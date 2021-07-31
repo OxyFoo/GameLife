@@ -25,8 +25,8 @@ class App extends React.Component {
         if (!pages.includes(newpage)) return;
         
         OptionsAnimation(this.state.animOpacity, 0).start();
-        setTimeout(() => { this.setState({ page: newpage }); }, 300);
-        setTimeout(() => { OptionsAnimation(this.state.animOpacity, 1).start(); }, 500);
+        setTimeout(() => { this.setState({ page: newpage }); }, 150);
+        setTimeout(() => { OptionsAnimation(this.state.animOpacity, 1).start(); }, 250);
     }
 
     render() {

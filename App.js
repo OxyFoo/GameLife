@@ -6,6 +6,7 @@ import user from './src/Managers/UserManager';
 import { OptionsAnimation } from './src/Components/Animations';
 
 import Home from './src/Pages/home';
+import AnimTest from './src/Pages/animTest';
 
 class App extends React.Component {
     state = {
@@ -19,8 +20,8 @@ class App extends React.Component {
     }
 
     changePage = (newpage) => {
-        if (newpage == this.state.page) return;
-        let pages = [ 'home' ];
+        //if (newpage == this.state.page) return;
+        let pages = [ 'home', 'animTest' ];
         if (!pages.includes(newpage)) return;
         
         OptionsAnimation(this.state.animOpacity, 0).start();
@@ -32,13 +33,19 @@ class App extends React.Component {
         let page;
         switch (this.state.page) {
             case 'home': page = <Home />; break;
+            case 'animTest': page = <AnimTest />; break;
         }
 
         const full = { width: '100%', height: '100%', backgroundColor: "#01222C" }
 
+        const inter = {
+            inputRange:  [0, 0.50, 0.60, 0.70, 0.85, 1],
+            outputRange: [0, 1,    0.2,  1,    0.2,  1]
+        };
+
         return (
             <View style={full}>
-                <Animated.View style={[full, { opacity: this.state.animOpacity }]}>
+                <Animated.View style={[full, { opacity: this.state.animOpacity.interpolate(inter) }]}>
                     {page}
                 </Animated.View>
             </View>

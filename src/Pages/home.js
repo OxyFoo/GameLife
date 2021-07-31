@@ -2,11 +2,16 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import GLText from '../Components/GLText';
+import user from '../Managers/UserManager';
 
 class Home extends React.Component {
+    animTest = () => {
+        user.changePage('animTest');
+    }
+
     render() {
         return (
-            <View style={{flex: 1}}>
+            <View style={{flex: 1}} onTouchStart={this.animTest}>
                 {/* Header */}
                 <GLText title="GAME LIFE" style={Style.header} />
                 <View style={Style.separator}></View>

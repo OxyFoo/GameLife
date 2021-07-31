@@ -20,20 +20,22 @@ class Home extends React.Component {
                 <View style={Style.content}>
                     <GLText title="prenom nom" style={Style.name} />
                     {/* Level */}
-                    <View style={Style.containerLevels}>
-                        <View style={Style.containerLevel}>
-                            <GLText title="Level" style={Style.levelTitle} />
-                            <GLText title="XX" style={Style.level} />
-                        </View>
-                        <View style={Style.containerXP}>
-                            <GLText title="xp total XXXXX" style={Style.levelXP} />
-                            <GLText title="average xp / day XXXXX" style={Style.levelXP} />
-                        </View>
-                    </View>
-
-                    {/* XP */}
                     <View>
-                        <GLText title="XX / YY XP" style={Style.textXP} />
+                        <View style={Style.containerLevels}>
+                            <View style={Style.containerLevel}>
+                                <GLText title="Level" style={Style.levelTitle} />
+                                <GLText title="XX" style={Style.level} />
+                            </View>
+                            <View style={Style.containerXP}>
+                                <GLText title="xp total XXXXX" style={Style.levelXP} />
+                                <GLText title="average xp / day XXXXX" style={Style.levelXP} />
+                            </View>
+                        </View>
+
+                        {/* XP */}
+                        <View>
+                            <GLText title="XX / YY XP" style={Style.textXP} />
+                        </View>
                     </View>
 
                     {/* Calendar + caracs */}
@@ -60,13 +62,15 @@ class Home extends React.Component {
                     </View>
 
                     {/* Comp */}
-                    <GLText title="Compétences" style={Style.compTitle} />
-                    <View style={Style.containerComp}>
-                        <View style={Style.comp} />
-                        <View style={Style.comp} />
-                        <View style={Style.comp} />
-                        <View style={Style.comp} />
-                        <View style={Style.comp} />
+                    <View>
+                        <GLText title="Compétences" style={Style.compTitle} />
+                        <View style={Style.containerComp}>
+                            <View style={Style.comp} />
+                            <View style={Style.comp} />
+                            <View style={Style.comp} />
+                            <View style={Style.comp} />
+                            <View style={Style.comp} />
+                        </View>
                     </View>
                 </View>
             </View>
@@ -88,7 +92,8 @@ const Style = StyleSheet.create({
         backgroundColor: '#FFFFFF'
     },
     content: {
-        flex: 1
+        flex: 1,
+        justifyContent: 'space-evenly'
     },
     name: {
         color: '#5AB4F0',
@@ -168,11 +173,12 @@ const Style = StyleSheet.create({
     compTitle: {
         color: '#5ABEFA',
         fontSize: 28,
-        padding: 24
+        padding: 12
     },
     containerComp: {
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        marginBottom: 24
     },
     comp: {
         width: 48,

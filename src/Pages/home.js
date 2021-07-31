@@ -98,7 +98,8 @@ const Style = StyleSheet.create({
     name: {
         color: '#5AB4F0',
         fontSize: 36,
-        marginTop: 12
+        marginTop: 12,
+        padding: 0
     },
     containerLevels: {
         paddingHorizontal: 24,

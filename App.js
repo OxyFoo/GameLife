@@ -68,7 +68,7 @@ class App extends React.Component {
         let page1 = GetPageContent(this.state.page1);
         let page2 = GetPageContent(this.state.page2);
 
-        const full = { width: '100%', height: '100%', backgroundColor: "#000011" }
+        const full = { width: '100%', height: '100%' }
 
         const inter = {
             inputRange:  [0, 0.4, 0.8, 1],
@@ -76,7 +76,7 @@ class App extends React.Component {
         };
 
         return (
-            <SafeAreaView>
+            <SafeAreaView style={{ backgroundColor: "#000011" }}>
                 <View style={full}>
                     <Animated.View pointerEvents={this.state.page1 ? 'auto' : 'none'} style={[full, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity1.interpolate(inter) }]}>
                         {page1}

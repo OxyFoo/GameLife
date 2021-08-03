@@ -10,6 +10,7 @@ import Skills from './src/Pages/skills';
 import Identity from './src/Pages/identity';
 import Settings from './src/Pages/settings';
 import Characteristics from './src/Pages/characteristics';
+import Charactescription from './src/Pages/charactescription';
 import Experience from './src/Pages/experience';
 
 class App extends React.Component {
@@ -28,7 +29,7 @@ class App extends React.Component {
     changePage = (newpage) => {
         if (newpage == (this.state.page1 || this.state.page2)) return;
 
-        let pages = [ 'loading', 'home', 'skills', 'characteristics', 'experience', 'identity', 'settings' ];
+        let pages = [ 'loading', 'home', 'skills', 'characteristics', 'charactescription', 'experience', 'identity', 'settings' ];
         if (!pages.includes(newpage)) return;
 
         if (!this.state.page1) {
@@ -57,6 +58,7 @@ class App extends React.Component {
                 case 'settings': p = <Settings />; break;
                 case 'experience': p = <Experience />; break;
                 case 'characteristics': p = <Characteristics />; break;
+                case 'charactescription': p = <Charactescription />; break;
             }
             return p;
         }

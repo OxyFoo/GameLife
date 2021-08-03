@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 function GLText(props) {
     const title = props.title;
     const value = props.value;
+    const onPress = props.onPress;
 
-    return typeof(value) !== 'undefined' ? (
+    let output = typeof(value) !== 'undefined' ? (
         <View style={[Style.row, props.style]}>
             <Text style={Style.titleLeft}>{title}</Text>
             <Text style={Style.valueRight}>{value}</Text>
@@ -13,6 +14,12 @@ function GLText(props) {
     ) : (
         <Text style={[ Style.text, props.style ]}>{title}</Text>
     )
+
+    return typeof(onPress) !== 'undefined' ? (
+        <TouchableOpacity activeOpacity={.5} onPress={onPress}>
+            {output}
+        </TouchableOpacity>
+    ) : (output);
 }
 
 const Style = StyleSheet.create({

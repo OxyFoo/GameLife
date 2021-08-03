@@ -1,9 +1,10 @@
 import { Animated } from 'react-native';
 
-function OptionsAnimation(anim, toValue) {
-    return Animated.spring(anim, {
+function OptionsAnimation(anim, toValue, duration = 300) {
+    return Animated.timing(anim, {
         toValue: toValue,
-        speed: 8,
+        duration: duration,
+        delay: 0,
         useNativeDriver: true
     });
 }

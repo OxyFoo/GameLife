@@ -1,42 +1,34 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
-import GLText from '../Components/GLText';
 import user from '../Managers/UserManager';
+import { GLHeader, GLText, GLXP } from '../Components/GL-Components';
 
 class Home extends React.Component {
-    animTest = () => {
-        user.changePage('animTest');
-    }
+    openSkills     = () => { user.changePage('skills'); }
+    openIdentity   = () => { user.changePage('identity'); }
+    openSettings   = () => { user.changePage('settings'); }
+    openExperience = () => { user.changePage('experience') }
+    openCharacteristics = () => { user.changePage('characteristics') }
 
     render() {
         return (
-            <View style={{flex: 1}} onTouchStart={this.animTest}>
+            <View style={{flex: 1}}>
                 {/* Header */}
-                <GLText title="GAME LIFE" style={Style.header} />
-                <View style={Style.separator}></View>
+                <GLHeader
+                    title="GAME LIFE"
+                    rightIcon='gear'
+                    onPressRight={this.openSettings}
+                />
 
                 {/* Content */}
                 <View style={Style.content}>
-                    <GLText title="prenom nom" style={Style.name} />
-                    {/* Level */}
-                    <View>
-                        <View style={Style.containerLevels}>
-                            <View style={Style.containerLevel}>
-                                <GLText title="Level" style={Style.levelTitle} />
-                                <GLText title="XX" style={Style.level} />
-                            </View>
-                            <View style={Style.containerXP}>
-                                <GLText title="xp total XXXXX" style={Style.levelXP} />
-                                <GLText title="average xp / day XXXXX" style={Style.levelXP} />
-                            </View>
-                        </View>
+                    <TouchableOpacity activeOpacity={.5} onPress={this.openIdentity}>
+                        <GLText title="prenom nom" style={Style.name} />
+                    </TouchableOpacity>
 
-                        {/* XP */}
-                        <View>
-                            <GLText title="XX / YY XP" style={Style.textXP} />
-                        </View>
-                    </View>
+                    {/* Level */}
+                    <GLXP onPress={this.openExperience} />
 
                     {/* Calendar + caracs */}
                     <View style={Style.main}>
@@ -44,7 +36,7 @@ class Home extends React.Component {
                         <View style={Style.containerCalendar}></View>
 
                         {/* Caracs */}
-                        <View style={Style.containerCaracs}>
+                        <TouchableOpacity style={Style.containerCaracs} activeOpacity={.5} onPress={this.openCharacteristics}>
                             <GLText title="Caractéristiques" style={Style.textTitleCarac} />
                             <GLText title="Sagesse" style={Style.textCarac} />
                             <GLText title="XX" style={Style.textCaracValue} />
@@ -58,11 +50,11 @@ class Home extends React.Component {
                             <GLText title="XX" style={Style.textCaracValue} />
                             <GLText title="Agilité" style={Style.textCarac} />
                             <GLText title="XX" style={Style.textCaracValue} />
-                        </View>
+                        </TouchableOpacity>
                     </View>
 
                     {/* Comp */}
-                    <View>
+                    <TouchableOpacity activeOpacity={.5} onPress={this.openSkills}>
                         <GLText title="Compétences" style={Style.compTitle} />
                         <View style={Style.containerComp}>
                             <View style={Style.comp} />
@@ -71,7 +63,7 @@ class Home extends React.Component {
                             <View style={Style.comp} />
                             <View style={Style.comp} />
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -79,18 +71,6 @@ class Home extends React.Component {
 }
 
 const Style = StyleSheet.create({
-    header: {
-        width: '100%',
-        color: '#5AB4F0',
-        padding: 14,
-        fontSize: 38,
-        backgroundColor: '#012D3B'
-    },
-    separator: {
-        width: '100%',
-        height: 1,
-        backgroundColor: '#FFFFFF'
-    },
     content: {
         flex: 1,
         justifyContent: 'space-evenly'
@@ -100,47 +80,6 @@ const Style = StyleSheet.create({
         fontSize: 36,
         marginTop: 12,
         padding: 0
-    },
-    containerLevels: {
-        paddingHorizontal: 24,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    containerLevel: {
-        flexDirection: 'row',
-        alignItems: 'flex-end'
-    },
-    levelTitle: {
-        color: '#55AFF0',
-        padding: 0,
-        paddingBottom: 6,
-        fontSize: 28
-    },
-    level: {
-        color: '#55AFF0',
-        padding: 6,
-        fontSize: 38
-    },
-    containerXP: {
-        alignItems: 'flex-end'
-    },
-    levelXP: {
-        color: '#CAE6F4',
-        fontSize: 12,
-        padding: 2
-    },
-    textXP: {
-        textAlign: 'right',
-        padding: 0,
-        paddingTop: 6,
-        paddingBottom: 2,
-        paddingRight: 8,
-        marginVertical: 12,
-        marginHorizontal: 24,
-        borderWidth: 2,
-        borderColor: '#FFFFFF'
     },
     main: {
         paddingHorizontal: 24,
@@ -184,7 +123,8 @@ const Style = StyleSheet.create({
     comp: {
         width: 48,
         height: 48,
-        backgroundColor: 'red'
+        borderColor: 'red',
+        borderWidth: 2
     }
 });
 

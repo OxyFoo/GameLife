@@ -76,16 +76,16 @@ class App extends React.Component {
         };
 
         return (
-            <View style={full}>
-                <SafeAreaView style={full}>
+            <SafeAreaView>
+                <View style={full}>
                     <Animated.View pointerEvents={this.state.page1 ? 'auto' : 'none'} style={[full, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity1.interpolate(inter) }]}>
                         {page1}
                     </Animated.View>
                     <Animated.View pointerEvents={this.state.page2 ? 'auto' : 'none'} style={[full, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity2.interpolate(inter) }]}>
                         {page2}
                     </Animated.View>
-                </SafeAreaView>
-            </View>
+                </View>
+            </SafeAreaView>
         )
     }
 }

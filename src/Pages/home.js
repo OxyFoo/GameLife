@@ -23,9 +23,7 @@ class Home extends React.Component {
 
                 {/* Content */}
                 <View style={Style.content}>
-                    <TouchableOpacity activeOpacity={.5} onPress={this.openIdentity}>
-                        <GLText title="prenom nom" style={Style.name} />
-                    </TouchableOpacity>
+                    <GLText title="prenom nom" style={Style.name} onPress={this.openIdentity} />
 
                     {/* Level */}
                     <GLXP onPress={this.openExperience} />

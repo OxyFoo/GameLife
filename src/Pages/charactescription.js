@@ -12,7 +12,7 @@ class Charactescription extends React.Component {
             <View style={{flex: 1}}>
                 {/* Header */}
                 <GLHeader
-                    title="Caractéristiques"
+                    title="Caracs"
                     leftIcon='back'
                     onPressLeft={this.back}
                 />

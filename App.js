@@ -7,6 +7,7 @@ import { OptionsAnimation } from './src/Components/Animations';
 import Loading from './src/Pages/loading';
 import Home from './src/Pages/home';
 import Skills from './src/Pages/skills';
+import SkillsEdition from './src/Pages/skillsEdition';
 import Identity from './src/Pages/identity';
 import Settings from './src/Pages/settings';
 import Characteristics from './src/Pages/characteristics';
@@ -29,7 +30,7 @@ class App extends React.Component {
     changePage = (newpage) => {
         if (newpage == (this.state.page1 || this.state.page2)) return;
 
-        let pages = [ 'loading', 'home', 'skills', 'characteristics', 'charactescription', 'experience', 'identity', 'settings' ];
+        let pages = [ 'loading', 'home', 'skills', 'skillsEdition', 'characteristics', 'charactescription', 'experience', 'identity', 'settings' ];
         if (!pages.includes(newpage)) return;
 
         if (!this.state.page1) {
@@ -54,6 +55,7 @@ class App extends React.Component {
                 case 'loading': p = <Loading />; break;
                 case 'home': p = <Home />; break;
                 case 'skills': p = <Skills />; break;
+                case 'skillsEdition': p = <SkillsEdition />; break;
                 case 'identity': p = <Identity />; break;
                 case 'settings': p = <Settings />; break;
                 case 'experience': p = <Experience />; break;

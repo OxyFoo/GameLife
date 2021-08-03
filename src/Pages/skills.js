@@ -5,12 +5,11 @@ import { GLHeader, GLText } from '../Components/GL-Components';
 import user from '../Managers/UserManager';
 
 class Skills extends React.Component {
-    back = () => {
-        user.changePage('home');
-    }
+    back = () => { user.changePage('home'); }
+    edit = () => { user.changePage('skillsEdition'); }
 
     component_skill = ({item}) => (
-        <TouchableOpacity activeOpacity={.5} style={skillStyle.skill}>
+        <TouchableOpacity activeOpacity={.5} style={skillStyle.skill} onPress={this.edit}>
             <View style={skillStyle.header}></View>
             <View style={skillStyle.body}>
                 <GLText style={skillStyle.title} title={item.title} />
@@ -24,7 +23,13 @@ class Skills extends React.Component {
         return (
             <View style={{flex: 1}}>
                 {/* Header */}
-                <GLHeader title="Compétences" leftIcon='back' onPressLeft={this.back} />
+                <GLHeader
+                    title="Compétences"
+                    leftIcon='back'
+                    onPressLeft={this.back}
+                    rightIcon='plus'
+                    onPressRight={this.edit}
+                />
 
                 {/* Controls */}
                 <View>

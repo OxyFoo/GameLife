@@ -6,6 +6,7 @@ import { GLHeader, GLText, GLXP } from '../Components/GL-Components';
 
 class Home extends React.Component {
     openSkills     = () => { user.changePage('skills'); }
+    openCalendar   = () => { user.changePage('calendar'); }
     openIdentity   = () => { user.changePage('identity'); }
     openSettings   = () => { user.changePage('settings'); }
     openExperience = () => { user.changePage('experience') }
@@ -31,7 +32,8 @@ class Home extends React.Component {
                     {/* Calendar + caracs */}
                     <View style={Style.main}>
                         {/* Calendar */}
-                        <View style={Style.containerCalendar}></View>
+                        <TouchableOpacity onPress={this.openCalendar} activeOpacity={.5} style={Style.containerCalendar}/>
+                        {/*<View style={Style.containerCalendar}></View>*/}
 
                         {/* Caracs */}
                         <TouchableOpacity style={Style.containerCaracs} activeOpacity={.5} onPress={this.openCharacteristics}>

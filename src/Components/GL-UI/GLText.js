@@ -5,11 +5,12 @@ function GLText(props) {
     const title = props.title;
     const value = props.value;
     const onPress = props.onPress;
+    const icon = props.icon;
 
     let output = typeof(value) !== 'undefined' ? (
         <View style={[Style.row, props.style]}>
-            <Text style={Style.titleLeft}>{title}</Text>
-            <Text style={Style.valueRight}>{value}</Text>
+            <Text style={[Style.titleLeft, props.styleText]}>{title}</Text>
+            <Text style={[Style.valueRight, props.styleText]}>{value}</Text>
         </View>
     ) : (
         <Text style={[ Style.text, props.style ]}>{title}</Text>

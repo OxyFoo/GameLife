@@ -3,11 +3,15 @@ import { View, StyleSheet } from 'react-native';
 
 import { GLHeader, GLText } from '../Components/GL-Components';
 import user from '../Managers/UserManager';
+import langManager from '../Managers/LangManager';
 
 class Charactescription extends React.Component {
     back = () => { user.changePage('characteristics'); }
 
     render() {
+        const carac = this.props.args[0];
+        const description = langManager.currentLangage['caracs'][carac];
+
         return (
             <View style={{flex: 1}}>
                 {/* Header */}
@@ -19,11 +23,11 @@ class Charactescription extends React.Component {
 
                 {/* Content */}
                 <View style={style.content}>
-                    <GLText style={style.text} onPress={this.open} title='Carac' />
+                    <GLText style={style.text} onPress={this.open} title={carac} />
 
                     <View style={style.containerDescription}>
                         <GLText style={style.text} onPress={this.open} title='Description :' />
-                        <GLText style={style.description} onPress={this.open} title='Lorem ipsum dolor sit amet consectetur, adipisicing elit. Culpa at vel, alias corporis officiis dolore, amet quasi debitis, quibusdam rem hic. Praesentium dolorum eum ut voluptatibus rerum natus cupiditate soluta?' />
+                        <GLText style={style.description} onPress={this.open} title={description} />
                     </View>
                 </View>
             </View>

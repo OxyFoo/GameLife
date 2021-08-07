@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SafeAreaView } from 'react-native';
 
+import langManager from './src/Managers/LangManager';
 import PageManager from './src/Managers/PageManager';
 
 class App extends React.Component {

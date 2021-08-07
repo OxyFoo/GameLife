@@ -24,7 +24,7 @@ class Home extends React.Component {
 
                 {/* Content */}
                 <View style={Style.content}>
-                    <GLText title="prenom nom" style={Style.name} onPress={this.openIdentity} />
+                    <GLText title={user.pseudo} style={Style.name} onPress={this.openIdentity} />
 
                     {/* Level */}
                     <GLXP onPress={this.openExperience} />

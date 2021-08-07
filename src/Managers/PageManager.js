@@ -21,7 +21,8 @@ class PageManager extends React.Component{
         page1: '',
         page2: '',
         animOpacity1: new Animated.Value(0),
-        animOpacity2: new Animated.Value(0)
+        animOpacity2: new Animated.Value(0),
+        arguments: []
     }
 
     componentDidMount() {
@@ -29,13 +30,17 @@ class PageManager extends React.Component{
         this.changePage('loading');
     }
 
-    changePage = (newpage) => {
+    changePage = (newpage, args) => {
         if (newpage == (this.state.page1 || this.state.page2)) return;
 
         if (!this.GetPageContent(newpage)) {
             console.error('Calling an incorrect page');
             return;
         };
+
+        if (typeof(args) !== 'undefined') {
+            this.setState({ arguments: args });
+        }
 
         if (!this.state.page1) {
             // Clear page 2
@@ -65,7 +70,7 @@ class PageManager extends React.Component{
             case 'settings': p = <Settings />; break;
             case 'experience': p = <Experience />; break;
             case 'characteristics': p = <Characteristics />; break;
-            case 'charactescription': p = <Charactescription />; break;
+            case 'charactescription': p = <Charactescription args={this.state.arguments} />; break;
         }
         return p;
     }

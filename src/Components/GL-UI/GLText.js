@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+const MAIN_FONT_NAME = 'Laffayette Comic Pro';
+
 function GLText(props) {
     const title = props.title;
     const value = props.value;
@@ -31,7 +33,7 @@ const Style = StyleSheet.create({
         
         color: '#CAE6F4',
         fontSize: 18,
-        fontFamily: "SquareFont"
+        fontFamily: MAIN_FONT_NAME
     },
     row: {
         paddingVertical: 6,
@@ -43,13 +45,14 @@ const Style = StyleSheet.create({
     titleLeft: {
         color: '#CAE6F4',
         fontSize: 24,
-        fontFamily: "SquareFont"
+        fontFamily: MAIN_FONT_NAME
     },
     valueRight: {
         color: '#CAE6F4',
         fontSize: 24,
-        fontFamily: "SquareFont"
+        fontFamily: MAIN_FONT_NAME
     }
 });
 
 export default GLText;
+export { MAIN_FONT_NAME };

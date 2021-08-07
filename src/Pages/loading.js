@@ -6,7 +6,7 @@ import user from '../Managers/UserManager';
 
 class Loading extends React.Component {
     componentDidMount() {
-        setTimeout(this.goToHome, 2000);
+        setTimeout(this.goToHome, 500);
     }
 
     goToHome = () => { user.changePage('home'); }

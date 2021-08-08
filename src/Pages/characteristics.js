@@ -7,8 +7,6 @@ import user from '../Managers/UserManager';
 
 class Characteristics extends React.Component {
     componentDidMount() {
-        const allCaracs = Object.keys(langManager.currentLangage['caracs']);
-        console.log(allCaracs);
     }
 
     open = (arg) => {
@@ -17,13 +15,15 @@ class Characteristics extends React.Component {
     back = () => { user.changePage('home'); }
 
     showCarac = ({item}) => {
+        const name = langManager.currentLangage['caracsName'][item];
+        const points = user.caracs[item];
         return (
-            <GLText style={style.text} onPress={() => { this.open(item) }} title={'X1   ' + item} />
+            <GLText style={style.text} onPress={() => { this.open(item) }} title={points + '   ' + name} />
         )
     }
 
     render() {
-        const allCaracs = Object.keys(langManager.currentLangage['caracs']);
+        const allCaracs = Object.keys(langManager.currentLangage['caracsName']);
 
         return (
             <View style={{flex: 1}}>

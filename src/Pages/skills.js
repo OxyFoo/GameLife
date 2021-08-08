@@ -6,10 +6,10 @@ import user from '../Managers/UserManager';
 
 class Skills extends React.Component {
     back = () => { user.changePage('home'); }
-    edit = () => { user.changePage('skillsEdition'); }
+    edit = (skill) => { user.changePage('skillsEdition', skill); }
 
     component_skill = ({item}) => (
-        <TouchableOpacity activeOpacity={.5} style={skillStyle.skill} onPress={this.edit}>
+        <TouchableOpacity activeOpacity={.5} style={skillStyle.skill} onPress={() => { this.edit(item); }}>
             <View style={skillStyle.header}></View>
             <View style={skillStyle.body}>
                 <GLText style={skillStyle.title} title={item.title} />
@@ -27,8 +27,6 @@ class Skills extends React.Component {
                     title="Compétences"
                     leftIcon='back'
                     onPressLeft={this.back}
-                    rightIcon='plus'
-                    onPressRight={this.edit}
                 />
 
                 {/* Controls */}

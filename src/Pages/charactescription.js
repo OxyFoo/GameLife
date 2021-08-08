@@ -9,8 +9,9 @@ class Charactescription extends React.Component {
     back = () => { user.changePage('characteristics'); }
 
     render() {
-        const carac = this.props.args[0];
-        const description = langManager.currentLangage['caracs'][carac];
+        const key = this.props.args[0];
+        const name = langManager.currentLangage['caracsName'][key];
+        const description = langManager.currentLangage['caracsDescription'][key];
 
         return (
             <View style={{flex: 1}}>
@@ -23,7 +24,7 @@ class Charactescription extends React.Component {
 
                 {/* Content */}
                 <View style={style.content}>
-                    <GLText style={style.text} onPress={this.open} title={carac} />
+                    <GLText style={style.text} onPress={this.open} title={name} />
 
                     <View style={style.containerDescription}>
                         <GLText style={style.text} onPress={this.open} title='Description :' />

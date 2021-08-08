@@ -65,7 +65,7 @@ class PageManager extends React.Component{
             case 'calendar': p = <Calendar />; break;
             case 'activity': p = <Activity />; break;
             case 'skills': p = <Skills />; break;
-            case 'skillsEdition': p = <SkillsEdition />; break;
+            case 'skillsEdition': p = <SkillsEdition args={this.state.arguments} />; break;
             case 'identity': p = <Identity />; break;
             case 'settings': p = <Settings />; break;
             case 'experience': p = <Experience />; break;

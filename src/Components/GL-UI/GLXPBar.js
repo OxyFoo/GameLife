@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import GLText from './GLText';
 
@@ -7,12 +7,18 @@ function GLXPBar(props) {
     const style = props.style;
     return (
         <View>
-            <GLText title="XX / YY XP" style={[Style.textXP, style]} />
+            <View style={styles.containerXP}>
+                <GLText title="XX / YY XP" style={[styles.textXP, style]} />
+            </View>
         </View>
     )
 }
 
-const Style = StyleSheet.create({
+const styles = StyleSheet.create({
+    containerXP: {
+        //backgroundColor: 'red',
+        margin: 12
+    },
     textXP: {
         textAlign: 'right',
         padding: 0,

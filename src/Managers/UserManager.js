@@ -1,3 +1,5 @@
+import langManager from "./LangManager";
+
 class UserManager {
     constructor() {
         this.changePage;
@@ -5,20 +7,20 @@ class UserManager {
         this.pseudo = 'Pseudo-0000';
         this.email = 'Aucun';
         this.titre = 'Aucun';
+        this.xp = 0;
+
+        this.caracs = {
+            'sag': 0,
+            'int': 0,
+            'conf': 0,
+            'for': 0,
+            'end': 0,
+            'agil': 0,
+            'dex': 0
+        };
 
         this.skills = [
-            new Skill('Skill 1', 'Category 1', 10, 'DD/MM/YY'),
-            new Skill('Skill 2', 'Category 1', 20, 'DD/MM/YY'),
-            new Skill('Skill 3', 'Category 1', 30, 'DD/MM/YY'),
-            new Skill('Skill 4', 'Category 2', 40, 'DD/MM/YY'),
-            new Skill('Skill 5', 'Category 2', 50, 'DD/MM/YY'),
-            new Skill('Skill 6', 'Category 2', 60, 'DD/MM/YY'),
-            new Skill('Skill 7', 'Category 2', 70, 'DD/MM/YY'),
-            new Skill('Skill 8', 'Category 3', 80, 'DD/MM/YY'),
-            new Skill('Skill 9', 'Category 3', 90, 'DD/MM/YY'),
-            new Skill('Skill 10', 'Category 3', 100, 'DD/MM/YY'),
-            new Skill('Skill 11', 'Category 3', 110, 'DD/MM/YY'),
-            new Skill('Skill 12', 'Category 3', 120, 'DD/MM/YY')
+            new Skill('skill1', 10, 'DD/MM/YY')
         ];
     }
 
@@ -54,11 +56,32 @@ class UserManager {
 }
 
 class Skill {
-    constructor(title, category, xp, lastTime) {
-        this.title = title;
-        this.category = category;
+    constructor(key, xp, lastTime) {
+        this.key = key;
+        this.title = this.getSkillName(key);
+        this.cat = this.getCatName(key);
         this.xp = xp;
         this.lastTime = lastTime;
+        this.caracs = {
+            'sag': this.getCarac(key, 'sag'),
+            'int': this.getCarac(key, 'int'),
+            'conf': this.getCarac(key, 'conf'),
+            'for': this.getCarac(key, 'for'),
+            'end': this.getCarac(key, 'end'),
+            'agil': this.getCarac(key, 'agil'),
+            'dex': this.getCarac(key, 'dex')
+        };
+    }
+
+    getSkillName = (key) => {
+        return langManager.currentLangage[key]['name'];
+    }
+    getCatName = (key) => {
+        return langManager.currentLangage[key]['cat'];
+    }
+
+    getCarac = (key, carac) => {
+        return langManager.currentLangage[key][carac];
     }
 }
 

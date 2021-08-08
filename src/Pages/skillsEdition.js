@@ -2,10 +2,32 @@ import * as React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import { GLHeader, GLHistory, GLText, GLXP } from '../Components/GL-Components';
+import langManager from '../Managers/LangManager';
 import user from '../Managers/UserManager';
 
 class SkillsEdition extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const skill = this.props.args;
+
+        this.title = skill.title;
+        this.cat = skill.cat;
+
+        const caracs = skill.caracs;
+        this.data = [];
+        for (let key in caracs) {
+            const newData = { key: key, value: caracs[key] };
+            this.data.push(newData);
+        }
+    }
     back = () => { user.changePage('skills'); }
+
+    skillElement = ({item}) => {
+        return (
+            <GLText style={Style.textGainCarac} title={item.value + ' ' + langManager.currentLangage['caracsName'][item.key]} />
+        )
+    }
 
     render() {
         return (
@@ -22,12 +44,12 @@ class SkillsEdition extends React.Component {
                     <View style={Style.header}>
                         <View style={Style.icon} />
                         <View style={Style.headerBody}>
-                            <GLText style={Style.titleHeader} title='?????' />
-                            <GLText style={Style.textHeader} title='Catérogie : ???' />
+                            <GLText style={Style.titleHeader} title={this.title} />
+                            <GLText style={Style.textHeader} title={'Catérogie : ' + this.cat} />
                         </View>
                     </View>
 
-                    <GLXP /> 
+                    <GLXP />
 
                     {/* Gains */}
                     <View style={Style.containerGains}>
@@ -36,22 +58,16 @@ class SkillsEdition extends React.Component {
                             <GLText style={Style.textGain2} title="(pour 60min)" />
                         </View>
                         <View style={Style.columnsGains}>
-                            <View style={Style.columnGains}>
-                                <GLText style={Style.textGainCarac} title="0 Sagesse" />
-                                <GLText style={Style.textGainCarac} title="0 Confiance" />
-                                <GLText style={Style.textGainCarac} title="0 Endurance" />
-                                <GLText style={Style.textGainCarac} title="0 Dextérité" />
-                            </View>
-                            <View style={Style.columnGains2}>
-                                <GLText style={Style.textGainCarac} title="0 Intelligence" />
-                                <GLText style={Style.textGainCarac} title="0 Force" />
-                                <GLText style={Style.textGainCarac} title="0 Agilité" />
-                            </View>
+                            <FlatList
+                                data={this.data}
+                                keyExtractor={(item, i) => 'skill_' + i}
+                                renderItem={this.skillElement}
+                            />
                         </View>
                     </View>
                 </View>
 
-                <GLHistory />
+            {/*<GLHistory />*/}
             </>
         )
     }

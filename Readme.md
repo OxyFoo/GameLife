@@ -4,6 +4,9 @@
 En 3 mots : Gestion RPG IRL
 (flemme)
 
+## Font
+Si beug avec les font, aller les supprimer dans info.plist et dans resources
+
 ## Sources
 ### Sites
 * [JS benchmarks](https://jsben.ch/WqlIl)

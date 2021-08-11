@@ -8,9 +8,6 @@ class GLTextEditable extends React.Component {
         editMode: false
     }
 
-    componentDidMount() {
-    }
-
     editMode_Enable = () => {
         if (typeof(this.props.beforeChangeText) !== 'undefined') {
             this.props.beforeChangeText();

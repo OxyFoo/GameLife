@@ -13,3 +13,68 @@ En 3 mots : Gestion RPG IRL
 * [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker)
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
+
+# Sécu (Requests)
+## Clés - Chiffrement / déchiffrement AES-256-OCB
+* Clé A : Stockées sur le serveur ET sur l'app
+* Clé B : Stockée uniquement sur le serveur
+## DBB
+* Inscription
+    - Ajout d'un user empty
+    - Ajout du deviceID/deviceName en suspend
+    - Envoi d'un mail pour valider ce device
+* Device validé
+    - Validation du device dans la BDD
+* Device refusé
+    - Blacklist du device dans la BDD
+## Serveur
+* Token = random(32)
+* getKey
+    * Input : BuildID (chiffré avec la clé A)
+    * Process : Compare le BuildID avec une liste de BuildID
+    * Return : Clé B (chiffré avec la clé A) ou vide si BuildID incorrect
+* getToken
+    * Input : DeviceName & DeviceID (chiffrés (séparéments) avec la clé B)
+    * Process :
+        - Vérification dans la BDD
+            - si inexistant : *inscription
+            - On vérifie l'appareil
+                - S'il a les droits
+                    - Génération du token
+                    - Stockage du token dans la BDD
+                    - Renvoie le token
+                - Sinon, rien
+    * Return : State (état, token)
+* tokenVerification
+    * Comparaison avec le token dans la BDD
+* getInternalData
+    * Input : Token
+    * Process : tokenVerification et lecture de la BDD
+    * Return : State, Citations, Titres (Leaderboard) (chiffrés avec la clé B)
+* getUserData
+    * Input : Token
+    * Process : tokenVerification et lecture de la BDD (chiffrés avec la clé B)
+    * Return : State & user data (chiffrés avec la clé B)
+* setUserDate
+    * Input : Token & Data
+    * Process : tokenVerification et écritude dans la BDD
+    * Return : State
+## App
+* Au démarrage (si internet)
+    * getKey (BuildID chiffré avec la clé A)
+* Si mail && connecté && pas token
+    * Si pas token : getToken
+* Si token (donc connecté):
+    * Récup des données
+        - getInternalData
+        - getUserData
+
+* Sauvegarde
+    - Sauvegarde locale
+    - Si token
+        - setUserData
+
+* Chargement
+    - Chargement local
+    - Si token
+        - getUserData

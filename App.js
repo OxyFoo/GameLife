@@ -19,6 +19,18 @@ class App extends React.Component {
         //user.changePage('loading');
         //setTimeout(() => { user.changePage('home'); }, 500);
 
+        // Pas de clé
+        //     Request (avec buildID)
+        //     Get key
+        //
+        // Mail défini && pas de token
+        //     Envoi au serv des données du tel (chiffrés)
+        //     Get token (serv : send state : token / mail non confirmed / banned / blacklisted / ...)
+        // If token
+        //     OK : save / load data
+        // Else
+        //     loop
+
         user.changePage('home');
     }
 

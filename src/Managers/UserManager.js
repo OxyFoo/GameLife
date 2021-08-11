@@ -29,7 +29,7 @@ class UserManager {
         };
 
         this.skills = [
-            new Skill('skill1', 10, 'DD/MM/YY')
+            //new Skill('skill1', 10, 'DD/MM/YY')
         ];
 
         // Device informations

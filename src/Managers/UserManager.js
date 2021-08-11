@@ -1,14 +1,70 @@
+import DeviceInfo from 'react-native-device-info';
+
 import langManager from "./LangManager";
+import ServManager from "./ServManager";
+import DataStorage from './DataStorage';
 
 class UserManager {
     constructor() {
+        // this.changePage(pageName, argument);
+        // Change page with animation and arg
+        // Function loaded in componentDidMount of PageManager (in App.js)
         this.changePage;
 
-        this.pseudo = 'Pseudo-0000';
+        // User informations
+        this.pseudo = 'Player-XXXX';
+        this.title = 'Titre';
+        this.birth = '';
         this.email = 'Aucun';
-        this.titre = 'Aucun';
         this.xp = 0;
 
+        this.stats = {
+            'sag': 0,
+            'int': 2,
+            'conf': 5,
+            'for': 6,
+            'end': 8,
+            'agil': 9,
+            'dex': 10
+        };
+
+        this.skills = [
+            new Skill('skill1', 10, 'DD/MM/YY')
+        ];
+
+        // Device informations
+        const DeviceID = DeviceInfo.getUniqueId();
+        const DeviceName = DeviceInfo.getDeviceNameSync();
+        const BuildID = DeviceInfo.getBuildIdSync();
+        const deviceInformations = {
+            'DeviceID': DeviceID,
+            'DeviceName': DeviceName,
+            'BuildID': BuildID
+        };
+
+        // Internet
+        this.conn = new ServManager();
+        this.conn.getToken(deviceInformations);
+
+        // Data storage
+        this.storage = new DataStorage();
+    }
+}
+
+class Stat {
+    constructor(key, xp) {
+        this.key = key;
+        this.xp = xp;
+    }
+}
+
+class Skill {
+    constructor(key, xp, lastTime) {
+        this.key = key;
+        this.title = '';
+        this.cat = '';
+        this.xp = xp;
+        this.lastTime = lastTime;
         this.caracs = {
             'sag': 0,
             'int': 0,
@@ -18,62 +74,9 @@ class UserManager {
             'agil': 0,
             'dex': 0
         };
-
-        this.skills = [
-            new Skill('skill1', 10, 'DD/MM/YY')
-        ];
     }
 
-
-    /*getCategories = () => {
-        let cats = [];
-        for (let i = 0; i < this.skills.length; i++) {
-            let skill = this.skills[i];
-
-            // Check if category exists
-            let index = -1;
-            for (let c = 0; c < cats.length; c++) {
-                if (cats[c].title === skill.category) {
-                    index = c; break;
-                }
-            }
-
-            // Add in cats
-            if (index === -1) {
-                cats.push({
-                    title: skill.category,
-                    xp: skill.xp,
-                    nb: 1
-                });
-            } else {
-                cats[index].xp += skill.xp;
-                cats[index].nb++;
-            }
-        }
-
-        return cats;
-    }*/
-}
-
-class Skill {
-    constructor(key, xp, lastTime) {
-        this.key = key;
-        this.title = this.getSkillName(key);
-        this.cat = this.getCatName(key);
-        this.xp = xp;
-        this.lastTime = lastTime;
-        this.caracs = {
-            'sag': this.getCarac(key, 'sag'),
-            'int': this.getCarac(key, 'int'),
-            'conf': this.getCarac(key, 'conf'),
-            'for': this.getCarac(key, 'for'),
-            'end': this.getCarac(key, 'end'),
-            'agil': this.getCarac(key, 'agil'),
-            'dex': this.getCarac(key, 'dex')
-        };
-    }
-
-    getSkillName = (key) => {
+    /*getSkillName = (key) => {
         return langManager.currentLangage[key]['name'];
     }
     getCatName = (key) => {
@@ -82,7 +85,7 @@ class Skill {
 
     getCarac = (key, carac) => {
         return langManager.currentLangage[key][carac];
-    }
+    }*/
 }
 
 const user = new UserManager();

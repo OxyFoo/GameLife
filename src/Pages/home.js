@@ -1,130 +1,164 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
 import user from '../Managers/UserManager';
-import { GLHeader, GLText, GLXP } from '../Components/GL-Components';
+import { GLHeader, GLText, GLXPBar, GLXPSmallBar } from '../Components/GL-Components';
+import langManager from '../Managers/LangManager';
 
 class Home extends React.Component {
-    openSkills     = () => { user.changePage('skills'); }
-    openCalendar   = () => { user.changePage('calendar'); }
-    openIdentity   = () => { user.changePage('identity'); }
-    openSettings   = () => { user.changePage('settings'); }
-    openExperience = () => { user.changePage('experience') }
-    openCharacteristics = () => { user.changePage('characteristics') }
+    constructor(props) {
+        super(props);
+        this.stats = [];
+        for (let stat in user.stats) {
+            this.stats.push({ key: stat, value: user.stats[stat] });
+        }
+    }
+    openIdentity = () => { user.changePage('identity'); }
+
+    statComponent = ({item}) => {
+        const title = langManager.currentLangage['statistics']['names'][item.key];
+        const value = item.value;
+
+        return (
+            <GLXPSmallBar title={title} value={value} max={10} />
+        )
+    }
 
     render() {
         return (
-            <View style={{flex: 1}}>
+            <View style={styles.parentView}>
                 {/* Header */}
-                <GLHeader
-                    title="GAME LIFE"
-                    rightIcon='gear'
-                    onPressRight={this.openSettings}
-                />
+                <GLHeader title="GAME LIFE" />
 
-                {/* Content */}
-                <View style={Style.content}>
-                    <GLText title={user.pseudo} style={Style.name} onPress={this.openIdentity} />
-
-                    {/* Level */}
-                    <GLXP onPress={this.openExperience} />
-
-                    {/* Calendar + caracs */}
-                    <View style={Style.main}>
-                        {/* Calendar */}
-                        <TouchableOpacity onPress={this.openCalendar} activeOpacity={.5} style={Style.containerCalendar}/>
-                        {/*<View style={Style.containerCalendar}></View>*/}
-
-                        {/* Caracs */}
-                        <TouchableOpacity style={Style.containerCaracs} activeOpacity={.5} onPress={this.openCharacteristics}>
-                            <GLText title="Caractéristiques" style={Style.textTitleCarac} />
-                            <GLText title="Sagesse" style={Style.textCarac} />
-                            <GLText title="XX" style={Style.textCaracValue} />
-                            <GLText title="Intelligence" style={Style.textCarac} />
-                            <GLText title="XX" style={Style.textCaracValue} />
-                            <GLText title="Confiance" style={Style.textCarac} />
-                            <GLText title="XX" style={Style.textCaracValue} />
-                            <GLText title="Force" style={Style.textCarac} />
-                            <GLText title="XX" style={Style.textCaracValue} />
-                            <GLText title="Endurance" style={Style.textCarac} />
-                            <GLText title="XX" style={Style.textCaracValue} />
-                            <GLText title="Agilité" style={Style.textCarac} />
-                            <GLText title="XX" style={Style.textCaracValue} />
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Comp */}
-                    <TouchableOpacity activeOpacity={.5} onPress={this.openSkills}>
-                        <GLText title="Compétences" style={Style.compTitle} />
-                        <View style={Style.containerComp}>
-                            <View style={Style.comp} />
-                            <View style={Style.comp} />
-                            <View style={Style.comp} />
-                            <View style={Style.comp} />
-                            <View style={Style.comp} />
-                        </View>
+                {/* User - main informations */}
+                <View style={styles.containerHeader}>
+                    <TouchableOpacity style={styles.containerUserName} activeOpacity={.5} onPress={this.openIdentity}>
+                        <GLText title={user.pseudo} style={styles.pseudo} />
+                        <GLText title={user.title} style={styles.title} />
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.containerUserXP} activeOpacity={.5}>
+                        <GLXPBar value={5} max={15} />
+                    </TouchableOpacity>
+                </View>
+
+                {/* User - Stats / Level / Calendar */}
+                <View style={styles.containerContent}>
+                    {/* Stats */}
+                    <TouchableOpacity activeOpacity={.5} style={styles.containerStats}>
+                        <FlatList
+                            data={this.stats}
+                            keyExtractor={item => 'stat_' + item.key}
+                            renderItem={this.statComponent}
+                        />
+                    </TouchableOpacity>
+
+                    <View style={styles.containerLevelColumn}>
+                        {/* Level */}
+                        <View style={styles.block}>
+                            <GLText style={styles.textLevel} title='LEVEL XX' />
+                            <GLText style={styles.textLevelTotal} title='XP TOTAL XX' color='grey' />
+                            <GLText style={styles.textLevelAverage} title='AVERAGE XX XP/DAY' color='grey' />
+                        </View>
+                        {/* Calendar */}
+                        <View style={[styles.block, styles.blockCalendar]}>
+                            <GLText style={styles.textLevel} title='CALENDRIER' />
+                        </View>
+                    </View>
+                </View>
+
+                {/* User - Skills */}
+                <GLText style={styles.titleSkill} title='COMPETENCES' />
+                <View style={styles.row}>
+                    <View style={[styles.block, styles.blockSkill]} />
+                    <View style={[styles.block, styles.blockSkill]} />
+                    <View style={[styles.block, styles.blockSkill]} />
+                </View>
+                <View style={styles.row}>
+                    <View style={[styles.block, styles.blockSkill]} />
+                    <View style={[styles.block, styles.blockSkill]} />
+                    <View style={[styles.block, styles.blockSkill]} />
                 </View>
             </View>
         )
     }
 }
 
-const Style = StyleSheet.create({
-    content: {
-        flex: 1,
-        justifyContent: 'space-evenly'
+const styles = StyleSheet.create({
+    parentView: {
+        flex: 1
     },
-    name: {
-        color: '#5AB4F0',
-        fontSize: 36,
-        marginTop: 12,
-        padding: 0
+    containerHeader: {
+        marginVertical: 12,
+        flexDirection: 'row'
     },
-    main: {
-        paddingHorizontal: 24,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    containerUserXP: {
+        width: '60%',
+        padding: 12,
+        display: 'flex',
+        justifyContent: 'center'
     },
-    containerCalendar: {
-        width: '40%',
-        borderWidth: 2,
-        borderColor: '#888888'
+    containerUserName: {
+        width: '35%',
+        margin: 12
     },
-    containerCaracs: {
-        width: '60%'
-    },
-    textTitleCarac: {
-        color: '#3E99E7',
-        fontSize: 20,
-        padding: 0
-    },
-    textCarac: {
-        color: '#5ABEFA',
+    pseudo: {
         fontSize: 18,
-        padding: 0,
-        marginTop: 8
+        textAlign: 'left'
     },
-    textCaracValue: {
-        color: '#5ABEFA',
-        fontSize: 18,
-        padding: 0
+    title: {
+        marginTop: 8,
+        fontSize: 14,
+        textAlign: 'left'
     },
-    compTitle: {
-        color: '#5ABEFA',
-        fontSize: 28,
+
+    containerContent: {
+        flexDirection: 'row'
+    },
+    containerStats: {
+        width: '55%',
         padding: 12
     },
-    containerComp: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        marginBottom: 24
+    containerLevelColumn: {
+        width: '45%',
+        margin: 0,
+        padding: 12
     },
-    comp: {
-        width: 48,
-        height: 48,
-        borderColor: 'red',
-        borderWidth: 2
+    textLevel: {
+        marginBottom: 12,
+        fontSize: 16
+    },
+    textLevelTotal: {
+        marginBottom: 12,
+        fontSize: 12
+    },
+    textLevelAverage: {
+        fontSize: 10
+    },
+
+    block: {
+        padding: 12,
+        borderWidth: 2,
+        borderColor: '#FFFFFF',
+        backgroundColor: '#000000'
+    },
+    blockCalendar: {
+        height: 275,
+        marginTop: 24
+    },
+    blockSkill: {
+        width: 64,
+        height: 64
+    },
+    row: {
+        width: '100%',
+        marginVertical: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+    },
+
+    titleSkill: {
+        marginVertical: 12,
+        fontSize: 28
     }
 });
 

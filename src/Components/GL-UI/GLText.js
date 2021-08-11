@@ -1,21 +1,29 @@
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const MAIN_FONT_NAME = 'Laffayette Comic Pro';
+const MAIN_FONT_NAME = 'Quantum';
+const COLORS = {
+    'white': '#ECECEC',
+    'grey': '#C2C2C2'
+}
 
 function GLText(props) {
     const title = props.title;
     const value = props.value;
     const onPress = props.onPress;
-    const icon = props.icon;
+
+    let color = props.color;
+    if (typeof(color) === 'undefined' || !COLORS.hasOwnProperty(color)) {
+        color = 'white'
+    }
 
     let output = typeof(value) !== 'undefined' ? (
-        <View style={[Style.row, props.style]}>
-            <Text style={[Style.titleLeft, props.styleText]}>{title}</Text>
-            <Text style={[Style.valueRight, props.styleText]}>{value}</Text>
+        <View style={[styles.row, props.style]}>
+            <Text style={[styles.titleLeft, props.styleText]}>{title}</Text>
+            <Text style={[styles.valueRight, props.styleText]}>{value}</Text>
         </View>
     ) : (
-        <Text style={[ Style.text, props.style ]}>{title}</Text>
+        <Text style={[ styles.text, props.style, { color: COLORS[color] } ]}>{title}</Text>
     )
 
     return typeof(onPress) !== 'undefined' ? (
@@ -25,14 +33,12 @@ function GLText(props) {
     ) : (output);
 }
 
-const Style = StyleSheet.create({
+const styles = StyleSheet.create({
     text: {
-        textAlign: 'center',
-
-        padding: 12,
-        
-        color: '#CAE6F4',
+        margin: 0,
+        padding: 0,
         fontSize: 18,
+        textAlign: 'center',
         fontFamily: MAIN_FONT_NAME
     },
     row: {

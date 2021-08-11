@@ -1,31 +1,22 @@
 {
-    "caracsName": {
-        "sag": "Sagesse",
-        "int": "Intelligence",
-        "conf": "Confiance en soi",
-        "for": "Force",
-        "end": "Endurance",
-        "agil": "Agilité",
-        "dex": "Dextérité"
-    },
-    "caracsDescription": {
-        "sag": "Description 1",
-        "int": "Description 2",
-        "conf": "Description",
-        "for": "Description",
-        "end": "Description",
-        "agil": "Description",
-        "dex": "Description"
-    },
-    "skill1": {
-        "name": "Piano",
-        "cat": "Musique",
-        "sag": 1,
-        "int": 2,
-        "conf": 3,
-        "for": 4,
-        "end": 0,
-        "agil": 0,
-        "dex": 0
+    "statistics": {
+        "names": {
+            "sag": "Sagesse",
+            "int": "Intelligence",
+            "conf": "Confiance en soi",
+            "for": "Force",
+            "end": "Endurance",
+            "agil": "Agilité",
+            "dex": "Dextérité"
+        },
+        "descriptions": {
+            "sag": "Description 1",
+            "int": "Description 2",
+            "conf": "Description",
+            "for": "Description",
+            "end": "Description",
+            "agil": "Description",
+            "dex": "Description"
+        }
     }
 }

@@ -5,12 +5,6 @@ import { GLText, GLLoading } from '../Components/GL-Components';
 import user from '../Managers/UserManager';
 
 class Loading extends React.Component {
-    componentDidMount() {
-        setTimeout(this.goToHome, 500);
-    }
-
-    goToHome = () => { user.changePage('home'); }
-
     render() {
         return (
             <View style={style.content}>

@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native';
 
 import { GLText, GLIconButton } from '../GL-Components';
 
-
 function GLHeader(props) {
     const LeftIcon_Press = () => { if (props.leftIcon && props.onPressLeft) props.onPressLeft(); };
     const LeftIcon_LongPress = () => { if (props.leftIcon && props.onLongPressLeft) props.onLongPressLeft(); };
@@ -31,7 +30,7 @@ const Style = StyleSheet.create({
         color: '#5AB4F0',
         padding: 14,
         fontSize: 38,
-        backgroundColor: '#000022'
+        backgroundColor: '#000000'
     },
     separator: {
         width: '100%',

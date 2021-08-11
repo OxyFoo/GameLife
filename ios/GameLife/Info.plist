@@ -53,8 +53,7 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Laffayette_Comic_Pro.ttf</string>
-		<string>Laffayette Comic Pro.ttf</string>
+		<string>Quantum.otf</string>
 	</array>
 </dict>
 </plist>

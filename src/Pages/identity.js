@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Alert, StyleSheet, FlatList } from 'react-native';
+import { View, Alert, StyleSheet, FlatList, TextInput } from 'react-native';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import { GLBottomModal, GLHeader, GLText, GLTextEditable } from '../Components/GL-Components';
 import user from '../Managers/UserManager';
@@ -20,15 +21,28 @@ const TITRES = [
 class Identity extends React.Component {
     state = {
         pseudo: user.pseudo,
+        birth: user.birth,
         email: user.email,
-        titre: user.titre,
-        modalEnabled: false
+        title: user.title,
+
+        modalEnabled: false,
+        showDateTimePicker: ''
     }
 
     back = () => { user.changePage('home'); }
     valid = () => {
+        // Check mail
+        if (this.state.email !== user.email) {
+            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+            if (reg.test(this.state.email) === false) {
+                console.error('Incorrect mail');
+                return;
+            }
+        }
+
         user.pseudo = this.state.pseudo;
-        user.titre = this.state.titre;
+        user.title = this.state.title;
+        user.birth = this.state.birth;
         user.email = this.state.email;
         user.changePage('home');
     }
@@ -36,8 +50,8 @@ class Identity extends React.Component {
     // Pseudo
     beforeEditPseudo = () => {
         Alert.alert(
-            'Changement de pseudo',
-            'Vous ne pouvez changer de pseudo qu\'une seule fois par mois, choisissez-bien !',
+            "Changement de pseudo",
+            "Vous ne pouvez changer de pseudo qu'une seule fois par mois, choisissez-bien !",
             [{ text: 'Ok' }],
             //{ cancelable: false }
         );
@@ -55,13 +69,38 @@ class Identity extends React.Component {
     toggleModal = () => {
         this.setState({ modalEnabled: !this.state.modalEnabled });
     }
-    editTitre = (newTitre) => {
-        this.setState({ modalEnabled: false, titre: newTitre });
+    editTitre = (newTitle) => {
+        this.setState({ modalEnabled: false, title: newTitle });
     }
     component_titre = ({ item }) => {
         return (
             <GLText title={item} onPress={() => this.editTitre(item)} />
         )
+    }
+
+    // Age
+    ageClick = () => {
+        this.showDTP();
+    }
+    showDTP = () => {
+        this.setState({ showDateTimePicker: 'date' });
+    }
+    hideDTP = () => {
+        this.setState({ showDateTimePicker: '' });
+    }
+    onChangeDateTimePicker = (date) => {
+        const twoDigit = (n) => ('00' + n).slice(-2);
+        
+        const YYYY = date.getFullYear();
+        const MM = twoDigit(date.getMonth() + 1);
+        const DD = twoDigit(date.getDate());
+        const selectedDate = [ YYYY, MM, DD ].join('/');
+        const age = this.calculateAge(selectedDate);
+        
+        if (age > 0) {
+            this.hideDTP();
+            this.setState({ birth: selectedDate });
+        }
     }
 
     // Mails
@@ -72,58 +111,75 @@ class Identity extends React.Component {
 
         this.setState({ email: newMail });
     }
-    
+
+    calculateAge = (birth) => {
+        const SelectedDate = new Date(birth);
+        const Today = new Date().getTime();
+        return new Date(Today - SelectedDate).getUTCFullYear() - 1970;
+    }
 
     render() {
-        return (
-            <View style={{flex: 1}}>
-                {/* Header */}
-                <GLHeader
-                    title="Identité"
-                    leftIcon='back'
-                    onPressLeft={this.back}
-                    rightIcon='check'
-                    onPressRight={this.valid}
-                />
+        const age = this.calculateAge(this.state.birth) || '?';
+        const mode = this.state.showDateTimePicker;
 
-                {/* Content */}
-                <View style={style.content}>
-                    <View style={style.containerPseudo}>
-                        <GLText style={[style.text, style.pseudoTitle]} title='Pseudo :' />
+        return (
+            <>
+                <View style={{flex: 1}}>
+                    {/* Header */}
+                    <GLHeader
+                        title="Identité"
+                        leftIcon='back'
+                        onPressLeft={this.back}
+                        rightIcon='check'
+                        onPressRight={this.valid}
+                    />
+
+                    {/* Content */}
+                    <View style={styles.content}>
+                        <GLText style={styles.text} title='PSEUDO' />
                         <GLTextEditable
-                            style={[style.text, style.pseudo]}
-                            title={this.state.pseudo}
-                            onEdit={this.editPseudo}
-                            beforeEdit={this.beforeEditPseudo}
+                            style={styles.value}
+                            value={this.state.pseudo}
+                            onChangeText={this.editPseudo}
+                            beforeChangeText={this.beforeEditPseudo}
+                        />
+                        <GLText style={styles.text} title='TITRE' />
+                        <GLText style={styles.value} title={this.state.title} onPress={this.toggleModal} color='grey' />
+                        <GLText style={styles.text} title='AGE' />
+                        <GLText style={styles.value} title={age + ' ans'} onPress={this.ageClick} color='grey' />
+                        <GLText style={styles.text} title='EMAIL' />
+                        <GLTextEditable
+                            style={styles.value}
+                            value={this.state.email}
+                            onChangeText={this.editMail}
+                            textContentType="emailAddress"
                         />
                     </View>
-                    <GLText styleText={style.text} title='Titre :' value={this.state.titre} onPress={this.toggleModal} />
-                    <GLText styleText={style.text} title='Age :' value='x ans' />
-                    <View style={style.containerPseudo}>
-                        <GLText style={[style.text, style.pseudoTitle]} title='Email :' />
-                        <GLTextEditable
-                            style={[style.text, style.pseudo]}
-                            title={this.state.email}
-                            onEdit={this.editMail}
+
+                    <GLBottomModal title='Titres' enabled={this.state.modalEnabled}>
+                        <FlatList
+                            data={TITRES}
+                            keyExtractor={(item, i) => "titre_" + i}
+                            renderItem={this.component_titre}
                         />
-                    </View>
+                    </GLBottomModal>
                 </View>
 
-                <GLBottomModal title='Titres' enabled={this.state.modalEnabled}>
-                    <FlatList
-                        data={TITRES}
-                        keyExtractor={(item, i) => "titre_" + i}
-                        renderItem={this.component_titre}
-                    />
-                </GLBottomModal>
-            </View>
+                <DateTimePickerModal
+                    date={new Date()}
+                    mode={mode}
+                    onConfirm={this.onChangeDateTimePicker}
+                    onCancel={this.hideDTP}
+                    isVisible={mode != ''}
+                />
+            </>
         )
     }
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     content: {
-        paddingHorizontal: 12,
+        paddingHorizontal: 24,
         paddingVertical: 48
     },
     containerPseudo: {
@@ -132,17 +188,17 @@ const style = StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'space-between'
     },
-    pseudoTitle: {
-        paddingLeft: 24
-    },
-    pseudo: {
-        fontSize: 20
-    },
     text: {
         textAlign: 'left',
         color: '#5AB4F0',
         fontSize: 24,
         marginBottom: 12
+    },
+    value: {
+        textAlign: 'left',
+        color: '#5AB4F0',
+        fontSize: 22,
+        marginBottom: 30
     }
 });
 

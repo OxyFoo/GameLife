@@ -12,8 +12,8 @@ class GLTextEditable extends React.Component {
     }
 
     editMode_Enable = () => {
-        if (typeof(this.props.beforeEdit) !== 'undefined') {
-            this.props.beforeEdit();
+        if (typeof(this.props.beforeChangeText) !== 'undefined') {
+            this.props.beforeChangeText();
         }
         this.setState({ editMode: true });
     }
@@ -21,14 +21,15 @@ class GLTextEditable extends React.Component {
     render() {
         return !this.state.editMode ? (
             <TouchableOpacity activeOpacity={.5} onPress={this.editMode_Enable}>
-                <GLText style={this.props.style} title={this.props.title} />
+                <GLText style={this.props.style} title={this.props.value} color='grey' />
             </TouchableOpacity>
         ) : (
             <TextInput
-                style={styles.input}
-                onChangeText={this.props.onEdit}
-                value={this.props.title}
+                style={[this.props.style, styles.input]}
+                onChangeText={this.props.onChangeText}
+                value={this.props.value}
                 placeholder="Pseudo"
+                textContentType={this.props.textContentType}
             />
         )
     }
@@ -36,14 +37,11 @@ class GLTextEditable extends React.Component {
 
 const styles = StyleSheet.create({
     input: {
-        color: '#5AB4F0',
+        margin: 0,
+        padding: 0,
+        color: '#FFFFFF',
         fontFamily: MAIN_FONT_NAME,
         fontSize: 20,
-        paddingVertical: 3,
-        paddingHorizontal: 12,
-        borderBottomColor: '#5AB4F0',
-        borderBottomWidth: 2,
-        marginBottom: 18
     }
 });
 

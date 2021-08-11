@@ -6,15 +6,8 @@ import { OptionsAnimation } from '../Components/Animations';
 
 import Loading from '../Pages/loading';
 import Home from '../Pages/home';
-import Calendar from '../Pages/calendar';
-import Activity from '../Pages/activity';
-import Skills from '../Pages/skills';
-import SkillsEdition from '../Pages/skillsEdition';
 import Identity from '../Pages/identity';
 import Settings from '../Pages/settings';
-import Characteristics from '../Pages/characteristics';
-import Charactescription from '../Pages/charactescription';
-import Experience from '../Pages/experience';
 
 class PageManager extends React.Component{
     state = {
@@ -22,12 +15,11 @@ class PageManager extends React.Component{
         page2: '',
         animOpacity1: new Animated.Value(0),
         animOpacity2: new Animated.Value(0),
-        arguments: []
+        arguments: undefined
     }
 
     componentDidMount() {
         user.changePage = this.changePage;
-        this.changePage('loading');
     }
 
     changePage = (newpage, args) => {
@@ -81,9 +73,13 @@ class PageManager extends React.Component{
 
         const fullscreen = { width: '100%', height: '100%' }
 
-        const inter = {
+        /*const inter = {
             inputRange:  [0, 0.4, 0.8, 1],
             outputRange: [0, 0.8, 0.2, 1]
+        };*/
+        const inter = {
+            inputRange:  [0, 1],
+            outputRange: [0, 1]
         };
 
         return (

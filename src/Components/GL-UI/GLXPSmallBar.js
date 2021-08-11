@@ -3,21 +3,28 @@ import { StyleSheet, View } from 'react-native';
 
 import GLText from './GLText';
 
-function GLXPBar(props) {
+function GLXPSmallBar(props) {
+    const title = props.title;
     const style = props.style;
     const valueMax = props.max || 10;
     const value = Math.min(props.value, valueMax) || 0;
 
-    const valueText = value + ' / ' + valueMax + ' XP';
+    const valueText = value + '/' + valueMax;
     const valueInt = value / valueMax * 100 + '%';
 
     return (
         <View style={style}>
             <View style={styles.containerXP}>
+
+                <View style={styles.row}>
+                    <GLText style={styles.textXPTitle} title={title} color='grey' />
+                    <GLText style={styles.textXP} title={'LVL X'} color='grey' />
+                </View>
                 <View style={styles.background}>
                     <View style={[styles.fill, { width: valueInt }]} />
-                    <GLText style={styles.textXP} title={valueText} />
                 </View>
+                <GLText style={styles.textXP} title={valueText} color='grey' />
+
             </View>
         </View>
     )
@@ -25,29 +32,35 @@ function GLXPBar(props) {
 
 const styles = StyleSheet.create({
     containerXP: {
+        marginVertical: 6,
     },
     background: {
         width: '100%',
         padding: 0,
-        borderWidth: 2,
-        borderColor: '#FFFFFF'
+        borderBottomWidth: 3,
+        borderColor: '#343434'
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     textXP: {
         paddingVertical: 6,
         paddingRight: 4,
-        fontSize: 14,
+        fontSize: 10,
         textAlign: 'right'
+    },
+    textXPTitle: {
+        marginLeft: 8,
+        fontSize: 18
     },
     fill: {
         position: 'absolute',
         top: 0,
         left: 0,
-        height: '100%',
-
-        paddingVertical: 3,
-        paddingHorizontal: 0,
-        backgroundColor: '#C2C2C2'
+        height: 3,
+        backgroundColor: '#FFFFFF'
     }
 });
 
-export default GLXPBar;
+export default GLXPSmallBar;

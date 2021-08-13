@@ -1,10 +1,10 @@
-import DeviceInfo from 'react-native-device-info';
-
 import langManager from "./LangManager";
 import ServManager from "./ServManager";
 import DataStorage from './DataStorage';
 
 class UserManager {
+    conn = new ServManager();
+
     constructor() {
         // this.changePage(pageName, argument);
         // Change page with animation and arg
@@ -15,7 +15,7 @@ class UserManager {
         this.pseudo = 'Player-XXXX';
         this.title = 'Titre';
         this.birth = '';
-        this.email = 'Aucun';
+        this.email = '';
         this.xp = 0;
 
         this.stats = {
@@ -32,23 +32,15 @@ class UserManager {
             //new Skill('skill1', 10, 'DD/MM/YY')
         ];
 
-        // Device informations
-        const DeviceID = DeviceInfo.getUniqueId();
-        const DeviceName = DeviceInfo.getDeviceNameSync();
-        const BuildID = DeviceInfo.getBuildIdSync();
-        const deviceInformations = {
-            'DeviceID': DeviceID,
-            'DeviceName': DeviceName,
-            'BuildID': BuildID
-        };
-
         // Internet
         this.conn = new ServManager();
-        this.conn.getToken(deviceInformations);
 
         // Data storage
         this.storage = new DataStorage();
     }
+
+    isConnected = this.conn.isConnected;
+    refreshAccount = this.conn.refreshAccount;
 }
 
 class Stat {

@@ -31,10 +31,10 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * Device refusé
     - Blacklist du device dans la BDD
 ## Serveur
-* Token = random(32)
+* Token = Crypt(random, KeyB)
 * getKey
-    * Input : BuildID (chiffré avec la clé A)
-    * Process : Compare le BuildID avec une liste de BuildID
+    * Input : App hash (chiffré avec la clé A)
+    * Process : Compare l'app hash avec une liste interne
     * Return : Clé B (chiffré avec la clé A) ou vide si BuildID incorrect
 * getToken
     * Input : DeviceName & DeviceID (chiffrés (séparéments) avec la clé B)

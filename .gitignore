@@ -74,4 +74,4 @@ babel.config.js
 .vscode/
 metro.config.js
 ressources/templates/*.psd
-Server
+Server/config.php

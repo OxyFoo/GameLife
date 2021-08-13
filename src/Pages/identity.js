@@ -22,7 +22,7 @@ class Identity extends React.Component {
     state = {
         pseudo: user.pseudo,
         birth: user.birth,
-        email: user.email,
+        email: user.email || 'Aucune',
         title: user.title,
 
         modalEnabled: false,
@@ -32,7 +32,7 @@ class Identity extends React.Component {
     back = () => { user.changePage('home'); }
     valid = () => {
         // Check mail
-        if (this.state.email !== user.email) {
+        if (this.state.email !== '' && this.state.email !== user.email) {
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
             if (reg.test(this.state.email) === false) {
                 console.error('Incorrect mail');
@@ -44,6 +44,7 @@ class Identity extends React.Component {
         user.title = this.state.title;
         user.birth = this.state.birth;
         user.email = this.state.email;
+        user.refreshAccount();
         user.changePage('home');
     }
 
@@ -136,6 +137,7 @@ class Identity extends React.Component {
 
                     {/* Content */}
                     <View style={styles.content}>
+                        <GLText style={styles.value} title={user.conn.isConnected() ? '1' : '0'} color='grey' />
                         <GLText style={styles.text} title='PSEUDO' />
                         <GLTextEditable
                             style={styles.value}

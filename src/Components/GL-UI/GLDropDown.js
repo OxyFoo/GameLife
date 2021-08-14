@@ -6,7 +6,7 @@ import GLIconButton from './GLIconButton';
 
 class GLDropDown extends React.Component {
     state = {
-        opened: false
+        opened: true
     }
 
     toggleVisibility = () => {
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     },
     drop: {
         position: 'absolute',
-        top: '75%',
+        top: 60,
         left: 0,
         right: 0,
 

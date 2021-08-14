@@ -1,35 +1,39 @@
-import user from "./UserManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import langManager from "./LangManager";
 
 const STORAGE_USER = '@params/user';
 const STORAGE_DATA = '@params/data';
 
 class DataStorage {
-    constructor() {
+    constructor(user) {
+        this.user = user;
     }
 
     Save() {
-        const online = user.isConnected();
+        const online = this.user.isConnected();
         const json = {
-            'pseudo': user.pseudo,
-            'title': user.title,
-            'birth': user.birth,
-            'email': user.email,
-            'xp': user.xp,
-            'stats': user.stats,
-            'skills': user.skills
+            'lang': langManager.currentLangageKey,
+            'pseudo': this.user.pseudo,
+            'title': this.user.title,
+            'birth': this.user.birth,
+            'email': this.user.email,
+            'xp': this.user.xp,
+            'stats': this.user.stats,
+            'skills': this.user.skills
         };
 
         // Local save
         AsyncStorage.setItem(STORAGE_USER, JSON.stringify(json));
+        console.log('Local save');
 
         if (online) {
             // Online save
+            console.log('Online save');
         }
     }
     
-    async Load() {
-        const online = user.isConnected();
+    async Load(callback) {
+        const online = this.user.isConnected();
         let json;
 
         // Local load
@@ -37,16 +41,23 @@ class DataStorage {
             if (!err && t != null) json = JSON.parse(t);
         });
 
-        user.pseudo = json['pseudo'];
-        user.title = json['title'];
-        user.birth = json['birth'];
-        user.email = json['email'];
-        user.xp = json['xp'];
-        user.stats = json['stats'];
-        user.skills = json['skills'];
+        langManager.setLangage(json['lang']);
+        this.user.pseudo = json['pseudo'];
+        this.user.title = json['title'];
+        this.user.birth = json['birth'];
+        this.user.email = json['email'];
+        this.user.xp = json['xp'];
+        this.user.stats = json['stats'];
+        this.user.skills = json['skills'];
+        console.log('Local load');
 
         if (online) {
             // Online load
+            console.log('Online load');
+        }
+
+        if (typeof(callback) !== 'undefined') {
+            callback();
         }
     }
 }

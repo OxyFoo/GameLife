@@ -33,12 +33,12 @@
                 // Waiting mail confirmation
                 $output['status'] = 'waitMailConfirmation';
             } else if ($perm === 1) {
-                if ($device['Banned'] == 0) {
+                if ($account['Banned'] == 0) {
                     // OK
-                    $output['status'] = 'OK';
+                    $output['status'] = 'ok';
                     $output['key'] = $db->GetPrivateKey($account);
                 } else {
-                    $output['status'] = 'Ban';
+                    $output['status'] = 'ban';
                 }
             } else {
                 // No device in account

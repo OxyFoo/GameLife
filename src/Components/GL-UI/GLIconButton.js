@@ -23,6 +23,7 @@ const Icons = {
     reject: require(iconsDir + 'reject.png'),
     reset: require(iconsDir + 'reset.png'),
     save: require(iconsDir + 'save.png'),
+    signout: require(iconsDir + 'signout.png'),
     tiktok: require(iconsDir + 'tiktok.png'),
     trash: require(iconsDir + 'trash.png'),
     unchecked: require(iconsDir + 'unchecked.png')

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
 import user from '../Managers/UserManager';
-import { GLHeader, GLText, GLXPBar, GLXPSmallBar } from '../Components/GL-Components';
 import langManager from '../Managers/LangManager';
+import { GLHeader, GLText, GLXPBar, GLXPSmallBar } from '../Components/GL-Components';
 
 class Home extends React.Component {
     constructor(props) {
@@ -14,9 +14,10 @@ class Home extends React.Component {
         }
     }
     openIdentity = () => { user.changePage('identity'); }
+    openSettings = () => { user.changePage('settings'); }
 
     statComponent = ({item}) => {
-        const title = langManager.currentLangage['statistics']['names'][item.key];
+        const title = langManager.curr['statistics']['names'][item.key];
         const value = item.value;
 
         return (
@@ -28,7 +29,11 @@ class Home extends React.Component {
         return (
             <View style={styles.parentView}>
                 {/* Header */}
-                <GLHeader title="GAME LIFE" />
+                <GLHeader
+                    title="Game Life"
+                    rightIcon="gear"
+                    onPressRight={this.openSettings}
+                />
 
                 {/* User - main informations */}
                 <View style={styles.containerHeader}>
@@ -55,9 +60,9 @@ class Home extends React.Component {
                     <View style={styles.containerLevelColumn}>
                         {/* Level */}
                         <View style={styles.block}>
-                            <GLText style={styles.textLevel} title='LEVEL XX' />
-                            <GLText style={styles.textLevelTotal} title='XP TOTAL XX' color='grey' />
-                            <GLText style={styles.textLevelAverage} title='AVERAGE XX XP/DAY' color='grey' />
+                            <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + 'XX'} />
+                            <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + 'XX'} color='grey' />
+                            <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', 'XX')} color='grey' />
                         </View>
                         {/* Calendar */}
                         <View style={[styles.block, styles.blockCalendar]}>

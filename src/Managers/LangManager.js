@@ -1,15 +1,18 @@
 import fr from '../../ressources/langs/fr.json';
+import en from '../../ressources/langs/en.json';
 
 class LangManager {
     constructor(defaultLang = 'fr') {
         this.langages = {
-            'fr': fr
+            'fr': fr,
+            'en': en
         };
         this.setLangage(defaultLang);
     }
 
     setLangage(lang) {
-        this.currentLangage = this.langages[lang];
+        this.currentLangageKey = lang;
+        this.curr = this.langages[lang];
     }
 
     switchLangage() {
@@ -17,13 +20,28 @@ class LangManager {
         let newlang = null;
         for (let lang in this.langages) {
             if (select) { newlang = lang; break; }
-            if (this.langages[lang] == this.currentLangage) select = true;
+            if (this.langages[lang] == this.curr) select = true;
         }
         if (!select || newlang == null)
             newlang = Object.keys(this.langages)[0];
         if (newlang != null)
-            this.currentLangage = this.langages[newlang];
+            this.curr = this.langages[newlang];
         return newlang;
+    }
+
+    getOtherLangs() {
+        let langs = [];
+        for (let l in this.langages) {
+            if (this.langages[l] === this.curr) {
+                continue;
+            }
+            const item = {
+                key: l,
+                value: this.langages[l]['name']
+            };
+            langs.push(item);
+        }
+        return langs;
     }
 }
 

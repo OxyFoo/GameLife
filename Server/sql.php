@@ -213,7 +213,8 @@
         public function GetPrivateKey($account) {
             $cipher = $this->keyB . $account['Email'] . $account['ID'] . $account['FirstConnDate'];
             $result = $this->Encrypt($cipher);
-            $key = substr($result, 0, 16);
+            $key = substr($result, 0, 32);
+            return $key;
         }
 
         public function Encrypt($str) {

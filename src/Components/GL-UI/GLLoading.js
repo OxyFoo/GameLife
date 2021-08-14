@@ -6,13 +6,13 @@ const logo = require(logoDir + 'loading.png');
 
 function GLLoading(props) {
     return (
-        <View style={Style.content}>
-            <Image style={Style.image} source={logo} />
+        <View style={styles.content}>
+            <Image style={styles.image} source={logo} />
         </View>
     )
 }
 
-const Style = StyleSheet.create({
+const styles = StyleSheet.create({
     content: {
         display: 'flex',
         alignItems: 'center'

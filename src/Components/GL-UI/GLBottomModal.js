@@ -51,7 +51,7 @@ class GLBottomModal extends React.Component {
 const styles = StyleSheet.create({
     containerModal: {
         width: '100%',
-        height: '50%',
+        height: '30%',
 
         position: 'absolute',
         left: 0,

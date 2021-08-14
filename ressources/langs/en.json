@@ -1,0 +1,53 @@
+{
+    "name": "English",
+
+    "level": {
+        "level": "Level",
+        "total": "TOTAL XP",
+        "average": "AVERAGE {} XP/DAY"
+    },
+
+    "identity": {
+        "page-title": "Identity",
+
+        "name-pseudo": "Pseudo",
+        "name-title": "Title",
+        "name-age": "Age",
+        "name-email": "EMail",
+
+        "value-age": "{} ans",
+
+        "placeholder-pseudo": "Pseudo",
+        "placeholder-email": "Mail adress",
+        "empty-email": "None"
+    },
+
+    "settings": {
+        "page-title": "Settings",
+
+        "input-langage": "Langages",
+        "input-theme": "Themes",
+        "input-disconnect": "Disconnect"
+    },
+
+    "statistics": {
+        "names": {
+            "sag": "Wisdom",
+            "int": "Intelligence",
+            "conf": "Confidence",
+            "for": "Strength",
+            "end": "Stamina",
+            "agil": "Agility",
+            "dex": "Dexterity"
+        },
+        "descriptions": {
+            "sag": "Description 1",
+            "int": "Description 2",
+            "conf": "Description",
+            "for": "Description",
+            "end": "Description",
+            "agil": "Description",
+            "dex": "Description"
+        }
+    }
+}

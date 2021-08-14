@@ -2,8 +2,9 @@ import * as React from 'react';
 import { View, Alert, StyleSheet, FlatList, TextInput } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import { GLBottomModal, GLHeader, GLText, GLTextEditable } from '../Components/GL-Components';
 import user from '../Managers/UserManager';
+import langManager from '../Managers/LangManager';
+import { GLBottomModal, GLHeader, GLText, GLTextEditable } from '../Components/GL-Components';
 
 const TITRES = [
     'Test 1',
@@ -22,7 +23,7 @@ class Identity extends React.Component {
     state = {
         pseudo: user.pseudo,
         birth: user.birth,
-        email: user.email || 'Aucune',
+        email: user.email,
         title: user.title,
 
         modalEnabled: false,
@@ -32,6 +33,7 @@ class Identity extends React.Component {
     back = () => { user.changePage('home'); }
     valid = () => {
         // Check mail
+        //if (!([ '', user.email ].includes(this.state.email))) {
         if (this.state.email !== '' && this.state.email !== user.email) {
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
             if (reg.test(this.state.email) === false) {
@@ -39,7 +41,7 @@ class Identity extends React.Component {
                 return;
             }
         }
-
+        
         user.pseudo = this.state.pseudo;
         user.title = this.state.title;
         user.birth = this.state.birth;
@@ -110,7 +112,7 @@ class Identity extends React.Component {
             return;
         }
 
-        this.setState({ email: newMail });
+        this.setState({ email: newMail.trim() });
     }
 
     calculateAge = (birth) => {
@@ -128,7 +130,7 @@ class Identity extends React.Component {
                 <View style={{flex: 1}}>
                     {/* Header */}
                     <GLHeader
-                        title="Identité"
+                        title={langManager.curr['identity']['page-title']}
                         leftIcon='back'
                         onPressLeft={this.back}
                         rightIcon='check'
@@ -137,24 +139,27 @@ class Identity extends React.Component {
 
                     {/* Content */}
                     <View style={styles.content}>
-                        <GLText style={styles.value} title={user.conn.isConnected() ? '1' : '0'} color='grey' />
-                        <GLText style={styles.text} title='PSEUDO' />
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-pseudo'].toUpperCase()} />
                         <GLTextEditable
                             style={styles.value}
                             value={this.state.pseudo}
                             onChangeText={this.editPseudo}
                             beforeChangeText={this.beforeEditPseudo}
+                            placeholder={langManager.curr['identity']['placeholder-pseudo']}
                         />
-                        <GLText style={styles.text} title='TITRE' />
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
                         <GLText style={styles.value} title={this.state.title} onPress={this.toggleModal} color='grey' />
-                        <GLText style={styles.text} title='AGE' />
-                        <GLText style={styles.value} title={age + ' ans'} onPress={this.ageClick} color='grey' />
-                        <GLText style={styles.text} title='EMAIL' />
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
+                        <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='grey' />
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()} />
+                        <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='grey' />
                         <GLTextEditable
                             style={styles.value}
                             value={this.state.email}
+                            defaultValue={langManager.curr['identity']['empty-email']}
                             onChangeText={this.editMail}
                             textContentType="emailAddress"
+                            placeholder={langManager.curr['identity']['placeholder-email']}
                         />
                     </View>
 

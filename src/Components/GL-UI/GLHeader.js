@@ -9,27 +9,27 @@ function GLHeader(props) {
     const RightIcon_Press = () => { if (props.rightIcon && props.onPressRight) props.onPressRight(); };
     const RightIcon_LongPress = () => { if (props.rightIcon && props.onLongPressRight) props.onLongPressRight(); };
 
-    const title = props.title;
-    const style = [ Style.header, props.style ];
+    const title = props.title.toUpperCase();
+    const style = [ styles.header, props.style ];
     const leftIcon = props.leftIcon || '';
     const rightIcon = props.rightIcon || '';
 
     return (
         <>
             <GLText title={title} style={style} />
-            <GLIconButton style={Style.leftIcon} icon={leftIcon} onPress={LeftIcon_Press} onLongPress={LeftIcon_LongPress} />
-            <GLIconButton style={Style.rightIcon} icon={rightIcon} onPress={RightIcon_Press} onLongPress={RightIcon_LongPress} />
-            <View style={Style.separator} />
+            <GLIconButton style={styles.leftIcon} icon={leftIcon} onPress={LeftIcon_Press} onLongPress={LeftIcon_LongPress} />
+            <GLIconButton style={styles.rightIcon} icon={rightIcon} onPress={RightIcon_Press} onLongPress={RightIcon_LongPress} />
+            <View style={styles.separator} />
         </>
     )
 }
 
-const Style = StyleSheet.create({
+const styles = StyleSheet.create({
     header: {
         width: '100%',
         color: '#5AB4F0',
-        padding: 14,
-        fontSize: 38,
+        padding: 20,
+        fontSize: 30,
         backgroundColor: '#000000'
     },
     separator: {

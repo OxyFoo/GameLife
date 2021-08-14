@@ -1,40 +1,114 @@
-import CryptoJS from "react-native-crypto-js";
+import { NativeModules } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
-import user from "./UserManager";
-
+const AES = NativeModules.Aes;
 const URL = 'https://oxyfoo.com/App/GameLife/app.php';
 
+const TIMER_LONG = 60 * 1000;
+const TIMER_SHORT = 10 * 1000;
+
+const STATUS = {
+    OFFLINE  : 'offline',
+    CONNECTED: 'ok',
+    BLACKLIST: 'blacklist',
+    WAITMAIL : 'waitMailConfirmation',
+    BANNED   : 'ban',
+    SIGNIN   : 'signin'
+};
+
 class ServManager {
-    constructor() {
-        this.online = false;
+    constructor(user) {
+        this.user = user;
+        this.online = false;    // Server ping
+        this.status = STATUS.OFFLINE;
+
+        this.iv = '20c3f6cb9dc45ee7524d2b252bac7d5e';
         this.key = '';
 
         // Device informations
         this.deviceID = DeviceInfo.getUniqueId();
         this.deviceName = DeviceInfo.getDeviceNameSync();
 
-        // Start
-        this.refreshAccount();
+        this.timeout;
     }
 
     isConnected = () => {
-        return this.key.length === 16;
+        return this.key.length === 64;
     }
 
-    checkConnectivity = () => {
+    refreshAccount = () => {
+        const pingResult = () => {
+            if (!this.online) {
+                loop(TIMER_LONG);
+            } else {
+                if (!this.isConnected()) {
+                    this.connect(connectResult);
+                }
+            }
+        };
+
+        const connectResult = (status, key) => {
+            if (typeof(status) === 'undefined') {
+                loop(TIMER_SHORT, 'Invalid response');
+                return;
+            }
+            
+            const index_status = Object.values(STATUS).indexOf(status);
+            if (index_status !== -1) this.status = STATUS[Object.keys(STATUS)[index_status]];
+
+            if (this.status === STATUS.CONNECTED) {
+                if (typeof(key) === 'undefined' || key.length !== 32) {
+                    loop(TIMER_SHORT, 'Invalid key length');
+                    return;
+                } else {
+                    this.key = this.stringToHex(key);
+                    // Online load
+                }
+            } else {
+                this.key = '';
+            }
+            this.user.changePage();
+        };
+
+        const loop = (duration, error) => {
+            if (typeof(error) !== 'undefined') {
+                console.error(error);
+            }
+            if (typeof(duration) === 'number') {
+                this.timeout = setTimeout(this.refreshAccount, duration);
+            }
+        }
+
+        clearTimeout(this.timeout);
+        if (this.user.email) {
+            this.checkConnectivity(pingResult);
+        } else if (this.status !== STATUS.OFFLINE) {
+            this.status = STATUS.OFFLINE;
+        }
+    }
+
+    checkConnectivity = (callback) => {
         const pingResponse = (result) => {
             const status = result['status'];
             if (typeof(status) === 'undefined' || status != 'OK') {
                 console.log('Server not found');
                 this.online = false;
+                if (typeof(callback) !== 'undefined') {
+                    callback();
+                }
                 return;
             }
+            console.log('ping ok');
             this.online = true;
+            if (typeof(callback) !== 'undefined') {
+                callback();
+            }
         }
         const pingError = () => {
             console.log('Server not found');
-            this.online = false;
+            if (typeof(callback) !== 'undefined') {
+                callback();
+            }
         }
 
         let data = {
@@ -43,53 +117,28 @@ class ServManager {
         this.Request(URL, data, pingResponse, pingError);
     }
 
-    refreshAccount = () => {
-        let loop = false;
-        if (user.email) {
-            if (!this.online) {
-                this.checkConnectivity();
-                loop = true;
-            } else {
-                if (!this.isConnected()) {
-                    this.getKey();
-                    loop = true;
-                }
-            }
-        }
-        if (loop) {
-            setTimeout(this.refreshAccount, 10*1000);
-        }
-    }
-
-    getKey = () => {
+    connect = (callback) => {
         const tokenResponse = (result) => {
+            console.log(result);
             const status = result['status'];
-            if (typeof(status) === 'undefined') {
-                console.error('Invalid response');
-                return;
-            }
-
             const key = result['key'];
-            if (key.length !== 16) {
-                console.error('Invalid key length');
-                return;
+            if (typeof(callback) !== 'undefined') {
+                callback(status, key);
             }
-
-            this.key = key;
-            console.log('Key : ' + key);
-            user.changePage('');
         }
 
         let data = {
             'action': 'gettoken',
             'deviceID': this.deviceID,
             'deviceName': this.deviceName,
-            'email': user.email
+            'email': this.user.email
         }
         this.Request(URL, data, tokenResponse);
     }
 
-    Connect = () => {
+    disconnect = () => {
+        this.key = '';
+        this.status = STATUS.OFFLINE;
     }
 
     Request = (url, data, callback, errorCallback, method, headers) => {
@@ -116,32 +165,22 @@ class ServManager {
                 callback(json);
             }
         }).catch((error) => {
+            this.online = false;
             console.error(error);
             if (typeof(errorCallback) === 'function') {
                 errorCallback(error);
             }
         });
     }
-}
 
-class Crypto {
-    #iv = '20c3f6cb9dc45ee7524d2b252bac7d5e';
-    #key =  'z9KbaqlO4T9wq71ze!_:{CW?icxYl?;}';
-    /*constructor() {
-        this.#key = this.#stringToHex(this.#key);
-    }*/
-
-    encryptData = (text) => { return CryptoJS.AES.encrypt(CryptoJS.algo.AES, this.#key, text).toString(); }
-    decryptData = (text) => { return CryptoJS.AES.decrypt(CryptoJS.algo.AES, this.#key, text).toString(); }
-
-    /*encryptData = (text) => AES.encrypt(text, this.#key, this.#iv).then(cipher => cipher);
-    decryptData = (text) => AES.decrypt(text, this.#key, this.#iv).then(cipher => cipher);
-    #stringToHex = (text) => {
+    encryptData = (text, key) => AES.encrypt(text, key, this.iv).then(cipher => cipher);
+    decryptData = (text, key) => AES.decrypt(text, key, this.iv).then(cipher => cipher);
+    stringToHex = (text) => {
         return Array.from(text).map(c =>
             c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) :
             encodeURIComponent(c).replace(/\%/g,'').toLowerCase()
         ).join('');
-    }*/
+    }
 }
 
 export default ServManager;

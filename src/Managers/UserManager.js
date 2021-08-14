@@ -3,7 +3,7 @@ import ServManager from "./ServManager";
 import DataStorage from './DataStorage';
 
 class UserManager {
-    conn = new ServManager();
+    conn = new ServManager(this);
 
     constructor() {
         // this.changePage(pageName, argument);
@@ -31,12 +31,24 @@ class UserManager {
         this.skills = [
             //new Skill('skill1', 10, 'DD/MM/YY')
         ];
-
-        // Internet
-        this.conn = new ServManager();
-
+        
         // Data storage
-        this.storage = new DataStorage();
+        this.storage = new DataStorage(this);
+        this.storage.Load(() => {
+            // Internet
+            this.refreshAccount();
+        });
+    }
+
+    disconnect = () => {
+        this.conn.disconnect();
+        this.email = '';
+        this.changePage();
+        this.storage.Save();
+    }
+    unmount = () => {
+        console.log('unmount');
+        this.storage.Save();
     }
 
     isConnected = this.conn.isConnected;

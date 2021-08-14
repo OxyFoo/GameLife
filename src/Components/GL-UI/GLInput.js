@@ -9,14 +9,14 @@ function GLInput(props) {
     //onChangeText={this.setStateMail}
     //autoCompleteType="email"
     return (
-        <View style={[props.style, Style.containerSelection]}>
-            <GLText style={Style.name} title={name + ' :'} />
-            <TextInput style={Style.input} />
+        <View style={[props.style, styles.containerSelection]}>
+            <GLText style={styles.name} title={name + ' :'} />
+            <TextInput style={styles.input} />
         </View>
     )
 }
 
-const Style = StyleSheet.create({
+const styles = StyleSheet.create({
     containerSelection: {
         display: 'flex',
         flexDirection: 'row',

@@ -6,6 +6,7 @@ import GLXPBar from './GL-UI/GLXPBar';
 import GLXPSmallBar from './GL-UI/GLXPSmallBar';
 import GLHeader from './GL-UI/GLHeader';
 import GLLoading from './GL-UI/GLLoading';
+import GLDropDown from './GL-UI/GLDropDown';
 import GLBottomModal from './GL-UI/GLBottomModal';
 
 export {
@@ -17,5 +18,6 @@ export {
     GLXPSmallBar,
     GLHeader,
     GLLoading,
+    GLDropDown,
     GLBottomModal
 }

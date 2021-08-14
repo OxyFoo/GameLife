@@ -1,4 +1,35 @@
 {
+    "name": "Français",
+
+    "level": {
+        "level": "Niveau",
+        "total": "XP total",
+        "average": "En moyenne {} xp/jour"
+    },
+
+    "identity": {
+        "page-title": "Identité",
+
+        "name-pseudo": "Pseudo",
+        "name-title": "Titre",
+        "name-age": "Age",
+        "name-email": "EMail",
+
+        "value-age": "{} ans",
+
+        "placeholder-pseudo": "Pseudo",
+        "placeholder-email": "Adresse mail",
+        "empty-email": "Aucune"
+    },
+
+    "settings": {
+        "page-title": "Paramètres",
+
+        "input-langage": "Langues",
+        "input-theme": "Thèmes",
+        "input-disconnect": "Se déconnecter"
+    },
+
     "statistics": {
         "names": {
             "sag": "Sagesse",

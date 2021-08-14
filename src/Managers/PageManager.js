@@ -23,7 +23,7 @@ class PageManager extends React.Component{
     }
 
     changePage = (newpage, args) => {
-        if (newpage === '') { this.forceUpdate(); return; }
+        if (typeof(newpage) === 'undefined' || newpage === '') { this.forceUpdate(); return; }
         if (newpage == (this.state.page1 || this.state.page2)) return;
 
         if (!this.GetPageContent(newpage)) {

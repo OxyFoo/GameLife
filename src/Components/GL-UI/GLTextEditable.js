@@ -18,15 +18,17 @@ class GLTextEditable extends React.Component {
     render() {
         return !this.state.editMode ? (
             <TouchableOpacity activeOpacity={.5} onPress={this.editMode_Enable}>
-                <GLText style={this.props.style} title={this.props.value} color='grey' />
+                <GLText style={this.props.style} title={this.props.value || this.props.defaultValue} color='grey' />
             </TouchableOpacity>
         ) : (
             <TextInput
                 style={[this.props.style, styles.input]}
                 onChangeText={this.props.onChangeText}
                 value={this.props.value}
-                placeholder="Pseudo"
+                placeholder={this.props.placeholder}
+                placeholderTextColor='#C2C2C2'
                 textContentType={this.props.textContentType}
+                autoFocus={true}
             />
         )
     }

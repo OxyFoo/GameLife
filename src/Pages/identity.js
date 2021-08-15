@@ -46,7 +46,9 @@ class Identity extends React.Component {
         user.title = this.state.title;
         user.birth = this.state.birth;
         user.email = this.state.email;
-        user.refreshAccount();
+
+        user.saveData();
+        user.conn.AsyncRefreshAccount();
         user.changePage('home');
     }
 

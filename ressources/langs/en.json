@@ -1,6 +1,10 @@
 {
     "name": "English",
 
+    "loading": {
+        "text-title": "Loading"
+    },
+
     "level": {
         "level": "Level",
         "total": "TOTAL XP",

@@ -210,22 +210,37 @@
             SendSigninMail($email, $deviceName, $text_accept, $text_reject);
         }
 
-        public function GetPrivateKey($account) {
-            $cipher = $this->keyB . $account['Email'] . $account['ID'] . $account['FirstConnDate'];
-            $result = $this->Encrypt($cipher);
-            $key = substr($result, 0, 32);
-            return $key;
+        public function GeneratePrivateToken($accountID, $deviceID) {
+            $random = RandomString(16);
+            $cipher = "$deviceID\t$accountID\t$random";
+            $middle = $this->Encrypt($cipher);
+            $result = $this->Encrypt($middle, $this->keyB);
+            return $result;
         }
 
-        public function Encrypt($str) {
+        public function GetDataFromToken($token) {
+            $middle = $this->Decrypt($token, $this->keyB);
+            $data = $this->Decrypt($middle);
+
+            list($deviceID, $accountID, $random) = explode("\t", $data);
+            return array('deviceID' => $deviceID, 'accountID' => $accountID);
+        }
+
+        public function GetQuotes() {
+            return $this->QueryArray("SELECT * FROM `Quotes`");
+        }
+
+        public function Encrypt($str, $key = null) {
             $output = "";
-            if ($str) $output = openssl_encrypt($str, $this->algorithm, $this->keyA);
+            $k = $key === null ? $this->keyA : $key;
+            if ($str) $output = openssl_encrypt($str, $this->algorithm, $k);
             return $output;
         }
 
-        public function Decrypt($str) {
+        public function Decrypt($str, $key = null) {
             $output = "";
-            if ($str) $output = openssl_decrypt($str, $this->algorithm, $this->keyA);
+            $k = $key === null ? $this->keyA : $key;
+            if ($str) $output = openssl_decrypt($str, $this->algorithm, $k);
             return $output;
         }
     }

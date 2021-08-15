@@ -1,6 +1,8 @@
 import langManager from "./LangManager";
 import ServManager from "./ServManager";
-import DataStorage from './DataStorage';
+import DataManager, { STORAGE } from './DataManager';
+
+import quotes from '../../ressources/langs/quotes.json';
 
 class UserManager {
     conn = new ServManager(this);
@@ -31,28 +33,67 @@ class UserManager {
         this.skills = [
             //new Skill('skill1', 10, 'DD/MM/YY')
         ];
-        
-        // Data storage
-        this.storage = new DataStorage(this);
-        this.storage.Load(() => {
-            // Internet
-            this.refreshAccount();
-        });
+
+        this.titles = [];
+        this.quotes = quotes;
     }
 
     disconnect = () => {
         this.conn.disconnect();
         this.email = '';
         this.changePage();
-        this.storage.Save();
+        //this.storage.Save();
     }
     unmount = () => {
         console.log('unmount');
-        this.storage.Save();
+        //this.storage.Save();
+    }
+
+    saveData() {
+        const data = {
+            'lang': langManager.currentLangageKey,
+            'pseudo': this.pseudo,
+            'title': this.title,
+            'birth': this.birth,
+            'email': this.email,
+            'xp': this.xp,
+            'stats': this.stats,
+            'skills': this.skills,
+            'titles': this.titles,
+            'quotes': this.quotes
+        };
+        DataManager.Save(STORAGE.USER, data, this.isConnected());
+    }
+    async loadData() {
+        const data = await DataManager.Load(STORAGE.USER, this.isConnected());
+
+        langManager.setLangage(data['lang']);
+        this.pseudo = data['pseudo'];
+        this.title = data['title'];
+        this.birth = data['birth'];
+        this.email = data['email'];
+        this.xp = data['xp'];
+        this.stats = data['stats'];
+        this.skills = data['skills'];
+        this.titles = data['titles'];
+        this.quotes = data['quotes'];
+    }
+
+    async loadAllData() {
+        await this.loadData();
+
+        const data = await this.conn.getInternalData();
+        const status = data['status'];
+
+        if (status === 'ok') {
+            this.titles = data['titles'];
+            this.quotes = data['quotes'];
+        }
+
+        this.saveData();
     }
 
     isConnected = this.conn.isConnected;
-    refreshAccount = this.conn.refreshAccount;
 }
 
 class Stat {

@@ -15,7 +15,7 @@ class PageManager extends React.Component{
         page2: '',
         animOpacity1: new Animated.Value(0),
         animOpacity2: new Animated.Value(0),
-        arguments: undefined
+        arguments: {}
     }
 
     componentDidMount() {
@@ -23,17 +23,22 @@ class PageManager extends React.Component{
     }
 
     changePage = (newpage, args) => {
-        if (typeof(newpage) === 'undefined' || newpage === '') { this.forceUpdate(); return; }
-        if (newpage == (this.state.page1 || this.state.page2)) return;
+        if (typeof(args) !== 'undefined') {
+            this.setState({ arguments: args });
+        }
+
+        if (typeof(newpage) === 'undefined' || newpage === '') {
+            this.forceUpdate(); return;
+        }
+
+        if (newpage == (this.state.page1 || this.state.page2)) {
+            return;
+        }
 
         if (!this.GetPageContent(newpage)) {
             console.error('Calling an incorrect page');
             return;
         };
-
-        if (typeof(args) !== 'undefined') {
-            this.setState({ arguments: args });
-        }
 
         if (!this.state.page1) {
             // Clear page 2
@@ -53,17 +58,10 @@ class PageManager extends React.Component{
     GetPageContent = (page) => {
         let p;
         switch (page) {
-            case 'loading': p = <Loading />; break;
+            case 'loading': p = <Loading args={this.state.arguments} />; break;
             case 'home': p = <Home />; break;
-            case 'calendar': p = <Calendar />; break;
-            case 'activity': p = <Activity />; break;
-            case 'skills': p = <Skills />; break;
-            case 'skillsEdition': p = <SkillsEdition args={this.state.arguments} />; break;
             case 'identity': p = <Identity />; break;
             case 'settings': p = <Settings />; break;
-            case 'experience': p = <Experience />; break;
-            case 'characteristics': p = <Characteristics />; break;
-            case 'charactescription': p = <Charactescription args={this.state.arguments} />; break;
         }
         return p;
     }

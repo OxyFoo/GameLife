@@ -12,9 +12,9 @@
     $output = array();
 
     if ($action === 'ping') {
-        $output['status'] = 'OK';
+        $output['status'] = 'ok';
     }
-    else if ($action === 'gettoken') {
+    else if ($action === 'getToken') {
         $deviceIdentifier = $data['deviceID'];
         $deviceName = $data['deviceName'];
         $email = $data['email'];
@@ -35,8 +35,9 @@
             } else if ($perm === 1) {
                 if ($account['Banned'] == 0) {
                     // OK
+                    $accountID = $account['ID'];
+                    $output['token'] = $db->GeneratePrivateToken($accountID, $deviceID);
                     $output['status'] = 'ok';
-                    $output['key'] = $db->GetPrivateKey($account);
                 } else {
                     $output['status'] = 'ban';
                 }
@@ -48,6 +49,26 @@
                 $db->SendMail($email, $deviceID, $accountID);
                 $output['status'] = 'signin';
             }
+        }
+    }
+    else if ($action === 'getInternalData') {
+        $token = $data['token'];
+        if (isset($token)) {
+            $data = $db->GetDataFromToken($token);
+            $deviceID = $data['deviceID'];
+            $accountID = $data['accountID'];
+
+            if (isset($accountID, $deviceID)) {
+                $output['quotes'] = $db->GetQuotes();
+                $output['titles'] = '';
+                $output['status'] = 'ok';
+            }
+
+            //$device = $db->GetDeviceByID($deviceID);
+            //$account = $db->GetAccountByID($accountID);
+        }
+        if (!isset($output['status'])) {
+            $output['status'] = 'fail';
         }
     }
 

@@ -23,7 +23,7 @@ class ServManager {
         this.status = STATUS.OFFLINE;
 
         this.iv = '20c3f6cb9dc45ee7524d2b252bac7d5e';
-        this.key = '';
+        this.token = '';
 
         // Device informations
         this.deviceID = DeviceInfo.getUniqueId();
@@ -33,116 +33,71 @@ class ServManager {
     }
 
     isConnected = () => {
-        return this.key.length === 64;
+        return this.status === STATUS.CONNECTED;
     }
 
-    refreshAccount = () => {
-        const pingResult = () => {
-            if (!this.online) {
-                loop(TIMER_LONG);
-            } else {
-                if (!this.isConnected()) {
-                    this.connect(connectResult);
-                }
-            }
-        };
+    async AsyncRefreshAccount() {
+        // Ping
+        const data = { 'action': 'ping' };
+        const result_ping = await this.Request_Async(URL, data);
+        this.online = typeof(result_ping['status']) !== 'undefined' && result_ping['status'] === 'ok';
 
-        const connectResult = (status, key) => {
-            if (typeof(status) === 'undefined') {
-                loop(TIMER_SHORT, 'Invalid response');
-                return;
-            }
-            
-            const index_status = Object.values(STATUS).indexOf(status);
-            if (index_status !== -1) this.status = STATUS[Object.keys(STATUS)[index_status]];
+        // Connection
+        if (this.online) {
+            if (!this.isConnected() && this.user.email !== '') {
+                const result_connect = await this.Connect();
+                const status = result_connect['status'];
+                const token = result_connect['token'];
 
-            if (this.status === STATUS.CONNECTED) {
-                if (typeof(key) === 'undefined' || key.length !== 32) {
-                    loop(TIMER_SHORT, 'Invalid key length');
+                if (typeof(status) === 'undefined') {
+                    console.error('Invalid response');
                     return;
+                }
+                
+                const index_status = Object.values(STATUS).indexOf(status);
+                if (index_status !== -1) this.status = STATUS[Object.keys(STATUS)[index_status]];
+    
+                if (this.status === STATUS.CONNECTED) {
+                    if (typeof(token) === 'undefined' || token.length === 0) {
+                        console.error('Invalid key length');
+                        return;
+                    } else {
+                        this.token = token;
+                        // Online load
+                    }
                 } else {
-                    this.key = this.stringToHex(key);
-                    // Online load
+                    this.token = '';
                 }
-            } else {
-                this.key = '';
+                this.user.changePage();
             }
-            this.user.changePage();
-        };
-
-        const loop = (duration, error) => {
-            if (typeof(error) !== 'undefined') {
-                console.error(error);
-            }
-            if (typeof(duration) === 'number') {
-                this.timeout = setTimeout(this.refreshAccount, duration);
-            }
-        }
-
-        clearTimeout(this.timeout);
-        if (this.user.email) {
-            this.checkConnectivity(pingResult);
-        } else if (this.status !== STATUS.OFFLINE) {
-            this.status = STATUS.OFFLINE;
         }
     }
 
-    checkConnectivity = (callback) => {
-        const pingResponse = (result) => {
-            const status = result['status'];
-            if (typeof(status) === 'undefined' || status != 'OK') {
-                console.log('Server not found');
-                this.online = false;
-                if (typeof(callback) !== 'undefined') {
-                    callback();
-                }
-                return;
-            }
-            console.log('ping ok');
-            this.online = true;
-            if (typeof(callback) !== 'undefined') {
-                callback();
-            }
-        }
-        const pingError = () => {
-            console.log('Server not found');
-            if (typeof(callback) !== 'undefined') {
-                callback();
-            }
-        }
-
-        let data = {
-            'action': 'ping'
-        }
-        this.Request(URL, data, pingResponse, pingError);
-    }
-
-    connect = (callback) => {
-        const tokenResponse = (result) => {
-            console.log(result);
-            const status = result['status'];
-            const key = result['key'];
-            if (typeof(callback) !== 'undefined') {
-                callback(status, key);
-            }
-        }
-
-        let data = {
-            'action': 'gettoken',
+    async Connect() {
+        const data = {
+            'action': 'getToken',
             'deviceID': this.deviceID,
             'deviceName': this.deviceName,
             'email': this.user.email
-        }
-        this.Request(URL, data, tokenResponse);
+        };
+        return await this.Request_Async(URL, data);
+    }
+
+    async getInternalData() {
+        const data = {
+            'action': 'getInternalData',
+            'token': this.token
+        };
+        return await this.Request_Async(URL, data);
     }
 
     disconnect = () => {
-        this.key = '';
+        this.token = '';
         this.status = STATUS.OFFLINE;
     }
 
-    Request = (url, data, callback, errorCallback, method, headers) => {
-        defaultHeaders = {
+    async Request_Async(url, data, method, headers) {
+        const defaultHeaders = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         };
@@ -150,37 +105,26 @@ class ServManager {
             method: method || 'POST',
             headers: headers || defaultHeaders,
             body: JSON.stringify(data)
+        };
+        const response = await fetch(url, header);
+
+        if (response.status != 200) {
+            // Error
+            return;
         }
-        fetch(url, header).then((response) => {
-            if (response.status != 200) {
-                console.error(response.status);
-                if (typeof(errorCallback) === 'function') {
-                    errorCallback(error);
-                }
-                return null;
-            }
-            return response.json();
-        }).then((json) => {
-            if (json && typeof(callback) === 'function') {
-                callback(json);
-            }
-        }).catch((error) => {
-            this.online = false;
-            console.error(error);
-            if (typeof(errorCallback) === 'function') {
-                errorCallback(error);
-            }
-        });
+
+        const json = await response.json();
+        return json;
     }
 
-    encryptData = (text, key) => AES.encrypt(text, key, this.iv).then(cipher => cipher);
+    /*encryptData = (text, key) => AES.encrypt(text, key, this.iv).then(cipher => cipher);
     decryptData = (text, key) => AES.decrypt(text, key, this.iv).then(cipher => cipher);
     stringToHex = (text) => {
         return Array.from(text).map(c =>
             c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) :
             encodeURIComponent(c).replace(/\%/g,'').toLowerCase()
         ).join('');
-    }
+    }*/
 }
 
 export default ServManager;

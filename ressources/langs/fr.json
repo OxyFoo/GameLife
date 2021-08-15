@@ -1,6 +1,10 @@
 {
     "name": "Français",
 
+    "loading": {
+        "text-title": "Chargement"
+    },
+
     "level": {
         "level": "Niveau",
         "total": "XP total",

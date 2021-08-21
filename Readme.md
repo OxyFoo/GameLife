@@ -83,3 +83,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
     - Chargement local
     - Si token
         - getUserData
+
+## 19/08/21
+* PHP: 560
+* JS: 2222

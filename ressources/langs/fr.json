@@ -11,6 +11,16 @@
         "average": "En moyenne {} xp/jour"
     },
 
+    "modal": {
+        "btn-ok": "Ok",
+        "btn-yes": "Oui",
+        "btn-no": "Non"
+    },
+
+    "home": {
+        "page-title": "Game Life"
+    },
+
     "identity": {
         "page-title": "Identité",
 
@@ -23,7 +33,35 @@
 
         "placeholder-pseudo": "Pseudo",
         "placeholder-email": "Adresse mail",
-        "empty-email": "Aucune"
+        "empty-email": "Aucune",
+        "empty-title": "Aucun"
+    },
+
+    "calendar": {
+        "page-title": "Calendrier",
+
+        "header1-action": "Modifier",
+        "header2-title": "Quêtes du jour",
+        "header2-time": "Temps restant : ",
+        "header2-action": "Voir",
+
+        "skill-time": "Début/Durée",
+        "skill-xp": "Expérience",
+        "value-xp": "+{} XP",
+
+        "popup-remove-title": "Suppression ?",
+        "popup-remove-message": "Êtes-vous sûr de vouloir supprimer cette activité ?"
+    },
+
+    "activity": {
+        "page-title": "Activité",
+        "input-category": "Catégorie",
+        "input-activity": "Activité",
+        "input-start": "Début",
+        "input-duration": "Durée",
+
+        "input-category-default": "Sélectionner",
+        "input-activity-default": "Sélectionner"
     },
 
     "settings": {
@@ -35,22 +73,26 @@
     },
 
     "statistics": {
+        "xp": {
+            "name": "Expérience",
+            "small": "XP"
+        },
         "names": {
             "sag": "Sagesse",
             "int": "Intelligence",
-            "conf": "Confiance en soi",
+            "con": "Confiance en soi",
             "for": "Force",
             "end": "Endurance",
-            "agil": "Agilité",
+            "agi": "Agilité",
             "dex": "Dextérité"
         },
         "descriptions": {
             "sag": "Description 1",
             "int": "Description 2",
-            "conf": "Description",
+            "con": "Description",
             "for": "Description",
             "end": "Description",
-            "agil": "Description",
+            "agi": "Description",
             "dex": "Description"
         }
     }

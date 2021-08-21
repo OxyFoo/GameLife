@@ -12,7 +12,24 @@
     $output = array();
 
     if ($action === 'ping') {
-        $output['status'] = 'ok';
+        $deviceIdentifier = $data['deviceID'];
+        $deviceName = $data['deviceName'];
+        if (isset($deviceIdentifier, $deviceName)) {
+            $device = $db->GetDevice($deviceIdentifier, $deviceName);
+            $output['status'] = 'ok';
+        }
+        /*$token = $data['token'];
+        if (isset($token)) {
+            $data = $db->GetDataFromToken($token);
+            $deviceID = $data['deviceID'];
+            $accountID = $data['accountID'];
+
+            if (isset($accountID, $deviceID)) {
+            }
+
+            //$device = $db->GetDeviceByID($deviceID);
+            //$account = $db->GetAccountByID($accountID);
+        }*/
     }
     else if ($action === 'getToken') {
         $deviceIdentifier = $data['deviceID'];
@@ -28,7 +45,7 @@
             $perm = $db->CheckDevicePermissions($deviceID, $account);
             if ($perm === -1) {
                 // Blacklisted
-                $output['status'] = 'backlist';
+                $output['status'] = 'blacklist';
             } else if ($perm === 0) {
                 // Waiting mail confirmation
                 $output['status'] = 'waitMailConfirmation';
@@ -52,26 +69,30 @@
         }
     }
     else if ($action === 'getInternalData') {
-        $token = $data['token'];
+        $lang = $data['lang'];
+        if (!empty($lang)) {
+            $output['quotes'] = $db->GetQuotes($lang);
+            $output['titles'] = $db->GetTitles($lang);
+            $output['skills'] = $db->GetSkills($lang);
+            $output['status'] = 'ok';
+        }
+        /*$token = $data['token'];
         if (isset($token)) {
             $data = $db->GetDataFromToken($token);
             $deviceID = $data['deviceID'];
             $accountID = $data['accountID'];
 
             if (isset($accountID, $deviceID)) {
-                $output['quotes'] = $db->GetQuotes();
-                $output['titles'] = '';
-                $output['status'] = 'ok';
             }
 
             //$device = $db->GetDeviceByID($deviceID);
             //$account = $db->GetAccountByID($accountID);
-        }
-        if (!isset($output['status'])) {
-            $output['status'] = 'fail';
-        }
+        }*/
     }
-
+    
+    if (!isset($output['status'])) {
+        $output['status'] = 'fail';
+    }
     echo(json_encode($output));
 
     unset($database);

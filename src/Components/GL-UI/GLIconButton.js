@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 
 const iconsDir = '../../../ressources/icons/';
 
@@ -15,6 +15,7 @@ const Icons = {
     chevron: require(iconsDir + 'chevron.png'),
     chevronTop: require(iconsDir + 'chevron-top.png'),
     chevronBottom: require(iconsDir + 'chevron-bottom.png'),
+    cross: require(iconsDir + 'cross.png'),
     gear: require(iconsDir + 'gear.png'),
     info: require(iconsDir + 'info.png'),
     instagram: require(iconsDir + 'instagram.png'),
@@ -35,10 +36,15 @@ function GLIconButton(props) {
     const size = props.size || 24;
     const source = Icons[props.icon];
     const onPress = props.onPress;
+    const hide = props.hide || false;
 
     return (
         <TouchableOpacity style={style} onPress={onPress} onLongPress={props.onLongPress} activeOpacity={.5} disabled={typeof(onPress) === 'undefined'}>
-            <Image style={{ width: size, height: size, resizeMode: 'contain' }} source={source} />
+            {!hide ? (
+                <Image style={{ width: size, height: size, resizeMode: 'contain' }} source={source} />
+            ) : (
+                <View style={{ width: size, height: size }} />
+            )}
         </TouchableOpacity>
     )
 }

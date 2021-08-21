@@ -4,6 +4,8 @@ import { SafeAreaView } from 'react-native';
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
 
+const LOADING_TIME_MAX = 5 * 1000;
+
 class App extends React.Component {
     componentDidMount() {
         user.changePage('loading');
@@ -14,27 +16,28 @@ class App extends React.Component {
         const t_start = new Date();
 
         // Load local user data
-        await user.loadData();
+        await user.loadData(false);
+        user.changePage('loading', { state: 'loadQuote' });
+        await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 1 });
-
+        
         // Load internet data (if online)
         await user.conn.AsyncRefreshAccount();
+        await user.sleep(user.random(500, 800));
         user.changePage('loading', { state: 2 });
-
+        
         // Load internet user data (if connected)
-        await user.loadAllData();
+        await user.loadData();
+        await user.loadInternalData();
+        user.refreshStats();
+        await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 3 });
 
         // Wait to 5 seconds (with small glith)
-        const TIME_MAX = 5 * 1000;
         const t_end = new Date();
-        const time = Math.max(0, TIME_MAX - (t_end - t_start));
-        setTimeout(() => { user.changePage('loading', { state: 4 }); }, time/2);
-        setTimeout(this.loadedData, time);
-    }
-
-    loadedData() {
-        user.changePage('home');
+        const time_left = LOADING_TIME_MAX - (t_end - t_start);
+        await user.sleep(time_left / 2); user.changePage('loading', { state: 4 });
+        await user.sleep(time_left / 2); user.changePage('home');
     }
 
     componentWillUnmount() {

@@ -4,7 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 const MAIN_FONT_NAME = 'Quantum';
 const COLORS = {
     'white': '#ECECEC',
-    'grey': '#C2C2C2'
+    'grey': '#C2C2C2',
+    'darkgrey': '#808080'
 }
 
 function GLText(props) {
@@ -43,18 +44,18 @@ const styles = StyleSheet.create({
     },
     row: {
         paddingVertical: 6,
-        paddingHorizontal: 24,
+        paddingHorizontal: 12,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
     titleLeft: {
-        color: '#CAE6F4',
+        color: COLORS.white,
         fontSize: 24,
         fontFamily: MAIN_FONT_NAME
     },
     valueRight: {
-        color: '#CAE6F4',
+        color: COLORS.grey,
         fontSize: 24,
         fontFamily: MAIN_FONT_NAME
     }

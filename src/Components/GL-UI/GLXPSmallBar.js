@@ -6,8 +6,8 @@ import GLText from './GLText';
 function GLXPSmallBar(props) {
     const title = props.title;
     const style = props.style;
-    const valueMax = props.max || 10;
-    const value = Math.min(props.value, valueMax) || 0;
+    const valueMax = parseInt(props.max) || 10;
+    const value = Math.min(parseInt(props.value), valueMax) || 0;
 
     const valueText = value + '/' + valueMax;
     const valueInt = value / valueMax * 100 + '%';
@@ -42,16 +42,20 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'flex-end'
     },
     textXP: {
-        paddingVertical: 6,
+        paddingVertical: 5,
         paddingRight: 4,
         fontSize: 10,
         textAlign: 'right'
     },
     textXPTitle: {
+        maxWidth: '80%',
+        textAlign: 'left',
         marginLeft: 8,
+        marginBottom: 4,
         fontSize: 18
     },
     fill: {

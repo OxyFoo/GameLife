@@ -5,8 +5,8 @@ import GLText from './GLText';
 
 function GLXPBar(props) {
     const style = props.style;
-    const valueMax = props.max || 10;
-    const value = Math.min(props.value, valueMax) || 0;
+    const valueMax = parseInt(props.max) || 10;
+    const value = Math.min(parseInt(props.value), valueMax) || 0;
 
     const valueText = value + ' / ' + valueMax + ' XP';
     const valueInt = value / valueMax * 100 + '%';

@@ -4,6 +4,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
+import { twoDigit } from '../Functions/Functions';
 import { GLBottomModal, GLHeader, GLText, GLTextEditable } from '../Components/GL-Components';
 
 const TITRES = [
@@ -47,8 +48,7 @@ class Identity extends React.Component {
         user.birth = this.state.birth;
         user.email = this.state.email;
 
-        user.saveData();
-        user.conn.AsyncRefreshAccount();
+        user.changeUser();
         user.changePage('home');
     }
 
@@ -94,8 +94,6 @@ class Identity extends React.Component {
         this.setState({ showDateTimePicker: '' });
     }
     onChangeDateTimePicker = (date) => {
-        const twoDigit = (n) => ('00' + n).slice(-2);
-        
         const YYYY = date.getFullYear();
         const MM = twoDigit(date.getMonth() + 1);
         const DD = twoDigit(date.getDate());
@@ -150,7 +148,7 @@ class Identity extends React.Component {
                             placeholder={langManager.curr['identity']['placeholder-pseudo']}
                         />
                         <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
-                        <GLText style={styles.value} title={this.state.title} onPress={this.toggleModal} color='grey' />
+                        <GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='grey' />
                         <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
                         <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='grey' />
                         <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()} />

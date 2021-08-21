@@ -8,6 +8,8 @@ import GLHeader from './GL-UI/GLHeader';
 import GLLoading from './GL-UI/GLLoading';
 import GLDropDown from './GL-UI/GLDropDown';
 import GLBottomModal from './GL-UI/GLBottomModal';
+import GLSkill from './GL-UI/GLSkill';
+import GLStats from './GL-UI/GLStats';
 
 export {
     GLText,
@@ -19,5 +21,7 @@ export {
     GLHeader,
     GLLoading,
     GLDropDown,
-    GLBottomModal
+    GLBottomModal,
+    GLSkill,
+    GLStats
 }

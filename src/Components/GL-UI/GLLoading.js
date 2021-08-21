@@ -32,7 +32,9 @@ class GLLoading extends React.Component {
             for (let i = 0; i < this.state.animOpacity.length; i++) {
                 const light = i === state ? 1 : 0;
                 const rnd = Math.random() * 250 + 250; // 250 - 500
-                OptionsAnimation(this.state.animOpacity[i], light, rnd).start();
+                if (light || i - 1 <= state) {
+                    OptionsAnimation(this.state.animOpacity[i], light, rnd).start();
+                }
             }
         }
     }
@@ -47,7 +49,11 @@ class GLLoading extends React.Component {
 
         return (
             <View style={containerStyle}>
-                <Animated.Image style={[styles.image, { opacity: this.state.animOpacity[state].interpolate(inter) }]} source={LOGOS[state]} />
+                <Animated.Image style={[styles.image, { opacity: this.state.animOpacity[0].interpolate(inter) }]} source={LOGOS[0]} />
+                <Animated.Image style={[styles.image, { position: 'absolute', opacity: this.state.animOpacity[1].interpolate(inter) }]} source={LOGOS[1]} />
+                <Animated.Image style={[styles.image, { position: 'absolute', opacity: this.state.animOpacity[2].interpolate(inter) }]} source={LOGOS[2]} />
+                <Animated.Image style={[styles.image, { position: 'absolute', opacity: this.state.animOpacity[3].interpolate(inter) }]} source={LOGOS[3]} />
+                <Animated.Image style={[styles.image, { position: 'absolute', opacity: this.state.animOpacity[4].interpolate(inter) }]} source={LOGOS[4]} />
             </View>
         )
     }

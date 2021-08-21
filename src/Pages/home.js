@@ -3,87 +3,124 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
-import { GLHeader, GLText, GLXPBar, GLXPSmallBar } from '../Components/GL-Components';
+import { dateToFormatString } from '../Functions/Functions';
+import { GLHeader, GLIconButton, GLSkill, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
+
+        // User statistics
         this.stats = [];
         for (let stat in user.stats) {
             this.stats.push({ key: stat, value: user.stats[stat] });
         }
+
+        // User activities
+        this.activities = user.activities;
+        while (this.activities.length > 4) {
+            this.activities.splice(0, 1);
+        }
+        this.activities.reverse();
+        //this.activities.length = Math.min(this.activities.length, 4);
     }
     openIdentity = () => { user.changePage('identity'); }
+    openCalendar = () => { user.changePage('calendar'); }
     openSettings = () => { user.changePage('settings'); }
 
-    statComponent = ({item}) => {
-        const title = langManager.curr['statistics']['names'][item.key];
-        const value = item.value;
-
-        return (
-            <GLXPSmallBar title={title} value={value} max={10} />
-        )
-    }
-
     render() {
+        const userExperience = user.getExperience();
+        const totalXP = user.xp;
+        const XP = userExperience.xp;
+        const LVL = userExperience.lvl;
+        const nextLvlXP = userExperience.next;
+
         return (
-            <View style={styles.parentView}>
+            <>
                 {/* Header */}
                 <GLHeader
-                    title="Game Life"
+                    title={langManager.curr['home']['page-title']}
                     rightIcon="gear"
                     onPressRight={this.openSettings}
                 />
 
-                {/* User - main informations */}
-                <View style={styles.containerHeader}>
-                    <TouchableOpacity style={styles.containerUserName} activeOpacity={.5} onPress={this.openIdentity}>
-                        <GLText title={user.pseudo} style={styles.pseudo} />
-                        <GLText title={user.title} style={styles.title} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.containerUserXP} activeOpacity={.5}>
-                        <GLXPBar value={5} max={15} />
-                    </TouchableOpacity>
-                </View>
+                <View style={styles.parentView}>
+                    {/* User - main informations */}
+                    <View style={styles.containerHeader}>
+                        <TouchableOpacity style={styles.containerUserName} activeOpacity={.5} onPress={this.openIdentity}>
+                            <GLText title={user.pseudo} style={styles.pseudo} />
+                            {user.title !== '' && (<GLText title={user.title} style={styles.title} />)}
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.containerUserXP} activeOpacity={.5}>
+                            <GLXPBar value={XP} max={nextLvlXP} />
+                        </TouchableOpacity>
+                    </View>
 
-                {/* User - Stats / Level / Calendar */}
-                <View style={styles.containerContent}>
-                    {/* Stats */}
-                    <TouchableOpacity activeOpacity={.5} style={styles.containerStats}>
-                        <FlatList
-                            data={this.stats}
-                            keyExtractor={item => 'stat_' + item.key}
-                            renderItem={this.statComponent}
-                        />
-                    </TouchableOpacity>
+                    {/* User - Stats / Level / Calendar */}
+                    <View style={styles.containerContent}>
+                        {/* Stats */}
+                        <TouchableOpacity activeOpacity={.5} style={styles.containerStats}>
+                            <GLStats stats={this.stats} />
+                        </TouchableOpacity>
 
-                    <View style={styles.containerLevelColumn}>
-                        {/* Level */}
-                        <View style={styles.block}>
-                            <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + 'XX'} />
-                            <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + 'XX'} color='grey' />
-                            <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', 'XX')} color='grey' />
+                        <View style={styles.containerLevelColumn}>
+                            {/* Level */}
+                            <View style={[styles.block, styles.blockLVL]}>
+                                <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + LVL} />
+                                <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + totalXP} color='grey' />
+                                <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', 'XX')} color='grey' />
+                            </View>
+                            {/* Calendar */}
+                            <TouchableOpacity
+                                style={[styles.block, styles.blockCalendar]}
+                                activeOpacity={.5}
+                                onPress={this.openCalendar}
+                            >
+                                <GLText style={styles.calendarTitle} title='CALENDRIER' />
+                                <FlatList
+                                    data={this.activities}
+                                    keyExtractor={(item, i) => 'activity_' + i}
+                                    renderItem={({item}) => {
+                                        const skill = user.getSkillByID(item.skillID);
+                                        const date = new Date(item.startDate);
+                                        const dateText = dateToFormatString(date);
+                                        const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + item.duration + 'm';
+                                        return (
+                                            <GLSkill
+                                                skill={skill.Name}
+                                                date={dateText}
+                                                time={timeText}
+                                                small={true}
+                                                onPress={() => { this.skill_click(item) }}
+                                                onRemove={() => { this.skill_remove(item) }}
+                                            />
+                                        )
+                                    }}
+                                />
+                                <View style={styles.calendarBottom}>
+                                    <GLText style={styles.textLevelPlus} title={"Voir plus"} />
+                                    <GLIconButton icon='chevron' size={16} />
+                                </View>
+                            </TouchableOpacity>
                         </View>
-                        {/* Calendar */}
-                        <View style={[styles.block, styles.blockCalendar]}>
-                            <GLText style={styles.textLevel} title='CALENDRIER' />
+                    </View>
+
+                    {/* User - Skills */}
+                    <View style={styles.containerSkills}>
+                        <GLText style={styles.titleSkill} title='COMPETENCES' />
+                        <View style={styles.row}>
+                            <View style={[styles.block, styles.blockSkill]} />
+                            <View style={[styles.block, styles.blockSkill]} />
+                            <View style={[styles.block, styles.blockSkill]} />
+                        </View>
+                        <View style={styles.row}>
+                            <View style={[styles.block, styles.blockSkill]} />
+                            <View style={[styles.block, styles.blockSkill]} />
+                            <View style={[styles.block, styles.blockSkill]} />
                         </View>
                     </View>
                 </View>
-
-                {/* User - Skills */}
-                <GLText style={styles.titleSkill} title='COMPETENCES' />
-                <View style={styles.row}>
-                    <View style={[styles.block, styles.blockSkill]} />
-                    <View style={[styles.block, styles.blockSkill]} />
-                    <View style={[styles.block, styles.blockSkill]} />
-                </View>
-                <View style={styles.row}>
-                    <View style={[styles.block, styles.blockSkill]} />
-                    <View style={[styles.block, styles.blockSkill]} />
-                    <View style={[styles.block, styles.blockSkill]} />
-                </View>
-            </View>
+            </>
         )
     }
 }
@@ -93,18 +130,17 @@ const styles = StyleSheet.create({
         flex: 1
     },
     containerHeader: {
-        marginVertical: 12,
+        width: '100%',
+        height: '10%',
         flexDirection: 'row'
     },
-    containerUserXP: {
-        width: '60%',
-        padding: 12,
+    containerUserName: {
+        width: '50%',
+        height: '100%',
+        padding: 6,
+
         display: 'flex',
         justifyContent: 'center'
-    },
-    containerUserName: {
-        width: '35%',
-        margin: 12
     },
     pseudo: {
         fontSize: 18,
@@ -115,54 +151,78 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlign: 'left'
     },
+    containerUserXP: {
+        width: '50%',
+        paddingHorizontal: 6,
+        display: 'flex',
+        justifyContent: 'center'
+    },
 
     containerContent: {
+        height: '60%',
         flexDirection: 'row'
     },
     containerStats: {
         width: '55%',
+        height: '100%',
         padding: 12
     },
     containerLevelColumn: {
         width: '45%',
-        margin: 0,
-        padding: 12
+        display: 'flex',
+        justifyContent: 'space-evenly'
     },
     textLevel: {
         marginBottom: 12,
-        fontSize: 16
+        fontSize: 18
     },
     textLevelTotal: {
         marginBottom: 12,
-        fontSize: 12
+        fontSize: 14
     },
     textLevelAverage: {
-        fontSize: 10
+        fontSize: 12
     },
 
     block: {
+        marginHorizontal: 12,
         padding: 12,
         borderWidth: 2,
         borderColor: '#FFFFFF',
         backgroundColor: '#000000'
     },
-    blockCalendar: {
-        height: 275,
-        marginTop: 24
+    blockLVL: { height: '30%', justifyContent: 'space-evenly' },
+    blockCalendar: { height: '65%', paddingHorizontal: 0 },
+    blockSkill: { width: 64, height: 64 },
+
+    calendarTitle: {
+        marginBottom: 12,
+        fontSize: 14
     },
-    blockSkill: {
-        width: 64,
-        height: 64
+    calendarBottom: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: '#000000'
+    },
+    textLevelPlus: {
+    },
+
+    containerSkills: {
+        height: '30%',
+        display: 'flex',
+        justifyContent: 'space-evenly'
     },
     row: {
         width: '100%',
-        marginVertical: 12,
         flexDirection: 'row',
         justifyContent: 'space-evenly'
     },
-
     titleSkill: {
-        marginVertical: 12,
         fontSize: 28
     }
 });

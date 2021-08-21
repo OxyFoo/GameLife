@@ -11,6 +11,16 @@
         "average": "AVERAGE {} XP/DAY"
     },
 
+    "modal": {
+        "btn-ok": "Ok",
+        "btn-yes": "Yes",
+        "btn-no": "No"
+    },
+
+    "home": {
+        "page-title": "Game Life"
+    },
+
     "identity": {
         "page-title": "Identity",
 
@@ -23,7 +33,35 @@
 
         "placeholder-pseudo": "Pseudo",
         "placeholder-email": "Mail adress",
-        "empty-email": "None"
+        "empty-email": "None",
+        "empty-title": "None"
+    },
+
+    "calendar": {
+        "page-title": "Calendar",
+
+        "header1-action": "Edit",
+        "header2-title": "Daily quests",
+        "header2-time": "Time left: ",
+        "header2-action": "See",
+
+        "skill-time": "Start/Duration",
+        "skill-xp": "Experience",
+        "value-xp": "+{} XP",
+
+        "popup-remove-title": "Delete ?",
+        "popup-remove-message": "Are you sure you want to eliminate this activity?"
+    },
+
+    "activity": {
+        "page-title": "Activity",
+        "input-category": "Category",
+        "input-activity": "Activity",
+        "input-start": "Start",
+        "input-duration": "Duration",
+
+        "input-category-default": "Select",
+        "input-activity-default": "Select"
     },
 
     "settings": {
@@ -35,22 +73,26 @@
     },
 
     "statistics": {
+        "xp": {
+            "name": "Expérience",
+            "small": "XP"
+        },
         "names": {
             "sag": "Wisdom",
             "int": "Intelligence",
-            "conf": "Confidence",
+            "con": "Confidence",
             "for": "Strength",
             "end": "Stamina",
-            "agil": "Agility",
+            "agi": "Agility",
             "dex": "Dexterity"
         },
         "descriptions": {
             "sag": "Description 1",
             "int": "Description 2",
-            "conf": "Description",
+            "con": "Description",
             "for": "Description",
             "end": "Description",
-            "agil": "Description",
+            "agi": "Description",
             "dex": "Description"
         }
     }

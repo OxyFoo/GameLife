@@ -7,6 +7,8 @@ import { OptionsAnimation } from '../Components/Animations';
 import Loading from '../Pages/loading';
 import Home from '../Pages/home';
 import Identity from '../Pages/identity';
+import Calendar from '../Pages/calendar';
+import Activity from '../Pages/activity';
 import Settings from '../Pages/settings';
 
 class PageManager extends React.Component{
@@ -23,9 +25,8 @@ class PageManager extends React.Component{
     }
 
     changePage = (newpage, args) => {
-        if (typeof(args) !== 'undefined') {
-            this.setState({ arguments: args });
-        }
+        const newArgs = typeof(args) !== 'undefined' ? args : {};
+        this.setState({ arguments: newArgs });
 
         if (typeof(newpage) === 'undefined' || newpage === '') {
             this.forceUpdate(); return;
@@ -61,6 +62,8 @@ class PageManager extends React.Component{
             case 'loading': p = <Loading args={this.state.arguments} />; break;
             case 'home': p = <Home />; break;
             case 'identity': p = <Identity />; break;
+            case 'calendar': p = <Calendar />; break;
+            case 'activity': p = <Activity args={this.state.arguments} />; break;
             case 'settings': p = <Settings />; break;
         }
         return p;

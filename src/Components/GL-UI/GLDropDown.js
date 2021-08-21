@@ -4,25 +4,36 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
 
-class GLDropDown extends React.Component {
+class GLDropDown extends React.PureComponent {
     state = {
-        opened: true
+        opened: false,
+        selectedText: undefined
     }
 
     toggleVisibility = () => {
+        if (this.props.disabled) return;
         this.setState({ opened: !this.state.opened });
     }
 
-    langComponent = ({ item }) => {
+    listComponent = ({ item }) => {
         const { key, value } = item;
 
+        if (this.props.disabled) {
+            return;
+        }
+
         // Events
-        let onSelect = null;
-        if (typeof(this.props.onSelect) === 'function') {
-            onSelect = () => {
-                this.props.onSelect(key);
-                this.toggleVisibility();
+        const onSelect = () => {
+            if (typeof(this.props.onSelect) === 'function') {
+                this.props.onSelect(key, item);
             };
+
+            const showOnSelect = this.props.showOnSelect;
+            if (typeof(showOnSelect) !== 'undefined' && showOnSelect === true) {
+                this.setState({ selectedText: value.toUpperCase() });
+            }
+
+            this.toggleVisibility();
         }
 
         // Component
@@ -33,24 +44,28 @@ class GLDropDown extends React.Component {
 
     render() {
         const opened = this.state.opened;
-        const value  = this.props.value.toUpperCase() || this.props.defaultValue.toUpperCase();
-        const style  = styles.selected;
+        const value  = this.state.selectedText || this.props.value.toUpperCase();
+        const style  = [ styles.container, this.props.style ];
         const icon   = opened ? 'chevronTop' : 'chevronBottom';
         const data   = this.props.data;
+        const onLongPress = this.props.onLongPress;
 
         return (
-            <View style={this.props.style}>
-                <TouchableOpacity style={styles.box} activeOpacity={.5} onPress={this.toggleVisibility}>
-                    <GLText style={style} title={value} color='grey' />
-                    <GLIconButton style={styles.icon} icon={icon} />
+            <View style={style}>
+                <TouchableOpacity style={styles.box} activeOpacity={.5} onPress={this.toggleVisibility} onLongPress={onLongPress}>
+                    <GLText style={styles.selected} title={value} color='grey' />
+                    <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />
                 </TouchableOpacity>
 
-                {opened && (
+                {!this.props.disabled && opened && (
                     <FlatList
                         style={styles.drop}
                         data={data}
                         keyExtractor={(item, i) => 'lang_' + i}
-                        renderItem={this.langComponent}
+                        renderItem={this.listComponent}
+                        removeClippedSubviews={true}
+                        maxToRenderPerBatch={20}
+                        updateCellsBatchingPeriod={50}
                     />
                 )}
             </View>
@@ -59,10 +74,14 @@ class GLDropDown extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        padding: 0,
+        marginHorizontal: 12,
+        marginVertical: 22
+    },
     box: {
-        margin: 24,
         paddingLeft: 4,
-
+        
         borderColor: '#FFFFFF',
         borderWidth: 3,
 
@@ -71,6 +90,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     selected: {
+        maxWidth: '85%',
+        paddingVertical: 6,
         textAlign: 'left'
     },
     icon: {
@@ -79,19 +100,20 @@ const styles = StyleSheet.create({
     },
     drop: {
         position: 'absolute',
-        top: 60,
+        top: '100%',
         left: 0,
         right: 0,
+        marginTop: -3,
 
-        marginHorizontal: 24,
+        maxHeight: 200,
         padding: 0,
 
         borderColor: '#FFFFFF',
         borderWidth: 3,
         backgroundColor: '#000011',
 
-        zIndex: 1000,
-        elevation: 1000
+        zIndex: 100,
+        elevation: 100
     },
     component: {
         margin: 4,

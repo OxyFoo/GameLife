@@ -1,8 +1,15 @@
 import langManager from "./LangManager";
 import ServManager from "./ServManager";
 import DataManager, { STORAGE } from './DataManager';
+import { isUndefined } from "../Functions/Functions";
 
-import quotes from '../../ressources/langs/quotes.json';
+import quotes from '../../ressources/defaultDB/quotes.json';
+import titles from '../../ressources/defaultDB/titles.json';
+import skills from '../../ressources/defaultDB/skills.json';
+
+const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
+const XPperHour = 100;
+const XPperLevel = 20;
 
 class UserManager {
     conn = new ServManager(this);
@@ -15,41 +22,235 @@ class UserManager {
 
         // User informations
         this.pseudo = 'Player-XXXX';
-        this.title = 'Titre';
+        this.title = '';
         this.birth = '';
         this.email = '';
         this.xp = 0;
+        this.activities = [];
 
         this.stats = {
             'sag': 0,
             'int': 2,
-            'conf': 5,
+            'con': 5,
             'for': 6,
             'end': 8,
-            'agil': 9,
+            'agi': 9,
             'dex': 10
         };
 
-        this.skills = [
-            //new Skill('skill1', 10, 'DD/MM/YY')
-        ];
-
         this.titles = [];
-        this.quotes = quotes;
+        this.quotes = [];
+        this.skills = [];
     }
 
     disconnect = () => {
         this.conn.disconnect();
         this.email = '';
         this.changePage();
-        //this.storage.Save();
+        this.saveData();
     }
     unmount = () => {
         console.log('unmount');
-        //this.storage.Save();
+        this.saveData();
+    }
+    clear = () => {
+        DataManager.Save(STORAGE.USER, '', false);
     }
 
-    saveData() {
+    getSkills = (category) => {
+        let skills = [];
+        for (let i = 0; i < this.skills.length; i++) {
+            let skill = this.skills[i];
+            if (typeof(category) === 'undefined' || category === skill.Category) {
+                skills.push({ key: skill.ID, value: skill.Name });
+            }
+        }
+        return skills;
+    }
+    getSkillByID = (ID) => {
+        let skill;
+        for (let i = 0; i < this.skills.length; i++) {
+            if (this.skills[i].ID == ID) {
+                skill = this.skills[i];
+                break;
+            }
+        }
+        return skill;
+    }
+    getSkillCategories = () => {
+        let cats = [];
+        for (let i = 0; i < this.skills.length; i++) {
+            let cat = this.skills[i].Category;
+            // Search
+            let isInCats = false;
+            for (let c = 0; c < cats.length; c++) {
+                if (cats[c].value == cat) {
+                    isInCats = true;
+                }
+            }
+            if (!isInCats) {
+                cats.push({ key: cats.length, value: cat });
+            }
+        }
+        return cats;
+    }
+
+    addActivity = (skillID, startDate, duration) => {
+        let output = false;
+        if (this.datetimeIsFree(startDate, duration)) {
+            let newActivity = {
+                skillID: skillID,
+                startDate: startDate,
+                duration: duration
+            }
+            // Add - Sort by date
+            const activityDate = new Date(startDate);
+            for (let a = 0; a < this.activities.length; a++) {
+                const arrayDate = new Date(this.activities[a].startDate);
+                if (activityDate < arrayDate) {
+                    this.activities.splice(a, 0, newActivity);
+                    output = true;
+                    break;
+                }
+            }
+            if (!output) {
+                this.activities.push(newActivity);
+                output = true;
+            }
+            this.refreshStats();
+        }
+        return output;
+    }
+
+    remActivity = (activity) => {
+        for (let i = 0; i < this.activities.length; i++) {
+            if (this.activities[i] == activity) {
+                this.activities.splice(i, 1);
+                break;
+            }
+        }
+        this.refreshStats();
+    }
+    getActivityByDate = (date) => {
+        let output = [];
+        const currDate = isUndefined(date) ? new Date() : new Date(date);
+        for (let i = 0; i < this.activities.length; i++) {
+            const activity = this.activities[i];
+            const activityDate = new Date(activity.startDate);
+            const sameYear = currDate.getFullYear() == activityDate.getFullYear();
+            const sameMonth = currDate.getMonth() == activityDate.getMonth();
+            const sameDate = currDate.getDate() == activityDate.getDate();
+            if (sameYear && sameMonth && sameDate) {
+                output.push(activity);
+            }
+        }
+        return output.reverse();
+    }
+
+    refreshStats = (save = true) => {
+        this.getExperience();
+        if (save) this.saveData();
+        this.changePage();
+    }
+
+    /**
+     * Calculate user xp & lvl & stats
+     * @param {Date} date Date before calculate stats (undefined to calculate before now)
+     * @returns {Dict} xp, lvl, next (amount of XP for next level)
+     */
+    getExperience = (date) => {
+        const refDate = !isUndefined(date) ? new Date(date) : new Date();
+
+        // Reset stats
+        this.xp = 0;
+        for (let s in allStats) {
+            const stat = allStats[s];
+            this.stats[stat] = 0;
+        }
+
+        // Count stats
+        for (let a in this.activities) {
+            const activity = this.activities[a];
+            const activityDate = new Date(activity.startDate);
+            const durationHour = activity.duration / 60;
+            const skillID = activity.skillID;
+            const skill = this.getSkillByID(skillID);
+
+            // Check date
+            if (activityDate >= refDate) continue;
+
+            // XP
+            const xp = (XPperHour * durationHour) + (this.stats.sag * durationHour);
+            this.xp += xp;
+
+            // Stats
+            for (let s in allStats) {
+                const stat = allStats[s];
+                this.stats[stat] += skill.Stats[stat];
+            }
+        }
+
+        // Level
+        let xp = this.xp;
+        let lvl = 0;
+        while (xp >= lvl * XPperLevel) {
+            xp -= lvl * XPperLevel;
+            lvl += 1;
+        }
+        const experience = {
+            'xp': xp,
+            'lvl': lvl,
+            'next': (lvl + 1) * XPperLevel
+        }
+        return experience;
+    }
+
+    getStatExperience = (statKey) => {
+    }
+
+    getSkillExperience = (skillID) => {
+    }
+
+    getFirstActivity = () => {
+        const dateValue = this.activities.length ? this.activities[0].startDate : undefined;
+        const date = new Date(dateValue);
+        date.setMinutes(date.getMinutes() - 1);
+        return date;
+    }
+
+    datetimeIsFree = (date, duration) => {
+        const startDate = new Date(date);
+        let output = true;
+        const endDate = new Date(startDate);
+        endDate.setMinutes(startDate.getMinutes() + duration - 1);
+        for (let a = 0; a < this.activities.length; a++) {
+            const activity = this.activities[a];
+            const activityStartDate = new Date(activity.startDate);
+            const activityEndDate = new Date(activityStartDate);
+            activityEndDate.setMinutes(activityStartDate.getMinutes() + activity.duration - 1);
+            const startDuringActivity = startDate > activityStartDate && startDate < activityEndDate;
+            const aroundActivity = startDate <= activityStartDate && endDate >= activityEndDate;
+
+            const endDuringActivity = endDate > activityStartDate && endDate < activityEndDate;
+            if (startDuringActivity || endDuringActivity || aroundActivity) {
+                output = false;
+                break;
+            }
+        }
+        return output;
+    }
+
+    async changeUser() {
+        if (user.email) {
+            await user.conn.AsyncRefreshAccount();
+            user.saveData();
+        } else {
+            user.disconnect();
+        }
+    }
+
+    saveData(online) {
+        const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
             'lang': langManager.currentLangageKey,
             'pseudo': this.pseudo,
@@ -57,80 +258,74 @@ class UserManager {
             'birth': this.birth,
             'email': this.email,
             'xp': this.xp,
-            'stats': this.stats,
+            'activities': this.activities,
             'skills': this.skills,
             'titles': this.titles,
             'quotes': this.quotes
         };
-        DataManager.Save(STORAGE.USER, data, this.isConnected());
+        DataManager.Save(STORAGE.USER, data, _online);
     }
-    async loadData() {
-        const data = await DataManager.Load(STORAGE.USER, this.isConnected());
+    async loadData(online) {
+        const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
+        const data = await DataManager.Load(STORAGE.USER, _online);
 
         langManager.setLangage(data['lang']);
-        this.pseudo = data['pseudo'];
-        this.title = data['title'];
-        this.birth = data['birth'];
-        this.email = data['email'];
-        this.xp = data['xp'];
-        this.stats = data['stats'];
-        this.skills = data['skills'];
-        this.titles = data['titles'];
-        this.quotes = data['quotes'];
+        this.pseudo = data['pseudo'] || this.pseudo;
+        this.title = data['title'] || '';
+        this.birth = data['birth'] || '';
+        this.email = data['email'] || '';
+        this.xp = data['xp'] || 0;
+        if (typeof(data['activities']) !== 'undefined') this.activities = data['activities'];
+        this.titles = data['titles'] || titles;
+        this.quotes = data['quotes'] || quotes;
+        this.skills = data['skills'] || skills;
     }
 
-    async loadAllData() {
-        await this.loadData();
+    async loadInternalData() {
+        if (this.conn.online) {
+            const data = await this.conn.getInternalData(langManager.currentLangageKey);
+            const status = data['status'];
 
-        const data = await this.conn.getInternalData();
-        const status = data['status'];
-
-        if (status === 'ok') {
-            this.titles = data['titles'];
-            this.quotes = data['quotes'];
+            if (status === 'ok') {
+                if (typeof(data['titles']) !== 'undefined') this.titles = data['titles'];
+                if (typeof(data['quotes']) !== 'undefined') this.quotes = data['quotes'];
+                if (typeof(data['skills']) !== 'undefined') this.skills = data['skills'];
+            }
         }
 
-        this.saveData();
+        this.saveData(false);
     }
 
     isConnected = this.conn.isConnected;
-}
 
-class Stat {
-    constructor(key, xp) {
-        this.key = key;
-        this.xp = xp;
+    random(min, max) {
+        const m = min || 0;
+        const M = max || 1;
+        let R = Math.random() * (M - m) + m;
+        return parseInt(R);
+    }
+    sleep(ms) {
+        const T = Math.max(0, ms);
+        return new Promise(resolve => setTimeout(resolve, T));
     }
 }
 
 class Skill {
-    constructor(key, xp, lastTime) {
-        this.key = key;
-        this.title = '';
-        this.cat = '';
-        this.xp = xp;
-        this.lastTime = lastTime;
-        this.caracs = {
+    constructor() {
+        this.Name = '';
+        this.Category = '';
+        this.Stats = {
             'sag': 0,
             'int': 0,
-            'conf': 0,
+            'con': 0,
             'for': 0,
             'end': 0,
-            'agil': 0,
+            'agi': 0,
             'dex': 0
         };
+        this.start = 0;
+        this.duration = 0;
     }
-
-    /*getSkillName = (key) => {
-        return langManager.currentLangage[key]['name'];
-    }
-    getCatName = (key) => {
-        return langManager.currentLangage[key]['cat'];
-    }
-
-    getCarac = (key, carac) => {
-        return langManager.currentLangage[key][carac];
-    }*/
 }
 
 const user = new UserManager();

@@ -1,16 +1,18 @@
 import fr from '../../ressources/langs/fr.json';
 import en from '../../ressources/langs/en.json';
 
+DEFAULT_LANG = 'fr';
+
 class LangManager {
-    constructor(defaultLang = 'fr') {
+    constructor() {
         this.langages = {
             'fr': fr,
             'en': en
         };
-        this.setLangage(defaultLang);
+        this.setLangage();
     }
 
-    setLangage(lang) {
+    setLangage(lang = DEFAULT_LANG) {
         this.currentLangageKey = lang;
         this.curr = this.langages[lang];
     }

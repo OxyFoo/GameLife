@@ -1,7 +1,7 @@
-import { NativeModules } from 'react-native';
+//import { NativeModules } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
-const AES = NativeModules.Aes;
+//const AES = NativeModules.Aes;
 const URL = 'https://oxyfoo.com/App/GameLife/app.php';
 
 const TIMER_LONG = 60 * 1000;
@@ -38,7 +38,11 @@ class ServManager {
 
     async AsyncRefreshAccount() {
         // Ping
-        const data = { 'action': 'ping' };
+        const data = {
+            'action': 'ping',
+            'deviceID': this.deviceID,
+            'deviceName': this.deviceName
+        };
         const result_ping = await this.Request_Async(URL, data);
         this.online = typeof(result_ping['status']) !== 'undefined' && result_ping['status'] === 'ok';
 
@@ -67,6 +71,8 @@ class ServManager {
                     }
                 } else {
                     this.token = '';
+                    const time = [ STATUS.SIGNIN, STATUS.WAITMAIL ].includes(this.status) ? TIMER_SHORT : TIMER_LONG;
+                    setTimeout(this.AsyncRefreshAccount.bind(this), time);
                 }
                 this.user.changePage();
             }
@@ -83,10 +89,10 @@ class ServManager {
         return await this.Request_Async(URL, data);
     }
 
-    async getInternalData() {
+    async getInternalData(langKey) {
         const data = {
             'action': 'getInternalData',
-            'token': this.token
+            'lang': langKey
         };
         return await this.Request_Async(URL, data);
     }

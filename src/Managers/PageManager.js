@@ -7,6 +7,7 @@ import { OptionsAnimation } from '../Components/Animations';
 import Loading from '../Pages/loading';
 import Home from '../Pages/home';
 import Identity from '../Pages/identity';
+import Statistic from '../Pages/statistic';
 import Calendar from '../Pages/calendar';
 import Activity from '../Pages/activity';
 import Settings from '../Pages/settings';
@@ -62,6 +63,7 @@ class PageManager extends React.Component{
             case 'loading': p = <Loading args={this.state.arguments} />; break;
             case 'home': p = <Home />; break;
             case 'identity': p = <Identity />; break;
+            case 'statistic': p = <Statistic args={this.state.arguments} />; break;
             case 'calendar': p = <Calendar />; break;
             case 'activity': p = <Activity args={this.state.arguments} />; break;
             case 'settings': p = <Settings />; break;

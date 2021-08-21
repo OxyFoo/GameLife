@@ -8,7 +8,7 @@ import GLHeader from './GL-UI/GLHeader';
 import GLLoading from './GL-UI/GLLoading';
 import GLDropDown from './GL-UI/GLDropDown';
 import GLBottomModal from './GL-UI/GLBottomModal';
-import GLSkill from './GL-UI/GLSkill';
+import GLActivityBox from './GL-UI/GLActivityBox';
 import GLStats from './GL-UI/GLStats';
 
 export {
@@ -22,6 +22,6 @@ export {
     GLLoading,
     GLDropDown,
     GLBottomModal,
-    GLSkill,
+    GLActivityBox,
     GLStats
 }

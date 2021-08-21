@@ -124,6 +124,8 @@ class Identity extends React.Component {
     render() {
         const age = this.calculateAge(this.state.birth) || '?';
         const mode = this.state.showDateTimePicker;
+        const totalDuration = user.getActivitiesTotalDuration();
+        const totalTxt = (totalDuration/60) + 'h ' + (totalDuration % totalDuration/60) + 'm';
 
         return (
             <>
@@ -139,6 +141,7 @@ class Identity extends React.Component {
 
                     {/* Content */}
                     <View style={styles.content}>
+                        {/* Pseudo */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-pseudo'].toUpperCase()} />
                         <GLTextEditable
                             style={styles.value}
@@ -147,12 +150,20 @@ class Identity extends React.Component {
                             beforeChangeText={this.beforeEditPseudo}
                             placeholder={langManager.curr['identity']['placeholder-pseudo']}
                         />
+
+                        {/* Title */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
                         <GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='grey' />
+
+                        {/* Age */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
                         <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='grey' />
+
+                        {/* Email */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()} />
                         <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='grey' />
+
+                        {/* Email */}
                         <GLTextEditable
                             style={styles.value}
                             value={this.state.email}
@@ -161,6 +172,10 @@ class Identity extends React.Component {
                             textContentType="emailAddress"
                             placeholder={langManager.curr['identity']['placeholder-email']}
                         />
+
+                        {/* Total time */}
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-totaltime'].toUpperCase()} />
+                        <GLText style={[styles.value, { marginBottom: 6 }]} title={totalTxt} color='grey' />
                     </View>
 
                     <GLBottomModal title='Titres' enabled={this.state.modalEnabled}>

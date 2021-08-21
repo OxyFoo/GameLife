@@ -5,7 +5,7 @@ import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { GLHeader } from '../Components/GL-Components';
 
-class Calendar extends React.Component {
+class Skills extends React.Component {
     back = () => { user.changePage('home'); }
 
     render() {
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Calendar;
+export default Skills;

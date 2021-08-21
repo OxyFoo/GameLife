@@ -10,7 +10,7 @@ function GLHeader(props) {
     const RightIcon_LongPress = () => { if (props.rightIcon && props.onLongPressRight) props.onLongPressRight(); };
 
     const title = props.title.toUpperCase();
-    const style = [ styles.header, props.style ];
+    const style = [ styles.header, props.style, props.small && styles.headerSmall ];
     const leftIcon = props.leftIcon || '';
     const rightIcon = props.rightIcon || '';
 
@@ -27,10 +27,15 @@ function GLHeader(props) {
 const styles = StyleSheet.create({
     header: {
         width: '100%',
+        height: 64,
         color: '#5AB4F0',
         padding: 20,
         fontSize: 30,
         backgroundColor: '#000000'
+    },
+    headerSmall: {
+        padding: 25,
+        fontSize: 20
     },
     separator: {
         width: '100%',

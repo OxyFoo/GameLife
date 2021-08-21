@@ -13,6 +13,7 @@ const Icons = {
     checked_yellow: require(iconsDir + 'checked_yellow.png'),
     checked: require(iconsDir + 'checked.png'),
     chevron: require(iconsDir + 'chevron.png'),
+    chevronLeft: require(iconsDir + 'chevron-left.png'),
     chevronTop: require(iconsDir + 'chevron-top.png'),
     chevronBottom: require(iconsDir + 'chevron-bottom.png'),
     cross: require(iconsDir + 'cross.png'),

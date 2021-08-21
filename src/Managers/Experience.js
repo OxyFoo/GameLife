@@ -1,0 +1,108 @@
+import { isUndefined } from "../Functions/Functions";
+
+const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
+const XPperHour = 100;
+const UserXPperLevel = 20;
+const StatXPperLevel = 2;
+const SkillXPperLevel = 2;
+
+class Experience {
+    constructor(user) {
+        this.user = user;
+    }
+
+    /**
+     * Calculate user xp & lvl & stats
+     * @param {Date} date Date before calculate stats (undefined to calculate before now)
+     * @returns {Dict} xp, lvl, next (amount of XP for next level)
+     */
+     getExperience(date) {
+        const refDate = !isUndefined(date) ? new Date(date) : new Date();
+
+        // Reset stats
+        this.user.xp = 0;
+        for (let s in allStats) {
+            const stat = allStats[s];
+            this.user.stats[stat] = 0;
+        }
+
+        // Count stats
+        for (let a in this.user.activities) {
+            const activity = this.user.activities[a];
+            const activityDate = new Date(activity.startDate);
+            const durationHour = activity.duration / 60;
+            const skillID = activity.skillID;
+            const skill = this.user.getSkillByID(skillID);
+
+            // Check date
+            if (activityDate >= refDate) continue;
+
+            // XP
+            const xp = (XPperHour * durationHour) + (this.user.stats.sag * durationHour);
+            this.user.xp += xp;
+
+            // Stats
+            for (let s in allStats) {
+                const stat = allStats[s];
+                this.user.stats[stat] += skill.Stats[stat];
+            }
+        }
+
+        return this.__getXPDict(this.user.xp, UserXPperLevel);
+    }
+
+    getStatExperience(statKey) {
+        let totalXP = 0;
+        for (let a in this.user.activities) {
+            const activity = this.user.activities[a];
+            const durationHour = activity.duration / 60;
+            totalXP += activity.Stats[statKey] * durationHour;
+        }
+        return this.__getXPDict(totalXP, StatXPperLevel);
+    }
+
+    getSkillExperience(skillID) {
+        let totalXP = 0;
+        let stats = {};
+
+        for (let s in allStats) {
+            stats[allStats[s]] = 0;
+        }
+
+        for (let a in this.user.activities) {
+            const activity = this.user.activities[a];
+            if (activity.skillID == skillID) {
+                const durationHour = activity.duration / 60;
+                const skill = this.user.getSkillByID(skillID);
+                for (let s in allStats) {
+                    const localXP = skill.Stats[allStats[s]] * durationHour;
+                    stats[allStats[s]] += localXP;
+                    totalXP += localXP;
+                }
+            }
+        }
+
+        // TODO - vérifier les valeurs !!!
+        let experience = this.__getXPDict(totalXP, SkillXPperLevel);
+        experience['stat'] = stats;
+
+        return experience;
+    }
+
+    __getXPDict(totalXP, xpPerLevel) {
+        let xp = totalXP;
+        let lvl = 0;
+        while (xp >= lvl * xpPerLevel) {
+            xp -= lvl * xpPerLevel;
+            lvl += 1;
+        }
+        const experience = {
+            'xp': xp,
+            'lvl': lvl,
+            'next': (lvl + 1) * xpPerLevel
+        }
+        return experience;
+    }
+}
+
+export default Experience;

@@ -4,7 +4,7 @@ import langManager from '../../Managers/LangManager';
 
 import { GLText, GLIconButton } from '../GL-Components';
 
-function GLSkill(props) {
+function GLActivityBox(props) {
     const skillTitle = (props.skill || '').toUpperCase();
     const skillTimes = props.time;
     const skillXP = langManager.curr['calendar']['value-xp'].replace('{}', props.xp || 0);
@@ -73,4 +73,4 @@ const smallStyles = StyleSheet.create({
     }
 });
 
-export default GLSkill;
+export default GLActivityBox;

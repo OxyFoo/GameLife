@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { dateToFormatString } from '../Functions/Functions';
-import { GLHeader, GLIconButton, GLSkill, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
+import { GLActivityBox, GLHeader, GLIconButton, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
 
 class Home extends React.Component {
     constructor(props) {
@@ -17,19 +17,20 @@ class Home extends React.Component {
         }
 
         // User activities
-        this.activities = user.activities;
-        while (this.activities.length > 4) {
-            this.activities.splice(0, 1);
+        const show = 4;
+        this.activities = [];
+        for (let i = user.activities.length-1; i > user.activities.length - show - 1; i--) {
+            if (i >= 0) {
+                this.activities.push(user.activities[i]);
+            }
         }
-        this.activities.reverse();
-        //this.activities.length = Math.min(this.activities.length, 4);
     }
     openIdentity = () => { user.changePage('identity'); }
     openCalendar = () => { user.changePage('calendar'); }
     openSettings = () => { user.changePage('settings'); }
 
     render() {
-        const userExperience = user.getExperience();
+        const userExperience = user.experience.getExperience();
         const totalXP = user.xp;
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;
@@ -59,9 +60,7 @@ class Home extends React.Component {
                     {/* User - Stats / Level / Calendar */}
                     <View style={styles.containerContent}>
                         {/* Stats */}
-                        <TouchableOpacity activeOpacity={.5} style={styles.containerStats}>
-                            <GLStats stats={this.stats} />
-                        </TouchableOpacity>
+                        <GLStats containerStyle={styles.containerStats} stats={this.stats} />
 
                         <View style={styles.containerLevelColumn}>
                             {/* Level */}
@@ -86,7 +85,7 @@ class Home extends React.Component {
                                         const dateText = dateToFormatString(date);
                                         const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + item.duration + 'm';
                                         return (
-                                            <GLSkill
+                                            <GLActivityBox
                                                 skill={skill.Name}
                                                 date={dateText}
                                                 time={timeText}
@@ -143,6 +142,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     pseudo: {
+        marginLeft: 4,
         fontSize: 18,
         textAlign: 'left'
     },

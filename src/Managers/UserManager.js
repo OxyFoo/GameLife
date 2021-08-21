@@ -1,18 +1,17 @@
 import langManager from "./LangManager";
 import ServManager from "./ServManager";
-import DataManager, { STORAGE } from './DataManager';
+import DataManager, { STORAGE } from '../Class/DataManager';
+
+import Experience from "./Experience";
 import { isUndefined } from "../Functions/Functions";
 
 import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
 
-const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
-const XPperHour = 100;
-const XPperLevel = 20;
-
 class UserManager {
     conn = new ServManager(this);
+    experience = new Experience(this);
 
     constructor() {
         // this.changePage(pageName, argument);
@@ -55,6 +54,12 @@ class UserManager {
     }
     clear = () => {
         DataManager.Save(STORAGE.USER, '', false);
+    }
+
+    refreshStats = (save = true) => {
+        this.experience.getExperience();
+        if (save) this.saveData();
+        this.changePage();
     }
 
     getSkills = (category) => {
@@ -121,7 +126,6 @@ class UserManager {
         }
         return output;
     }
-
     remActivity = (activity) => {
         for (let i = 0; i < this.activities.length; i++) {
             if (this.activities[i] == activity) {
@@ -146,76 +150,21 @@ class UserManager {
         }
         return output.reverse();
     }
-
-    refreshStats = (save = true) => {
-        this.getExperience();
-        if (save) this.saveData();
-        this.changePage();
-    }
-
-    /**
-     * Calculate user xp & lvl & stats
-     * @param {Date} date Date before calculate stats (undefined to calculate before now)
-     * @returns {Dict} xp, lvl, next (amount of XP for next level)
-     */
-    getExperience = (date) => {
-        const refDate = !isUndefined(date) ? new Date(date) : new Date();
-
-        // Reset stats
-        this.xp = 0;
-        for (let s in allStats) {
-            const stat = allStats[s];
-            this.stats[stat] = 0;
-        }
-
-        // Count stats
-        for (let a in this.activities) {
-            const activity = this.activities[a];
-            const activityDate = new Date(activity.startDate);
-            const durationHour = activity.duration / 60;
-            const skillID = activity.skillID;
-            const skill = this.getSkillByID(skillID);
-
-            // Check date
-            if (activityDate >= refDate) continue;
-
-            // XP
-            const xp = (XPperHour * durationHour) + (this.stats.sag * durationHour);
-            this.xp += xp;
-
-            // Stats
-            for (let s in allStats) {
-                const stat = allStats[s];
-                this.stats[stat] += skill.Stats[stat];
-            }
-        }
-
-        // Level
-        let xp = this.xp;
-        let lvl = 0;
-        while (xp >= lvl * XPperLevel) {
-            xp -= lvl * XPperLevel;
-            lvl += 1;
-        }
-        const experience = {
-            'xp': xp,
-            'lvl': lvl,
-            'next': (lvl + 1) * XPperLevel
-        }
-        return experience;
-    }
-
-    getStatExperience = (statKey) => {
-    }
-
-    getSkillExperience = (skillID) => {
-    }
-
     getFirstActivity = () => {
-        const dateValue = this.activities.length ? this.activities[0].startDate : undefined;
-        const date = new Date(dateValue);
+        let date = new Date();
+        if (this.activities.length) {
+            date = new Date(this.activities[0].startDate);
+        }
         date.setMinutes(date.getMinutes() - 1);
         return date;
+    }
+    getActivitiesTotalDuration = () => {
+        let totalDuration = 0;
+        for (let a in this.activities) {
+            const activity = this.activities[a];
+            totalDuration += activity.duration;
+        }
+        return totalDuration;
     }
 
     datetimeIsFree = (date, duration) => {

@@ -28,6 +28,7 @@
         "name-title": "Title",
         "name-age": "Age",
         "name-email": "EMail",
+        "name-totaltime": "Practice time",
 
         "value-age": "{} ans",
 
@@ -35,6 +36,10 @@
         "placeholder-email": "Mail adress",
         "empty-email": "None",
         "empty-title": "None"
+    },
+
+    "statistic": {
+        "page-title": "Caracteristics"
     },
 
     "calendar": {
@@ -62,6 +67,10 @@
 
         "input-category-default": "Select",
         "input-activity-default": "Select"
+    },
+
+    "skills": {
+        "page-title": "Skills"
     },
 
     "settings": {

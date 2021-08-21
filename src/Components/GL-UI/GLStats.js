@@ -1,24 +1,33 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import langManager from '../../Managers/LangManager';
+import user from '../../Managers/UserManager';
 import GLXPSmallBar from './GLXPSmallBar';
 
 function statComponent(item, index) {
-    const title = langManager.curr['statistics']['names'][item.key];
+    const statKey = item.key;
     const value = item.value;
+    const title = langManager.curr['statistics']['names'][statKey];
+
+    const pressEvent = () => {
+        user.changePage('statistic', { 'stat': statKey });
+    };
 
     return (
-        <GLXPSmallBar key={'skill_' + index} style={styles.stat} title={title} value={value} max={10} />
+        <TouchableOpacity style={styles.stat} key={'skill_' + index} activeOpacity={.5} onPress={pressEvent}>
+            <GLXPSmallBar title={title} value={value} max={10} />
+        </TouchableOpacity>
     )
 }
 
 function GLStats(props) {
     const stats = props.stats || [];
     const output = stats.map((item, i) => statComponent(item, i));
+    const containerStyle = [ styles.container, props.containerStyle ];
 
     return (
-        <View style={styles.container}>
+        <View style={containerStyle}>
             {output}
         </View>
     );

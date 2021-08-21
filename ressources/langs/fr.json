@@ -28,6 +28,7 @@
         "name-title": "Titre",
         "name-age": "Age",
         "name-email": "EMail",
+        "name-totaltime": "Temps de pratique",
 
         "value-age": "{} ans",
 
@@ -35,6 +36,10 @@
         "placeholder-email": "Adresse mail",
         "empty-email": "Aucune",
         "empty-title": "Aucun"
+    },
+
+    "statistic": {
+        "page-title": "Caractéristiques"
     },
 
     "calendar": {
@@ -64,6 +69,10 @@
         "input-activity-default": "Sélectionner"
     },
 
+    "skills": {
+        "page-title": "Compétences"
+    },
+
     "settings": {
         "page-title": "Paramètres",
 
@@ -89,7 +98,7 @@
         "descriptions": {
             "sag": "Description 1",
             "int": "Description 2",
-            "con": "Description",
+            "con": "Description Description Description Description Description Description Description Description Description Description Description Description",
             "for": "Description",
             "end": "Description",
             "agi": "Description",

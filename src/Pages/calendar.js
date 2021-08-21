@@ -4,7 +4,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
-import { GLHeader, GLIconButton, GLSkill, GLText } from '../Components/GL-Components';
+import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components/GL-Components';
 import { ClassicAlert, sum, dateToFormatString } from '../Functions/Functions';
 
 class Calendar extends React.Component {
@@ -86,7 +86,7 @@ class Calendar extends React.Component {
                         const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + item.duration + 'm';
                         const totalXP = sum(Object.values(skill.Stats));
                         return (
-                            <GLSkill
+                            <GLActivityBox
                                 skill={skill.Name}
                                 time={timeText}
                                 xp={totalXP}

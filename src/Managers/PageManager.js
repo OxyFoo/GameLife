@@ -11,6 +11,7 @@ import Statistic from '../Pages/statistic';
 import Calendar from '../Pages/calendar';
 import Activity from '../Pages/activity';
 import Settings from '../Pages/settings';
+import Experience from '../Pages/experience';
 
 class PageManager extends React.Component{
     state = {
@@ -67,6 +68,7 @@ class PageManager extends React.Component{
             case 'calendar': p = <Calendar />; break;
             case 'activity': p = <Activity args={this.state.arguments} />; break;
             case 'settings': p = <Settings />; break;
+            case 'experience': p = <Experience />; break;
         }
         return p;
     }
@@ -82,7 +84,7 @@ class PageManager extends React.Component{
             outputRange: [0, 0.8, 0.2, 1]
         };*/
         const inter = {
-            inputRange:  [0, 1],
+            inputRange:  [0, 0.5],
             outputRange: [0, 1]
         };
 

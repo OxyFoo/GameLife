@@ -6,6 +6,7 @@ import GLText from './GLText';
 function GLXPSmallBar(props) {
     const title = props.title;
     const style = props.style;
+    const level = props.level || 0;
     const valueMax = parseInt(props.max) || 10;
     const value = Math.min(parseInt(props.value), valueMax) || 0;
 
@@ -18,7 +19,7 @@ function GLXPSmallBar(props) {
 
                 <View style={styles.row}>
                     <GLText style={styles.textXPTitle} title={title} color='grey' />
-                    <GLText style={styles.textXP} title={'LVL X'} color='grey' />
+                    <GLText style={styles.textXP} title={'LVL ' + level} color='grey' />
                 </View>
                 <View style={styles.background}>
                     <View style={[styles.fill, { width: valueInt }]} />

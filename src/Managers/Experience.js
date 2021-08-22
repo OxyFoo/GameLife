@@ -13,11 +13,13 @@ class Experience {
 
     /**
      * Calculate user xp & lvl & stats
-     * @param {Date} date Date before calculate stats (undefined to calculate before now)
+     * @param {Date} toDate Date before calculate stats (undefined to calculate before now)
+     * @param {Date} fromDate Date after calculate stats (undefined to calculate all time)
      * @returns {Dict} xp, lvl, next (amount of XP for next level)
      */
-     getExperience(date) {
-        const refDate = !isUndefined(date) ? new Date(date) : new Date();
+     getExperience(toDate, fromDate) {
+        const refEndDate = !isUndefined(toDate) ? new Date(toDate) : new Date();
+        const refStartDate = !isUndefined(fromDate) ? new Date(fromDate) : new Date(null);
 
         // Reset stats
         this.user.xp = 0;
@@ -35,7 +37,8 @@ class Experience {
             const skill = this.user.getSkillByID(skillID);
 
             // Check date
-            if (activityDate >= refDate) continue;
+            if (activityDate >= refEndDate) continue;
+            if (activityDate < refStartDate) continue;
 
             // XP
             const xp = (XPperHour * durationHour) + (this.user.stats.sag * durationHour);
@@ -51,12 +54,23 @@ class Experience {
         return this.__getXPDict(this.user.xp, UserXPperLevel);
     }
 
+    getXPTo(level) {
+        let _lvl = 0;
+        let _xp = 0;
+        while (_lvl <= level) {
+            _xp += _lvl * UserXPperLevel;
+            _lvl += 1;
+        }
+        return _xp;
+    }
+
     getStatExperience(statKey) {
         let totalXP = 0;
         for (let a in this.user.activities) {
             const activity = this.user.activities[a];
             const durationHour = activity.duration / 60;
-            totalXP += activity.Stats[statKey] * durationHour;
+            const skill = this.user.getSkillByID(activity.skillID);
+            totalXP += skill.Stats[statKey] * durationHour;
         }
         return this.__getXPDict(totalXP, StatXPperLevel);
     }
@@ -99,7 +113,8 @@ class Experience {
         const experience = {
             'xp': xp,
             'lvl': lvl,
-            'next': (lvl + 1) * xpPerLevel
+            'next': (lvl + 1) * xpPerLevel,
+            'totalXP': totalXP
         }
         return experience;
     }

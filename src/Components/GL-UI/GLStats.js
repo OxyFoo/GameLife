@@ -6,8 +6,9 @@ import user from '../../Managers/UserManager';
 import GLXPSmallBar from './GLXPSmallBar';
 
 function statComponent(item, index) {
-    const statKey = item.key;
-    const value = item.value;
+    const statKey = item;
+
+    const stat = user.experience.getStatExperience(statKey);
     const title = langManager.curr['statistics']['names'][statKey];
 
     const pressEvent = () => {
@@ -16,13 +17,13 @@ function statComponent(item, index) {
 
     return (
         <TouchableOpacity style={styles.stat} key={'skill_' + index} activeOpacity={.5} onPress={pressEvent}>
-            <GLXPSmallBar title={title} value={value} max={10} />
+            <GLXPSmallBar title={title} value={stat.xp} max={stat.next} level={stat.lvl} />
         </TouchableOpacity>
     )
 }
 
 function GLStats(props) {
-    const stats = props.stats || [];
+    const stats = Object.keys(user.stats);
     const output = stats.map((item, i) => statComponent(item, i));
     const containerStyle = [ styles.container, props.containerStyle ];
 

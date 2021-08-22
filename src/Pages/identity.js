@@ -79,7 +79,7 @@ class Identity extends React.Component {
     }
     component_titre = ({ item }) => {
         return (
-            <GLText title={item} onPress={() => this.editTitre(item)} />
+            <GLText style={{ marginVertical: 4 }} title={item} onPress={() => this.editTitre(item)} />
         )
     }
 

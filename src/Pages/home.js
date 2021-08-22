@@ -10,12 +10,6 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
 
-        // User statistics
-        this.stats = [];
-        for (let stat in user.stats) {
-            this.stats.push({ key: stat, value: user.stats[stat] });
-        }
-
         // User activities
         const show = 4;
         this.activities = [];
@@ -28,6 +22,7 @@ class Home extends React.Component {
     openIdentity = () => { user.changePage('identity'); }
     openCalendar = () => { user.changePage('calendar'); }
     openSettings = () => { user.changePage('settings'); }
+    openExperience = () => { user.changePage('experience'); }
 
     render() {
         const userExperience = user.experience.getExperience();
@@ -52,23 +47,21 @@ class Home extends React.Component {
                             <GLText title={user.pseudo} style={styles.pseudo} />
                             {user.title !== '' && (<GLText title={user.title} style={styles.title} />)}
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.containerUserXP} activeOpacity={.5}>
-                            <GLXPBar value={XP} max={nextLvlXP} />
-                        </TouchableOpacity>
+                        <GLXPBar value={XP} max={nextLvlXP} style={styles.containerUserXP} />
                     </View>
 
                     {/* User - Stats / Level / Calendar */}
                     <View style={styles.containerContent}>
                         {/* Stats */}
-                        <GLStats containerStyle={styles.containerStats} stats={this.stats} />
+                        <GLStats containerStyle={styles.containerStats} />
 
                         <View style={styles.containerLevelColumn}>
                             {/* Level */}
-                            <View style={[styles.block, styles.blockLVL]}>
+                            <TouchableOpacity style={[styles.block, styles.blockLVL]} activeOpacity={0.5} onPress={this.openExperience}>
                                 <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + LVL} />
                                 <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + totalXP} color='grey' />
                                 <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', 'XX')} color='grey' />
-                            </View>
+                            </TouchableOpacity>
                             {/* Calendar */}
                             <TouchableOpacity
                                 style={[styles.block, styles.blockCalendar]}
@@ -148,6 +141,7 @@ const styles = StyleSheet.create({
     },
     title: {
         marginTop: 8,
+        marginLeft: 4,
         fontSize: 14,
         textAlign: 'left'
     },

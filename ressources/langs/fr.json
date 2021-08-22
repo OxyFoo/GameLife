@@ -7,6 +7,7 @@
 
     "level": {
         "level": "Niveau",
+        "level-small": "Lvl",
         "total": "XP total",
         "average": "En moyenne {} xp/jour"
     },
@@ -36,6 +37,22 @@
         "placeholder-email": "Adresse mail",
         "empty-email": "Aucune",
         "empty-title": "Aucun"
+    },
+
+    "experience": {
+        "page-title": "Gestion XP",
+
+        "name-total": "XP Total",
+        "name-average": "Moyenne d'XP/jour",
+        "name-day": "XP du jour",
+        "name-week": "XP de la semaine",
+        "name-month": "XP du mois",
+        "name-year": "XP de l'année",
+
+        "XPLeftToReach": "XP restant pour atteindre",
+        "name-next": "Niveau suivant",
+        "name-10": "Niveau 10",
+        "name-100": "Niveau 100"
     },
 
     "statistic": {

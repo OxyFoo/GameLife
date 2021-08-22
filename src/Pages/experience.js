@@ -21,8 +21,13 @@ class Experience extends React.Component {
 
         const title_total = lang_experience['name-total'];
         const value_total = totalXP;
+
+        const firstDate = user.getFirstActivity();
+        firstDate.setHours(0, 0, 0);
+        const delta = (new Date()) - firstDate;
+        const delta_days = delta / (1000 * 60 * 60 * 24);
         const title_average = lang_experience['name-average'];
-        const value_average = 0;
+        const value_average = Math.max(0, parseInt(totalXP / delta_days));
 
         const date = new Date();
         date.setHours(0, 0, 0);

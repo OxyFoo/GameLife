@@ -2,7 +2,7 @@ import langManager from "./LangManager";
 import ServManager from "./ServManager";
 import DataManager, { STORAGE } from '../Class/DataManager';
 
-import Experience from "./Experience";
+import Experience from "./XPManager";
 import { isUndefined } from "../Functions/Functions";
 
 import quotes from '../../ressources/defaultDB/quotes.json';

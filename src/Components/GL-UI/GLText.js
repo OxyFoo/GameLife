@@ -13,9 +13,13 @@ function GLText(props) {
     const value = props.value;
     const onPress = props.onPress;
 
+    let opacity = 1;
     let color = props.color;
     if (typeof(color) === 'undefined' || !COLORS.hasOwnProperty(color)) {
-        color = 'white'
+        if (color === 'transparent') {
+            opacity = 0;
+        }
+        color = 'white';
     }
 
     let output = typeof(value) !== 'undefined' ? (
@@ -24,7 +28,7 @@ function GLText(props) {
             <Text style={[styles.valueRight, props.styleText]}>{value}</Text>
         </View>
     ) : (
-        <Text style={[ styles.text, props.style, { color: COLORS[color] } ]}>{title}</Text>
+        <Text style={[ styles.text, props.style, { color: COLORS[color], opacity: opacity } ]}>{title}</Text>
     )
 
     return typeof(onPress) !== 'undefined' ? (

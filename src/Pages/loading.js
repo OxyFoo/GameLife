@@ -38,14 +38,14 @@ class Loading extends React.Component {
         const state = typeof(this.props.args['state']) === 'number' ? this.props.args['state'] : 0;
         const index = parseInt(this.state.textPoints) % POINTS.length;
         const loading_title = langManager.curr['loading']['text-title'];
-        const loading_points = POINTS[index] + loading_title + POINTS[index];
+        const loading_points = POINTS[index];
         return (
             <View style={styles.content}>
                     <GLLoading state={state} />
                     <View style={styles.containTitle}>
+                        {index !== 0 && (<GLText style={styles.points} title={loading_points} color={'transparent'} />)}
                         <GLText style={styles.title} title={loading_title} />
-                        <GLText style={styles.points} title={loading_points} />
-                        <View style={styles.backgroundPoints} />
+                        {index !== 0 && (<GLText style={styles.points} title={loading_points} />)}
                     </View>
                     <GLText style={styles.citation} title={this.state.quote} />
                     <GLText style={styles.author} title={this.state.author} />
@@ -66,27 +66,17 @@ const styles = StyleSheet.create({
     containTitle: {
         width: '100%',
         top: -24,
-        alignItems: 'center'
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
     title: {
-        width: 200,
-        color: '#3E99E7',
         fontSize: 28,
         zIndex: 10,
         elevation: 10
     },
     points: {
-        position: 'absolute',
-        color: '#3E99E7',
         fontSize: 28
-    },
-    backgroundPoints: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: '50%',
-        bottom: 0,
-        backgroundColor: '#000022'
     },
     citation: {
         top: -24,

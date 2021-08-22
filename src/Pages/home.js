@@ -30,6 +30,8 @@ class Home extends React.Component {
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;
         const nextLvlXP = userExperience.next;
+        //const blocks = [ {key: 0, value: 0}, {key: 1, value: 0}, {key: 2, value: 0}, {key: 3, value: 0}, {key: 4, value: 0}, {key: 5, value: 0} ];
+        const blocks = [ 0, 1, 2, 3, 4, 5 ];
 
         return (
             <>
@@ -98,19 +100,21 @@ class Home extends React.Component {
                     </View>
 
                     {/* User - Skills */}
-                    <View style={styles.containerSkills}>
+                    <TouchableOpacity style={styles.containerSkills} activeOpacity={0.5}>
                         <GLText style={styles.titleSkill} title='COMPETENCES' />
-                        <View style={styles.row}>
-                            <View style={[styles.block, styles.blockSkill]} />
-                            <View style={[styles.block, styles.blockSkill]} />
-                            <View style={[styles.block, styles.blockSkill]} />
-                        </View>
-                        <View style={styles.row}>
-                            <View style={[styles.block, styles.blockSkill]} />
-                            <View style={[styles.block, styles.blockSkill]} />
-                            <View style={[styles.block, styles.blockSkill]} />
-                        </View>
-                    </View>
+                        <FlatList
+                            columnWrapperStyle={{ width: '100%', justifyContent: 'space-evenly' }}
+                            contentContainerStyle={{ display: 'flex', alignItems: 'center' }}
+                            data={blocks}
+                            numColumns={3}
+                            keyExtractor={(item, i) => 'block_' + i}
+                            renderItem={({item}) => (
+                                <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5}>
+                                    <GLText title={item} />
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </TouchableOpacity>
                 </View>
             </>
         )
@@ -187,7 +191,7 @@ const styles = StyleSheet.create({
     },
     blockLVL: { height: '30%', justifyContent: 'space-evenly' },
     blockCalendar: { height: '65%', paddingHorizontal: 0 },
-    blockSkill: { width: 64, height: 64 },
+    blockSkill: { width: 64, height: 64, margin: 0, marginTop: 12 },
 
     calendarTitle: {
         marginBottom: 12,

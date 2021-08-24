@@ -46,7 +46,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: "#000020" }}>
+            <SafeAreaView style={{ backgroundColor: "#000000" }}>
                 <PageManager />
             </SafeAreaView>
         )

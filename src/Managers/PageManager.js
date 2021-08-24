@@ -81,7 +81,7 @@ class PageManager extends React.Component{
         let page1 = this.GetPageContent(this.state.page1);
         let page2 = this.GetPageContent(this.state.page2);
 
-        const fullscreen = { width: '100%', height: '100%' }
+        const fullscreen = { width: '100%', height: '100%', backgroundColor: "#000020" }
 
         /*const inter = {
             inputRange:  [0, 0.4, 0.8, 1],

@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         backgroundColor: '#000011',
 
-        zIndex: 100,
-        elevation: 100
+        zIndex: 10000,
+        elevation: 10000
     },
     component: {
         margin: 4,

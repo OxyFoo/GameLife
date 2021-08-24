@@ -50,9 +50,10 @@ class GLDropDown extends React.PureComponent {
         const icon   = opened ? 'chevronTop' : 'chevronBottom';
         const data   = this.props.data;
         const onLongPress = this.props.onLongPress;
+        const styleAtTop = { zIndex: 10000, elevation: 10000 };
 
         return (
-            <View style={style}>
+            <View style={this.state.opened ? [style, styleAtTop] : style}>
                 <TouchableOpacity style={styleBox} activeOpacity={.5} onPress={this.toggleVisibility} onLongPress={onLongPress}>
                     <GLText style={styles.selected} title={value} color='grey' />
                     <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />

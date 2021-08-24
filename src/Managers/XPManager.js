@@ -88,10 +88,10 @@ class Experience {
             if (activity.skillID == skillID) {
                 const durationHour = activity.duration / 60;
                 const skill = this.user.getSkillByID(skillID);
+                totalXP += XPperHour * durationHour;
                 for (let s in allStats) {
                     const localXP = skill.Stats[allStats[s]] * durationHour;
                     stats[allStats[s]] += localXP;
-                    totalXP += localXP;
                 }
             }
         }
@@ -111,7 +111,7 @@ class Experience {
      * @param {Boolean} ascending
      * @returns {Array} of skills
      */
-    getSkills(searchTxt, filter, sortType, ascending) {
+    getAllSkills(searchTxt, filter, sortType, ascending) {
         let skills = [];
 
         const skillsContainSkillID = (skillID) => {

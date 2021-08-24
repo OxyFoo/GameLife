@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
-import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLText } from '../Components/GL-Components';
+import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../Components/GL-Components';
 
 const data = [
     { key: 0, value: 'Test1' },
@@ -17,7 +17,7 @@ class Skills extends React.Component {
     state = {
         ascending: true,
         selectedSortIndex: 0,
-        skills: user.experience.getSkills()
+        skills: user.experience.getAllSkills()
     }
 
     back = () => { user.changePage('home'); }
@@ -27,13 +27,6 @@ class Skills extends React.Component {
     }
     switchOrder = () => {
         this.setState({ ascending: !this.state.ascending });
-    }
-
-    skill = ({ item }) => {
-        console.log(item);
-        return (
-            <GLText title={"test"} />
-        )
     }
 
     render() {
@@ -73,7 +66,9 @@ class Skills extends React.Component {
                     <FlatList
                         data={this.state.skills}
                         keyExtractor={(item, i) => 'lang_' + i}
-                        renderItem={this.skill}
+                        renderItem={({ item }) => (
+                            <GLSkillBox item={item} />
+                        )}
                     />
 
                     {/* Floating bottom right button */}
@@ -98,7 +93,9 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
         borderWidth: 3,
         borderTopWidth: 2,
-        backgroundColor: '#000000'
+        backgroundColor: '#000000',
+        zIndex: 100,
+        elevation: 100
     },
     search: { width: '40%', height: '100%' },
     filter: {

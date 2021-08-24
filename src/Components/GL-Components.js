@@ -9,6 +9,7 @@ import GLLoading from './GL-UI/GLLoading';
 import GLDropDown from './GL-UI/GLDropDown';
 import GLBottomModal from './GL-UI/GLBottomModal';
 import GLActivityBox from './GL-UI/GLActivityBox';
+import GLSkillBox from './GL-UI/GLSkillBox';
 import GLStats from './GL-UI/GLStats';
 import GLSearchBar from './GL-UI/GLSearchBar';
 
@@ -24,6 +25,7 @@ export {
     GLDropDown,
     GLBottomModal,
     GLActivityBox,
+    GLSkillBox,
     GLStats,
     GLSearchBar
 }

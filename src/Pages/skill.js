@@ -13,13 +13,13 @@ class Skill extends React.Component {
             <View style={{ flex: 1 }}>
                 {/* Header */}
                 <GLHeader
-                    title={langManager.curr['calendar']['page-title']}
+                    title={langManager.curr['skill']['page-title']}
                     leftIcon="back"
                     onPressLeft={this.back}
                 />
 
-                {/* Topbar */}
-                <View style={styles.topBar}>
+                {/* Content */}
+                <View style={styles.content}>
                 </View>
             </View>
         )
@@ -27,14 +27,7 @@ class Skill extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    topBar: {
-        width: '100%',
-        height: 64,
-        flexDirection: 'row',
-        borderColor: '#FFFFFF',
-        borderWidth: 3,
-        borderTopWidth: 2,
-        backgroundColor: '#000000'
+    content: {
     }
 });
 

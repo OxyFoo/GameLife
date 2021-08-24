@@ -6,6 +6,7 @@
     },
 
     "level": {
+        "xp": "XP",
         "level": "Niveau",
         "level-small": "Lvl",
         "total": "XP total",
@@ -94,6 +95,10 @@
         "top-sort-list": [
             "XP", "A-Z", "DATE"
         ]
+    },
+
+    "skill": {
+        "page-title": "Compétence"
     },
 
     "settings": {

@@ -50,10 +50,9 @@ class GLDropDown extends React.PureComponent {
         const icon   = opened ? 'chevronTop' : 'chevronBottom';
         const data   = this.props.data;
         const onLongPress = this.props.onLongPress;
-        const styleAtTop = { zIndex: 10000, elevation: 10000 };
 
         return (
-            <View style={this.state.opened ? [style, styleAtTop] : style}>
+            <View style={style}>
                 <TouchableOpacity style={styleBox} activeOpacity={.5} onPress={this.toggleVisibility} onLongPress={onLongPress}>
                     <GLText style={styles.selected} title={value} color='grey' />
                     <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />
@@ -79,10 +78,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 0,
         marginHorizontal: 12,
-        marginVertical: 22,
-
-        zIndex: 100,
-        elevation: 100
+        marginVertical: 22
     },
     box: {
         paddingLeft: 4,
@@ -117,8 +113,8 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         backgroundColor: '#000011',
 
-        zIndex: 10000,
-        elevation: 10000
+        zIndex: 1000,
+        elevation: 1000
     },
     component: {
         margin: 4,

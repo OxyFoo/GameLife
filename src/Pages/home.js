@@ -21,6 +21,8 @@ class Home extends React.Component {
     }
     openIdentity = () => { user.changePage('identity'); }
     openCalendar = () => { user.changePage('calendar'); }
+    openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
+    openSkills = () => { user.changePage('skills'); }
     openSettings = () => { user.changePage('settings'); }
     openExperience = () => { user.changePage('experience'); }
 
@@ -30,7 +32,6 @@ class Home extends React.Component {
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;
         const nextLvlXP = userExperience.next;
-        //const blocks = [ {key: 0, value: 0}, {key: 1, value: 0}, {key: 2, value: 0}, {key: 3, value: 0}, {key: 4, value: 0}, {key: 5, value: 0} ];
         const blocks = [ 0, 1, 2, 3, 4, 5 ];
 
         return (
@@ -100,7 +101,7 @@ class Home extends React.Component {
                     </View>
 
                     {/* User - Skills */}
-                    <TouchableOpacity style={styles.containerSkills} activeOpacity={0.5}>
+                    <TouchableOpacity style={styles.containerSkills} activeOpacity={0.5} onPress={this.openSkills}>
                         <GLText style={styles.titleSkill} title='COMPETENCES' />
                         <FlatList
                             columnWrapperStyle={{ width: '100%', justifyContent: 'space-evenly' }}
@@ -109,7 +110,7 @@ class Home extends React.Component {
                             numColumns={3}
                             keyExtractor={(item, i) => 'block_' + i}
                             renderItem={({item}) => (
-                                <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5}>
+                                <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item) }}>
                                     <GLText title={item} />
                                 </TouchableOpacity>
                             )}
@@ -189,8 +190,8 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
         backgroundColor: '#000000'
     },
-    blockLVL: { height: '30%', justifyContent: 'space-evenly' },
-    blockCalendar: { height: '65%', paddingHorizontal: 0 },
+    blockLVL: { height: '25%', justifyContent: 'space-evenly' },
+    blockCalendar: { height: '60%', paddingHorizontal: 0 },
     blockSkill: { width: 64, height: 64, margin: 0, marginTop: 12 },
 
     calendarTitle: {

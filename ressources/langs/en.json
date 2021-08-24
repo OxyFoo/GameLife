@@ -87,7 +87,13 @@
     },
 
     "skills": {
-        "page-title": "Skills"
+        "page-title": "Skills",
+
+        "top-search-placeholder": "Search",
+        "top-filter-default": "Filters",
+        "top-sort-list": [
+            "XP", "A-Z", "DATE"
+        ]
     },
 
     "settings": {

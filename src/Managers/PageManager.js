@@ -10,6 +10,8 @@ import Identity from '../Pages/identity';
 import Statistic from '../Pages/statistic';
 import Calendar from '../Pages/calendar';
 import Activity from '../Pages/activity';
+import Skill from '../Pages/skill';
+import Skills from '../Pages/skills';
 import Settings from '../Pages/settings';
 import Experience from '../Pages/experience';
 
@@ -67,6 +69,8 @@ class PageManager extends React.Component{
             case 'statistic': p = <Statistic args={this.state.arguments} />; break;
             case 'calendar': p = <Calendar />; break;
             case 'activity': p = <Activity args={this.state.arguments} />; break;
+            case 'skill': p = <Skill />; break;
+            case 'skills': p = <Skills />; break;
             case 'settings': p = <Settings />; break;
             case 'experience': p = <Experience />; break;
         }

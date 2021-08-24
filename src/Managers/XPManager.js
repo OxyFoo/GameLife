@@ -15,7 +15,7 @@ class Experience {
      * Calculate user xp & lvl & stats
      * @param {Date} toDate Date before calculate stats (undefined to calculate before now)
      * @param {Date} fromDate Date after calculate stats (undefined to calculate all time)
-     * @returns {Dict} xp, lvl, next (amount of XP for next level)
+     * @returns {Dict} xp, totalXP, lvl, next (amount of XP for next level)
      */
      getExperience(toDate, fromDate) {
         const refEndDate = !isUndefined(toDate) ? new Date(toDate) : new Date();
@@ -101,6 +101,46 @@ class Experience {
         experience['stat'] = stats;
 
         return experience;
+    }
+
+    /**
+     * 
+     * @param {*} searchTxt 
+     * @param {*} filter 
+     * @param {Number} sortType 0:XP, 1:Date, 2:A-Z
+     * @param {Boolean} ascending
+     * @returns {Array} of skills
+     */
+    getSkills(searchTxt, filter, sortType, ascending) {
+        let skills = [];
+
+        const skillsContainSkillID = (skillID) => {
+            let isIn = false;
+            for (let a in skills) {
+                if (skills[a].skillID == skillID) {
+                    isIn = a; break;
+                }
+            }
+            return isIn;
+        }
+
+        const activities = this.user.activities;
+        for (let a in activities) {
+            const activity = activities[a];
+            const skillID = activity.skillID;
+            const index = skillsContainSkillID(skillID);
+            if (index === false) {
+                skills.push({ ...activity, count: 1 });
+            } else {
+                skills.count += 1;
+                skills.duration += activity.duration;
+                if (skills.startDate < activity.startDate) {
+                    skills.startDate = activity.startDate;
+                }
+            }
+        }
+
+        return skills;
     }
 
     __getXPDict(totalXP, xpPerLevel) {

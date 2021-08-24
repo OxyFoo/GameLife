@@ -87,7 +87,13 @@
     },
 
     "skills": {
-        "page-title": "Compétences"
+        "page-title": "Compétences",
+
+        "top-search-placeholder": "Rechercher",
+        "top-filter-default": "Filtres",
+        "top-sort-list": [
+            "XP", "A-Z", "DATE"
+        ]
     },
 
     "settings": {

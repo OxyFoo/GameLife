@@ -32,7 +32,7 @@ function GLText(props) {
     )
 
     return typeof(onPress) !== 'undefined' ? (
-        <TouchableOpacity activeOpacity={.5} onPress={onPress}>
+        <TouchableOpacity activeOpacity={.5} onPress={onPress} style={props.containerStyle}>
             {output}
         </TouchableOpacity>
     ) : (output);

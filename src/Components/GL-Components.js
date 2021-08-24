@@ -10,6 +10,7 @@ import GLDropDown from './GL-UI/GLDropDown';
 import GLBottomModal from './GL-UI/GLBottomModal';
 import GLActivityBox from './GL-UI/GLActivityBox';
 import GLStats from './GL-UI/GLStats';
+import GLSearchBar from './GL-UI/GLSearchBar';
 
 export {
     GLText,
@@ -23,5 +24,6 @@ export {
     GLDropDown,
     GLBottomModal,
     GLActivityBox,
-    GLStats
+    GLStats,
+    GLSearchBar
 }

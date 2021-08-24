@@ -25,7 +25,7 @@ class Experience extends React.Component {
         const firstDate = user.getFirstActivity();
         firstDate.setHours(0, 0, 0);
         const delta = (new Date()) - firstDate;
-        const delta_days = delta / (1000 * 60 * 60 * 24);
+        const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));
         const title_average = lang_experience['name-average'];
         const value_average = Math.max(0, parseInt(totalXP / delta_days));
 
@@ -33,7 +33,8 @@ class Experience extends React.Component {
         date.setHours(0, 0, 0);
         const title_day = lang_experience['name-day'];
         const value_day = user.experience.getExperience(undefined, date).totalXP;
-        date.setDate(parseInt(date.getDate()/7) * 7);
+        const currDay = date.getDay();
+        date.setDate(date.getDate() - currDay);
         const title_week = lang_experience['name-week'];
         const value_week = user.experience.getExperience(undefined, date).totalXP;
         date.setDate(0);

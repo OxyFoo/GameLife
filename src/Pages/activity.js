@@ -242,7 +242,10 @@ const styles = StyleSheet.create({
     },
 
     containerAttr: {
-        marginTop: 12
+        marginTop: 12,
+
+        zIndex: 10,
+        elevation: 10
     },
     attr: {
         marginLeft: 12,

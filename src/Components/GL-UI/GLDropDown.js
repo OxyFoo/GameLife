@@ -79,7 +79,10 @@ const styles = StyleSheet.create({
     container: {
         padding: 0,
         marginHorizontal: 12,
-        marginVertical: 22
+        marginVertical: 22,
+
+        zIndex: 100,
+        elevation: 100
     },
     box: {
         paddingLeft: 4,

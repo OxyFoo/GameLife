@@ -71,9 +71,10 @@ const styles = StyleSheet.create({
     containerModal: {
         position: 'absolute',
         width: '100%',
-        height: '100%',
+        height: 64,
         top: '90%',
         left: 0,
+        overflow: 'visible',
         backgroundColor: '#000000'
     },
     header: {
@@ -93,7 +94,9 @@ const styles = StyleSheet.create({
     },
     content: {
         width: '100%',
-        height: (SCREEN_LIMIT*100) + '%'
+        height: SCREEN_HEIGHT * SCREEN_LIMIT + 1000,
+        paddingBottom: 1000,
+        backgroundColor: '#000000'
     }
 });
 

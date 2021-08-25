@@ -42,7 +42,7 @@ class Skill extends React.Component {
 
     render() {
         return (
-            <View style={{ width: '100%', height: '100%', backgroundColor: 'red' }}>
+            <View style={{ position: 'relative', width: '100%', height: '100%' }}>
                 {/* Header */}
                 <GLHeader
                     title={langManager.curr['skill']['page-title']}
@@ -72,7 +72,7 @@ class Skill extends React.Component {
                     </View>
                     <GLStats containerStyle={styles.stats} data={this.stats} />
                 </View>
-                {/*<GLBottomSwipePage title={langManager.curr['skill']['page-history'].toUpperCase()}>
+                <GLBottomSwipePage title={langManager.curr['skill']['page-history'].toUpperCase()}>
                     <FlatList
                         data={this.history}
                         keyExtractor={(item, i) => 'history_' + i}
@@ -91,7 +91,7 @@ class Skill extends React.Component {
                             )
                         }}
                     />
-                </GLBottomSwipePage>*/}
+                </GLBottomSwipePage>
             </View>
         )
     }

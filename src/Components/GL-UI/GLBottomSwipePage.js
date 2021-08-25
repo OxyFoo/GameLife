@@ -6,7 +6,6 @@ import GLIconButton from './GLIconButton';
 import GLText from './GLText';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const HEIGHT = SCREEN_HEIGHT - 64;
 const SCREEN_LIMIT = .6;
 
 class GLBottomSwipePage extends React.Component {
@@ -47,7 +46,7 @@ class GLBottomSwipePage extends React.Component {
                 style={[
                     styles.containerModal,
                     { transform: [{
-                        translateY: new Animated.subtract(HEIGHT, this.state.animPositionY)
+                        translateY: new Animated.subtract(0, this.state.animPositionY)
                     }]}
                 ]}
             >
@@ -73,8 +72,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         height: '100%',
+        top: '90%',
         left: 0,
-        bottom: 0,
         backgroundColor: '#000000'
     },
     header: {

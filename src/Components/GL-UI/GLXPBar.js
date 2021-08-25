@@ -50,8 +50,7 @@ const styles = StyleSheet.create({
     },
     textXPSmall: {
         paddingVertical: Platform.OS === 'ios' ? 2 : 4,
-        fontSize: 12,
-        backgroundColor: 'red'
+        fontSize: 12
     },
     fill: {
         position: 'absolute',

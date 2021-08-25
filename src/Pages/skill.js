@@ -59,8 +59,10 @@ class Skill extends React.Component {
                             </View>
                         </View>
                         <View style={styles.detailContainer}>
-                            <GLText style={styles.detailName} title={this.name} />
-                            <GLText style={styles.detailCategory} title={this.category} color="grey" />
+                            <View>
+                                <GLText style={styles.detailName} title={this.name} />
+                                <GLText style={styles.detailCategory} title={this.category} color="grey" />
+                            </View>
                             <View>
                                 <GLText style={styles.level} title={this.level} />
                                 <GLXPBar value={this.xp} max={this.maxXP} small={true} />
@@ -124,6 +126,7 @@ const styles = StyleSheet.create({
     },
     detailContainer: {
         flex: 1,
+        paddingTop: 4,
         paddingHorizontal: 12,
         paddingLeft: 0,
 
@@ -132,7 +135,8 @@ const styles = StyleSheet.create({
     },
     detailName: {
         fontSize: 20,
-        textAlign: 'left'
+        textAlign: 'left',
+        lineHeight: 18
     },
     detailCategory: {
         fontSize: 18,

@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     picture: {
-        width: 96,
-        height: 96,
+        width: 128,
+        height: 128,
 
         borderWidth: 2,
         borderColor: '#FFFFFF',
@@ -126,10 +126,11 @@ const styles = StyleSheet.create({
     detailContainer: {
         flex: 1,
         padding: 12,
+        paddingVertical: 18,
         paddingLeft: 0,
 
         display: 'flex',
-        justifyContent: 'space-around'
+        justifyContent: 'space-between'
     },
     detailName: {
         fontSize: 20,

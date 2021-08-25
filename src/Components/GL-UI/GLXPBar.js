@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
         textAlign: 'right'
     },
     textXPSmall: {
-        paddingVertical: 4
+        paddingVertical: 2,
+        fontSize: 12
     },
     fill: {
         position: 'absolute',

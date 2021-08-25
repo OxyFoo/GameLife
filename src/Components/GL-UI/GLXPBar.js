@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         bottom: (-8 + borderSize/5)*5,
         width: 3,
         height: (((borderSize**2)*2)**0.5)*2, // Pythagore
-        transform: [{ rotate: "26deg" }],
+        transform: [{ rotate: "24deg" }],
         backgroundColor: '#FFFFFF'
     }
 });

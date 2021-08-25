@@ -6,7 +6,7 @@ import langManager from '../Managers/LangManager';
 import { GLHeader, GLText, GLXPBar } from '../Components/GL-Components';
 
 class Experience extends React.Component {
-    back = () => { user.changePage('home'); }
+    back = () => { user.backPage(); }
 
     render() {
         const userExperience = user.experience.getExperience();

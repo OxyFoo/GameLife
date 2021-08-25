@@ -14,7 +14,7 @@ class Settings extends React.Component {
         if (this.initLang !== langManager.currentLangageKey) {
             user.loadInternalData();
         }
-        user.changePage('home');
+        user.backPage();
     }
     deconnect = user.disconnect;
     changeLang = (lang) => {

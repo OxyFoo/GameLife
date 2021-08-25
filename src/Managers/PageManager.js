@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated, View, BackHandler } from 'react-native';
 
 import user from '../Managers/UserManager';
 import { OptionsAnimation } from '../Components/Animations';
@@ -25,7 +25,31 @@ class PageManager extends React.Component{
     }
 
     componentDidMount() {
+        this.path = [];
+        user.backPage = this.backPage;
         user.changePage = this.changePage;
+        BackHandler.addEventListener('hardwareBackPress', this.backHandle);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.backHandle);
+    }
+
+    backHandle = () => {
+        this.backPage();
+        return true;
+    }
+
+    backPage = () => {
+        if (this.path.length < 3) {
+            // TODO - Popup pour fermer l'app
+            console.warn("Error, cannot go to previous page");
+            return;
+        }
+        this.path.length = this.path.length - 1;
+        const [ prevPage, prevArgs] = this.path[this.path.length - 1];
+        this.setState({ arguments: prevArgs });
+        this.pageAnimation(prevPage);
     }
 
     changePage = (newpage, args) => {
@@ -45,6 +69,11 @@ class PageManager extends React.Component{
             return;
         };
 
+        this.path.push([newpage, args]);
+        this.pageAnimation(newpage);
+    }
+
+    pageAnimation = (newpage) => {
         if (!this.state.page1) {
             // Clear page 2
             OptionsAnimation(this.state.animOpacity2, 0, 400).start(() => { this.setState({ page2: '' }); });

@@ -31,7 +31,7 @@ class Identity extends React.Component {
         showDateTimePicker: ''
     }
 
-    back = () => { user.changePage('home'); }
+    back = () => { user.backPage(); }
     valid = () => {
         // Check mail
         //if (!([ '', user.email ].includes(this.state.email))) {
@@ -49,7 +49,7 @@ class Identity extends React.Component {
         user.email = this.state.email;
 
         user.changeUser();
-        user.changePage('home');
+        user.backPage();
     }
 
     // Pseudo

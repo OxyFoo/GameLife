@@ -12,13 +12,14 @@ import skills from '../../ressources/defaultDB/skills.json';
 class UserManager {
     conn = new ServManager(this);
     experience = new Experience(this);
+    
+    // this.changePage(pageName, argument);
+    // Change page with animation and arg
+    // Function loaded in componentDidMount of PageManager (in App.js)
+    changePage;
+    backPage;
 
     constructor() {
-        // this.changePage(pageName, argument);
-        // Change page with animation and arg
-        // Function loaded in componentDidMount of PageManager (in App.js)
-        this.changePage;
-
         // User informations
         this.pseudo = 'Player-XXXX';
         this.title = '';

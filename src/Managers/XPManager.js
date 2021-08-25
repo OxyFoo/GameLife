@@ -124,6 +124,7 @@ class Experience {
             return isIn;
         }
 
+        // Get all skills
         const activities = this.user.activities;
         for (let a in activities) {
             const activity = activities[a];
@@ -139,6 +140,15 @@ class Experience {
                 }
             }
         }
+
+        // Skills sorting
+        /*let sortedSkills = [];
+        const skillslength = skills.length;
+        if (sortType === 0) { // Sort by XP
+            for (let i = 0; i < skillslength; i++) {
+                // Check smallest xp
+            }
+        }*/
 
         return skills;
     }

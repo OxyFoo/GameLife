@@ -20,7 +20,7 @@ class Skills extends React.Component {
         skills: user.experience.getAllSkills()
     }
 
-    back = () => { user.changePage('home'); }
+    back = () => { user.backPage(); }
     switchSort = () => {
         const newIndex = (this.state.selectedSortIndex + 1) % SORT_LIST.length;
         this.setState({ selectedSortIndex: newIndex })

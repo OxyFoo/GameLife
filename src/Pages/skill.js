@@ -11,7 +11,7 @@ class Skill extends React.Component {
         super(props);
 
         if (typeof(props.args) === 'undefined') {
-            user.changePage('home');
+            user.backPage();
             return;
         }
 
@@ -38,7 +38,7 @@ class Skill extends React.Component {
             }
         }
     }
-    back = () => { user.changePage('home'); }
+    back = () => { user.backPage(); }
 
     render() {
         return (

@@ -14,7 +14,7 @@ class Calendar extends React.Component {
         showDateTimePicker: ''
     };
 
-    back = () => { user.changePage('home'); }
+    back = () => { user.backPage(); }
     addSkill = () => { user.changePage('activity'); }
     skill_click = (activity) => { user.changePage('activity', {'activity': activity}); }
     skill_remove = (activity) => {

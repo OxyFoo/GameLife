@@ -57,7 +57,7 @@ class Activity extends React.Component {
         }
     }
 
-    back = () => { user.changePage('calendar'); }
+    back = () => { user.backPage(); }
     valid = () => {
         if (typeof(this.state.selectedActivity) === 'undefined') {
             console.warn("Il faut remplir les champs");

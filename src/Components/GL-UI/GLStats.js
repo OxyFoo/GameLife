@@ -5,7 +5,7 @@ import langManager from '../../Managers/LangManager';
 import user from '../../Managers/UserManager';
 import GLXPSmallBar from './GLXPSmallBar';
 
-function statComponent(item, index) {
+function statComponent(item, sup, index) {
     const statKey = item;
 
     const stat = user.experience.getStatExperience(statKey);
@@ -17,14 +17,15 @@ function statComponent(item, index) {
 
     return (
         <TouchableOpacity style={styles.stat} key={'skill_' + index} activeOpacity={.5} onPress={pressEvent}>
-            <GLXPSmallBar title={title} value={stat.xp} max={stat.next} level={stat.lvl} />
+            <GLXPSmallBar title={title} value={stat.xp} max={stat.next} sup={sup} level={stat.lvl} />
         </TouchableOpacity>
     )
 }
 
 function GLStats(props) {
-    const stats = Object.keys(user.stats);
-    const output = stats.map((item, i) => statComponent(item, i));
+    const keys = Object.keys(props.data || defaultStatsKeys);
+    const sup = Object.values(props.data || defaultStatsKeys);
+    const output = keys.map((item, i) => statComponent(item, sup[i], i));
     const containerStyle = [ styles.container, props.containerStyle ];
 
     return (
@@ -32,6 +33,16 @@ function GLStats(props) {
             {output}
         </View>
     );
+}
+
+const defaultStatsKeys = {
+    'sag': undefined,
+    'int': undefined,
+    'con': undefined,
+    'for': undefined,
+    'end': undefined,
+    'agi': undefined,
+    'dex': undefined
 }
 
 const styles = StyleSheet.create({

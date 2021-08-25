@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import langManager from '../../Managers/LangManager';
 
 import GLText from './GLText';
 
@@ -7,22 +8,30 @@ function GLXPSmallBar(props) {
     const title = props.title;
     const style = props.style;
     const level = props.level || 0;
-    const valueMax = parseInt(props.max) || 10;
-    const value = Math.min(parseInt(props.value), valueMax) || 0;
 
+    const valueMax = parseInt(props.max) || 10;
+    
+    const value = Math.min(parseInt(props.value), valueMax) || 0;
     const valueText = value + '/' + valueMax;
-    const valueInt = value / valueMax * 100 + '%';
+    const valueInt = (value / valueMax) * 100;
+
+    const sup = typeof(props.sup) !== 'undefined' ? parseInt(props.sup) : null;
+    const valueSup = ((value + (sup || 0)) / valueMax) * 100;
 
     return (
         <View style={style}>
             <View style={styles.containerXP}>
 
                 <View style={styles.row}>
-                    <GLText style={styles.textXPTitle} title={title} color='grey' />
-                    <GLText style={styles.textXP} title={'LVL ' + level} color='grey' />
+                    <View style={styles.titleContainer}>
+                        <GLText style={styles.textXPTitle} title={title} color='grey' />
+                        {sup !== null && sup !== 0 && (<GLText style={styles.textXPSup} title={'+' + sup + ' ' + langManager.curr['level']['xp']} color='grey' />)}
+                    </View>
+                    <GLText style={styles.textXP} title={langManager.curr['level']['level-small'] + ' ' + level} color='grey' />
                 </View>
                 <View style={styles.background}>
-                    <View style={[styles.fill, { width: valueInt }]} />
+                    <View style={[styles.fill, styles.sup, { width: valueSup + '%' }]} />
+                    <View style={[styles.fill, { width: valueInt + '%' }]} />
                 </View>
                 <GLText style={styles.textXP} title={valueText} color='grey' />
 
@@ -52,6 +61,12 @@ const styles = StyleSheet.create({
         fontSize: 10,
         textAlign: 'right'
     },
+    titleContainer: {
+        width: '80%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
     textXPTitle: {
         maxWidth: '80%',
         textAlign: 'left',
@@ -59,12 +74,20 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         fontSize: 18
     },
+    textXPSup: {
+        padding: 4,
+        textAlign: 'left',
+        fontSize: 12
+    },
     fill: {
         position: 'absolute',
         top: 0,
         left: 0,
         height: 3,
         backgroundColor: '#FFFFFF'
+    },
+    sup: {
+        backgroundColor: '#888888'
     }
 });
 

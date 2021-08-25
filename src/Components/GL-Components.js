@@ -12,6 +12,8 @@ import GLActivityBox from './GL-UI/GLActivityBox';
 import GLSkillBox from './GL-UI/GLSkillBox';
 import GLStats from './GL-UI/GLStats';
 import GLSearchBar from './GL-UI/GLSearchBar';
+import GLDoubleCorner from './GL-UI/GLDoubleCorner';
+import GLBottomSwipePage from './GL-UI/GLBottomSwipePage';
 
 export {
     GLText,
@@ -27,5 +29,7 @@ export {
     GLActivityBox,
     GLSkillBox,
     GLStats,
-    GLSearchBar
+    GLSearchBar,
+    GLDoubleCorner,
+    GLBottomSwipePage
 }

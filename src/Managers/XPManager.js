@@ -4,7 +4,7 @@ const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
 const XPperHour = 100;
 const UserXPperLevel = 20;
 const StatXPperLevel = 2;
-const SkillXPperLevel = 2;
+const SkillXPperLevel = 20;
 
 class Experience {
     constructor(user) {

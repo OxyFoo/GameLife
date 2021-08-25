@@ -98,7 +98,11 @@
     },
 
     "skill": {
-        "page-title": "Compétence"
+        "page-title": "Compétence",
+
+        "text-author": "Une idée de",
+        "page-history": "Historique",
+        "text-history": "{} pendant {} minutes"
     },
 
     "settings": {

@@ -69,7 +69,7 @@ class PageManager extends React.Component{
             case 'statistic': p = <Statistic args={this.state.arguments} />; break;
             case 'calendar': p = <Calendar />; break;
             case 'activity': p = <Activity args={this.state.arguments} />; break;
-            case 'skill': p = <Skill />; break;
+            case 'skill': p = <Skill args={this.state.arguments} />; break;
             case 'skills': p = <Skills />; break;
             case 'settings': p = <Settings />; break;
             case 'experience': p = <Experience />; break;

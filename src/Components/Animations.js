@@ -9,5 +9,12 @@ function OptionsAnimation(anim, toValue, duration = 300) {
     });
 }
 
-export { OptionsAnimation };
+function OptionsAnimationSpring(anim, toValue) {
+    return Animated.spring(anim, {
+        toValue: toValue,
+        useNativeDriver: true
+    });
+}
+
+export { OptionsAnimation, OptionsAnimationSpring };
 export default () => {};

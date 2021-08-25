@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { dateToFormatString } from '../Functions/Functions';
-import { GLActivityBox, GLHeader, GLIconButton, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
+import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
 
 class Home extends React.Component {
     constructor(props) {
@@ -61,10 +61,12 @@ class Home extends React.Component {
                         <View style={styles.containerLevelColumn}>
                             {/* Level */}
                             <TouchableOpacity style={[styles.block, styles.blockLVL]} activeOpacity={0.5} onPress={this.openExperience}>
+                                <GLDoubleCorner />
                                 <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + LVL} />
                                 <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + totalXP} color='grey' />
                                 <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', 'XX')} color='grey' />
                             </TouchableOpacity>
+
                             {/* Calendar */}
                             <TouchableOpacity
                                 style={[styles.block, styles.blockCalendar]}
@@ -110,8 +112,8 @@ class Home extends React.Component {
                             numColumns={3}
                             keyExtractor={(item, i) => 'block_' + i}
                             renderItem={({item}) => (
-                                <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item) }}>
-                                    <GLText title={item} />
+                                <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item+1) }}>
+                                    <GLText title={item+1} />
                                 </TouchableOpacity>
                             )}
                         />

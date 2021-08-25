@@ -15,6 +15,7 @@ const SORT_LIST = langManager.curr['skills']['top-sort-list'];
 
 class Skills extends React.Component {
     state = {
+        search: '',
         ascending: true,
         sortSelectedIndex: 0,
         skills: user.experience.getAllSkills(undefined, undefined, 0, true)
@@ -30,8 +31,13 @@ class Skills extends React.Component {
         this.setState({ ascending: !this.state.ascending });
         setTimeout(this.refreshSkills, 50);
     }
+    changeText = (newText) => {
+        this.setState({ search: newText });
+        setTimeout(this.refreshSkills, 50);
+    }
+
     refreshSkills = () => {
-        const search = undefined;
+        const search = this.state.search;
         const filter = undefined;
         const sort = this.state.sortSelectedIndex;
         const ascending = this.state.ascending;
@@ -56,6 +62,7 @@ class Skills extends React.Component {
                 <View style={styles.topBar}>
                     <GLSearchBar
                         style={styles.search}
+                        onChangeText={this.changeText}
                         placeholder={langManager.curr['skills']['top-search-placeholder']}
                     />
                     <GLDropDown

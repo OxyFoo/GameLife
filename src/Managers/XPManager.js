@@ -142,6 +142,22 @@ class Experience {
             }
         }
 
+        if (typeof(searchTxt) === 'string' && searchTxt.length > 0) {
+            while (1) {
+                let a = false;
+                for (let s = 0; s < skills.length; s++) {
+                    const skillID = skills[s].skillID;
+                    const skill = user.getSkillByID(skillID);
+                    if (!skill.Name.includes(searchTxt)) {
+                        skills.splice(s, 1);
+                        a = true;
+                        break;
+                    }
+                }
+                if (!a) break;
+            }
+        }
+
         // Skills sorting
         let sortedSkills = [];
         const skillslength = skills.length;

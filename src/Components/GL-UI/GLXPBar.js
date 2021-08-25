@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import GLText from './GLText';
 
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         textAlign: 'right'
     },
     textXPSmall: {
-        paddingVertical: 4,
+        paddingVertical: Platform.OS === 'ios' ? 2 : 4,
         fontSize: 12,
         backgroundColor: 'red'
     },

@@ -16,21 +16,31 @@ const SORT_LIST = langManager.curr['skills']['top-sort-list'];
 class Skills extends React.Component {
     state = {
         ascending: true,
-        selectedSortIndex: 0,
-        skills: user.experience.getAllSkills()
+        sortSelectedIndex: 0,
+        skills: user.experience.getAllSkills(undefined, undefined, 0, true)
     }
 
     back = () => { user.backPage(); }
     switchSort = () => {
-        const newIndex = (this.state.selectedSortIndex + 1) % SORT_LIST.length;
-        this.setState({ selectedSortIndex: newIndex })
+        const newIndex = (this.state.sortSelectedIndex + 1) % SORT_LIST.length;
+        this.setState({ sortSelectedIndex: newIndex });
+        setTimeout(this.refreshSkills, 50);
     }
     switchOrder = () => {
         this.setState({ ascending: !this.state.ascending });
+        setTimeout(this.refreshSkills, 50);
+    }
+    refreshSkills = () => {
+        const search = undefined;
+        const filter = undefined;
+        const sort = this.state.sortSelectedIndex;
+        const ascending = this.state.ascending;
+        const skills = user.experience.getAllSkills(search, filter, sort, ascending);
+        this.setState({ skills: skills });
     }
 
     render() {
-        const sort = SORT_LIST[this.state.selectedSortIndex];
+        const sort = SORT_LIST[this.state.sortSelectedIndex];
         const orderIcon = this.state.ascending ? 'chevronBottom' : 'chevronTop';
 
         return (

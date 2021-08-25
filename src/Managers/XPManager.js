@@ -1,4 +1,5 @@
 import { isUndefined } from "../Functions/Functions";
+import user from "./UserManager";
 
 const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
 const XPperHour = 100;
@@ -142,15 +143,59 @@ class Experience {
         }
 
         // Skills sorting
-        /*let sortedSkills = [];
+        let sortedSkills = [];
         const skillslength = skills.length;
         if (sortType === 0) { // Sort by XP
             for (let i = 0; i < skillslength; i++) {
-                // Check smallest xp
+                let biggestValue = 0;
+                let biggestIndex = 0;
+                for (let s = 0; s < skills.length; s++) {
+                    const skillID = skills[s].skillID;
+                    const skillXP = this.getSkillExperience(skillID);
+                    if (skillXP.totalXP > biggestValue) {
+                        biggestIndex = s;
+                        biggestValue = skillXP.totalXP;
+                    }
+                }
+                sortedSkills.push(skills[biggestIndex]);
+                skills.splice(biggestIndex, 1);
             }
-        }*/
+            if (!ascending) sortedSkills.reverse();
+        } else if (sortType === 1) { // Sort by alphabetic
+            for (let i = 0; i < skillslength; i++) {
+                let lastestValue = '';
+                let lastestIndex = 0;
+                for (let s = 0; s < skills.length; s++) {
+                    const skillID = skills[s].skillID;
+                    const skill = user.getSkillByID(skillID);
+                    if (skill.Name.localeCompare(lastestValue) === 1) {
+                        lastestIndex = s;
+                        lastestValue = skill.Name;
+                    }
+                }
+                sortedSkills.push(skills[lastestIndex]);
+                skills.splice(lastestIndex, 1);
+            }
+            if (ascending) sortedSkills.reverse();
+        } else if (sortType === 2) { // Sort by Date
+            for (let i = 0; i < skillslength; i++) {
+                let lastestValue = 0;
+                let lastestIndex = 0;
+                for (let s = 0; s < skills.length; s++) {
+                    const skillID = skills[s].skillID;
+                    const skill = user.getSkillByID(skillID);
+                    if (skill.startDate > lastestValue) {
+                        lastestIndex = s;
+                        lastestValue = skill.Name;
+                    }
+                }
+                sortedSkills.push(skills[lastestIndex]);
+                skills.splice(lastestIndex, 1);
+            }
+            if (ascending) sortedSkills.reverse();
+        }
 
-        return skills;
+        return sortedSkills;
     }
 
     __getXPDict(totalXP, xpPerLevel) {

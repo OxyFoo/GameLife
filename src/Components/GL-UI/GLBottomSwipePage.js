@@ -6,7 +6,10 @@ import GLIconButton from './GLIconButton';
 import GLText from './GLText';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SCREEN_LIMIT = .6;
+const SCREEN_LIMIT = .65;
+
+const MAX = SCREEN_HEIGHT * SCREEN_LIMIT - 64;
+const MID = MAX / 2;
 
 class GLBottomSwipePage extends React.Component {
     state = {
@@ -27,11 +30,9 @@ class GLBottomSwipePage extends React.Component {
         }
     }
     swipe_end = (event) => {
-        const max = SCREEN_HEIGHT * SCREEN_LIMIT;
-        const mid = max / 2;
-        if (this.curr_posY > mid) {
-            OptionsAnimationSpring(this.state.animPositionY, max).start();
-            this.setState({ init_posY: max });
+        if (this.curr_posY > MID) {
+            OptionsAnimationSpring(this.state.animPositionY, MAX).start();
+            this.setState({ init_posY: MAX });
         } else {
             OptionsAnimationSpring(this.state.animPositionY, 0).start();
             this.setState({ init_posY: 0 });
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         height: 64,
-        top: '90%',
+        bottom: 0,
         left: 0,
         overflow: 'visible',
         backgroundColor: '#000000'
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
     },
     content: {
         width: '100%',
-        height: SCREEN_HEIGHT * SCREEN_LIMIT + 1000,
+        height: MAX + 1000,
         paddingBottom: 1000,
         backgroundColor: '#000000'
     }

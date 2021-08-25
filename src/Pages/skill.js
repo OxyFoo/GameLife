@@ -102,12 +102,14 @@ const styles = StyleSheet.create({
         flex: 1
     },
     skillContainer: {
+        height: '25%',
         display: 'flex',
         flexDirection: 'row'
     },
     pictureContainer: {
         marginVertical: 24,
-        marginHorizontal: 12
+        marginHorizontal: 12,
+        justifyContent: 'center'
     },
     picture: {
         width: 96,

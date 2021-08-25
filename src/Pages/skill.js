@@ -102,12 +102,11 @@ const styles = StyleSheet.create({
         flex: 1
     },
     skillContainer: {
-        height: '25%',
+        marginVertical: 24,
         display: 'flex',
         flexDirection: 'row'
     },
     pictureContainer: {
-        marginVertical: 24,
         marginHorizontal: 12,
         justifyContent: 'center'
     },
@@ -126,7 +125,6 @@ const styles = StyleSheet.create({
     detailContainer: {
         flex: 1,
         paddingHorizontal: 12,
-        marginVertical: 18,
         paddingLeft: 0,
 
         display: 'flex',

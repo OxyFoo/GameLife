@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
     },
     textXPSmall: {
         paddingVertical: 4,
-        fontSize: 12
+        fontSize: 12,
+        backgroundColor: 'red'
     },
     fill: {
         position: 'absolute',

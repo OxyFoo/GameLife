@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
     cornerBorder: {
         position: 'absolute',
         right: -7 + borderSize/2,
-        bottom: -7 + borderSize/5,
+        bottom: (-7 + borderSize/5)*5,
         width: 3,
-        height: ((borderSize**2)*2)**0.5, // Pythagore
+        height: (((borderSize**2)*2)**0.5)*2, // Pythagore
         transform: [{ rotate: "30deg" }],
         backgroundColor: '#FFFFFF'
     }

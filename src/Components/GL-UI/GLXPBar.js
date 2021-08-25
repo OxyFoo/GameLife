@@ -73,11 +73,11 @@ const styles = StyleSheet.create({
     },
     cornerBorder: {
         position: 'absolute',
-        right: -7 + borderSize/2,
-        bottom: (-7 + borderSize/5)*5,
+        right: -5 + borderSize/2,
+        bottom: (-8 + borderSize/5)*5,
         width: 3,
         height: (((borderSize**2)*2)**0.5)*2, // Pythagore
-        transform: [{ rotate: "30deg" }],
+        transform: [{ rotate: "26deg" }],
         backgroundColor: '#FFFFFF'
     }
 });

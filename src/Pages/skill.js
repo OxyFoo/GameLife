@@ -42,7 +42,7 @@ class Skill extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ width: '100%', height: '100%' }}>
                 {/* Header */}
                 <GLHeader
                     title={langManager.curr['skill']['page-title']}

@@ -63,7 +63,7 @@ class Skill extends React.Component {
                             <GLText style={styles.detailCategory} title={this.category} color="grey" />
                             <View>
                                 <GLText style={styles.level} title={this.level} />
-                                <GLXPBar value={this.xp} max={this.maxXP} />
+                                <GLXPBar value={this.xp} max={this.maxXP} small={true} />
                             </View>
                             {this.creator !== '' && (
                                 <GLText style={styles.creator} title={this.creator} color="grey" />
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     detailCategory: {
-        fontSize: 24,
+        fontSize: 18,
         textAlign: 'left'
     },
     level: {

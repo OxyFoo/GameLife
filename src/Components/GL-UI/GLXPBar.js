@@ -42,13 +42,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000'
     },
     textXP: {
+        margin: 0,
         paddingVertical: 6,
         paddingRight: 4,
         fontSize: 14,
         textAlign: 'right'
     },
     textXPSmall: {
-        paddingVertical: 2,
+        paddingVertical: 4,
         fontSize: 12
     },
     fill: {

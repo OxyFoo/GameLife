@@ -29,10 +29,8 @@ class GLLeftPanel extends React.PureComponent {
 
     componentDidUpdate() {
         const propsState = this.props.state;
-        if (typeof(propsState) === 'boolean') {
-            if (propsState !== this.state.lastState) {
-                this.toggleVisibility();
-            }
+        if (propsState !== this.state.lastState) {
+            this.toggleVisibility();
         }
     }
 
@@ -69,7 +67,7 @@ class GLLeftPanel extends React.PureComponent {
         return (
             <Animated.View
                 style={[styles.parent, { opacity: this.state.animOpacity }]}
-                pointerEvents={this.state.opened !== null ? 'auto' : 'none'}
+                pointerEvents={this.state.opened ? 'auto' : 'none'}
             >
                 <View style={styles.background} onTouchStart={this.toggleVisibility} />
                 <Animated.View style={[styles.container, {

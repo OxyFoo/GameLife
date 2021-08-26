@@ -8,16 +8,16 @@ import { GLHeader, GLIconButton, GLText } from '../Components/GL-Components';
 class Statistic extends React.Component {
     constructor(props) {
         super(props);
-        this.args = this.props.args;
+        this.stat = this.props.args['stat'] || 'sag';
     }
 
     back = () => { user.backPage(); }
-    next = () => { user.changePage('statistic', {'stat': this.getSideStat(1)}); };
-    prev = () => { user.changePage('statistic', {'stat': this.getSideStat(-1)}); };
+    next = () => { user.changePage('statistic', {'stat': this.getSideStat(1)}, true); };
+    prev = () => { user.changePage('statistic', {'stat': this.getSideStat(-1)}, true); };
 
     getSideStat = (value) => {
         const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
-        const currStat = this.args.stat;
+        const currStat = this.stat;
         let index = allStats.indexOf(currStat) + value;
         if (index >= allStats.length) index = 0;
         if (index < 0) index = allStats.length - 1;
@@ -25,7 +25,7 @@ class Statistic extends React.Component {
     }
 
     render() {
-        const statKey = this.args['stat'];
+        const statKey = this.stat;
         const statName = (langManager.curr['statistics']['names'][statKey] || "").toUpperCase();
         const statDescription = langManager.curr['statistics']['descriptions'][statKey];
 

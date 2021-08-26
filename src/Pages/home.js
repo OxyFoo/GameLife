@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { dateToFormatString } from '../Functions/Functions';
-import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
+import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLLeftPanel, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
 
 class Home extends React.Component {
     constructor(props) {
@@ -42,12 +42,18 @@ class Home extends React.Component {
             this.skills.push({ key: -1, value: '' });
         }
     }
+
+    state = {
+        leftPanelState: 0
+    }
+
     openIdentity = () => { user.changePage('identity'); }
     openCalendar = () => { user.changePage('calendar'); }
     openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
     openSkills = () => { user.changePage('skills'); }
     openSettings = () => { user.changePage('settings'); }
     openExperience = () => { user.changePage('experience'); }
+    openLeftPanel = () => { this.setState({ leftPanelState: this.state.leftPanelState + 1 }) }
 
     render() {
         const userExperience = user.experience.getExperience();
@@ -61,6 +67,8 @@ class Home extends React.Component {
                 {/* Header */}
                 <GLHeader
                     title={langManager.curr['home']['page-title']}
+                    leftIcon="pencil"
+                    onPressLeft={this.openLeftPanel}
                     rightIcon="gear"
                     onPressRight={this.openSettings}
                 />
@@ -148,6 +156,7 @@ class Home extends React.Component {
                         />
                     </TouchableOpacity>
                 </View>
+                <GLLeftPanel state={this.state.leftPanelState} />
             </>
         )
     }

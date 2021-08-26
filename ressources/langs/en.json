@@ -23,7 +23,15 @@
         "page-title": "Game Life",
         "title-calendar": "Calendar",
         "title-skills": "Skills",
-        "text-seeall": "Show more"
+        "text-seeall": "Show more",
+
+        "shortcut-skills": "Skills",
+        "shortcut-calendar": "Calendar",
+        "shortcut-stats": "Caracteristics",
+        "shortcut-level": "Level",
+        "shortcut-leaderboard": "Leaderboard",
+        "shortcut-quests": "Quests",
+        "shortcut-settings": "Settings"
     },
 
     "identity": {

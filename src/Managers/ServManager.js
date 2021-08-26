@@ -112,14 +112,18 @@ class ServManager {
             headers: headers || defaultHeaders,
             body: JSON.stringify(data)
         };
-        const response = await fetch(url, header);
 
-        if (response.status != 200) {
-            // Error
-            return;
+        let json = { "state": "fail" };
+        try {
+            const response = await fetch(url, header);
+            if (response.status === 200) {
+                json = await response.json();
+            }
+        } catch (error) {
+            // TODO - Gérer l'abscence de co ici
+            //console.warn(error);
         }
 
-        const json = await response.json();
         return json;
     }
 

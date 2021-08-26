@@ -23,7 +23,15 @@
         "page-title": "Game Life",
         "title-calendar": "Calendrier",
         "title-skills": "Compétences",
-        "text-seeall": "Voir plus"
+        "text-seeall": "Voir plus",
+
+        "shortcut-skills": "Compétences",
+        "shortcut-calendar": "Calendrier",
+        "shortcut-stats": "Statistiques",
+        "shortcut-level": "Niveau",
+        "shortcut-leaderboard": "Classement",
+        "shortcut-quests": "Quêtes",
+        "shortcut-settings": "Réglages"
     },
 
     "identity": {
@@ -109,7 +117,7 @@
     },
 
     "settings": {
-        "page-title": "Paramètres",
+        "page-title": "Réglages",
 
         "input-langage": "Langues",
         "input-theme": "Thèmes",

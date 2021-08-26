@@ -56,7 +56,7 @@ class PageManager extends React.Component{
         this.pageAnimation(prevPage);
     }
 
-    changePage = (newpage, args) => {
+    changePage = (newpage, args, ignorePath = false) => {
         const newArgs = typeof(args) !== 'undefined' ? args : {};
         this.setState({ arguments: newArgs });
 
@@ -64,7 +64,7 @@ class PageManager extends React.Component{
             this.forceUpdate(); return;
         }
 
-        if (newpage == (this.state.page1 || this.state.page2)) {
+        if (!ignorePath && newpage == (this.state.page1 || this.state.page2)) {
             return;
         }
 
@@ -73,7 +73,9 @@ class PageManager extends React.Component{
             return;
         };
 
-        this.path.push([newpage, args]);
+        if (!ignorePath) {
+            this.path.push([newpage, args]);
+        }
         this.pageAnimation(newpage);
     }
 

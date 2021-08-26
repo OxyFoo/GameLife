@@ -15,6 +15,7 @@ import GLSearchBar from './GL-UI/GLSearchBar';
 import GLDoubleCorner from './GL-UI/GLDoubleCorner';
 import GLBottomSwipePage from './GL-UI/GLBottomSwipePage';
 import GLPopup from './GL-UI/GLPopup';
+import GLLeftPanel from './GL-UI/GLLeftPanel';
 
 export {
     GLText,
@@ -33,5 +34,6 @@ export {
     GLSearchBar,
     GLDoubleCorner,
     GLBottomSwipePage,
-    GLPopup
+    GLPopup,
+    GLLeftPanel
 }

@@ -18,6 +18,8 @@ class UserManager {
     // Function loaded in componentDidMount of PageManager (in App.js)
     changePage;
     backPage;
+    openPopup;
+    closePopup;
 
     constructor() {
         // User informations

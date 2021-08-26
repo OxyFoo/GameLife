@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
+import user from '../../Managers/UserManager';
 
 class GLDropDown extends React.PureComponent {
     state = {
@@ -14,7 +15,11 @@ class GLDropDown extends React.PureComponent {
 
     toggleVisibility = () => {
         if (this.props.disabled) return;
-        this.setState({ opened: !this.state.opened });
+        if (Platform.OS === 'ios') {
+            user.openPopup('list', this);
+        } else {
+            this.setState({ opened: !this.state.opened });
+        }
     }
 
     listComponent = ({ item }) => {
@@ -37,6 +42,7 @@ class GLDropDown extends React.PureComponent {
                 }
 
                 this.toggleVisibility();
+                user.closePopup();
             } else {
                 // Toggle element
                 let selected = this.state.selectedIndexes;
@@ -67,7 +73,6 @@ class GLDropDown extends React.PureComponent {
         const style  = [ styles.container, this.props.style ];
         const styleBox = [ styles.box, this.props.styleBox ];
         const icon   = opened ? 'chevronTop' : 'chevronBottom';
-        const data   = this.props.data;
         const onLongPress = this.props.onLongPress;
 
         return (
@@ -77,18 +82,25 @@ class GLDropDown extends React.PureComponent {
                     <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />
                 </TouchableOpacity>
 
-                {!this.props.disabled && opened && (
-                    <FlatList
-                        style={styles.drop}
-                        data={data}
-                        keyExtractor={(item, i) => 'lang_' + i}
-                        renderItem={this.listComponent}
-                        removeClippedSubviews={true}
-                        maxToRenderPerBatch={20}
-                        updateCellsBatchingPeriod={50}
-                    />
+                {!this.props.disabled && opened && Platform.OS === 'android' && (
+                    this.contentRender(styles.drop)
                 )}
             </View>
+        )
+    }
+
+    contentRender(style) {
+        const data = this.props.data;
+        return (
+            <FlatList
+                style={style}
+                data={data}
+                keyExtractor={(item, i) => 'lang_' + i}
+                renderItem={this.listComponent}
+                removeClippedSubviews={true}
+                maxToRenderPerBatch={20}
+                updateCellsBatchingPeriod={50}
+            />
         )
     }
 }

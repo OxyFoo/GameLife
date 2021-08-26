@@ -14,6 +14,7 @@ import Skill from '../Pages/skill';
 import Skills from '../Pages/skills';
 import Settings from '../Pages/settings';
 import Experience from '../Pages/experience';
+import { GLPopup } from '../Components/GL-Components';
 
 class PageManager extends React.Component{
     state = {
@@ -21,13 +22,16 @@ class PageManager extends React.Component{
         page2: '',
         animOpacity1: new Animated.Value(0),
         animOpacity2: new Animated.Value(0),
-        arguments: {}
+        arguments: {},
+        popupArgs: [ null, null ]
     }
 
     componentDidMount() {
         this.path = [];
         user.backPage = this.backPage;
         user.changePage = this.changePage;
+        user.openPopup = this.openPopup;
+        user.closePopup = this.closePopup;
         BackHandler.addEventListener('hardwareBackPress', this.backHandle);
     }
 
@@ -106,6 +110,18 @@ class PageManager extends React.Component{
         return p;
     }
 
+    openPopup = (type, args) => {
+        const newArgs = typeof(type) !== 'undefined' ? [ type, args ] : [ null, null ];
+        this.setState({ popupArgs: newArgs });
+    }
+    closePopup = () => {
+        const type = this.state.popupArgs[0];
+        if (type !== null) {
+            const args = this.state.popupArgs[1];
+            this.setState({ popupArgs: [ null, args ] });
+        }
+    }
+
     render() {
         let page1 = this.GetPageContent(this.state.page1);
         let page2 = this.GetPageContent(this.state.page2);
@@ -129,6 +145,7 @@ class PageManager extends React.Component{
                 <Animated.View pointerEvents={this.state.page2 ? 'auto' : 'none'} style={[fullscreen, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity2.interpolate(inter) }]}>
                     {page2}
                 </Animated.View>
+                <GLPopup type={this.state.popupArgs[0]} args={this.state.popupArgs[1]} />
             </View>
         )
     }

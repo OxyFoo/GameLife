@@ -18,6 +18,9 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker)
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
+
+### Unused
+* [React native gesture handler](https://www.npmjs.com/package/react-native-gesture-handler)
 * [React Native AES Crypto](https://www.npmjs.com/package/react-native-aes-crypto)
 
 # Sécu (Requests)

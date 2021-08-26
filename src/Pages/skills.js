@@ -16,8 +16,10 @@ const SORT_LIST = langManager.curr['skills']['top-sort-list'];
 class Skills extends React.Component {
     state = {
         search: '',
-        ascending: true,
+        filters: user.getSkillCategories(true),
+        selectedFiltersIndex: [],
         sortSelectedIndex: 0,
+        ascending: true,
         skills: user.experience.getAllSkills(undefined, undefined, 0, true)
     }
 
@@ -35,13 +37,20 @@ class Skills extends React.Component {
         this.setState({ search: newText });
         setTimeout(this.refreshSkills, 50);
     }
+    filterChange = (indexes) => {
+        this.setState({ selectedFiltersIndex: indexes });
+        setTimeout(this.refreshSkills, 50);
+    }
 
     refreshSkills = () => {
         const search = this.state.search;
-        const filter = undefined;
+        let filters = [];
+        for (let i = 0; i < this.state.selectedFiltersIndex.length; i++) {
+            filters.push(this.state.filters[this.state.selectedFiltersIndex[i]].value);
+        }
         const sort = this.state.sortSelectedIndex;
         const ascending = this.state.ascending;
-        const skills = user.experience.getAllSkills(search, filter, sort, ascending);
+        const skills = user.experience.getAllSkills(search, filters, sort, ascending);
         this.setState({ skills: skills });
     }
 
@@ -65,21 +74,27 @@ class Skills extends React.Component {
                         onChangeText={this.changeText}
                         placeholder={langManager.curr['skills']['top-search-placeholder']}
                     />
-                    <GLDropDown
-                        style={styles.filter}
-                        styleBox={styles.filterBox}
-                        data={data}
-                        value={langManager.curr['skills']['top-filter-default']}
-                    />
                     <GLText
+                        style={styles.sort}
                         containerStyle={{ flex: 1 }}
                         title={sort}
                         onPress={this.switchSort}
                     />
                 </View>
 
+                {/* Filters out of topbar but absolute to keep in, FUCK U RN */}
+                <GLDropDown
+                    style={styles.filter}
+                    styleBox={styles.filterBox}
+                    onSelect={this.filterChange}
+                    data={this.state.filters}
+                    disabled={this.state.filters.length <= 0}
+                    value={langManager.curr['skills']['top-filter-default']}
+                    toggleMode={true}
+                />
+
                 {/* Content */}
-                <View style={{ flex: 1 }}>
+                <View style={styles.content}>
                     <FlatList
                         data={this.state.skills}
                         keyExtractor={(item, i) => 'lang_' + i}
@@ -110,13 +125,18 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
         borderWidth: 3,
         borderTopWidth: 2,
-        backgroundColor: '#000000',
-        zIndex: 100,
-        elevation: 100
+        backgroundColor: '#000000'
     },
-    search: { width: '40%', height: '100%' },
-    filter: {
+    search: {
         width: '40%',
+        height: '100%'
+    },
+    filter: {
+        position: 'absolute',
+        top: 64,
+        left: '40%',
+        width: '40%',
+        height: 48,
         marginVertical: 0,
         marginHorizontal: 0,
         marginBottom: -3
@@ -126,7 +146,14 @@ const styles = StyleSheet.create({
         borderTopWidth: 0,
         borderBottomWidth: 0
     },
-    sort: { width: '20%' },
+    sort: {
+        width: '34%',
+        paddingVertical: 6,
+        marginLeft: '66%'
+    },
+    content: {
+        flex: 1
+    },
     floatingButton: {
         position: 'absolute',
         right: 12,

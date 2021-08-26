@@ -6,6 +6,8 @@ import GLIconButton from './GLIconButton';
 
 class GLDropDown extends React.PureComponent {
     state = {
+        toggleMode: this.props.toggleMode || false,
+        selectedIndexes: [],
         opened: false,
         selectedText: undefined
     }
@@ -24,21 +26,38 @@ class GLDropDown extends React.PureComponent {
 
         // Events
         const onSelect = () => {
-            if (typeof(this.props.onSelect) === 'function') {
-                this.props.onSelect(key, item);
-            };
+            if (!this.state.toggleMode) {
+                if (typeof(this.props.onSelect) === 'function') {
+                    this.props.onSelect(key, item);
+                };
 
-            const showOnSelect = this.props.showOnSelect;
-            if (typeof(showOnSelect) !== 'undefined' && showOnSelect === true) {
-                this.setState({ selectedText: value.toUpperCase() });
+                const showOnSelect = this.props.showOnSelect;
+                if (typeof(showOnSelect) !== 'undefined' && showOnSelect === true) {
+                    this.setState({ selectedText: value.toUpperCase() });
+                }
+
+                this.toggleVisibility();
+            } else {
+                // Toggle element
+                let selected = this.state.selectedIndexes;
+                if (selected.includes(key)) selected.splice(selected.indexOf(key), 1);
+                else selected.push(key);
+                this.setState({ selectedIndexes: selected });
+
+                if (typeof(this.props.onSelect) === 'function') {
+                    this.props.onSelect(selected);
+                };
+
+                this.forceUpdate();
             }
-
-            this.toggleVisibility();
         }
+
+        const isSelected = this.state.selectedIndexes.includes(key);
+        const color = (!this.state.toggleMode || isSelected) ? 'white' : 'darkgrey';
 
         // Component
         return (
-            <GLText style={styles.component} title={value.toUpperCase()} onPress={onSelect} />
+            <GLText style={styles.component} title={value.toUpperCase()} onPress={onSelect} color={color} />
         )
     }
 
@@ -78,11 +97,12 @@ const styles = StyleSheet.create({
     container: {
         padding: 0,
         marginHorizontal: 12,
-        marginVertical: 22
+        marginVertical: 22,
+        overflow: 'visible'
     },
     box: {
         paddingLeft: 4,
-        
+
         borderColor: '#FFFFFF',
         borderWidth: 3,
 

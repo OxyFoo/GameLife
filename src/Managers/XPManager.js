@@ -1,5 +1,4 @@
 import { isUndefined } from "../Functions/Functions";
-import user from "./UserManager";
 
 const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
 const XPperHour = 100;
@@ -107,12 +106,12 @@ class Experience {
     /**
      * 
      * @param {*} searchTxt 
-     * @param {*} filter 
+     * @param {*} filters 
      * @param {Number} sortType 0:XP, 1:Date, 2:A-Z
      * @param {Boolean} ascending
      * @returns {Array} of skills
      */
-    getAllSkills(searchTxt, filter, sortType, ascending) {
+    getAllSkills(searchTxt, filters, sortType, ascending) {
         let skills = [];
 
         const skillsContainSkillID = (skillID) => {
@@ -142,13 +141,31 @@ class Experience {
             }
         }
 
+        // Skills search
         if (typeof(searchTxt) === 'string' && searchTxt.length > 0) {
             while (1) {
                 let a = false;
                 for (let s = 0; s < skills.length; s++) {
                     const skillID = skills[s].skillID;
-                    const skill = user.getSkillByID(skillID);
+                    const skill = this.user.getSkillByID(skillID);
                     if (!skill.Name.includes(searchTxt)) {
+                        skills.splice(s, 1);
+                        a = true;
+                        break;
+                    }
+                }
+                if (!a) break;
+            }
+        }
+
+        // Skills filters
+        if (typeof(filters) !== 'undefined' && filters.length > 0) {
+            while (1) {
+                let a = false;
+                for (let s = 0; s < skills.length; s++) {
+                    const skillID = skills[s].skillID;
+                    const skill = this.user.getSkillByID(skillID);
+                    if (!filters.includes(skill.Category)) {
                         skills.splice(s, 1);
                         a = true;
                         break;
@@ -183,7 +200,7 @@ class Experience {
                 let lastestIndex = 0;
                 for (let s = 0; s < skills.length; s++) {
                     const skillID = skills[s].skillID;
-                    const skill = user.getSkillByID(skillID);
+                    const skill = this.user.getSkillByID(skillID);
                     if (skill.Name.localeCompare(lastestValue) === 1) {
                         lastestIndex = s;
                         lastestValue = skill.Name;
@@ -199,7 +216,7 @@ class Experience {
                 let lastestIndex = 0;
                 for (let s = 0; s < skills.length; s++) {
                     const skillID = skills[s].skillID;
-                    const skill = user.getSkillByID(skillID);
+                    const skill = this.user.getSkillByID(skillID);
                     if (skill.startDate > lastestValue) {
                         lastestIndex = s;
                         lastestValue = skill.Name;

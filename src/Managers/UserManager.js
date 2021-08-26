@@ -30,12 +30,12 @@ class UserManager {
 
         this.stats = {
             'sag': 0,
-            'int': 2,
-            'con': 5,
-            'for': 6,
-            'end': 8,
-            'agi': 9,
-            'dex': 10
+            'int': 0,
+            'con': 0,
+            'for': 0,
+            'end': 0,
+            'agi': 0,
+            'dex': 0
         };
 
         this.titles = [];
@@ -83,7 +83,7 @@ class UserManager {
         }
         return skill;
     }
-    getSkillCategories = () => {
+    getSkillCategories = (onlyUseful = false) => {
         let cats = [];
         for (let i = 0; i < this.skills.length; i++) {
             let cat = this.skills[i].Category;
@@ -94,7 +94,15 @@ class UserManager {
                     isInCats = true;
                 }
             }
-            if (!isInCats) {
+
+            let curr = false;
+            for (let a = 0; a < this.activities.length; a++) {
+                if (this.activities[a].skillID == this.skills[i].ID) {
+                    curr = true;
+                }
+            }
+
+            if (!isInCats && (!onlyUseful || curr)) {
                 cats.push({ key: cats.length, value: cat });
             }
         }

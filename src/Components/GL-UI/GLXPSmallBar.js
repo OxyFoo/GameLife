@@ -16,7 +16,8 @@ function GLXPSmallBar(props) {
     const valueInt = (value / valueMax) * 100;
 
     const sup = typeof(props.sup) !== 'undefined' ? parseInt(props.sup) : null;
-    const valueSup = ((value + (sup || 0)) / valueMax) * 100;
+    const supInt = Math.min(value + (sup || 0), valueMax);
+    const valueSup = (supInt / valueMax) * 100;
 
     return (
         <View style={style}>

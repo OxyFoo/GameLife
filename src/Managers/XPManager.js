@@ -53,6 +53,9 @@ class Experience {
 
         return this.__getXPDict(this.user.xp, UserXPperLevel);
     }
+    getXPperHour() {
+        return XPperHour;
+    }
 
     getXPTo(level) {
         let _lvl = 0;

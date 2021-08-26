@@ -14,7 +14,7 @@ function GLSkillBox(props) {
     const totalXP = skillExperience.totalXP;
 
     const text_title = (skill.Name || '').toUpperCase();
-    const text_level = langManager.curr['level']['level'] + level + ', ' + totalXP + langManager.curr['level']['xp'];
+    const text_level = langManager.curr['level']['level'] + ' ' + level + ', ' + totalXP + langManager.curr['level']['xp'];
     const text_date = dateToFormatString(new Date(props.item.startDate));
 
     const styleContainer = [ styles.container, props.style ];

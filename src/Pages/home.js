@@ -10,6 +10,13 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
 
+        // Average XP
+        const firstDate = user.getFirstActivity();
+        firstDate.setHours(0, 0, 0);
+        const delta = (new Date()) - firstDate;
+        const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));
+        this.averageXPperDay = Math.max(0, parseInt(user.xp / delta_days));
+
         // User activities
         const show = 4;
         this.activities = [];
@@ -17,6 +24,22 @@ class Home extends React.Component {
             if (i >= 0) {
                 this.activities.push(user.activities[i]);
             }
+        }
+
+        // Skills
+        const MAX_SKILLS = 6;
+        let skills = user.experience.getAllSkills('', [], 1, false);
+        skills.length = Math.min(skills.length, MAX_SKILLS);
+
+        this.skills = [];
+        for (let s = 0; s < skills.length; s++) {
+            const skillID = skills[s].skillID;
+            const skillName = user.getSkillByID(skillID).Name;
+            const newVal = { key: skillID, value: skillName };
+            this.skills.push(newVal);
+        }
+        while (this.skills.length < MAX_SKILLS) {
+            this.skills.push({ key: -1, value: '' });
         }
     }
     openIdentity = () => { user.changePage('identity'); }
@@ -32,7 +55,6 @@ class Home extends React.Component {
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;
         const nextLvlXP = userExperience.next;
-        const blocks = [ 0, 1, 2, 3, 4, 5 ];
 
         return (
             <>
@@ -64,7 +86,7 @@ class Home extends React.Component {
                                 <GLDoubleCorner />
                                 <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + LVL} />
                                 <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + totalXP} color='grey' />
-                                <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', 'XX')} color='grey' />
+                                <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', this.averageXPperDay)} color='grey' />
                             </TouchableOpacity>
 
                             {/* Calendar */}
@@ -73,7 +95,7 @@ class Home extends React.Component {
                                 activeOpacity={.5}
                                 onPress={this.openCalendar}
                             >
-                                <GLText style={styles.calendarTitle} title='CALENDRIER' />
+                                <GLText style={styles.calendarTitle} title={langManager.curr['home']['title-calendar'].toUpperCase()} />
                                 <FlatList
                                     data={this.activities}
                                     keyExtractor={(item, i) => 'activity_' + i}
@@ -95,7 +117,7 @@ class Home extends React.Component {
                                     }}
                                 />
                                 <View style={styles.calendarBottom}>
-                                    <GLText style={styles.textLevelPlus} title={"Voir plus"} />
+                                    <GLText style={styles.textLevelPlus} title={langManager.curr['home']['text-seeall']} />
                                     <GLIconButton icon='chevron' size={16} />
                                 </View>
                             </TouchableOpacity>
@@ -104,18 +126,25 @@ class Home extends React.Component {
 
                     {/* User - Skills */}
                     <TouchableOpacity style={styles.containerSkills} activeOpacity={0.5} onPress={this.openSkills}>
-                        <GLText style={styles.titleSkill} title='COMPETENCES' />
+                        <GLText style={styles.titleSkill} title={langManager.curr['home']['title-skills'].toUpperCase()} />
                         <FlatList
                             columnWrapperStyle={{ width: '100%', justifyContent: 'space-evenly' }}
                             contentContainerStyle={{ display: 'flex', alignItems: 'center' }}
-                            data={blocks}
+                            data={this.skills}
                             numColumns={3}
                             keyExtractor={(item, i) => 'block_' + i}
-                            renderItem={({item}) => (
-                                <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item+1) }}>
-                                    <GLText title={item+1} />
-                                </TouchableOpacity>
-                            )}
+                            renderItem={({item}) => {
+                                return item.key === -1 ? (
+                                        <View style={[styles.block, styles.blockSkill]} />
+                                    ) : (
+                                        <View>
+                                            <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item.key) }}>
+                                            </TouchableOpacity>
+                                            <GLText style={{ marginTop: 4, marginBottom: 8 }} title={item.value} />
+                                        </View>
+                                    )
+                                }
+                            }
                         />
                     </TouchableOpacity>
                 </View>
@@ -160,7 +189,7 @@ const styles = StyleSheet.create({
     },
 
     containerContent: {
-        height: '60%',
+        height: '55%',
         flexDirection: 'row'
     },
     containerStats: {
@@ -214,7 +243,7 @@ const styles = StyleSheet.create({
     },
 
     containerSkills: {
-        height: '30%',
+        height: '35%',
         display: 'flex',
         justifyContent: 'space-evenly'
     },

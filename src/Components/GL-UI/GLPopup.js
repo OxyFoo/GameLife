@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { Animated, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
-import GLText from './GLText';
-import GLIconButton from './GLIconButton';
 import { OptionsAnimation } from '../Animations';
 import user from '../../Managers/UserManager';
 
@@ -36,53 +34,6 @@ class GLPopup extends React.PureComponent {
         }
     }
 
-    listComponent = ({ item }) => {
-        const { key, value } = item;
-        return (
-            <GLText style={styles.component} title={value.toUpperCase()} color={'white'} onPress={() => {}} />
-        )
-
-        if (this.props.disabled) {
-            return;
-        }
-
-        // Events
-        const onSelect = () => {
-            if (!this.state.toggleMode) {
-                if (typeof(this.props.onSelect) === 'function') {
-                    this.props.onSelect(key, item);
-                };
-
-                const showOnSelect = this.props.showOnSelect;
-                if (typeof(showOnSelect) !== 'undefined' && showOnSelect === true) {
-                    this.setState({ selectedText: value.toUpperCase() });
-                }
-
-                this.toggleVisibility();
-            } else {
-                // Toggle element
-                let selected = this.state.selectedIndexes;
-                if (selected.includes(key)) selected.splice(selected.indexOf(key), 1);
-                else selected.push(key);
-                this.setState({ selectedIndexes: selected });
-
-                if (typeof(this.props.onSelect) === 'function') {
-                    this.props.onSelect(selected);
-                };
-
-                this.forceUpdate();
-            }
-        }
-
-        const isSelected = this.state.selectedIndexes.includes(key);
-        const color = (!this.state.toggleMode || isSelected) ? 'white' : 'darkgrey';
-
-        // Component
-        return (
-            <GLText style={styles.component} title={value.toUpperCase()} onPress={onSelect} color={color} />
-        )
-    }
-
     render() {
         return (
             <Animated.View
@@ -96,16 +47,6 @@ class GLPopup extends React.PureComponent {
                     }]}
                 >
                     {this.props.type === "list" && this.props.args.contentRender()}
-                    {/*this.props.type === 'list' && (
-                        <FlatList
-                            data={this.props.args}
-                            keyExtractor={(item, i) => 'lang_' + i}
-                            renderItem={this.listComponent}
-                            removeClippedSubviews={true}
-                            maxToRenderPerBatch={20}
-                            updateCellsBatchingPeriod={50}
-                        />
-                    )*/}
                 </Animated.View>
             </Animated.View>
         )

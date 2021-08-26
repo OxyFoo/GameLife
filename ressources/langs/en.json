@@ -20,7 +20,10 @@
     },
 
     "home": {
-        "page-title": "Game Life"
+        "page-title": "Game Life",
+        "title-calendar": "Calendar",
+        "title-skills": "Skills",
+        "text-seeall": "Show more"
     },
 
     "identity": {

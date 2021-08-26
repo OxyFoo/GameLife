@@ -132,9 +132,10 @@ class Activity extends React.Component {
 
         let skill, totalXP;
         if (!isUndefined(this.state.selectedActivity)) {
-            skill = user.getSkillByID(this.state.selectedActivity.skillID);
-            totalXP = sum(Object.values(skill.Stats)) * (this.DURATION[this.state.selectedTimeKey].duration / 60);
-            // TODO - utiliser la classe experience depuis l'user
+            const skillID = this.state.selectedActivity.skillID;
+            const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
+            skill = user.getSkillByID(skillID);
+            totalXP = user.experience.getXPperHour() * durationHour;
         }
 
         return (

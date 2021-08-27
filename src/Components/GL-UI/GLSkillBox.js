@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     text: {
-        fontSize: 12,
+        fontSize: 14,
         textAlign: 'left'
     },
     text2: {

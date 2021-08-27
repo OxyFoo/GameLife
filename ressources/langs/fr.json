@@ -111,6 +111,8 @@
     "skill": {
         "page-title": "Compétence",
 
+        "text-point": "Point",
+        "text-points": "Points",
         "text-author": "Une idée de",
         "page-history": "Historique",
         "text-history": "{} pendant {} minutes"
@@ -132,7 +134,7 @@
         "names": {
             "sag": "Sagesse",
             "int": "Intelligence",
-            "con": "Confiance en soi",
+            "con": "Assurance",
             "for": "Force",
             "end": "Endurance",
             "agi": "Agilité",

@@ -18,7 +18,7 @@ class Home extends React.Component {
         this.averageXPperDay = Math.max(0, parseInt(user.xp / delta_days));
 
         // User activities
-        const show = 4;
+        const show = 3;
         this.activities = [];
         for (let i = user.activities.length-1; i > user.activities.length - show - 1; i--) {
             if (i >= 0) {
@@ -51,7 +51,6 @@ class Home extends React.Component {
     openCalendar = () => { user.changePage('calendar'); }
     openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
     openSkills = () => { user.changePage('skills'); }
-    openSettings = () => { user.changePage('settings'); }
     openExperience = () => { user.changePage('experience'); }
     openLeftPanel = () => { this.setState({ leftPanelState: this.state.leftPanelState + 1 }) }
 
@@ -67,10 +66,8 @@ class Home extends React.Component {
                 {/* Header */}
                 <GLHeader
                     title={langManager.curr['home']['page-title']}
-                    leftIcon="pencil"
+                    leftIcon="sandwich"
                     onPressLeft={this.openLeftPanel}
-                    rightIcon="gear"
-                    onPressRight={this.openSettings}
                 />
 
                 <View style={styles.parentView}>
@@ -147,8 +144,8 @@ class Home extends React.Component {
                                     ) : (
                                         <View>
                                             <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item.key) }}>
+                                                <GLText style={styles.blockSkillText} title={item.value} />
                                             </TouchableOpacity>
-                                            <GLText style={{ marginTop: 4, marginBottom: 8 }} title={item.value} />
                                         </View>
                                     )
                                 }
@@ -232,7 +229,13 @@ const styles = StyleSheet.create({
     },
     blockLVL: { height: '25%', justifyContent: 'space-evenly' },
     blockCalendar: { height: '60%', paddingHorizontal: 0 },
-    blockSkill: { width: 64, height: 64, margin: 0, marginTop: 12 },
+    blockSkill: { width: 64, height: 64, margin: 0, marginTop: 12, marginBottom: 24, overflow: 'visible' },
+    blockSkillText: {
+        position: 'absolute',
+        top: 64,
+        left: '-70%',
+        right: '-70%'
+    },
 
     calendarTitle: {
         marginBottom: 12,

@@ -18,6 +18,7 @@ function GLXPSmallBar(props) {
     const sup = typeof(props.sup) !== 'undefined' ? parseInt(props.sup) : null;
     const supInt = Math.min(value + (sup || 0), valueMax);
     const valueSup = (supInt / valueMax) * 100;
+    const textSup = '+' + sup + ' ' + langManager.curr['skill']['text-' + (sup > 1 ? 'points' : 'point')];
 
     return (
         <View style={style}>
@@ -26,7 +27,7 @@ function GLXPSmallBar(props) {
                 <View style={styles.row}>
                     <View style={styles.titleContainer}>
                         <GLText style={styles.textXPTitle} title={title} color='grey' />
-                        {sup !== null && sup !== 0 && (<GLText style={styles.textXPSup} title={'+' + sup + ' ' + langManager.curr['level']['xp']} color='grey' />)}
+                        {sup !== null && sup !== 0 && (<GLText style={styles.textXPSup} title={textSup} color='grey' />)}
                     </View>
                     <GLText style={styles.textXP} title={langManager.curr['level']['level-small'] + ' ' + level} color='grey' />
                 </View>

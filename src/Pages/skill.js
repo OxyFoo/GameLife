@@ -21,7 +21,7 @@ class Skill extends React.Component {
 
         this.name = skill.Name;
         this.category = skill.Category;
-        this.level = langManager.curr['level']['level-small'] + ' ' + skillXP.lvl;
+        this.level = langManager.curr['level']['level'] + ' ' + skillXP.lvl;
         this.xp = skillXP.xp;
         this.maxXP = skillXP.next;
         if (skill.Creator) {
@@ -67,9 +67,7 @@ class Skill extends React.Component {
                                 <GLText style={styles.level} title={this.level} />
                                 <GLXPBar value={this.xp} max={this.maxXP} small={true} />
                             </View>
-                            {this.creator !== '' && (
-                                <GLText style={styles.creator} title={this.creator} color="grey" />
-                            )}
+                            <GLText style={styles.creator} title={this.creator} color="grey" />
                         </View>
                     </View>
                     <GLStats containerStyle={styles.stats} data={this.stats} />
@@ -143,7 +141,7 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     level: {
-        fontSize: 14,
+        fontSize: 16,
         marginBottom: 4,
         textAlign: 'left'
     },

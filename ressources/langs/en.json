@@ -111,6 +111,8 @@
     "skill": {
         "page-title": "Compétence",
 
+        "text-point": "Point",
+        "text-points": "Points",
         "text-author": "An idea from",
         "page-history": "History",
         "text-history": "{} during {} minutes"

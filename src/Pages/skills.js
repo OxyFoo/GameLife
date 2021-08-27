@@ -5,12 +5,6 @@ import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../Components/GL-Components';
 
-const data = [
-    { key: 0, value: 'Test1' },
-    { key: 1, value: 'Test2' },
-    { key: 2, value: 'Test3' }
-];
-
 const SORT_LIST = langManager.curr['skills']['top-sort-list'];
 
 class Skills extends React.Component {

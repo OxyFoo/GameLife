@@ -48,10 +48,6 @@ class Settings extends React.Component {
                         </TouchableOpacity>
                     )}
 
-                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={user.clear}>
-                        <GLText style={styles.title} title='[Test] Clear data' />
-                        <GLIconButton icon='trash' />
-                    </TouchableOpacity>
                 </View>
             </View>
         )

@@ -22,7 +22,7 @@ const SHORTCUTS = [
 class GLLeftPanel extends React.PureComponent {
     state = {
         opened: false,
-        lastState: 0,
+        lastState: false,
         animOpacity: new Animated.Value(0),
         animPosX: new Animated.Value(0)
     }
@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
         marginLeft: -PANEL_WIDTH,
         paddingTop: 64,
         borderColor: '#FFFFFF',
-        borderWidth: 2
+        borderWidth: 2,
+        backgroundColor: '#000000'
     },
     component: {
         paddingHorizontal: 12,

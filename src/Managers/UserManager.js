@@ -55,9 +55,6 @@ class UserManager {
         console.log('unmount');
         this.saveData();
     }
-    clear = () => {
-        DataManager.Save(STORAGE.USER, '', false);
-    }
 
     refreshStats = (save = true) => {
         this.experience.getExperience();

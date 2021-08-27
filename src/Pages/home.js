@@ -44,7 +44,14 @@ class Home extends React.Component {
     }
 
     state = {
-        leftPanelState: 0
+        loaded: false,
+        leftPanelState: false
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({ loaded: true });
+        }, 100);
     }
 
     openIdentity = () => { user.changePage('identity'); }
@@ -52,7 +59,7 @@ class Home extends React.Component {
     openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
     openSkills = () => { user.changePage('skills'); }
     openExperience = () => { user.changePage('experience'); }
-    openLeftPanel = () => { this.setState({ leftPanelState: this.state.leftPanelState + 1 }) }
+    openLeftPanel = () => { this.setState({ leftPanelState: !this.state.leftPanelState }) }
 
     render() {
         const userExperience = user.experience.getExperience();
@@ -153,7 +160,8 @@ class Home extends React.Component {
                         />
                     </TouchableOpacity>
                 </View>
-                <GLLeftPanel state={this.state.leftPanelState} />
+
+                {this.state.loaded && <GLLeftPanel state={this.state.leftPanelState} />}
             </>
         )
     }

@@ -80,18 +80,21 @@ class PageManager extends React.Component{
     }
 
     pageAnimation = (newpage) => {
+        const animation_duration = 200;
+        const animation_delay = 150;
+
         if (!this.state.page1) {
             // Clear page 2
             OptionsAnimation(this.state.animOpacity2, 0, 400).start(() => { this.setState({ page2: '' }); });
             // Load page 1
             setTimeout(() => { this.setState({ page1: newpage }); }, 0);
-            setTimeout(() => { OptionsAnimation(this.state.animOpacity1, 1, 100).start(); }, 200);
+            setTimeout(() => { OptionsAnimation(this.state.animOpacity1, 1, animation_duration).start(); }, animation_delay);
         } else {
             // Clear page 1
             OptionsAnimation(this.state.animOpacity1, 0, 400).start(() => { this.setState({ page1: '' }); });
             // Load page 2
             setTimeout(() => { this.setState({ page2: newpage }); }, 0);
-            setTimeout(() => { OptionsAnimation(this.state.animOpacity2, 1, 100).start(); }, 200);
+            setTimeout(() => { OptionsAnimation(this.state.animOpacity2, 1, animation_duration).start(); }, animation_delay);
         }
     }
 
@@ -135,7 +138,7 @@ class PageManager extends React.Component{
             outputRange: [0, 0.8, 0.2, 1]
         };*/
         const inter = {
-            inputRange:  [0, 0.5],
+            inputRange:  [0, 1],
             outputRange: [0, 1]
         };
 

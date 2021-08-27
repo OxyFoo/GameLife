@@ -234,7 +234,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 64,
         left: '-70%',
-        right: '-70%'
+        right: '-70%',
+        lineHeight: 16
     },
 
     calendarTitle: {

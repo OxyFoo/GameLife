@@ -26,15 +26,15 @@ class GLBottomSwipePage extends React.Component {
         const newPosY = this.state.init_posY + this.last_posY - posY;
         if (newPosY) {
             this.curr_posY = newPosY;
-            OptionsAnimation(this.state.animPositionY, newPosY, 0).start();
+            OptionsAnimation(this.state.animPositionY, newPosY, 0, false).start();
         }
     }
     swipe_end = (event) => {
         if (this.curr_posY > MID) {
-            OptionsAnimationSpring(this.state.animPositionY, MAX).start();
+            OptionsAnimationSpring(this.state.animPositionY, MAX, false).start();
             this.setState({ init_posY: MAX });
         } else {
-            OptionsAnimationSpring(this.state.animPositionY, 0).start();
+            OptionsAnimationSpring(this.state.animPositionY, 0, false).start();
             this.setState({ init_posY: 0 });
         }
     }
@@ -46,9 +46,9 @@ class GLBottomSwipePage extends React.Component {
             <Animated.View
                 style={[
                     styles.containerModal,
-                    { transform: [{
-                        translateY: new Animated.subtract(0, this.state.animPositionY)
-                    }]}
+                    {
+                        height: new Animated.add(64, this.state.animPositionY),
+                    }
                 ]}
             >
                 <View
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     containerModal: {
         position: 'absolute',
         width: '100%',
-        height: 64,
+        //height: 64,
         bottom: 0,
         left: 0,
         overflow: 'visible',

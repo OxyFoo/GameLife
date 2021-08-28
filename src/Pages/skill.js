@@ -81,8 +81,9 @@ class Skill extends React.Component {
                             const text = langManager.curr['skill']['text-history'];
                             const duration = item.duration;
                             const title = text.replace('{}', date).replace('{}', duration);
+                            const onPress = () => { user.changePage('activity', { 'activity': item }); }
                             return (
-                                <TouchableOpacity activeOpacity={0.5}>
+                                <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
                                     <GLText
                                         style={styles.textHistory}
                                         title={title}

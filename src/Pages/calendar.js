@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components/GL-Components';
-import { ClassicAlert, sum, dateToFormatString } from '../Functions/Functions';
+import { sum, dateToFormatString } from '../Functions/Functions';
 
 class Calendar extends React.Component {
     state = {
@@ -18,11 +18,15 @@ class Calendar extends React.Component {
     addSkill = () => { user.changePage('activity'); }
     skill_click = (activity) => { user.changePage('activity', {'activity': activity}); }
     skill_remove = (activity) => {
-        const remove = () => {
-            user.remActivity(activity);
-            this.onChangeDateTimePicker(this.state.currDate);
+        const remove = (button) => {
+            if (button === 'yes') {
+                user.remActivity(activity);
+                this.onChangeDateTimePicker(this.state.currDate);
+            }
         }
-        ClassicAlert("calendar", "popup-remove-title", "popup-remove-message", remove);
+        const title = langManager.curr['calendar']['popup-remove-title'];
+        const text = langManager.curr['calendar']['popup-remove-message'];
+        user.openPopup('yesno', [ title, text ], remove);
     }
 
     showDTP = () => { this.setState({ showDateTimePicker: 'date' }); }

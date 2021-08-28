@@ -3,15 +3,16 @@ import { View, StyleSheet, FlatList } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
-import { ClassicAlert, getDates, getDurations, isUndefined, sum } from '../Functions/Functions';
+import { getDates, getDurations, isUndefined } from '../Functions/Functions';
 import { GLDropDown, GLHeader, GLText } from '../Components/GL-Components';
+
+const STATS = [ "sag", "int", "con", "for", "end", "agi", "dex" ];
 
 class Activity extends React.Component {
     constructor(props) {
         super(props);
 
         this.SELECTED = typeof(props.args['activity']) !== 'undefined';
-        this.STATS = [ "sag", "int", "con", "for", "end", "agi", "dex" ];
 
         if (this.SELECTED) {
             const activity = props.args['activity'];
@@ -73,11 +74,15 @@ class Activity extends React.Component {
         }
     };
     trash = () => {
-        const remove = () => {
-            user.remActivity(this.state.selectedActivity);
-            this.back();
+        const remove = (button) => {
+            if (button === 'yes') {
+                user.remActivity(this.state.selectedActivity);
+                this.back();
+            }
         }
-        ClassicAlert("calendar", "popup-remove-title", "popup-remove-message", remove);
+        const title = langManager.curr['calendar']['popup-remove-title'];
+        const text = langManager.curr['calendar']['popup-remove-message'];
+        user.openPopup('yesno', [ title, text ], remove);
     }
 
     changeCat = (categoryIndex) => {
@@ -197,7 +202,7 @@ class Activity extends React.Component {
                         <View style={styles.containerAttr}>
                             <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small']} style={styles.attr} color='grey' />
                             <FlatList
-                                data={this.STATS}
+                                data={STATS}
                                 keyExtractor={(item, i) => 'skill_stat_' + i}
                                 renderItem={({item}) => (
                                     <GLText

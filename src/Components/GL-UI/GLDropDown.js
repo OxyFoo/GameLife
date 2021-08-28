@@ -22,6 +22,12 @@ class GLDropDown extends React.PureComponent {
         }
     }
 
+    backgroundPress = (ev) => {
+        if (Platform.OS === 'android' && this.state.opened) {
+            this.toggleVisibility();
+        }
+    }
+
     listComponent = ({ item }) => {
         const { key, value } = item;
 
@@ -76,16 +82,19 @@ class GLDropDown extends React.PureComponent {
         const onLongPress = this.props.onLongPress;
 
         return (
-            <View style={style}>
-                <TouchableOpacity style={styleBox} activeOpacity={.5} onPress={this.toggleVisibility} onLongPress={onLongPress}>
-                    <GLText style={styles.selected} title={value} color='grey' />
-                    <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />
-                </TouchableOpacity>
+            <>
+                {this.state.opened && <View style={styles.androidHitbox} onTouchStart={this.backgroundPress} />}
+                <View style={style}>
+                    <TouchableOpacity style={styleBox} activeOpacity={.5} onPress={this.toggleVisibility} onLongPress={onLongPress}>
+                        <GLText style={styles.selected} title={value} color='grey' />
+                        <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />
+                    </TouchableOpacity>
 
-                {!this.props.disabled && opened && Platform.OS === 'android' && (
-                    this.contentRender(styles.drop)
-                )}
-            </View>
+                    {!this.props.disabled && opened && Platform.OS === 'android' && (
+                        this.contentRender(styles.drop)
+                    )}
+                </View>
+            </>
         )
     }
 
@@ -106,6 +115,14 @@ class GLDropDown extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+    androidHitbox: {
+        position: 'absolute',
+        top: '-1000%',
+        left: '-1000%',
+        width: '2000%',
+        height: '2000%',
+        backgroundColor: '#00000066'
+    },
     container: {
         padding: 0,
         marginHorizontal: 12,

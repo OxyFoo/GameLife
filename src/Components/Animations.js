@@ -9,10 +9,10 @@ function OptionsAnimation(anim, toValue, duration = 300, native = true) {
     });
 }
 
-function OptionsAnimationSpring(anim, toValue) {
+function OptionsAnimationSpring(anim, toValue, native = true) {
     return Animated.spring(anim, {
         toValue: toValue,
-        useNativeDriver: true
+        useNativeDriver: native
     });
 }
 

@@ -60,30 +60,6 @@ function getDurations(max_hour = 4, step_minutes = 15) {
 }
 
 /**
- * Show alert with callback buttons, with langage keys
- * 
- * @param {String} title
- * @param {String} msg
- * @param {Function} callback
- * @param {Boolean} cancelable
- */
-function ClassicAlert(langKey, title, msg, callback, cancelable = true) {
-    const titre = langManager.curr[langKey][title];
-    const message = langManager.curr[langKey][msg];
-    let buttons = [
-        { text: langManager.curr["modal"]["btn-ok"] }
-    ];
-    if (typeof(callback) === 'function') {
-        buttons = [
-            { text: langManager.curr["modal"]["btn-no"], style: "cancel"},
-            { text: langManager.curr["modal"]["btn-yes"], onPress: callback }
-        ];
-    }
-    const options = { cancelable: cancelable };
-    Alert.alert(titre, message, buttons, options);
-}
-
-/**
  * Return date with format : dd/mm/yyyy
  * @param {Date} date
  * @returns {String} dd/mm/yyyy
@@ -96,5 +72,5 @@ function dateToFormatString(date) {
 }
 
 export { twoDigit, sum,
-    getDates, getDurations, ClassicAlert,
+    getDates, getDurations,
     isUndefined, dateToFormatString };

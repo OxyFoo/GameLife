@@ -32,7 +32,10 @@
         "shortcut-level": "Niveau",
         "shortcut-leaderboard": "Classement",
         "shortcut-quests": "Quêtes",
-        "shortcut-settings": "Réglages"
+        "shortcut-settings": "Réglages",
+
+        "popup-exit-title": "Quitter",
+        "popup-exit-text": "Voulez-vous quitter l'application ?"
     },
 
     "identity": {

@@ -15,6 +15,7 @@ import Skills from '../Pages/skills';
 import Settings from '../Pages/settings';
 import Experience from '../Pages/experience';
 import { GLPopup } from '../Components/GL-Components';
+import langManager from './LangManager';
 
 class PageManager extends React.Component{
     state = {
@@ -28,6 +29,7 @@ class PageManager extends React.Component{
     }
 
     componentDidMount() {
+        this.changing = false;
         this.path = [];
         user.backPage = this.backPage;
         user.changePage = this.changePage;
@@ -46,11 +48,19 @@ class PageManager extends React.Component{
     }
 
     backPage = () => {
+        if (this.changing) return;
         if (this.path.length < 3) {
-            // TODO - Popup pour fermer l'app
-            console.warn("Error, cannot go to previous page");
+            const callback = (button) => {
+                if (button === 'yes') {
+                    BackHandler.exitApp();
+                }
+            }
+            const title = langManager.curr['home']['popup-exit-title'];
+            const text = langManager.curr['home']['popup-exit-text'];
+            this.openPopup('yesno', [ title, text ], callback);
             return;
         }
+        this.changing = true;
         this.path.length = this.path.length - 1;
         const [ prevPage, prevArgs] = this.path[this.path.length - 1];
         this.setState({ arguments: prevArgs });
@@ -58,6 +68,7 @@ class PageManager extends React.Component{
     }
 
     changePage = (newpage, args, ignorePath = false) => {
+        if (this.changing) return;
         const newArgs = typeof(args) !== 'undefined' ? args : {};
         this.setState({ arguments: newArgs });
 
@@ -73,7 +84,7 @@ class PageManager extends React.Component{
             console.error('Calling an incorrect page');
             return;
         };
-
+        this.changing = true;
         if (!ignorePath) {
             this.path.push([newpage, args]);
         }
@@ -97,6 +108,10 @@ class PageManager extends React.Component{
             setTimeout(() => { this.setState({ page2: newpage }); }, 0);
             setTimeout(() => { OptionsAnimation(this.state.animOpacity2, 1, animation_duration).start(); }, animation_delay);
         }
+
+        setTimeout(() => {
+            this.changing = false;
+        }, animation_delay + animation_duration);
     }
 
     GetPageContent = (page) => {

@@ -32,7 +32,10 @@
         "shortcut-level": "Level",
         "shortcut-leaderboard": "Leaderboard",
         "shortcut-quests": "Quests",
-        "shortcut-settings": "Settings"
+        "shortcut-settings": "Settings",
+
+        "popup-exit-title": "Exit",
+        "popup-exit-text": "Do you want to leave the application?"
     },
 
     "identity": {

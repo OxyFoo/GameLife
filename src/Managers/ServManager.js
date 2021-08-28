@@ -34,11 +34,17 @@ class ServManager {
         this.timeout;
     }
 
+    destructor() {
+        clearTimeout(this.timeout);
+    }
+
     isConnected = () => {
         return this.status === STATUS.CONNECTED;
     }
 
     async AsyncRefreshAccount() {
+        clearTimeout(this.timeout);
+
         // Ping
         const data = {
             'action': 'ping',
@@ -74,7 +80,7 @@ class ServManager {
                 } else {
                     this.token = '';
                     const time = [ STATUS.SIGNIN, STATUS.WAITMAIL ].includes(this.status) ? TIMER_SHORT : TIMER_LONG;
-                    setTimeout(this.AsyncRefreshAccount.bind(this), time);
+                    this.timeout = setTimeout(this.AsyncRefreshAccount.bind(this), time);
 
                     if (this.status === STATUS.SIGNIN) {
                         const title = langManager.curr['identity']['alert-sendemail-title'];

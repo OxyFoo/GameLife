@@ -1,0 +1,93 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            @font-face {
+                font-family: Quantum;
+                src: url("https://oxyfoo.com/App/GameLife/mail/Quantum.otf") format('opentype');
+            }
+            * { font-family: Quantum; }
+            body { margin: 0; background-color: #000000; }
+            h2 { margin: 48px auto; font-size: 30px; }
+            .main {
+                width: 90%;
+                max-width: 500px;
+                margin: auto;
+                margin-top: 48px;
+                color: #fff;
+                border: solid 2px #fff;
+                background-color: #000020;
+            }
+            .main > .header {
+                color: #fff;
+                padding: 0 24px;
+                text-align: center;
+                font-size: 22px;
+                font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+            }
+            .main > .body {
+                position: relative;
+                padding: 24px 0 156px;
+
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+            }
+            .main > .body > a {
+                display: block;
+                width: 116px;
+                height: min-content;
+                padding: 12px;
+                text-align: center;
+                color: #fff !important;
+                text-decoration: none;
+                border: solid 2px #fff;
+            }
+            img.logo {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                padding: 24px;
+            }
+            .triangle {
+                position: absolute;
+                display : inline-block;
+                height : 0;
+                width : 0;
+                right: -2;
+                bottom: -2;
+                border-bottom : 70px solid #000000;
+                border-left : 70px solid transparent;
+            }
+            .triangle-border {
+                right: 0;
+                bottom: 0;
+                border-bottom : 70px solid #fff;
+            }
+            @media screen and (max-width: 600px) {
+                .main > .body > a { font-size: 16px; }
+            }
+            @media screen and (max-width: 400px) {
+                .main > .body > a { padding: 6px; }
+                .main > .header { font-size: 18px; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <div class="header">
+                <h2>%title%</h2>
+                <p>%text%</p>
+            </div>
+            <div class="body">
+                <a href="%link_reject%">%bt_reject%</a>
+                <a href="%link_accept%">%bt_accept%</a>
+                <div class="triangle triangle-border"></div>
+                <div class="triangle"></div>
+                <img class="logo" width="96px" src="https://oxyfoo.com/App/GameLife/mail/logo.png" title="Game Life" alt="logo.png" />
+            </div>
+        </div>
+    </body>
+</html>

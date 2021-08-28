@@ -55,8 +55,8 @@ class UserManager {
         this.saveData();
     }
     unmount = () => {
-        console.log('unmount');
         this.saveData();
+        this.conn.destructor();
     }
 
     refreshStats = (save = true) => {

@@ -23,7 +23,8 @@ class PageManager extends React.Component{
         animOpacity1: new Animated.Value(0),
         animOpacity2: new Animated.Value(0),
         arguments: {},
-        popupArgs: [ null, null ]
+        popupArgs: [ null, null, true ],
+        popupCallback: undefined
     }
 
     componentDidMount() {
@@ -115,15 +116,15 @@ class PageManager extends React.Component{
         return p;
     }
 
-    openPopup = (type, args) => {
-        const newArgs = typeof(type) !== 'undefined' ? [ type, args ] : [ null, null ];
-        this.setState({ popupArgs: newArgs });
+    openPopup = (type, args, callback, cancelable = true) => {
+        const newArgs = typeof(type) !== 'undefined' ? [ type, args, cancelable ] : [ null, null, true ];
+        this.setState({ popupArgs: newArgs, popupCallback: callback });
     }
     closePopup = () => {
         const type = this.state.popupArgs[0];
         if (type !== null) {
             const args = this.state.popupArgs[1];
-            this.setState({ popupArgs: [ null, args ] });
+            this.setState({ popupArgs: [ null, args, true ] });
         }
     }
 
@@ -150,7 +151,12 @@ class PageManager extends React.Component{
                 <Animated.View pointerEvents={this.state.page2 ? 'auto' : 'none'} style={[fullscreen, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity2.interpolate(inter) }]}>
                     {page2}
                 </Animated.View>
-                <GLPopup type={this.state.popupArgs[0]} args={this.state.popupArgs[1]} />
+                <GLPopup
+                    type={this.state.popupArgs[0]}
+                    args={this.state.popupArgs[1]}
+                    callback={this.state.popupCallback}
+                    cancelable={this.state.popupArgs[2]}
+                />
             </View>
         )
     }

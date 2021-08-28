@@ -49,6 +49,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
+        // Attempt to load home page faster
         setTimeout(() => {
             this.setState({ loaded: true });
         }, 100);

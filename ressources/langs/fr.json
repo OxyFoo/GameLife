@@ -25,6 +25,7 @@
         "title-skills": "Compétences",
         "text-seeall": "Voir plus",
 
+        "shortcut-identity": "Identité",
         "shortcut-skills": "Compétences",
         "shortcut-calendar": "Calendrier",
         "shortcut-stats": "Statistiques",
@@ -44,11 +45,21 @@
         "name-totaltime": "Temps de pratique",
 
         "value-age": "{} ans",
+        "value-totaltime": "{}h {}m",
 
         "placeholder-pseudo": "Pseudo",
         "placeholder-email": "Adresse mail",
         "empty-email": "Aucune",
-        "empty-title": "Aucun"
+        "empty-title": "Aucun",
+
+        "alert-pseudolimit-title": "Changement de pseudo",
+        "alert-pseudolimit-text": "Vous ne pouvez changer de pseudo qu'une seule fois par mois, choisissez-bien !",
+        "alert-pseudowait-title": "Pseudo déjà changé",
+        "alert-pseudowait-text": "Vous devez attendre {} jours avant de pouvoir le modifier à nouveau.",
+        "alert-incorrectemail-title": "Erreur",
+        "alert-incorrectemail-text": "Veuillez entrer une adresse email correcte.",
+        "alert-sendemail-title": "Email de vérification",
+        "alert-sendemail-text": "Un email de vérification vous a été envoyé !"
     },
 
     "experience": {

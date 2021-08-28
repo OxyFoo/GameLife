@@ -9,6 +9,8 @@ import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
 
+const DAYS_PSEUDO = 30;
+
 class UserManager {
     conn = new ServManager(this);
     experience = new Experience(this);
@@ -43,6 +45,7 @@ class UserManager {
         this.titles = [];
         this.quotes = [];
         this.skills = [];
+        this.lastPseudoDate = null;
     }
 
     disconnect = () => {
@@ -60,6 +63,17 @@ class UserManager {
         this.experience.getExperience();
         if (save) this.saveData();
         this.changePage();
+    }
+
+    daysBeforeChangePseudo = () => {
+        let days = 0;
+        if (this.lastPseudoDate !== null) {
+            const today = new Date();
+            const last = new Date(this.lastPseudoDate);
+            const delta = (today - last) / (1000 * 60 * 60 * 24);
+            days = Math.round(delta);
+        }
+        return DAYS_PSEUDO - days;
     }
 
     getSkills = (category) => {
@@ -226,16 +240,24 @@ class UserManager {
         const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
         const data = await DataManager.Load(STORAGE.USER, _online);
 
-        langManager.setLangage(data['lang']);
-        this.pseudo = data['pseudo'] || this.pseudo;
-        this.title = data['title'] || '';
-        this.birth = data['birth'] || '';
-        this.email = data['email'] || '';
-        this.xp = data['xp'] || 0;
-        if (typeof(data['activities']) !== 'undefined') this.activities = data['activities'];
-        this.titles = data['titles'] || titles;
-        this.quotes = data['quotes'] || quotes;
-        this.skills = data['skills'] || skills;
+        const get = (index, defaultValue) => {
+            let output = defaultValue;
+            if (data.hasOwnProperty(index)) {
+                output = data[index];
+            }
+            return output;
+        }
+
+        langManager.setLangage(get('lang', 'fr'));
+        this.pseudo = get('pseudo', this.pseudo);
+        this.title = get('title', '');
+        this.birth = get('birth', '');
+        this.email = get('email', '');
+        this.xp = get('xp', 0);
+        if (typeof(data['activities']) !== 'undefined') this.activities = get('activities');
+        this.titles = get('titles', titles);
+        this.quotes = get('quotes', quotes);
+        this.skills = get('skills', skills);
     }
 
     async loadInternalData() {

@@ -1,6 +1,8 @@
 //import { NativeModules } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
+import langManager from './LangManager';
+
 //const AES = NativeModules.Aes;
 const URL = 'https://oxyfoo.com/App/GameLife/app.php';
 
@@ -73,6 +75,12 @@ class ServManager {
                     this.token = '';
                     const time = [ STATUS.SIGNIN, STATUS.WAITMAIL ].includes(this.status) ? TIMER_SHORT : TIMER_LONG;
                     setTimeout(this.AsyncRefreshAccount.bind(this), time);
+
+                    if (this.status === STATUS.SIGNIN) {
+                        const title = langManager.curr['identity']['alert-sendemail-title'];
+                        const text = langManager.curr['identity']['alert-sendemail-text'];
+                        this.user.openPopup('ok', [ title, text ], undefined, false);
+                    }
                 }
                 this.user.changePage();
             }

@@ -10,6 +10,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const PANEL_WIDTH = SCREEN_WIDTH / 2;
 
 const SHORTCUTS = [
+    { text: "shortcut-identity", event: () => { user.changePage('identity') } },
     { text: "shortcut-skills", event: () => { user.changePage('skills') } },
     { text: "shortcut-calendar", event: () => { user.changePage('calendar') } },
     { text: "shortcut-stats", event: () => { user.changePage('statistic') } },
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
         marginLeft: -PANEL_WIDTH,
         paddingTop: 64,
         borderColor: '#FFFFFF',
-        borderWidth: 2,
+        borderRightWidth: 2,
         backgroundColor: '#000000'
     },
     component: {

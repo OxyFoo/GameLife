@@ -16,7 +16,7 @@ class GLDropDown extends React.PureComponent {
     toggleVisibility = () => {
         if (this.props.disabled) return;
         if (Platform.OS === 'ios') {
-            user.openPopup('list', this);
+            user.openPopup('list', this.contentRender.bind(this));
         } else {
             this.setState({ opened: !this.state.opened });
         }
@@ -98,7 +98,7 @@ class GLDropDown extends React.PureComponent {
                 keyExtractor={(item, i) => 'lang_' + i}
                 renderItem={this.listComponent}
                 removeClippedSubviews={true}
-                maxToRenderPerBatch={20}
+                maxToRenderPerBatch={50}
                 updateCellsBatchingPeriod={50}
             />
         )

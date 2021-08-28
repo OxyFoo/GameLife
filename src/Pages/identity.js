@@ -38,12 +38,17 @@ class Identity extends React.Component {
         if (this.state.email !== '' && this.state.email !== user.email) {
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
             if (reg.test(this.state.email) === false) {
-                console.error('Incorrect mail');
+                const title = langManager.curr['identity']['alert-incorrectemail-title'];
+                const text = langManager.curr['identity']['alert-incorrectemail-text'];
+                user.openPopup('ok', [ title, text ]);
                 return;
             }
         }
-        
-        user.pseudo = this.state.pseudo;
+
+        if (user.pseudo !== this.state.pseudo) {
+            user.pseudo = this.state.pseudo;
+            user.lastPseudoDate = new Date();
+        }
         user.title = this.state.title;
         user.birth = this.state.birth;
         user.email = this.state.email;
@@ -53,13 +58,18 @@ class Identity extends React.Component {
     }
 
     // Pseudo
-    beforeEditPseudo = () => {
-        Alert.alert(
-            "Changement de pseudo",
-            "Vous ne pouvez changer de pseudo qu'une seule fois par mois, choisissez-bien !",
-            [{ text: 'Ok' }],
-            //{ cancelable: false }
-        );
+    beforeEditPseudo = (textEditable_callback) => {
+        const days_before_editable = user.daysBeforeChangePseudo();
+
+        if (days_before_editable <= 0) {
+            const title = langManager.curr['identity']['alert-pseudolimit-title'];
+            const text = langManager.curr['identity']['alert-pseudolimit-text'];
+            user.openPopup('ok', [ title, text ], textEditable_callback, false);
+        } else {
+            const title = langManager.curr['identity']['alert-pseudowait-title'];
+            const text = langManager.curr['identity']['alert-pseudowait-text'].replace('{}', days_before_editable);
+            user.openPopup('ok', [ title, text ], undefined, false);
+        }
     }
     editPseudo = (newPseudo) => {
         // Conditions
@@ -125,7 +135,10 @@ class Identity extends React.Component {
         const age = this.calculateAge(this.state.birth) || '?';
         const mode = this.state.showDateTimePicker;
         const totalDuration = user.getActivitiesTotalDuration();
-        const totalTxt = (totalDuration/60) + 'h ' + (totalDuration % totalDuration/60) + 'm';
+        const totalH = Math.floor(totalDuration/60);
+        const totalM = ((totalDuration/60) - totalH) * 60;
+        const totalLang = langManager.curr['identity']['value-totaltime'];
+        const totalTxt = totalLang.replace('{}', totalH).replace('{}', totalM);
 
         return (
             <>

@@ -25,6 +25,7 @@
         "title-skills": "Skills",
         "text-seeall": "Show more",
 
+        "shortcut-identity": "Identity",
         "shortcut-skills": "Skills",
         "shortcut-calendar": "Calendar",
         "shortcut-stats": "Caracteristics",
@@ -44,11 +45,21 @@
         "name-totaltime": "Practice time",
 
         "value-age": "{} ans",
+        "value-totaltime": "{}h {}m",
 
         "placeholder-pseudo": "Pseudo",
         "placeholder-email": "Mail adress",
         "empty-email": "None",
-        "empty-title": "None"
+        "empty-title": "None",
+
+        "alert-pseudolimit-title": "Change username",
+        "alert-pseudolimit-text": "You can only change your nickname once a month, so choose wisely!",
+        "alert-pseudowait-title": "Username already changed",
+        "alert-pseudowait-text": "You must wait {} days before you can change it again.",
+        "alert-incorrectemail-title": "Error",
+        "alert-incorrectemail-text": "Please enter a valid email address.",
+        "alert-sendemail-title": "Verification email",
+        "alert-sendemail-text": "A verification email has been sent to you!"
     },
 
     "experience": {

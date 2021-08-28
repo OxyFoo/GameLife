@@ -9,10 +9,14 @@ class GLTextEditable extends React.Component {
     }
 
     editMode_Enable = () => {
-        if (typeof(this.props.beforeChangeText) !== 'undefined') {
-            this.props.beforeChangeText();
+        const open = () => {
+            this.setState({ editMode: true });
         }
-        this.setState({ editMode: true });
+        if (typeof(this.props.beforeChangeText) !== 'undefined') {
+            this.props.beforeChangeText(open);
+        } else {
+            open();
+        }
     }
 
     render() {

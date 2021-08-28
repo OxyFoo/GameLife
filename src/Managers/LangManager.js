@@ -12,9 +12,13 @@ class LangManager {
         this.setLangage();
     }
 
-    setLangage(lang = DEFAULT_LANG) {
-        this.currentLangageKey = lang;
-        this.curr = this.langages[lang];
+    setLangage(lang) {
+        let newLang = DEFAULT_LANG;
+        if (Object.keys(this.langages).includes(lang)) {
+            newLang = lang;
+        }
+        this.currentLangageKey = newLang;
+        this.curr = this.langages[newLang];
     }
 
     switchLangage() {

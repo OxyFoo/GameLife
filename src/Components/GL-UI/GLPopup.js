@@ -1,14 +1,23 @@
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, Dimensions, StyleSheet, View } from 'react-native';
 
 import { OptionsAnimation } from '../Animations';
 import user from '../../Managers/UserManager';
+import GLText from './GLText';
+import GLButton from './GLButton';
+import langManager from '../../Managers/LangManager';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const POPUP_HEIGHT_MAX = SCREEN_HEIGHT / 3;
 
 class GLPopup extends React.PureComponent {
     state = {
         opened: false,
+        type: null,
+        cancelable: true,
         animOpacity: new Animated.Value(0),
-        animScale: new Animated.Value(.8)
+        animScale: new Animated.Value(.8),
+        animHeight: new Animated.Value(0)
     }
 
     componentDidUpdate() {
@@ -22,16 +31,78 @@ class GLPopup extends React.PureComponent {
 
     toggleVisibility = () => {
         const opened = !this.state.opened;
-        this.setState({ opened: opened });
         if (opened) {
             // Open
+            this.setState({
+                opened: opened,
+                type: this.props.type,
+                cancelable: this.props.cancelable
+            });
             OptionsAnimation(this.state.animOpacity, 1, 200).start();
-            OptionsAnimation(this.state.animScale, 1, 200).start();
+            OptionsAnimation(this.state.animScale, 1, 200, false).start();
+            OptionsAnimation(this.state.animHeight, POPUP_HEIGHT_MAX, 400, false).start();
         } else {
             // Close
-            OptionsAnimation(this.state.animOpacity, 0, 200).start();
-            OptionsAnimation(this.state.animScale, .8, 200).start();
+            OptionsAnimation(this.state.animHeight, 0, 200, false).start();
+            setTimeout(() => {
+                OptionsAnimation(this.state.animOpacity, 0, 200).start();
+                OptionsAnimation(this.state.animScale, .8, 200, false).start();
+                this.setState({ opened: opened });
+            }, 200);
         }
+    }
+
+    backgroundPress = () => {
+        if (this.state.cancelable) {
+            user.closePopup();
+        }
+    }
+
+    content_message = () => {
+        const title = (this.props.args[0] || '').toUpperCase();
+        const message = this.props.args[1];
+        const ok = langManager.curr['modal']['btn-ok'];
+        const yes = langManager.curr['modal']['btn-yes'];
+        const no = langManager.curr['modal']['btn-no'];
+
+        const callback = (type) => {
+            const cb = this.props.callback;
+            if (typeof(cb) === 'function') {
+                cb(type);
+            }
+            user.closePopup();
+        }
+
+        let buttons = <GLButton value={ok} onPress={() => callback('ok')} />;
+        if (this.state.type === 'yesno') buttons = (
+            <>
+                <GLButton value={yes} onPress={() => callback('yes')} />
+                <GLButton value={no} onPress={() => callback('no')} />
+            </>
+        )
+
+        return (
+            <>
+                <GLText style={styles.title} title={title} />
+                <GLText title={message} />
+                <View style={styles.row}>{buttons}</View>
+            </>
+        )
+    }
+
+    content() {
+        let content;
+        switch (this.state.type) {
+            case 'list':
+                content = <this.props.args />;
+                break;
+            case 'ok':
+            case 'yesno':
+                content = <this.content_message />;
+                break;
+            default: content = <></>; break;
+        }
+        return content
     }
 
     render() {
@@ -41,12 +112,13 @@ class GLPopup extends React.PureComponent {
                 pointerEvents={this.props.type !== null ? 'auto' : 'none'}
                 onTouchEnd={() => { this.forceUpdate() }}
             >
-                <View style={styles.background} onTouchStart={user.closePopup} />
+                <View style={styles.background} onTouchStart={this.backgroundPress} />
                 <Animated.View style={[styles.container, {
+                        maxHeight: this.state.animHeight,
                         transform: [{ scale: this.state.animScale }]
                     }]}
                 >
-                    {this.props.type === "list" && this.props.args.contentRender()}
+                    {this.content()}
                 </Animated.View>
             </Animated.View>
         )
@@ -72,14 +144,26 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '80%',
-        maxHeight: '50%',
         borderColor: '#FFFFFF',
-        borderWidth: 2
+        borderWidth: 2,
+        overflow: 'hidden'
     },
     component: {
         margin: 4,
         paddingVertical: 4,
         textAlign: 'left'
+    },
+
+    title: {
+        fontSize: 20,
+        marginVertical: 24
+    },
+    row: {
+        width: '100%',
+        paddingVertical: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around'
     }
 });
 

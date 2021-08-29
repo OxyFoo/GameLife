@@ -33,7 +33,7 @@ class Experience extends React.Component {
         date.setHours(0, 0, 0);
         const title_day = lang_experience['name-day'];
         const value_day = user.experience.getExperience(undefined, date).totalXP;
-        const currDay = date.getDay();
+        const currDay = date.getDay() === 0 ? 6 : date.getDay() - 1;
         date.setDate(date.getDate() - currDay);
         const title_week = lang_experience['name-week'];
         const value_week = user.experience.getExperience(undefined, date).totalXP;

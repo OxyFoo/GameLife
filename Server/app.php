@@ -35,8 +35,9 @@
         $deviceIdentifier = $data['deviceID'];
         $deviceName = $data['deviceName'];
         $email = $data['email'];
+        $lang = $data['lang'];
 
-        if (isset($deviceIdentifier, $deviceName, $email)) {
+        if (isset($deviceIdentifier, $deviceName, $email, $lang)) {
             $account = $db->GetAccountByEmail($email);
             $device = $db->GetDevice($deviceIdentifier, $deviceName);
 
@@ -63,7 +64,7 @@
                 $accountID = $account['ID'];
                 $db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
                 $db->RefreshToken($deviceID);
-                $db->SendMail($email, $deviceID, $accountID);
+                $db->SendMail($email, $deviceID, $accountID, $lang);
                 $output['status'] = 'signin';
             }
         }

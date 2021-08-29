@@ -193,7 +193,7 @@
             $this->conn->query("DELETE FROM `$this->db_name`.`Users` WHERE `ID` = '$ID'");
         }*/
 
-        public function SendMail($email, $deviceID, $accountID) {
+        public function SendMail($email, $deviceID, $accountID, $lang) {
             $device = $this->GetDeviceByID($deviceID);
             $deviceID = $device['ID'];
             $deviceName = $device['Name'];
@@ -207,7 +207,7 @@
             $text_accept = base64_encode($this->Encrypt(json_encode($accept)));
             $text_reject = base64_encode($this->Encrypt(json_encode($reject)));
 
-            SendSigninMail($email, $deviceName, $text_accept, $text_reject);
+            SendSigninMail($email, $deviceName, $text_accept, $text_reject, $lang);
         }
 
         public function GeneratePrivateToken($accountID, $deviceID) {

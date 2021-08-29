@@ -12,8 +12,8 @@ class Statistic extends React.Component {
     }
 
     back = () => { user.backPage(); }
-    next = () => { user.changePage('statistic', {'stat': this.getSideStat(1)}, true); };
-    prev = () => { user.changePage('statistic', {'stat': this.getSideStat(-1)}, true); };
+    next = () => { user.changePage('statistic', {'stat': this.getSideStat(1)}, true, true); };
+    prev = () => { user.changePage('statistic', {'stat': this.getSideStat(-1)}, true, true); };
 
     getSideStat = (value) => {
         const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];

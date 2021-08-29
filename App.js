@@ -17,26 +17,27 @@ class App extends React.Component {
 
         // Load local user data
         await user.loadData(false);
-        user.changePage('loading', { state: 'loadQuote' });
         await user.sleep(user.random(200, 400));
-        user.changePage('loading', { state: 1 });
+        user.changePage('loading', { state: 'loadQuote' }, true);
+        await user.sleep(user.random(200, 400));
+        user.changePage('loading', { state: 1 }, true);
         
         // Load internet data (if online)
         await user.conn.AsyncRefreshAccount();
         await user.sleep(user.random(500, 800));
-        user.changePage('loading', { state: 2 });
+        user.changePage('loading', { state: 2 }, true);
         
         // Load internet user data (if connected)
         await user.loadData();
         await user.loadInternalData();
         user.refreshStats();
         await user.sleep(user.random(200, 400));
-        user.changePage('loading', { state: 3 });
+        user.changePage('loading', { state: 3 }, true);
 
         // Wait to 5 seconds (with small glith)
         const t_end = new Date();
         const time_left = LOADING_TIME_MAX - (t_end - t_start);
-        await user.sleep(time_left / 2); user.changePage('loading', { state: 4 });
+        await user.sleep(time_left / 2); user.changePage('loading', { state: 4 }, true);
         await user.sleep(time_left / 2); user.changePage('home');
     }
 

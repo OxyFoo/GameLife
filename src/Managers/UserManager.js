@@ -262,7 +262,7 @@ class UserManager {
 
     async loadInternalData() {
         if (this.conn.online) {
-            const data = await this.conn.getInternalData(langManager.currentLangageKey);
+            const data = await this.conn.getInternalData();
             const status = data['status'];
 
             if (status === 'ok') {

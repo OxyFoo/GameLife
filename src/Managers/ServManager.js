@@ -98,15 +98,16 @@ class ServManager {
             'action': 'getToken',
             'deviceID': this.deviceID,
             'deviceName': this.deviceName,
-            'email': this.user.email
+            'email': this.user.email,
+            'lang': langManager.currentLangageKey
         };
         return await this.Request_Async(URL, data);
     }
 
-    async getInternalData(langKey) {
+    async getInternalData() {
         const data = {
             'action': 'getInternalData',
-            'lang': langKey
+            'lang': langManager.currentLangageKey
         };
         return await this.Request_Async(URL, data);
     }

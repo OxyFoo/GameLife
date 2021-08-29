@@ -1,11 +1,13 @@
 {
     "fr": {
+        "subject": "GameLife : Nouvel appareil",
         "title": "Êtes-vous sûr(e) de vouloir devenir un joueur ?",
         "text": "Cette action est irreversible et peut vous faire devenir meilleur, ou bien pire...",
         "bt_accept": "Accepter",
         "bt_reject": "Refuser"
     },
     "en": {
+        "subject": "GameLife : New device",
         "title": "Are you sure you want to become a player?",
         "text": "This action is there is no way to undo it and can make you better, or worse...",
         "bt_accept": "Accept",

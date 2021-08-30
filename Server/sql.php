@@ -5,7 +5,7 @@
     require('./functions.php');
     require('./internalData.php');
 
-    $DAYS_PSEUDO_CHANGE = 0;
+    $DAYS_PSEUDO_CHANGE = 1;
 
     class DataBase
     {
@@ -222,9 +222,7 @@
         }
 
         public function setUserData($account, $data) {
-
             $accountID = $account['ID'];
-            $oldUsername = $account['Username'];
             $result = $this->conn->query("UPDATE `Users` SET `Data` = '$data' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving data failed");
@@ -240,11 +238,12 @@
 
             $changed = 0;
             $accountID = $account['ID'];
+            $oldUsername = $account['Username'];
             $lastPseudoDate = strtotime($account['LastPseudoDate']);
             $todayDate = time();
             $todayText = date('Y-m-d H:i:s', $todayDate);
             $delta = ($todayDate - $lastPseudoDate) / (60 * 60 * 24);
-            if ($oldUsername !== $username) {
+            if ($oldUsername != $username) {
                 if ($delta >= $DAYS_PSEUDO_CHANGE) {
                     if ($this->pseudoIsFree($accountID, $username)) {
                         $result_pseudo = $this->conn->query("UPDATE `Users` SET `Username` = '$username', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'");

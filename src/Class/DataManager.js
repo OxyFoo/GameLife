@@ -20,7 +20,6 @@ class DataManager {
             };
             Request_Async(_data).then(response => {
                 if (typeof(pseudoCallback) === 'function') {
-                    console.log(response);
                     const status = response.hasOwnProperty('status') ? response['status'] : '';
                     pseudoCallback(status);
                 }

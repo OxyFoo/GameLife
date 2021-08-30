@@ -9,7 +9,7 @@ import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
 
-const DAYS_PSEUDO_CHANGE = 0;
+const DAYS_PSEUDO_CHANGE = 1;
 
 class UserManager {
     conn = new ServManager(this);
@@ -249,7 +249,6 @@ class UserManager {
             const text = langManager.curr['identity']['alert-wrongpseudo-text'];
             this.openPopup('ok', [ title, text ]);
         }
-        console.log(status);
     }
 
     saveData(online) {

@@ -32,8 +32,7 @@
             // Check permissions
             $deviceID = $device['ID'];
             $perm = $db->CheckDevicePermissions($deviceID, $account);
-            if ($perm === -2) {
-            } else if ($perm === -1) {
+            if ($perm === -1) {
                 // Blacklisted
                 $output['status'] = 'blacklist';
             } else if ($perm === 0) {

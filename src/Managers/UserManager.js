@@ -9,7 +9,7 @@ import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
 
-const DAYS_PSEUDO_CHANGE = 1;
+const DAYS_PSEUDO_CHANGE = 0;
 
 class UserManager {
     conn = new ServManager(this);
@@ -239,6 +239,19 @@ class UserManager {
         }
     }
 
+    pseudoCallback = (status) => {
+        if (status === "wrongtimingpseudo") {
+            const title = langManager.curr['identity']['alert-wrongtimingpseudo-title'];
+            const text = langManager.curr['identity']['alert-wrongtimingpseudo-text'];
+            this.openPopup('ok', [ title, text ]);
+        } else if (status === "wrongpseudo") {
+            const title = langManager.curr['identity']['alert-wrongpseudo-title'];
+            const text = langManager.curr['identity']['alert-wrongpseudo-text'];
+            this.openPopup('ok', [ title, text ]);
+        }
+        console.log(status);
+    }
+
     saveData(online) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
@@ -257,7 +270,7 @@ class UserManager {
             'quotes': this.quotes
         }
         DataManager.Save(STORAGE.INTERNAL, internalData, false);
-        DataManager.Save(STORAGE.USER, data, _online, this.conn.token);
+        DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
     }
     async loadData(online) {
         const _online = typeof(online) !== 'undefined' ? online : this.isConnected();

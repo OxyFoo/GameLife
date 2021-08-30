@@ -1,7 +1,6 @@
 <?php
 
     require('./sql.php');
-    require('./internalData.php');
 
     $db = new DataBase();
 
@@ -42,6 +41,11 @@
                 echo("$Name<br />");
             }
         }
+    } else if ($action == "AAA") {
+        $accountID = 15;
+        $username = 'AAAb';
+        $test = $db->pseudoIsFree($accountID, $username);
+        print_r($test);
     }
 
 ?>

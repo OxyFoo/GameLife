@@ -100,8 +100,16 @@
                 unset($decoded->pseudo);
                 $userData = json_encode($decoded);
 
-                $db->setUserData($account, $pseudo, $userData);
-                $output['status'] = 'ok';
+                $db->setUserData($account, $userData);
+                $pseudoChanged = $db->setUsername($account, $pseudo);
+                if ($pseudoChanged === -1) {
+                    $output['status'] = 'wrongtimingpseudo';
+                    // App modifiée ?
+                } else if ($pseudoChanged === -2) {
+                    $output['status'] = 'wrongpseudo';
+                } else {
+                    $output['status'] = 'ok';
+                }
             }
         }
     }

@@ -5,7 +5,7 @@
     require('./functions.php');
     require('./internalData.php');
 
-    $DAYS_PSEUDO_CHANGE = 1;
+    $DAYS_PSEUDO_CHANGE = 0;
 
     class DataBase
     {
@@ -221,8 +221,7 @@
             return array('deviceID' => $deviceID, 'accountID' => $accountID);
         }
 
-        public function setUserData($account, $username, $data) {
-            global $DAYS_PSEUDO_CHANGE;
+        public function setUserData($account, $data) {
 
             $accountID = $account['ID'];
             $oldUsername = $account['Username'];
@@ -230,19 +229,43 @@
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving data failed");
             }
+        }
+
+        // 0 Nothing
+        // 1 Changed
+        // -1 Change failed (time)
+        // -2 Change failed (wrong)
+        public function setUsername($account, $username) {
+            global $DAYS_PSEUDO_CHANGE;
+
+            $changed = 0;
+            $accountID = $account['ID'];
             $lastPseudoDate = strtotime($account['LastPseudoDate']);
             $todayDate = time();
             $todayText = date('Y-m-d H:i:s', $todayDate);
             $delta = ($todayDate - $lastPseudoDate) / (60 * 60 * 24);
-            if ($oldUsername !== $username && $delta >= $DAYS_PSEUDO_CHANGE) {
-                $result_pseudo = $this->conn->query("UPDATE `Users` SET `Username` = '$username', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'");
-                if ($result_pseudo !== TRUE) {
-                    ExitWithStatus("Error: Saving pseudo failed");
+            if ($oldUsername !== $username) {
+                if ($delta >= $DAYS_PSEUDO_CHANGE) {
+                    if ($this->pseudoIsFree($accountID, $username)) {
+                        $result_pseudo = $this->conn->query("UPDATE `Users` SET `Username` = '$username', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'");
+                        $changed = 1;
+                        if ($result_pseudo !== TRUE) {
+                            ExitWithStatus("Error: Saving pseudo failed");
+                        }
+                    } else {
+                        $changed = -2;
+                    }
+                } else {
+                    $changed = -1;
                 }
             }
+
+            return $changed;
         }
 
-        public function pseudoIsFree() {
+        private function pseudoIsFree($accountID, $username) {
+            $usernames = $this->QueryArray("SELECT * FROM `Users` WHERE `ID` != '$accountID' AND `Username` = '$username'");
+            return count($usernames) === 0;
         }
 
         public function Encrypt($str, $key = null) {

@@ -7,7 +7,7 @@ const STORAGE = {
 }
 
 class DataManager {
-    static Save(storageKey, data, online, token) {
+    static Save(storageKey, data, online, token, pseudoCallback) {
         // Local save
         AsyncStorage.setItem(storageKey, JSON.stringify(data));
 
@@ -18,7 +18,13 @@ class DataManager {
                 'token': token,
                 'data': JSON.stringify(data)
             };
-            Request_Async(_data);
+            Request_Async(_data).then(response => {
+                if (typeof(pseudoCallback) === 'function') {
+                    console.log(response);
+                    const status = response.hasOwnProperty('status') ? response['status'] : '';
+                    pseudoCallback(status);
+                }
+            });
         }
     }
     

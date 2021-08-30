@@ -1,10 +1,10 @@
-//import { NativeModules } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
+import { Request_Async } from '../Functions/Request';
 import langManager from './LangManager';
 
+//import { NativeModules } from 'react-native';
 //const AES = NativeModules.Aes;
-const URL = 'https://oxyfoo.com/App/GameLife/app.php';
 
 const TIMER_LONG = 60 * 1000;
 const TIMER_SHORT = 10 * 1000;
@@ -51,7 +51,7 @@ class ServManager {
             'deviceID': this.deviceID,
             'deviceName': this.deviceName
         };
-        const result_ping = await this.Request_Async(URL, data);
+        const result_ping = await Request_Async(data);
         this.online = typeof(result_ping['status']) !== 'undefined' && result_ping['status'] === 'ok';
 
         // Connection
@@ -75,8 +75,12 @@ class ServManager {
                         return;
                     } else {
                         this.token = token;
-                        // Online load
+                        this.user.loadData(true);
                     }
+                } else if (this.status === STATUS.BLACKLIST) {
+                    const title = langManager.curr['identity']['alert-blacklist-title'];
+                    const text = langManager.curr['identity']['alert-blacklist-text'];
+                    this.user.openPopup('ok', [ title, text ], this.user.disconnect, false);
                 } else {
                     this.token = '';
                     const time = [ STATUS.SIGNIN, STATUS.WAITMAIL ].includes(this.status) ? TIMER_SHORT : TIMER_LONG;
@@ -101,45 +105,23 @@ class ServManager {
             'email': this.user.email,
             'lang': langManager.currentLangageKey
         };
-        return await this.Request_Async(URL, data);
+        return await Request_Async(data);
     }
 
     async getInternalData() {
+        if (!this.online) {
+            return;
+        }
         const data = {
             'action': 'getInternalData',
             'lang': langManager.currentLangageKey
         };
-        return await this.Request_Async(URL, data);
+        return await Request_Async(data);
     }
 
     disconnect = () => {
         this.token = '';
         this.status = STATUS.OFFLINE;
-    }
-
-    async Request_Async(url, data, method, headers) {
-        const defaultHeaders = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        };
-        const header = {
-            method: method || 'POST',
-            headers: headers || defaultHeaders,
-            body: JSON.stringify(data)
-        };
-
-        let json = { "state": "fail" };
-        try {
-            const response = await fetch(url, header);
-            if (response.status === 200) {
-                json = await response.json();
-            }
-        } catch (error) {
-            // TODO - Gérer l'abscence de co ici
-            //console.warn(error);
-        }
-
-        return json;
     }
 
     /*encryptData = (text, key) => AES.encrypt(text, key, this.iv).then(cipher => cipher);

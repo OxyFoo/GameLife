@@ -1,32 +1,49 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Request_Async } from "../Functions/Request";
 
 const STORAGE = {
-    USER: '@params/user'
+    USER: '@params/user',
+    INTERNAL: '@params/internal'
 }
 
 class DataManager {
-    static Save(storageKey, data, online) {
+    static Save(storageKey, data, online, token) {
         // Local save
         AsyncStorage.setItem(storageKey, JSON.stringify(data));
-        //console.log('Local save');
 
         if (online) {
             // Online save
-            //console.log('Online save');
+            const _data = {
+                'action': 'setUserData',
+                'token': token,
+                'data': JSON.stringify(data)
+            };
+            Request_Async(_data);
         }
     }
     
-    static async Load(storageKey, online = false) {
+    static async Load(storageKey, online = false, token = '') {
         let json;
         // Local load
         await AsyncStorage.getItem(storageKey, (err, t) => {
             if (!err && t != null) json = JSON.parse(t);
         });
-        //console.log('Local load');
 
         if (online) {
             // Online load
-            //console.log('Online load');
+            const data = {
+                'action': 'getUserData',
+                'token': token
+            };
+            const result = await Request_Async(data);
+            if (typeof(result['status']) !== 'undefined' && result['status'] === 'ok') {
+                if (result['data'] != '') {
+                    const onlineJson = JSON.parse(result['data']);
+                    for (const key in onlineJson) {
+                        json[key] = onlineJson[key];
+                    }
+                }
+            }
         }
 
         return json;

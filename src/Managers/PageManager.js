@@ -14,7 +14,8 @@ import Skill from '../Pages/skill';
 import Skills from '../Pages/skills';
 import Settings from '../Pages/settings';
 import Experience from '../Pages/experience';
-import { GLPopup } from '../Components/GL-Components';
+import Achievements from '../Pages/achievements';
+import { GLLeftPanel, GLPopup } from '../Components/GL-Components';
 import langManager from './LangManager';
 
 class PageManager extends React.Component{
@@ -25,7 +26,8 @@ class PageManager extends React.Component{
         animOpacity2: new Animated.Value(0),
         arguments: {},
         popupArgs: [ null, null, true ],
-        popupCallback: undefined
+        popupCallback: undefined,
+        leftPanelState: false
     }
 
     componentDidMount() {
@@ -35,6 +37,7 @@ class PageManager extends React.Component{
         user.changePage = this.changePage;
         user.openPopup = this.openPopup;
         user.closePopup = this.closePopup;
+        user.openLeftPanel = this.openLeftPanel;
         BackHandler.addEventListener('hardwareBackPress', this.backHandle);
     }
 
@@ -43,7 +46,13 @@ class PageManager extends React.Component{
     }
 
     backHandle = () => {
-        this.backPage();
+        const popup_opened = this.state.popupArgs[0] !== null;
+        const cancelable = this.state.popupArgs[2];
+        if (popup_opened && cancelable) {
+            this.closePopup();
+        } else if (!popup_opened) {
+            this.backPage();
+        }
         return true;
     }
 
@@ -55,8 +64,8 @@ class PageManager extends React.Component{
                     BackHandler.exitApp();
                 }
             }
-            const title = langManager.curr['home']['popup-exit-title'];
-            const text = langManager.curr['home']['popup-exit-text'];
+            const title = langManager.curr['home']['alert-exit-title'];
+            const text = langManager.curr['home']['alert-exit-text'];
             this.openPopup('yesno', [ title, text ], callback);
             return;
         }
@@ -126,6 +135,7 @@ class PageManager extends React.Component{
             case 'skill': p = <Skill args={this.state.arguments} />; break;
             case 'skills': p = <Skills />; break;
             case 'settings': p = <Settings />; break;
+            case 'achievements': p = <Achievements />; break;
             case 'experience': p = <Experience />; break;
         }
         return p;
@@ -141,6 +151,10 @@ class PageManager extends React.Component{
             const args = this.state.popupArgs[1];
             this.setState({ popupArgs: [ null, args, true ] });
         }
+    }
+
+    openLeftPanel = () => {
+        this.setState({ leftPanelState: !this.state.leftPanelState });
     }
 
     render() {
@@ -172,6 +186,7 @@ class PageManager extends React.Component{
                     callback={this.state.popupCallback}
                     cancelable={this.state.popupArgs[2]}
                 />
+                <GLLeftPanel state={this.state.leftPanelState} />
             </View>
         )
     }

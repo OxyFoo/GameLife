@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { Animated, Dimensions, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
 import { OptionsAnimation } from '../Animations';
 import user from '../../Managers/UserManager';
 import GLText from './GLText';
 import GLButton from './GLButton';
 import langManager from '../../Managers/LangManager';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const POPUP_HEIGHT_MAX = SCREEN_HEIGHT / 3;
+import GLDoubleCorner from './GLDoubleCorner';
 
 class GLPopup extends React.PureComponent {
     state = {
@@ -16,8 +14,7 @@ class GLPopup extends React.PureComponent {
         type: null,
         cancelable: true,
         animOpacity: new Animated.Value(0),
-        animScale: new Animated.Value(.8),
-        animHeight: new Animated.Value(0)
+        animScale: new Animated.Value(.9)
     }
 
     componentDidUpdate() {
@@ -40,13 +37,11 @@ class GLPopup extends React.PureComponent {
             });
             OptionsAnimation(this.state.animOpacity, 1, 200).start();
             OptionsAnimation(this.state.animScale, 1, 200, false).start();
-            OptionsAnimation(this.state.animHeight, POPUP_HEIGHT_MAX, 400, false).start();
         } else {
             // Close
-            OptionsAnimation(this.state.animHeight, 0, 200, false).start();
             setTimeout(() => {
                 OptionsAnimation(this.state.animOpacity, 0, 200).start();
-                OptionsAnimation(this.state.animScale, .8, 200, false).start();
+                OptionsAnimation(this.state.animScale, .9, 200, false).start();
                 this.setState({ opened: opened });
             }, 200);
         }
@@ -76,8 +71,8 @@ class GLPopup extends React.PureComponent {
         let buttons = <GLButton value={ok} onPress={() => callback('ok')} />;
         if (this.state.type === 'yesno') buttons = (
             <>
-                <GLButton value={yes} onPress={() => callback('yes')} />
                 <GLButton value={no} onPress={() => callback('no')} />
+                <GLButton value={yes} onPress={() => callback('yes')} color="grey" />
             </>
         )
 
@@ -114,11 +109,11 @@ class GLPopup extends React.PureComponent {
             >
                 <View style={styles.background} onTouchStart={this.backgroundPress} />
                 <Animated.View style={[styles.container, {
-                        maxHeight: this.state.animHeight,
                         transform: [{ scale: this.state.animScale }]
                     }]}
                 >
                     {this.content()}
+                    <GLDoubleCorner width={32} />
                 </Animated.View>
             </Animated.View>
         )
@@ -145,8 +140,7 @@ const styles = StyleSheet.create({
     container: {
         width: '80%',
         borderColor: '#FFFFFF',
-        borderWidth: 2,
-        overflow: 'hidden'
+        borderWidth: 2
     },
     component: {
         margin: 4,

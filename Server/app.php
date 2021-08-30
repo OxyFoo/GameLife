@@ -18,18 +18,6 @@
             $device = $db->GetDevice($deviceIdentifier, $deviceName);
             $output['status'] = 'ok';
         }
-        /*$token = $data['token'];
-        if (isset($token)) {
-            $data = $db->GetDataFromToken($token);
-            $deviceID = $data['deviceID'];
-            $accountID = $data['accountID'];
-
-            if (isset($accountID, $deviceID)) {
-            }
-
-            //$device = $db->GetDeviceByID($deviceID);
-            //$account = $db->GetAccountByID($accountID);
-        }*/
     }
     else if ($action === 'getToken') {
         $deviceIdentifier = $data['deviceID'];
@@ -44,7 +32,8 @@
             // Check permissions
             $deviceID = $device['ID'];
             $perm = $db->CheckDevicePermissions($deviceID, $account);
-            if ($perm === -1) {
+            if ($perm === -2) {
+            } else if ($perm === -1) {
                 // Blacklisted
                 $output['status'] = 'blacklist';
             } else if ($perm === 0) {
@@ -72,25 +61,51 @@
     else if ($action === 'getInternalData') {
         $lang = $data['lang'];
         if (!empty($lang)) {
-            $output['quotes'] = $db->GetQuotes($lang);
-            $output['titles'] = $db->GetTitles($lang);
-            $output['skills'] = $db->GetSkills($lang);
+            $output['quotes'] = GetQuotes($db, $lang);
+            $output['titles'] = GetTitles($db, $lang);
+            $output['skills'] = GetSkills($db, $lang);
             $output['status'] = 'ok';
         }
-        /*$token = $data['token'];
+    } else if ($action === 'getUserData') {
+        $token = $data['token'];
         if (isset($token)) {
-            $data = $db->GetDataFromToken($token);
-            $deviceID = $data['deviceID'];
-            $accountID = $data['accountID'];
+            $dataFromToken = $db->GetDataFromToken($token);
+            $accountID = $dataFromToken['accountID'];
 
-            if (isset($accountID, $deviceID)) {
+            if (isset($accountID)) {
+                $account = $db->GetAccountByID($accountID);
+                $username = $account['Username'];
+                $userData = $account['Data'];
+                if (isset($userData, $username)) {
+                    $decoded = json_decode($userData);
+                    $decoded->pseudo = $username;
+                    $userData = json_encode($decoded);
+                    $output['data'] = $userData;
+                    $output['status'] = 'ok';
+                }
             }
+        }
+    } else if ($action === 'setUserData') {
+        $token = $data['token'];
+        $userData = $data['data'];
+        if (isset($token, $userData)) {
+            $dataFromToken = $db->GetDataFromToken($token);
+            $accountID = $dataFromToken['accountID'];
+            $account = $db->GetAccountByID($accountID);
 
-            //$device = $db->GetDeviceByID($deviceID);
-            //$account = $db->GetAccountByID($accountID);
-        }*/
+            if (isset($account, $userData)) {
+                // Get & remove user from data
+                $decoded = json_decode($userData);
+                $pseudo = $decoded->pseudo;
+                unset($decoded->pseudo);
+                $userData = json_encode($decoded);
+
+                $db->setUserData($account, $pseudo, $userData);
+                $output['status'] = 'ok';
+            }
+        }
     }
-    
+
     if (!isset($output['status'])) {
         $output['status'] = 'fail';
     }

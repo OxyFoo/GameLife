@@ -31,11 +31,11 @@
         "shortcut-stats": "Statistiques",
         "shortcut-level": "Niveau",
         "shortcut-leaderboard": "Classement",
-        "shortcut-quests": "Quêtes",
+        "shortcut-achievements": "Succès",
         "shortcut-settings": "Réglages",
 
-        "popup-exit-title": "Quitter",
-        "popup-exit-text": "Voulez-vous quitter l'application ?"
+        "alert-exit-title": "Quitter",
+        "alert-exit-text": "Voulez-vous quitter l'application ?"
     },
 
     "identity": {
@@ -62,7 +62,9 @@
         "alert-incorrectemail-title": "Erreur",
         "alert-incorrectemail-text": "Veuillez entrer une adresse email correcte.",
         "alert-sendemail-title": "Email de vérification",
-        "alert-sendemail-text": "Un email de vérification vous a été envoyé !"
+        "alert-sendemail-text": "Un email de vérification vous a été envoyé !",
+        "alert-blacklist-title": "Blacklisté !",
+        "alert-blacklist-text": "Cet appareil a été blacklisté, veuillez utiliser une autre adresse mail pour vous connecter."
     },
 
     "experience": {
@@ -97,8 +99,10 @@
         "skill-xp": "Expérience",
         "value-xp": "+{} XP",
 
-        "popup-remove-title": "Suppression ?",
-        "popup-remove-message": "Êtes-vous sûr de vouloir supprimer cette activité ?"
+        "alert-remove-title": "Suppression ?",
+        "alert-remove-text": "Êtes-vous sûr de vouloir supprimer cette activité ?",
+        "alert-wrongtiming-title": "Impossible !",
+        "alert-wrongtiming-text": "L'activité sélectionnée comment ou termine durant une autre."
     },
 
     "activity": {
@@ -137,7 +141,10 @@
 
         "input-langage": "Langues",
         "input-theme": "Thèmes",
-        "input-disconnect": "Se déconnecter"
+        "input-disconnect": "Délier le mail",
+
+        "alert-disconnect-title": "Se déconnecter",
+        "alert-disconnect-text": "Voulez-vous vous déconnecter ? Les données ne seront sauvegardées que localement"
     },
 
     "statistics": {
@@ -163,5 +170,9 @@
             "agi": "Description",
             "dex": "Description"
         }
+    },
+
+    "achievements": {
+        "page-title": "Succès"
     }
 }

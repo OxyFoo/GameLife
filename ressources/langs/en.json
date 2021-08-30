@@ -31,11 +31,11 @@
         "shortcut-stats": "Caracteristics",
         "shortcut-level": "Level",
         "shortcut-leaderboard": "Leaderboard",
-        "shortcut-quests": "Quests",
+        "shortcut-achievements": "Achievements",
         "shortcut-settings": "Settings",
 
-        "popup-exit-title": "Exit",
-        "popup-exit-text": "Do you want to leave the application?"
+        "alert-exit-title": "Exit",
+        "alert-exit-text": "Do you want to leave the application?"
     },
 
     "identity": {
@@ -62,7 +62,9 @@
         "alert-incorrectemail-title": "Error",
         "alert-incorrectemail-text": "Please enter a valid email address.",
         "alert-sendemail-title": "Verification email",
-        "alert-sendemail-text": "A verification email has been sent to you!"
+        "alert-sendemail-text": "A verification email has been sent to you!",
+        "alert-blacklist-title": "Blacklisted!",
+        "alert-blacklist-text": "This device has been blacklisted, please use another email address to connect."
     },
 
     "experience": {
@@ -97,8 +99,10 @@
         "skill-xp": "Experience",
         "value-xp": "+{} XP",
 
-        "popup-remove-title": "Delete ?",
-        "popup-remove-message": "Are you sure you want to eliminate this activity?"
+        "alert-remove-title": "Delete ?",
+        "alert-remove-text": "Are you sure you want to eliminate this activity?",
+        "alert-wrongtiming-title": "No way!",
+        "alert-wrongtiming-text": "The selected activity how or ends during another."
     },
 
     "activity": {
@@ -137,7 +141,10 @@
 
         "input-langage": "Langages",
         "input-theme": "Themes",
-        "input-disconnect": "Disconnect"
+        "input-disconnect": "Unlink mail",
+
+        "alert-disconnect-title": "Disconnecting",
+        "alert-disconnect-text": "Do you want to log out? Data will only be saved locally"
     },
 
     "statistics": {
@@ -163,5 +170,9 @@
             "agi": "Description",
             "dex": "Description"
         }
+    },
+
+    "achievements": {
+        "page-title": "Achievements"
     }
 }

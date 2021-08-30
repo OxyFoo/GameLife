@@ -9,7 +9,7 @@ import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
 
-const DAYS_PSEUDO = 30;
+const DAYS_PSEUDO_CHANGE = 1;
 
 class UserManager {
     conn = new ServManager(this);
@@ -22,6 +22,7 @@ class UserManager {
     backPage;
     openPopup;
     closePopup;
+    openLeftPanel;
 
     constructor() {
         // User informations
@@ -60,9 +61,23 @@ class UserManager {
     }
 
     refreshStats = (save = true) => {
+        this.removeDeletedSkills();
         this.experience.getExperience();
         if (save) this.saveData();
         this.changePage();
+    }
+
+    removeDeletedSkills = () => {
+        for (let a in this.activities) {
+            let activity = this.activities[a];
+            let skillID = activity.skillID;
+            const skill = this.getSkillByID(skillID);
+            if (typeof(skill) === 'undefined') {
+                this.remActivity(activity);
+                this.removeDeletedSkills();
+                break;
+            }
+        }
     }
 
     daysBeforeChangePseudo = () => {
@@ -71,9 +86,9 @@ class UserManager {
             const today = new Date();
             const last = new Date(this.lastPseudoDate);
             const delta = (today - last) / (1000 * 60 * 60 * 24);
-            days = Math.round(delta);
+            days = DAYS_PSEUDO_CHANGE - Math.round(delta);
         }
-        return DAYS_PSEUDO - days;
+        return days;
     }
 
     getSkills = (category) => {
@@ -215,6 +230,10 @@ class UserManager {
         if (user.email) {
             await user.conn.AsyncRefreshAccount();
             user.saveData();
+            if (user.isConnected()) {
+                await user.loadData(true);
+                user.changePage();
+            }
         } else {
             user.disconnect();
         }
@@ -230,17 +249,20 @@ class UserManager {
             'email': this.email,
             'xp': this.xp,
             'activities': this.activities,
+            'pseudoDate': this.lastPseudoDate
+        };
+        const internalData = {
             'skills': this.skills,
             'titles': this.titles,
             'quotes': this.quotes
-        };
-        DataManager.Save(STORAGE.USER, data, _online);
+        }
+        DataManager.Save(STORAGE.INTERNAL, internalData, false);
+        DataManager.Save(STORAGE.USER, data, _online, this.conn.token);
     }
     async loadData(online) {
         const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
-        const data = await DataManager.Load(STORAGE.USER, _online);
 
-        const get = (index, defaultValue) => {
+        const get = (data, index, defaultValue) => {
             let output = defaultValue;
             if (data.hasOwnProperty(index)) {
                 output = data[index];
@@ -248,16 +270,20 @@ class UserManager {
             return output;
         }
 
-        langManager.setLangage(get('lang', 'fr'));
-        this.pseudo = get('pseudo', this.pseudo);
-        this.title = get('title', '');
-        this.birth = get('birth', '');
-        this.email = get('email', '');
-        this.xp = get('xp', 0);
-        if (typeof(data['activities']) !== 'undefined') this.activities = get('activities');
-        this.titles = get('titles', titles);
-        this.quotes = get('quotes', quotes);
-        this.skills = get('skills', skills);
+        const data = await DataManager.Load(STORAGE.USER, _online, this.conn.token);
+        langManager.setLangage(get(data, 'lang', 'fr'));
+        this.pseudo = get(data, 'pseudo', this.pseudo);
+        this.title = get(data, 'title', '');
+        this.birth = get(data, 'birth', '');
+        this.email = get(data, 'email', '');
+        this.xp = get(data, 'xp', 0);
+        if (typeof(data['activities']) !== 'undefined') this.activities = get(data, 'activities');
+        this.lastPseudoDate = get(data, 'pseudoDate', null);
+
+        const internalData = await DataManager.Load(STORAGE.INTERNAL, false);
+        this.titles = get(internalData, 'titles', titles);
+        this.quotes = get(internalData, 'quotes', quotes);
+        this.skills = get(internalData, 'skills', skills);
     }
 
     async loadInternalData() {

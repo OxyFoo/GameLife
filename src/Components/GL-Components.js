@@ -13,6 +13,7 @@ import GLSkillBox from './GL-UI/GLSkillBox';
 import GLStats from './GL-UI/GLStats';
 import GLSearchBar from './GL-UI/GLSearchBar';
 import GLDoubleCorner from './GL-UI/GLDoubleCorner';
+import GLCropCorner from './GL-UI/GLCropCorner';
 import GLBottomSwipePage from './GL-UI/GLBottomSwipePage';
 import GLPopup from './GL-UI/GLPopup';
 import GLLeftPanel from './GL-UI/GLLeftPanel';
@@ -33,6 +34,7 @@ export {
     GLStats,
     GLSearchBar,
     GLDoubleCorner,
+    GLCropCorner,
     GLBottomSwipePage,
     GLPopup,
     GLLeftPanel

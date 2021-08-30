@@ -68,7 +68,7 @@ class Identity extends React.Component {
         } else {
             const title = langManager.curr['identity']['alert-pseudowait-title'];
             const text = langManager.curr['identity']['alert-pseudowait-text'].replace('{}', days_before_editable);
-            user.openPopup('ok', [ title, text ], undefined, false);
+            user.openPopup('ok', [ title, text ], undefined);
         }
     }
     editPseudo = (newPseudo) => {

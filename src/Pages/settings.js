@@ -16,7 +16,16 @@ class Settings extends React.Component {
         }
         user.backPage();
     }
-    deconnect = user.disconnect;
+    deconnect = () => {
+        const event = (button) => {
+            if (button === 'yes') {
+                user.disconnect();
+            }
+        }
+        const title = langManager.curr['settings']['alert-disconnect-title'];
+        const text = langManager.curr['settings']['alert-disconnect-text'];
+        user.openPopup('yesno', [ title, text ], event);
+    }
     changeLang = (lang) => {
         langManager.setLangage(lang);
         user.changePage();

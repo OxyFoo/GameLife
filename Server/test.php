@@ -1,12 +1,13 @@
 <?php
 
     require('./sql.php');
+    require('./internalData.php');
 
     $db = new DataBase();
 
     $action = $_GET["action"];
     if (!isset($action)) {
-        $skills = $db->GetSkills();
+        $skills = GetSkills($db);
         for ($s = 0; $s < count($skills); $s++) {
             $ID = $skills[$s]["ID"];
             $Name = $skills[$s]["Name"];
@@ -14,14 +15,14 @@
         }
     } else if ($action == "test") {
         $lang = 'en';
-        $quotes = $db->GetQuotes($lang);
+        $quotes = GetQuotes($db, $lang);
         for ($q = 0; $q < count($quotes); $q++) {
             print_r($quotes[$q]);
             echo("<br /><br />");
         }
         //print_r($quotes);
     } else if ($action == "totaux") {
-        $skills = $db->GetSkills();
+        $skills = GetSkills($db);
         $ref = isset($_GET["not"]) ? intval($_GET["not"]) : -1;
         for ($s = 0; $s < count($skills); $s++) {
             $Name = $skills[$s]["Name"];
@@ -33,7 +34,7 @@
             echo("$Name : $total<br />");
         }
     } else if ($action == "compWithoutCreator") {
-        $skills = $db->GetSkills();
+        $skills = GetSkills($db);
         for ($s = 0; $s < count($skills); $s++) {
             $Name = $skills[$s]["Name"];
             $Creator = $skills[$s]["Creator"];

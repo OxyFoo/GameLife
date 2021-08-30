@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
-import { GLHeader, GLIconButton, GLText } from '../Components/GL-Components';
+import { GLCropCorner, GLHeader, GLIconButton, GLText } from '../Components/GL-Components';
 
 class Statistic extends React.Component {
     constructor(props) {
@@ -47,15 +47,12 @@ class Statistic extends React.Component {
                         <GLIconButton onPress={this.next} icon='chevron' />
                     </View>
                     <GLText style={styles.description} title={statDescription} />
-                    <View style={styles.corner} />
-                    <View style={styles.cornerBorder} />
+                    <GLCropCorner />
                 </View>
             </View>
         )
     }
 }
-
-const borderSize = 50;
 
 const styles = StyleSheet.create({
     container: {
@@ -80,31 +77,6 @@ const styles = StyleSheet.create({
     description: {
         marginVertical: 24
     },
-    corner: {
-        position: 'absolute',
-        right: -3,
-        bottom: -3,
-
-        width: 0,
-        height: 0,
-        backgroundColor: "transparent",
-        borderStyle: "solid",
-        borderRightWidth: borderSize,
-        borderTopWidth: borderSize,
-        borderRightColor: "transparent",
-        borderTopColor: "#000022",
-
-        transform: [{ rotate: "180deg" }]
-    },
-    cornerBorder: {
-        position: 'absolute',
-        right: -3 + borderSize/2,
-        bottom: -3 - borderSize/5,
-        width: 3,
-        height: ((borderSize**2)*2)**0.5, // Pythagore
-        transform: [{ rotate: "45deg" }],
-        backgroundColor: '#FFFFFF'
-    }
 });
 
 export default Statistic;

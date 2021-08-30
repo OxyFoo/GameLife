@@ -13,6 +13,7 @@
 
     $state = 'InvalidState';
     $action = $data->action;
+    $lang = $data->lang;
     $accountID = $data->accountID;
     $deviceID = $data->deviceID;
     $deviceToken = $data->deviceToken;
@@ -39,7 +40,13 @@
         }
     }
 
-    echo($state);
+    $fileLang = file_get_contents('mail/auth.json');
+    $langJson = json_decode($fileLang)->$lang;
+
+    $content = file_get_contents('mail/mail-auth.html');
+    $content = str_replace('%title%', $langJson->Title, $content);
+    $content = str_replace('%text%', $langJson->$state, $content);
+    echo($content);
 
     unset($db);
 

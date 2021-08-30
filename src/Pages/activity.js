@@ -67,7 +67,9 @@ class Activity extends React.Component {
             const date = this.DATES[this.state.selectedDateKey].fulldate;
             const duration = this.DURATION[this.state.selectedTimeKey].duration;
             if (!user.addActivity(skillID, date, duration)) {
-                console.warn("L'activité commence ou termine durant une autre !");
+                const title = langManager.curr['calendar']['alert-wrongtiming-title'];
+                const text = langManager.curr['calendar']['alert-wrongtiming-text'];
+                user.openPopup('ok', [ title, text ]);
                 return;
             }
             this.back();
@@ -80,8 +82,8 @@ class Activity extends React.Component {
                 this.back();
             }
         }
-        const title = langManager.curr['calendar']['popup-remove-title'];
-        const text = langManager.curr['calendar']['popup-remove-message'];
+        const title = langManager.curr['calendar']['alert-remove-title'];
+        const text = langManager.curr['calendar']['alert-remove-text'];
         user.openPopup('yesno', [ title, text ], remove);
     }
 
@@ -135,12 +137,13 @@ class Activity extends React.Component {
         const rightIcon = this.SELECTED ? 'trash' : 'check';
         const rightEvent = this.SELECTED ? this.trash : this.valid;
 
-        let skill, totalXP;
+        let skill, totalXP, bonusXP;
         if (!isUndefined(this.state.selectedActivity)) {
             const skillID = this.state.selectedActivity.skillID;
             const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
             skill = user.getSkillByID(skillID);
             totalXP = user.experience.getXPperHour() * durationHour;
+            bonusXP = user.experience.getStatExperience('sag').lvl * durationHour;
         }
 
         return (
@@ -200,7 +203,7 @@ class Activity extends React.Component {
 
                     {!isUndefined(skill) && (
                         <View style={styles.containerAttr}>
-                            <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small']} style={styles.attr} color='grey' />
+                            <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small'] + ' +' + bonusXP} style={styles.attr} color='grey' />
                             <FlatList
                                 data={STATS}
                                 keyExtractor={(item, i) => 'skill_stat_' + i}

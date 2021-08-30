@@ -42,4 +42,21 @@
         exit();
     }
 
+    function areSet($vars) {
+        $areSet = true;
+        for ($v = 0; $v < count($vars); $v++) {
+            $var = $vars[$v];
+            if (!isset($var) || empty($var)) {
+                $areSet = false;
+                break;
+            }
+        }
+        return $areSet;
+    }
+
+    function isJson($str) {
+        json_decode($str);
+        return json_last_error() === 0;
+    }
+
 ?>

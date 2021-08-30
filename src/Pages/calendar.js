@@ -15,7 +15,13 @@ class Calendar extends React.Component {
     };
 
     back = () => { user.backPage(); }
-    addSkill = () => { user.changePage('activity'); }
+    addSkill = () => {
+        if (user.skills.length <= 1) {
+            console.warn("Aucun skill !");
+            return;
+        }
+        user.changePage('activity');
+    }
     skill_click = (activity) => { user.changePage('activity', {'activity': activity}); }
     skill_remove = (activity) => {
         const remove = (button) => {
@@ -24,8 +30,8 @@ class Calendar extends React.Component {
                 this.onChangeDateTimePicker(this.state.currDate);
             }
         }
-        const title = langManager.curr['calendar']['popup-remove-title'];
-        const text = langManager.curr['calendar']['popup-remove-message'];
+        const title = langManager.curr['calendar']['alert-remove-title'];
+        const text = langManager.curr['calendar']['alert-remove-text'];
         user.openPopup('yesno', [ title, text ], remove);
     }
 

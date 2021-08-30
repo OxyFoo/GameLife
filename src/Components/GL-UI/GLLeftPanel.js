@@ -16,7 +16,7 @@ const SHORTCUTS = [
     { text: "shortcut-stats", event: () => { user.changePage('statistic') } },
     { text: "shortcut-level", event: () => { user.changePage('experience') } },
     { text: "shortcut-leaderboard", event: () => {} },
-    { text: "shortcut-quests", event: () => {} },
+    { text: "shortcut-achievements", event: () => { user.changePage('achievements') } },
     { text: "shortcut-settings", event: () => { user.changePage('settings') } }
 ];
 
@@ -51,7 +51,10 @@ class GLLeftPanel extends React.PureComponent {
 
     shortcut({ item }) {
         const text = langManager.curr['home'][item.text];
-        const event = item.event;
+        const event = () => {
+            this.toggleVisibility();
+            item.event();
+        }
 
         return (
             <GLText style={styles.component} title={text} onPress={event} />
@@ -78,7 +81,7 @@ class GLLeftPanel extends React.PureComponent {
                     <FlatList
                         data={SHORTCUTS}
                         keyExtractor={(item, i) => 'shortcut_' + i}
-                        renderItem={this.shortcut}
+                        renderItem={this.shortcut.bind(this)}
                         ItemSeparatorComponent={this.separator}
                         ListHeaderComponent={this.separator}
                         ListFooterComponent={this.separator}

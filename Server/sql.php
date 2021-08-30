@@ -3,6 +3,9 @@
     require('./mail.php');
     require('./config.php');
     require('./functions.php');
+    require('./internalData.php');
+
+    $DAYS_PSEUDO_CHANGE = 1;
 
     class DataBase
     {
@@ -42,7 +45,7 @@
             }
         }
 
-        private function QueryArray($command) {
+        public function QueryArray($command) {
             $output = [];
             $query = $this->conn->query($command);
             if ($query) {
@@ -156,7 +159,7 @@
                 ExitWithStatus("Error: Device adding failed");
             }
         }
-        
+
         public function RemDeviceAccount($deviceID, $account, $cellName) {
             $accountID = $account['ID'];
             $cell = explode(',', $account[$cellName]);
@@ -169,14 +172,6 @@
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Device removing failed");
             }
-        }
-
-        public function ValidDeviceAccount($deviceID, $account) {
-            $this->RemDeviceAccount($deviceID, $account, 'DevicesWait');
-            $this->AddDeviceAccount($deviceID, $account, 'Devices');
-        }
-
-        public function BlacklistDeviceAccount($deviceID, $account) {
         }
 
         public function RefreshToken($deviceID) {
@@ -200,9 +195,9 @@
             $deviceToken = $device['Token'];
 
             $accept = array('action' => 'accept', 'accountID' => $accountID,
-                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken);
+                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $lang);
             $reject = array('action' => 'reject', 'accountID' => $accountID,
-                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken);
+                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $lang);
 
             $text_accept = base64_encode($this->Encrypt(json_encode($accept)));
             $text_reject = base64_encode($this->Encrypt(json_encode($reject)));
@@ -211,7 +206,7 @@
         }
 
         public function GeneratePrivateToken($accountID, $deviceID) {
-            $random = RandomString(16);
+            $random = RandomString(24);
             $cipher = "$deviceID\t$accountID\t$random";
             $middle = $this->Encrypt($cipher);
             $result = $this->Encrypt($middle, $this->keyB);
@@ -226,104 +221,28 @@
             return array('deviceID' => $deviceID, 'accountID' => $accountID);
         }
 
-        public function GetQuotes($lang = 'fr') {
-            $quotes = $this->QueryArray("SELECT * FROM `Quotes`");
-            $validQuotes = array();
-            for ($q = 0; $q < count($quotes); $q++) {
-                $Lang = $quotes[$q]["Lang"];
-                $Quote = $quotes[$q]["Quote"];
-                $Author = $quotes[$q]["Author"];
-                if ($this->areSet([$Lang, $Quote, $Author])) {
-                    if ($Lang == $lang || $Lang == 'en') {
-                        array_push($validQuotes, $quotes[$q]);
-                    }
+        public function setUserData($account, $username, $data) {
+            global $DAYS_PSEUDO_CHANGE;
+
+            $accountID = $account['ID'];
+            $oldUsername = $account['Username'];
+            $result = $this->conn->query("UPDATE `Users` SET `Data` = '$data' WHERE `ID` = '$accountID'");
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Saving data failed");
+            }
+            $lastPseudoDate = strtotime($account['LastPseudoDate']);
+            $todayDate = time();
+            $todayText = date('Y-m-d H:i:s', $todayDate);
+            $delta = ($todayDate - $lastPseudoDate) / (60 * 60 * 24);
+            if ($oldUsername !== $username && $delta >= $DAYS_PSEUDO_CHANGE) {
+                $result_pseudo = $this->conn->query("UPDATE `Users` SET `Username` = '$username', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'");
+                if ($result_pseudo !== TRUE) {
+                    ExitWithStatus("Error: Saving pseudo failed");
                 }
             }
-            return $validQuotes;
         }
-        public function GetTitles($lang = 'fr') {
-            // TODO - Multilangue !
-            return $this->QueryArray("SELECT * FROM `Titles`");
-        }
-        public function GetSkills($lang = 'fr') {
-            $skills = $this->QueryArray("SELECT * FROM `Skills`");
-            $categories = $this->QueryArray("SELECT * FROM `Categories`");
-            $safeSkills = array();
 
-            for ($i = 0; $i < count($skills); $i++) {
-                // Get old stats
-                $Wisdom = $skills[$i]["Wisdom"];
-                $Intelligence = $skills[$i]["Intelligence"];
-                $Confidence = $skills[$i]["Confidence"];
-                $Strength = $skills[$i]["Strength"];
-                $Stamina = $skills[$i]["Stamina"];
-                $Dexterity = $skills[$i]["Dexterity"];
-                $Agility = $skills[$i]["Agility"];
-        
-                // Remove old stats
-                unset($skills[$i]["Wisdom"]);
-                unset($skills[$i]["Intelligence"]);
-                unset($skills[$i]["Confidence"]);
-                unset($skills[$i]["Strength"]);
-                unset($skills[$i]["Stamina"]);
-                unset($skills[$i]["Dexterity"]);
-                unset($skills[$i]["Agility"]);
-        
-                // Add new stats
-                $Stats = array(
-                    "sag" => $Wisdom,
-                    "int" => $Intelligence,
-                    "con" => $Confidence,
-                    "for" => $Strength,
-                    "end" => $Stamina,
-                    "agi" => $Agility,
-                    "dex" => $Dexterity
-                );
-                $skills[$i]["Stats"] = $Stats;
-
-                // Verifications
-                $Name = $skills[$i]["Name"];
-                $CategoryID = $skills[$i]["CategoryID"];
-                if (empty($Name) || $CategoryID === 0) {
-                    continue;
-                }
-
-                // Set category & translations
-                unset($skills[$i]["CategoryID"]);
-                for ($c = 0; $c < count($categories); $c++) {
-                    if ($categories[$c]["ID"] == $CategoryID) {
-                        $categoryName = $categories[$c]["Name"];
-                        $categoryTrans = $categories[$c]["Translations"];
-                        if ($this->isJson($categoryTrans)) {
-                            $trans = json_decode($categoryTrans);
-                            if (!empty($trans->$lang)) {
-                                $categoryName = $trans->$lang;
-                            }
-                        }
-                        $skills[$i]["Category"] = $categoryName;
-                        break;
-                    }
-                }
-
-                // Verification (2)
-                if (empty($skills[$i]["Category"])) {
-                    continue;
-                }
-
-                // Name translations
-                $Translations = $skills[$i]["Translations"];
-                unset($skills[$i]["Translations"]);
-                if ($this->isJson($Translations)) {
-                    $trans = json_decode($Translations);
-                    if (!empty($trans->$lang)) {
-                        $skills[$i]["Name"] = $trans->$lang;
-                    }
-                }
-
-                array_push($safeSkills, $skills[$i]);
-            }
-
-            return $safeSkills;
+        public function pseudoIsFree() {
         }
 
         public function Encrypt($str, $key = null) {
@@ -338,23 +257,6 @@
             $k = $key === null ? $this->keyA : $key;
             if ($str) $output = openssl_decrypt($str, $this->algorithm, $k);
             return $output;
-        }
-
-        private function areSet($vars) {
-            $areSet = true;
-            for ($v = 0; $v < count($vars); $v++) {
-                $var = $vars[$v];
-                if (!isset($var) || empty($var)) {
-                    $areSet = false;
-                    break;
-                }
-            }
-            return $areSet;
-        }
-
-        private function isJson($str) {
-            json_decode($str);
-            return json_last_error() === 0;
         }
     }
 

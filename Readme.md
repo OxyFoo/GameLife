@@ -64,7 +64,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
     * Input : Token
     * Process : tokenVerification et lecture de la BDD (chiffrés avec la clé B)
     * Return : State & user data (chiffrés avec la clé B)
-* setUserDate
+* setUserData
     * Input : Token & Data
     * Process : tokenVerification et écritude dans la BDD
     * Return : State

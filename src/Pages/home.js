@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { dateToFormatString } from '../Functions/Functions';
-import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLLeftPanel, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
+import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
 
 class Home extends React.Component {
     constructor(props) {
@@ -43,24 +43,11 @@ class Home extends React.Component {
         }
     }
 
-    state = {
-        loaded: false,
-        leftPanelState: false
-    }
-
-    componentDidMount() {
-        // Attempt to load home page faster
-        setTimeout(() => {
-            this.setState({ loaded: true });
-        }, 100);
-    }
-
     openIdentity = () => { user.changePage('identity'); }
     openCalendar = () => { user.changePage('calendar'); }
     openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
     openSkills = () => { user.changePage('skills'); }
     openExperience = () => { user.changePage('experience'); }
-    openLeftPanel = () => { this.setState({ leftPanelState: !this.state.leftPanelState }) }
 
     render() {
         const userExperience = user.experience.getExperience();
@@ -75,7 +62,7 @@ class Home extends React.Component {
                 <GLHeader
                     title={langManager.curr['home']['page-title']}
                     leftIcon="sandwich"
-                    onPressLeft={this.openLeftPanel}
+                    onPressLeft={user.openLeftPanel}
                 />
 
                 <View style={styles.parentView}>
@@ -161,8 +148,6 @@ class Home extends React.Component {
                         />
                     </TouchableOpacity>
                 </View>
-
-                {this.state.loaded && <GLLeftPanel state={this.state.leftPanelState} />}
             </>
         )
     }

@@ -4,13 +4,13 @@
         "Name": "",
         "Category": "",
         "Stats": {
-            "sag": "",
-            "int": "",
-            "con": "",
-            "for": "",
-            "end": "",
-            "agi": "",
-            "dex": ""
+            "sag": 0,
+            "int": 0,
+            "con": 0,
+            "for": 0,
+            "end": 0,
+            "agi": 0,
+            "dex": 0
         },
         "Creator": ""
     }

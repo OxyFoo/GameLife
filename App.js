@@ -17,8 +17,6 @@ class App extends React.Component {
 
         // Load local user data
         await user.loadData(false);
-        await user.sleep(300);
-        user.changePage('loading', { state: 'loadQuote' }, true);
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 1 }, true);
         

@@ -139,12 +139,23 @@ class UserManager {
 
     addActivity = (skillID, startDate, duration) => {
         let output = false;
-        if (this.datetimeIsFree(startDate, duration)) {
-            let newActivity = {
-                skillID: skillID,
-                startDate: startDate,
-                duration: duration
+
+        const newActivity = {
+            skillID: skillID,
+            startDate: startDate,
+            duration: duration
+        }
+
+        // Check if not exist
+        for (let a = 0; a < this.activities.length; a++) {
+            const activity = this.activities[a];
+            if (activity == newActivity) {
+                output = null;
+                return;
             }
+        }
+
+        if (this.datetimeIsFree(startDate, duration)) {
             // Add - Sort by date
             const activityDate = new Date(startDate);
             for (let a = 0; a < this.activities.length; a++) {
@@ -277,8 +288,10 @@ class UserManager {
         const get = (data, index, defaultValue) => {
             let output = defaultValue;
             if (typeof(data) !== 'undefined') {
-                if (data.hasOwnProperty(index)) {
-                    output = data[index];
+                if (data.hasOwnProperty(index) && data[index] !== null) {
+                    if (typeof(data[index]) !== 'object' || data[index].length > 0) {
+                        output = data[index];
+                    }
                 }
             }
             return output;
@@ -291,7 +304,13 @@ class UserManager {
         this.birth = get(data, 'birth', '');
         this.email = get(data, 'email', '');
         this.xp = get(data, 'xp', 0);
-        if (typeof(data['activities']) !== 'undefined') this.activities = get(data, 'activities');
+        if (typeof(data['activities']) !== 'undefined' && data['activities'].length > 0) {
+            for (let a in data['activities']) {
+                const activity = data['activities'][a];
+                this.addActivity(activity.skillID, activity.startDate, activity.duration);
+            }
+            this.activities = get(data, 'activities');
+        }
         this.lastPseudoDate = get(data, 'pseudoDate', null);
 
         const internalData = await DataManager.Load(STORAGE.INTERNAL, false);

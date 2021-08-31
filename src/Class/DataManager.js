@@ -45,7 +45,15 @@ class DataManager {
                 if (result['data'] != '') {
                     const onlineJson = JSON.parse(result['data']);
                     for (const key in onlineJson) {
-                        json[key] = onlineJson[key];
+                        const currValue = onlineJson[key];
+                        if (typeof(currValue) === 'object') {
+                            for (const childKey in currValue) {
+                                const currChildValue = currValue[childKey];
+                                json[key][childKey] = currChildValue;
+                            }
+                        } else {
+                            json[key] = currValue;
+                        }
                     }
                 }
             }

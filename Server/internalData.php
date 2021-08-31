@@ -21,6 +21,10 @@
         return $db->QueryArray("SELECT * FROM `Titles`");
     }
 
+    function GetAchievements($db, $lang = 'fr') {
+        // TODO - Get & multilangue !
+    }
+
     function GetSkills($db, $lang = 'fr') {
         $skills = $db->QueryArray("SELECT * FROM `Skills`");
         $categories = $db->QueryArray("SELECT * FROM `Categories`");

@@ -128,8 +128,9 @@ class Home extends React.Component {
                     <TouchableOpacity style={styles.containerSkills} activeOpacity={0.5} onPress={this.openSkills}>
                         <GLText style={styles.titleSkill} title={langManager.curr['home']['title-skills'].toUpperCase()} />
                         <FlatList
+                            style={{ height: '100%' }}
                             columnWrapperStyle={{ width: '100%', justifyContent: 'space-evenly' }}
-                            contentContainerStyle={{ display: 'flex', alignItems: 'center' }}
+                            contentContainerStyle={{ display: 'flex', height: '100%', alignItems: 'center' }}
                             data={this.skills}
                             numColumns={3}
                             keyExtractor={(item, i) => 'block_' + i}
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     },
 
     containerContent: {
-        height: '55%',
+        height: '45%',
         flexDirection: 'row'
     },
     containerStats: {
@@ -250,7 +251,8 @@ const styles = StyleSheet.create({
     },
 
     containerSkills: {
-        height: '35%',
+        height: '40%',
+        marginTop: 12,
         display: 'flex',
         justifyContent: 'space-evenly'
     },
@@ -260,6 +262,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     titleSkill: {
+        marginBottom: 12,
         fontSize: 28
     }
 });

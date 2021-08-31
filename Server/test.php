@@ -41,6 +41,15 @@
                 echo("$Name<br />");
             }
         }
+    } else if ($action == "compWithCreator") {
+        $skills = GetSkills($db);
+        for ($s = 0; $s < count($skills); $s++) {
+            $Name = $skills[$s]["Name"];
+            $Creator = $skills[$s]["Creator"];
+            if (!empty($Creator)) {
+                echo("$Name<br />");
+            }
+        }
     } else if ($action == "AAA") {
         $accountID = 15;
         $username = 'AAAb';

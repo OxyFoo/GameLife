@@ -5,7 +5,8 @@ const MAIN_FONT_NAME = 'Quantum';
 const COLORS = {
     'white': '#ECECEC',
     'grey': '#C2C2C2',
-    'darkgrey': '#808080'
+    'darkgrey': '#808080',
+    'black': '#000000'
 }
 
 function GLText(props) {

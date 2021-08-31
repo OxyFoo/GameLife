@@ -276,8 +276,10 @@ class UserManager {
 
         const get = (data, index, defaultValue) => {
             let output = defaultValue;
-            if (data.hasOwnProperty(index)) {
-                output = data[index];
+            if (typeof(data) !== 'undefined') {
+                if (data.hasOwnProperty(index)) {
+                    output = data[index];
+                }
             }
             return output;
         }

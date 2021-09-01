@@ -78,12 +78,13 @@ class PageManager extends React.Component{
 
     changePage = (newpage, args, ignorePath = false, forceUpdate = false) => {
         if (this.changing) return;
-        const newArgs = typeof(args) !== 'undefined' ? args : {};
-        this.setState({ arguments: newArgs });
 
         if (typeof(newpage) === 'undefined' || newpage === '') {
             this.forceUpdate(); return;
         }
+
+        const newArgs = typeof(args) !== 'undefined' ? args : {};
+        this.setState({ arguments: newArgs });
 
         if (!forceUpdate && newpage == (this.state.page1 || this.state.page2)) {
             return;
@@ -161,7 +162,7 @@ class PageManager extends React.Component{
         let page1 = this.GetPageContent(this.state.page1);
         let page2 = this.GetPageContent(this.state.page2);
 
-        const fullscreen = { width: '100%', height: '100%', backgroundColor: "#45484F" }
+        const fullscreen = { width: '100%', height: '100%', backgroundColor: "#000020" }
 
         /*const inter = {
             inputRange:  [0, 0.4, 0.8, 1],

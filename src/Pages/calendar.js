@@ -91,17 +91,22 @@ class Calendar extends React.Component {
                     data={this.state.activities}
                     keyExtractor={(item, i) => 'activity_' + i}
                     renderItem={({item}) => {
-                        const skill = user.getSkillByID(item.skillID);
-                        const date = new Date(item.startDate);
-                        const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + item.duration + 'm';
-                        const totalXP = sum(Object.values(skill.Stats));
+                        const activity = item;
+                        const skill = user.getSkillByID(activity.skillID);
+                        const date = new Date(activity.startDate);
+                        const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + activity.duration + 'm';
+
+                        const durationHour = activity.duration / 60;
+                        let totalXP = user.experience.getXPperHour() * durationHour;
+                        totalXP += user.experience.getStatExperience('sag', activity).lvl * durationHour;
+
                         return (
                             <GLActivityBox
                                 skill={skill.Name}
                                 time={timeText}
                                 xp={totalXP}
-                                onPress={() => { this.skill_click(item) }}
-                                onRemove={() => { this.skill_remove(item) }}
+                                onPress={() => { this.skill_click(activity) }}
+                                onRemove={() => { this.skill_remove(activity) }}
                             />
                         )
                     }}

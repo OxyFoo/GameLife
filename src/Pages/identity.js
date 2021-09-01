@@ -88,8 +88,10 @@ class Identity extends React.Component {
         this.setState({ modalEnabled: false, title: newTitle });
     }
     component_titre = ({ item }) => {
+        const title = item;
+
         return (
-            <GLText style={{ marginVertical: 4 }} title={item} onPress={() => this.editTitre(item)} />
+            <GLText style={{ marginVertical: 4 }} title={title.Title} onPress={() => this.editTitre(item)} />
         )
     }
 
@@ -139,6 +141,7 @@ class Identity extends React.Component {
         const totalM = ((totalDuration/60) - totalH) * 60;
         const totalLang = langManager.curr['identity']['value-totaltime'];
         const totalTxt = totalLang.replace('{}', totalH).replace('{}', totalM);
+        const titles = user.getUnlockTitles();
 
         return (
             <>
@@ -193,7 +196,7 @@ class Identity extends React.Component {
 
                     <GLBottomModal title='Titres' enabled={this.state.modalEnabled}>
                         <FlatList
-                            data={TITRES}
+                            data={titles}
                             keyExtractor={(item, i) => "titre_" + i}
                             renderItem={this.component_titre}
                         />

@@ -17,14 +17,48 @@
     }
 
     function GetTitles($db, $lang = 'fr') {
-        // TODO - Multilangue !
         $titles = $db->QueryArray("SELECT * FROM `Titles`");
+
+        // Translations
+        for ($i = 0; $i < count($titles); $i++) {
+            $Translations = $titles[$i]["Translations"];
+            unset($titles[$i]["Translations"]);
+
+            if (isJson($Translations)) {
+                $jsonTranslations = json_decode($Translations);
+                if (!empty($jsonTranslations->$lang)) {
+                    $titles[$i]["Title"] = $jsonTranslations->$lang;
+                }
+            }
+        }
+
         return $titles;
     }
 
     function GetAchievements($db, $lang = 'fr') {
-        // TODO - Multilangue !
         $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
+
+        // Translations
+        for ($i = 0; $i < count($achievements); $i++) {
+            $NameTranslations = $achievements[$i]["NameTranslations"];
+            $DescriptionTranslations = $achievements[$i]["DescriptionTranslations"];
+            unset($achievements[$i]["NameTranslations"]);
+            unset($achievements[$i]["DescriptionTranslations"]);
+
+            if (isJson($NameTranslations)) {
+                $jsonTranslations = json_decode($NameTranslations);
+                if (!empty($jsonTranslations->$lang)) {
+                    $achievements[$i]["Name"] = $jsonTranslations->$lang;
+                }
+            }
+            if (isJson($DescriptionTranslations)) {
+                $jsonTranslations = json_decode($DescriptionTranslations);
+                if (!empty($jsonTranslations->$lang)) {
+                    $achievements[$i]["Description"] = $jsonTranslations->$lang;
+                }
+            }
+        }
+
         return $achievements;
     }
 

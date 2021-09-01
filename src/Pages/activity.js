@@ -139,11 +139,13 @@ class Activity extends React.Component {
 
         let skill, totalXP, bonusXP;
         if (!isUndefined(this.state.selectedActivity)) {
-            const skillID = this.state.selectedActivity.skillID;
+            const selectedActivity = this.state.selectedActivity;
+            const skillID = selectedActivity.skillID;
             const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
             skill = user.getSkillByID(skillID);
             totalXP = user.experience.getXPperHour() * durationHour;
-            bonusXP = user.experience.getStatExperience('sag').lvl * durationHour;
+            const untilActivity = this.SELECTED ? selectedActivity : undefined;
+            bonusXP = user.experience.getStatExperience('sag', untilActivity).lvl * durationHour;
         }
 
         return (

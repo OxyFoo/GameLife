@@ -23,7 +23,7 @@ class Loading extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.props.args['state'] === 1 && this.state.quote === '' && user.quotes.length > 0) {
+        if (this.state.quote === '' && user.quotes.length > 0) {
             const random = user.random(0, user.quotes.length - 1);
             const quote = user.quotes[random];
             this.setState({ quote: quote['Quote'], author: quote['Author'] });

@@ -69,6 +69,17 @@ class UserManager {
         this.changePage();
     }
 
+    getUnlockTitles = () => {
+        let unlockTitles = [];
+        for (let t = 0; t < this.titles.length; t++) {
+            const title = this.titles[t];
+            if (title.AchievementsCondition == 0) {
+                unlockTitles.push(title);
+            }
+        }
+        return unlockTitles;
+    }
+
     removeDeletedSkills = () => {
         for (let a in this.activities) {
             let activity = this.activities[a];
@@ -288,10 +299,13 @@ class UserManager {
     async loadData(online) {
         const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
 
-        const get = (data, index, defaultValue) => {
+        const get = (data, index, defaultValue, oneBlock = false) => {
             let output = defaultValue;
             if (typeof(data) !== 'undefined') {
                 if (data.hasOwnProperty(index) && data[index] !== null) {
+                    if (oneBlock) {
+                        output = data[index];
+                    } else
                     if (typeof(data[index]) !== 'object' || data[index].length > 0) {
                         output = data[index];
                     }
@@ -317,10 +331,11 @@ class UserManager {
         this.lastPseudoDate = get(data, 'pseudoDate', null);
 
         const internalData = await DataManager.Load(STORAGE.INTERNAL, false);
-        this.titles = get(internalData, 'titles', titles);
-        this.quotes = get(internalData, 'quotes', quotes);
-        this.skills = get(internalData, 'skills', skills);
-        this.achievements = get(internalData, 'achievements', achievements);
+        //console.log(internalData['quotes']);
+        this.titles = get(internalData, 'titles', titles, true);
+        this.quotes = get(internalData, 'quotes', quotes, true);
+        this.skills = get(internalData, 'skills', skills, true);
+        this.achievements = get(internalData, 'achievements', achievements, true);
     }
 
     async loadInternalData() {

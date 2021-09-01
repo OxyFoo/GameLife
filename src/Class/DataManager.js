@@ -30,9 +30,10 @@ class DataManager {
     static async Load(storageKey, online = false, token = '') {
         let json;
         // Local load
-        await AsyncStorage.getItem(storageKey, (err, t) => {
+        const localData = await AsyncStorage.getItem(storageKey);/*, (err, t) => {
             if (!err && t != null) json = JSON.parse(t);
-        });
+        });*/
+        if (typeof(localData) !== 'undefined' && localData != null) json = JSON.parse(localData);
 
         if (online) {
             // Online load

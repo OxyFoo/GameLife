@@ -67,12 +67,14 @@ class Experience {
         return _xp;
     }
 
-    getStatExperience(statKey) {
+    getStatExperience(statKey, untilActivity) {
         let totalXP = 0;
         for (let a in this.user.activities) {
             const activity = this.user.activities[a];
             const durationHour = activity.duration / 60;
             const skill = this.user.getSkillByID(activity.skillID);
+
+            if (activity == untilActivity) break;
             totalXP += skill.Stats[statKey] * durationHour;
         }
         return this.__getXPDict(totalXP, StatXPperLevel);

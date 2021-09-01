@@ -63,6 +63,7 @@
             $output['quotes'] = GetQuotes($db, $lang);
             $output['titles'] = GetTitles($db, $lang);
             $output['skills'] = GetSkills($db, $lang);
+            $output['achievements'] = GetAchievements($db, $lang);
             $output['status'] = 'ok';
         }
     } else if ($action === 'getUserData') {

@@ -8,6 +8,7 @@ import { isUndefined } from "../Functions/Functions";
 import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
+import achievements from '../../ressources/defaultDB/achievements.json';
 
 const DAYS_PSEUDO_CHANGE = 1;
 
@@ -46,6 +47,7 @@ class UserManager {
         this.titles = [];
         this.quotes = [];
         this.skills = [];
+        this.achievements = [];
         this.lastPseudoDate = null;
     }
 
@@ -277,7 +279,8 @@ class UserManager {
         const internalData = {
             'skills': this.skills,
             'titles': this.titles,
-            'quotes': this.quotes
+            'quotes': this.quotes,
+            'achievements': this.achievements
         }
         DataManager.Save(STORAGE.INTERNAL, internalData, false);
         DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
@@ -317,6 +320,7 @@ class UserManager {
         this.titles = get(internalData, 'titles', titles);
         this.quotes = get(internalData, 'quotes', quotes);
         this.skills = get(internalData, 'skills', skills);
+        this.achievements = get(internalData, 'achievements', achievements);
     }
 
     async loadInternalData() {
@@ -328,6 +332,7 @@ class UserManager {
                 if (typeof(data['titles']) !== 'undefined') this.titles = data['titles'];
                 if (typeof(data['quotes']) !== 'undefined') this.quotes = data['quotes'];
                 if (typeof(data['skills']) !== 'undefined') this.skills = data['skills'];
+                if (typeof(data['achievements']) !== 'undefined') this.achievements = data['skills'];
             }
         }
 

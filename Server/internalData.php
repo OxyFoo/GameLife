@@ -18,11 +18,14 @@
 
     function GetTitles($db, $lang = 'fr') {
         // TODO - Multilangue !
-        return $db->QueryArray("SELECT * FROM `Titles`");
+        $titles = $db->QueryArray("SELECT * FROM `Titles`");
+        return $titles;
     }
 
     function GetAchievements($db, $lang = 'fr') {
-        // TODO - Get & multilangue !
+        // TODO - Multilangue !
+        $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
+        return $achievements;
     }
 
     function GetSkills($db, $lang = 'fr') {

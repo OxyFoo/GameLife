@@ -2,7 +2,9 @@
     "name": "Français",
 
     "loading": {
-        "text-title": "Chargement"
+        "text-loading": "Chargement",
+        "text-loaded": "Chargement terminé",
+        "text-end": "Appuyez pour continuer"
     },
 
     "level": {

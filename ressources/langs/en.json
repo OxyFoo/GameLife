@@ -2,7 +2,9 @@
     "name": "English",
 
     "loading": {
-        "text-title": "Loading"
+        "text-loading": "Loading",
+        "text-loaded": "Loading complete",
+        "text-end": "Press to continue"
     },
 
     "level": {

@@ -315,7 +315,8 @@ class UserManager {
             'email': this.email,
             'xp': this.xp,
             'activities': this.activities,
-            'pseudoDate': this.lastPseudoDate
+            'pseudoDate': this.lastPseudoDate,
+            'solvedAchievements': this.solvedAchievements
         };
         const internalData = {
             'skills': this.skills,
@@ -359,6 +360,7 @@ class UserManager {
             this.activities = get(data, 'activities');
         }
         this.lastPseudoDate = get(data, 'pseudoDate', null);
+        this.solvedAchievements = get(data, 'solvedAchievements', this.solvedAchievements);
 
         const internalData = await DataManager.Load(STORAGE.INTERNAL, false);
         //console.log(internalData['quotes']);

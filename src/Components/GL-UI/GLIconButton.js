@@ -18,6 +18,8 @@ const Icons = {
     chevronBottom: require(iconsDir + 'chevron-bottom.png'),
     chrono: require(iconsDir + 'chrono.png'),
     cross: require(iconsDir + 'cross.png'),
+    discord: require(iconsDir + 'discord.png'),
+    gamelife: require(iconsDir + 'gamelife.png'),
     gear: require(iconsDir + 'gear.png'),
     info: require(iconsDir + 'info.png'),
     instagram: require(iconsDir + 'instagram.png'),

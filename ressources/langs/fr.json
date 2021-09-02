@@ -35,6 +35,7 @@
         "shortcut-leaderboard": "Classement",
         "shortcut-achievements": "Succès",
         "shortcut-settings": "Réglages",
+        "shortcut-about": "A propos",
 
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Voulez-vous quitter l'application ?"
@@ -188,5 +189,16 @@
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "You have unlocked the achievement: {}"
+    },
+
+    "about": {
+        "page-title": "A propos",
+
+        "block-devs": "App créée par",
+        "block-helpers": "Contributeurs",
+        "block-links": "Liens",
+        "text-manager": "Manager",
+        "text-developer": "Développeur",
+        "text-graphiste": "Graphiste"
     }
 }

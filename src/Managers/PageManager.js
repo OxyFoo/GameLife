@@ -3,6 +3,8 @@ import { Animated, View, BackHandler } from 'react-native';
 
 import user from '../Managers/UserManager';
 import { OptionsAnimation } from '../Components/Animations';
+import { GLLeftPanel, GLPopup } from '../Components/GL-Components';
+import langManager from './LangManager';
 
 import Loading from '../Pages/loading';
 import Home from '../Pages/home';
@@ -15,8 +17,7 @@ import Skills from '../Pages/skills';
 import Settings from '../Pages/settings';
 import Experience from '../Pages/experience';
 import Achievements from '../Pages/achievements';
-import { GLLeftPanel, GLPopup } from '../Components/GL-Components';
-import langManager from './LangManager';
+import About from '../Pages/about';
 
 class PageManager extends React.Component{
     state = {
@@ -138,6 +139,7 @@ class PageManager extends React.Component{
             case 'settings': p = <Settings />; break;
             case 'achievements': p = <Achievements />; break;
             case 'experience': p = <Experience />; break;
+            case 'about': p = <About />; break;
         }
         return p;
     }

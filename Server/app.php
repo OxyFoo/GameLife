@@ -66,6 +66,7 @@
             $output['titles'] = GetTitles($db, $lang);
             $output['skills'] = GetSkills($db, $lang);
             $output['achievements'] = GetAchievements($db, $lang);
+            $output['helpers'] = GetHelpers($db);
             $output['status'] = 'ok';
         }
     } else if ($action === 'getUserData') {

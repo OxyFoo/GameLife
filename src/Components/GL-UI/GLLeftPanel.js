@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Dimensions, FlatList, StyleSheet, View } from 'react-native';
+import { Animated, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import langManager from '../../Managers/LangManager';
 import user from '../../Managers/UserManager';
 
@@ -86,6 +86,10 @@ class GLLeftPanel extends React.PureComponent {
                         ListHeaderComponent={this.separator}
                         ListFooterComponent={this.separator}
                     />
+                    <TouchableOpacity style={styles.aboutContainer} activeOpacity={.5} onPress={() => { this.toggleVisibility(); user.changePage('about'); }}>
+                        <GLText style={styles.aboutText} title={langManager.curr['home']['shortcut-about']} />
+                        <Image style={styles.aboutImage} source={require('../../../ressources/logo/loading_3.png')} width={32} height={32} />
+                    </TouchableOpacity>
                 </Animated.View>
             </Animated.View>
         )
@@ -127,6 +131,23 @@ const styles = StyleSheet.create({
         height: 2,
         marginLeft: '20%',
         backgroundColor: '#CCCCCC'
+    },
+    aboutContainer: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        padding: 24,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    aboutText: {
+        fontSize: 20,
+        textAlign: 'left'
+    },
+    aboutImage: {
     }
 });
 

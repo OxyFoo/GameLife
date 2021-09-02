@@ -11,6 +11,7 @@ import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
 import achievements from '../../ressources/defaultDB/achievements.json';
+import helpers from '../../ressources/defaultDB/helpers.json';
 
 const DAYS_PSEUDO_CHANGE = 1;
 
@@ -29,7 +30,7 @@ class UserManager {
 
     constructor() {
         // User informations
-        this.pseudo = 'Player-XXXX';
+        this.pseudo = 'Player';
         this.title = 0;
         this.birth = '';
         this.email = '';
@@ -51,6 +52,7 @@ class UserManager {
         this.skills = [];
         this.achievements = [];
         this.solvedAchievements = [];
+        this.helpers = [];
         this.lastPseudoDate = null;
 
         this.achievementsLoop = setInterval(this.checkAchievements, 10*1000);
@@ -433,7 +435,8 @@ class UserManager {
             'skills': this.skills,
             'titles': this.titles,
             'quotes': this.quotes,
-            'achievements': this.achievements
+            'achievements': this.achievements,
+            'helpers': this.helpers
         }
         DataManager.Save(STORAGE.INTERNAL, internalData, false);
         DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
@@ -474,11 +477,11 @@ class UserManager {
         this.solvedAchievements = get(data, 'solvedAchievements', this.solvedAchievements);
 
         const internalData = await DataManager.Load(STORAGE.INTERNAL, false);
-        //console.log(internalData['quotes']);
         this.titles = get(internalData, 'titles', titles, true);
         this.quotes = get(internalData, 'quotes', quotes, true);
         this.skills = get(internalData, 'skills', skills, true);
         this.achievements = get(internalData, 'achievements', achievements, true);
+        this.helpers = get(internalData, 'helpers', helpers, true);
     }
 
     async loadInternalData() {
@@ -491,6 +494,7 @@ class UserManager {
                 if (typeof(data['quotes']) !== 'undefined') this.quotes = data['quotes'];
                 if (typeof(data['skills']) !== 'undefined') this.skills = data['skills'];
                 if (typeof(data['achievements']) !== 'undefined') this.achievements = data['achievements'];
+                if (typeof(data['helpers']) !== 'undefined') this.helpers = data['helpers'];
             }
         }
 

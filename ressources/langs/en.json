@@ -35,6 +35,7 @@
         "shortcut-leaderboard": "Leaderboard",
         "shortcut-achievements": "Achievements",
         "shortcut-settings": "Settings",
+        "shortcut-about": "About",
 
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?"
@@ -188,5 +189,16 @@
 
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": ""
+    },
+
+    "about": {
+        "page-title": "About",
+
+        "block-devs": "App made by",
+        "block-helpers": "Helpers",
+        "block-links": "Links",
+        "text-manager": "Manager",
+        "text-developer": "Développeur",
+        "text-graphiste": "Graphiste"
     }
 }

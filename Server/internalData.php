@@ -143,4 +143,9 @@
         return $safeSkills;
     }
 
+    function GetHelpers($db) {
+        $helpers = $db->QueryArray("SELECT * FROM `Helpers`");
+        return $helpers;
+    }
+
 ?>

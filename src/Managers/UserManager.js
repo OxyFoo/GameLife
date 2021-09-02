@@ -28,7 +28,7 @@ class UserManager {
     constructor() {
         // User informations
         this.pseudo = 'Player-XXXX';
-        this.title = '';
+        this.title = 0;
         this.birth = '';
         this.email = '';
         this.xp = 0;
@@ -48,6 +48,7 @@ class UserManager {
         this.quotes = [];
         this.skills = [];
         this.achievements = [];
+        this.solvedAchievements = [];
         this.lastPseudoDate = null;
     }
 
@@ -73,11 +74,40 @@ class UserManager {
         let unlockTitles = [];
         for (let t = 0; t < this.titles.length; t++) {
             const title = this.titles[t];
-            if (title.AchievementsCondition == 0) {
-                unlockTitles.push(title);
+            const cond = parseInt(title.AchievementsCondition);
+            if (isNaN(cond)) {
+                continue;
+            }
+            if (cond === 0 || this.solvedAchievements.includes(cond)) {
+                const newTitle = { key: title.ID, value: title.Title };
+                unlockTitles.push(newTitle);
             }
         }
         return unlockTitles;
+    }
+
+    getTitleByID = (ID) => {
+        let currTitle = null;
+        for (let t = 0; t < this.titles.length; t++) {
+            const title = this.titles[t];
+            const titleID = parseInt(title.ID);
+            if (ID == titleID) {
+                currTitle = title.Title;
+                break;
+            }
+        }
+        return currTitle;
+    }
+
+    getAchievements = () => {
+        const achievements = [];
+        for (let a = 0; a < this.achievements.length; a++) {
+            const achievement = this.achievements[a];
+            if (achievement.Type == 1) {
+                achievements.push(achievement);
+            }
+        }
+        return achievements;
     }
 
     removeDeletedSkills = () => {
@@ -317,7 +347,7 @@ class UserManager {
         const data = await DataManager.Load(STORAGE.USER, _online, this.conn.token);
         langManager.setLangage(get(data, 'lang', 'fr'));
         this.pseudo = get(data, 'pseudo', this.pseudo);
-        this.title = get(data, 'title', '');
+        this.title = get(data, 'title', 0);
         this.birth = get(data, 'birth', '');
         this.email = get(data, 'email', '');
         this.xp = get(data, 'xp', 0);
@@ -347,7 +377,7 @@ class UserManager {
                 if (typeof(data['titles']) !== 'undefined') this.titles = data['titles'];
                 if (typeof(data['quotes']) !== 'undefined') this.quotes = data['quotes'];
                 if (typeof(data['skills']) !== 'undefined') this.skills = data['skills'];
-                if (typeof(data['achievements']) !== 'undefined') this.achievements = data['skills'];
+                if (typeof(data['achievements']) !== 'undefined') this.achievements = data['achievements'];
             }
         }
 

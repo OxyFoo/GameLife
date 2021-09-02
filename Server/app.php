@@ -42,6 +42,7 @@
                 if ($account['Banned'] == 0) {
                     // OK
                     $accountID = $account['ID'];
+                    $db->RefreshLastDate($accountID);
                     $output['token'] = $db->GeneratePrivateToken($accountID, $deviceID);
                     $output['status'] = 'ok';
                 } else {
@@ -50,6 +51,7 @@
             } else {
                 // No device in account
                 $accountID = $account['ID'];
+                $db->RefreshLastDate($accountID);
                 $db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
                 $db->RefreshToken($deviceID);
                 $db->SendMail($email, $deviceID, $accountID, $lang);
@@ -75,10 +77,12 @@
             if (isset($accountID)) {
                 $account = $db->GetAccountByID($accountID);
                 $username = $account['Username'];
+                $title = $account['Title'];
                 $userData = $account['Data'];
-                if (isset($userData, $username)) {
+                if (isset($userData, $username, $title)) {
                     $decoded = json_decode($userData);
                     $decoded->pseudo = $username;
+                    $decoded->title = $title;
                     $userData = json_encode($decoded);
                     $output['data'] = $userData;
                     $output['status'] = 'ok';
@@ -97,10 +101,13 @@
                 // Get & remove user from data
                 $decoded = json_decode($userData);
                 $pseudo = $decoded->pseudo;
+                $title = $decoded->title;
                 unset($decoded->pseudo);
+                unset($decoded->title);
                 $userData = json_encode($decoded);
 
                 $db->setUserData($account, $userData);
+                $db->setUserTitle($account, $title);
                 $pseudoChanged = $db->setUsername($account, $pseudo);
                 if ($pseudoChanged === -1) {
                     $output['status'] = 'wrongtimingpseudo';

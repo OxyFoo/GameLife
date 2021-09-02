@@ -5,33 +5,25 @@ import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { GLHeader, GLText } from '../Components/GL-Components';
 
-const DATA_TEST = [ 1, 2, 3, 4, 5, 6 ];
-
 class Achievements extends React.Component {
     achievementRender({ item }) {
-        const name = item;
+        const achievement = item;
+        const name = achievement.Name;
+        const description = achievement.Description;
 
         return (
             <View style={styles.achievementsContainer}>
-                <View style={styles.achievementsBox}>
-                    <View style={styles.row}>
-                        <View style={styles.colHeader}>
-                            <View style={styles.image}>
-                                <GLText title="Image" color="black" />
-                            </View>
-                            <GLText style={styles.imageText} title="JJ/MM/YY" />
-                        </View>
-                        <View style={styles.colContent}>
-                                <GLText style={styles.title} title={name} />
-                                <GLText style={styles.description} title="Description Description Description Description Description Description" color="grey" />
-                        </View>
-                    </View>
+                <View style={[styles.achievementsBox, styles.unsolved]}>
+                    <GLText style={styles.title} title={name} />
+                    <GLText style={styles.description} title={description} color="grey" />
                 </View>
             </View>
         )
     }
 
     render() {
+        const achievements = user.getAchievements();
+
         return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
@@ -45,8 +37,7 @@ class Achievements extends React.Component {
                 {/* Content */}
                 <View style={styles.container}>
                     <FlatList
-                        style={styles.achievements}
-                        data={DATA_TEST}
+                        data={achievements}
                         keyExtractor={(item, i) => 'achievements' + i}
                         renderItem={this.achievementRender}
                         numColumns={2}
@@ -58,14 +49,20 @@ class Achievements extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    achievements: {
-        paddingTop: 48
+    container: {
+        flex: 1,
+        paddingVertical: 24
     },
     achievementsContainer: {
         width: '50%',
         padding: 12
     },
     achievementsBox: {
+        height: 128,
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        paddingVertical: 12,
+        paddingHorizontal: 6,
         borderColor: '#FFFFFF',
         borderTopWidth: 3,
         borderBottomWidth: 3,
@@ -73,35 +70,13 @@ const styles = StyleSheet.create({
         borderRightWidth: 6,
         backgroundColor: '#000000'
     },
-    row: {
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    colHeader: {
-        width: '40%'
-    },
-    colContent: {
-        width: '60%'
-    },
-    image: {
-        width: 48,
-        height: 48,
-        margin: 10,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#FFFFFF'
-    },
-    imageText: {
-        position: 'absolute',
-        left: 0,
-        right: -6,
-        bottom: 12,
-        fontSize: 10
+    unsolved: {
+        borderColor: '#888888'
     },
     title: {
-        marginVertical: 4,
-        fontSize: 14
+        minHeight: 30,
+        marginBottom: 12,
+        fontSize: 18
     },
     description: {
         marginBottom: 12,

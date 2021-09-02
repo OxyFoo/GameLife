@@ -205,6 +205,13 @@
             SendSigninMail($email, $deviceName, $text_accept, $text_reject, $lang);
         }
 
+        public function RefreshLastDate($accountID) {
+            $result = $this->conn->query("UPDATE `Users` SET `LastConnDate` = current_timestamp() WHERE `ID` = '$accountID'");
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Saving last date failed");
+            }
+        }
+
         public function GeneratePrivateToken($accountID, $deviceID) {
             $random = RandomString(24);
             $cipher = "$deviceID\t$accountID\t$random";
@@ -226,6 +233,14 @@
             $result = $this->conn->query("UPDATE `Users` SET `Data` = '$data' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving data failed");
+            }
+        }
+
+        public function setUserTitle($account, $title) {
+            $accountID = $account['ID'];
+            $result = $this->conn->query("UPDATE `Users` SET `Title` = '$title' WHERE `ID` = '$accountID'");
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Saving title failed");
             }
         }
 

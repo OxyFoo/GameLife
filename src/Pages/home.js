@@ -70,7 +70,7 @@ class Home extends React.Component {
                     <View style={styles.containerHeader}>
                         <TouchableOpacity style={styles.containerUserName} activeOpacity={.5} onPress={this.openIdentity}>
                             <GLText title={user.pseudo} style={styles.pseudo} />
-                            {user.title !== '' && (<GLText title={user.title} style={styles.title} />)}
+                            {user.title !== 0 && (<GLText title={user.getTitleByID(user.title)} style={styles.title} />)}
                         </TouchableOpacity>
                         <GLXPBar value={XP} max={nextLvlXP} style={styles.containerUserXP} />
                     </View>

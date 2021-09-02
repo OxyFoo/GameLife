@@ -22,7 +22,7 @@ class App extends React.Component {
         
         // Load internet data (if online)
         await user.conn.AsyncRefreshAccount();
-        await user.sleep(user.random(500, 800));
+        await user.sleep(user.random(600, 800));
         user.changePage('loading', { state: 2 }, true);
         
         // Load internet user data (if connected)

@@ -15,7 +15,8 @@ class GLDropDown extends React.PureComponent {
 
     toggleVisibility = () => {
         if (this.props.disabled) return;
-        if (Platform.OS === 'ios') {
+        const forcePopupMode = this.props.forcePopupMode || false;
+        if (Platform.OS === 'ios' || forcePopupMode) {
             user.openPopup('list', this.contentRender.bind(this));
         } else {
             this.setState({ opened: !this.state.opened });
@@ -75,13 +76,17 @@ class GLDropDown extends React.PureComponent {
 
     render() {
         const opened = this.state.opened;
-        const value  = this.state.selectedText || this.props.value.toUpperCase();
         const style  = [ styles.container, this.props.style ];
         const styleBox = [ styles.box, this.props.styleBox ];
         const icon   = opened ? 'chevronTop' : 'chevronBottom';
         const onLongPress = this.props.onLongPress;
+        const simpleText = this.props.simpleText || false;
+        const forcePopupMode = this.props.forcePopupMode || false;
 
-        return (
+        let value  = this.state.selectedText || this.props.value;
+        if (!simpleText) value = value.toUpperCase();
+
+        return !simpleText ? (
             <>
                 {this.state.opened && <View style={styles.androidHitbox} onTouchStart={this.backgroundPress} />}
                 <View style={style}>
@@ -90,11 +95,13 @@ class GLDropDown extends React.PureComponent {
                         <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />
                     </TouchableOpacity>
 
-                    {!this.props.disabled && opened && Platform.OS === 'android' && (
+                    {!this.props.disabled && opened && !forcePopupMode && Platform.OS === 'android' && (
                         this.contentRender(styles.drop)
                     )}
                 </View>
             </>
+        ) : (
+            <GLText style={[this.props.style]} title={value} onPress={this.toggleVisibility} color='grey' />
         )
     }
 

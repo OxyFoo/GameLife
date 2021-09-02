@@ -5,20 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { twoDigit } from '../Functions/Functions';
-import { GLBottomModal, GLHeader, GLText, GLTextEditable } from '../Components/GL-Components';
-
-const TITRES = [
-    'Test 1',
-    'Test 2',
-    'Test 3',
-    'Test 4',
-    'Test 5',
-    'Test 6',
-    'Test 7',
-    'Test 8',
-    'Test 9',
-    'Test 10'
-];
+import { GLDropDown, GLHeader, GLText, GLTextEditable } from '../Components/GL-Components';
 
 class Identity extends React.Component {
     state = {
@@ -27,7 +14,6 @@ class Identity extends React.Component {
         email: user.email,
         title: user.title,
 
-        modalEnabled: false,
         showDateTimePicker: ''
     }
 
@@ -81,17 +67,14 @@ class Identity extends React.Component {
     }
 
     // Titre
-    toggleModal = () => {
-        this.setState({ modalEnabled: !this.state.modalEnabled });
-    }
-    editTitre = (newTitle) => {
-        this.setState({ modalEnabled: false, title: newTitle });
+    editTitle = (newTitle) => {
+        this.setState({ title: newTitle });
     }
     component_titre = ({ item }) => {
         const title = item;
 
         return (
-            <GLText style={{ marginVertical: 4 }} title={title.Title} onPress={() => this.editTitre(item)} />
+            <GLText style={{ marginVertical: 4 }} title={title.Title} onPress={() => this.editTitle(item)} />
         )
     }
 
@@ -141,6 +124,7 @@ class Identity extends React.Component {
         const totalM = ((totalDuration/60) - totalH) * 60;
         const totalLang = langManager.curr['identity']['value-totaltime'];
         const totalTxt = totalLang.replace('{}', totalH).replace('{}', totalM);
+        const title = user.getTitleByID(this.state.title) || langManager.curr['identity']['empty-title'];
         const titles = user.getUnlockTitles();
 
         return (
@@ -169,7 +153,15 @@ class Identity extends React.Component {
 
                         {/* Title */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
-                        <GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='grey' />
+                        {/*<GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='grey' />*/}
+                        <GLDropDown
+                            style={styles.value}
+                            value={title}
+                            data={titles}
+                            onSelect={this.editTitle}
+                            simpleText={true}
+                            forcePopupMode={true}
+                        />
 
                         {/* Age */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
@@ -193,14 +185,6 @@ class Identity extends React.Component {
                         <GLText style={styles.text} title={langManager.curr['identity']['name-totaltime'].toUpperCase()} />
                         <GLText style={[styles.value, { marginBottom: 6 }]} title={totalTxt} color='grey' />
                     </View>
-
-                    <GLBottomModal title='Titres' enabled={this.state.modalEnabled}>
-                        <FlatList
-                            data={titles}
-                            keyExtractor={(item, i) => "titre_" + i}
-                            renderItem={this.component_titre}
-                        />
-                    </GLBottomModal>
                 </View>
 
                 <DateTimePickerModal

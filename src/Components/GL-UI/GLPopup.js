@@ -39,11 +39,11 @@ class GLPopup extends React.PureComponent {
             OptionsAnimation(this.state.animScale, 1, 200, false).start();
         } else {
             // Close
+            OptionsAnimation(this.state.animOpacity, 0, 200).start();
+            OptionsAnimation(this.state.animScale, .9, 200, false).start();
             setTimeout(() => {
-                OptionsAnimation(this.state.animOpacity, 0, 200).start();
-                OptionsAnimation(this.state.animScale, .9, 200, false).start();
-                this.setState({ opened: opened });
-            }, 200);
+                this.setState({ opened: opened, type: null });
+            }, 150);
         }
     }
 
@@ -55,7 +55,7 @@ class GLPopup extends React.PureComponent {
 
     content_message = () => {
         const title = (this.props.args[0] || '').toUpperCase();
-        const message = this.props.args[1];
+        const message = this.props.args[1] || '';
         const ok = langManager.curr['modal']['btn-ok'];
         const yes = langManager.curr['modal']['btn-yes'];
         const no = langManager.curr['modal']['btn-no'];

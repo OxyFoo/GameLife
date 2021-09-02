@@ -244,6 +244,14 @@
             }
         }
 
+        public function setAchievements($account, $achievements) {
+            $accountID = $account['ID'];
+            $result = $this->conn->query("UPDATE `Users` SET `SolvedAchievements` = '$achievements' WHERE `ID` = '$accountID'");
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Saving title failed");
+            }
+        }
+
         // 0 Nothing
         // 1 Changed
         // -1 Change failed (time)

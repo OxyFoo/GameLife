@@ -92,3 +92,19 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 ## 19/08/21
 * PHP: 560
 * JS: 2222
+
+# Succès
+* Comparaisons
+    * élément 1
+        - B : Batterie
+        - SkX : Niveau du skill avec l'ID x
+        - SkTX : Temps du skill avec l'ID x
+        - XCa : Niveau de le Xème catégorie la plus élevée
+        - Ca : Niveau le plus élevé des catégories
+        - CaX : Niveau d'une catégorie avec l'ID x
+        - CaTX : Temps d'une catégorie avec l'ID x
+        - StX : Niveau d'une statistique (joueur) avec X = sag, int, ...
+        - StL
+    * Comparateur
+        - LT : less than
+        - GT : grater than

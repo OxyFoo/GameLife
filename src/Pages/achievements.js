@@ -10,10 +10,13 @@ class Achievements extends React.Component {
         const achievement = item;
         const name = achievement.Name;
         const description = achievement.Description;
+        const style = user.solvedAchievements.includes(parseInt(achievement.ID)) ?
+                      styles.achievementsBox :
+                      [styles.achievementsBox, styles.unsolved];
 
         return (
             <View style={styles.achievementsContainer}>
-                <View style={[styles.achievementsBox, styles.unsolved]}>
+                <View style={style}>
                     <GLText style={styles.title} title={name} />
                     <GLText style={styles.description} title={description} color="grey" />
                 </View>

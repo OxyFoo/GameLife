@@ -79,10 +79,12 @@
                 $username = $account['Username'];
                 $title = $account['Title'];
                 $userData = $account['Data'];
+                $solvedAchievements = $account['SolvedAchievements'];
                 if (isset($userData, $username, $title)) {
                     $decoded = json_decode($userData);
                     $decoded->pseudo = $username;
                     $decoded->title = $title;
+                    $decoded->solvedAchievements = $solvedAchievements !== "" ? array_map('intval', explode(',', $solvedAchievements)) : array();
                     $userData = json_encode($decoded);
                     $output['data'] = $userData;
                     $output['status'] = 'ok';
@@ -102,12 +104,15 @@
                 $decoded = json_decode($userData);
                 $pseudo = $decoded->pseudo;
                 $title = $decoded->title;
+                $solvedAchievements = implode(',', $decoded->solvedAchievements);
                 unset($decoded->pseudo);
                 unset($decoded->title);
+                unset($decoded->solvedAchievements);
                 $userData = json_encode($decoded);
 
                 $db->setUserData($account, $userData);
                 $db->setUserTitle($account, $title);
+                $db->setAchievements($account, $solvedAchievements);
                 $pseudoChanged = $db->setUsername($account, $pseudo);
                 if ($pseudoChanged === -1) {
                     $output['status'] = 'wrongtimingpseudo';

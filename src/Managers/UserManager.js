@@ -103,11 +103,21 @@ class UserManager {
         const achievements = [];
         for (let a = 0; a < this.achievements.length; a++) {
             const achievement = this.achievements[a];
-            if (achievement.Type == 1) {
+            if (achievement.Type == 1 || (achievement.Type == 0 && this.solvedAchievements.includes(parseInt(achievement.ID)))) {
                 achievements.push(achievement);
             }
         }
         return achievements;
+    }
+
+    checkAchievements = () => {
+        for (let a = 0; a < this.achievements.length; a++) {
+            const achievement = this.achievements[a];
+            if (this.solvedAchievements.includes(achievement.ID)) {
+                continue;
+            }
+            const Condition = achievement.Conditions;
+        }
     }
 
     removeDeletedSkills = () => {

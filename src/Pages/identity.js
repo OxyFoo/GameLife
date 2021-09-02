@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Alert, StyleSheet, FlatList, TextInput } from 'react-native';
+import { View, Alert, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import user from '../Managers/UserManager';
@@ -127,6 +127,14 @@ class Identity extends React.Component {
         const title = user.getTitleByID(this.state.title) || langManager.curr['identity']['empty-title'];
         const titles = user.getUnlockTitles();
 
+        let name, description;
+        if (user.solvedAchievements.length > 0) {
+            const achievementID = user.solvedAchievements[user.solvedAchievements.length - 1];
+            const achievement = user.getAchievementByID(achievementID);
+            name = achievement.Name;
+            description = achievement.Description;
+        }
+
         return (
             <>
                 <View style={{flex: 1}}>
@@ -183,7 +191,24 @@ class Identity extends React.Component {
 
                         {/* Total time */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-totaltime'].toUpperCase()} />
-                        <GLText style={[styles.value, { marginBottom: 6 }]} title={totalTxt} color='grey' />
+                        <GLText style={styles.value} title={totalTxt} color='grey' />
+
+                        {/* Last achievement */}
+                        {user.solvedAchievements.length > 0 && (
+                            <>
+                                <GLText style={styles.text} title={langManager.curr['identity']['name-lastachievement'].toUpperCase()} />
+                                <TouchableOpacity
+                                    style={styles.achievementsContainer}
+                                    activeOpacity={.5}
+                                    onPress={() => { user.changePage('achievements'); }}
+                                >
+                                    <View style={styles.achievementsBox}>
+                                        <GLText style={styles.title} title={name} />
+                                        <GLText style={styles.description} title={description} color="grey" />
+                                    </View>
+                                </TouchableOpacity>
+                            </>
+                        )}
                     </View>
                 </View>
 
@@ -221,6 +246,29 @@ const styles = StyleSheet.create({
         color: '#5AB4F0',
         fontSize: 22,
         marginBottom: 30
+    },
+
+    achievementsBox: {
+        height: 128,
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        paddingVertical: 12,
+        paddingHorizontal: 6,
+        borderColor: '#FFFFFF',
+        borderTopWidth: 3,
+        borderBottomWidth: 3,
+        borderLeftWidth: 6,
+        borderRightWidth: 6,
+        backgroundColor: '#000000'
+    },
+    title: {
+        minHeight: 30,
+        marginBottom: 12,
+        fontSize: 18
+    },
+    description: {
+        marginBottom: 12,
+        fontSize: 12
     }
 });
 

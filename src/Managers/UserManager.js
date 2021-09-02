@@ -1,3 +1,5 @@
+import deviceInfoModule from 'react-native-device-info';
+
 import langManager from "./LangManager";
 import ServManager from "./ServManager";
 import DataManager, { STORAGE } from '../Class/DataManager';
@@ -50,6 +52,8 @@ class UserManager {
         this.achievements = [];
         this.solvedAchievements = [];
         this.lastPseudoDate = null;
+
+        this.achievementsLoop = setInterval(this.checkAchievements, 10*1000);
     }
 
     disconnect = () => {
@@ -59,6 +63,7 @@ class UserManager {
         this.saveData();
     }
     unmount = () => {
+        clearInterval(this.achievementsLoop);
         this.saveData();
         this.conn.destructor();
     }
@@ -101,22 +106,118 @@ class UserManager {
 
     getAchievements = () => {
         const achievements = [];
+        // Get unlocked
         for (let a = 0; a < this.achievements.length; a++) {
             const achievement = this.achievements[a];
-            if (achievement.Type == 1 || (achievement.Type == 0 && this.solvedAchievements.includes(parseInt(achievement.ID)))) {
+            if (this.solvedAchievements.includes(parseInt(achievement.ID)) && achievement.Type != -1) {
+                achievements.push(achievement);
+            }
+        }
+        // Get others
+        for (let a = 0; a < this.achievements.length; a++) {
+            const achievement = this.achievements[a];
+            if (!achievements.includes(achievement) && achievement.Type == 1) {
                 achievements.push(achievement);
             }
         }
         return achievements;
     }
 
+    getAchievementByID = (ID) => {
+        let output;
+        for (let a = 0; a < this.achievements.length; a++) {
+            const achievement = this.achievements[a];
+            if (achievement.ID == ID) {
+                output = achievement;
+                break;
+            }
+        }
+        return output;
+    }
+
     checkAchievements = () => {
         for (let a = 0; a < this.achievements.length; a++) {
             const achievement = this.achievements[a];
-            if (this.solvedAchievements.includes(achievement.ID)) {
+            const achievementID = parseInt(achievement.ID);
+            if (this.solvedAchievements.includes(achievementID)) {
                 continue;
             }
-            const Condition = achievement.Conditions;
+            if (typeof(achievement.Conditions) === 'undefined') {
+                continue;
+            }
+            const conditions = achievement.Conditions.split(' ');
+            if (conditions.length != 3) {
+                continue;
+            }
+
+            let valid = false;
+            let value;
+            let first = conditions[0];
+            let operator = conditions[1];
+            let compareValue = conditions[2];
+
+            // Is time (or Level)
+            const isTime = first.includes('T');
+            first = first.replace('T', '');
+
+            // Get value to compare
+            if (first === 'B') {
+                const batteryLevel = deviceInfoModule.getBatteryLevelSync();
+                value = batteryLevel;
+            } else
+            if (first.startsWith('Sk')) {
+                // Skill level
+                first = first.replace('Sk', '');
+                const skillID = parseInt(first);
+                if (isTime) {
+                    // Get total time
+                    value = 0;
+                    for (const a in this.activities) {
+                        if (this.activities[a].ID == skillID) {
+                            value += this.activities[a].duration / 60;
+                        }
+                    }
+                } else {
+                    // Get level
+                    value = this.experience.getSkillExperience(skillID).lvl;
+                }
+            } else
+            if (first.startsWith('St')) {
+                // Stat level
+                first = first.replace('St', '');
+                const statKey = first;
+                const statLevel = this.experience.getStatExperience(statKey).lvl;
+                value = statLevel;
+            }/* else
+            if (first == 'Ca') {
+                // Get Max category level
+            } else
+            if (first.startsWith('Ca')) {
+                // Categorie
+                first = first.replace('Ca');
+                const CategoryID = parseInt(first);
+            }*/
+
+            switch (operator) {
+                case 'GT':
+                    if (value >= compareValue)
+                        valid = true;
+                    break;
+                case 'LT':
+                    if (value < compareValue)
+                        valid = true;
+                    break;
+            }
+
+            if (valid) {
+                const title = langManager.curr['achievements']['alert-achievement-title'];
+                let text = langManager.curr['achievements']['alert-achievement-text'];
+                text = text.replace('{}', achievement.Name);
+                user.openPopup('ok', [ title, text ]);
+
+                this.solvedAchievements.push(achievementID);
+                this.saveData();
+            }
         }
     }
 

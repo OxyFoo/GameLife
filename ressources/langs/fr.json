@@ -57,6 +57,8 @@
         "empty-email": "Aucune",
         "empty-title": "Aucun",
 
+        "name-lastachievement": "Dernier succès",
+
         "alert-pseudolimit-title": "Changement de pseudo",
         "alert-pseudolimit-text": "Vous ne pouvez changer de pseudo qu'une seule fois par mois, choisissez-bien !",
         "alert-pseudowait-title": "Pseudo déjà changé",
@@ -147,8 +149,11 @@
 
         "input-langage": "Langues",
         "input-theme": "Thèmes",
+        "input-reset": "Réinitialiser",
         "input-disconnect": "Délier le mail",
 
+        "alert-reset-title": "Réinitialiser",
+        "alert-reset-text": "Supprimer toutes les activités du compte ?",
         "alert-disconnect-title": "Se déconnecter",
         "alert-disconnect-text": "Voulez-vous vous déconnecter ? Les données ne seront sauvegardées que localement"
     },
@@ -179,6 +184,9 @@
     },
 
     "achievements": {
-        "page-title": "Succès"
+        "page-title": "Succès",
+
+        "alert-achievement-title": "Succès déverouillé",
+        "alert-achievement-text": "You have unlocked the achievement: {}"
     }
 }

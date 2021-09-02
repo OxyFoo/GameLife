@@ -57,6 +57,8 @@
         "empty-email": "None",
         "empty-title": "None",
 
+        "name-lastachievement": "Last achievement",
+
         "alert-pseudolimit-title": "Change username",
         "alert-pseudolimit-text": "You can only change your nickname once a month, so choose wisely!",
         "alert-pseudowait-title": "Username already changed",
@@ -147,8 +149,11 @@
 
         "input-langage": "Langages",
         "input-theme": "Themes",
+        "input-reset": "Reset",
         "input-disconnect": "Unlink mail",
 
+        "alert-reset-title": "Reset",
+        "alert-reset-text": "Delete all account activities?",
         "alert-disconnect-title": "Disconnecting",
         "alert-disconnect-text": "Do you want to log out? Data will only be saved locally"
     },
@@ -179,6 +184,9 @@
     },
 
     "achievements": {
-        "page-title": "Achievements"
+        "page-title": "Achievements",
+
+        "alert-achievement-title": "Unlocked achievement",
+        "alert-achievement-text": ""
     }
 }

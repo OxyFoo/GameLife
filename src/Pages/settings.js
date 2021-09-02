@@ -16,6 +16,17 @@ class Settings extends React.Component {
         }
         user.backPage();
     }
+    reset = () => {
+        const event = (button) => {
+            if (button === 'yes') {
+                user.activities = [];
+                user.saveData();
+            }
+        }
+        const title = langManager.curr['settings']['alert-reset-title'];
+        const text = langManager.curr['settings']['alert-reset-text'];
+        user.openPopup('yesno', [ title, text ], event);
+    }
     deconnect = () => {
         const event = (button) => {
             if (button === 'yes') {
@@ -44,12 +55,21 @@ class Settings extends React.Component {
 
                 {/* Content */}
                 <View style={styles.content}>
+                    {/* Langages */}
                     <GLText style={styles.title} title={langManager.curr['settings']['input-langage'].toUpperCase()} />
                     <GLDropDown
                         value={langManager.curr['name']}
                         data={langManager.getOtherLangs()}
                         onSelect={this.changeLang}
                     />
+
+                    {/* Disconnect */}
+                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>
+                        <GLText style={styles.title} title={langManager.curr['settings']['input-reset'].toUpperCase()} />
+                        <GLIconButton icon='trash' />
+                    </TouchableOpacity>
+
+                    {/* Disconnect */}
                     {user.isConnected() && (
                         <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.deconnect}>
                             <GLText style={styles.title} title={langManager.curr['settings']['input-disconnect'].toUpperCase()} />

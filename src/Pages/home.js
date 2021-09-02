@@ -41,7 +41,6 @@ class Home extends React.Component {
         while (this.skills.length < MAX_SKILLS) {
             this.skills.push({ key: -1, value: '' });
         }
-        console.log(user.solvedAchievements);
     }
 
     openIdentity = () => { user.changePage('identity'); }

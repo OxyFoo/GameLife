@@ -89,8 +89,7 @@
 
         "XPLeftToReach": "XP restant pour atteindre",
         "name-next": "Niveau suivant",
-        "name-10": "Niveau 10",
-        "name-100": "Niveau 100"
+        "name-next-x": "Niveau {}"
     },
 
     "statistic": {

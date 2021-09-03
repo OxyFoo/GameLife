@@ -49,9 +49,9 @@ class Experience extends React.Component {
         const next100lvl = Math.ceil(_experience.lvl / 100) * 100;
         const title_next = lang_experience['name-next'];
         const value_next = _experience.next - _experience.xp;
-        const title_10 = lang_experience['name-10'];
+        const title_10 = lang_experience['name-next-x'].replace('{}', next10lvl);
         const value_10 = user.experience.getXPTo(next10lvl) - _experience.totalXP;
-        const title_100 = lang_experience['name-100'];
+        const title_100 = lang_experience['name-next-x'].replace('{}', next100lvl);
         const value_100 = user.experience.getXPTo(next100lvl) - _experience.totalXP;
 
         return (

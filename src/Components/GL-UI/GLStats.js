@@ -10,7 +10,7 @@ function statComponent(item, sup, index) {
 
     const stat = user.experience.getStatExperience(statKey);
     const title = langManager.curr['statistics']['names'][statKey];
-    const total = stat.totalXP;
+    const total = Math.round(stat.totalXP);
 
     const pressEvent = () => {
         user.changePage('statistic', { 'stat': statKey });

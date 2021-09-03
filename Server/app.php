@@ -106,6 +106,7 @@
                 $pseudo = $decoded->pseudo;
                 $title = $decoded->title;
                 $solvedAchievements = implode(',', $decoded->solvedAchievements);
+                $xp = $decoded->xp;
                 unset($decoded->pseudo);
                 unset($decoded->title);
                 unset($decoded->solvedAchievements);
@@ -114,6 +115,7 @@
                 $db->setUserData($account, $userData);
                 $db->setUserTitle($account, $title);
                 $db->setAchievements($account, $solvedAchievements);
+                $db->setXP($account, $xp);
                 $pseudoChanged = $db->setUsername($account, $pseudo);
                 if ($pseudoChanged === -1) {
                     $output['status'] = 'wrongtimingpseudo';
@@ -125,6 +127,18 @@
                 }
             }
         }
+    } else if ($action === 'getLeaderboard') {
+        $token = $data['token'];
+        if (isset($token)) {
+            $dataFromToken = $db->GetDataFromToken($token);
+            $accountID = $dataFromToken['accountID'];
+            $account = $db->GetAccountByID($accountID);
+            if (isset($account)) {
+                $output['self'] = GetSelfPosition($db, $account);
+            }
+        }
+        $output['leaderboard'] = GetLeaderboard($db);
+        $output['status'] = 'ok';
     }
 
     if (!isset($output['status'])) {

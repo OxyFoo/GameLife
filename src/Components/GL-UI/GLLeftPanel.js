@@ -15,7 +15,7 @@ const SHORTCUTS = [
     { text: "shortcut-calendar", event: () => { user.changePage('calendar') } },
     { text: "shortcut-stats", event: () => { user.changePage('statistic') } },
     { text: "shortcut-level", event: () => { user.changePage('experience') } },
-    { text: "shortcut-leaderboard", event: () => {} },
+    { text: "shortcut-leaderboard", event: () => { user.changePage('leaderboard'); } },
     { text: "shortcut-achievements", event: () => { user.changePage('achievements') } },
     { text: "shortcut-settings", event: () => { user.changePage('settings') } }
 ];

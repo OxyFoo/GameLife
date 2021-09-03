@@ -12,7 +12,8 @@
         "level": "Level",
         "level-small": "Lvl",
         "total": "TOTAL XP",
-        "average": "AVERAGE {} XP/DAY"
+        "average": "AVERAGE {} XP/DAY",
+        "me": "Me"
     },
 
     "modal": {
@@ -189,6 +190,13 @@
 
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": ""
+    },
+
+    "leaderboard": {
+        "page-title": "Leaderboard",
+
+        "alert-onlineneed-title": "Connection required",
+        "alert-onlineneed-text": "A connection is required to access the ranking!"
     },
 
     "about": {

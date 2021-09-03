@@ -119,6 +119,14 @@ class ServManager {
         return await Request_Async(data);
     }
 
+    async getLeaderboard() {
+        const data = {
+            'action': 'getLeaderboard',
+            'token': this.token
+        }
+        return await Request_Async(data);
+    }
+
     disconnect = () => {
         this.token = '';
         this.status = STATUS.OFFLINE;

@@ -17,6 +17,7 @@ import Skills from '../Pages/skills';
 import Settings from '../Pages/settings';
 import Experience from '../Pages/experience';
 import Achievements from '../Pages/achievements';
+import Leaderboard from '../Pages/leaderboard';
 import About from '../Pages/about';
 
 class PageManager extends React.Component{
@@ -139,6 +140,7 @@ class PageManager extends React.Component{
             case 'settings': p = <Settings />; break;
             case 'achievements': p = <Achievements />; break;
             case 'experience': p = <Experience />; break;
+            case 'leaderboard': p = <Leaderboard />; break;
             case 'about': p = <About />; break;
         }
         return p;

@@ -252,6 +252,14 @@
             }
         }
 
+        public function setXP($account, $xp) {
+            $accountID = $account['ID'];
+            $result = $this->conn->query("UPDATE `Users` SET `XP` = '$xp' WHERE `ID` = '$accountID'");
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Saving XP failed");
+            }
+        }
+
         // 0 Nothing
         // 1 Changed
         // -1 Change failed (time)

@@ -69,6 +69,10 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
     * Input : Token & Data
     * Process : tokenVerification et écritude dans la BDD
     * Return : State
+* getLeaderboard
+    * Input : Token
+    * Process tokenVerification et récupération des X 1ers joueurs + soi-même
+    * Return : State & Leaderboard
 ## App
 * Au démarrage (si internet)
     * getKey (BuildID chiffré avec la clé A)

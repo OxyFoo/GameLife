@@ -148,4 +148,69 @@
         return $helpers;
     }
 
+    function GetSelfPosition($db, $account) {
+        $position = 0;
+        $accountID = $account['ID'];
+        $users = $db->QueryArray("SELECT * FROM `Users`");
+
+        // Count > 0
+        $length = 0;
+        for ($i = 0; $i < count($users); $i++) {
+            if (intval($users[$i]['XP']) > 0) $length++;
+        }
+
+        // Get sorted users
+        for ($l = 0; $l < $length; $l++) {
+            $maxID = 0;
+            $maxXP = 0;
+            for ($i = 0; $i < count($users); $i++) {
+                if (intval($users[$i]['XP']) > $maxXP) {
+                    $maxID = $i;
+                    $maxXP = intval($users[$i]['XP']);
+                }
+            }
+            if ($maxID == $accountID) {
+                break;
+            }
+            $position++;
+            unset($users[$maxID]);
+        }
+
+        return $position;
+    }
+    function GetLeaderboard($db) {
+        $topUsers = array();
+        $users = $db->QueryArray("SELECT * FROM `Users`");
+
+        // Count > 0
+        $length = 0;
+        for ($i = 0; $i < count($users); $i++) {
+            if (intval($users[$i]['XP']) > 0) $length++;
+        }
+        if ($length > 50) {
+            $length = 50;
+        }
+
+        // Get sorted users
+        for ($l = 0; $l < $length; $l++) {
+            $maxID = 0;
+            $maxXP = 0;
+            for ($i = 0; $i < count($users); $i++) {
+                if (intval($users[$i]['XP']) > $maxXP) {
+                    $maxID = $i;
+                    $maxXP = intval($users[$i]['XP']);
+                }
+            }
+            $user = array(
+                'Username' => $users[$maxID]['Username'],
+                'Title' => $users[$maxID]['Title'],
+                'XP' => $users[$maxID]['XP']
+            );
+            array_push($topUsers, $user);
+            unset($users[$maxID]);
+        }
+
+        return $topUsers;
+    }
+
 ?>

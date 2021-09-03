@@ -12,7 +12,8 @@
         "level": "Niveau",
         "level-small": "Lvl",
         "total": "XP total",
-        "average": "En moyenne {} xp/jour"
+        "average": "En moyenne {} xp/jour",
+        "me": "Moi"
     },
 
     "modal": {
@@ -189,6 +190,13 @@
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "You have unlocked the achievement: {}"
+    },
+
+    "leaderboard": {
+        "page-title": "Classement",
+
+        "alert-onlineneed-title": "Connexion nécessaire",
+        "alert-onlineneed-text": "Une connexion est nécessaire pour pouvoir avoir accès au classement !"
     },
 
     "about": {

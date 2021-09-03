@@ -34,7 +34,7 @@ class Leaderboard extends React.Component {
         const self = props.self || false;
         const pseudo = props.pseudo + (self ? ' (' + langManager.curr['level']['me'] + ')' : '');
         const title = props.title;
-        const xp = props.xp + ' ' + langManager.curr['level']['xp'];
+        const xp = parseInt(props.xp) + ' ' + langManager.curr['level']['xp'];
         const pos = props.position;
 
         return (

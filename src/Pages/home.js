@@ -28,7 +28,7 @@ class Home extends React.Component {
 
         // Skills
         const MAX_SKILLS = 6;
-        let skills = user.experience.getAllSkills('', [], 1, false);
+        let skills = user.experience.getAllSkills('', [], 0, true);
         skills.length = Math.min(skills.length, MAX_SKILLS);
 
         this.skills = [];

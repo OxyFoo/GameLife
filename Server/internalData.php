@@ -169,10 +169,10 @@
                     $maxXP = intval($users[$i]['XP']);
                 }
             }
+            $position++;
             if ($maxID == $accountID) {
                 break;
             }
-            $position++;
             unset($users[$maxID]);
         }
 

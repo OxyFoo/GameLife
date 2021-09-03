@@ -164,6 +164,9 @@ class UserManager {
 
             // Get value to compare
             if (first === 'B') {
+                if (deviceInfoModule.isEmulatorSync()) {
+                    continue;
+                }
                 const batteryLevel = deviceInfoModule.getBatteryLevelSync();
                 value = batteryLevel;
             } else

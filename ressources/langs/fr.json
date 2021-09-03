@@ -195,7 +195,9 @@
         "page-title": "Classement",
 
         "alert-onlineneed-title": "Connexion nécessaire",
-        "alert-onlineneed-text": "Une connexion est nécessaire pour pouvoir avoir accès au classement !"
+        "alert-onlineneed-text": "Une connexion est nécessaire pour pouvoir avoir accès au classement !",
+        "alert-connectneed-title": "Connectez-vous",
+        "alert-connectneed-text": "Pour apparaître dans le classement, connectez-vous en entrant votre adresse mail dans la page 'Identité'."
     },
 
     "about": {

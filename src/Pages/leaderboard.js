@@ -30,6 +30,12 @@ class Leaderboard extends React.Component {
         }
     }
 
+    info = () => {
+        const title = langManager.curr['leaderboard']['alert-connectneed-title'];
+        const text = langManager.curr['leaderboard']['alert-connectneed-text'];
+        user.openPopup('ok', [ title, text ]);
+    }
+
     userBoard(props) {
         const self = props.self || false;
         const pseudo = props.pseudo + (self ? ' (' + langManager.curr['level']['me'] + ')' : '');
@@ -66,6 +72,9 @@ class Leaderboard extends React.Component {
     }
 
     render() {
+        const connected = user.isConnected();
+        const rightIcon = !connected ? 'info' : undefined;
+
         return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
@@ -73,6 +82,8 @@ class Leaderboard extends React.Component {
                     title={langManager.curr['leaderboard']['page-title']}
                     leftIcon="back"
                     onPressLeft={user.backPage}
+                    rightIcon={rightIcon}
+                    onPressRight={this.info}
                 />
 
                 {/* Content */}

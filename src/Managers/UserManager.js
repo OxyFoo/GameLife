@@ -55,7 +55,7 @@ class UserManager {
         this.helpers = [];
         this.lastPseudoDate = null;
 
-        this.achievementsLoop = setInterval(this.checkAchievements, 10*1000);
+        this.achievementsLoop = setInterval(this.checkAchievements, 30*1000);
     }
 
     disconnect = () => {
@@ -164,11 +164,10 @@ class UserManager {
 
             // Get value to compare
             if (first === 'B') {
-                if (deviceInfoModule.isEmulatorSync()) {
-                    continue;
+                if (!deviceInfoModule.isEmulatorSync()) {
+                    const batteryLevel = deviceInfoModule.getBatteryLevelSync();
+                    value = batteryLevel;
                 }
-                const batteryLevel = deviceInfoModule.getBatteryLevelSync();
-                value = batteryLevel;
             } else
             if (first.startsWith('Sk')) {
                 // Skill level
@@ -193,15 +192,39 @@ class UserManager {
                 const statKey = first;
                 const statLevel = this.experience.getStatExperience(statKey).lvl;
                 value = statLevel;
-            }/* else
+            } else
             if (first == 'Ca') {
                 // Get Max category level
+                const categories = this.getSkillCategories(true);
+                let maxLevel = 0;
+                for (let c = 0; c < categories.length; c++) {
+                    const category = categories[c];
+                    const categoryXP = this.experience.getSkillCategoryExperience(category.value, true);
+                    if (categoryXP.lvl > maxLevel) {
+                        maxLevel = categoryXP.lvl;
+                    }
+                }
+                value = maxLevel;
             } else
-            if (first.startsWith('Ca')) {
+            if (first.endsWith('Ca')) {
                 // Categorie
                 first = first.replace('Ca');
-                const CategoryID = parseInt(first);
-            }*/
+                const CategoryDepth = parseInt(first);
+                const categories = this.getSkillCategories(true);
+                if (categories.length < CategoryDepth) continue;
+                let values = [];
+                for (let c = 0; c < categories.length; c++) {
+                    const category = categories[c];
+                    const categoryLevel = this.experience.getSkillCategoryExperience(category).lvl;
+                    values.push(categoryLevel);
+                }
+                values = values.sort().reverse();
+                value = values[CategoryDepth - 1];
+            }
+
+            if (typeof(value) === 'undefined') {
+                continue;
+            }
 
             switch (operator) {
                 case 'GT':

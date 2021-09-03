@@ -108,6 +108,40 @@ class Experience {
         return experience;
     }
 
+    getSkillCategoryExperience(category, relative = false) {
+        let totalXP = 0;
+
+        if (relative) {
+            // Get max skill experience
+            let maxSkillXP = 0;
+            for (let s = 0; s < this.user.skills.length; s++) {
+                const skill = this.user.skills[s];
+                if (skill.Category != category) continue;
+                const skillID = skill.ID;
+                const skillXP = this.getSkillExperience(skillID);
+                if (skillXP.totalXP > maxSkillXP) {
+                    maxSkillXP = skillXP.totalXP;
+                }
+            }
+            totalXP = maxSkillXP;
+        } else {
+            for (let a in this.user.activities) {
+                const activity = this.user.activities[a];
+                const skillID = activity.skillID;
+                const skill = this.user.getSkillByID(skillID);
+                const cat = skill.Category;
+    
+                if (cat == category) {
+                    const durationHour = activity.duration / 60;
+                    totalXP += XPperHour * durationHour;
+                }
+            }
+        }
+
+        let experience = this.__getXPDict(totalXP, SkillXPperLevel);
+        return experience;
+    }
+
     /**
      * 
      * @param {*} searchTxt 

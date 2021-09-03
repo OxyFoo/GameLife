@@ -178,6 +178,7 @@ class Activity extends React.Component {
                         data={this.state.skills}
                         onSelect={this.changeSkill}
                         disabled={this.SELECTED}
+                        forcePopupMode={true}
                     />
 
                     {/* Start / duration */}

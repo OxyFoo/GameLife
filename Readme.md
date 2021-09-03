@@ -104,13 +104,12 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
         - SkX : Niveau du skill avec l'ID x
         - SkTX : Temps du skill avec l'ID x
         - StX : Niveau d'une statistique (joueur) avec X = sag, int, ...
-    
-        - XCa : Niveau de la Xème catégorie la plus élevée
         - Ca : Niveau de la catégorie la plus élevée
-        - CaX : Niveau d'une catégorie avec l'ID x
-        - CaTX : Temps d'une catégorie avec l'ID x
+        - XCa : Niveau de la Xème catégorie la plus élevée
+        - [ ] CaX : Niveau d'une catégorie avec l'ID x
+        - [ ] CaTX : Temps d'une catégorie avec l'ID x
     * Comparateur
         - LT : less than
-        - GT : grater than
+        - GT : grater (or equal) than
     * Comparant
         - Integer : Soit le nombre d'heure, soit de niveau

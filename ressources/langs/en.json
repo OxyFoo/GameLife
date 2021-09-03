@@ -195,7 +195,9 @@
         "page-title": "Leaderboard",
 
         "alert-onlineneed-title": "Connection required",
-        "alert-onlineneed-text": "A connection is required to access the ranking!"
+        "alert-onlineneed-text": "A connection is required to access the ranking!",
+        "alert-connectneed-title": "Log in",
+        "alert-connectneed-text": "To appear in the ranking, log in by entering your email address in the 'Identity' page."
     },
 
     "about": {

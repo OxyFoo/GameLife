@@ -29,6 +29,13 @@ class Statistic extends React.Component {
         const statName = (langManager.curr['statistics']['names'][statKey] || "").toUpperCase();
         const statDescription = langManager.curr['statistics']['descriptions'][statKey];
 
+        const statXP = user.experience.getStatExperience(statKey);
+        const xp = langManager.curr['level']['xp'] + ' : ' + statXP.xp + '/' + statXP.next;
+        const lvl = langManager.curr['level']['level'] + ' : ' + statXP.lvl;
+        const total = langManager.curr['level']['total'] + ' : ' + statXP.totalXP;
+
+        const statText = xp + "\n" + lvl + "\n" + total;
+
         return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
@@ -46,6 +53,7 @@ class Statistic extends React.Component {
                         <GLText title={statName} />
                         <GLIconButton onPress={this.next} icon='chevron' />
                     </View>
+                    <GLText style={styles.descriptionText} title={statText} />
                     <GLText style={styles.description} title={statDescription} />
                     <GLCropCorner />
                 </View>
@@ -77,6 +85,10 @@ const styles = StyleSheet.create({
     description: {
         marginVertical: 24
     },
+    descriptionText: {
+        textAlign: 'left',
+        marginVertical: 24
+    }
 });
 
 export default Statistic;

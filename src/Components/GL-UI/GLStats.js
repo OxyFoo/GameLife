@@ -10,6 +10,7 @@ function statComponent(item, sup, index) {
 
     const stat = user.experience.getStatExperience(statKey);
     const title = langManager.curr['statistics']['names'][statKey];
+    const total = stat.totalXP;
 
     const pressEvent = () => {
         user.changePage('statistic', { 'stat': statKey });
@@ -17,7 +18,7 @@ function statComponent(item, sup, index) {
 
     return (
         <TouchableOpacity style={styles.stat} key={'skill_' + index} activeOpacity={.5} onPress={pressEvent}>
-            <GLXPSmallBar title={title} value={stat.xp} max={stat.next} sup={sup} level={stat.lvl} />
+            <GLXPSmallBar title={title} value={stat.xp} max={stat.next} sup={sup} level={stat.lvl} total={total} />
         </TouchableOpacity>
     )
 }

@@ -8,6 +8,7 @@ function GLXPSmallBar(props) {
     const title = props.title;
     const style = props.style;
     const level = props.level || 0;
+    const total = props.total || 0;
 
     const valueMax = parseInt(props.max) || 10;
     
@@ -36,6 +37,7 @@ function GLXPSmallBar(props) {
                     <View style={[styles.fill, { width: valueInt + '%' }]} />
                 </View>
                 <GLText style={styles.textXP} title={valueText} color='grey' />
+                <GLText style={styles.totalXP} title={total + ' ' + langManager.curr['level']['xp']} color='grey' />
 
             </View>
         </View>
@@ -62,6 +64,15 @@ const styles = StyleSheet.create({
         paddingRight: 4,
         fontSize: 10,
         textAlign: 'right'
+    },
+    totalXP: {
+        position: 'absolute',
+        left: 12,
+        bottom: 0,
+        paddingVertical: 5,
+        paddingRight: 4,
+        fontSize: 10,
+        textAlign: 'left'
     },
     titleContainer: {
         width: '80%',

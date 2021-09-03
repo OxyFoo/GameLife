@@ -170,9 +170,7 @@
                 }
             }
             $position++;
-            if ($maxID == $accountID) {
-                break;
-            }
+            if ($users[$maxID]['ID'] == $accountID) break;
             unset($users[$maxID]);
         }
 

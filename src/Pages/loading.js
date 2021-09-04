@@ -48,7 +48,7 @@ class Loading extends React.Component {
 
     screenPress = () => {
         if (this.state.loaded) {
-            if (user.firstStart) {
+            if (!user.firstStart) {
                 const event = (button) => {
                     if (button === 'refuse') {
                         BackHandler.exitApp();

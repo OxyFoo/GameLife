@@ -98,7 +98,8 @@ class Calendar extends React.Component {
 
                         const durationHour = activity.duration / 60;
                         let totalXP = user.experience.getXPperHour() * durationHour;
-                        totalXP += user.experience.getStatExperience('sag', activity).lvl * durationHour;
+                        const sagLevel = user.experience.getStatExperience('sag', activity).lvl - 1;
+                        totalXP += sagLevel * durationHour;
 
                         return (
                             <GLActivityBox

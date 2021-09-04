@@ -41,7 +41,8 @@ class Experience {
             if (activityDate < refStartDate) continue;
 
             // XP
-            const xp = (XPperHour * durationHour) + (this.getStatExperience('sag').lvl * durationHour);
+            const sagLevel = this.getStatExperience('sag').lvl - 1;
+            const xp = (XPperHour * durationHour) + (sagLevel * durationHour);
             this.user.xp += xp;
 
             // Stats

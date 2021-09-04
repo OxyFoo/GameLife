@@ -145,7 +145,8 @@ class Activity extends React.Component {
             skill = user.getSkillByID(skillID);
             totalXP = user.experience.getXPperHour() * durationHour;
             const untilActivity = this.SELECTED ? selectedActivity : undefined;
-            bonusXP = user.experience.getStatExperience('sag', untilActivity).lvl * durationHour;
+            const sagLevel = user.experience.getStatExperience('sag', untilActivity).lvl - 1;
+            bonusXP = sagLevel * durationHour;
         }
 
         return (

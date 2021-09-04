@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '80%',
+        maxHeight: '60%',
         borderColor: '#FFFFFF',
         borderWidth: 2
     },

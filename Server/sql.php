@@ -125,6 +125,12 @@
             return $result;
         }
 
+        public function AddHelper($type, $name, $trad) {
+            $command = "INSERT INTO `Helpers` (`Type`, `Name`, `TypeTrad`) VALUES ('$type', '$name', '$trad')";
+            $result = $this->conn->query($command);
+            return $result;
+        }
+
         public function AddDevice($deviceIdentifier, $deviceName) {
             $hashID = password_hash($deviceIdentifier, PASSWORD_BCRYPT);
             $command = "INSERT INTO `Devices` (`Identifier`, `Name`) VALUES ('$hashID', '$deviceName')";

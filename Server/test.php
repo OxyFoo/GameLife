@@ -50,11 +50,13 @@
                 echo("$Name<br />");
             }
         }
-    } else if ($action == "AAA") {
-        $accountID = 15;
-        $username = 'AAAb';
-        $test = $db->pseudoIsFree($accountID, $username);
-        print_r($test);
+    } else if ($action == "quickAddHelper") {
+        $type = $_POST["Type"];
+        $name = $_POST["Name"];
+        $trad = $_POST["Trad"];
+        if (isset($type, $name)) {
+            $db->AddHelper($type, $name, $trad);
+        }
     }
 
 ?>

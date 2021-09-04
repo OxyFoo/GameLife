@@ -204,10 +204,10 @@
         "page-title": "A propos",
 
         "block-devs": "App créée par",
-        "block-helpers": "Contributeurs",
+        "block-staff": "Staff",
+        "block-contributors": "Contributeurs",
         "block-links": "Liens",
         "text-manager": "Manager",
-        "text-developer": "Développeur",
-        "text-graphiste": "Graphiste"
+        "text-developer": "Développeur"
     }
 }

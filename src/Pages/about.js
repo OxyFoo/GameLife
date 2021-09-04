@@ -12,6 +12,13 @@ class About extends React.Component {
     GamelifePress = () => { Linking.openURL('https://oxyfoo.com'); }
 
     render() {
+        let staff = [];
+        let tipeee = [];
+        for (let i = 0; i < user.contributors.length; i++) {
+            const contributor = user.contributors[i];
+            if (contributor.Type === 'Tipeee') tipeee.push(contributor);
+            else staff.push(contributor);
+        }
         return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
@@ -27,19 +34,33 @@ class About extends React.Component {
                         <GLText style={styles.title} title={langManager.curr['about']['block-devs']} />
                         <GLText styleText={styles.text} title={"Pierre Marsaa"} value={langManager.curr['about']['text-manager']} />
                         <GLText styleText={styles.text} title={"Gérémy Lecaplain"} value={langManager.curr['about']['text-developer']} />
-                        <GLText styleText={styles.text} title={"Hubble"} value={langManager.curr['about']['text-graphiste']} />
                     </View>
                     <View>
-                        <GLText style={styles.title} title={langManager.curr['about']['block-helpers']} />
+                        <GLText style={styles.title} title={langManager.curr['about']['block-staff']} />
                         <FlatList
-                            data={user.helpers}
-                            style={styles.helpers}
-                            keyExtractor={(item, i) => 'helpers_' + i}
+                            data={staff}
+                            style={styles.contributors}
+                            keyExtractor={(item, i) => 'staff_' + i}
                             renderItem={({item}) => {
                                 const Name = item.Name;
                                 const Type = item.Type;
                                 return (
-                                    <GLText style={styles.helpersText} styleText={styles.helpersValues} title={Name} value={Type}/>
+                                    <GLText style={styles.contributorsText} styleText={styles.contributorsValues} title={Name} value={Type}/>
+                                )
+                            }}
+                        />
+                    </View>
+                    <View>
+                        <GLText style={styles.title} title={langManager.curr['about']['block-contributors']} />
+                        <FlatList
+                            data={tipeee}
+                            style={styles.contributors}
+                            keyExtractor={(item, i) => 'contributors_' + i}
+                            renderItem={({item}) => {
+                                const Name = item.Name;
+                                const Type = item.Type;
+                                return (
+                                    <GLText style={styles.contributorsText} styleText={styles.contributorsValues} title={Name} value={Type}/>
                                 )
                             }}
                         />
@@ -75,13 +96,13 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
 
-    helpers: {
-        height: '40%',
+    contributors: {
+        height: '20%',
         borderColor: '#FFFFFF',
         borderWidth: 3
     },
-    helpersText: { marginVertical: 4 },
-    helpersValues: { fontSize: 16 },
+    contributorsText: { marginVertical: 4 },
+    contributorsValues: { fontSize: 16 },
     row: {
         display: 'flex',
         flexDirection: 'row',

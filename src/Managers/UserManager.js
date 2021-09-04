@@ -52,7 +52,7 @@ class UserManager {
         this.skills = [];
         this.achievements = [];
         this.solvedAchievements = [];
-        this.helpers = [];
+        this.contributors = [];
         this.lastPseudoDate = null;
 
         this.achievementsLoop = setInterval(this.checkAchievements, 30*1000);
@@ -425,6 +425,7 @@ class UserManager {
             user.saveData();
             if (user.isConnected()) {
                 await user.loadData(true);
+                user.saveData();
                 user.changePage();
             }
         } else {
@@ -462,7 +463,7 @@ class UserManager {
             'titles': this.titles,
             'quotes': this.quotes,
             'achievements': this.achievements,
-            'helpers': this.helpers
+            'helpers': this.contributors
         }
         DataManager.Save(STORAGE.INTERNAL, internalData, false);
         DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
@@ -507,7 +508,7 @@ class UserManager {
         this.quotes = get(internalData, 'quotes', quotes, true);
         this.skills = get(internalData, 'skills', skills, true);
         this.achievements = get(internalData, 'achievements', achievements, true);
-        this.helpers = get(internalData, 'helpers', helpers, true);
+        this.contributors = get(internalData, 'helpers', helpers, true);
     }
 
     async loadInternalData() {
@@ -520,7 +521,7 @@ class UserManager {
                 if (typeof(data['quotes']) !== 'undefined') this.quotes = data['quotes'];
                 if (typeof(data['skills']) !== 'undefined') this.skills = data['skills'];
                 if (typeof(data['achievements']) !== 'undefined') this.achievements = data['achievements'];
-                if (typeof(data['helpers']) !== 'undefined') this.helpers = data['helpers'];
+                if (typeof(data['helpers']) !== 'undefined') this.contributors = data['helpers'];
             }
         }
 

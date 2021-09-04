@@ -143,8 +143,20 @@
         return $safeSkills;
     }
 
-    function GetHelpers($db) {
+    function GetHelpers($db, $lang) {
         $helpers = $db->QueryArray("SELECT * FROM `Helpers`");
+        // Translations
+        for ($i = 0; $i < count($helpers); $i++) {
+            $Translations = $helpers[$i]["TypeTrad"];
+            unset($helpers[$i]["TypeTrad"]);
+
+            if (isJson($Translations)) {
+                $jsonTranslations = json_decode($Translations);
+                if (!empty($jsonTranslations->$lang)) {
+                    $helpers[$i]["Type"] = $jsonTranslations->$lang;
+                }
+            }
+        }
         return $helpers;
     }
 

@@ -14,6 +14,7 @@ class Settings extends React.Component {
         if (this.initLang !== langManager.currentLangageKey) {
             user.loadInternalData();
         }
+        user.saveData();
         user.backPage();
     }
     reset = () => {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View, TextInput } from 'react-native';
 
-import { GLText } from '../GL-Components';
+import GLText from './GLText';
 
 function GLInput(props) {
     const name = props.name || 'Name';

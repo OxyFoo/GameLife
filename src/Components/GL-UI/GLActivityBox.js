@@ -2,7 +2,8 @@ import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import langManager from '../../Managers/LangManager';
 
-import { GLText, GLIconButton } from '../GL-Components';
+import GLText from './GLText';
+import GLIconButton from './GLIconButton';
 
 function GLActivityBox(props) {
     const skillTitle = (props.skill || '').toUpperCase();

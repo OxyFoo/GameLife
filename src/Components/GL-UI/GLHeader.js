@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { GLText, GLIconButton } from '../GL-Components';
+import GLText from './GLText';
+import GLIconButton from './GLIconButton';
 
 function GLHeader(props) {
     const LeftIcon_Press = () => { if (props.leftIcon && props.onPressLeft) props.onPressLeft(); };

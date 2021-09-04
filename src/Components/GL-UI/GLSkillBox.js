@@ -4,7 +4,7 @@ import { dateToFormatString } from '../../Functions/Functions';
 import langManager from '../../Managers/LangManager';
 import user from '../../Managers/UserManager';
 
-import { GLText, GLIconButton } from '../GL-Components';
+import GLText from './GLText';
 
 function GLSkillBox(props) {
     const skillID = props.item.skillID;

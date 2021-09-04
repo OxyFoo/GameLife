@@ -137,6 +137,20 @@
                 }
             }
 
+            // Logo
+            $LogoID = $skills[$i]["LogoID"];
+            if ($LogoID == 0) {
+                for ($c = 0; $c < count($categories); $c++) {
+                    if ($categories[$c]["ID"] == $CategoryID) {
+                        $categoryLogoID = $categories[$c]["LogoID"];
+                        if ($categoryLogoID != 0) {
+                            $skills[$i]["LogoID"] = $categoryLogoID;
+                        }
+                        break;
+                    }
+                }
+            }
+
             array_push($safeSkills, $skills[$i]);
         }
 
@@ -221,6 +235,11 @@
         }
 
         return $topUsers;
+    }
+
+    function GetSkillsIcon($db) {
+        $skillsIcon = $db->QueryArray("SELECT * FROM `SkillsIcon`");
+        return $skillsIcon;
     }
 
 ?>

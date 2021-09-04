@@ -13,6 +13,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [JS benchmarks](https://jsben.ch/WqlIl)
 * [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
 * [Custom shapes in RN](https://codedaily.io/tutorials/The-Shapes-of-React-Native)
+* [Base64 Class (Cross-Browser)](https://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript)
 
 ### React native packages
 * [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
@@ -20,6 +21,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
 * [React Native Sound Player](https://www.npmjs.com/package/react-native-sound-player)
+* [React Native Svg](https://github.com/react-native-svg/react-native-svg)
 
 ### Unused
 * [React native gesture handler](https://www.npmjs.com/package/react-native-gesture-handler)

@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { dateToFormatString } from '../../Functions/Functions';
 import langManager from '../../Managers/LangManager';
 import user from '../../Managers/UserManager';
+import GLSvg from './GLSvg';
 
 import GLText from './GLText';
 
@@ -19,12 +20,13 @@ function GLSkillBox(props) {
 
     const styleContainer = [ styles.container, props.style ];
     const eventPress = () => { user.changePage('skill', { skillID: skillID }) };
+    const xml = user.getXmlByLogoID(skill.LogoID);
 
     return (
         <View style={styleContainer}>
             <TouchableOpacity style={styles.container2} activeOpacity={.5} onPress={eventPress}>
-                <View>
-                    <View style={styles.icon} />
+                <View style={styles.icon}>
+                    <GLSvg xml={xml} />
                 </View>
                 <View style={styles.column}>
                     <GLText style={styles.title} title={text_title} />

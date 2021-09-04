@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
-import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
+import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components/GL-Components';
 import { dateToFormatString } from '../Functions/Functions';
 
 class Skill extends React.Component {
@@ -30,6 +30,7 @@ class Skill extends React.Component {
             this.creator = '';
         }
         this.stats = skill.Stats;
+        this.xml = user.getXmlByLogoID(skill.LogoID);
         this.history = [];
         for (let a in user.activities) {
             const activity = user.activities[a];
@@ -55,6 +56,7 @@ class Skill extends React.Component {
                     <View style={styles.skillContainer}>
                         <View style={styles.pictureContainer}>
                             <View style={styles.picture}>
+                                <GLSvg xml={this.xml} />
                                 <GLDoubleCorner />
                             </View>
                         </View>

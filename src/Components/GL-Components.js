@@ -16,6 +16,7 @@ import GLCropCorner from './GL-UI/GLCropCorner';
 import GLBottomSwipePage from './GL-UI/GLBottomSwipePage';
 import GLPopup from './GL-UI/GLPopup';
 import GLLeftPanel from './GL-UI/GLLeftPanel';
+import GLSvg from './GL-UI/GLSvg';
 
 export {
     GLText,
@@ -35,5 +36,6 @@ export {
     GLCropCorner,
     GLBottomSwipePage,
     GLPopup,
-    GLLeftPanel
+    GLLeftPanel,
+    GLSvg
 }

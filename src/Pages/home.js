@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { dateToFormatString } from '../Functions/Functions';
-import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLText, GLXPBar } from '../Components/GL-Components';
+import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../Components/GL-Components';
 
 class Home extends React.Component {
     constructor(props) {
@@ -33,7 +33,8 @@ class Home extends React.Component {
 
         this.skills = [];
         for (let s = 0; s < skills.length; s++) {
-            const skillID = skills[s].skillID;
+            const skill = skills[s];
+            const skillID = skill.skillID;
             const skillName = user.getSkillByID(skillID).Name;
             const newVal = { key: skillID, value: skillName };
             this.skills.push(newVal);
@@ -63,8 +64,8 @@ class Home extends React.Component {
                     title={langManager.curr['home']['page-title']}
                     leftIcon="sandwich"
                     onPressLeft={user.openLeftPanel}
-                    rightIcon="info"
-                    onPressRight={this.openBetaMail}
+                    rightIcon="trophy"
+                    onPressRight={() => user.changePage('leaderboard') }
                 />
 
                 <View style={styles.parentView}>
@@ -137,11 +138,21 @@ class Home extends React.Component {
                             numColumns={3}
                             keyExtractor={(item, i) => 'block_' + i}
                             renderItem={({item}) => {
+                                let xml = '';
+                                if (item.key !== -1) {
+                                    const skill = user.getSkillByID(item.key);
+                                    let logoID = skill.LogoID;
+                                    if (logoID != 0) {
+                                        xml = user.getXmlByLogoID(logoID);
+                                    }
+                                }
+
                                 return item.key === -1 ? (
                                         <View style={[styles.block, styles.blockSkill]} />
                                     ) : (
                                         <View>
                                             <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item.key) }}>
+                                                <GLSvg xml={xml} />
                                                 <GLText style={styles.blockSkillText} title={item.value} />
                                             </TouchableOpacity>
                                         </View>

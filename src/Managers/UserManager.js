@@ -10,6 +10,7 @@ import { isUndefined } from "../Functions/Functions";
 import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
 import skills from '../../ressources/defaultDB/skills.json';
+import skillsIcon from '../../ressources/defaultDB/skillsIcon.json';
 import achievements from '../../ressources/defaultDB/achievements.json';
 import helpers from '../../ressources/defaultDB/helpers.json';
 
@@ -52,6 +53,7 @@ class UserManager {
         this.titles = [];
         this.quotes = [];
         this.skills = [];
+        this.skillsIcon = [];
         this.achievements = [];
         this.solvedAchievements = [];
         this.contributors = [];
@@ -106,6 +108,19 @@ class UserManager {
             }
         }
         return currTitle;
+    }
+
+    getXmlByLogoID = (ID) => {
+        let currXml = null;
+        for (let i = 0; i < this.skillsIcon.length; i++) {
+            const skillIcon = this.skillsIcon[i];
+            const skillIconID = skillIcon.ID;
+            if (ID == skillIconID) {
+                currXml = skillIcon.Content;
+                break;
+            }
+        }
+        return currXml;
     }
 
     getAchievements = () => {
@@ -463,6 +478,7 @@ class UserManager {
         };
         const internalData = {
             'skills': this.skills,
+            'skillsIcon': this.skillsIcon,
             'titles': this.titles,
             'quotes': this.quotes,
             'achievements': this.achievements,
@@ -513,6 +529,7 @@ class UserManager {
         this.titles = get(internalData, 'titles', titles, true);
         this.quotes = get(internalData, 'quotes', quotes, true);
         this.skills = get(internalData, 'skills', skills, true);
+        this.skillsIcon = get(internalData, 'skillsIcon', skillsIcon, true);
         this.achievements = get(internalData, 'achievements', achievements, true);
         this.contributors = get(internalData, 'helpers', helpers, true);
     }
@@ -526,6 +543,7 @@ class UserManager {
                 if (typeof(data['titles']) !== 'undefined') this.titles = data['titles'];
                 if (typeof(data['quotes']) !== 'undefined') this.quotes = data['quotes'];
                 if (typeof(data['skills']) !== 'undefined') this.skills = data['skills'];
+                if (typeof(data['skillsIcon']) !== 'undefined') this.skillsIcon = data['skillsIcon'];
                 if (typeof(data['achievements']) !== 'undefined') this.achievements = data['achievements'];
                 if (typeof(data['helpers']) !== 'undefined') this.contributors = data['helpers'];
             }

@@ -65,6 +65,7 @@
             $output['quotes'] = GetQuotes($db, $lang);
             $output['titles'] = GetTitles($db, $lang);
             $output['skills'] = GetSkills($db, $lang);
+            $output['skillsIcon'] = GetSkillsIcon($db);
             $output['achievements'] = GetAchievements($db, $lang);
             $output['helpers'] = GetHelpers($db, $lang);
             $output['status'] = 'ok';

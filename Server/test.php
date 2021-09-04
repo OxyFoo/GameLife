@@ -51,11 +51,33 @@
             }
         }
     } else if ($action == "quickAddHelper") {
+        $pwd = $_POST["Password"];
         $type = $_POST["Type"];
         $name = $_POST["Name"];
         $trad = $_POST["Trad"];
+        if ($pwd !== "blablajaivraiment0imag!nati0npourlesmotsdepasseuntrucdefou") {
+            return;
+        }
         if (isset($type, $name)) {
             $db->AddHelper($type, $name, $trad);
+        }
+    } else if ($action == "quickAddSkill") {
+        $pwd = $_POST["Password"];
+        $Name = $_POST["Name"];
+        $Translations = $_POST["Translations"];
+        $CategoryID = $_POST["CategoryID"];
+        $Wisdom = $_POST["Wisdom"];
+        $Intelligence = $_POST["Intelligence"];
+        $Confidence = $_POST["Confidence"];
+        $Strength = $_POST["Strength"];
+        $Stamina = $_POST["Stamina"];
+        $Dexterity = $_POST["Dexterity"];
+        $Agility = $_POST["Agility"];
+        if ($pwd !== "blablajaivraiment0imag!nati0npourlesmotsdepasseuntrucdefou") {
+            return;
+        }
+        if (isset($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility)) {
+            $db->AddHelper($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility);
         }
     }
 

@@ -131,6 +131,12 @@
             return $result;
         }
 
+        public function AddSkill($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility) {
+            $command = "INSERT INTO `Skills` (`Name`, `Translations`, `CategoryID`, `Wisdom`, `Intelligence`, `Confidence`, `Strength`, `Stamina`, `Dexterity`, `Agility`) VALUES ('$Name', '$Translations', '$CategoryID', '$Wisdom', '$Intelligence', '$Confidence', '$Strength', '$Stamina', '$Dexterity', '$Agility')";
+            $result = $this->conn->query($command);
+            return $result;
+        }
+
         public function AddDevice($deviceIdentifier, $deviceName) {
             $hashID = password_hash($deviceIdentifier, PASSWORD_BCRYPT);
             $command = "INSERT INTO `Devices` (`Identifier`, `Name`) VALUES ('$hashID', '$deviceName')";

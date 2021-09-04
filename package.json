@@ -1,6 +1,7 @@
 {
   "name": "gamelife",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "versionName": "0.1 (bêta)",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

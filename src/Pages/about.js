@@ -11,6 +11,13 @@ class About extends React.Component {
     DiscordPress = () => { Linking.openURL('https://discord.gg/QDfsXCCq')}
     GamelifePress = () => { Linking.openURL('https://oxyfoo.com'); }
 
+    openPopup = () => {
+        const version = require('../../package.json').versionName;
+        const title = langManager.curr['about']['alert-info-title'];
+        const text = langManager.curr['about']['alert-info-text'].replace('{}', version);
+        user.openPopup('ok', [ title, text ]);
+    }
+
     render() {
         let staff = [];
         let tipeee = [];
@@ -19,6 +26,7 @@ class About extends React.Component {
             if (contributor.Type === 'Tipeee') tipeee.push(contributor);
             else staff.push(contributor);
         }
+
         return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
@@ -26,6 +34,8 @@ class About extends React.Component {
                     title={langManager.curr['about']['page-title']}
                     leftIcon="back"
                     onPressLeft={user.backPage}
+                    rightIcon="info"
+                    onPressRight={this.openPopup}
                 />
 
                 {/* Content */}

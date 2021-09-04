@@ -217,6 +217,9 @@
         "block-contributors": "Contributors",
         "block-links": "Links",
         "text-manager": "Manager",
-        "text-developer": "Développeur"
+        "text-developer": "Développeur",
+
+        "alert-info-title": "Additional information",
+        "alert-info-text": "Version: {}"
     }
 }

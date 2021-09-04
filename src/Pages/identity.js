@@ -1,11 +1,16 @@
 import * as React from 'react';
-import { View, Alert, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
+import { View, Alert, StyleSheet, FlatList, TextInput, TouchableOpacity, Image, Animated, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { twoDigit } from '../Functions/Functions';
 import { GLDropDown, GLHeader, GLText, GLTextEditable } from '../Components/GL-Components';
+import { OptionsAnimationS, OptionsAnimationSpring } from '../Components/Animations';
+
+// Image dimensions
+const MIN_WIDTH = 96;
+const MAX_WIDTH = Dimensions.get('window').width - 48;
 
 class Identity extends React.Component {
     state = {
@@ -14,7 +19,9 @@ class Identity extends React.Component {
         email: user.email,
         title: user.title,
 
-        showDateTimePicker: ''
+        showDateTimePicker: '',
+        imageOpened: false,
+        imageAnimation: new Animated.Value(MIN_WIDTH)
     }
 
     back = () => { user.backPage(); }
@@ -41,6 +48,14 @@ class Identity extends React.Component {
 
         user.changeUser();
         user.backPage();
+    }
+
+    // Image
+    imagePress = () => {
+        const opened = this.state.imageOpened;
+        this.setState({ imageOpened: !opened });
+        const newDim = opened ? MIN_WIDTH : MAX_WIDTH;
+        OptionsAnimationSpring(this.state.imageAnimation, newDim, false).start();
     }
 
     // Pseudo
@@ -149,6 +164,11 @@ class Identity extends React.Component {
 
                     {/* Content */}
                     <View style={styles.content}>
+                        {/* Profile image */}
+                        <Animated.View TouchableOpacity style={[styles.image, { width: this.state.imageAnimation, height: this.state.imageAnimation }]} onTouchStart={this.imagePress}>
+                            <Image style={{ width: '100%', height: '100%' }} source={require('../../ressources/photos/default.jpg')} resizeMode="contain"  />
+                        </Animated.View>
+
                         {/* Pseudo */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-pseudo'].toUpperCase()} />
                         <GLTextEditable
@@ -246,6 +266,17 @@ const styles = StyleSheet.create({
         color: '#5AB4F0',
         fontSize: 22,
         marginBottom: 30
+    },
+    image: {
+        position:'absolute',
+        top: 48,
+        right: 24,
+        width: 96,
+        height: 96,
+        borderColor: '#FFFFFF',
+        borderWidth: 2,
+        backgroundColor: '#000000',
+        zIndex: 100
     },
 
     achievementsBox: {

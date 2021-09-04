@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Linking } from 'react-native';
+import { View, StyleSheet, FlatList, Linking, Image } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
@@ -45,7 +45,9 @@ class Leaderboard extends React.Component {
 
         return (
             <View style={styles.userContainer}>
-                <View style={styles.userImage}></View>
+                <View style={styles.userImage}>
+                    <Image style={{ width: '100%', height: '100%' }} source={require('../../ressources/photos/default.jpg')} resizeMode="contain" />
+                </View>
                 <View style={styles.userDetails}>
                     <GLText style={styles.userDetail} title={pseudo} />
                     <GLText style={styles.userDetail} title={title} />

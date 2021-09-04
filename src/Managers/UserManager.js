@@ -29,6 +29,8 @@ class UserManager {
     openLeftPanel;
 
     constructor() {
+        this.firstStart = true;
+
         // User informations
         this.pseudo = 'Player';
         this.title = 0;
@@ -422,7 +424,7 @@ class UserManager {
     async changeUser() {
         if (user.email) {
             await user.conn.AsyncRefreshAccount();
-            user.saveData();
+            user.saveData(false);
             if (user.isConnected()) {
                 await user.loadData(true);
                 user.saveData();

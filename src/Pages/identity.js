@@ -165,7 +165,7 @@ class Identity extends React.Component {
                     {/* Content */}
                     <View style={styles.content}>
                         {/* Profile image */}
-                        <Animated.View TouchableOpacity style={[styles.image, { width: this.state.imageAnimation, height: this.state.imageAnimation }]} onTouchStart={this.imagePress}>
+                        <Animated.View style={[styles.image, { width: this.state.imageAnimation, height: this.state.imageAnimation }]} onTouchStart={this.imagePress}>
                             <Image style={{ width: '100%', height: '100%' }} source={require('../../ressources/photos/default.jpg')} resizeMode="contain"  />
                         </Animated.View>
 
@@ -276,7 +276,8 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
         borderWidth: 2,
         backgroundColor: '#000000',
-        zIndex: 100
+        zIndex: 100,
+        elevation: 100
     },
 
     achievementsBox: {

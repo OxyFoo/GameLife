@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, TextInput, View } from 'react-native';
 
 import { OptionsAnimation } from '../Animations';
 import user from '../../Managers/UserManager';
-import GLText from './GLText';
+import GLText, { MAIN_FONT_NAME } from './GLText';
 import GLButton from './GLButton';
 import langManager from '../../Managers/LangManager';
 import GLDoubleCorner from './GLDoubleCorner';
@@ -12,6 +12,7 @@ class GLPopup extends React.PureComponent {
     state = {
         opened: false,
         type: null,
+        input: '',
         cancelable: true,
         animOpacity: new Animated.Value(0),
         animScale: new Animated.Value(.9)
@@ -93,6 +94,41 @@ class GLPopup extends React.PureComponent {
         )
     }
 
+    content_input = () => {
+        const title = this.props.args[0] || '';
+        const message = this.props.args[1] || '';
+        const Continue = langManager.curr['modal']['btn-continue'];
+
+        const editInput = (newInput) => {
+            this.setState({ input: newInput });
+        }
+
+        const callback = () => {
+            const cb = this.props.callback;
+            if (typeof(cb) === 'function') {
+                cb(this.state.input);
+            }
+        }
+
+        return (
+            <>
+                <GLText style={styles.title} title={title} />
+                <GLText title={message} />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={editInput}
+                    value={this.state.input}
+                    placeholder={langManager.curr['identity']['placeholder-email']}
+                    placeholderTextColor='#C2C2C2'
+                    autoFocus={true}
+                />
+                <View style={styles.row}>
+                    <GLButton value={Continue} onPress={callback} />
+                </View>
+            </>
+        )
+    }
+
     content() {
         let content;
         switch (this.state.type) {
@@ -103,6 +139,9 @@ class GLPopup extends React.PureComponent {
             case 'yesno':
             case 'acceptornot':
                 content = <this.content_message />;
+                break;
+            case 'input':
+                content = <this.content_input />;
                 break;
             default: content = <></>; break;
         }
@@ -168,6 +207,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around'
+    },
+    input: {
+        marginVertical: 24,
+        marginHorizontal: 0,
+        paddingVertical: 0,
+        paddingHorizontal: 24,
+        color: '#FFFFFF',
+        fontFamily: MAIN_FONT_NAME,
+        fontSize: 20,
     }
 });
 

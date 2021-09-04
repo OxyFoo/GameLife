@@ -63,6 +63,8 @@ class Home extends React.Component {
                     title={langManager.curr['home']['page-title']}
                     leftIcon="sandwich"
                     onPressLeft={user.openLeftPanel}
+                    rightIcon="info"
+                    onPressRight={this.openBetaMail}
                 />
 
                 <View style={styles.parentView}>

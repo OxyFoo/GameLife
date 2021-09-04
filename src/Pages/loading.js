@@ -5,6 +5,7 @@ import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { GLText, GLLoading } from '../Components/GL-Components';
 import SoundPlayer from 'react-native-sound-player';
+import { Request_Async } from '../Functions/Request';
 
 const POINTS = [ '.', '..', '...', '..', '.' ];
 
@@ -49,23 +50,62 @@ class Loading extends React.Component {
     screenPress = () => {
         if (this.state.loaded) {
             if (!user.firstStart) {
-                const event = (button) => {
-                    if (button === 'refuse') {
-                        BackHandler.exitApp();
-                    } else if (button === 'accept') {
-                        user.firstStart = true;
-                        user.saveData(false);
-                        // To login
-                        user.changePage('home');
-                    }
-                }
-                const title = langManager.curr['home']['alert-first-title'];
-                const text = langManager.curr['home']['alert-first-text'];
-                user.openPopup('acceptornot', [ title, text ], event, false);
+                this.welcome();
             } else {
                 user.changePage('home');
             }
         }
+    }
+
+    welcome = () => {
+        const event = (button) => {
+            if (button === 'refuse') {
+                BackHandler.exitApp();
+            } else if (button === 'accept') {
+                setTimeout(this.openBetaMail, 50);
+            }
+        }
+        const title = langManager.curr['home']['alert-first-title'];
+        const text = langManager.curr['home']['alert-first-text'];
+        user.openPopup('acceptornot', [ title, text ], event, false);
+    }
+
+    openBetaMail = () => {
+        const event = (text) => {
+            if (text.length > 0 && text.includes('@')) {
+                this.checkBetaMail(text);
+            }
+        }
+        const title = langManager.curr['home']['alert-beta-title'];
+        const text = langManager.curr['home']['alert-beta-text'];
+        user.openPopup('input', [ title, text ], event, false);
+    }
+    async checkBetaMail(mail) {
+        const URL = 'https://oxyfoo.com/App/GameLife/betacheck.php';
+        const data = {
+            'action': 'check',
+            'mail': mail
+        }
+        const req = await Request_Async(data, URL);
+        if (typeof(req) !== 'undefined' && req.hasOwnProperty('status')) {
+            if (req['status'] === 'ok') {
+                user.closePopup();
+                user.firstStart = true;
+                user.saveData(false);
+                user.changePage('home');
+                return;
+            } else {
+                user.closePopup();
+                const event = () => {
+                    setTimeout(this.openBetaMail, 50);
+                }
+                const title = langManager.curr['home']['alert-betaerror-title'];
+                const text = langManager.curr['home']['alert-betaerror-text'];
+                user.openPopup('ok', [ title, text ], event, false);
+                return;
+            }
+        }
+        console.error("Problème de serveur !!!");
     }
 
     render() {

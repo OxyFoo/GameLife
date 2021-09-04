@@ -1,6 +1,6 @@
 const URL = 'https://oxyfoo.com/App/GameLife/app.php';
 
-async function Request_Async(data, method, headers) {
+async function Request_Async(data, url = URL, method, headers) {
     const defaultHeaders = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -13,14 +13,14 @@ async function Request_Async(data, method, headers) {
 
     let json = { "status": "fail" };
     try {
-        const response = await fetch(URL, header);
+        const response = await fetch(url, header);
         if (response.status === 200) {
             json = await response.json();
             if (json['status'] !== 'ok') {
                 //console.log(data);
                 //console.log(json);
                 //console.log("_____");
-                console.warn("Error: Request status " + response.status + ' (1)');
+                //console.warn("Error: Request status " + response.status + ' (1)');
             }
         } else {
             console.warn("Error: Request failed " + response.status + ' (2)');

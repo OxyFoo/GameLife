@@ -21,7 +21,8 @@
         "btn-yes": "Oui",
         "btn-no": "Non",
         "btn-accept": "Accepter",
-        "btn-refuse": "Refuser"
+        "btn-refuse": "Refuser",
+        "btn-continue": "Continuer"
     },
 
     "home": {
@@ -40,6 +41,10 @@
         "shortcut-settings": "Réglages",
         "shortcut-about": "A propos",
 
+        "alert-beta-title": "Bêta testeur",
+        "alert-beta-text": "Si vous avez été sélectionné pour participer à la version beta de cette application, entrez votre adresse mail ici :",
+        "alert-betaerror-title": "Erreur",
+        "alert-betaerror-text": "Adress mail incorrecte ou déjà utilisée ! Si tu as eu un pass beta manifeste toi dans le channel dédié pour qu'on résolve ton problème ^^",
         "alert-first-title": "Bienvenue",
         "alert-first-text": "Vous avez gagné le droit de devenir un joueur. Voulez vous accepter ?",
         "alert-exit-title": "Quitter",

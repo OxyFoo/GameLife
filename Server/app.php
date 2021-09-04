@@ -146,6 +146,6 @@
     }
     echo(json_encode($output));
 
-    unset($database);
+    unset($db);
 
 ?>

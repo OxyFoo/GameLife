@@ -497,12 +497,14 @@ class UserManager {
         this.birth = get(data, 'birth', '');
         this.email = get(data, 'email', '');
         this.xp = get(data, 'xp', 0);
-        if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
-            for (let a in data['activities']) {
-                const activity = data['activities'][a];
-                this.addActivity(activity.skillID, activity.startDate, activity.duration);
+        if (data.hasOwnProperty('activities')) {
+            if (data['activities'].length > 0) {
+                for (let a in data['activities']) {
+                    const activity = data['activities'][a];
+                    this.addActivity(activity.skillID, activity.startDate, activity.duration);
+                }
+                this.activities = get(data, 'activities');
             }
-            this.activities = get(data, 'activities');
         }
         this.lastPseudoDate = get(data, 'pseudoDate', null);
         this.solvedAchievements = get(data, 'solvedAchievements', this.solvedAchievements);

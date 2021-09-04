@@ -61,7 +61,7 @@ class Leaderboard extends React.Component {
     userComponent({ item, index }) {
         const pseudo = item.Username;
         const title = user.getTitleByID(parseInt(item.Title));
-        const xp = item.XP + ' ' + langManager.curr['level']['xp'];
+        const xp = item.XP;
 
         return (
             <this.userBoard

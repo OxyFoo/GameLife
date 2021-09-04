@@ -12,5 +12,4 @@ with open(FILE, 'r') as f:
         l = line[:-1] if "\n" in line else line
         name, trad, cat, Sag, Int, Con, For, End, Dex, Agi = l.split(SEP)
         data = { 'Password': PWD, 'Name': name, 'Translations': trad, 'CategoryID': cat, 'Wisdom': Sag, 'Intelligence': Int, 'Confidence': Con, 'Strength': For, 'Stamina': End, 'Dexterity': Dex, 'Agility': Agi }
-        #requests.post(URL, data=data)
-        print(data)
+        requests.post(URL, data=data)

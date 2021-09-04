@@ -59,6 +59,8 @@ class GLPopup extends React.PureComponent {
         const ok = langManager.curr['modal']['btn-ok'];
         const yes = langManager.curr['modal']['btn-yes'];
         const no = langManager.curr['modal']['btn-no'];
+        const accept = langManager.curr['modal']['btn-accept'];
+        const refuse = langManager.curr['modal']['btn-refuse'];
 
         const callback = (type) => {
             const cb = this.props.callback;
@@ -74,7 +76,13 @@ class GLPopup extends React.PureComponent {
                 <GLButton value={no} onPress={() => callback('no')} />
                 <GLButton value={yes} onPress={() => callback('yes')} color="grey" />
             </>
-        )
+        );
+        if (this.state.type === 'acceptornot') buttons = (
+            <>
+                <GLButton value={refuse} onPress={() => callback('refuse')} />
+                <GLButton value={accept} onPress={() => callback('accept')} />
+            </>
+        );
 
         return (
             <>
@@ -93,6 +101,7 @@ class GLPopup extends React.PureComponent {
                 break;
             case 'ok':
             case 'yesno':
+            case 'acceptornot':
                 content = <this.content_message />;
                 break;
             default: content = <></>; break;

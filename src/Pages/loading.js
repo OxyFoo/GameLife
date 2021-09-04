@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, BackHandler } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
@@ -48,7 +48,21 @@ class Loading extends React.Component {
 
     screenPress = () => {
         if (this.state.loaded) {
-            user.changePage('home');
+            if (user.firstStart) {
+                const event = (button) => {
+                    if (button === 'refuse') {
+                        BackHandler.exitApp();
+                    } else if (button === 'accept') {
+                        // To login
+                        user.changePage('home');
+                    }
+                }
+                const title = langManager.curr['home']['alert-first-title'];
+                const text = langManager.curr['home']['alert-first-text'];
+                user.openPopup('acceptornot', [ title, text ], event, false);
+            } else {
+                user.changePage('home');
+            }
         }
     }
 

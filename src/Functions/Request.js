@@ -20,7 +20,7 @@ async function Request_Async(data, method, headers) {
                 //console.log(data);
                 //console.log(json);
                 //console.log("_____");
-                //console.warn("Error: Request status " + response.status + ' (1)');
+                console.warn("Error: Request status " + response.status + ' (1)');
             }
         } else {
             console.warn("Error: Request failed " + response.status + ' (2)');

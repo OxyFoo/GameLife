@@ -19,7 +19,9 @@
     "modal": {
         "btn-ok": "Ok",
         "btn-yes": "Yes",
-        "btn-no": "No"
+        "btn-no": "No",
+        "btn-accept": "Accept",
+        "btn-refuse": "Refuse"
     },
 
     "home": {
@@ -38,6 +40,8 @@
         "shortcut-settings": "Settings",
         "shortcut-about": "About",
 
+        "alert-first-title": "Welcome",
+        "alert-first-text": "You have earned the right to become a player. Do you want to accept?",
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?"
     },

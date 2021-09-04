@@ -45,6 +45,10 @@
             }
         }
 
+        public function Query($command) {
+            return $this->conn->query($command);
+        }
+
         public function QueryArray($command) {
             $output = [];
             $query = $this->conn->query($command);
@@ -121,18 +125,6 @@
 
         public function AddAccount($email) {
             $command = "INSERT INTO `Users` (`Email`) VALUES ('$email')";
-            $result = $this->conn->query($command);
-            return $result;
-        }
-
-        public function AddHelper($type, $name, $trad) {
-            $command = "INSERT INTO `Helpers` (`Type`, `Name`, `TypeTrad`) VALUES ('$type', '$name', '$trad')";
-            $result = $this->conn->query($command);
-            return $result;
-        }
-
-        public function AddSkill($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility) {
-            $command = "INSERT INTO `Skills` (`Name`, `Translations`, `CategoryID`, `Wisdom`, `Intelligence`, `Confidence`, `Strength`, `Stamina`, `Dexterity`, `Agility`) VALUES ('$Name', '$Translations', '$CategoryID', '$Wisdom', '$Intelligence', '$Confidence', '$Strength', '$Stamina', '$Dexterity', '$Agility')";
             $result = $this->conn->query($command);
             return $result;
         }

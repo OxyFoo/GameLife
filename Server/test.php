@@ -1,6 +1,7 @@
 <?php
 
     require('./sql.php');
+    require('./add.php');
 
     $db = new DataBase();
 
@@ -59,7 +60,7 @@
             return;
         }
         if (isset($type, $name)) {
-            $db->AddHelper($type, $name, $trad);
+            AddHelper($db, $type, $name, $trad);
         }
     } else if ($action == "quickAddSkill") {
         $pwd = $_POST["Password"];
@@ -77,7 +78,16 @@
             return;
         }
         if (isset($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility)) {
-            $db->AddSkill($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility);
+            AddSkill($db, $Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility);
+        }
+    } else if ($action == "quickAddTesteur") {
+        $pwd = $_POST["Password"];
+        $mail = $_POST["Mail"];
+        if (isset($pwd, $mail)) {
+            if ($pwd !== "blablajaivraiment0imag!nati0npourlesmotsdepasseuntrucdefou") {
+                return;
+            }
+            AddTesteur($db, $mail);
         }
     }
 

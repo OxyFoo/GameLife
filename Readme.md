@@ -9,6 +9,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 
 ## Sources
 ### Sites
+* [AppIcon.co](https://appicon.co/)
 * [JS benchmarks](https://jsben.ch/WqlIl)
 * [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
 * [Custom shapes in RN](https://codedaily.io/tutorials/The-Shapes-of-React-Native)

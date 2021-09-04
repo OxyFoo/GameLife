@@ -53,6 +53,8 @@ class Loading extends React.Component {
                     if (button === 'refuse') {
                         BackHandler.exitApp();
                     } else if (button === 'accept') {
+                        user.firstStart = true;
+                        user.saveData(false);
                         // To login
                         user.changePage('home');
                     }

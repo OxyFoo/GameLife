@@ -450,6 +450,7 @@ class UserManager {
     saveData(online) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
+            'firstStart': this.firstStart,
             'lang': langManager.currentLangageKey,
             'pseudo': this.pseudo,
             'title': this.title,
@@ -490,12 +491,13 @@ class UserManager {
 
         const data = await DataManager.Load(STORAGE.USER, _online, this.conn.token);
         langManager.setLangage(get(data, 'lang', 'fr'));
+        this.firstStart = get(data, 'firstStart', false);
         this.pseudo = get(data, 'pseudo', this.pseudo);
         this.title = get(data, 'title', 0);
         this.birth = get(data, 'birth', '');
         this.email = get(data, 'email', '');
         this.xp = get(data, 'xp', 0);
-        if (typeof(data['activities']) !== 'undefined' && data['activities'].length > 0) {
+        if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
             for (let a in data['activities']) {
                 const activity = data['activities'][a];
                 this.addActivity(activity.skillID, activity.startDate, activity.duration);

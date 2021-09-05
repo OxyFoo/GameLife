@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, BackHandler } from 'react-native';
+import { View, StyleSheet, BackHandler, Platform } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
@@ -21,10 +21,12 @@ class Loading extends React.Component {
     componentDidMount() {
         this.interval = setInterval(this.loop, 500);
 
-        try {
-            SoundPlayer.playSoundFile('appli', 'mp3');
-        } catch (e) {
-            console.warn('Cannot play the sound file');
+        if (Platform.OS === "android") {
+            try {
+                SoundPlayer.playSoundFile('appli', 'mp3');
+            } catch (e) {
+                console.warn('Cannot play the sound file');
+            }
         }
     }
 

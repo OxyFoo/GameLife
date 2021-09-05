@@ -88,7 +88,7 @@ class Loading extends React.Component {
         user.openPopup('input', [ title, text ], event, false);
     }
     async checkBetaMail(mail) {
-        const URL = 'https://oxyfoo.com/App/GameLife/betacheck.php';
+        const URL = 'https://oxyfoo.com/App/GameLife/beta/betacheck.php';
         const data = {
             'action': 'check',
             'mail': mail

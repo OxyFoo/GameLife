@@ -1,4 +1,4 @@
-const URL = 'https://oxyfoo.com/App/GameLife/app.php';
+const URL = 'https://oxyfoo.com/App/GameLife/beta/app.php';
 
 async function Request_Async(data, url = URL, method, headers) {
     const defaultHeaders = {

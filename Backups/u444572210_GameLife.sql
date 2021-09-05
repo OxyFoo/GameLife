@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : Dim 05 sep. 2021 à 12:33
+-- Généré le : Dim 05 sep. 2021 à 12:47
 -- Version du serveur :  10.4.19-MariaDB-cll-lve
 -- Version de PHP : 7.2.34
 
@@ -194,7 +194,21 @@ INSERT INTO `Beta` (`ID`, `Mail`, `Enabled`) VALUES
 (115, 'Pierre.marsaa@icloud.com', 1),
 (116, 'Katanarise@hotmail.com', 1),
 (117, 'irnaivip@gmail.com', 0),
-(118, 'Laura.lecaplain66@hotmail.fr', 0);
+(118, 'Laura.lecaplain66@hotmail.fr', 0),
+(119, 'damienozz14@gmail.com', 0),
+(120, 'emmalavina41@gmail.com', 0),
+(121, 'irnaivip@gmail.com', 0),
+(122, 'radi.4dam@gmail.com', 0),
+(123, 'ubeydle67dbe@gmail.com', 0),
+(124, 'solea.casas@gmail.com', 0),
+(125, 'raibochu.pokemon@gmail.com', 0),
+(126, 'mylly0717201428@gmail.com', 0),
+(127, 'rins.bouard@gmail.com', 0),
+(128, 'W0oo0lfy.pro@gmail.com', 0),
+(129, 'will.lazimi@gmail.com', 0),
+(130, 'gougatn@gmail.com', 0),
+(131, 'theo.blaisot@gmail.com', 0),
+(132, 'tomhenras@gmail.com', 0);
 
 -- --------------------------------------------------------
 
@@ -814,7 +828,7 @@ ALTER TABLE `Achievements`
 -- AUTO_INCREMENT pour la table `Beta`
 --
 ALTER TABLE `Beta`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT pour la table `Categories`

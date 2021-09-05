@@ -160,8 +160,11 @@
         "input-langage": "Langues",
         "input-theme": "Thèmes",
         "input-reset": "Réinitialiser",
+        "input-clear": "Supprimer tout",
         "input-disconnect": "Délier le mail",
 
+        "alert-clear-title": "Supprimer",
+        "alert-clear-text": "Réinitialiser toutes les données de l'app (sauf le pass beta) ?",
         "alert-reset-title": "Réinitialiser",
         "alert-reset-text": "Supprimer toutes les activités du compte ?",
         "alert-disconnect-title": "Se déconnecter",

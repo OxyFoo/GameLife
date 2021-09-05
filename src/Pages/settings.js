@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, BackHandler } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
@@ -38,6 +38,17 @@ class Settings extends React.Component {
         const text = langManager.curr['settings']['alert-disconnect-text'];
         user.openPopup('yesno', [ title, text ], event);
     }
+    clear = () => {
+        const event = (button) => {
+            if (button === 'yes') {
+                user.clear();
+                setTimeout(BackHandler.exitApp, 200);
+            }
+        }
+        const title = langManager.curr['settings']['alert-clear-title'];
+        const text = langManager.curr['settings']['alert-clear-text'];
+        user.openPopup('yesno', [ title, text ], event);
+    }
     changeLang = (lang) => {
         langManager.setLangage(lang);
         user.changePage();
@@ -64,7 +75,7 @@ class Settings extends React.Component {
                         onSelect={this.changeLang}
                     />
 
-                    {/* Disconnect */}
+                    {/* Reset activities */}
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>
                         <GLText style={styles.title} title={langManager.curr['settings']['input-reset'].toUpperCase()} />
                         <GLIconButton icon='trash' />
@@ -77,6 +88,12 @@ class Settings extends React.Component {
                             <GLIconButton icon='signout' />
                         </TouchableOpacity>
                     )}
+
+                    {/* Reset activities */}
+                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.clear}>
+                        <GLText style={styles.title} title={langManager.curr['settings']['input-clear'].toUpperCase()} />
+                        <GLIconButton icon='trash' />
+                    </TouchableOpacity>
 
                 </View>
             </View>

@@ -160,8 +160,11 @@
         "input-langage": "Langages",
         "input-theme": "Themes",
         "input-reset": "Reset",
+        "input-clear": "Clear all",
         "input-disconnect": "Unlink mail",
 
+        "alert-clear-title": "Delete all",
+        "alert-clear-text": "Reset all data in the app (except the beta pass)?",
         "alert-reset-title": "Reset",
         "alert-reset-text": "Delete all account activities?",
         "alert-disconnect-title": "Disconnecting",

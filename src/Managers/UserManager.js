@@ -60,6 +60,35 @@ class UserManager {
         this.achievementsLoop = setInterval(this.checkAchievements, 30*1000);
     }
 
+    clear = () => {
+        this.pseudo = 'Player';
+        this.title = 0;
+        this.birth = '';
+        this.email = '';
+        this.xp = 0;
+        this.activities = [];
+
+        this.stats = {
+            'sag': 0,
+            'int': 0,
+            'con': 0,
+            'for': 0,
+            'end': 0,
+            'agi': 0,
+            'dex': 0
+        };
+
+        this.titles = [];
+        this.quotes = [];
+        this.skills = [];
+        this.skillsIcon = [];
+        this.achievements = [];
+        this.solvedAchievements = [];
+        this.contributors = [];
+        this.lastPseudoDate = null;
+        this.saveData(false);
+    }
+
     disconnect = () => {
         this.conn.disconnect();
         this.email = '';
@@ -437,7 +466,7 @@ class UserManager {
     async changeUser() {
         if (user.email) {
             await user.conn.AsyncRefreshAccount();
-            user.saveData(false);
+            user.saveMinData();
             if (user.isConnected()) {
                 await user.loadData(true);
                 user.saveData();
@@ -482,6 +511,19 @@ class UserManager {
             'helpers': this.contributors
         }
         DataManager.Save(STORAGE.INTERNAL, internalData, false);
+        DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
+    }
+    saveMinData(online) {
+        const _online = typeof(online) === 'boolean' ? online : this.isConnected();
+        const data = {
+            'pseudo': this.pseudo,
+            'title': this.title,
+            'birth': this.birth,
+            'email': this.email,
+            'xp': this.xp,
+            'pseudoDate': this.lastPseudoDate,
+            'solvedAchievements': this.solvedAchievements
+        };
         DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
     }
     async loadData(online) {

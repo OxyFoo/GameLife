@@ -200,7 +200,7 @@
         "page-title": "Succès",
 
         "alert-achievement-title": "Succès déverouillé",
-        "alert-achievement-text": "You have unlocked the achievement: {}"
+        "alert-achievement-text": "Vous avez débloqué le succès : {}"
     },
 
     "leaderboard": {

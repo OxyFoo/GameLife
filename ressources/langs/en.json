@@ -200,7 +200,7 @@
         "page-title": "Achievements",
 
         "alert-achievement-title": "Unlocked achievement",
-        "alert-achievement-text": ""
+        "alert-achievement-text": "You have unlocked the achievement: {}"
     },
 
     "leaderboard": {

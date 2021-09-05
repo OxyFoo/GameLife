@@ -4,7 +4,6 @@ import { View, StyleSheet, BackHandler } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { GLText, GLLoading } from '../Components/GL-Components';
-import SoundPlayer from 'react-native-sound-player';
 import { Request_Async } from '../Functions/Request';
 import DataManager, { STORAGE } from '../Class/DataManager';
 
@@ -20,12 +19,6 @@ class Loading extends React.Component {
 
     componentDidMount() {
         this.interval = setInterval(this.loop, 500);
-
-        try {
-            SoundPlayer.playSoundFile('appli', 'mp3');
-        } catch (e) {
-            console.warn('Cannot play the sound file');
-        }
     }
 
     componentWillUnmount() {

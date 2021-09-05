@@ -36,7 +36,7 @@ function GLXPSmallBar(props) {
                     <View style={[styles.fill, styles.sup, { width: valueSup + '%' }]} />
                     <View style={[styles.fill, { width: valueInt + '%' }]} />
                 </View>
-                <GLText style={styles.textXP} title={valueText} color='grey' />
+                <GLText style={styles.textXP} title={valueText + ' - ' + total + ' ' + langManager.curr['level']['xp']} color='grey' />
                 <GLText style={styles.totalXP} title={total + ' ' + langManager.curr['level']['xp']} color='grey' />
 
             </View>

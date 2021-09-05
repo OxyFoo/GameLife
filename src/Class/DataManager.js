@@ -3,7 +3,8 @@ import { Request_Async } from "../Functions/Request";
 
 const STORAGE = {
     USER: '@params/user',
-    INTERNAL: '@params/internal'
+    INTERNAL: '@params/internal',
+    APPSTATE: '@params/appstate'
 }
 
 class DataManager {

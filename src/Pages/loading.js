@@ -6,6 +6,7 @@ import langManager from '../Managers/LangManager';
 import { GLText, GLLoading } from '../Components/GL-Components';
 import SoundPlayer from 'react-native-sound-player';
 import { Request_Async } from '../Functions/Request';
+import DataManager, { STORAGE } from '../Class/DataManager';
 
 const POINTS = [ '.', '..', '...', '..', '.' ];
 
@@ -47,12 +48,18 @@ class Loading extends React.Component {
         this.setState({ textPoints: this.state.textPoints + 0.5 });
     }
 
-    screenPress = () => {
+    async screenPress() {
+        let started = false;
+        const data = await DataManager.Load(STORAGE.APPSTATE, false);
+        if (typeof(data) !== 'undefined' && data.hasOwnProperty('started')) {
+            started = data['started'];
+        }
+
         if (this.state.loaded) {
-            if (!user.firstStart) {
-                this.welcome();
-            } else {
+            if (started) {
                 user.changePage('home');
+            } else {
+                this.welcome();
             }
         }
     }
@@ -90,8 +97,7 @@ class Loading extends React.Component {
         if (typeof(req) !== 'undefined' && req.hasOwnProperty('status')) {
             if (req['status'] === 'ok') {
                 user.closePopup();
-                user.firstStart = true;
-                user.saveData(false);
+                DataManager.Save(STORAGE.APPSTATE, { started: true }, false);
                 user.changePage('home');
                 return;
             } else {
@@ -116,7 +122,7 @@ class Loading extends React.Component {
         const loaded_text = langManager.curr['loading']['text-end'];
 
         return (
-            <View style={styles.content} onTouchStart={this.screenPress} pointerEvents="box-only">
+            <View style={styles.content} onTouchStart={this.screenPress.bind(this)} pointerEvents="box-only">
                 <GLLoading state={state} />
                 <View style={styles.containTitle}>
                     {!this.state.loaded && (<GLText style={styles.points} title={loading_points} color={'transparent'} />)}

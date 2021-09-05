@@ -30,8 +30,6 @@ class UserManager {
     openLeftPanel;
 
     constructor() {
-        this.firstStart = true;
-
         // User informations
         this.pseudo = 'Player';
         this.title = 0;
@@ -465,7 +463,6 @@ class UserManager {
     saveData(online) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
-            'firstStart': this.firstStart,
             'lang': langManager.currentLangageKey,
             'pseudo': this.pseudo,
             'title': this.title,
@@ -507,7 +504,6 @@ class UserManager {
 
         const data = await DataManager.Load(STORAGE.USER, _online, this.conn.token);
         langManager.setLangage(get(data, 'lang', 'fr'));
-        this.firstStart = get(data, 'firstStart', false);
         this.pseudo = get(data, 'pseudo', this.pseudo);
         this.title = get(data, 'title', 0);
         this.birth = get(data, 'birth', '');

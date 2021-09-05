@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     },
     blockLVL: { height: '25%', justifyContent: 'space-evenly' },
     blockCalendar: { height: '60%', paddingHorizontal: 0 },
-    blockSkill: { width: 64, height: 64, margin: 0, marginTop: 12, marginBottom: 24, overflow: 'visible' },
+    blockSkill: { width: 64, height: 64, padding: 0, margin: 0, marginTop: 12, marginBottom: 24, overflow: 'visible' },
     blockSkillText: {
         position: 'absolute',
         top: 64,

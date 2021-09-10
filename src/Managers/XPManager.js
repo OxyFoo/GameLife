@@ -3,7 +3,7 @@ import { isUndefined } from "../Functions/Functions";
 const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
 const XPperHour = 100;
 const UserXPperLevel = 20;
-const StatXPperLevel = 2;
+const StatXPperLevel = 4;
 const SkillXPperLevel = 20;
 
 class Experience {

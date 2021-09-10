@@ -22,7 +22,7 @@ def Counter(path):
     return lines
 
 exts = [ "js", "php" ]
-ignoreDirs = []
+ignoreDirs = ['beta']
 
 os.system("cls || clear")
 

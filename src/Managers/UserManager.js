@@ -466,7 +466,7 @@ class UserManager {
     async changeUser() {
         if (user.email) {
             await user.conn.AsyncRefreshAccount();
-            user.saveMinData();
+            user.saveData();
             if (user.isConnected()) {
                 await user.loadData(true);
                 user.saveData();
@@ -489,7 +489,7 @@ class UserManager {
         }
     }
 
-    saveData(online) {
+    saveData(online, saveInternal = false) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
             'lang': langManager.currentLangageKey,
@@ -502,29 +502,19 @@ class UserManager {
             'pseudoDate': this.lastPseudoDate,
             'solvedAchievements': this.solvedAchievements
         };
-        const internalData = {
-            'skills': this.skills,
-            'skillsIcon': this.skillsIcon,
-            'titles': this.titles,
-            'quotes': this.quotes,
-            'achievements': this.achievements,
-            'helpers': this.contributors
+        DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
+
+        if (saveInternal) {
+            const internalData = {
+                'skills': this.skills,
+                'skillsIcon': this.skillsIcon,
+                'titles': this.titles,
+                'quotes': this.quotes,
+                'achievements': this.achievements,
+                'helpers': this.contributors
+            }
+            DataManager.Save(STORAGE.INTERNAL, internalData, false);
         }
-        DataManager.Save(STORAGE.INTERNAL, internalData, false);
-        DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
-    }
-    saveMinData(online) {
-        const _online = typeof(online) === 'boolean' ? online : this.isConnected();
-        const data = {
-            'pseudo': this.pseudo,
-            'title': this.title,
-            'birth': this.birth,
-            'email': this.email,
-            'xp': this.xp,
-            'pseudoDate': this.lastPseudoDate,
-            'solvedAchievements': this.solvedAchievements
-        };
-        DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
     }
     async loadData(online) {
         const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
@@ -587,7 +577,7 @@ class UserManager {
             }
         }
 
-        this.saveData(false);
+        this.saveData(false, true);
     }
 
     isConnected = this.conn.isConnected;

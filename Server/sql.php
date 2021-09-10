@@ -5,7 +5,7 @@
     require('./functions.php');
     require('./internalData.php');
 
-    $DAYS_PSEUDO_CHANGE = 1;
+    $DAYS_PSEUDO_CHANGE = 0;
 
     class DataBase
     {

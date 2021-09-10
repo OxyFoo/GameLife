@@ -179,25 +179,19 @@
         $accountID = $account['ID'];
         $users = $db->QueryArray("SELECT * FROM `Users`");
 
-        // Count > 0
-        $length = 0;
-        for ($i = 0; $i < count($users); $i++) {
-            if (intval($users[$i]['XP']) > 0) $length++;
-        }
-
-        // Get sorted users
-        for ($l = 0; $l < $length; $l++) {
-            $maxID = 0;
+        while (count($users) > 0) {
+            $maxID = -1;
             $maxXP = 0;
-            for ($i = 0; $i < count($users); $i++) {
-                if (intval($users[$i]['XP']) > $maxXP) {
-                    $maxID = $i;
-                    $maxXP = intval($users[$i]['XP']);
+            for ($u = 0; $u < count($users); $u++) {
+                $xp = intval($users[$u]['XP']);
+                if ($xp > $maxXP) {
+                    $maxID = $u;
+                    $maxXP = $xp;
                 }
             }
             $position++;
-            if ($users[$maxID]['ID'] == $accountID) break;
-            unset($users[$maxID]);
+            if ($users[$maxID]['ID'] == $accountID || $maxID === -1) break;
+            array_splice($users, $maxID, 1);
         }
 
         return $position;
@@ -206,24 +200,20 @@
         $topUsers = array();
         $users = $db->QueryArray("SELECT * FROM `Users`");
 
-        // Count > 0
-        $length = 0;
-        for ($i = 0; $i < count($users); $i++) {
-            if (intval($users[$i]['XP']) > 0) $length++;
-        }
-        if ($length > 50) {
-            $length = 50;
-        }
-
-        // Get sorted users
-        for ($l = 0; $l < $length; $l++) {
-            $maxID = 0;
+        // Sort users by XP
+        $maxTopUsers = 100;
+        while (count($topUsers) < $maxTopUsers) {
+            $maxID = -1;
             $maxXP = 0;
-            for ($i = 0; $i < count($users); $i++) {
-                if (intval($users[$i]['XP']) > $maxXP) {
-                    $maxID = $i;
-                    $maxXP = intval($users[$i]['XP']);
+            for ($u = 0; $u < count($users); $u++) {
+                $xp = intval($users[$u]['XP']);
+                if ($xp > $maxXP) {
+                    $maxID = $u;
+                    $maxXP = $xp;
                 }
+            }
+            if ($maxID === -1) {
+                break;
             }
             $user = array(
                 'Username' => $users[$maxID]['Username'],
@@ -231,7 +221,7 @@
                 'XP' => $users[$maxID]['XP']
             );
             array_push($topUsers, $user);
-            unset($users[$maxID]);
+            array_splice($users, $maxID, 1);
         }
 
         return $topUsers;

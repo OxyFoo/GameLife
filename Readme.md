@@ -99,6 +99,10 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 ## 19/08/21
 * PHP: 560
 * JS: 2222
+## 05/09/21
+* PHP: 1042
+* JS: 5520
+* Total: 6562
 
 # Succès
 * Comparaisons
@@ -116,3 +120,11 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
         - GT : grater (or equal) than
     * Comparant
         - Integer : Soit le nombre d'heure, soit de niveau
+
+
+@Pass bêta Merci pour tous vos retours et vos suggestions depuis hier ça fait très plaisir, et on ne va pas s'arrêter là !
+J'aimerais bien préciser un point étant donné que le but est d'améliorer l'app
+Merci à ceux qui postent des problèmes/bugs de l'app, mais veuillez svp indiquer précisément votre problème ainsi que le contexte de celui-ci (android/ios, émulateur/physique, appareil ancien/récent etc) car je ne peux malheureusement pas faire grand chose d'un simple "ça ne fonctionne pas".
+Sinon encore merci pour l'aide que vous nous avez déjà apporté :grin:
+
+Prendre en compte la casse pr la vérif des pseudos

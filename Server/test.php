@@ -89,6 +89,13 @@
             }
             AddTesteur($db, $mail);
         }
+    } else if ($action === "quotes") {
+        $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
+        foreach ($quotes as $quote) {
+            $q = $quote['Quote'];
+            $a = $quote['Author'];
+            echo("$q-$a<br/>");
+        }
     }
 
 ?>

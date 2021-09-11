@@ -5,23 +5,11 @@ import user from '../Managers/UserManager';
 import { OptionsAnimation } from '../Components/Animations';
 import { GLLeftPanel, GLPopup } from '../Components/GL-Components';
 import langManager from './LangManager';
-
-import Loading from '../Pages/loading';
-import Home from '../Pages/home';
-import Identity from '../Pages/identity';
-import Statistic from '../Pages/statistic';
-import Calendar from '../Pages/calendar';
-import Activity from '../Pages/activity';
-import Skill from '../Pages/skill';
-import Skills from '../Pages/skills';
-import Settings from '../Pages/settings';
-import Experience from '../Pages/experience';
-import Achievements from '../Pages/achievements';
-import Leaderboard from '../Pages/leaderboard';
-import About from '../Pages/about';
+import GetPageContent, { THEMES } from '../Class/ThemeManager';
 
 class PageManager extends React.Component{
     state = {
+        currTheme: THEMES.T0,
         page1: '',
         page2: '',
         animOpacity1: new Animated.Value(0),
@@ -92,7 +80,7 @@ class PageManager extends React.Component{
             return;
         }
 
-        if (!this.GetPageContent(newpage)) {
+        if (!GetPageContent(this.state.currTheme, newpage)) {
             console.error('Calling an incorrect page');
             return;
         };
@@ -126,26 +114,6 @@ class PageManager extends React.Component{
         }, animation_delay + animation_duration);
     }
 
-    GetPageContent = (page) => {
-        let p;
-        switch (page) {
-            case 'loading': p = <Loading args={this.state.arguments} />; break;
-            case 'home': p = <Home />; break;
-            case 'identity': p = <Identity />; break;
-            case 'statistic': p = <Statistic args={this.state.arguments} />; break;
-            case 'calendar': p = <Calendar />; break;
-            case 'activity': p = <Activity args={this.state.arguments} />; break;
-            case 'skill': p = <Skill args={this.state.arguments} />; break;
-            case 'skills': p = <Skills />; break;
-            case 'settings': p = <Settings />; break;
-            case 'achievements': p = <Achievements />; break;
-            case 'experience': p = <Experience />; break;
-            case 'leaderboard': p = <Leaderboard />; break;
-            case 'about': p = <About />; break;
-        }
-        return p;
-    }
-
     openPopup = (type, args, callback, cancelable = true) => {
         const newArgs = typeof(type) !== 'undefined' ? [ type, args, cancelable ] : [ null, null, true ];
         this.setState({ popupArgs: newArgs, popupCallback: callback });
@@ -163,8 +131,8 @@ class PageManager extends React.Component{
     }
 
     render() {
-        let page1 = this.GetPageContent(this.state.page1);
-        let page2 = this.GetPageContent(this.state.page2);
+        const page1 = GetPageContent(this.state.currTheme, this.state.page1, this.state.arguments);
+        const page2 = GetPageContent(this.state.currTheme, this.state.page2, this.state.arguments);
 
         const fullscreen = { width: '100%', height: '100%', backgroundColor: "#000020" }
 

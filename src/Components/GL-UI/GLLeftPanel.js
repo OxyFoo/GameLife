@@ -4,6 +4,7 @@ import langManager from '../../Managers/LangManager';
 import user from '../../Managers/UserManager';
 
 import { OptionsAnimation } from '../Animations';
+import GLIconButton from './GLIconButton';
 import GLText from './GLText';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -17,7 +18,8 @@ const SHORTCUTS = [
     { text: "shortcut-level", event: () => { user.changePage('experience') } },
     { text: "shortcut-leaderboard", event: () => { user.changePage('leaderboard'); } },
     { text: "shortcut-achievements", event: () => { user.changePage('achievements') } },
-    { text: "shortcut-settings", event: () => { user.changePage('settings') } }
+    { text: "shortcut-settings", event: () => { user.changePage('settings') } },
+    { text: "shortcut-report", event: () => { user.changePage('report') } }
 ];
 
 class GLLeftPanel extends React.PureComponent {
@@ -73,12 +75,15 @@ class GLLeftPanel extends React.PureComponent {
                 style={[styles.parent, { opacity: this.state.animOpacity }]}
                 pointerEvents={this.state.opened ? 'auto' : 'none'}
             >
-                <View style={styles.background} onTouchStart={this.toggleVisibility} />
+                <View style={styles.background} onTouchStart={this.toggleVisibility}>
+                    <GLIconButton icon="back" style={styles.backButton} />
+                </View>
                 <Animated.View style={[styles.container, {
                         transform: [{ translateX: this.state.animPosX }]
                     }]}
                 >
                     <FlatList
+                        style={{ flexGrow: 0 }}
                         data={SHORTCUTS}
                         keyExtractor={(item, i) => 'shortcut_' + i}
                         renderItem={this.shortcut.bind(this)}
@@ -148,6 +153,11 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     aboutImage: {
+    },
+    backButton: {
+        position: 'absolute',
+        right: 42,
+        bottom: 42
     }
 });
 

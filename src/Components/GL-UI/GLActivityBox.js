@@ -15,11 +15,9 @@ function GLActivityBox(props) {
 
     if (props.small) {
         const smallContainer = [ smallStyles.container, props.style ];
-        const dateText = props.date;
         return (
             <View style={smallContainer}>
                 <GLText style={smallStyles.title} title={skillTitle} />
-                <GLText style={smallStyles.text} title={dateText} />
                 <GLText style={smallStyles.text} title={skillTimes} />
             </View>
         )

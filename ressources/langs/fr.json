@@ -40,6 +40,8 @@
         "shortcut-achievements": "Succès",
         "shortcut-settings": "Réglages",
         "shortcut-about": "A propos",
+        "shortcut-report": "Report",
+        "shortcut-addactivity": "Ajouter une activité",
 
         "alert-beta-title": "Bêta testeur",
         "alert-beta-text": "Si vous avez été sélectionné pour participer à la version beta de cette application, entrez votre adresse mail ici :",
@@ -141,7 +143,8 @@
         "top-filter-default": "Filtres",
         "top-sort-list": [
             "XP", "A-Z", "DATE"
-        ]
+        ],
+        "text-empty": "Ajoutez une activité, les compétences associées apparaîtront ici"
     },
 
     "skill": {
@@ -226,5 +229,9 @@
         "alert-info-text": "Version : {}",
         "alert-unavailable-title": "Indisponible",
         "alert-unavailable-text": "Le site sera disponible bientôt, un peu de patience ^^"
+    },
+
+    "report": {
+        "page-title": "Report"
     }
 }

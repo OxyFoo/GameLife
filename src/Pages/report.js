@@ -2,8 +2,9 @@ import * as React from 'react';
 
 import user from '../Managers/UserManager';
 
-class Experience extends React.Component {
+class Report extends React.Component {
     back = () => { user.backPage(); }
+    test = () => { console.log("YESSS"); }
 }
 
-export default Experience;
+export default Report;

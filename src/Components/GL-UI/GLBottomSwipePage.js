@@ -19,6 +19,7 @@ class GLBottomSwipePage extends React.Component {
 
     swipe_start = (event) => {
         const posY = event.nativeEvent.pageY;
+        this.first_posY = posY;
         this.last_posY = posY;
     }
     swipe_move = (event) => {
@@ -30,13 +31,21 @@ class GLBottomSwipePage extends React.Component {
         }
     }
     swipe_end = (event) => {
-        if (this.curr_posY > MID) {
-            OptionsAnimationSpring(this.state.animPositionY, MAX, false).start();
-            this.setState({ init_posY: MAX });
-        } else {
-            OptionsAnimationSpring(this.state.animPositionY, 0, false).start();
-            this.setState({ init_posY: 0 });
+        // Swipe
+        if (this.curr_posY > MID) this.setPagePosY(MAX);
+        else this.setPagePosY(0);
+
+        // Press
+        const posY = event.nativeEvent.pageY;
+        if (Math.abs(this.first_posY - posY) < 2) {
+            this.setPagePosY(this.state.init_posY == 0 ? MAX : 0);
         }
+        this.first_posY = 0;
+    }
+
+    setPagePosY(posY) {
+        OptionsAnimationSpring(this.state.animPositionY, posY, false).start();
+        this.setState({ init_posY: posY });
     }
 
     render() {

@@ -109,7 +109,9 @@ class UserManager {
     }
 
     getUnlockTitles = () => {
-        let unlockTitles = [];
+        let unlockTitles = [
+            { key: 0, value: langManager.curr['identity']['empty-title'] }
+        ];
         for (let t = 0; t < this.titles.length; t++) {
             const title = this.titles[t];
             const cond = parseInt(title.AchievementsCondition);

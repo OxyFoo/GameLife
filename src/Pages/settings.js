@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, BackHandler } from 'react-native';
+import { BackHandler } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
-import { GLDropDown, GLHeader, GLIconButton, GLText } from '../Components/GL-Components';
 
 class Settings extends React.Component {
     constructor(props) {
@@ -54,68 +53,6 @@ class Settings extends React.Component {
         user.changePage();
         user.saveData(false);
     }
-
-    render() {
-        return (
-            <View style={{flex: 1}}>
-                {/* Header */}
-                <GLHeader
-                    title={langManager.curr['settings']['page-title']}
-                    leftIcon='back'
-                    onPressLeft={this.back}
-                />
-
-                {/* Content */}
-                <View style={styles.content}>
-                    {/* Langages */}
-                    <GLText style={styles.title} title={langManager.curr['settings']['input-langage'].toUpperCase()} />
-                    <GLDropDown
-                        value={langManager.curr['name']}
-                        data={langManager.getOtherLangs()}
-                        onSelect={this.changeLang}
-                    />
-
-                    {/* Reset activities */}
-                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>
-                        <GLText style={styles.title} title={langManager.curr['settings']['input-reset'].toUpperCase()} />
-                        <GLIconButton icon='trash' />
-                    </TouchableOpacity>
-
-                    {/* Disconnect */}
-                    {user.isConnected() && (
-                        <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.deconnect}>
-                            <GLText style={styles.title} title={langManager.curr['settings']['input-disconnect'].toUpperCase()} />
-                            <GLIconButton icon='signout' />
-                        </TouchableOpacity>
-                    )}
-
-                    {/* Reset activities */}
-                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.clear}>
-                        <GLText style={styles.title} title={langManager.curr['settings']['input-clear'].toUpperCase()} />
-                        <GLIconButton icon='trash' />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-        )
-    }
 }
-
-const styles = StyleSheet.create({
-    content: {
-        paddingVertical: 72,
-        paddingHorizontal: 36
-    },
-    title: {
-        textAlign: 'left',
-        fontSize: 22
-    },
-    button: {
-        marginVertical: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    }
-});
 
 export default Settings;

@@ -5,11 +5,10 @@ import user from '../Managers/UserManager';
 import { OptionsAnimation } from '../Components/Animations';
 import { GLLeftPanel, GLPopup } from '../Components/GL-Components';
 import langManager from './LangManager';
-import GetPageContent, { THEMES } from '../Class/ThemeManager';
+import ThemeManager from '../Class/ThemeManager';
 
 class PageManager extends React.Component{
     state = {
-        currTheme: THEMES.T0,
         page1: '',
         page2: '',
         animOpacity1: new Animated.Value(0),
@@ -80,7 +79,7 @@ class PageManager extends React.Component{
             return;
         }
 
-        if (!GetPageContent(this.state.currTheme, newpage)) {
+        if (!ThemeManager.GetPageContent(newpage)) {
             console.error('Calling an incorrect page');
             return;
         };
@@ -131,10 +130,10 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const page1 = GetPageContent(this.state.currTheme, this.state.page1, this.state.arguments);
-        const page2 = GetPageContent(this.state.currTheme, this.state.page2, this.state.arguments);
+        const page1 = ThemeManager.GetPageContent(this.state.page1, this.state.arguments);
+        const page2 = ThemeManager.GetPageContent(this.state.page2, this.state.arguments);
 
-        const fullscreen = { width: '100%', height: '100%', backgroundColor: "#000020" }
+        const fullscreen = { width: '100%', height: '100%', backgroundColor: ThemeManager.colors.globalBackground }
 
         /*const inter = {
             inputRange:  [0, 0.4, 0.8, 1],

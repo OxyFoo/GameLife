@@ -65,9 +65,10 @@ function getDurations(max_hour = 4, step_minutes = 15) {
  * @returns {String} dd/mm/yyyy
  */
 function dateToFormatString(date) {
-    const dd = twoDigit(date.getDate());
-    const mm = twoDigit(date.getMonth());
-    const yyyy = date.getFullYear();
+    const _date = new Date(date);
+    const dd = twoDigit(_date.getDate());
+    const mm = twoDigit(_date.getMonth() + 1);
+    const yyyy = _date.getFullYear();
     return [ dd, mm, yyyy ].join('/');
 }
 

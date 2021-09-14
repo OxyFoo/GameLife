@@ -94,7 +94,7 @@ class T0Home extends Home {
                                 onPress={this.addSkill}
                             >
                                 <GLDoubleCorner />
-                                <GLText title={langManager.curr['home']['shortcut-addactivity']} onPress={this.addSkill} />
+                                <GLText style={styles.addActivityText} title={langManager.curr['home']['shortcut-addactivity']} onPress={this.addSkill} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -103,9 +103,8 @@ class T0Home extends Home {
                     <TouchableOpacity style={styles.containerSkills} activeOpacity={0.5} onPress={this.openSkills}>
                         <GLText style={styles.titleSkill} title={langManager.curr['home']['title-skills'].toUpperCase()} />
                         <FlatList
-                            style={{ height: '100%' }}
                             columnWrapperStyle={{ width: '100%', justifyContent: 'space-evenly' }}
-                            contentContainerStyle={{ display: 'flex', height: '100%', alignItems: 'center' }}
+                            contentContainerStyle={{ display: 'flex', alignItems: 'center' }}
                             data={this.skills}
                             numColumns={3}
                             keyExtractor={(item, i) => 'block_' + i}
@@ -179,12 +178,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     containerStats: {
-        width: '55%',
+        width: '60%',
         height: '100%',
         padding: 12
     },
     containerLevelColumn: {
-        width: '45%',
+        width: '40%',
         display: 'flex',
         justifyContent: 'space-evenly'
     },
@@ -207,7 +206,7 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF'
     },
     blockLVL: { height: '25%', justifyContent: 'space-evenly' },
-    blockCalendar: { height: '45%', paddingHorizontal: 0, overflow: 'hidden' },
+    blockCalendar: { height: '40%', paddingHorizontal: 0, overflow: 'hidden' },
     blockSkill: { width: 64, height: 64, padding: 0, margin: 0, marginTop: 12, marginBottom: 36, overflow: 'visible' },
     blockSkillText: {
         marginVertical: 4,
@@ -233,10 +232,12 @@ const styles = StyleSheet.create({
     },
 
     containerSkills: {
-        height: '40%',
-        marginTop: 12,
+        flex: 1,
+        marginTop: 24,
         display: 'flex',
-        justifyContent: 'space-evenly'
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     row: {
         width: '100%',
@@ -246,6 +247,9 @@ const styles = StyleSheet.create({
     titleSkill: {
         marginBottom: 12,
         fontSize: 28
+    },
+    addActivityText: {
+        fontSize: 16
     }
 });
 

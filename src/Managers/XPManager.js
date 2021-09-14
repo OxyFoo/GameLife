@@ -165,7 +165,7 @@ class Experience {
         }
 
         // Get all skills
-        const activities = this.user.activities;
+        const activities = [...this.user.activities].reverse();
         for (let a in activities) {
             const activity = activities[a];
             const skillID = activity.skillID;

@@ -149,9 +149,11 @@ class GLPopup extends React.PureComponent {
     }
 
     render() {
+        const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
+
         return (
             <Animated.View
-                style={[styles.parent, { opacity: this.state.animOpacity }]}
+                style={[styles.parent, backgroundColor, { opacity: this.state.animOpacity }]}
                 pointerEvents={this.props.type !== null ? 'auto' : 'none'}
                 onTouchEnd={() => { this.forceUpdate() }}
             >
@@ -174,8 +176,7 @@ const styles = StyleSheet.create({
         height: '100%',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#000000'
+        justifyContent: 'center'
     },
     background: {
         position: 'absolute',

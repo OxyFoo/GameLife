@@ -9,7 +9,7 @@ import DataManager, { STORAGE } from '../Class/DataManager';
 
 
 class Loading extends React.Component {
-    POINTS = [ '.', '..', '...', '..', '.' ];
+    POINTS = [ '.', '..', '...', '..', '.', ' ' ];
     state = {
         textPoints: 0,
         quote: '',

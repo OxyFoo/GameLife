@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import user from '../../Managers/UserManager';
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
 
@@ -11,7 +12,11 @@ function GLHeader(props) {
     const RightIcon_LongPress = () => { if (props.rightIcon && props.onLongPressRight) props.onLongPressRight(); };
 
     const title = props.title.toUpperCase();
-    const style = [ styles.header, props.style, props.small && styles.headerSmall ];
+    const style = [
+        styles.header,
+        props.style, props.small && styles.headerSmall,
+        { backgroundColor: user.themeManager.colors['globalBackcomponent'] }
+    ];
     const leftIcon = props.leftIcon || '';
     const rightIcon = props.rightIcon || '';
 
@@ -31,8 +36,7 @@ const styles = StyleSheet.create({
         height: 64,
         color: '#5AB4F0',
         padding: 20,
-        fontSize: 30,
-        backgroundColor: '#000000'
+        fontSize: 30
     },
     headerSmall: {
         padding: 25,

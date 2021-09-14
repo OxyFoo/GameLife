@@ -70,6 +70,8 @@ class GLLeftPanel extends React.PureComponent {
     }
 
     render() {
+        const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
+
         return (
             <Animated.View
                 style={[styles.parent, { opacity: this.state.animOpacity }]}
@@ -78,7 +80,7 @@ class GLLeftPanel extends React.PureComponent {
                 <View style={styles.background} onTouchStart={this.toggleVisibility}>
                     <GLIconButton icon="back" style={styles.backButton} />
                 </View>
-                <Animated.View style={[styles.container, {
+                <Animated.View style={[styles.container, backgroundColor, {
                         transform: [{ translateX: this.state.animPosX }]
                     }]}
                 >
@@ -124,8 +126,7 @@ const styles = StyleSheet.create({
         marginLeft: -PANEL_WIDTH,
         paddingTop: 64,
         borderColor: '#FFFFFF',
-        borderRightWidth: 2,
-        backgroundColor: '#000000'
+        borderRightWidth: 2
     },
     component: {
         paddingHorizontal: 12,

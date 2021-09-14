@@ -8,63 +8,14 @@ import { dateToFormatString } from '../../Functions/Functions';
 import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../../Components/GL-Components';
 
 class T0Home extends Home {
-    constructor(props) {
-        super(props);
-
-        // Average XP
-        const firstDate = user.getFirstActivity();
-        firstDate.setHours(0, 0, 0);
-        const delta = (new Date()) - firstDate;
-        const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));
-        this.averageXPperDay = Math.max(0, parseInt(user.xp / delta_days));
-
-        // User activities
-        const show = 3;
-        this.activities = [];
-        for (let i = user.activities.length-1; i > user.activities.length - show - 1; i--) {
-            if (i >= 0) {
-                this.activities.push(user.activities[i]);
-            }
-        }
-
-        // Skills
-        const MAX_SKILLS = 6;
-        let skills = user.experience.getAllSkills('', [], 0, true);
-        skills.length = Math.min(skills.length, MAX_SKILLS);
-
-        this.skills = [];
-        for (let s = 0; s < skills.length; s++) {
-            const skill = skills[s];
-            const skillID = skill.skillID;
-            const skillName = user.getSkillByID(skillID).Name;
-            const newVal = { key: skillID, value: skillName };
-            this.skills.push(newVal);
-        }
-        while (this.skills.length < MAX_SKILLS) {
-            this.skills.push({ key: -1, value: '' });
-        }
-    }
-
-
-    addSkill = () => {
-        if (user.skills.length <= 1) {
-            console.warn("Aucun skill !");
-            return;
-        }
-        user.changePage('activity');
-    }
-    openIdentity = () => { user.changePage('identity'); }
-    openCalendar = () => { user.changePage('calendar'); }
-    openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
-    openSkills = () => { user.changePage('skills'); }
-    openExperience = () => { user.changePage('experience'); }
-
     render() {
         const userExperience = user.experience.getExperience();
         const totalXP = user.xp;
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;
         const nextLvlXP = userExperience.next;
+
+        const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
 
         return (
             <>
@@ -94,7 +45,7 @@ class T0Home extends Home {
 
                         <View style={styles.containerLevelColumn}>
                             {/* Level */}
-                            <TouchableOpacity style={[styles.block, styles.blockLVL]} activeOpacity={0.5} onPress={this.openExperience}>
+                            <TouchableOpacity style={[styles.block, styles.blockLVL, backgroundColor]} activeOpacity={0.5} onPress={this.openExperience}>
                                 <GLDoubleCorner />
                                 <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + LVL} />
                                 <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + totalXP} color='grey' />
@@ -103,7 +54,7 @@ class T0Home extends Home {
 
                             {/* Calendar */}
                             <TouchableOpacity
-                                style={[styles.block, styles.blockCalendar]}
+                                style={[styles.block, styles.blockCalendar, backgroundColor]}
                                 activeOpacity={.5}
                                 onPress={this.openCalendar}
                             >
@@ -130,18 +81,19 @@ class T0Home extends Home {
                                         }}
                                     />
                                 </View>
-                                <View style={styles.calendarBottom}>
+                                <View style={[styles.calendarBottom, backgroundColor]}>
                                     <GLText style={styles.textLevelPlus} title={langManager.curr['home']['text-seeall']} color="grey" />
                                     <GLIconButton icon='chevron' size={16} />
                                 </View>
                             </TouchableOpacity>
 
-                            {/* Calendar */}
+                            {/* Add activity */}
                             <TouchableOpacity
-                                style={styles.block}
+                                style={[styles.block, backgroundColor]}
                                 activeOpacity={.5}
                                 onPress={this.addSkill}
                             >
+                                <GLDoubleCorner />
                                 <GLText title={langManager.curr['home']['shortcut-addactivity']} onPress={this.addSkill} />
                             </TouchableOpacity>
                         </View>
@@ -168,10 +120,10 @@ class T0Home extends Home {
                                 }
 
                                 return item.key === -1 ? (
-                                        <View style={[styles.block, styles.blockSkill]} />
+                                        <View style={[styles.block, styles.blockSkill, backgroundColor]} />
                                     ) : (
                                         <View>
-                                            <TouchableOpacity style={[styles.block, styles.blockSkill]} activeOpacity={0.5} onPress={() => { this.openSkill(item.key) }}>
+                                            <TouchableOpacity style={[styles.block, styles.blockSkill, backgroundColor]} activeOpacity={0.5} onPress={() => { this.openSkill(item.key) }}>
                                                 <GLSvg xml={xml} />
                                                 <GLText style={styles.blockSkillText} title={item.value} />
                                             </TouchableOpacity>
@@ -252,14 +204,13 @@ const styles = StyleSheet.create({
         marginHorizontal: 12,
         padding: 12,
         borderWidth: 2,
-        borderColor: '#FFFFFF',
-        backgroundColor: '#000000'
+        borderColor: '#FFFFFF'
     },
     blockLVL: { height: '25%', justifyContent: 'space-evenly' },
-    blockCalendar: { height: '45%', paddingHorizontal: 0 },
+    blockCalendar: { height: '45%', paddingHorizontal: 0, overflow: 'hidden' },
     blockSkill: { width: 64, height: 64, padding: 0, margin: 0, marginTop: 12, marginBottom: 36, overflow: 'visible' },
     blockSkillText: {
-        marginTop: 2,
+        marginVertical: 4,
         marginLeft: '-50%',
         width: '200%',
         lineHeight: 16
@@ -276,8 +227,7 @@ const styles = StyleSheet.create({
         bottom: 6,
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        alignItems: 'center',
-        backgroundColor: '#000000'
+        alignItems: 'center'
     },
     textLevelPlus: {
     },

@@ -18,20 +18,24 @@ import T0Skills from '../Themes/T0/T0-skills';
 import T0Statistic from '../Themes/T0/T0-statistic';
 
 class ThemeManager {
-    static THEMES = {
+    THEMES = {
         T0: "T0",
-        T0V1: "T0.1"
+        T0V1: "T0.1",
+        T0V2: "T0.2"
     }
-    static selectedTheme = this.THEMES.T0;
-    static colors = COLORS[this.selectedTheme];
+    selectedTheme = this.THEMES.T0;
+    colors = COLORS[this.selectedTheme];
 
-    static setTheme(theme) {
-        const index = Object.values().indexOf(theme);
-        this.selectedTheme = this.THEMES[index];
-        this.colors = COLORS[this.selectedTheme];
+    setTheme(theme) {
+        this.selectedTheme = theme;
+        this.colors = COLORS[theme];
     }
 
-    static GetPageContent(page, args) {
+    isTheme(theme) {
+        return Object.values(this.THEMES).includes(theme);
+    }
+
+    GetPageContent(page, args) {
         let p;
         switch (this.selectedTheme) {
             default:

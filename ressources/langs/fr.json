@@ -1,6 +1,12 @@
 {
     "name": "Français",
 
+    "themes": {
+        "T0": "Classique",
+        "T0.1": "Gris",
+        "T0.2": "Bleu clair"
+    },
+
     "loading": {
         "text-loading": "Chargement",
         "text-loaded": "Chargement terminé",

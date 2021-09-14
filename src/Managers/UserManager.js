@@ -2,6 +2,7 @@ import deviceInfoModule from 'react-native-device-info';
 
 import langManager from "./LangManager";
 import ServManager from "./ServManager";
+import ThemeManager from '../Class/ThemeManager';
 import DataManager, { STORAGE } from '../Class/DataManager';
 
 import Experience from "./XPManager";
@@ -19,7 +20,8 @@ const DAYS_PSEUDO_CHANGE = 1;
 class UserManager {
     conn = new ServManager(this);
     experience = new Experience(this);
-    
+    themeManager = new ThemeManager();
+
     // this.changePage(pageName, argument);
     // Change page with animation and arg
     // Function loaded in componentDidMount of PageManager (in App.js)

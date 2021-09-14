@@ -27,6 +27,14 @@ class T0Settings extends Settings {
                         onSelect={this.changeLang}
                     />
 
+                    {/* Themes */}
+                    <GLText style={styles.title} title={langManager.curr['settings']['input-theme'].toUpperCase()} />
+                    <GLDropDown
+                        value={langManager.curr['themes'][this.currentTheme] || ''}
+                        data={this.selectableThemes}
+                        onSelect={this.changeTheme}
+                    />
+
                     {/* Reset activities */}
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>
                         <GLText style={styles.title} title={langManager.curr['settings']['input-reset'].toUpperCase()} />

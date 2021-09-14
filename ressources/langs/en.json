@@ -1,6 +1,12 @@
 {
     "name": "English",
 
+    "themes": {
+        "T0": "Classic",
+        "T0.1": "Grey",
+        "T0.2": "Light blue"
+    },
+
     "loading": {
         "text-loading": "Loading",
         "text-loaded": "Loading complete",

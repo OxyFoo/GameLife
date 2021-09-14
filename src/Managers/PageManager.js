@@ -5,7 +5,6 @@ import user from '../Managers/UserManager';
 import { OptionsAnimation } from '../Components/Animations';
 import { GLLeftPanel, GLPopup } from '../Components/GL-Components';
 import langManager from './LangManager';
-import ThemeManager from '../Class/ThemeManager';
 
 class PageManager extends React.Component{
     state = {
@@ -79,7 +78,7 @@ class PageManager extends React.Component{
             return;
         }
 
-        if (!ThemeManager.GetPageContent(newpage)) {
+        if (!user.themeManager.GetPageContent(newpage)) {
             console.error('Calling an incorrect page');
             return;
         };
@@ -110,7 +109,7 @@ class PageManager extends React.Component{
 
         setTimeout(() => {
             this.changing = false;
-        }, animation_delay + animation_duration);
+        }, animation_delay + animation_duration + 200);
     }
 
     openPopup = (type, args, callback, cancelable = true) => {
@@ -130,10 +129,10 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const page1 = ThemeManager.GetPageContent(this.state.page1, this.state.arguments);
-        const page2 = ThemeManager.GetPageContent(this.state.page2, this.state.arguments);
+        const page1 = user.themeManager.GetPageContent(this.state.page1, this.state.arguments);
+        const page2 = user.themeManager.GetPageContent(this.state.page2, this.state.arguments);
 
-        const fullscreen = { width: '100%', height: '100%', backgroundColor: ThemeManager.colors.globalBackground }
+        const fullscreen = { width: '100%', height: '100%', backgroundColor: user.themeManager.colors.globalBackground }
 
         /*const inter = {
             inputRange:  [0, 0.4, 0.8, 1],

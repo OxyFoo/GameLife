@@ -8,6 +8,13 @@ class Settings extends React.Component {
     constructor(props) {
         super(props);
         this.initLang = langManager.currentLangageKey;
+
+        this.currentTheme = user.themeManager.selectedTheme;
+        this.selectableThemes = [];
+        for (const T in user.themeManager.THEMES) {
+            const value = user.themeManager.THEMES[T];
+            this.selectableThemes.push({ key: value, value: langManager.curr['themes'][value] });
+        }
     }
     back = () => {
         if (this.initLang !== langManager.currentLangageKey) {
@@ -52,6 +59,13 @@ class Settings extends React.Component {
         langManager.setLangage(lang);
         user.changePage();
         user.saveData(false);
+    }
+    changeTheme = (theme) => {
+        if (user.themeManager.isTheme(theme)) {
+            user.themeManager.setTheme(theme);
+            this.currentTheme = theme;
+            user.changePage();
+        }
     }
 }
 

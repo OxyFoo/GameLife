@@ -19,13 +19,14 @@ function GLSkillBox(props) {
     const text_date = dateToFormatString(new Date(props.item.startDate));
 
     const styleContainer = [ styles.container, props.style ];
+    const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
     const eventPress = () => { user.changePage('skill', { skillID: skillID }) };
     const xml = user.getXmlByLogoID(skill.LogoID);
 
     return (
         <View style={styleContainer}>
             <TouchableOpacity style={styles.container2} activeOpacity={.5} onPress={eventPress}>
-                <View style={styles.icon}>
+                <View style={[styles.icon, backgroundColor]}>
                     <GLSvg xml={xml} />
                 </View>
                 <View style={styles.column}>
@@ -75,8 +76,7 @@ const styles = StyleSheet.create({
         height: 64,
         margin: 12,
         borderWidth: 3,
-        borderColor: 'white',
-        backgroundColor: '#000000'
+        borderColor: 'white'
     }
 });
 

@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Experience;
+export { T0Experience };

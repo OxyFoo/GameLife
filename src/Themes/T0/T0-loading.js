@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Loading;
+export { T0Loading };

@@ -6,6 +6,7 @@ class Statistic extends React.Component {
     constructor(props) {
         super(props);
         this.stat = this.props.args['stat'] || 'sag';
+        this.statXP = user.experience.getStatExperience(this.stat);
     }
 
     back = () => { user.backPage(); }

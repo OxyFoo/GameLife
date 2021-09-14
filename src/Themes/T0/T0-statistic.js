@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import Statistic from '../../Pages/statistic';
-import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { GLCropCorner, GLHeader, GLIconButton, GLText } from '../../Components/GL-Components';
 
@@ -12,10 +11,9 @@ class T0Statistic extends Statistic {
         const statName = (langManager.curr['statistics']['names'][statKey] || "").toUpperCase();
         const statDescription = langManager.curr['statistics']['descriptions'][statKey];
 
-        const statXP = user.experience.getStatExperience(statKey);
-        const xp = langManager.curr['level']['xp'] + ' : ' + statXP.xp + '/' + statXP.next;
-        const lvl = langManager.curr['level']['level'] + ' : ' + statXP.lvl;
-        const total = langManager.curr['level']['total'] + ' : ' + statXP.totalXP;
+        const xp = langManager.curr['level']['xp'] + ' : ' + this.statXP.xp + '/' + this.statXP.next;
+        const lvl = langManager.curr['level']['level'] + ' : ' + this.statXP.lvl;
+        const total = langManager.curr['level']['total'] + ' : ' + this.statXP.totalXP;
 
         const statText = xp + "\n" + lvl + "\n" + total;
 
@@ -74,4 +72,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Statistic;
+export { T0Statistic };

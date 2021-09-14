@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Skill;
+export { T0Skill };

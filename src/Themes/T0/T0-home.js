@@ -249,4 +249,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Home;
+export { T0Home };

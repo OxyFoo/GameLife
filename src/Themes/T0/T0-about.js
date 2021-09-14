@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0About;
+export { T0About };

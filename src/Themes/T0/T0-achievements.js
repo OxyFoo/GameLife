@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Achievements;
+export { T0Achievements };

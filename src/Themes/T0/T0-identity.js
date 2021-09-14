@@ -189,4 +189,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Identity;
+export { T0Identity };

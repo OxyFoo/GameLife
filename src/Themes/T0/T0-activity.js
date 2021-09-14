@@ -145,4 +145,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Activity;
+export { T0Activity };

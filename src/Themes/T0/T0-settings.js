@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Settings;
+export { T0Settings };

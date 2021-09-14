@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Calendar;
+export { T0Calendar };

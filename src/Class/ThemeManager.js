@@ -2,20 +2,20 @@ import * as React from 'react';
 
 import COLORS from '../Themes/Colors';
 
-import T0About from '../Themes/T0/T0-about';
-import T0Achievements from '../Themes/T0/T0-achievements';
-import T0Activity from '../Themes/T0/T0-activity';
-import T0Calendar from '../Themes/T0/T0-calendar';
-import T0Experience from '../Themes/T0/T0-experience';
-import T0Home from '../Themes/T0/T0-home';
-import T0Identity from '../Themes/T0/T0-identity';
-import T0Leaderboard from '../Themes/T0/T0-leaderboard';
-import T0Loading from '../Themes/T0/T0-loading';
-import T0Report from '../Themes/T0/T0-report';
-import T0Settings from '../Themes/T0/T0-settings';
-import T0Skill from '../Themes/T0/T0-skill';
-import T0Skills from '../Themes/T0/T0-skills';
-import T0Statistic from '../Themes/T0/T0-statistic';
+import { T0About } from '../Themes/T0/T0-about';
+import { T0Achievements } from '../Themes/T0/T0-achievements';
+import { T0Activity } from '../Themes/T0/T0-activity';
+import { T0Calendar } from '../Themes/T0/T0-calendar';
+import { T0Experience } from '../Themes/T0/T0-experience';
+import { T0Home } from '../Themes/T0/T0-home';
+import { T0Identity } from '../Themes/T0/T0-identity';
+import { T0Leaderboard } from '../Themes/T0/T0-leaderboard';
+import { T0Loading } from '../Themes/T0/T0-loading';
+import { T0Report } from '../Themes/T0/T0-report';
+import { T0Settings } from '../Themes/T0/T0-settings';
+import { T0Skill } from '../Themes/T0/T0-skill';
+import { T0Skills } from '../Themes/T0/T0-skills';
+import { T0Statistic } from '../Themes/T0/T0-statistic';
 
 class ThemeManager {
     THEMES = {
@@ -41,6 +41,7 @@ class ThemeManager {
             default:
             case this.THEMES.T0:
             case this.THEMES.T0V1:
+            case this.THEMES.T0V2:
                 switch (page) {
                     case 'about': p = <T0About />; break;
                     case 'achievements': p = <T0Achievements />; break;

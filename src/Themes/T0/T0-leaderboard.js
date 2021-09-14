@@ -117,4 +117,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Leaderboard;
+export { T0Leaderboard };

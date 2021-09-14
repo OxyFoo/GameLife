@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default T0Report;
+export { T0Report };

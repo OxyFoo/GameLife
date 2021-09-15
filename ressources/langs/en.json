@@ -49,10 +49,6 @@
         "shortcut-report": "Report",
         "shortcut-addactivity": "Add activity",
 
-        "alert-beta-title": "Beta tester",
-        "alert-beta-text": "If you have been selected to participate in the beta version of this application, enter your email address here:",
-        "alert-betaerror-title": "Error",
-        "alert-betaerror-text": "Incorrect mail or already used! If you had a beta pass, you manifest in the dedicated channel so that we solve your problem ^^",
         "alert-first-title": "Welcome",
         "alert-first-text": "You have earned the right to become a player. Do you want to accept?",
         "alert-exit-title": "Exit",

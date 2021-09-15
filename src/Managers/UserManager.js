@@ -1,11 +1,11 @@
 import deviceInfoModule from 'react-native-device-info';
 
 import langManager from "./LangManager";
-import ServManager from "./ServManager";
-import ThemeManager from '../Class/ThemeManager';
-import DataManager, { STORAGE } from '../Class/DataManager';
+import ServManager from "../Class/Server";
+import ThemeManager from '../Class/Theme';
+import DataStorage, { STORAGE } from '../Class/DataStorage';
 
-import Experience from "./XPManager";
+import Experience from "../Class/Experience";
 import { isUndefined } from "../Functions/Functions";
 
 import quotes from '../../ressources/defaultDB/quotes.json';
@@ -16,15 +16,27 @@ import achievements from '../../ressources/defaultDB/achievements.json';
 import helpers from '../../ressources/defaultDB/helpers.json';
 
 const DAYS_PSEUDO_CHANGE = 1;
+const DEFAULT_STATS = {
+    'sag': 0,
+    'int': 0,
+    'con': 0,
+    'for': 0,
+    'end': 0,
+    'agi': 0,
+    'dex': 0
+};
 
 class UserManager {
     conn = new ServManager(this);
     experience = new Experience(this);
     themeManager = new ThemeManager();
 
-    // this.changePage(pageName, argument);
-    // Change page with animation and arg
-    // Function loaded in componentDidMount of PageManager (in App.js)
+    /**
+     * this.changePage(pageName, argument);
+     * Change page with animation and arg
+     * Function loaded in componentDidMount of PageManager (in App.js)
+     * I've do that to skip cycles warns
+     */
     changePage;
     backPage;
     openPopup;
@@ -39,25 +51,16 @@ class UserManager {
         this.email = '';
         this.xp = 0;
         this.activities = [];
-
-        this.stats = {
-            'sag': 0,
-            'int': 0,
-            'con': 0,
-            'for': 0,
-            'end': 0,
-            'agi': 0,
-            'dex': 0
-        };
+        this.solvedAchievements = [];
+        this.lastPseudoDate = null;
+        this.stats = DEFAULT_STATS;
 
         this.titles = [];
         this.quotes = [];
         this.skills = [];
         this.skillsIcon = [];
         this.achievements = [];
-        this.solvedAchievements = [];
         this.contributors = [];
-        this.lastPseudoDate = null;
 
         this.achievementsLoop = setInterval(this.checkAchievements, 30*1000);
     }
@@ -69,25 +72,16 @@ class UserManager {
         this.email = '';
         this.xp = 0;
         this.activities = [];
-
-        this.stats = {
-            'sag': 0,
-            'int': 0,
-            'con': 0,
-            'for': 0,
-            'end': 0,
-            'agi': 0,
-            'dex': 0
-        };
+        this.solvedAchievements = [];
+        this.lastPseudoDate = null;
+        this.stats = DEFAULT_STATS;
 
         this.titles = [];
         this.quotes = [];
         this.skills = [];
         this.skillsIcon = [];
         this.achievements = [];
-        this.solvedAchievements = [];
         this.contributors = [];
-        this.lastPseudoDate = null;
         this.saveData(false);
     }
 
@@ -208,7 +202,7 @@ class UserManager {
 
             // Is time (or Level)
             const isTime = first.includes('T');
-            first = first.replace('T', '');
+            if (isTime) first = first.replace('T', '');
 
             // Get value to compare
             if (first === 'B') {
@@ -260,9 +254,10 @@ class UserManager {
                 const CategoryDepth = parseInt(first);
                 const categories = this.getSkillCategories(true);
                 if (categories.length < CategoryDepth) continue;
+
                 let values = [];
                 for (let c = 0; c < categories.length; c++) {
-                    const category = categories[c];
+                    const category = categories[c].value;
                     const categoryLevel = this.experience.getSkillCategoryExperience(category).lvl;
                     values.push(categoryLevel);
                 }
@@ -506,7 +501,7 @@ class UserManager {
             'pseudoDate': this.lastPseudoDate,
             'solvedAchievements': this.solvedAchievements
         };
-        DataManager.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
+        DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
 
         if (saveInternal) {
             const internalData = {
@@ -517,7 +512,7 @@ class UserManager {
                 'achievements': this.achievements,
                 'helpers': this.contributors
             }
-            DataManager.Save(STORAGE.INTERNAL, internalData, false);
+            DataStorage.Save(STORAGE.INTERNAL, internalData, false);
         }
     }
     async loadData(online) {
@@ -538,7 +533,7 @@ class UserManager {
             return output;
         }
 
-        const data = await DataManager.Load(STORAGE.USER, _online, this.conn.token);
+        const data = await DataStorage.Load(STORAGE.USER, _online, this.conn.token);
         langManager.setLangage(get(data, 'lang', 'fr'));
         this.pseudo = get(data, 'pseudo', this.pseudo);
         this.title = get(data, 'title', 0);
@@ -557,7 +552,7 @@ class UserManager {
         this.lastPseudoDate = get(data, 'pseudoDate', null);
         this.solvedAchievements = get(data, 'solvedAchievements', this.solvedAchievements);
 
-        const internalData = await DataManager.Load(STORAGE.INTERNAL, false);
+        const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
         this.titles = get(internalData, 'titles', titles, true);
         this.quotes = get(internalData, 'quotes', quotes, true);
         this.skills = get(internalData, 'skills', skills, true);
@@ -568,8 +563,10 @@ class UserManager {
 
     async loadInternalData() {
         if (this.conn.online) {
-            const data = await this.conn.getInternalData();
+            const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
+            const data = await this.conn.getInternalData(hash);
             const status = data['status'];
+            console.log(status);
 
             if (status === 'ok') {
                 if (typeof(data['titles']) !== 'undefined') this.titles = data['titles'];
@@ -578,6 +575,7 @@ class UserManager {
                 if (typeof(data['skillsIcon']) !== 'undefined') this.skillsIcon = data['skillsIcon'];
                 if (typeof(data['achievements']) !== 'undefined') this.achievements = data['achievements'];
                 if (typeof(data['helpers']) !== 'undefined') this.contributors = data['helpers'];
+                if (typeof(data['hash']) !== 'undefined') DataStorage.Save(STORAGE.INTERNAL_HASH, data['hash'], false);
             }
         }
 

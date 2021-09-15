@@ -48,7 +48,7 @@ class Activity extends React.Component {
                 skills: SKILLS,
         
                 selectedCategory: undefined,
-                selectedActivity: undefined,
+                selectedSkill: undefined,
                 selectedDateKey: 0,
                 selectedTimeKey: 3
             }
@@ -57,10 +57,10 @@ class Activity extends React.Component {
 
     back = () => { user.backPage(); }
     valid = () => {
-        if (typeof(this.state.selectedActivity) === 'undefined') {
+        if (typeof(this.state.selectedSkill) === 'undefined') {
             console.warn("Il faut remplir les champs");
         } else {
-            const skillID = this.state.selectedActivity.skillID;
+            const skillID = this.state.selectedSkill.skillID;
             const date = this.DATES[this.state.selectedDateKey].fulldate;
             const duration = this.DURATION[this.state.selectedTimeKey].duration;
             if (!user.addActivity(skillID, date, duration)) {
@@ -75,7 +75,7 @@ class Activity extends React.Component {
     trash = () => {
         const remove = (button) => {
             if (button === 'yes') {
-                user.remActivity(this.state.selectedActivity);
+                user.remActivity(this.state.selectedSkill);
                 this.back();
             }
         }

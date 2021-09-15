@@ -1,7 +1,7 @@
 import DeviceInfo from 'react-native-device-info';
 
 import { Request_Async } from '../Functions/Request';
-import langManager from './LangManager';
+import langManager from '../Managers/LangManager';
 
 //import { NativeModules } from 'react-native';
 //const AES = NativeModules.Aes;
@@ -108,12 +108,13 @@ class ServManager {
         return await Request_Async(data);
     }
 
-    async getInternalData() {
+    async getInternalData(hash) {
         if (!this.online) {
             return;
         }
         const data = {
             'action': 'getInternalData',
+            'hash': hash || '',
             'lang': langManager.currentLangageKey
         };
         return await Request_Async(data);

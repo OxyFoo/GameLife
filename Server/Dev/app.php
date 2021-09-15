@@ -1,6 +1,6 @@
 <?php
 
-    require('./sql.php');
+    require('./src/sql.php');
 
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
@@ -61,14 +61,25 @@
     }
     else if ($action === 'getInternalData') {
         $lang = $data['lang'];
-        if (!empty($lang)) {
+        $hash = $data['hash'];
+        if (!empty($lang) && isset($hash)) {
             $output['quotes'] = GetQuotes($db, $lang);
             $output['titles'] = GetTitles($db, $lang);
             $output['skills'] = GetSkills($db, $lang);
             $output['skillsIcon'] = GetSkillsIcon($db);
             $output['achievements'] = GetAchievements($db, $lang);
             $output['helpers'] = GetHelpers($db, $lang);
-            $output['status'] = 'ok';
+
+            $data = json_encode($output);
+            $hash_check = hash('md5', $data);
+
+            // Send all data or just 'same'
+            if ($hash != $hash_check) {
+                $output['hash'] = $hash_check;
+                $output['status'] = 'ok';
+            } else {
+                $output = array('status' => 'same');
+            }
         }
     } else if ($action === 'getUserData') {
         $token = $data['token'];

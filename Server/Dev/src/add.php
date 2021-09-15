@@ -12,10 +12,4 @@
         return $result;
     }
 
-    function AddTesteur($db, $Mail) {
-        $command = "INSERT INTO `Beta` (`Mail`) VALUES ('$Mail')";
-        $result = $db->Query($command);
-        return $result;
-    }
-
 ?>

@@ -10,14 +10,14 @@ import { GLDropDown, GLHeader, GLText } from '../../Components/GL-Components';
 class T0Activity extends Activity {
     render() {
         const title_category = !isUndefined(this.state.selectedCategory) ? this.state.selectedCategory.value : langManager.curr['activity']['input-category-default'];
-        const title_skill = !isUndefined(this.state.selectedActivity) ? user.getSkillByID(this.state.selectedActivity.skillID).Name : langManager.curr['activity']['input-activity-default'];
+        const title_skill = !isUndefined(this.state.selectedSkill) ? user.getSkillByID(this.state.selectedSkill.skillID).Name : langManager.curr['activity']['input-activity-default'];
 
         const rightIcon = this.SELECTED ? 'trash' : 'check';
         const rightEvent = this.SELECTED ? this.trash : this.valid;
 
         let skill, totalXP, bonusXP;
-        if (!isUndefined(this.state.selectedActivity)) {
-            const selectedActivity = this.state.selectedActivity;
+        if (!isUndefined(this.state.selectedSkill)) {
+            const selectedActivity = this.state.selectedSkill;
             const skillID = selectedActivity.skillID;
             const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
             skill = user.getSkillByID(skillID);

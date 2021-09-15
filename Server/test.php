@@ -1,11 +1,12 @@
 <?php
 
-    require('./sql.php');
-    require('./add.php');
+    require('./Dev/src/sql.php');
+    require('./Dev/src/add.php');
 
     $db = new DataBase();
 
     $action = $_GET["action"];
+
     if (!isset($action)) {
         $skills = GetSkills($db);
         for ($s = 0; $s < count($skills); $s++) {
@@ -79,15 +80,6 @@
         }
         if (isset($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility)) {
             AddSkill($db, $Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility);
-        }
-    } else if ($action == "quickAddTesteur") {
-        $pwd = $_POST["Password"];
-        $mail = $_POST["Mail"];
-        if (isset($pwd, $mail)) {
-            if ($pwd !== "blablajaivraiment0imag!nati0npourlesmotsdepasseuntrucdefou") {
-                return;
-            }
-            AddTesteur($db, $mail);
         }
     } else if ($action === "quotes") {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");

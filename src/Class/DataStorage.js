@@ -4,10 +4,11 @@ import { Request_Async } from "../Functions/Request";
 const STORAGE = {
     USER: '@params/user',
     INTERNAL: '@params/internal',
+    INTERNAL_HASH: '@params/internal_hash',
     APPSTATE: '@params/appstate'
 }
 
-class DataManager {
+class DataStorage {
     static Save(storageKey, data, online, token, pseudoCallback) {
         // Local save
         AsyncStorage.setItem(storageKey, JSON.stringify(data));
@@ -66,4 +67,4 @@ class DataManager {
 }
 
 export { STORAGE };
-export default DataManager;
+export default DataStorage;

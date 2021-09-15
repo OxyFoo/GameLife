@@ -4,9 +4,7 @@ import { BackHandler, Platform } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import SoundPlayer from 'react-native-sound-player';
-import { Request_Async } from '../Functions/Request';
-import DataManager, { STORAGE } from '../Class/DataManager';
-
+import DataStorage, { STORAGE } from '../Class/DataStorage';
 
 class Loading extends React.Component {
     POINTS = [ '.', '..', '...', '..', '.', ' ' ];
@@ -51,7 +49,7 @@ class Loading extends React.Component {
 
     async screenPress() {
         let started = false;
-        const data = await DataManager.Load(STORAGE.APPSTATE, false);
+        const data = await DataStorage.Load(STORAGE.APPSTATE, false);
         if (typeof(data) !== 'undefined' && data.hasOwnProperty('started')) {
             started = data['started'];
         }
@@ -70,49 +68,16 @@ class Loading extends React.Component {
             if (button === 'refuse') {
                 BackHandler.exitApp();
             } else if (button === 'accept') {
-                setTimeout(this.openBetaMail, 50);
+                setTimeout(() => {
+                    user.closePopup();
+                    DataStorage.Save(STORAGE.APPSTATE, { started: true }, false);
+                    user.changePage('home');
+                }, 100);
             }
         }
         const title = langManager.curr['home']['alert-first-title'];
         const text = langManager.curr['home']['alert-first-text'];
         user.openPopup('acceptornot', [ title, text ], event, false);
-    }
-
-    openBetaMail = () => {
-        const event = (text) => {
-            if (text.length > 0 && text.includes('@')) {
-                this.checkBetaMail(text);
-            }
-        }
-        const title = langManager.curr['home']['alert-beta-title'];
-        const text = langManager.curr['home']['alert-beta-text'];
-        user.openPopup('input', [ title, text ], event, false);
-    }
-    async checkBetaMail(mail) {
-        const URL = 'https://oxyfoo.com/App/GameLife/beta/betacheck.php';
-        const data = {
-            'action': 'check',
-            'mail': mail
-        }
-        const req = await Request_Async(data, URL);
-        if (typeof(req) !== 'undefined' && req.hasOwnProperty('status')) {
-            if (req['status'] === 'ok') {
-                user.closePopup();
-                DataManager.Save(STORAGE.APPSTATE, { started: true }, false);
-                user.changePage('home');
-                return;
-            } else {
-                user.closePopup();
-                const event = () => {
-                    setTimeout(this.openBetaMail, 50);
-                }
-                const title = langManager.curr['home']['alert-betaerror-title'];
-                const text = langManager.curr['home']['alert-betaerror-text'];
-                user.openPopup('ok', [ title, text ], event, false);
-                return;
-            }
-        }
-        console.error("Problème de serveur !!!");
     }
 }
 

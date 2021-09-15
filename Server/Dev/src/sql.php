@@ -1,9 +1,9 @@
 <?php
 
-    require('./mail.php');
-    require('./config.php');
-    require('./functions.php');
-    require('./internalData.php');
+    require('./src/mail.php');
+    require('./src/config.php');
+    require('./src/functions.php');
+    require('./src/internalData.php');
 
     $DAYS_PSEUDO_CHANGE = 0;
 

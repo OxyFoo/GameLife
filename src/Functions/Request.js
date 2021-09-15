@@ -1,4 +1,4 @@
-const URL = 'https://oxyfoo.com/App/GameLife/beta/app.php';
+const URL = 'https://oxyfoo.com/App/GameLife/Dev/app.php';
 
 async function Request_Async(data, url = URL, method, headers) {
     const defaultHeaders = {
@@ -16,21 +16,13 @@ async function Request_Async(data, url = URL, method, headers) {
         const response = await fetch(url, header);
         if (response.status === 200) {
             json = await response.json();
-            if (json['status'] !== 'ok') {
-                //console.log(data);
-                //console.log(json);
-                //console.log("_____");
-                //console.warn("Error: Request status " + response.status + ' (1)');
-            }
         } else {
-            console.warn("Error: Request failed " + response.status + ' (2)');
+            console.warn("Error: Request failed " + response.status + ' (1)');
             //console.log(data);
             console.log(response);
         }
     } catch (error) {
-        // Pas de co
-        //console.warn(error);
-        //console.warn("Problème étrange, merci de MP Terra pour lui en avertir, merci ^^");
+        json["status"] = "offline";
     }
 
     return json;

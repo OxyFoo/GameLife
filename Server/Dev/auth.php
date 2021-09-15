@@ -1,6 +1,6 @@
 <?php
 
-    require('./sql.php');
+    require('./src/sql.php');
 
     $raw_data = $_GET['data'];
     if (!isset($raw_data)) exit();

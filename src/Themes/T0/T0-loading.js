@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         width: '80%',
         marginTop: 16,
         marginBottom: 12,
+        paddingBottom: 24,
         textAlign: 'justify'
     },
     author: {

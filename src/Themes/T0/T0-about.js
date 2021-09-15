@@ -8,14 +8,6 @@ import { GLHeader, GLIconButton, GLText } from '../../Components/GL-Components';
 
 class T0About extends About {
     render() {
-        let staff = [];
-        let tipeee = [];
-        for (let i = 0; i < user.contributors.length; i++) {
-            const contributor = user.contributors[i];
-            if (contributor.Type === 'Tipeee') tipeee.push(contributor);
-            else staff.push(contributor);
-        }
-
         return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
@@ -37,7 +29,7 @@ class T0About extends About {
                     <View>
                         <GLText style={styles.title} title={langManager.curr['about']['block-staff']} />
                         <FlatList
-                            data={staff}
+                            data={this.staff}
                             style={styles.contributors}
                             keyExtractor={(item, i) => 'staff_' + i}
                             renderItem={({item}) => {
@@ -52,7 +44,7 @@ class T0About extends About {
                     <View>
                         <GLText style={styles.title} title={langManager.curr['about']['block-contributors']} />
                         <FlatList
-                            data={tipeee}
+                            data={this.tipeee}
                             style={styles.contributors}
                             keyExtractor={(item, i) => 'contributors_' + i}
                             renderItem={({item}) => {

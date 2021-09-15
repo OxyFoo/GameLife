@@ -24,39 +24,48 @@
         $deviceName = $data['deviceName'];
         $email = $data['email'];
         $lang = $data['lang'];
+        $version = $data['version'];
 
-        if (isset($deviceIdentifier, $deviceName, $email, $lang)) {
+        if (isset($deviceIdentifier, $deviceName, $email, $lang, $version)) {
             $account = $db->GetAccountByEmail($email);
             $device = $db->GetDevice($deviceIdentifier, $deviceName);
 
-            // Check permissions
-            $deviceID = $device['ID'];
-            $perm = $db->CheckDevicePermissions($deviceID, $account);
-            if ($perm === -1) {
-                // Blacklisted
-                $output['status'] = 'blacklist';
-            } else if ($perm === 0) {
-                // Waiting mail confirmation
-                $output['status'] = 'waitMailConfirmation';
-            } else if ($perm === 1) {
-                if ($account['Banned'] == 0) {
-                    // OK
+            $app = $db->QueryArray("SELECT * FROM `App`");
+            $last_version = $app[0]['Version'];
+
+            if ($version == $last_version) {
+                // Check permissions
+                $deviceID = $device['ID'];
+                $perm = $db->CheckDevicePermissions($deviceID, $account);
+                if ($perm === -1) {
+                    // Blacklisted
+                    $output['status'] = 'blacklist';
+                } else if ($perm === 0) {
+                    // Waiting mail confirmation
+                    $output['status'] = 'waitMailConfirmation';
+                } else if ($perm === 1) {
+                    if ($account['Banned'] == 0) {
+                        // OK
+                        $accountID = $account['ID'];
+                        $db->RefreshLastDate($accountID);
+                        $output['token'] = $db->GeneratePrivateToken($accountID, $deviceID);
+                        $output['status'] = 'ok';
+                    } else {
+                        $output['status'] = 'ban';
+                    }
+                } else {
+                    // No device in account
                     $accountID = $account['ID'];
                     $db->RefreshLastDate($accountID);
-                    $output['token'] = $db->GeneratePrivateToken($accountID, $deviceID);
-                    $output['status'] = 'ok';
-                } else {
-                    $output['status'] = 'ban';
+                    $db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
+                    $db->RefreshToken($deviceID);
+                    $db->SendMail($email, $deviceID, $accountID, $lang);
+                    $output['status'] = 'signin';
                 }
             } else {
-                // No device in account
-                $accountID = $account['ID'];
-                $db->RefreshLastDate($accountID);
-                $db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
-                $db->RefreshToken($deviceID);
-                $db->SendMail($email, $deviceID, $accountID, $lang);
-                $output['status'] = 'signin';
+                $output['status'] = 'update';
             }
+
         }
     }
     else if ($action === 'getInternalData') {
@@ -68,7 +77,7 @@
             $output['skills'] = GetSkills($db, $lang);
             $output['skillsIcon'] = GetSkillsIcon($db);
             $output['achievements'] = GetAchievements($db, $lang);
-            $output['helpers'] = GetHelpers($db, $lang);
+            $output['helpers'] = GetContributors($db, $lang);
 
             $data = json_encode($output);
             $hash_check = hash('md5', $data);

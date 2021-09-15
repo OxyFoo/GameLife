@@ -1,7 +1,7 @@
 <?php
 
-    require('./Dev/src/sql.php');
-    require('./Dev/src/add.php');
+    require('./src/sql.php');
+    require('./src/add.php');
 
     $db = new DataBase();
 
@@ -88,6 +88,10 @@
             $a = $quote['Author'];
             echo("$q-$a<br/>");
         }
+    } else if ($action === "getVersion") {
+        $app = $db->QueryArray("SELECT * FROM `App`");
+        $version = $app[0]['Version'];
+        print_r($version);
     }
 
 ?>

@@ -261,7 +261,8 @@ class UserManager {
                     const categoryLevel = this.experience.getSkillCategoryExperience(category).lvl;
                     values.push(categoryLevel);
                 }
-                values = values.sort().reverse();
+                values.sort();
+                values.reverse();
                 value = values[CategoryDepth - 1];
             }
 
@@ -321,7 +322,7 @@ class UserManager {
         for (let i = 0; i < this.skills.length; i++) {
             let skill = this.skills[i];
             if (typeof(category) === 'undefined' || category === skill.Category) {
-                skills.push({ key: skill.ID, value: skill.Name });
+                skills.push({ key: parseInt(skill.ID), value: skill.Name });
             }
         }
         return skills;
@@ -355,11 +356,19 @@ class UserManager {
                 }
             }
 
-            if (!isInCats && (!onlyUseful || curr)) {
-                cats.push({ key: cats.length, value: cat });
+            if (!isInCats && (!onlyUseful || curr) && !cats.includes(cat)) {
+                cats.push(cat);
             }
         }
-        return cats;
+
+        // Sort
+        cats.sort();
+        let cats_sorted = [];
+        for (const c in cats) {
+            cats_sorted.push({ key: parseInt(c), value: cats[c] });
+        }
+
+        return cats_sorted;
     }
 
     addActivity = (skillID, startDate, duration) => {
@@ -566,7 +575,6 @@ class UserManager {
             const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
             const data = await this.conn.getInternalData(hash);
             const status = data['status'];
-            console.log(status);
 
             if (status === 'ok') {
                 if (typeof(data['titles']) !== 'undefined') this.titles = data['titles'];

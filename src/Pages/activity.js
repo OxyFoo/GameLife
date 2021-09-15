@@ -31,7 +31,7 @@ class Activity extends React.Component {
                 skills: [],
 
                 selectedCategory: category,
-                selectedActivity: activity,
+                selectedSkill: activity,
                 selectedDateKey: 0,
                 selectedTimeKey: 0
             }
@@ -89,7 +89,7 @@ class Activity extends React.Component {
             this.setState({
                 skills: user.getSkills(),
                 selectedCategory: undefined,
-                selectedActivity: undefined
+                selectedSkill: undefined
             });
             return;
         }
@@ -97,7 +97,7 @@ class Activity extends React.Component {
         this.setState({
             skills: user.getSkills(category.value),
             selectedCategory: category,
-            selectedActivity: undefined
+            selectedSkill: undefined
         });
     }
     changeSkill = (skillID) => {
@@ -115,7 +115,7 @@ class Activity extends React.Component {
         }
 
         this.setState({
-            selectedActivity: activity,
+            selectedSkill: activity,
             selectedCategory: category,
             skills: user.getSkills(category.value)
         });

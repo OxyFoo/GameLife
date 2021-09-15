@@ -51,6 +51,8 @@
 
         "alert-first-title": "Welcome",
         "alert-first-text": "You have earned the right to become a player. Do you want to accept?",
+        "alert-update-title": "Update",
+        "alert-update-text": "An update of the application is available",
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?"
     },

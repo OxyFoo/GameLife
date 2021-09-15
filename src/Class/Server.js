@@ -1,3 +1,4 @@
+import { BackHandler } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 import { Request_Async } from '../Functions/Request';
@@ -15,7 +16,8 @@ const STATUS = {
     BLACKLIST: 'blacklist',
     WAITMAIL : 'waitMailConfirmation',
     BANNED   : 'ban',
-    SIGNIN   : 'signin'
+    SIGNIN   : 'signin',
+    UPDATE   : 'update'
 };
 
 class ServManager {
@@ -69,7 +71,11 @@ class ServManager {
                 const index_status = Object.values(STATUS).indexOf(status);
                 if (index_status !== -1) this.status = STATUS[Object.keys(STATUS)[index_status]];
     
-                if (this.status === STATUS.CONNECTED) {
+                if (this.status === STATUS.UPDATE) {
+                    const title = langManager.curr['home']['alert-update-title'];
+                    const text = langManager.curr['home']['alert-update-text'];
+                    this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
+                } else if (this.status === STATUS.CONNECTED) {
                     if (typeof(token) === 'undefined' || token.length === 0) {
                         console.error('Invalid key length');
                         return;
@@ -98,12 +104,14 @@ class ServManager {
     }
 
     async Connect() {
+        const version = require('../../package.json').version;
         const data = {
             'action': 'getToken',
             'deviceID': this.deviceID,
             'deviceName': this.deviceName,
             'email': this.user.email,
-            'lang': langManager.currentLangageKey
+            'lang': langManager.currentLangageKey,
+            'version': version
         };
         return await Request_Async(data);
     }

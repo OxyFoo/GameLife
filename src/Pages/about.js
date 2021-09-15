@@ -5,6 +5,19 @@ import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 
 class About extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.staff = [];
+        this.tipeee = [];
+        for (let i = 0; i < user.contributors.length; i++) {
+            const contributor = user.contributors[i];
+            if (contributor.Type === 'Tipeee') this.tipeee.push(contributor);
+            else this.staff.push(contributor);
+        }
+        this.tipeee.reverse();
+    }
+
     TiktokPress  = () => { Linking.openURL('https://vm.tiktok.com/ZMdcNpCvu/'); }
     InstaPress   = () => { Linking.openURL('https://www.instagram.com/p/CTUlsU2jP51'); }
     DiscordPress = () => { Linking.openURL('https://discord.gg/QDfsXCCq')}

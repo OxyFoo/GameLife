@@ -17,12 +17,12 @@ class T0Activity extends Activity {
 
         let skill, totalXP, bonusXP;
         if (!isUndefined(this.state.selectedSkill)) {
-            const selectedActivity = this.state.selectedSkill;
-            const skillID = selectedActivity.skillID;
+            const selectedSkill = this.state.selectedSkill;
+            const skillID = selectedSkill.skillID;
             const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
             skill = user.getSkillByID(skillID);
             totalXP = user.experience.getXPperHour() * durationHour;
-            const untilActivity = this.SELECTED ? selectedActivity : undefined;
+            const untilActivity = this.SELECTED ? selectedSkill : undefined;
             const sagLevel = user.experience.getStatExperience('sag', untilActivity).lvl - 1;
             bonusXP = sagLevel * durationHour;
         }

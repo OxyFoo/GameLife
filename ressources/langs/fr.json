@@ -51,6 +51,8 @@
 
         "alert-first-title": "Bienvenue",
         "alert-first-text": "Vous avez gagné le droit de devenir un joueur. Voulez vous accepter ?",
+        "alert-update-title": "Mise à jour",
+        "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Voulez-vous quitter l'application ?"
     },

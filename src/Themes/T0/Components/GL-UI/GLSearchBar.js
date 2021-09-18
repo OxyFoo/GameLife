@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import GLIconButton from './GLIconButton';
-import { isUndefined } from '../../Functions/Functions';
+import { isUndefined } from '../../../../Functions/Functions';
 
 function GLSearchBar(props) {
     const [ getInput, setInput ] = React.useState('');

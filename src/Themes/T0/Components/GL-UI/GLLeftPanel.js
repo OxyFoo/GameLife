@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Animated, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import langManager from '../../Managers/LangManager';
-import user from '../../Managers/UserManager';
+import langManager from '../../../../Managers/LangManager';
+import user from '../../../../Managers/UserManager';
 
-import { OptionsAnimation } from '../Animations';
+import { OptionsAnimation } from '../../../../Functions/Animations';
 import GLIconButton from './GLIconButton';
 import GLText from './GLText';
 
@@ -95,7 +95,7 @@ class GLLeftPanel extends React.PureComponent {
                     />
                     <TouchableOpacity style={styles.aboutContainer} activeOpacity={.5} onPress={() => { this.toggleVisibility(); user.changePage('about'); }}>
                         <GLText style={styles.aboutText} title={langManager.curr['home']['shortcut-about']} />
-                        <Image style={styles.aboutImage} source={require('../../../ressources/logo/loading_3.png')} width={32} height={32} />
+                        <Image style={styles.aboutImage} source={require('../../../../../ressources/logo/loading_3.png')} width={32} height={32} />
                     </TouchableOpacity>
                 </Animated.View>
             </Animated.View>

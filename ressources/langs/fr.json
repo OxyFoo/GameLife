@@ -236,6 +236,31 @@
     },
 
     "report": {
-        "page-title": "Report"
+        "page-title": "Report",
+
+        "types-text": "Type",
+        "types": {
+            "activity": "Proposer une activité",
+            "suggest": "Suggestion",
+            "bug": "Bug",
+            "message": "Message"
+        },
+
+        "type-activity-text": "Vous pouvez nous proposer une activité ici",
+        "type-activity-remain": "Nombre de points à placer : ",
+        "type-activity-name": "Nom de l'activité",
+        "type-activity-category": "Catégorie",
+        "type-suggest-text": "Une suggestion à propos de l'application ? Partage-nous ton idée ici",
+        "type-bug-text": "Vous avez vu un bug ? Merci de nous apporter le plus de détails à propos de celui-ci",
+        "type-bug-input1": "Conséquences du bug",
+        "type-bug-input2": "Comment le reproduire ?",
+        "type-message-text": "Vous avez un message à nous transmettre ? Merci de nous l'envoyer ici",
+
+        "button-send": "Envoyer",
+
+        "alert-notfill-title": "Pas terminé",
+        "alert-notfill-text": "Merci de remplir tous les champs",
+        "alert-success-title": "Envoyé",
+        "alert-success-text": "Merci pour votre retour !"
     }
 }

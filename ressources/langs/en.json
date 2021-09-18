@@ -236,6 +236,31 @@
     },
 
     "report": {
-        "page-title": "Report"
+        "page-title": "Report",
+
+        "types-text": "Type",
+        "types": {
+            "activity": "Propose an activity",
+            "suggest": "Suggestion",
+            "bug": "Bug",
+            "message": "Message"
+        },
+
+        "type-activity-text": "You can suggest an activity here",
+        "type-activity-remain": "Number of points to place: ",
+        "type-activity-name": "Name of the activity",
+        "type-activity-category": "Category",
+        "type-suggest-text": "Any suggestion about the application? Share your idea here",
+        "type-bug-text": "Have you seen a bug? Please bring us as much details about it as possible",
+        "type-bug-input1": "Consequences of the bug",
+        "type-bug-input2": "How to reproduce it?",
+        "type-message-text": "Do you have a message for us? Please send it here",
+
+        "button-send": "Send",
+
+        "alert-notfill-title": "Not completed",
+        "alert-notfill-text": "Please fill in all fields",
+        "alert-success-title": "Sent",
+        "alert-success-text": "Thank you for your feedback!"
     }
 }

@@ -5,7 +5,7 @@ import Activity from '../../Pages/activity';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { isUndefined } from '../../Functions/Functions';
-import { GLDropDown, GLHeader, GLText } from '../../Components/GL-Components';
+import { GLDropDown, GLHeader, GLText } from './Components/GL-Components';
 
 class T0Activity extends Activity {
     render() {

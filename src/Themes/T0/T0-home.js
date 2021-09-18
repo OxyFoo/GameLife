@@ -5,7 +5,7 @@ import Home from '../../Pages/home';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { dateToFormatString } from '../../Functions/Functions';
-import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../../Components/GL-Components';
+import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from './Components/GL-Components';
 
 class T0Home extends Home {
     render() {
@@ -223,7 +223,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 6,
+        bottom: 0,
+        paddingBottom: 6,
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center'

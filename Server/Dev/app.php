@@ -1,6 +1,7 @@
 <?php
 
     require('./src/sql.php');
+    require('./src/add.php');
 
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
@@ -160,6 +161,26 @@
         }
         $output['leaderboard'] = GetLeaderboard($db);
         $output['status'] = 'ok';
+    } else if ($action === 'report') {
+        $token = $data['token'];
+        $report_type = $data['type'];
+        $report_data = $data['data'];
+        $deviceID = 0;
+
+        if (isset($token, $report_type, $report_data)) {
+            if (!empty($token)) {
+                $dataFromToken = $db->GetDataFromToken($token);
+                $token_deviceID = $dataFromToken['deviceID'];
+                if (isset($token_deviceID)) {
+                    $deviceID = $token_deviceID;
+                }
+            }
+
+            $report_result = AddReport($db, $deviceID, $report_type, $report_data);
+            if ($report_result === TRUE) {
+                $output['status'] = 'ok';
+            }
+        }
     }
 
     if (!isset($output['status'])) {

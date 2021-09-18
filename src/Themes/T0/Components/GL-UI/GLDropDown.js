@@ -3,7 +3,7 @@ import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-na
 
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
-import user from '../../Managers/UserManager';
+import user from '../../../../Managers/UserManager';
 
 class GLDropDown extends React.PureComponent {
     state = {

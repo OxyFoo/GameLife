@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Animated, StyleSheet, TextInput, View } from 'react-native';
 
-import { OptionsAnimation } from '../Animations';
-import user from '../../Managers/UserManager';
+import { OptionsAnimation } from '../../../../Functions/Animations';
+import user from '../../../../Managers/UserManager';
 import GLText, { MAIN_FONT_NAME } from './GLText';
 import GLButton from './GLButton';
-import langManager from '../../Managers/LangManager';
+import langManager from '../../../../Managers/LangManager';
 import GLDoubleCorner from './GLDoubleCorner';
 
 class GLPopup extends React.PureComponent {

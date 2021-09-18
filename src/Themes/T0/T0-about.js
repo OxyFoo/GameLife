@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import About from '../../Pages/about';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLHeader, GLIconButton, GLText } from '../../Components/GL-Components';
+import { GLHeader, GLIconButton, GLText } from './Components/GL-Components';
 
 class T0About extends About {
     render() {

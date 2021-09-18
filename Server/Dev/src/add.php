@@ -12,4 +12,10 @@
         return $result;
     }
 
+    function AddReport($db, $deviceID, $type, $data) {
+        $command = "INSERT INTO `Reports` (`DeviceID`, `Type`, `Content`) VALUES ('$deviceID', '$type', '$data')";
+        $result = $db->Query($command);
+        return $result;
+    }
+
 ?>

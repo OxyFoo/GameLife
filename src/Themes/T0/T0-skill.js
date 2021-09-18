@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Skill from '../../Pages/skill';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../../Components/GL-Components';
+import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from './Components/GL-Components';
 import { dateToFormatString } from '../../Functions/Functions';
 
 class T0Skill extends Skill {

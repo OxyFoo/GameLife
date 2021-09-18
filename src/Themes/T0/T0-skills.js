@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 
 import Skills from '../../Pages/skills';
 import langManager from '../../Managers/LangManager';
-import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../../Components/GL-Components';
+import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from './Components/GL-Components';
 
 class T0Skills extends Skills {
     render() {

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import Statistic from '../../Pages/statistic';
 import langManager from '../../Managers/LangManager';
-import { GLCropCorner, GLHeader, GLIconButton, GLText } from '../../Components/GL-Components';
+import { GLCropCorner, GLHeader, GLIconButton, GLText } from './Components/GL-Components';
 
 class T0Statistic extends Statistic {
     render() {

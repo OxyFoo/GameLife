@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import langManager from '../../Managers/LangManager';
-import user from '../../Managers/UserManager';
+import langManager from '../../../../Managers/LangManager';
+import user from '../../../../Managers/UserManager';
 import GLXPSmallBar from './GLXPSmallBar';
 
 function statComponent(item, sup, index) {

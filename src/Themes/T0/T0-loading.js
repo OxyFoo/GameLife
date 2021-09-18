@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import Loading from '../../Pages/loading';
 import langManager from '../../Managers/LangManager';
-import { GLText, GLLoading } from '../../Components/GL-Components';
+import { GLText, GLLoading } from './Components/GL-Components';
 
 class T0Loading extends Loading {
     render() {

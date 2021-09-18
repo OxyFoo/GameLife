@@ -72,6 +72,10 @@ function dateToFormatString(date) {
     return [ dd, mm, yyyy ].join('/');
 }
 
-export { twoDigit, sum,
+function range(length) {
+    return Array.from({ length: length+1 }, (_, i) => i);
+}
+
+export { twoDigit, sum, range,
     getDates, getDurations,
     isUndefined, dateToFormatString };

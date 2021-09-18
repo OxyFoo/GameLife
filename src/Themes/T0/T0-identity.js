@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Identity from '../../Pages/identity';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLDropDown, GLHeader, GLText, GLTextEditable } from '../../Components/GL-Components';
+import { GLDropDown, GLHeader, GLText, GLTextEditable } from './Components/GL-Components';
 
 class T0Identity extends Identity {
     component_titre = ({ item }) => {

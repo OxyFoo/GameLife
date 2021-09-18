@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Animated, View, BackHandler } from 'react-native';
 
 import user from '../Managers/UserManager';
-import { OptionsAnimation } from '../Components/Animations';
-import { GLLeftPanel, GLPopup } from '../Components/GL-Components';
+import { OptionsAnimation } from '../Functions/Animations';
+import { GLLeftPanel, GLPopup } from '../Themes/T0/Components/GL-Components';
 import langManager from './LangManager';
 
 class PageManager extends React.Component{

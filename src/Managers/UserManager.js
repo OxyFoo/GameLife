@@ -2,7 +2,7 @@ import deviceInfoModule from 'react-native-device-info';
 
 import langManager from "./LangManager";
 import ServManager from "../Class/Server";
-import ThemeManager from '../Class/Theme';
+import ThemeManager from '../Class/Themes';
 import DataStorage, { STORAGE } from '../Class/DataStorage';
 
 import Experience from "../Class/Experience";

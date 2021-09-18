@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import user from '../../Managers/UserManager';
+import user from '../../../../Managers/UserManager';
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
 

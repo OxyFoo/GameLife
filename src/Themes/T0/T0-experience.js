@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import Experience from '../../Pages/experience';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLHeader, GLText, GLXPBar } from '../../Components/GL-Components';
+import { GLHeader, GLText, GLXPBar } from './Components/GL-Components';
 
 class T0Experience extends Experience {
     render() {

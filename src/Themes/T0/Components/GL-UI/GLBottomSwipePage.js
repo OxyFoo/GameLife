@@ -3,8 +3,7 @@ import { Animated, Dimensions, StyleSheet, View } from 'react-native';
 
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
-import { OptionsAnimation, OptionsAnimationSpring } from '../Animations';
-
+import { OptionsAnimation, OptionsAnimationSpring } from '../../../../Functions/Animations';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_LIMIT = .65;

@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Settings from '../../Pages/settings';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLDropDown, GLHeader, GLIconButton, GLText } from '../../Components/GL-Components';
+import { GLDropDown, GLHeader, GLIconButton, GLText } from './Components/GL-Components';
 
 class T0Settings extends Settings {
     render() {

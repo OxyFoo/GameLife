@@ -4,7 +4,7 @@ import { Animated, Dimensions } from 'react-native';
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { twoDigit } from '../Functions/Functions';
-import { OptionsAnimationSpring } from '../Components/Animations';
+import { OptionsAnimationSpring } from '../Functions/Animations';
 
 // Image dimensions
 const MIN_WIDTH = 96;

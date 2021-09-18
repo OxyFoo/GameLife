@@ -5,8 +5,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Calendar from '../../Pages/calendar';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../../Components/GL-Components';
 import { dateToFormatString } from '../../Functions/Functions';
+import { GLHeader, GLIconButton, GLActivityBox, GLText } from './Components/GL-Components';
 
 class T0Calendar extends Calendar {
     render() {

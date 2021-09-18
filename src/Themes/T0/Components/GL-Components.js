@@ -17,6 +17,8 @@ import GLBottomSwipePage from './GL-UI/GLBottomSwipePage';
 import GLPopup from './GL-UI/GLPopup';
 import GLLeftPanel from './GL-UI/GLLeftPanel';
 import GLSvg from './GL-UI/GLSvg';
+import GLDigit from './GL-UI/GLDigit';
+import GLButton from './GL-UI/GLButton';
 
 export {
     GLText,
@@ -37,5 +39,7 @@ export {
     GLBottomSwipePage,
     GLPopup,
     GLLeftPanel,
-    GLSvg
+    GLSvg,
+    GLDigit,
+    GLButton
 }

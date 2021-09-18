@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import Achievements from '../../Pages/achievements';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLHeader, GLText } from '../../Components/GL-Components';
+import { GLHeader, GLText } from './Components/GL-Components';
 
 class T0Achievements extends Achievements {
     achievementRender({ item }) {

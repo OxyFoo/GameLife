@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { dateToFormatString } from '../../Functions/Functions';
-import langManager from '../../Managers/LangManager';
-import user from '../../Managers/UserManager';
+import { dateToFormatString } from '../../../../Functions/Functions';
+import langManager from '../../../../Managers/LangManager';
+import user from '../../../../Managers/UserManager';
 import GLSvg from './GLSvg';
 
 import GLText from './GLText';

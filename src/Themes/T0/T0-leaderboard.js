@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList, Image } from 'react-native';
 import Leaderboard from '../../Pages/leaderboard';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLHeader, GLText } from '../../Components/GL-Components';
+import { GLHeader, GLText } from './Components/GL-Components';
 
 class T0Leaderboard extends Leaderboard {
     userBoard(props) {

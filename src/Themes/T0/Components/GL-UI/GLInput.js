@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 
+import user from '../../../../Managers/UserManager';
 import GLText from './GLText';
 
 function GLInput(props) {
@@ -11,7 +12,7 @@ function GLInput(props) {
     return (
         <View style={[styles.containerSelection, props.style, multiline && styles.containerSelectionMultiline]}>
             {typeof(name) !== 'undefined' && <GLText style={multiline ? styles.nameMultiline : styles.name} title={multiline ? name : name + ' :'} />}
-            <TextInput style={[styles.input, props.styleInput, inputWidth]} multiline={multiline} onChangeText={props.onChangeText} value={props.value} />
+            <TextInput style={[styles.input, props.styleInput, inputWidth, { color: user.themeManager.colors['text']['main'] }]} multiline={multiline} onChangeText={props.onChangeText} value={props.value} />
         </View>
     )
 }

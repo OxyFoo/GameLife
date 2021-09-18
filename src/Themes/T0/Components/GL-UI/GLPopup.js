@@ -75,7 +75,7 @@ class GLPopup extends React.PureComponent {
         if (this.state.type === 'yesno') buttons = (
             <>
                 <GLButton value={no} onPress={() => callback('no')} />
-                <GLButton value={yes} onPress={() => callback('yes')} color="grey" />
+                <GLButton value={yes} onPress={() => callback('yes')} color="secondary" />
             </>
         );
         if (this.state.type === 'acceptornot') buttons = (

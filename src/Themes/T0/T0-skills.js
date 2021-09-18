@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
 import Skills from '../../Pages/skills';
+import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from './Components/GL-Components';
 
@@ -22,7 +23,7 @@ class T0Skills extends Skills {
                 />
 
                 {/* Topbar */}
-                <View style={styles.topBar}>
+                <View style={[styles.topBar, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
                     <GLSearchBar
                         style={styles.search}
                         onChangeText={this.changeText}
@@ -33,6 +34,7 @@ class T0Skills extends Skills {
                         containerStyle={{ flex: 1 }}
                         title={sort}
                         onPress={this.switchSort}
+                        color={'secondary'}
                     />
                 </View>
 
@@ -81,8 +83,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#FFFFFF',
         borderWidth: 3,
-        borderTopWidth: 2,
-        backgroundColor: '#000000'
+        borderTopWidth: 2
     },
     search: {
         width: '40%',

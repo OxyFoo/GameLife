@@ -573,7 +573,7 @@ class UserManager {
     async loadInternalData() {
         if (this.conn.online) {
             const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
-            const data = await this.conn.getInternalData(hash);
+            const data = await this.conn.reqGetInternalData(hash);
             const status = data['status'];
 
             if (status === 'ok') {

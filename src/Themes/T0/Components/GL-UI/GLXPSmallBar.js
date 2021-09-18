@@ -27,16 +27,16 @@ function GLXPSmallBar(props) {
 
                 <View style={styles.row}>
                     <View style={styles.titleContainer}>
-                        <GLText style={styles.textXPTitle} title={title} color='grey' />
-                        {sup !== null && sup !== 0 && (<GLText style={styles.textXPSup} title={textSup} color='grey' />)}
+                        <GLText style={styles.textXPTitle} title={title} color='secondary' />
+                        {sup !== null && sup !== 0 && (<GLText style={styles.textXPSup} title={textSup} color='secondary' />)}
                     </View>
-                    <GLText style={styles.textXP} title={langManager.curr['level']['level-small'] + ' ' + level} color='grey' />
+                    <GLText style={styles.textXP} title={langManager.curr['level']['level-small'] + ' ' + level} color='secondary' />
                 </View>
                 <View style={styles.background}>
                     <View style={[styles.fill, styles.sup, { width: valueSup + '%' }]} />
                     <View style={[styles.fill, { width: valueInt + '%' }]} />
                 </View>
-                <GLText style={styles.textXP} title={valueText + ' - ' + total + ' ' + langManager.curr['level']['xp']} color='grey' />
+                <GLText style={styles.textXP} title={valueText + ' - ' + total + ' ' + langManager.curr['level']['xp']} color='secondary' />
 
             </View>
         </View>

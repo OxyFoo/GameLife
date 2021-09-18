@@ -7,7 +7,7 @@ function GLButton(props) {
     const value = props.value;
     const onPress = props.onPress;
     const style = [ styles.containerStyle, props.containerStyle ];
-    const color = props.color || 'white';
+    const color = props.color || 'main';
 
     return (
         <TouchableOpacity activeOpacity={.5} onPress={onPress} style={[style, { borderColor: color }]}>

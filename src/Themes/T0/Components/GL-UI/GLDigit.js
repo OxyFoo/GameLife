@@ -66,7 +66,7 @@ class GLDigit extends React.Component {
 
     render() {
         const style = [ styles.containerStyle, this.props.containerStyle ];
-        const color = this.props.color || 'white';
+        const color = this.props.color || 'main';
         const maxValue = this.props.lock ? 0 : this.props.maxValue;
 
         return (

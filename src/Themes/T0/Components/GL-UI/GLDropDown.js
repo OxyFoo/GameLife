@@ -66,7 +66,7 @@ class GLDropDown extends React.PureComponent {
         }
 
         const isSelected = this.state.selectedIndexes.includes(key);
-        const color = (!this.state.toggleMode || isSelected) ? 'white' : 'darkgrey';
+        const color = (!this.state.toggleMode || isSelected) ? 'main' : 'dark';
 
         // Component
         return (
@@ -91,32 +91,33 @@ class GLDropDown extends React.PureComponent {
                 {this.state.opened && <View style={styles.androidHitbox} onTouchStart={this.backgroundPress} />}
                 <View style={style}>
                     <TouchableOpacity style={styleBox} activeOpacity={.5} onPress={this.toggleVisibility} onLongPress={onLongPress}>
-                        <GLText style={styles.selected} title={value} color='grey' />
+                        <GLText style={styles.selected} title={value} color='secondary' />
                         <GLIconButton style={styles.icon} icon={icon} hide={this.props.disabled} />
                     </TouchableOpacity>
 
                     {!this.props.disabled && opened && !forcePopupMode && Platform.OS === 'android' && (
-                        this.contentRender(styles.drop)
+                        this.contentRender([styles.drop, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }])
                     )}
                 </View>
             </>
         ) : (
-            <GLText style={[this.props.style]} title={value} onPress={this.toggleVisibility} color='grey' />
+            <GLText style={[this.props.style]} title={value} onPress={this.toggleVisibility} color='secondary' />
         )
     }
 
     contentRender(style) {
         const data = this.props.data;
         return (
-            <FlatList
-                style={style}
-                data={data}
-                keyExtractor={(item, i) => 'lang_' + i}
-                renderItem={this.listComponent}
-                removeClippedSubviews={true}
-                maxToRenderPerBatch={50}
-                updateCellsBatchingPeriod={50}
-            />
+            <View style={style}>
+                <FlatList
+                    data={data}
+                    keyExtractor={(item, i) => 'lang_' + i}
+                    renderItem={this.listComponent}
+                    removeClippedSubviews={true}
+                    maxToRenderPerBatch={50}
+                    updateCellsBatchingPeriod={50}
+                />
+            </View>
         )
     }
 }
@@ -167,7 +168,6 @@ const styles = StyleSheet.create({
 
         borderColor: '#FFFFFF',
         borderWidth: 3,
-        backgroundColor: '#000011',
 
         zIndex: 1000,
         elevation: 1000

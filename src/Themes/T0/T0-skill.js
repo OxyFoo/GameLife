@@ -22,7 +22,7 @@ class T0Skill extends Skill {
                 <View style={styles.content}>
                     <View style={styles.skillContainer}>
                         <View style={styles.pictureContainer}>
-                            <View style={styles.picture}>
+                            <View style={[styles.picture, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
                                 <GLSvg xml={this.xml} />
                                 <GLDoubleCorner />
                             </View>
@@ -30,13 +30,13 @@ class T0Skill extends Skill {
                         <View style={styles.detailContainer}>
                             <View>
                                 <GLText style={styles.detailName} title={this.name} />
-                                <GLText style={styles.detailCategory} title={this.category} color="grey" />
+                                <GLText style={styles.detailCategory} title={this.category} color="secondary" />
                             </View>
                             <View>
                                 <GLText style={styles.level} title={this.level} />
                                 <GLXPBar value={this.xp} max={this.maxXP} small={true} />
                             </View>
-                            <GLText style={styles.creator} title={this.creator} color="grey" />
+                            <GLText style={styles.creator} title={this.creator} color="secondary" />
                         </View>
                     </View>
                     <GLStats containerStyle={styles.stats} data={this.stats} />
@@ -88,9 +88,7 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
 
         zIndex: -100,
-        elevation: -100,
-
-        backgroundColor: '#000000'
+        elevation: -100
     },
     detailContainer: {
         flex: 1,

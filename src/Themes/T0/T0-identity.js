@@ -66,7 +66,7 @@ class T0Identity extends Identity {
 
                         {/* Title */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
-                        {/*<GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='grey' />*/}
+                        {/*<GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='secondary' />*/}
                         <GLDropDown
                             style={styles.value}
                             value={title}
@@ -78,11 +78,11 @@ class T0Identity extends Identity {
 
                         {/* Age */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
-                        <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='grey' />
+                        <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='secondary' />
 
                         {/* Email */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()} />
-                        <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='grey' />
+                        <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='secondary' />
 
                         {/* Email */}
                         <GLTextEditable
@@ -96,20 +96,19 @@ class T0Identity extends Identity {
 
                         {/* Total time */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-totaltime'].toUpperCase()} />
-                        <GLText style={styles.value} title={totalTxt} color='grey' />
+                        <GLText style={styles.value} title={totalTxt} color='secondary' />
 
                         {/* Last achievement */}
                         {user.solvedAchievements.length > 0 && (
                             <>
                                 <GLText style={styles.text} title={langManager.curr['identity']['name-lastachievement'].toUpperCase()} />
                                 <TouchableOpacity
-                                    style={styles.achievementsContainer}
                                     activeOpacity={.5}
                                     onPress={() => { user.changePage('achievements'); }}
                                 >
-                                    <View style={styles.achievementsBox}>
+                                    <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
                                         <GLText style={styles.title} title={name} />
-                                        <GLText style={styles.description} title={description} color="grey" />
+                                        <GLText style={styles.description} title={description} color="secondary" />
                                     </View>
                                 </TouchableOpacity>
                             </>
@@ -175,8 +174,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 3,
         borderBottomWidth: 3,
         borderLeftWidth: 6,
-        borderRightWidth: 6,
-        backgroundColor: '#000000'
+        borderRightWidth: 6
     },
     title: {
         minHeight: 30,

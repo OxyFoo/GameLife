@@ -5,7 +5,8 @@ const STORAGE = {
     USER: '@params/user',
     INTERNAL: '@params/internal',
     INTERNAL_HASH: '@params/internal_hash',
-    APPSTATE: '@params/appstate'
+    APPSTATE: '@params/appstate',
+    THEME: '@params/theme'
 }
 
 class DataStorage {
@@ -32,9 +33,7 @@ class DataStorage {
     static async Load(storageKey, online = false, token = '') {
         let json;
         // Local load
-        const localData = await AsyncStorage.getItem(storageKey);/*, (err, t) => {
-            if (!err && t != null) json = JSON.parse(t);
-        });*/
+        const localData = await AsyncStorage.getItem(storageKey);
         if (typeof(localData) !== 'undefined' && localData != null) json = JSON.parse(localData);
 
         if (online) {

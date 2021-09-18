@@ -261,6 +261,8 @@
         "alert-notfill-title": "Pas terminé",
         "alert-notfill-text": "Merci de remplir tous les champs",
         "alert-success-title": "Envoyé",
-        "alert-success-text": "Merci pour votre retour !"
+        "alert-success-text": "Merci pour votre retour !",
+        "alert-error-title": "Erreur",
+        "alert-error-text": "Une erreur est survenue, veuillez réessayer plus tard."
     }
 }

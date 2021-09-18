@@ -48,8 +48,8 @@ class T0Home extends Home {
                             <TouchableOpacity style={[styles.block, styles.blockLVL, backgroundColor]} activeOpacity={0.5} onPress={this.openExperience}>
                                 <GLDoubleCorner />
                                 <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + LVL} />
-                                <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + totalXP} color='grey' />
-                                <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', this.averageXPperDay)} color='grey' />
+                                <GLText style={styles.textLevelTotal} title={langManager.curr['level']['total'] + ' ' + totalXP} color='secondary' />
+                                <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', this.averageXPperDay)} color='secondary' />
                             </TouchableOpacity>
 
                             {/* Calendar */}
@@ -82,7 +82,7 @@ class T0Home extends Home {
                                     />
                                 </View>
                                 <View style={[styles.calendarBottom, backgroundColor]}>
-                                    <GLText style={styles.textLevelPlus} title={langManager.curr['home']['text-seeall']} color="grey" />
+                                    <GLText style={styles.textLevelPlus} title={langManager.curr['home']['text-seeall']} color="secondary" />
                                     <GLIconButton icon='chevron' size={16} />
                                 </View>
                             </TouchableOpacity>

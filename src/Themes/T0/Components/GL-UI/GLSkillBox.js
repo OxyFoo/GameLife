@@ -31,8 +31,8 @@ function GLSkillBox(props) {
                 </View>
                 <View style={styles.column}>
                     <GLText style={styles.title} title={text_title} />
-                    <GLText style={styles.text} title={text_level} color='grey' />
-                    <GLText style={styles.text2} title={text_date} color='grey' />
+                    <GLText style={styles.text} title={text_level} color='secondary' />
+                    <GLText style={styles.text2} title={text_date} color='secondary' />
                 </View>
             </TouchableOpacity>
         </View>

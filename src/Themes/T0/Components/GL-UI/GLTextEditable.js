@@ -22,7 +22,7 @@ class GLTextEditable extends React.Component {
     render() {
         return !this.state.editMode ? (
             <TouchableOpacity activeOpacity={.5} onPress={this.editMode_Enable}>
-                <GLText style={this.props.style} title={this.props.value || this.props.defaultValue} color='grey' />
+                <GLText style={this.props.style} title={this.props.value || this.props.defaultValue} color='secondary' />
             </TouchableOpacity>
         ) : (
             <TextInput

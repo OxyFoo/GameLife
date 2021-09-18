@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     component: {
         paddingHorizontal: 12,
-        paddingVertical: 24
+        paddingVertical: 20
     },
     separator: {
         width: '60%',

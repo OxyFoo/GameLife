@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import COLORS from '../Themes/Colors';
+import DataStorage, { STORAGE } from '../Class/DataStorage';
 
 import { T0About } from '../Themes/T0/T0-about';
 import { T0Achievements } from '../Themes/T0/T0-achievements';
@@ -23,12 +24,29 @@ class ThemeManager {
         T0V1: "T0.1",
         T0V2: "T0.2"
     }
-    selectedTheme = this.THEMES.T0;
+    DEFAULT = this.THEMES.T0;
+    selectedTheme = this.DEFAULT;
     colors = COLORS[this.selectedTheme];
 
-    setTheme(theme) {
+    constructor() {
+        this.loadTheme();
+    }
+    
+    async loadTheme() {
+        const currentTheme = await DataStorage.Load(STORAGE.THEME, false);
+        if (Object.values(this.THEMES).includes(currentTheme)) {
+            this.setTheme(currentTheme, false);
+        }
+    }
+
+    saveTheme() {
+        DataStorage.Save(STORAGE.THEME, this.selectedTheme, false);
+    }
+
+    setTheme(theme, save = true) {
         this.selectedTheme = theme;
         this.colors = COLORS[theme];
+        if (save) this.saveTheme();
     }
 
     isTheme(theme) {

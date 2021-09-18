@@ -48,18 +48,13 @@ class ServManager {
         clearTimeout(this.timeout);
 
         // Ping
-        const data = {
-            'action': 'ping',
-            'deviceID': this.deviceID,
-            'deviceName': this.deviceName
-        };
-        const result_ping = await Request_Async(data);
+        const result_ping = await this.reqPing();
         this.online = typeof(result_ping['status']) !== 'undefined' && result_ping['status'] === 'ok';
 
         // Connection
         if (this.online) {
             if (!this.isConnected() && this.user.email !== '') {
-                const result_connect = await this.Connect();
+                const result_connect = await this.reqConnect();
                 const status = result_connect['status'];
                 const token = result_connect['token'];
 
@@ -103,7 +98,16 @@ class ServManager {
         }
     }
 
-    async Connect() {
+    reqPing() {
+        const data = {
+            'action': 'ping',
+            'deviceID': this.deviceID,
+            'deviceName': this.deviceName
+        };
+        return Request_Async(data);
+    }
+
+    reqConnect() {
         const version = require('../../package.json').version;
         const data = {
             'action': 'getToken',
@@ -113,10 +117,10 @@ class ServManager {
             'lang': langManager.currentLangageKey,
             'version': version
         };
-        return await Request_Async(data);
+        return Request_Async(data);
     }
 
-    async getInternalData(hash) {
+    reqGetInternalData(hash) {
         if (!this.online) {
             return;
         }
@@ -125,7 +129,7 @@ class ServManager {
             'hash': hash || '',
             'lang': langManager.currentLangageKey
         };
-        return await Request_Async(data);
+        return Request_Async(data);
     }
 
     async getLeaderboard() {

@@ -84,7 +84,7 @@ class T0Activity extends Activity {
 
                     {!isUndefined(skill) && (
                         <View style={styles.containerAttr}>
-                            <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small'] + ' +' + bonusXP} style={styles.attr} color='grey' />
+                            <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small'] + ' +' + bonusXP} style={styles.attr} color='secondary' />
                             <FlatList
                                 data={this.STATS}
                                 keyExtractor={(item, i) => 'skill_stat_' + i}
@@ -92,7 +92,7 @@ class T0Activity extends Activity {
                                     <GLText
                                         title={'+' + (skill.Stats[item] * (this.DURATION[this.state.selectedTimeKey].duration / 60)) + ' ' + langManager.curr['statistics']['names'][item]}
                                         style={styles.attr}
-                                        color={skill.Stats[item] == 0 ? 'darkgrey' : 'grey'}
+                                        color={skill.Stats[item] == 0 ? 'dark' : 'secondary'}
                                     />
                                 )}
                             />

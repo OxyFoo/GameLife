@@ -12,14 +12,14 @@ class T0Achievements extends Achievements {
         const name = achievement.Name;
         const description = achievement.Description;
         const style = user.solvedAchievements.includes(parseInt(achievement.ID)) ?
-                      styles.achievementsBox :
-                      [styles.achievementsBox, styles.unsolved];
+                      [styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }] :
+                      [styles.achievementsBox, styles.unsolved, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }];
 
         return (
             <View style={styles.achievementsContainer}>
                 <View style={style}>
                     <GLText style={styles.title} title={name} />
-                    <GLText style={styles.description} title={description} color="grey" />
+                    <GLText style={styles.description} title={description} color="secondary" />
                 </View>
             </View>
         )
@@ -69,8 +69,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 3,
         borderBottomWidth: 3,
         borderLeftWidth: 6,
-        borderRightWidth: 6,
-        backgroundColor: '#000000'
+        borderRightWidth: 6
     },
     unsolved: {
         borderColor: '#888888'

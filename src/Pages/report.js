@@ -114,8 +114,11 @@ class Report extends React.Component {
                 break;
             }
         }
+        if (type === 0 && this.state.remain != 0) {
+            isFilled = false;
+        }
 
-        if (!isFilled || this.state.remain != 0) {
+        if (!isFilled) {
             const title = langManager.curr['report']['alert-notfill-title'];
             const text = langManager.curr['report']['alert-notfill-text'];
             user.openPopup('ok', [ title, text ]);
@@ -130,7 +133,6 @@ class Report extends React.Component {
         };
 
         const result_ping = await Request_Async(data);
-        console.log(result_ping);
 
         if (result_ping.hasOwnProperty("status") && result_ping["status"] === 'ok') {
             const title = langManager.curr['report']['alert-success-title'];

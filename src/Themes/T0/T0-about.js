@@ -26,35 +26,37 @@ class T0About extends About {
                         <GLText styleText={styles.text} title={"Pierre Marsaa"} value={langManager.curr['about']['text-manager']} />
                         <GLText styleText={styles.text} title={"Gérémy Lecaplain"} value={langManager.curr['about']['text-developer']} />
                     </View>
-                    <View>
+                    <View style={styles.contributorsContainer}>
                         <GLText style={styles.title} title={langManager.curr['about']['block-staff']} />
-                        <FlatList
-                            data={this.staff}
-                            style={styles.contributors}
-                            keyExtractor={(item, i) => 'staff_' + i}
-                            renderItem={({item}) => {
-                                const Name = item.Name;
-                                const Type = item.Type;
-                                return (
-                                    <GLText style={styles.contributorsText} styleText={styles.contributorsValues} title={Name} value={Type}/>
-                                )
-                            }}
-                        />
+                        <View style={styles.contributors}>
+                            <FlatList
+                                data={this.staff}
+                                keyExtractor={(item, i) => 'staff_' + i}
+                                renderItem={({item}) => {
+                                    const Name = item.Name;
+                                    const Type = item.Type;
+                                    return (
+                                        <GLText style={styles.contributorsText} styleText={styles.contributorsValues} title={Name} value={Type}/>
+                                    )
+                                }}
+                            />
+                        </View>
                     </View>
-                    <View>
+                    <View style={styles.contributorsContainer}>
                         <GLText style={styles.title} title={langManager.curr['about']['block-contributors']} />
-                        <FlatList
-                            data={this.tipeee}
-                            style={styles.contributors}
-                            keyExtractor={(item, i) => 'contributors_' + i}
-                            renderItem={({item}) => {
-                                const Name = item.Name;
-                                const Type = item.Type;
-                                return (
-                                    <GLText style={styles.contributorsText} styleText={styles.contributorsValues} title={Name} value={Type}/>
-                                )
-                            }}
-                        />
+                        <View style={styles.contributors}>
+                            <FlatList
+                                data={this.tipeee}
+                                keyExtractor={(item, i) => 'contributors_' + i}
+                                renderItem={({item}) => {
+                                    const Name = item.Name;
+                                    const Type = item.Type;
+                                    return (
+                                        <GLText style={styles.contributorsText} styleText={styles.contributorsValues} title={Name} value={Type}/>
+                                    )
+                                }}
+                            />
+                        </View>
                     </View>
                     <View>
                         <GLText style={styles.title} title={langManager.curr['about']['block-links']} />
@@ -87,8 +89,11 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
 
+    contributorsContainer: {
+        height: '28%'
+    },
     contributors: {
-        height: '20%',
+        flex: 1,
         borderColor: '#FFFFFF',
         borderWidth: 3
     },

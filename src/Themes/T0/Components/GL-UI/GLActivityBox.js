@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import langManager from '../../../../Managers/LangManager';
 
+import langManager from '../../../../Managers/LangManager';
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
 

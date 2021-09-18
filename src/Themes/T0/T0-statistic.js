@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import Statistic from '../../Pages/statistic';
+import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { GLCropCorner, GLHeader, GLIconButton, GLText } from './Components/GL-Components';
 
@@ -28,7 +29,7 @@ class T0Statistic extends Statistic {
                 />
 
                 {/* Topbar */}
-                <View style={styles.container}>
+                <View style={[styles.container, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
                     <View style={styles.topBar}>
                         <GLIconButton onPress={this.prev} icon='chevronLeft' />
                         <GLText title={statName} />
@@ -53,8 +54,7 @@ const styles = StyleSheet.create({
 
         borderWidth: 3,
         borderTopWidth: 2,
-        borderColor: '#FFFFFF',
-        backgroundColor: '#000000'
+        borderColor: '#FFFFFF'
     },
     topBar: {
         width: '100%',

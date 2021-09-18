@@ -28,22 +28,22 @@ class T0Calendar extends Calendar {
                 />
 
                 {/* Topbar */}
-                <View style={styles.topBar}>
+                <View style={[styles.topBar, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
                     <TouchableOpacity style={styles.headerLeft} activeOpacity={.5} onPress={this.showDTP} >
                         <GLText style={styleTopLeft} title={currDateTxt} />
                         {/* Edit */}
                         <View style={styles.textIcon}>
-                            <GLText style={styles.small} title={langManager.curr['calendar']['header1-action']} color="grey" />
+                            <GLText style={styles.small} title={langManager.curr['calendar']['header1-action']} color="secondary" />
                             <GLIconButton size={14} icon='chevron' />
                         </View>
                     </TouchableOpacity>
                     <View style={styles.Vseparator} />
                     <TouchableOpacity style={styles.headerRight} activeOpacity={.5} onPress={this.dailyQuest} >
                         <GLText style={styleTopLeft} title={langManager.curr['calendar']['header2-title']} />
-                        <GLText style={[styleMidLeft, styles.small]} title={langManager.curr['calendar']['header2-time'] + 'Xh'} color="grey" />
+                        <GLText style={[styleMidLeft, styles.small]} title={langManager.curr['calendar']['header2-time'] + 'Xh'} color="secondary" />
                         {/* Daily quest */}
                         <View style={styles.textIcon}>
-                            <GLText style={styles.small} title={langManager.curr['calendar']['header2-action']} color="grey" />
+                            <GLText style={styles.small} title={langManager.curr['calendar']['header2-action']} color="secondary" />
                             <GLIconButton size={14} icon='chevron' />
                         </View>
                     </TouchableOpacity>
@@ -97,8 +97,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderColor: '#FFFFFF',
         borderWidth: 3,
-        borderTopWidth: 2,
-        backgroundColor: '#000000'
+        borderTopWidth: 2
     },
     headerLeft: {
         width: '40%',

@@ -250,7 +250,7 @@ class UserManager {
             } else
             if (first.endsWith('Ca')) {
                 // Categorie
-                first = first.replace('Ca');
+                first = first.replace('Ca', '');
                 const CategoryDepth = parseInt(first);
                 const categories = this.getSkillCategories(true);
                 if (categories.length < CategoryDepth) continue;
@@ -262,7 +262,6 @@ class UserManager {
                     values.push(categoryLevel);
                 }
                 values.sort();
-                values.reverse();
                 value = values[CategoryDepth - 1];
             }
 

@@ -37,16 +37,18 @@
         "title-skills": "Compétences",
         "text-seeall": "Voir plus",
 
+        "shortcut-shop": "Boutique",
         "shortcut-identity": "Identité",
         "shortcut-skills": "Compétences",
         "shortcut-calendar": "Calendrier",
+        "shortcut-dailyquest": "Quêtes journalières",
         "shortcut-stats": "Statistiques",
         "shortcut-level": "Niveau",
         "shortcut-leaderboard": "Classement",
         "shortcut-achievements": "Succès",
+        "shortcut-report": "Report",
         "shortcut-settings": "Réglages",
         "shortcut-about": "A propos",
-        "shortcut-report": "Report",
         "shortcut-addactivity": "Ajouter une activité",
 
         "alert-first-title": "Bienvenue",
@@ -264,5 +266,18 @@
         "alert-success-text": "Merci pour votre retour !",
         "alert-error-title": "Erreur",
         "alert-error-text": "Une erreur est survenue, veuillez réessayer plus tard."
+    },
+
+    "dailyquest": {
+        "page-title": "Quêtes journalières",
+
+        "info-remain-time": "Temps restant : ",
+        "daily-title": "Quêtes disponibles"
+    },
+
+    "shop": {
+        "page-title": "Boutique",
+
+        "wait": "La boutique sera disponible bientôt !"
     }
 }

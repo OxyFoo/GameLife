@@ -11,15 +11,17 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const PANEL_WIDTH = SCREEN_WIDTH / 2;
 
 const SHORTCUTS = [
+    { text: "shortcut-shop", event: () => { user.changePage('shop') } },
     { text: "shortcut-identity", event: () => { user.changePage('identity') } },
     { text: "shortcut-skills", event: () => { user.changePage('skills') } },
+    { text: "shortcut-dailyquest", event: () => { user.changePage('dailyquest') } },
     { text: "shortcut-calendar", event: () => { user.changePage('calendar') } },
     { text: "shortcut-stats", event: () => { user.changePage('statistic') } },
     { text: "shortcut-level", event: () => { user.changePage('experience') } },
     { text: "shortcut-leaderboard", event: () => { user.changePage('leaderboard'); } },
     { text: "shortcut-achievements", event: () => { user.changePage('achievements') } },
-    { text: "shortcut-settings", event: () => { user.changePage('settings') } },
-    { text: "shortcut-report", event: () => { user.changePage('report') } }
+    { text: "shortcut-report", event: () => { user.changePage('report') } },
+    { text: "shortcut-settings", event: () => { user.changePage('settings') } }
 ];
 
 class GLLeftPanel extends React.PureComponent {
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     },
     component: {
         paddingHorizontal: 12,
-        paddingVertical: 20
+        paddingVertical: 16
     },
     separator: {
         width: '60%',

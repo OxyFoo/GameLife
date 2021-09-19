@@ -24,8 +24,8 @@ class T0Home extends Home {
                     title={langManager.curr['home']['page-title']}
                     leftIcon="sandwich"
                     onPressLeft={user.openLeftPanel}
-                    rightIcon="trophy"
-                    onPressRight={() => user.changePage('leaderboard') }
+                    rightIcon="chrono"
+                    onPressRight={() => user.changePage('dailyquest') }
                 />
 
                 <View style={styles.parentView}>

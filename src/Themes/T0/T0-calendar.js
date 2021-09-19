@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Calendar from '../../Pages/calendar';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { dateToFormatString } from '../../Functions/Functions';
+import { dateToFormatString, GetTimeToTomorrow } from '../../Functions/Functions';
 import { GLHeader, GLIconButton, GLActivityBox, GLText } from './Components/GL-Components';
 
 class T0Calendar extends Calendar {
@@ -15,6 +15,8 @@ class T0Calendar extends Calendar {
 
         const DTPMode = this.state.showDateTimePicker;
         const currDateTxt = dateToFormatString(this.state.currDate);
+
+        const dailyquestTime = GetTimeToTomorrow();
 
         return (
             <View style={{ flex: 1 }}>
@@ -40,7 +42,7 @@ class T0Calendar extends Calendar {
                     <View style={styles.Vseparator} />
                     <TouchableOpacity style={styles.headerRight} activeOpacity={.5} onPress={this.dailyQuest} >
                         <GLText style={styleTopLeft} title={langManager.curr['calendar']['header2-title']} />
-                        <GLText style={[styleMidLeft, styles.small]} title={langManager.curr['calendar']['header2-time'] + 'Xh'} color="secondary" />
+                        <GLText style={[styleMidLeft, styles.small]} title={langManager.curr['calendar']['header2-time'] + dailyquestTime} color="secondary" />
                         {/* Daily quest */}
                         <View style={styles.textIcon}>
                             <GLText style={styles.small} title={langManager.curr['calendar']['header2-action']} color="secondary" />

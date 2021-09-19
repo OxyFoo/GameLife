@@ -37,16 +37,18 @@
         "title-skills": "Skills",
         "text-seeall": "Show more",
 
+        "shortcut-shop": "Shop",
         "shortcut-identity": "Identity",
         "shortcut-skills": "Skills",
         "shortcut-calendar": "Calendar",
+        "shortcut-dailyquest": "Daily quest",
         "shortcut-stats": "Caracteristics",
         "shortcut-level": "Level",
         "shortcut-leaderboard": "Leaderboard",
         "shortcut-achievements": "Achievements",
+        "shortcut-report": "Report",
         "shortcut-settings": "Settings",
         "shortcut-about": "About",
-        "shortcut-report": "Report",
         "shortcut-addactivity": "Add activity",
 
         "alert-first-title": "Welcome",
@@ -264,5 +266,18 @@
         "alert-success-text": "Thank you for your feedback!",
         "alert-error-title": "Error",
         "alert-error-text": "An error has occurred, please try again later."
+    },
+
+    "dailyquest": {
+        "page-title": "Daily quest",
+
+        "info-remain-time": "Time remaining: ",
+        "daily-title": "Available quests"
+    },
+
+    "shop": {
+        "page-title": "shop",
+
+        "wait": "The shop will be available soon!"
     }
 }

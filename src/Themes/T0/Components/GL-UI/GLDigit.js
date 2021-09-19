@@ -75,7 +75,7 @@ class GLDigit extends React.Component {
                 onTouchMove={this.swipe_move}
                 onTouchEnd={this.swipe_end}
                 activeOpacity={.5}
-                style={[ style, { borderColor: color, } ]}
+                style={style}
             >
                 <Animated.View style={[
                     styles.content,

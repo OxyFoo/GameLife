@@ -149,14 +149,17 @@ class UserManager {
     }
 
     getAchievements = () => {
-        const achievements = [];
+        let achievements = [];
+
         // Get unlocked
-        for (let a = 0; a < this.achievements.length; a++) {
-            const achievement = this.achievements[a];
-            if (this.solvedAchievements.includes(parseInt(achievement.ID)) && achievement.Type != -1) {
-                achievements.push(achievement);
-            }
+        let solvedAchievements = [...this.solvedAchievements];
+        solvedAchievements.reverse();
+        for (let s = 0; s < solvedAchievements.length; s++) {
+            const achievementID = solvedAchievements[s];
+            const achievement = this.getAchievementByID(achievementID);
+            achievements.push(achievement);
         }
+
         // Get others
         for (let a = 0; a < this.achievements.length; a++) {
             const achievement = this.achievements[a];

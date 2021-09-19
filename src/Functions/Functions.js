@@ -1,6 +1,3 @@
-import { Alert } from "react-native";
-import langManager from "../Managers/LangManager";
-
 function twoDigit(n) {
     return ('00' + n).slice(-2);
 }
@@ -76,6 +73,20 @@ function range(length) {
     return Array.from({ length: length+1 }, (_, i) => i);
 }
 
+function GetTimeToTomorrow() {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0);
+    tomorrow.setMinutes(0);
+    tomorrow.setSeconds(0);
+    const delta = new Date(tomorrow - today);
+    const HH = twoDigit(delta.getHours() - 1);
+    const MM = twoDigit(delta.getMinutes() + 1);
+    return HH + ':' + MM;
+}
+
 export { twoDigit, sum, range,
     getDates, getDurations,
-    isUndefined, dateToFormatString };
+    isUndefined, dateToFormatString,
+    GetTimeToTomorrow };

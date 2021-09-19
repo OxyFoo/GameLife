@@ -23,10 +23,10 @@ const COLORS_T0_1 = {
 const COLORS_T0_2 = {
     globalBackground: '#D8E3E7',
     globalBackcomponent: '#5AB4F0',
-    xpBar: '#51C4D3',
+    xpBar: '#5AB4F0',
     text: {
         main: '#000000',
-        secondary: '#000000',
+        secondary: '#424242',
         dark: '#D8E3E7'
     }
 }

@@ -40,7 +40,7 @@ class Calendar extends React.Component {
     }
 
     dailyQuest = () => {
-        console.log("TODO - Daily quest");
+        user.changePage('dailyquest');
     }
 }
 

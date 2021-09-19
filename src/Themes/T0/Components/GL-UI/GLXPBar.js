@@ -18,7 +18,7 @@ function GLXPBar(props) {
         <View style={style}>
             <View style={styles.containerXP}>
                 <View style={styles.background}>
-                    <View style={[styles.fill, { width: valueInt, backgroundColor: user.themeManager.colors['text']['secondary'] }]}>
+                    <View style={[styles.fill, { width: valueInt, backgroundColor: user.themeManager.colors['xpBar'] }]}>
                         <View style={styles.corner} />
                         <View style={styles.cornerBorder} />
                     </View>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     corner: {
         position: 'absolute',
         right: 0,
-        bottom: 0,
+        bottom: 0.5,
 
         width: 0,
         height: 0,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         borderRightWidth: borderSize*.5,
         borderTopWidth: borderSize,
         borderRightColor: "transparent",
-        borderTopColor: "#000022",
+        borderTopColor: "#000000",
 
         transform: [{ rotate: "180deg" }]
     },

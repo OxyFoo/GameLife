@@ -1,6 +1,7 @@
 const COLORS_T0 = {
     globalBackground: '#000020',
     globalBackcomponent: '#000000',
+    xpBar: '#ECECEC',
     text: {
         main: '#ECECEC',
         secondary: '#C2C2C2',
@@ -11,6 +12,7 @@ const COLORS_T0 = {
 const COLORS_T0_1 = {
     globalBackground: '#45484F',
     globalBackcomponent: '#000000',
+    xpBar: '#ECECEC',
     text: {
         main: '#ECECEC',
         secondary: '#C2C2C2',
@@ -20,10 +22,11 @@ const COLORS_T0_1 = {
 
 const COLORS_T0_2 = {
     globalBackground: '#D8E3E7',
-    globalBackcomponent: '#51C4D3',
+    globalBackcomponent: '#5AB4F0',
+    xpBar: '#51C4D3',
     text: {
-        main: '#132C33',
-        secondary: '#126E82',
+        main: '#000000',
+        secondary: '#000000',
         dark: '#D8E3E7'
     }
 }

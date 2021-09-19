@@ -103,6 +103,7 @@ class T0Identity extends Identity {
                             <>
                                 <GLText style={styles.text} title={langManager.curr['identity']['name-lastachievement'].toUpperCase()} />
                                 <TouchableOpacity
+                                    style={styles.achievementsContainer}
                                     activeOpacity={.5}
                                     onPress={() => { user.changePage('achievements'); }}
                                 >
@@ -110,6 +111,18 @@ class T0Identity extends Identity {
                                         <GLText style={styles.title} title={name} />
                                         <GLText style={styles.description} title={description} color="secondary" />
                                     </View>
+                                    {user.solvedAchievements.length > 1 && (
+                                        <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                                            <GLText style={styles.title} title={name} />
+                                            <GLText style={styles.description} title={description} color="secondary" />
+                                        </View>
+                                    )}
+                                    {user.solvedAchievements.length > 2 && (
+                                        <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                                            <GLText style={styles.title} title={name} />
+                                            <GLText style={styles.description} title={description} color="secondary" />
+                                        </View>
+                                    )}
                                 </TouchableOpacity>
                             </>
                         )}
@@ -164,10 +177,16 @@ const styles = StyleSheet.create({
         elevation: 100
     },
 
-    achievementsBox: {
+    achievementsContainer: {
         height: 128,
         display: 'flex',
+        flexDirection: 'row'
+    },
+    achievementsBox: {
+        flex: 1,
+        display: 'flex',
         justifyContent: 'space-evenly',
+        marginHorizontal: 4,
         paddingVertical: 12,
         paddingHorizontal: 6,
         borderColor: '#FFFFFF',
@@ -179,11 +198,11 @@ const styles = StyleSheet.create({
     title: {
         minHeight: 30,
         marginBottom: 12,
-        fontSize: 18
+        fontSize: 16
     },
     description: {
         marginBottom: 12,
-        fontSize: 12
+        fontSize: 10
     }
 });
 

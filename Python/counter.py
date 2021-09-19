@@ -28,4 +28,5 @@ os.system("cls || clear")
 
 nb_lines = Counter("../Server")
 nb_lines += Counter("../src")
+#nb_lines = Counter("../src/Themes")
 print("\nTotal :".ljust(50) + str(nb_lines).rjust(4) + ' lines')

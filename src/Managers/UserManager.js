@@ -5,6 +5,7 @@ import ServManager from "../Class/Server";
 import ThemeManager from '../Class/Themes';
 import DataStorage, { STORAGE } from '../Class/DataStorage';
 
+import Base64 from '../Class/Base64';
 import Experience from "../Class/Experience";
 import { isUndefined } from "../Functions/Functions";
 
@@ -87,7 +88,9 @@ class UserManager {
         this.skillsIcon = [];
         this.achievements = [];
         this.contributors = [];
+        this.conn.status = 'offline';
         this.conn.destructor();
+        await DataStorage.clearAll();
         await this.saveData(false);
     }
 
@@ -520,7 +523,7 @@ class UserManager {
             'xp': this.xp,
             'activities': this.activities,
             'solvedAchievements': this.solvedAchievements,
-            'daily': this.daily,
+            'daily': Base64.encode(JSON.stringify(this.daily)),
             'dailyDate':  this.dailyDate
         };
         await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
@@ -569,6 +572,9 @@ class UserManager {
             this.birth = get(data, 'birth', '');
             this.xp = get(data, 'xp', 0);
             this.daily = get(data, 'daily', []);
+            if (typeof(this.daily) === 'string') {
+                this.daily = JSON.parse(Base64.decode(this.daily));
+            }
             this.dailyDate = get(data, 'dailyDate', null);
             if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
                 if (this.activities.length === 0) {

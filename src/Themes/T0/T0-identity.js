@@ -51,7 +51,7 @@ class T0Identity extends Identity {
                         title={langManager.curr['identity']['page-title']}
                         leftIcon='back'
                         onPressLeft={this.back}
-                        rightIcon='check'
+                        rightIcon={this.state.loading ? '' : 'check'}
                         onPressRight={this.valid.bind(this)}
                     />
 
@@ -88,7 +88,7 @@ class T0Identity extends Identity {
                         <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
                         <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='secondary' />
 
-                        {/* Email */}
+                        {/* Email status */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()} />
                         <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='secondary' />
 

@@ -54,6 +54,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Quantum.otf</string>
+		<string>FORCED SQUARE.ttf</string>
+		<string>rexlia rg.otf</string>
+		<string>SadanaSquare.ttf</string>
 	</array>
 </dict>
 </plist>

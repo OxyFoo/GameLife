@@ -68,6 +68,10 @@ class DataStorage {
 
         return json;
     }
+
+    static async clearAll() {
+        await AsyncStorage.clear();
+    }
 }
 
 export { STORAGE };

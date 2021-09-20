@@ -17,6 +17,7 @@ class Identity extends React.Component {
         email: user.email,
         title: user.title,
 
+        loading: false,
         showDateTimePicker: '',
         imageOpened: false,
         imageAnimation: new Animated.Value(MIN_WIDTH)
@@ -44,6 +45,7 @@ class Identity extends React.Component {
         user.birth = this.state.birth;
         user.email = this.state.email;
 
+        this.setState({ loading: true });
         await user.changeUser();
         user.backPage();
     }

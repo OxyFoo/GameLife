@@ -37,6 +37,9 @@ class ServManager {
     }
 
     destructor() {
+        this.online = false;
+        this.status = STATUS.OFFLINE;
+        this.token = '';
         clearTimeout(this.timeout);
     }
 

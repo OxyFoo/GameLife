@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import user from '../../../../Managers/UserManager';
 
-const MAIN_FONT_NAME = 'Quantum';
+const MAIN_FONT_NAME = 'FORCED SQUARE';
 const COLORS = {
     'main': '#ECECEC',
     'secondary': '#C2C2C2',

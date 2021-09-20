@@ -83,7 +83,8 @@ class Dailyquest extends React.Component {
     save = () => {
         const category1 = this.state.selectedCategory1;
         const category2 = this.state.selectedCategory2;
-        user.daily = [ category1, category2 ];
+        const categories = [ category1, category2 ];
+        user.daily = categories;
         user.dailyDate = new Date();
         user.saveData();
         this.saved();

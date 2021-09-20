@@ -15,7 +15,8 @@ import skillsIcon from '../../ressources/defaultDB/skillsIcon.json';
 import achievements from '../../ressources/defaultDB/achievements.json';
 import helpers from '../../ressources/defaultDB/helpers.json';
 
-const DAYS_PSEUDO_CHANGE = 1;
+const DAYS_PSEUDO_CHANGE = 0;
+const DEFAULT_PSEUDO = 'Player';
 const DEFAULT_STATS = {
     'sag': 0,
     'int': 0,
@@ -45,15 +46,17 @@ class UserManager {
 
     constructor() {
         // User informations
-        this.pseudo = 'Player';
+        this.pseudo = DEFAULT_PSEUDO;
+        this.pseudoDate = null;
         this.title = 0;
         this.birth = '';
         this.email = '';
         this.xp = 0;
         this.activities = [];
         this.solvedAchievements = [];
-        this.lastPseudoDate = null;
         this.stats = DEFAULT_STATS;
+        this.daily = [];
+        this.dailyDate = null;
 
         this.titles = [];
         this.quotes = [];
@@ -65,16 +68,18 @@ class UserManager {
         this.achievementsLoop = setInterval(this.checkAchievements, 30*1000);
     }
 
-    clear = () => {
-        this.pseudo = 'Player';
+    async clear() {
+        this.pseudo = DEFAULT_PSEUDO;
         this.title = 0;
         this.birth = '';
         this.email = '';
         this.xp = 0;
         this.activities = [];
         this.solvedAchievements = [];
-        this.lastPseudoDate = null;
+        this.pseudoDate = null;
         this.stats = DEFAULT_STATS;
+        this.daily = [];
+        this.dailyDate = null;
 
         this.titles = [];
         this.quotes = [];
@@ -82,25 +87,26 @@ class UserManager {
         this.skillsIcon = [];
         this.achievements = [];
         this.contributors = [];
-        this.saveData(false);
+        this.conn.destructor();
+        await this.saveData(false);
     }
 
-    disconnect = () => {
+    async disconnect() {
         this.conn.disconnect();
         this.email = '';
         this.changePage();
-        this.saveData();
+        await this.saveData();
     }
-    unmount = () => {
+    async unmount() {
         clearInterval(this.achievementsLoop);
         this.saveData();
         this.conn.destructor();
     }
 
-    refreshStats = (save = true) => {
+    async refreshStats(save = true) {
         this.removeDeletedSkills();
         this.experience.getExperience();
-        if (save) this.saveData();
+        if (save) await this.saveData();
         this.changePage();
     }
 
@@ -287,7 +293,7 @@ class UserManager {
                 const title = langManager.curr['achievements']['alert-achievement-title'];
                 let text = langManager.curr['achievements']['alert-achievement-text'];
                 text = text.replace('{}', achievement.Name);
-                user.openPopup('ok', [ title, text ]);
+                this.openPopup('ok', [ title, text ]);
 
                 this.solvedAchievements.push(achievementID);
                 this.saveData();
@@ -310,9 +316,9 @@ class UserManager {
 
     daysBeforeChangePseudo = () => {
         let days = 0;
-        if (this.lastPseudoDate !== null) {
+        if (this.pseudoDate !== null) {
             const today = new Date();
-            const last = new Date(this.lastPseudoDate);
+            const last = new Date(this.pseudoDate);
             const delta = (today - last) / (1000 * 60 * 60 * 24);
             days = DAYS_PSEUDO_CHANGE - Math.round(delta);
         }
@@ -373,7 +379,7 @@ class UserManager {
         return cats_sorted;
     }
 
-    addActivity = (skillID, startDate, duration) => {
+    addActivity = (skillID, startDate, duration, save = true) => {
         let output = false;
 
         const newActivity = {
@@ -406,7 +412,7 @@ class UserManager {
                 this.activities.push(newActivity);
                 output = true;
             }
-            this.refreshStats();
+            this.refreshStats(save);
         }
         return output;
     }
@@ -474,16 +480,20 @@ class UserManager {
     }
 
     async changeUser() {
-        if (user.email) {
-            await user.conn.AsyncRefreshAccount();
-            user.saveData();
-            if (user.isConnected()) {
-                await user.loadData(true);
-                user.saveData();
-                user.changePage();
+        const pseudo = this.pseudo;
+        if (this.email) {
+            await this.conn.AsyncRefreshAccount();
+            await this.saveData(false);
+            if (this.isConnected()) {
+                await this.loadData(true);
+                if (pseudo != DEFAULT_PSEUDO) {
+                    this.pseudo = pseudo;
+                }
+                await this.saveData(true);
+                this.changePage();
             }
         } else {
-            user.disconnect();
+            await this.disconnect();
         }
     }
 
@@ -499,20 +509,24 @@ class UserManager {
         }
     }
 
-    saveData(online, saveInternal = false) {
+    async saveData(online, saveInternal = false) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
             'lang': langManager.currentLangageKey,
             'pseudo': this.pseudo,
+            'pseudoDate': this.pseudoDate,
             'title': this.title,
             'birth': this.birth,
-            'email': this.email,
             'xp': this.xp,
             'activities': this.activities,
-            'pseudoDate': this.lastPseudoDate,
-            'solvedAchievements': this.solvedAchievements
+            'solvedAchievements': this.solvedAchievements,
+            'daily': this.daily,
+            'dailyDate':  this.dailyDate
         };
-        DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
+        await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
+
+        const email = { 'email': this.email };
+        await DataStorage.Save(STORAGE.MAIL, email, false);
 
         if (saveInternal) {
             const internalData = {
@@ -523,12 +537,10 @@ class UserManager {
                 'achievements': this.achievements,
                 'helpers': this.contributors
             }
-            DataStorage.Save(STORAGE.INTERNAL, internalData, false);
+            await DataStorage.Save(STORAGE.INTERNAL, internalData, false);
         }
     }
     async loadData(online) {
-        const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
-
         const get = (data, index, defaultValue, oneBlock = false) => {
             let output = defaultValue;
             if (typeof(data) !== 'undefined') {
@@ -544,24 +556,39 @@ class UserManager {
             return output;
         }
 
+        const data_email = await DataStorage.Load(STORAGE.MAIL, false);
+        this.email = get(data_email, 'email', '');
+
+        const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
         const data = await DataStorage.Load(STORAGE.USER, _online, this.conn.token);
-        langManager.setLangage(get(data, 'lang', 'fr'));
-        this.pseudo = get(data, 'pseudo', this.pseudo);
-        this.title = get(data, 'title', 0);
-        this.birth = get(data, 'birth', '');
-        this.email = get(data, 'email', '');
-        this.xp = get(data, 'xp', 0);
         if (typeof(data) !== 'undefined') {
+            langManager.setLangage(get(data, 'lang', 'fr'));
+            this.pseudo = get(data, 'pseudo', this.pseudo);
+            this.pseudoDate = get(data, 'pseudoDate', null);
+            this.title = get(data, 'title', 0);
+            this.birth = get(data, 'birth', '');
+            this.xp = get(data, 'xp', 0);
+            this.daily = get(data, 'daily', []);
+            this.dailyDate = get(data, 'dailyDate', null);
             if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
-                for (let a in data['activities']) {
-                    const activity = data['activities'][a];
-                    this.addActivity(activity.skillID, activity.startDate, activity.duration);
+                if (this.activities.length === 0) {
+                    this.activities = data['activities'];
+                } else {
+                    for (let a in data['activities']) {
+                        const activity = data['activities'][a];
+                        this.addActivity(activity.skillID, activity.startDate, activity.duration, false);
+                    }
                 }
-                this.activities = get(data, 'activities');
+            }
+            if (data.hasOwnProperty('solvedAchievements')) {
+                const achievements = data['solvedAchievements'];
+                for (let i = 0; i < achievements.length; i++) {
+                    if (!this.solvedAchievements.includes(achievements[i])) {
+                        this.solvedAchievements.push(achievements[i]);
+                    }
+                }
             }
         }
-        this.lastPseudoDate = get(data, 'pseudoDate', null);
-        this.solvedAchievements = get(data, 'solvedAchievements', this.solvedAchievements);
 
         const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
         this.titles = get(internalData, 'titles', titles, true);
@@ -585,11 +612,11 @@ class UserManager {
                 if (typeof(data['skillsIcon']) !== 'undefined') this.skillsIcon = data['skillsIcon'];
                 if (typeof(data['achievements']) !== 'undefined') this.achievements = data['achievements'];
                 if (typeof(data['helpers']) !== 'undefined') this.contributors = data['helpers'];
-                if (typeof(data['hash']) !== 'undefined') DataStorage.Save(STORAGE.INTERNAL_HASH, data['hash'], false);
+                if (typeof(data['hash']) !== 'undefined') await DataStorage.Save(STORAGE.INTERNAL_HASH, data['hash'], false);
             }
         }
 
-        this.saveData(false, true);
+        await this.saveData(false, true);
     }
 
     isConnected = this.conn.isConnected;

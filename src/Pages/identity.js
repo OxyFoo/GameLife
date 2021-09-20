@@ -23,7 +23,7 @@ class Identity extends React.Component {
     }
 
     back = () => { user.backPage(); }
-    valid = () => {
+    async valid() {
         // Check mail
         //if (!([ '', user.email ].includes(this.state.email))) {
         if (this.state.email !== '' && this.state.email !== user.email) {
@@ -38,13 +38,13 @@ class Identity extends React.Component {
 
         if (user.pseudo !== this.state.pseudo) {
             user.pseudo = this.state.pseudo;
-            user.lastPseudoDate = new Date();
+            user.pseudoDate = new Date();
         }
         user.title = this.state.title;
         user.birth = this.state.birth;
         user.email = this.state.email;
 
-        user.changeUser();
+        await user.changeUser();
         user.backPage();
     }
 

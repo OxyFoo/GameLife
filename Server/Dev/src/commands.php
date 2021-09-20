@@ -113,12 +113,12 @@
                     $title = $account['Title'];
                     $userData = $account['Data'];
                     $solvedAchievements = $account['SolvedAchievements'];
-                    if (isset($userData, $username, $title)) {
-                        $decoded = json_decode($userData);
-                        $decoded->pseudo = $username;
-                        $decoded->title = $title;
-                        $decoded->solvedAchievements = $solvedAchievements !== "" ? array_map('intval', explode(',', $solvedAchievements)) : array();
-                        $userData = json_encode($decoded);
+                    if (isset($userData, $username, $title, $solvedAchievements)) {
+                        $userData = json_decode($userData, true);
+                        $userData['pseudo'] = $username;
+                        $userData['title'] = $title;
+                        $userData['solvedAchievements'] = $solvedAchievements !== "" ? array_map('intval', explode(',', $solvedAchievements)) : array();
+                        $userData = json_encode($userData);
                         $this->output['data'] = $userData;
                         $this->output['status'] = 'ok';
                     }

@@ -3,6 +3,7 @@ import { Request_Async } from "../Functions/Request";
 
 const STORAGE = {
     USER: '@params/user',
+    MAIL: '@params/mail',
     INTERNAL: '@params/internal',
     INTERNAL_HASH: '@params/internal_hash',
     APPSTATE: '@params/appstate',
@@ -10,7 +11,7 @@ const STORAGE = {
 }
 
 class DataStorage {
-    static Save(storageKey, data, online, token, pseudoCallback) {
+    static async Save(storageKey, data, online, token, pseudoCallback) {
         // Local save
         AsyncStorage.setItem(storageKey, JSON.stringify(data));
 
@@ -21,7 +22,7 @@ class DataStorage {
                 'token': token,
                 'data': JSON.stringify(data)
             };
-            Request_Async(_data).then(response => {
+            await Request_Async(_data).then(response => {
                 if (typeof(pseudoCallback) === 'function') {
                     const status = response.hasOwnProperty('status') ? response['status'] : '';
                     pseudoCallback(status);
@@ -43,18 +44,22 @@ class DataStorage {
                 'token': token
             };
             const result = await Request_Async(data);
-            if (typeof(result['status']) !== 'undefined' && result['status'] === 'ok') {
-                if (result['data'] != '') {
+            if (result.hasOwnProperty('status') && result['status'] === 'ok') {
+                if (result.hasOwnProperty('data') && result['data'] !== '') {
                     const onlineJson = JSON.parse(result['data']);
-                    for (const key in onlineJson) {
-                        const currValue = onlineJson[key];
-                        if (typeof(currValue) === 'object') {
-                            for (const childKey in currValue) {
-                                const currChildValue = currValue[childKey];
-                                json[key][childKey] = currChildValue;
+                    for (const currKey in onlineJson) {
+                        const currValue = onlineJson[currKey];
+                        if (typeof(json[currKey]) !== 'undefined') {
+                            if (typeof(currValue) === 'object') {
+                                for (const childKey in currValue) {
+                                    const currChildValue = currValue[childKey];
+                                    json[currKey][childKey] = currChildValue;
+                                }
+                            } else {
+                                json[currKey] = currValue;
                             }
                         } else {
-                            json[key] = currValue;
+                            json[currKey] = currValue;
                         }
                     }
                 }

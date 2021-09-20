@@ -49,7 +49,7 @@ class T0Identity extends Identity {
                         leftIcon='back'
                         onPressLeft={this.back}
                         rightIcon='check'
-                        onPressRight={this.valid}
+                        onPressRight={this.valid.bind(this)}
                     />
 
                     {/* Content */}
@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     },
     achievementsBox: {
         flex: 1,
+        maxWidth: '30%',
         display: 'flex',
         justifyContent: 'space-evenly',
         marginHorizontal: 4,

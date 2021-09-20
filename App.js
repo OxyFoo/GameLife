@@ -15,16 +15,15 @@ class App extends React.Component {
         await user.loadData(false);
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 1 }, true);
-        
+
         // Load internet data (if online)
         await user.conn.AsyncRefreshAccount();
         await user.sleep(user.random(600, 800));
         user.changePage('loading', { state: 2 }, true);
-        
+
         // Load internet user data (if connected)
-        await user.loadData();
         await user.loadInternalData();
-        user.refreshStats();
+        await user.refreshStats();
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 3 }, true);
 

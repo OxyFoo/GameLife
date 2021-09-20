@@ -173,7 +173,7 @@
         "input-disconnect": "Délier le mail",
 
         "alert-clear-title": "Supprimer",
-        "alert-clear-text": "Réinitialiser toutes les données de l'app (sauf le pass beta) ?",
+        "alert-clear-text": "Réinitialiser toutes les données de l'app ?",
         "alert-reset-title": "Réinitialiser",
         "alert-reset-text": "Supprimer toutes les activités du compte ?",
         "alert-disconnect-title": "Se déconnecter",
@@ -272,7 +272,24 @@
         "page-title": "Quêtes journalières",
 
         "info-remain-time": "Temps restant : ",
-        "daily-title": "Quêtes disponibles"
+        "daily-define-title": "Sélection des quêtes journalières",
+        "daily-define-text": "Entrez 2 catégories dans lesquelles vous voulez vous perfectionner",
+        "daily-define-cat1": "Catégorie 1",
+        "daily-define-cat2": "Catégorie 2",
+        "daily-define-button": "Enregistrer",
+        "daily-title": "Quêtes disponibles",
+        "bonus-title": "Objectif bonus",
+        "daily-edit-button": "Modifier les catégories",
+        "daily-categories-text": "{} ou {}",
+
+        "alert-notfill-title": "Pas terminé",
+        "alert-notfill-text": "Merci de remplir tous les champs",
+        "alert-same-title": "Pas terminé",
+        "alert-same-text": "Vous ne pouvez pas choisir deux fois la même catégorie",
+        "alert-warn-title": "Attention",
+        "alert-warn-text": "Si vous modifiez les catégories vous ne pourrez remplir les quêtes journalières qu'à partir de demain, voulez-vous continuer ?",
+        "alert-success-title": "Succès",
+        "alert-success-text": "Les quêtes journalières ont été modifiées"
     },
 
     "shop": {

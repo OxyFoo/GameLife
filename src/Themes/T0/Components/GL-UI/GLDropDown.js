@@ -101,7 +101,7 @@ class GLDropDown extends React.PureComponent {
                 </View>
             </>
         ) : (
-            <GLText style={[this.props.style]} title={value} onPress={this.toggleVisibility} color='secondary' />
+            <GLText style={this.props.style} title={value} onPress={this.toggleVisibility} color='secondary' />
         )
     }
 

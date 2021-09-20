@@ -68,7 +68,7 @@
         "name-email": "EMail",
         "name-totaltime": "Practice time",
 
-        "value-age": "{} ans",
+        "value-age": "{} years old",
         "value-totaltime": "{}h {}m",
 
         "placeholder-pseudo": "Pseudo",
@@ -173,7 +173,7 @@
         "input-disconnect": "Unlink mail",
 
         "alert-clear-title": "Delete all",
-        "alert-clear-text": "Reset all data in the app (except the beta pass)?",
+        "alert-clear-text": "Reset all data in the app?",
         "alert-reset-title": "Reset",
         "alert-reset-text": "Delete all account activities?",
         "alert-disconnect-title": "Disconnecting",
@@ -262,6 +262,8 @@
 
         "alert-notfill-title": "Not completed",
         "alert-notfill-text": "Please fill in all fields",
+        "alert-same-title": "Not completed",
+        "alert-same-text": "You cannot choose the same category twice",
         "alert-success-title": "Sent",
         "alert-success-text": "Thank you for your feedback!",
         "alert-error-title": "Error",
@@ -272,7 +274,22 @@
         "page-title": "Daily quest",
 
         "info-remain-time": "Time remaining: ",
-        "daily-title": "Available quests"
+        "daily-define-title": "Selection of daily quests",
+        "daily-define-text": "Enter 2 categories in which you want to improve",
+        "daily-define-cat1": "Category 1",
+        "daily-define-cat2": "Category 2",
+        "daily-define-button": "Save",
+        "daily-title": "Available quests",
+        "bonus-title": "Objective bonus",
+        "daily-edit-button": "Edit categories",
+        "daily-categories-text": "{} or {}",
+
+        "alert-notfill-title": "Not completed",
+        "alert-notfill-text": "Please fill in all fields",
+        "alert-warn-title": "Warning",
+        "alert-warn-text": "If you change the categories you will only be able to complete the daily quests from tomorrow, do you want to continue?",
+        "alert-success-title": "Success",
+        "alert-success-text": "Daily quests have been modified"
     },
 
     "shop": {

@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import COLORS from '../Themes/Colors';
 import DataStorage, { STORAGE } from '../Class/DataStorage';
+import { isUndefined } from '../Functions/Functions';
 
 import { T0About } from '../Themes/T0/T0-about';
 import { T0Achievements } from '../Themes/T0/T0-achievements';
@@ -35,14 +36,18 @@ class ThemeManager {
     }
     
     async loadTheme() {
-        const currentTheme = await DataStorage.Load(STORAGE.THEME, false);
-        if (Object.values(this.THEMES).includes(currentTheme)) {
-            this.setTheme(currentTheme, false);
+        const data = await DataStorage.Load(STORAGE.THEME, false);
+        if (!isUndefined(data) && data.hasOwnProperty('theme')) {
+            const currentTheme = data['theme'];
+            if (Object.values(this.THEMES).includes(currentTheme)) {
+                this.setTheme(currentTheme, false);
+            }
         }
     }
 
     saveTheme() {
-        DataStorage.Save(STORAGE.THEME, this.selectedTheme, false);
+        const data = { 'theme': this.selectedTheme };
+        DataStorage.Save(STORAGE.THEME, data, false);
     }
 
     setTheme(theme, save = true) {

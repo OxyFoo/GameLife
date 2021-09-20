@@ -6,6 +6,7 @@ import Identity from '../../Pages/identity';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { GLDropDown, GLHeader, GLText, GLTextEditable } from './Components/GL-Components';
+import { isUndefined } from '../../Functions/Functions';
 
 class T0Identity extends Identity {
     component_titre = ({ item }) => {
@@ -36,8 +37,10 @@ class T0Identity extends Identity {
         for (let i = 0; i < max; i++) {
             const achievementID = solvedAchievements[i];
             const achievement = user.getAchievementByID(achievementID);
-            names.push(achievement.Name);
-            descriptions.push(achievement.Description);
+            if (!isUndefined(achievement)) {
+                names.push(achievement.Name);
+                descriptions.push(achievement.Description);
+            }
         }
 
         return (
@@ -104,7 +107,7 @@ class T0Identity extends Identity {
                         <GLText style={styles.value} title={totalTxt} color='secondary' />
 
                         {/* Last achievement */}
-                        {user.solvedAchievements.length > 0 && (
+                        {names.length > 0 && (
                             <>
                                 <GLText style={styles.text} title={langManager.curr['identity']['name-lastachievement'].toUpperCase()} />
                                 <TouchableOpacity
@@ -116,13 +119,13 @@ class T0Identity extends Identity {
                                         <GLText style={styles.title} title={names[0]} />
                                         <GLText style={styles.description} title={descriptions[0]} color="secondary" />
                                     </View>
-                                    {user.solvedAchievements.length > 1 && (
+                                    {names.length > 1 && (
                                         <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
                                             <GLText style={styles.title} title={names[1]} />
                                             <GLText style={styles.description} title={descriptions[1]} color="secondary" />
                                         </View>
                                     )}
-                                    {user.solvedAchievements.length > 2 && (
+                                    {names.length > 2 && (
                                         <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
                                             <GLText style={styles.title} title={names[2]} />
                                             <GLText style={styles.description} title={descriptions[2]} color="secondary" />

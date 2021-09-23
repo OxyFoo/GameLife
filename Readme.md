@@ -23,9 +23,10 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Sound Player](https://www.npmjs.com/package/react-native-sound-player)
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
 
-### Unused
+### Unused (removed)
 * [React native gesture handler](https://www.npmjs.com/package/react-native-gesture-handler)
 * [React Native AES Crypto](https://www.npmjs.com/package/react-native-aes-crypto)
+* [React Native Admob](https://react-native-admob.github.io/admob)
 
 # Sécu (Requests)
 ## Clés - Chiffrement / déchiffrement AES-256-OCB

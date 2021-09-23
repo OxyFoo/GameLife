@@ -35,11 +35,11 @@ class T0Settings extends Settings {
                         onSelect={this.changeTheme}
                     />
 
-                    {/* Reset activities */}
+                    {/* Reset activities
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>
                         <GLText style={styles.title} title={langManager.curr['settings']['input-reset'].toUpperCase()} />
                         <GLIconButton icon='trash' />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     {/* Disconnect */}
                     {user.isConnected() && (
@@ -49,11 +49,11 @@ class T0Settings extends Settings {
                         </TouchableOpacity>
                     )}
 
-                    {/* Reset activities */}
+                    {/* Reset activities
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.clear}>
                         <GLText style={styles.title} title={langManager.curr['settings']['input-clear'].toUpperCase()} />
                         <GLIconButton icon='trash' />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                 </View>
             </View>

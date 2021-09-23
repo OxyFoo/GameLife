@@ -54,6 +54,11 @@ class Report extends React.Component {
     }
 
     back = () => { user.backPage(); }
+    info = () => {
+        const title = langManager.curr['report']['alert-buginfo-title'];
+        const text = langManager.curr['report']['alert-buginfo-text'];
+        user.openPopup('ok', [ title, text ]);
+    }
 
     selectType = (index) => { this.setState({ selectedType: index }); }
     changeTextInputSkillName = (text) => { this.setState({ input_skillname: text }); }

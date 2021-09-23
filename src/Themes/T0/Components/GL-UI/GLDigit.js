@@ -6,7 +6,7 @@ import { OptionsAnimation, OptionsAnimationSpring } from '../../../../Functions/
 
 import GLText from './GLText';
 
-const STEP = 17.5;
+const STEP = 17;
 
 class GLDigit extends React.Component {
     state = {
@@ -96,7 +96,7 @@ class GLDigit extends React.Component {
 
 const styles = StyleSheet.create({
     containerStyle: {
-        width: 42,
+        width: 38,
         height: 32,
         paddingLeft: 8,
         justifyContent: 'center',
@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textButton: {
-        marginHorizontal: 4
+        marginHorizontal: 4,
+        fontSize: 22
     }
 });
 

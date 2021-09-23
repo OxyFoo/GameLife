@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 function GLDoubleCorner(props) {
     const borderWidth = -props.borderWidth || -4;
     const width = props.width || 24;
+    const color = props.color || '#FFFFFF';
 
     const styles = StyleSheet.create({
         cornerTL: {
@@ -14,7 +15,7 @@ function GLDoubleCorner(props) {
             left: borderWidth,
             borderTopWidth: 2,
             borderLeftWidth: 2,
-            borderColor: '#FFFFFF',
+            borderColor: color,
 
             zIndex: -1000,
             elevation: -1000
@@ -27,7 +28,7 @@ function GLDoubleCorner(props) {
             bottom: borderWidth,
             borderRightWidth: 2,
             borderBottomWidth: 2,
-            borderColor: '#FFFFFF',
+            borderColor: color,
 
             zIndex: -1000,
             elevation: -1000

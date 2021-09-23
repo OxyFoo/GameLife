@@ -21,6 +21,10 @@ class T0Shop extends Shop {
                 <View style={styles.container}>
                     <GLText style={styles.wait} title={langManager.curr['shop']['wait']} />
                 </View>
+
+                {/* PUB - Banner */}
+                <View style={styles.banner}>
+                </View>
             </View>
         )
     }
@@ -35,6 +39,13 @@ const styles = StyleSheet.create({
     wait: {
         padding: 24,
         fontSize: 28
+    },
+
+    banner: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0
     }
 });
 

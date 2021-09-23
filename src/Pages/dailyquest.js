@@ -6,15 +6,18 @@ import langManager from '../Managers/LangManager';
 
 class Dailyquest extends React.Component {
     state = {
+        informations: false,
         enable: false,
         time: GetTimeToTomorrow(),
-        selectedCategory1: undefined,
-        selectedCategory2: undefined
+        selectedSkill1: undefined,
+        selectedSkill2: undefined
     }
 
     componentDidMount() {
-        this.setState({ enable: user.daily.length === 2 });
-        this.CATEGORIES = user.getSkillCategories();
+        this.setState({ enable: user.daily.length > 0 });
+        this.daily_states = user.dailyTodayCheck();
+        this.daily_bonus = user.dailyGetBonusCategory();
+        this.SKILLS = user.getSkills();
         this.interval = setInterval(this.loop, 1000);
     }
 
@@ -27,7 +30,9 @@ class Dailyquest extends React.Component {
     }
 
     back = () => {
-        if (!this.state.enable && user.daily.length === 2) {
+        if (this.state.informations) {
+            this.setState({ informations: false });
+        } else if (!this.state.enable && user.daily.length) {
             this.setState({ enable: true });
         } else {
             user.backPage();
@@ -36,44 +41,33 @@ class Dailyquest extends React.Component {
 
     // EDIT
 
-    changeCat1 = (categoryIndex) => {
-        if (typeof(categoryIndex) !== 'number') {
-            this.setState({ selectedCategory1: undefined });
+    changeSkill1 = (skillID) => {
+        if (typeof(skillID) !== 'number') {
+            this.setState({ selectedSkill1: undefined });
             return;
         }
-        const category = this.CATEGORIES[categoryIndex];
-        this.setState({ selectedCategory1: category });
+        this.setState({ selectedSkill1: skillID });
     }
 
-    changeCat2 = (categoryIndex) => {
-        if (typeof(categoryIndex) !== 'number') {
-            this.setState({ selectedCategory2: undefined });
+    changeSkill2 = (skillID) => {
+        if (typeof(skillID) !== 'number') {
+            this.setState({ selectedSkill2: undefined });
             return;
         }
-        const category = this.CATEGORIES[categoryIndex];
-        this.setState({ selectedCategory2: category });
+        this.setState({ selectedSkill2: skillID });
     }
 
     saveClick = () => {
-        const valid = this.state.selectedCategory1 !== undefined && this.state.selectedCategory2 !== undefined;
+        const valid = this.state.selectedSkill1 !== undefined && this.state.selectedSkill2 !== undefined;
         if (!valid) {
             const title = langManager.curr['dailyquest']['alert-notfill-title'];
             const text = langManager.curr['dailyquest']['alert-notfill-text'];
             user.openPopup('ok', [ title, text ]);
         } else {
-            if (this.state.selectedCategory1 == this.state.selectedCategory2) {
+            if (this.state.selectedSkill1 == this.state.selectedSkill2) {
                 const title = langManager.curr['dailyquest']['alert-same-title'];
                 const text = langManager.curr['dailyquest']['alert-same-text'];
                 user.openPopup('ok', [ title, text ]);
-            } else if (user.daily.length === 2 && (user.daily[0] != this.state.selectedCategory1 || user.daily[1] != this.state.selectedCategory2)) {
-                const event = (button) => {
-                    if (button === 'yes') {
-                        setTimeout(this.save, 100);
-                    }
-                }
-                const title = langManager.curr['dailyquest']['alert-warn-title'];
-                const text = langManager.curr['dailyquest']['alert-warn-text'];
-                user.openPopup('yesno', [ title, text ], event, false);
             } else {
                 this.save();
             }
@@ -81,12 +75,9 @@ class Dailyquest extends React.Component {
     }
 
     save = () => {
-        const category1 = this.state.selectedCategory1;
-        const category2 = this.state.selectedCategory2;
-        const categories = [ category1, category2 ];
-        user.daily = categories;
-        user.dailyDate = new Date();
-        user.saveData();
+        const skillID1 = this.state.selectedSkill1;
+        const skillID2 = this.state.selectedSkill2;
+        user.dailyOnChange(skillID1, skillID2)
         this.saved();
     }
 
@@ -100,11 +91,21 @@ class Dailyquest extends React.Component {
     // DAILY QUESTS
 
     edit = () => {
+        if (user.dailyAlreadyChanged()) {
+            const title = langManager.curr['dailyquest']['alert-warn-title'];
+            const text = langManager.curr['dailyquest']['alert-warn-text'];
+            user.openPopup('ok', [ title, text ]);
+            return;
+        }
         this.setState({
             enable: false,
-            selectedCategory1: user.daily[0],
-            selectedCategory2: user.daily[1]
+            selectedSkill1: undefined,
+            selectedSkill2: undefined
         });
+    }
+
+    info = () => {
+        this.setState({ informations: true });
     }
 }
 

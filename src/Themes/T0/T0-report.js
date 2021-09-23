@@ -106,6 +106,8 @@ class T0Report extends Report {
                     title={langManager.curr['report']['page-title']}
                     leftIcon="back"
                     onPressLeft={this.back}
+                    rightIcon={this.state.selectedType === 2 ? 'info' : ''}
+                    onPressRight={this.info}
                 />
 
                 {/* Content */}

@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import user from '../../../../Managers/UserManager';
 
 import GLText from './GLText';
+import GLDoubleCorner from './GLDoubleCorner';
 
 function GLButton(props) {
     const value = props.value;
@@ -14,6 +15,7 @@ function GLButton(props) {
     return (
         <TouchableOpacity activeOpacity={.5} onPress={onPress} style={[style, { borderColor: colorHex }]}>
             <GLText title={value} style={styles.textButton} color={color} />
+            <GLDoubleCorner color={colorHex} />
         </TouchableOpacity>
     )
 }

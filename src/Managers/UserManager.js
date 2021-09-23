@@ -16,7 +16,7 @@ import skillsIcon from '../../ressources/defaultDB/skillsIcon.json';
 import achievements from '../../ressources/defaultDB/achievements.json';
 import helpers from '../../ressources/defaultDB/helpers.json';
 
-const DAYS_PSEUDO_CHANGE = 0;
+const DAYS_PSEUDO_CHANGE = 30;
 const DEFAULT_PSEUDO = 'Player';
 const DEFAULT_STATS = {
     'sag': 0,
@@ -57,7 +57,6 @@ class UserManager {
         this.solvedAchievements = [];
         this.stats = DEFAULT_STATS;
         this.daily = [];
-        this.dailyDate = null;
 
         this.titles = [];
         this.quotes = [];
@@ -80,7 +79,6 @@ class UserManager {
         this.pseudoDate = null;
         this.stats = DEFAULT_STATS;
         this.daily = [];
-        this.dailyDate = null;
 
         this.titles = [];
         this.quotes = [];
@@ -392,30 +390,37 @@ class UserManager {
         }
 
         // Check if not exist
+        let exists = false;
         for (let a = 0; a < this.activities.length; a++) {
             const activity = this.activities[a];
-            if (activity == newActivity) {
-                output = null;
-                return;
+            const activity_compare = {
+                skillID: activity.skillID,
+                startDate: activity.startDate,
+                duration: activity.duration
+            }
+            if (activity_compare == newActivity) {
+                exists = true;
             }
         }
 
-        if (this.datetimeIsFree(startDate, duration)) {
-            // Add - Sort by date
-            const activityDate = new Date(startDate);
-            for (let a = 0; a < this.activities.length; a++) {
-                const arrayDate = new Date(this.activities[a].startDate);
-                if (activityDate < arrayDate) {
-                    this.activities.splice(a, 0, newActivity);
-                    output = true;
-                    break;
+        if (!exists) {
+            if (this.datetimeIsFree(startDate, duration)) {
+                // Add - Sort by date
+                const activityDate = new Date(startDate);
+                for (let a = 0; a < this.activities.length; a++) {
+                    const arrayDate = new Date(this.activities[a].startDate);
+                    if (activityDate < arrayDate) {
+                        this.activities.splice(a, 0, newActivity);
+                        output = true;
+                        break;
+                    }
                 }
+                if (!output) {
+                    this.activities.push(newActivity);
+                    output = true;
+                }
+                this.refreshStats(save);
             }
-            if (!output) {
-                this.activities.push(newActivity);
-                output = true;
-            }
-            this.refreshStats(save);
         }
         return output;
     }
@@ -428,7 +433,7 @@ class UserManager {
         }
         this.refreshStats();
     }
-    getActivityByDate = (date) => {
+    getActivitiesByDate = (date) => {
         let output = [];
         const currDate = isUndefined(date) ? new Date() : new Date(date);
         for (let i = 0; i < this.activities.length; i++) {
@@ -523,8 +528,7 @@ class UserManager {
             'xp': this.xp,
             'activities': this.activities,
             'solvedAchievements': this.solvedAchievements,
-            'daily': Base64.encode(JSON.stringify(this.daily)),
-            'dailyDate':  this.dailyDate
+            'daily': Base64.encode(JSON.stringify(this.daily))
         };
         await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
 
@@ -575,7 +579,6 @@ class UserManager {
             if (typeof(this.daily) === 'string') {
                 this.daily = JSON.parse(Base64.decode(this.daily));
             }
-            this.dailyDate = get(data, 'dailyDate', null);
             if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
                 if (this.activities.length === 0) {
                     this.activities = data['activities'];
@@ -623,6 +626,76 @@ class UserManager {
         }
 
         await this.saveData(false, true);
+    }
+
+    dailyAlreadyChanged = () => {
+        let output = false;
+        for (let d = 0; d < this.daily.length; d++) {
+            const daily = this.daily[d];
+            const dailyDate = new Date(daily.date);
+            const today = new Date();
+
+            const sameYear = today.getFullYear() == dailyDate.getFullYear();
+            const sameMonth = today.getMonth() == dailyDate.getMonth();
+            const sameDate = today.getDate() == dailyDate.getDate();
+            if (sameYear && sameMonth && sameDate) {
+                output = true;
+                break;
+            }
+        }
+        return output;
+    }
+    dailyOnChange = (skillID1, skillID2) => {
+        const newDaily = {
+            'skills': [ skillID1, skillID2 ],
+            'date': new Date()
+        }
+        this.daily.push(newDaily);
+        this.saveData();
+    }
+
+    dailyCheck = (date) => {
+    }
+
+    dailyTodayCheck = () => {
+        let state1 = 0;
+        let state2 = 0;
+
+        const dailyBonusCategory = this.dailyGetBonusCategory();
+        if (this.daily.length) {
+            const IDs = this.dailyGetSkills().skills;
+            const today_activities = this.getActivitiesByDate();
+            for (let ta = 0; ta < today_activities.length; ta++) {
+                const activity = today_activities[ta];
+                const skillID = activity.skillID;
+                const skill = this.getSkillByID(skillID);
+                const category = skill.Category;
+                if (IDs.includes(skillID)) {
+                    state1 += activity.duration;
+                }
+                if (category == dailyBonusCategory) {
+                    state2 += activity.duration;
+                }
+            }
+        }
+
+        state1 /= 60;
+        state2 /= 15;
+
+        return [ state1, state2 ];
+    }
+
+    dailyGetSkills = () => {
+        if (this.daily.length) return this.daily[this.daily.length - 1];
+        else return null;
+    }
+    dailyGetBonusCategory = () => {
+        const skillsLength = this.skills.length
+        const today = new Date();
+        const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
+        const skill = this.skills[index];
+        const category = skill.Category;
+        return category;
     }
 
     isConnected = this.conn.isConnected;

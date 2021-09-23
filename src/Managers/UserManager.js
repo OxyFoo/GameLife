@@ -528,7 +528,7 @@ class UserManager {
             'xp': this.xp,
             'activities': this.activities,
             'solvedAchievements': this.solvedAchievements,
-            'daily': Base64.encode(JSON.stringify(this.daily))
+            'daily': this.daily
         };
         await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
 
@@ -576,9 +576,6 @@ class UserManager {
             this.birth = get(data, 'birth', '');
             this.xp = get(data, 'xp', 0);
             this.daily = get(data, 'daily', []);
-            if (typeof(this.daily) === 'string') {
-                this.daily = JSON.parse(Base64.decode(this.daily));
-            }
             if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
                 if (this.activities.length === 0) {
                     this.activities = data['activities'];
@@ -654,9 +651,6 @@ class UserManager {
         this.saveData();
     }
 
-    dailyCheck = (date) => {
-    }
-
     dailyTodayCheck = () => {
         let state1 = 0;
         let state2 = 0;
@@ -689,9 +683,9 @@ class UserManager {
         if (this.daily.length) return this.daily[this.daily.length - 1];
         else return null;
     }
-    dailyGetBonusCategory = () => {
+    dailyGetBonusCategory = (date) => {
         const skillsLength = this.skills.length
-        const today = new Date();
+        const today = isUndefined(date) ? new Date() : new Date(date);
         const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
         const skill = this.skills[index];
         const category = skill.Category;

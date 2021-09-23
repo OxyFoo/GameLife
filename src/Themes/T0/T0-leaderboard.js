@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList, Image } from 'react-native';
 import Leaderboard from '../../Pages/leaderboard';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLHeader, GLText } from './Components/GL-Components';
+import { GLButton, GLHeader, GLText } from './Components/GL-Components';
 
 class T0Leaderboard extends Leaderboard {
     userBoard(props) {
@@ -47,6 +47,7 @@ class T0Leaderboard extends Leaderboard {
     render() {
         const connected = user.isConnected();
         const rightIcon = !connected ? 'info' : undefined;
+        const buttonText = langManager.curr['leaderboard'][this.state.time === 'week' ? 'button-week-text' : 'button-global-text'];
 
         return (
             <View style={{ flex: 1 }}>
@@ -61,6 +62,9 @@ class T0Leaderboard extends Leaderboard {
 
                 {/* Content */}
                 <View style={styles.container}>
+                    {/*<View style={styles.center}>
+                        <GLButton value={buttonText} onPress={this.toggle.bind(this)} />
+                    </View>*/}
 
                     <this.userBoard
                         self={true}
@@ -87,6 +91,10 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 24,
         paddingHorizontal: 48
+    },
+    center: {
+        marginBottom: 24,
+        alignItems: 'center'
     },
     userContainer: {
         display: 'flex',

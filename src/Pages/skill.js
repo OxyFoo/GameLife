@@ -29,13 +29,13 @@ class Skill extends React.Component {
         this.stats = skill.Stats;
         this.xml = user.getXmlByLogoID(skill.LogoID);
         this.history = [];
-        const activities = [...user.activities].reverse();
-        for (let a in activities) {
-            const activity = activities[a];
+        for (let a in user.activities) {
+            const activity = user.activities[a];
             if (activity.skillID === skillID) {
                 this.history.push(activity);
             }
         }
+        this.history.reverse();
     }
 
     back = () => { user.backPage(); }

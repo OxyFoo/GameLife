@@ -28,28 +28,113 @@ class Experience {
             this.user.stats[stat] = 0;
         }
 
-        // Count stats
-        for (let a in this.user.activities) {
-            const activity = this.user.activities[a];
-            const activityDate = new Date(activity.startDate);
-            const durationHour = activity.duration / 60;
-            const skillID = activity.skillID;
-            const skill = this.user.getSkillByID(skillID);
-
-            // Check date
-            if (activityDate >= refEndDate) continue;
-            if (activityDate < refStartDate) continue;
-
-            // XP
-            const sagLevel = this.getStatExperience('sag').lvl - 1;
-            const xp = (XPperHour * durationHour) + (sagLevel * durationHour);
-            this.user.xp += xp;
-
-            // Stats
-            for (let s in allStats) {
-                const stat = allStats[s];
-                this.user.stats[stat] += skill.Stats[stat];
+        // Sort activities & daily
+        /*let events = [];
+        let activities = [...this.user.activities];
+        let daily = [...this.user.daily];
+        while (activities.length || daily.length) {
+            if (!activities.length) {
+                events.push(daily[0]);
+                daily.splice(0, 1);
+                continue;
             }
+            if (!daily.length) {
+                events.push(activities[0]);
+                activities.splice(0, 1);
+                continue;
+            }
+            let activityDate = new Date(activities[0].startDate);
+            let dailyDate = new Date(daily[0].date);
+            if (activityDate > dailyDate) {
+                events.push(daily[0]);
+                daily.splice(0, 1);
+            } else {
+                events.push(activities[0]);
+                activities.splice(0, 1);
+            }
+        }*/
+
+        const getQuestAvancementFromActivity = (activity) => {
+            const activityDate = new Date(activity.startDate);
+            let output = null;
+            for (let i = 0; i < this.user.daily.length; i++) {
+                const daily = this.user.daily[i];
+                const dailyDate = new Date(daily.date);
+                if (activityDate > dailyDate) {
+                    output = daily.skills;
+                    output.push(this.user.dailyGetBonusCategory(activityDate));
+                }
+            }
+            return output;
+        }
+
+        // Count stats
+        const date = new Date(this.user.getFirstActivity());
+        date.setHours(0, 0, 0, 0);
+        let activities = [...this.user.activities];
+        let questSupp = 0;
+        let bonusSupp = 0;
+        while (activities.length) {
+            const activitiesInDay = this.user.getActivitiesByDate(date);
+            let questComplete = 0;
+            let bonusComplete = 0;
+            for (let a = 0; a < activitiesInDay.length; a++) {
+                const activity = activitiesInDay[a];
+                const activityDate = new Date(activity.startDate);
+                const durationHour = activity.duration / 60;
+                const skillID = activity.skillID;
+                const skill = this.user.getSkillByID(skillID);
+                const category = skill.Category;
+
+                // Remove from list
+                for (let i = 0; i < activities.length; i++) {
+                    if (activities[i] == activity) {
+                        activities.splice(i, 1);
+                        break;
+                    }
+                }
+
+                // Get Bonus
+                const daily = getQuestAvancementFromActivity(activity);
+                if (daily !== null) {
+                    if (skillID == daily[0] || skillID == daily[1]) { // Quest
+                        questComplete += activity.duration;
+                    } else if (category == daily[2]) { // Bonus
+                        bonusComplete += activity.duration;
+                    }
+                }
+
+                // Check date
+                if (activityDate >= refEndDate) continue;
+                if (activityDate < refStartDate) continue;
+
+                // XP
+                const sagLevel = this.getStatExperience('sag').lvl - 1;
+                const xp = (XPperHour * durationHour) + (sagLevel * durationHour);
+                const bonusMultiplier = 1 + ((questSupp + bonusSupp) / 100);
+                this.user.xp += xp * bonusMultiplier;
+
+                // Stats
+                for (let s in allStats) {
+                    const stat = allStats[s];
+                    this.user.stats[stat] += skill.Stats[stat];
+                }
+            }
+
+            questComplete /= 60;
+            bonusComplete /= 15;
+            if (questComplete >= 1) {
+                if (questSupp < 0) questSupp = 1;
+                else if (questSupp < 21) questSupp += 1;
+            } else if (questSupp > 0) {
+                questSupp = -5;
+            }
+            if (bonusComplete >= 1) {
+                if (bonusSupp < 10) bonusSupp += 0.5;
+            } else {
+                bonusSupp = 0;
+            }
+            date.setDate(date.getDate() + 1);
         }
 
         return this.__getXPDict(this.user.xp, UserXPperLevel);
@@ -272,7 +357,7 @@ class Experience {
     }
 
     __getXPDict(totalXP, xpPerLevel) {
-        let xp = totalXP;
+        let xp = parseInt(totalXP);
         let lvl = 0;
         while (xp >= lvl * xpPerLevel) {
             xp -= lvl * xpPerLevel;
@@ -282,7 +367,7 @@ class Experience {
             'xp': xp,
             'lvl': lvl,
             'next': lvl * xpPerLevel,
-            'totalXP': totalXP
+            'totalXP': parseInt(totalXP)
         }
         return experience;
     }

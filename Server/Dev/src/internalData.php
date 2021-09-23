@@ -197,7 +197,7 @@
         return $helpers_sorted;
     }
 
-    function GetSelfPosition($db, $account) {
+    function GetSelfPosition($db, $account, $time) {
         $position = 0;
         $accountID = $account['ID'];
         $users = $db->QueryArray("SELECT * FROM `Users`");
@@ -219,7 +219,7 @@
 
         return $position;
     }
-    function GetLeaderboard($db) {
+    function GetLeaderboard($db, $time) {
         $topUsers = array();
         $users = $db->QueryArray("SELECT * FROM `Users`");
 

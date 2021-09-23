@@ -6,17 +6,19 @@ import langManager from '../Managers/LangManager';
 class Leaderboard extends React.Component {
     state = {
         self: 0,
-        leaderboard: []
+        leaderboard: [],
+        time: ''
     }
     constructor(props) {
         super(props);
         this.loadLoaderboard();
     }
-    async loadLoaderboard() {
-        const leaderboard = await user.conn.getLeaderboard();
+    async loadLoaderboard(week = false) {
+        const leaderboard = await user.conn.getLeaderboard(week);
         this.setState({
             self: leaderboard['self'],
-            leaderboard: leaderboard['leaderboard']
+            leaderboard: leaderboard['leaderboard'],
+            time: week ? 'week' : ''
         });
     }
     componentDidMount() {
@@ -26,6 +28,11 @@ class Leaderboard extends React.Component {
             user.openPopup('ok', [ title, text ]);
             setTimeout(user.backPage, 500);
         }
+    }
+
+    toggle = () => {
+        console.log(this.state.time);
+        this.loadLoaderboard(this.state.time == 'week');
     }
 
     info = () => {

@@ -135,12 +135,13 @@ class ServManager {
         return Request_Async(data);
     }
 
-    async getLeaderboard() {
-        const data = {
+    getLeaderboard(week = false) {
+        let data = {
             'action': 'getLeaderboard',
             'token': this.token
         }
-        return await Request_Async(data);
+        if (week) data['time'] = 'week';
+        return Request_Async(data);
     }
 
     disconnect = () => {

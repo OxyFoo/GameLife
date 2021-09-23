@@ -17,6 +17,7 @@
         case 'setUserData': $commands->SetUserData(); break;
         case 'getLeaderboard': $commands->GetLeaderboard(); break;
         case 'report': $commands->Report(); break;
+        case 'getDate': $commands->GetDate(); break;
     }
 
     $output = $commands->GetOutput();

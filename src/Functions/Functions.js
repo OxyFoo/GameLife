@@ -75,14 +75,9 @@ function range(length) {
 
 function GetTimeToTomorrow() {
     const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0);
-    tomorrow.setMinutes(0);
-    tomorrow.setSeconds(0);
-    const delta = new Date(tomorrow - today);
-    const HH = twoDigit(delta.getHours() - 1);
-    const MM = twoDigit(delta.getMinutes() + 1);
+    const delta = 24 - (today.getHours() + today.getMinutes()/60);
+    const HH = twoDigit(parseInt(delta));
+    const MM = twoDigit(parseInt((delta - parseInt(delta)) * 60));
     return HH + ':' + MM;
 }
 

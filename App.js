@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { SafeAreaView } from 'react-native';
+import { BackHandler, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
+import { currentDateIsSafe } from './src/Functions/System';
+import langManager from './src/Managers/LangManager';
 
 class App extends React.Component {
     componentDidMount() {
@@ -15,6 +17,15 @@ class App extends React.Component {
         await user.loadData(false);
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 1 }, true);
+
+        // Check date errors
+        const isSafe = await currentDateIsSafe();
+        if (!isSafe) {
+            const title = langManager.curr['home']['alert-dateerror-title'];
+            const text = langManager.curr['home']['alert-dateerror-text'];
+            user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
+            return;
+        }
 
         // Load internet data (if online)
         await user.conn.AsyncRefreshAccount();

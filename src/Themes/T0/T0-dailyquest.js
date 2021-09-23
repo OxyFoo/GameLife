@@ -51,13 +51,17 @@ class T0Dailyquest extends Dailyquest {
             const title = langManager.curr['dailyquest']['daily-title'];
             const bonus = langManager.curr['dailyquest']['bonus-title'];
             const edit = langManager.curr['dailyquest']['daily-edit-button'];
+
+            const questMain = langManager.curr['dailyquest']['quest-main-text'];
+            const questBonus = langManager.curr['dailyquest']['quest-bonus-text'];
+
             return (
                 <>
                     <GLText style={styles.title} title={title} />
                     <View style={styles.blockContainer}>
                         <View style={styles.row}>
                             <GLSvg style={styles.icon} xml={this.daily_states[0] >= 1 ? 'check' : 'uncheck'} />
-                            <GLText style={styles.textList} title="Une heure d'acivité parmis les catégories suivantes :" />
+                            <GLText style={styles.textList} title={questMain} />
                         </View>
                         <GLText title={skills} style={{ marginVertical: 12 }} />
                     </View>
@@ -66,7 +70,7 @@ class T0Dailyquest extends Dailyquest {
                     <View style={styles.blockContainer}>
                         <View style={styles.row}>
                             <GLSvg style={styles.icon} xml={this.daily_states[0] >= 1 ? 'check' : 'uncheck'} />
-                            <GLText style={styles.textList} title="Un quart d'heure dans la catégorie suivante :" />
+                            <GLText style={styles.textList} title={questBonus} />
                         </View>
                         <GLText title={this.daily_bonus} style={{ marginVertical: 12 }} />
                     </View>
@@ -88,10 +92,10 @@ class T0Dailyquest extends Dailyquest {
             const title = langManager.curr['dailyquest']['alert-info-title'];
             const text = langManager.curr['dailyquest']['alert-info-text'];
             return (
-                <View style={{ padding: 24 }}>
+                <ScrollView style={{ padding: 24 }}>
                     <GLText style={{ paddingVertical: 12, fontSize: 26 }} title={title} />
                     <GLText style={styles.largetext} title={text} />
-                </View>
+                </ScrollView>
             )
         }
 
@@ -101,6 +105,7 @@ class T0Dailyquest extends Dailyquest {
         else page = define();
         return page;
     }
+
     render() {
         const dailyquestTime = langManager.curr['dailyquest']['info-remain-time'] + GetTimeToTomorrow();
 
@@ -119,9 +124,7 @@ class T0Dailyquest extends Dailyquest {
                 {/* Content */}
                 <View style={styles.container}>
                     <GLText style={styles.remainTime} title={dailyquestTime} />
-                    <ScrollView>
-                        <this.content />
-                    </ScrollView>
+                    <this.content />
                 </View>
             </View>
         )

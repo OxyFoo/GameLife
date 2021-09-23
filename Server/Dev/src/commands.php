@@ -165,15 +165,16 @@
 
         public function GetLeaderboard() {
             $token = $this->data['token'];
+            $time = $this->data['time'];
             if (isset($token)) {
                 $dataFromToken = $this->db->GetDataFromToken($token);
                 $accountID = $dataFromToken['accountID'];
                 $account = $this->db->GetAccountByID($accountID);
                 if (isset($account)) {
-                    $this->output['self'] = GetSelfPosition($this->db, $account);
+                    $this->output['self'] = GetSelfPosition($this->db, $account, $time);
                 }
             }
-            $this->output['leaderboard'] = GetLeaderboard($this->db);
+            $this->output['leaderboard'] = GetLeaderboard($this->db, $time);
             $this->output['status'] = 'ok';
         }
 
@@ -197,6 +198,11 @@
                     $this->output['status'] = 'ok';
                 }
             }
+        }
+
+        public function GetDate() {
+            $this->output['status'] = 'ok';
+            $this->output['time'] = time();
         }
 
     }

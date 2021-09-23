@@ -56,7 +56,9 @@
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-exit-title": "Quitter",
-        "alert-exit-text": "Voulez-vous quitter l'application ?"
+        "alert-exit-text": "Voulez-vous quitter l'application ?",
+        "alert-dateerror-title": "Attention",
+        "alert-dateerror-text": "Il semblerait que tu aies modifié la date, peut-être dans le but de tricher ? J'espère que cela ne se reproduira plus ^^"
     },
 
     "identity": {
@@ -127,6 +129,8 @@
 
         "alert-remove-title": "Suppression ?",
         "alert-remove-text": "Êtes-vous sûr de vouloir supprimer cette activité ?",
+        "alert-notfill-title": "Incorrect",
+        "alert-notfill-text": "Veuillez remplir tous les champs avant de continuer",
         "alert-wrongtiming-title": "Impossible !",
         "alert-wrongtiming-text": "L'activité sélectionnée comment ou termine durant une autre."
     },
@@ -215,6 +219,9 @@
     "leaderboard": {
         "page-title": "Classement",
 
+        "button-global-text": "Global",
+        "button-week-text": "Semaine",
+
         "alert-onlineneed-title": "Connexion nécessaire",
         "alert-onlineneed-text": "Une connexion est nécessaire pour pouvoir avoir accès au classement !",
         "alert-connectneed-title": "Connectez-vous",
@@ -284,11 +291,11 @@
         "daily-edit-button": "Modifier les catégories",
         "daily-categories-text": " ou ",
 
-        "quest-main-text": "",
-        "quest-bonus-text": "",
+        "quest-main-text": "Une heure d'acivité parmis les catégories suivantes :",
+        "quest-bonus-text": "Un quart d'heure dans la catégorie suivante :",
 
         "alert-info-title": "Informations",
-        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et quart d’activité : vous avez 1h15 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 20 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt disponible) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuel). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
+        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et quart d’activité : vous avez 1h15 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 21 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt disponible) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuel). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
         "alert-notfill-title": "Pas terminé",
         "alert-notfill-text": "Merci de remplir tous les champs",
         "alert-same-title": "Pas terminé",

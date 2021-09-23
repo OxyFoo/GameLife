@@ -58,7 +58,9 @@ class Activity extends React.Component {
     back = () => { user.backPage(); }
     valid = () => {
         if (typeof(this.state.selectedSkill) === 'undefined') {
-            console.warn("Il faut remplir les champs");
+            const title = langManager.curr['calendar']['alert-notfill-title'];
+            const text = langManager.curr['calendar']['alert-notfill-text'];
+            user.openPopup('ok', [ title, text ]);
         } else {
             const skillID = this.state.selectedSkill.skillID;
             const date = this.DATES[this.state.selectedDateKey].fulldate;

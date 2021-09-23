@@ -7,7 +7,8 @@ const STORAGE = {
     INTERNAL: '@params/internal',
     INTERNAL_HASH: '@params/internal_hash',
     APPSTATE: '@params/appstate',
-    THEME: '@params/theme'
+    THEME: '@params/theme',
+    DATE: '@params/date'
 }
 
 class DataStorage {

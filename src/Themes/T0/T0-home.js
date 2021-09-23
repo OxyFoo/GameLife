@@ -10,7 +10,7 @@ import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, 
 class T0Home extends Home {
     render() {
         const userExperience = user.experience.getExperience();
-        const totalXP = user.xp;
+        const totalXP = parseInt(user.xp);
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;
         const nextLvlXP = userExperience.next;

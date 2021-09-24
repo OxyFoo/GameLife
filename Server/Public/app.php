@@ -1,0 +1,27 @@
+<?php
+
+    require('./src/commands.php');
+
+    $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
+    $action = $data['action'];
+    if (!isset($action)) exit();
+
+    $commands = new Commands($data);
+
+    switch ($action) {
+        case 'ping': $commands->Ping(); break;
+        case 'getToken': $commands->GetToken(); break;
+        case 'getInternalData': $commands->GetInternalData(); break;
+        case 'getUserData': $commands->GetUserData(); break;
+        case 'setUserData': $commands->SetUserData(); break;
+        case 'getLeaderboard': $commands->GetLeaderboard(); break;
+        case 'report': $commands->Report(); break;
+        case 'getDate': $commands->GetDate(); break;
+    }
+
+    $output = $commands->GetOutput();
+    echo($output);
+    unset($commands);
+
+?>

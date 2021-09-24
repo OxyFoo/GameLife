@@ -234,7 +234,8 @@
 
         public function setUserData($account, $data) {
             $accountID = $account['ID'];
-            $result = $this->conn->query("UPDATE `Users` SET `Data` = '$data' WHERE `ID` = '$accountID'");
+            $crypted = $this->Encrypt($data);
+            $result = $this->conn->query("UPDATE `Users` SET `Data` = '$crypted' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving data failed");
             }

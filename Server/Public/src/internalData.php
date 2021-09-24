@@ -65,7 +65,7 @@
     function GetSkills($db, $lang = 'fr') {
         $skills = $db->QueryArray("SELECT * FROM `Skills`");
         $categories = $db->QueryArray("SELECT * FROM `Categories`");
-        $safeSkills = array();
+        $skills_safe = array();
 
         for ($i = 0; $i < count($skills); $i++) {
             // Get old stats
@@ -151,30 +151,53 @@
                 }
             }
 
-            array_push($safeSkills, $skills[$i]);
+            array_push($skills_safe, $skills[$i]);
         }
 
-        return $safeSkills;
+        $skills_sorted = SortDictBy($skills_safe, "Name");
+
+        return $skills_sorted;
     }
 
-    function GetHelpers($db, $lang) {
-        $helpers = $db->QueryArray("SELECT * FROM `Helpers`");
+    function GetContributors($db, $lang) {
+        $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
+        $helpers_sorted = array();
+        $helpers_count = count($helpers);
+
+        // Sort
+        $priority = 0;
+        while (!!count($helpers)) {
+            $founded = 0;
+            for ($i = 0; $i < count($helpers); $i++) {
+                if ($helpers[$i]["Priority"] == $priority) {
+                    array_push($helpers_sorted, $helpers[$i]);
+                    array_splice($helpers, $i, 1);
+                    $founded = 1;
+                    break;
+                }
+            }
+            if (!$founded) {
+                $priority++;
+            }
+        }
+
         // Translations
-        for ($i = 0; $i < count($helpers); $i++) {
-            $Translations = $helpers[$i]["TypeTrad"];
-            unset($helpers[$i]["TypeTrad"]);
+        for ($i = 0; $i < $helpers_count; $i++) {
+            $Translations = $helpers_sorted[$i]["TypeTrad"];
+            unset($helpers_sorted[$i]["TypeTrad"]);
+            unset($helpers_sorted[$i]["Priority"]);
 
             if (isJson($Translations)) {
                 $jsonTranslations = json_decode($Translations);
                 if (!empty($jsonTranslations->$lang)) {
-                    $helpers[$i]["Type"] = $jsonTranslations->$lang;
+                    $helpers_sorted[$i]["Type"] = $jsonTranslations->$lang;
                 }
             }
         }
-        return $helpers;
+        return $helpers_sorted;
     }
 
-    function GetSelfPosition($db, $account) {
+    function GetSelfPosition($db, $account, $time) {
         $position = 0;
         $accountID = $account['ID'];
         $users = $db->QueryArray("SELECT * FROM `Users`");
@@ -196,7 +219,7 @@
 
         return $position;
     }
-    function GetLeaderboard($db) {
+    function GetLeaderboard($db, $time) {
         $topUsers = array();
         $users = $db->QueryArray("SELECT * FROM `Users`");
 

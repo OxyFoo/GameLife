@@ -59,4 +59,39 @@
         return json_last_error() === 0;
     }
 
+    function isSorted($arr) {
+        $arr_check = $arr;
+        sort($arr_check);
+        return $arr == $arr_check;
+    }
+
+    function SortDictBy($dict, $cell) {
+        $sorted = array();
+
+        $i = 0;
+        while (count($dict) > 0) {
+            $added = 0;
+            for ($s = 0; $s < count($sorted); $s++) {
+                if (!isset($dict[$i]["Name"], $sorted[$s]["Name"])) {
+                    continue;
+                }
+                $Name = $dict[$i]["Name"];
+                $NameRef = $sorted[$s]["Name"];
+                $arr = array($NameRef, $Name);
+                if (!isSorted($arr)) {
+                    array_splice($sorted, $s, 0, array($dict[$i]));
+                    array_splice($dict, $i, 1);
+                    $added = 1;
+                    break;
+                }
+            }
+            if (!$added) {
+                array_push($sorted, $dict[$i]);
+                array_splice($dict, $i, 1);
+            }
+        }
+
+        return $sorted;
+    }
+
 ?>

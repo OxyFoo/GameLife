@@ -1,8 +1,12 @@
 <?php
 
+    $URL = "https://oxyfoo.com/App/GameLife/Public/auth.php";
+
     function SendSigninMail($email, $deviceName, $accept, $reject, $lang = 'fr') {
-        $link_accept = "https://oxyfoo.com/App/GameLife/beta/auth.php?data=$accept";
-        $link_reject = "https://oxyfoo.com/App/GameLife/beta/auth.php?data=$reject";
+        global $URL;
+
+        $link_accept = "$URL?data=$accept";
+        $link_reject = "$URL?data=$reject";
         
         $lang_content = file_get_contents("mail/lang.json");
         $lang_json = json_decode($lang_content);

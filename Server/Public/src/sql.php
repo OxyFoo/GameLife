@@ -1,11 +1,11 @@
 <?php
 
-    require('./mail.php');
-    require('./config.php');
-    require('./functions.php');
-    require('./internalData.php');
+    require('./src/mail.php');
+    require('./src/config.php');
+    require('./src/functions.php');
+    require('./src/internalData.php');
 
-    $DAYS_PSEUDO_CHANGE = 1;
+    $DAYS_PSEUDO_CHANGE = 28;
 
     class DataBase
     {
@@ -234,7 +234,8 @@
 
         public function setUserData($account, $data) {
             $accountID = $account['ID'];
-            $result = $this->conn->query("UPDATE `Users` SET `Data` = '$data' WHERE `ID` = '$accountID'");
+            $crypted = $this->Encrypt($data);
+            $result = $this->conn->query("UPDATE `Users` SET `Data` = '$crypted' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving data failed");
             }

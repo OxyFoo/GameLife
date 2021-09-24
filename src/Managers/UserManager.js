@@ -489,6 +489,7 @@ class UserManager {
 
     async changeUser() {
         const pseudo = this.pseudo;
+        const title = this.title;
         if (this.email) {
             await this.conn.AsyncRefreshAccount();
             await this.saveData(false);
@@ -497,6 +498,7 @@ class UserManager {
                 if (pseudo != DEFAULT_PSEUDO) {
                     this.pseudo = pseudo;
                 }
+                this.title = title;
                 await this.saveData(true);
                 this.changePage();
             }

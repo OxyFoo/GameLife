@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BackHandler, SafeAreaView } from 'react-native';
+import { AppState, BackHandler, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
@@ -9,6 +9,7 @@ import langManager from './src/Managers/LangManager';
 class App extends React.Component {
     componentDidMount() {
         user.changePage('loading');
+        this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
         this.loadData();
     }
 
@@ -17,15 +18,6 @@ class App extends React.Component {
         await user.loadData(false);
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 1 }, true);
-
-        // Check date errors
-        const isSafe = await currentDateIsSafe();
-        if (!isSafe) {
-            const title = langManager.curr['home']['alert-dateerror-title'];
-            const text = langManager.curr['home']['alert-dateerror-text'];
-            user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
-            return;
-        }
 
         // Load internet data (if online)
         await user.conn.AsyncRefreshAccount();
@@ -41,6 +33,22 @@ class App extends React.Component {
         // Wait to 5 seconds (with small glith)
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 4 }, true);
+    }
+
+    async componentChangeState(newState) {
+        console.log(newState);
+        if (newState === 'active') {
+            console.log("Check date");
+            // Check date errors
+            const isSafe = await currentDateIsSafe();
+            console.log(isSafe);
+            if (!isSafe) {
+                const title = langManager.curr['home']['alert-dateerror-title'];
+                const text = langManager.curr['home']['alert-dateerror-text'];
+                user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
+                return;
+            }
+        }
     }
 
     componentWillUnmount() {

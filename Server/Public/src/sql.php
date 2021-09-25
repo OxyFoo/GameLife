@@ -281,7 +281,7 @@
             $delta = ($todayDate - $lastPseudoDate) / (60 * 60 * 24);
             if ($oldUsername != $username) {
                 if ($delta >= $DAYS_PSEUDO_CHANGE) {
-                    if ($this->pseudoIsFree($accountID, $username)) {
+                    if (strtolower($this->pseudoIsFree($accountID, $username))) {
                         $result_pseudo = $this->conn->query("UPDATE `Users` SET `Username` = '$username', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'");
                         $changed = 1;
                         if ($result_pseudo !== TRUE) {

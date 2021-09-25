@@ -5,7 +5,6 @@ import ServManager from "../Class/Server";
 import ThemeManager from '../Class/Themes';
 import DataStorage, { STORAGE } from '../Class/DataStorage';
 
-import Base64 from '../Class/Base64';
 import Experience from "../Class/Experience";
 import { isUndefined } from "../Functions/Functions";
 
@@ -488,15 +487,16 @@ class UserManager {
     }
 
     async changeUser() {
-        const pseudo = this.pseudo;
+        const oldEmail = this.email
+        const oldPseudo = this.pseudo;
         const title = this.title;
         if (this.email) {
             await this.conn.AsyncRefreshAccount();
             await this.saveData(false);
             if (this.isConnected()) {
                 await this.loadData(true);
-                if (pseudo != DEFAULT_PSEUDO) {
-                    this.pseudo = pseudo;
+                if (oldPseudo !== DEFAULT_PSEUDO && oldEmail === this.email) {
+                    this.pseudo = oldPseudo;
                 }
                 this.title = title;
                 await this.saveData(true);

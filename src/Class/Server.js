@@ -16,8 +16,7 @@ const STATUS = {
     BLACKLIST: 'blacklist',
     WAITMAIL : 'waitMailConfirmation',
     BANNED   : 'ban',
-    SIGNIN   : 'signin',
-    UPDATE   : 'update'
+    SIGNIN   : 'signin'
 };
 
 class ServManager {
@@ -52,14 +51,21 @@ class ServManager {
 
         // Ping
         const result_ping = await this.reqPing();
-        this.online = typeof(result_ping['status']) !== 'undefined' && result_ping['status'] === 'ok';
-
+        if (result_ping.hasOwnProperty('status')) {
+            const status = result_ping['status'];
+            this.online = status === 'ok';
+            if (status == 'update') {
+                const title = langManager.curr['home']['alert-update-title'];
+                const text = langManager.curr['home']['alert-update-text'];
+                this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
+            }
+        }
+        
         // Connection
         if (this.online) {
             if (!this.isConnected() && this.user.email !== '') {
                 const result_connect = await this.reqConnect();
                 const status = result_connect['status'];
-                const token = result_connect['token'];
 
                 if (typeof(status) === 'undefined') {
                     console.error('Invalid response');
@@ -69,11 +75,8 @@ class ServManager {
                 const index_status = Object.values(STATUS).indexOf(status);
                 if (index_status !== -1) this.status = STATUS[Object.keys(STATUS)[index_status]];
     
-                if (this.status === STATUS.UPDATE) {
-                    const title = langManager.curr['home']['alert-update-title'];
-                    const text = langManager.curr['home']['alert-update-text'];
-                    this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
-                } else if (this.status === STATUS.CONNECTED) {
+                if (this.status === STATUS.CONNECTED) {
+                    const token = result_connect['token'];
                     if (typeof(token) === 'undefined' || token.length === 0) {
                         console.error('Invalid key length');
                         return;
@@ -102,23 +105,23 @@ class ServManager {
     }
 
     reqPing() {
+        const version = require('../../package.json').version;
         const data = {
             'action': 'ping',
             'deviceID': this.deviceID,
-            'deviceName': this.deviceName
+            'deviceName': this.deviceName,
+            'version': version
         };
         return Request_Async(data);
     }
 
     reqConnect() {
-        const version = require('../../package.json').version;
         const data = {
             'action': 'getToken',
             'deviceID': this.deviceID,
             'deviceName': this.deviceName,
             'email': this.user.email,
-            'lang': langManager.currentLangageKey,
-            'version': version
+            'lang': langManager.currentLangageKey
         };
         return Request_Async(data);
     }

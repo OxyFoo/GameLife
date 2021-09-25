@@ -36,12 +36,9 @@ class App extends React.Component {
     }
 
     async componentChangeState(newState) {
-        console.log(newState);
         if (newState === 'active') {
-            console.log("Check date");
             // Check date errors
             const isSafe = await currentDateIsSafe();
-            console.log(isSafe);
             if (!isSafe) {
                 const title = langManager.curr['home']['alert-dateerror-title'];
                 const text = langManager.curr['home']['alert-dateerror-text'];

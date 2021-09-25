@@ -19,11 +19,20 @@
         }
 
         public function Ping() {
-            $deviceIdentifier = $this->data['deviceID'];
-            $deviceName = $this->data['deviceName'];
-            if (isset($deviceIdentifier, $deviceName)) {
-                $device = $this->db->GetDevice($deviceIdentifier, $deviceName);
-                $this->output['status'] = 'ok';
+            $app = $this->db->QueryArray("SELECT * FROM `App`");
+            $last_version = $app[0]['Version'];
+            
+            $version = $this->data['version'];
+            if (isset($version) && $version == $last_version) {
+                $deviceIdentifier = $this->data['deviceID'];
+                $deviceName = $this->data['deviceName'];
+
+                if (isset($deviceIdentifier, $deviceName)) {
+                    $device = $this->db->GetDevice($deviceIdentifier, $deviceName);
+                    $this->output['status'] = 'ok';
+                }
+            } else {
+                $this->output['status'] = 'update';
             }
         }
 
@@ -32,48 +41,40 @@
             $deviceName = $this->data['deviceName'];
             $email = $this->data['email'];
             $lang = $this->data['lang'];
-            $version = $this->data['version'];
-    
-            if (isset($deviceIdentifier, $deviceName, $email, $lang, $version)) {
+
+            if (isset($deviceIdentifier, $deviceName, $email, $lang)) {
                 $account = $this->db->GetAccountByEmail($email);
                 $device = $this->db->GetDevice($deviceIdentifier, $deviceName);
-    
-                $app = $this->db->QueryArray("SELECT * FROM `App`");
-                $last_version = $app[0]['Version'];
-    
-                if ($version == $last_version) {
-                    // Check permissions
-                    $deviceID = $device['ID'];
-                    $perm = $this->db->CheckDevicePermissions($deviceID, $account);
-                    if ($perm === -1) {
-                        // Blacklisted
-                        $this->output['status'] = 'blacklist';
-                    } else if ($perm === 0) {
-                        // Waiting mail confirmation
-                        $this->output['status'] = 'waitMailConfirmation';
-                    } else if ($perm === 1) {
-                        if ($account['Banned'] == 0) {
-                            // OK
-                            $accountID = $account['ID'];
-                            $this->db->RefreshLastDate($accountID);
-                            $this->output['token'] = $this->db->GeneratePrivateToken($accountID, $deviceID);
-                            $this->output['status'] = 'ok';
-                        } else {
-                            $this->output['status'] = 'ban';
-                        }
-                    } else {
-                        // No device in account
+
+                // Check permissions
+                $deviceID = $device['ID'];
+                $perm = $this->db->CheckDevicePermissions($deviceID, $account);
+                if ($perm === -1) {
+                    // Blacklisted
+                    $this->output['status'] = 'blacklist';
+                } else if ($perm === 0) {
+                    // Waiting mail confirmation
+                    $this->output['status'] = 'waitMailConfirmation';
+                } else if ($perm === 1) {
+                    if ($account['Banned'] == 0) {
+                        // OK
                         $accountID = $account['ID'];
                         $this->db->RefreshLastDate($accountID);
-                        $this->db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
-                        $this->db->RefreshToken($deviceID);
-                        $this->db->SendMail($email, $deviceID, $accountID, $lang);
-                        $this->output['status'] = 'signin';
+                        $this->output['token'] = $this->db->GeneratePrivateToken($accountID, $deviceID);
+                        $this->output['status'] = 'ok';
+                    } else {
+                        $this->output['status'] = 'ban';
                     }
                 } else {
-                    $this->output['status'] = 'update';
+                    // No device in account
+                    $accountID = $account['ID'];
+                    $this->db->RefreshLastDate($accountID);
+                    $this->db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
+                    $this->db->RefreshToken($deviceID);
+                    $this->db->SendMail($email, $deviceID, $accountID, $lang);
+                    $this->output['status'] = 'signin';
                 }
-    
+
             }
         }
 

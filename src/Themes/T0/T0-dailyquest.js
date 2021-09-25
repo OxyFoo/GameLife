@@ -42,8 +42,9 @@ class T0Dailyquest extends Dailyquest {
 
         const quests = () => {
             let skills;
-            if (this.state.enable) {
-                const skillsIDs = user.dailyGetSkills().skills;
+            const dailySkills = user.dailyGetSkills();
+            if (this.state.enable && dailySkills != null) {
+                const skillsIDs = dailySkills.skills;
                 const skillName1 = user.getSkillByID(skillsIDs[0]).Name;
                 const skillName2 = user.getSkillByID(skillsIDs[1]).Name;
                 skills = skillName1 + langManager.curr['dailyquest']['daily-categories-text'] + skillName2;

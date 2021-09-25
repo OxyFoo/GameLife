@@ -31,6 +31,7 @@ class Leaderboard extends React.Component {
     }
 
     toggle = () => {
+        // TODO
         console.log(this.state.time);
         this.loadLoaderboard(this.state.time == 'week');
     }

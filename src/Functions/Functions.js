@@ -20,11 +20,13 @@ function getDates(days_number = 2, step_minutes = 15) {
     let dates = [];
 
     let date = new Date();
+    let today = new Date();
     date.setMinutes(parseInt(date.getMinutes()/step_minutes)*step_minutes, 0, 0);
     for (let i = 0; i < (60 / step_minutes) * 24 * days_number; i++) {
         const HH = twoDigit(date.getHours());
         const MM = twoDigit(date.getMinutes());
-        const newDate = date.getDate() + ' ' + HH + ':' + MM;
+        const day = date.getDate() === today.getDate() ? '' : date.getDate() + '/' + (date.getMonth() + 1) + ' ';
+        const newDate = day + ' ' + HH + ':' + MM;
         const newDict = { key: dates.length, value: newDate, fulldate: date.toString() };
         dates.push(newDict);
         date.setMinutes(date.getMinutes() - step_minutes);

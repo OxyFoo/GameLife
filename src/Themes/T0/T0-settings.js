@@ -49,7 +49,7 @@ class T0Settings extends Settings {
                         </TouchableOpacity>
                     )}
 
-                    {/* Reset activities
+                    {/* Reset all
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.clear}>
                         <GLText style={styles.title} title={langManager.curr['settings']['input-clear'].toUpperCase()} />
                         <GLIconButton icon='trash' />

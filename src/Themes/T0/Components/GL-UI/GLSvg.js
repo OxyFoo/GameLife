@@ -13,7 +13,7 @@ const XML_DEFAULT = 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWx
 
 function GLSvg(props) {
     let xml_raw = XML_DEFAULT;
-    if (typeof(props.xml) !== 'undefined') {
+    if (typeof(props.xml) !== 'undefined' && props.xml != null) {
         switch (props.xml) {
             case 'check': xml_raw = XML_CHECK; break;
             case 'uncheck': xml_raw = XML_UNCHECK; break;

@@ -70,7 +70,7 @@ class T0Dailyquest extends Dailyquest {
                     <GLText style={styles.title} title={bonus} />
                     <View style={styles.blockContainer}>
                         <View style={styles.row}>
-                            <GLSvg style={styles.icon} xml={this.daily_states[0] >= 1 ? 'check' : 'uncheck'} />
+                            <GLSvg style={styles.icon} xml={this.daily_states[1] >= 1 ? 'check' : 'uncheck'} />
                             <GLText style={styles.textList} title={questBonus} />
                         </View>
                         <GLText title={this.daily_bonus} style={{ marginVertical: 12 }} />

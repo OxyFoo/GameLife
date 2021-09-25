@@ -97,7 +97,7 @@ class GLLeftPanel extends React.PureComponent {
                     />
                     <TouchableOpacity style={styles.aboutContainer} activeOpacity={.5} onPress={() => { this.toggleVisibility(); user.changePage('about'); }}>
                         <GLText style={styles.aboutText} title={langManager.curr['home']['shortcut-about']} />
-                        <Image style={styles.aboutImage} source={require('../../../../../ressources/logo/loading_3.png')} width={32} height={32} />
+                        <Image style={styles.aboutImage} source={require('../../../../../ressources/logo/loading_3.png')} width={32} height={32} style={{ transform: [{ scale: 2.5 }] }} />
                     </TouchableOpacity>
                 </Animated.View>
             </Animated.View>

@@ -105,6 +105,11 @@ class GLLeftPanel extends React.PureComponent {
     }
 }
 
+// juste pour avoir la taille de l'écran 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+console.log(ww,wh,wh/ww);
+
 const styles = StyleSheet.create({
     parent: {
         position: 'absolute',
@@ -126,13 +131,14 @@ const styles = StyleSheet.create({
         width: PANEL_WIDTH,
         height: '100%',
         marginLeft: -PANEL_WIDTH,
-        paddingTop: 64,
+        paddingTop: '10%',//wh*4/100,
+        paddingBottom : '40%', //wh*10/100 , 
         borderColor: '#FFFFFF',
         borderRightWidth: 2
     },
     component: {
-        paddingHorizontal: 12,
-        paddingVertical: 16
+        paddingHorizontal: '4%', // ww * 32 / 1000 ,
+        paddingVertical: '8%' // wh * 24 /1000 
     },
     separator: {
         width: '60%',
@@ -145,14 +151,14 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        padding: 24,
+        padding: '10%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
     aboutText: {
-        fontSize: 20,
+        fontSize: ww*6/100,
         textAlign: 'left'
     },
     aboutImage: {

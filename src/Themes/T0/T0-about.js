@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList,Dimensions } from 'react-native';
 
 import About from '../../Pages/about';
 import user from '../../Managers/UserManager';
@@ -73,37 +73,50 @@ class T0About extends About {
     }
 }
 
+// juste pour avoir la taille de l'écran 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+console.log(ww,wh,wh/ww);
+
 const styles = StyleSheet.create({
-    container: {
+    container: { // background 
         flex: 1,
-        paddingHorizontal: 24,
+        paddingHorizontal: '6.4%',
 
         display: 'flex',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly', 
+        
     },
-    title: {
-        fontSize: 32,
-        marginBottom: 24
+    title: { // sous titres 
+        fontSize: ww*853/10000,
+        marginBottom: '3.6%',
+        
     },
-    text: {
-        fontSize: 20
+    text: { // Crédits Gerem Pierre
+        fontSize: ww*53/1000,
+        
     },
 
-    contributorsContainer: {
-        height: '28%'
+    contributorsContainer: { // titres et tableaux contributeurs 
+        height: '28%',
+        
     },
-    contributors: {
+    contributors: { // tableaux contributeurs 
         flex: 1,
         borderColor: '#FFFFFF',
-        borderWidth: 3
+        borderWidth: 3, 
+        
     },
-    contributorsText: { marginVertical: 4 },
-    contributorsValues: { fontSize: 16 },
-    row: {
+
+    contributorsText: { marginVertical: '1%', },
+    contributorsValues: { fontSize: ww*43/1000,  },
+
+    row: { // barre du bas 
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly', 
+        
     }
 });
 

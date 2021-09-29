@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import Achievements from '../../Pages/achievements';
 import user from '../../Managers/UserManager';
@@ -50,38 +50,46 @@ class T0Achievements extends Achievements {
     }
 }
 
+// juste pour avoir la taille de l'écran 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+console.log(ww,wh,wh/ww);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 24
+        paddingVertical: "3.5%",
+        
     },
     achievementsContainer: {
         width: '50%',
-        padding: 12
+        padding: "3.2%", 
+        
     },
     achievementsBox: {
-        height: 128,
+        height: wh * 19 / 100,
         display: 'flex',
         justifyContent: 'space-evenly',
-        paddingVertical: 12,
-        paddingHorizontal: 6,
+        paddingVertical: "5%",
+        paddingHorizontal: "5%",
         borderColor: '#FFFFFF',
-        borderTopWidth: 3,
-        borderBottomWidth: 3,
-        borderLeftWidth: 6,
-        borderRightWidth: 6
+        borderTopWidth: ww * 16 / 1000 ,
+        borderBottomWidth: ww * 16 / 1000 ,
+        borderLeftWidth: ww * 16 / 1000 ,
+        borderRightWidth: ww * 16 / 1000 ,
+        
     },
     unsolved: {
         borderColor: '#888888'
+        
     },
     title: {
         minHeight: 30,
-        marginBottom: 12,
-        fontSize: 18
+        marginBottom:  wh * 18 / 1000 ,
+        fontSize:  ww * 48 / 1000 ,
     },
     description: {
         marginBottom: 12,
-        fontSize: 12
+        fontSize:  ww * 32 / 1000 ,
     }
 });
 

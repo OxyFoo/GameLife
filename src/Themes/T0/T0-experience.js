@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions} from 'react-native';
 
 import Experience from '../../Pages/experience';
 import user from '../../Managers/UserManager';
@@ -93,16 +93,20 @@ class T0Experience extends Experience {
     }
 }
 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+
+// peut etre devoir faire une scroll view pour celle la quand même, je suis pas sur de comment ca va s'adapter.. (a voir sur petit écran)
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 24,
+        padding: "7%",
         display: 'flex',
         justifyContent: 'space-around',
     },
     textLevel: {
-        marginVertical: 6,
-        fontSize: 18,
+        marginVertical: "1.5%",
+        fontSize: ww * 48 / 1000,
         textAlign: 'left'
     }
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions} from 'react-native';
 
 import Dailyquest from '../../Pages/dailyquest';
 import user from '../../Managers/UserManager';
@@ -131,11 +131,13 @@ class T0Dailyquest extends Dailyquest {
         )
     }
 }
-
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+console.log(ww,wh,wh/ww);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 24
+        paddingVertical: "5%"
     },
     fullscreen: {
         flex: 1,
@@ -152,50 +154,57 @@ const styles = StyleSheet.create({
     },
 
     icon: {
-        width: 24,
-        height: 24,
-        margin: 12
+        width: ww * 64 / 1000, 
+        height: ww * 64 / 1000, 
+        margin: "4%", 
     },
 
     remainTime: {
-        marginRight: 24,
-        textAlign: 'right'
+        marginRight: "5%",
+        textAlign: 'right',
     },
     title: {
-        paddingVertical: 48,
-        fontSize: 26
+        paddingVertical: "10%",
+        fontSize: ww * 693 / 10000,
+        
     },
-    text: {
-        paddingVertical: 6,
-        fontSize: 20
+    text: { // C'EST LE TEXT DE QUOI CA WESH 
+        paddingVertical: 6, // JE PEUX PAS BIEN FAIRE LE PADDING PARCE QUE JE SAIS PAS OU EST LE TEXTE 
+        fontSize: ww * 53 / 1000,  
     },
+
     largetext: {
         textAlign: 'justify',
-        paddingVertical: 6,
-        fontSize: 16,
-        lineHeight: 18
+        paddingVertical: "2%",
+        fontSize: ww * 426 / 10000,
+        lineHeight: wh * 239 / 10000,
+        
     },
+    
     titleS: {
-        paddingVertical: 12,
-        fontSize: 26
+        paddingVertical: "2%",
+        fontSize: ww * 693 / 10000
     },
     button: {
-        width: 164,
-        height: 48,
-        marginTop: 32
+        width: ww * 437 / 1000,
+        height: wh * 71 / 1000,
+        marginTop: "7%"
     },
 
     blockContainer: {
-        padding: 12,
-        marginHorizontal: 24,
+        padding: "3%",
+        marginHorizontal: "10%",
         borderWidth: 2,
-        borderColor: '#FFFFFF'
+        borderColor: '#FFFFFF',
+        
+        
     },
     textList: {
         width: '80%',
-        marginVertical: 6,
-        lineHeight: 18,
-        textAlign: 'left'
+        marginVertical: "2%",
+        lineHeight: wh * 269 / 10000,
+        textAlign: 'left',
+        
     }
 });
 

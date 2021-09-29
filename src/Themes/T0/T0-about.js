@@ -76,7 +76,7 @@ class T0About extends About {
 // juste pour avoir la taille de l'écran 
 const ww = Dimensions.get('window').width ; 
 const wh = Dimensions.get('window').height ;
-console.log(ww,wh,wh/ww);
+
 
 const styles = StyleSheet.create({
     container: { // background 

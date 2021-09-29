@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import Activity from '../../Pages/activity';
 import user from '../../Managers/UserManager';
@@ -103,17 +103,20 @@ class T0Activity extends Activity {
         )
     }
 }
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
     content: {
-        paddingVertical: 48,
-        paddingHorizontal: 36
+        paddingVertical: "5%",
+        paddingHorizontal: "8%",
     },
     title: {
-        marginTop: 12,
-        marginHorizontal: 12,
+        marginTop: "3%",
+        marginHorizontal: "4%",
         textAlign: 'left',
-        fontSize: 20
+        fontSize: ww * 53 / 1000, 
+
     },
     button: {
         flexDirection: 'row',
@@ -132,16 +135,18 @@ const styles = StyleSheet.create({
     },
 
     containerAttr: {
-        marginTop: 12,
+        marginTop: "5%",
 
         zIndex: -10,
-        elevation: -10
+        elevation: -10,
+
+        
     },
     attr: {
-        marginLeft: 12,
-        marginBottom: 6,
-        fontSize: 22,
-        textAlign: 'left'
+        marginLeft: "4%",
+        marginBottom: "2%",
+        fontSize: ww * 586 / 10000,
+        textAlign: 'left',
     }
 });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Calendar from '../../Pages/calendar';
@@ -91,19 +91,21 @@ class T0Calendar extends Calendar {
         )
     }
 }
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
     topBar: {
         width: '100%',
-        height: 64,
+        height: '9.5%',
         flexDirection: 'row',
         borderColor: '#FFFFFF',
         borderWidth: 3,
-        borderTopWidth: 2
+        borderTopWidth: 2,
     },
     headerLeft: {
         width: '40%',
-        height: '100%'
+        height: '100%',
     },
     headerRight: {
         width: '60%',
@@ -113,18 +115,20 @@ const styles = StyleSheet.create({
         width: 3,
         height: '100%',
         backgroundColor: '#FFFFFF'
+        
     },
-    absolute: { position: 'absolute', fontSize: 20 },
-    small: { fontSize: 16 },
-    topLeft: { textAlign: 'left', top: 4, left: 4 },
-    midLeft: { textAlign: 'left', bottom: '40%', left: 4 },
+    absolute: { position: 'absolute', fontSize: ww * 53 / 1000, },
+    small: { fontSize: ww * 426 / 10000 },
+    topLeft: { textAlign: 'left', top: "4%", left: "2%" },
+    midLeft: { textAlign: 'left', bottom: '40%', left: "2%" },
     textIcon: {
         position: 'absolute',
         bottom: 0,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+
     }
 });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 
 import Loading from '../../Pages/loading';
 import langManager from '../../Managers/LangManager';
@@ -28,6 +28,8 @@ class T0Loading extends Loading {
         )
     }
 }
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
     content: {
@@ -40,31 +42,31 @@ const styles = StyleSheet.create({
     },
     containTitle: {
         width: '100%',
-        top: -24,
+        top: - (wh * 359 / 10000),
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'row'
     },
     title: {
-        fontSize: 28,
+        fontSize: ww * 746 / 10000,
         zIndex: 10,
-        elevation: 10
+        elevation: 10, 
     },
     points: {
-        fontSize: 28
+        fontSize: ww * 746 / 10000
     },
     citation: {
-        top: -24,
+        top: - (wh * 359 / 10000),
         width: '80%',
-        marginTop: 16,
-        marginBottom: 12,
-        paddingBottom: 24,
+        marginTop: "5%",
+        marginBottom: "3%",
+        paddingBottom: "3%",
         textAlign: 'justify'
     },
     author: {
-        top: -24,
+        top: - (wh * 359 / 10000),
         width: '80%',
-        marginVertical: 12,
+        marginVertical: "3%",
         textAlign: 'right'
     },
     text: {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 
 import Skill from '../../Pages/skill';
 import user from '../../Managers/UserManager';
@@ -67,24 +67,27 @@ class T0Skill extends Skill {
     }
 }
 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+
 const styles = StyleSheet.create({
     content: {
         flex: 1
     },
     skillContainer: {
-        marginVertical: 24,
+        marginVertical: "5%",
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     pictureContainer: {
-        marginHorizontal: 12,
+        marginHorizontal: "5%",
         justifyContent: 'center'
     },
     picture: {
-        width: 128,
-        height: 128,
+        width: ww*34/100,
+        height: ww*34/100,
 
-        borderWidth: 2,
+        borderWidth: ww*5/1000,
         borderColor: '#FFFFFF',
 
         zIndex: -100,
@@ -92,37 +95,38 @@ const styles = StyleSheet.create({
     },
     detailContainer: {
         flex: 1,
-        paddingTop: 4,
-        paddingHorizontal: 12,
+        paddingTop: "1%",
+        paddingHorizontal: "5%",
         paddingLeft: 0,
 
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     detailName: {
-        fontSize: 20,
+        fontSize: ww * 60 / 1000,
         textAlign: 'left',
-        lineHeight: 18
+        lineHeight: wh * 375 / 10000,
+        
     },
     detailCategory: {
-        fontSize: 18,
+        fontSize: ww * 55 / 1000,
         textAlign: 'left'
     },
     level: {
-        fontSize: 16,
+        fontSize: ww * 50 / 1000,
         marginBottom: 4,
         textAlign: 'left'
     },
     creator: {
-        fontSize: 12,
+        fontSize: ww * 40 / 1000,
         textAlign: 'left'
     },
     stats: {
         height: '60%',
-        padding: 24
+        padding: "6%"
     },
     textHistory: {
-        padding: 24
+        padding: "5%"
     }
 });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 
 import Shop from '../../Pages/shop';
 import user from '../../Managers/UserManager';
@@ -29,16 +29,18 @@ class T0Shop extends Shop {
         )
     }
 }
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 24
+        paddingVertical: "5%"
     },
 
     wait: {
-        padding: 24,
-        fontSize: 28
+        padding: '5%',
+        fontSize: ww * 75 / 1000 , 
     },
 
     banner: {

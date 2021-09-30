@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 
 import Home from '../../Pages/home';
 import user from '../../Managers/UserManager';
@@ -137,7 +137,9 @@ class T0Home extends Home {
         )
     }
 }
-
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+console.log(ww,wh,wh/ww);
 const styles = StyleSheet.create({
     parentView: {
         flex: 1
@@ -145,30 +147,33 @@ const styles = StyleSheet.create({
     containerHeader: {
         width: '100%',
         height: '10%',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     containerUserName: {
         width: '50%',
         height: '100%',
-        padding: 6,
+        padding: "2%",
 
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+
     },
     pseudo: {
-        marginLeft: 4,
-        fontSize: 18,
-        textAlign: 'left'
+        marginLeft: "2%",
+        fontSize: ww * 48 / 1000,
+        textAlign: 'left',
+        
     },
     title: {
-        marginTop: 8,
-        marginLeft: 4,
-        fontSize: 14,
-        textAlign: 'left'
+        marginTop: "4%",
+        marginLeft: "2%",
+        fontSize: ww * 37 / 1000,
+        textAlign: 'left',
+        
     },
     containerUserXP: {
         width: '50%',
-        paddingHorizontal: 6,
+        paddingHorizontal: "3%",
         display: 'flex',
         justifyContent: 'center'
     },
@@ -180,7 +185,8 @@ const styles = StyleSheet.create({
     containerStats: {
         width: '60%',
         height: '100%',
-        padding: 12
+        padding: "3%",
+        
     },
     containerLevelColumn: {
         width: '40%',
@@ -188,43 +194,45 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     textLevel: {
-        marginBottom: 12,
-        fontSize: 18
+        marginBottom: "10%",
+        fontSize: ww * 48 / 1000
     },
     textLevelTotal: {
-        marginBottom: 12,
-        fontSize: 14
+        marginBottom: "10%",
+        fontSize: ww * 37 / 1000 
     },
     textLevelAverage: {
-        fontSize: 12
+        fontSize: ww * 32 / 1000
     },
 
     block: {
-        marginHorizontal: 12,
-        padding: 12,
+        marginHorizontal: "0.8%",
+        padding: "8%",
         borderWidth: 2,
-        borderColor: '#FFFFFF'
+        borderColor: '#FFFFFF',
     },
-    blockLVL: { height: '25%', justifyContent: 'space-evenly' },
-    blockCalendar: { height: '40%', paddingHorizontal: 0, overflow: 'hidden' },
-    blockSkill: { width: 64, height: 64, padding: 0, margin: 0, marginTop: 12, marginBottom: 36, overflow: 'visible' },
+    blockLVL: { height: '25%', justifyContent: 'space-evenly' , },
+    blockCalendar: { height: '40%', paddingHorizontal: 0, overflow: 'hidden',  },
+    blockSkill: { width: ww * 17 / 100, height: ww*17/100, padding: 0, margin: 0, marginTop: "3%", marginBottom: "50%", overflow: 'visible' ,},
     blockSkillText: {
-        marginVertical: 4,
+        marginVertical: "5%",
         marginLeft: '-50%',
         width: '200%',
-        lineHeight: 16
+        lineHeight: 16,
+        fontSize : ww * 42 / 1000
+        
     },
 
     calendarTitle: {
-        marginBottom: 12,
-        fontSize: 14
+        marginBottom: "3%",
+        fontSize: ww * 37 / 1000 
     },
     calendarBottom: {
         position: 'absolute',
         left: 0,
         right: 0,
         bottom: 0,
-        paddingBottom: 6,
+        paddingBottom: "3%",
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center'
@@ -234,11 +242,12 @@ const styles = StyleSheet.create({
 
     containerSkills: {
         flex: 1,
-        marginTop: 24,
+        marginTop: "5%",
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        
     },
     row: {
         width: '100%',
@@ -246,11 +255,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     titleSkill: {
-        marginBottom: 12,
-        fontSize: 28
+        marginBottom: "3%",
+        fontSize: ww * 75 / 1000,
+        
     },
     addActivityText: {
-        fontSize: 16
+        fontSize: ww * 426 / 10000,
     }
 });
 

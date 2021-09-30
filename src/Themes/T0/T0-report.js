@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
 
 import Report from '../../Pages/report';
 import langManager from '../../Managers/LangManager';
@@ -129,42 +129,46 @@ class T0Report extends Report {
         )
     }
 }
-
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+console.log(ww,wh,wh/ww);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 24
+        paddingHorizontal: "5%"
     },
-    title: { fontSize: 32 },
-    text: { fontSize: 20, marginVertical: 12 },
-    textCenter: { fontSize: 16, textAlign: 'center', marginVertical: 12 },
+    title: { fontSize: ww * 85 / 1000 },
+    text: { fontSize: ww * 53 / 1000, marginVertical: wh*15/1000 },
+    textCenter: { fontSize: ww * 426 / 10000, textAlign: 'center', marginVertical: "2%" },
 
     stats: {
-        marginTop: 24
+        marginTop: "3%"
     },
 
     column: { width: '50%' },
     row: {
-        marginVertical: 24,
+        marginVertical: 10,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     rowS: {
-        marginVertical: 2,
-        paddingHorizontal: 24,
+        marginVertical: "1.3%",
+        paddingHorizontal: "20%",
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+
     },
     center: {
-        marginVertical: 48,
+        marginVertical: "10%",
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        
     }
 });
 

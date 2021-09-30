@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Image } from 'react-native';
+import { View, StyleSheet, FlatList, Image, Dimensions } from 'react-native';
 
 import Leaderboard from '../../Pages/leaderboard';
 import user from '../../Managers/UserManager';
@@ -85,34 +85,38 @@ class T0Leaderboard extends Leaderboard {
         )
     }
 }
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 24,
-        paddingHorizontal: 48
+        paddingVertical: "5%",
+        paddingHorizontal: "10%"
     },
     center: {
-        marginBottom: 24,
-        alignItems: 'center'
+        marginBottom: "5%",
+        alignItems: 'center',
     },
     userContainer: {
         display: 'flex',
         flexDirection: 'row',
-        borderWidth: 3,
+        borderWidth: ww * 8 / 1000,
         borderColor: '#FFFFFF',
-        padding: 4
+        padding: "1.2%",
+        
     },
     userImage: {
-        width: 64,
-        height: 64,
-        borderWidth: 3,
+        width: ww * 17 / 100,
+        height: ww * 17/ 100,
+        borderWidth: ww * 8 / 1000,
         borderColor: '#FFFFFF',
+        
     },
     userDetails: {
         flex: 1,
-        paddingLeft: 12,
-        justifyContent: 'space-around'
+        paddingLeft: "3%",
+        justifyContent: 'space-around', 
     },
     userDetail: {
         textAlign: 'left'
@@ -121,7 +125,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         right: 0,
-        padding: 2
+        padding: "1%",
+        
     }
 });
 

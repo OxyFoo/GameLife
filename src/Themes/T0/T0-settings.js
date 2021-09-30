@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 
 import Settings from '../../Pages/settings';
 import user from '../../Managers/UserManager';
@@ -61,17 +61,20 @@ class T0Settings extends Settings {
     }
 }
 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+
 const styles = StyleSheet.create({
     content: {
-        paddingVertical: 72,
-        paddingHorizontal: 36
+        paddingVertical: "15%",
+        paddingHorizontal: "8%"
     },
     title: {
         textAlign: 'left',
-        fontSize: 22
+        fontSize: ww * 58 / 1000
     },
     button: {
-        marginVertical: 12,
+        marginVertical: "3%",
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'

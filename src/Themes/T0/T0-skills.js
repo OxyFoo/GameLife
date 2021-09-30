@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import Skills from '../../Pages/skills';
 import user from '../../Managers/UserManager';
@@ -75,39 +75,43 @@ class T0Skills extends Skills {
     }
 }
 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+
 const styles = StyleSheet.create({
     topBar: {
         width: '100%',
-        height: 48,
+        height: wh * 72 / 1000, // 48 
         flexDirection: 'row',
         alignItems: 'center',
         borderColor: '#FFFFFF',
         borderWidth: 3,
-        borderTopWidth: 2
+        borderTopWidth: 2,
     },
     search: {
         width: '40%',
-        height: '100%'
+        height: '100%',
+        
     },
     filter: {
         position: 'absolute',
-        top: 64,
+        top: wh * 96 / 1000,
         left: '40%',
         width: '40%',
-        height: 48,
+        height: wh * 72 / 1000, // 48 
         marginVertical: 0,
         marginHorizontal: 0,
-        marginBottom: -3
+        marginBottom: -3,
     },
     filterBox: {
         height: '100%',
         borderTopWidth: 0,
-        borderBottomWidth: 0
+        borderBottomWidth: 0,
     },
     sort: {
         width: '34%',
-        paddingVertical: 6,
-        marginLeft: '66%'
+        paddingVertical: "5%",
+        marginLeft: '66%',
     },
     content: {
         flex: 1
@@ -115,10 +119,12 @@ const styles = StyleSheet.create({
     floatingButton: {
         position: 'absolute',
         right: 12,
-        bottom: 12
+        bottom: 12,
+
     },
     emptyText: {
-        marginTop: 48
+        marginTop: 48,
+        
     }
 });
 

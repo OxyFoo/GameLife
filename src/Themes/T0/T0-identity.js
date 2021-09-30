@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Animated, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Identity from '../../Pages/identity';
@@ -71,7 +71,21 @@ class T0Identity extends Identity {
                             beforeChangeText={this.beforeEditPseudo}
                             placeholder={langManager.curr['identity']['placeholder-pseudo']}
                         />
+                        {/* Email status */}
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()+" - "+user.conn.status} />
+                        {/* <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='secondary' /> */ 
+                        /* J'aime pas effacer des lignes de code durement obtenu mdrrrr j'suis nostalgique */ }
 
+                        {/* Email */}
+                        <GLTextEditable
+                            style={styles.value}
+                            value={this.state.email}
+                            defaultValue={langManager.curr['identity']['empty-email']}
+                            onChangeText={this.editMail}
+                            textContentType="emailAddress"
+                            placeholder={langManager.curr['identity']['placeholder-email']}
+                        />
+                        
                         {/* Title */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
                         {/*<GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='secondary' />*/}
@@ -87,20 +101,6 @@ class T0Identity extends Identity {
                         {/* Age */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
                         <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='secondary' />
-
-                        {/* Email status */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()} />
-                        <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='secondary' />
-
-                        {/* Email */}
-                        <GLTextEditable
-                            style={styles.value}
-                            value={this.state.email}
-                            defaultValue={langManager.curr['identity']['empty-email']}
-                            onChangeText={this.editMail}
-                            textContentType="emailAddress"
-                            placeholder={langManager.curr['identity']['placeholder-email']}
-                        />
 
                         {/* Total time */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-totaltime'].toUpperCase()} />
@@ -149,10 +149,14 @@ class T0Identity extends Identity {
     }
 }
 
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+
 const styles = StyleSheet.create({
-    content: {
-        paddingHorizontal: 24,
-        paddingVertical: 48
+    content: { 
+        paddingHorizontal: "8%",
+        paddingVertical: "5%",
+        
     },
     containerPseudo: {
         display: 'flex',
@@ -163,21 +167,22 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'left',
         color: '#5AB4F0',
-        fontSize: 24,
-        marginBottom: 12
+        fontSize: ww * 64 / 1000,
+        marginBottom: "3%",
+
     },
     value: {
         textAlign: 'left',
         color: '#5AB4F0',
-        fontSize: 22,
-        marginBottom: 30
+        fontSize: ww * 586 / 10000,
+        marginBottom: "10%"
     },
     image: {
         position:'absolute',
-        top: 48,
-        right: 24,
-        width: 96,
-        height: 96,
+        top: "3%",
+        right: "7%",
+        width: ww * 25/100,
+        height: ww * 25/100,
         borderColor: '#FFFFFF',
         borderWidth: 2,
         backgroundColor: '#000000',
@@ -185,33 +190,35 @@ const styles = StyleSheet.create({
         elevation: 100
     },
 
-    achievementsContainer: {
-        height: 128,
+    achievementsContainer: { 
+        height: wh * 165 / 1000,
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        
     },
-    achievementsBox: {
+    achievementsBox: { 
         flex: 1,
         maxWidth: '30%',
         display: 'flex',
         justifyContent: 'space-evenly',
-        marginHorizontal: 4,
-        paddingVertical: 12,
-        paddingHorizontal: 6,
+        marginHorizontal: "2%",
+        paddingVertical: "2%",
+        paddingHorizontal: "2%",
         borderColor: '#FFFFFF',
-        borderTopWidth: 3,
-        borderBottomWidth: 3,
-        borderLeftWidth: 6,
-        borderRightWidth: 6
+        borderTopWidth: ww * 11 / 1000,
+        borderBottomWidth: ww * 11 / 1000,
+        borderLeftWidth: ww * 11 / 1000,
+        borderRightWidth: ww * 11 / 1000,
+        
     },
-    title: {
-        minHeight: 30,
-        marginBottom: 12,
-        fontSize: 16
+    title: { 
+        minHeight: wh * 45 / 1000,
+        marginBottom: "15%",
+        fontSize: ww * 426 / 10000,
     },
-    description: {
-        marginBottom: 12,
-        fontSize: 10
+    description: { 
+        marginBottom: "10%",
+        fontSize:ww*26/1000 ,
     }
 });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 
 import Statistic from '../../Pages/statistic';
 import user from '../../Managers/UserManager';
@@ -43,13 +43,15 @@ class T0Statistic extends Statistic {
         )
     }
 }
-
+const ww = Dimensions.get('window').width ; 
+const wh = Dimensions.get('window').height ;
+console.log(ww,wh,wh/ww);
 const styles = StyleSheet.create({
     container: {
         width: '80%',
-        paddingVertical: 24,
-        paddingHorizontal: 12,
-        marginTop: 48,
+        paddingVertical: "6%",
+        paddingHorizontal: "5%",
+        marginTop: "15%",
         marginLeft: '10%',
 
         borderWidth: 3,
@@ -64,11 +66,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     description: {
-        marginVertical: 24
+        marginVertical: "5%"
     },
     descriptionText: {
         textAlign: 'left',
-        marginVertical: 24
+        marginVertical: "10%"
     }
 });
 

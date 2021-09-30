@@ -142,7 +142,8 @@ const wh = Dimensions.get('window').height ;
 console.log(ww,wh,wh/ww);
 const styles = StyleSheet.create({
     parentView: {
-        flex: 1
+        flex: 1,
+        padding:"2%"
     },
     containerHeader: {
         width: '100%',
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     },
     containerUserXP: {
         width: '50%',
-        paddingHorizontal: "3%",
+        paddingHorizontal: "0%",
         display: 'flex',
         justifyContent: 'center'
     },
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
     },
     blockLVL: { height: '25%', justifyContent: 'space-evenly' , },
     blockCalendar: { height: '40%', paddingHorizontal: 0, overflow: 'hidden',  },
-    blockSkill: { width: ww * 17 / 100, height: ww*17/100, padding: 0, margin: 0, marginTop: "3%", marginBottom: "50%", overflow: 'visible' ,},
+    blockSkill: { width: ww * 17 / 100, height: ww*17/100, padding: 0, margin: 0, marginTop: "3%", marginBottom: wh * 6 / 100, overflow: 'visible' ,},
     blockSkillText: {
         marginVertical: "5%",
         marginLeft: '-50%',

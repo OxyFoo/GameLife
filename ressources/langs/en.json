@@ -101,9 +101,9 @@
 
         "name-total": "XP Total",
         "name-average": "Average XP/day",
-        "name-day": "XP of the day",
-        "name-week": "XP of the week",
-        "name-month": "XP of the month",
+        "name-day": "Daily XP",
+        "name-week": "Weekly XP",
+        "name-month": "Monthly XP",
         "name-year": "XP of the year",
 
         "XPLeftToReach": "XP left to reach",
@@ -200,10 +200,10 @@
         },
         "descriptions": {
             "sag": "Wisdom is a special skill, it allows you to gain bonus experience depending on your level. It is acquired by doing personal development activities such as meditation or other.",
-            "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train your brain and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
+            "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
             "con": "Confidence is a special statistic, each hour of skill (no matter what skill you do) gives you 1 point of confidence, so it increases with you and tells you how many hours of activity you have done.",
             "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
-            "end": "Stamina is probably the activity that you will improve the fastest! This is a key statistic that improves in almost all sports!",
+            "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
             "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision tasks, writing tasks on a computer or even with musical instruments."
         }

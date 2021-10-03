@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import Statistic from '../../Pages/statistic';
 import user from '../../Managers/UserManager';
@@ -43,8 +43,7 @@ class T0Statistic extends Statistic {
         )
     }
 }
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
+
 const styles = StyleSheet.create({
     container: {
         width: '80%',

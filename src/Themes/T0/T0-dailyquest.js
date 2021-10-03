@@ -133,6 +133,7 @@ class T0Dailyquest extends Dailyquest {
 }
 const ww = Dimensions.get('window').width ; 
 const wh = Dimensions.get('window').height ;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

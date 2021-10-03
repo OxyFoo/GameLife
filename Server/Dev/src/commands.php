@@ -18,12 +18,47 @@
             return json_encode($this->output);
         }
 
+        private function GetAppData() {
+            $appData = array();
+            $app = $db->QueryArray("SELECT * FROM `App`");
+            $lastHashRefresh = 0;
+            for ($i = 0; $i < count($app); $i++) {
+                $index = $app[$i]['ID'];
+                $value = $app[$i]['Data'];
+                $date = $app[$i]['Date'];
+                if ($index === "Version") {
+                    $appData['Version'] = $value;
+                } else if ($index === "DBHash") {
+                    $appData["DBHash"] = $value;
+                    $lastHashRefresh = MinutesFromDate($date);
+                }
+            }
+
+            if ($lastHashRefresh > 60) {
+                // Refresh database hash
+                $lang = $this->data['lang'];
+                $db_all = GetAllInternalData($this->db, $lang);
+
+                $data = json_encode($db_all);
+                $newHash = hash('md5', $data);
+
+                if ($newHash !== $appData['DBHash']) {
+                    // Refresh `App` in DB
+                    // TODO - Confirm
+                    $result = $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'DBHash'");
+                    if ($result === TRUE) {
+                        $appData['DBHash'] = $newHash;
+                    }
+                }
+            }
+
+            return $appData;
+        }
+
         public function Ping() {
-            $app = $this->db->QueryArray("SELECT * FROM `App`");
-            $last_version = $app[0]['Version'];
-            
+            $appData = $this->GetAppData();
             $version = $this->data['version'];
-            if (isset($version) && $version == $last_version) {
+            if (isset($version) && $version == $appData['Version']) {
                 $deviceIdentifier = $this->data['deviceID'];
                 $deviceName = $this->data['deviceName'];
 
@@ -81,19 +116,14 @@
         public function GetInternalData() {
             $lang = $this->data['lang'];
             $hash = $this->data['hash'];
-            if (!empty($lang) && isset($hash)) {
-                $this->output['quotes'] = GetQuotes($this->db, $lang);
-                $this->output['titles'] = GetTitles($this->db, $lang);
-                $this->output['skills'] = GetSkills($this->db, $lang);
-                $this->output['skillsIcon'] = GetSkillsIcon($this->db);
-                $this->output['achievements'] = GetAchievements($this->db, $lang);
-                $this->output['helpers'] = GetContributors($this->db, $lang);
+            $appData = $this->GetAppData();
 
-                $data = json_encode($this->output);
-                $hash_check = hash('md5', $data);
+            if (!empty($lang) && isset($hash)) {
+                $hash_check = $appData['DBHash'];
 
                 // Send all data or just 'same'
                 if ($hash != $hash_check) {
+                    $this->output['tables'] = GetAllInternalData($this->db, $lang);
                     $this->output['hash'] = $hash_check;
                     $this->output['status'] = 'ok';
                 } else {

@@ -612,15 +612,17 @@ class UserManager {
             const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
             const data = await this.conn.reqGetInternalData(hash);
             const status = data['status'];
+            const tables = data['tables'];
 
+            // TODO - Chech tables interpretation
             if (status === 'ok') {
-                if (typeof(data['titles']) !== 'undefined') this.titles = data['titles'];
-                if (typeof(data['quotes']) !== 'undefined') this.quotes = data['quotes'];
-                if (typeof(data['skills']) !== 'undefined') this.skills = data['skills'];
-                if (typeof(data['skillsIcon']) !== 'undefined') this.skillsIcon = data['skillsIcon'];
-                if (typeof(data['achievements']) !== 'undefined') this.achievements = data['achievements'];
-                if (typeof(data['helpers']) !== 'undefined') this.contributors = data['helpers'];
-                if (typeof(data['hash']) !== 'undefined') await DataStorage.Save(STORAGE.INTERNAL_HASH, data['hash'], false);
+                if (typeof(tables['titles']) !== 'undefined') this.titles = tables['titles'];
+                if (typeof(tables['quotes']) !== 'undefined') this.quotes = tables['quotes'];
+                if (typeof(tables['skills']) !== 'undefined') this.skills = tables['skills'];
+                if (typeof(tables['skillsIcon']) !== 'undefined') this.skillsIcon = tables['skillsIcon'];
+                if (typeof(tables['achievements']) !== 'undefined') this.achievements = tables['achievements'];
+                if (typeof(tables['helpers']) !== 'undefined') this.contributors = tables['helpers'];
+                if (typeof(tables['hash']) !== 'undefined') await DataStorage.Save(STORAGE.INTERNAL_HASH, tables['hash'], false);
             }
         }
 

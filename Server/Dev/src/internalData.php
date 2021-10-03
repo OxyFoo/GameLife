@@ -1,5 +1,16 @@
 <?php
 
+    function GetAllInternalData($db, $lang) {
+        $db_all = array();
+        $db_all['quotes'] = GetQuotes($db, $lang);
+        $db_all['titles'] = GetTitles($db, $lang);
+        $db_all['skills'] = GetSkills($db, $lang);
+        $db_all['skillsIcon'] = GetSkillsIcon($db);
+        $db_all['achievements'] = GetAchievements($db, $lang);
+        $db_all['helpers'] = GetContributors($db, $lang);
+        return $db_all;
+    }
+
     function GetQuotes($db, $lang = 'fr') {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
         $validQuotes = array();

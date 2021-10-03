@@ -103,6 +103,10 @@
             }
         }
         print_r($data);
+    } else if ($action === "setHashTest") {
+        // TODO - Check upate
+        $hashTest = "Blabla";
+        $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$hashTest' WHERE `ID` = 'DBHash'");
     }
 
 ?>

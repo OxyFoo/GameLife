@@ -1,4 +1,4 @@
-const URL = 'https://oxyfoo.com/App/GameLife/Public/app.php';
+const URL = require('../../package.json').serverURL;
 
 async function Request_Async(data, url = URL, method, headers) {
     const defaultHeaders = {

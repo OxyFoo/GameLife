@@ -94,4 +94,9 @@
         return $sorted;
     }
 
+    function MinutesFromDate($date) {
+        $date_delta = (time() - strtotime($date)) / 60;
+        return round($date_delta, 2);
+    }
+
 ?>

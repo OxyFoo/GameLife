@@ -239,9 +239,7 @@
         "text-developer": "Développeur",
 
         "alert-info-title": "Informations supplémentaires",
-        "alert-info-text": "Version : {}",
-        "alert-unavailable-title": "Indisponible",
-        "alert-unavailable-text": "Le site sera disponible bientôt, un peu de patience ^^"
+        "alert-info-text": "Version : {}"
     },
 
     "report": {

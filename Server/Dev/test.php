@@ -88,10 +88,21 @@
             $a = $quote['Author'];
             echo("$q-$a<br/>");
         }
-    } else if ($action === "getVersion") {
+    } else if ($action === "getData") {
         $app = $db->QueryArray("SELECT * FROM `App`");
-        $version = $app[0]['Version'];
-        print_r($version);
+        $data = array();
+        for ($i = 0; $i < count($app); $i++) {
+            $index = $app[$i]['ID'];
+            $value = $app[$i]['Data'];
+            $date = $app[$i]['Date'];
+            if ($index === "Version") {
+                $data['Version'] = $value;
+            } else if ($index === "DBHash") {
+                $data["DBHash"] = $value;
+                $data["LastHashRefresh"] = MinutesFromDate($date);
+            }
+        }
+        print_r($data);
     }
 
 ?>

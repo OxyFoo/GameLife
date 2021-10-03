@@ -38,7 +38,7 @@ class Activity extends React.Component {
         } else {
             const MAX_DAYS = 2;
             const STEP_MINUTES = 15;
-            const TOTAL_HOUR_DURATION = 2;
+            const TOTAL_HOUR_DURATION = 4;
             const SKILLS = user.getSkills();
 
             this.CATEGORIES = user.getSkillCategories();

@@ -139,7 +139,6 @@ class T0Home extends Home {
 }
 const ww = Dimensions.get('window').width ; 
 const wh = Dimensions.get('window').height ;
-console.log(ww,wh,wh/ww);
 const styles = StyleSheet.create({
     parentView: {
         flex: 1,

@@ -132,7 +132,7 @@
         "alert-notfill-title": "Incorrect",
         "alert-notfill-text": "Veuillez remplir tous les champs avant de continuer",
         "alert-wrongtiming-title": "Impossible !",
-        "alert-wrongtiming-text": "L'activité sélectionnée comment ou termine durant une autre."
+        "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre."
     },
 
     "activity": {
@@ -200,11 +200,11 @@
         },
         "descriptions": {
             "sag": "La sagesse est une compétence particulière, elle vous permet de gagner de l’expérience en bonus en fonction de votre niveau. Elle s’acquiert en faisant surtout des activités de développement personnel comme la méditation ou autre.",
-            "int": "L’intelligence est une statistiques très large, dès que vous faites fonctionner vos méninges, vous entraînez votre cerveau et gagnez donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
-            "con": "L’assurance est une statistique spéciale, chaque heure de compétence (peu importe la compétence faite) vous apporte 1 point d’assurance, elle augmente donc en même temps que vous et vous indique le nombre d’heures d’activités que vous avez fait.",
-            "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physique par exemple !",
+            "int": "L’intelligence est une statistique très large, dès que vous faites fonctionner vos méninges, vous entraînez votre cerveau et gagnez donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
+            "con": "L’assurance est une statistique spéciale, chaque heure de compétence (peu importe la compétence faite) vous apporte 1 point d’assurance, elle augmente donc en même temps que vous et vous indique le nombre d’heures d’activités que vous avez faites.",
+            "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physiques par exemple !",
             "end": "L’endurance est probablement la statistique que vous améliorerez le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
-            "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter votre agilité sont des actis comme des étirements ou encore du yoga.",
+            "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter votre agilité sont des activités comme des étirements ou encore du yoga.",
             "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
         }
     },
@@ -291,11 +291,11 @@
         "daily-edit-button": "Modifier les catégories",
         "daily-categories-text": " ou ",
 
-        "quest-main-text": "Une heure d'acivité parmis les catégories suivantes :",
+        "quest-main-text": "Une heure d'activité parmis les catégories suivantes :",
         "quest-bonus-text": "Un quart d'heure dans la catégorie suivante :",
 
         "alert-info-title": "Informations",
-        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et quart d’activité : vous avez 1h15 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 21 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt disponible) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuel). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
+        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et quart d’activité : vous avez 1h15 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 21 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt disponible) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuelle). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
         "alert-notfill-title": "Pas terminé",
         "alert-notfill-text": "Merci de remplir tous les champs",
         "alert-same-title": "Pas terminé",

@@ -6,6 +6,8 @@ const UserXPperLevel = 20;
 const StatXPperLevel = 2;
 const SkillXPperLevel = 20;
 
+const MaxHourPerDay = 12;
+
 class Experience {
     constructor(user) {
         this.user = user;
@@ -78,6 +80,8 @@ class Experience {
             const activitiesInDay = this.user.getActivitiesByDate(date);
             let questComplete = 0;
             let bonusComplete = 0;
+            let hoursRemain = MaxHourPerDay;
+
             for (let a = 0; a < activitiesInDay.length; a++) {
                 const activity = activitiesInDay[a];
                 const activityDate = new Date(activity.startDate);
@@ -107,6 +111,10 @@ class Experience {
                 // Check date
                 if (activityDate >= refEndDate) continue;
                 if (activityDate < refStartDate) continue;
+
+                // Limit
+                hoursRemain -= durationHour;
+                if (hoursRemain <= 0) continue;
 
                 // XP
                 const sagLevel = this.getStatExperience('sag').lvl - 1;

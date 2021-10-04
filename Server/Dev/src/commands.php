@@ -20,7 +20,7 @@
 
         private function GetAppData() {
             $appData = array();
-            $app = $db->QueryArray("SELECT * FROM `App`");
+            $app = $this->db->QueryArray("SELECT * FROM `App`");
             $lastHashRefresh = 0;
             for ($i = 0; $i < count($app); $i++) {
                 $index = $app[$i]['ID'];
@@ -44,8 +44,7 @@
 
                 if ($newHash !== $appData['DBHash']) {
                     // Refresh `App` in DB
-                    // TODO - Confirm
-                    $result = $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'DBHash'");
+                    $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'DBHash'");
                     if ($result === TRUE) {
                         $appData['DBHash'] = $newHash;
                     }

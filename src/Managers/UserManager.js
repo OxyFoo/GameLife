@@ -15,7 +15,7 @@ import skillsIcon from '../../ressources/defaultDB/skillsIcon.json';
 import achievements from '../../ressources/defaultDB/achievements.json';
 import helpers from '../../ressources/defaultDB/helpers.json';
 
-const DAYS_PSEUDO_CHANGE = 30;
+const DAYS_PSEUDO_CHANGE = 2;
 const DEFAULT_PSEUDO = 'Player';
 const DEFAULT_STATS = {
     'sag': 0,
@@ -316,7 +316,7 @@ class UserManager {
 
     daysBeforeChangePseudo = () => {
         let days = 0;
-        if (this.pseudoDate !== null) {
+        if (this.pseudoDate !== null && this.pseudo.length !== 0) {
             const today = new Date();
             const last = new Date(this.pseudoDate);
             const delta = (today - last) / (1000 * 60 * 60 * 24);
@@ -387,6 +387,10 @@ class UserManager {
             startDate: startDate,
             duration: duration
         }
+
+        const limitDate = new Date();
+        limitDate.setFullYear(2021, 8, 29);
+        if (startDate < limitDate) return;
 
         // Check if not exist
         let exists = false;
@@ -614,7 +618,6 @@ class UserManager {
             const status = data['status'];
             const tables = data['tables'];
 
-            // TODO - Chech tables interpretation
             if (status === 'ok') {
                 if (typeof(tables['titles']) !== 'undefined') this.titles = tables['titles'];
                 if (typeof(tables['quotes']) !== 'undefined') this.quotes = tables['quotes'];

@@ -76,15 +76,13 @@ class T0Dailyquest extends Dailyquest {
                         <GLText title={this.daily_bonus} style={{ marginVertical: 12 }} />
                     </View>
 
-                    {!user.dailyAlreadyChanged() && (
-                        <View style={styles.center}>
-                            <GLButton
-                                containerStyle={styles.button}
-                                value={edit}
-                                onPress={this.edit}
-                            />
-                        </View>
-                    )}
+                    <View style={styles.center}>
+                        <GLButton
+                            containerStyle={styles.button}
+                            value={edit}
+                            onPress={this.edit}
+                        />
+                    </View>
                 </>
             )
         }

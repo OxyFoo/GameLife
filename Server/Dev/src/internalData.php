@@ -1,6 +1,6 @@
 <?php
 
-    function GetAllInternalData($db, $lang) {
+    function GetAllInternalData($db, $lang = 'fr') {
         $db_all = array();
         $db_all['quotes'] = GetQuotes($db, $lang);
         $db_all['titles'] = GetTitles($db, $lang);

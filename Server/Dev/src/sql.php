@@ -5,7 +5,7 @@
     require('./src/functions.php');
     require('./src/internalData.php');
 
-    $DAYS_PSEUDO_CHANGE = 28;
+    $DAYS_PSEUDO_CHANGE = 0;
 
     class DataBase
     {

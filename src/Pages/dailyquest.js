@@ -5,17 +5,21 @@ import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 
 class Dailyquest extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.daily_states = user.dailyTodayCheck();
+    }
     state = {
         informations: false,
         enable: false,
         time: GetTimeToTomorrow(),
         selectedSkill1: undefined,
-        selectedSkill2: undefined
+        selectedSkill2: undefined,
+        enable: user.daily.length > 0
     }
 
     componentDidMount() {
-        this.setState({ enable: user.daily.length > 0 });
-        this.daily_states = user.dailyTodayCheck();
         this.daily_bonus = user.dailyGetBonusCategory();
         this.SKILLS = user.getSkills();
         this.interval = setInterval(this.loop, 1000);

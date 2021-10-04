@@ -449,7 +449,7 @@ class UserManager {
                 output.push(activity);
             }
         }
-        return output.reverse();
+        return output;
     }
     getFirstActivity = () => {
         let date = new Date();

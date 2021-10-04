@@ -5,7 +5,7 @@ import langManager from '../Managers/LangManager';
 
 class Calendar extends React.Component {
     state = {
-        activities: user.getActivitiesByDate(),
+        activities: user.getActivitiesByDate().reverse(),
         currDate: new Date(),
         showDateTimePicker: ''
     };
@@ -34,7 +34,7 @@ class Calendar extends React.Component {
     showDTP = () => { this.setState({ showDateTimePicker: 'date' }); }
     hideDTP = () => { this.setState({ showDateTimePicker: '' }); }
     onChangeDateTimePicker = (date) => {
-        const activities = user.getActivitiesByDate(date);
+        const activities = user.getActivitiesByDate(date).reverse();
         this.hideDTP();
         this.setState({ activities: activities, currDate: date });
     }

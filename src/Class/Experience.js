@@ -114,7 +114,7 @@ class Experience {
 
                 // Limit
                 hoursRemain -= durationHour;
-                if (hoursRemain <= 0) continue;
+                if (hoursRemain < 0) continue;
 
                 // XP
                 const sagLevel = this.getStatExperience('sag').lvl - 1;

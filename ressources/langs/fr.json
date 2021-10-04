@@ -55,6 +55,8 @@
         "alert-first-text": "Vous avez gagné le droit de devenir un joueur. Voulez vous accepter ?",
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
+        "alert-newversion-title": "Attention",
+        "alert-newversion-text": "Vous êtes sur une version non disponible au grand public, les fonctionnalités en ligne sont désactivés jusqu’à la publication officielle",
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Voulez-vous quitter l'application ?",
         "alert-dateerror-title": "Attention",

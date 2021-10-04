@@ -31,6 +31,8 @@
                     $device = $this->db->GetDevice($deviceIdentifier, $deviceName);
                     $this->output['status'] = 'ok';
                 }
+            } else if ($last_version < $version) {
+                $this->output['status'] = 'nextUpdate';
             } else {
                 $this->output['status'] = 'update';
             }

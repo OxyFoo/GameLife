@@ -55,6 +55,8 @@
         "alert-first-text": "You have earned the right to become a player. Do you want to accept?",
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
+        "alert-newversion-title": "Warning",
+        "alert-newversion-text": "You are on a version not available to the public, the online features are disabled until the official release",
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?",
         "alert-dateerror-title": "Warning",

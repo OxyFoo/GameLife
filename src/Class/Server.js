@@ -58,6 +58,11 @@ class ServManager {
                 const title = langManager.curr['home']['alert-update-title'];
                 const text = langManager.curr['home']['alert-update-text'];
                 this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
+            } else if (status == 'nextUpdate') {
+                this.online = false;
+                const title = langManager.curr['home']['alert-newversion-title'];
+                const text = langManager.curr['home']['alert-newversion-text'];
+                this.user.openPopup('ok', [ title, text ], undefined, false);
             }
         }
         

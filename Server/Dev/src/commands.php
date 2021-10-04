@@ -57,7 +57,8 @@
         public function Ping() {
             $appData = $this->GetAppData();
             $version = $this->data['version'];
-            if (isset($version) && $version == $appData['Version']) {
+            $serverVersion = $appData['Version'];
+            if (isset($version) && $version == $serverVersion) {
                 $deviceIdentifier = $this->data['deviceID'];
                 $deviceName = $this->data['deviceName'];
 
@@ -65,6 +66,8 @@
                     $device = $this->db->GetDevice($deviceIdentifier, $deviceName);
                     $this->output['status'] = 'ok';
                 }
+            } else if ($serverVersion < $appData) {
+                $this->output['status'] = 'nextUpdate';
             } else {
                 $this->output['status'] = 'update';
             }

@@ -42,12 +42,10 @@
                 $data = json_encode($db_all);
                 $newHash = hash('md5', $data);
 
-                if ($newHash !== $appData['DBHash']) {
-                    // Refresh `App` in DB
-                    $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'DBHash'");
-                    if ($result === TRUE) {
-                        $appData['DBHash'] = $newHash;
-                    }
+                // Refresh `App` in DB
+                $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'DBHash'");
+                if ($newHash !== $appData['DBHash'] && $result === TRUE) {
+                    $appData['DBHash'] = $newHash;
                 }
             }
 

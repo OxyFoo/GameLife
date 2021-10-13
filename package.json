@@ -2,7 +2,7 @@
   "name": "gamelife",
   "version": "0.2.1",
   "versionName": "0.2.1 (bêta)",
-  "serverURL": "https://oxyfoo.com/App/GameLife/Public/app.php",
+  "serverURL": "https://oxyfoo.com/App/GameLife/Dev/app.php",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -19,6 +19,7 @@
     "react-native-codegen": "^0.0.8",
     "react-native-device-info": "^8.1.7",
     "react-native-modal-datetime-picker": "^10.2.0",
+    "react-native-push-notification": "^8.1.1",
     "react-native-sound-player": "^0.11.1",
     "react-native-svg": "^12.1.1"
   },

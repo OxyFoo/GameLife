@@ -1,6 +1,6 @@
 <?php
 
-    $URL = "https://oxyfoo.com/App/GameLife/Dev/auth.php";
+    $URL = "https://oxyfoo.com/App/GameLife/Public/auth.php";
 
     function SendSigninMail($email, $deviceName, $accept, $reject, $lang = 'fr') {
         global $URL;

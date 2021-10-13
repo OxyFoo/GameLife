@@ -7,6 +7,10 @@
         "T0.2": "Bleu clair"
     },
 
+    "notifications": {
+        "text-title": "Citation du jour"
+    },
+
     "loading": {
         "text-loading": "Chargement",
         "text-loaded": "Chargement terminé",

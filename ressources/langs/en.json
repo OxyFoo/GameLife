@@ -7,6 +7,10 @@
         "T0.2": "Light blue"
     },
 
+    "notifications": {
+        "text-title": "Quote of the day"
+    },
+
     "loading": {
         "text-loading": "Loading",
         "text-loaded": "Loading complete",

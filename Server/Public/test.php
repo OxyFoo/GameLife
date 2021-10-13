@@ -25,6 +25,13 @@
         $a_pc = round(($android / $total) * 100, 2);
         $i_pc = round(($ios / $total) * 100, 2);
         echo("Android : $android ($a_pc%)<br/>iOS : $ios ($i_pc%)<br/>Total : $total");
+    } else if ($action === "getUser") {
+        $id = $_GET['id'];
+        if (!empty($id)) {
+            $user = $db->QueryArray("SELECT * FROM `Users` WHERE `ID` = '$id'")[0];
+            $user['Data'] = $db->Decrypt($user['Data']);
+            print_r($user);
+        }
     }
 
     unset($commands);

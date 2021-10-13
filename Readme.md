@@ -22,6 +22,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
 * [React Native Sound Player](https://www.npmjs.com/package/react-native-sound-player)
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
+* [React Native Push Notification](https://www.npmjs.com/package/react-native-push-notification)
 
 ### Unused (removed)
 * [React native gesture handler](https://www.npmjs.com/package/react-native-gesture-handler)

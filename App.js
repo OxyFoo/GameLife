@@ -5,6 +5,7 @@ import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
 import { currentDateIsSafe } from './src/Functions/System';
 import langManager from './src/Managers/LangManager';
+import { enableNotificationSchedule } from './src/Functions/Notifications';
 
 class App extends React.Component {
     componentDidMount() {
@@ -33,6 +34,8 @@ class App extends React.Component {
         // Wait to 5 seconds (with small glith)
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 4 }, true);
+
+        enableNotificationSchedule();
     }
 
     async componentChangeState(newState) {

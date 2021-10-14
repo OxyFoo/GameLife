@@ -164,7 +164,9 @@ class UserManager {
         for (let s = 0; s < solvedAchievements.length; s++) {
             const achievementID = solvedAchievements[s];
             const achievement = this.getAchievementByID(achievementID);
-            achievements.push(achievement);
+            if (achievement && achievement.Type != -1) {
+                achievements.push(achievement);
+            }
         }
 
         // Get others

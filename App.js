@@ -35,7 +35,9 @@ class App extends React.Component {
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 4 }, true);
 
-        enableMorningNotifications();
+        if (user.morningNotifications) {
+            enableMorningNotifications();
+        }
     }
 
     async componentChangeState(newState) {

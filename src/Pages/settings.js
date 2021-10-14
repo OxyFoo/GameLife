@@ -3,6 +3,7 @@ import { BackHandler } from 'react-native';
 
 import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
+import { disableMorningNotifications, enableMorningNotifications } from '../Functions/Notifications';
 
 class Settings extends React.Component {
     constructor(props) {
@@ -75,6 +76,8 @@ class Settings extends React.Component {
     }
     changeMorningNotifications = (enabled) => {
         user.morningNotifications = enabled;
+        if (enabled) enableMorningNotifications();
+        else disableMorningNotifications();
         user.saveData(false);
         user.changePage();
     }

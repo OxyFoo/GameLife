@@ -8,7 +8,19 @@
     },
 
     "notifications": {
-        "text-title": "Citation du jour"
+        "titles": [
+            "Citation du jour",
+            "Pensée du jour",
+            "Un peu de motivation !",
+            "Une citation sympa pour commencer la journée !",
+            "Une lueur d'espoir ?",
+            "Mais que dirais Luffy ?",
+            "T'es pas loin de la fin !",
+            "Encore un p'tit effort !",
+            "Tu vas y arriver !",
+            "Ca finira bien, promis",
+            "Jamais 9 sans 10 comme dirait l'autre : Bonjour, la citation du jour"
+        ]
     },
 
     "loading": {

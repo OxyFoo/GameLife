@@ -8,7 +8,19 @@
     },
 
     "notifications": {
-        "text-title": "Quote of the day"
+        "titles": [
+            "Quote of the day",
+            "Thought for the day",
+            "A little motivation!",
+            "A nice quote to start the day!",
+            "A glimmer of hope ?",
+            "But what would you Luffy say ?",
+            "You're not far from the end !",
+            "One more little effort !",
+            "You're going to make it !",
+            "It will end well, I promise",
+            "Never 9 without 10 as the other would say : Good morning, quote of the day"
+        ]
     },
 
     "loading": {

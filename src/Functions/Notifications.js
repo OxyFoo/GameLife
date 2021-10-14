@@ -1,45 +1,57 @@
-import langManager from '../Managers/LangManager';
 import PushNotification from 'react-native-push-notification';
+
+import langManager from '../Managers/LangManager';
 import user from '../Managers/UserManager';
 
 const CHANNEL_ID = '1';
-const MAX_DAYS = 15;
+const SET_HOUR = 9;
+const MAX_DAYS = 30;
 
-function enableNotificationSchedule() {
+function enableMorningNotifications() {
+    let enabled = true;
     PushNotification.channelExists(CHANNEL_ID, (exists) => {
         if (!exists) {
             PushNotification.createChannel({
                 channelId: CHANNEL_ID,
                 channelName: 'Quotes notifications'
-            },
-            (created) => {
+            }, (created) => {
                 if (created) {
                     InitNotification();
+                } else {
+                    enabled = false;
                 }
             });
         } else {
             InitNotification();
         }
     });
+    return enabled;
 }
 
 function InitNotification() {
-    //PushNotification.clearLocalNotification();
+    PushNotification.cancelAllLocalNotifications();
 
-    // Define 9h tomorrow
+    // Define SET_HOUR h tomorrow
     const date = new Date();
     const hour = date.getHours();
-    if (hour > 9) date.setDate(date.getDate() + 1);
-    date.setHours(9, 0, 0, 0);
+    if (hour > SET_HOUR) date.setDate(date.getDate() + 1);
+    date.setHours(SET_HOUR, 21, 0, 0);
 
+    // Set all notifications for MAX_DAYS days
     for (let _ = 0; _ < MAX_DAYS; _++) {
-        const random = user.random(0, user.quotes.length - 1);
-        const { Quote, Author } = user.quotes[random];
+        const titles = langManager.curr['notifications']['titles'];
+        const quotes = user.quotes;
+
+        const random_title = user.random(0, titles.length - 1);
+        const random_quote = user.random(0, quotes.length - 1);
+        const Title = titles[random_title];
+        const { Quote, Author } = quotes[random_quote];
+
 
         PushNotification.localNotificationSchedule({
             channelId: CHANNEL_ID,
-            title: langManager.curr['notifications']['text-title'],
-            message: Quote + '(' + Author + ')',
+            title: Title,
+            message: Quote + ' (' + Author + ')',
             date: date
         });
 
@@ -47,8 +59,15 @@ function InitNotification() {
     }
 }
 
-function disableNotificationSchedule() {
-    PushNotification.deleteChannel(CHANNEL_ID);
+function disableMorningNotifications() {
+    let removed = false;
+    PushNotification.channelExists(CHANNEL_ID, (exists) => {
+        if (exists) {
+            PushNotification.deleteChannel(CHANNEL_ID);
+            removed = true;
+        }
+    });
+    return removed;
 }
 
-export { enableNotificationSchedule, disableNotificationSchedule }
+export { enableMorningNotifications, disableMorningNotifications }

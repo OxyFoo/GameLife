@@ -5,7 +5,7 @@ import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
 import { currentDateIsSafe } from './src/Functions/System';
 import langManager from './src/Managers/LangManager';
-import { enableNotificationSchedule } from './src/Functions/Notifications';
+import { enableMorningNotifications } from './src/Functions/Notifications';
 
 class App extends React.Component {
     componentDidMount() {
@@ -35,7 +35,7 @@ class App extends React.Component {
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 4 }, true);
 
-        enableNotificationSchedule();
+        enableMorningNotifications();
     }
 
     async componentChangeState(newState) {

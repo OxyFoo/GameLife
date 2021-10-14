@@ -15,6 +15,12 @@ class Settings extends React.Component {
             const value = user.themeManager.THEMES[T];
             this.selectableThemes.push({ key: value, value: langManager.curr['themes'][value] });
         }
+
+        // Notifications
+        this.enabledOrNot = [
+            { key: false, value: langManager.curr['settings']['enabled-morningnotifications']},
+            { key: true, value: langManager.curr['settings']['disabled-morningnotifications']}
+        ];
     }
     back = () => {
         if (this.initLang !== langManager.currentLangageKey) {
@@ -66,6 +72,11 @@ class Settings extends React.Component {
             this.currentTheme = theme;
             user.changePage();
         }
+    }
+    changeMorningNotifications = (enabled) => {
+        user.morningNotifications = enabled;
+        user.saveData(false);
+        user.changePage();
     }
 }
 

@@ -194,6 +194,10 @@
         "input-clear": "Supprimer tout",
         "input-disconnect": "Délier le mail",
 
+        "input-morningnotifications": "Notifications journalières",
+        "enabled-morningnotifications": "Activées",
+        "disabled-morningnotifications": "Désactivées",
+
         "alert-clear-title": "Supprimer",
         "alert-clear-text": "Réinitialiser toutes les données de l'app ?",
         "alert-reset-title": "Réinitialiser",

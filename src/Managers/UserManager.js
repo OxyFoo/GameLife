@@ -56,6 +56,7 @@ class UserManager {
         this.solvedAchievements = [];
         this.stats = DEFAULT_STATS;
         this.daily = [];
+        this.morningNotifications = true;
 
         this.titles = [];
         this.quotes = [];
@@ -538,8 +539,11 @@ class UserManager {
         };
         await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
 
-        const email = { 'email': this.email };
-        await DataStorage.Save(STORAGE.MAIL, email, false);
+        const data_settings = {
+            'email': this.email,
+            'morningNotifications': this.morningNotifications
+        };
+        await DataStorage.Save(STORAGE.SETTINGS, data_settings, false);
 
         if (saveInternal) {
             const internalData = {
@@ -569,8 +573,9 @@ class UserManager {
             return output;
         }
 
-        const data_email = await DataStorage.Load(STORAGE.MAIL, false);
-        this.email = get(data_email, 'email', '');
+        const data_settings = await DataStorage.Load(STORAGE.SETTINGS, false);
+        this.email = get(data_settings, 'email', '');
+        this.morningNotifications = get(data_settings, 'morningNotifications', true);
 
         const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
         const data = await DataStorage.Load(STORAGE.USER, _online, this.conn.token);

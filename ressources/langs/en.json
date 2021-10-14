@@ -194,6 +194,10 @@
         "input-clear": "Clear all",
         "input-disconnect": "Unlink mail",
 
+        "input-morningnotifications": "Morning notifications",
+        "enabled-morningnotifications": "Enabled",
+        "disabled-morningnotifications": "Disabled",
+
         "alert-clear-title": "Delete all",
         "alert-clear-text": "Reset all data in the app?",
         "alert-reset-title": "Reset",

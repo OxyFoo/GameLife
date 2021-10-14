@@ -3,7 +3,7 @@ import { Request_Async } from "../Functions/Request";
 
 const STORAGE = {
     USER: '@params/user',
-    MAIL: '@params/mail',
+    SETTINGS: '@params/settings',
     INTERNAL: '@params/internal',
     INTERNAL_HASH: '@params/internal_hash',
     APPSTATE: '@params/appstate',

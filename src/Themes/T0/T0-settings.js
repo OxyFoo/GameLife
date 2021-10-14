@@ -35,6 +35,14 @@ class T0Settings extends Settings {
                         onSelect={this.changeTheme}
                     />
 
+                    {/* Morning notifications */}
+                    <GLText style={styles.title} title={langManager.curr['settings']['input-morningnotifications'].toUpperCase()} />
+                    <GLDropDown
+                        value={this.enabledOrNot[user.morningNotifications ? 1 : 0].value || ''}
+                        data={this.enabledOrNot}
+                        onSelect={this.changeMorningNotifications}
+                    />
+
                     {/* Reset activities
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>
                         <GLText style={styles.title} title={langManager.curr['settings']['input-reset'].toUpperCase()} />

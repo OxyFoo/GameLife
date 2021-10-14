@@ -31,6 +31,8 @@ class ServManager {
         // Device informations
         this.deviceID = DeviceInfo.getUniqueId();
         this.deviceName = DeviceInfo.getDeviceNameSync();
+        this.osName = DeviceInfo.getSystemName();
+        this.osVersion = DeviceInfo.getSystemVersion();
 
         this.timeout;
     }
@@ -115,6 +117,8 @@ class ServManager {
             'action': 'ping',
             'deviceID': this.deviceID,
             'deviceName': this.deviceName,
+            'deviceOSName': this.osName,
+            'deviceOSVersion': this.osVersion,
             'version': version
         };
         return Request_Async(data);

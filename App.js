@@ -31,7 +31,7 @@ class App extends React.Component {
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 3 }, true);
 
-        // Wait to 5 seconds (with small glith)
+        // Wait
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 4 }, true);
 

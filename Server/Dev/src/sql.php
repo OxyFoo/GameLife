@@ -89,7 +89,7 @@
             return $account;
         }
 
-        public function GetDevice($deviceIdentifier, $deviceName) {
+        public function GetDevice($deviceIdentifier, $deviceName, $osName = '', $osVersion = '') {
             $command = "SELECT * FROM `Devices` WHERE `Name` = '$deviceName'";
             $device = NULL;
             $devices = $this->QueryArray($command);
@@ -103,11 +103,20 @@
 
             if (!$device) {
                 // Add new device in DB
-                $r = $this->AddDevice($deviceIdentifier, $deviceName);
+                $r = $this->AddDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
                 if ($r !== TRUE) {
                     ExitWithStatus("Error: Adding device in DB failed");
                 }
-                $device = $this->GetDevice($deviceIdentifier, $deviceName);
+                $device = $this->GetDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
+            } else {
+                // Refresh data
+                if (!empty($osName) && !empty($osVersion)) {
+                    if ($device['OSName'] != $deviceName || $device['OSVersion'] != $osVersion) {
+                        $ID = $device['ID'];
+                        $update_command = "UPDATE `Devices` SET `OSName` = '$osName', `OSVersion` = '$osVersion', `Updated` = CURRENT_TIMESTAMP() WHERE `Devices`.`ID` = $ID";
+                        $this->Query($update_command);
+                    }
+                }
             }
 
             return $device;
@@ -129,9 +138,9 @@
             return $result;
         }
 
-        public function AddDevice($deviceIdentifier, $deviceName) {
+        public function AddDevice($deviceIdentifier, $deviceName, $osName, $osVersion) {
             $hashID = password_hash($deviceIdentifier, PASSWORD_BCRYPT);
-            $command = "INSERT INTO `Devices` (`Identifier`, `Name`) VALUES ('$hashID', '$deviceName')";
+            $command = "INSERT INTO `Devices` (`Identifier`, `Name`, `OSName`, `OSVersion`) VALUES ('$hashID', '$deviceName', '$osName', '$osVersion')";
             $result = $this->conn->query($command);
             return $result;
         }

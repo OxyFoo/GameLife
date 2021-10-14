@@ -59,9 +59,11 @@
             if (isset($version) && $version == $serverVersion) {
                 $deviceIdentifier = $this->data['deviceID'];
                 $deviceName = $this->data['deviceName'];
+                $osName = $this->data['deviceOSName'];
+                $osVersion = $this->data['deviceOSVersion'];
 
                 if (isset($deviceIdentifier, $deviceName)) {
-                    $device = $this->db->GetDevice($deviceIdentifier, $deviceName);
+                    $device = $this->db->GetDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
                     $this->output['status'] = 'ok';
                 }
             } else if ($serverVersion < $appData) {

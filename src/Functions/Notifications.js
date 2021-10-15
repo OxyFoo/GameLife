@@ -1,3 +1,5 @@
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 
 import langManager from '../Managers/LangManager';
@@ -9,27 +11,34 @@ const MAX_DAYS = 30;
 
 function enableMorningNotifications() {
     let enabled = true;
-    PushNotification.channelExists(CHANNEL_ID, (exists) => {
-        if (!exists) {
-            PushNotification.createChannel({
-                channelId: CHANNEL_ID,
-                channelName: 'Quotes notifications'
-            }, (created) => {
-                if (created) {
-                    InitNotification();
-                } else {
-                    enabled = false;
-                }
-            });
-        } else {
-            InitNotification();
-        }
-    });
+
+    if (Platform.OS === "ios") {
+        InitNotification();
+    } else if (Platform.OS === "android") {
+        PushNotification.channelExists(CHANNEL_ID, (exists) => {
+            if (!exists) {
+                PushNotification.createChannel({
+                    channelId: CHANNEL_ID,
+                    channelName: 'Quotes notifications'
+                }, (created) => {
+                    if (created) {
+                        InitNotification();
+                    } else {
+                        enabled = false;
+                    }
+                });
+            } else {
+                InitNotification();
+            }
+        });
+    }
+
     return enabled;
 }
 
 function InitNotification() {
-    PushNotification.cancelAllLocalNotifications();
+    if (Platform.OS === "ios") PushNotificationIOS.removeAllPendingNotificationRequests();
+    else if (Platform.OS === "android") PushNotification.cancelAllLocalNotifications();
 
     // Define SET_HOUR h tomorrow
     const date = new Date();
@@ -38,7 +47,7 @@ function InitNotification() {
     date.setHours(SET_HOUR, 21, 0, 0);
 
     // Set all notifications for MAX_DAYS days
-    for (let _ = 0; _ < MAX_DAYS; _++) {
+    for (let i = 0; i < MAX_DAYS; i++) {
         const titles = langManager.curr['notifications']['titles'];
         const quotes = user.quotes;
 
@@ -46,14 +55,23 @@ function InitNotification() {
         const random_quote = user.random(0, quotes.length - 1);
         const Title = titles[random_title];
         const { Quote, Author } = quotes[random_quote];
+        const Body = Quote + ' (' + Author + ')';
 
-
-        PushNotification.localNotificationSchedule({
-            channelId: CHANNEL_ID,
-            title: Title,
-            message: Quote + ' (' + Author + ')',
-            date: date
-        });
+        if (Platform.OS === "ios") {
+            PushNotificationIOS.addNotificationRequest({
+                id: i,
+                title: Title,
+                body: Body,
+                fireDate: date
+            });
+        } else if (Platform.OS === "android") {
+            PushNotification.localNotificationSchedule({
+                channelId: CHANNEL_ID,
+                title: Title,
+                message: Body,
+                date: date
+            });
+        }
 
         date.setDate(date.getDate() + 1);
     }
@@ -61,12 +79,16 @@ function InitNotification() {
 
 function disableMorningNotifications() {
     let removed = false;
-    PushNotification.channelExists(CHANNEL_ID, (exists) => {
-        if (exists) {
-            PushNotification.deleteChannel(CHANNEL_ID);
-            removed = true;
-        }
-    });
+    if (Platform.OS === "ios") {
+        PushNotificationIOS.removeAllPendingNotificationRequests();
+    } else if (Platform.OS === "android") {
+        PushNotification.channelExists(CHANNEL_ID, (exists) => {
+            if (exists) {
+                PushNotification.deleteChannel(CHANNEL_ID);
+                removed = true;
+            }
+        });
+    }
     return removed;
 }
 

@@ -33,7 +33,7 @@ class Settings extends React.Component {
     reset = () => {
         const event = (button) => {
             if (button === 'yes') {
-                user.activities = [];
+                user.activitiyManager.setAll([]);
                 user.saveData();
             }
         }

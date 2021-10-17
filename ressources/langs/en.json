@@ -99,7 +99,7 @@
         "name-lastachievement": "Last achievement",
 
         "alert-pseudolimit-title": "Change username",
-        "alert-pseudolimit-text": "You can only change your nickname once a month, so choose wisely!",
+        "alert-pseudolimit-text": "You can only change your nickname once every {} days, so choose wisely!",
         "alert-pseudowait-title": "Username already changed",
         "alert-pseudowait-text": "You must wait {} days before you can change it again.",
         "alert-incorrectemail-title": "Error",

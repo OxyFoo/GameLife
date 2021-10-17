@@ -7,7 +7,7 @@ class Home extends React.Component {
         super(props);
 
         // Average XP
-        const firstDate = user.getFirstActivity();
+        const firstDate = user.activitiyManager.getFirst();
         firstDate.setHours(0, 0, 0);
         const delta = (new Date()) - firstDate;
         const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));
@@ -15,10 +15,11 @@ class Home extends React.Component {
 
         // User activities
         const show = 3;
+        const userActivities = user.activitiyManager.getAll();
         this.activities = [];
-        for (let i = user.activities.length-1; i > user.activities.length - show - 1; i--) {
+        for (let i = userActivities.length-1; i > userActivities.length - show - 1; i--) {
             if (i >= 0) {
-                this.activities.push(user.activities[i]);
+                this.activities.push(userActivities[i]);
             }
         }
 

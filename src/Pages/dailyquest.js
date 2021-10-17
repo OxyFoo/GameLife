@@ -8,7 +8,7 @@ class Dailyquest extends React.Component {
     constructor(props) {
         super(props);
 
-        this.daily_states = user.dailyTodayCheck();
+        this.daily_states = user.quests.dailyTodayCheck();
     }
     state = {
         informations: false,
@@ -16,11 +16,11 @@ class Dailyquest extends React.Component {
         time: GetTimeToTomorrow(),
         selectedSkill1: undefined,
         selectedSkill2: undefined,
-        enable: user.daily.length > 0
+        enable: user.quests.daily.length > 0
     }
 
     componentDidMount() {
-        this.daily_bonus = user.dailyGetBonusCategory();
+        this.daily_bonus = user.quests.dailyGetBonusCategory();
         this.SKILLS = user.getSkills();
         this.interval = setInterval(this.loop, 1000);
     }
@@ -36,7 +36,7 @@ class Dailyquest extends React.Component {
     back = () => {
         if (this.state.informations) {
             this.setState({ informations: false });
-        } else if (!this.state.enable && user.daily.length) {
+        } else if (!this.state.enable && user.quests.daily.length) {
             this.setState({ enable: true });
         } else {
             user.backPage();
@@ -81,7 +81,7 @@ class Dailyquest extends React.Component {
     save = () => {
         const skillID1 = this.state.selectedSkill1;
         const skillID2 = this.state.selectedSkill2;
-        user.dailyOnChange(skillID1, skillID2)
+        user.quests.dailyOnChange(skillID1, skillID2)
         this.saved();
     }
 
@@ -95,7 +95,7 @@ class Dailyquest extends React.Component {
     // DAILY QUESTS
 
     edit = () => {
-        if (user.dailyAlreadyChanged()) {
+        if (user.quests.dailyAlreadyChanged()) {
             const title = langManager.curr['dailyquest']['alert-warn-title'];
             const text = langManager.curr['dailyquest']['alert-warn-text'];
             user.openPopup('ok', [ title, text ]);

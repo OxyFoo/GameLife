@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
 
 import Settings from '../../Pages/settings';
 import user from '../../Managers/UserManager';
@@ -36,12 +36,16 @@ class T0Settings extends Settings {
                     />
 
                     {/* Morning notifications */}
-                    <GLText style={styles.title} title={langManager.curr['settings']['input-morningnotifications'].toUpperCase()} />
-                    <GLDropDown
-                        value={this.enabledOrNot[user.morningNotifications ? 1 : 0].value || ''}
-                        data={this.enabledOrNot}
-                        onSelect={this.changeMorningNotifications}
-                    />
+                    {Platform.OS === "android" && (
+                        <>
+                            <GLText style={styles.title} title={langManager.curr['settings']['input-morningnotifications'].toUpperCase()} />
+                            <GLDropDown
+                                value={this.enabledOrNot[user.morningNotifications ? 1 : 0].value || ''}
+                                data={this.enabledOrNot}
+                                onSelect={this.changeMorningNotifications}
+                            />
+                        </>
+                    )}
 
                     {/* Reset activities
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>

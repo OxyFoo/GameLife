@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppState, BackHandler, SafeAreaView } from 'react-native';
+import { AppState, BackHandler, Platform, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
@@ -35,8 +35,11 @@ class App extends React.Component {
         await user.sleep(user.random(200, 400));
         user.changePage('loading', { state: 4 }, true);
 
-        if (user.morningNotifications) {
-            enableMorningNotifications();
+        // TODO : iOS notifications
+        if (Platform.OS === "android") {
+            if (user.morningNotifications) {
+                enableMorningNotifications();
+            }
         }
     }
 

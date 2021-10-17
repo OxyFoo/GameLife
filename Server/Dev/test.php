@@ -83,29 +83,39 @@
         }
     } else if ($action === "quotes") {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
-        foreach ($quotes as $quote) {
-            $q = $quote['Quote'];
-            $a = $quote['Author'];
-            echo("$q-$a<br/>");
+        if ($quotes !== FALSE) {
+            foreach ($quotes as $quote) {
+                $q = $quote['Quote'];
+                $a = $quote['Author'];
+                echo("$q-$a<br/>");
+            }
         }
     } else if ($action === "getData") {
         $app = $db->QueryArray("SELECT * FROM `App`");
-        $data = array();
-        for ($i = 0; $i < count($app); $i++) {
-            $index = $app[$i]['ID'];
-            $value = $app[$i]['Data'];
-            $date = $app[$i]['Date'];
-            if ($index === "Version") {
-                $data['Version'] = $value;
-            } else if ($index === "DBHash") {
-                $data["DBHash"] = $value;
-                $data["LastHashRefresh"] = MinutesFromDate($date);
+        if ($app !== FALSE) {
+            $data = array();
+            for ($i = 0; $i < count($app); $i++) {
+                $index = $app[$i]['ID'];
+                $value = $app[$i]['Data'];
+                $date = $app[$i]['Date'];
+                if ($index === "Version") {
+                    $data['Version'] = $value;
+                } else if ($index === "DBHash") {
+                    $data["DBHash"] = $value;
+                    $data["LastHashRefresh"] = MinutesFromDate($date);
+                }
             }
+            print_r($data);
         }
-        print_r($data);
     } else if ($action === "setHashTest") {
         $hashTest = "Blabla";
         $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$hashTest' WHERE `ID` = 'DBHash'");
+    } else if ($action === "getAccount") {
+        $ID = 1;
+        $command = "SELECT * FROM `Users` WHERE `ID` = '$ID'";
+        $account = $db->Query($command);
+        print_r($account->fetch_assoc());
+        print_r($account);
     }
 
 ?>

@@ -39,7 +39,6 @@ class Identity extends React.Component {
 
         if (user.pseudo !== this.state.pseudo) {
             user.pseudo = this.state.pseudo;
-            user.pseudoDate = new Date();
         }
         user.title = this.state.title;
         user.birth = this.state.birth;
@@ -60,11 +59,11 @@ class Identity extends React.Component {
 
     // Pseudo
     beforeEditPseudo = (textEditable_callback) => {
-        const days_before_editable = user.daysBeforeChangePseudo();
+        const [ days_before_editable, days_total ] = user.daysBeforeChangePseudo();
 
         if (days_before_editable <= 0) {
             const title = langManager.curr['identity']['alert-pseudolimit-title'];
-            const text = langManager.curr['identity']['alert-pseudolimit-text'];
+            const text = langManager.curr['identity']['alert-pseudolimit-text'].replace('{}', days_total);
             user.openPopup('ok', [ title, text ], textEditable_callback, false);
         } else {
             const title = langManager.curr['identity']['alert-pseudowait-title'];

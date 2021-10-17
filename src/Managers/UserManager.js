@@ -6,7 +6,6 @@ import ThemeManager from '../Class/Themes';
 import DataStorage, { STORAGE } from '../Class/DataStorage';
 
 import Experience from "../Class/Experience";
-import { isUndefined } from "../Functions/Functions";
 
 import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
@@ -14,8 +13,10 @@ import skills from '../../ressources/defaultDB/skills.json';
 import skillsIcon from '../../ressources/defaultDB/skillsIcon.json';
 import achievements from '../../ressources/defaultDB/achievements.json';
 import helpers from '../../ressources/defaultDB/helpers.json';
+import Activities from '../Class/Activities';
+import Quests from '../Class/Quests';
 
-const DAYS_PSEUDO_CHANGE = 2;
+const DAYS_PSEUDO_CHANGE = 7;
 const DEFAULT_PSEUDO = 'Player';
 const DEFAULT_STATS = {
     'sag': 0,
@@ -28,9 +29,11 @@ const DEFAULT_STATS = {
 };
 
 class UserManager {
-    conn = new ServManager(this);
+    activitiyManager = new Activities(this);
     experience = new Experience(this);
+    quests = new Quests(this);
     themeManager = new ThemeManager();
+    conn = new ServManager(this);
 
     /**
      * this.changePage(pageName, argument);
@@ -55,7 +58,6 @@ class UserManager {
         this.activities = [];
         this.solvedAchievements = [];
         this.stats = DEFAULT_STATS;
-        this.daily = [];
         this.morningNotifications = true;
 
         this.titles = [];
@@ -74,11 +76,11 @@ class UserManager {
         this.birth = '';
         this.email = '';
         this.xp = 0;
-        this.activities = [];
         this.solvedAchievements = [];
         this.pseudoDate = null;
         this.stats = DEFAULT_STATS;
-        this.daily = [];
+        this.quests.daily = [];
+        this.morningNotifications = true;
 
         this.titles = [];
         this.quotes = [];
@@ -105,12 +107,65 @@ class UserManager {
     }
 
     async refreshStats(save = true) {
-        this.removeDeletedSkills();
+        this.activitiyManager.removeDeletedSkillsActivities();
         this.experience.getExperience();
         if (save) await this.saveData();
         this.changePage();
     }
 
+    daysBeforeChangePseudo = () => {
+        let days = 0;
+        this.pseudoDate = null;
+        if (this.pseudoDate !== null && this.pseudo.length !== 0) {
+            const today = new Date();
+            const last = new Date(this.pseudoDate);
+            const delta = (today - last) / (1000 * 60 * 60 * 24);
+            days = DAYS_PSEUDO_CHANGE - Math.round(delta);
+        }
+        return [ days, DAYS_PSEUDO_CHANGE ];
+    }
+
+    async changeUser() {
+        const oldEmail = this.email
+        const oldPseudo = this.pseudo;
+        const title = this.title;
+        if (this.email) {
+            await this.conn.AsyncRefreshAccount();
+            await this.saveData(false);
+            if (this.isConnected()) {
+                await this.loadData(true);
+                if (oldPseudo !== DEFAULT_PSEUDO && oldEmail === this.email) {
+                    this.pseudo = oldPseudo;
+                }
+                this.title = title;
+                await this.saveData(true);
+                this.changePage();
+            }
+        } else {
+            await this.disconnect();
+        }
+    }
+
+    pseudoCallback = (status) => {
+        async function loadData(button) {
+            await this.loadData();
+            this.changePage();
+        };
+        if (status === "wrongtimingpseudo") {
+            const title = langManager.curr['identity']['alert-wrongtimingpseudo-title'];
+            const text = langManager.curr['identity']['alert-wrongtimingpseudo-text'];
+            this.openPopup('ok', [ title, text ], loadData.bind(this));
+        } else if (status === "wrongpseudo") {
+            const title = langManager.curr['identity']['alert-wrongpseudo-title'];
+            const text = langManager.curr['identity']['alert-wrongpseudo-text'];
+            this.openPopup('ok', [ title, text ], loadData.bind(this));
+        } else if (status === "ok") {
+            this.pseudoDate = new Date();
+            this.saveData(false);
+        }
+    }
+
+    /* TITRES */
     getUnlockTitles = () => {
         let unlockTitles = [
             { key: 0, value: langManager.curr['identity']['empty-title'] }
@@ -128,7 +183,6 @@ class UserManager {
         }
         return unlockTitles;
     }
-
     getTitleByID = (ID) => {
         let currTitle = null;
         for (let t = 0; t < this.titles.length; t++) {
@@ -142,6 +196,7 @@ class UserManager {
         return currTitle;
     }
 
+    /* LOGO */
     getXmlByLogoID = (ID) => {
         let currXml = null;
         for (let i = 0; i < this.skillsIcon.length; i++) {
@@ -155,6 +210,7 @@ class UserManager {
         return currXml;
     }
 
+    /* Achievements */
     getAchievements = () => {
         let achievements = [];
 
@@ -178,7 +234,6 @@ class UserManager {
         }
         return achievements;
     }
-
     getAchievementByID = (ID) => {
         let output;
         for (let a = 0; a < this.achievements.length; a++) {
@@ -190,7 +245,6 @@ class UserManager {
         }
         return output;
     }
-
     checkAchievements = () => {
         for (let a = 0; a < this.achievements.length; a++) {
             const achievement = this.achievements[a];
@@ -230,9 +284,10 @@ class UserManager {
                 if (isTime) {
                     // Get total time
                     value = 0;
-                    for (const a in this.activities) {
-                        if (this.activities[a].ID == skillID) {
-                            value += this.activities[a].duration / 60;
+                    const activities = this.activitiyManager.getAll();
+                    for (const a in activities) {
+                        if (activities[a].ID == skillID) {
+                            value += activities[a].duration / 60;
                         }
                     }
                 } else {
@@ -304,30 +359,7 @@ class UserManager {
         }
     }
 
-    removeDeletedSkills = () => {
-        for (let a in this.activities) {
-            let activity = this.activities[a];
-            let skillID = activity.skillID;
-            const skill = this.getSkillByID(skillID);
-            if (typeof(skill) === 'undefined') {
-                this.remActivity(activity);
-                this.removeDeletedSkills();
-                break;
-            }
-        }
-    }
-
-    daysBeforeChangePseudo = () => {
-        let days = 0;
-        if (this.pseudoDate !== null && this.pseudo.length !== 0) {
-            const today = new Date();
-            const last = new Date(this.pseudoDate);
-            const delta = (today - last) / (1000 * 60 * 60 * 24);
-            days = DAYS_PSEUDO_CHANGE - Math.round(delta);
-        }
-        return days;
-    }
-
+    /* SKILLS */
     getSkills = (category) => {
         let skills = [];
         for (let i = 0; i < this.skills.length; i++) {
@@ -361,8 +393,9 @@ class UserManager {
             }
 
             let curr = false;
-            for (let a = 0; a < this.activities.length; a++) {
-                if (this.activities[a].skillID == this.skills[i].ID) {
+            const activities = this.activitiyManager.getAll();
+            for (let a = 0; a < activities.length; a++) {
+                if (activities[a].skillID == this.skills[i].ID) {
                     curr = true;
                 }
             }
@@ -382,150 +415,6 @@ class UserManager {
         return cats_sorted;
     }
 
-    addActivity = (skillID, startDate, duration, save = true) => {
-        let output = false;
-
-        const newActivity = {
-            skillID: skillID,
-            startDate: startDate,
-            duration: duration
-        }
-
-        const limitDate = new Date();
-        limitDate.setFullYear(2021, 8, 29);
-        if (startDate < limitDate) return;
-
-        // Check if not exist
-        let exists = false;
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
-            const activity_compare = {
-                skillID: activity.skillID,
-                startDate: activity.startDate,
-                duration: activity.duration
-            }
-            if (activity_compare == newActivity) {
-                exists = true;
-            }
-        }
-
-        if (!exists) {
-            if (this.datetimeIsFree(startDate, duration)) {
-                // Add - Sort by date
-                const activityDate = new Date(startDate);
-                for (let a = 0; a < this.activities.length; a++) {
-                    const arrayDate = new Date(this.activities[a].startDate);
-                    if (activityDate < arrayDate) {
-                        this.activities.splice(a, 0, newActivity);
-                        output = true;
-                        break;
-                    }
-                }
-                if (!output) {
-                    this.activities.push(newActivity);
-                    output = true;
-                }
-                this.refreshStats(save);
-            }
-        }
-        return output;
-    }
-    remActivity = (activity) => {
-        for (let i = 0; i < this.activities.length; i++) {
-            if (this.activities[i] == activity) {
-                this.activities.splice(i, 1);
-                break;
-            }
-        }
-        this.refreshStats();
-    }
-    getActivitiesByDate = (date) => {
-        let output = [];
-        const currDate = isUndefined(date) ? new Date() : new Date(date);
-        for (let i = 0; i < this.activities.length; i++) {
-            const activity = this.activities[i];
-            const activityDate = new Date(activity.startDate);
-            const sameYear = currDate.getFullYear() == activityDate.getFullYear();
-            const sameMonth = currDate.getMonth() == activityDate.getMonth();
-            const sameDate = currDate.getDate() == activityDate.getDate();
-            if (sameYear && sameMonth && sameDate) {
-                output.push(activity);
-            }
-        }
-        return output;
-    }
-    getFirstActivity = () => {
-        let date = new Date();
-        if (this.activities.length) {
-            date = new Date(this.activities[0].startDate);
-        }
-        date.setMinutes(date.getMinutes() - 1);
-        return date;
-    }
-    getActivitiesTotalDuration = () => {
-        let totalDuration = 0;
-        for (let a in this.activities) {
-            const activity = this.activities[a];
-            totalDuration += activity.duration;
-        }
-        return totalDuration;
-    }
-
-    datetimeIsFree = (date, duration) => {
-        const startDate = new Date(date);
-        let output = true;
-        const endDate = new Date(startDate);
-        endDate.setMinutes(startDate.getMinutes() + duration - 1);
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
-            const activityStartDate = new Date(activity.startDate);
-            const activityEndDate = new Date(activityStartDate);
-            activityEndDate.setMinutes(activityStartDate.getMinutes() + activity.duration - 1);
-            const startDuringActivity = startDate > activityStartDate && startDate < activityEndDate;
-            const aroundActivity = startDate <= activityStartDate && endDate >= activityEndDate;
-
-            const endDuringActivity = endDate > activityStartDate && endDate < activityEndDate;
-            if (startDuringActivity || endDuringActivity || aroundActivity) {
-                output = false;
-                break;
-            }
-        }
-        return output;
-    }
-
-    async changeUser() {
-        const oldEmail = this.email
-        const oldPseudo = this.pseudo;
-        const title = this.title;
-        if (this.email) {
-            await this.conn.AsyncRefreshAccount();
-            await this.saveData(false);
-            if (this.isConnected()) {
-                await this.loadData(true);
-                if (oldPseudo !== DEFAULT_PSEUDO && oldEmail === this.email) {
-                    this.pseudo = oldPseudo;
-                }
-                this.title = title;
-                await this.saveData(true);
-                this.changePage();
-            }
-        } else {
-            await this.disconnect();
-        }
-    }
-
-    pseudoCallback = (status) => {
-        if (status === "wrongtimingpseudo") {
-            const title = langManager.curr['identity']['alert-wrongtimingpseudo-title'];
-            const text = langManager.curr['identity']['alert-wrongtimingpseudo-text'];
-            this.openPopup('ok', [ title, text ]);
-        } else if (status === "wrongpseudo") {
-            const title = langManager.curr['identity']['alert-wrongpseudo-title'];
-            const text = langManager.curr['identity']['alert-wrongpseudo-text'];
-            this.openPopup('ok', [ title, text ]);
-        }
-    }
-
     async saveData(online, saveInternal = false) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
@@ -535,9 +424,9 @@ class UserManager {
             'title': this.title,
             'birth': this.birth,
             'xp': this.xp,
-            'activities': this.activities,
+            'activities': this.activitiyManager.getAll(),
             'solvedAchievements': this.solvedAchievements,
-            'daily': this.daily
+            'daily': this.quests.daily
         };
         await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
 
@@ -588,14 +477,14 @@ class UserManager {
             this.title = get(data, 'title', 0);
             this.birth = get(data, 'birth', '');
             this.xp = get(data, 'xp', 0);
-            this.daily = get(data, 'daily', []);
+            this.quests.daily = get(data, 'daily', []);
             if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
-                if (this.activities.length === 0) {
-                    this.activities = data['activities'];
+                if (this.activitiyManager.getAll().length === 0) {
+                    this.activitiyManager.setAll(data['activities']);
                 } else {
                     for (let a in data['activities']) {
                         const activity = data['activities'][a];
-                        this.addActivity(activity.skillID, activity.startDate, activity.duration, false);
+                        this.activitiyManager.Add(activity.skillID, activity.startDate, activity.duration, false);
                     }
                 }
             }
@@ -617,7 +506,6 @@ class UserManager {
         this.achievements = get(internalData, 'achievements', achievements, true);
         this.contributors = get(internalData, 'helpers', helpers, true);
     }
-
     async loadInternalData() {
         if (this.conn.online) {
             const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
@@ -637,73 +525,6 @@ class UserManager {
         }
 
         await this.saveData(false, true);
-    }
-
-    dailyAlreadyChanged = () => {
-        let output = false;
-        for (let d = 0; d < this.daily.length; d++) {
-            const daily = this.daily[d];
-            const dailyDate = new Date(daily.date);
-            const today = new Date();
-
-            const sameYear = today.getFullYear() == dailyDate.getFullYear();
-            const sameMonth = today.getMonth() == dailyDate.getMonth();
-            const sameDate = today.getDate() == dailyDate.getDate();
-            if (sameYear && sameMonth && sameDate) {
-                output = true;
-                break;
-            }
-        }
-        return output;
-    }
-    dailyOnChange = (skillID1, skillID2) => {
-        const newDaily = {
-            'skills': [ skillID1, skillID2 ],
-            'date': new Date()
-        }
-        this.daily.push(newDaily);
-        this.saveData();
-    }
-
-    dailyTodayCheck = () => {
-        let state1 = 0;
-        let state2 = 0;
-
-        const dailyBonusCategory = this.dailyGetBonusCategory();
-        if (this.daily.length) {
-            const IDs = this.dailyGetSkills().skills;
-            const today_activities = this.getActivitiesByDate();
-            for (let ta = 0; ta < today_activities.length; ta++) {
-                const activity = today_activities[ta];
-                const skillID = activity.skillID;
-                const skill = this.getSkillByID(skillID);
-                const category = skill.Category;
-                if (IDs.includes(skillID)) {
-                    state1 += activity.duration;
-                }
-                if (category == dailyBonusCategory) {
-                    state2 += activity.duration;
-                }
-            }
-        }
-
-        state1 /= 60;
-        state2 /= 15;
-
-        return [ state1, state2 ];
-    }
-
-    dailyGetSkills = () => {
-        if (this.daily.length) return this.daily[this.daily.length - 1];
-        else return null;
-    }
-    dailyGetBonusCategory = (date) => {
-        const skillsLength = this.skills.length
-        const today = isUndefined(date) ? new Date() : new Date(date);
-        const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
-        const skill = this.skills[index];
-        const category = skill.Category;
-        return category;
     }
 
     isConnected = this.conn.isConnected;

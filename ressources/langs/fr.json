@@ -99,7 +99,7 @@
         "name-lastachievement": "Dernier succès",
 
         "alert-pseudolimit-title": "Changement de pseudo",
-        "alert-pseudolimit-text": "Vous ne pouvez changer de pseudo qu'une seule fois par mois, choisissez-bien !",
+        "alert-pseudolimit-text": "Vous ne pouvez changer de pseudo qu'une seule fois tous les {} jours, choisissez-bien !",
         "alert-pseudowait-title": "Pseudo déjà changé",
         "alert-pseudowait-text": "Vous devez attendre {} jours avant de pouvoir le modifier à nouveau.",
         "alert-incorrectemail-title": "Erreur",

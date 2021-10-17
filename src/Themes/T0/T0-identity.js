@@ -20,7 +20,7 @@ class T0Identity extends Identity {
     render() {
         const age = this.calculateAge(this.state.birth) || '?';
         const mode = this.state.showDateTimePicker;
-        const totalDuration = user.getActivitiesTotalDuration();
+        const totalDuration = user.activitiyManager.getTotalDuration();
         const totalH = Math.floor(totalDuration/60);
         const totalM = ((totalDuration/60) - totalH) * 60;
         const totalLang = langManager.curr['identity']['value-totaltime'];
@@ -71,12 +71,9 @@ class T0Identity extends Identity {
                             beforeChangeText={this.beforeEditPseudo}
                             placeholder={langManager.curr['identity']['placeholder-pseudo']}
                         />
-                        {/* Email status */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()+" - "+user.conn.status} />
-                        {/* <GLText style={[styles.value, { marginBottom: 6 }]} title={user.conn.status} color='secondary' /> */ 
-                        /* J'aime pas effacer des lignes de code durement obtenu mdrrrr j'suis nostalgique */ }
 
                         {/* Email */}
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()+" - "+user.conn.status} />
                         <GLTextEditable
                             style={styles.value}
                             value={this.state.email}
@@ -88,7 +85,6 @@ class T0Identity extends Identity {
                         
                         {/* Title */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
-                        {/*<GLText style={styles.value} title={this.state.title || langManager.curr['identity']['empty-title']} onPress={this.toggleModal} color='secondary' />*/}
                         <GLDropDown
                             style={styles.value}
                             value={title}

@@ -11,6 +11,7 @@ const MaxHourPerDay = 12;
 class Experience {
     constructor(user) {
         this.user = user;
+        this.getAllActivities = () => { return this.user.activitiyManager.getAll(); };
     }
 
     /**
@@ -33,7 +34,7 @@ class Experience {
         // Sort activities & daily
         /*let events = [];
         let activities = [...this.user.activities];
-        let daily = [...this.user.daily];
+        let daily = [...this.user.quests.daily];
         while (activities.length || daily.length) {
             if (!activities.length) {
                 events.push(daily[0]);
@@ -59,25 +60,25 @@ class Experience {
         const getQuestAvancementFromActivity = (activity) => {
             const activityDate = new Date(activity.startDate);
             let output = null;
-            for (let i = 0; i < this.user.daily.length; i++) {
-                const daily = this.user.daily[i];
+            for (let i = 0; i < this.user.quests.daily.length; i++) {
+                const daily = this.user.quests.daily[i];
                 const dailyDate = new Date(daily.date);
                 if (activityDate > dailyDate) {
                     output = daily.skills;
-                    output.push(this.user.dailyGetBonusCategory(activityDate));
+                    output.push(this.user.quests.dailyGetBonusCategory(activityDate));
                 }
             }
             return output;
         }
 
         // Count stats
-        const date = new Date(this.user.getFirstActivity());
+        const date = new Date(this.user.activitiyManager.getFirst());
         date.setHours(0, 0, 0, 0);
-        let activities = [...this.user.activities];
+        let activities = [...this.getAllActivities()];
         let questSupp = 0;
         let bonusSupp = 0;
         while (activities.length) {
-            const activitiesInDay = this.user.getActivitiesByDate(date);
+            const activitiesInDay = this.user.activitiyManager.getByDate(date);
             let questComplete = 0;
             let bonusComplete = 0;
             let hoursRemain = MaxHourPerDay;
@@ -163,8 +164,9 @@ class Experience {
 
     getStatExperience(statKey, untilActivity) {
         let totalXP = 0;
-        for (let a in this.user.activities) {
-            const activity = this.user.activities[a];
+        const activities = this.getAllActivities();
+        for (let a in activities) {
+            const activity = activities[a];
             const durationHour = activity.duration / 60;
             const skill = this.user.getSkillByID(activity.skillID);
 
@@ -182,8 +184,9 @@ class Experience {
             stats[allStats[s]] = 0;
         }
 
-        for (let a in this.user.activities) {
-            const activity = this.user.activities[a];
+        const activities = this.getAllActivities();
+        for (let a in activities) {
+            const activity = activities[a];
             if (activity.skillID == skillID) {
                 const durationHour = activity.duration / 60;
                 const skill = this.user.getSkillByID(skillID);
@@ -219,8 +222,9 @@ class Experience {
             }
             totalXP = maxSkillXP;
         } else {
-            for (let a in this.user.activities) {
-                const activity = this.user.activities[a];
+            const activities = this.getAllActivities();
+            for (let a in activities) {
+                const activity = activities[a];
                 const skillID = activity.skillID;
                 const skill = this.user.getSkillByID(skillID);
                 const cat = skill.Category;
@@ -258,7 +262,7 @@ class Experience {
         }
 
         // Get all skills
-        const activities = [...this.user.activities].reverse();
+        const activities = [...this.getAllActivities()].reverse();
         for (let a in activities) {
             const activity = activities[a];
             const skillID = activity.skillID;

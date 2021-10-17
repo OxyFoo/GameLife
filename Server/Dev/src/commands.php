@@ -18,19 +18,26 @@
             return json_encode($this->output);
         }
 
+        /**
+         * Fonction privée qui permet de récupérer la version de l'application et le hash de la base de donnée
+         * (Hash qui est actualisé si erroné)
+         */
         private function GetAppData() {
-            $appData = array();
+            $appData = array('Version' => 0, 'DBHash' => '');
             $app = $this->db->QueryArray("SELECT * FROM `App`");
             $lastHashRefresh = 0;
-            for ($i = 0; $i < count($app); $i++) {
-                $index = $app[$i]['ID'];
-                $value = $app[$i]['Data'];
-                $date = $app[$i]['Date'];
-                if ($index === "Version") {
-                    $appData['Version'] = $value;
-                } else if ($index === "DBHash") {
-                    $appData["DBHash"] = $value;
-                    $lastHashRefresh = MinutesFromDate($date);
+
+            if ($app !== FALSE) {
+                for ($i = 0; $i < count($app); $i++) {
+                    $index = $app[$i]['ID'];
+                    $value = $app[$i]['Data'];
+                    $date = $app[$i]['Date'];
+                    if ($index === "Version") {
+                        $appData['Version'] = $value;
+                    } else if ($index === "DBHash") {
+                        $appData["DBHash"] = $value;
+                        $lastHashRefresh = MinutesFromDate($date);
+                    }
                 }
             }
 
@@ -52,6 +59,11 @@
             return $appData;
         }
 
+        /**
+         * Fonction pour ping le serveur depuis l'app
+         * Elle permet également de stocker l'appareil dans la base de donnée (modèle + OS)
+         * Et de vérifier la version de l'application
+         */
         public function Ping() {
             $appData = $this->GetAppData();
             $version = $this->data['version'];
@@ -64,6 +76,7 @@
 
                 if (isset($deviceIdentifier, $deviceName)) {
                     $device = $this->db->GetDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
+                    $this->db->AddStatistic($device['ID']);
                     $this->output['status'] = 'ok';
                 }
             } else if ($serverVersion < $appData) {
@@ -73,6 +86,10 @@
             }
         }
 
+        /**
+         * Fonction qui permet de récupérer un token pour l'application, qui permet d'identifier l'utilisateur
+         * Permet de définir l'état du compte utilisateur (wait mail, ban, etc)
+         */
         public function GetToken() {
             $deviceIdentifier = $this->data['deviceID'];
             $deviceName = $this->data['deviceName'];
@@ -111,10 +128,13 @@
                     $this->db->SendMail($email, $deviceID, $accountID, $lang);
                     $this->output['status'] = 'signin';
                 }
-
             }
         }
 
+        /**
+         * Fonction qui permet de récupérer toutes les données interne de l'application si il ne les a
+         * à savoir : les activités, les citations, les icones, les titres, succès etc
+         */
         public function GetInternalData() {
             $lang = $this->data['lang'];
             $hash = $this->data['hash'];
@@ -134,6 +154,9 @@
             }
         }
 
+        /**
+         * Récupère les données de l'utilisateur (activités, pseudo, succès, etc)
+         */
         public function GetUserData() {
             $token = $this->data['token'];
             if (isset($token)) {
@@ -159,6 +182,9 @@
             }
         }
 
+        /**
+         * Définit les données de l'utilisateur (activités, pseudo, succès, etc)
+         */
         public function SetUserData() {
             $token = $this->data['token'];
             $userData = $this->data['data'];
@@ -196,6 +222,11 @@
             }
         }
 
+        /**
+         * Récupère les 100 1ers utilisateurs du leaderboard
+         * 
+         * (Code obsolète, une seule commande SQL + formattage suffit !)
+         */
         public function GetLeaderboard() {
             $token = $this->data['token'];
             $time = $this->data['time'];
@@ -211,6 +242,9 @@
             $this->output['status'] = 'ok';
         }
 
+        /**
+         * Ajoute un report dans la base de donnée
+         */
         public function Report() {
             $token = $this->data['token'];
             $report_type = $this->data['type'];
@@ -233,6 +267,10 @@
             }
         }
 
+        /**
+         * Permet de renvoyer la date du serveur pour la comparer à celle de l'app,
+         * Pour éviter les changements d'heures
+         */
         public function GetDate() {
             $this->output['status'] = 'ok';
             $this->output['time'] = time();

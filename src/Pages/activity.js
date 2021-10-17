@@ -65,7 +65,7 @@ class Activity extends React.Component {
             const skillID = this.state.selectedSkill.skillID;
             const date = this.DATES[this.state.selectedDateKey].fulldate;
             const duration = this.DURATION[this.state.selectedTimeKey].duration;
-            if (!user.addActivity(skillID, date, duration)) {
+            if (!user.activitiyManager.Add(skillID, date, duration)) {
                 const title = langManager.curr['calendar']['alert-wrongtiming-title'];
                 const text = langManager.curr['calendar']['alert-wrongtiming-text'];
                 user.openPopup('ok', [ title, text ]);
@@ -77,7 +77,7 @@ class Activity extends React.Component {
     trash = () => {
         const remove = (button) => {
             if (button === 'yes') {
-                user.remActivity(this.state.selectedSkill);
+                user.activitiyManager.Remove(this.state.selectedSkill);
                 this.back();
             }
         }

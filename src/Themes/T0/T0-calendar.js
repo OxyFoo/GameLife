@@ -84,7 +84,7 @@ class T0Calendar extends Calendar {
                     onCancel={this.hideDTP}
                     isVisible={DTPMode != ''}
                     maximumDate={new Date()}
-                    minimumDate={user.getFirstActivity()}
+                    minimumDate={user.activitiyManager.getFirst()}
                 />
 
             </View>

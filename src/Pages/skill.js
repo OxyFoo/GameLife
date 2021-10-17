@@ -29,8 +29,9 @@ class Skill extends React.Component {
         this.stats = skill.Stats;
         this.xml = user.getXmlByLogoID(skill.LogoID);
         this.history = [];
-        for (let a in user.activities) {
-            const activity = user.activities[a];
+        const userActivities = user.activitiyManager.getAll();
+        for (let a in userActivities) {
+            const activity = userActivities[a];
             if (activity.skillID === skillID) {
                 this.history.push(activity);
             }

@@ -96,8 +96,9 @@ class T0Dailyquest extends Dailyquest {
                             const title = item.title;
                             let description = item.description || '';
                             description = description.split('\n').join(', ');
-                            if (description.length >= 20) {
-                                description.length = Math.min(description.length, 20);
+                            const maxCaracs = 15;
+                            if (description.length >= maxCaracs) {
+                                description.substr(0, Math.min(description.length, maxCaracs));
                                 description += '...';
                             }
                             const selectEvent = () => { this.selectTodo(index) };

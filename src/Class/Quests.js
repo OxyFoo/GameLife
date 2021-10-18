@@ -4,6 +4,7 @@ class Quests {
     constructor(user) {
         this.user = user;
         this.daily = [];
+        this.todoList = [];
     }
 
     dailyAlreadyChanged() {
@@ -73,6 +74,43 @@ class Quests {
         const skill = this.user.skills[index];
         const category = skill.Category;
         return category;
+    }
+
+    todoAdd(title, description) {
+        const newTodo = {
+            complete: false,
+            title: title,
+            description: description
+        }
+        this.todoList.push(newTodo);
+    }
+    todoEdit(index, complete, title, description) {
+        if (index < 0 || index >= this.todoList.length) {
+            return;
+        }
+
+        if (!isUndefined(complete)) {
+            this.todoList[index].complete = complete;
+        }
+        if (!isUndefined(title)) {
+            this.todoList[index].title = title;
+        }
+        if (!isUndefined(description)) {
+            this.todoList[index].description = description;
+        }
+    }
+    todoToggle(index) {
+        if (index < 0 || index >= this.todoList.length) {
+            return null;
+        }
+        this.todoList[index].complete = !this.todoList[index].complete;
+        return this.todoList[index].complete;
+    }
+    todoRemove(index) {
+        if (index < 0 || index >= this.todoList.length) {
+            return;
+        }
+        this.todoList.splice(index, 1);
     }
 }
 

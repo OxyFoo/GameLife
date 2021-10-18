@@ -115,7 +115,6 @@ class UserManager {
 
     daysBeforeChangePseudo = () => {
         let days = 0;
-        this.pseudoDate = null;
         if (this.pseudoDate !== null && this.pseudo.length !== 0) {
             const today = new Date();
             const last = new Date(this.pseudoDate);
@@ -426,7 +425,8 @@ class UserManager {
             'xp': this.xp,
             'activities': this.activitiyManager.getAll(),
             'solvedAchievements': this.solvedAchievements,
-            'daily': this.quests.daily
+            'daily': this.quests.daily,
+            'tasks': this.quests.todoList
         };
         await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
 
@@ -478,6 +478,8 @@ class UserManager {
             this.birth = get(data, 'birth', '');
             this.xp = get(data, 'xp', 0);
             this.quests.daily = get(data, 'daily', []);
+            this.quests.todoList = get(data, 'tasks', []);
+            this.solvedAchievements = get(data, 'solvedAchievements', []);
             if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
                 if (this.activitiyManager.getAll().length === 0) {
                     this.activitiyManager.setAll(data['activities']);
@@ -485,14 +487,6 @@ class UserManager {
                     for (let a in data['activities']) {
                         const activity = data['activities'][a];
                         this.activitiyManager.Add(activity.skillID, activity.startDate, activity.duration, false);
-                    }
-                }
-            }
-            if (data.hasOwnProperty('solvedAchievements')) {
-                const achievements = data['solvedAchievements'];
-                for (let i = 0; i < achievements.length; i++) {
-                    if (!this.solvedAchievements.includes(achievements[i])) {
-                        this.solvedAchievements.push(achievements[i]);
                     }
                 }
             }

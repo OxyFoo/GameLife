@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView, Dimensions} from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 
 import Dailyquest from '../../Pages/dailyquest';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GLButton, GLDropDown, GLHeader, GLSvg, GLText } from './Components/GL-Components';
+import { GLButton, GLDropDown, GLHeader, GLIconButton, GLInput, GLSvg, GLText } from './Components/GL-Components';
 import { GetTimeToTomorrow, isUndefined } from '../../Functions/Functions';
 
 class T0Dailyquest extends Dailyquest {
@@ -15,7 +15,7 @@ class T0Dailyquest extends Dailyquest {
             const skillName2 = !isUndefined(this.state.selectedSkill2) ? user.getSkillByID(this.state.selectedSkill2).Name : langManager.curr['dailyquest']['daily-define-cat2'];
             const save = langManager.curr['dailyquest']['daily-define-button'];
             return (
-                <View style={styles.fullscreen}>
+                <View style={{ alignItems: 'center' }}>
                     <GLText style={styles.titleS} title={define} />
                     <GLDropDown
                         style={{ width: '60%' }}
@@ -32,7 +32,7 @@ class T0Dailyquest extends Dailyquest {
                         onLongPress={() => this.changeSkill2('')}
                     />
                     <GLButton
-                        containerStyle={styles.button}
+                        containerStyle={[styles.button, { width: '50%' }]}
                         value={save}
                         onPress={this.saveClick}
                     />
@@ -49,38 +49,100 @@ class T0Dailyquest extends Dailyquest {
                 const skillName2 = user.getSkillByID(skillsIDs[1]).Name;
                 skills = skillName1 + langManager.curr['dailyquest']['daily-categories-text'] + skillName2;
             }
-            const title = langManager.curr['dailyquest']['daily-title'];
-            const bonus = langManager.curr['dailyquest']['bonus-title'];
+            const title_quests = langManager.curr['dailyquest']['daily-title'];
             const edit = langManager.curr['dailyquest']['daily-edit-button'];
 
             const questMain = langManager.curr['dailyquest']['quest-main-text'];
             const questBonus = langManager.curr['dailyquest']['quest-bonus-text'];
 
+            const title_todo = langManager.curr['dailyquest']['daily-task-title'];
+
             return (
                 <>
-                    <GLText style={styles.title} title={title} />
+                    <GLText style={styles.title} title={title_quests} />
                     <View style={styles.blockContainer}>
                         <View style={styles.row}>
                             <GLSvg style={styles.icon} xml={this.daily_states[0] >= 1 ? 'check' : 'uncheck'} />
                             <GLText style={styles.textList} title={questMain} />
                         </View>
                         <GLText title={skills} style={{ marginVertical: 12 }} />
-                    </View>
-
-                    <GLText style={styles.title} title={bonus} />
-                    <View style={styles.blockContainer}>
                         <View style={styles.row}>
                             <GLSvg style={styles.icon} xml={this.daily_states[1] >= 1 ? 'check' : 'uncheck'} />
                             <GLText style={styles.textList} title={questBonus} />
                         </View>
-                        <GLText title={this.daily_bonus} style={{ marginVertical: 12 }} />
+                        <GLText title={this.state.daily_bonus} style={{ marginVertical: 12 }} />
+                        <View style={styles.center}>
+                            <GLButton
+                                containerStyle={styles.button}
+                                value={edit}
+                                onPress={this.edit}
+                            />
+                        </View>
                     </View>
 
-                    <View style={styles.center}>
+                    <View style={styles.titleTodo}>
+                        <GLText style={styles.title} title={title_todo} />
+                        <GLIconButton onPress={() => { this.selectTodo(-1); }} icon='plus' />
+                    </View>
+                    <FlatList
+                        style={styles.blockContainer}
+                        data={user.quests.todoList}
+                        keyExtractor={(item, i) => 'todolist-task-' + i}
+                        ItemSeparatorComponent={() => (
+                            <View style={{ width: '60%', height: 1, marginLeft: '20%', backgroundColor: '#FFFFFF' }} />
+                        )}
+                        renderItem={({item, index}) => {
+                            const check = item.complete;
+                            const title = item.title;
+                            let description = item.description;
+                            if (description.length >= 20) {
+                                description.length = Math.min(description.length, 20);
+                                description += '...';
+                            }
+                            const selectEvent = () => { this.selectTodo(index) };
+                            const toggleEvent = () => { this.toggleTodo(index) };
+
+                            return (
+                                <View style={styles.taskRow}>
+                                    <TouchableOpacity style={styles.icon} activeOpacity={0.5} onPress={toggleEvent}>
+                                        <GLSvg xml={check ? 'check' : 'uncheck'} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.taskCol} activeOpacity={0.5} onPress={selectEvent}>
+                                        <GLText style={styles.textList} title={title} />
+                                        <GLText style={styles.textList} title={description} />
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }}
+                    />
+                </>
+            )
+        }
+
+        const todolist = () => {
+            const title_todo = langManager.curr['dailyquest']['daily-task-title'];
+            const title = langManager.curr['dailyquest']['task-edit-title'];
+            const title_subtask = langManager.curr['dailyquest']['task-edit-subtask'];
+            const title_description = langManager.curr['dailyquest']['task-edit-description'];
+
+            const bt_add = langManager.curr['dailyquest']['task-edit-add'];
+            const bt_save = langManager.curr['dailyquest']['task-edit-save'];
+
+            return (
+                <>
+                    <GLText style={styles.titleS} title={title_todo} />
+                    <GLText style={styles.title} title={title} />
+                    <GLInput value={this.state.taskTitle} onChangeText={this.onChangeTaskTitle} style={styles.input} />
+                    {/*<GLText style={styles.title} title={title_subtask} />
+                    <GLInput style={styles.input} />*/}
+                    <GLText style={styles.title} title={title_description} />
+                    <GLInput value={this.state.taskDescription} onChangeText={this.onChangeTaskDescription} style={styles.input} />
+
+                    <View style={{ width: '60%', marginLeft: '20%', marginTop: 24 }}>
                         <GLButton
                             containerStyle={styles.button}
-                            value={edit}
-                            onPress={this.edit}
+                            value={this.state.selectedTodo === -1 ? bt_add : bt_save}
+                            onPress={this.saveTask}
                         />
                     </View>
                 </>
@@ -100,8 +162,9 @@ class T0Dailyquest extends Dailyquest {
 
         let page = (<></>);
         if (this.state.informations) page = informations();
-        else if (this.state.enable) page = quests();
-        else page = define();
+        else if (this.state.selectedTodo !== null) page = todolist();
+        else if (!this.state.enable) page = define();
+        else page = quests();
         return page;
     }
 
@@ -135,7 +198,7 @@ const wh = Dimensions.get('window').height ;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: "5%"
+        paddingVertical: '5%'
     },
     fullscreen: {
         flex: 1,
@@ -154,55 +217,73 @@ const styles = StyleSheet.create({
     icon: {
         width: ww * 64 / 1000, 
         height: ww * 64 / 1000, 
-        margin: "4%", 
+        margin: '4%'
     },
 
     remainTime: {
-        marginRight: "5%",
-        textAlign: 'right',
+        marginRight: '5%',
+        textAlign: 'right'
     },
     title: {
-        paddingVertical: "10%",
-        fontSize: ww * 693 / 10000,
-        
+        textAlign: 'left',
+        marginLeft: '10%',
+        marginTop: 24,
+        fontSize: ww * 7 / 100
     },
-    text: { // C'EST LE TEXT DE QUOI CA WESH 
-        paddingVertical: 6, // JE PEUX PAS BIEN FAIRE LE PADDING PARCE QUE JE SAIS PAS OU EST LE TEXTE 
-        fontSize: ww * 53 / 1000,  
+    titleTodo: {
+        marginTop: 24,
+        paddingRight: 24,
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between'
     },
 
     largetext: {
         textAlign: 'justify',
-        paddingVertical: "2%",
-        fontSize: ww * 426 / 10000,
-        lineHeight: wh * 239 / 10000,
-        
+        paddingVertical: '2%',
+        fontSize: ww * 4.26 / 100,
+        lineHeight: wh * 2 / 100
     },
-    
+
     titleS: {
-        paddingVertical: "2%",
-        fontSize: ww * 693 / 10000
+        paddingVertical: 24,
+        fontSize: ww * 7 / 100
     },
     button: {
-        width: ww * 437 / 1000,
-        height: wh * 71 / 1000,
-        marginTop: "7%"
+        width: '95%',
+        height: 'auto',
+        marginTop: 12,
+        paddingVertical: 12
     },
 
     blockContainer: {
-        padding: "3%",
-        marginHorizontal: "10%",
+        padding: 12,
+        marginTop: 24,
+        marginHorizontal: '10%',
         borderWidth: 2,
-        borderColor: '#FFFFFF',
-        
-        
+        borderColor: '#FFFFFF'
     },
     textList: {
         width: '80%',
-        marginVertical: "2%",
-        lineHeight: wh * 269 / 10000,
-        textAlign: 'left',
-        
+        marginVertical: '2%',
+        lineHeight: wh * 2 / 100,
+        textAlign: 'left'
+    },
+
+    input: {
+        justifyContent: 'center',
+        marginVertical: 6
+    },
+
+    taskRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginBottom: 12
+    },
+    taskCol: {
+        flex: 1,
+        alignItems: 'center'
     }
 });
 

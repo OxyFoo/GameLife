@@ -306,16 +306,22 @@
         "daily-define-cat1": "Skill 1",
         "daily-define-cat2": "Skill 2",
         "daily-define-button": "Save",
+
         "daily-title": "Available quests",
-        "bonus-title": "Objective bonus",
         "daily-edit-button": "Edit categories",
         "daily-categories-text": " or ",
-
-        "quest-main-text": "One hour of activity in the following categories:",
+        "quest-main-text": "One hour and a half of activity in the following categories:",
         "quest-bonus-text": "One quarter hour in the following category:",
 
+        "daily-task-title": "Todo list",
+        "task-edit-title": "Title",
+        "task-edit-subtask": "Subtasks",
+        "task-edit-description": "Description",
+        "task-edit-add": "Add",
+        "task-edit-save": "Save",
+
         "alert-info-title": "Informations",
-        "alert-info-text": "Daily quests are a way for you to get extra experience.\n\nThere are 3 categories in the daily quests:\n\n\n1- The hour and a quarter of activity: you have 1h15 of \"mandatory\" activity per day.\n1 hour of activity of your choice, you can choose to complete this hour by doing 1 or 2 activities (of different categories).\nIf you complete your hour of activity, you gain +1% of xp for the next day (can be accumulated 21 times)\nIf you fail, you will get -5% of xp for the next day (not cumulative)\n\n\n2- (Available soon) A list of habits you want to start / continue.\nYou can decide to add up to 5 habits at the same time.\nIf you achieve your quarter of an hour of activity taken at random, you gain +0,5% of xp for the next day (cumulative 10 times)\nIf you fail, nothing happens.\n\n\n3- (Available soon) A button to watch a commercial. Watching one earns you points (and later virtual currency). You can earn titles and other bonuses from a certain number of ads watched!",
+        "alert-info-text": "Daily quests are a way for you to get extra experience.\n\nThere are 3 categories in the daily quests:\n\n\n1- The hour and a half of activity: you have 1h30 of \"mandatory\" activity per day.\n1 hour of activity of your choice, you can choose to complete this hour by doing 1 or 2 activities (of different categories).\nIf you complete your hour of activity, you gain +1% of xp for the next day (can be accumulated 21 times)\nIf you fail, you will get -5% of xp for the next day (not cumulative)\n\n\n2- (Finished soon) A list of habits you want to start / continue.\nYou can decide to add up to 5 habits at the same time.\nIf you achieve your quarter of an hour of activity taken at random, you gain +0,5% of xp for the next day (cumulative 10 times)\nIf you fail, nothing happens.\n\n\n3- (Available soon) A button to watch a commercial. Watching one earns you points (and later virtual currency). You can earn titles and other bonuses from a certain number of ads watched!",
         "alert-notfill-title": "Not completed",
         "alert-notfill-text": "Please fill in all fields",
         "alert-same-title": "Not completed",
@@ -323,7 +329,11 @@
         "alert-warn-title": "Warning",
         "alert-warn-text": "You can only change the skills for the daily quests once a day",
         "alert-success-title": "Success",
-        "alert-success-text": "Daily quests have been modified"
+        "alert-success-text": "Daily quests have been modified",
+        "alert-tasknotitle-title": "Incorrect",
+        "alert-tasknotitle-text": "Please enter a title for your task",
+        "alert-taskremove-title": "Delete ?",
+        "alert-taskremove-text": "You have already checked this task, press no to uncheck it, or yes to delete it"
     },
 
     "shop": {

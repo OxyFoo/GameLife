@@ -306,16 +306,22 @@
         "daily-define-cat1": "Compétence 1",
         "daily-define-cat2": "Compétence 2",
         "daily-define-button": "Enregistrer",
+
         "daily-title": "Quêtes disponibles",
-        "bonus-title": "Objectif bonus",
         "daily-edit-button": "Modifier les catégories",
         "daily-categories-text": " ou ",
-
-        "quest-main-text": "Une heure d'activité parmis les catégories suivantes :",
+        "quest-main-text": "Une heure et demie d'activité parmis les catégories suivantes :",
         "quest-bonus-text": "Un quart d'heure dans la catégorie suivante :",
 
+        "daily-task-title": "Tâches jounalières",
+        "task-edit-title": "Titre",
+        "task-edit-subtask": "Sous-tâches",
+        "task-edit-description": "Description",
+        "task-edit-add": "Ajouter",
+        "task-edit-save": "Enregistrer",
+
         "alert-info-title": "Informations",
-        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et quart d’activité : vous avez 1h15 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 21 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt disponible) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuelle). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
+        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et demie d’activité : vous avez 1h30 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 21 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt terminée) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuelle). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
         "alert-notfill-title": "Pas terminé",
         "alert-notfill-text": "Merci de remplir tous les champs",
         "alert-same-title": "Pas terminé",
@@ -323,7 +329,11 @@
         "alert-warn-title": "Attention",
         "alert-warn-text": "Vous ne pouvez modifier les compétences pour les quêtes journalières qu'une fois par jour",
         "alert-success-title": "Succès",
-        "alert-success-text": "Les quêtes journalières ont été modifiées"
+        "alert-success-text": "Les quêtes journalières ont été modifiées",
+        "alert-tasknotitle-title": "Incorrect",
+        "alert-tasknotitle-text": "Veuillez entrer un titre à votre tâche",
+        "alert-taskremove-title": "Supprimer ?",
+        "alert-taskremove-text": "Vous avez déjà coché cette tâche, appuyez sur non pour la décocher, ou sur oui pour la supprimer"
     },
 
     "shop": {

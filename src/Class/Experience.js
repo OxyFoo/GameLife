@@ -1,7 +1,6 @@
 import { isUndefined } from "../Functions/Functions";
 
 const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
-const XPperHour = 100;
 const UserXPperLevel = 20;
 const StatXPperLevel = 2;
 const SkillXPperLevel = 20;
@@ -119,7 +118,7 @@ class Experience {
 
                 // XP
                 const sagLevel = this.getStatExperience('sag').lvl - 1;
-                const xp = (XPperHour * durationHour) + (sagLevel * durationHour);
+                const xp = (skill.XP * durationHour) + (sagLevel * durationHour);
                 const bonusMultiplier = 1 + ((questSupp + bonusSupp) / 100);
                 this.user.xp += xp * bonusMultiplier;
 
@@ -147,9 +146,6 @@ class Experience {
         }
 
         return this.__getXPDict(this.user.xp, UserXPperLevel);
-    }
-    getXPperHour() {
-        return XPperHour;
     }
 
     getXPTo(level) {
@@ -190,7 +186,7 @@ class Experience {
             if (activity.skillID == skillID) {
                 const durationHour = activity.duration / 60;
                 const skill = this.user.getSkillByID(skillID);
-                totalXP += XPperHour * durationHour;
+                totalXP += skill.XP * durationHour;
                 for (let s in allStats) {
                     const localXP = skill.Stats[allStats[s]] * durationHour;
                     stats[allStats[s]] += localXP;
@@ -231,7 +227,7 @@ class Experience {
     
                 if (cat == category) {
                     const durationHour = activity.duration / 60;
-                    totalXP += XPperHour * durationHour;
+                    totalXP += skill.XP * durationHour;
                 }
             }
         }

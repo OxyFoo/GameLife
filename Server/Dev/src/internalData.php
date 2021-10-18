@@ -20,8 +20,13 @@
                 $Quote = $quotes[$q]["Quote"];
                 $Author = $quotes[$q]["Author"];
                 if (areSet([$Lang, $Quote, $Author])) {
-                    if ($Lang == $lang || $Lang == 'en') {
+                    if ($Lang == $lang) {
                         array_push($validQuotes, $quotes[$q]);
+                    } else if ($lang === 'fr' && $Lang === 'en') {
+                        $add = rand(0, 20) === 0;
+                        if ($add) {
+                            array_push($validQuotes, $quotes[$q]);
+                        }
                     }
                 }
             }

@@ -15,16 +15,17 @@ class T0Activity extends Activity {
         const rightIcon = this.SELECTED ? 'trash' : 'check';
         const rightEvent = this.SELECTED ? this.trash : this.valid;
 
-        let skill, totalXP, bonusXP;
+        let skill, totalXP, bonusXP, textBonusXP;
         if (!isUndefined(this.state.selectedSkill)) {
             const selectedSkill = this.state.selectedSkill;
             const skillID = selectedSkill.skillID;
             const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
             skill = user.getSkillByID(skillID);
-            totalXP = user.experience.getXPperHour() * durationHour;
+            totalXP = skill.XP * durationHour;
             const untilActivity = this.SELECTED ? selectedSkill : undefined;
             const sagLevel = user.experience.getStatExperience('sag', untilActivity).lvl - 1;
             bonusXP = sagLevel * durationHour;
+            textBonusXP = bonusXP === 0 ? '' : ' +' + bonusXP;
         }
 
         return (
@@ -84,17 +85,20 @@ class T0Activity extends Activity {
 
                     {!isUndefined(skill) && (
                         <View style={styles.containerAttr}>
-                            <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small'] + ' +' + bonusXP} style={styles.attr} color='secondary' />
+                            <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small'] + textBonusXP} style={styles.attr} color='secondary' />
                             <FlatList
                                 data={this.STATS}
                                 keyExtractor={(item, i) => 'skill_stat_' + i}
-                                renderItem={({item}) => (
-                                    <GLText
-                                        title={'+' + (skill.Stats[item] * (this.DURATION[this.state.selectedTimeKey].duration / 60)) + ' ' + langManager.curr['statistics']['names'][item]}
-                                        style={styles.attr}
-                                        color={skill.Stats[item] == 0 ? 'dark' : 'secondary'}
-                                    />
-                                )}
+                                renderItem={({item}) => {
+                                    const pts = skill.Stats[item] * (this.DURATION[this.state.selectedTimeKey].duration / 60);
+                                    return pts > 0 && (
+                                        <GLText
+                                            title={'+' + pts + ' ' + langManager.curr['statistics']['names'][item]}
+                                            style={styles.attr}
+                                            color={skill.Stats[item] == 0 ? 'dark' : 'secondary'}
+                                        />
+                                    )
+                                }}
                             />
                         </View>
                     )}

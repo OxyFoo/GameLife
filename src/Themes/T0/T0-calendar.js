@@ -61,7 +61,7 @@ class T0Calendar extends Calendar {
                         const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + activity.duration + 'm';
 
                         const durationHour = activity.duration / 60;
-                        let totalXP = user.experience.getXPperHour() * durationHour;
+                        let totalXP = skill.XP * durationHour;
                         const sagLevel = user.experience.getStatExperience('sag', activity).lvl - 1;
                         totalXP += sagLevel * durationHour;
 

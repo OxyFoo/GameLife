@@ -16,20 +16,28 @@ class Dailyquest extends React.Component {
         time: GetTimeToTomorrow(),
         selectedSkill1: undefined,
         selectedSkill2: undefined,
-        enable: user.quests.daily.length > 0
-    }
+        daily_bonus: user.quests.dailyGetBonusCategory(),
+        enable: user.quests.daily.length > 0,
 
+        selectedTodo: null,
+        taskTitle: '',
+        taskDescription: ''
+    }
+    
     componentDidMount() {
-        this.daily_bonus = user.quests.dailyGetBonusCategory();
         this.SKILLS = user.getSkills();
         this.interval = setInterval(this.loop, 1000);
     }
-
+    
     componentWillUnmount() {
         clearInterval(this.interval);
     }
-
+    
     loop = () => {
+        const newBonus = user.quests.dailyGetBonusCategory();
+        if (newBonus != this.state.daily_bonus) {
+            this.setState({ daily_bonus: newBonus });
+        }
         this.setState({ time: GetTimeToTomorrow() });
     }
 
@@ -38,6 +46,8 @@ class Dailyquest extends React.Component {
             this.setState({ informations: false });
         } else if (!this.state.enable && user.quests.daily.length) {
             this.setState({ enable: true });
+        } else if (this.state.selectedTodo !== null) {
+            this.setState({ selectedTodo: null });
         } else {
             user.backPage();
         }
@@ -110,6 +120,63 @@ class Dailyquest extends React.Component {
 
     info = () => {
         this.setState({ informations: true });
+    }
+
+    // Todo List
+
+    selectTodo = (id) => {
+        const showTitle = id === -1 ? '' : user.quests.todoList[id].title;
+        const showDescription = id === -1 ? '' : user.quests.todoList[id].description;
+        this.setState({
+            selectedTodo: id,
+            taskTitle: showTitle,
+            taskDescription: showDescription
+        });
+    }
+    toggleTodo = (id) => {
+        if (id < 0) return;
+
+        const currentState = user.quests.todoList[id].complete;
+        if (currentState === false) {
+            user.quests.todoToggle(id);
+        } else {
+            const title = langManager.curr['dailyquest']['alert-taskremove-title'];
+            const text = langManager.curr['dailyquest']['alert-taskremove-text'];
+            const event = (button) => {
+                if (button === 'yes') {
+                    user.quests.todoRemove(id);
+                } else {
+                    user.quests.todoToggle(id);
+                }
+            }
+            user.openPopup('yesno', [ title, text ], event);
+        }
+    }
+    onChangeTaskTitle = (newTitle) => {
+        if (newTitle.length > 30) return;
+        this.setState({ taskTitle: newTitle });
+    }
+    onChangeTaskDescription = (newDescription) => {
+        this.setState({ taskDescription: newDescription });
+    }
+    saveTask = () => {
+        const { taskTitle, taskDescription } = this.state;
+
+        if (!taskTitle.length) {
+            const title = langManager.curr['dailyquest']['alert-tasknotitle-title'];
+            const text = langManager.curr['dailyquest']['alert-tasknotitle-text'];
+            user.openPopup('ok', [ title, text ]);
+        } else {
+            if (this.state.selectedTodo === -1) {
+                // Add todo
+                user.quests.todoAdd(taskTitle, taskDescription);
+            } else {
+                // Save todo
+                user.quests.todoEdit(this.state.selectedTodo, false, taskTitle, taskDescription);
+            }
+            this.back();
+            user.saveData();
+        }
     }
 }
 

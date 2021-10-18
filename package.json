@@ -2,7 +2,7 @@
   "name": "gamelife",
   "version": "0.2.2",
   "versionName": "0.2.2 (bêta)",
-  "serverURL": "https://oxyfoo.com/App/GameLife/Dev/app.php",
+  "serverURL": "https://oxyfoo.com/App/GameLife/Public/app.php",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

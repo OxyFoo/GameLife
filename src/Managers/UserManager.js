@@ -316,6 +316,7 @@ class UserManager {
             } else
             if (first.endsWith('Ca')) {
                 // Categorie
+                // TODO - Bug ici, mais avant changer les catégories
                 first = first.replace('Ca', '');
                 const CategoryDepth = parseInt(first);
                 const categories = this.getSkillCategories(true);
@@ -414,7 +415,7 @@ class UserManager {
         return cats_sorted;
     }
 
-    async saveData(online, saveInternal = false) {
+    async saveData(online) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
             'lang': langManager.currentLangageKey,
@@ -435,18 +436,17 @@ class UserManager {
             'morningNotifications': this.morningNotifications
         };
         await DataStorage.Save(STORAGE.SETTINGS, data_settings, false);
-
-        if (saveInternal) {
-            const internalData = {
-                'skills': this.skills,
-                'skillsIcon': this.skillsIcon,
-                'titles': this.titles,
-                'quotes': this.quotes,
-                'achievements': this.achievements,
-                'helpers': this.contributors
-            }
-            await DataStorage.Save(STORAGE.INTERNAL, internalData, false);
+    }
+    async saveIntenalData() {
+        const internalData = {
+            'skills': this.skills,
+            'skillsIcon': this.skillsIcon,
+            'titles': this.titles,
+            'quotes': this.quotes,
+            'achievements': this.achievements,
+            'helpers': this.contributors
         }
+        await DataStorage.Save(STORAGE.INTERNAL, internalData, false);
     }
     async loadData(online) {
         const get = (data, index, defaultValue, oneBlock = false) => {
@@ -518,7 +518,7 @@ class UserManager {
             }
         }
 
-        await this.saveData(false, true);
+        await this.saveIntenalData();
     }
 
     isConnected = this.conn.isConnected;

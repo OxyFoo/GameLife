@@ -55,8 +55,9 @@ class ServManager {
         const result_ping = await this.reqPing();
         if (result_ping.hasOwnProperty('status')) {
             const status = result_ping['status'];
-            this.online = status === 'ok';
-            if (status == 'update') {
+            if (status == 'ok') {
+                this.online = true;
+            } else if (status == 'update') {
                 const title = langManager.curr['home']['alert-update-title'];
                 const text = langManager.curr['home']['alert-update-text'];
                 this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
@@ -65,6 +66,11 @@ class ServManager {
                 const title = langManager.curr['home']['alert-newversion-title'];
                 const text = langManager.curr['home']['alert-newversion-text'];
                 this.user.openPopup('ok', [ title, text ], undefined, false);
+            } else if (result_ping.hasOwnProperty('details')) {
+                const error = result_ping['details'].toString();
+                if (error !== "TypeError: Network request failed") {
+                    this.user.openPopup('ok', [ status, error ]);
+                }
             }
         }
         
@@ -89,7 +95,7 @@ class ServManager {
                         return;
                     } else {
                         this.token = token;
-                        this.user.loadData(true);
+                        await this.user.loadData(true);
                     }
                 } else if (this.status === STATUS.BLACKLIST) {
                     const title = langManager.curr['identity']['alert-blacklist-title'];

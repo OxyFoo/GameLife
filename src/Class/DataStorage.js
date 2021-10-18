@@ -45,6 +45,7 @@ class DataStorage {
                 'token': token
             };
             const result = await Request_Async(data);
+            const blocks = [ 'solvedAchievements' ];
             if (result.hasOwnProperty('status') && result['status'] === 'ok') {
                 if (result.hasOwnProperty('data') && result['data'] !== '') {
                     const onlineJson = JSON.parse(result['data']);
@@ -52,9 +53,13 @@ class DataStorage {
                         const currValue = onlineJson[currKey];
                         if (typeof(json[currKey]) !== 'undefined') {
                             if (typeof(currValue) === 'object') {
-                                for (const childKey in currValue) {
-                                    const currChildValue = currValue[childKey];
-                                    json[currKey][childKey] = currChildValue;
+                                if (!blocks.includes(currKey)) {
+                                    for (const childKey in currValue) {
+                                        const currChildValue = currValue[childKey];
+                                        json[currKey][childKey] = currChildValue;
+                                    }
+                                } else {
+                                    json[currKey] = currValue;
                                 }
                             } else {
                                 json[currKey] = currValue;

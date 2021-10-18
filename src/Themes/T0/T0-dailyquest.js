@@ -94,7 +94,8 @@ class T0Dailyquest extends Dailyquest {
                         renderItem={({item, index}) => {
                             const check = item.complete;
                             const title = item.title;
-                            let description = item.description;
+                            let description = item.description || '';
+                            description = description.split('\n').join(', ');
                             if (description.length >= 20) {
                                 description.length = Math.min(description.length, 20);
                                 description += '...';
@@ -109,7 +110,7 @@ class T0Dailyquest extends Dailyquest {
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.taskCol} activeOpacity={0.5} onPress={selectEvent}>
                                         <GLText style={styles.textList} title={title} />
-                                        <GLText style={styles.textList} title={description} />
+                                        <GLText style={styles.textList} title={description} color={"secondary"} />
                                     </TouchableOpacity>
                                 </View>
                             )
@@ -132,11 +133,24 @@ class T0Dailyquest extends Dailyquest {
                 <>
                     <GLText style={styles.titleS} title={title_todo} />
                     <GLText style={styles.title} title={title} />
-                    <GLInput value={this.state.taskTitle} onChangeText={this.onChangeTaskTitle} style={styles.input} />
+                    <GLInput
+                        style={styles.input}
+                        value={this.state.taskTitle}
+                        onChangeText={this.onChangeTaskTitle}
+                    />
+
                     {/*<GLText style={styles.title} title={title_subtask} />
                     <GLInput style={styles.input} />*/}
+
                     <GLText style={styles.title} title={title_description} />
-                    <GLInput value={this.state.taskDescription} onChangeText={this.onChangeTaskDescription} style={styles.input} />
+                    <View style={styles.center}>
+                        <GLInput
+                            style={[styles.input, { width: '80%' }]}
+                            value={this.state.taskDescription}
+                            onChangeText={this.onChangeTaskDescription}
+                            multiline
+                        />
+                    </View>
 
                     <View style={{ width: '60%', marginLeft: '20%', marginTop: 24 }}>
                         <GLButton

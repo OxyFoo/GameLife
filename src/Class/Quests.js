@@ -77,10 +77,11 @@ class Quests {
     }
 
     todoAdd(title, description) {
-        const newTodo = {
+        let newTodo = {
             complete: false,
             title: title,
-            description: description
+            description: description,
+            subtasks: []
         }
         this.todoList.push(newTodo);
     }

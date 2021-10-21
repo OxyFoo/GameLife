@@ -5,7 +5,7 @@
     require('./src/functions.php');
     require('./src/internalData.php');
 
-    $DAYS_PSEUDO_CHANGE = 0;
+    $DAYS_PSEUDO_CHANGE = 6;
 
     class DataBase
     {
@@ -45,14 +45,25 @@
             }
         }
 
+        /**
+         * Exécute une commande SQL
+         * 
+         * Renvoie l'état de la requête (TRUE ou FALSE)
+         */
         public function Query($command) {
             return $this->conn->query($command);
         }
 
+        /**
+         * Exécute une commande SQL
+         * 
+         * Renvoie les valeurs dans une liste (ou FALSE)
+         */
         public function QueryArray($command) {
-            $output = [];
-            $query = $this->conn->query($command);
+            $output = FALSE;
+            $query = $this->Query($command);
             if ($query) {
+                $output = array();
                 while ($row = $query->fetch_assoc()) {
                     array_push($output, $row);
                 }
@@ -65,15 +76,17 @@
             $account = NULL;
             $accounts = $this->QueryArray($command);
 
-            if (!$accounts) {
-                // Add new empty account
-                $r = $this->AddAccount($email);
-                if ($r !== TRUE) {
-                    ExitWithStatus("Error: Adding device in DB failed");
+            if ($accounts !== FALSE) {
+                if (!$accounts) {
+                    // Add new empty account
+                    $r = $this->AddAccount($email);
+                    if ($r !== TRUE) {
+                        ExitWithStatus("Error: Adding device in DB failed");
+                    }
+                    return $this->GetAccountByEmail($email);
+                } else if (count($accounts) === 1) {
+                    $account = $accounts[0];
                 }
-                return $this->GetAccountByEmail($email);
-            } else if (count($accounts) === 1) {
-                $account = $accounts[0];
             }
 
             return $account;
@@ -83,13 +96,13 @@
             $command = "SELECT * FROM `Users` WHERE `ID` = '$ID'";
             $account = NULL;
             $accounts = $this->QueryArray($command);
-            if (count($accounts) === 1) {
+            if ($accounts !== FALSE && count($accounts) === 1) {
                 $account = $accounts[0];
             }
             return $account;
         }
 
-        public function GetDevice($deviceIdentifier, $deviceName) {
+        public function GetDevice($deviceIdentifier, $deviceName, $osName = '', $osVersion = '') {
             $command = "SELECT * FROM `Devices` WHERE `Name` = '$deviceName'";
             $device = NULL;
             $devices = $this->QueryArray($command);
@@ -103,11 +116,20 @@
 
             if (!$device) {
                 // Add new device in DB
-                $r = $this->AddDevice($deviceIdentifier, $deviceName);
+                $r = $this->AddDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
                 if ($r !== TRUE) {
                     ExitWithStatus("Error: Adding device in DB failed");
                 }
-                $device = $this->GetDevice($deviceIdentifier, $deviceName);
+                $device = $this->GetDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
+            } else {
+                // Refresh data
+                if (!empty($osName) && !empty($osVersion)) {
+                    if ($device['OSName'] != $deviceName || $device['OSVersion'] != $osVersion) {
+                        $ID = $device['ID'];
+                        $update_command = "UPDATE `Devices` SET `OSName` = '$osName', `OSVersion` = '$osVersion', `Updated` = CURRENT_TIMESTAMP() WHERE `Devices`.`ID` = $ID";
+                        $this->Query($update_command);
+                    }
+                }
             }
 
             return $device;
@@ -117,7 +139,7 @@
             $command = "SELECT * FROM `Devices` WHERE `ID` = '$ID'";
             $device = NULL;
             $devices = $this->QueryArray($command);
-            if (count($devices) === 1) {
+            if ($devices !== FALSE && count($devices) === 1) {
                 $device = $devices[0];
             }
             return $device;
@@ -125,17 +147,24 @@
 
         public function AddAccount($email) {
             $command = "INSERT INTO `Users` (`Email`) VALUES ('$email')";
-            $result = $this->conn->query($command);
+            $result = $this->Query($command);
             return $result;
         }
 
-        public function AddDevice($deviceIdentifier, $deviceName) {
+        public function AddDevice($deviceIdentifier, $deviceName, $osName, $osVersion) {
             $hashID = password_hash($deviceIdentifier, PASSWORD_BCRYPT);
-            $command = "INSERT INTO `Devices` (`Identifier`, `Name`) VALUES ('$hashID', '$deviceName')";
-            $result = $this->conn->query($command);
+            $command = "INSERT INTO `Devices` (`Identifier`, `Name`, `OSName`, `OSVersion`) VALUES ('$hashID', '$deviceName', '$osName', '$osVersion')";
+            $result = $this->Query($command);
             return $result;
         }
 
+        /**
+         * Return :
+         *      NULL : Not found / Error
+         *      -1   : Blacklist
+         *      0    : Wait mail confirmation
+         *      1    : OK
+         */
         public function CheckDevicePermissions($deviceID, $account) {
             $output = NULL;
             $devices = explode(',', $account['Devices']);
@@ -158,7 +187,7 @@
             } else {
                 $newCell = $deviceID;
             }
-            $result = $this->conn->query("UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'");
+            $result = $this->Query("UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Device adding failed");
             }
@@ -172,7 +201,7 @@
             }
             unset($cell[array_search($deviceID, $cell)]);
             $newCell = join(',', $cell);
-            $result = $this->conn->query("UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'");
+            $result = $this->Query("UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Device removing failed");
             }
@@ -180,16 +209,16 @@
 
         public function RefreshToken($deviceID) {
             $token = RandomString();
-            $result = $this->conn->query("UPDATE `Devices` SET `Token` = '$token' WHERE `ID` = '$deviceID'");
+            $result = $this->Query("UPDATE `Devices` SET `Token` = '$token' WHERE `ID` = '$deviceID'");
             return $result;
         }
 
         public function RemoveToken($deviceID) {
-            return $this->conn->query("UPDATE `Devices` SET `Token` = '' WHERE `ID` = '$deviceID'");
+            return $this->Query("UPDATE `Devices` SET `Token` = '' WHERE `ID` = '$deviceID'");
         }
 
         /*public function DelUser($ID) {
-            $this->conn->query("DELETE FROM `$this->db_name`.`Users` WHERE `ID` = '$ID'");
+            $this->Query("DELETE FROM `$this->db_name`.`Users` WHERE `ID` = '$ID'");
         }*/
 
         public function SendMail($email, $deviceID, $accountID, $lang) {
@@ -210,7 +239,7 @@
         }
 
         public function RefreshLastDate($accountID) {
-            $result = $this->conn->query("UPDATE `Users` SET `LastConnDate` = current_timestamp() WHERE `ID` = '$accountID'");
+            $result = $this->Query("UPDATE `Users` SET `LastConnDate` = current_timestamp() WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving last date failed");
             }
@@ -235,7 +264,7 @@
         public function setUserData($account, $data) {
             $accountID = $account['ID'];
             $crypted = $this->Encrypt($data);
-            $result = $this->conn->query("UPDATE `Users` SET `Data` = '$crypted' WHERE `ID` = '$accountID'");
+            $result = $this->Query("UPDATE `Users` SET `Data` = '$crypted' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving data failed");
             }
@@ -243,7 +272,7 @@
 
         public function setUserTitle($account, $title) {
             $accountID = $account['ID'];
-            $result = $this->conn->query("UPDATE `Users` SET `Title` = '$title' WHERE `ID` = '$accountID'");
+            $result = $this->Query("UPDATE `Users` SET `Title` = '$title' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving title failed");
             }
@@ -251,7 +280,7 @@
 
         public function setAchievements($account, $achievements) {
             $accountID = $account['ID'];
-            $result = $this->conn->query("UPDATE `Users` SET `SolvedAchievements` = '$achievements' WHERE `ID` = '$accountID'");
+            $result = $this->Query("UPDATE `Users` SET `SolvedAchievements` = '$achievements' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving title failed");
             }
@@ -259,7 +288,7 @@
 
         public function setXP($account, $xp) {
             $accountID = $account['ID'];
-            $result = $this->conn->query("UPDATE `Users` SET `XP` = '$xp' WHERE `ID` = '$accountID'");
+            $result = $this->Query("UPDATE `Users` SET `XP` = '$xp' WHERE `ID` = '$accountID'");
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving XP failed");
             }
@@ -279,10 +308,19 @@
             $todayDate = time();
             $todayText = date('Y-m-d H:i:s', $todayDate);
             $delta = ($todayDate - $lastPseudoDate) / (60 * 60 * 24);
-            if ($oldUsername != $username) {
-                if ($delta >= $DAYS_PSEUDO_CHANGE) {
-                    if (strtolower($this->pseudoIsFree($accountID, $username))) {
-                        $result_pseudo = $this->conn->query("UPDATE `Users` SET `Username` = '$username', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'");
+            $u = ucfirst(strtolower($username));
+            if ($oldUsername != $u) {
+                if (empty($oldUsername)) {
+                    $command = "UPDATE `Users` SET `Username` = '$u', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'";
+                    $result_pseudo = $this->Query($command);
+                    if ($result_pseudo !== TRUE) {
+                        ExitWithStatus("Error: Saving pseudo failed (2)");
+                    }
+                } else if ($delta >= $DAYS_PSEUDO_CHANGE) {
+                    $pseudoIsFree = $this->pseudoIsFree($accountID, $u);
+                    if ($pseudoIsFree) {
+                        $command = "UPDATE `Users` SET `Username` = '$u', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'";
+                        $result_pseudo = $this->Query($command);
                         $changed = 1;
                         if ($result_pseudo !== TRUE) {
                             ExitWithStatus("Error: Saving pseudo failed");
@@ -299,8 +337,10 @@
         }
 
         private function pseudoIsFree($accountID, $username) {
-            $usernames = $this->QueryArray("SELECT * FROM `Users` WHERE `ID` != '$accountID' AND `Username` = '$username'");
-            return count($usernames) === 0;
+            $usernames = $this->Query("SELECT * FROM `Users` WHERE `ID` != '$accountID' AND `Username` = '$username'");
+            $isFree = NULL;
+            if ($usernames !== FALSE) $isFree = $usernames->num_rows === 0;
+            return $isFree;
         }
 
         public function Encrypt($str, $key = null) {
@@ -315,6 +355,12 @@
             $k = $key === null ? $this->keyA : $key;
             if ($str) $output = openssl_decrypt($str, $this->algorithm, $k);
             return $output;
+        }
+
+        public function AddStatistic($deviceID, $type = "0") {
+            $command = "INSERT INTO `Statistics` (`DeviceID`, `Type`) VALUES ('$deviceID', '$type')";
+            $result = $this->Query($command);
+            return $result;
         }
     }
 

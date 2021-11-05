@@ -23,6 +23,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Sound Player](https://www.npmjs.com/package/react-native-sound-player)
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
 * [React Native Push Notification](https://www.npmjs.com/package/react-native-push-notification)
+* [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
 
 ### Unused (removed)
 * [React native gesture handler](https://www.npmjs.com/package/react-native-gesture-handler)

@@ -1,25 +1,37 @@
 import * as React from 'react';
 
-import COLORS from '../Themes/Colors';
 import DataStorage, { STORAGE } from '../Class/DataStorage';
 import { isUndefined } from '../Functions/Functions';
 
-import { T0About } from '../Themes/T0/T0-about';
-import { T0Achievements } from '../Themes/T0/T0-achievements';
-import { T0Activity } from '../Themes/T0/T0-activity';
-import { T0Calendar } from '../Themes/T0/T0-calendar';
-import { T0Dailyquest } from '../Themes/T0/T0-dailyquest';
-import { T0Experience } from '../Themes/T0/T0-experience';
-import { T0Home } from '../Themes/T0/T0-home';
-import { T0Identity } from '../Themes/T0/T0-identity';
-import { T0Leaderboard } from '../Themes/T0/T0-leaderboard';
-import { T0Loading } from '../Themes/T0/T0-loading';
-import { T0Report } from '../Themes/T0/T0-report';
-import { T0Settings } from '../Themes/T0/T0-settings';
-import { T0Shop } from '../Themes/T0/T0-shop';
-import { T0Skill } from '../Themes/T0/T0-skill';
-import { T0Skills } from '../Themes/T0/T0-skills';
-import { T0Statistic } from '../Themes/T0/T0-statistic';
+import { T0About } from '../Pages/front/about';
+import { T0Achievements } from '../Pages/front/achievements';
+import { T0Activity } from '../Pages/front/activity';
+import { T0Calendar } from '../Pages/front/calendar';
+import { T0Dailyquest } from '../Pages/front/dailyquest';
+import { T0Experience } from '../Pages/front/experience';
+import { T0Home } from '../Pages/front/home';
+import { T0Identity } from '../Pages/front/identity';
+import { T0Leaderboard } from '../Pages/front/leaderboard';
+import { T0Loading } from '../Pages/front/loading';
+import { T0Report } from '../Pages/front/report';
+import { T0Settings } from '../Pages/front/settings';
+import { T0Shop } from '../Pages/front/shop';
+import { T0Skill } from '../Pages/front/skill';
+import { T0Skills } from '../Pages/front/skills';
+import { T0Statistic } from '../Pages/front/statistic';
+
+const COLORS = {
+    "T0": {
+        globalBackground: '#000020',
+        globalBackcomponent: '#000000',
+        xpBar: '#ECECEC',
+        text: {
+            main: '#ECECEC',
+            secondary: '#C2C2C2',
+            dark: '#808080'
+        }
+    }
+}
 
 class ThemeManager {
     THEMES = {
@@ -32,7 +44,7 @@ class ThemeManager {
     colors = COLORS[this.selectedTheme];
 
     constructor() {
-        this.loadTheme();
+        //this.loadTheme();
     }
     
     async loadTheme() {

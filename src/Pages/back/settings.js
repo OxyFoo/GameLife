@@ -5,7 +5,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { disableMorningNotifications, enableMorningNotifications } from '../../Functions/Notifications';
 
-class Settings extends React.Component {
+class BackSettings extends React.Component {
     constructor(props) {
         super(props);
         this.initLang = langManager.currentLangageKey;
@@ -68,8 +68,7 @@ class Settings extends React.Component {
         user.saveData(false);
     }
     changeTheme = (theme) => {
-        if (user.themeManager.isTheme(theme)) {
-            user.themeManager.setTheme(theme);
+        if (user.themeManager.setTheme(theme)) {
             this.currentTheme = theme;
             user.changePage();
         }
@@ -83,4 +82,4 @@ class Settings extends React.Component {
     }
 }
 
-export default Settings;
+export default BackSettings;

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 
-class Statistic extends React.Component {
+class BackStatistic extends React.Component {
     constructor(props) {
         super(props);
         this.stat = this.props.args['stat'] || 'sag';
@@ -23,4 +23,4 @@ class Statistic extends React.Component {
     }
 }
 
-export default Statistic;
+export default BackStatistic;

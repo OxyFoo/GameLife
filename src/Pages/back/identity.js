@@ -10,7 +10,7 @@ import { OptionsAnimationSpring } from '../../Functions/Animations';
 const MIN_WIDTH = 96;
 const MAX_WIDTH = Dimensions.get('window').width - 48;
 
-class Identity extends React.Component {
+class BackIdentity extends React.Component {
     state = {
         pseudo: user.pseudo,
         birth: user.birth,
@@ -124,4 +124,4 @@ class Identity extends React.Component {
     }
 }
 
-export default Identity;
+export default BackIdentity;

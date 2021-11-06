@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import Activity from '../back/activity';
+import BackActivity from '../back/activity';
 import { isUndefined } from '../../Functions/Functions';
 import { GLDropDown, GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Activity extends Activity {
+class Activity extends BackActivity {
     render() {
         const title_category = !isUndefined(this.state.selectedCategory) ? this.state.selectedCategory.value : langManager.curr['activity']['input-category-default'];
         const title_skill = !isUndefined(this.state.selectedSkill) ? user.getSkillByID(this.state.selectedSkill.skillID).Name : langManager.curr['activity']['input-activity-default'];
@@ -155,4 +155,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Activity };
+export default Activity;

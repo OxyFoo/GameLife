@@ -4,7 +4,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { GetTimeToTomorrow } from '../../Functions/Functions';
 
-class Dailyquest extends React.Component {
+class BackDailyquest extends React.Component {
     constructor(props) {
         super(props);
 
@@ -180,4 +180,4 @@ class Dailyquest extends React.Component {
     }
 }
 
-export default Dailyquest;
+export default BackDailyquest;

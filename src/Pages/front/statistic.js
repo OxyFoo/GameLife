@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import Statistic from '../back/statistic';
+import BackStatistic from '../back/statistic';
 import { GLCropCorner, GLHeader, GLIconButton, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Statistic extends Statistic {
+class Statistic extends BackStatistic {
     render() {
         const statKey = this.stat;
         const statName = (langManager.curr['statistics']['names'][statKey] || "").toUpperCase();
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Statistic };
+export default Statistic;

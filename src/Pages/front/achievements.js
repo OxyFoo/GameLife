@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import Achievements from '../back/achievements';
+import BackAchievements from '../back/achievements';
 import { GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Achievements extends Achievements {
+class Achievements extends BackAchievements {
     achievementRender({ item }) {
         const achievement = item;
         const name = achievement.Name;
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Achievements };
+export default Achievements;

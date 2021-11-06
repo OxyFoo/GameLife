@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions} from 'react-native';
 
-import Experience from '../back/experience';
+import BackExperience from '../back/experience';
 import { GLHeader, GLText, GLXPBar } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Experience extends Experience {
+class Experience extends BackExperience {
     render() {
         const userExperience = user.experience.getExperience();
         const totalXP = user.xp;
@@ -112,4 +112,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Experience };
+export default Experience;

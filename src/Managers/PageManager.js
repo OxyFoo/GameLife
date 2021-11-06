@@ -6,6 +6,24 @@ import langManager from './LangManager';
 import { OptionsAnimation } from '../Functions/Animations';
 import { GLLeftPanel, GLPopup } from '../Pages/Components';
 
+import About from '../Pages/front/about';
+import Achievements from '../Pages/front/achievements';
+import Activity from '../Pages/front/activity';
+import Calendar from '../Pages/front/calendar';
+import Dailyquest from '../Pages/front/dailyquest';
+import Experience from '../Pages/front/experience';
+import Home from '../Pages/front/home';
+import Identity from '../Pages/front/identity';
+import Leaderboard from '../Pages/front/leaderboard';
+import Loading from '../Pages/front/loading';
+import Login from '../Pages/front/login';
+import Report from '../Pages/front/report';
+import Settings from '../Pages/front/settings';
+import Shop from '../Pages/front/shop';
+import Skill from '../Pages/front/skill';
+import Skills from '../Pages/front/skills';
+import Statistic from '../Pages/front/statistic';
+
 class PageManager extends React.Component{
     state = {
         page1: '',
@@ -78,7 +96,7 @@ class PageManager extends React.Component{
             return;
         }
 
-        if (!user.themeManager.GetPageContent(newpage)) {
+        if (!this.GetPageContent(newpage)) {
             console.error('Calling an incorrect page');
             return;
         };
@@ -128,9 +146,33 @@ class PageManager extends React.Component{
         this.setState({ leftPanelState: !this.state.leftPanelState });
     }
 
+    GetPageContent(page, args) {
+        let p;
+        switch (page) {
+            case 'about': p = <About />; break;
+            case 'achievements': p = <Achievements />; break;
+            case 'activity': p = <Activity args={args} />; break;
+            case 'calendar': p = <Calendar />; break;
+            case 'dailyquest': p = <Dailyquest />; break;
+            case 'experience': p = <Experience />; break;
+            case 'home': p = <Home />; break;
+            case 'identity': p = <Identity />; break;
+            case 'leaderboard': p = <Leaderboard />; break;
+            case 'loading': p = <Loading args={args} />; break;
+            case 'login': p = <Login />; break;
+            case 'report': p = <Report />; break;
+            case 'settings': p = <Settings />; break;
+            case 'shop': p = <Shop />; break;
+            case 'skill': p = <Skill args={args} />; break;
+            case 'skills': p = <Skills />; break;
+            case 'statistic': p = <Statistic args={args} />; break;
+        }
+        return p;
+    }
+
     render() {
-        const page1 = user.themeManager.GetPageContent(this.state.page1, this.state.arguments);
-        const page2 = user.themeManager.GetPageContent(this.state.page2, this.state.arguments);
+        const page1 = this.GetPageContent(this.state.page1, this.state.arguments);
+        const page2 = this.GetPageContent(this.state.page2, this.state.arguments);
 
         const fullscreen = { width: '100%', height: '100%', backgroundColor: user.themeManager.colors.globalBackground }
 

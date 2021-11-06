@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 
-import BackShop from '../back/shop';
+import BackLogin from '../back/login';
 import { GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class Shop extends BackShop {
+class Login extends BackLogin {
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Shop;
+export default Login;

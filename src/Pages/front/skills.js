@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
-import Skills from '../back/skills';
+import BackSkills from '../back/skills';
 import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Skills extends Skills {
+class Skills extends BackSkills {
     render() {
         const sort = this.SORT_LIST[this.state.sortSelectedIndex];
         const orderIcon = this.state.ascending ? 'chevronBottom' : 'chevronTop';
@@ -123,4 +123,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Skills };
+export default Skills;

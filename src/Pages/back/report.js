@@ -5,7 +5,7 @@ import langManager from '../../Managers/LangManager';
 import { sum } from '../../Functions/Functions';
 import { Request_Async } from '../../Functions/Request';
 
-class Report extends React.Component {
+class BackReport extends React.Component {
     constructor(props) {
         super(props);
 
@@ -147,4 +147,4 @@ class Report extends React.Component {
     }
 }
 
-export default Report;
+export default BackReport;

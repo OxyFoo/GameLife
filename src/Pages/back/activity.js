@@ -4,7 +4,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { getDates, getDurations } from '../../Functions/Functions';
 
-class Activity extends React.Component {
+class BackActivity extends React.Component {
     constructor(props) {
         super(props);
 
@@ -130,4 +130,4 @@ class Activity extends React.Component {
     }
 }
 
-export default Activity;
+export default BackActivity;

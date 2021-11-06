@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Image, Dimensions } from 'react-native';
 
-import Leaderboard from '../back/leaderboard';
+import BackLeaderboard from '../back/leaderboard';
 import { GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Leaderboard extends Leaderboard {
+class Leaderboard extends BackLeaderboard {
     userBoard(props) {
         const self = props.self || false;
         const pseudo = props.pseudo + (self ? ' (' + langManager.curr['level']['me'] + ')' : '');
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Leaderboard };
+export default Leaderboard;

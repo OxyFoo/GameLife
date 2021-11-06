@@ -3,7 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class Skills extends React.Component {
+class BackSkills extends React.Component {
     SORT_LIST = langManager.curr['skills']['top-sort-list'];
     state = {
         search: '',
@@ -53,4 +53,4 @@ class Skills extends React.Component {
     }
 }
 
-export default Skills;
+export default BackSkills;

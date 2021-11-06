@@ -3,7 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class Skill extends React.Component {
+class BackSkill extends React.Component {
     constructor(props) {
         super(props);
 
@@ -42,4 +42,4 @@ class Skill extends React.Component {
     back = () => { user.backPage(); }
 }
 
-export default Skill;
+export default BackSkill;

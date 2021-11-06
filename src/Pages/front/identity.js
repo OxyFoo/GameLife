@@ -2,14 +2,14 @@ import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Animated, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import Identity from '../back/identity';
+import BackIdentity from '../back/identity';
 import { GLDropDown, GLHeader, GLText, GLTextEditable } from '../Components';
 import { isUndefined } from '../../Functions/Functions';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Identity extends Identity {
+class Identity extends BackIdentity {
     component_titre = ({ item }) => {
         const title = item;
 
@@ -219,4 +219,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Identity };
+export default Identity;

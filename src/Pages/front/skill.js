@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 
-import Skill from '../back/skill';
+import BackSkill from '../back/skill';
 import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 import { dateToFormatString } from '../../Functions/Functions';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Skill extends Skill {
+class Skill extends BackSkill {
     render() {
         return (
             <View style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Skill };
+export default Skill;

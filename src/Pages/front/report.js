@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
 
-import Report from '../back/report';
+import BackReport from '../back/report';
 import { GLDigit, GLDropDown, GLHeader, GLInput, GLText, GLButton } from '../Components';
 
 import langManager from '../../Managers/LangManager';
 
-class T0Report extends Report {
+class Report extends BackReport {
     content = () => {
         const state = this.state.selectedType;
         let output = <></>;
@@ -172,4 +172,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Report };
+export default Report;

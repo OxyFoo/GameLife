@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { View, StyleSheet, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 
-import Dailyquest from '../back/dailyquest';
+import BackDailyquest from '../back/dailyquest';
 import { GLButton, GLDropDown, GLHeader, GLIconButton, GLInput, GLSvg, GLText } from '../Components';
 import { GetTimeToTomorrow, isUndefined } from '../../Functions/Functions';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Dailyquest extends Dailyquest {
+class Dailyquest extends BackDailyquest {
     content = () => {
         const define = () => {
             const define = langManager.curr['dailyquest']['daily-define-title'];
@@ -303,4 +303,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Dailyquest };
+export default Dailyquest;

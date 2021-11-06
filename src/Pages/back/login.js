@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-class BackShop extends React.Component {
+class BackLogin extends React.Component {
     constructor(props) {
         super(props);
     }
 }
 
-export default BackShop;
+export default BackLogin;

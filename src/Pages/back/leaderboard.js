@@ -3,7 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class Leaderboard extends React.Component {
+class BackLeaderboard extends React.Component {
     state = {
         self: 0,
         leaderboard: [],
@@ -43,4 +43,4 @@ class Leaderboard extends React.Component {
     }
 }
 
-export default Leaderboard;
+export default BackLeaderboard;

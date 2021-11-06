@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 
-import Home from '../back/home';
+import BackHome from '../back/home';
 import { dateToFormatString } from '../../Functions/Functions';
 import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Home extends Home {
+class Home extends BackHome {
     render() {
         const userExperience = user.experience.getExperience();
         const totalXP = parseInt(user.xp);
@@ -265,4 +265,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Home };
+export default Home;

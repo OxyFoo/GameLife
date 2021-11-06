@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 
-class Home extends React.Component {
+class BackHome extends React.Component {
     constructor(props) {
         super(props);
 
@@ -56,4 +56,4 @@ class Home extends React.Component {
     openExperience = () => { user.changePage('experience'); }
 }
 
-export default Home;
+export default BackHome;

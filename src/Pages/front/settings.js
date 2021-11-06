@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
 
-import Settings from '../back/settings';
+import BackSettings from '../back/settings';
 import { GLDropDown, GLHeader, GLIconButton, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Settings extends Settings {
+class Settings extends BackSettings {
     render() {
         return (
             <View style={{flex: 1}}>
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Settings };
+export default Settings;

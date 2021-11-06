@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 
-import Loading from '../back/loading';
+import BackLoading from '../back/loading';
 import { GLText, GLLoading } from '../Components';
 
 import langManager from '../../Managers/LangManager';
 
-class T0Loading extends Loading {
+class Loading extends BackLoading {
     render() {
         const state = typeof(this.props.args['state']) === 'number' ? this.props.args['state'] : 0;
         const index = parseInt(this.state.textPoints) % this.POINTS.length;
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Loading };
+export default Loading;

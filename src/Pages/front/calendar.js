@@ -2,14 +2,14 @@ import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import Calendar from '../back/calendar';
+import BackCalendar from '../back/calendar';
 import { dateToFormatString, GetTimeToTomorrow } from '../../Functions/Functions';
 import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0Calendar extends Calendar {
+class Calendar extends BackCalendar {
     render() {
         const styleTopLeft = [ styles.absolute, styles.topLeft ];
         const styleMidLeft = [ styles.absolute, styles.midLeft ];
@@ -133,4 +133,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0Calendar };
+export default Calendar;

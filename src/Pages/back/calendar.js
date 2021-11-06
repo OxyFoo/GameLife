@@ -3,7 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class Calendar extends React.Component {
+class BackCalendar extends React.Component {
     state = {
         activities: user.activitiyManager.getByDate().reverse(),
         currDate: new Date(),
@@ -44,4 +44,4 @@ class Calendar extends React.Component {
     }
 }
 
-export default Calendar;
+export default BackCalendar;

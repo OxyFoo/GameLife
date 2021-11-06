@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList,Dimensions } from 'react-native';
 
-import About from '../back/about';
+import BackAbout from '../back/about';
 import { GLHeader, GLIconButton, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class T0About extends About {
+class About extends BackAbout {
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -121,4 +121,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { T0About };
+export default About;

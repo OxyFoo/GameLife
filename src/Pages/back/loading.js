@@ -6,7 +6,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import DataStorage, { STORAGE } from '../../Class/DataStorage';
 
-class Loading extends React.Component {
+class BackLoading extends React.Component {
     POINTS = [ '.', '..', '...', '..', '.', ' ' ];
     state = {
         textPoints: 0,
@@ -81,4 +81,4 @@ class Loading extends React.Component {
     }
 }
 
-export default Loading;
+export default BackLoading;

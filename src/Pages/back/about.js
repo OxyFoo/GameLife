@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-class About extends React.Component {
+class BackAbout extends React.Component {
     constructor(props) {
         super(props);
 
@@ -31,4 +31,4 @@ class About extends React.Component {
     }
 }
 
-export default About;
+export default BackAbout;

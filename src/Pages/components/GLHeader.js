@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import user from '../../Managers/UserManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
 
@@ -15,7 +16,7 @@ function GLHeader(props) {
     const style = [
         styles.header,
         props.style, props.small && styles.headerSmall,
-        { backgroundColor: user.themeManager.colors['globalBackcomponent'] }
+        { backgroundColor: themeManager.colors['globalBackcomponent'] }
     ];
     const leftIcon = props.leftIcon || '';
     const rightIcon = props.rightIcon || '';

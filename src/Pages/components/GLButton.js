@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import user from '../../Managers/UserManager';
+
+import themeManager from '../../Managers/ThemeManager';
 
 import GLText from './GLText';
 import GLDoubleCorner from './GLDoubleCorner';
@@ -10,7 +11,7 @@ function GLButton(props) {
     const onPress = props.onPress;
     const style = [ styles.containerStyle, props.containerStyle ];
     const color = props.color || 'main';
-    const colorHex = user.themeManager.colors['text'][color];
+    const colorHex = themeManager.colors['text'][color];
 
     return (
         <TouchableOpacity activeOpacity={.5} onPress={onPress} style={[style, { borderColor: colorHex }]}>

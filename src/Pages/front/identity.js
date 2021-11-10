@@ -2,12 +2,13 @@ import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Animated, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
+import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import BackIdentity from '../back/identity';
 import { GLDropDown, GLHeader, GLText, GLTextEditable } from '../Components';
 import { isUndefined } from '../../Functions/Functions';
-
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
 
 class Identity extends BackIdentity {
     component_titre = ({ item }) => {
@@ -21,7 +22,7 @@ class Identity extends BackIdentity {
     render() {
         const age = this.calculateAge(this.state.birth) || '?';
         const mode = this.state.showDateTimePicker;
-        const totalDuration = user.activitiyManager.getTotalDuration();
+        const totalDuration = user.activities.getTotalDuration();
         const totalH = Math.floor(totalDuration/60);
         const totalM = ((totalDuration/60) - totalH) * 60;
         const totalLang = langManager.curr['identity']['value-totaltime'];
@@ -112,18 +113,18 @@ class Identity extends BackIdentity {
                                     activeOpacity={.5}
                                     onPress={() => { user.changePage('achievements'); }}
                                 >
-                                    <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                                    <View style={[styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                                         <GLText style={styles.title} title={names[0]} />
                                         <GLText style={styles.description} title={descriptions[0]} color="secondary" />
                                     </View>
                                     {names.length > 1 && (
-                                        <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                                        <View style={[styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                                             <GLText style={styles.title} title={names[1]} />
                                             <GLText style={styles.description} title={descriptions[1]} color="secondary" />
                                         </View>
                                     )}
                                     {names.length > 2 && (
-                                        <View style={[styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                                        <View style={[styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                                             <GLText style={styles.title} title={names[2]} />
                                             <GLText style={styles.description} title={descriptions[2]} color="secondary" />
                                         </View>

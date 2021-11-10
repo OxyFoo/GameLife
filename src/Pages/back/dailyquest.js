@@ -25,7 +25,7 @@ class BackDailyquest extends React.Component {
     }
     
     componentDidMount() {
-        this.SKILLS = user.getSkills();
+        this.SKILLS = user.skills.getAsObj();
         this.interval = setInterval(this.loop, 1000);
     }
     

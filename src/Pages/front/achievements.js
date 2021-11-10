@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import BackAchievements from '../back/achievements';
-import { GLHeader, GLText } from '../Components';
-
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+
+import BackAchievements from '../back/achievements';
+import { GLHeader, GLText } from '../Components';
 
 class Achievements extends BackAchievements {
     achievementRender({ item }) {
@@ -13,8 +14,8 @@ class Achievements extends BackAchievements {
         const name = achievement.Name;
         const description = achievement.Description;
         const style = user.solvedAchievements.includes(parseInt(achievement.ID)) ?
-                      [styles.achievementsBox, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }] :
-                      [styles.achievementsBox, styles.unsolved, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }];
+                      [styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }] :
+                      [styles.achievementsBox, styles.unsolved, { backgroundColor: themeManager.colors['globalBackcomponent'] }];
 
         return (
             <View style={styles.achievementsContainer}>

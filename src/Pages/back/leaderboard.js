@@ -14,12 +14,15 @@ class BackLeaderboard extends React.Component {
         this.loadLoaderboard();
     }
     async loadLoaderboard(week = false) {
-        const leaderboard = await user.conn.getLeaderboard(week);
-        this.setState({
-            self: leaderboard['self'],
-            leaderboard: leaderboard['leaderboard'],
-            time: week ? 'week' : ''
-        });
+        const response_leaderboard = await user.conn.getLeaderboard(week);
+
+        if (response_leaderboard.status === 'ok') {
+            this.setState({
+                self: response_leaderboard.data['self'],
+                leaderboard: response_leaderboard.data['leaderboard'],
+                time: week ? 'week' : ''
+            });
+        }
     }
     componentDidMount() {
         if (!user.conn.online) {

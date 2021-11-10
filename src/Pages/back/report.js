@@ -138,11 +138,12 @@ class BackReport extends React.Component {
         };
 
         const result_ping = await Request_Async(data);
-
-        if (result_ping.hasOwnProperty("status") && result_ping["status"] === 'ok') {
+        if (result_ping.status === 'ok') {
             const title = langManager.curr['report']['alert-success-title'];
             const text = langManager.curr['report']['alert-success-text'];
             user.openPopup('ok', [ title, text ], user.backPage, false);
+        } else if (result_ping.status === 'err') {
+            console.error('Send failed: ' + result_ping.error);
         }
     }
 }

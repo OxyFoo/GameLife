@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Animated, View, BackHandler } from 'react-native';
+import { Animated, BackHandler } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import user from '../Managers/UserManager';
 import langManager from './LangManager';
@@ -174,7 +175,7 @@ class PageManager extends React.Component{
         const page1 = this.GetPageContent(this.state.page1, this.state.arguments);
         const page2 = this.GetPageContent(this.state.page2, this.state.arguments);
 
-        const fullscreen = { width: '100%', height: '100%', backgroundColor: user.themeManager.colors.globalBackground }
+        const fullscreen = { width: '100%', height: '100%' }
 
         /*const inter = {
             inputRange:  [0, 0.4, 0.8, 1],
@@ -186,7 +187,7 @@ class PageManager extends React.Component{
         };
 
         return (
-            <View style={fullscreen}>
+            <LinearGradient style={fullscreen} colors={['#03052E', '#353657']}>
                 <Animated.View pointerEvents={this.state.page1 ? 'auto' : 'none'} style={[fullscreen, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity1.interpolate(inter) }]}>
                     {page1}
                 </Animated.View>
@@ -200,7 +201,7 @@ class PageManager extends React.Component{
                     cancelable={this.state.popupArgs[2]}
                 />
                 <GLLeftPanel state={this.state.leftPanelState} />
-            </View>
+            </LinearGradient>
         )
     }
 }

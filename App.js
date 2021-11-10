@@ -1,63 +1,42 @@
 import * as React from 'react';
-import { AppState, BackHandler, Platform, SafeAreaView } from 'react-native';
+import { AppState, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
-import { currentDateIsSafe } from './src/Functions/System';
-import langManager from './src/Managers/LangManager';
-import { enableMorningNotifications } from './src/Functions/Notifications';
+import DataStorage, { STORAGE } from './src/Functions/DataStorage';
 
 class App extends React.Component {
     componentDidMount() {
-        user.changePage('loading');
+        user.changePage('login');
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
-        this.loadData();
-    }
-
-    async loadData() {
-        // Load local user data
-        await user.loadData(false);
-        await user.sleep(user.random(200, 400));
-        user.changePage('loading', { state: 1 }, true);
-
-        // Load internet data (if online)
-        await user.conn.AsyncRefreshAccount();
-        await user.sleep(user.random(600, 800));
-        user.changePage('loading', { state: 2 }, true);
-
-        // Load internet user data (if connected)
-        await user.loadInternalData();
-        await user.refreshStats();
-        await user.sleep(user.random(200, 400));
-        user.changePage('loading', { state: 3 }, true);
-
-        // Wait
-        await user.sleep(user.random(200, 400));
-        user.changePage('loading', { state: 4 }, true);
-
-        // TODO : iOS notifications
-        if (Platform.OS === "android") {
-            if (user.morningNotifications) {
-                enableMorningNotifications();
-            }
-        }
     }
 
     async componentChangeState(newState) {
-        if (newState === 'active') {
-            // Check date errors
-            const isSafe = await currentDateIsSafe();
-            if (!isSafe) {
-                const title = langManager.curr['home']['alert-dateerror-title'];
-                const text = langManager.curr['home']['alert-dateerror-text'];
-                user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
-                return;
-            }
-        }
+        user.dateCheck.changeState(newState);
     }
 
     componentWillUnmount() {
+        this.appStateSubscription.remove();
         user.unmount();
+    }
+
+    async startApp() {
+        let onboardingWatched = false;
+        const data = await DataStorage.Load(STORAGE.ONBOARDING, false);
+        if (typeof(data) !== 'undefined' && data.hasOwnProperty('on-boarding')) {
+            onboardingWatched = data['on-boarding'];
+        }
+        if (onboardingWatched) {
+            user.changePage('home');
+        } else {
+            const callback = () => {
+                DataStorage.Save(STORAGE.ONBOARDING, { 'on-boarding': true }, false);
+                user.changePage('home');
+            }
+            user.changePage('onboarding', { 'callback': callback });
+        }
+        
+        // View
     }
 
     render() {

@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import user from '../../Managers/UserManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
-import user from '../../Managers/UserManager';
 
 class GLDropDown extends React.PureComponent {
     state = {
@@ -96,7 +98,7 @@ class GLDropDown extends React.PureComponent {
                     </TouchableOpacity>
 
                     {!this.props.disabled && opened && !forcePopupMode && Platform.OS === 'android' && (
-                        this.contentRender([styles.drop, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }])
+                        this.contentRender([styles.drop, { backgroundColor: themeManager.colors['globalBackcomponent'] }])
                     )}
                 </View>
             </>

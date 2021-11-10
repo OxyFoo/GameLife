@@ -3,6 +3,7 @@ import { BackHandler } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
 import { disableMorningNotifications, enableMorningNotifications } from '../../Functions/Notifications';
 
 class BackSettings extends React.Component {
@@ -10,10 +11,10 @@ class BackSettings extends React.Component {
         super(props);
         this.initLang = langManager.currentLangageKey;
 
-        this.currentTheme = user.themeManager.selectedTheme;
+        this.currentTheme = themeManager.selectedTheme;
         this.selectableThemes = [];
-        for (const T in user.themeManager.THEMES) {
-            const value = user.themeManager.THEMES[T];
+        for (const T in themeManager.THEMES) {
+            const value = themeManager.THEMES[T];
             this.selectableThemes.push({ key: value, value: langManager.curr['themes'][value] });
         }
 
@@ -33,7 +34,7 @@ class BackSettings extends React.Component {
     reset = () => {
         const event = (button) => {
             if (button === 'yes') {
-                user.activitiyManager.setAll([]);
+                user.activities.setAll([]);
                 user.saveData();
             }
         }
@@ -68,7 +69,7 @@ class BackSettings extends React.Component {
         user.saveData(false);
     }
     changeTheme = (theme) => {
-        if (user.themeManager.setTheme(theme)) {
+        if (themeManager.setTheme(theme)) {
             this.currentTheme = theme;
             user.changePage();
         }

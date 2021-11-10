@@ -2,10 +2,13 @@ import deviceInfoModule from 'react-native-device-info';
 
 import langManager from "./LangManager";
 import ServManager from "../Class/Server";
-import ThemeManager from '../Class/Themes';
-import DataStorage, { STORAGE } from '../Class/DataStorage';
+import DataStorage, { STORAGE } from '../Functions/DataStorage';
 
+import Skills from '../Class/Skills';
+import Activities from '../Class/Activities';
 import Experience from "../Class/Experience";
+import Quests from '../Class/Quests';
+import DateCheck from '../Tools/DateCheck';
 
 import quotes from '../../ressources/defaultDB/quotes.json';
 import titles from '../../ressources/defaultDB/titles.json';
@@ -13,8 +16,6 @@ import skills from '../../ressources/defaultDB/skills.json';
 import skillsIcon from '../../ressources/defaultDB/skillsIcon.json';
 import achievements from '../../ressources/defaultDB/achievements.json';
 import helpers from '../../ressources/defaultDB/helpers.json';
-import Activities from '../Class/Activities';
-import Quests from '../Class/Quests';
 
 const DAYS_PSEUDO_CHANGE = 7;
 const DEFAULT_PSEUDO = 'Player';
@@ -29,10 +30,10 @@ const DEFAULT_STATS = {
 };
 
 class UserManager {
-    activitiyManager = new Activities(this);
+    skills = new Skills(this);
+    activities = new Activities(this);
     experience = new Experience(this);
     quests = new Quests(this);
-    themeManager = new ThemeManager();
     conn = new ServManager(this);
 
     /**
@@ -48,6 +49,8 @@ class UserManager {
     openLeftPanel;
 
     constructor() {
+        this.dateCheck = new DateCheck(this);
+
         // User informations
         this.pseudo = DEFAULT_PSEUDO;
         this.pseudoDate = null;
@@ -55,14 +58,12 @@ class UserManager {
         this.birth = '';
         this.email = '';
         this.xp = 0;
-        this.activities = [];
         this.solvedAchievements = [];
         this.stats = DEFAULT_STATS;
         this.morningNotifications = true;
 
         this.titles = [];
         this.quotes = [];
-        this.skills = [];
         this.skillsIcon = [];
         this.achievements = [];
         this.contributors = [];
@@ -84,7 +85,6 @@ class UserManager {
 
         this.titles = [];
         this.quotes = [];
-        this.skills = [];
         this.skillsIcon = [];
         this.achievements = [];
         this.contributors = [];
@@ -107,7 +107,7 @@ class UserManager {
     }
 
     async refreshStats(save = true) {
-        this.activitiyManager.removeDeletedSkillsActivities();
+        this.activities.removeDeletedSkillsActivities();
         this.experience.getExperience();
         if (save) await this.saveData();
         this.changePage();
@@ -283,7 +283,7 @@ class UserManager {
                 if (isTime) {
                     // Get total time
                     value = 0;
-                    const activities = this.activitiyManager.getAll();
+                    const activities = this.activities.getAll();
                     for (const a in activities) {
                         if (activities[a].ID == skillID) {
                             value += activities[a].duration / 60;
@@ -303,7 +303,7 @@ class UserManager {
             } else
             if (first == 'Ca') {
                 // Get Max category level
-                const categories = this.getSkillCategories(true);
+                const categories = this.skills.getCategories(true);
                 let maxLevel = 0;
                 for (let c = 0; c < categories.length; c++) {
                     const category = categories[c];
@@ -319,7 +319,7 @@ class UserManager {
                 // TODO - Bug ici, mais avant changer les catégories
                 first = first.replace('Ca', '');
                 const CategoryDepth = parseInt(first);
-                const categories = this.getSkillCategories(true);
+                const categories = this.skills.getCategories(true);
                 if (categories.length < CategoryDepth) continue;
 
                 let values = [];
@@ -359,62 +359,6 @@ class UserManager {
         }
     }
 
-    /* SKILLS */
-    getSkills = (category) => {
-        let skills = [];
-        for (let i = 0; i < this.skills.length; i++) {
-            let skill = this.skills[i];
-            if (typeof(category) === 'undefined' || category === skill.Category) {
-                skills.push({ key: parseInt(skill.ID), value: skill.Name });
-            }
-        }
-        return skills;
-    }
-    getSkillByID = (ID) => {
-        let skill;
-        for (let i = 0; i < this.skills.length; i++) {
-            if (this.skills[i].ID == ID) {
-                skill = this.skills[i];
-                break;
-            }
-        }
-        return skill;
-    }
-    getSkillCategories = (onlyUseful = false) => {
-        let cats = [];
-        for (let i = 0; i < this.skills.length; i++) {
-            let cat = this.skills[i].Category;
-            // Search
-            let isInCats = false;
-            for (let c = 0; c < cats.length; c++) {
-                if (cats[c].value == cat) {
-                    isInCats = true;
-                }
-            }
-
-            let curr = false;
-            const activities = this.activitiyManager.getAll();
-            for (let a = 0; a < activities.length; a++) {
-                if (activities[a].skillID == this.skills[i].ID) {
-                    curr = true;
-                }
-            }
-
-            if (!isInCats && (!onlyUseful || curr) && !cats.includes(cat)) {
-                cats.push(cat);
-            }
-        }
-
-        // Sort
-        cats.sort();
-        let cats_sorted = [];
-        for (const c in cats) {
-            cats_sorted.push({ key: parseInt(c), value: cats[c] });
-        }
-
-        return cats_sorted;
-    }
-
     async saveData(online) {
         const _online = typeof(online) === 'boolean' ? online : this.isConnected();
         const data = {
@@ -424,7 +368,7 @@ class UserManager {
             'title': this.title,
             'birth': this.birth,
             'xp': this.xp,
-            'activities': this.activitiyManager.getAll(),
+            'activities': this.activities.getAll(),
             'solvedAchievements': this.solvedAchievements,
             'daily': this.quests.daily,
             'tasks': this.quests.todoList
@@ -439,7 +383,7 @@ class UserManager {
     }
     async saveIntenalData() {
         const internalData = {
-            'skills': this.skills,
+            'skills': this.skills.getAll(),
             'skillsIcon': this.skillsIcon,
             'titles': this.titles,
             'quotes': this.quotes,
@@ -481,12 +425,12 @@ class UserManager {
             this.quests.todoList = get(data, 'tasks', []);
             this.solvedAchievements = get(data, 'solvedAchievements', []);
             if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
-                if (this.activitiyManager.getAll().length === 0) {
-                    this.activitiyManager.setAll(data['activities']);
+                if (this.activities.getAll().length === 0) {
+                    this.activities.setAll(data['activities']);
                 } else {
                     for (let a in data['activities']) {
                         const activity = data['activities'][a];
-                        this.activitiyManager.Add(activity.skillID, activity.startDate, activity.duration, false);
+                        this.activities.Add(activity.skillID, activity.startDate, activity.duration, false);
                     }
                 }
             }
@@ -495,7 +439,7 @@ class UserManager {
         const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
         this.titles = get(internalData, 'titles', titles, true);
         this.quotes = get(internalData, 'quotes', quotes, true);
-        this.skills = get(internalData, 'skills', skills, true);
+        this.skills.setAll(get(internalData, 'skills', skills, true));
         this.skillsIcon = get(internalData, 'skillsIcon', skillsIcon, true);
         this.achievements = get(internalData, 'achievements', achievements, true);
         this.contributors = get(internalData, 'helpers', helpers, true);
@@ -503,56 +447,33 @@ class UserManager {
     async loadInternalData() {
         if (this.conn.online) {
             const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
-            const data = await this.conn.reqGetInternalData(hash);
-            const status = data['status'];
-            const tables = data['tables'];
+            const reqInternalData = await this.conn.reqGetInternalData(hash);
 
-            if (status === 'ok') {
-                if (typeof(tables['titles']) !== 'undefined') this.titles = tables['titles'];
-                if (typeof(tables['quotes']) !== 'undefined') this.quotes = tables['quotes'];
-                if (typeof(tables['skills']) !== 'undefined') this.skills = tables['skills'];
-                if (typeof(tables['skillsIcon']) !== 'undefined') this.skillsIcon = tables['skillsIcon'];
-                if (typeof(tables['achievements']) !== 'undefined') this.achievements = tables['achievements'];
-                if (typeof(tables['helpers']) !== 'undefined') this.contributors = tables['helpers'];
-                if (typeof(tables['hash']) !== 'undefined') await DataStorage.Save(STORAGE.INTERNAL_HASH, tables['hash'], false);
+            if (reqInternalData.status === 'ok') {
+                const state = reqInternalData.data['state'];
+
+                if (state === 'ok') {
+                    const tables = reqInternalData.data['tables'];
+                    const hash = reqInternalData.data['hash'];
+
+                    if (typeof(tables['titles']) !== 'undefined') this.titles = tables['titles'];
+                    if (typeof(tables['quotes']) !== 'undefined') this.quotes = tables['quotes'];
+                    if (typeof(tables['skills']) !== 'undefined') this.skills.setAll(tables['skills']);
+                    if (typeof(tables['skillsIcon']) !== 'undefined') this.skillsIcon = tables['skillsIcon'];
+                    if (typeof(tables['achievements']) !== 'undefined') this.achievements = tables['achievements'];
+                    if (typeof(tables['helpers']) !== 'undefined') this.contributors = tables['helpers'];
+                    if (typeof(tables['hash']) !== 'undefined') await DataStorage.Save(STORAGE.INTERNAL_HASH, hash, false);
+
+                    await this.saveIntenalData();
+                }
             }
         }
-
-        await this.saveIntenalData();
     }
 
     isConnected = this.conn.isConnected;
-
-    random(min, max) {
-        const m = min || 0;
-        const M = max || 1;
-        let R = Math.random() * (M - m) + m;
-        return parseInt(R);
-    }
-    sleep(ms) {
-        const T = Math.max(0, ms);
-        return new Promise(resolve => setTimeout(resolve, T));
-    }
-}
-
-class Skill {
-    constructor() {
-        this.Name = '';
-        this.Category = '';
-        this.Stats = {
-            'sag': 0,
-            'int': 0,
-            'con': 0,
-            'for': 0,
-            'end': 0,
-            'agi': 0,
-            'dex': 0
-        };
-        this.start = 0;
-        this.duration = 0;
-    }
 }
 
 const user = new UserManager();
 
 export default user;
+export { UserManager };

@@ -46,11 +46,11 @@ class Quests {
         const dailyBonusCategory = this.dailyGetBonusCategory();
         if (this.daily.length) {
             const IDs = this.dailyGetSkills().skills;
-            const today_activities = this.user.activitiyManager.getByDate();
+            const today_activities = this.user.activities.getByDate();
             for (let ta = 0; ta < today_activities.length; ta++) {
                 const activity = today_activities[ta];
                 const skillID = activity.skillID;
-                const skill = this.user.getSkillByID(skillID);
+                const skill = this.user.skills.getByID(skillID);
                 const category = skill.Category;
                 if (IDs.includes(skillID)) {
                     state1 += activity.duration;
@@ -68,10 +68,10 @@ class Quests {
     }
 
     dailyGetBonusCategory(date) {
-        const skillsLength = this.user.skills.length
+        const skillsLength = this.user.skills.getAll().length;
         const today = isUndefined(date) ? new Date() : new Date(date);
         const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
-        const skill = this.user.skills[index];
+        const skill = this.user.skills.getAll()[index];
         const category = skill.Category;
         return category;
     }

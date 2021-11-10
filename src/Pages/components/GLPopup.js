@@ -3,6 +3,7 @@ import { Animated, StyleSheet, TextInput, View } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
 import { OptionsAnimation } from '../../Functions/Animations';
 
 import GLButton from './GLButton';
@@ -150,7 +151,7 @@ class GLPopup extends React.PureComponent {
     }
 
     render() {
-        const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
+        const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
             <Animated.View

@@ -1,30 +1,74 @@
-const URL = require('../../package.json').serverURL;
+import { atLeastOneUndefined } from './Functions';
 
-async function Request_Async(data, url = URL, method, headers) {
-    const defaultHeaders = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    };
+const URL = __DEV__ ?
+    "https://oxyfoo.com/App/GameLife/Dev/app.php" :
+    "https://oxyfoo.com/App/GameLife/Public/app.php";
+
+const defaultHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+};
+
+class ReqResponse {
+    /**
+     * @readonly
+     * @property {'ok' | 'err'} status - The status of the request.
+     */
+    status = null;
+
+    /**
+     * @readonly
+     * @property {Object} data - The data of the request.
+     */
+    data = null;
+
+    /**
+     * @readonly
+     * @property {string} error - The error of the request.
+     */
+    error = null;
+}
+
+/**
+ * @param {Object} data 
+ * @param {String} url - Default : App server
+ * @param {'GET' | 'POST'} method  - Default : 'POST'
+ * @param {Object} headers - Default :
+ * {'Accept': 'application/json', 'Content-Type': 'application/json'}
+ * @returns {Promise<ReqResponse>}
+ */
+async function Request_Async(data, url = URL, method = 'POST', headers = defaultHeaders) {
+    let reqResponse = new ReqResponse();
+
+    if (atLeastOneUndefined(data, url, method, headers)) {
+        console.error('Please define all variables !');
+        reqResponse.status = 'err';
+        reqResponse.error = 'Please define all variables !';
+        return reqResponse;
+    }
+
     const header = {
-        method: method || 'POST',
-        headers: headers || defaultHeaders,
+        method: method,
+        headers: headers,
         body: JSON.stringify(data)
     };
 
-    let json = { "status": "fail" };
     try {
-        const response = await fetch(url, header);
-        if (response.status === 200) {
-            json = await response.json();
+        const request = await fetch(url, header);
+        if (request.status === 200) {
+            const response = await request.json();
+            reqResponse.status = 'ok';
+            reqResponse.data = response;
         } else {
-            json['details'] = response;
+            reqResponse.status = 'err';
+            reqResponse.error = request.status + ' - ' + request.statusText;
         }
     } catch (error) {
-        json['details'] = error;
-        json["status"] = "offline";
+        reqResponse.status = 'err';
+        reqResponse.error = error;
     }
 
-    return json;
+    return reqResponse;
 }
 
 export { Request_Async };

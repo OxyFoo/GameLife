@@ -14,7 +14,7 @@ class BackActivity extends React.Component {
         if (this.SELECTED) {
             const activity = props.args['activity'];
             const skillID = activity.skillID;
-            const skill = user.getSkillByID(skillID);
+            const skill = user.skills.getByID(skillID);
 
             const date = new Date(activity.startDate);
             const dateTxt = date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
@@ -39,9 +39,9 @@ class BackActivity extends React.Component {
             const MAX_DAYS = 2;
             const STEP_MINUTES = 15;
             const TOTAL_HOUR_DURATION = 4;
-            const SKILLS = user.getSkills();
+            const SKILLS = user.skills.getAsObj();
 
-            this.CATEGORIES = user.getSkillCategories();
+            this.CATEGORIES = user.skills.getCategories();
             this.DATES = getDates(MAX_DAYS, STEP_MINUTES);
             this.DURATION = getDurations(TOTAL_HOUR_DURATION, STEP_MINUTES);
             this.state = {
@@ -65,7 +65,7 @@ class BackActivity extends React.Component {
             const skillID = this.state.selectedSkill.skillID;
             const date = this.DATES[this.state.selectedDateKey].fulldate;
             const duration = this.DURATION[this.state.selectedTimeKey].duration;
-            if (!user.activitiyManager.Add(skillID, date, duration)) {
+            if (!user.activities.Add(skillID, date, duration)) {
                 const title = langManager.curr['calendar']['alert-wrongtiming-title'];
                 const text = langManager.curr['calendar']['alert-wrongtiming-text'];
                 user.openPopup('ok', [ title, text ]);
@@ -77,7 +77,7 @@ class BackActivity extends React.Component {
     trash = () => {
         const remove = (button) => {
             if (button === 'yes') {
-                user.activitiyManager.Remove(this.state.selectedSkill);
+                user.activities.Remove(this.state.selectedSkill);
                 this.back();
             }
         }
@@ -89,7 +89,7 @@ class BackActivity extends React.Component {
     changeCat = (categoryIndex) => {
         if (typeof(categoryIndex) !== 'number') {
             this.setState({
-                skills: user.getSkills(),
+                skills: user.skills.getAsObj(),
                 selectedCategory: undefined,
                 selectedSkill: undefined
             });
@@ -97,14 +97,14 @@ class BackActivity extends React.Component {
         }
         const category = this.CATEGORIES[categoryIndex];
         this.setState({
-            skills: user.getSkills(category.value),
+            skills: user.skills.getAsObj(category.value),
             selectedCategory: category,
             selectedSkill: undefined
         });
     }
     changeSkill = (skillID) => {
         const activity = { skillID: skillID };
-        const skill = user.getSkillByID(skillID);
+        const skill = user.skills.getByID(skillID);
 
         // Get category ID
         let category;
@@ -119,7 +119,7 @@ class BackActivity extends React.Component {
         this.setState({
             selectedSkill: activity,
             selectedCategory: category,
-            skills: user.getSkills(category.value)
+            skills: user.skills.getAsObj(category.value)
         });
     }
     changeDate = (key) => {

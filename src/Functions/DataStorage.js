@@ -1,12 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Request_Async } from "../Functions/Request";
+import { strIsJSON } from "./Functions";
+import { Request_Async } from "./Request";
 
 const STORAGE = {
     USER: '@params/user',
     SETTINGS: '@params/settings',
     INTERNAL: '@params/internal',
     INTERNAL_HASH: '@params/internal_hash',
-    APPSTATE: '@params/appstate',
+    ONBOARDING: '@params/onboarding',
     THEME: '@params/theme',
     DATE: '@params/date'
 }
@@ -23,12 +24,18 @@ class DataStorage {
                 'token': token,
                 'data': JSON.stringify(data)
             };
-            await Request_Async(_data).then(response => {
+
+            // TODO - Tej ce bout de code
+            const response = await Request_Async(_data);
+            if (typeof(pseudoCallback) === 'function' && response.status === 'ok') {
+                pseudoCallback(response.data);
+            }
+            /*Request_Async(_data).then(response => {
                 if (typeof(pseudoCallback) === 'function') {
                     const status = response.hasOwnProperty('status') ? response['status'] : '';
                     pseudoCallback(status);
                 }
-            });
+            });*/
         }
     }
     
@@ -44,11 +51,11 @@ class DataStorage {
                 'action': 'getUserData',
                 'token': token
             };
-            const result = await Request_Async(data);
             const blocks = [ 'solvedAchievements' ];
-            if (result.hasOwnProperty('status') && result['status'] === 'ok') {
-                if (result.hasOwnProperty('data') && result['data'] !== '') {
-                    const onlineJson = JSON.parse(result['data']);
+            const response = await Request_Async(data);
+            if (response.status === 'ok') {
+                if (strIsJSON(response.data)) {
+                    const onlineJson = JSON.parse(response.data);
                     for (const currKey in onlineJson) {
                         const currValue = onlineJson[currKey];
                         if (typeof(json[currKey]) !== 'undefined') {

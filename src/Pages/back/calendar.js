@@ -5,14 +5,14 @@ import langManager from '../../Managers/LangManager';
 
 class BackCalendar extends React.Component {
     state = {
-        activities: user.activitiyManager.getByDate().reverse(),
+        activities: user.activities.getByDate().reverse(),
         currDate: new Date(),
         showDateTimePicker: ''
     };
 
     back = () => { user.backPage(); }
     addSkill = () => {
-        if (user.skills.length <= 1) {
+        if (user.skills.getAll().length <= 1) {
             console.warn("Aucun skill !");
             return;
         }
@@ -22,7 +22,7 @@ class BackCalendar extends React.Component {
     skill_remove = (activity) => {
         const remove = (button) => {
             if (button === 'yes') {
-                user.activitiyManager.Remove(activity);
+                user.activities.Remove(activity);
                 this.onChangeDateTimePicker(this.state.currDate);
             }
         }
@@ -34,7 +34,7 @@ class BackCalendar extends React.Component {
     showDTP = () => { this.setState({ showDateTimePicker: 'date' }); }
     hideDTP = () => { this.setState({ showDateTimePicker: '' }); }
     onChangeDateTimePicker = (date) => {
-        const activities = user.activitiyManager.getByDate(date).reverse();
+        const activities = user.activities.getByDate(date).reverse();
         this.hideDTP();
         this.setState({ activities: activities, currDate: date });
     }

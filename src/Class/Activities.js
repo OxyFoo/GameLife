@@ -1,14 +1,35 @@
+import { UserManager } from "../Managers/UserManager";
 import { isUndefined } from "../Functions/Functions";
+
+class Activity {
+    skillID = 0;
+    startDate = new Date();
+    duration = 0;
+}
 
 class Activities {
     constructor(user) {
+        /**
+         * @type {UserManager}
+         */
         this.user = user;
-        this.activities = [];
+
+        /**
+         * @type {Array<Activity>}
+         */
+        activities = [];
     }
 
+    /**
+     * @returns {Activity[]} activities
+     */
     getAll() {
         return this.activities;
     }
+
+    /**
+     * @param {Activity[]} activities 
+     */
     setAll(activities) {
         this.activities = activities;
     }
@@ -17,7 +38,7 @@ class Activities {
         for (let a in this.activities) {
             let activity = this.activities[a];
             let skillID = activity.skillID;
-            const skill = this.user.getSkillByID(skillID);
+            const skill = this.user.skills.getByID(skillID);
             if (typeof(skill) === 'undefined') {
                 this.Remove(activity);
                 this.removeDeletedSkillsActivities();

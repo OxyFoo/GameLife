@@ -13,7 +13,7 @@ class BackSkill extends React.Component {
         }
 
         const skillID = props.args['skillID'];
-        const skill = user.getSkillByID(skillID);
+        const skill = user.skills.getByID(skillID);
         const skillXP = user.experience.getSkillExperience(skillID);
 
         this.name = skill.Name;
@@ -29,7 +29,7 @@ class BackSkill extends React.Component {
         this.stats = skill.Stats;
         this.xml = user.getXmlByLogoID(skill.LogoID);
         this.history = [];
-        const userActivities = user.activitiyManager.getAll();
+        const userActivities = user.activities.getAll();
         for (let a in userActivities) {
             const activity = userActivities[a];
             if (activity.skillID === skillID) {

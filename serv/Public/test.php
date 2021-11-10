@@ -32,6 +32,31 @@
             $user['Data'] = $db->Decrypt($user['Data']);
             print_r($user);
         }
+    } else if ($action == "compWithoutCreator") {
+        $skills = GetSkills($db);
+        for ($s = 0; $s < count($skills); $s++) {
+            $Name = $skills[$s]["Name"];
+            $Creator = $skills[$s]["Creator"];
+            if (empty($Creator)) {
+                echo("$Name<br />");
+            }
+        }
+    } else if ($action == "getSkills") {
+        $skills = GetSkills($db);
+        $sep = "//";
+        echo("ID{$sep}Name{$sep}XP{$sep}sag{$sep}int{$sep}con{$sep}for{$sep}end{$sep}agi{$sep}dex{$sep}Category<br/>");
+        for ($s = 0; $s < count($skills); $s++) {
+            $skill = $skills[$s];
+
+            extract($skill["Stats"]);
+            $ID = $skill["ID"];
+            $Name = $skill["Name"];
+            $XP = $skill["XP"];
+            $Stats = "$sag{$sep}$int{$sep}$con{$sep}$for{$sep}$end{$sep}$agi{$sep}$dex";
+            $Category = $skill["Category"];
+
+            echo("$ID{$sep}$Name{$sep}$XP{$sep}$Stats{$sep}$Category<br/>");
+        }
     }
 
     unset($commands);

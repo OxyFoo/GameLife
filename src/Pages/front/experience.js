@@ -22,7 +22,7 @@ class Experience extends BackExperience {
         const title_total = lang_experience['name-total'];
         const value_total = totalXP;
 
-        const firstDate = user.activitiyManager.getFirst();
+        const firstDate = user.activities.getFirst();
         firstDate.setHours(0, 0, 0);
         const delta = (new Date()) - firstDate;
         const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));

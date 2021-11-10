@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 
+import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import BackSkill from '../back/skill';
 import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 import { dateToFormatString } from '../../Functions/Functions';
-
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
 
 class Skill extends BackSkill {
     render() {
@@ -23,7 +24,7 @@ class Skill extends BackSkill {
                 <View style={styles.content}>
                     <View style={styles.skillContainer}>
                         <View style={styles.pictureContainer}>
-                            <View style={[styles.picture, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                            <View style={[styles.picture, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                                 <GLSvg xml={this.xml} />
                                 <GLDoubleCorner />
                             </View>

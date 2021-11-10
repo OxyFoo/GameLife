@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
-import user from '../../Managers/UserManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import GLText from './GLText';
 
 function GLXPBar(props) {
@@ -18,7 +19,7 @@ function GLXPBar(props) {
         <View style={style}>
             <View style={styles.containerXP}>
                 <View style={styles.background}>
-                    <View style={[styles.fill, { width: valueInt, backgroundColor: user.themeManager.colors['xpBar'] }]}>
+                    <View style={[styles.fill, { width: valueInt, backgroundColor: themeManager.colors['xpBar'] }]}>
                         <View style={styles.corner} />
                         <View style={styles.cornerBorder} />
                     </View>

@@ -1,54 +1,51 @@
 import * as React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, Button, TextInput, StyleSheet } from 'react-native';
 
 import BackLogin from '../back/login';
 import { GLHeader, GLText } from '../Components';
 
-import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 class Login extends BackLogin {
     render() {
+        const pageTitle = langManager.curr['login']['page-title'];
+
         return (
             <View style={{ flex: 1 }}>
                 {/* Header */}
-                <GLHeader
-                    title={langManager.curr['shop']['page-title']}
-                    leftIcon="back"
-                    onPressLeft={user.backPage}
-                />
+                <GLHeader title={pageTitle} />
 
                 {/* Content */}
                 <View style={styles.container}>
                     <GLText style={styles.wait} title={langManager.curr['shop']['wait']} />
-                </View>
-
-                {/* PUB - Banner */}
-                <View style={styles.banner}>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={this.onChangeText}
+                        value={this.state.email}
+                        placeholder={"Email"}
+                        placeholderTextColor='#C2C2C2'
+                        textContentType='emailAddress'
+                    />
+                    <Button
+                        title="Login"
+                        onPress={this.onLogin}
+                    />
                 </View>
             </View>
         )
     }
 }
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: "5%"
-    },
-
-    wait: {
         padding: '5%',
-        fontSize: ww * 75 / 1000 , 
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-
-    banner: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0
+    input: {
+        color: '#FFFFFF'
     }
 });
 

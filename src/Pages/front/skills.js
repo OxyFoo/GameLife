@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import BackSkills from '../back/skills';
 import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../Components';
-
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
 
 class Skills extends BackSkills {
     render() {
@@ -24,7 +24,7 @@ class Skills extends BackSkills {
                 />
 
                 {/* Topbar */}
-                <View style={[styles.topBar, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                <View style={[styles.topBar, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                     <GLSearchBar
                         style={styles.search}
                         onChangeText={this.changeText}

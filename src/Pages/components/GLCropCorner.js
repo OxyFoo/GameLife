@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import user from '../../Managers/UserManager';
+import themeManager from '../../Managers/ThemeManager';
 
 function GLCropCorner(props) {
-    const backgroundColor = props.backgroundColor || user.themeManager.colors['globalBackground'];
+    const backgroundColor = props.backgroundColor || themeManager.colors['globalBackground'];
     const size = props.size || 50;
 
     const styles = StyleSheet.create({

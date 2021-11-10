@@ -77,12 +77,12 @@
                 if (isset($deviceIdentifier, $deviceName)) {
                     $device = $this->db->GetDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
                     $this->db->AddStatistic($device['ID']);
-                    $this->output['status'] = 'ok';
+                    $this->output['state'] = 'ok';
                 }
             } else if ($serverVersion < $appData) {
-                $this->output['status'] = 'nextUpdate';
+                $this->output['state'] = 'nextUpdate';
             } else {
-                $this->output['status'] = 'update';
+                $this->output['state'] = 'update';
             }
         }
 
@@ -105,19 +105,19 @@
                 $perm = $this->db->CheckDevicePermissions($deviceID, $account);
                 if ($perm === -1) {
                     // Blacklisted
-                    $this->output['status'] = 'blacklist';
+                    $this->output['state'] = 'blacklist';
                 } else if ($perm === 0) {
                     // Waiting mail confirmation
-                    $this->output['status'] = 'waitMailConfirmation';
+                    $this->output['state'] = 'waitMailConfirmation';
                 } else if ($perm === 1) {
                     if ($account['Banned'] == 0) {
                         // OK
                         $accountID = $account['ID'];
                         $this->db->RefreshLastDate($accountID);
                         $this->output['token'] = $this->db->GeneratePrivateToken($accountID, $deviceID);
-                        $this->output['status'] = 'ok';
+                        $this->output['state'] = 'ok';
                     } else {
-                        $this->output['status'] = 'ban';
+                        $this->output['state'] = 'ban';
                     }
                 } else {
                     // No device in account
@@ -126,7 +126,7 @@
                     $this->db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
                     $this->db->RefreshToken($deviceID);
                     $this->db->SendMail($email, $deviceID, $accountID, $lang);
-                    $this->output['status'] = 'signin';
+                    $this->output['state'] = 'signin';
                 }
             }
         }
@@ -147,9 +147,9 @@
                 if ($hash != $hash_check) {
                     $this->output['tables'] = GetAllInternalData($this->db, $lang);
                     $this->output['hash'] = $hash_check;
-                    $this->output['status'] = 'ok';
+                    $this->output['state'] = 'ok';
                 } else {
-                    $this->output = array('status' => 'same');
+                    $this->output = array('state' => 'same');
                 }
             }
         }
@@ -272,7 +272,6 @@
          * Pour éviter les changements d'heures
          */
         public function GetDate() {
-            $this->output['status'] = 'ok';
             $this->output['time'] = time();
         }
 

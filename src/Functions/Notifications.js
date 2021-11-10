@@ -2,8 +2,9 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 
-import langManager from '../Managers/LangManager';
 import user from '../Managers/UserManager';
+import langManager from '../Managers/LangManager';
+import { random } from './Functions';
 
 const CHANNEL_ID = '1';
 const SET_HOUR = 9;
@@ -51,8 +52,8 @@ function InitNotification() {
         const titles = langManager.curr['notifications']['titles'];
         const quotes = user.quotes;
 
-        const random_title = user.random(0, titles.length - 1);
-        const random_quote = user.random(0, quotes.length - 1);
+        const random_title = random(0, titles.length - 1);
+        const random_quote = random(0, quotes.length - 1);
         const Title = titles[random_title];
         const { Quote, Author } = quotes[random_quote];
         const Body = Quote + ' (' + Author + ')';

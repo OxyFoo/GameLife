@@ -4,7 +4,7 @@ import { Animated, Dimensions, StyleSheet, View } from 'react-native';
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
 import { OptionsAnimation, OptionsAnimationSpring } from '../../Functions/Animations';
-import user from '../../Managers/UserManager';
+import themeManager from '../../Managers/ThemeManager';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_LIMIT = .65;
@@ -62,7 +62,7 @@ class GLBottomSwipePage extends React.Component {
                 ]}
             >
                 <View
-                    style={[styles.header, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}
+                    style={[styles.header, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}
                     onTouchStart={this.swipe_start}
                     onTouchMove={this.swipe_move}
                     onTouchEnd={this.swipe_end}
@@ -70,7 +70,7 @@ class GLBottomSwipePage extends React.Component {
                     <GLText style={styles.title} title={this.props.title} />
                     <GLIconButton icon={icon} size={32} />
                 </View>
-                <View style={[styles.content, { backgroundColor: user.themeManager.colors['globalBackground'] }]}>
+                <View style={[styles.content, { backgroundColor: themeManager.colors['globalBackground'] }]}>
                     {this.props.children}
                 </View>
             </Animated.View>

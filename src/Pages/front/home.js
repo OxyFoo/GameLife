@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 
+import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import BackHome from '../back/home';
 import { dateToFormatString } from '../../Functions/Functions';
 import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
-
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
 
 class Home extends BackHome {
     render() {
@@ -16,7 +17,7 @@ class Home extends BackHome {
         const LVL = userExperience.lvl;
         const nextLvlXP = userExperience.next;
 
-        const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
+        const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
             <>
@@ -65,7 +66,7 @@ class Home extends BackHome {
                                         data={this.activities}
                                         keyExtractor={(item, i) => 'activity_' + i}
                                         renderItem={({item}) => {
-                                            const skill = user.getSkillByID(item.skillID);
+                                            const skill = user.skills.getByID(item.skillID);
                                             const date = new Date(item.startDate);
                                             const dateText = dateToFormatString(date);
                                             const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + item.duration + 'm';
@@ -112,7 +113,7 @@ class Home extends BackHome {
                             renderItem={({item}) => {
                                 let xml = '';
                                 if (item.key !== -1) {
-                                    const skill = user.getSkillByID(item.key);
+                                    const skill = user.skills.getByID(item.key);
                                     let logoID = skill.LogoID;
                                     if (logoID != 0) {
                                         xml = user.getXmlByLogoID(logoID);

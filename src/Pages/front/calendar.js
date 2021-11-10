@@ -2,12 +2,13 @@ import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import BackCalendar from '../back/calendar';
-import { dateToFormatString, GetTimeToTomorrow } from '../../Functions/Functions';
-import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components';
-
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+
+import BackCalendar from '../back/calendar';
+import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components';
+import { dateToFormatString, GetTimeToTomorrow } from '../../Functions/Functions';
 
 class Calendar extends BackCalendar {
     render() {
@@ -31,7 +32,7 @@ class Calendar extends BackCalendar {
                 />
 
                 {/* Topbar */}
-                <View style={[styles.topBar, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                <View style={[styles.topBar, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                     <TouchableOpacity style={styles.headerLeft} activeOpacity={.5} onPress={this.showDTP} >
                         <GLText style={styleTopLeft} title={currDateTxt} />
                         {/* Edit */}
@@ -57,7 +58,7 @@ class Calendar extends BackCalendar {
                     keyExtractor={(item, i) => 'activity_' + i}
                     renderItem={({item}) => {
                         const activity = item;
-                        const skill = user.getSkillByID(activity.skillID);
+                        const skill = user.skills.getByID(activity.skillID);
                         const date = new Date(activity.startDate);
                         const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + activity.duration + 'm';
 
@@ -85,7 +86,7 @@ class Calendar extends BackCalendar {
                     onCancel={this.hideDTP}
                     isVisible={DTPMode != ''}
                     maximumDate={new Date()}
-                    minimumDate={user.activitiyManager.getFirst()}
+                    minimumDate={user.activities.getFirst()}
                 />
 
             </View>

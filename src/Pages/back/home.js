@@ -7,7 +7,7 @@ class BackHome extends React.Component {
         super(props);
 
         // Average XP
-        const firstDate = user.activitiyManager.getFirst();
+        const firstDate = user.activities.getFirst();
         firstDate.setHours(0, 0, 0);
         const delta = (new Date()) - firstDate;
         const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));
@@ -15,7 +15,7 @@ class BackHome extends React.Component {
 
         // User activities
         const show = 3;
-        const userActivities = user.activitiyManager.getAll();
+        const userActivities = user.activities.getAll();
         this.activities = [];
         for (let i = userActivities.length-1; i > userActivities.length - show - 1; i--) {
             if (i >= 0) {
@@ -32,7 +32,7 @@ class BackHome extends React.Component {
         for (let s = 0; s < skills.length; s++) {
             const skill = skills[s];
             const skillID = skill.skillID;
-            const skillName = user.getSkillByID(skillID).Name;
+            const skillName = user.skills.getByID(skillID).Name;
             const newVal = { key: skillID, value: skillName };
             this.skills.push(newVal);
         }
@@ -43,7 +43,7 @@ class BackHome extends React.Component {
 
 
     addSkill = () => {
-        if (user.skills.length <= 1) {
+        if (user.skills.getAll().length <= 1) {
             console.warn("Aucun skill !");
             return;
         }

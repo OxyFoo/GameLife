@@ -10,6 +10,17 @@ function isUndefined(el) {
     return typeof(el) === 'undefined';
 }
 
+function atLeastOneUndefined(...args) {
+    return args.some(isUndefined);
+}
+
+function strIsJSON(str) {
+    let isJSON = true;
+    try { JSON.parse(str); }
+    catch (e) { isJSON = false; }
+    return isJSON;
+}
+
 /**
  * 
  * @param {Number} days_number
@@ -83,7 +94,19 @@ function GetTimeToTomorrow() {
     return HH + ':' + MM;
 }
 
-export { twoDigit, sum, range,
+function sleep(ms) {
+    const T = Math.max(0, ms);
+    return new Promise(resolve => setTimeout(resolve, T));
+}
+
+function random(min, max) {
+    const m = min || 0;
+    const M = max || 1;
+    let R = Math.random() * (M - m) + m;
+    return parseInt(R);
+}
+
+export { twoDigit, sum, range, strIsJSON,
     getDates, getDurations,
-    isUndefined, dateToFormatString,
-    GetTimeToTomorrow };
+    isUndefined, atLeastOneUndefined, dateToFormatString,
+    GetTimeToTomorrow, sleep, random };

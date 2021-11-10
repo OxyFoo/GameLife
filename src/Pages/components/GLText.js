@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import user from '../../Managers/UserManager';
+
+import themeManager from '../../Managers/ThemeManager';
 
 const MAIN_FONT_NAME = 'FORCED SQUARE';
 
@@ -11,7 +12,7 @@ function GLText(props) {
     
     let opacity = 1;
     let color = props.color;
-    const COLORS = user.themeManager.colors['text'];
+    const COLORS = themeManager.colors['text'];
     if (typeof(color) === 'undefined' || !COLORS.hasOwnProperty(color)) {
         if (color === 'transparent') {
             opacity = 0;

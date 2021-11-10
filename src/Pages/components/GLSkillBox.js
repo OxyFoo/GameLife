@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { dateToFormatString } from '../../Functions/Functions';
-import langManager from '../../Managers/LangManager';
-import user from '../../Managers/UserManager';
-import GLSvg from './GLSvg';
 
+import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+import { dateToFormatString } from '../../Functions/Functions';
+
+import GLSvg from './GLSvg';
 import GLText from './GLText';
 
 function GLSkillBox(props) {
     const skillID = props.item.skillID;
-    const skill = user.getSkillByID(skillID);
+    const skill = user.skills.getByID(skillID);
     const skillExperience = user.experience.getSkillExperience(skillID);
     const level = skillExperience.lvl;
     const totalXP = skillExperience.totalXP;
@@ -19,7 +21,7 @@ function GLSkillBox(props) {
     const text_date = dateToFormatString(new Date(props.item.startDate));
 
     const styleContainer = [ styles.container, props.style ];
-    const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
+    const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
     const eventPress = () => { user.changePage('skill', { skillID: skillID }) };
     const xml = user.getXmlByLogoID(skill.LogoID);
 

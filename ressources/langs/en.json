@@ -23,12 +23,6 @@
         ]
     },
 
-    "loading": {
-        "text-loading": "Loading",
-        "text-loaded": "Loading complete",
-        "text-end": "Press to continue"
-    },
-
     "level": {
         "xp": "XP",
         "level": "Level",
@@ -45,6 +39,112 @@
         "btn-accept": "Accept",
         "btn-refuse": "Refuse",
         "btn-continue": "Continue"
+    },
+
+    "about": {
+        "page-title": "About",
+
+        "block-devs": "App made by",
+        "block-staff": "Staff",
+        "block-contributors": "Contributors",
+        "block-links": "Links",
+        "text-manager": "Manager",
+        "text-developer": "Développeur",
+
+        "alert-info-title": "Additional information",
+        "alert-info-text": "Version: {}"
+    },
+
+    "achievements": {
+        "page-title": "Achievements",
+
+        "alert-achievement-title": "Unlocked achievement",
+        "alert-achievement-text": "You have unlocked the achievement: {}"
+    },
+
+    "activity": {
+        "page-title": "Activity",
+        "input-category": "Category",
+        "input-activity": "Activity",
+        "input-start": "Start",
+        "input-duration": "Duration",
+
+        "input-category-default": "Select",
+        "input-activity-default": "Select"
+    },
+
+    "calendar": {
+        "page-title": "Calendar",
+
+        "header1-action": "Edit",
+        "header2-title": "Daily quests",
+        "header2-time": "Time left: ",
+        "header2-action": "See",
+
+        "skill-time": "Start/Duration",
+        "skill-xp": "Experience",
+        "value-xp": "+{} XP",
+
+        "alert-remove-title": "Delete ?",
+        "alert-remove-text": "Are you sure you want to eliminate this activity?",
+        "alert-notfill-title": "Incorrec",
+        "alert-notfill-text": "Please fill in all fields before continuing",
+        "alert-wrongtiming-title": "No way!",
+        "alert-wrongtiming-text": "The selected activity how or ends during another."
+    },
+
+    "dailyquest": {
+        "page-title": "Daily quest",
+
+        "info-remain-time": "Time remaining: ",
+        "daily-define-title": "Selection of daily quests",
+        "daily-define-text": "Enter 2 categories in which you want to improve",
+        "daily-define-cat1": "Skill 1",
+        "daily-define-cat2": "Skill 2",
+        "daily-define-button": "Save",
+
+        "daily-title": "Available quests",
+        "daily-edit-button": "Edit categories",
+        "daily-categories-text": " or ",
+        "quest-main-text": "One hour and a half of activity in the following categories:",
+        "quest-bonus-text": "One quarter hour in the following category:",
+
+        "daily-task-title": "Todo list",
+        "task-edit-title": "Title",
+        "task-edit-subtask": "Subtasks",
+        "task-edit-description": "Description",
+        "task-edit-add": "Add",
+        "task-edit-save": "Save",
+
+        "alert-info-title": "Informations",
+        "alert-info-text": "Daily quests are a way for you to get extra experience.\n\nThere are 3 categories in the daily quests:\n\n\n1- The hour and a half of activity: you have 1h30 of \"mandatory\" activity per day.\n1 hour of activity of your choice, you can choose to complete this hour by doing 1 or 2 activities (of different categories).\nIf you complete your hour of activity, you gain +1% of xp for the next day (can be accumulated 21 times)\nIf you fail, you will get -5% of xp for the next day (not cumulative)\n\n\n2- (Finished soon) A list of habits you want to start / continue.\nYou can decide to add up to 5 habits at the same time.\nIf you achieve your quarter of an hour of activity taken at random, you gain +0,5% of xp for the next day (cumulative 10 times)\nIf you fail, nothing happens.\n\n\n3- (Available soon) A button to watch a commercial. Watching one earns you points (and later virtual currency). You can earn titles and other bonuses from a certain number of ads watched!",
+        "alert-notfill-title": "Not completed",
+        "alert-notfill-text": "Please fill in all fields",
+        "alert-same-title": "Not completed",
+        "alert-same-text": "You cannot choose the same skill twice",
+        "alert-warn-title": "Warning",
+        "alert-warn-text": "You can only change the skills for the daily quests once a day",
+        "alert-success-title": "Success",
+        "alert-success-text": "Daily quests have been modified",
+        "alert-tasknotitle-title": "Incorrect",
+        "alert-tasknotitle-text": "Please enter a title for your task",
+        "alert-taskremove-title": "Delete ?",
+        "alert-taskremove-text": "You have already checked this task, press no to uncheck it, or yes to delete it"
+    },
+
+    "experience": {
+        "page-title": "XP Management",
+
+        "name-total": "XP Total",
+        "name-average": "Average XP/day",
+        "name-day": "Daily XP",
+        "name-week": "Weekly XP",
+        "name-month": "Monthly XP",
+        "name-year": "XP of the year",
+
+        "XPLeftToReach": "XP left to reach",
+        "name-next": "Next level",
+        "name-next-x": "Level {}"
     },
 
     "home": {
@@ -67,8 +167,6 @@
         "shortcut-about": "About",
         "shortcut-addactivity": "Add activity",
 
-        "alert-first-title": "Welcome",
-        "alert-first-text": "You have earned the right to become a player. Do you want to accept?",
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
         "alert-newversion-title": "Warning",
@@ -114,130 +212,6 @@
         "alert-wrongtimingpseudo-text": "Change of nickname impossible"
     },
 
-    "experience": {
-        "page-title": "XP Management",
-
-        "name-total": "XP Total",
-        "name-average": "Average XP/day",
-        "name-day": "Daily XP",
-        "name-week": "Weekly XP",
-        "name-month": "Monthly XP",
-        "name-year": "XP of the year",
-
-        "XPLeftToReach": "XP left to reach",
-        "name-next": "Next level",
-        "name-next-x": "Level {}"
-    },
-
-    "statistic": {
-        "page-title": "Caracteristics"
-    },
-
-    "calendar": {
-        "page-title": "Calendar",
-
-        "header1-action": "Edit",
-        "header2-title": "Daily quests",
-        "header2-time": "Time left: ",
-        "header2-action": "See",
-
-        "skill-time": "Start/Duration",
-        "skill-xp": "Experience",
-        "value-xp": "+{} XP",
-
-        "alert-remove-title": "Delete ?",
-        "alert-remove-text": "Are you sure you want to eliminate this activity?",
-        "alert-notfill-title": "Incorrec",
-        "alert-notfill-text": "Please fill in all fields before continuing",
-        "alert-wrongtiming-title": "No way!",
-        "alert-wrongtiming-text": "The selected activity how or ends during another."
-    },
-
-    "activity": {
-        "page-title": "Activity",
-        "input-category": "Category",
-        "input-activity": "Activity",
-        "input-start": "Start",
-        "input-duration": "Duration",
-
-        "input-category-default": "Select",
-        "input-activity-default": "Select"
-    },
-
-    "skills": {
-        "page-title": "Skills",
-
-        "top-search-placeholder": "Search",
-        "top-filter-default": "Filters",
-        "top-sort-list": [
-            "XP", "A-Z", "DATE"
-        ],
-        "text-empty": "Add an activity, the associated skills will appear here"
-    },
-
-    "skill": {
-        "page-title": "Compétence",
-
-        "text-point": "Point",
-        "text-points": "Points",
-        "text-author": "An idea from",
-        "page-history": "History",
-        "text-history": "{} during {} minutes"
-    },
-
-    "settings": {
-        "page-title": "Settings",
-
-        "input-langage": "Langages",
-        "input-theme": "Themes",
-        "input-reset": "Reset",
-        "input-clear": "Clear all",
-        "input-disconnect": "Unlink mail",
-
-        "input-morningnotifications": "Morning notifications",
-        "enabled-morningnotifications": "Enabled",
-        "disabled-morningnotifications": "Disabled",
-
-        "alert-clear-title": "Delete all",
-        "alert-clear-text": "Reset all data in the app?",
-        "alert-reset-title": "Reset",
-        "alert-reset-text": "Delete all account activities?",
-        "alert-disconnect-title": "Disconnecting",
-        "alert-disconnect-text": "Do you want to log out? Data will only be saved locally"
-    },
-
-    "statistics": {
-        "xp": {
-            "name": "Expérience",
-            "small": "XP"
-        },
-        "names": {
-            "sag": "Wisdom",
-            "int": "Intelligence",
-            "con": "Confidence",
-            "for": "Strength",
-            "end": "Stamina",
-            "agi": "Agility",
-            "dex": "Dexterity"
-        },
-        "descriptions": {
-            "sag": "Wisdom is a special skill, it allows you to gain bonus experience depending on your level. It is acquired by doing personal development activities such as meditation or other.",
-            "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
-            "con": "Confidence is a special statistic, each hour of skill (no matter what skill you do) gives you 1 point of confidence, so it increases with you and tells you how many hours of activity you have done.",
-            "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
-            "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
-            "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
-            "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision tasks, writing tasks on a computer or even with musical instruments."
-        }
-    },
-
-    "achievements": {
-        "page-title": "Achievements",
-
-        "alert-achievement-title": "Unlocked achievement",
-        "alert-achievement-text": "You have unlocked the achievement: {}"
-    },
-
     "leaderboard": {
         "page-title": "Leaderboard",
 
@@ -250,18 +224,8 @@
         "alert-connectneed-text": "To appear in the ranking, log in by entering your email address in the 'Identity' page."
     },
 
-    "about": {
-        "page-title": "About",
-
-        "block-devs": "App made by",
-        "block-staff": "Staff",
-        "block-contributors": "Contributors",
-        "block-links": "Links",
-        "text-manager": "Manager",
-        "text-developer": "Développeur",
-
-        "alert-info-title": "Additional information",
-        "alert-info-text": "Version: {}"
+    "login": {
+        "page-title": "Login"
     },
 
     "report": {
@@ -297,48 +261,80 @@
         "alert-error-text": "An error has occurred, please try again later."
     },
 
-    "dailyquest": {
-        "page-title": "Daily quest",
+    "settings": {
+        "page-title": "Settings",
 
-        "info-remain-time": "Time remaining: ",
-        "daily-define-title": "Selection of daily quests",
-        "daily-define-text": "Enter 2 categories in which you want to improve",
-        "daily-define-cat1": "Skill 1",
-        "daily-define-cat2": "Skill 2",
-        "daily-define-button": "Save",
+        "input-langage": "Langages",
+        "input-theme": "Themes",
+        "input-reset": "Reset",
+        "input-clear": "Clear all",
+        "input-disconnect": "Unlink mail",
 
-        "daily-title": "Available quests",
-        "daily-edit-button": "Edit categories",
-        "daily-categories-text": " or ",
-        "quest-main-text": "One hour and a half of activity in the following categories:",
-        "quest-bonus-text": "One quarter hour in the following category:",
+        "input-morningnotifications": "Morning notifications",
+        "enabled-morningnotifications": "Enabled",
+        "disabled-morningnotifications": "Disabled",
 
-        "daily-task-title": "Todo list",
-        "task-edit-title": "Title",
-        "task-edit-subtask": "Subtasks",
-        "task-edit-description": "Description",
-        "task-edit-add": "Add",
-        "task-edit-save": "Save",
-
-        "alert-info-title": "Informations",
-        "alert-info-text": "Daily quests are a way for you to get extra experience.\n\nThere are 3 categories in the daily quests:\n\n\n1- The hour and a half of activity: you have 1h30 of \"mandatory\" activity per day.\n1 hour of activity of your choice, you can choose to complete this hour by doing 1 or 2 activities (of different categories).\nIf you complete your hour of activity, you gain +1% of xp for the next day (can be accumulated 21 times)\nIf you fail, you will get -5% of xp for the next day (not cumulative)\n\n\n2- (Finished soon) A list of habits you want to start / continue.\nYou can decide to add up to 5 habits at the same time.\nIf you achieve your quarter of an hour of activity taken at random, you gain +0,5% of xp for the next day (cumulative 10 times)\nIf you fail, nothing happens.\n\n\n3- (Available soon) A button to watch a commercial. Watching one earns you points (and later virtual currency). You can earn titles and other bonuses from a certain number of ads watched!",
-        "alert-notfill-title": "Not completed",
-        "alert-notfill-text": "Please fill in all fields",
-        "alert-same-title": "Not completed",
-        "alert-same-text": "You cannot choose the same skill twice",
-        "alert-warn-title": "Warning",
-        "alert-warn-text": "You can only change the skills for the daily quests once a day",
-        "alert-success-title": "Success",
-        "alert-success-text": "Daily quests have been modified",
-        "alert-tasknotitle-title": "Incorrect",
-        "alert-tasknotitle-text": "Please enter a title for your task",
-        "alert-taskremove-title": "Delete ?",
-        "alert-taskremove-text": "You have already checked this task, press no to uncheck it, or yes to delete it"
+        "alert-clear-title": "Delete all",
+        "alert-clear-text": "Reset all data in the app?",
+        "alert-reset-title": "Reset",
+        "alert-reset-text": "Delete all account activities?",
+        "alert-disconnect-title": "Disconnecting",
+        "alert-disconnect-text": "Do you want to log out? Data will only be saved locally"
     },
 
     "shop": {
         "page-title": "shop",
 
         "wait": "The shop will be available soon!"
+    },
+
+    "skill": {
+        "page-title": "Compétence",
+
+        "text-point": "Point",
+        "text-points": "Points",
+        "text-author": "An idea from",
+        "page-history": "History",
+        "text-history": "{} during {} minutes"
+    },
+
+    "skills": {
+        "page-title": "Skills",
+
+        "top-search-placeholder": "Search",
+        "top-filter-default": "Filters",
+        "top-sort-list": [
+            "XP", "A-Z", "DATE"
+        ],
+        "text-empty": "Add an activity, the associated skills will appear here"
+    },
+
+    "statistic": {
+        "page-title": "Caracteristics"
+    },
+
+    "statistics": {
+        "xp": {
+            "name": "Expérience",
+            "small": "XP"
+        },
+        "names": {
+            "sag": "Wisdom",
+            "int": "Intelligence",
+            "con": "Confidence",
+            "for": "Strength",
+            "end": "Stamina",
+            "agi": "Agility",
+            "dex": "Dexterity"
+        },
+        "descriptions": {
+            "sag": "Wisdom is a special skill, it allows you to gain bonus experience depending on your level. It is acquired by doing personal development activities such as meditation or other.",
+            "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
+            "con": "Confidence is a special statistic, each hour of skill (no matter what skill you do) gives you 1 point of confidence, so it increases with you and tells you how many hours of activity you have done.",
+            "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
+            "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
+            "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
+            "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision tasks, writing tasks on a computer or even with musical instruments."
+        }
     }
 }

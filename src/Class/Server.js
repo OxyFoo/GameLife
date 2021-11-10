@@ -1,11 +1,8 @@
 import { BackHandler } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
-import { Request_Async } from '../Functions/Request';
 import langManager from '../Managers/LangManager';
-
-//import { NativeModules } from 'react-native';
-//const AES = NativeModules.Aes;
+import { Request_Async } from '../Functions/Request';
 
 const TIMER_LONG = 60 * 1000;
 const TIMER_SHORT = 10 * 1000;
@@ -53,43 +50,39 @@ class ServManager {
 
         // Ping
         const result_ping = await this.reqPing();
-        if (result_ping.hasOwnProperty('status')) {
-            const status = result_ping['status'];
-            if (status == 'ok') {
-                this.online = true;
-            } else if (status == 'update') {
+        if (result_ping.status === 'ok') {
+            this.online = true;
+            const state = result_ping.data['state'];
+            if (state === 'update') {
                 const title = langManager.curr['home']['alert-update-title'];
                 const text = langManager.curr['home']['alert-update-text'];
                 this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
-            } else if (status == 'nextUpdate') {
+            } else if (state === 'nextUpdate') {
                 this.online = false;
                 const title = langManager.curr['home']['alert-newversion-title'];
                 const text = langManager.curr['home']['alert-newversion-text'];
                 this.user.openPopup('ok', [ title, text ], undefined, false);
-            } else if (result_ping.hasOwnProperty('details')) {
-                const error = result_ping['details'].toString();
-                if (error !== "TypeError: Network request failed") {
-                    this.user.openPopup('ok', [ status, error ]);
-                }
             }
+        } else {
+            console.error('Ping failed: ' + result_ping.error);
         }
-        
+
         // Connection
         if (this.online) {
             if (!this.isConnected() && this.user.email !== '') {
                 const result_connect = await this.reqConnect();
-                const status = result_connect['status'];
 
-                if (typeof(status) === 'undefined') {
-                    console.error('Invalid response');
+                if (result_connect.status === 'err') {
+                    console.error('Get token failed: ' + result_connect.error);
                     return;
                 }
-                
-                const index_status = Object.values(STATUS).indexOf(status);
+
+                const state = result_connect.data['state'];
+                const index_status = Object.values(STATUS).indexOf(state);
                 if (index_status !== -1) this.status = STATUS[Object.keys(STATUS)[index_status]];
     
                 if (this.status === STATUS.CONNECTED) {
-                    const token = result_connect['token'];
+                    const token = result_connect.data['token'];
                     if (typeof(token) === 'undefined' || token.length === 0) {
                         console.error('Invalid key length');
                         return;
@@ -142,9 +135,6 @@ class ServManager {
     }
 
     reqGetInternalData(hash) {
-        if (!this.online) {
-            return;
-        }
         const data = {
             'action': 'getInternalData',
             'hash': hash || '',
@@ -166,15 +156,6 @@ class ServManager {
         this.token = '';
         this.status = STATUS.OFFLINE;
     }
-
-    /*encryptData = (text, key) => AES.encrypt(text, key, this.iv).then(cipher => cipher);
-    decryptData = (text, key) => AES.decrypt(text, key, this.iv).then(cipher => cipher);
-    stringToHex = (text) => {
-        return Array.from(text).map(c =>
-            c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) :
-            encodeURIComponent(c).replace(/\%/g,'').toLowerCase()
-        ).join('');
-    }*/
 }
 
 export default ServManager;

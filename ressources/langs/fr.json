@@ -23,12 +23,6 @@
         ]
     },
 
-    "loading": {
-        "text-loading": "Chargement",
-        "text-loaded": "Chargement terminé",
-        "text-end": "Appuyez pour continuer"
-    },
-
     "level": {
         "xp": "XP",
         "level": "Niveau",
@@ -45,6 +39,112 @@
         "btn-accept": "Accepter",
         "btn-refuse": "Refuser",
         "btn-continue": "Continuer"
+    },
+
+    "about": {
+        "page-title": "A propos",
+
+        "block-devs": "App créée par",
+        "block-staff": "Staff",
+        "block-contributors": "Contributeurs",
+        "block-links": "Liens",
+        "text-manager": "Manager",
+        "text-developer": "Développeur",
+
+        "alert-info-title": "Informations supplémentaires",
+        "alert-info-text": "Version : {}"
+    },
+
+    "achievements": {
+        "page-title": "Succès",
+
+        "alert-achievement-title": "Succès déverouillé",
+        "alert-achievement-text": "Vous avez débloqué le succès : {}"
+    },
+
+    "activity": {
+        "page-title": "Activité",
+        "input-category": "Catégorie",
+        "input-activity": "Activité",
+        "input-start": "Début",
+        "input-duration": "Durée",
+
+        "input-category-default": "Sélectionner",
+        "input-activity-default": "Sélectionner"
+    },
+
+    "calendar": {
+        "page-title": "Calendrier",
+
+        "header1-action": "Modifier",
+        "header2-title": "Quêtes du jour",
+        "header2-time": "Temps restant : ",
+        "header2-action": "Voir",
+
+        "skill-time": "Début/Durée",
+        "skill-xp": "Expérience",
+        "value-xp": "+{} XP",
+
+        "alert-remove-title": "Suppression ?",
+        "alert-remove-text": "Êtes-vous sûr de vouloir supprimer cette activité ?",
+        "alert-notfill-title": "Incorrect",
+        "alert-notfill-text": "Veuillez remplir tous les champs avant de continuer",
+        "alert-wrongtiming-title": "Impossible !",
+        "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre."
+    },
+
+    "dailyquest": {
+        "page-title": "Quêtes journalières",
+
+        "info-remain-time": "Temps restant : ",
+        "daily-define-title": "Sélection des quêtes journalières",
+        "daily-define-text": "Entrez 2 catégories dans lesquelles vous voulez vous perfectionner",
+        "daily-define-cat1": "Compétence 1",
+        "daily-define-cat2": "Compétence 2",
+        "daily-define-button": "Enregistrer",
+
+        "daily-title": "Quêtes disponibles",
+        "daily-edit-button": "Modifier les catégories",
+        "daily-categories-text": " ou ",
+        "quest-main-text": "Une heure et demie d'activité parmis les catégories suivantes :",
+        "quest-bonus-text": "Un quart d'heure dans la catégorie suivante :",
+
+        "daily-task-title": "Tâches jounalières",
+        "task-edit-title": "Titre",
+        "task-edit-subtask": "Sous-tâches",
+        "task-edit-description": "Description",
+        "task-edit-add": "Ajouter",
+        "task-edit-save": "Enregistrer",
+
+        "alert-info-title": "Informations",
+        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et demie d’activité : vous avez 1h30 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 21 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt terminée) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuelle). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
+        "alert-notfill-title": "Pas terminé",
+        "alert-notfill-text": "Merci de remplir tous les champs",
+        "alert-same-title": "Pas terminé",
+        "alert-same-text": "Vous ne pouvez pas choisir deux fois la même compétence",
+        "alert-warn-title": "Attention",
+        "alert-warn-text": "Vous ne pouvez modifier les compétences pour les quêtes journalières qu'une fois par jour",
+        "alert-success-title": "Succès",
+        "alert-success-text": "Les quêtes journalières ont été modifiées",
+        "alert-tasknotitle-title": "Incorrect",
+        "alert-tasknotitle-text": "Veuillez entrer un titre à votre tâche",
+        "alert-taskremove-title": "Supprimer ?",
+        "alert-taskremove-text": "Vous avez déjà coché cette tâche, appuyez sur non pour la décocher, ou sur oui pour la supprimer"
+    },
+
+    "experience": {
+        "page-title": "Gestion XP",
+
+        "name-total": "XP Total",
+        "name-average": "Moyenne d'XP/jour",
+        "name-day": "XP du jour",
+        "name-week": "XP de la semaine",
+        "name-month": "XP du mois",
+        "name-year": "XP de l'année",
+
+        "XPLeftToReach": "XP restant pour atteindre",
+        "name-next": "Niveau suivant",
+        "name-next-x": "Niveau {}"
     },
 
     "home": {
@@ -67,8 +167,6 @@
         "shortcut-about": "A propos",
         "shortcut-addactivity": "Ajouter une activité",
 
-        "alert-first-title": "Bienvenue",
-        "alert-first-text": "Vous avez gagné le droit de devenir un joueur. Voulez vous accepter ?",
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
@@ -114,130 +212,6 @@
         "alert-wrongtimingpseudo-text": "Modification du pseudo impossible"
     },
 
-    "experience": {
-        "page-title": "Gestion XP",
-
-        "name-total": "XP Total",
-        "name-average": "Moyenne d'XP/jour",
-        "name-day": "XP du jour",
-        "name-week": "XP de la semaine",
-        "name-month": "XP du mois",
-        "name-year": "XP de l'année",
-
-        "XPLeftToReach": "XP restant pour atteindre",
-        "name-next": "Niveau suivant",
-        "name-next-x": "Niveau {}"
-    },
-
-    "statistic": {
-        "page-title": "Caractéristiques"
-    },
-
-    "calendar": {
-        "page-title": "Calendrier",
-
-        "header1-action": "Modifier",
-        "header2-title": "Quêtes du jour",
-        "header2-time": "Temps restant : ",
-        "header2-action": "Voir",
-
-        "skill-time": "Début/Durée",
-        "skill-xp": "Expérience",
-        "value-xp": "+{} XP",
-
-        "alert-remove-title": "Suppression ?",
-        "alert-remove-text": "Êtes-vous sûr de vouloir supprimer cette activité ?",
-        "alert-notfill-title": "Incorrect",
-        "alert-notfill-text": "Veuillez remplir tous les champs avant de continuer",
-        "alert-wrongtiming-title": "Impossible !",
-        "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre."
-    },
-
-    "activity": {
-        "page-title": "Activité",
-        "input-category": "Catégorie",
-        "input-activity": "Activité",
-        "input-start": "Début",
-        "input-duration": "Durée",
-
-        "input-category-default": "Sélectionner",
-        "input-activity-default": "Sélectionner"
-    },
-
-    "skills": {
-        "page-title": "Compétences",
-
-        "top-search-placeholder": "Rechercher",
-        "top-filter-default": "Filtres",
-        "top-sort-list": [
-            "XP", "A-Z", "DATE"
-        ],
-        "text-empty": "Ajoutez une activité, les compétences associées apparaîtront ici"
-    },
-
-    "skill": {
-        "page-title": "Compétence",
-
-        "text-point": "Point",
-        "text-points": "Points",
-        "text-author": "Une idée de",
-        "page-history": "Historique",
-        "text-history": "{} pendant {} minutes"
-    },
-
-    "settings": {
-        "page-title": "Réglages",
-
-        "input-langage": "Langues",
-        "input-theme": "Thèmes",
-        "input-reset": "Réinitialiser",
-        "input-clear": "Supprimer tout",
-        "input-disconnect": "Délier le mail",
-
-        "input-morningnotifications": "Notifications journalières",
-        "enabled-morningnotifications": "Activées",
-        "disabled-morningnotifications": "Désactivées",
-
-        "alert-clear-title": "Supprimer",
-        "alert-clear-text": "Réinitialiser toutes les données de l'app ?",
-        "alert-reset-title": "Réinitialiser",
-        "alert-reset-text": "Supprimer toutes les activités du compte ?",
-        "alert-disconnect-title": "Se déconnecter",
-        "alert-disconnect-text": "Voulez-vous vous déconnecter ? Les données ne seront sauvegardées que localement"
-    },
-
-    "statistics": {
-        "xp": {
-            "name": "Expérience",
-            "small": "XP"
-        },
-        "names": {
-            "sag": "Sagesse",
-            "int": "Intelligence",
-            "con": "Assurance",
-            "for": "Force",
-            "end": "Endurance",
-            "agi": "Agilité",
-            "dex": "Dextérité"
-        },
-        "descriptions": {
-            "sag": "La sagesse est une compétence particulière, elle vous permet de gagner de l’expérience en bonus en fonction de votre niveau. Elle s’acquiert en faisant surtout des activités de développement personnel comme la méditation ou autre.",
-            "int": "L’intelligence est une statistique très large, dès que vous faites fonctionner vos méninges, vous entraînez votre cerveau et gagnez donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
-            "con": "L’assurance est une statistique spéciale, chaque heure de compétence (peu importe la compétence faite) vous apporte 1 point d’assurance, elle augmente donc en même temps que vous et vous indique le nombre d’heures d’activités que vous avez faites.",
-            "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physiques par exemple !",
-            "end": "L’endurance est probablement la statistique que vous améliorerez le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
-            "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter votre agilité sont des activités comme des étirements ou encore du yoga.",
-            "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
-        }
-    },
-
-    "achievements": {
-        "page-title": "Succès",
-
-        "alert-achievement-title": "Succès déverouillé",
-        "alert-achievement-text": "Vous avez débloqué le succès : {}"
-    },
-
     "leaderboard": {
         "page-title": "Classement",
 
@@ -250,18 +224,8 @@
         "alert-connectneed-text": "Pour apparaître dans le classement, connectez-vous en entrant votre adresse mail dans la page 'Identité'."
     },
 
-    "about": {
-        "page-title": "A propos",
-
-        "block-devs": "App créée par",
-        "block-staff": "Staff",
-        "block-contributors": "Contributeurs",
-        "block-links": "Liens",
-        "text-manager": "Manager",
-        "text-developer": "Développeur",
-
-        "alert-info-title": "Informations supplémentaires",
-        "alert-info-text": "Version : {}"
+    "login": {
+        "page-title": "Connexion"
     },
 
     "report": {
@@ -297,48 +261,80 @@
         "alert-error-text": "Une erreur est survenue, veuillez réessayer plus tard."
     },
 
-    "dailyquest": {
-        "page-title": "Quêtes journalières",
+    "settings": {
+        "page-title": "Réglages",
 
-        "info-remain-time": "Temps restant : ",
-        "daily-define-title": "Sélection des quêtes journalières",
-        "daily-define-text": "Entrez 2 catégories dans lesquelles vous voulez vous perfectionner",
-        "daily-define-cat1": "Compétence 1",
-        "daily-define-cat2": "Compétence 2",
-        "daily-define-button": "Enregistrer",
+        "input-langage": "Langues",
+        "input-theme": "Thèmes",
+        "input-reset": "Réinitialiser",
+        "input-clear": "Supprimer tout",
+        "input-disconnect": "Délier le mail",
 
-        "daily-title": "Quêtes disponibles",
-        "daily-edit-button": "Modifier les catégories",
-        "daily-categories-text": " ou ",
-        "quest-main-text": "Une heure et demie d'activité parmis les catégories suivantes :",
-        "quest-bonus-text": "Un quart d'heure dans la catégorie suivante :",
+        "input-morningnotifications": "Notifications journalières",
+        "enabled-morningnotifications": "Activées",
+        "disabled-morningnotifications": "Désactivées",
 
-        "daily-task-title": "Tâches jounalières",
-        "task-edit-title": "Titre",
-        "task-edit-subtask": "Sous-tâches",
-        "task-edit-description": "Description",
-        "task-edit-add": "Ajouter",
-        "task-edit-save": "Enregistrer",
-
-        "alert-info-title": "Informations",
-        "alert-info-text": "Les quêtes journalières sont un moyen pour vous d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et demie d’activité : vous avez 1h30 d’activité « obligatoire » par jour.\n1h d’activité de votre choix, vous pouvez choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi vous réalisez votre heure d'activité, vous gagnez +1% d'xp pour le lendemain (cumulable 21 fois)\nSi vous échouez, vous aurez -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt terminée) Une liste d’habitude que vous voulez commencer / continuer.\nVous pouvez décider de rajouter jusqu’à 5 habitudes en même temps.\nSi vous réalisez votre quart d'heure d'activité prise au hasard, vous gagnez +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi vous échouez, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une vous fait gagner des points (et plus tard de la monnaie virtuelle). Vous pouvez gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
-        "alert-notfill-title": "Pas terminé",
-        "alert-notfill-text": "Merci de remplir tous les champs",
-        "alert-same-title": "Pas terminé",
-        "alert-same-text": "Vous ne pouvez pas choisir deux fois la même compétence",
-        "alert-warn-title": "Attention",
-        "alert-warn-text": "Vous ne pouvez modifier les compétences pour les quêtes journalières qu'une fois par jour",
-        "alert-success-title": "Succès",
-        "alert-success-text": "Les quêtes journalières ont été modifiées",
-        "alert-tasknotitle-title": "Incorrect",
-        "alert-tasknotitle-text": "Veuillez entrer un titre à votre tâche",
-        "alert-taskremove-title": "Supprimer ?",
-        "alert-taskremove-text": "Vous avez déjà coché cette tâche, appuyez sur non pour la décocher, ou sur oui pour la supprimer"
+        "alert-clear-title": "Supprimer",
+        "alert-clear-text": "Réinitialiser toutes les données de l'app ?",
+        "alert-reset-title": "Réinitialiser",
+        "alert-reset-text": "Supprimer toutes les activités du compte ?",
+        "alert-disconnect-title": "Se déconnecter",
+        "alert-disconnect-text": "Voulez-vous vous déconnecter ? Les données ne seront sauvegardées que localement"
     },
 
     "shop": {
         "page-title": "Boutique",
 
         "wait": "La boutique sera disponible bientôt !"
+    },
+
+    "skill": {
+        "page-title": "Compétence",
+
+        "text-point": "Point",
+        "text-points": "Points",
+        "text-author": "Une idée de",
+        "page-history": "Historique",
+        "text-history": "{} pendant {} minutes"
+    },
+
+    "skills": {
+        "page-title": "Compétences",
+
+        "top-search-placeholder": "Rechercher",
+        "top-filter-default": "Filtres",
+        "top-sort-list": [
+            "XP", "A-Z", "DATE"
+        ],
+        "text-empty": "Ajoutez une activité, les compétences associées apparaîtront ici"
+    },
+
+    "statistic": {
+        "page-title": "Caractéristiques"
+    },
+
+    "statistics": {
+        "xp": {
+            "name": "Expérience",
+            "small": "XP"
+        },
+        "names": {
+            "sag": "Sagesse",
+            "int": "Intelligence",
+            "con": "Assurance",
+            "for": "Force",
+            "end": "Endurance",
+            "agi": "Agilité",
+            "dex": "Dextérité"
+        },
+        "descriptions": {
+            "sag": "La sagesse est une compétence particulière, elle vous permet de gagner de l’expérience en bonus en fonction de votre niveau. Elle s’acquiert en faisant surtout des activités de développement personnel comme la méditation ou autre.",
+            "int": "L’intelligence est une statistique très large, dès que vous faites fonctionner vos méninges, vous entraînez votre cerveau et gagnez donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
+            "con": "L’assurance est une statistique spéciale, chaque heure de compétence (peu importe la compétence faite) vous apporte 1 point d’assurance, elle augmente donc en même temps que vous et vous indique le nombre d’heures d’activités que vous avez faites.",
+            "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physiques par exemple !",
+            "end": "L’endurance est probablement la statistique que vous améliorerez le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
+            "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter votre agilité sont des activités comme des étirements ou encore du yoga.",
+            "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
+        }
     }
 }

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
+
 import BackStatistic from '../back/statistic';
 import { GLCropCorner, GLHeader, GLIconButton, GLText } from '../Components';
-
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
 
 class Statistic extends BackStatistic {
     render() {
@@ -30,7 +30,7 @@ class Statistic extends BackStatistic {
                 />
 
                 {/* Topbar */}
-                <View style={[styles.container, { backgroundColor: user.themeManager.colors['globalBackcomponent'] }]}>
+                <View style={[styles.container, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                     <View style={styles.topBar}>
                         <GLIconButton onPress={this.prev} icon='chevronLeft' />
                         <GLText title={statName} />

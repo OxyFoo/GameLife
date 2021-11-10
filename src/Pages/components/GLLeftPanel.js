@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { Animated, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import langManager from '../../Managers/LangManager';
-import user from '../../Managers/UserManager';
 
+import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
 import { OptionsAnimation } from '../../Functions/Animations';
-import GLIconButton from './GLIconButton';
+
 import GLText from './GLText';
+import GLIconButton from './GLIconButton';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const PANEL_WIDTH = SCREEN_WIDTH / 2;
@@ -72,7 +74,7 @@ class GLLeftPanel extends React.PureComponent {
     }
 
     render() {
-        const backgroundColor = { backgroundColor: user.themeManager.colors['globalBackcomponent'] };
+        const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
             <Animated.View

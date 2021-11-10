@@ -1,4 +1,4 @@
-import DataStorage, { STORAGE } from '../Class/DataStorage';
+import DataStorage, { STORAGE } from '../Functions/DataStorage';
 import { isUndefined } from '../Functions/Functions';
 
 class ThemeManager {
@@ -64,4 +64,7 @@ class ThemeManager {
     }
 }
 
-export default ThemeManager;
+const themeManager = new ThemeManager();
+
+export default themeManager;
+export { ThemeManager };

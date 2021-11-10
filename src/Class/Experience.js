@@ -10,7 +10,7 @@ const MaxHourPerDay = 12;
 class Experience {
     constructor(user) {
         this.user = user;
-        this.getAllActivities = () => { return this.user.activitiyManager.getAll(); };
+        this.getAllActivities = () => { return this.user.activities.getAll(); };
     }
 
     /**
@@ -71,13 +71,13 @@ class Experience {
         }
 
         // Count stats
-        const date = new Date(this.user.activitiyManager.getFirst());
+        const date = new Date(this.user.activities.getFirst());
         date.setHours(0, 0, 0, 0);
         let activities = [...this.getAllActivities()];
         let questSupp = 0;
         let bonusSupp = 0;
         while (activities.length) {
-            const activitiesInDay = this.user.activitiyManager.getByDate(date);
+            const activitiesInDay = this.user.activities.getByDate(date);
             let questComplete = 0;
             let bonusComplete = 0;
             let hoursRemain = MaxHourPerDay;
@@ -87,7 +87,7 @@ class Experience {
                 const activityDate = new Date(activity.startDate);
                 const durationHour = activity.duration / 60;
                 const skillID = activity.skillID;
-                const skill = this.user.getSkillByID(skillID);
+                const skill = this.user.skills.getByID(skillID);
                 const category = skill.Category;
 
                 // Remove from list
@@ -164,7 +164,7 @@ class Experience {
         for (let a in activities) {
             const activity = activities[a];
             const durationHour = activity.duration / 60;
-            const skill = this.user.getSkillByID(activity.skillID);
+            const skill = this.user.skills.getByID(activity.skillID);
 
             if (activity == untilActivity) break;
             totalXP += skill.Stats[statKey] * durationHour;
@@ -185,7 +185,7 @@ class Experience {
             const activity = activities[a];
             if (activity.skillID == skillID) {
                 const durationHour = activity.duration / 60;
-                const skill = this.user.getSkillByID(skillID);
+                const skill = this.user.skills.getByID(skillID);
                 totalXP += skill.XP * durationHour;
                 for (let s in allStats) {
                     const localXP = skill.Stats[allStats[s]] * durationHour;
@@ -207,8 +207,9 @@ class Experience {
         if (relative) {
             // Get max skill experience
             let maxSkillXP = 0;
-            for (let s = 0; s < this.user.skills.length; s++) {
-                const skill = this.user.skills[s];
+            const skills = this.user.skills.getAll();
+            for (let s = 0; s < skills.length; s++) {
+                const skill = skills[s];
                 if (skill.Category != category) continue;
                 const skillID = skill.ID;
                 const skillXP = this.getSkillExperience(skillID);
@@ -222,7 +223,7 @@ class Experience {
             for (let a in activities) {
                 const activity = activities[a];
                 const skillID = activity.skillID;
-                const skill = this.user.getSkillByID(skillID);
+                const skill = this.user.skills.getByID(skillID);
                 const cat = skill.Category;
     
                 if (cat == category) {
@@ -280,7 +281,7 @@ class Experience {
                 let a = false;
                 for (let s = 0; s < skills.length; s++) {
                     const skillID = skills[s].skillID;
-                    const skill = this.user.getSkillByID(skillID);
+                    const skill = this.user.skills.getByID(skillID);
                     if (!skill.Name.includes(searchTxt)) {
                         skills.splice(s, 1);
                         a = true;
@@ -297,7 +298,7 @@ class Experience {
                 let a = false;
                 for (let s = 0; s < skills.length; s++) {
                     const skillID = skills[s].skillID;
-                    const skill = this.user.getSkillByID(skillID);
+                    const skill = this.user.skills.getByID(skillID);
                     if (!filters.includes(skill.Category)) {
                         skills.splice(s, 1);
                         a = true;
@@ -333,7 +334,7 @@ class Experience {
                 let lastestIndex = 0;
                 for (let s = 0; s < skills.length; s++) {
                     const skillID = skills[s].skillID;
-                    const skill = this.user.getSkillByID(skillID);
+                    const skill = this.user.skills.getByID(skillID);
                     if (skill.Name.localeCompare(lastestValue) === 1) {
                         lastestIndex = s;
                         lastestValue = skill.Name;
@@ -349,7 +350,7 @@ class Experience {
                 let lastestIndex = 0;
                 for (let s = 0; s < skills.length; s++) {
                     const skillID = skills[s].skillID;
-                    const skill = this.user.getSkillByID(skillID);
+                    const skill = this.user.skills.getByID(skillID);
                     if (skill.startDate > lastestValue) {
                         lastestIndex = s;
                         lastestValue = skill.Name;

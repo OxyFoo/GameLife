@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 
-const iconsDir = '../../../ressources/icons/';
+const iconsDir = '../../../res/icons/';
 
 const Icons = {
     accept: require(iconsDir + 'accept.png'),

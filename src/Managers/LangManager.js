@@ -1,5 +1,5 @@
-import fr from '../../ressources/langs/fr.json';
-import en from '../../ressources/langs/en.json';
+import fr from '../../res/langs/fr.json';
+import en from '../../res/langs/en.json';
 
 DEFAULT_LANG = 'fr';
 

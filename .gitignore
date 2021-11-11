@@ -73,7 +73,7 @@ babel.config.js
 .gitattributes
 .vscode/
 metro.config.js
-ressources/templates/*.psd
 config.php
 Backups
 Readmeme.md
+Python

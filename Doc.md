@@ -8,10 +8,10 @@
 | serv | Contient tous les fichiers serveurs, pour la version publique ou la version de dev |
 | src | Contient tous les codes sources pour la compilation de l'application |
 | src > Class | Toutes les classes utilisées par le UserManager, nécessaires au fonctionnement de toute la partie utilisateur |
-| src > Functions | Toutes les fonctions isolées (requêtes, notifications, ) |
-| src >  |  |
-| src >  |  |
-| src >  |  |
+| src > Functions | Toutes les fonctions isolées (requêtes, notifications, ...) |
+| src > Managers | Classes qui gèrent toute une partie de l'app |
+| src > Pages | Bah... Les pages de l'app quoi |
+| src > Tools | Outils pour améliorer l'app (vérifications des dates, anti-cheat, ...) |
 
 ## Succès
 ### Comparaisons

@@ -61,7 +61,7 @@ class Identity extends BackIdentity {
                     <View style={styles.content}>
                         {/* Profile image */}
                         <Animated.View style={[styles.image, { width: this.state.imageAnimation, height: this.state.imageAnimation }]} onTouchStart={this.imagePress}>
-                            <Image style={{ width: '100%', height: '100%' }} source={require('../../../ressources/photos/default.jpg')} resizeMode="contain"  />
+                            <Image style={{ width: '100%', height: '100%' }} source={require('../../../res/photos/default.jpg')} resizeMode="contain"  />
                         </Animated.View>
 
                         {/* Pseudo */}

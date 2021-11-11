@@ -3,7 +3,7 @@ import { StyleSheet, View, Animated } from 'react-native';
 
 import { OptionsAnimation } from '../../Functions/Animations';
 
-const LOGO_DIR = '../../../ressources/logo/';
+const LOGO_DIR = '../../../res/logo/';
 const LOGOS = [
     require(LOGO_DIR + 'loading_0.png'),
     require(LOGO_DIR + 'loading_1.png'),

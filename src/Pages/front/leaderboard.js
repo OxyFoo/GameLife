@@ -18,7 +18,7 @@ class Leaderboard extends BackLeaderboard {
         return (
             <View style={styles.userContainer}>
                 <View style={styles.userImage}>
-                    <Image style={{ width: '100%', height: '100%' }} source={require('../../../ressources/photos/default.jpg')} resizeMode="contain" />
+                    <Image style={{ width: '100%', height: '100%' }} source={require('../../../res/photos/default.jpg')} resizeMode="contain" />
                 </View>
                 <View style={styles.userDetails}>
                     <GLText style={styles.userDetail} title={pseudo} />

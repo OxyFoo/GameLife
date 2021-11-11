@@ -10,12 +10,12 @@ import Experience from "../Class/Experience";
 import Quests from '../Class/Quests';
 import DateCheck from '../Tools/DateCheck';
 
-import quotes from '../../ressources/defaultDB/quotes.json';
-import titles from '../../ressources/defaultDB/titles.json';
-import skills from '../../ressources/defaultDB/skills.json';
-import skillsIcon from '../../ressources/defaultDB/skillsIcon.json';
-import achievements from '../../ressources/defaultDB/achievements.json';
-import helpers from '../../ressources/defaultDB/helpers.json';
+import quotes from '../../res/defaultDB/quotes.json';
+import titles from '../../res/defaultDB/titles.json';
+import skills from '../../res/defaultDB/skills.json';
+import skillsIcon from '../../res/defaultDB/skillsIcon.json';
+import achievements from '../../res/defaultDB/achievements.json';
+import helpers from '../../res/defaultDB/helpers.json';
 
 const DAYS_PSEUDO_CHANGE = 7;
 const DEFAULT_PSEUDO = 'Player';

@@ -37,7 +37,7 @@ class ThemeManager {
 
     async loadTheme() {
         const data = await DataStorage.Load(STORAGE.THEME, false);
-        if (!isUndefined(data) && data.hasOwnProperty('theme')) {
+        if (data !== null && data.hasOwnProperty('theme')) {
             const currentTheme = data['theme'];
             this.setTheme(currentTheme, false);
         }

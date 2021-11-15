@@ -6,7 +6,7 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import BackHome from '../back/home';
-import { dateToFormatString } from '../../Functions/Functions';
+import { dateToFormatString } from '../../Functions/Time';
 import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 
 class Home extends BackHome {

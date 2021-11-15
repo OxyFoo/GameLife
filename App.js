@@ -4,6 +4,7 @@ import { AppState, SafeAreaView } from 'react-native';
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
 import DataStorage, { STORAGE } from './src/Functions/DataStorage';
+import { checkDate } from './src/Tools/DateCheck';
 
 class App extends React.Component {
     componentDidMount() {
@@ -11,8 +12,15 @@ class App extends React.Component {
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
     }
 
-    async componentChangeState(newState) {
-        user.dateCheck.changeState(newState);
+    async componentChangeState(state) {
+        if (state === 'active') {
+            if (!checkDate()) {
+                /*const title = langManager.curr['home']['alert-dateerror-title'];
+                const text = langManager.curr['home']['alert-dateerror-text'];
+                this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);*/
+                console.error("TODO - Message d'erreur");
+            }
+        }
     }
 
     componentWillUnmount() {
@@ -22,8 +30,11 @@ class App extends React.Component {
 
     async startApp() {
         let onboardingWatched = false;
+        console.log("AH");
         const data = await DataStorage.Load(STORAGE.ONBOARDING, false);
-        if (typeof(data) !== 'undefined' && data.hasOwnProperty('on-boarding')) {
+        console.log(data);
+        if (data !== null && data.hasOwnProperty('on-boarding')) {
+            console.log(data['on-boarding']);
             onboardingWatched = data['on-boarding'];
         }
         if (onboardingWatched) {

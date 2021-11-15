@@ -1,14 +1,13 @@
 import deviceInfoModule from 'react-native-device-info';
 
 import langManager from "./LangManager";
-import ServManager from "../Class/Server";
 import DataStorage, { STORAGE } from '../Functions/DataStorage';
 
+import Server from "../Class/Server";
 import Skills from '../Class/Skills';
 import Activities from '../Class/Activities';
 import Experience from "../Class/Experience";
 import Quests from '../Class/Quests';
-import DateCheck from '../Tools/DateCheck';
 
 import quotes from '../../res/defaultDB/quotes.json';
 import titles from '../../res/defaultDB/titles.json';
@@ -30,11 +29,11 @@ const DEFAULT_STATS = {
 };
 
 class UserManager {
-    skills = new Skills(this);
     activities = new Activities(this);
     experience = new Experience(this);
     quests = new Quests(this);
-    conn = new ServManager(this);
+    server = new Server(this);
+    skills = new Skills(this);
 
     /**
      * this.changePage(pageName, argument);
@@ -49,8 +48,6 @@ class UserManager {
     openLeftPanel;
 
     constructor() {
-        this.dateCheck = new DateCheck(this);
-
         // User informations
         this.pseudo = DEFAULT_PSEUDO;
         this.pseudoDate = null;
@@ -68,7 +65,8 @@ class UserManager {
         this.achievements = [];
         this.contributors = [];
 
-        this.achievementsLoop = setInterval(this.checkAchievements, 30*1000);
+        // TODO - Réactiver les succès
+        //this.achievementsLoop = setInterval(this.checkAchievements, 30*1000);
     }
 
     async clear() {
@@ -88,14 +86,14 @@ class UserManager {
         this.skillsIcon = [];
         this.achievements = [];
         this.contributors = [];
-        this.conn.status = 'offline';
-        this.conn.destructor();
+        this.server.status = 'offline';
+        this.server.destructor();
         await DataStorage.clearAll();
         await this.saveData(false);
     }
 
     async disconnect() {
-        this.conn.disconnect();
+        this.server.disconnect();
         this.email = '';
         this.changePage();
         await this.saveData();
@@ -103,7 +101,7 @@ class UserManager {
     async unmount() {
         clearInterval(this.achievementsLoop);
         this.saveData();
-        this.conn.destructor();
+        this.server.destructor();
     }
 
     async refreshStats(save = true) {
@@ -129,7 +127,7 @@ class UserManager {
         const oldPseudo = this.pseudo;
         const title = this.title;
         if (this.email) {
-            await this.conn.AsyncRefreshAccount();
+            await this.server.AsyncRefreshAccount();
             await this.saveData(false);
             if (this.isConnected()) {
                 await this.loadData(true);
@@ -373,7 +371,9 @@ class UserManager {
             'daily': this.quests.daily,
             'tasks': this.quests.todoList
         };
-        await DataStorage.Save(STORAGE.USER, data, _online, this.conn.token, this.pseudoCallback);
+
+        // TODO - this.pseudoCallback, le mettre ailleurs
+        await DataStorage.Save(STORAGE.USER, data, _online, this.server.token);
 
         const data_settings = {
             'email': this.email,
@@ -395,26 +395,26 @@ class UserManager {
     async loadData(online) {
         const get = (data, index, defaultValue, oneBlock = false) => {
             let output = defaultValue;
-            if (typeof(data) !== 'undefined') {
-                if (data.hasOwnProperty(index) && data[index] !== null) {
-                    if (oneBlock) {
-                        output = data[index];
-                    } else
-                    if (typeof(data[index]) !== 'object' || data[index].length > 0) {
-                        output = data[index];
-                    }
+            if (data.hasOwnProperty(index) && data[index] !== null) {
+                if (oneBlock) {
+                    output = data[index];
+                } else
+                if (typeof(data[index]) !== 'object' || data[index].length > 0) {
+                    output = data[index];
                 }
             }
             return output;
         }
 
         const data_settings = await DataStorage.Load(STORAGE.SETTINGS, false);
-        this.email = get(data_settings, 'email', '');
-        this.morningNotifications = get(data_settings, 'morningNotifications', true);
+        if (data_settings !== null) {
+            this.email = get(data_settings, 'email', '');
+            this.morningNotifications = get(data_settings, 'morningNotifications', true);
+        }
 
         const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
-        const data = await DataStorage.Load(STORAGE.USER, _online, this.conn.token);
-        if (typeof(data) !== 'undefined') {
+        const data = await DataStorage.Load(STORAGE.USER, _online, this.server.token);
+        if (data !== null) {
             langManager.setLangage(get(data, 'lang', 'fr'));
             this.pseudo = get(data, 'pseudo', this.pseudo);
             this.pseudoDate = get(data, 'pseudoDate', null);
@@ -437,19 +437,21 @@ class UserManager {
         }
 
         const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
-        this.titles = get(internalData, 'titles', titles, true);
-        this.quotes = get(internalData, 'quotes', quotes, true);
-        this.skills.setAll(get(internalData, 'skills', skills, true));
-        this.skillsIcon = get(internalData, 'skillsIcon', skillsIcon, true);
-        this.achievements = get(internalData, 'achievements', achievements, true);
-        this.contributors = get(internalData, 'helpers', helpers, true);
+        if (internalData !== null) {
+            this.titles = get(internalData, 'titles', titles, true);
+            this.quotes = get(internalData, 'quotes', quotes, true);
+            this.skills.setAll(get(internalData, 'skills', skills, true));
+            this.skillsIcon = get(internalData, 'skillsIcon', skillsIcon, true);
+            this.achievements = get(internalData, 'achievements', achievements, true);
+            this.contributors = get(internalData, 'helpers', helpers, true);
+        }
     }
     async loadInternalData() {
-        if (this.conn.online) {
+        if (this.server.online) {
             const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
-            const reqInternalData = await this.conn.reqGetInternalData(hash);
+            const reqInternalData = await this.server.reqGetInternalData(hash);
 
-            if (reqInternalData.status === 'ok') {
+            if (reqInternalData.status === 200) {
                 const state = reqInternalData.data['state'];
 
                 if (state === 'ok') {
@@ -470,7 +472,7 @@ class UserManager {
         }
     }
 
-    isConnected = this.conn.isConnected;
+    isConnected = this.server.isConnected;
 }
 
 const user = new UserManager();

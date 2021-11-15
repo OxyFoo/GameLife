@@ -116,6 +116,12 @@
         $account = $db->Query($command);
         print_r($account->fetch_assoc());
         print_r($account);
+    } else if ($action === "error") {
+        print_r("AH");
+        //trigger_error("Error", 512);
+        //$err = trigger_error("ErrorHandler", 512);
+        $err = http_response_code(500);
+        print_r($err);
     }
 
 ?>

@@ -11,6 +11,7 @@
 
     switch ($action) {
         case 'ping': $commands->Ping(); break;
+        case 'login': $commands->Login(); break;
         case 'getToken': $commands->GetToken(); break;
         case 'getInternalData': $commands->GetInternalData(); break;
         case 'getUserData': $commands->GetUserData(); break;

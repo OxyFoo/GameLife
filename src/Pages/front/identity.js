@@ -75,7 +75,7 @@ class Identity extends BackIdentity {
                         />
 
                         {/* Email */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase()+" - "+user.conn.status} />
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase() + " - " + user.server.status} />
                         <GLTextEditable
                             style={styles.value}
                             value={this.state.email}

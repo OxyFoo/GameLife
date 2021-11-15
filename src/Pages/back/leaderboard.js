@@ -14,9 +14,9 @@ class BackLeaderboard extends React.Component {
         this.loadLoaderboard();
     }
     async loadLoaderboard(week = false) {
-        const response_leaderboard = await user.conn.getLeaderboard(week);
+        const response_leaderboard = await user.server.getLeaderboard(week);
 
-        if (response_leaderboard.status === 'ok') {
+        if (response_leaderboard.status === 200) {
             this.setState({
                 self: response_leaderboard.data['self'],
                 leaderboard: response_leaderboard.data['leaderboard'],
@@ -25,7 +25,7 @@ class BackLeaderboard extends React.Component {
         }
     }
     componentDidMount() {
-        if (!user.conn.online) {
+        if (!user.server.online) {
             const title = langManager.curr['leaderboard']['alert-onlineneed-title'];
             const text = langManager.curr['leaderboard']['alert-onlineneed-text'];
             user.openPopup('ok', [ title, text ]);

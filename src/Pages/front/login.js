@@ -9,6 +9,7 @@ import langManager from '../../Managers/LangManager';
 class Login extends BackLogin {
     render() {
         const pageTitle = langManager.curr['login']['page-title'];
+        const emailTitle = langManager.curr['login']['input-email-title'];
 
         return (
             <View style={{ flex: 1 }}>
@@ -17,7 +18,7 @@ class Login extends BackLogin {
 
                 {/* Content */}
                 <View style={styles.container}>
-                    <GLText style={styles.wait} title={langManager.curr['shop']['wait']} />
+                    <GLText style={styles.wait} title={emailTitle} />
                     <TextInput
                         style={styles.input}
                         onChangeText={this.onChangeText}

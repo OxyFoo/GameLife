@@ -4,7 +4,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
-import { dateToFormatString } from '../../Functions/Functions';
+import { dateToFormatString } from '../../Functions/Time';
 
 import GLSvg from './GLSvg';
 import GLText from './GLText';

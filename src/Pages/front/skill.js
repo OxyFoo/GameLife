@@ -7,7 +7,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import BackSkill from '../back/skill';
 import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
-import { dateToFormatString } from '../../Functions/Functions';
+import { dateToFormatString } from '../../Functions/Time';
 
 class Skill extends BackSkill {
     render() {

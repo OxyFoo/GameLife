@@ -2,8 +2,10 @@ import * as React from 'react';
 import { Platform } from 'react-native';
 
 import user from '../../Managers/UserManager';
-import { random, sleep } from '../../Functions/Functions';
+import { isEmail, random, sleep } from '../../Functions/Functions';
 import { enableMorningNotifications } from '../../Functions/Notifications';
+
+const MAX_EMAIL_LENGTH = 320;
 
 class BackLogin extends React.Component {
     constructor(props) {
@@ -11,31 +13,32 @@ class BackLogin extends React.Component {
 
         this.state = {
             email: '',
-            error: false
+            error: false,
+            signinMode: false
         };
     }
 
     onChangeText = (newText) => {
         newText = newText.trim();
-        newText = newText.substring(0, Math.min(newText.length, 320));
+        if (newText.length > MAX_EMAIL_LENGTH) {
+            newText = newText.substring(0, 320);
+        }
         this.setState({ email: newText });
     }
 
-    onLogin = () => {
-        const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-        if (!this.state.email.length) {
+    onLogin = async () => {
+        const { email } = this.state;
+        if (!isEmail(email)) {
             this.setState({ error: true });
             return;
         }
 
-        if (!reg.test(this.state.email)) {
-            this.setState({ error: true });
-            return;
-        }
-
-        this.loadData();
+        const status = await user.server.Connect(email);
+        console.log(status);
+        //this.loadData();
     }
 
+    // TODO - Old function, remove it
     async loadData() {
         user.changePage('login');
         await sleep(200);
@@ -46,7 +49,7 @@ class BackLogin extends React.Component {
         user.changePage('loading', { state: 1 }, true);
 
         // Load internet data (if online)
-        await user.conn.AsyncRefreshAccount();
+        await user.server.AsyncRefreshAccount();
         await sleep(random(600, 800));
         user.changePage('loading', { state: 2 }, true);
 

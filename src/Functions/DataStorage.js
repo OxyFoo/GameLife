@@ -1,8 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { strIsJSON } from "./Functions";
 import { Request_Async } from "./Request";
 
-const STORAGE = {
+/**
+ * @typedef {Object} DataStorage_Data
+ */
+const STORAGE_KEYS = {
     USER: '@params/user',
     SETTINGS: '@params/settings',
     INTERNAL: '@params/internal',
@@ -10,50 +14,77 @@ const STORAGE = {
     ONBOARDING: '@params/onboarding',
     THEME: '@params/theme',
     DATE: '@params/date'
-}
+};
 
 class DataStorage {
-    static async Save(storageKey, data, online, token, pseudoCallback) {
-        // Local save
-        AsyncStorage.setItem(storageKey, JSON.stringify(data));
+    /**
+     * 
+     * @param {String} storageKey - Storage key
+     * @param {Object} data - Data to save (JSON object)
+     * @param {Boolean} online - If true, data will be saved online
+     *  (data will be saved locally in any case)
+     * @param {String} token - Token for online saving
+     * 
+     * @returns {Promise<Boolean>} - True if data was saved
+     */
+    static async Save(storageKey, data, online, token) {
+        let success = false;
 
-        if (online) {
+        if (strIsJSON(data)) {
+            // Local save
+            success = true;
+            const data_json = JSON.parse(data);
+            await AsyncStorage.setItem(storageKey, data_json, (err) => {
+                if (err) success = false;
+            });
+
             // Online save
-            const _data = {
-                'action': 'setUserData',
-                'token': token,
-                'data': JSON.stringify(data)
-            };
+            if (online && success) {
+                const _data = {
+                    'action': 'setUserData',
+                    'token': token,
+                    'data': data_json
+                };
 
-            // TODO - Tej ce bout de code
-            const response = await Request_Async(_data);
-            if (typeof(pseudoCallback) === 'function' && response.status === 'ok') {
-                pseudoCallback(response.data);
-            }
-            /*Request_Async(_data).then(response => {
-                if (typeof(pseudoCallback) === 'function') {
-                    const status = response.hasOwnProperty('status') ? response['status'] : '';
-                    pseudoCallback(status);
+                const response = await Request_Async(_data);
+                if (response.status === 200) {
+                    success = true;
                 }
-            });*/
+            }
         }
-    }
-    
-    static async Load(storageKey, online = false, token = '') {
-        let json;
-        // Local load
-        const localData = await AsyncStorage.getItem(storageKey);
-        if (typeof(localData) !== 'undefined' && localData != null) json = JSON.parse(localData);
 
-        if (online) {
-            // Online load
+        return success;
+    }
+
+    /**
+     * 
+     * @param {String} storageKey - Storage key
+     * @param {Boolean} online - If true, data will be loaded online
+     * @param {String} token - Token for online loading
+     * 
+     * @returns {Promise<Object>} - Data (JSON object) or null if an error occurred
+     */
+    static async Load(storageKey, online = false, token = '') {
+        let json = null;
+
+        // Local load
+        if (!online) {
+            const localData = await AsyncStorage.getItem(storageKey);
+            if (strIsJSON(localData)) {
+                json = JSON.parse(localData);
+            }
+        }
+
+        // TODO
+        // Online load
+        else {
             const data = {
                 'action': 'getUserData',
                 'token': token
             };
             const blocks = [ 'solvedAchievements' ];
             const response = await Request_Async(data);
-            if (response.status === 'ok') {
+            if (response.status === 200) {
                 if (strIsJSON(response.data)) {
                     const onlineJson = JSON.parse(response.data);
                     for (const currKey in onlineJson) {
@@ -87,5 +118,5 @@ class DataStorage {
     }
 }
 
-export { STORAGE };
+export { STORAGE_KEYS as STORAGE };
 export default DataStorage;

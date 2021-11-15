@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import { GetTimeToTomorrow } from '../../Functions/Functions';
+import { getTimeToTomorrow } from '../../Functions/Time';
 
 class BackDailyquest extends React.Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class BackDailyquest extends React.Component {
     state = {
         informations: false,
         enable: false,
-        time: GetTimeToTomorrow(),
+        time: getTimeToTomorrow(),
         selectedSkill1: undefined,
         selectedSkill2: undefined,
         daily_bonus: user.quests.dailyGetBonusCategory(),
@@ -38,7 +38,7 @@ class BackDailyquest extends React.Component {
         if (newBonus != this.state.daily_bonus) {
             this.setState({ daily_bonus: newBonus });
         }
-        this.setState({ time: GetTimeToTomorrow() });
+        this.setState({ time: getTimeToTomorrow() });
     }
 
     back = () => {

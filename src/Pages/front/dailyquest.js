@@ -3,7 +3,8 @@ import { View, StyleSheet, ScrollView, Dimensions, FlatList, TouchableOpacity } 
 
 import BackDailyquest from '../back/dailyquest';
 import { GLButton, GLDropDown, GLHeader, GLIconButton, GLInput, GLSvg, GLText } from '../Components';
-import { GetTimeToTomorrow, isUndefined } from '../../Functions/Functions';
+import { isUndefined } from '../../Functions/Functions';
+import { getTimeToTomorrow } from '../../Functions/Time';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
@@ -185,7 +186,7 @@ class Dailyquest extends BackDailyquest {
     }
 
     render() {
-        const dailyquestTime = langManager.curr['dailyquest']['info-remain-time'] + GetTimeToTomorrow();
+        const dailyquestTime = langManager.curr['dailyquest']['info-remain-time'] + getTimeToTomorrow();
 
         return (
             <View style={{ flex: 1 }}>

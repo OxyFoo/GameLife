@@ -8,7 +8,8 @@ import themeManager from '../../Managers/ThemeManager';
 
 import BackCalendar from '../back/calendar';
 import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components';
-import { dateToFormatString, GetTimeToTomorrow } from '../../Functions/Functions';
+import { dateToFormatString } from '../../Functions/Time';
+import { getTimeToTomorrow } from '../../Functions/Time';
 
 class Calendar extends BackCalendar {
     render() {
@@ -18,7 +19,7 @@ class Calendar extends BackCalendar {
         const DTPMode = this.state.showDateTimePicker;
         const currDateTxt = dateToFormatString(this.state.currDate);
 
-        const dailyquestTime = GetTimeToTomorrow();
+        const dailyquestTime = getTimeToTomorrow();
 
         return (
             <View style={{ flex: 1 }}>

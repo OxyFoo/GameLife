@@ -225,7 +225,9 @@
     },
 
     "login": {
-        "page-title": "Connexion"
+        "page-title": "Connexion",
+
+        "input-email-title": "Adresse email"
     },
 
     "report": {

@@ -132,18 +132,18 @@ class BackReport extends React.Component {
 
         let data = {
             'action': 'report',
-            'token': user.conn.token,
+            'token': user.server.token,
             'type': report_type,
             'data': JSON.stringify(report)
         };
 
-        const result_ping = await Request_Async(data);
-        if (result_ping.status === 'ok') {
+        const result_report = await Request_Async(data);
+        if (result_report.status === 200) {
             const title = langManager.curr['report']['alert-success-title'];
             const text = langManager.curr['report']['alert-success-text'];
             user.openPopup('ok', [ title, text ], user.backPage, false);
-        } else if (result_ping.status === 'err') {
-            console.error('Send failed: ' + result_ping.error);
+        } else {
+            console.error('Send failed: ' + result_report.status + ' - ' + result_report.data['error']);
         }
     }
 }

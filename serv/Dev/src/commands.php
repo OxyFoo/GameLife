@@ -19,8 +19,8 @@
         }
 
         /**
-         * Fonction privée qui permet de récupérer la version de l'application et le hash de la base de donnée
-         * (Hash qui est actualisé si erroné)
+         * Retrieve the application version and the database hash
+         * (Hash that is updated if old)
          */
         private function GetAppData() {
             $appData = array('Version' => 0, 'DBHash' => '');
@@ -60,9 +60,9 @@
         }
 
         /**
-         * Fonction pour ping le serveur depuis l'app
-         * Elle permet également de stocker l'appareil dans la base de donnée (modèle + OS)
-         * Et de vérifier la version de l'application
+         * Function to ping the server from the app
+         * It also allows to store the device in the database (model + OS)
+         * And to check the application version
          */
         public function Ping() {
             $appData = $this->GetAppData();
@@ -87,8 +87,8 @@
         }
 
         /**
-         * Fonction qui permet de récupérer un token pour l'application, qui permet d'identifier l'utilisateur
-         * Permet de définir l'état du compte utilisateur (wait mail, ban, etc)
+         * Retrieve a token for the application, which identifies the user
+         * Define the status of the user account (wait mail, ban, etc.)
          */
         public function GetToken() {
             $deviceIdentifier = $this->data['deviceID'];
@@ -105,19 +105,19 @@
                 $perm = $this->db->CheckDevicePermissions($deviceID, $account);
                 if ($perm === -1) {
                     // Blacklisted
-                    $this->output['state'] = 'blacklist';
+                    $this->output['status'] = 'blacklist';
                 } else if ($perm === 0) {
                     // Waiting mail confirmation
-                    $this->output['state'] = 'waitMailConfirmation';
+                    $this->output['status'] = 'waitMailConfirmation';
                 } else if ($perm === 1) {
                     if ($account['Banned'] == 0) {
                         // OK
                         $accountID = $account['ID'];
                         $this->db->RefreshLastDate($accountID);
                         $this->output['token'] = $this->db->GeneratePrivateToken($accountID, $deviceID);
-                        $this->output['state'] = 'ok';
+                        $this->output['status'] = 'ok';
                     } else {
-                        $this->output['state'] = 'ban';
+                        $this->output['status'] = 'ban';
                     }
                 } else {
                     // No device in account
@@ -126,14 +126,14 @@
                     $this->db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
                     $this->db->RefreshToken($deviceID);
                     $this->db->SendMail($email, $deviceID, $accountID, $lang);
-                    $this->output['state'] = 'signin';
+                    $this->output['status'] = 'signin';
                 }
             }
         }
 
         /**
-         * Fonction qui permet de récupérer toutes les données interne de l'application si il ne les a
-         * à savoir : les activités, les citations, les icones, les titres, succès etc
+         * Recover all the internal data of the application if it has them
+         * namely: activities, quotes, icons, titles, successes etc.
          */
         public function GetInternalData() {
             $lang = $this->data['lang'];
@@ -155,7 +155,7 @@
         }
 
         /**
-         * Récupère les données de l'utilisateur (activités, pseudo, succès, etc)
+         * Retrieves user data (activities, nickname, successes, etc)
          */
         public function GetUserData() {
             $token = $this->data['token'];
@@ -183,7 +183,7 @@
         }
 
         /**
-         * Définit les données de l'utilisateur (activités, pseudo, succès, etc)
+         * Defines user data (activities, nickname, successes, etc)
          */
         public function SetUserData() {
             $token = $this->data['token'];
@@ -223,9 +223,9 @@
         }
 
         /**
-         * Récupère les 100 1ers utilisateurs du leaderboard
+         * Retrieves the top 100 users from the leaderboard
          * 
-         * (Code obsolète, une seule commande SQL + formattage suffit !)
+         * (Obsolete code, one SQL command + formatting is enough!)
          */
         public function GetLeaderboard() {
             $token = $this->data['token'];
@@ -243,7 +243,7 @@
         }
 
         /**
-         * Ajoute un report dans la base de donnée
+         * Add a report to the database
          */
         public function Report() {
             $token = $this->data['token'];
@@ -268,8 +268,8 @@
         }
 
         /**
-         * Permet de renvoyer la date du serveur pour la comparer à celle de l'app,
-         * Pour éviter les changements d'heures
+         * Return the date of the server to compare it with the date of the app,
+         * To avoid time changes
          */
         public function GetDate() {
             $this->output['time'] = time();

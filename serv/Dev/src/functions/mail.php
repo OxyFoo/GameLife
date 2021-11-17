@@ -2,11 +2,10 @@
 
     $URL = "https://oxyfoo.com/App/GameLife/Dev/auth.php";
 
-    function SendSigninMail($email, $deviceName, $accept, $reject, $lang = 'fr') {
+    function SendSigninMail($email, $deviceName, $accept, $lang = 'fr') {
         global $URL;
 
         $link_accept = "$URL?data=$accept";
-        $link_reject = "$URL?data=$reject";
         
         $lang_content = file_get_contents("mail/lang.json");
         $lang_json = json_decode($lang_content);
@@ -27,7 +26,6 @@
         $message = str_replace("%bt_accept%", $bt_accept, $message);
         $message = str_replace("%bt_reject%", $bt_reject, $message);
         $message = str_replace("%link_accept%", $link_accept, $message);
-        $message = str_replace("%link_reject%", $link_reject, $message);
         $message = str_replace("%device%", $deviceName, $message);
 
         $headers = array(

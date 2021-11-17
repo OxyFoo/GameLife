@@ -1,7 +1,16 @@
 <?php
 
-    require('./src/sql.php');
+    require('./src/sql/account.php');
+    require('./src/sql/device.php');
+    require('./src/sql/user.php');
+    require('./src/sql/internalData.php');
+    require('./src/sql/sql.php');
+
+    require('./src/functions/mail.php');
+    require('./src/functions/functions.php');
+
     require('./src/add.php');
+    require('./src/config.php');
 
     class Commands {
         public function __construct($data) {
@@ -74,59 +83,69 @@
                 $osName = $this->data['deviceOSName'];
                 $osVersion = $this->data['deviceOSVersion'];
 
-                if (isset($deviceIdentifier, $deviceName)) {
-                    $device = $this->db->GetDevice($deviceIdentifier, $deviceName, $osName, $osVersion);
-                    $this->db->AddStatistic($device['ID']);
-                    $this->output['state'] = 'ok';
+                if (isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
+                    $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+                    if ($device === NULL) {
+                        $device = Device::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
+                    }
+                    if ($device === NULL) {
+                        $this->output['status'] = 'error';
+                    } else {
+                        Device::Refresh($this->db, $device, $osName, $osVersion);
+                        Device::AddStatistic($this->db, $device);
+                        $this->output['status'] = 'ok';
+                    }
                 }
             } else if ($serverVersion < $appData) {
-                $this->output['state'] = 'nextUpdate';
+                $this->output['status'] = 'downdate';
             } else {
-                $this->output['state'] = 'update';
+                $this->output['status'] = 'update';
             }
         }
 
         /**
-         * Retrieve a token for the application, which identifies the user
-         * Define the status of the user account (wait mail, ban, etc.)
+         * Get the status of the user account (wait mail, ban, etc.)
          */
-        public function GetToken() {
+        public function Login() {
             $deviceIdentifier = $this->data['deviceID'];
             $deviceName = $this->data['deviceName'];
             $email = $this->data['email'];
             $lang = $this->data['lang'];
 
             if (isset($deviceIdentifier, $deviceName, $email, $lang)) {
-                $account = $this->db->GetAccountByEmail($email);
-                $device = $this->db->GetDevice($deviceIdentifier, $deviceName);
+                $account = Account::GetByEmail($this->db, $email);
+                $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+
+                if ($account === NULL) {
+                    $this->output['status'] = 'free';
+                    return;
+                }
 
                 // Check permissions
                 $deviceID = $device['ID'];
-                $perm = $this->db->CheckDevicePermissions($deviceID, $account);
-                if ($perm === -1) {
-                    // Blacklisted
-                    $this->output['status'] = 'blacklist';
-                } else if ($perm === 0) {
-                    // Waiting mail confirmation
-                    $this->output['status'] = 'waitMailConfirmation';
-                } else if ($perm === 1) {
-                    if ($account['Banned'] == 0) {
-                        // OK
+                $perm = Account::CheckDevicePermissions($deviceID, $account);
+                switch ($perm) {
+                    case 0: // OK
+                        if ($account['Banned'] != 0) {
+                            $this->output['status'] = 'ban';
+                            break;
+                        }
                         $accountID = $account['ID'];
-                        $this->db->RefreshLastDate($accountID);
+                        Account::RefreshLastDate($this->db, $accountID);
                         $this->output['token'] = $this->db->GeneratePrivateToken($accountID, $deviceID);
                         $this->output['status'] = 'ok';
-                    } else {
-                        $this->output['status'] = 'ban';
-                    }
-                } else {
-                    // No device in account
-                    $accountID = $account['ID'];
-                    $this->db->RefreshLastDate($accountID);
-                    $this->db->AddDeviceAccount($deviceID, $account, 'DevicesWait');
-                    $this->db->RefreshToken($deviceID);
-                    $this->db->SendMail($email, $deviceID, $accountID, $lang);
-                    $this->output['status'] = 'signin';
+                        break;
+                    case 1: // Wait mail confirmation
+                        $this->output['status'] = 'waitMailConfirmation';
+                        break;
+                    default: // Device isn't in account
+                        $accountID = $account['ID'];
+                        Account::RefreshLastDate($this->db, $accountID);
+                        Account::AddDevice($this->db, $deviceID, $account, 'DevicesWait');
+                        Device::RefreshToken($this->db, $deviceID);
+                        $this->db->SendMail($email, $deviceID, $accountID, $lang);
+                        $this->output['status'] = 'signin';
+                        break;
                 }
             }
         }
@@ -164,7 +183,7 @@
                 $accountID = $dataFromToken['accountID'];
     
                 if (isset($accountID)) {
-                    $account = $this->db->GetAccountByID($accountID);
+                    $account = Account::GetByID($this->db, $accountID);
                     $username = $account['Username'];
                     $title = $account['Title'];
                     $userData = $this->db->Decrypt($account['Data']);
@@ -191,7 +210,7 @@
             if (isset($token, $userData)) {
                 $dataFromToken = $this->db->GetDataFromToken($token);
                 $accountID = $dataFromToken['accountID'];
-                $account = $this->db->GetAccountByID($accountID);
+                $account = Account::GetByID($this->db, $accountID);
     
                 if (isset($account, $userData)) {
                     // Get & remove user from data
@@ -233,7 +252,7 @@
             if (isset($token)) {
                 $dataFromToken = $this->db->GetDataFromToken($token);
                 $accountID = $dataFromToken['accountID'];
-                $account = $this->db->GetAccountByID($accountID);
+                $account = Account::GetByID($this->db, $accountID);
                 if (isset($account)) {
                     $this->output['self'] = GetSelfPosition($this->db, $account, $time);
                 }

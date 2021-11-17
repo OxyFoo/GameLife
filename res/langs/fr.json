@@ -204,8 +204,6 @@
         "alert-incorrectemail-text": "Veuillez entrer une adresse email correcte.",
         "alert-sendemail-title": "Email de vérification",
         "alert-sendemail-text": "Un email de vérification vous a été envoyé !",
-        "alert-blacklist-title": "Blacklisté !",
-        "alert-blacklist-text": "Cet appareil a été blacklisté, veuillez utiliser une autre adresse mail pour vous connecter.",
         "alert-wrongpseudo-title": "Pseudo réservé",
         "alert-wrongpseudo-text": "Ce pseudo est déjà utilisé, veuillez en choisir un autre.",
         "alert-wrongtimingpseudo-title": "Erreur",
@@ -225,9 +223,14 @@
     },
 
     "login": {
-        "page-title": "Connexion",
+        "page-title": "Yo",
+        "page-text": "Bonjours à toi, joueur de ta propre vie, viens rejoindre la communoté des LVL-UP",
 
-        "input-email-title": "Adresse email"
+        "input-email-title": "Adresse email",
+        "input-pseudo-title": "Pseudo",
+        "input-cgu-text": "CGU blablabla",
+        "button-login-text": "Se connecter",
+        "button-signin-text": "S'inscrire"
     },
 
     "report": {

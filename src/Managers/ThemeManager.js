@@ -9,8 +9,7 @@ class ThemeManager {
             xpBar: '#ECECEC',
             text: {
                 main: '#ECECEC',
-                secondary: '#C2C2C2',
-                dark: '#808080'
+                secondary: '#808080'
             }
         },
         Light: {
@@ -19,8 +18,7 @@ class ThemeManager {
             xpBar: '#ECECEC',
             text: {
                 main: '#ECECEC',
-                secondary: '#C2C2C2',
-                dark: '#808080'
+                secondary: '#808080'
             }
         }
     }

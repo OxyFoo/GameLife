@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Animated } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import { isEmail, random, sleep } from '../../Functions/Functions';
+import { OptionsAnimation } from '../../Functions/Animations';
 import { enableMorningNotifications } from '../../Functions/Notifications';
 
 const MAX_EMAIL_LENGTH = 320;
+const MAX_PSEUDO_LENGTH = 32;
 
 class BackLogin extends React.Component {
     constructor(props) {
@@ -13,17 +15,29 @@ class BackLogin extends React.Component {
 
         this.state = {
             email: '',
-            error: false,
-            signinMode: false
+            errorEmail: false,
+            pseudo: '',
+            errorPseudo: false,
+            signinMode: false,
+
+            animSignin: new Animated.Value(0)
         };
     }
 
-    onChangeText = (newText) => {
+    onChangeEmail = (newText) => {
         newText = newText.trim();
         if (newText.length > MAX_EMAIL_LENGTH) {
-            newText = newText.substring(0, 320);
+            newText = newText.substring(0, MAX_EMAIL_LENGTH);
         }
         this.setState({ email: newText });
+    }
+
+    onChangePseudo = (newText) => {
+        newText = newText.trim();
+        if (newText.length > MAX_PSEUDO_LENGTH) {
+            newText = newText.substring(0, MAX_PSEUDO_LENGTH);
+        }
+        this.setState({ pseudo: newText });
     }
 
     onLogin = async () => {
@@ -34,8 +48,17 @@ class BackLogin extends React.Component {
         }
 
         const status = await user.server.Connect(email);
+        if (status === 'free') {
+            this.setState({ signinMode: true });
+            OptionsAnimation(this.state.animSignin, 1, 400, false).start();
+        }
         console.log(status);
         //this.loadData();
+    }
+
+    onBack = () => {
+        OptionsAnimation(this.state.animSignin, 0, 400, false).start();
+        this.setState({ signinMode: false });
     }
 
     // TODO - Old function, remove it

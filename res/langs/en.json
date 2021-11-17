@@ -204,8 +204,6 @@
         "alert-incorrectemail-text": "Please enter a valid email address.",
         "alert-sendemail-title": "Verification email",
         "alert-sendemail-text": "A verification email has been sent to you!",
-        "alert-blacklist-title": "Blacklisted!",
-        "alert-blacklist-text": "This device has been blacklisted, please use another email address to connect.",
         "alert-wrongpseudo-title": "Reserved nickname",
         "alert-wrongpseudo-text": "This nickname is already in use, please choose another one.",
         "alert-wrongtimingpseudo-title": "Error",
@@ -225,9 +223,14 @@
     },
 
     "login": {
-        "page-title": "Login",
+        "page-title": "Yo",
+        "page-text": "Hello to you, player of your own life, come and join the LVL-UP community",
 
-        "input-email-title": "Email address"
+        "input-email-title": "Email address",
+        "input-pseudo-title": "Pseudo",
+        "input-cgu-text": "CGU blablabla",
+        "button-login-text": "Login",
+        "button-signin-text": "Signin"
     },
 
     "report": {

@@ -11,7 +11,7 @@ const TIMER_SHORT = 10 * 1000;
 const STATUS = {
     OFFLINE  : 'offline',
     CONNECTED: 'ok',
-    BLACKLIST: 'blacklist',
+    FREE     : 'free',
     WAITMAIL : 'waitMailConfirmation',
     BANNED   : 'ban',
     SIGNIN   : 'signin',
@@ -50,12 +50,12 @@ class Server {
     Ping = async () => {
         const result_ping = await this.reqPing();
         if (result_ping.status === 200) {
-            const state = result_ping.data['state'];
-            if (state === 'update') {
+            const status = result_ping.data['status'];
+            if (status === 'update') {
                 const title = langManager.curr['home']['alert-update-title'];
                 const text = langManager.curr['home']['alert-update-text'];
                 this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
-            } else if (state === 'nextUpdate') {
+            } else if (status === 'downdate') {
                 this.online = false;
                 const title = langManager.curr['home']['alert-newversion-title'];
                 const text = langManager.curr['home']['alert-newversion-text'];
@@ -142,10 +142,6 @@ class Server {
                         this.token = token;
                         await this.user.loadData(true);
                     }
-                } else if (this.status === STATUS.BLACKLIST) {
-                    const title = langManager.curr['identity']['alert-blacklist-title'];
-                    const text = langManager.curr['identity']['alert-blacklist-text'];
-                    this.user.openPopup('ok', [ title, text ], this.user.disconnect, false);
                 } else {
                     this.token = '';
                     const time = [ STATUS.SIGNIN, STATUS.WAITMAIL ].includes(this.status) ? TIMER_SHORT : TIMER_LONG;

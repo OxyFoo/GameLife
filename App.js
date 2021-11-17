@@ -8,6 +8,8 @@ import { checkDate } from './src/Tools/DateCheck';
 
 class App extends React.Component {
     componentDidMount() {
+        // TODO - Wait
+        user.server.Ping();
         user.changePage('login');
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
     }

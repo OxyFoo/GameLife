@@ -6,6 +6,7 @@ import { GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 
 class Leaderboard extends BackLeaderboard {
     userBoard(props) {
@@ -32,7 +33,7 @@ class Leaderboard extends BackLeaderboard {
 
     userComponent({ item, index }) {
         const pseudo = item.Username;
-        const title = user.getTitleByID(parseInt(item.Title));
+        const title = dataManager.titles.getTitleByID(parseInt(item.Title));
         const xp = item.XP;
 
         return (
@@ -70,7 +71,7 @@ class Leaderboard extends BackLeaderboard {
                     <this.userBoard
                         self={true}
                         pseudo={user.pseudo}
-                        title={user.title === 0 ? '' : user.getTitleByID(user.title)}
+                        title={user.title === 0 ? '' : dataManager.titles.getTitleByID(user.title)}
                         xp={user.xp}
                         position={this.state.self}
                     />

@@ -1,5 +1,6 @@
 import { UserManager } from "../Managers/UserManager";
 import { isUndefined } from "../Functions/Functions";
+import dataManager from "../Managers/DataManager";
 
 class Activity {
     skillID = 0;
@@ -17,7 +18,7 @@ class Activities {
         /**
          * @type {Array<Activity>}
          */
-        activities = [];
+        this.activities = [];
     }
 
     /**
@@ -38,8 +39,8 @@ class Activities {
         for (let a in this.activities) {
             let activity = this.activities[a];
             let skillID = activity.skillID;
-            const skill = this.user.skills.getByID(skillID);
-            if (typeof(skill) === 'undefined') {
+            const skill = dataManager.skills.getByID(skillID);
+            if (skill === null) {
                 this.Remove(activity);
                 this.removeDeletedSkillsActivities();
                 break;

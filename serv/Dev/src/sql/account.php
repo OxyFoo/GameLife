@@ -49,7 +49,7 @@
             }
         }
 
-        public static function RemDeviceAccount($db, $deviceID, $account, $cellName) {
+        public static function RemDevice($db, $deviceID, $account, $cellName) {
             $accountID = $account['ID'];
             $cell = explode(',', $account[$cellName]);
             if (!in_array($deviceID, $cell)) {
@@ -65,12 +65,12 @@
 
         /**
          * Return :
+         *      -1   : Not found / Error
          *      0    : OK
          *      1    : Wait mail confirmation
-         *      NULL : Not found / Error
          */
         public static function CheckDevicePermissions($deviceID, $account) {
-            $output = NULL;
+            $output = -1;
             $devices = explode(',', $account['Devices']);
             $devicesWait = explode(',', $account['DevicesWait']);
 

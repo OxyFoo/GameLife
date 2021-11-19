@@ -1,5 +1,4 @@
 import DataStorage, { STORAGE } from '../Functions/DataStorage';
-import { isUndefined } from '../Functions/Functions';
 
 class ThemeManager {
     THEMES = {
@@ -29,30 +28,12 @@ class ThemeManager {
     // Get the color of the theme
     colors = this.THEMES[this.selectedTheme];
 
-    constructor() {
-        this.loadTheme();
-    }
-
-    async loadTheme() {
-        const data = await DataStorage.Load(STORAGE.THEME, false);
-        if (data !== null && data.hasOwnProperty('theme')) {
-            const currentTheme = data['theme'];
-            this.setTheme(currentTheme, false);
-        }
-    }
-
-    saveTheme() {
-        const data = { 'theme': this.selectedTheme };
-        DataStorage.Save(STORAGE.THEME, data, false);
-    }
-
-    setTheme(theme, save = true) {
+    setTheme(theme) {
         let output = false;
         if (this.isTheme(theme)) {
             output = true;
             this.selectedTheme = theme;
             this.colors = this.THEMES[theme];
-            if (save) this.saveTheme();
         }
         return output;
     }

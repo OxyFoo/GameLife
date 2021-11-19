@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import BackHome from '../back/home';
@@ -35,7 +36,7 @@ class Home extends BackHome {
                     <View style={styles.containerHeader}>
                         <TouchableOpacity style={styles.containerUserName} activeOpacity={.5} onPress={this.openIdentity}>
                             <GLText title={user.pseudo} style={styles.pseudo} />
-                            {user.title != 0 && (<GLText title={user.getTitleByID(user.title)} style={styles.title} />)}
+                            {user.title != 0 && (<GLText title={dataManager.titles.getTitleByID(user.title)} style={styles.title} />)}
                         </TouchableOpacity>
                         <GLXPBar value={XP} max={nextLvlXP} style={styles.containerUserXP} />
                     </View>
@@ -66,7 +67,7 @@ class Home extends BackHome {
                                         data={this.activities}
                                         keyExtractor={(item, i) => 'activity_' + i}
                                         renderItem={({item}) => {
-                                            const skill = user.skills.getByID(item.skillID);
+                                            const skill = dataManager.skills.getByID(item.skillID);
                                             const date = new Date(item.startDate);
                                             const dateText = dateToFormatString(date);
                                             const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + item.duration + 'm';
@@ -113,10 +114,10 @@ class Home extends BackHome {
                             renderItem={({item}) => {
                                 let xml = '';
                                 if (item.key !== -1) {
-                                    const skill = user.skills.getByID(item.key);
+                                    const skill = dataManager.skills.getByID(item.key);
                                     let logoID = skill.LogoID;
                                     if (logoID != 0) {
-                                        xml = user.getXmlByLogoID(logoID);
+                                        xml = dataManager.skills.getXmlByLogoID(logoID);
                                     }
                                 }
 

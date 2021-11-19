@@ -41,7 +41,7 @@ class Settings extends BackSettings {
                         <>
                             <GLText style={styles.title} title={langManager.curr['settings']['input-morningnotifications'].toUpperCase()} />
                             <GLDropDown
-                                value={this.enabledOrNot[user.morningNotifications ? 1 : 0].value || ''}
+                                value={this.enabledOrNot[user.settings.morningNotifications ? 1 : 0].value || ''}
                                 data={this.enabledOrNot}
                                 onSelect={this.changeMorningNotifications}
                             />
@@ -55,12 +55,10 @@ class Settings extends BackSettings {
                     </TouchableOpacity> */}
 
                     {/* Disconnect */}
-                    {user.isConnected() && (
-                        <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.deconnect}>
-                            <GLText style={styles.title} title={langManager.curr['settings']['input-disconnect'].toUpperCase()} />
-                            <GLIconButton icon='signout' />
-                        </TouchableOpacity>
-                    )}
+                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.deconnect}>
+                        <GLText style={styles.title} title={langManager.curr['settings']['input-disconnect'].toUpperCase()} />
+                        <GLIconButton icon='signout' />
+                    </TouchableOpacity>
 
                     {/* Reset all
                     <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.clear}>

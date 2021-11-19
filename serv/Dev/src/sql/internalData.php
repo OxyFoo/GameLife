@@ -2,59 +2,14 @@
 
     function GetAllInternalData($db, $lang = 'fr') {
         $db_all = array();
+        $db_all['achievements'] = GetAchievements($db, $lang);
+        $db_all['categories'] = GetCategories($db, $lang);
+        $db_all['contributors'] = GetContributors($db, $lang);
         $db_all['quotes'] = GetQuotes($db, $lang);
-        $db_all['titles'] = GetTitles($db, $lang);
         $db_all['skills'] = GetSkills($db, $lang);
         $db_all['skillsIcon'] = GetSkillsIcon($db);
-        $db_all['achievements'] = GetAchievements($db, $lang);
-        $db_all['helpers'] = GetContributors($db, $lang);
+        $db_all['titles'] = GetTitles($db, $lang);
         return $db_all;
-    }
-
-    function GetQuotes($db, $lang = 'fr') {
-        $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
-        $validQuotes = array();
-        if ($quotes !== FALSE) {
-            for ($q = 0; $q < count($quotes); $q++) {
-                $Lang = $quotes[$q]["Lang"];
-                $Quote = $quotes[$q]["Quote"];
-                $Author = $quotes[$q]["Author"];
-                if (areSet([$Lang, $Quote, $Author])) {
-                    if ($Lang == $lang) {
-                        array_push($validQuotes, $quotes[$q]);
-                    } else if ($lang === 'fr' && $Lang === 'en') {
-                        $add = rand(0, 20) === 0;
-                        if ($add) {
-                            array_push($validQuotes, $quotes[$q]);
-                        }
-                    }
-                }
-            }
-        }
-        return $validQuotes;
-    }
-
-    function GetTitles($db, $lang = 'fr') {
-        $titles = $db->QueryArray("SELECT * FROM `Titles`");
-
-        if ($titles === FALSE) {
-            return array();
-        }
-
-        // Translations
-        for ($i = 0; $i < count($titles); $i++) {
-            $Translations = $titles[$i]["Translations"];
-            unset($titles[$i]["Translations"]);
-
-            if (isJson($Translations)) {
-                $jsonTranslations = json_decode($Translations);
-                if (!empty($jsonTranslations->$lang)) {
-                    $titles[$i]["Title"] = $jsonTranslations->$lang;
-                }
-            }
-        }
-
-        return $titles;
     }
 
     function GetAchievements($db, $lang = 'fr') {
@@ -86,6 +41,95 @@
         }
 
         return $achievements;
+    }
+
+    function GetCategories($db, $lang = 'fr') {
+        $categories = $db->QueryArray("SELECT * FROM `Categories`");
+
+        if ($categories === FALSE) {
+            return array();
+        }
+
+        // Translations
+        for ($i = 0; $i < count($categories); $i++) {
+            $Translations = $categories[$i]["Translations"];
+            unset($categories[$i]["Translations"]);
+
+            if (isJson($Translations)) {
+                $jsonTranslations = json_decode($Translations);
+                if (!empty($jsonTranslations->$lang)) {
+                    $categories[$i]["Name"] = $jsonTranslations->$lang;
+                }
+            }
+        }
+
+        return $categories;
+    }
+
+    function GetContributors($db, $lang) {
+        $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
+
+        if ($helpers === FALSE) {
+            return array();
+        }
+
+        $helpers_sorted = array();
+        $helpers_count = count($helpers);
+
+        // Sort
+        $priority = 0;
+        while (!!count($helpers)) {
+            $founded = 0;
+            for ($i = 0; $i < count($helpers); $i++) {
+                if ($helpers[$i]["Priority"] == $priority) {
+                    array_push($helpers_sorted, $helpers[$i]);
+                    array_splice($helpers, $i, 1);
+                    $founded = 1;
+                    break;
+                }
+            }
+            if (!$founded) {
+                $priority++;
+            }
+        }
+
+        // Translations
+        for ($i = 0; $i < $helpers_count; $i++) {
+            $Translations = $helpers_sorted[$i]["TypeTrad"];
+            unset($helpers_sorted[$i]["TypeTrad"]);
+            unset($helpers_sorted[$i]["Priority"]);
+
+            if (isJson($Translations)) {
+                $jsonTranslations = json_decode($Translations);
+                if (!empty($jsonTranslations->$lang)) {
+                    $helpers_sorted[$i]["Type"] = $jsonTranslations->$lang;
+                }
+            }
+        }
+        return $helpers_sorted;
+    }
+
+    function GetQuotes($db, $lang = 'fr') {
+        $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
+        $validQuotes = array();
+        if ($quotes !== FALSE) {
+            for ($q = 0; $q < count($quotes); $q++) {
+                $Lang = $quotes[$q]["Lang"];
+                $Quote = $quotes[$q]["Quote"];
+                $Author = $quotes[$q]["Author"];
+                if (areSet([$Lang, $Quote, $Author])) {
+                    if ($Lang == $lang) {
+                        array_push($validQuotes, $quotes[$q]);
+                    } else if ($lang === 'fr' && $Lang === 'en') {
+                        $add = rand(0, 20) === 0;
+                        if ($add) {
+                            array_push($validQuotes, $quotes[$q]);
+                        }
+                    }
+                }
+            }
+        }
+        return $validQuotes;
     }
 
     function GetSkills($db, $lang = 'fr') {
@@ -132,28 +176,6 @@
                     continue;
                 }
 
-                // Set category & translations
-                unset($skills[$i]["CategoryID"]);
-                for ($c = 0; $c < count($categories); $c++) {
-                    if ($categories[$c]["ID"] == $CategoryID) {
-                        $categoryName = $categories[$c]["Name"];
-                        $categoryTrans = $categories[$c]["Translations"];
-                        if (isJson($categoryTrans)) {
-                            $trans = json_decode($categoryTrans);
-                            if (!empty($trans->$lang)) {
-                                $categoryName = $trans->$lang;
-                            }
-                        }
-                        $skills[$i]["Category"] = $categoryName;
-                        break;
-                    }
-                }
-
-                // Verification (2)
-                if (empty($skills[$i]["Category"])) {
-                    continue;
-                }
-
                 // Name translations
                 $Translations = $skills[$i]["Translations"];
                 unset($skills[$i]["Translations"]);
@@ -187,50 +209,38 @@
         return $skills_sorted;
     }
 
-    function GetContributors($db, $lang) {
-        $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
+    function GetSkillsIcon($db) {
+        $skillsIcon = $db->QueryArray("SELECT * FROM `SkillsIcon`");
+        if ($skillsIcon === FALSE) {
+            return array();
+        }
+        return $skillsIcon;
+    }
 
-        if ($helpers === FALSE) {
+    function GetTitles($db, $lang = 'fr') {
+        $titles = $db->QueryArray("SELECT * FROM `Titles`");
+
+        if ($titles === FALSE) {
             return array();
         }
 
-        $helpers_sorted = array();
-        $helpers_count = count($helpers);
-
-        // Sort
-        $priority = 0;
-        while (!!count($helpers)) {
-            $founded = 0;
-            for ($i = 0; $i < count($helpers); $i++) {
-                if ($helpers[$i]["Priority"] == $priority) {
-                    array_push($helpers_sorted, $helpers[$i]);
-                    array_splice($helpers, $i, 1);
-                    $founded = 1;
-                    break;
-                }
-            }
-            if (!$founded) {
-                $priority++;
-            }
-        }
-
         // Translations
-        for ($i = 0; $i < $helpers_count; $i++) {
-            $Translations = $helpers_sorted[$i]["TypeTrad"];
-            unset($helpers_sorted[$i]["TypeTrad"]);
-            unset($helpers_sorted[$i]["Priority"]);
+        for ($i = 0; $i < count($titles); $i++) {
+            $Translations = $titles[$i]["Translations"];
+            unset($titles[$i]["Translations"]);
 
             if (isJson($Translations)) {
                 $jsonTranslations = json_decode($Translations);
                 if (!empty($jsonTranslations->$lang)) {
-                    $helpers_sorted[$i]["Type"] = $jsonTranslations->$lang;
+                    $titles[$i]["Title"] = $jsonTranslations->$lang;
                 }
             }
         }
-        return $helpers_sorted;
+
+        return $titles;
     }
 
-    function GetSelfPosition($db, $account, $time) {
+    /*function GetSelfPosition($db, $account, $time) {
         $position = 0;
         $accountID = $account['ID'];
         $users = $db->QueryArray("SELECT * FROM `Users`");
@@ -285,14 +295,6 @@
         }
 
         return $topUsers;
-    }
-
-    function GetSkillsIcon($db) {
-        $skillsIcon = $db->QueryArray("SELECT * FROM `SkillsIcon`");
-        if ($skillsIcon === FALSE) {
-            return array();
-        }
-        return $skillsIcon;
-    }
+    }*/
 
 ?>

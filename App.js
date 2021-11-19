@@ -8,9 +8,7 @@ import { checkDate } from './src/Tools/DateCheck';
 
 class App extends React.Component {
     componentDidMount() {
-        // TODO - Wait
-        user.server.Ping();
-        user.changePage('login');
+        this.startApp();
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
     }
 
@@ -31,6 +29,21 @@ class App extends React.Component {
     }
 
     async startApp() {
+        await user.settings.Load();
+        await user.server.Ping();
+
+        const email = user.settings.email;
+        const online = user.server.online;
+        const connected = user.settings.connected;
+        if (email === '') {
+            if (online) user.changePage('login');
+            else        user.changePage('waitinternet');
+        } else {
+            if (connected) user.changePage('loading');
+            else           user.changePage('waitmail');
+        }
+        return;
+
         let onboardingWatched = false;
         console.log("AH");
         const data = await DataStorage.Load(STORAGE.ONBOARDING, false);

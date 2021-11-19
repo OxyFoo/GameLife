@@ -6,13 +6,14 @@ import { GLText, GLLoading } from '../Components';
 
 class Loading extends BackLoading {
     render() {
-        const state = typeof(this.props.args['state']) === 'number' ? this.props.args['state'] : 0;
+        const { icon, quote, author } = this.state;
+        // TODO - Add date
 
         return (
             <View style={styles.content}>
-                <GLLoading state={state} />
-                <GLText style={styles.citation} title={this.state.quote} />
-                <GLText style={styles.author} title={this.state.author} />
+                <GLLoading state={icon} />
+                <GLText style={styles.citation} title={quote} />
+                <GLText style={styles.author} title={author} />
             </View>
         )
     }

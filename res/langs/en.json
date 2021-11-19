@@ -190,8 +190,6 @@
         "value-totaltime": "{}h {}m",
 
         "placeholder-pseudo": "Pseudo",
-        "placeholder-email": "Mail adress",
-        "empty-email": "None",
         "empty-title": "None",
 
         "name-lastachievement": "Last achievement",
@@ -200,10 +198,6 @@
         "alert-pseudolimit-text": "You can only change your nickname once every {} days, so choose wisely!",
         "alert-pseudowait-title": "Username already changed",
         "alert-pseudowait-text": "You must wait {} days before you can change it again.",
-        "alert-incorrectemail-title": "Error",
-        "alert-incorrectemail-text": "Please enter a valid email address.",
-        "alert-sendemail-title": "Verification email",
-        "alert-sendemail-text": "A verification email has been sent to you!",
         "alert-wrongpseudo-title": "Reserved nickname",
         "alert-wrongpseudo-text": "This nickname is already in use, please choose another one.",
         "alert-wrongtimingpseudo-title": "Error",
@@ -228,9 +222,16 @@
 
         "input-email-title": "Email address",
         "input-pseudo-title": "Pseudo",
-        "input-cgu-text": "CGU blablabla",
+        "input-cgu-text": "I have read and agree to the %.",
+        "input-cgu-click": "terms and conditions",
         "button-login-text": "Login",
-        "button-signin-text": "Signin"
+        "button-signin-text": "Signin",
+
+        "error-login-nonmail": "Please enter a valid email address.",
+        "error-signin-server": "An error has occurred.",
+        "error-signin-pseudoWrong": "Please enter a correct pseudo.",
+        "error-signin-pseudoUsed": "This pseudo is already in use.",
+        "error-signin-disagree": "Please accept the terms and conditions."
     },
 
     "report": {
@@ -341,5 +342,11 @@
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
             "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision tasks, writing tasks on a computer or even with musical instruments."
         }
+    },
+
+    "waitmail": {
+        "page-title": "",
+
+        "text-wait": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam."
     }
 }

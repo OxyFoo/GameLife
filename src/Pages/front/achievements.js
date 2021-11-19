@@ -13,7 +13,7 @@ class Achievements extends BackAchievements {
         const achievement = item;
         const name = achievement.Name;
         const description = achievement.Description;
-        const style = user.solvedAchievements.includes(parseInt(achievement.ID)) ?
+        const style = user.achievements.solved.includes(parseInt(achievement.ID)) ?
                       [styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }] :
                       [styles.achievementsBox, styles.unsolved, { backgroundColor: themeManager.colors['globalBackcomponent'] }];
 

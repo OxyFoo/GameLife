@@ -120,7 +120,7 @@ class GLPopup extends React.PureComponent {
                     style={styles.input}
                     onChangeText={editInput}
                     value={this.state.input}
-                    placeholder={langManager.curr['identity']['placeholder-email']}
+                    placeholder={'Email'}
                     placeholderTextColor='#C2C2C2'
                     autoFocus={true}
                 />

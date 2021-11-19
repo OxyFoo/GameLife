@@ -14,7 +14,6 @@ class BackIdentity extends React.Component {
     state = {
         pseudo: user.pseudo,
         birth: user.birth,
-        email: user.email,
         title: user.title,
 
         loading: false,
@@ -25,27 +24,14 @@ class BackIdentity extends React.Component {
 
     back = () => { user.backPage(); }
     async valid() {
-        // Check mail
-        //if (!([ '', user.email ].includes(this.state.email))) {
-        if (this.state.email !== '' && this.state.email !== user.email) {
-            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-            if (reg.test(this.state.email) === false) {
-                const title = langManager.curr['identity']['alert-incorrectemail-title'];
-                const text = langManager.curr['identity']['alert-incorrectemail-text'];
-                user.openPopup('ok', [ title, text ]);
-                return;
-            }
-        }
-
         if (user.pseudo !== this.state.pseudo) {
             user.pseudo = this.state.pseudo;
         }
         user.title = this.state.title;
         user.birth = this.state.birth;
-        user.email = this.state.email;
 
         this.setState({ loading: true });
-        await user.changeUser();
+        // TODO - Save
         user.backPage();
     }
 
@@ -106,15 +92,6 @@ class BackIdentity extends React.Component {
             this.hideDTP();
             this.setState({ birth: selectedDate });
         }
-    }
-
-    // Mails
-    editMail = (newMail) => {
-        if (newMail.length > 128) {
-            return;
-        }
-
-        this.setState({ email: newMail.trim() });
     }
 
     calculateAge = (birth) => {

@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 import { getTimeToTomorrow } from '../../Functions/Time';
 
 class BackDailyquest extends React.Component {
@@ -25,7 +26,7 @@ class BackDailyquest extends React.Component {
     }
     
     componentDidMount() {
-        this.SKILLS = user.skills.getAsObj();
+        this.SKILLS = dataManager.skills.getAsObj();
         this.interval = setInterval(this.loop, 1000);
     }
     

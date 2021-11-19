@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 
 class BackCalendar extends React.Component {
     state = {
@@ -12,7 +13,7 @@ class BackCalendar extends React.Component {
 
     back = () => { user.backPage(); }
     addSkill = () => {
-        if (user.skills.getAll().length <= 1) {
+        if (dataManager.skills.getAll().length <= 1) {
             console.warn("Aucun skill !");
             return;
         }

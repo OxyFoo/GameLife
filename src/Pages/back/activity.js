@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 import { getDates, getDurations } from '../../Functions/Time';
 
 class BackActivity extends React.Component {
@@ -14,7 +15,7 @@ class BackActivity extends React.Component {
         if (this.SELECTED) {
             const activity = props.args['activity'];
             const skillID = activity.skillID;
-            const skill = user.skills.getByID(skillID);
+            const skill = dataManager.skills.getByID(skillID);
 
             const date = new Date(activity.startDate);
             const dateTxt = date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
@@ -39,9 +40,9 @@ class BackActivity extends React.Component {
             const MAX_DAYS = 2;
             const STEP_MINUTES = 15;
             const TOTAL_HOUR_DURATION = 4;
-            const SKILLS = user.skills.getAsObj();
+            const SKILLS = dataManager.skills.getAsObj();
 
-            this.CATEGORIES = user.skills.getCategories();
+            this.CATEGORIES = dataManager.skills.getCategories();
             this.DATES = getDates(MAX_DAYS, STEP_MINUTES);
             this.DURATION = getDurations(TOTAL_HOUR_DURATION, STEP_MINUTES);
             this.state = {
@@ -89,7 +90,7 @@ class BackActivity extends React.Component {
     changeCat = (categoryIndex) => {
         if (typeof(categoryIndex) !== 'number') {
             this.setState({
-                skills: user.skills.getAsObj(),
+                skills: dataManager.skills.getAsObj(),
                 selectedCategory: undefined,
                 selectedSkill: undefined
             });
@@ -97,14 +98,14 @@ class BackActivity extends React.Component {
         }
         const category = this.CATEGORIES[categoryIndex];
         this.setState({
-            skills: user.skills.getAsObj(category.value),
+            skills: dataManager.skills.getAsObj(category.value),
             selectedCategory: category,
             selectedSkill: undefined
         });
     }
     changeSkill = (skillID) => {
         const activity = { skillID: skillID };
-        const skill = user.skills.getByID(skillID);
+        const skill = dataManager.skills.getByID(skillID);
 
         // Get category ID
         let category;
@@ -119,7 +120,7 @@ class BackActivity extends React.Component {
         this.setState({
             selectedSkill: activity,
             selectedCategory: category,
-            skills: user.skills.getAsObj(category.value)
+            skills: dataManager.skills.getAsObj(category.value)
         });
     }
     changeDate = (key) => {

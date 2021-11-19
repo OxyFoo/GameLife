@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { View, Image, Button, TextInput, StyleSheet, Animated } from 'react-native';
+import { View, Text, Image, StyleSheet, Animated } from 'react-native';
+import { Button, HelperText, TextInput, Checkbox } from 'react-native-paper';
 
 import BackLogin from '../back/login';
-import { GLText } from '../Components';
 
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
@@ -13,9 +13,12 @@ class Login extends BackLogin {
         const pageText = langManager.curr['login']['page-text'];
         const emailTitle = langManager.curr['login']['input-email-title'];
         const PseudoTitle = langManager.curr['login']['input-pseudo-title'];
-        const CGUTitle = langManager.curr['login']['input-cgu-text'];
         const btnLogin = langManager.curr['login']['button-login-text'];
         const btnSignin = langManager.curr['login']['button-signin-text'];
+
+        const CGUTitle = langManager.curr['login']['input-cgu-text'];
+        const cguTexts = CGUTitle.split('%');
+        const cguClick = langManager.curr['login']['input-cgu-click'];
 
         return (
             <View style={styles.body}>
@@ -26,8 +29,8 @@ class Login extends BackLogin {
                     <Image style={{width: 196, height: 196}} source={require('../../../res/logo/login_hand.png')} />
                 </View>
 
-                <GLText style={styles.title} title={pageTitle} />
-                <GLText style={styles.text} title={pageText} color='secondary' />
+                <Text style={[styles.title, { color: themeManager.colors['text']['main'] }]}>{pageTitle}</Text>
+                <Text style={[styles.text, { color: themeManager.colors['text']['secondary'] }]}>{pageText}</Text>
 
                 {/* Content */}
                 <Animated.View
@@ -36,52 +39,111 @@ class Login extends BackLogin {
                         { height: Animated.add(86, Animated.multiply(154, this.state.animSignin)) }
                     ]}
                 >
-                    <GLText title={emailTitle} color='secondary' />
+                    {/* Email */}
                     <TextInput
-                        style={[styles.input, { borderColor: themeManager.colors['text']['secondary'] }]}
-                        onChangeText={this.onChangeEmail}
-                        value={this.state.email}
-                        placeholder={emailTitle}
-                        placeholderTextColor='#C2C2C2'
+                        mode='outlined'
+                        theme={theme}
+                        outlineColor={'#808080'}
+                        activeOutlineColor={'#9095FF'}
+                        style={styles.input}
+                        label={emailTitle}
                         textContentType='emailAddress'
-                        editable={!this.state.signinMode}
+                        value={this.state.email}
+                        onChangeText={this.onChangeEmail}
+                        disabled={this.state.signinMode}
                     />
-                    <GLText title={PseudoTitle} color='secondary' />
+                    <HelperText
+                        type="error"
+                        style={styles.helperText}
+                        visible={this.state.errorEmail.length}
+                    >
+                        {this.state.errorEmail}
+                    </HelperText>
+
+                    {/* Pseudo */}
                     <TextInput
-                        style={[styles.input, { borderColor: themeManager.colors['text']['secondary'] }]}
+                        mode='outlined'
+                        theme={theme}
+                        outlineColor={'#808080'}
+                        activeOutlineColor={'#9095FF'}
+                        style={styles.input}
                         onChangeText={this.onChangePseudo}
                         value={this.state.pseudo}
-                        placeholder={PseudoTitle}
-                        placeholderTextColor='#C2C2C2'
+                        label={PseudoTitle}
                         textContentType='emailAddress'
                     />
-                    <GLText title={CGUTitle} color='secondary' />
+                    <HelperText
+                        type="error"
+                        style={styles.helperText}
+                        visible={this.state.errorPseudo.length}
+                    >
+                        {this.state.errorPseudo}
+                    </HelperText>
+
+                    {/* CGU */}
+                    <View style={styles.cgu}>
+                        <Checkbox
+                            color={'#9095FF'}
+                            status={this.state.cguAccepted ? 'checked' : 'unchecked'}
+                            onPress={this.onChangeCGU}
+                        />
+                        <Text style={{ color: themeManager.colors['text']['secondary'] }}>
+                            <Text>{cguTexts[0]}</Text>
+                            <Text style={styles.hypertext} onPress={this.CGURedirect}>{cguClick}</Text>
+                            <Text>{cguTexts[1]}</Text>
+                        </Text>
+                    </View>
+                    <HelperText
+                        type="error"
+                        style={styles.helperText}
+                        visible={this.state.errorCgu.length}
+                    >
+                        {this.state.errorCgu}
+                    </HelperText>
                 </Animated.View>
                 <Animated.View
                     style={[
                         styles.button,
-                        { left: Animated.multiply(72, this.state.animSignin) }
+                        { left: Animated.multiply(84, this.state.animSignin) }
                     ]}
                 >
                     <Button
-                        title={this.state.signinMode ? btnSignin : btnLogin}
+                        mode="contained"
+                        color="#9095FF"
+                        contentStyle={{ height: '100%' }}
+                        labelStyle={{ color: '#FFFFFF' }}
+                        compact={false}
+                        loading={this.state.loading}
                         onPress={this.onLogin}
-                    />
+                    >
+                        {this.state.signinMode ? btnSignin : btnLogin}
+                    </Button>
                 </Animated.View>
                 <Animated.View
                     style={[
                         styles.backButton,
                         //{ left: Animated.multiply(64, this.state.animSignin) }
-                        { transform: [{ translateX: Animated.add(-72, Animated.multiply(72, this.state.animSignin)) }] }
+                        { transform: [{ translateX: Animated.add(-128, Animated.multiply(128, this.state.animSignin)) }] }
                     ]}
                 >
                     <Button
-                        title={'<-'}
+                        mode="contained"
+                        color="#9095FF"
+                        contentStyle={{ height: '100%' }}
+                        labelStyle={{ fontSize: 12, marginRight: -1, color: '#FFFFFF' }}
+                        icon={require('../../../res/icons/back.png')}
                         onPress={this.onBack}
-                    />
+                    ></Button>
                 </Animated.View>
             </View>
         )
+    }
+}
+
+const theme = {
+    colors: {
+        placeholder: 'white', text: 'white', primary: 'white',
+        underlineColor: 'transparent', background: '#0E1247'
     }
 }
 
@@ -101,12 +163,10 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     input: {
-        width: '90%',
-        marginBottom: 24,
-        color: '#FFFFFF',
-        borderWidth: 2,
-        borderRadius: 10,
-        paddingHorizontal: 18
+        width: '80%',
+    },
+    helperText: {
+        marginBottom: 4
     },
     backgroundImage: {
         width: '100%',
@@ -121,26 +181,44 @@ const styles = StyleSheet.create({
         right: 0
     },
     title: {
-        fontSize: 64,
+        fontSize: 58,
         textDecorationLine: 'underline'
     },
     text: {
         width: '90%',
-        marginVertical: '5%',
-        fontSize: 20
+        marginVertical: '4%',
+        textAlign: 'center',
+        fontSize: 16
     },
     button: {
         position: 'absolute',
+        height: 56,
         bottom: 0,
         left: 0,
         right: 0,
-        margin: 24
+        margin: 24,
+        borderRadius: 20,
+        backgroundColor: '#FFFFFF',
+        overflow: 'hidden'
     },
     backButton: {
         position: 'absolute',
-        width: 48,
+        height: 56,
+        width: 64,
         left: 24,
-        bottom: 24
+        bottom: 24,
+        borderRadius: 20,
+        overflow: 'hidden'
+    },
+    cgu: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: -12
+    },
+    hypertext: {
+        color: '#9095FF'
     }
 });
 

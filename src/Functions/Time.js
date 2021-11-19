@@ -1,3 +1,5 @@
+import { twoDigit } from "./Functions";
+
 /**
  * @param {Number} days_number
  * @param {Number} step_minutes
@@ -57,6 +59,17 @@ function getTimeToTomorrow() {
     return HH + ':' + MM;
 }
 
+function getDaysUntil(date) {
+    let days = 0;
+    if (date !== null) {
+        const today = new Date();
+        const _date = new Date(date);
+        const delta = today.getTime() - _date.getTime();
+        days = delta / (1000 * 60 * 60 * 24);
+    }
+    return days;
+}
+
 /**
  * Return date with format : dd/mm/yyyy
  * @param {Date} date
@@ -70,4 +83,5 @@ function getTimeToTomorrow() {
     return [ dd, mm, yyyy ].join('/');
 }
 
-export { getDates, getDurations, getTimeToTomorrow, dateToFormatString };
+export { getDates, getDurations,
+    getTimeToTomorrow, getDaysUntil, dateToFormatString };

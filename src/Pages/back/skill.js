@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 
 class BackSkill extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class BackSkill extends React.Component {
         }
 
         const skillID = props.args['skillID'];
-        const skill = user.skills.getByID(skillID);
+        const skill = dataManager.skills.getByID(skillID);
         const skillXP = user.experience.getSkillExperience(skillID);
 
         this.name = skill.Name;
@@ -27,7 +28,7 @@ class BackSkill extends React.Component {
             this.creator = '';
         }
         this.stats = skill.Stats;
-        this.xml = user.getXmlByLogoID(skill.LogoID);
+        this.xml = dataManager.skills.getXmlByLogoID(skill.LogoID);
         this.history = [];
         const userActivities = user.activities.getAll();
         for (let a in userActivities) {

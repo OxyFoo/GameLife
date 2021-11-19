@@ -1,4 +1,4 @@
-import { UserManager } from "../Managers/UserManager";
+import { strIsJSON } from "../Functions/Functions";
 
 class Skill {
     ID = 0;
@@ -19,13 +19,10 @@ class Skill {
 }
 
 class Skills {
-    /**
-     * Skills manager
-     * @param {UserManager} user
-     */
-    constructor(user) {
-        this.user = user;
+    constructor() {
         this.skills = [];
+        this.skillsIcons = [];
+        this.skillsCategories = [];
     }
 
     /**
@@ -34,8 +31,28 @@ class Skills {
     getAll() {
         return this.skills;
     }
+    /**
+     * @param {Object} skills 
+     */
     setAll(skills) {
         this.skills = skills;
+    }
+
+    save() {
+        const data = {
+            skills: this.skills,
+            skillsIcons: this.skillsIcons,
+            skillsCategories: this.skillsCategories
+        };
+        return JSON.stringify(data);
+    }
+    load(str) {
+        if (strIsJSON(str)) {
+            const json = JSON.parse(str);
+            this.skills = json.skills;
+            this.skillsIcons = json.skillsIcons;
+            this.skillsCategories = json.skillsCategories;
+        }
     }
 
     getAsObj(category) {
@@ -49,8 +66,12 @@ class Skills {
         return skills;
     }
 
+    /**
+     * @param {Number} ID
+     * @returns {Skill} - Return skill if exists or null
+     */
     getByID(ID) {
-        let skill;
+        let skill = null;
         const skillsFilter = this.skills.filter(skill => skill.ID === ID);
         if (skillsFilter.length > 0) {
             skill = skillsFilter[0];
@@ -59,7 +80,7 @@ class Skills {
     }
 
     getCategories(onlyUseful = false) {
-        let cats = [];
+        /*let cats = [];
         for (let i = 0; i < this.skills.length; i++) {
             let cat = this.skills[i].Category;
             // Search
@@ -90,7 +111,25 @@ class Skills {
             cats_sorted.push({ key: parseInt(c), value: cats[c] });
         }
 
-        return cats_sorted;
+        return cats_sorted;*/
+    }
+
+    /**
+     * Return XML of logo by ID
+     * @param {Number} ID
+     * @returns {String} Representation of logo (XML)
+     */
+    getXmlByLogoID = (ID) => {
+        let currXml = null;
+        for (let i = 0; i < this.skillsIcons.length; i++) {
+            const skillIcon = this.skillsIcons[i];
+            const skillIconID = skillIcon.ID;
+            if (ID == skillIconID) {
+                currXml = skillIcon.Content;
+                break;
+            }
+        }
+        return currXml;
     }
 }
 

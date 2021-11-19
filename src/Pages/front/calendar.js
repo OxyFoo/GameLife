@@ -5,6 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
+import dataManager from '../../Managers/DataManager';
 
 import BackCalendar from '../back/calendar';
 import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components';
@@ -59,7 +60,7 @@ class Calendar extends BackCalendar {
                     keyExtractor={(item, i) => 'activity_' + i}
                     renderItem={({item}) => {
                         const activity = item;
-                        const skill = user.skills.getByID(activity.skillID);
+                        const skill = dataManager.skills.getByID(activity.skillID);
                         const date = new Date(activity.startDate);
                         const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + activity.duration + 'm';
 

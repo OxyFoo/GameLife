@@ -12,11 +12,12 @@
     switch ($action) {
         case 'ping': $commands->Ping(); break;
         case 'login': $commands->Login(); break;
+        case 'signin': $commands->Signin(); break;
         case 'getToken': $commands->GetToken(); break;
         case 'getInternalData': $commands->GetInternalData(); break;
         case 'getUserData': $commands->GetUserData(); break;
         case 'setUserData': $commands->SetUserData(); break;
-        case 'getLeaderboard': $commands->GetLeaderboard(); break;
+        //case 'getLeaderboard': $commands->GetLeaderboard(); break;
         case 'report': $commands->Report(); break;
         case 'getDate': $commands->GetDate(); break;
     }

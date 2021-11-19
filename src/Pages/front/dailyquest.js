@@ -8,13 +8,14 @@ import { getTimeToTomorrow } from '../../Functions/Time';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 
 class Dailyquest extends BackDailyquest {
     content = () => {
         const define = () => {
             const define = langManager.curr['dailyquest']['daily-define-title'];
-            const skillName1 = !isUndefined(this.state.selectedSkill1) ? user.skills.getByID(this.state.selectedSkill1).Name : langManager.curr['dailyquest']['daily-define-cat1'];
-            const skillName2 = !isUndefined(this.state.selectedSkill2) ? user.skills.getByID(this.state.selectedSkill2).Name : langManager.curr['dailyquest']['daily-define-cat2'];
+            const skillName1 = !isUndefined(this.state.selectedSkill1) ? dataManager.skills.getByID(this.state.selectedSkill1).Name : langManager.curr['dailyquest']['daily-define-cat1'];
+            const skillName2 = !isUndefined(this.state.selectedSkill2) ? dataManager.skills.getByID(this.state.selectedSkill2).Name : langManager.curr['dailyquest']['daily-define-cat2'];
             const save = langManager.curr['dailyquest']['daily-define-button'];
             return (
                 <View style={{ alignItems: 'center' }}>
@@ -47,8 +48,8 @@ class Dailyquest extends BackDailyquest {
             const dailySkills = user.quests.dailyGetSkills();
             if (this.state.enable && dailySkills != null) {
                 const skillsIDs = dailySkills.skills;
-                const skillName1 = user.skills.getByID(skillsIDs[0]).Name;
-                const skillName2 = user.skills.getByID(skillsIDs[1]).Name;
+                const skillName1 = dataManager.skills.getByID(skillsIDs[0]).Name;
+                const skillName2 = dataManager.skills.getByID(skillsIDs[1]).Name;
                 skills = skillName1 + langManager.curr['dailyquest']['daily-categories-text'] + skillName2;
             }
             const title_quests = langManager.curr['dailyquest']['daily-title'];

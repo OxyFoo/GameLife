@@ -3,6 +3,7 @@ import { Linking } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 
 class BackAbout extends React.Component {
     constructor(props) {
@@ -10,8 +11,8 @@ class BackAbout extends React.Component {
 
         this.staff = [];
         this.tipeee = [];
-        for (let i = 0; i < user.contributors.length; i++) {
-            const contributor = user.contributors[i];
+        for (let i = 0; i < dataManager.contributors.length; i++) {
+            const contributor = dataManager.contributors[i];
             if (contributor.Type === 'Tipeee') this.tipeee.push(contributor);
             else this.staff.push(contributor);
         }

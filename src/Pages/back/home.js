@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import user from '../../Managers/UserManager';
+import dataManager from '../../Managers/DataManager';
 
 class BackHome extends React.Component {
     constructor(props) {
@@ -32,7 +33,7 @@ class BackHome extends React.Component {
         for (let s = 0; s < skills.length; s++) {
             const skill = skills[s];
             const skillID = skill.skillID;
-            const skillName = user.skills.getByID(skillID).Name;
+            const skillName = dataManager.skills.getByID(skillID).Name;
             const newVal = { key: skillID, value: skillName };
             this.skills.push(newVal);
         }
@@ -41,9 +42,8 @@ class BackHome extends React.Component {
         }
     }
 
-
     addSkill = () => {
-        if (user.skills.getAll().length <= 1) {
+        if (dataManager.skills.getAll().length <= 1) {
             console.warn("Aucun skill !");
             return;
         }

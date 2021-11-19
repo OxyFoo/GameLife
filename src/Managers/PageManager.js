@@ -24,6 +24,8 @@ import Shop from '../Pages/front/shop';
 import Skill from '../Pages/front/skill';
 import Skills from '../Pages/front/skills';
 import Statistic from '../Pages/front/statistic';
+import Waitinternet from '../Pages/front/waitinternet';
+import Waitmail from '../Pages/front/waitmail';
 
 class PageManager extends React.Component{
     state = {
@@ -84,28 +86,29 @@ class PageManager extends React.Component{
     }
 
     changePage = (newpage, args, ignorePath = false, forceUpdate = false) => {
-        if (this.changing) return;
+        if (this.changing) return false;
 
         if (typeof(newpage) === 'undefined' || newpage === '') {
-            this.forceUpdate(); return;
+            this.forceUpdate(); return false;
         }
 
         const newArgs = typeof(args) !== 'undefined' ? args : {};
         this.setState({ arguments: newArgs });
 
         if (!forceUpdate && newpage == (this.state.page1 || this.state.page2)) {
-            return;
+            return false;
         }
 
         if (!this.GetPageContent(newpage)) {
             console.error('Calling an incorrect page');
-            return;
+            return false;
         };
         this.changing = true;
         if (!ignorePath) {
             this.path.push([newpage, args]);
         }
         this.pageAnimation(newpage);
+        return true;
     }
 
     pageAnimation = (newpage) => {
@@ -167,6 +170,8 @@ class PageManager extends React.Component{
             case 'skill': p = <Skill args={args} />; break;
             case 'skills': p = <Skills />; break;
             case 'statistic': p = <Statistic args={args} />; break;
+            case 'waitinternet': p = <Waitinternet />; break;
+            case 'waitmail': p = <Waitmail args={args} />; break;
         }
         return p;
     }

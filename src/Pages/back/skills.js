@@ -2,12 +2,13 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 
 class BackSkills extends React.Component {
     SORT_LIST = langManager.curr['skills']['top-sort-list'];
     state = {
         search: '',
-        filters: user.skills.getCategories(true),
+        filters: dataManager.skills.getCategories(true),
         selectedFiltersIndex: [],
         sortSelectedIndex: 0,
         ascending: true,
@@ -16,7 +17,7 @@ class BackSkills extends React.Component {
 
     back = () => { user.backPage(); }
     addSkill = () => {
-        if (user.skills.getAll().length <= 1) {
+        if (dataManager.skills.getAll().length <= 1) {
             console.warn("Aucun skill !");
             return;
         }

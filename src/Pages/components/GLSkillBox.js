@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 import { dateToFormatString } from '../../Functions/Time';
 
@@ -11,7 +12,7 @@ import GLText from './GLText';
 
 function GLSkillBox(props) {
     const skillID = props.item.skillID;
-    const skill = user.skills.getByID(skillID);
+    const skill = dataManager.skills.getByID(skillID);
     const skillExperience = user.experience.getSkillExperience(skillID);
     const level = skillExperience.lvl;
     const totalXP = skillExperience.totalXP;
@@ -23,7 +24,7 @@ function GLSkillBox(props) {
     const styleContainer = [ styles.container, props.style ];
     const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
     const eventPress = () => { user.changePage('skill', { skillID: skillID }) };
-    const xml = user.getXmlByLogoID(skill.LogoID);
+    const xml = dataManager.skills.getXmlByLogoID(skill.LogoID);
 
     return (
         <View style={styleContainer}>

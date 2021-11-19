@@ -7,13 +7,13 @@ import { Request_Async } from "./Request";
  * @typedef {Object} DataStorage_Data
  */
 const STORAGE_KEYS = {
-    USER: '@params/user',
-    SETTINGS: '@params/settings',
-    INTERNAL: '@params/internal',
-    INTERNAL_HASH: '@params/internal_hash',
-    ONBOARDING: '@params/onboarding',
-    THEME: '@params/theme',
-    DATE: '@params/date'
+    USER: '@data/user',
+    SETTINGS: '@data/settings',
+    INTERNAL: '@data/internal',
+
+    INTERNAL_HASH: '@settings/internal_hash',
+    ONBOARDING: '@settings/onboarding',
+    DATE: '@tools/date'
 };
 
 class DataStorage {
@@ -30,26 +30,27 @@ class DataStorage {
     static async Save(storageKey, data, online, token) {
         let success = false;
 
-        if (strIsJSON(data)) {
-            // Local save
-            success = true;
-            const data_json = JSON.parse(data);
-            await AsyncStorage.setItem(storageKey, data_json, (err) => {
-                if (err) success = false;
-            });
+        // Local save
+        success = true;
+        const strData = JSON.stringify(data);
+        await AsyncStorage.setItem(storageKey, strData, (err) => {
+            if (err) {
+                console.error(err);
+                success = false;
+            }
+        });
 
-            // Online save
-            if (online && success) {
-                const _data = {
-                    'action': 'setUserData',
-                    'token': token,
-                    'data': data_json
-                };
+        // Online save
+        if (online && success) {
+            const _data = {
+                'action': 'setUserData',
+                'token': token,
+                'data': data
+            };
 
-                const response = await Request_Async(_data);
-                if (response.status === 200) {
-                    success = true;
-                }
+            const response = await Request_Async(_data);
+            if (response.status === 200) {
+                success = true;
             }
         }
 

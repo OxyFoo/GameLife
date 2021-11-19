@@ -1,5 +1,6 @@
 <?php
 
+    require('./src/config.php');
     require('./src/sql/account.php');
     require('./src/sql/device.php');
     require('./src/sql/user.php');
@@ -20,23 +21,26 @@
     $accountID = $data->accountID;
     $deviceID = $data->deviceID;
     $deviceToken = $data->deviceToken;
+
     if (isset($action, $accountID, $deviceID, $deviceToken)) {
         $device = Device::GetByID($db, $deviceID);
-        if ($device['Token'] === $deviceToken && ($action === 'accept' || $action === 'reject')) {
-            $account = Account::GetByID($db, $accountID);
-            $perm = Account::CheckDevicePermissions($deviceID, $account);
-            if ($perm === 0) {
-                Account::RemDevice($db, $deviceID, $account, 'DevicesWait');
-                Device::RemoveToken($db, $deviceID);
+        if ($device !== NULL) {
+            if ($device['Token'] === $deviceToken) {
                 if ($action === 'accept') {
-                    Account::AddDevice($db, $deviceID, $account, 'Devices');
-                    $state = "Accept";
+                    $account = Account::GetByID($db, $accountID);
+                    $perm = Account::CheckDevicePermissions($deviceID, $account);
+                    if ($perm === 1) {
+                        Account::RemDevice($db, $deviceID, $account, 'DevicesWait');
+                        Device::RemoveToken($db, $deviceID);
+                        Account::AddDevice($db, $deviceID, $account, 'Devices');
+                        $state = "Accept";
+                    } else {
+                        $state = "InvalidPerm";
+                    }
                 }
             } else {
-                $state = "InvalidPerm";
+                $state = "InvalidToken";
             }
-        } else {
-            $state = "InvalidToken";
         }
     }
 

@@ -4,6 +4,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import BackIdentity from '../back/identity';
@@ -27,12 +28,12 @@ class Identity extends BackIdentity {
         const totalM = ((totalDuration/60) - totalH) * 60;
         const totalLang = langManager.curr['identity']['value-totaltime'];
         const totalTxt = totalLang.replace('{}', totalH).replace('{}', totalM);
-        const title = user.getTitleByID(this.state.title) || langManager.curr['identity']['empty-title'];
+        const title = dataManager.titles.getTitleByID(this.state.title) || langManager.curr['identity']['empty-title'];
         const titles = user.getUnlockTitles();
 
         let names = [];
         let descriptions = [];
-        let solvedAchievements = [...user.solvedAchievements];
+        let solvedAchievements = [...user.achievements.solved];
         solvedAchievements.reverse();
 
         const max = Math.min(solvedAchievements.length, 3);
@@ -76,15 +77,8 @@ class Identity extends BackIdentity {
 
                         {/* Email */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase() + " - " + user.server.status} />
-                        <GLTextEditable
-                            style={styles.value}
-                            value={this.state.email}
-                            defaultValue={langManager.curr['identity']['empty-email']}
-                            onChangeText={this.editMail}
-                            textContentType="emailAddress"
-                            placeholder={langManager.curr['identity']['placeholder-email']}
-                        />
-                        
+                        <GLText style={styles.value} title={user.settings.email} />
+
                         {/* Title */}
                         <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
                         <GLDropDown

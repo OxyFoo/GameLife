@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Platform, Animated } from 'react-native';
+import { Animated, Linking } from 'react-native';
 
 import user from '../../Managers/UserManager';
-import { isEmail, random, sleep } from '../../Functions/Functions';
+import langManager from '../../Managers/LangManager';
+import { isEmail } from '../../Functions/Functions';
 import { OptionsAnimation } from '../../Functions/Animations';
-import { enableMorningNotifications } from '../../Functions/Notifications';
 
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
@@ -14,11 +14,15 @@ class BackLogin extends React.Component {
         super(props);
 
         this.state = {
-            email: '',
-            errorEmail: false,
-            pseudo: '',
-            errorPseudo: false,
+            loading: false,
             signinMode: false,
+
+            email: '',
+            pseudo: '',
+            cguAccepted: false,
+            errorEmail: '',
+            errorPseudo: '',
+            errorCgu: '',
 
             animSignin: new Animated.Value(0)
         };
@@ -40,54 +44,108 @@ class BackLogin extends React.Component {
         this.setState({ pseudo: newText });
     }
 
+    onChangeCGU = () => {
+        const { cguAccepted } = this.state;
+        this.setState({ cguAccepted: !cguAccepted });
+    }
+
+    CGURedirect() {
+        const link = 'https://google.com';
+        Linking.openURL(link);
+    }
+
     onLogin = async () => {
+        if (this.state.loading) {
+            return;
+        }
+        this.setState({ loading: true });
+
         const { email } = this.state;
         if (!isEmail(email)) {
-            this.setState({ error: true });
+            this.setState({
+                loading: false,
+                errorEmail: langManager.curr['login']['error-login-nonmail']
+            });
             return;
         }
 
-        const status = await user.server.Connect(email);
-        if (status === 'free') {
-            this.setState({ signinMode: true });
-            OptionsAnimation(this.state.animSignin, 1, 400, false).start();
+        if (this.state.errorEmail.length) {
+            this.setState({ errorEmail: '' });
         }
-        console.log(status);
-        //this.loadData();
+
+        if (this.state.signinMode) {
+            await this.Signin();
+        } else {
+            // Login
+            const status = await user.server.Connect(email);
+            if (status === 'free') {
+                this.setState({ signinMode: true });
+                OptionsAnimation(this.state.animSignin, 1, 400, false).start();
+            } else if (status === 'ok' || status === 'ban') {
+                user.settings.email = email;
+                user.settings.connected = true;
+                await user.settings.Save();
+                user.changePage('loading');
+            } else if (status === 'waitMailConfirmation' || status === 'newDevice') {
+                user.settings.email = email;
+                await user.settings.Save();
+                user.changePage('waitmail', { email: email });
+            }
+        }
+        this.setState({ loading: false });
+    }
+
+    async Signin() {
+        if (!this.state.pseudo.length) {
+            this.setState({ errorPseudo: langManager.curr['login']['error-signin-pseudoWrong'] });
+            return;
+        } else if (this.state.errorPseudo.length) {
+            this.setState({ errorPseudo: '' });
+        }
+
+        if (!this.state.cguAccepted) {
+            this.setState({ errorCgu: langManager.curr['login']['error-signin-disagree'] });
+            return;
+        } else if (this.state.errorCgu.length) {
+            this.setState({ errorCgu: '' });
+        }
+
+        const { email, pseudo } = this.state;
+        const signinStatus = await user.server.Signin(email, pseudo);
+
+        if (signinStatus === 'pseudoUsed') {
+            this.setState({ errorPseudo: langManager.curr['login']['error-signin-pseudoUsed'] });
+        }
+
+        else if (signinStatus === null) {
+            this.setState({
+                pseudo: '',
+                errorPseudo: '',
+                errorEmail: langManager.curr['login']['error-signin-server']
+            });
+            this.onBack();
+        }
+
+        else if (signinStatus === 'ok') {
+            if (this.state.errorPseudo.length) {
+                this.setState({ errorPseudo: '' });
+            }
+            user.settings.email = email;
+            await user.settings.Save();
+            user.changePage('waitmail', { email: email });
+        }
     }
 
     onBack = () => {
-        OptionsAnimation(this.state.animSignin, 0, 400, false).start();
-        this.setState({ signinMode: false });
-    }
-
-    // TODO - Old function, remove it
-    async loadData() {
-        user.changePage('login');
-        await sleep(200);
-
-        // Load local user data
-        await user.loadData(false);
-        await sleep(random(200, 400));
-        user.changePage('loading', { state: 1 }, true);
-
-        // Load internet data (if online)
-        await user.server.AsyncRefreshAccount();
-        await sleep(random(600, 800));
-        user.changePage('loading', { state: 2 }, true);
-
-        // Load internet user data (if connected)
-        await user.loadInternalData();
-        await user.refreshStats();
-        await sleep(random(200, 400));
-        user.changePage('loading', { state: 3 }, true);
-        await sleep(200);
-
-        // TODO : iOS notifications
-        if (Platform.OS === "android") {
-            if (user.morningNotifications) {
-                enableMorningNotifications();
-            }
+        if (this.state.signinMode) {
+            OptionsAnimation(this.state.animSignin, 0, 400, false).start();
+            this.setState({
+                signinMode: false,
+                pseudo: '',
+                cguAccepted: false,
+                errorPseudo: '',
+                errorCgu: '',
+            });
         }
     }
 }

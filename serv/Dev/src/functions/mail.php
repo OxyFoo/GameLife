@@ -18,13 +18,11 @@
         $title = $lang_json->$selected_lang->title;
         $text = $lang_json->$selected_lang->text;
         $bt_accept = $lang_json->$selected_lang->bt_accept;
-        $bt_reject = $lang_json->$selected_lang->bt_reject;
 
         $message = file_get_contents("mail/mail-check.html");
         $message = str_replace("%title%", $title, $message);
         $message = str_replace("%text%", $text, $message);
         $message = str_replace("%bt_accept%", $bt_accept, $message);
-        $message = str_replace("%bt_reject%", $bt_reject, $message);
         $message = str_replace("%link_accept%", $link_accept, $message);
         $message = str_replace("%device%", $deviceName, $message);
 

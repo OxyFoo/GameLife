@@ -1,16 +1,16 @@
 <?php
 
+    require('./src/add.php');
+    require('./src/config.php');
+
+    require('./src/functions/mail.php');
+    require('./src/functions/functions.php');
+
     require('./src/sql/account.php');
     require('./src/sql/device.php');
     require('./src/sql/user.php');
     require('./src/sql/internalData.php');
     require('./src/sql/sql.php');
-
-    require('./src/functions/mail.php');
-    require('./src/functions/functions.php');
-
-    require('./src/add.php');
-    require('./src/config.php');
 
     class Commands {
         public function __construct($data) {
@@ -132,20 +132,47 @@
                         }
                         $accountID = $account['ID'];
                         Account::RefreshLastDate($this->db, $accountID);
-                        $this->output['token'] = $this->db->GeneratePrivateToken($accountID, $deviceID);
+                        $this->output['token'] = Device::GeneratePrivateToken($this->db, $accountID, $deviceID);
                         $this->output['status'] = 'ok';
                         break;
                     case 1: // Wait mail confirmation
                         $this->output['status'] = 'waitMailConfirmation';
                         break;
                     default: // Device isn't in account
+                    case -1:
                         $accountID = $account['ID'];
                         Account::RefreshLastDate($this->db, $accountID);
                         Account::AddDevice($this->db, $deviceID, $account, 'DevicesWait');
                         Device::RefreshToken($this->db, $deviceID);
                         $this->db->SendMail($email, $deviceID, $accountID, $lang);
-                        $this->output['status'] = 'signin';
+                        $this->output['status'] = 'newDevice';
                         break;
+                }
+            }
+        }
+
+        public function Signin() {
+            $deviceIdentifier = $this->data['deviceID'];
+            $deviceName = $this->data['deviceName'];
+            $email = $this->data['email'];
+            $pseudo = $this->data['pseudo'];
+            $lang = $this->data['lang'];
+
+            if (isset($deviceIdentifier, $deviceName, $email, $pseudo, $lang)) {
+                // Check pseudo
+                    // Return pseudoUsed
+                // Add account
+                // Add deviceID in confirmed devices in account
+                // Return ok
+                if (User::pseudoIsFree($this->db, $pseudo)) {
+                    $account = Account::Add($this->db, $pseudo, $email);
+                    if ($account === NULL) {
+                        $this->output['status'] = 'error';
+                    } else {
+                        $this->output['status'] = 'ok';
+                    }
+                } else {
+                    $this->output['status'] = 'pseudoUsed';
                 }
             }
         }
@@ -166,9 +193,9 @@
                 if ($hash != $hash_check) {
                     $this->output['tables'] = GetAllInternalData($this->db, $lang);
                     $this->output['hash'] = $hash_check;
-                    $this->output['state'] = 'ok';
+                    $this->output['status'] = 'ok';
                 } else {
-                    $this->output = array('state' => 'same');
+                    $this->output = array('status' => 'same');
                 }
             }
         }
@@ -179,7 +206,7 @@
         public function GetUserData() {
             $token = $this->data['token'];
             if (isset($token)) {
-                $dataFromToken = $this->db->GetDataFromToken($token);
+                $dataFromToken = Device::GetDataFromToken($this->db, $token);
                 $accountID = $dataFromToken['accountID'];
     
                 if (isset($accountID)) {
@@ -208,7 +235,7 @@
             $token = $this->data['token'];
             $userData = $this->data['data'];
             if (isset($token, $userData)) {
-                $dataFromToken = $this->db->GetDataFromToken($token);
+                $dataFromToken = Device::GetDataFromToken($this->db, $token);
                 $accountID = $dataFromToken['accountID'];
                 $account = Account::GetByID($this->db, $accountID);
     
@@ -224,11 +251,11 @@
                     unset($decoded->solvedAchievements);
                     $userData = json_encode($decoded);
     
-                    $this->db->setUserData($account, $userData);
-                    $this->db->setUserTitle($account, $title);
-                    $this->db->setAchievements($account, $solvedAchievements);
-                    $this->db->setXP($account, $xp);
-                    $pseudoChanged = $this->db->setUsername($account, $pseudo);
+                    User::SetData($this->db, $account, $userData);
+                    User::setTitle($this->db, $account, $title);
+                    User::setAchievements($this->db, $account, $solvedAchievements);
+                    User::setXP($this->db, $account, $xp);
+                    $pseudoChanged = User::setPseudo($this->db, $account, $pseudo);
                     if ($pseudoChanged === -1) {
                         $this->output['status'] = 'wrongtimingpseudo';
                         // App modifiée ?
@@ -246,11 +273,11 @@
          * 
          * (Obsolete code, one SQL command + formatting is enough!)
          */
-        public function GetLeaderboard() {
+        /*public function GetLeaderboard() {
             $token = $this->data['token'];
             $time = $this->data['time'];
             if (isset($token)) {
-                $dataFromToken = $this->db->GetDataFromToken($token);
+                $dataFromToken = Device::GetDataFromToken($this->db, $token);
                 $accountID = $dataFromToken['accountID'];
                 $account = Account::GetByID($this->db, $accountID);
                 if (isset($account)) {
@@ -259,7 +286,7 @@
             }
             $this->output['leaderboard'] = GetLeaderboard($this->db, $time);
             $this->output['status'] = 'ok';
-        }
+        }*/
 
         /**
          * Add a report to the database
@@ -272,7 +299,7 @@
     
             if (isset($token, $report_type, $report_data)) {
                 if (!empty($token)) {
-                    $dataFromToken = $this->db->GetDataFromToken($token);
+                    $dataFromToken = Device::GetDataFromToken($this->db, $token);
                     $token_deviceID = $dataFromToken['deviceID'];
                     if (isset($token_deviceID)) {
                         $deviceID = $token_deviceID;

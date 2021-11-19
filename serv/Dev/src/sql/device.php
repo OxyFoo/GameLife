@@ -65,6 +65,22 @@
         public static function RemoveToken($db, $deviceID) {
             return $db->Query("UPDATE `Devices` SET `Token` = '' WHERE `ID` = '$deviceID'");
         }
+
+        public static function GeneratePrivateToken($db, $accountID, $deviceID) {
+            $random = RandomString(24);
+            $cipher = "$deviceID\t$accountID\t$random";
+            $middle = $db->Encrypt($cipher);
+            $result = $db->Encrypt($middle, $db->keyB);
+            return $result;
+        }
+
+        public static function GetDataFromToken($db, $token) {
+            $middle = $db->Decrypt($token, $db->keyB);
+            $data = $db->Decrypt($middle);
+
+            list($deviceID, $accountID, $random) = explode("\t", $data);
+            return array('deviceID' => $deviceID, 'accountID' => $accountID);
+        }
     }
 
 ?>

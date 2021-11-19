@@ -7,11 +7,12 @@ import { GLDropDown, GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 
 class Activity extends BackActivity {
     render() {
         const title_category = !isUndefined(this.state.selectedCategory) ? this.state.selectedCategory.value : langManager.curr['activity']['input-category-default'];
-        const title_skill = !isUndefined(this.state.selectedSkill) ? user.skills.getByID(this.state.selectedSkill.skillID).Name : langManager.curr['activity']['input-activity-default'];
+        const title_skill = !isUndefined(this.state.selectedSkill) ? dataManager.skills.getByID(this.state.selectedSkill.skillID).Name : langManager.curr['activity']['input-activity-default'];
 
         const rightIcon = this.SELECTED ? 'trash' : 'check';
         const rightEvent = this.SELECTED ? this.trash : this.valid;
@@ -21,7 +22,7 @@ class Activity extends BackActivity {
             const selectedSkill = this.state.selectedSkill;
             const skillID = selectedSkill.skillID;
             const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
-            skill = user.skills.getByID(skillID);
+            skill = dataManager.skills.getByID(skillID);
             totalXP = skill.XP * durationHour;
             const untilActivity = this.SELECTED ? selectedSkill : undefined;
             const sagLevel = user.experience.getStatExperience('sag', untilActivity).lvl - 1;

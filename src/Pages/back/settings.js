@@ -20,13 +20,14 @@ class BackSettings extends React.Component {
 
         // Notifications
         this.enabledOrNot = [
-            { key: false, value: langManager.curr['settings']['enabled-morningnotifications']},
-            { key: true, value: langManager.curr['settings']['disabled-morningnotifications']}
+            { key: false, value: langManager.curr['settings']['disabled-morningnotifications']},
+            { key: true, value: langManager.curr['settings']['enabled-morningnotifications']}
         ];
     }
     back = () => {
         if (this.initLang !== langManager.currentLangageKey) {
-            user.loadInternalData();
+            // TODO - Reload internal data (dataManager)
+            //user.loadInternalData();
         }
         user.saveData();
         user.backPage();
@@ -75,10 +76,10 @@ class BackSettings extends React.Component {
         }
     }
     changeMorningNotifications = (enabled) => {
-        user.morningNotifications = enabled;
         if (enabled) enableMorningNotifications();
         else disableMorningNotifications();
-        user.saveData(false);
+        user.settings.morningNotifications = enabled;
+        user.settings.Save();
         user.changePage();
     }
 }

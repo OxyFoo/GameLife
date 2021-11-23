@@ -55,7 +55,7 @@ class Settings extends BackSettings {
                     </TouchableOpacity> */}
 
                     {/* Disconnect */}
-                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.deconnect}>
+                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.disconnect}>
                         <GLText style={styles.title} title={langManager.curr['settings']['input-disconnect'].toUpperCase()} />
                         <GLIconButton icon='signout' />
                     </TouchableOpacity>

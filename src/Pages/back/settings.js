@@ -29,21 +29,23 @@ class BackSettings extends React.Component {
             // TODO - Reload internal data (dataManager)
             //user.loadInternalData();
         }
-        user.saveData();
+        // TODO - Save user data
+        //user.saveData();
         user.backPage();
     }
     reset = () => {
         const event = (button) => {
             if (button === 'yes') {
                 user.activities.setAll([]);
-                user.saveData();
+                // TODO - Save user data
+                //user.saveData();
             }
         }
         const title = langManager.curr['settings']['alert-reset-title'];
         const text = langManager.curr['settings']['alert-reset-text'];
         user.openPopup('yesno', [ title, text ], event);
     }
-    deconnect = () => {
+    disconnect = () => {
         const event = (button) => {
             if (button === 'yes') {
                 user.disconnect();
@@ -67,7 +69,8 @@ class BackSettings extends React.Component {
     changeLang = (lang) => {
         langManager.setLangage(lang);
         user.changePage();
-        user.saveData(false);
+        // TODO - Save user data
+        //user.saveData(false);
     }
     changeTheme = (theme) => {
         if (themeManager.setTheme(theme)) {

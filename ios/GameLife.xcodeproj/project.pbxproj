@@ -11,7 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		3DB728E589CC467F91DE4930 /* FORCED SQUARE.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE40A020E52344DBA2EC9077 /* FORCED SQUARE.ttf */; };
+		3DB728E589CC467F91DE4930 /* Hind Vadodara.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE40A020E52344DBA2EC9077 /* Hind Vadodara.ttf */; };
 		6B3720EA057EFA970806F580 /* libPods-GameLife.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DEC4141362C61EA0E93B071 /* libPods-GameLife.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		DBC0B9E8701B268CE9A4965A /* libPods-GameLife-GameLifeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EE4BD92F11C387BE3C5709F /* libPods-GameLife-GameLifeTests.a */; };
@@ -62,7 +62,7 @@
 		6F5177D4E8644FC090576B6C /* SadanaSquare.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SadanaSquare.ttf; path = ../res/fonts/SadanaSquare.ttf; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = GameLife/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8EE4BD92F11C387BE3C5709F /* libPods-GameLife-GameLifeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GameLife-GameLifeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE40A020E52344DBA2EC9077 /* FORCED SQUARE.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FORCED SQUARE.ttf"; path = "../res/fonts/FORCED SQUARE.ttf"; sourceTree = "<group>"; };
+		AE40A020E52344DBA2EC9077 /* Hind Vadodara.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Hind Vadodara.ttf"; path = "../res/fonts/Hind Vadodara.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FDF911A3855D411F968F843C /* rexlia rg.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rexlia rg.otf"; path = "../res/fonts/rexlia rg.otf"; sourceTree = "<group>"; };
 		7E5ABC791C4C4A3EB0B1F683 /* AntDesign.ttf */ = {isa = PBXFileReference; name = "AntDesign.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
@@ -190,7 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				259A9A2EAD88429999679AC8 /* Quantum.otf */,
-				AE40A020E52344DBA2EC9077 /* FORCED SQUARE.ttf */,
+				AE40A020E52344DBA2EC9077 /* Hind Vadodara.ttf */,
 				FDF911A3855D411F968F843C /* rexlia rg.otf */,
 				6F5177D4E8644FC090576B6C /* SadanaSquare.ttf */,
 				7E5ABC791C4C4A3EB0B1F683 /* AntDesign.ttf */,
@@ -309,7 +309,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				3DB728E589CC467F91DE4930 /* FORCED SQUARE.ttf in Resources */,
+				3DB728E589CC467F91DE4930 /* Hind Vadodara.ttf in Resources */,
 				2FF3B4FBF0AD48B4A86F0D1B /* AntDesign.ttf in Resources */,
 				6837DA8E83614428BB8FF5C3 /* Entypo.ttf in Resources */,
 				4FBE8490EC5D46B8A22F65A7 /* EvilIcons.ttf in Resources */,

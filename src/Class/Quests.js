@@ -32,7 +32,8 @@ class Quests {
             'date': new Date()
         }
         this.daily.push(newDaily);
-        this.user.saveData();
+        // TODO - Save user data
+        //this.user.saveData();
     }
 
     dailyGetSkills() {

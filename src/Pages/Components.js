@@ -19,8 +19,14 @@ import GLLeftPanel from './components/GLLeftPanel';
 import GLSvg from './components/GLSvg';
 import GLDigit from './components/GLDigit';
 import GLButton from './components/GLButton';
+import Button from './components/Button';
+import BottomBar from './components/BottomBar';
+import Text from './components/Text';
 
 export {
+    Button,
+    BottomBar,
+    Text,
     GLText,
     GLInput,
     GLTextEditable,

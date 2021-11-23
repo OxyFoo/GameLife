@@ -20,6 +20,29 @@ function strIsJSON(str) {
 }
 
 /**
+ * @param {Array} array 
+ * @param {String} key - Key of array
+ * @returns {Array} - Return sorted array
+ */
+function sortByKey(array, key) {
+    const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
+    const compare = (a, b) => format(a[key]) < format(b[key]) ? -1 : 1;
+    return array.sort(compare);
+}
+
+/**
+ * 
+ * @param {Array} array 
+ * @param {String} key 
+ * @param {*} value 
+ * @returns {?Object} Return object or null if didn't exists
+ */
+function getByKey(array, key, value) {
+    const result = array.find((element) => element[key] == value);
+    return !isUndefined(result) ? result : null;
+}
+
+/**
  * @param {String} email
  * @returns {Boolean} - true if str "email" is a valid email
  */
@@ -72,6 +95,7 @@ function random(min, max) {
     return parseInt(R);
 }
 
-export { twoDigit, sum, range, strIsJSON, isEmail,
+export { twoDigit, sum, range, strIsJSON,
+    sortByKey, getByKey, isEmail,
     getDeviceInformations, isUndefined,
     sleep, random };

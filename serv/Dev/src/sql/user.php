@@ -4,6 +4,67 @@
 
     class User
     {
+        public static function ExecQueue($db, $account, $data) {
+            $activities = $data['activities'];
+            $achievements = $data['achievements'];
+
+            if (isset($activities)) {
+                $this->AddActivities($db, $account, $achievements);
+            }
+
+            if (isset($achievements)) {
+                $this->AddAchievement($db, $account, $achievements);
+            }
+        }
+        // Format : [ ['add|rem',SkillID,DATE,DURATION], ... ]
+        private static function AddActivities($db, $account, $data) {
+            $accountID = $account['ID'];
+            $accountData = $account['Data'];
+            for ($i = 0; $i < count($accountData); $i++) {
+                $activity = $accountData[$i];
+
+                $type = $activity[0];
+                $skillID = $activity[1];
+                $date = $activity[2];
+                $duration = $activity[3];
+                $newActivity = [ $skillID, $date, $duration ];
+
+                if ($type === 'add') {
+                    array_push($accountData, $newActivity);
+                } else if ($type === 'rem') {
+                    // TODO - Check ça
+                    $index = array_search($newActivity, $accountData);
+                    if ($index !== false) {
+                        array_splice($accountData, $index, 1);
+                    }
+                }
+
+                $command = "UPDATE `Users` SET `Data` = '$accountData' WHERE `ID` = '$accountID'";
+                $result = $db->Query($command);
+                if ($result !== TRUE) {
+                    ExitWithStatus("Error: saving achievements failed");
+                }
+            }
+        }
+        // Format : [1, 2, 3, ...]
+        private static function AddAchievement($db, $account, $data) {
+            // TODO - Vérifier cette fonction
+            $accountID = $account['ID'];
+            $achievements = explode(',', $account['SolvedAchievements']);
+            for ($i = 0; $i < count($data); $i++) {
+                $achievement = $achievements[$i];
+                if (!in_array($achievement, $achievements)) {
+                    array_push($achievements, $achievement);
+                }
+            }
+            $achievementsFormat = implode(',', $achievements);
+            $command = "UPDATE `Users` SET `SolvedAchievements` = '$achievementsFormat' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: saving achievements failed");
+            }
+        }
+
         public static function pseudoIsFree($db, $pseudo) {
             $p = ucfirst(strtolower($pseudo));
             $command = "SELECT * FROM `Users` WHERE `Username` = '$p'";

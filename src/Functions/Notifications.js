@@ -40,13 +40,11 @@ function __initNotification() {
     // Set all notifications for MAX_DAYS days
     for (let i = 0; i < MAX_DAYS; i++) {
         const titles = langManager.curr['notifications']['titles'];
-        const quotes = dataManager.quotes;
-
         const random_title = random(0, titles.length - 1);
-        const random_quote = random(0, quotes.length - 1);
         const Title = titles[random_title];
-        const { Quote, Author } = quotes[random_quote];
-        const Body = Quote + ' (' + Author + ')';
+
+        const quote = dataManager.quotes.getRandomQuote();
+        const Body = quote.Quote + ' (' + quote.Author + ')';
 
         if (Platform.OS === "ios") {
             PushNotificationIOS.addNotificationRequest({

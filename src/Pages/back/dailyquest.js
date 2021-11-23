@@ -176,7 +176,8 @@ class BackDailyquest extends React.Component {
                 user.quests.todoEdit(this.state.selectedTodo, false, taskTitle, taskDescription);
             }
             this.back();
-            user.saveData();
+            // TODO - Save user data
+            //user.saveData();
         }
     }
 }

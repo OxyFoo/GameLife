@@ -22,6 +22,7 @@
     "react-native-modal-datetime-picker": "^10.2.0",
     "react-native-paper": "^4.10.1",
     "react-native-push-notification": "^8.1.1",
+    "react-native-shadow-2": "^5.1.2",
     "react-native-sound-player": "^0.11.1",
     "react-native-svg": "^12.1.1",
     "react-native-vector-icons": "^9.0.0"

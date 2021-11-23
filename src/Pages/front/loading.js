@@ -7,8 +7,6 @@ import { GLText, GLLoading } from '../Components';
 class Loading extends BackLoading {
     render() {
         const { icon, quote, author } = this.state;
-        // TODO - Add date
-
         return (
             <View style={styles.content}>
                 <GLLoading state={icon} />

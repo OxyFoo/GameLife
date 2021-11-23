@@ -16,6 +16,7 @@
         case 'getToken': $commands->GetToken(); break;
         case 'getInternalData': $commands->GetInternalData(); break;
         case 'getUserData': $commands->GetUserData(); break;
+        case 'addUserData': $commands->AddUserData(); break;
         case 'setUserData': $commands->SetUserData(); break;
         //case 'getLeaderboard': $commands->GetLeaderboard(); break;
         case 'report': $commands->Report(); break;

@@ -3,7 +3,6 @@ import { AppState, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
-import DataStorage, { STORAGE } from './src/Functions/DataStorage';
 import { checkDate } from './src/Tools/DateCheck';
 
 class App extends React.Component {
@@ -35,34 +34,21 @@ class App extends React.Component {
         const email = user.settings.email;
         const online = user.server.online;
         const connected = user.settings.connected;
+        const showOnboard = !user.settings.onboardingWatched;
         if (email === '') {
-            if (online) user.changePage('login');
-            else        user.changePage('waitinternet');
+            /*if (showOnboard) user.changePage('onboarding', { 'nextPage': 'home' });
+            else */if (online) user.changePage('login');
+            else             user.changePage('waitinternet');
         } else {
             if (connected) user.changePage('loading');
             else           user.changePage('waitmail');
         }
-        return;
 
-        let onboardingWatched = false;
-        console.log("AH");
-        const data = await DataStorage.Load(STORAGE.ONBOARDING, false);
-        console.log(data);
-        if (data !== null && data.hasOwnProperty('on-boarding')) {
-            console.log(data['on-boarding']);
-            onboardingWatched = data['on-boarding'];
-        }
-        if (onboardingWatched) {
-            user.changePage('home');
-        } else {
-            const callback = () => {
-                DataStorage.Save(STORAGE.ONBOARDING, { 'on-boarding': true }, false);
-                user.changePage('home');
-            }
-            user.changePage('onboarding', { 'callback': callback });
-        }
-        
-        // View
+        return;
+        // TODO - Code at end of onboarding
+        user.settings.onboardingWatched = true;
+        user.settings.Save();
+        user.changePage(this.props.args['nextPage']);
     }
 
     render() {

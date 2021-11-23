@@ -11,6 +11,13 @@ class Settings {
          */
         this.user = user;
 
+        this.onboardingWatched = false;
+        this.email = '';
+        this.connected = false;
+        this.morningNotifications = true;
+    }
+
+    Clear() {
         this.email = '';
         this.connected = false;
         this.morningNotifications = true;

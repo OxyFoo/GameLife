@@ -46,6 +46,8 @@
                     } else if ($index === "DBHash") {
                         $appData["DBHash"] = $value;
                         $lastHashRefresh = MinutesFromDate($date);
+                    } else if ($index === "Maintenance") {
+                        $appData["Maintenance"] = $value !== '0';
                     }
                 }
             }
@@ -98,8 +100,10 @@
                 }
             } else if ($serverVersion < $appData) {
                 $this->output['status'] = 'downdate';
-            } else {
+            } else if ($serverVersion > $appData) {
                 $this->output['status'] = 'update';
+            } else if ($appData["Maintenance"]) {
+                $this->output['status'] = 'maintenance';
             }
         }
 
@@ -228,6 +232,24 @@
             }
         }
 
+        public function AddUserData() {
+            $token = $this->data['token'];
+            $userData = $this->data['data'];
+            if (isset($token, $userData)) {
+                $dataFromToken = Device::GetDataFromToken($this->db, $token);
+                $accountID = $dataFromToken['accountID'];
+    
+                if (isset($accountID)) {
+                    $account = Account::GetByID($this->db, $accountID);
+                    if ($account !== NULL) {
+                        // TODO - Save data here
+                        User::ExecQueue($this->db, $account, $userData);
+                        $this->output['status'] = 'ok';
+                    }
+                }
+            }
+        }
+
         /**
          * Defines user data (activities, nickname, successes, etc)
          */
@@ -238,7 +260,7 @@
                 $dataFromToken = Device::GetDataFromToken($this->db, $token);
                 $accountID = $dataFromToken['accountID'];
                 $account = Account::GetByID($this->db, $accountID);
-    
+
                 if (isset($account, $userData)) {
                     // Get & remove user from data
                     $decoded = json_decode($userData);

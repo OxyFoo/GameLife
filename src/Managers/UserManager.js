@@ -1,5 +1,3 @@
-import deviceInfoModule from 'react-native-device-info';
-
 import langManager from "./LangManager";
 import dataManager from './DataManager';
 import { getDaysUntil } from '../Functions/Time';
@@ -70,30 +68,31 @@ class UserManager {
         this.quests.daily = [];
         this.quests.todoList = [];
 
-        this.settings.morningNotifications = true;
+        this.settings.Clear();
+        this.server.Clear();
 
-        this.server.status = 'offline';
-        this.server.destructor();
         await DataStorage.clearAll();
-        await this.saveData(false);
+        await this.localSave();
     }
 
     async disconnect() {
-        this.server.disconnect();
-        this.settings.email = '';
+        await this.onlineSave();
+
+        this.server.Clear();
+        this.settings.Clear();
+        await this.localSave();
         await this.settings.Save();
-        await this.saveData();
         this.changePage('login');
     }
     async unmount() {
-        this.saveData();
-        this.server.destructor();
+        await this.localSave();
+        await this.onlineSave();
+        this.server.Clear();
     }
 
-    async refreshStats(save = true) {
+    async refreshStats() {
         this.activities.removeDeletedSkillsActivities();
         this.experience.getExperience();
-        if (save) await this.saveData();
         this.changePage();
     }
 
@@ -107,7 +106,7 @@ class UserManager {
     }
 
     // TODO - Move
-    pseudoCallback = (status) => {
+    /*pseudoCallback = (status) => {
         async function loadData(button) {
             await this.loadData();
             this.changePage();
@@ -122,9 +121,9 @@ class UserManager {
             this.openPopup('ok', [ title, text ], loadData.bind(this));
         } else if (status === "ok") {
             this.pseudoDate = new Date();
-            this.saveData(false);
+            this.localSave();
         }
-    }
+    }*/
 
     // TODO - Replace by inventory system
     /* TITRES */
@@ -149,8 +148,12 @@ class UserManager {
     async saveUnsavedData() {
         return true;
     }
-    async saveData(online) {
-        const _online = typeof(online) === 'boolean' ? online : this.isConnected();
+
+    /**
+     * Load local user data
+     * @returns {Promise<Boolean>}
+     */
+    localSave = () => {
         const data = {
             'pseudo': this.pseudo,
             'pseudoDate': this.pseudoDate,
@@ -163,47 +166,48 @@ class UserManager {
             'tasks': this.quests.todoList
         };
 
-        // TODO - this.pseudoCallback, le mettre ailleurs
-        await DataStorage.Save(STORAGE.USER, data, _online, this.server.token);
+        return DataStorage.Save(STORAGE.USER, data);
     }
+    onlineSave = async () => {
+        let data = {};
+
+        if (this.activities.isUnsaved()) {
+            data['activities'] = this.activities.UNSAVED_activities;
+        }
+
+        if (this.achievements.isUnsaved()) {
+            data['achievements'] = this.achievements.UNSAVED_solved;
+        }
+
+        const saved = await this.server.SaveData(data);
+        if (saved) {
+            this.activities.Purge();
+            this.achievements.Purge();
+        }
+    };
+
+    localLoad = async () => this.loadData(false);
+    onlineLoad = async () => this.loadData(true);
     async loadData(online) {
-        const get = (data, index, defaultValue, oneBlock = false) => {
-            let output = defaultValue;
-            if (data.hasOwnProperty(index) && data[index] !== null) {
-                if (oneBlock) {
-                    output = data[index];
-                } else
-                if (typeof(data[index]) !== 'object' || data[index].length > 0) {
-                    output = data[index];
-                }
-            }
-            return output;
-        }
+        let data;
+        if (online) data = await this.server.LoadData();
+        else        data = await DataStorage.Load(STORAGE.USER);
 
-        const _online = typeof(online) !== 'undefined' ? online : this.isConnected();
-        const data = await DataStorage.Load(STORAGE.USER, _online, this.server.token);
+        // TODO - Finir ça
         if (data !== null) {
-            this.pseudo = get(data, 'pseudo', this.pseudo);
-            this.pseudoDate = get(data, 'pseudoDate', null);
-            this.title = get(data, 'title', 0);
-            this.birth = get(data, 'birth', '');
-            this.xp = get(data, 'xp', 0);
-            this.quests.daily = get(data, 'daily', []);
-            this.quests.todoList = get(data, 'tasks', []);
-            this.achievements.solved = get(data, 'solvedAchievements', []);
-            if (data.hasOwnProperty('activities') && data['activities'].length > 0) {
-                if (this.activities.getAll().length === 0) {
-                    this.activities.setAll(data['activities']);
-                } else {
-                    for (let a in data['activities']) {
-                        const activity = data['activities'][a];
-                        this.activities.Add(activity.skillID, activity.startDate, activity.duration, false);
-                    }
-                }
-            }
+            this.pseudo = data['pseudo'];
+            this.pseudoDate = data['pseudoDate'];
+            this.title = data['title'];
+            this.birth = data['birth'];
+            //this.xp = data['xp'];
+            this.activities.setAll(data['activities']);
+            this.achievements.solved = data['solvedAchievements'];
+            this.quests.daily = data['daily'];
+            this.quests.todoList = data['tasks'];
         }
 
-        this.refreshStats(false);
+        this.refreshStats();
+        return data !== null;
     }
 
     isConnected = this.server.isConnected;

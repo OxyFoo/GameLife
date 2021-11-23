@@ -29,31 +29,28 @@ class BackLoading extends React.Component {
         }
     }
 
-    DefineQuote() {
-        const quotes = dataManager.quotes;
-        if (quotes.length > 0) {
-            const rnd = random(0, quotes.length - 1);
-            this.setState({
-                quote: quotes[rnd]['Quote'],
-                author: quotes[rnd]['Author']
-            });
-        }
-    }
-
     async LoadData() {
         // Loading : Internal data
         const online = user.server.online;
         if (online) await dataManager.onlineLoad();
         else        await dataManager.localLoad();
-        await user.loadData(false);
-        this.DefineQuote();
+        await user.localLoad();
+
+        // Define quote
+        const quote = dataManager.quotes.getRandomQuote();
+        if (quote !== null) {
+            this.setState({
+                quote: quote.Quote,
+                author: quote.Author
+            });
+        }
 
         // Loading : User data
         await sleep(500); this.setState({ icon: 1 });
         if (online) {
-            await user.loadData(false);
+            await user.localLoad();
             const saved = await user.saveUnsavedData();
-            if (saved) await user.loadData(true);
+            if (saved) await user.onlineLoad();
             else console.error('saveUnsavedData failed');
         }
 
@@ -64,12 +61,10 @@ class BackLoading extends React.Component {
         } else {
             disableMorningNotifications();
         }
-        console.log(user.settings.morningNotifications);
 
         await sleep(250); this.setState({ icon: 3 });
         await sleep(500);
         while (!user.changePage('home')) await sleep(100);
-
     }
 }
 

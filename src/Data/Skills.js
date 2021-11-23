@@ -1,4 +1,4 @@
-import { strIsJSON } from "../Functions/Functions";
+import { getByKey, sortByKey, strIsJSON } from "../Functions/Functions";
 
 class Skill {
     ID = 0;
@@ -16,6 +16,15 @@ class Skill {
     LogoID = '';
     Creator = '';
     XP = 0;
+}
+
+class Icon {
+}
+
+class Category {
+    ID = 0;
+    Name = '';
+    LogoID = 0;
 }
 
 class Skills {
@@ -68,15 +77,23 @@ class Skills {
 
     /**
      * @param {Number} ID
-     * @returns {Skill} - Return skill if exists or null
+     * @returns {?Skill} - Return skill if exists or null
      */
-    getByID(ID) {
-        let skill = null;
-        const skillsFilter = this.skills.filter(skill => skill.ID === ID);
-        if (skillsFilter.length > 0) {
-            skill = skillsFilter[0];
+    getByID = (ID) => getByKey(this.skills, 'ID', ID);
+
+    getAllCategories(onlyUseful = false) {
+        let output = [];
+        let categories = sortByKey(this.skillsCategories, 'Name');
+        categories = categories.map((el) => { return { key: el.ID, value: el.Name } });
+        if (onlyUseful) {
+            // TODO - End that
+            //categories = categories.filter((el) => {});
         }
-        return skill;
+        return output;
+        /*let sorted = this.skillsCategories.sort((a, b) => );
+        for (let i = 0; i < this.skillsCategories.length; i++) {
+            if ()
+        }*/
     }
 
     getCategories(onlyUseful = false) {

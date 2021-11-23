@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { View, Text, Image, StyleSheet, Animated } from 'react-native';
-import { Button, HelperText, TextInput, Checkbox } from 'react-native-paper';
+import { View, Text, Image, StyleSheet, Animated, Dimensions } from 'react-native';
+import { Button as OldButton, HelperText, TextInput, Checkbox } from 'react-native-paper';
 
 import BackLogin from '../back/login';
 
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
+import { Button, BottomBar, GLIconButton } from '../Components';
 
 class Login extends BackLogin {
     render() {
@@ -108,6 +109,14 @@ class Login extends BackLogin {
                     ]}
                 >
                     <Button
+                        color="#9095FF"
+                        style={{ width: '100%' }}
+                        //loading={this.state.loading}
+                        onPress={this.onLogin}
+                    >
+                        {this.state.signinMode ? btnSignin : btnLogin}
+                    </Button>
+                    {/*<OldButton
                         mode="contained"
                         color="#9095FF"
                         contentStyle={{ height: '100%' }}
@@ -117,7 +126,7 @@ class Login extends BackLogin {
                         onPress={this.onLogin}
                     >
                         {this.state.signinMode ? btnSignin : btnLogin}
-                    </Button>
+                    </OldButton>*/}
                 </Animated.View>
                 <Animated.View
                     style={[
@@ -127,14 +136,23 @@ class Login extends BackLogin {
                     ]}
                 >
                     <Button
+                        color="#9095FF"
+                        style={{ width: '100%', height: '100%' }}
+                        //loading={this.state.loading}
+                        onPress={this.onBack}
+                    >
+                        <GLIconButton icon='back' size={16} />
+                    </Button>
+                    {/*<Button
                         mode="contained"
                         color="#9095FF"
                         contentStyle={{ height: '100%' }}
                         labelStyle={{ fontSize: 12, marginRight: -1, color: '#FFFFFF' }}
                         icon={require('../../../res/icons/back.png')}
                         onPress={this.onBack}
-                    ></Button>
+                    ></Button>*/}
                 </Animated.View>
+                {/*<BottomBar />*/}
             </View>
         )
     }

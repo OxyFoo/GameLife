@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
-const MAIN_FONT_NAME = 'FORCED SQUARE';
+const MAIN_FONT_NAME = 'Hind Vadodara';
 
 function GLText(props) {
     const title = props.title;

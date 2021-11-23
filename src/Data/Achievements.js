@@ -1,5 +1,4 @@
 import { strIsJSON } from "../Functions/Functions";
-import user from "../Managers/UserManager";
 
 class Achievement {
     ID = 0;
@@ -27,13 +26,11 @@ class Achievements {
         }
     }
 
-    // TODO - Check functions :
-
-    getAchievements = () => {
+    getAchievements = (solved) => {
         let achievements = [];
 
         // Get unlocked
-        let solvedAchievements = [...user.achievements.solved];
+        let solvedAchievements = [...solved];
         solvedAchievements.reverse();
         for (let s = 0; s < solvedAchievements.length; s++) {
             const achievementID = solvedAchievements[s];

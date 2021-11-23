@@ -29,7 +29,7 @@ class BackLogin extends React.Component {
     }
 
     onChangeEmail = (newText) => {
-        newText = newText.trim();
+        newText = newText.trim().toLowerCase();
         if (newText.length > MAX_EMAIL_LENGTH) {
             newText = newText.substring(0, MAX_EMAIL_LENGTH);
         }

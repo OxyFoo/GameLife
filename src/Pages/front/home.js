@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
@@ -8,7 +8,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import BackHome from '../back/home';
 import { dateToFormatString } from '../../Functions/Time';
-import { GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
+import { BottomBar, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 
 class Home extends BackHome {
     render() {
@@ -21,16 +21,21 @@ class Home extends BackHome {
         const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
-            <>
+            <View style={{ flex: 1}}>
                 {/* Header */}
                 <GLHeader
                     title={langManager.curr['home']['page-title']}
-                    leftIcon="sandwich"
+                    //leftIcon="sandwich"
                     onPressLeft={user.openLeftPanel}
-                    rightIcon="chrono"
-                    onPressRight={() => user.changePage('dailyquest') }
+                    rightIcon="gear"
+                    onPressRight={() => user.changePage('settings') }
                 />
 
+                <View style={styles.backgroundCircles}>
+                    <Image source={require('../../../res/logo/home_circles.png')} />
+                </View>
+
+                {/* Stats */}
                 <View style={styles.parentView}>
                     {/* User - main informations */}
                     <View style={styles.containerHeader}>
@@ -136,7 +141,9 @@ class Home extends BackHome {
                         />
                     </TouchableOpacity>
                 </View>
-            </>
+
+                <BottomBar />
+            </View>
         )
     }
 }
@@ -145,7 +152,12 @@ const wh = Dimensions.get('window').height ;
 const styles = StyleSheet.create({
     parentView: {
         flex: 1,
-        padding:"2%"
+        padding:"2%",
+
+        width: 0,
+        height: 0,
+        opacity: 0,
+        overflow: 'hidden'
     },
     containerHeader: {
         width: '100%',
@@ -264,6 +276,12 @@ const styles = StyleSheet.create({
     },
     addActivityText: {
         fontSize: ww * 426 / 10000,
+    },
+
+    backgroundCircles: {
+        position: 'absolute',
+        left: 0,
+        bottom: 0
     }
 });
 

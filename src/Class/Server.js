@@ -3,19 +3,17 @@ import { BackHandler } from 'react-native';
 import { UserManager } from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { Request_Async } from '../Functions/Request';
-import { getDeviceInformations } from '../Functions/Functions';
-
-const TIMER_LONG = 60 * 1000;
-const TIMER_SHORT = 10 * 1000;
+import { getDeviceInformations, strIsJSON } from '../Functions/Functions';
 
 const STATUS = {
-    OFFLINE   : 'offline',
-    CONNECTED : 'ok',
-    FREE      : 'free',
-    WAITMAIL  : 'waitMailConfirmation',
-    BANNED    : 'ban',
-    NEWDEVICE : 'newDevice',
-    ERROR     : 'error'
+    OFFLINE     : 'offline',
+    CONNECTED   : 'ok',
+    FREE        : 'free',
+    WAITMAIL    : 'waitMailConfirmation',
+    BANNED      : 'ban',
+    NEWDEVICE   : 'newDevice',
+    MAINTENANCE : 'maintenance',
+    ERROR       : 'error'
 };
 
 class Server {
@@ -24,19 +22,19 @@ class Server {
          * @type {UserManager}
          */
         this.user = user;
+        this.token = '';
         this.online = false;
         this.status = STATUS.OFFLINE;
-        this.token = '';
     }
 
-    destructor() {
+    Clear = () => {
+        this.token = '';
         this.online = false;
         this.status = STATUS.OFFLINE;
-        this.token = '';
     }
 
     isConnected() {
-        return this.status === STATUS.CONNECTED;
+        return this.status === STATUS.CONNECTED || this.status === STATUS.BANNED;
     }
 
     Ping = async () => {
@@ -53,6 +51,8 @@ class Server {
                 const title = langManager.curr['home']['alert-newversion-title'];
                 const text = langManager.curr['home']['alert-newversion-text'];
                 this.user.openPopup('ok', [ title, text ], undefined, false);
+            } else if (status === STATUS.MAINTENANCE) {
+                // TODO - Gérer la maintenance
             } else if (status === 'ok') {
                 online = true;
             }
@@ -81,7 +81,7 @@ class Server {
             this.status = status;
         }
 
-        if (status === STATUS.CONNECTED) {
+        if (status === STATUS.CONNECTED || status === STATUS.BANNED) {
             const token = result_connect.data['token'];
             if (typeof(token) !== 'undefined' && token.length) {
                 this.token = token;
@@ -109,6 +109,50 @@ class Server {
             }
         }
         return signin;
+    }
+
+    /**
+     * Send data unsaved on server
+     * @param {Array} data - Data to add to server
+     * @returns {Promise<Boolean>} - Return success of online save
+     */
+    async SaveData(data) {
+        let success = false;
+        const _data = {
+            'action': 'addUserData',
+            'token': this.token,
+            'data': data
+        };
+
+        const response = await Request_Async(_data);
+        if (response.status === 200) {
+            if (response.data['status'] === 'ok') {
+                // TODO - Add "Data Token"
+                success = true;
+            }
+        }
+
+        return success;
+    }
+
+    /**
+     * Load all user data
+     * @returns {Promise<?Object>} - Return all online data or null if failed
+     */
+    async LoadData() {
+        let json = null;
+        const data = {
+            'action': 'getUserData',
+            'token': this.token
+        };
+        const response = await Request_Async(data);
+        if (response.status === 200) {
+            if (strIsJSON(response.data)) {
+                // TODO - Add "Data Token"
+                json = JSON.parse(response.data);
+            }
+        }
+        return json;
     }
 
     __reqPing() {
@@ -147,11 +191,6 @@ class Server {
         }
         if (week) data['time'] = 'week';
         return Request_Async(data);
-    }
-
-    disconnect = () => {
-        this.token = '';
-        this.status = STATUS.OFFLINE;
     }
 }
 

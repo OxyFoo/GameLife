@@ -18,6 +18,18 @@ class Achievements {
          * @type {Array<Achievement>}
          */
         this.solved = [];
+
+        /**
+         * @type {Array<Achievement>}
+         */
+        this.UNSAVED_solved = [];
+    }
+
+    isUnsaved() {
+        return this.UNSAVED_solved.length > 0;
+    }
+    Purge() {
+        this.UNSAVED_solved = [];
     }
 
     // TODO - Add events
@@ -132,6 +144,7 @@ class Achievements {
                 this.user.openPopup('ok', [ title, text ]);
 
                 this.solved.push(achievementID);
+                this.UNSAVED_solved.push(achievementID);
                 this.user.eventNewAchievement(achievement);
             }
         }

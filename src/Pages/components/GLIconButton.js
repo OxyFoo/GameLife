@@ -1,6 +1,15 @@
 import * as React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 
+import GLSvg from './GLSvg';
+import { isUndefined } from '../../Functions/Functions';
+
+import svgAdd from '../../../res/icons/add';
+import svgCalendar from '../../../res/icons/calendar';
+import svgHome from '../../../res/icons/home';
+import svgShop from '../../../res/icons/shop';
+import svgSocial from '../../../res/icons/social';
+
 const iconsDir = '../../../res/icons/';
 
 const Icons = {
@@ -36,21 +45,36 @@ const Icons = {
     unchecked: require(iconsDir + 'unchecked.png')
 }
 
+const SVGIcons = {
+    add: svgAdd,
+    calendar: svgCalendar,
+    home: svgHome,
+    shop: svgShop,
+    social: svgSocial
+}
+
+
 function GLIconButton(props) {
     const pad = props.small ? 0 : 4;
     const style = [props.style, { padding: pad }];
     const size = props.size || 24;
-    const source = Icons[props.icon];
     const onPress = props.onPress;
     const hide = props.hide || false;
 
+    let image;
+    if (!hide && !isUndefined(props.icon) && Icons.hasOwnProperty(props.icon)) {
+        image = <Image style={{ width: size, height: size, resizeMode: 'contain' }} source={Icons[props.icon]} />;
+    } else if (!hide && !isUndefined(props.svg) && SVGIcons.hasOwnProperty(props.svg)) {
+        const Icon = SVGIcons[props.svg];
+        image = <Icon color={props.color} />;
+    }
+    if (isUndefined(image)) {
+        image = <View style={{ width: size, height: size }} />;
+    }
+
     return (
         <TouchableOpacity style={style} onPress={onPress} onLongPress={props.onLongPress} activeOpacity={.5} disabled={typeof(onPress) === 'undefined'}>
-            {!hide ? (
-                <Image style={{ width: size, height: size, resizeMode: 'contain' }} source={source} />
-            ) : (
-                <View style={{ width: size, height: size }} />
-            )}
+            {image}
         </TouchableOpacity>
     )
 }

@@ -19,6 +19,11 @@ class Activities {
          * @type {Array<Activity>}
          */
         this.activities = [];
+
+        /**
+         * @type {Array<Activity>}
+         */
+        this.UNSAVED_activities = [];
     }
 
     /**
@@ -35,6 +40,13 @@ class Activities {
         this.activities = activities;
     }
 
+    isUnsaved() {
+        return this.UNSAVED_activities.length > 0;
+    }
+    Purge() {
+        this.UNSAVED_activities = [];
+    }
+
     removeDeletedSkillsActivities() {
         for (let a in this.activities) {
             let activity = this.activities[a];
@@ -48,7 +60,7 @@ class Activities {
         }
     }
 
-    Add(skillID, startDate, duration, save = true) {
+    Add(skillID, startDate, duration) {
         let output = false;
 
         const newActivity = {
@@ -89,9 +101,11 @@ class Activities {
                 }
                 if (!output) {
                     this.activities.push(newActivity);
+                    this.UNSAVED_activities.push(['add', newActivity.skillID, newActivity.startDate, newActivity.duration ]);
                     output = true;
                 }
-                this.user.refreshStats(save);
+                // TODO - Save (local & online or future)
+                this.user.refreshStats();
             }
         }
         return output;
@@ -101,9 +115,11 @@ class Activities {
         for (let i = 0; i < this.activities.length; i++) {
             if (this.activities[i] == activity) {
                 this.activities.splice(i, 1);
+                this.UNSAVED_activities.push(['add', activity.skillID, activity.startDate, activity.duration ]);
                 break;
             }
         }
+        // TODO - Save (local & online or future)
         this.user.refreshStats();
     }
 

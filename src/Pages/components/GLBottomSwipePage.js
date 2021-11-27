@@ -3,7 +3,7 @@ import { Animated, Dimensions, StyleSheet, View } from 'react-native';
 
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
-import { OptionsAnimation, OptionsAnimationSpring } from '../../Functions/Animations';
+import { TimingAnimation, SpringAnimation } from '../../Functions/Animations';
 import themeManager from '../../Managers/ThemeManager';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -28,7 +28,7 @@ class GLBottomSwipePage extends React.Component {
         const newPosY = this.state.init_posY + this.last_posY - posY;
         if (newPosY) {
             this.curr_posY = newPosY;
-            OptionsAnimation(this.state.animPositionY, newPosY, 0, false).start();
+            TimingAnimation(this.state.animPositionY, newPosY, 0, false).start();
         }
     }
     swipe_end = (event) => {
@@ -45,7 +45,7 @@ class GLBottomSwipePage extends React.Component {
     }
 
     setPagePosY(posY) {
-        OptionsAnimationSpring(this.state.animPositionY, posY, false).start();
+        SpringAnimation(this.state.animPositionY, posY, false).start();
         this.setState({ init_posY: posY });
     }
 

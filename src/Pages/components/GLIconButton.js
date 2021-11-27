@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 
-import GLSvg from './GLSvg';
 import { isUndefined } from '../../Functions/Functions';
 
 import svgAdd from '../../../res/icons/add';
@@ -9,6 +8,7 @@ import svgCalendar from '../../../res/icons/calendar';
 import svgHome from '../../../res/icons/home';
 import svgShop from '../../../res/icons/shop';
 import svgSocial from '../../../res/icons/social';
+import svgLoading from '../../../res/icons/loading';
 
 const iconsDir = '../../../res/icons/';
 
@@ -50,7 +50,8 @@ const SVGIcons = {
     calendar: svgCalendar,
     home: svgHome,
     shop: svgShop,
-    social: svgSocial
+    social: svgSocial,
+    loading: svgLoading
 }
 
 

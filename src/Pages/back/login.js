@@ -4,7 +4,7 @@ import { Animated, Linking } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { isEmail } from '../../Functions/Functions';
-import { OptionsAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Functions/Animations';
 
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
@@ -18,14 +18,25 @@ class BackLogin extends React.Component {
             signinMode: false,
 
             email: '',
-            pseudo: '',
+            username: '',
             cguAccepted: false,
             errorEmail: '',
-            errorPseudo: '',
+            errorUsername: '',
             errorCgu: '',
 
             animSignin: new Animated.Value(0)
         };
+    }
+
+    componentDidMount() {
+        setTimeout(this.checkConnection, 500);
+    }
+
+    checkConnection = async () => {
+        await user.server.Ping();
+        if (!user.server.online) {
+            user.changePage('waitinternet');
+        }
     }
 
     onChangeEmail = (newText) => {
@@ -36,12 +47,12 @@ class BackLogin extends React.Component {
         this.setState({ email: newText });
     }
 
-    onChangePseudo = (newText) => {
+    onChangeUsername = (newText) => {
         newText = newText.trim();
         if (newText.length > MAX_PSEUDO_LENGTH) {
             newText = newText.substring(0, MAX_PSEUDO_LENGTH);
         }
-        this.setState({ pseudo: newText });
+        this.setState({ username: newText });
     }
 
     onChangeCGU = () => {
@@ -80,7 +91,7 @@ class BackLogin extends React.Component {
             const status = await user.server.Connect(email);
             if (status === 'free') {
                 this.setState({ signinMode: true });
-                OptionsAnimation(this.state.animSignin, 1, 400, false).start();
+                TimingAnimation(this.state.animSignin, 1, 400, false).start();
             } else if (status === 'ok' || status === 'ban') {
                 user.settings.email = email;
                 user.settings.connected = true;
@@ -90,19 +101,21 @@ class BackLogin extends React.Component {
                 user.settings.email = email;
                 await user.settings.Save();
                 user.changePage('waitmail', { email: email });
+            } else if (status === 'error') {
+                this.checkConnection();
             }
         }
         this.setState({ loading: false });
     }
 
     async Signin() {
-        if (!this.state.pseudo.length) {
-            this.setState({ errorPseudo: langManager.curr['login']['error-signin-pseudoWrong'] });
+        if (!this.state.username.length) {
+            this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoWrong'] });
             return;
-        } else if (this.state.errorPseudo.length) {
-            this.setState({ errorPseudo: '' });
+        } else if (this.state.errorUsername.length) {
+            this.setState({ errorUsername: '' });
         }
-
+        
         if (!this.state.cguAccepted) {
             this.setState({ errorCgu: langManager.curr['login']['error-signin-disagree'] });
             return;
@@ -110,25 +123,25 @@ class BackLogin extends React.Component {
             this.setState({ errorCgu: '' });
         }
 
-        const { email, pseudo } = this.state;
-        const signinStatus = await user.server.Signin(email, pseudo);
+        const { email, username } = this.state;
+        const signinStatus = await user.server.Signin(email, username);
 
         if (signinStatus === 'pseudoUsed') {
-            this.setState({ errorPseudo: langManager.curr['login']['error-signin-pseudoUsed'] });
+            this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoUsed'] });
         }
 
         else if (signinStatus === null) {
             this.setState({
-                pseudo: '',
-                errorPseudo: '',
+                username: '',
+                errorUsername: '',
                 errorEmail: langManager.curr['login']['error-signin-server']
             });
             this.onBack();
         }
 
         else if (signinStatus === 'ok') {
-            if (this.state.errorPseudo.length) {
-                this.setState({ errorPseudo: '' });
+            if (this.state.errorUsername.length) {
+                this.setState({ errorUsername: '' });
             }
             user.settings.email = email;
             await user.settings.Save();
@@ -138,12 +151,12 @@ class BackLogin extends React.Component {
 
     onBack = () => {
         if (this.state.signinMode) {
-            OptionsAnimation(this.state.animSignin, 0, 400, false).start();
+            TimingAnimation(this.state.animSignin, 0, 400, false).start();
             this.setState({
                 signinMode: false,
-                pseudo: '',
+                username: '',
                 cguAccepted: false,
-                errorPseudo: '',
+                errorUsername: '',
                 errorCgu: '',
             });
         }

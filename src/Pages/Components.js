@@ -19,14 +19,31 @@ import GLLeftPanel from './components/GLLeftPanel';
 import GLSvg from './components/GLSvg';
 import GLDigit from './components/GLDigit';
 import GLButton from './components/GLButton';
+
+import Text from './components/Text';
+import Input from './components/Input';
+import Icon from './components/Icon';
 import Button from './components/Button';
 import BottomBar from './components/BottomBar';
-import Text from './components/Text';
+import Checkbox from './components/Checkbox';
+import Container from './components/Container';
+import Swiper from './components/Swiper';
+import ProgressBar from './components/ProgressBar';
+import XPBar from './components/XPBar';
 
 export {
+    Text,
+    Input,
+    Icon,
     Button,
     BottomBar,
-    Text,
+    Checkbox,
+    Container,
+    Swiper,
+    ProgressBar,
+    XPBar,
+
+    // Old components
     GLText,
     GLInput,
     GLTextEditable,

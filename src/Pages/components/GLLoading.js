@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, Animated } from 'react-native';
 
-import { OptionsAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Functions/Animations';
 
 const LOGO_DIR = '../../../res/logo/';
 const LOGOS = [
@@ -31,7 +31,7 @@ class GLLoading extends React.Component {
             for (let i = 0; i < this.state.animOpacity.length; i++) {
                 const light = i === state ? 1 : 0;
                 if (light || i - 1 <= state) {
-                    OptionsAnimation(this.state.animOpacity[i], light, 200).start();
+                    TimingAnimation(this.state.animOpacity[i], light, 200).start();
                 }
             }
         }

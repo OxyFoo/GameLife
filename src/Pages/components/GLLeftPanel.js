@@ -4,7 +4,7 @@ import { Animated, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, Vi
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
-import { OptionsAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Functions/Animations';
 
 import GLText from './GLText';
 import GLIconButton from './GLIconButton';
@@ -46,12 +46,12 @@ class GLLeftPanel extends React.PureComponent {
         this.setState({ opened: opened, lastState: this.props.state });
         if (opened) {
             // Open
-            OptionsAnimation(this.state.animOpacity, 1, 250).start();
-            OptionsAnimation(this.state.animPosX, PANEL_WIDTH, 250).start();
+            TimingAnimation(this.state.animOpacity, 1, 250).start();
+            TimingAnimation(this.state.animPosX, PANEL_WIDTH, 250).start();
         } else {
             // Close
-            OptionsAnimation(this.state.animOpacity, 0, 250).start();
-            OptionsAnimation(this.state.animPosX, 0, 250).start();
+            TimingAnimation(this.state.animOpacity, 0, 250).start();
+            TimingAnimation(this.state.animPosX, 0, 250).start();
         }
     }
 

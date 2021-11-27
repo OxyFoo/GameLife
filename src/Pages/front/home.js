@@ -8,7 +8,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import BackHome from '../back/home';
 import { dateToFormatString } from '../../Functions/Time';
-import { BottomBar, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
+import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, Swiper, Text, XPBar } from '../Components';
 
 class Home extends BackHome {
     render() {
@@ -21,7 +21,7 @@ class Home extends BackHome {
         const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
-            <View style={{ flex: 1}}>
+            <View style={{ flex: 1 }}>
                 {/* Header */}
                 <GLHeader
                     title={langManager.curr['home']['page-title']}
@@ -35,24 +35,60 @@ class Home extends BackHome {
                     <Image source={require('../../../res/logo/home_circles.png')} />
                 </View>
 
+                {/* TESTS */}
+                <View style={{ flex: 1, padding: '5%' }}>
+                    <Button color='main2' borderRadius={14} style={{ marginBottom: 24 }} icon='home'>{'Ajouter des tâches'}</Button>
+                    <Button color='main1' borderRadius={14} style={{ marginBottom: 24 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
+
+                    <XPBar value={4} style={{ marginBottom: 24 }} />
+
+                    <Swiper
+                        style={{ marginBottom: 24 }}
+                        pages={[
+                            <>
+                                <Text style={{ marginBottom: 12 }}>{'Page 1'}</Text>
+                                <Button color='main1' borderRadius={14}>{'Quêtes journalières'}</Button>
+                            </>,
+                            <>
+                                <Text>{'Page 2'}</Text>
+                                <XPBar value={10 } style={{ marginBottom: 24 }} />
+                            </>,
+                            <Button color='main2' borderRadius={14}>{'Page 3'}</Button>
+                        ]}
+                    />
+
+                    <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
+                        <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                    </Container>
+
+                    <Container text='Rollable !' type='rollable' opened={true}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Checkbox
+                                style={{ marginRight: 4 }}
+                                checked={this.state.testChecked}
+                                onChange={() => { this.setState({ testChecked: !this.state.testChecked }) }}
+                            />
+                            <Text fontSize={14} color='primary' onPress={() => { this.setState({ testChecked: !this.state.testChecked }) }}>{'Blablabla blablabla blabla bla'}</Text>
+                        </View>
+                    </Container>
+                </View>
+
                 {/* Stats */}
                 <View style={styles.parentView}>
-                    {/* User - main informations */}
+                    {/* User - main informations 
                     <View style={styles.containerHeader}>
                         <TouchableOpacity style={styles.containerUserName} activeOpacity={.5} onPress={this.openIdentity}>
                             <GLText title={user.pseudo} style={styles.pseudo} />
                             {user.title != 0 && (<GLText title={dataManager.titles.getTitleByID(user.title)} style={styles.title} />)}
                         </TouchableOpacity>
                         <GLXPBar value={XP} max={nextLvlXP} style={styles.containerUserXP} />
-                    </View>
+                    </View>*/}
 
-                    {/* User - Stats / Level / Calendar */}
+                    {/* User - Stats / Level / Calendar 
                     <View style={styles.containerContent}>
-                        {/* Stats */}
                         <GLStats containerStyle={styles.containerStats} />
 
                         <View style={styles.containerLevelColumn}>
-                            {/* Level */}
                             <TouchableOpacity style={[styles.block, styles.blockLVL, backgroundColor]} activeOpacity={0.5} onPress={this.openExperience}>
                                 <GLDoubleCorner />
                                 <GLText style={styles.textLevel} title={langManager.curr['level']['level'] + ' ' + LVL} />
@@ -60,7 +96,6 @@ class Home extends BackHome {
                                 <GLText style={styles.textLevelAverage} title={langManager.curr['level']['average'].replace('{}', this.averageXPperDay)} color='secondary' />
                             </TouchableOpacity>
 
-                            {/* Calendar */}
                             <TouchableOpacity
                                 style={[styles.block, styles.blockCalendar, backgroundColor]}
                                 activeOpacity={.5}
@@ -95,7 +130,6 @@ class Home extends BackHome {
                                 </View>
                             </TouchableOpacity>
 
-                            {/* Add activity */}
                             <TouchableOpacity
                                 style={[styles.block, backgroundColor]}
                                 activeOpacity={.5}
@@ -105,9 +139,9 @@ class Home extends BackHome {
                                 <GLText style={styles.addActivityText} title={langManager.curr['home']['shortcut-addactivity']} onPress={this.addSkill} />
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </View>*/}
 
-                    {/* User - Skills */}
+                    {/* Skills 
                     <TouchableOpacity style={styles.containerSkills} activeOpacity={0.5} onPress={this.openSkills}>
                         <GLText style={styles.titleSkill} title={langManager.curr['home']['title-skills'].toUpperCase()} />
                         <FlatList
@@ -139,10 +173,8 @@ class Home extends BackHome {
                                 }
                             }
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity>*/}
                 </View>
-
-                <BottomBar />
             </View>
         )
     }
@@ -152,12 +184,7 @@ const wh = Dimensions.get('window').height ;
 const styles = StyleSheet.create({
     parentView: {
         flex: 1,
-        padding:"2%",
-
-        width: 0,
-        height: 0,
-        opacity: 0,
-        overflow: 'hidden'
+        padding:"2%"
     },
     containerHeader: {
         width: '100%',

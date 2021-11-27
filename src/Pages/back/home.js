@@ -42,6 +42,11 @@ class BackHome extends React.Component {
         }
     }
 
+    state = {
+        test: '',
+        testChecked: false
+    }
+
     addSkill = () => {
         if (dataManager.skills.getAll().length <= 1) {
             console.warn("Aucun skill !");

@@ -28,13 +28,13 @@ class Settings extends BackSettings {
                         onSelect={this.changeLang}
                     />
 
-                    {/* Themes */}
+                    {/* Themes 
                     <GLText style={styles.title} title={langManager.curr['settings']['input-theme'].toUpperCase()} />
                     <GLDropDown
                         value={langManager.curr['themes'][this.currentTheme] || ''}
                         data={this.selectableThemes}
                         onSelect={this.changeTheme}
-                    />
+                    />*/}
 
                     {/* Morning notifications */}
                     {Platform.OS === "android" && (

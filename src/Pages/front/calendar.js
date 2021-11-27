@@ -14,6 +14,8 @@ import { getTimeToTomorrow } from '../../Functions/Time';
 
 class Calendar extends BackCalendar {
     render() {
+        return null;
+
         const styleTopLeft = [ styles.absolute, styles.topLeft ];
         const styleMidLeft = [ styles.absolute, styles.midLeft ];
 

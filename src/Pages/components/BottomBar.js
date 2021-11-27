@@ -1,59 +1,134 @@
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { OptionsAnimation, OptionsAnimationSpring } from '../../Functions/Animations';
 
-import { Button } from '../Components';
-import GLIconButton from './GLIconButton';
+import user from '../../Managers/UserManager';
+import { SpringAnimation } from '../../Functions/Animations';
+
+import Button from './Button';
+import Icon from './Icon';
+
+const BottomBarProps = {
+    show: false,
+    selectedIndex: -1
+}
 
 class BottomBar extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     state = {
+        show: false,
+        animationShow: new Animated.Value(128),
         selectedIndex: 0,
         animationBar: new Animated.Value(0)
     }
 
-    changePage = (index) => {
-        this.setState({ selectedIndex: index });
-        OptionsAnimationSpring(this.state.animationBar, index * .2, false).start();
+    componentDidUpdate() {
+        // Show / Hide
+        const newState = this.props.show;
+        if (newState !== this.state.show) {
+            this.setState({ show: newState });
+            const toValue = newState ? 0 : 128;
+            SpringAnimation(this.state.animationShow, toValue, true).start();
+        }
+
+        // Selectection bar
+        const newIndex = this.props.selectedIndex;
+        if (newIndex !== this.state.selectedIndex) {
+            this.setState({ selectedIndex: newIndex });
+            SpringAnimation(this.state.animationBar, newIndex * .2, false).start();
+        }
     }
+
+    goToHome = () => user.changePage('home');
+    goToCalendar = () => user.changePage('calendar');
+    goToActivity = () => user.changePage('activity');
+    goToSettings = () => user.changePage('settings');
+    goToShop = () => user.changePage('shop');
 
     render() {
         const IntToPc = { inputRange: [0, 1], outputRange: ['0%', '100%'] };
+        const isChecked = (index) => index === this.state.selectedIndex ? '#9095FF' : '#6e6e6e';
+
         return (
-            <Animated.View style={styles.parent}>
+            <Animated.View style={[styles.parent, { transform: [{ translateY: this.state.animationShow }] }]} pointerEvents={'box-none'}>
                 <View style={styles.body}>
                     {/* Selection bar */}
                     <Animated.View style={[styles.bar, { left: this.state.animationBar.interpolate(IntToPc) }]} />
 
                     {/* Buttons */}
-                    <Button onPress={() => this.changePage(0)} style={{...styles.button, ...styles.btFirst}} color='transparent' rippleColor='#9095FF'>
-                        <GLIconButton svg='home' color={this.state.selectedIndex === 0 ? '#9095FF' : '#6e6e6e' } />
+                    <Button
+                        rippleFactor={4}
+                        onPress={this.goToHome}
+                        style={{...styles.button, ...styles.btFirst}}
+                        color='transparent'
+                        rippleColor='#9095FF' borderRadius={0}
+                    >
+                        <Icon icon='home' color={isChecked(0)} />
                     </Button>
-                    <Button onPress={() => this.changePage(1)} style={styles.button} color='transparent' rippleColor='#9095FF'>
-                        <GLIconButton svg='calendar' color={this.state.selectedIndex === 1 ? '#9095FF' : '#6e6e6e' } />
+
+                    <Button
+                        rippleFactor={4}
+                        onPress={this.goToCalendar}
+                        style={styles.button}
+                        color='transparent'
+                        rippleColor='#9095FF'
+                        borderRadius={0}
+                    >
+                        <Icon icon='calendar' color={isChecked(1)} />
                     </Button>
-                    <View style={{ flex: 1 }} />
-                    <Button onPress={() => this.changePage(3)} style={styles.button} color='transparent' rippleColor='#9095FF'>
-                        <GLIconButton svg='shop' color={this.state.selectedIndex === 3 ? '#9095FF' : '#6e6e6e' } />
+
+
+
+                    <Button
+                        rippleFactor={4}
+                        style={styles.button}
+                        color='transparent'
+                        borderRadius={0}>
                     </Button>
-                    <Button onPress={() => this.changePage(4)} style={{...styles.button, ...styles.btLast}} color='transparent' rippleColor='#9095FF'>
-                        <GLIconButton svg='social' color={this.state.selectedIndex === 4 ? '#9095FF' : '#6e6e6e' } />
+
+
+
+                    <Button
+                        rippleFactor={4}
+                        onPress={this.goToSettings}
+                        style={styles.button} color='transparent'
+                        rippleColor='#9095FF'
+                        borderRadius={0}
+                    >
+                        <Icon icon='social' color={isChecked(3)} />
+                    </Button>
+
+                    <Button
+                        rippleFactor={4}
+                        onPress={this.goToShop}
+                        style={{...styles.button, ...styles.btLast}}
+                        color='transparent'
+                        rippleColor='#9095FF'
+                        borderRadius={0}
+                    >
+                        <Icon icon='shop' color={isChecked(4)} />
                     </Button>
                 </View>
 
                 {/* Add button */}
-                <View style={styles.btMiddleParent}>
-                    <Button onPress={() => this.changePage(2)} style={styles.btMiddle} color='#DBA1FF' rippleColor='#000000'>
-                        <GLIconButton svg='add' />
-                    </Button>
+                <View style={styles.btMiddleParent} pointerEvents='box-none'>
+                    {/*<Button style={styles.btMiddle} onPress={this.goToActivity} color='#DBA1FF' rippleColor='#000000' borderRadius={50}>
+                        <Icon icon='add' />
+                    </Button>*/}
+                    <Button
+                        style={styles.btMiddle}
+                        onPress={this.goToActivity}
+                        color='#DBA1FF'
+                        rippleColor='#000000'
+                        icon='add'
+                        borderRadius={50}
+                    />
                 </View>
             </Animated.View>
         )
     }
 }
+
+BottomBar.prototype.props = BottomBarProps;
+BottomBar.defaultProps = BottomBarProps;
 
 const styles = StyleSheet.create({
     parent: {
@@ -75,7 +150,8 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         height: '100%',
-        borderRadius: 0
+        borderRadius: 0,
+        justifyContent: 'center'
     },
     btFirst: {
         borderTopLeftRadius: 20,
@@ -84,13 +160,13 @@ const styles = StyleSheet.create({
     btMiddleParent: {
         position: 'absolute',
         width: '100%',
+        height: '100%',
         top: 24,
         alignItems: 'center'
     },
     btMiddle: {
-        width: 50,
-        height: 50,
-        borderRadius: 50
+        height: '100%',
+        aspectRatio: 1,
     },
     btLast: {
         borderTopRightRadius: 20,

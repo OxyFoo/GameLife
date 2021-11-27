@@ -12,6 +12,16 @@ function isUndefined(el) {
     return typeof(el) === 'undefined';
 }
 
+function minmax(min, value, max) {
+    let output = null;
+    if (typeof(value) === 'number') {
+        output = value;
+        if (output < min) output = min;
+        else if (output > max) output = max;
+    }
+    return output;
+}
+
 function strIsJSON(str) {
     let isJSON = true;
     try { JSON.parse(str); }
@@ -97,5 +107,5 @@ function random(min, max) {
 
 export { twoDigit, sum, range, strIsJSON,
     sortByKey, getByKey, isEmail,
-    getDeviceInformations, isUndefined,
+    getDeviceInformations, isUndefined, minmax,
     sleep, random };

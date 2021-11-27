@@ -37,13 +37,13 @@ class Activity extends BackActivity {
                     title={langManager.curr['activity']['page-title']}
                     leftIcon='back'
                     onPressLeft={this.back}
-                    rightIcon={rightIcon}
+                    //rightIcon={rightIcon}
                     onPressRight={rightEvent}
                 />
 
                 {/* Content */}
                 <View style={styles.content}>
-                    {/* Category */}
+                    {/* Category 
                     <GLText style={styles.title} title={langManager.curr['activity']['input-category'].toUpperCase()} />
                     <GLDropDown
                         value={title_category}
@@ -51,18 +51,18 @@ class Activity extends BackActivity {
                         onSelect={this.changeCat}
                         disabled={this.SELECTED}
                         onLongPress={() => this.changeCat('')}
-                    />
+                    />*/}
 
-                    {/* Activity */}
+                    {/* Activity 
                     <GLText style={styles.title} title={langManager.curr['activity']['input-activity'].toUpperCase()} />
                     <GLDropDown
                         value={title_skill}
                         data={this.state.skills}
                         onSelect={this.changeSkill}
                         disabled={this.SELECTED}
-                    />
+                    />*/}
 
-                    {/* Start / duration */}
+                    {/* Start / duration 
                     <View style={styles.row}>
                         <View style={styles.column}>
                             <GLText style={styles.title} title={langManager.curr['activity']['input-start'].toUpperCase()} />
@@ -83,7 +83,7 @@ class Activity extends BackActivity {
                                 disabled={this.SELECTED}
                             />
                         </View>
-                    </View>
+                    </View>*/}
 
                     {!isUndefined(skill) && (
                         <View style={styles.containerAttr}>

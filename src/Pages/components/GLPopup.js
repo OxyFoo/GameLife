@@ -4,7 +4,7 @@ import { Animated, StyleSheet, TextInput, View } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
-import { OptionsAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Functions/Animations';
 
 import GLButton from './GLButton';
 import GLText, { MAIN_FONT_NAME } from './GLText';
@@ -38,12 +38,12 @@ class GLPopup extends React.PureComponent {
                 type: this.props.type,
                 cancelable: this.props.cancelable
             });
-            OptionsAnimation(this.state.animOpacity, 1, 200).start();
-            OptionsAnimation(this.state.animScale, 1, 200, false).start();
+            TimingAnimation(this.state.animOpacity, 1, 200).start();
+            TimingAnimation(this.state.animScale, 1, 200, false).start();
         } else {
             // Close
-            OptionsAnimation(this.state.animOpacity, 0, 200).start();
-            OptionsAnimation(this.state.animScale, .9, 200, false).start();
+            TimingAnimation(this.state.animOpacity, 0, 200).start();
+            TimingAnimation(this.state.animScale, .9, 200, false).start();
             setTimeout(() => {
                 this.setState({ opened: opened, type: null });
             }, 150);

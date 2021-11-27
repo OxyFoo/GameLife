@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import { range } from '../../Functions/Functions';
-import { OptionsAnimation, OptionsAnimationSpring } from '../../Functions/Animations';
+import { TimingAnimation, SpringAnimation } from '../../Functions/Animations';
 
 import GLText from './GLText';
 
@@ -31,7 +31,7 @@ class GLDigit extends React.Component {
         const newPosX = this.curr_posX + (this.first_posX - posX);
         if (newPosX) {
             this.init_posX = newPosX;
-            OptionsAnimation(this.state.animLeft, this.init_posX, 0, false).start();
+            TimingAnimation(this.state.animLeft, this.init_posX, 0, false).start();
         }
     }
     swipe_end = (event) => {
@@ -60,7 +60,7 @@ class GLDigit extends React.Component {
     }
 
     setDigitsPosX(posX) {
-        OptionsAnimationSpring(this.state.animLeft, posX, false).start();
+        SpringAnimation(this.state.animLeft, posX, false).start();
         this.curr_posX = posX;
     }
 

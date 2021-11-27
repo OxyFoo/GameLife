@@ -4,8 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import user from '../Managers/UserManager';
 import langManager from './LangManager';
-import { OptionsAnimation } from '../Functions/Animations';
-import { GLLeftPanel, GLPopup } from '../Pages/Components';
+import { TimingAnimation } from '../Functions/Animations';
+import { BottomBar, GLLeftPanel, GLPopup } from '../Pages/Components';
 
 import About from '../Pages/front/about';
 import Achievements from '../Pages/front/achievements';
@@ -34,9 +34,14 @@ class PageManager extends React.Component{
         animOpacity1: new Animated.Value(0),
         animOpacity2: new Animated.Value(0),
         arguments: {},
+
+        bottomBarShow: false,
+        pageIndex: -1,
+
+        // Old
         popupArgs: [ null, null, true ],
         popupCallback: undefined,
-        leftPanelState: false
+        leftPanelState: false,
     }
 
     componentDidMount() {
@@ -103,31 +108,40 @@ class PageManager extends React.Component{
             console.error('Calling an incorrect page');
             return false;
         };
+
         this.changing = true;
         if (!ignorePath) {
             this.path.push([newpage, args]);
         }
         this.pageAnimation(newpage);
+
         return true;
     }
 
     pageAnimation = (newpage) => {
         const animation_duration = 200;
-        const animation_delay = 150;
+        const animation_delay = 100;
 
         if (!this.state.page1) {
             // Clear page 2
-            OptionsAnimation(this.state.animOpacity2, 0, 400).start(() => { this.setState({ page2: '' }); });
+            TimingAnimation(this.state.animOpacity2, 0, 400).start(() => { this.setState({ page2: '' }); });
             // Load page 1
             setTimeout(() => { this.setState({ page1: newpage }); }, 0);
-            setTimeout(() => { OptionsAnimation(this.state.animOpacity1, 1, animation_duration).start(); }, animation_delay);
+            setTimeout(() => { TimingAnimation(this.state.animOpacity1, 1, animation_duration).start(); }, animation_delay);
         } else {
             // Clear page 1
-            OptionsAnimation(this.state.animOpacity1, 0, 400).start(() => { this.setState({ page1: '' }); });
+            TimingAnimation(this.state.animOpacity1, 0, 400).start(() => { this.setState({ page1: '' }); });
             // Load page 2
             setTimeout(() => { this.setState({ page2: newpage }); }, 0);
-            setTimeout(() => { OptionsAnimation(this.state.animOpacity2, 1, animation_duration).start(); }, animation_delay);
+            setTimeout(() => { TimingAnimation(this.state.animOpacity2, 1, animation_duration).start(); }, animation_delay);
         }
+
+        const bottomBarPages = [ 'home', 'calendar', 'x', 'settings', 'shop' ];
+        const bottomBarShow = bottomBarPages.includes(newpage);
+        this.setState({ bottomBarShow: bottomBarShow });
+
+        const index = bottomBarPages.indexOf(newpage);
+        this.setState({ pageIndex: index !== -1 ? index : 2 });
 
         setTimeout(() => {
             this.changing = false;
@@ -187,8 +201,8 @@ class PageManager extends React.Component{
             outputRange: [0, 0.8, 0.2, 1]
         };*/
         const inter = {
-            inputRange:  [0, 1],
-            outputRange: [0, 1]
+            inputRange:  [0, .5, 1],
+            outputRange: [0, 0, 1]
         };
 
         return (
@@ -205,6 +219,7 @@ class PageManager extends React.Component{
                     callback={this.state.popupCallback}
                     cancelable={this.state.popupArgs[2]}
                 />
+                <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.pageIndex} />
                 <GLLeftPanel state={this.state.leftPanelState} />
             </LinearGradient>
         )

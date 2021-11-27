@@ -4,7 +4,7 @@ import { Animated, Dimensions } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import { twoDigit } from '../../Functions/Functions';
-import { OptionsAnimationSpring } from '../../Functions/Animations';
+import { SpringAnimation } from '../../Functions/Animations';
 
 // Image dimensions
 const MIN_WIDTH = 96;
@@ -40,7 +40,7 @@ class BackIdentity extends React.Component {
         const opened = this.state.imageOpened;
         this.setState({ imageOpened: !opened });
         const newDim = opened ? MIN_WIDTH : MAX_WIDTH;
-        OptionsAnimationSpring(this.state.imageAnimation, newDim, false).start();
+        SpringAnimation(this.state.imageAnimation, newDim, false).start();
     }
 
     // Pseudo

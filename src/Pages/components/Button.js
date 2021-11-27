@@ -1,110 +1,122 @@
 import * as React from 'react';
-import { Animated, StyleSheet, View, Dimensions } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
-import { Text } from '../Components';
-import { OptionsAnimation } from '../../Functions/Animations';
+import themeManager from '../../Managers/ThemeManager';
+import { isUndefined } from '../../Functions/Functions';
+
+import Text from './Text';
+import Icon from './Icon';
+import Ripple from './Ripple';
+
+const ButtonProps = {
+    style: {},
+    styleAnimation: undefined,
+    icon: '',
+    iconSize: 24,
+    iconColor: 'white',
+    iconAngle: 0,
+    loading: false,
+    color: 'transparent',
+    colorText: 'primary',
+    rippleColor: '#000000',
+    rippleFactor: 2,
+    borderRadius: 20,
+    onPress: undefined,
+    /**
+     * @type {'auto'|'box-only'|'box-none'|'none'}
+     */
+    pointerEvents: 'box-only'
+}
 
 class Button extends React.Component {
     constructor(props) {
         super(props);
-        this.anim_ended = true;
-        this.pressed = false;
-    }
-
-    state = {
-        ripple_posX: 0,
-        ripple_posY: 0,
-        ripple_anim: new Animated.Value(0),
-        ripple_opacity: new Animated.Value(0)
+        this.rippleRef = React.createRef(); 
+        this.posX = 0; this.posY = 0;
     }
 
     onTouchStart = (event) => {
-        if (!this.anim_ended) {
-            return;
-        }
-        this.pressed = true;
-        this.anim_ended = false;
-        const posX = event.nativeEvent.locationX;
-        const posY = event.nativeEvent.locationY;
-        this.setState({
-            ripple_posX: posX,
-            ripple_posY: posY
-        });
-
-        OptionsAnimation(this.state.ripple_opacity, 0.2, 100).start();
-        OptionsAnimation(this.state.ripple_anim, 150, 300).start(() => {
-            this.anim_ended = true;
-            if (!this.pressed) {
-                this.rippleHide();
-            }
-        });
+        this.rippleRef.current.onTouchStart(event);
+        this.posX = event.nativeEvent.locationX;
+        this.posY = event.nativeEvent.locationY;
     }
     onTouchEnd = (event) => {
-        this.pressed = false;
-        if (this.anim_ended) {
-            this.rippleHide();
-        }
-        const posX = event.nativeEvent.locationX;
-        const posY = event.nativeEvent.locationY;
-        const { ripple_posX, ripple_posY } = this.state;
-        const isPress = Math.abs(ripple_posX - posX) < 20 && Math.abs(ripple_posY - posY) < 20;
-        callback = this.props.onPress;
-        if (typeof(callback) === 'function' && isPress) {
+        this.rippleRef.current.onTouchEnd(event);
+
+        const deltaX = Math.abs(event.nativeEvent.locationX - this.posX);
+        const deltaY = Math.abs(event.nativeEvent.locationY - this.posY);
+        const isPress = deltaX < 20 && deltaY < 20;
+
+        const callback = this.props.onPress;
+        const isFunction = typeof(callback) === 'function';
+        if (isPress && isFunction && !this.props.loading) {
             callback();
         }
     }
 
-    rippleHide(duration = 200) {
-        OptionsAnimation(this.state.ripple_opacity, 0, duration).start();
-        OptionsAnimation(this.state.ripple_anim, 0, duration+100).start();
-    }
-
     render() {
-        const color = this.props.color || '#E0E0E0';
-        const style = { ...styles.body, ...this.props.style, backgroundColor: color };
+        const children = this.props.children;
+        const hasChildren = !isUndefined(children);
+        const hasIcon = this.props.icon !== '';
+        const isLoading = this.props.loading;
+        const onlyOneChild = !hasChildren || !hasIcon || isLoading;
+
+        const color = themeManager.getColor(this.props.color);
+        const align = onlyOneChild ? 'center' : 'space-between';
+        const style = [
+            styles.body,
+            {
+                justifyContent: align,
+                borderRadius: this.props.borderRadius,
+                backgroundColor: color
+            },
+            this.props.style,
+            this.props.styleAnimation
+        ];
+        const ButtonView = typeof(this.props.styleAnimation) === 'undefined' ? View : Animated.View;
+
+        let content;
+        if (this.props.loading) {
+            content = <Icon icon='loadingDots' size={this.props.iconSize + 8} color={this.props.iconColor} />;
+        } else {
+            content = <>
+                        {hasChildren && <Text style={styles.text} color={this.props.colorText}>{children}</Text>}
+                        {hasIcon     && <Icon icon={this.props.icon} size={this.props.iconSize} color={this.props.iconColor} angle={this.props.iconAngle} />}
+                    </>;
+        }
 
         return (
-            <View
+            <ButtonView
                 style={style}
                 onTouchStart={this.onTouchStart}
                 onTouchEnd={this.onTouchEnd}
-                pointerEvents={'box-only'}
+                pointerEvents={this.props.pointerEvents}
             >
-                <Text style={styles.text}>
-                    {this.props.children}
-                </Text>
-                <Animated.View
-                    style={[
-                        styles.ripple, {
-                        backgroundColor: this.props.rippleColor || '#000000',
-                        opacity: this.state.ripple_opacity,
-                        top: this.state.ripple_posY,
-                        left: this.state.ripple_posX,
-                        borderRadius: this.state.ripple_anim,
-                        transform: [{ scale: this.state.ripple_anim }]
-                    }]}
+                {content}
+                <Ripple
+                    ref={this.rippleRef}
+                    rippleColor={this.props.rippleColor}
+                    rippleFactor={this.props.rippleFactor}
                 />
-            </View>
+            </ButtonView>
         )
     }
 }
 
+Button.prototype.props = ButtonProps;
+Button.defaultProps = ButtonProps;
+
 const styles = StyleSheet.create({
     body: {
-        width: '80%',
         height: 56,
+        paddingHorizontal: 24,
 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
 
-        borderRadius: 20,
         overflow: 'hidden'
-    },
-    ripple: {
-        position: 'absolute',
-        width: '2%',
-        aspectRatio: 1
     },
     text: {
         color: '#FFFFFF',

@@ -23,13 +23,13 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
 * [React Native Push Notification](https://www.npmjs.com/package/react-native-push-notification)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
-* [React Native Paper](https://www.npmjs.com/package/react-native-paper)
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
 
 ### Unused (removed)
-* [React native gesture handler](https://www.npmjs.com/package/react-native-gesture-handler)
+* [React native Gesture Handler](https://www.npmjs.com/package/react-native-gesture-handler)
 * [React Native AES Crypto](https://www.npmjs.com/package/react-native-aes-crypto)
 * [React Native Admob](https://react-native-admob.github.io/admob)
+* [React Native Paper](https://www.npmjs.com/package/react-native-paper)
 
 ### Others
 * [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)

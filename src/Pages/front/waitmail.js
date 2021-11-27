@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { Button, ProgressBar } from 'react-native-paper';
+import { View, Image, StyleSheet } from 'react-native';
 
 import BackWaitmail from '../back/waitmail';
 
+import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import { Text, Button, ProgressBar } from '../Components';
 
 class Waitmail extends BackWaitmail {
     render() {
-        const textWait = langManager.curr['waitmail']['text-wait'];
+        const email = user.settings.email;
+        const textWait = langManager.curr['wait']['text-wait-email'];
 
         return (
             <View style={styles.body}>
@@ -17,25 +18,21 @@ class Waitmail extends BackWaitmail {
                     <Image source={require('../../../res/logo/login_circles.png')} />
                 </View>
 
-                {/* Content */}
-                <View style={styles.container}>
-                    <Text style={[styles.text, { color: themeManager.colors['text']['main'] }]}>{textWait}</Text>
-                </View>
+                <Text style={styles.title} color='main' fontSize={24}>{email}</Text>
+                <Text style={styles.text} color='main' fontSize={16}>{textWait}</Text>
 
                 {/* ProgressBar & Back button */}
                 <View style={styles.progressBar}>
-                    <ProgressBar indeterminate={true} color='#9095FF' />
+                    <ProgressBar />
                 </View>
-                <View style={styles.backButton}>
-                    <Button
-                        mode="contained"
-                        color="#9095FF"
-                        contentStyle={{ height: '100%' }}
-                        labelStyle={{ fontSize: 12, marginRight: -1, color: '#FFFFFF' }}
-                        icon={require('../../../res/icons/back.png')}
-                        onPress={this.onBack}
-                    ></Button>
-                </View>
+                <Button
+                    style={styles.backButton}
+                    color="main1"
+                    icon='arrowLeft'
+                    rippleFactor={4}
+                    onPress={this.onBack}
+                    borderRadius={20}
+                />
             </View>
         )
     }
@@ -45,13 +42,6 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         padding: '5%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    container: {
-        width: '100%',
-        marginTop: '5%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -66,23 +56,19 @@ const styles = StyleSheet.create({
         left: 96,
         right: 24,
         bottom: 24,
-        borderRadius: 20,
         overflow: 'hidden'
     },
     backButton: {
         position: 'absolute',
-        height: 56,
         width: 64,
         left: 24,
-        bottom: 24,
-        borderRadius: 20,
-        overflow: 'hidden'
+        bottom: 24
+    },
+    title: {
+        marginBottom: 64
     },
     text: {
-        width: '90%',
-        marginVertical: '4%',
-        textAlign: 'center',
-        fontSize: 16
+        width: '90%'
     }
 });
 

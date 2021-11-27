@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { Platform, Animated } from 'react-native';
 
 import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
-import { isEmail, random, sleep } from '../../Functions/Functions';
-import { OptionsAnimation } from '../../Functions/Animations';
-import { enableMorningNotifications } from '../../Functions/Notifications';
 
 const REFRESH_DELAY = 2; // seconds
 
@@ -25,6 +20,9 @@ class BackWaitinternet extends React.Component {
     }
     Loop = async () => {
         await user.server.Ping();
+        if (user.server.online) {
+            user.changePage('login');
+        }
     }
 }
 

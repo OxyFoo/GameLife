@@ -344,9 +344,8 @@
         }
     },
 
-    "waitmail": {
-        "page-title": "",
-
-        "text-wait": "Un mail vous a été envoyé pour autoriser votre appareil à vous connecter.\n\nLe mail peut s'envoyer après quelque minutes, vérifiez vos spam."
+    "wait": {
+        "text-wait-internet": "Vous devez être connecté à internet pour pouvoir vous connecter !",
+        "text-wait-email": "Un mail vous a été envoyé pour autoriser votre appareil à vous connecter.\n\nLe mail peut s'envoyer après quelque minutes, vérifiez vos spam."
     }
 }

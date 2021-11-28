@@ -1,0 +1,148 @@
+import * as React from 'react';
+import { View, Animated, StyleSheet, Dimensions } from 'react-native';
+
+import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
+
+const PageProps = {
+    style: {},
+    canScrollOver: true
+}
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
+class Page extends React.Component {
+    constructor(props) {
+        super(props);
+        this.posY = 0;
+    }
+    state = {
+        height: 0,
+        positionY: new Animated.Value(0)
+    }
+
+    onLayout = (event) => {
+        const  { x, y, width, height } = event.nativeEvent.layout;
+        if (height !== this.state.maxHeight) {
+            this.setState({ height: height });
+
+            this.posY = this.LimitValues(this.posY);
+            TimingAnimation(this.state.positionY, this.posY, 0.1).start();
+        }
+        //console.log('Screen:', SCREEN_HEIGHT);
+        //console.log('Layout:', height);
+    }
+
+    LimitValues = (value, canScrollOver = false) => {
+        // No scroll over bottom
+        const { height } = this.state;
+        const bottom = value + height;
+        const maxHeight = SCREEN_HEIGHT * 0.8;
+        if (!canScrollOver) {
+            if (bottom < maxHeight)
+                value = maxHeight - height;
+        }
+        else if (height > maxHeight) {
+            if (value + height < maxHeight) {
+                value = (maxHeight - height) + ((value - (maxHeight - height)) / 4);
+            }
+        } else if (value < 0) {
+            value /= 4;
+        }
+        //if (bottom > maxHeight) value = height + (value / 4);
+        //if (value < maxHeight - height) value = (maxHeight - height) + (value / 4);
+
+        /*const top = this.posY + height;
+        const maxHeight = SCREEN_HEIGHT * 0.8;
+        if (height > maxHeight) {
+            if (!canScrollOver)
+                if (top < maxHeight)
+                    value = maxHeight - height;
+            if (value < maxHeight - height) value = (maxHeight - height) + (value / 4);
+        } else {
+            if (!canScrollOver)
+                value = Math.max(0, value);
+            else if (value < 0) value /= 4;
+        }*/
+
+        // No scroll over top
+        if (!canScrollOver) value = Math.min(0, value);
+        // Reduce over scroll top
+        if (value > 0) value /= 4;
+        return value;
+    }
+
+    onTouchStart = (event) => {
+        this.acc = 0;
+        this.firstPosY = this.posY;
+        this.firstTouchY = event.nativeEvent.pageY;
+
+        this.tickPos = 0;
+        this.tickTime = Date.now();
+    }
+
+    onTouchMove = (event) => {
+        // Position
+        const currPosY = event.nativeEvent.pageY;
+        const deltaPosY = this.firstTouchY - currPosY;
+        const newPosY = this.firstPosY - deltaPosY;
+
+        // Acceleration
+        const deltaTime = (Date.now() - this.tickTime) / 1000;
+        this.acc = (newPosY - this.tickPos) / deltaTime;
+        this.tickTime = Date.now();
+        this.tickPos = newPosY;
+
+        // Update
+        this.posY = this.LimitValues(newPosY, this.props.canScrollOver);
+        TimingAnimation(this.state.positionY, this.posY, 0.1).start();
+    }
+
+    onTouchEnd = (event) => {
+        let newPosY = this.posY + this.acc * 0.25;
+        newPosY = this.LimitValues(newPosY);
+
+        this.posY = newPosY;
+        if (Math.abs(this.acc) * 0.25 > 100) {
+            SpringAnimation(this.state.positionY, newPosY).start();
+        } else {
+            TimingAnimation(this.state.positionY, newPosY, 200).start();
+        }
+    }
+
+
+    render() {
+        const position = { transform: [{ translateY: this.state.positionY }] };
+
+        return (
+            <View
+                style={[styles.parent, this.props.style]}
+                onTouchStart={this.onTouchStart}
+                onTouchMove={this.onTouchMove}
+                onTouchEnd={this.onTouchEnd}
+            >
+                <Animated.View
+                    style={[styles.content, position]}
+                    onLayout={this.onLayout}
+                >
+                    {this.props.children}
+                </Animated.View>
+            </View>
+        );
+    }
+}
+
+Page.prototype.props = PageProps;
+Page.defaultProps = PageProps;
+
+const styles = StyleSheet.create({
+    parent: {
+        width: '100%',
+        height: '100%',
+        padding: '5%',
+        backgroundColor: '#00000001'
+    },
+    content: {
+    }
+});
+
+export default Page;

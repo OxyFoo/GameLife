@@ -37,14 +37,14 @@ class Button extends React.Component {
 
     onTouchStart = (event) => {
         this.rippleRef.current.onTouchStart(event);
-        this.posX = event.nativeEvent.locationX;
-        this.posY = event.nativeEvent.locationY;
+        this.posX = event.nativeEvent.pageX;
+        this.posY = event.nativeEvent.pageY;
     }
     onTouchEnd = (event) => {
         this.rippleRef.current.onTouchEnd(event);
 
-        const deltaX = Math.abs(event.nativeEvent.locationX - this.posX);
-        const deltaY = Math.abs(event.nativeEvent.locationY - this.posY);
+        const deltaX = Math.abs(event.nativeEvent.pageX - this.posX);
+        const deltaY = Math.abs(event.nativeEvent.pageY - this.posY);
         const isPress = deltaX < 20 && deltaY < 20;
 
         const callback = this.props.onPress;

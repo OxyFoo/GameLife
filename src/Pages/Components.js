@@ -20,6 +20,7 @@ import GLSvg from './components/GLSvg';
 import GLDigit from './components/GLDigit';
 import GLButton from './components/GLButton';
 
+import Page from './components/Page';
 import Text from './components/Text';
 import Input from './components/Input';
 import Icon from './components/Icon';
@@ -27,11 +28,14 @@ import Button from './components/Button';
 import BottomBar from './components/BottomBar';
 import Checkbox from './components/Checkbox';
 import Container from './components/Container';
+import Combobox from './components/Combobox';
 import Swiper from './components/Swiper';
 import ProgressBar from './components/ProgressBar';
 import XPBar from './components/XPBar';
 
 export {
+    Page,
+
     Text,
     Input,
     Icon,
@@ -39,6 +43,7 @@ export {
     BottomBar,
     Checkbox,
     Container,
+    Combobox,
     Swiper,
     ProgressBar,
     XPBar,

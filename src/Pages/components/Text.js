@@ -12,6 +12,7 @@ const TextProps = {
     fontSize: 18,
     color: 'primary',
     onPress: undefined,
+    onLayout: undefined
 }
 
 class Text extends React.Component {
@@ -35,6 +36,7 @@ class Text extends React.Component {
                         },
                         this.props.style
                     ]}
+                    onLayout={this.props.onLayout}
                 >
                     {this.props.children}
                 </RNText>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, ScrollView } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
@@ -8,7 +8,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import BackHome from '../back/home';
 import { dateToFormatString } from '../../Functions/Time';
-import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, Swiper, Text, XPBar } from '../Components';
+import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, Combobox, Swiper, Text, XPBar, Page } from '../Components';
 
 class Home extends BackHome {
     render() {
@@ -19,6 +19,58 @@ class Home extends BackHome {
         const nextLvlXP = userExperience.next;
 
         const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
+
+        return (
+            <Page canScrollOver={true}>
+                <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
+                <Button color='main1' borderRadius={14} style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
+
+                <XPBar value={4} style={{ marginBottom: 12 }} />
+
+                {/*<Combobox style={{ marginBottom: 12 }} />*/}
+
+                <Swiper
+                    style={{ marginBottom: 12 }}
+                    pages={[
+                        <>
+                            <Text style={{ marginBottom: 12 }}>{'Page 1'}</Text>
+                            <Button color='main1' borderRadius={14}>{'Quêtes journalières'}</Button>
+                        </>,
+                        <>
+                            <Text>{'Page 2'}</Text>
+                            <XPBar value={10 } style={{ marginBottom: 24 }} />
+                        </>,
+                        <Button color='main2' borderRadius={14}>{'Page 3'}</Button>
+                    ]}
+                />
+
+                <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
+                    <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                </Container>
+
+                <Container text='Rollable !' type='rollable' opened={true}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Checkbox
+                            style={{ marginRight: 4 }}
+                            checked={this.state.testChecked}
+                            onChange={() => { this.setState({ testChecked: !this.state.testChecked }) }}
+                        />
+                        <Text fontSize={14} color='primary' onPress={() => { this.setState({ testChecked: !this.state.testChecked }) }}>{'Blablabla blablabla blabla bla'}</Text>
+                    </View>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
+                    <Text style={{ marginBottom: 48 }}>Insh le scroll marche bien</Text>
+                </Container>
+            </Page>
+        )
 
         return (
             <View style={{ flex: 1 }}>
@@ -36,42 +88,58 @@ class Home extends BackHome {
                 </View>
 
                 {/* TESTS */}
-                <View style={{ flex: 1, padding: '5%' }}>
-                    <Button color='main2' borderRadius={14} style={{ marginBottom: 24 }} icon='home'>{'Ajouter des tâches'}</Button>
-                    <Button color='main1' borderRadius={14} style={{ marginBottom: 24 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
+                <ScrollView
+                    style={{ /*flex: 1*/ width: '100%', height: '100%', padding: '5%' }}
+                    onTouchEnd={() => {}}
+                >
+                    <View>
+                        <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
+                        <Button color='main1' borderRadius={14} style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
 
-                    <XPBar value={4} style={{ marginBottom: 24 }} />
+                        <XPBar value={4} style={{ marginBottom: 12 }} />
 
-                    <Swiper
-                        style={{ marginBottom: 24 }}
-                        pages={[
-                            <>
-                                <Text style={{ marginBottom: 12 }}>{'Page 1'}</Text>
-                                <Button color='main1' borderRadius={14}>{'Quêtes journalières'}</Button>
-                            </>,
-                            <>
-                                <Text>{'Page 2'}</Text>
-                                <XPBar value={10 } style={{ marginBottom: 24 }} />
-                            </>,
-                            <Button color='main2' borderRadius={14}>{'Page 3'}</Button>
-                        ]}
-                    />
+                        <Combobox style={{ marginBottom: 12 }} />
 
-                    <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
-                        <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
-                    </Container>
+                        <Swiper
+                            style={{ marginBottom: 12 }}
+                            pages={[
+                                <>
+                                    <Text style={{ marginBottom: 12 }}>{'Page 1'}</Text>
+                                    <Button color='main1' borderRadius={14}>{'Quêtes journalières'}</Button>
+                                </>,
+                                <>
+                                    <Text>{'Page 2'}</Text>
+                                    <XPBar value={10 } style={{ marginBottom: 24 }} />
+                                </>,
+                                <Button color='main2' borderRadius={14}>{'Page 3'}</Button>
+                            ]}
+                        />
 
-                    <Container text='Rollable !' type='rollable' opened={true}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Checkbox
-                                style={{ marginRight: 4 }}
-                                checked={this.state.testChecked}
-                                onChange={() => { this.setState({ testChecked: !this.state.testChecked }) }}
-                            />
-                            <Text fontSize={14} color='primary' onPress={() => { this.setState({ testChecked: !this.state.testChecked }) }}>{'Blablabla blablabla blabla bla'}</Text>
-                        </View>
-                    </Container>
-                </View>
+                        <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                        </Container>
+
+                        <Container text='Rollable !' type='rollable' opened={true}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Checkbox
+                                    style={{ marginRight: 4 }}
+                                    checked={this.state.testChecked}
+                                    onChange={() => { this.setState({ testChecked: !this.state.testChecked }) }}
+                                />
+                                <Text fontSize={14} color='primary' onPress={() => { this.setState({ testChecked: !this.state.testChecked }) }}>{'Blablabla blablabla blabla bla'}</Text>
+                            </View>
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                            <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
+                        </Container>
+
+                        <View style={{ width: '100%', height: 128 }} />
+                    </View>
+                </ScrollView>
 
                 {/* Stats */}
                 <View style={styles.parentView}>

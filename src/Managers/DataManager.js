@@ -51,11 +51,11 @@ class DataManager {
         const reqInternalData = await Request_Async(data);
 
         if (reqInternalData.status === 200) {
-            const status = reqInternalData.data['status'];
+            const status = reqInternalData.content['status'];
 
             if (status === 'ok') {
-                const tables = reqInternalData.data['tables'];
-                const hash = reqInternalData.data['hash'];
+                const tables = reqInternalData.content['tables'];
+                const hash = reqInternalData.content['hash'];
 
                 this.achievements.achievements = tables['achievements'];
                 this.contributors.contributors = tables['contributors'];

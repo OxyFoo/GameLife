@@ -18,6 +18,7 @@ import svgLoadingDots from '../../../res/icons/loading-dots';
 
 const IconProps = {
     style: {},
+    containerStyle: {},
     /**
      * @type {'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'home'|'shop'|'social'|'loading'|'loadingDots'}
      */
@@ -52,13 +53,19 @@ class Icon extends React.Component {
 
         if (show && icon !== '' && SVGIcons.hasOwnProperty(icon)) {
             const Icon = SVGIcons[icon];
-            output = <Icon width={size} height={size} color={color} rotation={angle} />;
+            output = <View style={[containerStyle, style]}>
+                        <Icon width={size} height={size} color={color} rotation={angle} />
+                    </View>;
         } else {
             output = <View style={[containerStyle, style]} />;
         }
 
         if (!isUndefined(onPress)) {
-            output = <TouchableOpacity style={[containerStyle, style]} onPress={this.props.onPress}>
+            output = <TouchableOpacity
+                        style={[containerStyle, this.props.containerStyle]}
+                        onPress={this.props.onPress}
+                        activeOpacity={.5}
+                    >
                         {output}
                     </TouchableOpacity>;
         }

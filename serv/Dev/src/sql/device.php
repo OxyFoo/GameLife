@@ -11,11 +11,12 @@
             }
         }
 
-        public static function Get($db, $deviceIdentifier, $deviceName) {
+        public static function Get($db, $deviceIdentifier, $deviceName, $searchAll = FALSE) {
             $device = NULL;
-            $command = "SELECT * FROM `Devices` WHERE `Name` = '$deviceName'";
-            $devices = $db->QueryArray($command);
+            $command = "SELECT * FROM `Devices`";
+            if (!$searchAll) $command .= " WHERE `Name` = '$deviceName'";
 
+            $devices = $db->QueryArray($command);
             for ($d = 0; $d < count($devices); $d++) {
                 if (password_verify($deviceIdentifier, $devices[$d]['Identifier'])) {
                     $device = $devices[$d];
@@ -23,14 +24,24 @@
                 }
             }
 
+            if ($device === NULL && !$searchAll) {
+                return Device::Get($db, $deviceIdentifier, $deviceName, TRUE);
+            }
+
             return $device;
         }
 
-        public static function Refresh($db, $device, $osName, $osVersion) {
-            if ($device['OSName'] != $osName || $device['OSVersion'] != $osVersion) {
+        public static function Refresh($db, $device, $deviceName, $osName, $osVersion) {
+            if ($device['Name'] != $deviceName || $device['OSName'] != $osName || $device['OSVersion'] != $osVersion) {
                 $ID = $device['ID'];
-                $update_command = "UPDATE `Devices` SET `OSName` = '$osName', `OSVersion` = '$osVersion', `Updated` = CURRENT_TIMESTAMP() WHERE `Devices`.`ID` = $ID";
-                $result = $db->Query($update_command);
+                $edit = array(
+                    'Name' => $deviceName,
+                    'OSName' => $osName,
+                    'OSVersion'  => $osVersion,
+                    'Updated' => 'CURRENT_TIMESTAMP()'
+                );
+                $cond = array('ID' => $ID);
+                $result = $db->QueryEdit('Devices', $edit, $cond);
                 if ($result !== TRUE) {
                     ExitWithStatus("Error: Refreshing device in DB failed");
                 }

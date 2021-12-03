@@ -180,7 +180,7 @@
     "identity": {
         "page-title": "Identité",
 
-        "name-pseudo": "Pseudo",
+        "name-username": "Pseudo",
         "name-title": "Titre",
         "name-age": "Age",
         "name-email": "EMail",
@@ -189,7 +189,7 @@
         "value-age": "{} ans",
         "value-totaltime": "{}h {}m",
 
-        "placeholder-pseudo": "Pseudo",
+        "placeholder-username": "Pseudo",
         "empty-title": "Aucun",
 
         "name-lastachievement": "Dernier succès",
@@ -221,7 +221,7 @@
         "page-text": "Bonjours à toi, joueur de ta propre vie, viens rejoindre la communoté des LVL-UP",
 
         "input-email-title": "Adresse email",
-        "input-pseudo-title": "Pseudo",
+        "input-username-title": "Pseudo",
         "input-cgu-text": "J'ai lu et j'accepte les %.",
         "input-cgu-click": "conditions générales",
         "button-login-text": "Se connecter",

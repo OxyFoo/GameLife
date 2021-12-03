@@ -56,19 +56,19 @@ const styles = StyleSheet.create({
     body: {
         width: '100%',
         height: 10,
+        borderRadius: 8,
         overflow: 'hidden'
     },
     bar: {
         width: '100%',
-        height: '100%',
-        borderRadius: 8,
+        height: '100%'
     },
     black: {
         position: 'absolute',
         height: '100%',
         top: 0,
         right: 0,
-        borderLeftWidth: 1,
+        borderLeftWidth: 0.6,
         borderLeftColor: '#FFFFFF',
         backgroundColor: '#000000'
     }

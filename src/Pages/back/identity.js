@@ -12,7 +12,7 @@ const MAX_WIDTH = Dimensions.get('window').width - 48;
 
 class BackIdentity extends React.Component {
     state = {
-        pseudo: user.pseudo,
+        username: user.username,
         birth: user.birth,
         title: user.title,
 
@@ -24,8 +24,8 @@ class BackIdentity extends React.Component {
 
     back = () => { user.backPage(); }
     async valid() {
-        if (user.pseudo !== this.state.pseudo) {
-            user.pseudo = this.state.pseudo;
+        if (user.username !== this.state.username) {
+            user.username = this.state.username;
         }
         user.title = this.state.title;
         user.birth = this.state.birth;
@@ -57,13 +57,13 @@ class BackIdentity extends React.Component {
             user.openPopup('ok', [ title, text ], undefined);
         }
     }
-    editPseudo = (newPseudo) => {
+    editPseudo = (newUsername) => {
         // Conditions
-        if (newPseudo.length > 16) {
+        if (newUsername.length > 16) {
             return;
         }
 
-        this.setState({ pseudo: newPseudo });
+        this.setState({ username: newUsername });
     }
 
     // Titre

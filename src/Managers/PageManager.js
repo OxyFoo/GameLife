@@ -26,6 +26,7 @@ import Skills from '../Pages/front/skills';
 import Statistic from '../Pages/front/statistic';
 import Waitinternet from '../Pages/front/waitinternet';
 import Waitmail from '../Pages/front/waitmail';
+import Test from '../Pages/front/test';
 
 class PageManager extends React.Component{
     state = {
@@ -186,6 +187,7 @@ class PageManager extends React.Component{
             case 'statistic': p = <Statistic args={args} />; break;
             case 'waitinternet': p = <Waitinternet />; break;
             case 'waitmail': p = <Waitmail args={args} />; break;
+            case 'test': p = <Test />; break;
         }
         return p;
     }

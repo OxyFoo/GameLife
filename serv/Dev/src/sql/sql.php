@@ -54,6 +54,21 @@
             return $output;
         }
 
+        public function QueryEdit($table, $cells, $conditions) {
+            $formatCells = array();
+            $formatConds = array();
+            foreach ($cells as $key => $value) {
+                array_push($formatCells, "`$key` = '$value'");
+            }
+            foreach ($conditions as $key => $value) {
+                array_push($formatConds, "`$key` = '$value'");
+            }
+            $SET = implode(',', $formatCells);
+            $COND = implode(' AND ', $formatConds);
+            $command = "UPDATE `$table` SET $SET WHERE $COND";
+            return $this->Query($command);
+        }
+
         public function SendMail($email, $deviceID, $accountID, $lang) {
             $device = Device::GetByID($this, $deviceID);
             $deviceID = $device['ID'];

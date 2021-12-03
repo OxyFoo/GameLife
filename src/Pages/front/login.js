@@ -12,7 +12,7 @@ class Login extends BackLogin {
         const pageTitle = langManager.curr['login']['page-title'];
         const pageText = langManager.curr['login']['page-text'];
         const titleEmail = langManager.curr['login']['input-email-title'];
-        const titleUsername = langManager.curr['login']['input-pseudo-title'];
+        const titleUsername = langManager.curr['login']['input-username-title'];
         const btnLogin = langManager.curr['login']['button-login-text'];
         const btnSignin = langManager.curr['login']['button-signin-text'];
 

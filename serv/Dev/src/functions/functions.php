@@ -39,6 +39,7 @@
     function ExitWithStatus($message) {
         $output = array('status' => 'error', 'error' => $message);
         echo(json_encode($output));
+        http_response_code(500);
         exit();
     }
 

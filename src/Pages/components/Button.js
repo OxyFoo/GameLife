@@ -21,6 +21,11 @@ const ButtonProps = {
     rippleColor: '#000000',
     rippleFactor: 2,
     borderRadius: 20,
+    /**
+     * Setting used to ignore button event, to get header icon press event
+     * @param {Boolean} nonClickable
+     */
+    nonClickable: false, // TODO - Teriner la remontée jusqu'au containers
     onPress: undefined,
     /**
      * @type {'auto'|'box-only'|'box-none'|'none'}

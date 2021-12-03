@@ -42,30 +42,19 @@ class Page extends React.Component {
                 value = maxHeight - height;
         }
         else if (height > maxHeight) {
-            if (value + height < maxHeight) {
+            if (bottom < maxHeight)
                 value = (maxHeight - height) + ((value - (maxHeight - height)) / 4);
-            }
-        } else if (value < 0) {
+        } else
+
+        // Reduce over scroll bottom
+        if (value < 0) {
             value /= 4;
         }
-        //if (bottom > maxHeight) value = height + (value / 4);
-        //if (value < maxHeight - height) value = (maxHeight - height) + (value / 4);
-
-        /*const top = this.posY + height;
-        const maxHeight = SCREEN_HEIGHT * 0.8;
-        if (height > maxHeight) {
-            if (!canScrollOver)
-                if (top < maxHeight)
-                    value = maxHeight - height;
-            if (value < maxHeight - height) value = (maxHeight - height) + (value / 4);
-        } else {
-            if (!canScrollOver)
-                value = Math.max(0, value);
-            else if (value < 0) value /= 4;
-        }*/
 
         // No scroll over top
-        if (!canScrollOver) value = Math.min(0, value);
+        if (!canScrollOver)
+            if (value > 0)
+                value = 0;
         // Reduce over scroll top
         if (value > 0) value /= 4;
         return value;

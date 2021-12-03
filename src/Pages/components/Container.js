@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Functions/Animations';
 
 import Text from './Text';
 import Button from './Button';
@@ -21,7 +21,8 @@ const ContainerProps = {
      */
     type: 'static',
     opened: true,
-    onChangeState: (opened) => {}
+    onChangeState: (opened) => {},
+    onHeaderPress: () => {}
 }
 
 class Container extends React.Component {
@@ -54,7 +55,7 @@ class Container extends React.Component {
         this.setState({ opened: newState });
         this.props.onChangeState(newState);
 
-        SpringAnimation(this.state.animAngleIcon, newState ? 90 : 0, false).start();
+        TimingAnimation(this.state.animAngleIcon, newState ? 1 : 0, 400, false).start();
         TimingAnimation(this.state.animHeightContent, newState ? 1 : 0, 300, false).start();
         TimingAnimation(this.state.animBorderRadius, newState ? 0 : 20, newState ? 50 : 800, false).start();
     }
@@ -70,6 +71,11 @@ class Container extends React.Component {
             backgroundColor: themeManager.getColor(this.props.backgroundColor),
             opacity: this.state.maxHeight === 0 && this.props.type === 'rollable' ? 0 : 1,
             height: this.state.maxHeight === 0 ? 'auto' : contentHeight
+        };
+
+        const interDeg = {
+            inputRange: [0, 1],
+            outputRange: ['0deg', '180deg']
         };
 
         return (
@@ -88,7 +94,9 @@ class Container extends React.Component {
                     >
                         {this.props.text}
                     </Text>
-                    {this.props.type === 'rollable' && <Icon icon='chevron' size={18} angle={this.state.animAngleIcon} />}
+                    <Animated.View style={{ transform: [{ rotateX: this.state.animAngleIcon.interpolate(interDeg) }] }}>
+                        {this.props.type === 'rollable' && <Icon icon='chevron' size={18} angle={90} />}
+                    </Animated.View>
                 </Button>
                 <Animated.View
                     style={[styles.content, contentStyle]}

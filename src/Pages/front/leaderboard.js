@@ -11,7 +11,7 @@ import dataManager from '../../Managers/DataManager';
 class Leaderboard extends BackLeaderboard {
     userBoard(props) {
         const self = props.self || false;
-        const pseudo = props.pseudo + (self ? ' (' + langManager.curr['level']['me'] + ')' : '');
+        const username = props.username + (self ? ' (' + langManager.curr['level']['me'] + ')' : '');
         const title = props.title;
         const xp = Math.ceil(props.xp) + ' ' + langManager.curr['level']['xp'];
         const pos = props.position;
@@ -22,7 +22,7 @@ class Leaderboard extends BackLeaderboard {
                     <Image style={{ width: '100%', height: '100%' }} source={require('../../../res/photos/default.jpg')} resizeMode="contain" />
                 </View>
                 <View style={styles.userDetails}>
-                    <GLText style={styles.userDetail} title={pseudo} />
+                    <GLText style={styles.userDetail} title={username} />
                     <GLText style={styles.userDetail} title={title} />
                     <GLText style={styles.userDetail} title={xp} />
                     <GLText style={styles.userCorner} title={pos} />
@@ -32,13 +32,13 @@ class Leaderboard extends BackLeaderboard {
     }
 
     userComponent({ item, index }) {
-        const pseudo = item.Username;
+        const username = item.Username;
         const title = dataManager.titles.getTitleByID(parseInt(item.Title));
         const xp = item.XP;
 
         return (
             <this.userBoard
-                pseudo={pseudo}
+                username={username}
                 title={title}
                 xp={xp}
                 position={index+1}
@@ -70,7 +70,7 @@ class Leaderboard extends BackLeaderboard {
 
                     <this.userBoard
                         self={true}
-                        pseudo={user.pseudo}
+                        username={user.username}
                         title={user.title === 0 ? '' : dataManager.titles.getTitleByID(user.title)}
                         xp={user.xp}
                         position={this.state.self}

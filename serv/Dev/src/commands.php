@@ -73,7 +73,7 @@
         /**
          * Function to ping the server from the app
          * It also allows to store the device in the database (model + OS)
-         * And to check the application version
+         * And to check the application version or if it is in maintenance mode
          */
         public function Ping() {
             $appData = $this->GetAppData();
@@ -93,7 +93,7 @@
                     if ($device === NULL) {
                         $this->output['status'] = 'error';
                     } else {
-                        Device::Refresh($this->db, $device, $osName, $osVersion);
+                        Device::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
                         Device::AddStatistic($this->db, $device);
                         $this->output['status'] = 'ok';
                     }
@@ -159,17 +159,17 @@
             $deviceIdentifier = $this->data['deviceID'];
             $deviceName = $this->data['deviceName'];
             $email = $this->data['email'];
-            $pseudo = $this->data['pseudo'];
+            $username = $this->data['username'];
             $lang = $this->data['lang'];
 
-            if (isset($deviceIdentifier, $deviceName, $email, $pseudo, $lang)) {
-                // Check pseudo
+            if (isset($deviceIdentifier, $deviceName, $email, $username, $lang)) {
+                // Check username
                     // Return pseudoUsed
                 // Add account
                 // Add deviceID in confirmed devices in account
                 // Return ok
-                if (User::pseudoIsFree($this->db, $pseudo)) {
-                    $account = Account::Add($this->db, $pseudo, $email);
+                if (User::pseudoIsFree($this->db, $username)) {
+                    $account = Account::Add($this->db, $username, $email);
                     if ($account === NULL) {
                         $this->output['status'] = 'error';
                     } else {
@@ -217,12 +217,15 @@
                     $account = Account::GetByID($this->db, $accountID);
                     $username = $account['Username'];
                     $title = $account['Title'];
-                    $userData = $this->db->Decrypt($account['Data']);
+                    $activities = $this->db->Decrypt($account['Data']);
                     $solvedAchievements = $account['SolvedAchievements'];
-                    if (isset($userData, $username, $title, $solvedAchievements)) {
-                        $userData = json_decode($userData, true);
-                        $userData['pseudo'] = $username;
-                        $userData['title'] = $title;
+                    if (isset($activities, $username, $title, $solvedAchievements)) {
+                        $userData = array(
+                            'username' => $username,
+                            'usernameDate' => $usernameDate,
+                            'title' => $title,
+                            'activities' => json_decode($activities, true)
+                        );
                         $userData['solvedAchievements'] = $solvedAchievements !== "" ? array_map('intval', explode(',', $solvedAchievements)) : array();
                         $userData = json_encode($userData);
                         $this->output['data'] = $userData;

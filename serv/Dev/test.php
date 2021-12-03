@@ -1,7 +1,16 @@
 <?php
 
-    require('./src/sql.php');
     require('./src/add.php');
+    require('./src/config.php');
+
+    require('./src/functions/mail.php');
+    require('./src/functions/functions.php');
+
+    require('./src/sql/account.php');
+    require('./src/sql/device.php');
+    require('./src/sql/user.php');
+    require('./src/sql/internalData.php');
+    require('./src/sql/sql.php');
 
     $db = new DataBase();
 
@@ -114,14 +123,44 @@
         $ID = 1;
         $command = "SELECT * FROM `Users` WHERE `ID` = '$ID'";
         $account = $db->Query($command);
-        print_r($account->fetch_assoc());
-        print_r($account);
+        $accountData = $account->fetch_assoc();
+        $activities = $db->Decrypt($accountData['Activities']);
+        //print_r($account);
+        //echo("<br />");
+        //print_r($accountData);
+        print_r($activities);
     } else if ($action === "error") {
         print_r("AH");
         //trigger_error("Error", 512);
         //$err = trigger_error("ErrorHandler", 512);
         $err = http_response_code(500);
         print_r($err);
+    } else if ($action === "queryEdit") {
+        $ID = '140';
+        $edit = array(
+            'Name' => 'A',
+            'OSName' => 'B',
+            'OSVersion'  => 'C',
+            'Updated' => 'CURRENT_TIMESTAMP()'
+        );
+        $cond = array('ID' => $ID);
+        //$update_command = "UPDATE `Devices` SET `OSName` = '$osName', `OSVersion` = '$osVersion', `Updated` = CURRENT_TIMESTAMP() WHERE `Devices`.`ID` = $ID";
+        //$result = $db->Query($update_command);
+        $result = $db->QueryEdit('Devices', $edit, $cond);
+        print_r($result);
+    } else if ($action === 'date') {
+        $account = Account::GetByID($db, '1');
+        //print_r($account);
+        $date = $account['LastChangeUsername'];
+        if ($date === NULL) {
+            print_r("AH");
+        }
+        print_r($date);
+        $int = strtotime($date);
+        echo("<br />");
+        print_r($int);
+        echo("<br />");
+        print_r(strtotime('0000-00-00 00:00:00'));
     }
 
 ?>

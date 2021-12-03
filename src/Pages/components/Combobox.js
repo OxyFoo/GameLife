@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import themeManager from '../../Managers/ThemeManager';
+
+import Icon from './Icon';
+import Input from './Input';
 
 const ComboboxProps = {
     style: {},
@@ -9,10 +11,10 @@ const ComboboxProps = {
 
 class Combobox extends React.Component {
     render() {
-        const hexActiveColor = themeManager.getColor(this.props.activeColor);
-        const borders = { borderColor: hexActiveColor };
         return (
-            <View style={[styles.parent, borders, this.props.style]}>
+            <View style={[styles.parent, this.props.style]}>
+                <Input staticLabel={true} />
+                <Icon style={styles.chevron} icon='chevron' />
             </View>
         );
     }
@@ -23,10 +25,14 @@ Combobox.defaultProps = ComboboxProps;
 
 const styles = StyleSheet.create({
     parent: {
-        width: '100%',
-        borderRadius: 4,
-        borderWidth: 1.6
+        width: '100%'
     },
+    chevron: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        backgroundColor: 'red'
+    }
 });
 
 export default Combobox;

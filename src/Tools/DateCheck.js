@@ -26,7 +26,7 @@ async function checkDate() {
         const onlineData = { 'action': 'getDate' }
         const result = await Request_Async(onlineData);
         if (result.status === 200) {
-            const onlineTime = result.data['time'];
+            const onlineTime = result.content['time'];
             const delta = Math.abs(today.getTime()/1000 - onlineTime) / (60 * 60);
             if (delta > 12) {
                 safe = false;

@@ -41,7 +41,7 @@ class Server {
         let online = false;
         const result_ping = await this.__reqPing();
         if (result_ping.status === 200) {
-            const status = result_ping.data['status'];
+            const status = result_ping.content['status'];
             // Return status & popup out of this class
             if (status === 'update') {
                 const title = langManager.curr['home']['alert-update-title'];
@@ -57,7 +57,7 @@ class Server {
                 online = true;
             }
         } else {
-            console.error('Ping failed: ' + result_ping.status + ' - ' + result_ping.data['error']);
+            console.error('Ping failed:', result_ping.status, '-', result_ping.content);
         }
         this.online = online;
     }
@@ -72,17 +72,17 @@ class Server {
         const result_connect = await this.__reqConnect(email);
 
         if (result_connect.status !== 200) {
-            console.error('Get token failed: ' + result_connect.status + ' - ' + result_connect.data['error']);
+            console.error('Get token failed: ' + result_connect.status + ' - ' + result_connect.content['error']);
             return STATUS.ERROR;
         }
 
-        if (Object.values(STATUS).includes(result_connect.data['status'])) {
-            status = result_connect.data['status'];
+        if (Object.values(STATUS).includes(result_connect.content['status'])) {
+            status = result_connect.content['status'];
             this.status = status;
         }
 
         if (status === STATUS.CONNECTED || status === STATUS.BANNED) {
-            const token = result_connect.data['token'];
+            const token = result_connect.content['token'];
             if (typeof(token) !== 'undefined' && token.length) {
                 this.token = token;
             } else {
@@ -96,14 +96,14 @@ class Server {
     /**
      * Send a request to the server to create a new user account
      * @param {String} email - Email of the user
-     * @param {String} pseudo - Pseudo of the user
+     * @param {String} username - Pseudo of the user
      * @returns {Promise<String>} - Status of the user signin
      */
-    Signin = async (email, pseudo) => {
+    Signin = async (email, username) => {
         let signin = null;
-        const result = await this.__reqSignin(email, pseudo);
+        const result = await this.__reqSignin(email, username);
         if (result.status === 200) {
-            const status = result.data['status'];
+            const status = result.content['status'];
             if (status === 'ok' || status === 'pseudoUsed') {
                 signin = status;
             }
@@ -126,7 +126,7 @@ class Server {
 
         const response = await Request_Async(_data);
         if (response.status === 200) {
-            if (response.data['status'] === 'ok') {
+            if (response.content['status'] === 'ok') {
                 // TODO - Add "Data Token"
                 success = true;
             }
@@ -147,9 +147,12 @@ class Server {
         };
         const response = await Request_Async(data);
         if (response.status === 200) {
-            if (strIsJSON(response.data)) {
-                // TODO - Add "Data Token"
-                json = JSON.parse(response.data);
+            let content = response.content;
+            if (content['status'] === 'ok') {
+                if (strIsJSON(content['data'])) {
+                    // TODO - Add "Data Token"
+                    json = JSON.parse(content['data']);
+                }
             }
         }
         return json;
@@ -173,11 +176,11 @@ class Server {
         return Request_Async(data);
     }
 
-    __reqSignin(email, pseudo) {
+    __reqSignin(email, username) {
         const data = {
             'action': 'signin',
             'email': email,
-            'pseudo': pseudo,
+            'username': username,
             'lang': langManager.currentLangageKey,
             ...getDeviceInformations()
         };

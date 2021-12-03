@@ -65,8 +65,8 @@
             }
         }
 
-        public static function pseudoIsFree($db, $pseudo) {
-            $p = ucfirst(strtolower($pseudo));
+        public static function pseudoIsFree($db, $username) {
+            $p = ucfirst(strtolower($username));
             $command = "SELECT * FROM `Users` WHERE `Username` = '$p'";
             $pseudos = $db->Query($command);
             $isFree = false;
@@ -127,26 +127,26 @@
             $changed = 0;
             $accountID = $account['ID'];
             $oldUsername = $account['Username'];
-            $lastPseudoDate = strtotime($account['LastPseudoDate']);
+            $lastPseudoDate = strtotime($account['LastChangeUsername']);
             $todayDate = time();
             $todayText = date('Y-m-d H:i:s', $todayDate);
             $delta = ($todayDate - $lastPseudoDate) / (60 * 60 * 24);
             $u = ucfirst(strtolower($username));
             if ($oldUsername != $u) {
                 if (empty($oldUsername)) {
-                    $command = "UPDATE `Users` SET `Username` = '$u', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'";
+                    $command = "UPDATE `Users` SET `Username` = '$u', `LastChangeUsername` = '$todayText' WHERE `ID` = '$accountID'";
                     $result_pseudo = $db->Query($command);
                     if ($result_pseudo !== TRUE) {
-                        ExitWithStatus("Error: Saving pseudo failed (2)");
+                        ExitWithStatus("Error: Saving username failed (2)");
                     }
                 } else if ($delta >= $DAYS_PSEUDO_CHANGE) {
                     $pseudoIsFree = $db->pseudoIsFree($accountID, $u);
                     if ($pseudoIsFree) {
-                        $command = "UPDATE `Users` SET `Username` = '$u', `LastPseudoDate` = '$todayText' WHERE `ID` = '$accountID'";
+                        $command = "UPDATE `Users` SET `Username` = '$u', `LastChangeUsername` = '$todayText' WHERE `ID` = '$accountID'";
                         $result_pseudo = $db->Query($command);
                         $changed = 1;
                         if ($result_pseudo !== TRUE) {
-                            ExitWithStatus("Error: Saving pseudo failed");
+                            ExitWithStatus("Error: Saving username failed");
                         }
                     } else {
                         $changed = -2;

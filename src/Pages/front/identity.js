@@ -66,13 +66,13 @@ class Identity extends BackIdentity {
                         </Animated.View>
 
                         {/* Pseudo */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-pseudo'].toUpperCase()} />
+                        <GLText style={styles.text} title={langManager.curr['identity']['name-username'].toUpperCase()} />
                         <GLTextEditable
                             style={styles.value}
-                            value={this.state.pseudo}
+                            value={this.state.username}
                             onChangeText={this.editPseudo}
                             beforeChangeText={this.beforeEditPseudo}
-                            placeholder={langManager.curr['identity']['placeholder-pseudo']}
+                            placeholder={langManager.curr['identity']['placeholder-username']}
                         />
 
                         {/* Email */}

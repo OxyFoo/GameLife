@@ -2,9 +2,9 @@
 
     class Account
     {
-        public static function Add($db, $pseudo, $email) {
+        public static function Add($db, $username, $email) {
             // Add new empty account
-            $command = "INSERT INTO `Users` (`Username`, `Email`) VALUES ('$pseudo', '$email')";
+            $command = "INSERT INTO `Users` (`Username`, `Email`) VALUES ('$username', '$email')";
             $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Adding device in DB failed");

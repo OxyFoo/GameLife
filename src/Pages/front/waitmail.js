@@ -18,8 +18,8 @@ class Waitmail extends BackWaitmail {
                     <Image source={require('../../../res/logo/login_circles.png')} />
                 </View>
 
-                <Text style={styles.title} color='main' fontSize={24}>{email}</Text>
-                <Text style={styles.text} color='main' fontSize={16}>{textWait}</Text>
+                <Text style={styles.title} color='primary' fontSize={22}>{email}</Text>
+                <Text color='primary' fontSize={16}>{textWait}</Text>
 
                 {/* ProgressBar & Back button */}
                 <View style={styles.progressBar}>
@@ -65,10 +65,8 @@ const styles = StyleSheet.create({
         bottom: 24
     },
     title: {
-        marginBottom: 64
-    },
-    text: {
-        width: '90%'
+        marginBottom: 64,
+        textDecorationLine: 'underline'
     }
 });
 

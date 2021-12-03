@@ -11,7 +11,6 @@ import Server from "../Class/Server";
 import Settings from '../Class/Settings';
 
 const DAYS_PSEUDO_CHANGE = 7;
-const DEFAULT_PSEUDO = 'Player';
 const DEFAULT_STATS = {
     'sag': 0,
     'int': 0,
@@ -50,8 +49,8 @@ class UserManager {
 
     constructor() {
         // User informations
-        this.pseudo = DEFAULT_PSEUDO;
-        this.pseudoDate = null;
+        this.username = '';
+        this.usernameDate = null;
         this.title = 0;
         this.birth = '';
         this.xp = 0;
@@ -59,8 +58,8 @@ class UserManager {
     }
 
     async clear() {
-        this.pseudo = DEFAULT_PSEUDO;
-        this.pseudoDate = null;
+        this.username = '';
+        this.usernameDate = null;
         this.title = 0;
         this.birth = '';
         this.xp = 0;
@@ -100,7 +99,7 @@ class UserManager {
     }
 
     daysBeforeChangePseudo = () => {
-        const delta = getDaysUntil(this.pseudoDate);
+        const delta = getDaysUntil(this.usernameDate);
         const remain = DAYS_PSEUDO_CHANGE - Math.round(delta);
         return [ remain, DAYS_PSEUDO_CHANGE ];
     }
@@ -120,7 +119,7 @@ class UserManager {
             const text = langManager.curr['identity']['alert-wrongpseudo-text'];
             this.openPopup('ok', [ title, text ], loadData.bind(this));
         } else if (status === "ok") {
-            this.pseudoDate = new Date();
+            this.usernameDate = new Date();
             this.localSave();
         }
     }*/
@@ -155,8 +154,8 @@ class UserManager {
      */
     localSave = () => {
         const data = {
-            'pseudo': this.pseudo,
-            'pseudoDate': this.pseudoDate,
+            'username': this.username,
+            'usernameDate': this.usernameDate,
             'title': this.title,
             'birth': this.birth,
             'xp': this.xp,
@@ -195,15 +194,15 @@ class UserManager {
 
         // TODO - Finir ça
         if (data !== null) {
-            this.pseudo = data['pseudo'];
-            this.pseudoDate = data['pseudoDate'];
+            this.username = data['username'];
+            this.usernameDate = data['usernameDate'];
             this.title = data['title'];
-            this.birth = data['birth'];
-            //this.xp = data['xp'];
             this.activities.setAll(data['activities']);
-            this.achievements.solved = data['solvedAchievements'];
-            this.quests.daily = data['daily'];
-            this.quests.todoList = data['tasks'];
+            //this.birth = data['birth'];
+            //this.xp = data['xp'];
+            //this.achievements.solved = data['solvedAchievements'];
+            //this.quests.daily = data['daily'];
+            //this.quests.todoList = data['tasks'];
         }
 
         this.refreshStats();

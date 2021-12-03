@@ -18,7 +18,7 @@ class ReqResponse {
      * @readonly
      * @property {Object} data - The data of the request or error information if failed.
      */
-    data = null;
+    content = null;
 }
 
 /**
@@ -43,13 +43,13 @@ async function Request_Async(data = {}, url = URL, method = 'POST', headers = de
         reqResponse.status = request.status;
         if (request.status === 200) {
             const response = await request.json();
-            reqResponse.data = response;
+            reqResponse.content = response;
         } else {
-            reqResponse.data = { error: request.statusText };
+            reqResponse.content = { error: request.statusText };
         }
     } catch (err) {
         reqResponse.status = 1;
-        reqResponse.data = { error: err };
+        reqResponse.content = { error: err };
     }
 
     return reqResponse;

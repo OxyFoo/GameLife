@@ -45,6 +45,16 @@ class BackLoading extends React.Component {
             });
         }
 
+        // Connect
+        if (user.server.token === '') {
+            const email = user.settings.email;
+            const status = await user.server.Connect(email);
+            if (status === 'newDevice' || status === 'waitMailConfirmation') {
+                while (!user.changePage('waitmail', { email: email })) await sleep(100);
+                return;
+            }
+        }
+
         // Loading : User data
         await sleep(500); this.setState({ icon: 1 });
         if (online) {

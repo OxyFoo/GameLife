@@ -31,6 +31,13 @@ class App extends React.Component {
         await user.settings.Load();
         await user.server.Ping();
 
+        const TEST = false;
+
+        if (TEST) {
+            user.changePage('test');
+            return;
+        }
+
         const email = user.settings.email;
         const online = user.server.online;
         const connected = user.settings.connected;

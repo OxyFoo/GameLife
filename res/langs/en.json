@@ -180,7 +180,7 @@
     "identity": {
         "page-title": "Identity",
 
-        "name-pseudo": "Pseudo",
+        "name-username": "Pseudo",
         "name-title": "Title",
         "name-age": "Age",
         "name-email": "EMail",
@@ -189,7 +189,7 @@
         "value-age": "{} years old",
         "value-totaltime": "{}h {}m",
 
-        "placeholder-pseudo": "Pseudo",
+        "placeholder-username": "Pseudo",
         "empty-title": "None",
 
         "name-lastachievement": "Last achievement",
@@ -221,7 +221,7 @@
         "page-text": "Hello to you, player of your own life, come and join the LVL-UP community",
 
         "input-email-title": "Email address",
-        "input-pseudo-title": "Pseudo",
+        "input-username-title": "Pseudo",
         "input-cgu-text": "I have read and agree to the %.",
         "input-cgu-click": "terms and conditions",
         "button-login-text": "Login",
@@ -229,8 +229,8 @@
 
         "error-login-nonmail": "Please enter a valid email address.",
         "error-signin-server": "An error has occurred.",
-        "error-signin-pseudoWrong": "Please enter a correct pseudo.",
-        "error-signin-pseudoUsed": "This pseudo is already in use.",
+        "error-signin-pseudoWrong": "Please enter a correct username.",
+        "error-signin-pseudoUsed": "This username is already in use.",
         "error-signin-disagree": "Please accept the terms and conditions."
     },
 

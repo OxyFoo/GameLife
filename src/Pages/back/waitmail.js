@@ -33,10 +33,11 @@ class BackWaitmail extends React.Component {
             this.onBack();
         } else if (status === 'ok' || status === 'ban') {
             user.settings.connected = true;
-            user.settings.Save();
+            await user.settings.Save();
             user.changePage('loading');
         } else if (status === 'newDevice') {
             // TODO - Mail sent
+            console.log('Mail sent');
         }
     }
 }

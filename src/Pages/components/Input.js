@@ -9,6 +9,7 @@ import Text from './Text';
 const InputProps = {
     style: {},
     label: 'Default',
+    staticLabel: false,
     activeColor: 'main1',
     text: '',
     /**
@@ -31,13 +32,13 @@ const ANIM_DURATION = 200;
 class Input extends React.Component {
     state = {
         animHeight: new Animated.Value(1),
-        animTop: new Animated.Value(0),
         animLeft: new Animated.Value(12),
         animScale: new Animated.Value(1),
         animBorderWidth: new Animated.Value(1.2),
 
         isFocused: false,
-        textWidth: 0
+        textWidth: 0,
+        textHeight: 0
     }
 
     onLayout = (event) => {
@@ -45,11 +46,20 @@ class Input extends React.Component {
         if (width !== this.state.textWidth) {
             this.setState({ textWidth: width });
         }
+        if (height !== this.state.textHeight) {
+            this.setState({ textHeight: height });
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.staticLabel) {
+            this.movePlaceHolderBorder();
+        }
     }
 
     movePlaceHolderIn() {
+        if (this.props.staticLabel) return;
         TimingAnimation(this.state.animHeight, 1, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animTop, 0, ANIM_DURATION, false).start();
         TimingAnimation(this.state.animLeft, 12, ANIM_DURATION, false).start();
         TimingAnimation(this.state.animScale, 1, ANIM_DURATION, false).start();
         TimingAnimation(this.state.animBorderWidth, 1.2, ANIM_DURATION, false).start();
@@ -57,7 +67,6 @@ class Input extends React.Component {
 
     movePlaceHolderBorder() {
         TimingAnimation(this.state.animHeight, 0, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animTop, -6, ANIM_DURATION, false).start();
         TimingAnimation(this.state.animLeft, 8, ANIM_DURATION, false).start();
         TimingAnimation(this.state.animScale, 0.75, ANIM_DURATION, false).start();
         TimingAnimation(this.state.animBorderWidth, 1.6, ANIM_DURATION, false).start();
@@ -76,7 +85,7 @@ class Input extends React.Component {
     }
 
     render() {
-        const interH = { inputRange: [0, 1], outputRange: ['12%', '100%'] }
+        const interH = { inputRange: [0, 1], outputRange: ['0%', '100%'] }
         const activeColor = this.state.isFocused ? this.props.activeColor : 'border';
         const hexActiveColor = themeManager.getColor(activeColor);
         const hexBackgroundColor = themeManager.getColor('background');
@@ -99,18 +108,20 @@ class Input extends React.Component {
                         height: this.state.animHeight.interpolate(interH),
                         transform: [
                             { translateX: -this.state.textWidth/2 },
+                            { translateY: -this.state.textHeight/2 },
                             { scale: this.state.animScale },
                             { translateX: this.state.textWidth/2 },
+                            { translateY: this.state.textHeight/2 },
                             { translateX: this.state.animLeft },
-                            { translateY: this.state.animTop }
+                            //{ translateY: this.state.animTop }
                         ]
                     }]}
+                    pointerEvents={'none'}
                 >
                     <Text
                         color={textColor}
                         fontSize={16}
                         onLayout={this.onLayout}
-                        onPress={() => {}}
                     >
                         {this.props.label}
                     </Text>
@@ -139,6 +150,7 @@ const styles = StyleSheet.create({
     },
     placeholderParent: {
         position: 'absolute',
+        minHeight: 4,
         top: 0,
         left: 0,
         paddingHorizontal: 4,
@@ -149,6 +161,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     input: {
+        height: 56,
         color: '#FFFFFF',
         paddingHorizontal: 12
     }

@@ -1,15 +1,26 @@
-import { isUndefined } from "../Functions/Functions";
+import { UserManager } from "../Managers/UserManager";
 import dataManager from "../Managers/DataManager";
+import { isUndefined } from "../Functions/Functions";
 
-const allStats = [ 'sag', 'int', 'con', 'for', 'end', 'agi', 'dex' ];
+const allStats = [ 'int', 'soc', 'for', 'end', 'agi', 'dex' ];
 const UserXPperLevel = 20;
 const StatXPperLevel = 2;
 const SkillXPperLevel = 20;
 
 const MaxHourPerDay = 12;
 
+class XPInfo {
+    xp = 0;
+    lvl = 0;
+    next = 0;
+    totalXP = 0;
+}
+
 class Experience {
     constructor(user) {
+        /**
+         * @type {UserManager}
+         */
         this.user = user;
         this.getAllActivities = () => { return this.user.activities.getAll(); };
     }
@@ -18,7 +29,7 @@ class Experience {
      * Calculate user xp & lvl & stats
      * @param {Date} toDate Date before calculate stats (undefined to calculate before now)
      * @param {Date} fromDate Date after calculate stats (undefined to calculate all time)
-     * @returns {Dict} xp, totalXP, lvl, next (amount of XP for next level)
+     * @returns {XPInfo} xp, totalXP, lvl, next (amount of XP for next level)
      */
      getExperience(toDate, fromDate) {
         const refEndDate = !isUndefined(toDate) ? new Date(toDate) : new Date();

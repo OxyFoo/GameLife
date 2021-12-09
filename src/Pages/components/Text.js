@@ -17,8 +17,11 @@ const TextProps = {
 
 class Text extends React.Component {
     render() {
-        const color = themeManager.getColor(this.props.color, 'text');
         const onPress = this.props.onPress;
+        let color = themeManager.getColor(this.props.color, 'text');
+        if (color === null) {
+            color = themeManager.getColor(this.props.color);
+        }
 
         return (
             <TouchableOpacity

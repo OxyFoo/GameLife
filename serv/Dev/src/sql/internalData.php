@@ -3,11 +3,11 @@
     function GetAllInternalData($db, $lang = 'fr') {
         $db_all = array();
         $db_all['achievements'] = GetAchievements($db, $lang);
-        $db_all['categories'] = GetCategories($db, $lang);
         $db_all['contributors'] = GetContributors($db, $lang);
         $db_all['quotes'] = GetQuotes($db, $lang);
         $db_all['skills'] = GetSkills($db, $lang);
         $db_all['skillsIcon'] = GetSkillsIcon($db);
+        $db_all['skillsCategory'] = GetSkillsCategory($db, $lang);
         $db_all['titles'] = GetTitles($db, $lang);
         return $db_all;
     }
@@ -21,6 +21,9 @@
 
         // Translations
         for ($i = 0; $i < count($achievements); $i++) {
+            $achievements[$i]['ID'] = intval($achievements[$i]['ID']);
+            $achievements[$i]['Type'] = intval($achievements[$i]['Type']);
+
             $NameTranslations = $achievements[$i]["NameTranslations"];
             $DescriptionTranslations = $achievements[$i]["DescriptionTranslations"];
             unset($achievements[$i]["NameTranslations"]);
@@ -41,29 +44,6 @@
         }
 
         return $achievements;
-    }
-
-    function GetCategories($db, $lang = 'fr') {
-        $categories = $db->QueryArray("SELECT * FROM `Categories`");
-
-        if ($categories === FALSE) {
-            return array();
-        }
-
-        // Translations
-        for ($i = 0; $i < count($categories); $i++) {
-            $Translations = $categories[$i]["Translations"];
-            unset($categories[$i]["Translations"]);
-
-            if (isJson($Translations)) {
-                $jsonTranslations = json_decode($Translations);
-                if (!empty($jsonTranslations->$lang)) {
-                    $categories[$i]["Name"] = $jsonTranslations->$lang;
-                }
-            }
-        }
-
-        return $categories;
     }
 
     function GetContributors($db, $lang) {
@@ -95,6 +75,7 @@
 
         // Translations
         for ($i = 0; $i < $helpers_count; $i++) {
+            $helpers_sorted[$i]['ID'] = intval($helpers_sorted[$i]['ID']);
             $Translations = $helpers_sorted[$i]["TypeTrad"];
             unset($helpers_sorted[$i]["TypeTrad"]);
             unset($helpers_sorted[$i]["Priority"]);
@@ -113,17 +94,18 @@
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
         $validQuotes = array();
         if ($quotes !== FALSE) {
-            for ($q = 0; $q < count($quotes); $q++) {
-                $Lang = $quotes[$q]["Lang"];
-                $Quote = $quotes[$q]["Quote"];
-                $Author = $quotes[$q]["Author"];
+            for ($i = 0; $i < count($quotes); $i++) {
+                $quotes[$i]['ID'] = intval($quotes[$i]['ID']);
+                $Lang = $quotes[$i]["Lang"];
+                $Quote = $quotes[$i]["Quote"];
+                $Author = $quotes[$i]["Author"];
                 if (areSet([$Lang, $Quote, $Author])) {
                     if ($Lang == $lang) {
-                        array_push($validQuotes, $quotes[$q]);
+                        array_push($validQuotes, $quotes[$i]);
                     } else if ($lang === 'fr' && $Lang === 'en') {
                         $add = rand(0, 20) === 0;
                         if ($add) {
-                            array_push($validQuotes, $quotes[$q]);
+                            array_push($validQuotes, $quotes[$i]);
                         }
                     }
                 }
@@ -139,6 +121,9 @@
 
         if ($skills !== FALSE && $categories !== FALSE) {
             for ($i = 0; $i < count($skills); $i++) {
+                $skills[$i]["ID"] = intval($skills[$i]["ID"]);
+                $skills[$i]["XP"] = intval($skills[$i]["XP"]);
+
                 // Get old stats
                 $Wisdom = $skills[$i]["Wisdom"];
                 $Intelligence = $skills[$i]["Intelligence"];
@@ -159,13 +144,13 @@
 
                 // Add new stats
                 $Stats = array(
-                    "sag" => $Wisdom,
-                    "int" => $Intelligence,
-                    "con" => $Confidence,
-                    "for" => $Strength,
-                    "end" => $Stamina,
-                    "agi" => $Agility,
-                    "dex" => $Dexterity
+                    "sag" => intval($Wisdom),
+                    "int" => intval($Intelligence),
+                    "con" => intval($Confidence),
+                    "for" => intval($Strength),
+                    "end" => intval($Stamina),
+                    "agi" => intval($Agility),
+                    "dex" => intval($Dexterity)
                 );
                 $skills[$i]["Stats"] = $Stats;
 
@@ -175,6 +160,7 @@
                 if (empty($Name) || $CategoryID === 0) {
                     continue;
                 }
+                $skills[$i]["CategoryID"] = intval($CategoryID);
 
                 // Name translations
                 $Translations = $skills[$i]["Translations"];
@@ -188,12 +174,13 @@
 
                 // Logo
                 $LogoID = $skills[$i]["LogoID"];
+                $skills[$i]["LogoID"] = intval($LogoID);
                 if ($LogoID == 0) {
                     for ($c = 0; $c < count($categories); $c++) {
                         if ($categories[$c]["ID"] == $CategoryID) {
                             $categoryLogoID = $categories[$c]["LogoID"];
                             if ($categoryLogoID != 0) {
-                                $skills[$i]["LogoID"] = $categoryLogoID;
+                                $skills[$i]["LogoID"] = intval($categoryLogoID);
                             }
                             break;
                         }
@@ -214,7 +201,35 @@
         if ($skillsIcon === FALSE) {
             return array();
         }
+        for ($i = 0; $i < count($skillsIcon); $i++) {
+            $skillsIcon[$i]["ID"] = intval($skillsIcon[$i]["ID"]);
+        }
         return $skillsIcon;
+    }
+
+    function GetSkillsCategory($db, $lang = 'fr') {
+        $categories = $db->QueryArray("SELECT * FROM `Categories`");
+
+        if ($categories === FALSE) {
+            return array();
+        }
+
+        // Translations
+        for ($i = 0; $i < count($categories); $i++) {
+            $categories[$i]["ID"] = intval($categories[$i]["ID"]);
+            $categories[$i]["LogoID"] = intval($categories[$i]["LogoID"]);
+            $Translations = $categories[$i]["Translations"];
+            unset($categories[$i]["Translations"]);
+
+            if (isJson($Translations)) {
+                $jsonTranslations = json_decode($Translations);
+                if (!empty($jsonTranslations->$lang)) {
+                    $categories[$i]["Name"] = $jsonTranslations->$lang;
+                }
+            }
+        }
+
+        return $categories;
     }
 
     function GetTitles($db, $lang = 'fr') {
@@ -226,6 +241,9 @@
 
         // Translations
         for ($i = 0; $i < count($titles); $i++) {
+            $titles[$i]['ID'] = intval($titles[$i]['ID']);
+            $titles[$i]['AchievementsCondition'] = intval($titles[$i]['AchievementsCondition']);
+
             $Translations = $titles[$i]["Translations"];
             unset($titles[$i]["Translations"]);
 

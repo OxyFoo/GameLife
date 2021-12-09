@@ -8,42 +8,56 @@ import {  SpringAnimation } from '../../Functions/Animations';
 const XPBarProps = {
     value: 0,
     maxValue: 10,
+    supValue: 0,
     style: {}
 }
 
 class XPBar extends React.Component {
     state = {
-        animation: new Animated.Value(1)
+        width: 0,
+        animation: new Animated.Value(0),
+        animCover: new Animated.Value(0)
     }
 
     componentDidMount() {
         this.startAnimations();
     }
-    
+
+    onLayout = (event) => {
+        const { width } = event.nativeEvent.layout;
+        this.setState({ width: width });
+    }
+
     startAnimations = async () => {
         const valueMax = parseInt(this.props.maxValue);
         const value = minmax(0, this.props.value, valueMax);
-        const valueInt = 1 - (value / valueMax);
+        const valueInt = value / valueMax;
+        const valueCover = this.props.supValue / valueMax;
 
         await sleep(300);
-        SpringAnimation(this.state.animation, valueInt, false).start();
+        SpringAnimation(this.state.animation, valueInt).start();
+        await sleep(300);
+        SpringAnimation(this.state.animCover, valueCover).start();
     }
 
     render() {
         const style = { ...styles.body, ...this.props.style };
-        const inter = { inputRange: [0, 1], outputRange: ['0%', '100%'] };
+        const leftOffset = Animated.multiply(this.state.animation, this.state.width);
+        const suppOffset = Animated.multiply(this.state.animCover, this.state.width);
+        const black = [styles.black, { transform: [{ translateX: leftOffset } ]}];
+        const cover = [styles.border, { transform: [{ translateX: suppOffset } ]}];
 
         return (
-            <View style={style}>
+            <View style={style} onLayout={this.onLayout}>
                 <LinearGradient
                     style={styles.bar}
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 0}}
                     colors={['#DBA1FF', '#9095FF', '#8CF7FF']}
                 />
-                <Animated.View
-                    style={[styles.black, { width: this.state.animation.interpolate(inter) }]}
-                />
+                <Animated.View style={black}>
+                    <Animated.View style={cover} />
+                </Animated.View>
             </View>
         )
     }
@@ -65,12 +79,24 @@ const styles = StyleSheet.create({
     },
     black: {
         position: 'absolute',
+        width: '100%',
         height: '100%',
         top: 0,
-        right: 0,
+        left: 0,
         borderLeftWidth: 0.6,
         borderLeftColor: '#FFFFFF',
-        backgroundColor: '#000000'
+        backgroundColor: '#000000',
+        overflow: 'hidden'
+    },
+    border: {
+        position: 'absolute',
+        top: 0,
+        left: '-100%',
+        width: '100%',
+        minWidth: 0.6,
+        height: '100%',
+        opacity: 0.5,
+        backgroundColor: '#FFFFFF'
     }
 });
 

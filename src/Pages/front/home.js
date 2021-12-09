@@ -3,17 +3,63 @@ import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import dataManager from '../../Managers/DataManager';
-import themeManager from '../../Managers/ThemeManager';
 
 import BackHome from '../back/home';
-import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, Combobox, Swiper, Text, XPBar, Page } from '../Components';
+import { Button, Container, Swiper, Text, XPBar, Page } from '../Components';
+import { UserHeader, StatsBars } from '../Widgets';
+import { round } from '../../Functions/Functions';
 
 class Home extends BackHome {
     render() {
+        const lang = langManager.curr['home'];
+        const userStats = user.experience.getExperience();
+        const nextLvlPc = round(userStats.xp / userStats.next, 2);
+
         return (
             <Page canScrollOver={true}>
-                <Text>{user.username}</Text>
+                <UserHeader />
+
+                <View style={styles.XPHeader}>
+                    <View style={styles.XPHeaderLvl}>
+                        <Text style={{ marginRight: 8 }}>LVL</Text>
+                        <Text color='main2'>{userStats.lvl}</Text>
+                    </View>
+                    <Text>{nextLvlPc}%</Text>
+                </View>
+                <XPBar value={userStats.xp} maxValue={userStats.next} />
+
+                <Swiper style={styles.topSpace} pages={[
+                    <Text>Page 1</Text>,
+                    <Text>Page 2</Text>,
+                    <Text>Page 3</Text>
+                ]} />
+
+                <Button style={styles.topSpace} color='main2' borderRadius={8} icon='add'>{lang['btn-add-task']}</Button>
+                <Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>
+
+                <Container
+                    style={styles.topSpace}
+                    text={lang['con-stats']}
+                    type='rollable'
+                    opened={false}
+                    color='main3'
+                    rippleColor='white'
+                >
+                    <StatsBars data={user.stats} />
+                </Container>
+
+                <Container
+                    style={styles.topSpace}
+                    text={lang['con-skill-experience']}
+                    type='rollable'
+                    opened={false}
+                    color='main3'
+                    //rippleColor='white'
+                >
+                    {/* TODO - Show best skills */}
+                    <Button style={styles.btnSmall}>{lang['btn-other-skills']}</Button>
+                </Container>
+
             </Page>
         );
     }
@@ -21,36 +67,30 @@ class Home extends BackHome {
 const ww = Dimensions.get('window').width ; 
 const wh = Dimensions.get('window').height ;
 const styles = StyleSheet.create({
-    parentView: {
-        flex: 1,
-        padding:"2%"
-    },
-    containerHeader: {
-        width: '100%',
-        height: '10%',
+    XPHeader: {
+        marginBottom: 12,
+        paddingHorizontal: '5%',
         flexDirection: 'row',
+        justifyContent: 'space-between'
     },
-    containerUserName: {
-        width: '50%',
-        height: '100%',
-        padding: "2%",
+    XPHeaderLvl: {
+        flexDirection: 'row'
+    },
 
-        display: 'flex',
-        justifyContent: 'center',
+    topSpace: {
+        marginTop: 24
+    },
 
+    btnSmall: {
+        height: 46,
+        marginHorizontal: '20%',
+        borderRadius: 8
     },
-    username: {
-        marginLeft: "2%",
-        fontSize: ww * 48 / 1000,
-        textAlign: 'left'
-    },
-    title: {
-        marginTop: "4%",
-        marginLeft: "2%",
-        fontSize: ww * 37 / 1000,
-        textAlign: 'left',
-        
-    },
+
+
+
+
+
     containerUserXP: {
         width: '50%',
         paddingHorizontal: "0%",

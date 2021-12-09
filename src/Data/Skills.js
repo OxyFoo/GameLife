@@ -13,12 +13,15 @@ class Skill {
         'agi': 0,
         'dex': 0
     };
-    LogoID = '';
+    LogoID = 0;
     Creator = '';
     XP = 0;
 }
 
 class Icon {
+    ID = 0;
+    Name = '';
+    Content = '';
 }
 
 class Category {
@@ -29,8 +32,19 @@ class Category {
 
 class Skills {
     constructor() {
+        /**
+         * @type {Skill[]}
+         */
         this.skills = [];
+
+        /**
+         * @type {Icon[]}
+         */
         this.skillsIcons = [];
+
+        /**
+         * @type {Category[]}
+         */
         this.skillsCategories = [];
     }
 

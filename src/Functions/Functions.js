@@ -4,6 +4,16 @@ function twoDigit(n) {
     return ('00' + n).slice(-2);
 }
 
+/**
+ * @param {Number} number 
+ * @param {Number} decimal 
+ * @returns {Number}
+ */
+function round(number, decimal = 0) {
+    const dec = decimal.toString();
+    return  +(Math.round(number + ('e+' + dec)) + ('e-' + dec));
+}
+
 function sum(arr) {
     return arr.reduce((partial_sum, a) => partial_sum + parseInt(a), 0);
 }
@@ -105,7 +115,7 @@ function random(min, max) {
     return parseInt(R);
 }
 
-export { twoDigit, sum, range, strIsJSON,
+export { twoDigit, round, sum, range, strIsJSON,
     sortByKey, getByKey, isEmail,
     getDeviceInformations, isUndefined, minmax,
     sleep, random };

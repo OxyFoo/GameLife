@@ -8,6 +8,16 @@ import Titles from "../Data/Titles";
 import Quotes from "../Data/Quotes";
 import Contributors from "../Data/Contributors";
 
+// TODO - For inventory
+class Title {
+    ID = 0;
+    Type = 0;
+    Name = '';
+    Description = '';
+    Conditions = '';
+    Reward = '';
+}
+
 class DataManager {
     constructor() {
         this.achievements = new Achievements();
@@ -42,7 +52,9 @@ class DataManager {
     }
 
     async onlineLoad() {
-        const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
+        // TODO - null pour les tests
+        const hash = null;
+        //const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
         const data = {
             'action': 'getInternalData',
             'hash': hash === null ? '' : hash['hash'],
@@ -62,7 +74,7 @@ class DataManager {
                 this.quotes.quotes = tables['quotes'];
                 this.skills.skills = tables['skills'];
                 this.skills.skillsIcons = tables['skillsIcon'];
-                this.skills.skillsCategories = tables['categories'];
+                this.skills.skillsCategories = tables['skillsCategory'];
                 this.titles.titles = tables['titles'];
                 await DataStorage.Save(STORAGE.INTERNAL_HASH, { hash: hash }, false);
                 await this.localSave();

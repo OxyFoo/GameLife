@@ -12,9 +12,8 @@ import Settings from '../Class/Settings';
 
 const DAYS_PSEUDO_CHANGE = 7;
 const DEFAULT_STATS = {
-    'sag': 0,
     'int': 0,
-    'con': 0,
+    'soc': 0,
     'for': 0,
     'end': 0,
     'agi': 0,
@@ -93,6 +92,10 @@ class UserManager {
         this.activities.removeDeletedSkillsActivities();
         this.experience.getExperience();
         this.changePage();
+    }
+
+    getTitle() {
+        return dataManager.titles.getTitleByID(user.title) || '';
     }
 
     async eventNewAchievement(achievement) {
@@ -196,8 +199,8 @@ class UserManager {
         if (data !== null) {
             this.username = data['username'];
             this.usernameDate = data['usernameDate'];
-            this.title = data['title'];
-            this.activities.setAll(data['activities']);
+            this.title = 1;//data['title'];
+            //this.activities.setAll(data['activities']);
             //this.birth = data['birth'];
             //this.xp = data['xp'];
             //this.achievements.solved = data['solvedAchievements'];

@@ -32,6 +32,32 @@
         "me": "Me"
     },
 
+    "dates": {
+        "month": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        "days": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ]
+    },
+
     "modal": {
         "btn-ok": "Ok",
         "btn-yes": "Yes",
@@ -148,6 +174,12 @@
     },
 
     "home": {
+        "btn-add-task": "Add tasks",
+        "btn-quests": "Quests",
+        "con-stats": "Statistics",
+        "con-skill-experience": "Skills",
+        "btn-other-skills": "Other comp.",
+
         "page-title": "Game Life",
         "title-calendar": "Calendar",
         "title-skills": "Skills",
@@ -325,18 +357,16 @@
             "small": "XP"
         },
         "names": {
-            "sag": "Wisdom",
             "int": "Intelligence",
-            "con": "Confidence",
+            "soc": "Social",
             "for": "Strength",
             "end": "Stamina",
             "agi": "Agility",
             "dex": "Dexterity"
         },
         "descriptions": {
-            "sag": "Wisdom is a special skill, it allows you to gain bonus experience depending on your level. It is acquired by doing personal development activities such as meditation or other.",
             "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
-            "con": "Confidence is a special statistic, each hour of skill (no matter what skill you do) gives you 1 point of confidence, so it increases with you and tells you how many hours of activity you have done.",
+            "soc": "Social...",
             "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
             "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",

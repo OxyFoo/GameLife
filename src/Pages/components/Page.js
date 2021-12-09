@@ -5,6 +5,7 @@ import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
 
 const PageProps = {
     style: {},
+    scrollable: true,
     canScrollOver: true
 }
 
@@ -22,7 +23,7 @@ class Page extends React.Component {
 
     onLayout = (event) => {
         const  { x, y, width, height } = event.nativeEvent.layout;
-        if (height !== this.state.maxHeight) {
+        if (height !== this.state.height) {
             this.setState({ height: height });
 
             this.posY = this.LimitValues(this.posY);
@@ -33,22 +34,28 @@ class Page extends React.Component {
     }
 
     LimitValues = (value, canScrollOver = false) => {
+        if (!this.props.scrollable) {
+            return 0;
+        }
+
+        const reduceScroll = 8;
+
         // No scroll over bottom
         const { height } = this.state;
         const bottom = value + height;
-        const maxHeight = SCREEN_HEIGHT * 0.8;
+        const maxHeight = SCREEN_HEIGHT - 156;
         if (!canScrollOver) {
             if (bottom < maxHeight)
                 value = maxHeight - height;
         }
         else if (height > maxHeight) {
             if (bottom < maxHeight)
-                value = (maxHeight - height) + ((value - (maxHeight - height)) / 4);
+                value = (maxHeight - height) + ((value - (maxHeight - height)) / reduceScroll);
         } else
 
         // Reduce over scroll bottom
         if (value < 0) {
-            value /= 4;
+            value /= reduceScroll;
         }
 
         // No scroll over top
@@ -56,7 +63,7 @@ class Page extends React.Component {
             if (value > 0)
                 value = 0;
         // Reduce over scroll top
-        if (value > 0) value /= 4;
+        if (value > 0) value /= reduceScroll;
         return value;
     }
 

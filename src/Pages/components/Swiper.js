@@ -11,6 +11,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const SwiperProps = {
     style: {},
+    height: 128,
     borderRadius: 16,
     enableAutoNext: true,
     delayNext: 10,
@@ -105,8 +106,11 @@ class Swiper extends React.Component {
             <View
                 style={[
                     styles.parent,
-                    { backgroundColor: themeManager.getColor(this.props.backgroundColor) },
-                    { borderRadius: this.props.borderRadius },
+                    {
+                        height: this.props.height,
+                        backgroundColor: themeManager.getColor(this.props.backgroundColor),
+                        borderRadius: this.props.borderRadius
+                    },
                     this.props.style
                 ]}
                 onTouchStart={this.onTouchStart}
@@ -131,7 +135,6 @@ Swiper.defaultProps = SwiperProps;
 
 const styles = StyleSheet.create({
     parent: {
-        height: 128,
         overflow: 'hidden'
     },
     contentContainer: {

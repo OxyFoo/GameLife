@@ -1,62 +1,101 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { View, StyleSheet, FlatList, Animated, Dimensions } from 'react-native';
 
 import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
-import dataManager from '../../Managers/DataManager';
 
 import BackCalendar from '../back/calendar';
-import { GLHeader, GLIconButton, GLActivityBox, GLText } from '../Components';
-import { dateToFormatString } from '../../Functions/Time';
-import { getTimeToTomorrow } from '../../Functions/Time';
+import { Icon, Page, Text } from '../Components';
+import { Activity, BlockMonth, UserHeader } from '../Widgets';
+import themeManager from '../../Managers/ThemeManager';
+import { GetFullDate, GetMonthAndYear } from '../../Functions/Date';
+import dataManager from '../../Managers/DataManager';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Calendar extends BackCalendar {
     render() {
-        return null;
+        const { selectedDate, selectedMonth, selectedYear, animation } = this.state;
 
-        const styleTopLeft = [ styles.absolute, styles.topLeft ];
-        const styleMidLeft = [ styles.absolute, styles.midLeft ];
+        const interPanel = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
+        const interDateP = { inputRange: [0, 1], outputRange: [SCREEN_HEIGHT/4, 0] };
 
-        const DTPMode = this.state.showDateTimePicker;
-        const currDateTxt = dateToFormatString(this.state.currDate);
+        const styleContent = [styles.mainContent, { transform: [{ translateY: animation.interpolate(interPanel) }] } ];
+        const styleCalendar = { transform: [{ translateY: animation.interpolate(interDateP) }] };
 
-        const dailyquestTime = getTimeToTomorrow();
+        const title = selectedDate === null ? '' : GetMonthAndYear(selectedMonth, selectedYear);
+        const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
+
+        const month = ({ item }) => (
+            <BlockMonth
+                style={{ maxHeight: 260, minHeight: 260 }}
+                month={item.month}
+                year={item.year}
+                data={item.data}
+                onPressDay={this.daySelect}
+            />
+        );
+
+        return (
+            <Page style={{ padding: 0 }} scrollable={false}>
+                <UserHeader style={{ padding: '5%', paddingBottom: 0 }} />
+
+                <Animated.View style={styleContent}>
+                    {/* Month + arrows to show calendar */}
+                    <View style={styles.row}>
+                        <Icon icon='arrowLeft' onPress={() => this.daySelect()} color='main1' size={32} />
+                        <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
+                        <Icon size={32} />
+                    </View>
+
+                    {/* Date selection + arrows prev/next */}
+                    <View style={styles.row}>
+                        <Icon onPress={() => {this.weekSelect(-1)}} icon='chevron' color='main1' size={18} angle={180} />
+                        <BlockMonth
+                            style={styles.weekRow}
+                            showTitle={false}
+                            data={[this.state.currWeek]}
+                            month={selectedMonth}
+                            year={selectedYear}
+                            selectedDay={new Date(selectedYear, selectedMonth, selectedDate)}
+                            onPressDay={this.daySelect}
+                        />
+                        <Icon onPress={() => {this.weekSelect(1)}} icon='chevron' color='main1' size={18} />
+                    </View>
+
+                    {/* CurrDate + Activities panel */}
+                    <View style={[styles.pannel, { backgroundColor: themeManager.getColor('backgroundGrey') }]}>
+                        <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
+                        <Icon xml='' />
+                        <Icon xml={dataManager.skills.skillsIcons[0].Content} />
+                    </View>
+                </Animated.View>
+
+                <Animated.View style={styleCalendar}>
+                    <FlatList
+                        ref={(ref) => { this.flatlist = ref}}
+                        style={styles.months}
+                        data={this.state.months}
+                        renderItem={month}
+                        keyExtractor={(item, index) => 'm-' + index}
+                        //windowSize={12}
+                        //initialNumToRender={2}
+                        getItemLayout={(data, index) => (
+                            {length: 260, offset: 260 * index, index}
+                        )}
+                        //removeClippedSubviews={true}
+                        refreshing={false}
+                        //onEndReached={(e) => { this.addMonthToBottom() }}
+                        //onScroll={(e) => { if (e.nativeEvent.contentOffset.y === 0) this.addMonthToTop() }}
+                        onScroll={this.onScroll}
+                    />
+                </Animated.View>
+
+            </Page>
+        );
 
         return (
             <View style={{ flex: 1 }}>
-                {/* Header */}
-                <GLHeader
-                    title={langManager.curr['calendar']['page-title']}
-                    leftIcon="back"
-                    onPressLeft={this.back}
-                    rightIcon="plus"
-                    onPressRight={this.addSkill}
-                />
-
-                {/* Topbar */}
-                <View style={[styles.topBar, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
-                    <TouchableOpacity style={styles.headerLeft} activeOpacity={.5} onPress={this.showDTP} >
-                        <GLText style={styleTopLeft} title={currDateTxt} />
-                        {/* Edit */}
-                        <View style={styles.textIcon}>
-                            <GLText style={styles.small} title={langManager.curr['calendar']['header1-action']} color="secondary" />
-                            <GLIconButton size={14} icon='chevron' />
-                        </View>
-                    </TouchableOpacity>
-                    <View style={styles.Vseparator} />
-                    <TouchableOpacity style={styles.headerRight} activeOpacity={.5} onPress={this.dailyQuest} >
-                        <GLText style={styleTopLeft} title={langManager.curr['calendar']['header2-title']} />
-                        <GLText style={[styleMidLeft, styles.small]} title={langManager.curr['calendar']['header2-time'] + dailyquestTime} color="secondary" />
-                        {/* Daily quest */}
-                        <View style={styles.textIcon}>
-                            <GLText style={styles.small} title={langManager.curr['calendar']['header2-action']} color="secondary" />
-                            <GLIconButton size={14} icon='chevron' />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
+                {/* Show activities 
                 <FlatList
                     data={this.state.activities}
                     keyExtractor={(item, i) => 'activity_' + i}
@@ -81,60 +120,53 @@ class Calendar extends BackCalendar {
                             />
                         )
                     }}
-                />
-
-                <DateTimePickerModal
-                    date={this.state.currDate}
-                    mode={DTPMode}
-                    onConfirm={this.onChangeDateTimePicker}
-                    onCancel={this.hideDTP}
-                    isVisible={DTPMode != ''}
-                    maximumDate={new Date()}
-                    minimumDate={user.activities.getFirst()}
-                />
+                />*/}
 
             </View>
         )
     }
 }
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
-    topBar: {
+    row: {
         width: '100%',
-        height: '9.5%',
-        flexDirection: 'row',
-        borderColor: '#FFFFFF',
-        borderWidth: 3,
-        borderTopWidth: 2,
-    },
-    headerLeft: {
-        width: '40%',
-        height: '100%',
-    },
-    headerRight: {
-        width: '60%',
-        height: '100%'
-    },
-    Vseparator: {
-        width: 3,
-        height: '100%',
-        backgroundColor: '#FFFFFF'
-        
-    },
-    absolute: { position: 'absolute', fontSize: ww * 53 / 1000, },
-    small: { fontSize: ww * 426 / 10000 },
-    topLeft: { textAlign: 'left', top: "4%", left: "2%" },
-    midLeft: { textAlign: 'left', bottom: '40%', left: "2%" },
-    textIcon: {
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
+        marginTop: 12,
+        paddingHorizontal: '5%',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between'
+    },
+    weekRow: {
+        flex: 1,
+        marginBottom: 0
+    },
+    title: {
+        fontWeight: 'bold'
+    },
+    months: {
+        height: '80%'
+    },
 
+    mainContent: {
+        position: 'absolute',
+        top: 130,
+        width: '100%',
+        height: SCREEN_HEIGHT - 130,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+
+        zIndex: 100,
+        elevation: 100
+    },
+    pannel: {
+        width: '100%',
+        height: '85%',
+        marginTop: 12,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16
+    },
+    date: {
+        marginVertical: 24
     }
 });
 

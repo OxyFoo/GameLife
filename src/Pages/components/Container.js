@@ -13,6 +13,7 @@ const ContainerProps = {
     text: 'Title',
     textcolor: 'primary',
     color: 'main1',
+    rippleColor: undefined,
     backgroundColor: 'backgroundTransparent',
     icon: '',
     iconAngle: 0,
@@ -29,7 +30,7 @@ class Container extends React.Component {
     state = {
         animAngleIcon: new Animated.Value(0),
         animHeightContent: new Animated.Value(0),
-        animBorderRadius: new Animated.Value(20),
+        animBorderRadius: new Animated.Value(8),
         opened: false,
         maxHeight: 0
     }
@@ -38,13 +39,13 @@ class Container extends React.Component {
         if (this.props.opened !== this.state.opened) {
             TimingAnimation(this.state.animAngleIcon, 0, 0, false).start();
             TimingAnimation(this.state.animHeightContent, 0, 0, false).start();
-            TimingAnimation(this.state.animBorderRadius, 20, 0, false).start();
+            TimingAnimation(this.state.animBorderRadius, 8, 0, false).start();
             this.onChangeState();
         }
     }
 
     onLayout = (event) => {
-        const  { x, y, width, height } = event.nativeEvent.layout;
+        const { x, y, width, height } = event.nativeEvent.layout;
         if (height > this.state.maxHeight) {
             this.setState({ maxHeight: height });
         }
@@ -57,7 +58,7 @@ class Container extends React.Component {
 
         TimingAnimation(this.state.animAngleIcon, newState ? 1 : 0, 400, false).start();
         TimingAnimation(this.state.animHeightContent, newState ? 1 : 0, 300, false).start();
-        TimingAnimation(this.state.animBorderRadius, newState ? 0 : 20, newState ? 50 : 800, false).start();
+        TimingAnimation(this.state.animBorderRadius, newState ? 0 : 8, newState ? 50 : 800, false).start();
     }
 
     render() {
@@ -85,6 +86,8 @@ class Container extends React.Component {
                     color={this.props.color}
                     icon={this.props.type === 'rollable' ? '' : this.props.icon}
                     iconAngle={this.props.iconAngle}
+                    rippleColor={this.props.rippleColor}
+                    borderRadius={8}
                     onPress={this.onChangeState}
                     pointerEvents={this.props.type === 'rollable' ? 'box-only' : 'none'}
                 >
@@ -123,8 +126,8 @@ const styles = StyleSheet.create({
         paddingRight: 24
     },
     content: {
-        borderBottomStartRadius: 20,
-        borderBottomEndRadius: 20,
+        borderBottomStartRadius: 8,
+        borderBottomEndRadius: 8,
         overflow: 'hidden'
     }
 });

@@ -2,11 +2,8 @@ import { strIsJSON } from "../Functions/Functions";
 
 class Title {
     ID = 0;
-    Type = 0;
-    Name = '';
-    Description = '';
-    Conditions = '';
-    Reward = '';
+    Title = '';
+    AchievementsCondition = 0;
 }
 
 class Titles {

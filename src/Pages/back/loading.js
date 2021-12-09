@@ -36,6 +36,8 @@ class BackLoading extends React.Component {
         else        await dataManager.localLoad();
         await user.localLoad();
 
+        // TODO - Check data (if it doesn't empty)
+
         // Define quote
         const quote = dataManager.quotes.getRandomQuote();
         if (quote !== null) {
@@ -74,7 +76,10 @@ class BackLoading extends React.Component {
 
         await sleep(250); this.setState({ icon: 3 });
         await sleep(500);
-        while (!user.changePage('home')) await sleep(100);
+        //while (!user.changePage('home')) await sleep(100);
+
+        // TODO - Remove temp loading page
+        while (!user.changePage('calendar')) await sleep(100);
     }
 }
 

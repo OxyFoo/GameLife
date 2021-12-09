@@ -2,12 +2,16 @@ class ThemeManager {
     THEMES = {
         Dark: {
             main1: '#9095FF', // Purple
-            main2: '#DBA1FF', // Blue
+            main2: '#DBA1FF', // Pink
+            main3: '#0B112F', // Dark (background)
+            white: '#FFFFFF', // White
             border: '#808080', // Grey
             background: '#0E1247', // Dark purple
+            backgroundGrey: '#222740', // Grey
             backgroundTransparent: '#FFFFFF33', // Transparent white
-            globalBackground: '#000020',
-            globalBackcomponent: '#000000',
+
+            globalBackground: '#000020', // Obsolete
+            globalBackcomponent: '#000000', // Obsolete
             xpBar: '#ECECEC',
             text: {
                 main: '#ECECEC', // Obsolete
@@ -58,11 +62,13 @@ class ThemeManager {
      * @param {?String} subTheme - Key of subtheme (eg: text)
      * @returns {String} - Hex color
      */
-    getColor(str, subTheme) {
-        let output = str;
-        if (!str.includes('#')) {
+    getColor(str, subTheme = null) {
+        let output = null;
+        if (str.includes('#')) {
+            output = str;
+        } else {
             let selectedColors = this.colors;
-            if (selectedColors.hasOwnProperty(subTheme)) {
+            if (subTheme !== null && selectedColors.hasOwnProperty(subTheme)) {
                 selectedColors = selectedColors[subTheme];
             }
             if (selectedColors.hasOwnProperty(str)) {

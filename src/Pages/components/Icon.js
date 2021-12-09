@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 
+import Base64 from '../../Functions/Base64';
 import themeManager from '../../Managers/ThemeManager';
 import { isUndefined } from '../../Functions/Functions';
 
+import svgDefault from '../../../res/icons/default';
 import svgAdd from '../../../res/icons/add';
 import svgArrowLeft from '../../../res/icons/arrow-left';
 import svgCalendar from '../../../res/icons/calendar';
@@ -15,12 +17,18 @@ import svgShop from '../../../res/icons/shop';
 import svgSocial from '../../../res/icons/social';
 import svgLoading from '../../../res/icons/loading';
 import svgLoadingDots from '../../../res/icons/loading-dots';
+import { SvgXml } from 'react-native-svg';
 
 const IconProps = {
     style: {},
     containerStyle: {},
     /**
-     * @type {'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'home'|'shop'|'social'|'loading'|'loadingDots'}
+     * @description Display an icon from XML base64 encoded ('icon' sikp if define)
+     * @type {String}
+     */
+    xml: undefined,
+    /**
+     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'home'|'shop'|'social'|'loading'|'loadingDots'}
      */
     icon: '',
     size: 24,
@@ -31,6 +39,7 @@ const IconProps = {
 }
 
 const SVGIcons = {
+    default: svgDefault,
     add: svgAdd,
     arrowLeft: svgArrowLeft,
     calendar: svgCalendar,
@@ -47,14 +56,22 @@ const SVGIcons = {
 class Icon extends React.Component {
     render() {
         let output;
-        const { style, icon, size, angle, onPress, show } = this.props;
+        const { style, icon, xml, size, angle, onPress, show } = this.props;
         const containerStyle = { width: size, height: size };
         const color = themeManager.getColor(this.props.color);
 
-        if (show && icon !== '' && SVGIcons.hasOwnProperty(icon)) {
-            const Icon = SVGIcons[icon];
+        if (show && !isUndefined(xml)) {
+            if (typeof(xml) !== 'string' || xml.length < 10) {
+                return <Icon icon='default' width={size} height={size} color={color} />
+            }
+            const XML = Base64.decode(xml).split('#FFFFFF').join(color);
             output = <View style={[containerStyle, style]}>
-                        <Icon width={size} height={size} color={color} rotation={angle} />
+                        <SvgXml xml={XML} width={size} height={size} />
+                    </View>;
+        } else if (show && icon !== '' && SVGIcons.hasOwnProperty(icon)) {
+            const _Icon = SVGIcons[icon];
+            output = <View style={[containerStyle, style]}>
+                        <_Icon width={size} height={size} color={color} rotation={angle} />
                     </View>;
         } else {
             output = <View style={[containerStyle, style]} />;

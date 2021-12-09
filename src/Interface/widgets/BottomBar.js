@@ -3,9 +3,8 @@ import { Animated, StyleSheet, View } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import { SpringAnimation } from '../../Functions/Animations';
+import { Button, Icon } from '../Components';
 
-import Button from './Button';
-import Icon from './Icon';
 
 const BottomBarProps = {
     show: false,

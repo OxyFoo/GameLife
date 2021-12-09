@@ -5,7 +5,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackSkill from '../back/skill';
+import BackSkill from '../pageBack/skill';
 import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 import { dateToFormatString } from '../../Functions/Time';
 

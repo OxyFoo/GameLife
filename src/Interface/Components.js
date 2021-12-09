@@ -25,7 +25,6 @@ import Text from './components/Text';
 import Input from './components/Input';
 import Icon from './components/Icon';
 import Button from './components/Button';
-import BottomBar from './components/BottomBar';
 import Checkbox from './components/Checkbox';
 import Container from './components/Container';
 import Combobox from './components/Combobox';
@@ -40,7 +39,6 @@ export {
     Input,
     Icon,
     Button,
-    BottomBar,
     Checkbox,
     Container,
     Combobox,

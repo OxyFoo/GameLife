@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
-import BackWaitmail from '../back/waitmail';
+import BackWaitmail from '../pageBack/waitmail';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';

@@ -4,7 +4,7 @@ import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-import BackHome from '../back/home';
+import BackHome from '../pageBack/home';
 import { Button, Container, Swiper, Text, XPBar, Page } from '../Components';
 import { UserHeader, StatsBars } from '../Widgets';
 import { round } from '../../Functions/Functions';

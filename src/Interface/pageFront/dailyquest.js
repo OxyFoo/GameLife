@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 
-import BackDailyquest from '../back/dailyquest';
+import BackDailyquest from '../pageBack/dailyquest';
 import { GLButton, GLDropDown, GLHeader, GLIconButton, GLInput, GLSvg, GLText } from '../Components';
 import { isUndefined } from '../../Functions/Functions';
 import { getTimeToTomorrow } from '../../Functions/Time';

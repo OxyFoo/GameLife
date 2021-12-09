@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList,Dimensions } from 'react-native';
 
-import BackAbout from '../back/about';
+import BackAbout from '../pageBack/about';
 import { GLHeader, GLIconButton, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';

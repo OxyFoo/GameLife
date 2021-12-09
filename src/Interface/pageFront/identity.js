@@ -7,7 +7,7 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackIdentity from '../back/identity';
+import BackIdentity from '../pageBack/identity';
 import { GLDropDown, GLHeader, GLText, GLTextEditable } from '../Components';
 import { isUndefined } from '../../Functions/Functions';
 

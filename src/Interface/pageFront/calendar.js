@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList, Animated, Dimensions } from 'react-native';
 
 import user from '../../Managers/UserManager';
 
-import BackCalendar from '../back/calendar';
+import BackCalendar from '../pageBack/calendar';
 import { Icon, Page, Text } from '../Components';
 import { Activity, BlockMonth, UserHeader } from '../Widgets';
 import themeManager from '../../Managers/ThemeManager';

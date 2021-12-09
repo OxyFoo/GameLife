@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
 
-import BackSettings from '../back/settings';
+import BackSettings from '../pageBack/settings';
 import { GLDropDown, GLHeader, GLIconButton, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';

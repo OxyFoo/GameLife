@@ -6,7 +6,7 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackTest from '../back/test';
+import BackTest from '../pageBack/test';
 import { dateToFormatString } from '../../Functions/Time';
 import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, Combobox, Swiper, Text, XPBar, Page } from '../Components';
 

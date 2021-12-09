@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions} from 'react-native';
 
-import BackExperience from '../back/experience';
+import BackExperience from '../pageBack/experience';
 import { GLHeader, GLText, GLXPBar } from '../Components';
 
 import user from '../../Managers/UserManager';

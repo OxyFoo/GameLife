@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import BackLoading from '../back/loading';
+import BackLoading from '../pageBack/loading';
 import { GLText, GLLoading } from '../Components';
 
 class Loading extends BackLoading {

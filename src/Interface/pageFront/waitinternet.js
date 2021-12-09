@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
-import BackWaitinternet from '../back/waitinternet';
+import BackWaitinternet from '../pageBack/waitinternet';
 
 import langManager from '../../Managers/LangManager';
 import { Text } from '../Components';

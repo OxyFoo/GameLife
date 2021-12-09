@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackStatistic from '../back/statistic';
+import BackStatistic from '../pageBack/statistic';
 import { GLCropCorner, GLHeader, GLIconButton, GLText } from '../Components';
 
 class Statistic extends BackStatistic {

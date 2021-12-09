@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Image, Dimensions } from 'react-native';
 
-import BackLeaderboard from '../back/leaderboard';
+import BackLeaderboard from '../pageBack/leaderboard';
 import { GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';

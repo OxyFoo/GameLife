@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackSkills from '../back/skills';
+import BackSkills from '../pageBack/skills';
 import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../Components';
 
 class Skills extends BackSkills {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Image, StyleSheet, Animated } from 'react-native';
 
-import BackLogin from '../back/login';
+import BackLogin from '../pageBack/login';
 
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';

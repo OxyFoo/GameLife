@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 
-import BackShop from '../back/shop';
+import BackShop from '../pageBack/shop';
 import { GLHeader, GLText } from '../Components';
 
 import user from '../../Managers/UserManager';

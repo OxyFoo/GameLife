@@ -5,7 +5,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackAchievements from '../back/achievements';
+import BackAchievements from '../pageBack/achievements';
 import { GLHeader, GLText } from '../Components';
 
 class Achievements extends BackAchievements {

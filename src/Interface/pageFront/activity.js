@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import BackActivity from '../back/activity';
+import BackActivity from '../pageBack/activity';
 import { isUndefined } from '../../Functions/Functions';
 import { GLDropDown, GLHeader, GLText } from '../Components';
 

@@ -79,7 +79,7 @@ class BackLoading extends React.Component {
         //while (!user.changePage('home')) await sleep(100);
 
         // TODO - Remove temp loading page
-        while (!user.changePage('calendar')) await sleep(100);
+        while (!user.changePage('activity')) await sleep(100);
     }
 }
 

@@ -26,7 +26,8 @@ const ButtonProps = {
      * @param {Boolean} nonClickable
      */
     nonClickable: false, // TODO - Teriner la remontée jusqu'au containers
-    onPress: undefined,
+    onPress: () => {},
+    onLongPress: () => {},
     /**
      * @type {'auto'|'box-only'|'box-none'|'none'}
      */
@@ -37,25 +38,27 @@ class Button extends React.Component {
     constructor(props) {
         super(props);
         this.rippleRef = React.createRef(); 
-        this.posX = 0; this.posY = 0;
+        this.posX = 0; this.posY = 0; this.time = 0;
     }
 
     onTouchStart = (event) => {
         this.rippleRef.current.onTouchStart(event);
         this.posX = event.nativeEvent.pageX;
         this.posY = event.nativeEvent.pageY;
+        this.time = event.nativeEvent.timestamp;
     }
     onTouchEnd = (event) => {
         this.rippleRef.current.onTouchEnd(event);
 
         const deltaX = Math.abs(event.nativeEvent.pageX - this.posX);
         const deltaY = Math.abs(event.nativeEvent.pageY - this.posY);
+        const deltaT = (event.nativeEvent.timestamp - this.time);
         const isPress = deltaX < 20 && deltaY < 20;
 
-        const callback = this.props.onPress;
-        const isFunction = typeof(callback) === 'function';
-        if (isPress && isFunction && !this.props.loading) {
-            callback();
+        const { onPress, onLongPress } = this.props;
+        if (isPress && !this.props.loading) {
+            if (deltaT < 500) onPress();
+            else onLongPress();
         }
     }
 

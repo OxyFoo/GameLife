@@ -44,7 +44,6 @@ class UserManager {
     backPage;
     openPopup;
     closePopup;
-    openLeftPanel;
 
     constructor() {
         // User informations

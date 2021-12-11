@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import user from '../Managers/UserManager';
 import langManager from './LangManager';
 import { TimingAnimation } from '../Functions/Animations';
-import { GLLeftPanel, GLPopup } from '../Interface/Components';
+import { GLPopup } from '../Interface/Components';
 import { BottomBar } from '../Interface/Widgets';
 
 import About from '../Interface/pageFront/about';
@@ -42,8 +42,7 @@ class PageManager extends React.Component{
 
         // Old
         popupArgs: [ null, null, true ],
-        popupCallback: undefined,
-        leftPanelState: false,
+        popupCallback: undefined
     }
 
     componentDidMount() {
@@ -53,7 +52,6 @@ class PageManager extends React.Component{
         user.changePage = this.changePage;
         user.openPopup = this.openPopup;
         user.closePopup = this.closePopup;
-        user.openLeftPanel = this.openLeftPanel;
         BackHandler.addEventListener('hardwareBackPress', this.backHandle);
     }
 
@@ -162,10 +160,6 @@ class PageManager extends React.Component{
         }
     }
 
-    openLeftPanel = () => {
-        this.setState({ leftPanelState: !this.state.leftPanelState });
-    }
-
     GetPageContent(page, args) {
         let p;
         switch (page) {
@@ -223,7 +217,6 @@ class PageManager extends React.Component{
                     cancelable={this.state.popupArgs[2]}
                 />
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.pageIndex} />
-                <GLLeftPanel state={this.state.leftPanelState} />
             </LinearGradient>
         )
     }

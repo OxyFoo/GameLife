@@ -8,7 +8,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import BackTest from '../pageBack/test';
 import { dateToFormatString } from '../../Functions/Time';
-import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, Combobox, Swiper, Text, XPBar, Page } from '../Components';
+import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch } from '../Components';
 
 class Test extends BackTest {
     render() {
@@ -21,15 +21,21 @@ class Test extends BackTest {
         const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
-            <Page canScrollOver={true}>
+            <Page style={{ height: '1000%' }} canScrollOver={true}>
                 <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
                 <Button color='main1' borderRadius={14} style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
 
-                <XPBar value={0} style={{ marginBottom: 12 }} />
-                <XPBar value={4} style={{ marginBottom: 12 }} />
-                <XPBar value={10} style={{ marginBottom: 12 }} />
+                <Input style={{ marginBottom: 12 }} label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
 
-                <Combobox style={{ marginBottom: 12 }} />
+                <ComboBox style={{ marginBottom: 12 }} />
+
+                <TextSwitch style={{ marginBottom: 12 }} />
+
+                <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
+                    <XPBar value={0} style={{ marginBottom: 12 }} />
+                    <XPBar value={4} style={{ marginBottom: 12 }} />
+                    <XPBar value={10} style={{ marginBottom: 12 }} />
+                </Container>
 
                 <Swiper
                     style={{ marginBottom: 12 }}
@@ -46,7 +52,7 @@ class Test extends BackTest {
                     ]}
                 />
 
-                <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
+                {/*<Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
                     <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
                 </Container>
 
@@ -70,7 +76,8 @@ class Test extends BackTest {
                     <Text style={{ marginBottom: 48 }}>Blablabla</Text>
                     <Text style={{ marginBottom: 48 }}>Blablabla</Text>
                     <Text style={{ marginBottom: 48 }}>Insh le scroll marche bien</Text>
-                </Container>
+                </Container>*/}
+                
             </Page>
         )
 
@@ -100,7 +107,7 @@ class Test extends BackTest {
 
                         <XPBar value={4} style={{ marginBottom: 12 }} />
 
-                        <Combobox style={{ marginBottom: 12 }} />
+                        <ComboBox style={{ marginBottom: 12 }} />
 
                         <Swiper
                             style={{ marginBottom: 12 }}

@@ -17,6 +17,7 @@ class ThemeManager {
                 main: '#ECECEC', // Obsolete
                 primary: '#ECECEC',
                 secondary: '#808080',
+                light: '#A7A4A4',
                 error: '#CC0029'
             }
         }/*,

@@ -59,6 +59,7 @@
     },
 
     "modal": {
+        "back": "Retour",
         "btn-ok": "Ok",
         "btn-yes": "Oui",
         "btn-no": "Non",
@@ -89,6 +90,14 @@
     },
 
     "activity": {
+        "title-category": "Catégorie",
+        "title-activity": "Activité",
+        "title-schedule": "Horaire",
+        "title-experience": "Expérience",
+        "title-commentary": "Commentaire",
+        "btn-create": "Créer",
+
+        "__OLD": "",
         "page-title": "Activité",
         "input-category": "Catégorie",
         "input-activity": "Activité",
@@ -100,6 +109,10 @@
     },
 
     "calendar": {
+        "activity-start": "Début",
+        "activity-duration": "Durée",
+
+        "___OLD___": "OLD",
         "page-title": "Calendrier",
 
         "header1-action": "Modifier",

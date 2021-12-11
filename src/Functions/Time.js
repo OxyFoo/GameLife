@@ -75,7 +75,7 @@ function getDaysUntil(date) {
  * @param {Date} date
  * @returns {String} dd/mm/yyyy
  */
- function dateToFormatString(date) {
+function dateToFormatString(date) {
     const _date = new Date(date);
     const dd = twoDigit(_date.getDate());
     const mm = twoDigit(_date.getMonth() + 1);
@@ -83,5 +83,27 @@ function getDaysUntil(date) {
     return [ dd, mm, yyyy ].join('/');
 }
 
-export { getDates, getDurations,
-    getTimeToTomorrow, getDaysUntil, dateToFormatString };
+/**
+ * Return date with format : HH:MM
+ * @param {Number} time
+ * @param {Boolean} withOffset
+ * @returns {String} HH:MM
+ */
+function timeToFormatString(time, withOffset = false) {
+    const offset = withOffset ? new Date().getTimezoneOffset() : 0;
+    const minutesInDay = (time - offset) % 1440;
+    const HH = Math.floor(minutesInDay / 60);
+    const MM = Math.floor(minutesInDay - HH * 60);
+    return [ HH, MM ].map(twoDigit).join(':');
+}
+
+/**
+ * Get absolute time in seconds
+ */
+function GetTime() {
+    return Math.floor(new Date().getTime() / 1000);
+}
+
+export { getDates, getDurations, GetTime,
+    getTimeToTomorrow, getDaysUntil,
+    timeToFormatString, dateToFormatString };

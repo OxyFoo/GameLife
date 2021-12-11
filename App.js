@@ -31,7 +31,7 @@ class App extends React.Component {
         await user.settings.Load();
         await user.server.Ping();
 
-        const TEST = false;
+        const TEST = true;
 
         if (TEST) {
             user.changePage('test');

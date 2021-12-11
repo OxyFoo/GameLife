@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import user from '../../Managers/UserManager';
-import { SpringAnimation } from '../../Functions/Animations';
 import { Button, Icon } from '../Components';
+import { SpringAnimation } from '../../Functions/Animations';
 
 
 const BottomBarProps = {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     bar: {
         position: 'absolute',
         top: 0,
-        left: '0%',
+        left: 0,
         width: '11%',
         height: 4,
         marginLeft: '3%',

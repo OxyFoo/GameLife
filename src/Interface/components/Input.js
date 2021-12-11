@@ -17,7 +17,9 @@ const InputProps = {
      */
     textContentType: 'default',
     onChangeText: () => {},
-    enabled: true
+    enabled: true,
+    active: false,
+    pointerEvents: 'auto'
 }
 
 const textTypes = {
@@ -51,9 +53,13 @@ class Input extends React.Component {
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (this.props.staticLabel) {
             this.movePlaceHolderBorder();
+        }
+        if (prevProps.text !== this.props.text) {
+            if (this.props.text.length > 0) this.movePlaceHolderBorder();
+            else if (!this.state.isFocused) this.movePlaceHolderIn();
         }
     }
 
@@ -85,11 +91,12 @@ class Input extends React.Component {
     }
 
     render() {
+        const isActive = this.state.isFocused || this.props.active;
         const interH = { inputRange: [0, 1], outputRange: ['0%', '100%'] }
-        const activeColor = this.state.isFocused ? this.props.activeColor : 'border';
+        const activeColor = isActive ? this.props.activeColor : 'border';
         const hexActiveColor = themeManager.getColor(activeColor);
         const hexBackgroundColor = themeManager.getColor('background');
-        const textColor = this.state.isFocused ? themeManager.getColor(this.props.activeColor) : 'primary';
+        const textColor = isActive ? themeManager.getColor(this.props.activeColor) : 'primary';
         const interC = { inputRange: [0, 1], outputRange: [hexBackgroundColor+'FF', hexBackgroundColor+'00'] }
         const opacity = this.props.enabled ? 1 : 0.6;
 
@@ -129,11 +136,13 @@ class Input extends React.Component {
                 <TextInput
                     style={styles.input}
                     selectionColor={hexActiveColor}
+                    value={this.props.text}
                     onChangeText={this.props.onChangeText}
                     onFocus={this.onFocusIn}
                     onBlur={this.onFocusOut}
                     textContentType={textTypes[this.props.textContentType]['ios']}
                     autoCompleteType={textTypes[this.props.textContentType]['android']}
+                    pointerEvents={this.props.pointerEvents}
                 />
             </Animated.View>
         );

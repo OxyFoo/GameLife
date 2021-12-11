@@ -8,16 +8,6 @@ import Titles from "../Data/Titles";
 import Quotes from "../Data/Quotes";
 import Contributors from "../Data/Contributors";
 
-// TODO - For inventory
-class Title {
-    ID = 0;
-    Type = 0;
-    Name = '';
-    Description = '';
-    Conditions = '';
-    Reward = '';
-}
-
 class DataManager {
     constructor() {
         this.achievements = new Achievements();
@@ -53,8 +43,8 @@ class DataManager {
 
     async onlineLoad() {
         // TODO - null pour les tests
-        const hash = null;
-        //const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
+        //const hash = null;
+        const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
         const data = {
             'action': 'getInternalData',
             'hash': hash === null ? '' : hash['hash'],

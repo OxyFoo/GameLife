@@ -8,6 +8,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
 
 const TextProps = {
     style: {},
+    bold: undefined,
     containerStyle: {},
     fontSize: 18,
     color: 'primary',
@@ -35,7 +36,8 @@ class Text extends React.Component {
                         styles.text,
                         {
                             color: color,
-                            fontSize: this.props.fontSize
+                            fontSize: this.props.fontSize,
+                            fontWeight: isUndefined(this.props.bold) ? 'normal' : 'bold'
                         },
                         this.props.style
                     ]}

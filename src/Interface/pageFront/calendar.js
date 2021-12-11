@@ -5,10 +5,11 @@ import user from '../../Managers/UserManager';
 
 import BackCalendar from '../pageBack/calendar';
 import { Icon, Page, Text } from '../Components';
-import { Activity, BlockMonth, UserHeader } from '../Widgets';
+import { ActivityCard, BlockMonth, UserHeader } from '../Widgets';
 import themeManager from '../../Managers/ThemeManager';
 import { GetFullDate, GetMonthAndYear } from '../../Functions/Date';
 import dataManager from '../../Managers/DataManager';
+import { Activity } from '../../Class/Activities';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -25,6 +26,14 @@ class Calendar extends BackCalendar {
         const title = selectedDate === null ? '' : GetMonthAndYear(selectedMonth, selectedYear);
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
 
+        const card = ({ item, index }) => (
+            <ActivityCard
+                style={{ maxWidth: '48%' }}
+                activity={item}
+                index={index}
+            />
+        )
+
         const month = ({ item }) => (
             <BlockMonth
                 style={{ maxHeight: 260, minHeight: 260 }}
@@ -34,6 +43,12 @@ class Calendar extends BackCalendar {
                 onPressDay={this.daySelect}
             />
         );
+
+        const test = new Activity();
+        test.skillID = 5;
+        test.startDate = new Date().getTime()/1000;
+        test.duration = 60;
+        const testActs = [ test, test, test, test, test ];
 
         return (
             <Page style={{ padding: 0 }} scrollable={false}>
@@ -65,8 +80,15 @@ class Calendar extends BackCalendar {
                     {/* CurrDate + Activities panel */}
                     <View style={[styles.pannel, { backgroundColor: themeManager.getColor('backgroundGrey') }]}>
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
-                        <Icon xml='' />
-                        <Icon xml={dataManager.skills.skillsIcons[0].Content} />
+                        <FlatList
+                            //contentContainerStyle={{ padding: '2%' }}
+                            style={{ marginHorizontal: '5%' }}
+                            columnWrapperStyle={{ marginBottom: '5%', justifyContent: 'space-between' }}
+                            data={this.state.currActivities}
+                            numColumns={2}
+                            renderItem={card}
+                            keyExtractor={(item, index) => 's-' + index}
+                        />
                     </View>
                 </Animated.View>
 
@@ -162,11 +184,13 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '85%',
         marginTop: 12,
+        paddingBottom: 100,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
     },
     date: {
-        marginVertical: 24
+        marginVertical: 24,
+        fontWeight: 'bold'
     }
 });
 

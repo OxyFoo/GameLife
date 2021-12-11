@@ -24,10 +24,12 @@ import Page from './components/Page';
 import Text from './components/Text';
 import Input from './components/Input';
 import Icon from './components/Icon';
+import IconCheckable from './components/IconCheckable';
 import Button from './components/Button';
+import TextSwitch from './components/TextSwitch';
 import Checkbox from './components/Checkbox';
 import Container from './components/Container';
-import Combobox from './components/Combobox';
+import ComboBox from './components/ComboBox';
 import Swiper from './components/Swiper';
 import ProgressBar from './components/ProgressBar';
 import XPBar from './components/XPBar';
@@ -38,10 +40,12 @@ export {
     Text,
     Input,
     Icon,
+    IconCheckable,
     Button,
+    TextSwitch,
     Checkbox,
     Container,
-    Combobox,
+    ComboBox,
     Swiper,
     ProgressBar,
     XPBar,

@@ -9,6 +9,20 @@ class BackActivity extends React.Component {
     constructor(props) {
         super(props);
 
+        let categories = [];
+        for (let i = 0; i < dataManager.skills.skillsCategories.length; i++) {
+            const category = dataManager.skills.skillsCategories[i];
+            const ID = category.ID;
+            const Icon = dataManager.skills.getXmlByLogoID(category.LogoID);
+            categories.push({ ID: ID, icon: Icon, checked: false });
+        }
+        this.state = {
+            categories: categories
+        }
+        return;
+
+        // OLD
+
         this.STATS = [ "sag", "int", "con", "for", "end", "agi", "dex" ];
         this.SELECTED = typeof(props.args['activity']) !== 'undefined';
 
@@ -54,6 +68,18 @@ class BackActivity extends React.Component {
                 selectedTimeKey: 3
             }
         }
+    }
+
+    selectCategory = (ID, checked) => {
+        let { categories } = this.state;
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].ID === ID) {
+                categories[i].checked = checked;
+            } else {
+                categories[i].checked = false;
+            }
+        }
+        this.setState({ categories: categories });
     }
 
     back = () => { user.backPage(); }

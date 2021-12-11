@@ -123,9 +123,14 @@ class BackCalendar extends React.Component {
 
     daySelect = async (day = null, month = null, year = null) => {
         if (day !== null) {
+            // Select day
             const block = GetBlockMonth(month, year);
             const week = block.find(w => w.includes(day));
+            const date = new Date(year, month, day);
+            const activities = user.activities.getByDate(date).reverse();
+
             this.setState({
+                currActivities: activities,
                 selectedDate: day,
                 selectedMonth: month,
                 selectedYear: year,
@@ -135,6 +140,7 @@ class BackCalendar extends React.Component {
                 await this.showPanel();
             }
         } else {
+            // Unselect day (calendar mode)
             if (this.state.opened) {
                 await this.hidePanel();
             }

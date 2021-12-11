@@ -5,9 +5,8 @@ class Skill {
     Name = '';
     CategoryID = 0; // TODO - Catégories par ID, dans ce fichier
     Stats = {
-        'sag': 0,
         'int': 0,
-        'con': 0,
+        'soc': 0,
         'for': 0,
         'end': 0,
         'agi': 0,
@@ -151,7 +150,7 @@ class Skills {
      * @returns {String} Representation of logo (XML)
      */
     getXmlByLogoID = (ID) => {
-        let currXml = null;
+        let currXml = '';
         for (let i = 0; i < this.skillsIcons.length; i++) {
             const skillIcon = this.skillsIcons[i];
             const skillIconID = skillIcon.ID;

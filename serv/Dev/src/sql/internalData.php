@@ -116,7 +116,7 @@
 
     function GetSkills($db, $lang = 'fr') {
         $skills = $db->QueryArray("SELECT * FROM `Skills`");
-        $categories = $db->QueryArray("SELECT * FROM `Categories`");
+        $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
         $skills_safe = array();
 
         if ($skills !== FALSE && $categories !== FALSE) {
@@ -125,18 +125,16 @@
                 $skills[$i]["XP"] = intval($skills[$i]["XP"]);
 
                 // Get old stats
-                $Wisdom = $skills[$i]["Wisdom"];
                 $Intelligence = $skills[$i]["Intelligence"];
-                $Confidence = $skills[$i]["Confidence"];
+                $Social = $skills[$i]["Social"];
                 $Strength = $skills[$i]["Strength"];
                 $Stamina = $skills[$i]["Stamina"];
                 $Dexterity = $skills[$i]["Dexterity"];
                 $Agility = $skills[$i]["Agility"];
 
                 // Remove old stats
-                unset($skills[$i]["Wisdom"]);
                 unset($skills[$i]["Intelligence"]);
-                unset($skills[$i]["Confidence"]);
+                unset($skills[$i]["Social"]);
                 unset($skills[$i]["Strength"]);
                 unset($skills[$i]["Stamina"]);
                 unset($skills[$i]["Dexterity"]);
@@ -144,9 +142,8 @@
 
                 // Add new stats
                 $Stats = array(
-                    "sag" => intval($Wisdom),
                     "int" => intval($Intelligence),
-                    "con" => intval($Confidence),
+                    "soc" => intval($Social),
                     "for" => intval($Strength),
                     "end" => intval($Stamina),
                     "agi" => intval($Agility),
@@ -208,7 +205,7 @@
     }
 
     function GetSkillsCategory($db, $lang = 'fr') {
-        $categories = $db->QueryArray("SELECT * FROM `Categories`");
+        $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
 
         if ($categories === FALSE) {
             return array();

@@ -1,10 +1,11 @@
 import { UserManager } from "../Managers/UserManager";
 import { isUndefined } from "../Functions/Functions";
 import dataManager from "../Managers/DataManager";
+import { GetTime } from "../Functions/Time";
 
 class Activity {
     skillID = 0;
-    startDate = new Date();
+    startDate = GetTime();
     duration = 0;
 }
 
@@ -47,8 +48,9 @@ class Activities {
         this.UNSAVED_activities = [];
     }
 
+    // TODO - Update or remove
     removeDeletedSkillsActivities() {
-        for (let a in this.activities) {
+        /*for (let a in this.activities) {
             let activity = this.activities[a];
             let skillID = activity.skillID;
             const skill = dataManager.skills.getByID(skillID);
@@ -57,17 +59,16 @@ class Activities {
                 this.removeDeletedSkillsActivities();
                 break;
             }
-        }
+        }*/
     }
 
     Add(skillID, startDate, duration) {
         let output = false;
 
-        const newActivity = {
-            skillID: skillID,
-            startDate: startDate,
-            duration: duration
-        }
+        const newActivity = new Activity();
+        newActivity.skillID = skillID;
+        newActivity.startDate = startDate;
+        newActivity.duration = duration;
 
         const limitDate = new Date();
         limitDate.setFullYear(2021, 8, 29);
@@ -178,4 +179,5 @@ class Activities {
     }
 }
 
+export { Activity };
 export default Activities;

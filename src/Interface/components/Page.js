@@ -5,8 +5,10 @@ import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
 
 const PageProps = {
     style: {},
+    pageStyle: {},
     scrollable: true,
-    canScrollOver: true
+    canScrollOver: true,
+    bottomOffset: 156
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -43,7 +45,7 @@ class Page extends React.Component {
         // No scroll over bottom
         const { height } = this.state;
         const bottom = value + height;
-        const maxHeight = SCREEN_HEIGHT - 156;
+        const maxHeight = SCREEN_HEIGHT - this.props.bottomOffset;
         if (!canScrollOver) {
             if (bottom < maxHeight)
                 value = maxHeight - height;
@@ -117,7 +119,7 @@ class Page extends React.Component {
                 onTouchEnd={this.onTouchEnd}
             >
                 <Animated.View
-                    style={[styles.content, position]}
+                    style={[styles.content, this.props.pageStyle, position]}
                     onLayout={this.onLayout}
                 >
                     {this.props.children}

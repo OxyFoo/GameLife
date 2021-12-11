@@ -3,14 +3,85 @@ import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import BackActivity from '../pageBack/activity';
 import { isUndefined } from '../../Functions/Functions';
-import { GLDropDown, GLHeader, GLText } from '../Components';
+import { Button, Container, GLDropDown, GLHeader, GLText, Icon, IconCheckable, Page, Text } from '../Components';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
+import PageHeader from '../widgets/PageHeader';
+import themeManager from '../../Managers/ThemeManager';
+
+/**
+ * TODO - Terminer cette page
+ * 
+ * [] Ajouter le textswitch
+ * [] Ajouter la combobox
+ * [] Actualiser les activités lors des chgmts
+ * [] Popup + datetimepicker
+ * [] Afficher les XP
+ * [] Afficher / charger / enregistrer les commentaires (a part ? Mettre un ID aux activités ?)
+ * [] Page d'ajout terminé (ou commencement + bloquer sur cette page + compteur)
+ */
 
 class Activity extends BackActivity {
+    renderCategory = ({ item, index }) => {
+        const { ID, icon, checked } = item;
+        return <IconCheckable
+                    style={{ margin: '2%' }}
+                    id={ID}
+                    xml={icon}
+                    size={32}
+                    checked={checked}
+                    onPress={this.selectCategory}
+                />
+    }
     render() {
+        const lang = langManager.curr['activity'];
+
+        return (
+            <Page scrollable={false} canScrollOver={false}>
+                <PageHeader
+                />
+
+                <View style={styles.parent}>
+
+                    {/* Categories */}
+                    <Text style={styles.title} bold>{lang['title-category']}</Text>
+                    <FlatList
+                        style={styles.fullWidth}
+                        data={this.state.categories}
+                        renderItem={this.renderCategory}
+                        numColumns={6}
+                        keyExtractor={(item, index) => 'c-' + index}
+                    />
+
+                    {/* Activities */}
+                    <Text style={styles.title} bold>{lang['title-activity']}</Text>
+
+                    <Page
+                        style={styles.panel}
+                        pageStyle={[styles.panelPage, { backgroundColor: themeManager.getColor('backgroundGrey') }]}
+                        bottomOffset={256}
+                    >
+                        {/* Schedule */}
+                        <Text style={styles.title} bold>{lang['title-schedule']}</Text>
+
+                        {/* Experience */}
+                        <Text style={styles.title} bold>{lang['title-experience']}</Text>
+                        <Container style={styles.fullWidth} text='+XXX XP +X'>
+                        </Container>
+
+                        {/* Commentary */}
+                        <Text style={styles.title} bold>{lang['title-commentary']}</Text>
+                        <Container style={styles.fullWidth} text='TITRE COMMENTAIRE'>
+                        </Container>
+                        <Container style={styles.fullWidth} />
+
+                        <Button style={{ width: '100%', marginBottom: 48 }} color='main2'>{'test'}</Button>
+                    </Page>
+                </View>
+            </Page>
+        );
         const title_category = !isUndefined(this.state.selectedCategory) ? this.state.selectedCategory.value : langManager.curr['activity']['input-category-default'];
         const title_skill = !isUndefined(this.state.selectedSkill) ? dataManager.skills.getByID(this.state.selectedSkill.skillID).Name : langManager.curr['activity']['input-activity-default'];
 
@@ -113,6 +184,30 @@ const ww = Dimensions.get('window').width ;
 const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
+    parent: {
+        marginTop: 64,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    title: {
+        marginBottom: 24,
+        fontSize: 22
+    },
+    fullWidth: {
+        width: '100%',
+        marginBottom: 48
+    },
+    panel: {
+        width: '110%',
+        padding: 0
+    },
+    panelPage: {
+        padding: '5%',
+        borderRadius: 16
+    }
+});
+
+const styles2 = StyleSheet.create({
     content: {
         paddingVertical: "5%",
         paddingHorizontal: "8%",

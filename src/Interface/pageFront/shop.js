@@ -15,7 +15,7 @@ class Shop extends BackShop {
                 <GLHeader
                     title={langManager.curr['shop']['page-title']}
                     leftIcon="back"
-                    onPressLeft={user.backPage}
+                    onPressLeft={user.interface.backPage}
                 />
 
                 {/* Content */}

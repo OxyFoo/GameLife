@@ -13,17 +13,17 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const PANEL_WIDTH = SCREEN_WIDTH / 2;
 
 const SHORTCUTS = [
-    { text: "shortcut-shop", event: () => { user.changePage('shop') } },
-    { text: "shortcut-identity", event: () => { user.changePage('identity') } },
-    { text: "shortcut-skills", event: () => { user.changePage('skills') } },
-    { text: "shortcut-dailyquest", event: () => { user.changePage('dailyquest') } },
-    { text: "shortcut-calendar", event: () => { user.changePage('calendar') } },
-    { text: "shortcut-stats", event: () => { user.changePage('statistic') } },
-    { text: "shortcut-level", event: () => { user.changePage('experience') } },
-    //{ text: "shortcut-leaderboard", event: () => { user.changePage('leaderboard'); } },
-    { text: "shortcut-achievements", event: () => { user.changePage('achievements') } },
-    { text: "shortcut-report", event: () => { user.changePage('report') } },
-    { text: "shortcut-settings", event: () => { user.changePage('settings') } }
+    { text: "shortcut-shop", event: () => { user.interface.changePage('shop') } },
+    { text: "shortcut-identity", event: () => { user.interface.changePage('identity') } },
+    { text: "shortcut-skills", event: () => { user.interface.changePage('skills') } },
+    { text: "shortcut-dailyquest", event: () => { user.interface.changePage('dailyquest') } },
+    { text: "shortcut-calendar", event: () => { user.interface.changePage('calendar') } },
+    { text: "shortcut-stats", event: () => { user.interface.changePage('statistic') } },
+    { text: "shortcut-level", event: () => { user.interface.changePage('experience') } },
+    //{ text: "shortcut-leaderboard", event: () => { user.interface.changePage('leaderboard'); } },
+    { text: "shortcut-achievements", event: () => { user.interface.changePage('achievements') } },
+    { text: "shortcut-report", event: () => { user.interface.changePage('report') } },
+    { text: "shortcut-settings", event: () => { user.interface.changePage('settings') } }
 ];
 
 class GLLeftPanel extends React.PureComponent {
@@ -97,7 +97,7 @@ class GLLeftPanel extends React.PureComponent {
                         ListHeaderComponent={this.separator}
                         ListFooterComponent={this.separator}
                     />
-                    <TouchableOpacity style={styles.aboutContainer} activeOpacity={.5} onPress={() => { this.toggleVisibility(); user.changePage('about'); }}>
+                    <TouchableOpacity style={styles.aboutContainer} activeOpacity={.5} onPress={() => { this.toggleVisibility(); user.interface.changePage('about'); }}>
                         <GLText style={styles.aboutText} title={langManager.curr['home']['shortcut-about']} />
                         <Image style={styles.aboutImage} source={require('../../../res/logo/loading_3.png')} width={32} height={32} style={{ transform: [{ scale: 2.5 }] }} />
                     </TouchableOpacity>

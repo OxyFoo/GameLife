@@ -19,7 +19,7 @@ class Dots extends React.Component {
         const interLeft = { inputRange: inputRange, outputRange: outputRange };
 
         //inputRange = [0, .5, 1, 1.5, 2], outputRange = [8, 24, 8, 24, 8]
-        outputRange = [...Array(inputRange.length).keys()].map((_, i) => (i % 1 == 0) ? 8 : 24);
+        outputRange = [...inputRange].map((_, i) => (_ % 1 == 0) ? 8 : 24);
         const interWidth = { inputRange: inputRange, outputRange: outputRange };
 
         const left = { left: Animated.multiply(this.props.position.interpolate(interLeft), 16) };

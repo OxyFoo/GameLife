@@ -26,6 +26,7 @@ import Input from './components/Input';
 import Icon from './components/Icon';
 import IconCheckable from './components/IconCheckable';
 import Button from './components/Button';
+import Separator from './components/Separator';
 import TextSwitch from './components/TextSwitch';
 import Checkbox from './components/Checkbox';
 import Container from './components/Container';
@@ -42,6 +43,7 @@ export {
     Icon,
     IconCheckable,
     Button,
+    Separator,
     TextSwitch,
     Checkbox,
     Container,

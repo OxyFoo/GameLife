@@ -10,6 +10,8 @@ import BackTest from '../pageBack/test';
 import { dateToFormatString } from '../../Functions/Time';
 import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch } from '../Components';
 
+const TEST_VALUES = [{id: 0, value: 'Abc 0'}, {id: 1, value: 'Def 1'}, {id: 2, value: 'Item 2'}, {id: 3, value: 'Item 3'}, {id: 4, value: 'Item 4'}];
+
 class Test extends BackTest {
     render() {
         const userExperience = user.experience.getExperience();
@@ -21,13 +23,13 @@ class Test extends BackTest {
         const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
-            <Page style={{ height: '1000%' }} canScrollOver={true}>
+            <Page canScrollOver={true}>
                 <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
                 <Button color='main1' borderRadius={14} style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
 
                 <Input style={{ marginBottom: 12 }} label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
 
-                <ComboBox style={{ marginBottom: 12 }} />
+                <ComboBox style={{ marginBottom: 12 }} data={TEST_VALUES} setSearchBar={true} />
 
                 <TextSwitch style={{ marginBottom: 12 }} />
 
@@ -89,7 +91,7 @@ class Test extends BackTest {
                     //leftIcon="sandwich"
                     onPressLeft={user.openLeftPanel}
                     rightIcon="gear"
-                    onPressRight={() => user.changePage('settings') }
+                    onPressRight={() => user.interface.changePage('settings') }
                 />
 
                 <View style={styles.backgroundCircles}>
@@ -185,7 +187,7 @@ class Test extends BackTest {
                                         keyExtractor={(item, i) => 'activity_' + i}
                                         renderItem={({item}) => {
                                             const skill = dataManager.skills.getByID(item.skillID);
-                                            const date = new Date(item.startDate);
+                                            const date = new Date(item.startTime);
                                             const dateText = dateToFormatString(date);
                                             const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + item.duration + 'm';
                                             return (

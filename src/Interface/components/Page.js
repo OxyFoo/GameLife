@@ -5,10 +5,10 @@ import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
 
 const PageProps = {
     style: {},
-    pageStyle: {},
     scrollable: true,
     canScrollOver: true,
-    bottomOffset: 156
+    bottomOffset: 156,
+    onLayout: (event) => {}
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -26,13 +26,12 @@ class Page extends React.Component {
     onLayout = (event) => {
         const  { x, y, width, height } = event.nativeEvent.layout;
         if (height !== this.state.height) {
-            this.setState({ height: height });
-
-            this.posY = this.LimitValues(this.posY);
-            TimingAnimation(this.state.positionY, this.posY, 0.1).start();
+            this.setState({ height: height }, () => {
+                this.posY = this.LimitValues(this.posY);
+                TimingAnimation(this.state.positionY, this.posY, 100).start();
+            });
         }
-        //console.log('Screen:', SCREEN_HEIGHT);
-        //console.log('Layout:', height);
+        this.props.onLayout(event);
     }
 
     LimitValues = (value, canScrollOver = false) => {
@@ -112,19 +111,15 @@ class Page extends React.Component {
         const position = { transform: [{ translateY: this.state.positionY }] };
 
         return (
-            <View
-                style={[styles.parent, this.props.style]}
+            <Animated.View
+                style={[styles.parent, this.props.style, position]}
+                onLayout={this.onLayout}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
             >
-                <Animated.View
-                    style={[styles.content, this.props.pageStyle, position]}
-                    onLayout={this.onLayout}
-                >
-                    {this.props.children}
-                </Animated.View>
-            </View>
+                {this.props.children}
+            </Animated.View>
         );
     }
 }
@@ -135,11 +130,8 @@ Page.defaultProps = PageProps;
 const styles = StyleSheet.create({
     parent: {
         width: '100%',
-        height: '100%',
         padding: '5%',
         backgroundColor: '#00000001'
-    },
-    content: {
     }
 });
 

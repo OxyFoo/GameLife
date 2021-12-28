@@ -1,46 +1,55 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions, Animated } from 'react-native';
 
 import BackActivity from '../pageBack/activity';
-import { isUndefined } from '../../Functions/Functions';
-import { Button, Container, GLDropDown, GLHeader, GLText, Icon, IconCheckable, Page, Text } from '../Components';
+import { Page, Text, Button, ComboBox, IconCheckable, TextSwitch } from '../Components';
+import { PageHeader, ActivitySchedule, ActivityExperience } from '../Widgets';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
-import PageHeader from '../widgets/PageHeader';
 import themeManager from '../../Managers/ThemeManager';
 
 /**
- * TODO - Terminer cette page
- * 
- * [] Ajouter le textswitch
- * [] Ajouter la combobox
- * [] Actualiser les activités lors des chgmts
- * [] Popup + datetimepicker
- * [] Afficher les XP
+ * TODO
  * [] Afficher / charger / enregistrer les commentaires (a part ? Mettre un ID aux activités ?)
- * [] Page d'ajout terminé (ou commencement + bloquer sur cette page + compteur)
+ * [] Enregistrer localement / en ligne une activité
+ * [] Supprimer localement / en ligne une activité
+ * [x] Page d'ajout terminé (ou commencement + bloquer sur cette page + compteur)
  */
 
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH  = Dimensions.get('window').width;
+
 class Activity extends BackActivity {
-    renderCategory = ({ item, index }) => {
+    renderCategory = ({ item }) => {
         const { ID, icon, checked } = item;
-        return <IconCheckable
-                    style={{ margin: '2%' }}
-                    id={ID}
-                    xml={icon}
-                    size={32}
-                    checked={checked}
-                    onPress={this.selectCategory}
-                />
+        return (
+            <IconCheckable
+                style={{ margin: '2%' }}
+                id={ID}
+                xml={icon}
+                size={32}
+                checked={checked}
+                onPress={this.selectCategory}
+                pressable={!this.state.visualisationMode}
+            />
+        )
     }
     render() {
         const lang = langManager.curr['activity'];
+        const backgroundColor = themeManager.getColor('backgroundGrey');
+
+        const inter = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
+        const panelPosY = this.state.animPosY.interpolate(inter);
+        const skillID = this.state.selectedSkill.id;
+        const skill = dataManager.skills.getByID((skillID));
+        const durationHour = this.state.activityDuration / 60;
 
         return (
-            <Page scrollable={false} canScrollOver={false}>
+            <Page scrollable={this.state.selectedSkill.id !== 0} canScrollOver={false} bottomOffset={0}>
                 <PageHeader
+                    onBackPress={user.interface.backPage}
                 />
 
                 <View style={styles.parent}>
@@ -57,137 +66,72 @@ class Activity extends BackActivity {
 
                     {/* Activities */}
                     <Text style={styles.title} bold>{lang['title-activity']}</Text>
-
-                    <Page
-                        style={styles.panel}
-                        pageStyle={[styles.panelPage, { backgroundColor: themeManager.getColor('backgroundGrey') }]}
-                        bottomOffset={256}
-                    >
-                        {/* Schedule */}
-                        <Text style={styles.title} bold>{lang['title-schedule']}</Text>
-
-                        {/* Experience */}
-                        <Text style={styles.title} bold>{lang['title-experience']}</Text>
-                        <Container style={styles.fullWidth} text='+XXX XP +X'>
-                        </Container>
-
-                        {/* Commentary */}
-                        <Text style={styles.title} bold>{lang['title-commentary']}</Text>
-                        <Container style={styles.fullWidth} text='TITRE COMMENTAIRE'>
-                        </Container>
-                        <Container style={styles.fullWidth} />
-
-                        <Button style={{ width: '100%', marginBottom: 48 }} color='main2'>{'test'}</Button>
-                    </Page>
-                </View>
-            </Page>
-        );
-        const title_category = !isUndefined(this.state.selectedCategory) ? this.state.selectedCategory.value : langManager.curr['activity']['input-category-default'];
-        const title_skill = !isUndefined(this.state.selectedSkill) ? dataManager.skills.getByID(this.state.selectedSkill.skillID).Name : langManager.curr['activity']['input-activity-default'];
-
-        const rightIcon = this.SELECTED ? 'trash' : 'check';
-        const rightEvent = this.SELECTED ? this.trash : this.valid;
-
-        let skill, totalXP, bonusXP, textBonusXP;
-        if (!isUndefined(this.state.selectedSkill)) {
-            const selectedSkill = this.state.selectedSkill;
-            const skillID = selectedSkill.skillID;
-            const durationHour = (this.DURATION[this.state.selectedTimeKey].duration / 60);
-            skill = dataManager.skills.getByID(skillID);
-            totalXP = skill.XP * durationHour;
-            const untilActivity = this.SELECTED ? selectedSkill : undefined;
-            const sagLevel = user.experience.getStatExperience('sag', untilActivity).lvl - 1;
-            bonusXP = sagLevel * durationHour;
-            textBonusXP = bonusXP === 0 ? '' : ' +' + bonusXP;
-        }
-
-        return (
-            <View style={{flex: 1}}>
-                {/* Header */}
-                <GLHeader
-                    title={langManager.curr['activity']['page-title']}
-                    leftIcon='back'
-                    onPressLeft={this.back}
-                    //rightIcon={rightIcon}
-                    onPressRight={rightEvent}
-                />
-
-                {/* Content */}
-                <View style={styles.content}>
-                    {/* Category 
-                    <GLText style={styles.title} title={langManager.curr['activity']['input-category'].toUpperCase()} />
-                    <GLDropDown
-                        value={title_category}
-                        data={this.CATEGORIES}
-                        onSelect={this.changeCat}
-                        disabled={this.SELECTED}
-                        onLongPress={() => this.changeCat('')}
-                    />*/}
-
-                    {/* Activity 
-                    <GLText style={styles.title} title={langManager.curr['activity']['input-activity'].toUpperCase()} />
-                    <GLDropDown
-                        value={title_skill}
+                    <ComboBox
+                        style={{ marginBottom: 48 }}
                         data={this.state.skills}
-                        onSelect={this.changeSkill}
-                        disabled={this.SELECTED}
-                    />*/}
+                        title={this.getCategoryName()}
+                        setSearchBar={true}
+                        selectedValue={this.state.selectedSkill.value}
+                        onSelect={this.selectActivity}
+                        enabled={!this.state.visualisationMode}
+                    />
 
-                    {/* Start / duration 
-                    <View style={styles.row}>
-                        <View style={styles.column}>
-                            <GLText style={styles.title} title={langManager.curr['activity']['input-start'].toUpperCase()} />
-                            <GLDropDown
-                                value={this.DATES[this.state.selectedDateKey].value}
-                                data={this.DATES}
-                                onSelect={this.changeDate}
-                                disabled={this.SELECTED}
-                            />
-                        </View>
+                </View>
 
-                        <View style={styles.column}>
-                            <GLText style={styles.title} title={langManager.curr['activity']['input-duration'].toUpperCase()} />
-                            <GLDropDown
-                                value={this.DURATION[this.state.selectedTimeKey].value}
-                                data={this.DURATION}
-                                onSelect={this.changeDuration}
-                                disabled={this.SELECTED}
-                            />
-                        </View>
-                    </View>*/}
+                <Animated.View style={[styles.panel, { backgroundColor: backgroundColor, transform: [{ translateY: panelPosY }] }]}>
+                    {!this.state.visualisationMode &&
+                        <TextSwitch
+                            style={{ marginBottom: 24 }}
+                            textLeft={lang['swiper-already']}
+                            textRight={lang['swiper-now']}
+                            onChange={this.onChangeMode}
+                        />
+                    }
 
-                    {!isUndefined(skill) && (
-                        <View style={styles.containerAttr}>
-                            <GLText title={'+' + totalXP + ' ' + langManager.curr['statistics']['xp']['small'] + textBonusXP} style={styles.attr} color='secondary' />
-                            <FlatList
-                                data={this.STATS}
-                                keyExtractor={(item, i) => 'skill_stat_' + i}
-                                renderItem={({item}) => {
-                                    const pts = skill.Stats[item] * (this.DURATION[this.state.selectedTimeKey].duration / 60);
-                                    return pts > 0 && (
-                                        <GLText
-                                            title={'+' + pts + ' ' + langManager.curr['statistics']['names'][item]}
-                                            style={styles.attr}
-                                            color={skill.Stats[item] == 0 ? 'dark' : 'secondary'}
-                                        />
-                                    )
-                                }}
+                    {this.state.startnowMode ? (
+                        <Button onPress={this.StartActivity} color='main2'>{lang['btn-start']}</Button>
+                    ) : (
+                        <View>
+                            {/* Schedule */}
+                            <Text style={styles.title} bold>{lang['title-schedule']}</Text>
+                            <ActivitySchedule
+                                editable={!this.state.visualisationMode}
+                                onChange={this.onChangeSchedule}
+                                initialValue={this.state.ActivitySchedule}
                             />
+
+                            {/* Experience */}
+                            <Text style={styles.title} bold>{(skill !== null && skill.XP > 0) ? lang['title-experience'] : lang['title-no-experience']}</Text>
+                            <ActivityExperience
+                                skillID={this.state.selectedSkill.id}
+                                durationHour={durationHour}
+                            />
+
+                            {/* Commentary */}
+                            {/*this.state.commentary === null ? (
+                                <Button style={styles.comButton} color='main1' fontSize={14}>{lang['add-commentary']}</Button>
+                            ) : (
+                                <Text style={styles.title} bold>{lang['title-commentary']}</Text>
+                            )*/}
+
+                            {/* Save / Remove button */}
+                            {this.state.visualisationMode ? (
+                                <Button onPress={this.RemActivity} color='main2'>{lang['btn-remove']}</Button>
+                            ) : (
+                                <Button onPress={this.AddActivity} color='main2'>{lang['btn-add']}</Button>
+                            )}
                         </View>
                     )}
-                </View>
-            </View>
+                </Animated.View>
+
+            </Page>
         )
     }
 }
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
     parent: {
-        marginTop: 64,
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'center'
     },
     title: {
         marginBottom: 24,
@@ -199,55 +143,19 @@ const styles = StyleSheet.create({
     },
     panel: {
         width: '110%',
-        padding: 0
-    },
-    panelPage: {
+        marginLeft: '-5%',
         padding: '5%',
-        borderRadius: 16
-    }
-});
-
-const styles2 = StyleSheet.create({
-    content: {
-        paddingVertical: "5%",
-        paddingHorizontal: "8%",
+        borderRadius: 24
     },
-    title: {
-        marginTop: "3%",
-        marginHorizontal: "4%",
-        textAlign: 'left',
-        fontSize: ww * 53 / 1000, 
-
+    panelChild: {
+        position: 'absolute',
+        left: 0,
+        right: 0
     },
-    button: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-
-    row: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    column: {
-        width: '50%'
-    },
-
-    containerAttr: {
-        marginTop: "5%",
-
-        zIndex: -10,
-        elevation: -10,
-
-        
-    },
-    attr: {
-        marginLeft: "4%",
-        marginBottom: "2%",
-        fontSize: ww * 586 / 10000,
-        textAlign: 'left',
+    comButton: {
+        height: 48,
+        marginBottom: 48,
+        marginHorizontal: '5%'
     }
 });
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 
-import user from '../../Managers/UserManager';
+import user, { DEFAULT_STATS } from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import BackHome from '../pageBack/home';
@@ -34,8 +34,17 @@ class Home extends BackHome {
                     <Text>Page 3</Text>
                 ]} />
 
-                <Button style={styles.topSpace} color='main2' borderRadius={8} icon='add'>{lang['btn-add-task']}</Button>
-                <Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>
+                <Button
+                    style={styles.topSpace}
+                    color='main2'
+                    borderRadius={8}
+                    icon='add'
+                    onPress={() => { user.interface.changePage('activity', undefined, true) }}
+                >
+                    {lang['btn-add-task']}
+                </Button>
+
+                {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
 
                 <Container
                     style={styles.topSpace}
@@ -45,7 +54,7 @@ class Home extends BackHome {
                     color='main3'
                     rippleColor='white'
                 >
-                    <StatsBars data={user.stats} />
+                    <StatsBars data={DEFAULT_STATS} />
                 </Container>
 
                 <Container

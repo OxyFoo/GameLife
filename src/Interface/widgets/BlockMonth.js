@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { Text } from '../Components';
 import themeManager from '../../Managers/ThemeManager';
 import { GetMonthAndYear } from '../../Functions/Date';
+import user from '../../Managers/UserManager';
 
 const BlockMonthProps = {
     style: {},
@@ -29,59 +30,89 @@ function isSameDay(date, day, month, year) {
 function Day(props) {
     const { today, selectedDay, day, month, year, onPressDay } = props;
 
+    const onPress = () => { onPressDay(day, month, year); };
     const isToday = isSameDay(today, day, month, year);
     const isSelectedDay = selectedDay === null ? false : isSameDay(selectedDay, day, month, year);
 
-    const onPress = () => { onPressDay(day, month, year); };
+    const actDate = new Date(year, month, day);
+    /**
+     * 0 : No activity this day
+     * 1 : Activity this day (no XP)
+     * 2 : Activity this day (with XP) - Priority
+     */
+    let containActivity = user.activities.containActivity(actDate) ? 2 : 0;
+    if (containActivity === 0) {
+        containActivity = user.activities.containActivity(actDate, true) ? 1 : 0;
+    }
+
+    const bgMain1 = { backgroundColor: themeManager.getColor('main1') };
+    const bgMain2 = { backgroundColor: themeManager.getColor('main2') };
+    const bgBorder = { backgroundColor: themeManager.getColor('border') };
 
     let style = [styles.day];
-    if (isSelectedDay) {
-        style.push(styles.circle, { backgroundColor: themeManager.getColor('main1') });
-    } else if (isToday) {
-        style.push(styles.circle, { backgroundColor: themeManager.getColor('main2') });
-    }
+    if (isSelectedDay) style.push(styles.circle, bgMain1);
+    else if (isToday) style.push(styles.circle, bgMain2);
+
+    let dot = null;
+    if (containActivity === 1) dot = <View style={[styles.dot, bgBorder]} />;
+    else if (containActivity === 2) dot = <View style={[styles.dot, bgMain2]} />;
 
     return (
         <View style={style}>
-            {day !== 0 &&
-                <Text containerStyle={{ width: '100%' }} onPress={onPress}>{day}</Text>
-            }
+            {day !== 0 && <Text containerStyle={{ width: '100%' }} onPress={onPress}>{day}</Text>}
+            {dot !== null && <View style={styles.dotContainer}>{dot}</View>}
         </View>
     );
 }
 const ItemDay = React.memo(Day, (a, b) => a == b);
 
-function BlockMonth(props) {
-    const { month, year, data, today, selectedDay, onPressDay } = props;
+class BlockMonth extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { mounted: false }
+    }
+    componentDidMount() {
+        const enable = () => { this.setState({ mounted: true }); };
+        const time = this.props.showTitle ? 500 : 0;
+        setTimeout(enable, time);
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        const { data, selectedDay } = nextProps;
+        const { data: currData, selectedDay: currSelectedDay } = this.props;
 
-    const renderDay = ({ item: day }) => (
-        <ItemDay day={day} month={month} year={year} today={today} selectedDay={selectedDay} onPressDay={onPressDay} />
-    )
+        const { mounted } = this.state;
+        const { mounted: currMounted } = nextState;
 
-    const days = data.flat();
-    const title = GetMonthAndYear(month, year);
+        return data !== currData || selectedDay !== currSelectedDay || mounted !== currMounted;
+    }
 
-    return (
-        <View style={[styles.container, props.style]} onLayout={props.onLayout}>
-            {props.showTitle && <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>}
-            <View style={styles.content}>
-                <FlatList
-                    data={days}
-                    numColumns={7}
-                    columnWrapperStyle={styles.rowContainer}
-                    renderItem={renderDay}
-                    keyExtractor={(item, index) => 'm-' + index}
-                />
+    render() {
+        const { month, year, data, today, selectedDay, onPressDay } = this.props;
+
+        const renderDay = ({ item: day }) => (
+            <ItemDay day={day} month={month} year={year} today={today} selectedDay={selectedDay} onPressDay={onPressDay} />
+        );
+
+        const days = data.flat();
+        const title = GetMonthAndYear(month, year);
+        const height = { height: this.props.showTitle ? 260 : 'auto' };
+
+        return (
+            <View style={[styles.container, height, this.props.style]} onLayout={this.props.onLayout}>
+                {this.props.showTitle && <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>}
+                {this.state.mounted && (
+                    <FlatList
+                        data={days}
+                        numColumns={7}
+                        columnWrapperStyle={styles.rowContainer}
+                        renderItem={renderDay}
+                        keyExtractor={(item, index) => 'm-' + index}
+                    />
+                )}
             </View>
-        </View>
-    );
+        );
+    }
 }
-
-const areEqual = (prevProps, nextProps) => {
-    const { data, selectedDay } = nextProps;
-    const { data: prevData, selectedDay: prevSelectedDay } = prevProps;
-    return data === prevData && selectedDay === prevSelectedDay;
-};
 
 BlockMonth.prototype.props = BlockMonthProps;
 BlockMonth.defaultProps = BlockMonthProps;
@@ -95,21 +126,37 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         fontWeight: 'bold'
     },
-    content: {
-        width: '100%'
+    loading: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'red'
     },
     rowContainer: {
         justifyContent: 'space-evenly'
     },
     day: {
         width: '10%',
-        paddingVertical: 6,
+        aspectRatio: 1,
+        //paddingVertical: 6,
         alignItems: 'center',
         justifyContent: 'center'
     },
     circle: {
         borderRadius: 50
+    },
+
+    dotContainer: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: 'center'
+    },
+    dot: {
+        width: 4,
+        height: 4,
+        borderRadius: 2
     }
 });
 
-export default React.memo(BlockMonth, areEqual);
+export default BlockMonth;

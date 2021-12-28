@@ -20,7 +20,7 @@ class BackWaitmail extends React.Component {
     onBack = () => {
         user.settings.email = '';
         user.settings.Save();
-        user.changePage('login');
+        user.interface.changePage('login', undefined, true);
     }
 
     Login = async () => {
@@ -34,7 +34,7 @@ class BackWaitmail extends React.Component {
         } else if (status === 'ok' || status === 'ban') {
             user.settings.connected = true;
             await user.settings.Save();
-            user.changePage('loading');
+            user.interface.changePage('loading', undefined, true);
         } else if (status === 'newDevice') {
             // TODO - Mail sent
             console.log('Mail sent');

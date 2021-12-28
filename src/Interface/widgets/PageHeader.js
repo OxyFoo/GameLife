@@ -21,7 +21,7 @@ class PageHeader extends React.Component {
                     <Icon style={styles.headerLeftArrow} icon='arrowLeft' size={38} />
                     <Text>{T_back}</Text>
                 </TouchableOpacity>
-                <Icon onPress={onHelpPress} icon='checkboxOff' size={36} />
+                <Icon onPress={onHelpPress} icon='info' size={30} />
             </View>
         );
     }

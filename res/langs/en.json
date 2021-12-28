@@ -33,6 +33,11 @@
     },
 
     "dates": {
+        "names": {
+            "date": "Date",
+            "start-time": "Start",
+            "duration": "Duration"
+        },
         "month": [
             "January",
             "February",
@@ -60,6 +65,7 @@
 
     "modal": {
         "back": "Back",
+        "search": "Search",
         "btn-ok": "Ok",
         "btn-yes": "Yes",
         "btn-no": "No",
@@ -94,13 +100,35 @@
         "title-activity": "Activity",
         "title-schedule": "Schedule",
         "title-experience": "Experience",
+        "title-no-experience": "This activity has no experience",
         "title-commentary": "Commentary",
-        "btn-create": "Create",
+        "input-activity": "All activities",
+        "swiper-already": "Already done",
+        "swiper-now": "Start now",
+        "btn-start": "Start",
+        "btn-add": "Add",
+        "btn-remove": "Remove",
+        "add-commentary": "Add commentary",
+
+        "alert-remove-title": "Delete ?",
+        "alert-remove-text": "Are you sure you want to eliminate this activity?",
+        "alert-wrongtiming-title": "No way!",
+        "alert-wrongtimindg-text": "The selected activity how or ends during another.",
+
+        "timer-launch": "Launch time:",
+        "timer-gain": "Gains per hour",
+        "timer-complete": "Complete",
+        "timer-cancel": "Cancel",
+        "timeralert-cancel-title": "Cancel activity",
+        "timeralert-cancel-text": "Are you sure you want to cancel this activity?",
+
+        "display-activity-text": "Your activity has been created!",
+        "display-activity-button": "Back home",
 
         "__OLD": "",
         "page-title": "Activity",
         "input-category": "Category",
-        "input-activity": "Activity",
+        "input-activity2": "Activity",
         "input-start": "Start",
         "input-duration": "Duration",
 
@@ -124,12 +152,8 @@
         "skill-xp": "Experience",
         "value-xp": "+{} XP",
 
-        "alert-remove-title": "Delete ?",
-        "alert-remove-text": "Are you sure you want to eliminate this activity?",
         "alert-notfill-title": "Incorrec",
-        "alert-notfill-text": "Please fill in all fields before continuing",
-        "alert-wrongtiming-title": "No way!",
-        "alert-wrongtiming-text": "The selected activity how or ends during another."
+        "alert-notfill-text": "Please fill in all fields before continuing"
     },
 
     "dailyquest": {
@@ -379,7 +403,7 @@
         },
         "descriptions": {
             "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
-            "soc": "Social...",
+            "soc": "Social competence is a skill that increases when you do activities with other people. For example, team sports or going out with friends.",
             "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
             "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
@@ -390,5 +414,9 @@
     "wait": {
         "text-wait-internet": "You must be connected to the internet to be able to connect!",
         "text-wait-email": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam."
+    },
+
+    "widget": {
+        "btn-edit-time": "Change"
     }
 }

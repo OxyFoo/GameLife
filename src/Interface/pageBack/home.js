@@ -1,19 +1,18 @@
 import * as React from 'react';
 
 import user from '../../Managers/UserManager';
-import dataManager from '../../Managers/DataManager';
 
 class BackHome extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    addSkill = () => { user.changePage('activity'); }
-    openIdentity = () => { user.changePage('identity'); }
-    openCalendar = () => { user.changePage('calendar'); }
-    openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
-    openSkills = () => { user.changePage('skills'); }
-    openExperience = () => { user.changePage('experience'); }
+    addSkill = () => { user.interface.changePage('activity'); }
+    openIdentity = () => { user.interface.changePage('identity'); }
+    openCalendar = () => { user.interface.changePage('calendar'); }
+    openSkill = (skillID) => { user.interface.changePage('skill', { skillID: skillID }); }
+    openSkills = () => { user.interface.changePage('skills'); }
+    openExperience = () => { user.interface.changePage('experience'); }
 }
 
 export default BackHome;

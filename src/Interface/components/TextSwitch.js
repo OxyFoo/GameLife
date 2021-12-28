@@ -43,8 +43,8 @@ class TextSwitch extends React.Component {
         return (
             <View style={parentStyle} onLayout={this.onLayout}>
                 <Animated.View style={selectionStyle} />
-                <Button style={styles.button} onPress={() => { this.onChange(0) }} rippleColor={rippleColor} borderRadius={16}>{this.props.textLeft}</Button>
-                <Button style={styles.button} onPress={() => { this.onChange(1) }} rippleColor={rippleColor} borderRadius={16}>{this.props.textRight}</Button>
+                <Button style={[styles.button, { marginRight: '5%' }]} onPress={() => { this.onChange(0) }} rippleColor={rippleColor} fontSize={12}>{this.props.textLeft}</Button>
+                <Button style={styles.button} onPress={() => { this.onChange(1) }} rippleColor={rippleColor} fontSize={12}>{this.props.textRight}</Button>
             </View>
         );
     }
@@ -57,13 +57,15 @@ const styles = StyleSheet.create({
     parent: {
         display: 'flex',
         flexDirection: 'row',
-        padding: 0,
+        height: 55,
+        padding: 4,
         borderWidth: 1.6,
         borderRadius: 16
     },
     button: {
-        width: '50%',
-        height: 50
+        width: '47.5%',
+        height: '100%',
+        borderRadius: 8
     },
     selection: {
         position: 'absolute',

@@ -28,9 +28,9 @@ import { twoDigit } from "./Functions";
  * 
  * @param {Number} max_hour
  * @param {Number} step_minutes
- * @returns {Array} Array of dict : { key: k, value: HH:MM, duration: minutes } over a period of max_hour each step_minutes
+ * @returns {Array<{key: 0, value: '00:00', duration: 0}>} Array of dict : { key: k, value: HH:MM, duration: minutes } over a period of max_hour each step_minutes
  */
- function getDurations(max_hour = 4, step_minutes = 15) {
+function getDurations(max_hour = 4, step_minutes = 15) {
     let durations = [];
 
     let date = new Date();
@@ -85,6 +85,18 @@ function dateToFormatString(date) {
 
 /**
  * Return date with format : HH:MM
+ * @param {Date} date
+ * @returns {String} HH:MM
+ */
+function dateToFormatTimeString(date) {
+    const _date = new Date(date);
+    const HH = twoDigit(_date.getHours());
+    const MM = twoDigit(_date.getMinutes());
+    return [ HH, MM ].join(':');
+}
+
+/**
+ * Return date with format : HH:MM
  * @param {Number} time
  * @param {Boolean} withOffset
  * @returns {String} HH:MM
@@ -99,11 +111,23 @@ function timeToFormatString(time, withOffset = false) {
 
 /**
  * Get absolute time in seconds
+ * @param {Date} date
+ * @returns {Number} time in seconds
  */
-function GetTime() {
-    return Math.floor(new Date().getTime() / 1000);
+function GetTime(date = new Date()) {
+    return Math.floor(date.getTime() / 1000);
+}
+
+/**
+ * @param {Number} time in seconds
+ * @returns {Number} time rounded to quarters in seconds
+ */
+function RoundToQuarter(time) {
+    const date = new Date(time * 1000);
+    date.setMinutes(Math.round(date.getMinutes() / 15) * 15, 0, 0);
+    return GetTime(date);
 }
 
 export { getDates, getDurations, GetTime,
-    getTimeToTomorrow, getDaysUntil,
-    timeToFormatString, dateToFormatString };
+    getTimeToTomorrow, getDaysUntil, RoundToQuarter,
+    timeToFormatString, dateToFormatTimeString, dateToFormatString };

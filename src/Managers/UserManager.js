@@ -1,7 +1,6 @@
 import langManager from "./LangManager";
 import dataManager from './DataManager';
-import { getDaysUntil } from '../Functions/Time';
-import DataStorage, { STORAGE } from '../Functions/DataStorage';
+//import PageManager from "./PageManager";
 
 import Achievements from '../Class/Achievements';
 import Activities from '../Class/Activities';
@@ -9,6 +8,9 @@ import Experience from "../Class/Experience";
 import Quests from '../Class/Quests';
 import Server from "../Class/Server";
 import Settings from '../Class/Settings';
+
+import { getDaysUntil } from '../Functions/Time';
+import DataStorage, { STORAGE } from '../Functions/DataStorage';
 
 const DAYS_PSEUDO_CHANGE = 7;
 const DEFAULT_STATS = {
@@ -27,23 +29,12 @@ class UserManager {
     quests = new Quests(this);
     server = new Server(this);
     settings = new Settings(this);
-
     /**
-     * this.changePage(pageName, argument);
-     * Change page with animation and arg
      * Function loaded in componentDidMount of PageManager (in App.js)
      * I've do that to skip cycles warns
+     * @type {PageManager}
      */
-    /**
-     * @param {String} newpage
-     * @param {Object} args
-     * @param {Boolean} ignorePath - Default: false
-     * @param {Boolean} forceUpdate - Default: false
-     */
-    changePage;
-    backPage;
-    openPopup;
-    closePopup;
+    interface;
 
     constructor() {
         // User informations
@@ -53,6 +44,7 @@ class UserManager {
         this.birth = '';
         this.xp = 0;
         this.stats = DEFAULT_STATS;
+        this.tempSelectedTime = null;
     }
 
     async clear() {
@@ -62,6 +54,7 @@ class UserManager {
         this.birth = '';
         this.xp = 0;
         this.stats = DEFAULT_STATS;
+        this.tempSelectedTime = null;
         this.quests.daily = [];
         this.quests.todoList = [];
 
@@ -79,7 +72,7 @@ class UserManager {
         this.settings.Clear();
         await this.localSave();
         await this.settings.Save();
-        this.changePage('login');
+        this.interface.changePage('login');
     }
     async unmount() {
         await this.localSave();
@@ -90,7 +83,7 @@ class UserManager {
     async refreshStats() {
         this.activities.removeDeletedSkillsActivities();
         this.experience.getExperience();
-        this.changePage();
+        this.interface.changePage();
     }
 
     getTitle() {
@@ -110,16 +103,16 @@ class UserManager {
     /*pseudoCallback = (status) => {
         async function loadData(button) {
             await this.loadData();
-            this.changePage();
+            this.interface.changePage();
         };
         if (status === "wrongtimingpseudo") {
             const title = langManager.curr['identity']['alert-wrongtimingpseudo-title'];
             const text = langManager.curr['identity']['alert-wrongtimingpseudo-text'];
-            this.openPopup('ok', [ title, text ], loadData.bind(this));
+            this.interface.popup.Open('ok', [ title, text ], loadData.bind(this));
         } else if (status === "wrongpseudo") {
             const title = langManager.curr['identity']['alert-wrongpseudo-title'];
             const text = langManager.curr['identity']['alert-wrongpseudo-text'];
-            this.openPopup('ok', [ title, text ], loadData.bind(this));
+            this.interface.popup.Open('ok', [ title, text ], loadData.bind(this));
         } else if (status === "ok") {
             this.usernameDate = new Date();
             this.localSave();
@@ -164,7 +157,8 @@ class UserManager {
             'activities': this.activities.getAll(),
             'solvedAchievements': this.achievements.solved,
             'daily': this.quests.daily,
-            'tasks': this.quests.todoList
+            'tasks': this.quests.todoList,
+            'currentActivity': this.activities.currentActivity
         };
 
         return DataStorage.Save(STORAGE.USER, data);
@@ -194,10 +188,15 @@ class UserManager {
         if (online) data = await this.server.LoadData();
         else        data = await DataStorage.Load(STORAGE.USER);
 
+        const loadKey = (key, defaultValue) => {
+            if (!data.hasOwnProperty(key)) return defaultValue;
+            return data[key];
+        }
+
         // TODO - Finir ça
         if (data !== null) {
-            this.username = data['username'];
-            this.usernameDate = data['usernameDate'];
+            this.username = loadKey('username');
+            this.usernameDate = loadKey('usernameDate');
             this.title = 1;//data['title'];
             //this.activities.setAll(data['activities']);
             //this.birth = data['birth'];
@@ -205,6 +204,9 @@ class UserManager {
             //this.achievements.solved = data['solvedAchievements'];
             //this.quests.daily = data['daily'];
             //this.quests.todoList = data['tasks'];
+            if (loadKey('currentActivity', null) !== null) {
+                this.activities.currentActivity = loadKey('currentActivity');
+            }
         }
 
         this.refreshStats();
@@ -217,4 +219,4 @@ class UserManager {
 const user = new UserManager();
 
 export default user;
-export { UserManager };
+export { UserManager, DEFAULT_STATS };

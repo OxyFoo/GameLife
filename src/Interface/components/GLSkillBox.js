@@ -19,11 +19,11 @@ function GLSkillBox(props) {
 
     const text_title = (skill.Name || '').toUpperCase();
     const text_level = langManager.curr['level']['level'] + ' ' + level + ', ' + totalXP + langManager.curr['level']['xp'];
-    const text_date = dateToFormatString(new Date(props.item.startDate));
+    const text_date = dateToFormatString(new Date(props.item.startTime));
 
     const styleContainer = [ styles.container, props.style ];
     const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
-    const eventPress = () => { user.changePage('skill', { skillID: skillID }) };
+    const eventPress = () => { user.interface.changePage('skill', { skillID: skillID }) };
     const xml = dataManager.skills.getXmlByLogoID(skill.LogoID);
 
     return (

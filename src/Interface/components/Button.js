@@ -11,6 +11,7 @@ import Ripple from './Ripple';
 const ButtonProps = {
     style: {},
     styleAnimation: undefined,
+    fontSize: 16,
     icon: '',
     iconSize: 24,
     iconColor: 'white',
@@ -28,6 +29,7 @@ const ButtonProps = {
     nonClickable: false, // TODO - Teriner la remontée jusqu'au containers
     onPress: () => {},
     onLongPress: () => {},
+    onLayout: () => {},
     /**
      * @type {'auto'|'box-only'|'box-none'|'none'}
      */
@@ -45,14 +47,14 @@ class Button extends React.Component {
         this.rippleRef.current.onTouchStart(event);
         this.posX = event.nativeEvent.pageX;
         this.posY = event.nativeEvent.pageY;
-        this.time = event.nativeEvent.timestamp;
+        this.time = new Date().getTime();
     }
     onTouchEnd = (event) => {
         this.rippleRef.current.onTouchEnd(event);
 
         const deltaX = Math.abs(event.nativeEvent.pageX - this.posX);
         const deltaY = Math.abs(event.nativeEvent.pageY - this.posY);
-        const deltaT = (event.nativeEvent.timestamp - this.time);
+        const deltaT = new Date().getTime() - this.time;
         const isPress = deltaX < 20 && deltaY < 20;
 
         const { onPress, onLongPress } = this.props;
@@ -81,14 +83,14 @@ class Button extends React.Component {
             this.props.style,
             this.props.styleAnimation
         ];
-        const ButtonView = typeof(this.props.styleAnimation) === 'undefined' ? View : Animated.View;
+        const ButtonView = isUndefined(this.props.styleAnimation) ? View : Animated.View;
 
         let content;
         if (this.props.loading) {
             content = <Icon icon='loadingDots' size={this.props.iconSize + 8} color={this.props.iconColor} />;
         } else {
             content = <>
-                        {hasChildren && <Text style={styles.text} color={this.props.colorText}>{children}</Text>}
+                        {hasChildren && <Text style={styles.text} color={this.props.colorText} fontSize={this.props.fontSize}>{children}</Text>}
                         {hasIcon     && <Icon icon={this.props.icon} size={this.props.iconSize} color={this.props.iconColor} angle={this.props.iconAngle} />}
                     </>;
         }
@@ -98,6 +100,7 @@ class Button extends React.Component {
                 style={style}
                 onTouchStart={this.onTouchStart}
                 onTouchEnd={this.onTouchEnd}
+                onLayout={this.props.onLayout}
                 pointerEvents={this.props.pointerEvents}
             >
                 {content}
@@ -128,7 +131,6 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#FFFFFF',
-        fontSize: 16,
         textTransform: 'uppercase'
     }
 });

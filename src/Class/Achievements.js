@@ -1,9 +1,11 @@
 import { UserManager } from "../Managers/UserManager";
 import dataManager from "../Managers/DataManager";
 
+// TODO - Correct ?
 class Achievement {
     skillID = 0;
-    startDate = new Date();
+    //startDate = new Date();
+    startTime = 0;
     duration = 0;
 }
 
@@ -141,7 +143,7 @@ class Achievements {
                 const title = langManager.curr['achievements']['alert-achievement-title'];
                 let text = langManager.curr['achievements']['alert-achievement-text'];
                 text = text.replace('{}', achievement.Name);
-                this.user.openPopup('ok', [ title, text ]);
+                this.user.interface.popup.Open('ok', [ title, text ]);
 
                 this.solved.push(achievementID);
                 this.UNSAVED_solved.push(achievementID);

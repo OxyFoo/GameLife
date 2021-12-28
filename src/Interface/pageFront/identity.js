@@ -105,7 +105,7 @@ class Identity extends BackIdentity {
                                 <TouchableOpacity
                                     style={styles.achievementsContainer}
                                     activeOpacity={.5}
-                                    onPress={() => { user.changePage('achievements'); }}
+                                    onPress={() => { user.interface.changePage('achievements'); }}
                                 >
                                     <View style={[styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
                                         <GLText style={styles.title} title={names[0]} />

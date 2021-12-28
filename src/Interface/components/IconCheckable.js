@@ -14,7 +14,8 @@ const IconCheckableProps = {
     colorOff: 'backgroundGrey',
     id: 0,
     checked: undefined,
-    onPress: (id, checked) => {}
+    onPress: (id, checked) => {},
+    pressable: true
 }
 
 class IconCheckable extends React.Component {
@@ -27,7 +28,7 @@ class IconCheckable extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!isUndefined(this.props.checked)) {
-            if (this.props.checked !== prevProps.checked) {
+            if (this.props.checked !== this.state.checked) {
                 this.setState({ checked: this.props.checked });
             }
         }
@@ -37,8 +38,10 @@ class IconCheckable extends React.Component {
         const { id } = this.props;
         const { checked } = this.state;
 
-        this.setState({ checked: !checked });
-        this.props.onPress(id, !checked);
+        if (this.props.pressable) {
+            this.setState({ checked: !checked });
+            this.props.onPress(id, !checked);
+        }
     }
 
     render() {

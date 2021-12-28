@@ -50,7 +50,7 @@ class BackDailyquest extends React.Component {
         } else if (this.state.selectedTodo !== null) {
             this.setState({ selectedTodo: null });
         } else {
-            user.backPage();
+            user.interface.backPage();
         }
     }
 
@@ -77,12 +77,12 @@ class BackDailyquest extends React.Component {
         if (!valid) {
             const title = langManager.curr['dailyquest']['alert-notfill-title'];
             const text = langManager.curr['dailyquest']['alert-notfill-text'];
-            user.openPopup('ok', [ title, text ]);
+            user.interface.popup.Open('ok', [ title, text ]);
         } else {
             if (this.state.selectedSkill1 == this.state.selectedSkill2) {
                 const title = langManager.curr['dailyquest']['alert-same-title'];
                 const text = langManager.curr['dailyquest']['alert-same-text'];
-                user.openPopup('ok', [ title, text ]);
+                user.interface.popup.Open('ok', [ title, text ]);
             } else {
                 this.save();
             }
@@ -100,7 +100,7 @@ class BackDailyquest extends React.Component {
         const enable = () => { this.setState({ enable: true }); }
         const title = langManager.curr['dailyquest']['alert-success-title'];
         const text = langManager.curr['dailyquest']['alert-success-text'];
-        user.openPopup('ok', [ title, text ], enable, false);
+        user.interface.popup.Open('ok', [ title, text ], enable, false);
     }
 
     // DAILY QUESTS
@@ -109,7 +109,7 @@ class BackDailyquest extends React.Component {
         if (user.quests.dailyAlreadyChanged()) {
             const title = langManager.curr['dailyquest']['alert-warn-title'];
             const text = langManager.curr['dailyquest']['alert-warn-text'];
-            user.openPopup('ok', [ title, text ]);
+            user.interface.popup.Open('ok', [ title, text ]);
             return;
         }
         this.setState({
@@ -150,7 +150,7 @@ class BackDailyquest extends React.Component {
                     user.quests.todoToggle(id);
                 }
             }
-            user.openPopup('yesno', [ title, text ], event);
+            user.interface.popup.Open('yesno', [ title, text ], event);
         }
     }
     onChangeTaskTitle = (newTitle) => {
@@ -166,7 +166,7 @@ class BackDailyquest extends React.Component {
         if (!taskTitle.length) {
             const title = langManager.curr['dailyquest']['alert-tasknotitle-title'];
             const text = langManager.curr['dailyquest']['alert-tasknotitle-text'];
-            user.openPopup('ok', [ title, text ]);
+            user.interface.popup.Open('ok', [ title, text ]);
         } else {
             if (this.state.selectedTodo === -1) {
                 // Add todo

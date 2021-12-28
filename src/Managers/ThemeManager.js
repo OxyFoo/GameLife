@@ -7,19 +7,22 @@ class ThemeManager {
             white: '#FFFFFF', // White
             border: '#808080', // Grey
             background: '#0E1247', // Dark purple
+            backgroundCard: '#384065', // Transparent purple
             backgroundGrey: '#222740', // Grey
             backgroundTransparent: '#FFFFFF33', // Transparent white
 
-            globalBackground: '#000020', // Obsolete
-            globalBackcomponent: '#000000', // Obsolete
-            xpBar: '#ECECEC',
             text: {
                 main: '#ECECEC', // Obsolete
                 primary: '#ECECEC',
                 secondary: '#808080',
                 light: '#A7A4A4',
                 error: '#CC0029'
-            }
+            },
+
+            // Obsolete
+            globalBackground: '#000020',
+            globalBackcomponent: '#000000',
+            xpBar: '#ECECEC'
         }/*,
         Light: {
             globalBackground: '#000020',
@@ -61,13 +64,19 @@ class ThemeManager {
     /**
      * @param {String} str - Name of theme color or hex color
      * @param {?String} subTheme - Key of subtheme (eg: text)
+     * @param {Number} opacity - Opacity of color, between 0 and 1
      * @returns {String} - Hex color
      */
-    getColor(str, subTheme = null) {
+    getColor(str, subTheme = null, opacity = 1) {
         let output = null;
+
+        // If already hex color, keep it
         if (str.includes('#')) {
             output = str;
-        } else {
+        }
+
+        // If not hex color, get the color from current theme
+        else {
             let selectedColors = this.colors;
             if (subTheme !== null && selectedColors.hasOwnProperty(subTheme)) {
                 selectedColors = selectedColors[subTheme];
@@ -76,6 +85,16 @@ class ThemeManager {
                 output = selectedColors[str];
             }
         }
+
+        // Apply opacity
+        if (output !== null && output.startsWith('#') && opacity < 1) {
+            let opacityStr = Math.round(opacity * 255).toString(16);
+            if (opacityStr.length === 1) {
+                opacityStr = '0' + opacityStr;
+            }
+            output = output.substring(0, 7) + opacityStr;
+        }
+
         return output;
     }
 }

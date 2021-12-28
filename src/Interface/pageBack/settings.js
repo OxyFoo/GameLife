@@ -31,7 +31,7 @@ class BackSettings extends React.Component {
         }
         // TODO - Save user data
         //user.saveData();
-        user.backPage();
+        user.interface.backPage();
     }
     reset = () => {
         const event = (button) => {
@@ -43,7 +43,7 @@ class BackSettings extends React.Component {
         }
         const title = langManager.curr['settings']['alert-reset-title'];
         const text = langManager.curr['settings']['alert-reset-text'];
-        user.openPopup('yesno', [ title, text ], event);
+        user.interface.popup.Open('yesno', [ title, text ], event);
     }
     disconnect = () => {
         const event = (button) => {
@@ -53,7 +53,7 @@ class BackSettings extends React.Component {
         }
         const title = langManager.curr['settings']['alert-disconnect-title'];
         const text = langManager.curr['settings']['alert-disconnect-text'];
-        user.openPopup('yesno', [ title, text ], event);
+        user.interface.popup.Open('yesno', [ title, text ], event);
     }
     clear = () => {
         const event = (button) => {
@@ -64,18 +64,18 @@ class BackSettings extends React.Component {
         }
         const title = langManager.curr['settings']['alert-clear-title'];
         const text = langManager.curr['settings']['alert-clear-text'];
-        user.openPopup('yesno', [ title, text ], event);
+        user.interface.popup.Open('yesno', [ title, text ], event);
     }
     changeLang = (lang) => {
         langManager.setLangage(lang);
-        user.changePage();
+        user.interface.changePage();
         // TODO - Save user data
         //user.saveData(false);
     }
     changeTheme = (theme) => {
         if (themeManager.setTheme(theme)) {
             this.currentTheme = theme;
-            user.changePage();
+            user.interface.changePage();
         }
     }
     changeMorningNotifications = (enabled) => {
@@ -83,7 +83,7 @@ class BackSettings extends React.Component {
         else disableMorningNotifications();
         user.settings.morningNotifications = enabled;
         user.settings.Save();
-        user.changePage();
+        user.interface.changePage();
     }
 }
 

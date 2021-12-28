@@ -16,7 +16,7 @@ class App extends React.Component {
             if (!checkDate()) {
                 /*const title = langManager.curr['home']['alert-dateerror-title'];
                 const text = langManager.curr['home']['alert-dateerror-text'];
-                this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);*/
+                this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);*/
                 console.error("TODO - Message d'erreur");
             }
         }
@@ -31,10 +31,10 @@ class App extends React.Component {
         await user.settings.Load();
         await user.server.Ping();
 
-        const TEST = true;
+        const TEST = false;
 
         if (TEST) {
-            user.changePage('test');
+            user.interface.changePage('test', undefined, true);
             return;
         }
 
@@ -43,19 +43,19 @@ class App extends React.Component {
         const connected = user.settings.connected;
         const showOnboard = !user.settings.onboardingWatched;
         if (email === '') {
-            /*if (showOnboard) user.changePage('onboarding', { 'nextPage': 'home' });
-            else */if (online) user.changePage('login');
-            else             user.changePage('waitinternet');
+            /*if (showOnboard) user.interface.changePage('onboarding', { 'nextPage': 'home' });
+            else */if (online) user.interface.changePage('login', undefined, true);
+            else             user.interface.changePage('waitinternet', undefined, true);
         } else {
-            if (connected) user.changePage('loading');
-            else           user.changePage('waitmail');
+            if (connected) user.interface.changePage('loading', undefined, true);
+            else           user.interface.changePage('waitmail', undefined, true);
         }
 
         return;
         // TODO - Code at end of onboarding
         user.settings.onboardingWatched = true;
         user.settings.Save();
-        user.changePage(this.props.args['nextPage']);
+        user.interface.changePage(this.props.args['nextPage'], undefined, true);
     }
 
     render() {

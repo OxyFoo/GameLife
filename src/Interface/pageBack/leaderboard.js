@@ -28,8 +28,8 @@ class BackLeaderboard extends React.Component {
         if (!user.server.online) {
             const title = langManager.curr['leaderboard']['alert-onlineneed-title'];
             const text = langManager.curr['leaderboard']['alert-onlineneed-text'];
-            user.openPopup('ok', [ title, text ]);
-            setTimeout(user.backPage, 500);
+            user.interface.popup.Open('ok', [ title, text ]);
+            setTimeout(user.interface.backPage, 500);
         }
     }
 
@@ -42,7 +42,7 @@ class BackLeaderboard extends React.Component {
     info = () => {
         const title = langManager.curr['leaderboard']['alert-connectneed-title'];
         const text = langManager.curr['leaderboard']['alert-connectneed-text'];
-        user.openPopup('ok', [ title, text ]);
+        user.interface.popup.Open('ok', [ title, text ]);
     }
 }
 

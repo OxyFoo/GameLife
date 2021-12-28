@@ -22,7 +22,7 @@ class BackIdentity extends React.Component {
         imageAnimation: new Animated.Value(MIN_WIDTH)
     }
 
-    back = () => { user.backPage(); }
+    back = () => { user.interface.backPage(); }
     async valid() {
         if (user.username !== this.state.username) {
             user.username = this.state.username;
@@ -32,7 +32,7 @@ class BackIdentity extends React.Component {
 
         this.setState({ loading: true });
         // TODO - Save
-        user.backPage();
+        user.interface.backPage();
     }
 
     // Image
@@ -50,11 +50,11 @@ class BackIdentity extends React.Component {
         if (days_before_editable <= 0) {
             const title = langManager.curr['identity']['alert-pseudolimit-title'];
             const text = langManager.curr['identity']['alert-pseudolimit-text'].replace('{}', days_total);
-            user.openPopup('ok', [ title, text ], textEditable_callback, false);
+            user.interface.popup.Open('ok', [ title, text ], textEditable_callback, false);
         } else {
             const title = langManager.curr['identity']['alert-pseudowait-title'];
             const text = langManager.curr['identity']['alert-pseudowait-text'].replace('{}', days_before_editable);
-            user.openPopup('ok', [ title, text ], undefined);
+            user.interface.popup.Open('ok', [ title, text ], undefined);
         }
     }
     editPseudo = (newUsername) => {

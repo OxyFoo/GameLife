@@ -94,6 +94,8 @@ class Skills {
      */
     getByID = (ID) => getByKey(this.skills, 'ID', ID);
 
+    getByCategory = (ID) => this.skills.filter(skill => skill.CategoryID === ID);
+
     getAllCategories(onlyUseful = false) {
         let output = [];
         let categories = sortByKey(this.skillsCategories, 'Name');

@@ -9,7 +9,7 @@ class BackSkill extends React.Component {
         super(props);
 
         if (typeof(props.args) === 'undefined') {
-            user.backPage();
+            user.interface.backPage();
             return;
         }
 
@@ -40,7 +40,7 @@ class BackSkill extends React.Component {
         this.history.reverse();
     }
 
-    back = () => { user.backPage(); }
+    back = () => { user.interface.backPage(); }
 }
 
 export default BackSkill;

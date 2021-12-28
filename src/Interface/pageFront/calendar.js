@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Animated, Dimensions } from 'react-native';
 
-import user from '../../Managers/UserManager';
-
 import BackCalendar from '../pageBack/calendar';
 import { Icon, Page, Text } from '../Components';
 import { ActivityCard, BlockMonth, UserHeader } from '../Widgets';
+
+import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 import { GetFullDate, GetMonthAndYear } from '../../Functions/Date';
-import dataManager from '../../Managers/DataManager';
-import { Activity } from '../../Class/Activities';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -31,24 +29,19 @@ class Calendar extends BackCalendar {
                 style={{ maxWidth: '48%' }}
                 activity={item}
                 index={index}
+                onPress={() => { user.interface.changePage('activity', { activity: item }) }}
             />
         )
 
         const month = ({ item }) => (
             <BlockMonth
-                style={{ maxHeight: 260, minHeight: 260 }}
+                //style={{ maxHeight: 260, minHeight: 260 }}
                 month={item.month}
                 year={item.year}
                 data={item.data}
                 onPressDay={this.daySelect}
             />
         );
-
-        const test = new Activity();
-        test.skillID = 5;
-        test.startDate = new Date().getTime()/1000;
-        test.duration = 60;
-        const testActs = [ test, test, test, test, test ];
 
         return (
             <Page style={{ padding: 0 }} scrollable={false}>
@@ -109,43 +102,13 @@ class Calendar extends BackCalendar {
                         //onEndReached={(e) => { this.addMonthToBottom() }}
                         //onScroll={(e) => { if (e.nativeEvent.contentOffset.y === 0) this.addMonthToTop() }}
                         onScroll={this.onScroll}
+                        //scrollEnabled={!this.state.isReached}
+                        //maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: undefined }}
                     />
                 </Animated.View>
 
             </Page>
         );
-
-        return (
-            <View style={{ flex: 1 }}>
-                {/* Show activities 
-                <FlatList
-                    data={this.state.activities}
-                    keyExtractor={(item, i) => 'activity_' + i}
-                    renderItem={({item}) => {
-                        const activity = item;
-                        const skill = dataManager.skills.getByID(activity.skillID);
-                        const date = new Date(activity.startDate);
-                        const timeText = date.getHours() + 'h' + date.getMinutes() + 'm/' + activity.duration + 'm';
-
-                        const durationHour = activity.duration / 60;
-                        let totalXP = skill.XP * durationHour;
-                        const sagLevel = user.experience.getStatExperience('sag', activity).lvl - 1;
-                        totalXP += sagLevel * durationHour;
-
-                        return (
-                            <GLActivityBox
-                                skill={skill.Name}
-                                time={timeText}
-                                xp={totalXP}
-                                onPress={() => { this.skill_click(activity) }}
-                                onRemove={() => { this.skill_remove(activity) }}
-                            />
-                        )
-                    }}
-                />*/}
-
-            </View>
-        )
     }
 }
 
@@ -182,7 +145,7 @@ const styles = StyleSheet.create({
     },
     pannel: {
         width: '100%',
-        height: '85%',
+        height: '86%',
         marginTop: 12,
         paddingBottom: 100,
         borderTopLeftRadius: 16,

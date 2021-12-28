@@ -52,13 +52,13 @@ class BackTest extends React.Component {
             console.warn("Aucun skill !");
             return;
         }
-        user.changePage('activity');
+        user.interface.changePage('activity');
     }
-    openIdentity = () => { user.changePage('identity'); }
-    openCalendar = () => { user.changePage('calendar'); }
-    openSkill = (skillID) => { user.changePage('skill', { skillID: skillID }); }
-    openSkills = () => { user.changePage('skills'); }
-    openExperience = () => { user.changePage('experience'); }
+    openIdentity = () => { user.interface.changePage('identity'); }
+    openCalendar = () => { user.interface.changePage('calendar'); }
+    openSkill = (skillID) => { user.interface.changePage('skill', { skillID: skillID }); }
+    openSkills = () => { user.interface.changePage('skills'); }
+    openExperience = () => { user.interface.changePage('experience'); }
 }
 
 export default BackTest;

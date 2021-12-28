@@ -48,11 +48,11 @@ class Skill extends BackSkill {
                         data={this.history}
                         keyExtractor={(item, i) => 'history_' + i}
                         renderItem={({item, i}) => {
-                            const date = dateToFormatString(new Date(item.startDate));
+                            const date = dateToFormatString(new Date(item.startTime));
                             const text = langManager.curr['skill']['text-history'];
                             const duration = item.duration;
                             const title = text.replace('{}', date).replace('{}', duration);
-                            const onPress = () => { user.changePage('activity', { 'activity': item }); }
+                            const onPress = () => { user.interface.changePage('activity', { 'activity': item }); }
                             return (
                                 <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
                                     <GLText

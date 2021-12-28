@@ -52,7 +52,7 @@ class GLPopup extends React.PureComponent {
 
     backgroundPress = () => {
         if (this.state.cancelable) {
-            user.closePopup();
+            user.interface.popup.Close();
         }
     }
 
@@ -70,7 +70,7 @@ class GLPopup extends React.PureComponent {
             if (typeof(cb) === 'function') {
                 cb(type);
             }
-            user.closePopup();
+            user.interface.popup.Close();
         }
 
         let buttons = <GLButton value={ok} onPress={() => callback('ok')} />;

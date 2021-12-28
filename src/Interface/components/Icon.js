@@ -12,9 +12,12 @@ import svgCalendar from '../../../res/icons/calendar';
 import svgCheckboxOn from '../../../res/icons/checkbox-on';
 import svgCheckboxOff from '../../../res/icons/checkbox-off';
 import svgChevron from '../../../res/icons/chevron';
+import svgChrono from '../../../res/icons/chrono';
 import svgHome from '../../../res/icons/home';
+import svgInfo from '../../../res/icons/info';
 import svgShop from '../../../res/icons/shop';
 import svgSocial from '../../../res/icons/social';
+import svgSuccess from '../../../res/icons/success';
 import svgLoading from '../../../res/icons/loading';
 import svgLoadingDots from '../../../res/icons/loading-dots';
 import { SvgXml } from 'react-native-svg';
@@ -28,7 +31,7 @@ const IconProps = {
      */
     xml: undefined,
     /**
-     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'home'|'shop'|'social'|'loading'|'loadingDots'}
+     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'home'|'info'|'shop'|'social'|'success'|'loading'|'loadingDots'}
      */
     icon: '',
     size: 24,
@@ -46,9 +49,12 @@ const SVGIcons = {
     checkboxOn: svgCheckboxOn,
     checkboxOff: svgCheckboxOff,
     chevron: svgChevron,
+    chrono: svgChrono,
     home: svgHome,
+    info: svgInfo,
     shop: svgShop,
     social: svgSocial,
+    success: svgSuccess,
     loading: svgLoading,
     loadingDots: svgLoadingDots
 }

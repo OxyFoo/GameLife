@@ -13,7 +13,7 @@ function statComponent(item, sup, index) {
     const total = Math.round(stat.totalXP);
 
     const pressEvent = () => {
-        user.changePage('statistic', { 'stat': statKey });
+        user.interface.changePage('statistic', { 'stat': statKey });
     };
 
     return (

@@ -28,7 +28,7 @@ class BackAbout extends React.Component {
         const version = require('../../../package.json').versionName;
         const title = langManager.curr['about']['alert-info-title'];
         const text = langManager.curr['about']['alert-info-text'].replace('{}', version);
-        user.openPopup('ok', [ title, text ]);
+        user.interface.popup.Open('ok', [ title, text ]);
     }
 }
 

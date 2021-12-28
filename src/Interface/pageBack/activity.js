@@ -1,159 +1,133 @@
 import * as React from 'react';
+import { Animated } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
-import { getDates, getDurations } from '../../Functions/Time';
+
+import { Activity } from '../../Class/Activities';
+import { isUndefined } from '../../Functions/Functions';
+import { SpringAnimation } from '../../Functions/Animations';
+import { GetTime } from '../../Functions/Time';
 
 class BackActivity extends React.Component {
     constructor(props) {
         super(props);
 
+        const visualisationMode = this.props.args.hasOwnProperty('activity');
+
+        /**
+         * @type {Activity}
+         */
+        const activity = visualisationMode ? this.props.args.activity : null;
+        const skill = visualisationMode ? dataManager.skills.getByID(activity.skillID) : null;
+
         let categories = [];
         for (let i = 0; i < dataManager.skills.skillsCategories.length; i++) {
             const category = dataManager.skills.skillsCategories[i];
             const ID = category.ID;
+            const Name = category.Name;
             const Icon = dataManager.skills.getXmlByLogoID(category.LogoID);
-            categories.push({ ID: ID, icon: Icon, checked: false });
+            const Checked = visualisationMode ? skill.CategoryID === ID : false;
+            categories.push({ ID: ID, name: Name, icon: Icon, checked: Checked });
         }
+
+        const skills = dataManager.skills.skills.map(skill => ({ id: skill.ID, value: skill.Name }));
+        const emptySkill = { id: 0, value: '' };
+
+        let activitySchedule;
+        if (visualisationMode) activitySchedule = [ activity.startTime, activity.duration ];
+        else if (user.tempSelectedTime !== null) activitySchedule = [ user.tempSelectedTime, 15 ];
+
         this.state = {
-            categories: categories
-        }
-        return;
+            categories: categories,
+            skills: skills,
 
-        // OLD
+            visualisationMode: visualisationMode,
+            startnowMode: 0,
+            selectedSkill: visualisationMode ? { id: activity.skillID, value: skill.Name } : emptySkill,
+            animPosY: new Animated.Value(visualisationMode ? 0 : 1),
 
-        this.STATS = [ "sag", "int", "con", "for", "end", "agi", "dex" ];
-        this.SELECTED = typeof(props.args['activity']) !== 'undefined';
-
-        if (this.SELECTED) {
-            const activity = props.args['activity'];
-            const skillID = activity.skillID;
-            const skill = dataManager.skills.getByID(skillID);
-
-            const date = new Date(activity.startDate);
-            const dateTxt = date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
-            const timeTxt = parseInt(activity.duration/60) + ':' + parseInt(activity.duration%60);
-            const duration = activity.duration;
-
-            this.CATEGORIES = [];
-            this.DATES = [{ key: 0, value: dateTxt, fulldate: date }];
-            this.DURATION = [{ key: 0, value: timeTxt, duration: duration }];
-
-            const category = { key: 0, value: skill.Category };
-
-            this.state = {
-                skills: [],
-
-                selectedCategory: category,
-                selectedSkill: activity,
-                selectedDateKey: 0,
-                selectedTimeKey: 0
-            }
-        } else {
-            const MAX_DAYS = 2;
-            const STEP_MINUTES = 15;
-            const TOTAL_HOUR_DURATION = 4;
-            const SKILLS = dataManager.skills.getAsObj();
-
-            this.CATEGORIES = dataManager.skills.getCategories();
-            this.DATES = getDates(MAX_DAYS, STEP_MINUTES);
-            this.DURATION = getDurations(TOTAL_HOUR_DURATION, STEP_MINUTES);
-            this.state = {
-                skills: SKILLS,
-        
-                selectedCategory: undefined,
-                selectedSkill: undefined,
-                selectedDateKey: 0,
-                selectedTimeKey: 3
-            }
+            commentary: null,
+            activityStart: visualisationMode ? activity.startTime : null,
+            activityDuration: visualisationMode ? activity.duration : 15,
+            ActivitySchedule: activitySchedule
         }
     }
 
     selectCategory = (ID, checked) => {
         let { categories } = this.state;
-        for (let i = 0; i < categories.length; i++) {
-            if (categories[i].ID === ID) {
-                categories[i].checked = checked;
-            } else {
-                categories[i].checked = false;
-            }
-        }
-        this.setState({ categories: categories });
+        const newCategories = categories.map(cat => ({
+            ...cat, checked: cat.ID === ID ? checked : false
+        }));
+        this.setState({ categories: newCategories });
+
+        this.selectActivity(null);
+
+        let newActivities = dataManager.skills.getByCategory(ID)
+        if (ID !== 0) newActivities = newActivities.map(skill => ({ id: skill.ID, value: skill.Name }));
+        this.setState({ skills: newActivities });
     }
 
-    back = () => { user.backPage(); }
-    valid = () => {
-        if (typeof(this.state.selectedSkill) === 'undefined') {
-            const title = langManager.curr['calendar']['alert-notfill-title'];
-            const text = langManager.curr['calendar']['alert-notfill-text'];
-            user.openPopup('ok', [ title, text ]);
-        } else {
-            const skillID = this.state.selectedSkill.skillID;
-            const date = this.DATES[this.state.selectedDateKey].fulldate;
-            const duration = this.DURATION[this.state.selectedTimeKey].duration;
-            if (!user.activities.Add(skillID, date, duration)) {
-                const title = langManager.curr['calendar']['alert-wrongtiming-title'];
-                const text = langManager.curr['calendar']['alert-wrongtiming-text'];
-                user.openPopup('ok', [ title, text ]);
-                return;
-            }
-            this.back();
+    selectActivity = (skill) => {
+        SpringAnimation(this.state.animPosY, skill === null ? 1 : 0).start();
+        if (skill === null) skill = { id: 0, value: '' };
+        this.setState({ selectedSkill: skill });
+    }
+
+    onChangeMode = (index) => {
+        this.setState({ startnowMode: index === 1 });
+    }
+
+    getCategoryName = () => {
+        let output = langManager.curr['activity']['input-activity'];
+        const selectedCategory = this.state.categories.find(category => category.checked);
+        if (!isUndefined(selectedCategory)) {
+            output = selectedCategory.name;
         }
-    };
-    trash = () => {
+        return output;
+    }
+
+    onChangeSchedule = (startTime, duration) => {
+        this.setState({ activityStart: startTime, activityDuration: duration });
+    }
+
+    AddActivity = () => {
+        const skillID = this.state.selectedSkill.id;
+        const { activityStart, activityDuration } = this.state;
+        if (user.activities.Add(skillID, activityStart, activityDuration)) {
+            user.interface.backPage();
+        } else {
+            const title = langManager.curr['activity']['alert-wrongtiming-title'];
+            const text = langManager.curr['activity']['alert-wrongtiming-text'];
+            user.interface.popup.Open('ok', [ title, text ]);
+        }
+    }
+    RemActivity = () => {
         const remove = (button) => {
             if (button === 'yes') {
-                user.activities.Remove(this.state.selectedSkill);
-                this.back();
+                user.activities.Remove(this.props.args.activity);
+                user.interface.backPage();
             }
         }
-        const title = langManager.curr['calendar']['alert-remove-title'];
-        const text = langManager.curr['calendar']['alert-remove-text'];
-        user.openPopup('yesno', [ title, text ], remove);
+        const title = langManager.curr['activity']['alert-remove-title'];
+        const text = langManager.curr['activity']['alert-remove-text'];
+        user.interface.popup.Open('yesno', [ title, text ], remove);
     }
+    StartActivity = () => {
+        const skillID = this.state.selectedSkill.id;
+        const startTime = GetTime();
 
-    changeCat = (categoryIndex) => {
-        if (typeof(categoryIndex) !== 'number') {
-            this.setState({
-                skills: dataManager.skills.getAsObj(),
-                selectedCategory: undefined,
-                selectedSkill: undefined
-            });
+        if (!user.activities.timeIsFree(startTime, 15)) {
+            const title = langManager.curr['activity']['alert-wrongtiming-title'];
+            const text = langManager.curr['activity']['alert-wrongtiming-text'];
+            user.interface.popup.Open('ok', [ title, text ]);
             return;
         }
-        const category = this.CATEGORIES[categoryIndex];
-        this.setState({
-            skills: dataManager.skills.getAsObj(category.value),
-            selectedCategory: category,
-            selectedSkill: undefined
-        });
-    }
-    changeSkill = (skillID) => {
-        const activity = { skillID: skillID };
-        const skill = dataManager.skills.getByID(skillID);
 
-        // Get category ID
-        let category;
-        for (let i = 0; i < this.CATEGORIES.length; i++) {
-            const cat = this.CATEGORIES[i];
-            if (cat.value === skill.Category) {
-                category = cat;
-                break;
-            }
-        }
-
-        this.setState({
-            selectedSkill: activity,
-            selectedCategory: category,
-            skills: dataManager.skills.getAsObj(category.value)
-        });
-    }
-    changeDate = (key) => {
-        this.setState({ selectedDateKey: key });
-    }
-    changeDuration = (key) => {
-        this.setState({ selectedTimeKey: key });
+        user.activities.currentActivity = [ skillID, startTime ];
+        user.localSave();
+        user.interface.changePage('activitytimer', undefined, true);
     }
 }
 

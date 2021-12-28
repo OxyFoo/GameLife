@@ -52,7 +52,7 @@ class BackLoading extends React.Component {
             const email = user.settings.email;
             const status = await user.server.Connect(email);
             if (status === 'newDevice' || status === 'waitMailConfirmation') {
-                while (!user.changePage('waitmail', { email: email })) await sleep(100);
+                while (!user.interface.changePage('waitmail', { email: email }, true)) await sleep(100);
                 return;
             }
         }
@@ -76,10 +76,12 @@ class BackLoading extends React.Component {
 
         await sleep(250); this.setState({ icon: 3 });
         await sleep(500);
-        //while (!user.changePage('home')) await sleep(100);
 
-        // TODO - Remove temp loading page
-        while (!user.changePage('activity')) await sleep(100);
+        if (user.activities.currentActivity === null) {
+            while (!user.interface.changePage('home')) await sleep(100);
+        } else {
+            while (!user.interface.changePage('activitytimer', undefined, true)) await sleep(100);
+        }
     }
 }
 

@@ -46,11 +46,11 @@ class Server {
             if (status === 'update') {
                 const title = langManager.curr['home']['alert-update-title'];
                 const text = langManager.curr['home']['alert-update-text'];
-                this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
+                this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);
             } else if (status === 'downdate') {
                 const title = langManager.curr['home']['alert-newversion-title'];
                 const text = langManager.curr['home']['alert-newversion-text'];
-                this.user.openPopup('ok', [ title, text ], undefined, false);
+                this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
             } else if (status === STATUS.MAINTENANCE) {
                 // TODO - Gérer la maintenance
             } else if (status === 'ok') {

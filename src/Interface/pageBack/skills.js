@@ -15,13 +15,13 @@ class BackSkills extends React.Component {
         skills: user.experience.getAllSkills(undefined, undefined, 0, true)
     }
 
-    back = () => { user.backPage(); }
+    back = () => { user.interface.backPage(); }
     addSkill = () => {
         if (dataManager.skills.getAll().length <= 1) {
             console.warn("Aucun skill !");
             return;
         }
-        user.changePage('activity');
+        user.interface.changePage('activity');
     }
     switchSort = () => {
         const newIndex = (this.state.sortSelectedIndex + 1) % this.SORT_LIST.length;

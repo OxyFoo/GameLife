@@ -19,18 +19,19 @@ const SwiperProps = {
      * @type {Array<Object>}
      */
     pages: [],
+    initIndex: 0,
     backgroundColor: 'backgroundTransparent'
 }
 
 class Swiper extends React.Component {
     constructor(props) {
         super(props);
-        this.posX = 0;
+        this.posX = this.props.initIndex;
         this.nextIn = this.props.delayNext;
     }
     state = {
-        positionX: new Animated.Value(0),
-        positionDots: new Animated.Value(0)
+        positionX: new Animated.Value(this.props.initIndex),
+        positionDots: new Animated.Value(this.props.initIndex)
     }
 
     componentDidMount() {
@@ -44,12 +45,22 @@ class Swiper extends React.Component {
         if (this.nextIn <= 0) {
             this.nextIn = this.props.delayNext;
             if (this.props.enableAutoNext) {
-                const nextIndex = (this.posX + 1) % this.props.pages.length;
-                this.posX = nextIndex;
-                SpringAnimation(this.state.positionX, nextIndex, false).start();
-                SpringAnimation(this.state.positionDots, nextIndex, false).start();
+                this.Next();
             }
         }
+    }
+
+    Next = () => {
+        const nextIndex = (this.posX + 1) % this.props.pages.length;
+        this.posX = nextIndex;
+        SpringAnimation(this.state.positionX, nextIndex, false).start();
+        SpringAnimation(this.state.positionDots, nextIndex, false).start();
+    }
+    Prev = () => {
+        const prevIndex = this.posX === 0 ? this.props.pages.length - 1 : this.posX - 1;
+        this.posX = prevIndex;
+        SpringAnimation(this.state.positionX, prevIndex, false).start();
+        SpringAnimation(this.state.positionDots, prevIndex, false).start();
     }
 
     onTouchStart = (event) => {

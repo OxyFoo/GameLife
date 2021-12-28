@@ -36,11 +36,11 @@ class BottomBar extends React.Component {
         }
     }
 
-    goToHome = () => user.changePage('home');
-    goToCalendar = () => user.changePage('calendar');
-    goToActivity = () => user.changePage('activity');
-    goToSettings = () => user.changePage('settings');
-    goToShop = () => user.changePage('shop');
+    goToHome = () => user.interface.changePage('home');
+    goToCalendar = () => user.interface.changePage('calendar');
+    goToActivity = () => user.interface.changePage('activity', undefined, true);
+    goToSettings = () => user.interface.changePage('settings');
+    goToShop = () => user.interface.changePage('shop');
 
     render() {
         const IntToPc = { inputRange: [0, 1], outputRange: ['0%', '100%'] };

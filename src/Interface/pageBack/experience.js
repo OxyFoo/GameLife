@@ -3,7 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 
 class BackExperience extends React.Component {
-    back = () => { user.backPage(); }
+    back = () => { user.interface.backPage(); }
 }
 
 export default BackExperience;

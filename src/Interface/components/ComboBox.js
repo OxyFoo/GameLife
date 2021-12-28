@@ -1,19 +1,13 @@
 import * as React from 'react';
-import { Animated, FlatList, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native';
-import { TimingAnimation } from '../../Functions/Animations';
-import Button from './Button';
+import { Animated, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
 
 import Text from './Text';
+import Button from './Button';
 import Icon from './Icon';
 import Input from './Input';
 import themeManager from '../../Managers/ThemeManager';
-
-/**
- * TODO
- * Remove TEST
- * Traduction de "Search"
- */
-const TEST = [{id: 0, value: 'Item 0'}, {id: 1, value: 'Item 1'}, {id: 2, value: 'Item 2'}, {id: 3, value: 'Item 3'}, {id: 4, value: 'Item 4'}];
+import langManager from '../../Managers/LangManager';
+import { SpringAnimation } from '../../Functions/Animations';
 
 const ComboBoxProps = {
     style: {},
@@ -22,9 +16,11 @@ const ComboBoxProps = {
     /**
      * @type {Array<{id: 0, value: ''}>}
      */
-    data: TEST,
-    setSearchBar: true,
-    onSelect: (item) => {}
+    data: [],
+    selectedValue: '',
+    setSearchBar: false,
+    onSelect: (item) => {},
+    enabled: true
 }
 
 class ComboBox extends React.Component {
@@ -35,8 +31,23 @@ class ComboBox extends React.Component {
             x: 0, y: 0
         },
         anim: new Animated.Value(0),
+
+        data: [],
         selectionMode: false,
-        selectedValue: ''
+        selectedValue: '',
+        search: ''
+    }
+
+    componentDidMount() {
+        this.refreshSearch();
+    }
+    componentDidUpdate(prevProps) {
+        if (prevProps.data != this.props.data) {
+            this.refreshSearch();
+        }
+        if (this.state.selectedValue != this.props.selectedValue) {
+            this.setState({ selectedValue: this.props.selectedValue });
+        }
     }
 
     onLayout = (event) => {
@@ -49,24 +60,38 @@ class ComboBox extends React.Component {
     }
 
     openSelection = () => {
-        TimingAnimation(this.state.anim, 1, 200).start();
+        if (!this.props.enabled) return;
+        SpringAnimation(this.state.anim, 1).start();
         this.setState({ selectionMode: true });
     }
     closeSelection = () => {
-        TimingAnimation(this.state.anim, 0, 200).start();
+        SpringAnimation(this.state.anim, 0).start();
         this.setState({ selectionMode: false });
     }
     resetSelection = () => {
+        if (!this.props.enabled) return;
+        this.props.onSelect(null);
         this.setState({ selectedValue: '' });
     }
 
-    renderSearchBar = () => {
-        return (
-            <View style={styles.parentSearchBar}>
-                <Input label={'Search'} />
-            </View>
-        )
+    refreshSearch = (text = '') => {
+        if (text.length > 0) {
+            const newDate = this.props.data.filter(item => item.value.toLowerCase().includes(text.toLowerCase()));
+            this.setState({ data: newDate, search: text });
+        } else {
+            this.setState({ data: this.props.data, search: text });
+        }
     }
+
+    renderSearchBar = () => (
+        <View style={styles.parentSearchBar}>
+            <Input
+                label={langManager.curr['modal']['search']}
+                text={this.state.search}
+                onChangeText={this.refreshSearch}
+            />
+        </View>
+    )
 
     renderItem = ({ item }) => {
         const { id, value } = item;
@@ -85,10 +110,19 @@ class ComboBox extends React.Component {
             </TouchableHighlight>
         )
     }
+    renderChevron = () => {
+        const angle = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
+        return this.props.enabled && (
+            <View style={styles.chevron}>
+                <Animated.View style={{ transform: [{ rotateX: angle }] }}>
+                    <Icon icon='chevron' size={20} angle={-90} />
+                </Animated.View>
+            </View>
+        )
+    }
     render() {
         const  { x, y, width, height } = this.state.parent;
-        const angle = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
         const animValue = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: [y+height+20, y+height] });
         const overlayPos = [styles.overlay, {
             width: width,
@@ -96,14 +130,13 @@ class ComboBox extends React.Component {
             transform: [{ translateX: x }, { translateY: animValue }],
             backgroundColor: themeManager.getColor('backgroundGrey')
         }];
+        const header = this.props.setSearchBar ? this.renderSearchBar : null;
 
         return (
             <>
                 <View style={[styles.parent, this.props.style]} onLayout={this.onLayout}>
                     <Input label={this.props.title} text={this.state.selectedValue} active={this.state.selectionMode} pointerEvents='none' />
-                    <View style={styles.chevron}><Animated.View style={{ transform: [{ rotateX: angle }] }}>
-                        <Icon icon='chevron' size={20} angle={-90} />
-                    </Animated.View></View>
+                    <this.renderChevron />
                     <Button style={styles.hoverButton} onPress={this.openSelection} onLongPress={this.resetSelection} rippleColor='white' />
                 </View>
 
@@ -111,8 +144,8 @@ class ComboBox extends React.Component {
 
                 <Animated.View style={overlayPos} pointerEvents={this.state.selectionMode ? 'auto': 'none'}>
                     <FlatList
-                        ListHeaderComponent={this.renderSearchBar}
-                        data={this.props.data}
+                        ListHeaderComponent={header}
+                        data={this.state.data}
                         renderItem={this.renderItem}
                         keyExtractor={(item, index) => 'i-' + index}
                     />
@@ -155,7 +188,9 @@ const styles = StyleSheet.create({
         left: 2,
         right: 2,
         bottom: 2,
-        borderRadius: 2
+        borderRadius: 2,
+        zIndex: 800,
+        elevation: 800
     },
 
     parent: {

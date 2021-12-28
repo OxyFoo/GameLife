@@ -19,7 +19,7 @@ class GLDropDown extends React.PureComponent {
         if (this.props.disabled) return;
         const forcePopupMode = this.props.forcePopupMode || false;
         if (Platform.OS === 'ios' || forcePopupMode) {
-            user.openPopup('list', this.contentRender.bind(this));
+            user.interface.popup.Open('list', this.contentRender.bind(this));
         } else {
             this.setState({ opened: !this.state.opened });
         }
@@ -51,7 +51,7 @@ class GLDropDown extends React.PureComponent {
                 }
 
                 this.toggleVisibility();
-                user.closePopup();
+                user.interface.popup.Close();
             } else {
                 // Toggle element
                 let selected = this.state.selectedIndexes;

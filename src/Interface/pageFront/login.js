@@ -88,7 +88,6 @@ class Login extends BackLogin {
                     styleAnimation={{transform: [{ translateX: Animated.add(-128, Animated.multiply(128, this.state.animSignin)) }] }}
                     color="main1"
                     //rippleColor='main1'
-                    rippleFactor={4}
                     onPress={this.onBack}
                 >
                     <GLIconButton icon='back' size={16} />

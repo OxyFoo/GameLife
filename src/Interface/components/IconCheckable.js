@@ -59,7 +59,6 @@ class IconCheckable extends React.Component {
                 <Button
                     style={buttonStyle}
                     color={backgroundColor}
-                    rippleFactor={4}
                     borderRadius={10}
                     onPress={this.switch}
                 >

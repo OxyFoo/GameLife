@@ -54,7 +54,7 @@ class Home extends BackHome {
                     color='main3'
                     rippleColor='white'
                 >
-                    <StatsBars data={DEFAULT_STATS} />
+                    <StatsBars data={user.stats} />
                 </Container>
 
                 <Container

@@ -13,6 +13,8 @@ const PageProps = {
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
+// TODO - Auto scroll if height change
+
 class Page extends React.Component {
     constructor(props) {
         super(props);
@@ -106,6 +108,10 @@ class Page extends React.Component {
         }
     }
 
+    GotoY = (y) => {
+        this.posY = this.LimitValues(y, true);
+        SpringAnimation(this.state.positionY, this.posY).start();
+    }
 
     render() {
         const position = { transform: [{ translateY: this.state.positionY }] };

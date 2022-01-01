@@ -29,7 +29,7 @@ class Ripple extends React.Component {
         this.setState({ ripple_posX: posX, ripple_posY: posY });
 
         TimingAnimation(this.state.ripple_opacity, 0.2, 100).start();
-        TimingAnimation(this.state.ripple_anim, this.props.rippleFactor * 100, 300).start(() => {
+        TimingAnimation(this.state.ripple_anim, 200, 300).start(() => {
             this.anim_ended = true;
             if (!this.pressed) {
                 this.Hide();
@@ -54,6 +54,7 @@ class Ripple extends React.Component {
             <Animated.View
                 style={[
                     styles.ripple, {
+                    width: this.props.parentWidth * .02,
                     backgroundColor: color,
                     opacity: this.state.ripple_opacity,
                     top: this.state.ripple_posY,
@@ -69,7 +70,6 @@ class Ripple extends React.Component {
 const styles = StyleSheet.create({
     ripple: {
         position: 'absolute',
-        width: '2%',
         aspectRatio: 1
     }
 });

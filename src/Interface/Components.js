@@ -34,6 +34,7 @@ import ComboBox from './components/ComboBox';
 import Swiper from './components/Swiper';
 import ProgressBar from './components/ProgressBar';
 import XPBar from './components/XPBar';
+import Character from './components/Character';
 
 export {
     Page,
@@ -51,6 +52,7 @@ export {
     Swiper,
     ProgressBar,
     XPBar,
+    Character,
 
     // Old components
     GLText,

@@ -54,7 +54,6 @@ class BottomBar extends React.Component {
 
                     {/* Buttons */}
                     <Button
-                        rippleFactor={4}
                         onPress={this.goToHome}
                         style={{...styles.button, ...styles.btFirst}}
                         color='transparent'
@@ -64,7 +63,6 @@ class BottomBar extends React.Component {
                     </Button>
 
                     <Button
-                        rippleFactor={4}
                         onPress={this.goToCalendar}
                         style={styles.button}
                         color='transparent'
@@ -77,7 +75,6 @@ class BottomBar extends React.Component {
 
 
                     <Button
-                        rippleFactor={4}
                         style={styles.button}
                         color='transparent'
                         borderRadius={0}>
@@ -86,7 +83,6 @@ class BottomBar extends React.Component {
 
 
                     <Button
-                        rippleFactor={4}
                         onPress={this.goToSettings}
                         style={styles.button} color='transparent'
                         rippleColor='#9095FF'
@@ -96,7 +92,6 @@ class BottomBar extends React.Component {
                     </Button>
 
                     <Button
-                        rippleFactor={4}
                         onPress={this.goToShop}
                         style={{...styles.button, ...styles.btLast}}
                         color='transparent'

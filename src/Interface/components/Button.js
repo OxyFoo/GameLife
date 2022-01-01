@@ -20,7 +20,6 @@ const ButtonProps = {
     color: 'transparent',
     colorText: 'primary',
     rippleColor: '#000000',
-    rippleFactor: 2,
     borderRadius: 20,
     /**
      * Setting used to ignore button event, to get header icon press event
@@ -29,7 +28,7 @@ const ButtonProps = {
     nonClickable: false, // TODO - Teriner la remontée jusqu'au containers
     onPress: () => {},
     onLongPress: () => {},
-    onLayout: () => {},
+    onLayout: (event) => {},
     /**
      * @type {'auto'|'box-only'|'box-none'|'none'}
      */
@@ -41,6 +40,7 @@ class Button extends React.Component {
         super(props);
         this.rippleRef = React.createRef(); 
         this.posX = 0; this.posY = 0; this.time = 0;
+        this.state = { width: 0 };
     }
 
     onTouchStart = (event) => {
@@ -62,6 +62,11 @@ class Button extends React.Component {
             if (deltaT < 500) onPress();
             else onLongPress();
         }
+    }
+
+    onLayout = (event) => {
+        this.props.onLayout(event);
+        this.setState({ width: event.nativeEvent.layout.width });
     }
 
     render() {
@@ -100,14 +105,14 @@ class Button extends React.Component {
                 style={style}
                 onTouchStart={this.onTouchStart}
                 onTouchEnd={this.onTouchEnd}
-                onLayout={this.props.onLayout}
+                onLayout={this.onLayout}
                 pointerEvents={this.props.pointerEvents}
             >
                 {content}
                 <Ripple
                     ref={this.rippleRef}
+                    parentWidth={this.state.width}
                     rippleColor={this.props.rippleColor}
-                    rippleFactor={this.props.rippleFactor}
                 />
             </ButtonView>
         )

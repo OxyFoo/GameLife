@@ -46,6 +46,7 @@ class BackActivity extends React.Component {
             visualisationMode: visualisationMode,
             startnowMode: 0,
             selectedSkill: visualisationMode ? { id: activity.skillID, value: skill.Name } : emptySkill,
+            posY: 0,
             animPosY: new Animated.Value(visualisationMode ? 0 : 1),
 
             commentary: null,
@@ -96,7 +97,9 @@ class BackActivity extends React.Component {
         const skillID = this.state.selectedSkill.id;
         const { activityStart, activityDuration } = this.state;
         if (user.activities.Add(skillID, activityStart, activityDuration)) {
-            user.interface.backPage();
+            const text = langManager.curr['activity']['display-activity-text'];
+            const button = langManager.curr['activity']['display-activity-button'];
+            user.interface.changePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
         } else {
             const title = langManager.curr['activity']['alert-wrongtiming-title'];
             const text = langManager.curr['activity']['alert-wrongtiming-text'];

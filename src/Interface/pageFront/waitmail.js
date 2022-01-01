@@ -29,7 +29,6 @@ class Waitmail extends BackWaitmail {
                     style={styles.backButton}
                     color="main1"
                     icon='arrowLeft'
-                    rippleFactor={4}
                     onPress={this.onBack}
                     borderRadius={20}
                 />

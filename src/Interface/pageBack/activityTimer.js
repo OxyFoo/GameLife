@@ -8,6 +8,8 @@ import langManager from '../../Managers/LangManager';
 
 const MAX_TIME = 4 * 60; // Minutes
 
+// TODO - Vérifier lors du tick et de l'ajout que le temps max fonctionne (> 4h ou ne pas mordre sur les actis suivantes)
+
 class BackActivityTimer extends React.Component {
     constructor (props) {
         super(props);
@@ -34,6 +36,15 @@ class BackActivityTimer extends React.Component {
         this.setState({ currentTime: GetTime() });
         // TODO - Temps max
         // TODO - End in other activity
+
+        const { startTime, currentTime } = this.state;
+
+        const _startTime = RoundToQuarter(startTime);
+        const _endTime = RoundToQuarter(currentTime);
+        const _duration = (_endTime - _startTime) / 60;
+        if (_duration > MAX_TIME || !user.activities.timeIsFree(_startTime, _duration)) {
+            this.addActivity();
+        }
     }
     componentWillUnmount() {
         clearInterval(this.timer);
@@ -57,7 +68,6 @@ class BackActivityTimer extends React.Component {
         const remove = (button) => {
             if (button === 'yes') {
                 this.finished = true;
-                user.interface.path.length = 3;
                 user.interface.changePage('calendar');
             }
         }
@@ -74,10 +84,16 @@ class BackActivityTimer extends React.Component {
 
         const _startTime = RoundToQuarter(startTime);
         const _endTime = RoundToQuarter(currentTime);
-        const _duration = minmax(15, (_endTime - _startTime) / 60, MAX_TIME);
+        let _duration = minmax(15, (_endTime - _startTime) / 60, MAX_TIME);
 
-        this.finished = user.activities.Add(skillID, _startTime, _duration);
-        user.interface.path.length = 3;
+        while (this.finished === false) {
+            if (_duration === 0) {
+                console.error('Activity can\'t be added.');
+                return;
+            }
+            this.finished = user.activities.Add(skillID, _startTime, _duration);
+            _duration -= 15;
+        }
 
         const text = langManager.curr['activity']['display-activity-text'];
         const button = langManager.curr['activity']['display-activity-button'];

@@ -78,7 +78,8 @@ class BackLoading extends React.Component {
         await sleep(500);
 
         if (user.activities.currentActivity === null) {
-            while (!user.interface.changePage('home')) await sleep(100);
+            // TODO - home
+            while (!user.interface.changePage('avatar')) await sleep(100);
         } else {
             while (!user.interface.changePage('activitytimer', undefined, true)) await sleep(100);
         }

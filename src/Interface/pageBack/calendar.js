@@ -52,6 +52,8 @@ class BackCalendar extends React.Component {
         const Month = today.getMonth();
         const FullYear = today.getFullYear();
         this.daySelect(Day, Month, FullYear);
+
+        // TODO - Doesn't works on iOS
         this.flatlist.scrollToIndex({ index: 2, animated: false });
     }
 

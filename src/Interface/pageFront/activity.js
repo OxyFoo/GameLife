@@ -14,7 +14,7 @@ import themeManager from '../../Managers/ThemeManager';
  * TODO
  * [] Afficher / charger / enregistrer les commentaires (a part ? Mettre un ID aux activités ?)
  * [] Enregistrer localement / en ligne une activité
- * [] Supprimer localement / en ligne une activité
+ * [x] Supprimer localement / en ligne une activité
  * [x] Page d'ajout terminé (ou commencement + bloquer sur cette page + compteur)
  */
 
@@ -78,7 +78,17 @@ class Activity extends BackActivity {
 
                 </View>
 
-                <Animated.View style={[styles.panel, { backgroundColor: backgroundColor, transform: [{ translateY: panelPosY }] }]}>
+                <Animated.View
+                    style={[
+                        styles.panel,
+                        {
+                            minHeight: SCREEN_HEIGHT - this.state.posY - 12,
+                            backgroundColor: backgroundColor,
+                            transform: [{ translateY: panelPosY }]
+                        }
+                    ]}
+                    onLayout={(event) => { this.setState({ posY: event.nativeEvent.layout.y }) }}
+                >
                     {!this.state.visualisationMode &&
                         <TextSwitch
                             style={{ marginBottom: 24 }}

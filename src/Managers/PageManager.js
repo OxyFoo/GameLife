@@ -12,6 +12,7 @@ import About from '../Interface/pageFront/about';
 import Achievements from '../Interface/pageFront/achievements';
 import Activity from '../Interface/pageFront/activity';
 import ActivityTimer from '../Interface/pageFront/activityTimer';
+import Avatar from '../Interface/pageFront/avatar';
 import Calendar from '../Interface/pageFront/calendar';
 import Dailyquest from '../Interface/pageFront/dailyquest';
 import Display from '../Interface/pageFront/display';
@@ -84,13 +85,6 @@ class PageManager extends React.Component{
         if (this.popup.Close()) return true;
         else if (this.backPage()) return true;
 
-        /*const popup_opened = this.state.popupArgs[0] !== null;
-        const cancelable = this.state.popupArgs[2];
-        if (popup_opened && cancelable) {
-            this.popup.Close();
-        } else if (!popup_opened) {
-            this.backPage();
-        }*/
         return true;
     }
 
@@ -185,6 +179,7 @@ class PageManager extends React.Component{
             case 'achievements': p = <Achievements />; break;
             case 'activity': p = <Activity args={args} />; break;
             case 'activitytimer': p = <ActivityTimer args={args} />; break;
+            case 'avatar': p = <Avatar />; break;
             case 'calendar': p = <Calendar />; break;
             case 'dailyquest': p = <Dailyquest />; break;
             case 'display': p = <Display args={args} />; break;

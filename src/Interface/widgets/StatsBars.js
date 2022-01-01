@@ -10,6 +10,7 @@ import { isUndefined } from '../../Functions/Functions';
 const StatsBarsProps = {
     style: {},
     data: undefined,
+    supData: undefined,
     /**
      * @type {'all'|'int'|'soc'|'for'|'end'|'agi'|'dex'}
      */
@@ -90,9 +91,9 @@ function StatsBars(props) {
 
     if (!isUndefined(props.data)) {
         const keys = Object.keys(props.data);
-        //const sup = Object.values(props.data);
+        const supData = isUndefined(props.supData) ? Array(keys.length).fill(0) : Object.values(props.supData);
         if (props.bars === 'all') {
-            output = keys.map((item, i) => statComponent(item, 0/*sup[i]*/, i));
+            output = keys.map((item, i) => statComponent(item, supData[i], i));
         } else {
             output = statComponent(props.bars, props.data[props.bars], 0);
         }

@@ -10,6 +10,7 @@ import Icon from './Icon';
 
 const ContainerProps = {
     style: {},
+    styleContainer: {},
     text: 'Title',
     textcolor: 'primary',
     color: 'main1',
@@ -105,7 +106,7 @@ class Container extends React.Component {
                     style={[styles.content, contentStyle]}
                     onLayout={this.onLayout}
                 >
-                    <View style={{ padding: '5%' }}>
+                    <View style={[{ padding: '5%' }, this.props.styleContainer]}>
                         {children}
                     </View>
                 </Animated.View>

@@ -15,6 +15,7 @@ import svgCheckboxOff from '../../../res/icons/checkbox-off';
 import svgChevron from '../../../res/icons/chevron';
 import svgChrono from '../../../res/icons/chrono';
 import svgCross from '../../../res/icons/cross';
+import svgEdit from '../../../res/icons/edit';
 import svgHome from '../../../res/icons/home';
 import svgInfo from '../../../res/icons/info';
 import svgItem from '../../../res/icons/item';
@@ -33,7 +34,7 @@ const IconProps = {
      */
     xml: undefined,
     /**
-     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'home'|'info'|'item'|'shop'|'social'|'success'|'loading'|'loadingDots'}
+     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'edit'|'home'|'info'|'item'|'shop'|'social'|'success'|'loading'|'loadingDots'}
      */
     icon: '',
     size: 24,
@@ -53,6 +54,7 @@ const SVGIcons = {
     chevron: svgChevron,
     chrono: svgChrono,
     cross: svgCross,
+    edit: svgEdit,
     home: svgHome,
     info: svgInfo,
     item: svgItem,

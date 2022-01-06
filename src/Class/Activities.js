@@ -171,6 +171,20 @@ class Activities {
         //const find = this.activities.find(activity => );
         //return !isUndefined(find);
     }
+    GetTimeFromFirst() {
+        let initTime = null;
+        for (let a = 0; a < this.activities.length; a++) {
+            const activity = this.activities[a];
+            if (initTime === null || activity.startTime < initTime) {
+                initTime = activity.startTime;
+            }
+        }
+
+        const initDate = new Date(initTime * 1000);
+        const now = new Date();
+        const diff = (now.getTime() - initDate.getTime()) / 1000;
+    }
+    // TODO - Remove
     getFirst() {
         let date = new Date();
         if (this.activities.length) {

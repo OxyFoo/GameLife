@@ -1,23 +1,36 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableHighlight } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { Button, Text } from '../Components';
+
+import { Character } from '../Components';
 
 const AvatarCardProps = {
+    selectedId: -1,
+    onPress: (ID) => {}
 }
 
 class ItemCard extends React.Component {
+    onPress = () => {
+        this.props.onPress(this.props.item.id);
+    }
+
     render() {
-        const background = { backgroundColor: themeManager.getColor('backgroundCard') };
+        const { item } = this.props;
+        const isSelected = item.id === this.props.selectedId;
+        const background = {
+            backgroundColor: themeManager.getColor(isSelected ? 'main1' : 'backgroundCard')
+        };
 
         return (
-            <Button style={styles.card} color='backgroundCard' rippleColor='white'>Test</Button>
-        );
-        return (
-            <View style={[styles.card, background]}>
-                <Text>Test</Text>
-            </View>
+            <TouchableHighlight
+                style={[styles.card, background]}
+                onPress={this.onPress}
+                underlayColor={themeManager.getColor('main1', null, .5)}
+                touchSoundDisabled={true}
+            >
+                <Character />
+            </TouchableHighlight>
         );
     }
 }
@@ -28,10 +41,12 @@ ItemCard.defaultProps = AvatarCardProps;
 const styles = StyleSheet.create({
     card: {
         width: '30%',
-        height: 'auto',
         aspectRatio: 1,
+        margin: 6,
         borderRadius: 8,
-        paddingHorizontal: 0
+
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

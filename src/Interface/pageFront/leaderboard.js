@@ -19,7 +19,7 @@ class Leaderboard extends BackLeaderboard {
         return (
             <View style={styles.userContainer}>
                 <View style={styles.userImage}>
-                    <Image style={{ width: '100%', height: '100%' }} source={require('../../../res/photos/default.jpg')} resizeMode="contain" />
+                    {/*<Image style={{ width: '100%', height: '100%' }} source={require('../../../res/photos/default.jpg')} resizeMode="contain" />*/}
                 </View>
                 <View style={styles.userDetails}>
                     <GLText style={styles.userDetail} title={username} />
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         height: ww * 17/ 100,
         borderWidth: ww * 8 / 1000,
         borderColor: '#FFFFFF',
-        
+        backgroundColor: '#000000'
     },
     userDetails: {
         flex: 1,

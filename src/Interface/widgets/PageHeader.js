@@ -18,8 +18,8 @@ class PageHeader extends React.Component {
         return (
             <View style={[styles.header, this.props.style]}>
                 <TouchableOpacity style={styles.headerLeft} activeOpacity={.5} onPress={onBackPress}>
-                    <Icon style={styles.headerLeftArrow} icon='arrowLeft' size={38} />
-                    <Text>{T_back}</Text>
+                    <Icon style={styles.headerLeftArrow} icon='arrowLeft' size={30} />
+                    <Text fontSize={16}>{T_back}</Text>
                 </TouchableOpacity>
                 <Icon onPress={onHelpPress} icon='info' size={30} />
             </View>

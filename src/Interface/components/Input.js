@@ -53,6 +53,12 @@ class Input extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.staticLabel || this.props.text.length > 0) {
+            this.movePlaceHolderBorder();
+        }
+    }
+
     componentDidUpdate(prevProps) {
         if (this.props.staticLabel) {
             this.movePlaceHolderBorder();

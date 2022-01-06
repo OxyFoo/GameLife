@@ -8,6 +8,10 @@ import Titles from "../Data/Titles";
 import Quotes from "../Data/Quotes";
 import Contributors from "../Data/Contributors";
 
+// TODO - Hash par catégories
+// TODO - Pouvoir télécharger juste les textes
+// TODO - Ne pas tout charger dans des variables directement (économiser de la mémoire)
+
 class DataManager {
     constructor() {
         this.achievements = new Achievements();

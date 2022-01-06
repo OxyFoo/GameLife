@@ -41,7 +41,7 @@ class UserManager {
         this.username = '';
         this.usernameDate = null;
         this.title = 0;
-        this.birth = '';
+        this.birth = 0;
         this.xp = 0;
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;
@@ -51,7 +51,7 @@ class UserManager {
         this.username = '';
         this.usernameDate = null;
         this.title = 0;
-        this.birth = '';
+        this.birth = 0;
         this.xp = 0;
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;

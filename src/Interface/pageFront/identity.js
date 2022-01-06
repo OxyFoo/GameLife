@@ -1,216 +1,127 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Animated, Dimensions } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { View, StyleSheet, FlatList, Dimensions, Animated, TouchableOpacity } from 'react-native';
+
+import BackIdentity from '../pageBack/identity';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackIdentity from '../pageBack/identity';
-import { GLDropDown, GLHeader, GLText, GLTextEditable } from '../Components';
-import { isUndefined } from '../../Functions/Functions';
+import { Page, Text, XPBar, Container, Button } from '../Components';
+import { UserHeader, PageHeader, AvatarEditor, StatsBars } from '../Widgets';
 
 class Identity extends BackIdentity {
-    component_titre = ({ item }) => {
-        const title = item;
-
-        return (
-            <GLText style={{ marginVertical: 4 }} title={title.Title} onPress={() => this.editTitle(item)} />
-        )
-    }
-
     render() {
-        const age = this.calculateAge(this.state.birth) || '?';
-        const mode = this.state.showDateTimePicker;
-        const totalDuration = user.activities.getTotalDuration();
-        const totalH = Math.floor(totalDuration/60);
-        const totalM = ((totalDuration/60) - totalH) * 60;
-        const totalLang = langManager.curr['identity']['value-totaltime'];
-        const totalTxt = totalLang.replace('{}', totalH).replace('{}', totalM);
-        const title = dataManager.titles.getTitleByID(this.state.title) || langManager.curr['identity']['empty-title'];
-        const titles = user.getUnlockTitles();
+        const interReverse = { inputRange: [0, 1], outputRange: [1, 0] };
+        const headerOpacity = this.refAvatar === null ? 1 : this.refAvatar.state.editorAnim.interpolate(interReverse);
+        const headerPointer = this.refAvatar === null ? 'auto' : (this.refAvatar.state.editorOpened ? 'auto' : 'none');
 
-        let names = [];
-        let descriptions = [];
-        let solvedAchievements = [...user.achievements.solved];
-        solvedAchievements.reverse();
-
-        const max = Math.min(solvedAchievements.length, 3);
-        for (let i = 0; i < max; i++) {
-            const achievementID = solvedAchievements[i];
-            const achievement = user.getAchievementByID(achievementID);
-            if (!isUndefined(achievement)) {
-                names.push(achievement.Name);
-                descriptions.push(achievement.Description);
-            }
-        }
+        const rowStyle = [styles.row, { borderColor: themeManager.getColor('main1') }];
+        const cellStyle = [styles.cell, { borderColor: themeManager.getColor('main1') }];
+        const row = (title, value) => (
+            <View style={rowStyle}>
+                <Text fontSize={14} containerStyle={cellStyle} style={{ textAlign: 'left' }}>{title}</Text>
+                <Text fontSize={14} containerStyle={[cellStyle, { borderRightWidth: 0 }]} style={{ textAlign: 'left' }}>{value}</Text>
+            </View>
+        );
 
         return (
-            <>
-                <View style={{flex: 1}}>
-                    {/* Header */}
-                    <GLHeader
-                        title={langManager.curr['identity']['page-title']}
-                        leftIcon='back'
-                        onPressLeft={this.back}
-                        rightIcon={this.state.loading ? '' : 'check'}
-                        onPressRight={this.valid.bind(this)}
-                    />
+            <Page
+                ref={ref => this.refPage = ref}
+                scrollable={!this.state.editorOpened}
+                canScrollOver={false}
+                bottomOffset={0}
+            >
+                <PageHeader
+                    style={{ marginBottom: 0 }}
+                    onBackPress={this.onBack}
+                />
 
-                    {/* Content */}
-                    <View style={styles.content}>
-                        {/* Profile image */}
-                        <Animated.View style={[styles.image, { width: this.state.imageAnimation, height: this.state.imageAnimation }]} onTouchStart={this.imagePress}>
-                            <Image style={{ width: '100%', height: '100%' }} source={require('../../../res/photos/default.jpg')} resizeMode="contain"  />
-                        </Animated.View>
+                <Animated.View style={{ opacity: headerOpacity }} pointerEvents={headerPointer}>
+                    <UserHeader showAge={true} editable={true} />
 
-                        {/* Pseudo */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-username'].toUpperCase()} />
-                        <GLTextEditable
-                            style={styles.value}
-                            value={this.state.username}
-                            onChangeText={this.editPseudo}
-                            beforeChangeText={this.beforeEditPseudo}
-                            placeholder={langManager.curr['identity']['placeholder-username']}
-                        />
+                    <Animated.View style={styles.xp}>
+                        <View style={styles.xpRow}>
+                            <Text>LVL X</Text>
+                            <Text>BLABLA</Text>
+                        </View>
+                        <XPBar value={8} maxValue={10} />
+                    </Animated.View>
+                </Animated.View>
 
-                        {/* Email */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-email'].toUpperCase() + " - " + user.server.status} />
-                        <GLText style={styles.value} title={user.settings.email} />
+                <AvatarEditor
+                    ref={ref => this.refAvatar = ref}
+                    refParent={this}
+                    onChangeState={opened => this.setState({ editorOpened: opened }) }
+                />
 
-                        {/* Title */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-title'].toUpperCase()} />
-                        <GLDropDown
-                            style={styles.value}
-                            value={title}
-                            data={titles}
-                            onSelect={this.editTitle}
-                            simpleText={true}
-                            forcePopupMode={true}
-                        />
+                <Container
+                    style={styles.topSpace}
+                    styleContainer={{ padding: 0 }}
+                    text={'TITLE 0'}
+                    type='static'
+                    opened={true}
+                    color='main1'
+                    backgroundColor='backgroundCard'
+                >
+                    {row('DEPUIS', this.playTime)}
+                    {row('ACTIVITES', this.totalActivityLength)}
+                    {row('TEMPS ACTIVITES', this.totalActivityTime)}
+                </Container>
 
-                        {/* Age */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-age'].toUpperCase()} />
-                        <GLText style={styles.value} title={langManager.curr['identity']['value-age'].replace('{}', age)} onPress={this.ageClick} color='secondary' />
+                <View style={{ paddingHorizontal: '5%' }}>
+                    <Container
+                        style={styles.topSpace}
+                        text={'TITLE 1'}
+                        type='rollable'
+                        opened={false}
+                        color='backgroundCard'
+                    >
+                        <StatsBars data={user.stats} />
+                    </Container>
 
-                        {/* Total time */}
-                        <GLText style={styles.text} title={langManager.curr['identity']['name-totaltime'].toUpperCase()} />
-                        <GLText style={styles.value} title={totalTxt} color='secondary' />
-
-                        {/* Last achievement */}
-                        {names.length > 0 && (
-                            <>
-                                <GLText style={styles.text} title={langManager.curr['identity']['name-lastachievement'].toUpperCase()} />
-                                <TouchableOpacity
-                                    style={styles.achievementsContainer}
-                                    activeOpacity={.5}
-                                    onPress={() => { user.interface.changePage('achievements'); }}
-                                >
-                                    <View style={[styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
-                                        <GLText style={styles.title} title={names[0]} />
-                                        <GLText style={styles.description} title={descriptions[0]} color="secondary" />
-                                    </View>
-                                    {names.length > 1 && (
-                                        <View style={[styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
-                                            <GLText style={styles.title} title={names[1]} />
-                                            <GLText style={styles.description} title={descriptions[1]} color="secondary" />
-                                        </View>
-                                    )}
-                                    {names.length > 2 && (
-                                        <View style={[styles.achievementsBox, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
-                                            <GLText style={styles.title} title={names[2]} />
-                                            <GLText style={styles.description} title={descriptions[2]} color="secondary" />
-                                        </View>
-                                    )}
-                                </TouchableOpacity>
-                            </>
-                        )}
-                    </View>
+                    <Container
+                        style={styles.topSpace}
+                        text={'TITLE 2'}
+                        type='rollable'
+                        opened={false}
+                        color='backgroundCard'
+                    >
+                        {/* TODO - Show best skills */}
+                    </Container>
                 </View>
 
-                <DateTimePickerModal
-                    date={new Date()}
-                    mode={mode}
-                    onConfirm={this.onChangeDateTimePicker}
-                    onCancel={this.hideDTP}
-                    isVisible={mode != ''}
-                />
-            </>
+                <Container
+                    style={styles.topSpace}
+                    text={'TITLE 3'}
+                    type='static'
+                    opened={true}
+                    color='main1'
+                    backgroundColor='backgroundCard'
+                >
+                    {/* TODO - Show last achievements */}
+                </Container>
+            </Page>
         )
     }
 }
 
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
-
 const styles = StyleSheet.create({
-    content: { 
-        paddingHorizontal: "8%",
-        paddingVertical: "5%",
-        
-    },
-    containerPseudo: {
-        display: 'flex',
+    xp: { marginBottom: 24 },
+    xpRow: { flexDirection: 'row' },
+    topSpace: { marginTop: 24 },
+    row: {
+        width: '100%',
+        height: 48,
         flexDirection: 'row',
-        alignItems: 'flex-end',
-        justifyContent: 'space-between'
+        borderTopWidth: .4
     },
-    text: {
-        textAlign: 'left',
-        color: '#5AB4F0',
-        fontSize: ww * 64 / 1000,
-        marginBottom: "3%",
-
-    },
-    value: {
-        textAlign: 'left',
-        color: '#5AB4F0',
-        fontSize: ww * 586 / 10000,
-        marginBottom: "10%"
-    },
-    image: {
-        position:'absolute',
-        top: "3%",
-        right: "7%",
-        width: ww * 25/100,
-        height: ww * 25/100,
-        borderColor: '#FFFFFF',
-        borderWidth: 2,
-        backgroundColor: '#000000',
-        zIndex: 100,
-        elevation: 100
-    },
-
-    achievementsContainer: { 
-        height: wh * 165 / 1000,
-        display: 'flex',
-        flexDirection: 'row',
-        
-    },
-    achievementsBox: { 
-        flex: 1,
-        maxWidth: '30%',
-        display: 'flex',
-        justifyContent: 'space-evenly',
-        marginHorizontal: "2%",
-        paddingVertical: "2%",
-        paddingHorizontal: "2%",
-        borderColor: '#FFFFFF',
-        borderTopWidth: ww * 11 / 1000,
-        borderBottomWidth: ww * 11 / 1000,
-        borderLeftWidth: ww * 11 / 1000,
-        borderRightWidth: ww * 11 / 1000,
-        
-    },
-    title: { 
-        minHeight: wh * 45 / 1000,
-        marginBottom: "15%",
-        fontSize: ww * 426 / 10000,
-    },
-    description: { 
-        marginBottom: "10%",
-        fontSize:ww*26/1000 ,
+    cell: {
+        width: '50%',
+        paddingHorizontal: '5%',
+        justifyContent: 'center',
+        borderRightWidth: .4
     }
 });
 

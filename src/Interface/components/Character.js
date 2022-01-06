@@ -3,9 +3,6 @@ import { StyleSheet, View } from 'react-native';
 
 import Character_Classic from '../../../res/stuffs/humans/human_classic';
 
-const CharacterProps = {
-}
-
 class Part {
     /**
      * @param {String} name Name of body part (used for keys)
@@ -59,48 +56,58 @@ class Part {
     }
 }
 
+const CharacterProps = {
+}
+
 class Character extends React.Component {
     constructor(props) {
         super(props);
 
-        const bust = new Part('bust', 0, 0, 10, 250, 80);
-        const head = new Part('head', -10, 90, 0);
-        const left_arm = new Part('left_arm', 45, 165, 20);
-        const left_forearm = new Part('left_forearm', 90, 90, 90);
-        const left_hand = new Part('left_hand', 80, 90, 20);
-        const right_arm = new Part('right_arm', 45, 15, 30);
-        const right_forearm = new Part('right_forearm', 90, 90, 40);
-        const right_hand = new Part('right_hand', 80, 90, 20);
-        const left_thigh = new Part('left_thigh', 130, 99, -20);
-        const left_leg = new Part('left_leg', 125, 90, -30);
-        const left_foot = new Part('left_foot', 135, 90, 0);
-        const right_thigh = new Part('right_thigh', 130, 81, -20);
-        const right_leg = new Part('right_leg', 125, 90, -40);
-        const right_foot = new Part('right_foot', 135, 90, 0);
+        /**
+         * @type {Number[3]} posX, posY, Rotation
+         */
+        const initPos = [ 250, 80, 10 ];
+
+        /**
+         * @type {Part[13]} Rotations of body parts
+         * head, left_arm, left_forearm, left_hand, right_arm, right_forearm, right_hand, left_thigh, left_leg, left_foot, right_thigh, right_leg, right_foot
+         */
+        const angles = [ 0, 20, 90, 20, 30, 40, 20, -20, -30, 0, -20, -40, 0 ];
+
+        const bust = new Part('bust', 0, 0, initPos[2], initPos[0], initPos[1]);
+        const head = new Part('head', -10, 90, angles[0]);
+        const left_arm = new Part('left_arm', 45, 165, angles[1]);
+        const left_forearm = new Part('left_forearm', 90, 90, angles[2]);
+        const left_hand = new Part('left_hand', 80, 90, angles[3]);
+        const right_arm = new Part('right_arm', 45, 15, angles[4]);
+        const right_forearm = new Part('right_forearm', 90, 90, angles[5]);
+        const right_hand = new Part('right_hand', 80, 90, angles[6]);
+        const left_thigh = new Part('left_thigh', 130, 99, angles[7]);
+        const left_leg = new Part('left_leg', 125, 90, angles[8]);
+        const left_foot = new Part('left_foot', 135, 90, angles[9]);
+        const right_thigh = new Part('right_thigh', 130, 81, angles[10]);
+        const right_leg = new Part('right_leg', 125, 90, angles[11]);
+        const right_foot = new Part('right_foot', 135, 90, angles[12]);
 
         bust.childs.push(head);
-
         // Left arm
         left_forearm.childs.push(left_hand);
         left_arm.childs.push(left_forearm);
         bust.childs.push(left_arm);
-
         // Right arm
         right_forearm.childs.push(right_hand);
         right_arm.childs.push(right_forearm);
         bust.childs.push(right_arm);
-
         // Left leg
         left_leg.childs.push(left_foot);
         left_thigh.childs.push(left_leg);
         bust.childs.push(left_thigh);
-
         // Right leg
         right_leg.childs.push(right_foot);
         right_thigh.childs.push(right_leg);
         bust.childs.push(right_thigh);
 
-        this.character = bust.render()
+        this.character = bust.render();
     }
 
     render() {

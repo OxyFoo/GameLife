@@ -247,15 +247,15 @@
     },
 
     "identity": {
-        "page-title": "Identité",
+        "value-age": "{} ans",
 
+        "___OLD___": "",
         "name-username": "Pseudo",
         "name-title": "Titre",
         "name-age": "Age",
         "name-email": "EMail",
         "name-totaltime": "Temps de pratique",
 
-        "value-age": "{} ans",
         "value-totaltime": "{}h {}m",
 
         "placeholder-username": "Pseudo",

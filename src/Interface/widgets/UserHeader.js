@@ -1,20 +1,56 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import langManager from '../../Managers/LangManager';
 
 import user from '../../Managers/UserManager';
-import { Text } from '../Components';
+import { Text, Icon, Input } from '../Components';
 
 const UserHeaderProps = {
-    style: {}
+    style: {},
+    showAge: false,
+    editable: false
 }
 
 class UserHeader extends React.Component {
-    render() {
+    state = {
+        input: user.username
+    }
+
+    onPress = () => {
+        if (!this.props.editable) return;
+        user.interface.popup.Open('custom', this.renderEdit, undefined, true);
+    }
+
+    // TODO - Terminer cette popup
+    renderEdit = () => {
         return (
-            <View style={[styles.header, this.props.style]}>
-                <Text style={styles.username} color='primary'>{user.username}</Text>
-                <Text style={styles.title} color='secondary'>{user.getTitle()}</Text>
+            <View>
+                <Text>TEST</Text>
+                <Input
+                    label='PSEUDO'
+                    text={this.state.input}
+                    onChangeText={(text) => { this.setState({ input: text }) }}
+                />
             </View>
+        );
+    }
+
+    render() {
+        const age = langManager.curr['identity']['value-age'].replace('{}', '18');
+        const showAge = age !== null && this.props.showAge;
+        const activeOpacity = this.props.editable ? 0.6 : 1;
+
+        return (
+            <TouchableOpacity style={[styles.header, this.props.style]} onPress={this.onPress} activeOpacity={activeOpacity}>
+                <View>
+                    <View style={styles.usernameContainer}>
+                        <Text style={styles.username} color='primary'>{user.username}</Text>
+                        {showAge && <Text style={styles.age} color='secondary'>{age}</Text>}
+                    </View>
+                    <Text style={styles.title} color='secondary'>{user.getTitle()}</Text>
+                </View>
+                {this.props.editable && <Icon icon='edit' color='border' />}
+            </TouchableOpacity>
         );
     }
 }
@@ -26,16 +62,26 @@ const styles = StyleSheet.create({
     header: {
         width: '100%',
         marginBottom: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         elevation: 1000,
         zIndex: 1000
     },
+    usernameContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
     username: {
-        marginTop: '5%',
+        marginTop: 6,
         fontSize: 28,
         textAlign: 'left'
     },
+    age: {
+        marginLeft: 6,
+        fontSize: 20
+    },
     title: {
-        marginTop: 8,
         fontSize: 24,
         textAlign: 'left'
     },

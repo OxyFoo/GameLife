@@ -57,7 +57,7 @@ class Leaderboard extends BackLeaderboard {
                 <GLHeader
                     title={langManager.curr['leaderboard']['page-title']}
                     leftIcon="back"
-                    onPressLeft={user.interface.backPage}
+                    onPressLeft={user.interface.BackPage}
                     rightIcon={rightIcon}
                     onPressRight={this.info}
                 />

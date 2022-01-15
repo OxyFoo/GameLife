@@ -1,94 +1,57 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
-
-import BackSettings from '../pageBack/settings';
-import { GLDropDown, GLHeader, GLIconButton, GLText } from '../Components';
+import { View, StyleSheet } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
+import BackSettings from '../pageBack/settings';
+import { Page, Text, Button, Switch, TextSwitch, ComboBox } from '../Components';
+import { PageHeader } from '../Widgets';
+
 class Settings extends BackSettings {
     render() {
+        const langThemes = langManager.curr['themes'];
+        const lang = langManager.curr['settings'];
+
         return (
-            <View style={{flex: 1}}>
-                {/* Header */}
-                <GLHeader
-                    title={langManager.curr['settings']['page-title']}
-                    leftIcon='back'
-                    onPressLeft={this.back}
+            <Page ref={ref => { if (ref !== null) this.pageRef = ref; }} bottomOffset={0}>
+                <PageHeader onBackPress={user.interface.BackPage} />
+
+                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-about']}</Button>
+
+                <ComboBox
+                    style={styles.margin}
+                    title={lang['input-langage']}
+                    pageRef={this.pageRef}
+                    data={this.state.dataLangs}
+                    selectedValue={this.state.selectedLang.value}
+                    onSelect={this.onChangeLang}
                 />
 
-                {/* Content */}
-                <View style={styles.content}>
-                    {/* Langages */}
-                    <GLText style={styles.title} title={langManager.curr['settings']['input-langage'].toUpperCase()} />
-                    <GLDropDown
-                        value={langManager.curr['name']}
-                        data={langManager.getOtherLangs()}
-                        onSelect={this.changeLang}
+                <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
+                <TextSwitch style={styles.margin} textLeft={langThemes['Dark']} textRight={langThemes['Light']} />
+
+                <View style={{ marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ textAlign: 'left' }}>{lang['input-start-sound']}</Text>
+                    <Switch
+                        value={this.state.switchStartAudio}
+                        onValueChanged={(value) => { this.setState({ switchStartAudio: value }); }}
                     />
-
-                    {/* Themes 
-                    <GLText style={styles.title} title={langManager.curr['settings']['input-theme'].toUpperCase()} />
-                    <GLDropDown
-                        value={langManager.curr['themes'][this.currentTheme] || ''}
-                        data={this.selectableThemes}
-                        onSelect={this.changeTheme}
-                    />*/}
-
-                    {/* Morning notifications */}
-                    {Platform.OS === "android" && (
-                        <>
-                            <GLText style={styles.title} title={langManager.curr['settings']['input-morningnotifications'].toUpperCase()} />
-                            <GLDropDown
-                                value={this.enabledOrNot[user.settings.morningNotifications ? 1 : 0].value || ''}
-                                data={this.enabledOrNot}
-                                onSelect={this.changeMorningNotifications}
-                            />
-                        </>
-                    )}
-
-                    {/* Reset activities
-                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.reset}>
-                        <GLText style={styles.title} title={langManager.curr['settings']['input-reset'].toUpperCase()} />
-                        <GLIconButton icon='trash' />
-                    </TouchableOpacity> */}
-
-                    {/* Disconnect */}
-                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.disconnect}>
-                        <GLText style={styles.title} title={langManager.curr['settings']['input-disconnect'].toUpperCase()} />
-                        <GLIconButton icon='signout' />
-                    </TouchableOpacity>
-
-                    {/* Reset all
-                    <TouchableOpacity style={styles.button} activeOpacity={.5} onPress={this.clear}>
-                        <GLText style={styles.title} title={langManager.curr['settings']['input-clear'].toUpperCase()} />
-                        <GLIconButton icon='trash' />
-                    </TouchableOpacity> */}
-
                 </View>
-            </View>
+
+                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-report']}</Button>
+                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-disconnect']}</Button>
+                <Button style={styles.margin} color='danger' borderRadius={16}>{lang['input-delete-activities']}</Button>
+                <Button style={styles.margin} color='danger' borderRadius={16}>{lang['input-delete-account']}</Button>
+                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-tuto-again']}</Button>
+            </Page>
         )
     }
 }
 
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
-
 const styles = StyleSheet.create({
-    content: {
-        paddingVertical: "15%",
-        paddingHorizontal: "8%"
-    },
-    title: {
-        textAlign: 'left',
-        fontSize: ww * 58 / 1000
-    },
-    button: {
-        marginVertical: "3%",
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+    margin: {
+        marginBottom: 24
     }
 });
 

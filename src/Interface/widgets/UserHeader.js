@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+
 import langManager from '../../Managers/LangManager';
 
 import user from '../../Managers/UserManager';
-import { Text, Icon, Input } from '../Components';
+import { Text, Icon, Input, Button } from '../Components';
 
 const UserHeaderProps = {
     style: {},
@@ -19,6 +20,10 @@ class UserHeader extends React.Component {
     onPress = () => {
         if (!this.props.editable) return;
         user.interface.popup.Open('custom', this.renderEdit, undefined, true);
+    }
+
+    onAvatarPress = () => {
+        user.interface.ChangePage('identity');
     }
 
     // TODO - Terminer cette popup
@@ -40,6 +45,10 @@ class UserHeader extends React.Component {
         const showAge = age !== null && this.props.showAge;
         const activeOpacity = this.props.editable ? 0.6 : 1;
 
+        const edit = <Icon icon='edit' color='border' />;
+        const avatar = <Button style={styles.avatar} onPress={this.onAvatarPress} rippleColor='white' />;
+        const rightItem = this.props.editable ? edit : avatar;
+
         return (
             <TouchableOpacity style={[styles.header, this.props.style]} onPress={this.onPress} activeOpacity={activeOpacity}>
                 <View>
@@ -49,7 +58,7 @@ class UserHeader extends React.Component {
                     </View>
                     <Text style={styles.title} color='secondary'>{user.getTitle()}</Text>
                 </View>
-                {this.props.editable && <Icon icon='edit' color='border' />}
+                {rightItem}
             </TouchableOpacity>
         );
     }
@@ -85,6 +94,16 @@ const styles = StyleSheet.create({
         fontSize: 24,
         textAlign: 'left'
     },
+    avatar: {
+        position: 'absolute',
+        top: '20%',
+        right: 0,
+        height: '60%',
+        aspectRatio: 1,
+        borderRadius: 4,
+        borderColor: 'white',
+        borderWidth: 2
+    }
 });
 
 export default UserHeader;

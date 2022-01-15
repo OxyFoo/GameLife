@@ -2,9 +2,8 @@
     "name": "Français",
 
     "themes": {
-        "T0": "Classique",
-        "T0.1": "Gris",
-        "T0.2": "Bleu clair"
+        "Dark": "Sombre",
+        "Light": "Clair"
     },
 
     "notifications": {
@@ -337,17 +336,16 @@
     },
 
     "settings": {
-        "page-title": "Réglages",
-
+        "input-about": "À propos de nous",
         "input-langage": "Langues",
         "input-theme": "Thèmes",
-        "input-reset": "Réinitialiser",
-        "input-clear": "Supprimer tout",
+        "input-start-sound": "Son au démarrage",
+        "input-daily-notif": "Notifications quotidiennes",
+        "input-report": "Report",
         "input-disconnect": "Se déconnecter",
-
-        "input-morningnotifications": "Notifications journalières",
-        "enabled-morningnotifications": "Activées",
-        "disabled-morningnotifications": "Désactivées",
+        "input-tuto-again": "Revoir le tutoriel",
+        "input-delete-activities": "Supprimer toutes les activités",
+        "input-delete-account": "Supprimer le compte",
 
         "alert-clear-title": "Supprimer",
         "alert-clear-text": "Réinitialiser toutes les données de l'app ?",

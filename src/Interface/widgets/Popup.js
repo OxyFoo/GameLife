@@ -127,7 +127,7 @@ class Popup extends React.PureComponent {
     render() {
         const containerStyle = [
             styles.container,
-            { backgroundColor: themeManager.getColor('backgroundCard') },
+            { backgroundColor: themeManager.GetColor('backgroundCard') },
             { transform: [{ scale: this.state.animScale }] }
         ];
         const buttonQuit = [

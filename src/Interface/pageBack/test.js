@@ -44,7 +44,9 @@ class BackTest extends React.Component {
 
     state = {
         test: '',
-        testChecked: false
+        testChecked: false,
+        selectedSkill: {ID: -1, value: ''},
+        switch: true
     }
 
     addSkill = () => {
@@ -52,13 +54,13 @@ class BackTest extends React.Component {
             console.warn("Aucun skill !");
             return;
         }
-        user.interface.changePage('activity');
+        user.interface.ChangePage('activity');
     }
-    openIdentity = () => { user.interface.changePage('identity'); }
-    openCalendar = () => { user.interface.changePage('calendar'); }
-    openSkill = (skillID) => { user.interface.changePage('skill', { skillID: skillID }); }
-    openSkills = () => { user.interface.changePage('skills'); }
-    openExperience = () => { user.interface.changePage('experience'); }
+    openIdentity = () => { user.interface.ChangePage('identity'); }
+    openCalendar = () => { user.interface.ChangePage('calendar'); }
+    openSkill = (skillID) => { user.interface.ChangePage('skill', { skillID: skillID }); }
+    openSkills = () => { user.interface.ChangePage('skills'); }
+    openExperience = () => { user.interface.ChangePage('experience'); }
 }
 
 export default BackTest;

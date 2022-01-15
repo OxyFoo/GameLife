@@ -2,9 +2,8 @@
     "name": "English",
 
     "themes": {
-        "T0": "Classic",
-        "T0.1": "Grey",
-        "T0.2": "Light blue"
+        "Dark": "Dark",
+        "Light": "Light"
     },
 
     "notifications": {
@@ -337,17 +336,16 @@
     },
 
     "settings": {
-        "page-title": "Settings",
-
+        "input-about": "About us",
         "input-langage": "Langages",
         "input-theme": "Themes",
-        "input-reset": "Reset",
-        "input-clear": "Clear all",
+        "input-start-sound": "Start sound",
+        "input-daily-notif": "Daily notifications",
+        "input-report": "Report",
         "input-disconnect": "Disconnect",
-
-        "input-morningnotifications": "Morning notifications",
-        "enabled-morningnotifications": "Enabled",
-        "disabled-morningnotifications": "Disabled",
+        "input-tuto-again": "Review the tutorial",
+        "input-delete-activities": "Delete all activities",
+        "input-delete-account": "Delete my account",
 
         "alert-clear-title": "Delete all",
         "alert-clear-text": "Reset all data in the app?",

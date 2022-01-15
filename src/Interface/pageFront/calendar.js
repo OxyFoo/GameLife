@@ -29,7 +29,7 @@ class Calendar extends BackCalendar {
                 style={{ maxWidth: '48%' }}
                 activity={item}
                 index={index}
-                onPress={() => { user.interface.changePage('activity', { activity: item }) }}
+                onPress={() => { user.interface.ChangePage('activity', { activity: item }) }}
             />
         )
 
@@ -71,7 +71,7 @@ class Calendar extends BackCalendar {
                     </View>
 
                     {/* CurrDate + Activities panel */}
-                    <View style={[styles.pannel, { backgroundColor: themeManager.getColor('backgroundGrey') }]}>
+                    <View style={[styles.pannel, { backgroundColor: themeManager.GetColor('backgroundGrey') }]}>
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         <FlatList
                             //contentContainerStyle={{ padding: '2%' }}

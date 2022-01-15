@@ -19,14 +19,14 @@ class ItemCard extends React.Component {
         const { item } = this.props;
         const isSelected = item.id === this.props.selectedId;
         const background = {
-            backgroundColor: themeManager.getColor(isSelected ? 'main1' : 'backgroundCard')
+            backgroundColor: themeManager.GetColor(isSelected ? 'main1' : 'backgroundCard')
         };
 
         return (
             <TouchableHighlight
                 style={[styles.card, background]}
                 onPress={this.onPress}
-                underlayColor={themeManager.getColor('main1', null, .5)}
+                underlayColor={themeManager.GetColor('main1', null, .5)}
                 touchSoundDisabled={true}
             >
                 <Character />

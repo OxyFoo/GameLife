@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import user from '../../Managers/UserManager';
+
 import { Button, Icon } from '../Components';
 import { SpringAnimation } from '../../Functions/Animations';
-
 
 const BottomBarProps = {
     show: false,
@@ -14,9 +14,11 @@ const BottomBarProps = {
 class BottomBar extends React.Component {
     state = {
         show: false,
-        animationShow: new Animated.Value(128),
+        animPosY: new Animated.Value(128),
+
         selectedIndex: 0,
-        animationBar: new Animated.Value(0)
+        barWidth: 0,
+        animBarX: new Animated.Value(0)
     }
 
     componentDidUpdate() {
@@ -25,49 +27,57 @@ class BottomBar extends React.Component {
         if (newState !== this.state.show) {
             this.setState({ show: newState });
             const toValue = newState ? 0 : 128;
-            SpringAnimation(this.state.animationShow, toValue, true).start();
+            SpringAnimation(this.state.animPosY, toValue).start();
         }
 
         // Selectection bar
         const newIndex = this.props.selectedIndex;
         if (newIndex !== this.state.selectedIndex) {
             this.setState({ selectedIndex: newIndex });
-            SpringAnimation(this.state.animationBar, newIndex * .2, false).start();
+            SpringAnimation(this.state.animBarX, newIndex * .2 * this.state.barWidth).start();
         }
+
+        // Show / hide settings button
+        const settingOpacity = user.interface.GetCurrentPage() === 'home' ? 1 : 0;
     }
 
-    goToHome = () => user.interface.changePage('home');
-    goToCalendar = () => user.interface.changePage('calendar');
-    goToActivity = () => user.interface.changePage('activity', undefined, true);
-    goToSettings = () => user.interface.changePage('settings');
-    goToShop = () => user.interface.changePage('shop');
+    onLayout = (event) => {
+        const { width } = event.nativeEvent.layout;
+        this.setState({ barWidth: width });
+    }
+
+    goToHome = () => user.interface.ChangePage('home');
+    goToCalendar = () => user.interface.ChangePage('calendar');
+    goToActivity = () => user.interface.ChangePage('activity', undefined, true);
+    goToSettings = () => user.interface.ChangePage('settings');
+    goToShop = () => user.interface.ChangePage('shop');
 
     render() {
-        const IntToPc = { inputRange: [0, 1], outputRange: ['0%', '100%'] };
         const isChecked = (index) => index === this.state.selectedIndex ? '#9095FF' : '#6e6e6e';
 
         return (
-            <Animated.View style={[styles.parent, { transform: [{ translateY: this.state.animationShow }] }]} pointerEvents={'box-none'}>
-                <View style={styles.body}>
+            <Animated.View style={[styles.parent, { transform: [{ translateY: this.state.animPosY }] }]} pointerEvents={'box-none'}>
+                <View style={styles.body} onLayout={this.onLayout}>
                     {/* Selection bar */}
-                    <Animated.View style={[styles.bar, { left: this.state.animationBar.interpolate(IntToPc) }]} />
+                    <Animated.View style={[styles.bar, { transform: [{ translateX: this.state.animBarX }] }]} />
 
                     {/* Buttons */}
                     <Button
-                        onPress={this.goToHome}
                         style={{...styles.button, ...styles.btFirst}}
                         color='transparent'
-                        rippleColor='#9095FF' borderRadius={0}
+                        borderRadius={0}
+                        rippleColor='#9095FF'
+                        onPress={this.goToHome}
                     >
                         <Icon icon='home' color={isChecked(0)} />
                     </Button>
 
                     <Button
-                        onPress={this.goToCalendar}
                         style={styles.button}
                         color='transparent'
-                        rippleColor='#9095FF'
                         borderRadius={0}
+                        rippleColor='#9095FF'
+                        onPress={this.goToCalendar}
                     >
                         <Icon icon='calendar' color={isChecked(1)} />
                     </Button>
@@ -83,39 +93,37 @@ class BottomBar extends React.Component {
 
 
                     <Button
-                        onPress={this.goToSettings}
-                        style={styles.button} color='transparent'
-                        rippleColor='#9095FF'
+                        style={styles.button}
+                        color='transparent'
                         borderRadius={0}
+                        rippleColor='#9095FF'
+                        onPress={this.goToSettings}
                     >
                         <Icon icon='social' color={isChecked(3)} />
                     </Button>
 
                     <Button
-                        onPress={this.goToShop}
                         style={{...styles.button, ...styles.btLast}}
                         color='transparent'
-                        rippleColor='#9095FF'
                         borderRadius={0}
+                        rippleColor='#9095FF'
+                        onPress={this.goToShop}
                     >
                         <Icon icon='shop' color={isChecked(4)} />
                     </Button>
                 </View>
 
                 {/* Add button */}
-                <View style={styles.btMiddleParent} pointerEvents='box-none'>
-                    {/*<Button style={styles.btMiddle} onPress={this.goToActivity} color='#DBA1FF' rippleColor='#000000' borderRadius={50}>
-                        <Icon icon='add' />
-                    </Button>*/}
+                <Animated.View style={styles.btMiddleParent} pointerEvents='box-none'>
                     <Button
                         style={styles.btMiddle}
                         onPress={this.goToActivity}
-                        color='#DBA1FF'
+                        color='main2'
                         rippleColor='#000000'
                         icon='add'
                         borderRadius={50}
                     />
-                </View>
+                </Animated.View>
             </Animated.View>
         )
     }

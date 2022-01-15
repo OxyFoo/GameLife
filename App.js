@@ -34,7 +34,7 @@ class App extends React.Component {
         const TEST = true;
 
         if (TEST) {
-            user.interface.changePage('test', undefined, true);
+            user.interface.ChangePage('test', undefined, true);
             return;
         }
 
@@ -43,19 +43,19 @@ class App extends React.Component {
         const connected = user.settings.connected;
         const showOnboard = !user.settings.onboardingWatched;
         if (email === '') {
-            /*if (showOnboard) user.interface.changePage('onboarding', { 'nextPage': 'home' });
-            else */if (online) user.interface.changePage('login', undefined, true);
-            else             user.interface.changePage('waitinternet', undefined, true);
+            /*if (showOnboard) user.interface.ChangePage('onboarding', { 'nextPage': 'home' });
+            else */if (online) user.interface.ChangePage('login', undefined, true);
+            else             user.interface.ChangePage('waitinternet', undefined, true);
         } else {
-            if (connected) user.interface.changePage('loading', undefined, true);
-            else           user.interface.changePage('waitmail', undefined, true);
+            if (connected) user.interface.ChangePage('loading', undefined, true);
+            else           user.interface.ChangePage('waitmail', undefined, true);
         }
 
         return;
         // TODO - Code at end of onboarding
         user.settings.onboardingWatched = true;
         user.settings.Save();
-        user.interface.changePage(this.props.args['nextPage'], undefined, true);
+        user.interface.ChangePage(this.props.args['nextPage'], undefined, true);
     }
 
     render() {

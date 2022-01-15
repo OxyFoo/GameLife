@@ -37,7 +37,7 @@ class ProgressBar extends React.Component {
                 <Animated.View style={[
                     styles.bar,
                     {
-                        backgroundColor: themeManager.getColor('main1'),
+                        backgroundColor: themeManager.GetColor('main1'),
                         left: this.state.animTranslate.interpolate(inter),
                         transform: [
                             { scaleX: this.state.animScale }

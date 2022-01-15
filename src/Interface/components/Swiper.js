@@ -119,7 +119,7 @@ class Swiper extends React.Component {
                     styles.parent,
                     {
                         height: this.props.height,
-                        backgroundColor: themeManager.getColor(this.props.backgroundColor),
+                        backgroundColor: themeManager.GetColor(this.props.backgroundColor),
                         borderRadius: this.props.borderRadius
                     },
                     this.props.style

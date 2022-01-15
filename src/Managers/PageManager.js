@@ -21,6 +21,7 @@ import Identity from '../Interface/pageFront/identity';
 import Leaderboard from '../Interface/pageFront/leaderboard';
 import Loading from '../Interface/pageFront/loading';
 import Login from '../Interface/pageFront/login';
+import Multiplayer from '../Interface/pageFront/multiplayer';
 import Report from '../Interface/pageFront/report';
 import Settings from '../Interface/pageFront/settings';
 import Shop from '../Interface/pageFront/shop';
@@ -82,12 +83,12 @@ class PageManager extends React.Component{
         if (!this.backable) return false;
 
         if (this.popup.Close()) return true;
-        if (this.backPage()) return true;
+        if (this.BackPage()) return true;
 
         return true;
     }
 
-    backPage = () => {
+    BackPage = () => {
         if (this.changing) return false;
         if (this.path.length < 1) {
             const title = langManager.curr['home']['alert-exit-title'];
@@ -104,7 +105,7 @@ class PageManager extends React.Component{
         return true;
     }
 
-    changePage = (newpage, args, ignorePage = false, forceUpdate = false) => {
+    ChangePage = (newpage, args, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
 
         const prevPage = this.state.page1 || this.state.page2;
@@ -117,7 +118,7 @@ class PageManager extends React.Component{
             return false;
         }
 
-        if (!this.GetPageContent(newpage)) {
+        if (!this.getPageContent(newpage)) {
             console.error('Calling an incorrect page');
             return false;
         };
@@ -138,25 +139,28 @@ class PageManager extends React.Component{
 
     pageAnimation = (newpage) => {
         const animation_duration = 200;
-        const animation_delay = 100;
 
         // Switch pages animation
         if (!this.state.page1) {
-            // Clear page 2
-            TimingAnimation(this.state.animOpacity2, 0, 100).start(() => { this.setState({ page2: '' }); });
             // Load page 1
-            setTimeout(() => { this.setState({ page1: newpage }); }, 0);
-            setTimeout(() => { TimingAnimation(this.state.animOpacity1, 1, animation_duration).start(); }, animation_delay);
+            this.setState({ page1: newpage }, () => {
+                // Clear page 2
+                TimingAnimation(this.state.animOpacity2, 0, animation_duration).start(() => { this.setState({ page2: '' }); });
+                // Show page 1
+                TimingAnimation(this.state.animOpacity1, 1, animation_duration).start();
+            });
         } else {
-            // Clear page 1
-            TimingAnimation(this.state.animOpacity1, 0, 100).start(() => { this.setState({ page1: '' }); });
             // Load page 2
-            setTimeout(() => { this.setState({ page2: newpage }); }, 0);
-            setTimeout(() => { TimingAnimation(this.state.animOpacity2, 1, animation_duration).start(); }, animation_delay);
+            this.setState({ page2: newpage }, () => {
+                // Clear page 1
+                TimingAnimation(this.state.animOpacity1, 0, animation_duration).start(() => { this.setState({ page1: '' }); });
+                // Show page 2
+                TimingAnimation(this.state.animOpacity2, 1, animation_duration).start();
+            });
         }
 
         // Bottom bar selected index animation
-        const bottomBarPages = [ 'home', 'calendar', 'x', 'settings', 'shop' ];
+        const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
         const bottomBarShow = bottomBarPages.includes(newpage);
         this.setState({ bottomBarShow: bottomBarShow });
         const index = bottomBarPages.indexOf(newpage);
@@ -164,14 +168,14 @@ class PageManager extends React.Component{
 
         setTimeout(() => {
             this.changing = false;
-        }, animation_delay + animation_duration + 200);
+        }, animation_duration + 300);
     }
 
     GetCurrentPage = () => {
         return this.state.page1 || this.state.page2;
     }
 
-    GetPageContent(page, args) {
+    getPageContent(page, args) {
         let p;
         switch (page) {
             case 'about': p = <About />; break;
@@ -187,6 +191,7 @@ class PageManager extends React.Component{
             case 'leaderboard': p = <Leaderboard />; break;
             case 'loading': p = <Loading args={args} />; break;
             case 'login': p = <Login />; break;
+            case 'multiplayer': p = <Multiplayer />; break;
             case 'report': p = <Report />; break;
             case 'settings': p = <Settings />; break;
             case 'shop': p = <Shop />; break;
@@ -200,8 +205,8 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const page1 = this.GetPageContent(this.state.page1, this.state.arguments);
-        const page2 = this.GetPageContent(this.state.page2, this.state.arguments);
+        const page1 = this.getPageContent(this.state.page1, this.state.arguments);
+        const page2 = this.getPageContent(this.state.page2, this.state.arguments);
 
         const fullscreen = { width: '100%', height: '100%' }
 

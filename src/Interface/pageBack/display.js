@@ -29,7 +29,7 @@ class BackDisplay extends React.Component {
     }
 
     ToHome = () => {
-        user.interface.changePage('home');
+        user.interface.ChangePage('home');
     }
 }
 

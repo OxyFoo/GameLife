@@ -45,8 +45,8 @@ class IconCheckable extends React.Component {
     }
 
     render() {
-        const hexOn = themeManager.getColor(this.props.colorOn);
-        const hexOff = themeManager.getColor(this.props.colorOff);
+        const hexOn = themeManager.GetColor(this.props.colorOn);
+        const hexOff = themeManager.GetColor(this.props.colorOff);
         const iconColor = this.state.checked ? hexOff : hexOn;
         const backgroundColor = this.state.checked ? hexOn : hexOff;
 

@@ -37,8 +37,8 @@ class Settings {
     async Load() {
         const data_settings = await DataStorage.Load(STORAGE.SETTINGS, false);
         if (data_settings !== null) {
-            langManager.setLangage(data_settings['lang']);
-            themeManager.setTheme(data_settings['theme']);
+            langManager.SetLangage(data_settings['lang']);
+            themeManager.SetTheme(data_settings['theme']);
             this.email = data_settings['email'];
             this.connected = data_settings['connected'];
             this.morningNotifications = data_settings['morningNotifications'];

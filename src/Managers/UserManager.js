@@ -73,7 +73,7 @@ class UserManager {
         this.settings.Clear();
         await this.localSave();
         await this.settings.Save();
-        this.interface.changePage('login');
+        this.interface.ChangePage('login');
     }
     async unmount() {
         await this.localSave();
@@ -84,7 +84,7 @@ class UserManager {
     async refreshStats() {
         this.activities.removeDeletedSkillsActivities();
         this.experience.getExperience();
-        this.interface.changePage();
+        this.interface.ChangePage();
     }
 
     getTitle() {
@@ -104,7 +104,7 @@ class UserManager {
     /*pseudoCallback = (status) => {
         async function loadData(button) {
             await this.loadData();
-            this.interface.changePage();
+            this.interface.ChangePage();
         };
         if (status === "wrongtimingpseudo") {
             const title = langManager.curr['identity']['alert-wrongtimingpseudo-title'];

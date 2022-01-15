@@ -16,7 +16,7 @@ class BackActivityTimer extends React.Component {
 
         const activitySet = user.activities.currentActivity !== null;
         if (!activitySet) {
-            user.interface.backPage();
+            user.interface.BackPage();
             return;
         }
 
@@ -68,7 +68,7 @@ class BackActivityTimer extends React.Component {
         const remove = (button) => {
             if (button === 'yes') {
                 this.finished = true;
-                user.interface.changePage('calendar');
+                user.interface.ChangePage('calendar');
             }
         }
         const title = langManager.curr['activity']['timeralert-cancel-title'];
@@ -97,7 +97,7 @@ class BackActivityTimer extends React.Component {
 
         const text = langManager.curr['activity']['display-activity-text'];
         const button = langManager.curr['activity']['display-activity-button'];
-        user.interface.changePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
+        user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
     }
 }
 

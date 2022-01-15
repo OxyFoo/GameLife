@@ -24,11 +24,11 @@ class Dots extends React.Component {
 
         const left = { left: Animated.multiply(this.props.position.interpolate(interLeft), 16) };
         const width = { width: this.props.position.interpolate(interWidth) };
-        const bg = { backgroundColor: themeManager.getColor(this.props.colorActiveDot) };
+        const bg = { backgroundColor: themeManager.GetColor(this.props.colorActiveDot) };
         return <Animated.View style={[styles.dot, styles.mainDot, left, width, bg]} />;
     }
     Dot = (_, index) => {
-        const bg = { backgroundColor: themeManager.getColor(this.props.colorDots) };
+        const bg = { backgroundColor: themeManager.GetColor(this.props.colorDots) };
         return <View key={'dot-'+index} style={[styles.dot, bg]} />;
     }
 

@@ -129,7 +129,7 @@ class ComboBox extends React.Component {
             <TouchableHighlight
                 style={styles.item}
                 onPress={onPress}
-                underlayColor={themeManager.getColor('backgroundTransparent')}
+                underlayColor={themeManager.GetColor('backgroundTransparent')}
             >
                 <Text style={styles.itemText}>{value}</Text>
             </TouchableHighlight>
@@ -153,7 +153,7 @@ class ComboBox extends React.Component {
             width: width,
             opacity: this.state.anim,
             transform: [{ translateX: x }, { translateY: animValue }],
-            backgroundColor: themeManager.getColor('backgroundGrey')
+            backgroundColor: themeManager.GetColor('backgroundGrey')
         }];
         const header = this.props.setSearchBar ? this.renderSearchBar : null;
 

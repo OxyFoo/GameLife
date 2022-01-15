@@ -45,9 +45,9 @@ function Day(props) {
         containActivity = user.activities.containActivity(actDate, true) ? 1 : 0;
     }
 
-    const bgMain1 = { backgroundColor: themeManager.getColor('main1') };
-    const bgMain2 = { backgroundColor: themeManager.getColor('main2') };
-    const bgBorder = { backgroundColor: themeManager.getColor('border') };
+    const bgMain1 = { backgroundColor: themeManager.GetColor('main1') };
+    const bgMain2 = { backgroundColor: themeManager.GetColor('main2') };
+    const bgBorder = { backgroundColor: themeManager.GetColor('border') };
 
     let style = [styles.day];
     if (isSelectedDay) style.push(styles.circle, bgMain1);

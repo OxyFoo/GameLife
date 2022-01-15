@@ -96,10 +96,10 @@ class ActivitySchedule extends React.Component {
             width: width,
             opacity: this.state.anim,
             transform: [{ translateX: x }, { translateY: animValue }],
-            backgroundColor: themeManager.getColor('backgroundGrey')
+            backgroundColor: themeManager.GetColor('backgroundGrey')
         }];
         const lang = langManager.curr['widget'];
-        const mainColor = themeManager.getColor('main1');
+        const mainColor = themeManager.GetColor('main1');
 
         return (
             <>

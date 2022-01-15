@@ -99,7 +99,7 @@ class BackActivity extends React.Component {
         if (user.activities.Add(skillID, activityStart, activityDuration)) {
             const text = langManager.curr['activity']['display-activity-text'];
             const button = langManager.curr['activity']['display-activity-button'];
-            user.interface.changePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
+            user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
         } else {
             const title = langManager.curr['activity']['alert-wrongtiming-title'];
             const text = langManager.curr['activity']['alert-wrongtiming-text'];
@@ -110,7 +110,7 @@ class BackActivity extends React.Component {
         const remove = (button) => {
             if (button === 'yes') {
                 user.activities.Remove(this.props.args.activity);
-                user.interface.backPage();
+                user.interface.BackPage();
             }
         }
         const title = langManager.curr['activity']['alert-remove-title'];
@@ -130,7 +130,7 @@ class BackActivity extends React.Component {
 
         user.activities.currentActivity = [ skillID, startTime ];
         user.localSave();
-        user.interface.changePage('activitytimer', undefined, true);
+        user.interface.ChangePage('activitytimer', undefined, true);
     }
 }
 

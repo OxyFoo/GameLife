@@ -1,54 +1,32 @@
 import * as React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackShop from '../pageBack/shop';
-import { GLHeader, GLText } from '../Components';
 
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
+import { Page, Icon, Text } from '../Components';
+import { UserHeader } from '../Widgets';
 
 class Shop extends BackShop {
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                {/* Header */}
-                <GLHeader
-                    title={langManager.curr['shop']['page-title']}
-                    leftIcon="back"
-                    onPressLeft={user.interface.backPage}
-                />
-
-                {/* Content */}
-                <View style={styles.container}>
-                    <GLText style={styles.wait} title={langManager.curr['shop']['wait']} />
+            <Page canScrollOver={true}>
+                <UserHeader />
+                <View style={styles.wallet}>
+                    <Text style={styles.ox} color='main1'>{'100'}</Text>
+                    <Icon icon='ox' color='main1' size={24} />
                 </View>
-
-                {/* PUB - Banner */}
-                <View style={styles.banner}>
-                </View>
-            </View>
+            </Page>
         )
     }
 }
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingVertical: "5%"
+    wallet: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
     },
-
-    wait: {
-        padding: '5%',
-        fontSize: ww * 75 / 1000 , 
-    },
-
-    banner: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0
+    ox: {
+        marginRight: 6
     }
 });
 

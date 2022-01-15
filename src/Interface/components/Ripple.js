@@ -49,7 +49,7 @@ class Ripple extends React.Component {
     }
 
     render() {
-        const color = themeManager.getColor(this.props.rippleColor);
+        const color = themeManager.GetColor(this.props.rippleColor);
         return (
             <Animated.View
                 style={[

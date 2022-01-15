@@ -10,6 +10,7 @@ class ThemeManager {
             backgroundCard: '#384065', // Transparent purple
             backgroundGrey: '#222740', // Grey
             backgroundTransparent: '#FFFFFF33', // Transparent white
+            danger: '#CC0029',
 
             text: {
                 main: '#ECECEC', // Obsolete
@@ -42,7 +43,7 @@ class ThemeManager {
     // Get the color of the theme
     colors = this.THEMES[this.selectedTheme];
 
-    setTheme(theme) {
+    SetTheme(theme) {
         let output = false;
         if (this.isTheme(theme)) {
             output = true;
@@ -67,7 +68,7 @@ class ThemeManager {
      * @param {Number} opacity - Opacity of color, between 0 and 1
      * @returns {String} - Hex color
      */
-    getColor(str, subTheme = null, opacity = 1) {
+    GetColor(str, subTheme = null, opacity = 1) {
         let output = null;
 
         // If already hex color, keep it

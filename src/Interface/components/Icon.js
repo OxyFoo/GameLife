@@ -19,6 +19,8 @@ import svgEdit from '../../../res/icons/edit';
 import svgHome from '../../../res/icons/home';
 import svgInfo from '../../../res/icons/info';
 import svgItem from '../../../res/icons/item';
+import svgOx from '../../../res/icons/ox';
+import svgSetting from '../../../res/icons/setting';
 import svgShop from '../../../res/icons/shop';
 import svgSocial from '../../../res/icons/social';
 import svgSuccess from '../../../res/icons/success';
@@ -34,7 +36,7 @@ const IconProps = {
      */
     xml: undefined,
     /**
-     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'edit'|'home'|'info'|'item'|'shop'|'social'|'success'|'loading'|'loadingDots'}
+     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'edit'|'home'|'info'|'item'|'ox'|'setting'|'shop'|'social'|'success'|'loading'|'loadingDots'}
      */
     icon: '',
     size: 24,
@@ -58,6 +60,8 @@ const SVGIcons = {
     home: svgHome,
     info: svgInfo,
     item: svgItem,
+    ox: svgOx,
+    setting: svgSetting,
     shop: svgShop,
     social: svgSocial,
     success: svgSuccess,
@@ -70,7 +74,7 @@ class Icon extends React.Component {
         let output;
         const { style, icon, xml, size, angle, onPress, show } = this.props;
         const containerStyle = { width: size, height: size };
-        const color = themeManager.getColor(this.props.color);
+        const color = themeManager.GetColor(this.props.color);
 
         if (show && !isUndefined(xml)) {
             if (typeof(xml) !== 'string' || xml.length < 10) {

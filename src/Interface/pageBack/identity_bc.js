@@ -19,7 +19,7 @@ class BackIdentity extends React.Component {
         loading: false
     }
 
-    back = () => { user.interface.backPage(); }
+    back = () => { user.interface.BackPage(); }
     async valid() {
         if (user.username !== this.state.username) {
             user.username = this.state.username;
@@ -29,7 +29,7 @@ class BackIdentity extends React.Component {
 
         this.setState({ loading: true });
         // TODO - Save
-        user.interface.backPage();
+        user.interface.BackPage();
     }
 
     // Pseudo

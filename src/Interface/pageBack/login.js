@@ -35,7 +35,7 @@ class BackLogin extends React.Component {
     checkConnection = async () => {
         await user.server.Ping();
         if (!user.server.online) {
-            user.interface.changePage('waitinternet');
+            user.interface.ChangePage('waitinternet');
         }
     }
 
@@ -96,11 +96,11 @@ class BackLogin extends React.Component {
                 user.settings.email = email;
                 user.settings.connected = true;
                 await user.settings.Save();
-                user.interface.changePage('loading');
+                user.interface.ChangePage('loading');
             } else if (status === 'waitMailConfirmation' || status === 'newDevice') {
                 user.settings.email = email;
                 await user.settings.Save();
-                user.interface.changePage('waitmail', { email: email });
+                user.interface.ChangePage('waitmail', { email: email });
             } else if (status === 'error') {
                 this.checkConnection();
             }
@@ -145,7 +145,7 @@ class BackLogin extends React.Component {
             }
             user.settings.email = email;
             await user.settings.Save();
-            user.interface.changePage('waitmail', { email: email });
+            user.interface.ChangePage('waitmail', { email: email });
         }
     }
 

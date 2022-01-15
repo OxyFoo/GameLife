@@ -33,18 +33,26 @@ const ANIM_DURATION = 200;
 
 class Input extends React.Component {
     state = {
-        animHeight: new Animated.Value(1),
-        animLeft: new Animated.Value(12),
+        animTop: new Animated.Value(1),
+        animLeft: new Animated.Value(16),
         animScale: new Animated.Value(1),
-        animBorderWidth: new Animated.Value(1.2),
 
         isFocused: false,
+        boxHeight: 0,
+        borderWidth: 1.2,
         textWidth: 0,
         textHeight: 0
     }
 
-    onLayout = (event) => {
-        const  { x, y, width, height } = event.nativeEvent.layout;
+    onBoxLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        if (height !== this.state.boxHeight) {
+            this.setState({ boxHeight: height });
+        }
+    }
+
+    onTextLayout = (event) => {
+        const { width, height } = event.nativeEvent.layout;
         if (width !== this.state.textWidth) {
             this.setState({ textWidth: width });
         }
@@ -71,17 +79,17 @@ class Input extends React.Component {
 
     movePlaceHolderIn() {
         if (this.props.staticLabel) return;
-        TimingAnimation(this.state.animHeight, 1, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animLeft, 12, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animScale, 1, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animBorderWidth, 1.2, ANIM_DURATION, false).start();
+        TimingAnimation(this.state.animTop, 1, ANIM_DURATION).start();
+        TimingAnimation(this.state.animLeft, 16, ANIM_DURATION).start();
+        TimingAnimation(this.state.animScale, 1, ANIM_DURATION).start();
+        this.setState({ borderWidth: 1.2 });
     }
 
     movePlaceHolderBorder() {
-        TimingAnimation(this.state.animHeight, 0, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animLeft, 8, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animScale, 0.75, ANIM_DURATION, false).start();
-        TimingAnimation(this.state.animBorderWidth, 1.6, ANIM_DURATION, false).start();
+        TimingAnimation(this.state.animTop, 0, ANIM_DURATION).start();
+        TimingAnimation(this.state.animLeft, 8, ANIM_DURATION).start();
+        TimingAnimation(this.state.animScale, 0.75, ANIM_DURATION).start();
+        this.setState({ borderWidth: 1.6 });
     }
 
     onFocusIn = (ev, a) => {
@@ -98,36 +106,47 @@ class Input extends React.Component {
 
     render() {
         const isActive = this.state.isFocused || this.props.active;
-        const interH = { inputRange: [0, 1], outputRange: ['0%', '100%'] }
+        const interH = { inputRange: [0, 1], outputRange: [-this.state.textHeight/2, this.state.boxHeight/2 - this.state.textHeight/2 - 2] }
         const activeColor = isActive ? this.props.activeColor : 'border';
-        const hexActiveColor = themeManager.getColor(activeColor);
-        const hexBackgroundColor = themeManager.getColor('background');
-        const textColor = isActive ? themeManager.getColor(this.props.activeColor) : 'primary';
+        const hexActiveColor = themeManager.GetColor(activeColor);
+        const hexBackgroundColor = themeManager.GetColor('background');
+        const textColor = isActive ? themeManager.GetColor(this.props.activeColor) : 'primary';
         const interC = { inputRange: [0, 1], outputRange: [hexBackgroundColor+'FF', hexBackgroundColor+'00'] }
         const opacity = this.props.enabled ? 1 : 0.6;
+        const barStyle = [styles.bar, {
+            width: this.state.textWidth * 0.75 + 12,
+            backgroundColor: hexBackgroundColor,
+            transform: [
+                { scaleX: Animated.subtract(1, this.state.animTop) },
+            ]
+        }];
 
         return (
             <Animated.View style={[styles.parent, {
                     backgroundColor: hexBackgroundColor,
                     borderColor: hexActiveColor,
-                    borderWidth: this.state.animBorderWidth,
+                    borderWidth: this.state.borderWidth,
                     opacity: opacity
                 }, this.props.style]}
+                onLayout={this.onBoxLayout}
                 pointerEvents={this.props.enabled ? this.props.pointerEvents : 'none'}
             >
+                <Animated.View style={barStyle} />
+
                 {/* Title (in center or move into top border if focused or active) */}
                 <Animated.View
                     style={[styles.placeholderParent, {
-                        backgroundColor: this.state.animHeight.interpolate(interC), // hexBackgroundColor,
-                        height: this.state.animHeight.interpolate(interH),
+                        //backgroundColor: this.state.animScale.interpolate(interC), // hexBackgroundColor,
+                        //backgroundColor: hexBackgroundColor,
                         transform: [
                             { translateX: -this.state.textWidth/2 },
                             { translateY: -this.state.textHeight/2 },
                             { scale: this.state.animScale },
                             { translateX: this.state.textWidth/2 },
                             { translateY: this.state.textHeight/2 },
+
                             { translateX: this.state.animLeft },
-                            //{ translateY: this.state.animTop }
+                            { translateY: this.state.animTop.interpolate(interH) }
                         ]
                     }]}
                     pointerEvents={'none'}
@@ -135,7 +154,7 @@ class Input extends React.Component {
                     <Text
                         color={textColor}
                         fontSize={16}
-                        onLayout={this.onLayout}
+                        onLayout={this.onTextLayout}
                     >
                         {this.props.label}
                     </Text>
@@ -150,6 +169,7 @@ class Input extends React.Component {
                     onBlur={this.onFocusOut}
                     textContentType={textTypes[this.props.textContentType]['ios']}
                     autoCompleteType={textTypes[this.props.textContentType]['android']}
+                    autoCorrect={false}
                 />
             </Animated.View>
         );
@@ -166,7 +186,6 @@ const styles = StyleSheet.create({
     },
     placeholderParent: {
         position: 'absolute',
-        minHeight: 4,
         top: 0,
         left: 0,
         paddingHorizontal: 4,
@@ -180,6 +199,14 @@ const styles = StyleSheet.create({
         height: 56,
         color: '#FFFFFF',
         paddingHorizontal: 12
+    },
+
+    bar: {
+        position: 'absolute',
+        top: -2,
+        left: 6,
+        height: 2,
+        backgroundColor: 'red'
     }
 });
 

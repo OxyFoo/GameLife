@@ -17,8 +17,8 @@ class Identity extends BackIdentity {
         const headerOpacity = this.refAvatar === null ? 1 : this.refAvatar.state.editorAnim.interpolate(interReverse);
         const headerPointer = this.refAvatar === null ? 'auto' : (this.refAvatar.state.editorOpened ? 'auto' : 'none');
 
-        const rowStyle = [styles.row, { borderColor: themeManager.getColor('main1') }];
-        const cellStyle = [styles.cell, { borderColor: themeManager.getColor('main1') }];
+        const rowStyle = [styles.row, { borderColor: themeManager.GetColor('main1') }];
+        const cellStyle = [styles.cell, { borderColor: themeManager.GetColor('main1') }];
         const row = (title, value) => (
             <View style={rowStyle}>
                 <Text fontSize={14} containerStyle={cellStyle} style={{ textAlign: 'left' }}>{title}</Text>

@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import dataManager from '../../Managers/DataManager';
 
 import { GetBlockMonth } from '../../Functions/Date';
 import { Animated } from 'react-native';
@@ -47,10 +46,10 @@ class BackCalendar extends React.Component {
     }
 
     componentDidMount() {
-        const today = new Date();
-        const Day = today.getDate();
-        const Month = today.getMonth();
-        const FullYear = today.getFullYear();
+        const selectedDate = user.tempSelectedTime === null ? new Date() : new Date(user.tempSelectedTime * 1000);
+        const Day = selectedDate.getDate();
+        const Month = selectedDate.getMonth();
+        const FullYear = selectedDate.getFullYear();
         this.daySelect(Day, Month, FullYear);
 
         // TODO - Doesn't works on iOS
@@ -58,7 +57,9 @@ class BackCalendar extends React.Component {
     }
 
     componentWillUnmount() {
-        user.tempSelectedTime = null;
+        if (user.interface.GetCurrentPage() !== 'activity') {
+            user.tempSelectedTime = null;
+        }
     }
 
     onScroll = (e) => {

@@ -53,7 +53,7 @@ class BackReport extends React.Component {
         this.refreshRemainPoints();
     }
 
-    back = () => { user.interface.backPage(); }
+    back = () => { user.interface.BackPage(); }
     info = () => {
         const title = langManager.curr['report']['alert-buginfo-title'];
         const text = langManager.curr['report']['alert-buginfo-text'];
@@ -141,7 +141,7 @@ class BackReport extends React.Component {
         if (result_report.status === 200) {
             const title = langManager.curr['report']['alert-success-title'];
             const text = langManager.curr['report']['alert-success-text'];
-            user.interface.popup.Open('ok', [ title, text ], user.interface.backPage, false);
+            user.interface.popup.Open('ok', [ title, text ], user.interface.BackPage, false);
         } else {
             console.error('Send failed: ' + result_report.status + ' - ' + result_report.data['error']);
         }

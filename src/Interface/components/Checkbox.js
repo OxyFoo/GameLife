@@ -30,8 +30,8 @@ class Checkbox extends React.Component {
     }
 
     render() {
-        const activeColor = themeManager.getColor(this.props.color);
-        const emptyColor = themeManager.getColor('border');
+        const activeColor = themeManager.GetColor(this.props.color);
+        const emptyColor = themeManager.GetColor('border');
 
         return (
             <View style={this.props.style}>

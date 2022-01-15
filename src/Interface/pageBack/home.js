@@ -7,12 +7,12 @@ class BackHome extends React.Component {
         super(props);
     }
 
-    addSkill = () => { user.interface.changePage('activity'); }
-    openIdentity = () => { user.interface.changePage('identity'); }
-    openCalendar = () => { user.interface.changePage('calendar'); }
-    openSkill = (skillID) => { user.interface.changePage('skill', { skillID: skillID }); }
-    openSkills = () => { user.interface.changePage('skills'); }
-    openExperience = () => { user.interface.changePage('experience'); }
+    addSkill = () => { user.interface.ChangePage('activity'); }
+    openIdentity = () => { user.interface.ChangePage('identity'); }
+    openCalendar = () => { user.interface.ChangePage('calendar'); }
+    openSkill = (skillID) => { user.interface.ChangePage('skill', { skillID: skillID }); }
+    openSkills = () => { user.interface.ChangePage('skills'); }
+    openExperience = () => { user.interface.ChangePage('experience'); }
 }
 
 export default BackHome;

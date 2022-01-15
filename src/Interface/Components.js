@@ -15,7 +15,6 @@ import GLDoubleCorner from './components/GLDoubleCorner';
 import GLCropCorner from './components/GLCropCorner';
 import GLBottomSwipePage from './components/GLBottomSwipePage';
 import GLPopup from './components/GLPopup';
-import GLLeftPanel from './components/GLLeftPanel';
 import GLSvg from './components/GLSvg';
 import GLDigit from './components/GLDigit';
 import GLButton from './components/GLButton';
@@ -32,6 +31,7 @@ import Checkbox from './components/Checkbox';
 import Container from './components/Container';
 import ComboBox from './components/ComboBox';
 import Swiper from './components/Swiper';
+import Switch from './components/Switch';
 import ProgressBar from './components/ProgressBar';
 import XPBar from './components/XPBar';
 import Character from './components/Character';
@@ -50,6 +50,7 @@ export {
     Container,
     ComboBox,
     Swiper,
+    Switch,
     ProgressBar,
     XPBar,
     Character,
@@ -72,7 +73,6 @@ export {
     GLCropCorner,
     GLBottomSwipePage,
     GLPopup,
-    GLLeftPanel,
     GLSvg,
     GLDigit,
     GLButton

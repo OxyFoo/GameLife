@@ -76,7 +76,7 @@ class Button extends React.Component {
         const isLoading = this.props.loading;
         const onlyOneChild = !hasChildren || !hasIcon || isLoading;
 
-        const color = themeManager.getColor(this.props.color);
+        const color = themeManager.GetColor(this.props.color);
         const align = onlyOneChild ? 'center' : 'space-between';
         const style = [
             styles.body,

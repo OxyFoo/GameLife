@@ -59,7 +59,7 @@ class ActivityCard extends React.Component {
             {
                 opacity: this.state.anim,
                 transform: [ { translateY: this.state.anim.interpolate(inter) } ],
-                backgroundColor: themeManager.getColor('backgroundCard', null, skill.XP === 0 ? 0.5 : 1)
+                backgroundColor: themeManager.GetColor('backgroundCard', null, skill.XP === 0 ? 0.5 : 1)
             },
             this.props.style
         ];

@@ -52,7 +52,7 @@ class Skill extends BackSkill {
                             const text = langManager.curr['skill']['text-history'];
                             const duration = item.duration;
                             const title = text.replace('{}', date).replace('{}', duration);
-                            const onPress = () => { user.interface.changePage('activity', { 'activity': item }); }
+                            const onPress = () => { user.interface.ChangePage('activity', { 'activity': item }); }
                             return (
                                 <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
                                     <GLText

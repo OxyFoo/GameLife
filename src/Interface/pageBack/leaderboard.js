@@ -29,7 +29,7 @@ class BackLeaderboard extends React.Component {
             const title = langManager.curr['leaderboard']['alert-onlineneed-title'];
             const text = langManager.curr['leaderboard']['alert-onlineneed-text'];
             user.interface.popup.Open('ok', [ title, text ]);
-            setTimeout(user.interface.backPage, 500);
+            setTimeout(user.interface.BackPage, 500);
         }
     }
 

@@ -19,9 +19,9 @@ const TextProps = {
 class Text extends React.Component {
     render() {
         const onPress = this.props.onPress;
-        let color = themeManager.getColor(this.props.color, 'text');
+        let color = themeManager.GetColor(this.props.color, 'text');
         if (color === null) {
-            color = themeManager.getColor(this.props.color);
+            color = themeManager.GetColor(this.props.color);
         }
 
         return (

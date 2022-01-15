@@ -34,9 +34,9 @@ class TextSwitch extends React.Component {
     }
 
     render() {
-        const parentStyle = [styles.parent, { borderColor: themeManager.getColor('main1') }, this.props.style];
-        const rippleColor = themeManager.getColor('white');
-        const selectColor = themeManager.getColor('main1');
+        const parentStyle = [styles.parent, { borderColor: themeManager.GetColor('main1') }, this.props.style];
+        const rippleColor = themeManager.GetColor('white');
+        const selectColor = themeManager.GetColor('main1');
         const selectionInter = { inputRange: [0, 1], outputRange: [0, this.state.parentWidth/2] };
         const selectionStyle = [styles.selection, { width: this.state.parentWidth/2-12, backgroundColor: selectColor, transform: [{ translateX: this.state.anim.interpolate(selectionInter) }] }];
 

@@ -166,7 +166,7 @@ class Avatar extends React.Component {
                 top: characterBottomPosY + 12,
                 height: SCREEN_HEIGHT - characterBottomPosY + 120,
                 opacity: editorAnim,
-                backgroundColor: themeManager.getColor('background'),
+                backgroundColor: themeManager.GetColor('background'),
                 transform: [{ translateY: editorTranslateY }]
             }
         ];

@@ -9,10 +9,10 @@ class LangManager {
             'fr': fr,
             'en': en
         };
-        this.setLangage();
+        this.SetLangage();
     }
 
-    setLangage(lang) {
+    SetLangage(lang) {
         let newLang = DEFAULT_LANG;
         if (Object.keys(this.langages).includes(lang)) {
             newLang = lang;
@@ -21,7 +21,8 @@ class LangManager {
         this.curr = this.langages[newLang];
     }
 
-    switchLangage() {
+    // TODO - This function is not used, remove it
+    SwitchLangage() {
         let select = false;
         let newlang = null;
         for (let lang in this.langages) {
@@ -35,7 +36,8 @@ class LangManager {
         return newlang;
     }
 
-    getOtherLangs() {
+    // TODO - This function is not used, remove it
+    GetOtherLangs() {
         let langs = [];
         for (let l in this.langages) {
             if (this.langages[l] === this.curr) {

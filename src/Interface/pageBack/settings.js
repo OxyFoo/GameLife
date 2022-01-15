@@ -11,28 +11,25 @@ class BackSettings extends React.Component {
         super(props);
         this.initLang = langManager.currentLangageKey;
 
-        this.currentTheme = themeManager.selectedTheme;
-        this.selectableThemes = [];
-        for (const T in themeManager.THEMES) {
-            const value = themeManager.THEMES[T];
-            this.selectableThemes.push({ key: value, value: langManager.curr['themes'][value] });
-        }
+        const langs = Object.keys(langManager.langages);
+        const dataLangs = langs.map(lang => new Object({ key: lang, value: langManager.langages[lang]['name'] }));
+        const current = dataLangs.find(lang => lang.key === langManager.currentLangageKey);
 
-        // Notifications
-        this.enabledOrNot = [
-            { key: false, value: langManager.curr['settings']['disabled-morningnotifications']},
-            { key: true, value: langManager.curr['settings']['enabled-morningnotifications']}
-        ];
-    }
-    back = () => {
-        if (this.initLang !== langManager.currentLangageKey) {
-            // TODO - Reload internal data (dataManager)
-            //user.loadInternalData();
+        this.state = {
+            selectedLang: current,
+            dataLangs: dataLangs,
+            switchStartAudio: false
         }
-        // TODO - Save user data
-        //user.saveData();
-        user.interface.backPage();
     }
+
+    onChangeLang = (lang) => {
+        this.setState({ selectedLang: lang });
+        langManager.SetLangage(lang.key);
+        user.settings.Save();
+    }
+
+    // TODO - OLD, Remove
+
     reset = () => {
         const event = (button) => {
             if (button === 'yes') {
@@ -67,15 +64,16 @@ class BackSettings extends React.Component {
         user.interface.popup.Open('yesno', [ title, text ], event);
     }
     changeLang = (lang) => {
-        langManager.setLangage(lang);
-        user.interface.changePage();
+        langManager.SetLangage(lang);
+        user.interface.ChangePage();
         // TODO - Save user data
         //user.saveData(false);
     }
     changeTheme = (theme) => {
-        if (themeManager.setTheme(theme)) {
+        //this.currentTheme = themeManager.selectedTheme; // Init
+        if (themeManager.SetTheme(theme)) {
             this.currentTheme = theme;
-            user.interface.changePage();
+            user.interface.ChangePage();
         }
     }
     changeMorningNotifications = (enabled) => {
@@ -83,7 +81,7 @@ class BackSettings extends React.Component {
         else disableMorningNotifications();
         user.settings.morningNotifications = enabled;
         user.settings.Save();
-        user.interface.changePage();
+        user.interface.ChangePage();
     }
 }
 

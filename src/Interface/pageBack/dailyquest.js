@@ -50,7 +50,7 @@ class BackDailyquest extends React.Component {
         } else if (this.state.selectedTodo !== null) {
             this.setState({ selectedTodo: null });
         } else {
-            user.interface.backPage();
+            user.interface.BackPage();
         }
     }
 

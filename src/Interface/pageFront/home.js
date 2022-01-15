@@ -39,7 +39,7 @@ class Home extends BackHome {
                     color='main2'
                     borderRadius={8}
                     icon='add'
-                    onPress={() => { user.interface.changePage('activity', undefined, true) }}
+                    onPress={() => { user.interface.ChangePage('activity', undefined, true) }}
                 >
                     {lang['btn-add-task']}
                 </Button>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, ScrollView, Switch as RNSwitch } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
@@ -8,9 +8,9 @@ import themeManager from '../../Managers/ThemeManager';
 
 import BackTest from '../pageBack/test';
 import { dateToFormatString } from '../../Functions/Time';
-import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch } from '../Components';
+import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch, Switch } from '../Components';
 
-const TEST_VALUES = [{id: 0, value: 'Abc 0'}, {id: 1, value: 'Def 1'}, {id: 2, value: 'Item 2'}, {id: 3, value: 'Item 3'}, {id: 4, value: 'Item 4'}];
+const TEST_VALUES = [{ID: 0, value: 'Abc 0'}, {ID: 1, value: 'Def 1'}, {ID: 2, value: 'Item 2'}, {ID: 3, value: 'Item 3'}, {ID: 4, value: 'Item 4'}];
 
 class Test extends BackTest {
     render() {
@@ -34,6 +34,8 @@ class Test extends BackTest {
                     style={{ marginBottom: 12 }}
                     data={TEST_VALUES}
                     setSearchBar={true}
+                    selectedValue={this.state.selectedSkill.value}
+                    onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: 0, value: ''} : item }); }}
                 />
 
                 <TextSwitch style={{ marginBottom: 12 }} />
@@ -58,6 +60,20 @@ class Test extends BackTest {
                         <Button color='main2' borderRadius={14}>{'Page 3'}</Button>
                     ]}
                 />
+
+                <Switch
+                    value={this.state.switch}
+                    onValueChanged={(value) => { this.setState({ switch: value }); }}
+                />
+
+                {/*<View style={{ width: 48 }}>
+                    <RNSwitch
+                        value={this.state.switch}
+                        onValueChange={(value) => { this.setState({ switch: value }); }}
+                        thumbColor={this.state.switch ? themeManager.GetColor('main1') : themeManager.GetColor('backgroundCard')}
+                        trackColor={{ false: themeManager.GetColor('background'), true: themeManager.GetColor('background') }}
+                    />
+                </View>*/}
 
                 {/*<Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
                     <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
@@ -96,7 +112,7 @@ class Test extends BackTest {
                     //leftIcon="sandwich"
                     onPressLeft={user.openLeftPanel}
                     rightIcon="gear"
-                    onPressRight={() => user.interface.changePage('settings') }
+                    onPressRight={() => user.interface.ChangePage('settings') }
                 />
 
                 <View style={styles.backgroundCircles}>

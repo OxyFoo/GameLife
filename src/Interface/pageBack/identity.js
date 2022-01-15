@@ -31,7 +31,7 @@ class BackIdentity extends React.Component {
         if (this.refAvatar !== null && this.refAvatar.state.editorOpened) {
             this.refAvatar.CloseEditor();
         } else {
-            user.interface.backPage();
+            user.interface.BackPage();
         }
     }
 }

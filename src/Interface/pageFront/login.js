@@ -19,7 +19,7 @@ class Login extends BackLogin {
         const CGUTitle = langManager.curr['login']['input-cgu-text'];
         const cguTexts = CGUTitle.split('%');
         const cguClick = langManager.curr['login']['input-cgu-click'];
-        const cguColor = themeManager.getColor('main1');
+        const cguColor = themeManager.GetColor('main1');
 
         return (
             <View style={{ flex: 1 }}>

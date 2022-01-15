@@ -23,7 +23,7 @@ function GLSkillBox(props) {
 
     const styleContainer = [ styles.container, props.style ];
     const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
-    const eventPress = () => { user.interface.changePage('skill', { skillID: skillID }) };
+    const eventPress = () => { user.interface.ChangePage('skill', { skillID: skillID }) };
     const xml = dataManager.skills.getXmlByLogoID(skill.LogoID);
 
     return (

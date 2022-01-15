@@ -21,7 +21,7 @@ class BackWaitinternet extends React.Component {
     Loop = async () => {
         await user.server.Ping();
         if (user.server.online) {
-            user.interface.changePage('login', undefined, true);
+            user.interface.ChangePage('login', undefined, true);
         }
     }
 }

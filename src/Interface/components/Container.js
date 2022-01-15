@@ -70,7 +70,7 @@ class Container extends React.Component {
         };
         const contentHeight = Animated.multiply(this.state.animHeightContent, this.state.maxHeight);
         const contentStyle = {
-            backgroundColor: themeManager.getColor(this.props.backgroundColor),
+            backgroundColor: themeManager.GetColor(this.props.backgroundColor),
             opacity: this.state.maxHeight === 0 && this.props.type === 'rollable' ? 0 : 1,
             height: this.state.maxHeight === 0 ? 'auto' : contentHeight
         };

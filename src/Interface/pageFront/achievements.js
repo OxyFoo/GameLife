@@ -35,7 +35,7 @@ class Achievements extends BackAchievements {
                     title={langManager.curr['achievements']['page-title']}
                     //small={true}
                     leftIcon="back"
-                    onPressLeft={user.interface.backPage}
+                    onPressLeft={user.interface.BackPage}
                 />
 
                 {/* Content */}

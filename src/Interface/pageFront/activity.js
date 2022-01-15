@@ -38,7 +38,7 @@ class Activity extends BackActivity {
     }
     render() {
         const lang = langManager.curr['activity'];
-        const backgroundColor = themeManager.getColor('backgroundGrey');
+        const backgroundColor = themeManager.GetColor('backgroundGrey');
 
         const inter = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
         const panelPosY = this.state.animPosY.interpolate(inter);
@@ -49,7 +49,7 @@ class Activity extends BackActivity {
         return (
             <Page ref={ref => this.pageRef = ref} scrollable={this.state.selectedSkill.id !== 0} canScrollOver={false} bottomOffset={0}>
                 <PageHeader
-                    onBackPress={user.interface.backPage}
+                    onBackPress={user.interface.BackPage}
                 />
 
                 <View style={styles.parent}>

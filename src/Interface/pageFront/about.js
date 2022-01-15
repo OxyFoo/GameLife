@@ -15,7 +15,7 @@ class About extends BackAbout {
                 <GLHeader
                     title={langManager.curr['about']['page-title']}
                     leftIcon="back"
-                    onPressLeft={user.interface.backPage}
+                    onPressLeft={user.interface.BackPage}
                     rightIcon="info"
                     onPressRight={this.openInfo}
                 />

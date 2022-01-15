@@ -23,13 +23,18 @@ class Test extends BackTest {
         const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
 
         return (
-            <Page canScrollOver={true}>
+            <Page ref={ref => this.pageRef = ref} canScrollOver={true}>
                 <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
                 <Button color='main1' borderRadius={14} style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
 
                 <Input style={{ marginBottom: 12 }} label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
 
-                <ComboBox style={{ marginBottom: 12 }} data={TEST_VALUES} setSearchBar={true} />
+                <ComboBox
+                    pageRef={this.pageRef}
+                    style={{ marginBottom: 12 }}
+                    data={TEST_VALUES}
+                    setSearchBar={true}
+                />
 
                 <TextSwitch style={{ marginBottom: 12 }} />
 

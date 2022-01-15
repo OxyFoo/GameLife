@@ -1,10 +1,11 @@
+import langManager from "../Managers/LangManager";
 import { strIsJSON } from "../Functions/Functions";
 
 class Achievement {
     ID = 0;
     Type = 0;
-    Name = '';
-    Description = '';
+    Name = { 'fr': '', 'en': '' };
+    Description = { 'fr': '', 'en': '' };
     Conditions = '';
     Reward = '';
 }
@@ -23,6 +24,14 @@ class Achievements {
     load(achievements) {
         if (strIsJSON(achievements)) {
             this.achievements = JSON.parse(achievements);
+            for (let i = 0; i < this.achievements.length; i++) {
+                if (strIsJSON(this.achievements[i].Name)) {
+                    this.achievements[i].Name = JSON.parse(this.achievements[i].Name);
+                }
+                if (strIsJSON(this.achievements[i].Description)) {
+                    this.achievements[i].Description = JSON.parse(this.achievements[i].Description);
+                }
+            }
         }
     }
 

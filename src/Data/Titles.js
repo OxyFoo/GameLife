@@ -1,9 +1,9 @@
+import langManager from "../Managers/LangManager";
 import { strIsJSON } from "../Functions/Functions";
 
 class Title {
     ID = 0;
-    Title = '';
-    AchievementsCondition = 0;
+    Name = { fr: '', en: '' };
 }
 
 class Titles {
@@ -20,6 +20,10 @@ class Titles {
     load(titles) {
         if (strIsJSON(titles)) {
             this.titles = JSON.parse(titles);
+
+            for (let i = 0; i < this.titles.length; i++)
+                if (strIsJSON(this.titles[i].Name))
+                    this.titles[i].Name = JSON.parse(this.titles[i].Name);
         }
     }
 
@@ -29,7 +33,7 @@ class Titles {
             const title = this.titles[t];
             const titleID = parseInt(title.ID);
             if (ID == titleID) {
-                currTitle = title.Title;
+                currTitle = title.Name;
                 break;
             }
         }

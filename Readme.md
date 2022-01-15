@@ -33,11 +33,3 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 
 ### Others
 * [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
-
-## 19/08/21
-* PHP: 560
-* JS: 2222
-## 05/09/21
-* PHP: 1042
-* JS: 5520
-* Total: 6562

@@ -8,10 +8,6 @@ import Titles from "../Data/Titles";
 import Quotes from "../Data/Quotes";
 import Contributors from "../Data/Contributors";
 
-// TODO - Hash par catégories
-// TODO - Pouvoir télécharger juste les textes
-// TODO - Ne pas tout charger dans des variables directement (économiser de la mémoire)
-
 class DataManager {
     constructor() {
         this.achievements = new Achievements();
@@ -19,6 +15,16 @@ class DataManager {
         this.titles = new Titles();
         this.quotes = new Quotes();
         this.contributors = new Contributors();
+    }
+
+    GetText(value) {
+        let output = '';
+        if (typeof(value) === 'object') {
+            const key = langManager.currentLangageKey;
+            if (key in value) output = value[key];
+            else output = value['fr'];
+        }
+        return output;
     }
 
     async localSave() {
@@ -67,8 +73,8 @@ class DataManager {
                 this.contributors.contributors = tables['contributors'];
                 this.quotes.quotes = tables['quotes'];
                 this.skills.skills = tables['skills'];
-                this.skills.skillsIcons = tables['skillsIcon'];
-                this.skills.skillsCategories = tables['skillsCategory'];
+                this.skills.icons = tables['skillsIcon'];
+                this.skills.categories = tables['skillsCategory'];
                 this.titles.titles = tables['titles'];
                 await DataStorage.Save(STORAGE.INTERNAL_HASH, { hash: hash }, false);
                 await this.localSave();

@@ -128,6 +128,18 @@ function RoundToQuarter(time) {
     return GetTime(date);
 }
 
+/**
+ * @param {Number} Time in seconds 
+ * @returns {Number} Time in seconds
+ */
+function GetMidnightTime(time) {
+    const _date = new Date(time * 1000);
+    _date.setHours(1, 0, 0, 0); // Set to midnight
+    return GetTime(_date);
+}
+
 export { getDates, getDurations, GetTime,
     getTimeToTomorrow, getDaysUntil, RoundToQuarter,
-    timeToFormatString, dateToFormatTimeString, dateToFormatString };
+    timeToFormatString, dateToFormatTimeString, dateToFormatString,
+    GetMidnightTime
+};

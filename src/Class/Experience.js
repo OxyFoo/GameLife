@@ -1,6 +1,8 @@
 import { UserManager } from "../Managers/UserManager";
 import dataManager from "../Managers/DataManager";
+
 import { isUndefined } from "../Functions/Functions";
+import { GetMidnightTime, GetTime } from "../Functions/Time";
 
 const allStats = [ 'int', 'soc', 'for', 'end', 'agi', 'dex' ];
 const UserXPperLevel = 20;
@@ -23,6 +25,52 @@ class Experience {
          */
         this.user = user;
         this.getAllActivities = () => this.user.activities.getAll();
+    }
+
+    /**
+     * @param {Number} startTime Default: now in seconds
+     * @param {Number} day Number of day after startTime, 0 = until today (included)
+     * @returns {XPInfo}
+     */
+    GetExperience(startTime = GetTime(new Date()), day = 0) {
+        const _startTime = GetMidnightTime(startTime);
+        const _durationDays = day > 0 ? day : Math.min(1, Math.floor((GetTime(new Date()) - _startTime) / 86400));
+        const _endTime = _startTime + 86400 * _durationDays;
+
+        // Reset stats
+        this.user.xp = 0;
+        for (let s in allStats) {
+            const stat = allStats[s];
+            this.user.stats[stat] = 0;
+        }
+
+        // Count XP & stats
+        for (let time = _startTime; time <= _endTime; time += 86400) {
+            const activitiesInDay = this.user.activities.GetByTime(time);
+            let hoursRemain = MaxHourPerDay;
+
+            for (let a = 0; a < activitiesInDay.length; a++) {
+                const activity = activitiesInDay[a];
+                const durationHour = activity.duration / 60;
+                const skillID = activity.skillID;
+                const skill = dataManager.skills.getByID(skillID);
+
+                // Limit
+                if (skill.XP > 0) hoursRemain -= durationHour;
+                if (hoursRemain < 0) continue;
+
+                // XP
+                this.user.xp += skill.XP * durationHour;
+
+                // Stats
+                for (let s in allStats) {
+                    const stat = allStats[s];
+                    this.user.stats[stat] += skill.Stats[stat];
+                }
+            }
+        }
+
+        return this.__getXPDict(this.user.xp, UserXPperLevel);
     }
 
     /**
@@ -68,13 +116,12 @@ class Experience {
             }
         }*/
 
-        // Count stats
-        const date = new Date(this.user.activities.getFirst());
-        date.setHours(0, 0, 0, 0);
+        // Count XP & stats (old)
+        let time = this.user.activities.GetFirstTime();
         let activities = [...this.getAllActivities()];
 
         while (activities.length) {
-            const activitiesInDay = this.user.activities.getByDate(date);
+            const activitiesInDay = this.user.activities.GetByTime(time);
             let hoursRemain = MaxHourPerDay;
 
             for (let a = 0; a < activitiesInDay.length; a++) {
@@ -110,7 +157,7 @@ class Experience {
                 }
             }
 
-            date.setDate(date.getDate() + 1);
+            time += 86400;
         }
 
         return this.__getXPDict(this.user.xp, UserXPperLevel);

@@ -161,6 +161,143 @@
         print_r($int);
         echo("<br />");
         print_r(strtotime('0000-00-00 00:00:00'));
+    } else if ($action === 'success') {
+        $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
+        /*foreach ($achievements as $key => $value) {
+            print_r($key);
+            print_r("=>");
+            print_r($value);
+            echo("<br />");
+        }*/
+        echo(json_encode($achievements));
+    } else if ($action === 'removeTranslations') {
+        $skills = $db->QueryArray("SELECT * FROM `Skills`");
+        $list = array(
+            '{"fr":"Corde à sauter","en":"Jumping rope", "es":"Cuerda de saltar"}',
+            '{"fr":"Accrobranche","en":"Tree climbing"}',
+            '{"fr":"Volleyball","en":"Volleyball"}',
+            '{"fr":"Teakwondo","en":"Taekwondo"}',
+            '{"fr":"Musculation (poids de corps)","en":"Calisthenics"}',
+            '{"fr":"Lecture","en":"Reading"}',
+            '{"fr":"Via-Ferrata","en":"Via-Ferrata"}',
+            '{"fr":"Natation","en":"Swimming"}',
+            '{"fr":"Ecriture (d\'histoire)","en":"Story writing"}',
+            '{"fr":"Dessin","en":"Drawing"}',
+            '{"fr":"Musculation (salle)","en":"Musculation"}',
+            '{"fr":"Danse","en":"Dance"}',
+            '{"fr":"Scoutisme","en":"Scouting"}',
+            '{"fr":"Marche","en":"Walk"}',
+            '{"fr":"Travail Scolaire","en":"School work"}',
+            '{"fr":"Piano","en":"Piano"}',
+            '{"fr":"Bricolage","en":"Handiwork"}',
+            '{"fr":"Modélisation 3D","en":"3D Modeling"}',
+            '{"fr":"Violon","en":"Violon"}',
+            '{"fr":"Cuisine","en":"Cooking"}',
+            '{"fr":"Ménage","en":"Household"}',
+            '{"fr":"Puzzle","en":"Jigsaw puzzle"}',
+            '{"fr":"Rubiks Cube","en":"Rubiks Cube"}',
+            '{"fr":"Peinture","en":"Painting"}',
+            '{"fr":"Basketball","en":"Basketball"}',
+            '{"fr":"Course","en":"Run"}',
+            '{"fr":"Vélo","en":"Bike"}',
+            '{"fr":"Ultimate","en":"Ultimate"}',
+            '{"fr":"Trail","en":"Trail"}',
+            '{"fr":"Combat","en":"Fight"}',
+            '{"fr":"Sport freestyle","en":"Freestyle sport"}',
+            '{"fr":"Escrime","en":"Fencing"}',
+            '{"fr":"Boxe","en":"Boxing"}',
+            '{"fr":"Hacking","en":"Hacking"}',
+            '{"fr":"Méditation","en":"Meditation"}',
+            '{"fr":"Surf","en":"Surfing"}',
+            '{"fr":"Skateboad","en":"Skateboarding"}',
+            '{"fr":"Apprentissage langue","en":"Language learning"}',
+            '{"fr":"Judo","en":"Judo"}',
+            '{"fr":"Aïkido","en":"Aikido"}',
+            '{"fr":"Tricot / Couture","en":"Knitting \/ Sewing"}',
+            '{"fr":"Chant","en":"Singing"}',
+            '{"fr":"Escalade","en":"Climbing"}',
+            '{"fr":"Lutte","en":"Wrestling"}',
+            '{"fr":"Equitation","en":"Horseback riding"}',
+            '{"fr":"Shadow Boxing","en":"Shadow Boxing"}',
+            '{"fr":"Mécanique","en":"mechanic"}',
+            '{"fr":"Yoga","en":"Yoga"}',
+            '{"fr":"Football","en":"Soccer"}',
+            '{"fr":"Gymnastique","en":"Gymnastics"}',
+            '{"fr":"Tennis","en":"Tennis"}',
+            '{"fr":"Rugby","en":"Rugby"}',
+            '{"fr":"Trampoline","en":"Trampoline"}',
+            '{"fr":"Production musicale","en":"Music production"}',
+            '{"fr":"Tir (précision)","en":"Precision shooting"}',
+            '{"fr":"Jardinage","en":"Gardening"}',
+            '{"fr":"Sprint","en":"Sprinting"}',
+            '{"fr":"Pen Spinning","en":"Pen spinning"}',
+            '{"fr":"Création artistique","en":"Artistic creation"}',
+            '{"fr":"Promener animal","en":"Pet walking"}',
+            '{"fr":"S\'occuper d\'enfants","en":"Childcare"}',
+            '{"fr":"Musée, galerie","en":"Museum, gallery"}',
+            '{"fr":"Casse-tête","en":"Puzzle"}',
+            '{"fr":"Mixologie","en":"Mixology"}',
+            '{"fr":"Roller","en":"Roller"}',
+            '{"fr":"VTT free-ride","en":"Free-ride bike"}',
+            '{"fr":"Muay thai","en":"Muay thai"}',
+            '{"fr":"Football Americain","en":"Football"}',
+            '{"fr":"Jeune Sapeur Pompiers","en":"Young firefighter"}',
+            '{"fr":"Programmation","en":"Coding"}',
+            '{"fr":"Guitare","en":"Guitare"}',
+            '{"fr":"Discours","en":"Speech"}',
+            '{"fr":"Forgeron","en":"Blacksmith"}',
+            '{"fr":"Pétanque","en":"Petanque"}',
+            '{"fr":"Plongée sous marine","en":"Scuba Diving"}',
+            '{"fr":"Voile","en":"Sailing"}',
+            '{"fr":"Randonnee","en":"Hike"}',
+            '{"fr":"Ping pong","en":"Table tennis"}',
+            '{"fr":"Gainage","en":"Core building"}',
+            '{"fr":"Jujitsu","en":"Jujitsu"}',
+            '{"fr":"Crossfit","en":"Crossfit"}',
+            '{"fr":"Lancer de poids","en":"Weight throw"}',
+            '{"fr":"Jogging","en":"Jogging"}',
+            '{"fr":"Renforcement musculaire","en":"muscular reinforcement"}',
+            '{"fr":"Pôle dance","en":"Dance pole"}',
+            '{"fr":"Saut en hauteur","en":"High Jump"}',
+            '{"fr":"Kait surf","en":"Kait surfing"}',
+            '{"fr":"Apnée","en":"Apnea"}',
+            '{"fr":"Parkour","en":"Parkour"}',
+            '{"fr":"Kayak","en":"Kayak"}',
+            '{"fr":"Handball","en":"Handball"}',
+            '{"fr":"Badminton","en":"Badminton"}',
+            '{"fr":"Accordeon","en":"Accordion"}',
+            '{"fr":"Trombone","en":"Trombone"}',
+            '{"fr":"Solfege","en":"Music theory"}',
+            '{"fr":"Billard","en":"Pool"}',
+            '{"fr":"Echec","en":"Chess"}',
+            '{"fr":"Tour de carte","en":"Card trick"}',
+            '{"fr":"Theâtre","en":"Theatre"}',
+            '{"fr":"Photographie","en":"Photography"}',
+            '{"fr":"Montage","en":"Editing"}',
+            '{"fr":"Dressage (animal)","en":"Animal training"}',
+            '{"fr":"Redaction","en":"Redaction"}',
+            '{"fr":"Couteau papillon","en":"Butterfly knife"}',
+            '{"fr":"Création cosplay","en":"Cosplay creation"}',
+            '{"fr":"Botanique","en":"Botany"}',
+            '{"fr":"Photo animalière","en":"Animal photography"}'
+        );
+        foreach ($skills as $key => $value) {
+            //$translations = json_encode($value['Translations']);
+            $ID = $value['ID'];
+            $name = $list[$ID - 1];
+            //$translations['fr'] = $name;
+            //$test = str_replace('{', "{$name,", $translations);
+            //$translations = str_replace("{", "{\"fr\": \"$name\",", $translations);
+            //print_r($translations);
+
+            /*if (json_decode($name) === false) {
+                print_r($ID);
+                print_r($name);
+                echo("<br />");
+            }*/
+
+            $db->Query("UPDATE `Skills` SET `Name` = '$name' WHERE `Skills`.`ID` = $ID");
+        }
     }
 
 ?>

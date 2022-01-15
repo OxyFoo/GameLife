@@ -32,6 +32,7 @@ class UserManager {
     /**
      * Function loaded in componentDidMount of PageManager (in App.js)
      * I've do that to skip cycles warns
+     * (Not imported (for JSDoc) for the same reason)
      * @type {PageManager}
      */
     interface;
@@ -120,6 +121,7 @@ class UserManager {
     }*/
 
     // TODO - Replace by inventory system
+    //        "title.AchievementsCondition" Removed
     /* TITRES */
     getUnlockTitles = () => {
         let unlockTitles = [

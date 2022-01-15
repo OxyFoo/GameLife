@@ -149,7 +149,7 @@ class BackCalendar extends React.Component {
             const block = GetBlockMonth(month, year);
             const week = block.find(w => w.includes(day));
             const date = new Date(year, month, day);
-            const activities = user.activities.getByDate(date).reverse();
+            const activities = user.activities.GetByTime(GetTime(date)).reverse();
 
             this.setState({
                 currActivities: activities,

@@ -23,16 +23,16 @@ class BackActivity extends React.Component {
         const skill = visualisationMode ? dataManager.skills.getByID(activity.skillID) : null;
 
         let categories = [];
-        for (let i = 0; i < dataManager.skills.skillsCategories.length; i++) {
-            const category = dataManager.skills.skillsCategories[i];
+        for (let i = 0; i < dataManager.skills.categories.length; i++) {
+            const category = dataManager.skills.categories[i];
             const ID = category.ID;
-            const Name = category.Name;
+            const Name = dataManager.GetText(category.Name);
             const Icon = dataManager.skills.getXmlByLogoID(category.LogoID);
             const Checked = visualisationMode ? skill.CategoryID === ID : false;
             categories.push({ ID: ID, name: Name, icon: Icon, checked: Checked });
         }
 
-        const skills = dataManager.skills.skills.map(skill => ({ id: skill.ID, value: skill.Name }));
+        const skills = dataManager.skills.skills.map(skill => ({ id: skill.ID, value: dataManager.GetText(skill.Name) }));
         const emptySkill = { id: 0, value: '' };
 
         let activitySchedule;
@@ -45,7 +45,7 @@ class BackActivity extends React.Component {
 
             visualisationMode: visualisationMode,
             startnowMode: 0,
-            selectedSkill: visualisationMode ? { id: activity.skillID, value: skill.Name } : emptySkill,
+            selectedSkill: visualisationMode ? { id: activity.skillID, value: dataManager.GetText(skill.Name) } : emptySkill,
             posY: 0,
             animPosY: new Animated.Value(visualisationMode ? 0 : 1),
 
@@ -65,8 +65,8 @@ class BackActivity extends React.Component {
 
         this.selectActivity(null);
 
-        let newActivities = dataManager.skills.getByCategory(ID)
-        if (ID !== 0) newActivities = newActivities.map(skill => ({ id: skill.ID, value: skill.Name }));
+        let newActivities = dataManager.skills.getByCategory(ID);
+        if (ID !== 0) newActivities = newActivities.map(skill => ({ id: skill.ID, value: dataManager.GetText(skill.Name) }));
         this.setState({ skills: newActivities });
     }
 

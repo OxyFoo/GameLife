@@ -14,44 +14,17 @@
 
     function GetAchievements($db, $lang = 'fr') {
         $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
-
-        if ($achievements === FALSE) {
-            return array();
-        }
-
-        // Translations
+        if ($achievements === FALSE) return array();
         for ($i = 0; $i < count($achievements); $i++) {
             $achievements[$i]['ID'] = intval($achievements[$i]['ID']);
             $achievements[$i]['Type'] = intval($achievements[$i]['Type']);
-
-            $NameTranslations = $achievements[$i]["NameTranslations"];
-            $DescriptionTranslations = $achievements[$i]["DescriptionTranslations"];
-            unset($achievements[$i]["NameTranslations"]);
-            unset($achievements[$i]["DescriptionTranslations"]);
-
-            if (isJson($NameTranslations)) {
-                $jsonTranslations = json_decode($NameTranslations);
-                if (!empty($jsonTranslations->$lang)) {
-                    $achievements[$i]["Name"] = $jsonTranslations->$lang;
-                }
-            }
-            if (isJson($DescriptionTranslations)) {
-                $jsonTranslations = json_decode($DescriptionTranslations);
-                if (!empty($jsonTranslations->$lang)) {
-                    $achievements[$i]["Description"] = $jsonTranslations->$lang;
-                }
-            }
         }
-
         return $achievements;
     }
 
     function GetContributors($db, $lang) {
         $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
-
-        if ($helpers === FALSE) {
-            return array();
-        }
+        if ($helpers === FALSE) return array();
 
         $helpers_sorted = array();
         $helpers_count = count($helpers);
@@ -159,16 +132,6 @@
                 }
                 $skills[$i]["CategoryID"] = intval($CategoryID);
 
-                // Name translations
-                $Translations = $skills[$i]["Translations"];
-                unset($skills[$i]["Translations"]);
-                if (isJson($Translations)) {
-                    $trans = json_decode($Translations);
-                    if (!empty($trans->$lang)) {
-                        $skills[$i]["Name"] = $trans->$lang;
-                    }
-                }
-
                 // Logo
                 $LogoID = $skills[$i]["LogoID"];
                 $skills[$i]["LogoID"] = intval($LogoID);
@@ -195,9 +158,7 @@
 
     function GetSkillsIcon($db) {
         $skillsIcon = $db->QueryArray("SELECT * FROM `SkillsIcon`");
-        if ($skillsIcon === FALSE) {
-            return array();
-        }
+        if ($skillsIcon === FALSE) return array();
         for ($i = 0; $i < count($skillsIcon); $i++) {
             $skillsIcon[$i]["ID"] = intval($skillsIcon[$i]["ID"]);
         }
@@ -206,52 +167,19 @@
 
     function GetSkillsCategory($db, $lang = 'fr') {
         $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
-
-        if ($categories === FALSE) {
-            return array();
-        }
-
-        // Translations
+        if ($categories === FALSE) return array();
         for ($i = 0; $i < count($categories); $i++) {
             $categories[$i]["ID"] = intval($categories[$i]["ID"]);
-            $categories[$i]["LogoID"] = intval($categories[$i]["LogoID"]);
-            $Translations = $categories[$i]["Translations"];
-            unset($categories[$i]["Translations"]);
-
-            if (isJson($Translations)) {
-                $jsonTranslations = json_decode($Translations);
-                if (!empty($jsonTranslations->$lang)) {
-                    $categories[$i]["Name"] = $jsonTranslations->$lang;
-                }
-            }
         }
-
         return $categories;
     }
 
     function GetTitles($db, $lang = 'fr') {
         $titles = $db->QueryArray("SELECT * FROM `Titles`");
-
-        if ($titles === FALSE) {
-            return array();
-        }
-
-        // Translations
+        if ($titles === FALSE) return array();
         for ($i = 0; $i < count($titles); $i++) {
-            $titles[$i]['ID'] = intval($titles[$i]['ID']);
-            $titles[$i]['AchievementsCondition'] = intval($titles[$i]['AchievementsCondition']);
-
-            $Translations = $titles[$i]["Translations"];
-            unset($titles[$i]["Translations"]);
-
-            if (isJson($Translations)) {
-                $jsonTranslations = json_decode($Translations);
-                if (!empty($jsonTranslations->$lang)) {
-                    $titles[$i]["Title"] = $jsonTranslations->$lang;
-                }
-            }
+            $titles[$i]["ID"] = intval($titles[$i]["ID"]);
         }
-
         return $titles;
     }
 

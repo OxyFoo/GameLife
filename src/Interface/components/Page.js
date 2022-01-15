@@ -19,24 +19,32 @@ class Page extends React.Component {
     constructor(props) {
         super(props);
         this.posY = 0;
+        this.scrollEnabled = true;
     }
     state = {
         height: 0,
         positionY: new Animated.Value(0)
     }
 
+    GotoY = (y) => {
+        this.posY = this.limitValues(y, true);
+        SpringAnimation(this.state.positionY, this.posY).start();
+    }
+    EnableScroll = () => this.scrollEnabled = true;
+    DisableScroll = () => this.scrollEnabled = false;
+
     onLayout = (event) => {
         const  { x, y, width, height } = event.nativeEvent.layout;
         if (height !== this.state.height) {
             this.setState({ height: height }, () => {
-                this.posY = this.LimitValues(this.posY);
+                this.posY = this.limitValues(this.posY);
                 TimingAnimation(this.state.positionY, this.posY, 100).start();
             });
         }
         this.props.onLayout(event);
     }
 
-    LimitValues = (value, canScrollOver = false) => {
+    limitValues = (value, canScrollOver = false) => {
         if (!this.props.scrollable) {
             return 0;
         }
@@ -71,6 +79,8 @@ class Page extends React.Component {
     }
 
     onTouchStart = (event) => {
+        if (!this.scrollEnabled) return;
+
         this.acc = 0;
         this.firstPosY = this.posY;
         this.firstTouchY = event.nativeEvent.pageY;
@@ -80,6 +90,8 @@ class Page extends React.Component {
     }
 
     onTouchMove = (event) => {
+        if (!this.scrollEnabled) return;
+
         // Position
         const currPosY = event.nativeEvent.pageY;
         const deltaPosY = this.firstTouchY - currPosY;
@@ -92,13 +104,15 @@ class Page extends React.Component {
         this.tickPos = newPosY;
 
         // Update
-        this.posY = this.LimitValues(newPosY, this.props.canScrollOver);
+        this.posY = this.limitValues(newPosY, this.props.canScrollOver);
         TimingAnimation(this.state.positionY, this.posY, 0.1).start();
     }
 
     onTouchEnd = (event) => {
+        if (!this.scrollEnabled) return;
+
         let newPosY = this.posY + this.acc * 0.25;
-        newPosY = this.LimitValues(newPosY);
+        newPosY = this.limitValues(newPosY);
 
         this.posY = newPosY;
         if (Math.abs(this.acc) * 0.25 > 100) {
@@ -106,11 +120,6 @@ class Page extends React.Component {
         } else {
             TimingAnimation(this.state.positionY, newPosY, 200).start();
         }
-    }
-
-    GotoY = (y) => {
-        this.posY = this.LimitValues(y, true);
-        SpringAnimation(this.state.positionY, this.posY).start();
     }
 
     render() {

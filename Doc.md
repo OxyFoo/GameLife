@@ -29,3 +29,5 @@
     - GT : grater (or equal) than
 * Comparant
     - Integer : Soit le nombre d'heure, soit de niveau
+* Récompense
+    - XP_ : _ nombre de point d'xp

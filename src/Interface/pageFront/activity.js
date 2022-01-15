@@ -47,7 +47,7 @@ class Activity extends BackActivity {
         const durationHour = this.state.activityDuration / 60;
 
         return (
-            <Page scrollable={this.state.selectedSkill.id !== 0} canScrollOver={false} bottomOffset={0}>
+            <Page ref={ref => this.pageRef = ref} scrollable={this.state.selectedSkill.id !== 0} canScrollOver={false} bottomOffset={0}>
                 <PageHeader
                     onBackPress={user.interface.backPage}
                 />
@@ -67,6 +67,7 @@ class Activity extends BackActivity {
                     {/* Activities */}
                     <Text style={styles.title} bold>{lang['title-activity']}</Text>
                     <ComboBox
+                        pageRef={this.pageRef}
                         style={{ marginBottom: 48 }}
                         data={this.state.skills}
                         title={this.getCategoryName()}

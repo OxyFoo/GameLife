@@ -8,7 +8,7 @@ class BackTest extends React.Component {
         super(props);
 
         // Average XP
-        const firstDate = user.activities.getFirst();
+        const firstDate = new Date(user.activities.GetFirstTime() * 1000);
         firstDate.setHours(0, 0, 0);
         const delta = (new Date()) - firstDate;
         const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));

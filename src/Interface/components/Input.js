@@ -113,8 +113,9 @@ class Input extends React.Component {
                     borderWidth: this.state.animBorderWidth,
                     opacity: opacity
                 }, this.props.style]}
-                pointerEvents={this.props.enabled ? 'auto' : 'none'}
+                pointerEvents={this.props.enabled ? this.props.pointerEvents : 'none'}
             >
+                {/* Title (in center or move into top border if focused or active) */}
                 <Animated.View
                     style={[styles.placeholderParent, {
                         backgroundColor: this.state.animHeight.interpolate(interC), // hexBackgroundColor,
@@ -139,6 +140,7 @@ class Input extends React.Component {
                         {this.props.label}
                     </Text>
                 </Animated.View>
+
                 <TextInput
                     style={styles.input}
                     selectionColor={hexActiveColor}
@@ -148,7 +150,6 @@ class Input extends React.Component {
                     onBlur={this.onFocusOut}
                     textContentType={textTypes[this.props.textContentType]['ios']}
                     autoCompleteType={textTypes[this.props.textContentType]['android']}
-                    pointerEvents={this.props.pointerEvents}
                 />
             </Animated.View>
         );

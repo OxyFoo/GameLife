@@ -1,8 +1,9 @@
+import langManager from "../Managers/LangManager";
 import { getByKey, sortByKey, strIsJSON } from "../Functions/Functions";
 
 class Skill {
     ID = 0;
-    Name = '';
+    Name = { fr: '', en: '' };
     CategoryID = 0; // TODO - Catégories par ID, dans ce fichier
     Stats = {
         'int': 0,
@@ -19,13 +20,13 @@ class Skill {
 
 class Icon {
     ID = 0;
-    Name = '';
+    //Name = ''; // Unused
     Content = '';
 }
 
 class Category {
     ID = 0;
-    Name = '';
+    Name = { fr: '', en: '' };
     LogoID = 0;
 }
 
@@ -39,12 +40,12 @@ class Skills {
         /**
          * @type {Icon[]}
          */
-        this.skillsIcons = [];
+        this.icons = [];
 
         /**
          * @type {Category[]}
          */
-        this.skillsCategories = [];
+        this.categories = [];
     }
 
     /**
@@ -63,8 +64,8 @@ class Skills {
     save() {
         const data = {
             skills: this.skills,
-            skillsIcons: this.skillsIcons,
-            skillsCategories: this.skillsCategories
+            skillsIcons: this.icons,
+            skillsCategories: this.categories
         };
         return JSON.stringify(data);
     }
@@ -72,8 +73,15 @@ class Skills {
         if (strIsJSON(str)) {
             const json = JSON.parse(str);
             this.skills = json.skills;
-            this.skillsIcons = json.skillsIcons;
-            this.skillsCategories = json.skillsCategories;
+            this.icons = json.skillsIcons;
+            this.categories = json.skillsCategories;
+
+            for (let i = 0; i < this.skills.length; i++)
+                if (strIsJSON(this.skills[i].Name))
+                    this.skills[i].Name = JSON.parse(this.skills[i].Name);
+            for (let i = 0; i < this.categories.length; i++)
+                if (strIsJSON(this.categories[i].Name))
+                    this.categories[i].Name = JSON.parse(this.categories[i].Name);
         }
     }
 
@@ -98,15 +106,15 @@ class Skills {
 
     getAllCategories(onlyUseful = false) {
         let output = [];
-        let categories = sortByKey(this.skillsCategories, 'Name');
+        let categories = sortByKey(this.categories, 'Name');
         categories = categories.map((el) => { return { key: el.ID, value: el.Name } });
         if (onlyUseful) {
             // TODO - End that
             //categories = categories.filter((el) => {});
         }
         return output;
-        /*let sorted = this.skillsCategories.sort((a, b) => );
-        for (let i = 0; i < this.skillsCategories.length; i++) {
+        /*let sorted = this.categories.sort((a, b) => );
+        for (let i = 0; i < this.categories.length; i++) {
             if ()
         }*/
     }
@@ -153,8 +161,8 @@ class Skills {
      */
     getXmlByLogoID = (ID) => {
         let currXml = '';
-        for (let i = 0; i < this.skillsIcons.length; i++) {
-            const skillIcon = this.skillsIcons[i];
+        for (let i = 0; i < this.icons.length; i++) {
+            const skillIcon = this.icons[i];
             const skillIconID = skillIcon.ID;
             if (ID == skillIconID) {
                 currXml = skillIcon.Content;

@@ -1,6 +1,5 @@
 import { UserManager } from "../Managers/UserManager";
-import { isUndefined } from "../Functions/Functions";
-import { GetTime } from "../Functions/Time";
+import { GetMidnightTime, GetTime } from "../Functions/Time";
 
 import dataManager from "../Managers/DataManager";
 
@@ -136,20 +135,15 @@ class Activities {
         return sameSkillID && sameStartTime && sameDuration;
     }
 
-    getByDate(date = new Date()) {
-        let output = [];
-        const currDate = new Date(date);
-        for (let i = 0; i < this.activities.length; i++) {
-            const activity = this.activities[i];
-            const activityDate = new Date(activity.startTime*1000);
-            const sameYear = currDate.getFullYear() == activityDate.getFullYear();
-            const sameMonth = currDate.getMonth() == activityDate.getMonth();
-            const sameDate = currDate.getDate() == activityDate.getDate();
-            if (sameYear && sameMonth && sameDate) {
-                output.push(activity);
-            }
-        }
-        return output;
+    /**
+     * Get activities in a specific date
+     * @param {Number} time - Time to define day (auto define of midnights)
+     * @returns {Activity[]} activities
+     */
+    GetByTime(time = GetTime(new Date())) {
+        const startTime = GetMidnightTime(time);
+        const endTime = startTime + 86400;
+        return this.activities.filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
     }
     containActivity(date = new Date(), onlyRelax = false) {
         date.setHours(0, 0, 0, 0);
@@ -171,27 +165,25 @@ class Activities {
         //const find = this.activities.find(activity => );
         //return !isUndefined(find);
     }
-    GetTimeFromFirst() {
-        let initTime = null;
+
+    GetFirstTime() {
+        let time = null;
         for (let a = 0; a < this.activities.length; a++) {
             const activity = this.activities[a];
-            if (initTime === null || activity.startTime < initTime) {
-                initTime = activity.startTime;
+            if (time === null || activity.startTime < time) {
+                time = activity.startTime;
             }
         }
+        return time;
+    }
+    GetTimeFromFirst() {
+        const initTime = this.GetFirstTime();
+        if (initTime === null) return null;
 
         const initDate = new Date(initTime * 1000);
         const now = new Date();
-        const diff = (now.getTime() - initDate.getTime()) / 1000;
-    }
-    // TODO - Remove
-    getFirst() {
-        let date = new Date();
-        if (this.activities.length) {
-            date = new Date(this.activities[0].startTime);
-        }
-        date.setMinutes(date.getMinutes() - 1);
-        return date;
+        const diff = GetTime(now) - GetTime(initDate);
+        return diff;
     }
     getTotalDuration() {
         let totalDuration = 0;

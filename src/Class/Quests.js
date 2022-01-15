@@ -48,7 +48,7 @@ class Quests {
         const dailyBonusCategory = this.dailyGetBonusCategory();
         if (this.daily.length) {
             const IDs = this.dailyGetSkills().skills;
-            const today_activities = this.user.activities.getByDate();
+            const today_activities = this.user.activities.GetByTime();
             for (let ta = 0; ta < today_activities.length; ta++) {
                 const activity = today_activities[ta];
                 const skillID = activity.skillID;

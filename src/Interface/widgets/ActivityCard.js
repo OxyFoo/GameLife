@@ -47,8 +47,8 @@ class ActivityCard extends React.Component {
 
         const skill = dataManager.skills.getByID(activity.skillID);
         const LogoID = skill.LogoID;
-        const XML = dataManager.skills.skillsIcons.find(x => x.ID === LogoID).Content;
-        const T_category = dataManager.skills.skillsCategories.find(x => x.ID === skill.CategoryID).Name;
+        const XML = dataManager.skills.icons.find(x => x.ID === LogoID).Content;
+        const T_category = dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name;
         const T_activity = skill.Name;
         const T_start_value = timeToFormatString(activity.startTime/60, true);
         const T_duration_value = timeToFormatString(activity.duration);

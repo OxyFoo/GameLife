@@ -12,7 +12,7 @@ import { round } from '../../Functions/Functions';
 class Home extends BackHome {
     render() {
         const lang = langManager.curr['home'];
-        const userStats = user.experience.getExperience();
+        const userStats = user.experience.GetExperience();
         const nextLvlPc = round(userStats.xp / userStats.next, 2);
 
         return (

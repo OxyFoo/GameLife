@@ -82,7 +82,7 @@ class PageManager extends React.Component{
         if (!this.backable) return false;
 
         if (this.popup.Close()) return true;
-        else if (this.backPage()) return true;
+        if (this.backPage()) return true;
 
         return true;
     }

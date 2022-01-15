@@ -20,7 +20,13 @@ const ComboBoxProps = {
     selectedValue: '',
     setSearchBar: false,
     onSelect: (item) => {},
-    enabled: true
+    enabled: true,
+
+    /**
+     * @type {React.Ref}
+     * @description Used to prevent scroll page when scrolling list
+     */
+    pageRef: null
 }
 
 class ComboBox extends React.Component {
@@ -39,8 +45,10 @@ class ComboBox extends React.Component {
     }
 
     componentDidMount() {
+        this.flatlistRef = null;
         this.refreshSearch();
     }
+
     componentDidUpdate(prevProps) {
         if (prevProps.data != this.props.data) {
             this.refreshSearch();
@@ -61,10 +69,27 @@ class ComboBox extends React.Component {
 
     openSelection = () => {
         if (!this.props.enabled) return;
+
+        // Disable parent scroll
+        if (this.props.pageRef !== null) {
+            this.props.pageRef.DisableScroll();
+        } else {
+            console.warn('ComboBox: pageRef is null');
+        }
+
+        // Scroll to top
+        if (this.flatlistRef !== null) {
+            this.flatlistRef.scrollToOffset({ offset: 0, animated: false });
+        }
+
+        // Open selection
         SpringAnimation(this.state.anim, 1).start();
         this.setState({ selectionMode: true });
     }
     closeSelection = () => {
+        if (this.props.pageRef !== null) {
+            this.props.pageRef.EnableScroll();
+        }
         SpringAnimation(this.state.anim, 0).start();
         this.setState({ selectionMode: false });
     }
@@ -114,7 +139,7 @@ class ComboBox extends React.Component {
         const angle = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
         return this.props.enabled && (
-            <View style={styles.chevron}>
+            <View style={styles.chevron} pointerEvents='none'>
                 <Animated.View style={{ transform: [{ rotateX: angle }] }}>
                     <Icon icon='chevron' size={20} angle={-90} />
                 </Animated.View>
@@ -134,16 +159,20 @@ class ComboBox extends React.Component {
 
         return (
             <>
+                {/* Component (Input for selection, chevron and button for ripple + events) */}
                 <View style={[styles.parent, this.props.style]} onLayout={this.onLayout}>
                     <Input label={this.props.title} text={this.state.selectedValue} active={this.state.selectionMode} pointerEvents='none' />
                     <this.renderChevron />
                     <Button style={styles.hoverButton} onPress={this.openSelection} onLongPress={this.resetSelection} rippleColor='white' />
                 </View>
 
+                {/* Overlay (black opacity + back event) */}
                 {this.state.selectionMode && <View style={styles.overlayBackground} onTouchStart={this.closeSelection} />}
 
+                {/* Content (flatlist with elements) */}
                 <Animated.View style={overlayPos} pointerEvents={this.state.selectionMode ? 'auto': 'none'}>
                     <FlatList
+                        ref={ref => this.flatlistRef = ref}
                         ListHeaderComponent={header}
                         data={this.state.data}
                         renderItem={this.renderItem}

@@ -27,7 +27,7 @@ class Quotes {
     /**
      * @returns {?Quote}
      */
-    getRandomQuote() {
+    GetRandomQuote() {
         let quote = null;
         if (this.quotes.length > 0) {
             const random_quote = random(0, this.quotes.length - 1);

@@ -31,3 +31,11 @@
     - Integer : Soit le nombre d'heure, soit de niveau
 * Récompense
     - XP_ : _ nombre de point d'xp
+    - TODO
+
+## News
+* Texte : Juste du texte
+* Icone + texte : Nom de l'icône qui sera affichée à gauche du texte + texte
+* Bouton + texte : Texte à gauche + Bouton de redirection à droite
+    - Redirection vers un site web
+    - Redirection vers une page de l'app

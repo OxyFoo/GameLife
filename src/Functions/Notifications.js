@@ -43,7 +43,7 @@ function __initNotification() {
         const random_title = random(0, titles.length - 1);
         const Title = titles[random_title];
 
-        const quote = dataManager.quotes.getRandomQuote();
+        const quote = dataManager.quotes.GetRandomQuote();
         const Body = quote.Quote + ' (' + quote.Author + ')';
 
         if (Platform.OS === "ios") {

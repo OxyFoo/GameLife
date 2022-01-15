@@ -2,16 +2,13 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackLoading from '../pageBack/loading';
-import { GLText, GLLoading } from '../Components';
+import { GLLoading } from '../Components';
 
 class Loading extends BackLoading {
     render() {
-        const { icon, quote, author } = this.state;
         return (
             <View style={styles.content}>
-                <GLLoading state={icon} />
-                <GLText style={styles.citation} title={quote} />
-                <GLText style={styles.author} title={author} />
+                <GLLoading state={this.state.icon} />
             </View>
         )
     }
@@ -25,13 +22,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    citation: {
-        maxWidth: '80%',
-        marginVertical: 24
-    },
-    author: {
-        fontWeight: 'bold'
     }
 });
 

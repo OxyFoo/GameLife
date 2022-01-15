@@ -11,7 +11,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const SwiperProps = {
     style: {},
-    height: 128,
+    height: undefined,
     borderRadius: 16,
     enableAutoNext: true,
     delayNext: 10,
@@ -29,7 +29,9 @@ class Swiper extends React.Component {
         this.posX = this.props.initIndex;
         this.nextIn = this.props.delayNext;
     }
+
     state = {
+        maxHeight: 0,
         positionX: new Animated.Value(this.props.initIndex),
         positionDots: new Animated.Value(this.props.initIndex)
     }
@@ -102,23 +104,36 @@ class Swiper extends React.Component {
         SpringAnimation(this.state.positionDots, newPage, false).start();
     }
 
+    onLayoutPage = (event) => {
+        const { height } = event.nativeEvent.layout;
+        const { maxHeight } = this.state;
+
+        if (height > maxHeight) {
+            this.setState({ maxHeight: height });
+        }
+    }
+
     render() {
         if (this.props.pages.length === 0) return null;
 
         const pageWidth = { width: 100 / this.props.pages.length + '%' };
-        const newPage = (p, index) => <View key={'page-'+index} style={[styles.page, pageWidth]}>{p}</View>;
+        const newPage = (p, index) => (
+            <View key={'page-' + index} style={pageWidth} onLayout={this.onLayoutPage}>{p}</View>
+        );
         const pages = this.props.pages.map(newPage);
 
         const inter = { inputRange: [0, 1], outputRange: ['0%', '100%'] };
-        const left = { left: Animated.subtract(0, this.state.positionX).interpolate(inter) };
-        const width = { width: this.props.pages.length * 100 + '%' };
+        const contentContainerStyle = [styles.contentContainer, {
+            left: Animated.subtract(0, this.state.positionX).interpolate(inter),
+            width: this.props.pages.length * 100 + '%'
+        }];
 
         return (
             <View
                 style={[
                     styles.parent,
                     {
-                        height: this.props.height,
+                        height: this.props.height || this.state.maxHeight,
                         backgroundColor: themeManager.GetColor(this.props.backgroundColor),
                         borderRadius: this.props.borderRadius
                     },
@@ -128,7 +143,7 @@ class Swiper extends React.Component {
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
             >
-                <Animated.View style={[styles.contentContainer, width, left]}>
+                <Animated.View style={contentContainerStyle}>
                     {pages}
                 </Animated.View>
                 <Dots
@@ -150,11 +165,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         position: 'absolute',
-        height: '100%',
         flexDirection: 'row'
-    },
-    page: {
-        height: '100%'
     },
     dots: {
         position: 'absolute',

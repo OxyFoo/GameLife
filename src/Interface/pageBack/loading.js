@@ -1,35 +1,49 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
-import SoundPlayer from 'react-native-sound-player';
 
 import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
-import { random, sleep } from '../../Functions/Functions';
+
+import { sleep } from '../../Functions/Functions';
+import { PlayStartSound } from '../../Functions/Sound';
 import { disableMorningNotifications, enableMorningNotifications } from '../../Functions/Notifications';
 
 class BackLoading extends React.Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            icon: 0,
-            quote: '',
-            author: ''
-        }
+    state = {
+        icon: 0
     }
 
     componentDidMount() {
-        this.LoadData();
-        // TODO - IOS
-        if (Platform.OS === "android") {
-            try {
-                SoundPlayer.playSoundFile('appli', 'mp3');
-            } catch (e) {
-                console.warn('Cannot play the sound file');
-            }
-        }
+        this.Initialisation();
+        PlayStartSound();
     }
 
-    async LoadData() {
+    async Initialisation() {
+        await user.settings.Load();
+        await user.server.Ping();
+
+        this.setState({ icon: 1 });
+
+        const email = user.settings.email;
+        const online = user.server.online;
+        const connected = user.settings.connected;
+        const showOnboard = !user.settings.onboardingWatched;
+        if (email === '') {
+            /*if (showOnboard) user.interface.ChangePage('onboarding', { 'nextPage': 'home' });
+            else */if (online) user.interface.ChangePage('login', undefined, true);
+            else             user.interface.ChangePage('waitinternet', undefined, true);
+        } else {
+            if (connected) this.loadData();
+            else           user.interface.ChangePage('waitmail', undefined, true);
+        }
+
+        return;
+        // TODO - Code at end of onboarding
+        user.settings.onboardingWatched = true;
+        user.settings.Save();
+        user.interface.ChangePage(this.props.args['nextPage'], undefined, true);
+    }
+
+    async loadData() {
         // Loading : Internal data
         const online = user.server.online;
         if (online) await dataManager.onlineLoad();
@@ -37,15 +51,6 @@ class BackLoading extends React.Component {
         await user.localLoad();
 
         // TODO - Check data (if it doesn't empty)
-
-        // Define quote
-        const quote = dataManager.quotes.getRandomQuote();
-        if (quote !== null) {
-            this.setState({
-                quote: quote.Quote,
-                author: quote.Author
-            });
-        }
 
         // Connect
         if (user.server.token === '') {
@@ -57,25 +62,25 @@ class BackLoading extends React.Component {
             }
         }
 
+        this.setState({ icon: 2 });
+
         // Loading : User data
-        await sleep(500); this.setState({ icon: 1 });
         if (online) {
             await user.localLoad();
             const saved = await user.saveUnsavedData();
             if (saved) await user.onlineLoad();
             else console.error('saveUnsavedData failed');
         }
+        user.tempQuote = dataManager.quotes.GetRandomQuote();
 
         // Loading : Notifications
-        await sleep(250); this.setState({ icon: 2 });
         if (user.settings.morningNotifications) {
             await enableMorningNotifications();
         } else {
             disableMorningNotifications();
         }
 
-        await sleep(250); this.setState({ icon: 3 });
-        await sleep(500);
+        this.setState({ icon: 3 }); await sleep(200);
 
         if (user.activities.currentActivity === null) {
             // TODO - home

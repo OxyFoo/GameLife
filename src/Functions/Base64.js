@@ -1,6 +1,6 @@
 const Base64 = {
     _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-    encode: function(e) {
+    Encode: function(e) {
         var t = "";
         if (e != "" && e != null) {
             var n, r, i, s, o, u, a;
@@ -24,7 +24,7 @@ const Base64 = {
         }
         return t;
     },
-    decode: function(e) {
+    Decode: function(e) {
         var t = "";
         if (e != "" && e != null) {
             var n, r, i;

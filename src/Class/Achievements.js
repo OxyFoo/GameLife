@@ -27,7 +27,7 @@ class Achievements {
         this.UNSAVED_solved = [];
     }
 
-    isUnsaved() {
+    IsUnsaved() {
         return this.UNSAVED_solved.length > 0;
     }
     Purge() {
@@ -35,7 +35,7 @@ class Achievements {
     }
 
     // TODO - Add events
-    checkAchievements() {
+    CheckAchievements() {
         const achievements = dataManager.achievements.achievements;
         for (let a = 0; a < achievements.length; a++) {
             const achievement = achievements[a];
@@ -75,7 +75,7 @@ class Achievements {
                 if (isTime) {
                     // Get total time
                     value = 0;
-                    const activities = this.user.activities.getAll();
+                    const activities = this.user.activities.GetAll();
                     for (const a in activities) {
                         if (activities[a].ID == skillID) {
                             value += activities[a].duration / 60;
@@ -83,23 +83,23 @@ class Achievements {
                     }
                 } else {
                     // Get level
-                    value = this.user.experience.getSkillExperience(skillID).lvl;
+                    value = this.user.experience.GetSkillExperience(skillID).lvl;
                 }
             } else
             if (first.startsWith('St')) {
                 // Stat level
                 first = first.replace('St', '');
                 const statKey = first;
-                const statLevel = this.user.experience.getStatExperience(statKey).lvl;
+                const statLevel = this.user.experience.GetStatExperience(statKey).lvl;
                 value = statLevel;
             } else
             if (first == 'Ca') {
                 // Get Max category level
-                const categories = dataManager.skills.getCategories(true);
+                const categories = dataManager.skills.GetCategories(true);
                 let maxLevel = 0;
                 for (let c = 0; c < categories.length; c++) {
                     const category = categories[c];
-                    const categoryXP = this.user.experience.getSkillCategoryExperience(category.value, true);
+                    const categoryXP = this.user.experience.GetSkillCategoryExperience(category.value, true);
                     if (categoryXP.lvl > maxLevel) {
                         maxLevel = categoryXP.lvl;
                     }
@@ -111,13 +111,13 @@ class Achievements {
                 // TODO - Bug ici, mais avant changer les catégories
                 first = first.replace('Ca', '');
                 const CategoryDepth = parseInt(first);
-                const categories = dataManager.skills.getCategories(true);
+                const categories = dataManager.skills.GetCategories(true);
                 if (categories.length < CategoryDepth) continue;
 
                 let values = [];
                 for (let c = 0; c < categories.length; c++) {
                     const category = categories[c].value;
-                    const categoryLevel = this.user.experience.getSkillCategoryExperience(category).lvl;
+                    const categoryLevel = this.user.experience.GetSkillCategoryExperience(category).lvl;
                     values.push(categoryLevel);
                 }
                 values.sort();
@@ -147,7 +147,7 @@ class Achievements {
 
                 this.solved.push(achievementID);
                 this.UNSAVED_solved.push(achievementID);
-                this.user.eventNewAchievement(achievement);
+                this.user.EventNewAchievement(achievement);
             }
         }
     }

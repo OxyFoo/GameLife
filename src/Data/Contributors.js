@@ -1,5 +1,3 @@
-import { strIsJSON } from "../Functions/Functions";
-
 class Contributor {
     ID = 0;
     Lang = '';
@@ -15,13 +13,13 @@ class Contributors {
         this.contributors = [];
     }
 
-    save() {
-        return JSON.stringify(this.contributors);
-    }
-    load(achievements) {
-        if (strIsJSON(achievements)) {
-            this.contributors = JSON.parse(achievements);
+    Load(contributors) {
+        if (typeof(contributors) === 'object') {
+            this.contributors = contributors;
         }
+    }
+    Save() {
+        return this.contributors;
     }
 }
 

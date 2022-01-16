@@ -45,7 +45,7 @@
                     if ($ID === "Version") {
                         $appData['Version'] = $data;
                     } else if ($ID === "Hashes") {
-                        $appData["Hashes"] = $data;
+                        $appData["Hashes"] = json_decode($data, true);
                         $lastHashRefresh = MinutesFromDate($date);
                     } else if ($ID === "Maintenance") {
                         $appData["Maintenance"] = $data !== '0';
@@ -57,23 +57,23 @@
 
             if ($lastHashRefresh > 60) {
                 // Refresh database hash
-                $lang = $this->data['lang'];
-                $db_all = GetAllInternalData($this->db, $lang);
+                $db_all = GetAllInternalData($this->db);
 
-                // SEPARATE HASHES
-                $hashes = array();
-                foreach ($db_all as $key => $value) {
-                    $hashes[$key] = md5(json_encode($value));
-                }
-                // SEPARATE HASHES
-
-                $data = json_encode($db_all);
-                $newHash = hash('md5', $data);
+                // Get all hashes
+                $hashSkills = md5(json_encode(array($db_all['skills'], $db_all['skillsIcon'], $db_all['skillsCategory'])));
+                $hashEquips = md5(json_encode(array($db_all['achievements'], $db_all['titles'])));
+                $hashApptxt = md5(json_encode(array($db_all['contributors'], $db_all['quotes'])));
+                $newHashes = array(
+                    'skills' => $hashSkills,
+                    'equips' => $hashEquips,
+                    'apptxt' => $hashApptxt
+                );
 
                 // Refresh `App` in DB
-                $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'Hashes'");
-                if ($newHash !== $appData['Hashes'] && $result === TRUE) {
-                    $appData['Hashes'] = $newHash;
+                $newHashesString = json_encode($newHashes);
+                $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHashesString' WHERE `ID` = 'Hashes'");
+                if ($result === TRUE && $newHash !== $appData['Hashes']) {
+                    $appData['Hashes'] = $newHashes;
                 }
             }
 
@@ -196,24 +196,18 @@
          * namely: activities, quotes, icons, titles, successes etc.
          */
         public function GetInternalData() {
-            // SEPARATE HASHES
-            $hashes = $this->data['hashes'];
-            // SEPARATE HASHES
-
-            $lang = $this->data['lang'];
-            $hash = $this->data['hash'];
             $appData = $this->GetAppData();
+            $reqHashes = $this->data['hashes'];
 
-            if (!empty($lang) && isset($hash)) {
-                $hash_check = $appData['Hashes'];
+            if (isset($reqHashes) || $reqHashes === NULL) {
+                $appHashes = $appData['Hashes'];
+                $newTables = GetNewInternalData($this->db, $reqHashes, $appHashes);
 
-                // Send all data or just 'same'
-                if ($hash != $hash_check) {
-                    $this->output['tables'] = GetAllInternalData($this->db, $lang);
-                    $this->output['hash'] = $hash_check;
+                // Return new hashes & data
+                if (count($newTables) > 0) {
+                    $this->output['tables'] = $newTables;
+                    $this->output['hashes'] = $appHashes;
                     $this->output['status'] = 'ok';
-                } else {
-                    $this->output = array('status' => 'same');
                 }
             }
         }

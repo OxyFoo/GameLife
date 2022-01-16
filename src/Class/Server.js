@@ -3,7 +3,7 @@ import { BackHandler } from 'react-native';
 import { UserManager } from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import { Request_Async } from '../Functions/Request';
-import { getDeviceInformations, strIsJSON } from '../Functions/Functions';
+import { GetDeviceInformations, StrIsJSON } from '../Functions/Functions';
 
 const STATUS = {
     OFFLINE     : 'offline',
@@ -33,7 +33,7 @@ class Server {
         this.status = STATUS.OFFLINE;
     }
 
-    isConnected() {
+    IsConnected() {
         return this.status === STATUS.CONNECTED || this.status === STATUS.BANNED;
     }
 
@@ -149,7 +149,7 @@ class Server {
         if (response.status === 200) {
             let content = response.content;
             if (content['status'] === 'ok') {
-                if (strIsJSON(content['data'])) {
+                if (StrIsJSON(content['data'])) {
                     // TODO - Add "Data Token"
                     json = JSON.parse(content['data']);
                 }
@@ -161,7 +161,7 @@ class Server {
     __reqPing() {
         const data = {
             'action': 'ping',
-            ...getDeviceInformations(true, true)
+            ...GetDeviceInformations(true, true)
         };
         return Request_Async(data);
     }
@@ -171,7 +171,7 @@ class Server {
             'action': 'login',
             'email': email,
             'lang': langManager.currentLangageKey,
-            ...getDeviceInformations()
+            ...GetDeviceInformations()
         };
         return Request_Async(data);
     }
@@ -182,12 +182,12 @@ class Server {
             'email': email,
             'username': username,
             'lang': langManager.currentLangageKey,
-            ...getDeviceInformations()
+            ...GetDeviceInformations()
         };
         return Request_Async(data);
     }
 
-    getLeaderboard(week = false) {
+    GetLeaderboard(week = false) {
         let data = {
             'action': 'getLeaderboard',
             'token': this.token

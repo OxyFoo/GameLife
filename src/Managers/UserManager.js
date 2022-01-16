@@ -9,7 +9,7 @@ import Quests from '../Class/Quests';
 import Server from "../Class/Server";
 import Settings from '../Class/Settings';
 
-import { getDaysUntil } from '../Functions/Time';
+import { GetDaysUntil } from '../Functions/Time';
 import DataStorage, { STORAGE } from '../Functions/DataStorage';
 
 const DAYS_PSEUDO_CHANGE = 7;
@@ -63,39 +63,40 @@ class UserManager {
         this.server.Clear();
 
         await DataStorage.clearAll();
-        await this.localSave();
+        await this.LocalSave();
     }
 
     async disconnect() {
-        await this.onlineSave();
+        await this.OnlineSave();
 
         this.server.Clear();
         this.settings.Clear();
-        await this.localSave();
+        await this.LocalSave();
         await this.settings.Save();
         this.interface.ChangePage('login');
     }
     async unmount() {
-        await this.localSave();
-        await this.onlineSave();
+        await this.LocalSave();
+        await this.OnlineSave();
         this.server.Clear();
     }
 
     async refreshStats() {
-        this.activities.removeDeletedSkillsActivities();
+        this.activities.RemoveDeletedSkillsActivities();
         this.experience.getExperience();
         this.interface.ChangePage();
     }
 
-    getTitle() {
-        return dataManager.titles.getTitleByID(user.title) || '';
+    GetTitle() {
+        const title = dataManager.titles.GetTitleByID(user.title);
+        return title === null ? '' : dataManager.GetText(title);
     }
 
-    async eventNewAchievement(achievement) {
+    async EventNewAchievement(achievement) {
     }
 
-    daysBeforeChangePseudo = () => {
-        const delta = getDaysUntil(this.usernameDate);
+    DaysBeforeChangePseudo = () => {
+        const delta = GetDaysUntil(this.usernameDate);
         const remain = DAYS_PSEUDO_CHANGE - Math.round(delta);
         return [ remain, DAYS_PSEUDO_CHANGE ];
     }
@@ -116,14 +117,14 @@ class UserManager {
             this.interface.popup.Open('ok', [ title, text ], loadData.bind(this));
         } else if (status === "ok") {
             this.usernameDate = new Date();
-            this.localSave();
+            this.LocalSave();
         }
     }*/
 
     // TODO - Replace by inventory system
     //        "title.AchievementsCondition" Removed
     /* TITRES */
-    getUnlockTitles = () => {
+    GetUnlockTitles = () => {
         let unlockTitles = [
             { key: 0, value: langManager.curr['identity']['empty-title'] }
         ];
@@ -141,7 +142,7 @@ class UserManager {
         return unlockTitles;
     }
 
-    async saveUnsavedData() {
+    async SaveUnsavedData() {
         return true;
     }
 
@@ -149,14 +150,14 @@ class UserManager {
      * Load local user data
      * @returns {Promise<Boolean>}
      */
-    localSave = () => {
+    LocalSave = () => {
         const data = {
             'username': this.username,
             'usernameDate': this.usernameDate,
             'title': this.title,
             'birth': this.birth,
             'xp': this.xp,
-            'activities': this.activities.getAll(),
+            'activities': this.activities.GetAll(),
             'solvedAchievements': this.achievements.solved,
             'daily': this.quests.daily,
             'tasks': this.quests.todoList,
@@ -165,14 +166,14 @@ class UserManager {
 
         return DataStorage.Save(STORAGE.USER, data);
     }
-    onlineSave = async () => {
+    OnlineSave = async () => {
         let data = {};
 
-        if (this.activities.isUnsaved()) {
+        if (this.activities.IsUnsaved()) {
             data['activities'] = this.activities.UNSAVED_activities;
         }
 
-        if (this.achievements.isUnsaved()) {
+        if (this.achievements.IsUnsaved()) {
             data['achievements'] = this.achievements.UNSAVED_solved;
         }
 
@@ -183,8 +184,8 @@ class UserManager {
         }
     };
 
-    localLoad = async () => this.loadData(false);
-    onlineLoad = async () => this.loadData(true);
+    LocalLoad = async () => this.loadData(false);
+    OnlineLoad = async () => this.loadData(true);
     async loadData(online) {
         let data;
         if (online) data = await this.server.LoadData();
@@ -200,7 +201,7 @@ class UserManager {
             this.username = loadKey('username');
             this.usernameDate = loadKey('usernameDate');
             this.title = 1;//data['title'];
-            //this.activities.setAll(data['activities']);
+            //this.activities.SetAll(data['activities']);
             //this.birth = data['birth'];
             //this.xp = data['xp'];
             //this.achievements.solved = data['solvedAchievements'];
@@ -215,7 +216,7 @@ class UserManager {
         return data !== null;
     }
 
-    isConnected = this.server.isConnected;
+    IsConnected = this.server.IsConnected;
 }
 
 const user = new UserManager();

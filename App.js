@@ -3,7 +3,7 @@ import { AppState, LogBox, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
-import { checkDate } from './src/Tools/DateCheck';
+import { CheckDate } from './src/Tools/DateCheck';
 
 class App extends React.Component {
     componentDidMount() {
@@ -20,7 +20,7 @@ class App extends React.Component {
 
     async componentChangeState(state) {
         if (state === 'active') {
-            if (!checkDate()) {
+            if (!CheckDate()) {
                 /*const title = langManager.curr['home']['alert-dateerror-title'];
                 const text = langManager.curr['home']['alert-dateerror-text'];
                 this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);*/

@@ -4,7 +4,8 @@ import PushNotification from 'react-native-push-notification';
 
 import langManager from '../Managers/LangManager';
 import dataManager from '../Managers/DataManager';
-import { random } from './Functions';
+
+import { Random } from './Functions';
 
 const CHANNEL_ID = '1';
 const SET_HOUR = 9;
@@ -40,7 +41,7 @@ function __initNotification() {
     // Set all notifications for MAX_DAYS days
     for (let i = 0; i < MAX_DAYS; i++) {
         const titles = langManager.curr['notifications']['titles'];
-        const random_title = random(0, titles.length - 1);
+        const random_title = Random(0, titles.length - 1);
         const Title = titles[random_title];
 
         const quote = dataManager.quotes.GetRandomQuote();
@@ -67,7 +68,7 @@ function __initNotification() {
     }
 }
 
-async function enableMorningNotifications(forcePopup = false) {
+async function EnableMorningNotifications(forcePopup = false) {
     let enabled = true;
 
     if (Platform.OS === "ios") {
@@ -96,7 +97,7 @@ async function enableMorningNotifications(forcePopup = false) {
     return enabled;
 }
 
-function disableMorningNotifications() {
+function DisableMorningNotifications() {
     let removed = false;
     if (Platform.OS === "ios") {
         PushNotificationIOS.removeAllPendingNotificationRequests();
@@ -111,4 +112,4 @@ function disableMorningNotifications() {
     return removed;
 }
 
-export { enableMorningNotifications, disableMorningNotifications }
+export { EnableMorningNotifications, DisableMorningNotifications }

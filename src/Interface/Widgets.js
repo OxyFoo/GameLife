@@ -1,14 +1,14 @@
-import ActivityCard from './widgets/ActivityCard';
-import ActivityExperience from './widgets/ActivityExperience';
-import ActivitySchedule from './widgets/ActivitySchedule';
-import ItemCard from './widgets/ItemCard';
-import AvatarEditor from './widgets/AvatarEditor';
-import BlockMonth from './widgets/BlockMonth';
-import BottomBar from './widgets/BottomBar';
-import PageHeader from './widgets/PageHeader';
-import Popup from './widgets/Popup';
-import StatsBars from './widgets/StatsBars';
-import UserHeader from './widgets/UserHeader';
+import ActivityCard from './Widgets/ActivityCard';
+import ActivityExperience from './Widgets/ActivityExperience';
+import ActivitySchedule from './Widgets/ActivitySchedule';
+import ItemCard from './Widgets/ItemCard';
+import AvatarEditor from './Widgets/AvatarEditor';
+import BlockMonth from './Widgets/BlockMonth';
+import BottomBar from './Widgets/BottomBar';
+import PageHeader from './Widgets/PageHeader';
+import Popup from './Widgets/Popup';
+import StatsBars from './Widgets/StatsBars';
+import UserHeader from './Widgets/UserHeader';
 
 export {
     ActivityCard,

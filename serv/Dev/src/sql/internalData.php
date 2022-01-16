@@ -1,100 +1,101 @@
 <?php
 
-    function GetAllInternalData($db, $lang = 'fr') {
+    function GetAllInternalData($db) {
         $db_all = array();
-        $db_all['achievements'] = GetAchievements($db, $lang);
-        $db_all['contributors'] = GetContributors($db, $lang);
-        $db_all['quotes'] = GetQuotes($db, $lang);
-        $db_all['skills'] = GetSkills($db, $lang);
+        $db_all['achievements'] = GetAchievements($db);
+        $db_all['contributors'] = GetContributors($db);
+        $db_all['quotes'] = GetQuotes($db);
+        $db_all['skills'] = GetSkills($db);
         $db_all['skillsIcon'] = GetSkillsIcon($db);
-        $db_all['skillsCategory'] = GetSkillsCategory($db, $lang);
-        $db_all['titles'] = GetTitles($db, $lang);
+        $db_all['skillsCategory'] = GetSkillsCategory($db);
+        $db_all['titles'] = GetTitles($db);
         return $db_all;
     }
 
-    function GetNewInternalData($db) {
+    function GetNewInternalData($db, $reqHashes, $appHashes) {
+        // Hashes :
+        // - skills : skills, skillsIcon, skillsCategory
+        // - equips : achievements, titles
+        // - apptxt : contributors, quotes
+
+        $newTables = array();
+
+        if ($reqHashes === NULL || $reqHashes['skills'] !== $appHashes['skills']) {
+            $newTables['skills'] = GetSkills($db);
+            $newTables['skillsIcon'] = GetSkillsIcon($db);
+            $newTables['skillsCategory'] = GetSkillsCategory($db);
+        }
+        if ($reqHashes === NULL || $reqHashes['equips'] !== $appHashes['equips']) {
+            $newTables['achievements'] = GetAchievements($db);
+            $newTables['titles'] = GetTitles($db);
+        }
+        if ($reqHashes === NULL || $reqHashes['apptxt'] !== $appHashes['apptxt']) {
+            $newTables['contributors'] = GetContributors($db);
+            $newTables['quotes'] = GetQuotes($db);
+        }
+
+        return $newTables;
     }
 
-    function GetAchievements($db, $lang = 'fr') {
+    function GetAchievements($db) {
         $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
         if ($achievements === FALSE) return array();
         for ($i = 0; $i < count($achievements); $i++) {
             $achievements[$i]['ID'] = intval($achievements[$i]['ID']);
             $achievements[$i]['Type'] = intval($achievements[$i]['Type']);
+            $achievements[$i]['Name'] = json_decode($achievements[$i]['Name']);
+            $achievements[$i]['Description'] = json_decode($achievements[$i]['Description']);
         }
         return $achievements;
     }
 
-    function GetContributors($db, $lang) {
+    function GetContributors($db) {
         $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
-        if ($helpers === FALSE) return array();
 
         $helpers_sorted = array();
-        $helpers_count = count($helpers);
 
-        // Sort
-        $priority = 0;
-        while (!!count($helpers)) {
-            $founded = 0;
-            for ($i = 0; $i < count($helpers); $i++) {
-                if ($helpers[$i]["Priority"] == $priority) {
-                    array_push($helpers_sorted, $helpers[$i]);
-                    array_splice($helpers, $i, 1);
-                    $founded = 1;
-                    break;
+        if ($helpers !== FALSE) {
+            // Sort
+            $priority = 0;
+            while (!!count($helpers)) {
+                $founded = 0;
+                for ($i = 0; $i < count($helpers); $i++) {
+                    if ($helpers[$i]["Priority"] == $priority) {
+                        array_push($helpers_sorted, $helpers[$i]);
+                        array_splice($helpers, $i, 1);
+                        $founded = 1;
+                        break;
+                    }
                 }
-            }
-            if (!$founded) {
-                $priority++;
+                if (!$founded) {
+                    $priority++;
+                }
             }
         }
 
-        // Translations
-        for ($i = 0; $i < $helpers_count; $i++) {
+        for ($i = 0; $i < count($helpers_sorted); $i++) {
             $helpers_sorted[$i]['ID'] = intval($helpers_sorted[$i]['ID']);
-            $Translations = $helpers_sorted[$i]["TypeTrad"];
-            unset($helpers_sorted[$i]["TypeTrad"]);
-            unset($helpers_sorted[$i]["Priority"]);
-
-            if (isJson($Translations)) {
-                $jsonTranslations = json_decode($Translations);
-                if (!empty($jsonTranslations->$lang)) {
-                    $helpers_sorted[$i]["Type"] = $jsonTranslations->$lang;
-                }
-            }
+            $helpers_sorted[$i]['Type'] = json_decode($helpers_sorted[$i]['Type']);
+            $helpers_sorted[$i]['Priority'] = intval($helpers_sorted[$i]['Priority']);
         }
+
         return $helpers_sorted;
     }
 
-    function GetQuotes($db, $lang = 'fr') {
+    function GetQuotes($db) {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
-        $validQuotes = array();
-        if ($quotes !== FALSE) {
-            for ($i = 0; $i < count($quotes); $i++) {
-                $quotes[$i]['ID'] = intval($quotes[$i]['ID']);
-                $Lang = $quotes[$i]["Lang"];
-                $Quote = $quotes[$i]["Quote"];
-                $Author = $quotes[$i]["Author"];
-                if (areSet([$Lang, $Quote, $Author])) {
-                    if ($Lang == $lang) {
-                        array_push($validQuotes, $quotes[$i]);
-                    } else if ($lang === 'fr' && $Lang === 'en') {
-                        $add = rand(0, 20) === 0;
-                        if ($add) {
-                            array_push($validQuotes, $quotes[$i]);
-                        }
-                    }
-                }
-            }
+        if ($quotes === FALSE) return array();
+        for ($i = 0; $i < count($quotes); $i++) {
+            $quotes[$i]['ID'] = intval($quotes[$i]['ID']);
         }
-        return $validQuotes;
+        return $quotes;
     }
 
-    function GetSkills($db, $lang = 'fr') {
+    function GetSkills($db) {
         $skills = $db->QueryArray("SELECT * FROM `Skills`");
         $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
-        $skills_safe = array();
 
+        $skills_safe = array();
         if ($skills !== FALSE && $categories !== FALSE) {
             for ($i = 0; $i < count($skills); $i++) {
                 $skills[$i]["ID"] = intval($skills[$i]["ID"]);
@@ -133,6 +134,7 @@
                 if (empty($Name) || $CategoryID === 0) {
                     continue;
                 }
+                $skills[$i]['Name'] = json_decode($Name);
                 $skills[$i]["CategoryID"] = intval($CategoryID);
 
                 // Logo
@@ -168,20 +170,22 @@
         return $skillsIcon;
     }
 
-    function GetSkillsCategory($db, $lang = 'fr') {
+    function GetSkillsCategory($db) {
         $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
         if ($categories === FALSE) return array();
         for ($i = 0; $i < count($categories); $i++) {
             $categories[$i]["ID"] = intval($categories[$i]["ID"]);
+            $categories[$i]['Name'] = json_decode($categories[$i]['Name']);
         }
         return $categories;
     }
 
-    function GetTitles($db, $lang = 'fr') {
+    function GetTitles($db) {
         $titles = $db->QueryArray("SELECT * FROM `Titles`");
         if ($titles === FALSE) return array();
         for ($i = 0; $i < count($titles); $i++) {
             $titles[$i]["ID"] = intval($titles[$i]["ID"]);
+            $titles[$i]["Name"] = json_decode($titles[$i]["Name"]);
         }
         return $titles;
     }

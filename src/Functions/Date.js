@@ -1,5 +1,5 @@
 import langManager from "../Managers/LangManager";
-import { isUndefined, round } from "./Functions";
+import { IsUndefined } from "./Functions";
 
 const DAYS = {
     sunday: 0,
@@ -12,7 +12,7 @@ const DAYS = {
 }
 
 /**
- * Return number of weeks in month
+ * Return number of weeks in month (test function)
  * @param {Number} month
  * @param {Number} year
  * @returns {Number}
@@ -35,8 +35,8 @@ function WeeksCount(month, year) {
  * @returns {Number[][]}
  */
 function GetBlockMonth(month, year, start = DAYS.monday) {
-    if (isUndefined(month)) month = new Date().getMonth();
-    if (isUndefined(year)) year = new Date().getFullYear();
+    if (IsUndefined(month)) month = new Date().getMonth();
+    if (IsUndefined(year)) year = new Date().getFullYear();
 
     const date = new Date(year, month, 1);
     let output = [];

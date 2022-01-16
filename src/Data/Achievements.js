@@ -1,6 +1,3 @@
-import langManager from "../Managers/LangManager";
-import { strIsJSON } from "../Functions/Functions";
-
 class Achievement {
     ID = 0;
     Type = 0;
@@ -19,23 +16,16 @@ class Achievements {
     }
 
     Load(achievements) {
-        if (strIsJSON(achievements)) {
-            this.achievements = JSON.parse(achievements);
-            for (let i = 0; i < this.achievements.length; i++) {
-                if (strIsJSON(this.achievements[i].Name)) {
-                    this.achievements[i].Name = JSON.parse(this.achievements[i].Name);
-                }
-                if (strIsJSON(this.achievements[i].Description)) {
-                    this.achievements[i].Description = JSON.parse(this.achievements[i].Description);
-                }
-            }
+        if (typeof(achievements) === 'object') {
+            this.achievements = achievements;
         }
     }
     Save() {
-        return JSON.stringify(this.achievements);
+        return this.achievements;
     }
 
-    getAchievements = (solved) => {
+    // TODO - Update this function
+    GetAchievements = (solved) => {
         let achievements = [];
 
         // Get unlocked
@@ -43,7 +33,7 @@ class Achievements {
         solvedAchievements.reverse();
         for (let s = 0; s < solvedAchievements.length; s++) {
             const achievementID = solvedAchievements[s];
-            const achievement = this.getAchievementByID(achievementID);
+            const achievement = this.GetAchievementByID(achievementID);
             if (achievement && achievement.Type != -1) {
                 achievements.push(achievement);
             }
@@ -59,7 +49,7 @@ class Achievements {
         return achievements;
     }
 
-    getAchievementByID = (ID) => {
+    GetAchievementByID = (ID) => {
         let output;
         for (let a = 0; a < this.achievements.length; a++) {
             const achievement = this.achievements[a];

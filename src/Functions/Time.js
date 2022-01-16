@@ -1,19 +1,20 @@
-import { twoDigit } from "./Functions";
+import { TwoDigit } from "./Functions";
 
 /**
+ * TODO - Unused ?
  * @param {Number} days_number
  * @param {Number} step_minutes
  * @returns {Array} Array of dict : { key: k, value: dd HH:MM, fulldate: date } over a period of days_number each step_minutes
  */
- function getDates(days_number = 2, step_minutes = 15) {
+function getDates(days_number = 2, step_minutes = 15) {
     let dates = [];
 
     let date = new Date();
     let today = new Date();
     date.setMinutes(parseInt(date.getMinutes()/step_minutes)*step_minutes, 0, 0);
     for (let i = 0; i < (60 / step_minutes) * 24 * days_number; i++) {
-        const HH = twoDigit(date.getHours());
-        const MM = twoDigit(date.getMinutes());
+        const HH = TwoDigit(date.getHours());
+        const MM = TwoDigit(date.getMinutes());
         const day = date.getDate() === today.getDate() ? '' : date.getDate() + '/' + (date.getMonth() + 1) + ' ';
         const newDate = day + ' ' + HH + ':' + MM;
         const newDict = { key: dates.length, value: newDate, fulldate: date.toString() };
@@ -30,14 +31,14 @@ import { twoDigit } from "./Functions";
  * @param {Number} step_minutes
  * @returns {Array<{key: 0, value: '00:00', duration: 0}>} Array of dict : { key: k, value: HH:MM, duration: minutes } over a period of max_hour each step_minutes
  */
-function getDurations(max_hour = 4, step_minutes = 15) {
+function GetDurations(max_hour = 4, step_minutes = 15) {
     let durations = [];
 
     let date = new Date();
     date.setHours(0, step_minutes, 0, 0);
     const count = max_hour * (60 / step_minutes);
     for (let i = 0; i < count; i++) {
-        const textDuration = twoDigit(date.getHours()) + ':' + twoDigit(date.getMinutes());
+        const textDuration = TwoDigit(date.getHours()) + ':' + TwoDigit(date.getMinutes());
         const totalDuration = date.getHours() * 60 + date.getMinutes();
         const newDuration = { key: durations.length, value: textDuration, duration: totalDuration };
         durations.push(newDuration);
@@ -51,15 +52,15 @@ function getDurations(max_hour = 4, step_minutes = 15) {
  * 
  * @returns {String} Time (format: HH:MM) until tomorrow midnight
  */
-function getTimeToTomorrow() {
+function GetTimeToTomorrow() {
     const today = new Date();
     const delta = 24 - (today.getHours() + today.getMinutes()/60);
-    const HH = twoDigit(parseInt(delta));
-    const MM = twoDigit(parseInt((delta - parseInt(delta)) * 60));
+    const HH = TwoDigit(parseInt(delta));
+    const MM = TwoDigit(parseInt((delta - parseInt(delta)) * 60));
     return HH + ':' + MM;
 }
 
-function getDaysUntil(date) {
+function GetDaysUntil(date) {
     let days = 0;
     if (date !== null) {
         const today = new Date();
@@ -75,10 +76,10 @@ function getDaysUntil(date) {
  * @param {Date} date
  * @returns {String} dd/mm/yyyy
  */
-function dateToFormatString(date) {
+function DateToFormatString(date) {
     const _date = new Date(date);
-    const dd = twoDigit(_date.getDate());
-    const mm = twoDigit(_date.getMonth() + 1);
+    const dd = TwoDigit(_date.getDate());
+    const mm = TwoDigit(_date.getMonth() + 1);
     const yyyy = _date.getFullYear();
     return [ dd, mm, yyyy ].join('/');
 }
@@ -88,10 +89,10 @@ function dateToFormatString(date) {
  * @param {Date} date
  * @returns {String} HH:MM
  */
-function dateToFormatTimeString(date) {
+function DateToFormatTimeString(date) {
     const _date = new Date(date);
-    const HH = twoDigit(_date.getHours());
-    const MM = twoDigit(_date.getMinutes());
+    const HH = TwoDigit(_date.getHours());
+    const MM = TwoDigit(_date.getMinutes());
     return [ HH, MM ].join(':');
 }
 
@@ -101,12 +102,12 @@ function dateToFormatTimeString(date) {
  * @param {Boolean} withOffset
  * @returns {String} HH:MM
  */
-function timeToFormatString(time, withOffset = false) {
+function TimeToFormatString(time, withOffset = false) {
     const offset = withOffset ? new Date().getTimezoneOffset() : 0;
     const minutesInDay = (time - offset) % 1440;
     const HH = Math.floor(minutesInDay / 60);
     const MM = Math.floor(minutesInDay - HH * 60);
-    return [ HH, MM ].map(twoDigit).join(':');
+    return [ HH, MM ].map(TwoDigit).join(':');
 }
 
 /**
@@ -138,8 +139,8 @@ function GetMidnightTime(time) {
     return GetTime(_date);
 }
 
-export { getDates, getDurations, GetTime,
-    getTimeToTomorrow, getDaysUntil, RoundToQuarter,
-    timeToFormatString, dateToFormatTimeString, dateToFormatString,
+export { GetDurations, GetTime,
+    GetTimeToTomorrow, GetDaysUntil, RoundToQuarter,
+    TimeToFormatString, DateToFormatTimeString, DateToFormatString,
     GetMidnightTime
 };

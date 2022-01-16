@@ -1,5 +1,3 @@
-import { getByKey, sortByKey, strIsJSON } from "../Functions/Functions";
-
 class Item {
     ID = 0;
     Name = '';
@@ -25,37 +23,14 @@ class Items {
         this.items = [];
     }
 
-    /**
-     * @returns {Item[]}
-     */
-    getAll() {
+    Save() {
         return this.items;
     }
-    /**
-     * @param {Object} items 
-     */
-    setAll(items) {
-        this.items = items;
-    }
-
-    save() {
-        const data = { items: this.items };
-        return JSON.stringify(data);
-    }
-    load(str) {
-        if (strIsJSON(str)) {
-            const json = JSON.parse(str);
-            this.items = json.items;
+    Load(items) {
+        if (typeof(items) === 'object') {
+            this.items = items;
         }
     }
-
-    /**
-     * @param {Number} ID
-     * @returns {?Item} - Return skill if exists or null
-     */
-    getByID = (ID) => getByKey(this.skills, 'ID', ID);
-
-    getByCategory = (ID) => this.items.filter(items => items.CategoryID === ID);
 }
 
 export default Items;

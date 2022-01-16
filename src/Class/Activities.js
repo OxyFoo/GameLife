@@ -36,18 +36,18 @@ class Activities {
     /**
      * @returns {Activity[]} activities
      */
-    getAll() {
+    GetAll() {
         return this.activities;
     }
 
     /**
      * @param {Activity[]} activities 
      */
-    setAll(activities) {
+    SetAll(activities) {
         this.activities = activities;
     }
 
-    isUnsaved() {
+    IsUnsaved() {
         return this.UNSAVED_activities.length > 0;
     }
     Purge() {
@@ -55,14 +55,14 @@ class Activities {
     }
 
     // TODO - Update or remove
-    removeDeletedSkillsActivities() {
+    RemoveDeletedSkillsActivities() {
         /*for (let a in this.activities) {
             let activity = this.activities[a];
             let skillID = activity.skillID;
-            const skill = dataManager.skills.getByID(skillID);
+            const skill = dataManager.skills.GetByID(skillID);
             if (skill === null) {
                 this.Remove(activity);
-                this.removeDeletedSkillsActivities();
+                this.RemoveDeletedSkillsActivities();
                 break;
             }
         }*/
@@ -93,7 +93,7 @@ class Activities {
         }
 
         if (!exists) {
-            if (this.timeIsFree(startTime, duration)) {
+            if (this.TimeIsFree(startTime, duration)) {
                 // Add - Sort by date
                 /*const activityDate = new Date(startTime);
                 for (let a = 0; a < this.activities.length; a++) {
@@ -118,7 +118,7 @@ class Activities {
 
     Remove(activity) {
         for (let i = 0; i < this.activities.length; i++) {
-            if (this.AreEquals(this.activities[i], activity)) {
+            if (this.areEquals(this.activities[i], activity)) {
                 this.activities.splice(i, 1);
                 this.UNSAVED_activities.push(['rem', activity.skillID, activity.startTime, activity.duration ]);
                 break;
@@ -128,7 +128,7 @@ class Activities {
         this.user.refreshStats();
     }
 
-    AreEquals(activity1, activity2) {
+    areEquals(activity1, activity2) {
         const sameSkillID = activity1.skillID === activity2.skillID;
         const sameStartTime = activity1.startTime === activity2.startTime;
         const sameDuration = activity1.duration === activity2.duration;
@@ -145,7 +145,7 @@ class Activities {
         const endTime = startTime + 86400;
         return this.activities.filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
     }
-    containActivity(date = new Date(), onlyRelax = false) {
+    ContainActivity(date = new Date(), onlyRelax = false) {
         date.setHours(0, 0, 0, 0);
         const startTime = GetTime(date);
         date.setHours(23, 59, 59, 999);
@@ -155,7 +155,7 @@ class Activities {
             const activity = this.activities[a];
             if (activity.startTime >= startTime && activity.startTime <= endTime) {
                 if (!onlyRelax) return true;
-                if (dataManager.skills.getByID(activity.skillID).XP === 0) return true;
+                if (dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
             }
         }
         return false;
@@ -163,7 +163,7 @@ class Activities {
         //const condNormalActivity = (activity) => activity.startTime >= startTime && activity.startTime <= endTime;
         //const condRelaxActivity = (activity) => activity.startTime >= startTime && activity.startTime <= endTime && this.activities[0]. === 0;
         //const find = this.activities.find(activity => );
-        //return !isUndefined(find);
+        //return !IsUndefined(find);
     }
 
     GetFirstTime() {
@@ -185,7 +185,7 @@ class Activities {
         const diff = GetTime(now) - GetTime(initDate);
         return diff;
     }
-    getTotalDuration() {
+    GetTotalDuration() {
         let totalDuration = 0;
         for (let a in this.activities) {
             const activity = this.activities[a];
@@ -194,7 +194,7 @@ class Activities {
         return totalDuration;
     }
 
-    timeIsFree(time, duration) {
+    TimeIsFree(time, duration) {
         let output = true;
         const startTime = time;
         const endTime = time + duration*60;

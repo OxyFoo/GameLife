@@ -1,7 +1,7 @@
 import { Request_Async } from '../Functions/Request';
 import DataStorage, { STORAGE } from '../Functions/DataStorage';
 
-async function checkDate() {
+async function CheckDate() {
     let safe = true;
 
     // In that order, user can block app, but... its ok ^^
@@ -37,4 +37,4 @@ async function checkDate() {
     return safe;
 }
 
-export { checkDate };
+export { CheckDate };

@@ -27,38 +27,37 @@ class DataManager {
         return output;
     }
 
-    async localSave() {
+    async LocalSave() {
         const internalData = {
             'achievements': this.achievements.Save(),
-            'contributors': this.contributors.save(),
+            'contributors': this.contributors.Save(),
             'quotes': this.quotes.Save(),
-            'skills': this.skills.save(),
-            'titles': this.titles.save()
+            'skills': this.skills.Save(),
+            'titles': this.titles.Save()
         }
         const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData, false);
         return saved;
     }
 
-    async localLoad() {
+    async LocalLoad() {
         const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
         if (internalData !== null) {
             this.achievements.Load(internalData['achievements']);
-            this.contributors.load(internalData['contributors']);
+            this.contributors.Load(internalData['contributors']);
             this.quotes.Load(internalData['quotes']);
-            this.skills.load(internalData['skills']);
-            this.titles.load(internalData['titles']);
+            this.skills.Load(internalData['skills']);
+            this.titles.Load(internalData['titles']);
         }
         return internalData !== null;
     }
 
-    async onlineLoad() {
-        // TODO - null pour les tests
-        //const hash = null;
-        const hash = await DataStorage.Load(STORAGE.INTERNAL_HASH, false);
+    async OnlineLoad() {
+        await this.LocalLoad();
+
+        const appHashes = await DataStorage.Load(STORAGE.INTERNAL_HASHES, false);
         const data = {
             'action': 'getInternalData',
-            'hash': hash === null ? '' : hash['hash'],
-            'lang': langManager.currentLangageKey
+            'hashes': appHashes
         };
         const reqInternalData = await Request_Async(data);
 
@@ -66,22 +65,27 @@ class DataManager {
             const status = reqInternalData.content['status'];
 
             if (status === 'ok') {
-                const tables = reqInternalData.content['tables'];
-                const hash = reqInternalData.content['hash'];
+                const reqHashes = reqInternalData.content['hashes'];
+                const reqTables = reqInternalData.content['tables'];
 
-                if (tables.hasOwnProperty('achievements')) this.achievements.Set(tables['achievements']);
+                if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
+                if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);
+                if (reqTables.hasOwnProperty('quotes')) this.quotes.Load(reqTables['quotes']);
+                if (reqTables.hasOwnProperty('skills')) {
+                    const skills = {
+                        skills: reqTables['skills'],
+                        skillsIcons: reqTables['skillsIcon'],
+                        skillsCategories: reqTables['skillsCategory']
+                    };
+                    this.skills.Load(skills);
+                }
+                if (reqTables.hasOwnProperty('titles')) {
+                    this.titles.Load(reqTables['titles']);
+                    console.log('loaded');
+                }
 
-                //this.achievements.achievements = tables['achievements'];
-                this.contributors.contributors = tables['contributors'];
-                this.quotes.quotes = tables['quotes'];
-                this.skills.skills = tables['skills'];
-                this.skills.icons = tables['skillsIcon'];
-                this.skills.categories = tables['skillsCategory'];
-                this.titles.titles = tables['titles'];
-                await DataStorage.Save(STORAGE.INTERNAL_HASH, { hash: hash }, false);
-                await this.localSave();
-            } else if (status === 'same') {
-                await this.localLoad();
+                await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes, false);
+                await this.LocalSave();
             }
         }
     }

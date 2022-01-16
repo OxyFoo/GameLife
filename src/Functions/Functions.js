@@ -1,6 +1,6 @@
 import DeviceInfo from 'react-native-device-info';
 
-function twoDigit(n) {
+function TwoDigit(n) {
     return ('00' + n).slice(-2);
 }
 
@@ -9,20 +9,20 @@ function twoDigit(n) {
  * @param {Number} decimal 
  * @returns {Number}
  */
-function round(number, decimal = 0) {
+function Round(number, decimal = 0) {
     const dec = decimal.toString();
     return  +(Math.round(number + ('e+' + dec)) + ('e-' + dec));
 }
 
-function sum(arr) {
+function Sum(arr) {
     return arr.reduce((partial_sum, a) => partial_sum + parseInt(a), 0);
 }
 
-function isUndefined(el) {
+function IsUndefined(el) {
     return typeof(el) === 'undefined';
 }
 
-function minmax(min, value, max) {
+function MinMax(min, value, max) {
     let output = null;
     if (typeof(value) === 'number') {
         output = value;
@@ -32,7 +32,7 @@ function minmax(min, value, max) {
     return output;
 }
 
-function strIsJSON(str) {
+function StrIsJSON(str) {
     let isJSON = true;
     try { JSON.parse(str); }
     catch (e) { isJSON = false; }
@@ -44,7 +44,7 @@ function strIsJSON(str) {
  * @param {String} key - Key of array
  * @returns {Array} - Return sorted array
  */
-function sortByKey(array, key) {
+function SortByKey(array, key) {
     const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
     const compare = (a, b) => format(a[key]) < format(b[key]) ? -1 : 1;
     return array.sort(compare);
@@ -57,16 +57,16 @@ function sortByKey(array, key) {
  * @param {*} value 
  * @returns {?Object} Return object or null if didn't exists
  */
-function getByKey(array, key, value) {
+function GetByKey(array, key, value) {
     const result = array.find((element) => element[key] == value);
-    return !isUndefined(result) ? result : null;
+    return !IsUndefined(result) ? result : null;
 }
 
 /**
  * @param {String} email
  * @returns {Boolean} - true if str "email" is a valid email
  */
-function isEmail(email) {
+function IsEmail(email) {
     let isEmail = false;
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (typeof(email) === 'string' && email.length && reg.test(email)) {
@@ -81,7 +81,7 @@ function isEmail(email) {
  * @param {Boolean} version - true to get the version of the app
  * @returns Dictionary of currect device
  */
-function getDeviceInformations(OS = false, version = false) {
+function GetDeviceInformations(OS = false, version = false) {
     let device = {};
 
     device.deviceID = DeviceInfo.getUniqueId();
@@ -99,23 +99,23 @@ function getDeviceInformations(OS = false, version = false) {
     return device;
 }
 
-function range(length) {
+function Range(length) {
     return Array.from({ length: length+1 }, (_, i) => i);
 }
 
-function sleep(ms) {
+function Sleep(ms) {
     const T = Math.max(0, ms);
     return new Promise(resolve => setTimeout(resolve, T));
 }
 
-function random(min, max) {
+function Random(min, max) {
     const m = min || 0;
     const M = max || 1;
     let R = Math.random() * (M - m) + m;
     return parseInt(R);
 }
 
-export { twoDigit, round, sum, range, strIsJSON,
-    sortByKey, getByKey, isEmail,
-    getDeviceInformations, isUndefined, minmax,
-    sleep, random };
+export { TwoDigit, Round, Sum, Range, StrIsJSON,
+    SortByKey, GetByKey, IsEmail,
+    GetDeviceInformations, IsUndefined, MinMax,
+    Sleep, Random };

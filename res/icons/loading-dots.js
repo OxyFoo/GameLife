@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-import { sleep } from '../../src/Functions/Functions';
+import { Sleep } from '../../src/Functions/Functions';
 import { TimingAnimation } from '../../src/Functions/Animations';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -22,13 +22,13 @@ class SvgComponent extends React.Component {
         clearInterval(this.interval);
     }
     Loop = async () => {
-        await sleep(150); TimingAnimation(this.state.animation1, 0.2, 250, false).start();
-        await sleep(150); TimingAnimation(this.state.animation2, 0.2, 250, false).start();
-        await sleep(150); TimingAnimation(this.state.animation3, 0.2, 250, false).start();
+        await Sleep(150); TimingAnimation(this.state.animation1, 0.2, 250, false).start();
+        await Sleep(150); TimingAnimation(this.state.animation2, 0.2, 250, false).start();
+        await Sleep(150); TimingAnimation(this.state.animation3, 0.2, 250, false).start();
 
-        await sleep(150); TimingAnimation(this.state.animation1, 1, 250, false).start();
-        await sleep(150); TimingAnimation(this.state.animation2, 1, 250, false).start();
-        await sleep(150); TimingAnimation(this.state.animation3, 1, 250, false).start();
+        await Sleep(150); TimingAnimation(this.state.animation1, 1, 250, false).start();
+        await Sleep(150); TimingAnimation(this.state.animation2, 1, 250, false).start();
+        await Sleep(150); TimingAnimation(this.state.animation3, 1, 250, false).start();
     }
 
     render() {

@@ -1,5 +1,4 @@
-import langManager from "../Managers/LangManager";
-import { getByKey, sortByKey, strIsJSON } from "../Functions/Functions";
+import { GetByKey, SortByKey } from "../Functions/Functions";
 
 class Skill {
     ID = 0;
@@ -48,44 +47,23 @@ class Skills {
         this.categories = [];
     }
 
-    /**
-     * @returns {Skill[]}
-     */
-    getAll() {
-        return this.skills;
+    Load(data) {
+        if (typeof(data) === 'object') {
+            if (data.hasOwnProperty('skills')) this.skills = data.skills;
+            if (data.hasOwnProperty('skillsIcons')) this.icons = data.skillsIcons;
+            if (data.hasOwnProperty('skillsCategories')) this.categories = data.skillsCategories;
+        }
     }
-    /**
-     * @param {Object} skills 
-     */
-    setAll(skills) {
-        this.skills = skills;
-    }
-
-    save() {
+    Save() {
         const data = {
             skills: this.skills,
             skillsIcons: this.icons,
             skillsCategories: this.categories
         };
-        return JSON.stringify(data);
-    }
-    load(str) {
-        if (strIsJSON(str)) {
-            const json = JSON.parse(str);
-            this.skills = json.skills;
-            this.icons = json.skillsIcons;
-            this.categories = json.skillsCategories;
-
-            for (let i = 0; i < this.skills.length; i++)
-                if (strIsJSON(this.skills[i].Name))
-                    this.skills[i].Name = JSON.parse(this.skills[i].Name);
-            for (let i = 0; i < this.categories.length; i++)
-                if (strIsJSON(this.categories[i].Name))
-                    this.categories[i].Name = JSON.parse(this.categories[i].Name);
-        }
+        return data;
     }
 
-    getAsObj(category) {
+    GetAsObj(category) {
         let skills = [];
         for (let i = 0; i < this.skills.length; i++) {
             let skill = this.skills[i];
@@ -100,13 +78,14 @@ class Skills {
      * @param {Number} ID
      * @returns {?Skill} - Return skill if exists or null
      */
-    getByID = (ID) => getByKey(this.skills, 'ID', ID);
+    GetByID = (ID) => GetByKey(this.skills, 'ID', ID);
 
-    getByCategory = (ID) => this.skills.filter(skill => skill.CategoryID === ID);
+    GetByCategory = (ID) => this.skills.filter(skill => skill.CategoryID === ID);
 
-    getAllCategories(onlyUseful = false) {
+    // TODO - Unused ?
+    GetAllCategories(onlyUseful = false) {
         let output = [];
-        let categories = sortByKey(this.categories, 'Name');
+        let categories = SortByKey(this.categories, 'Name');
         categories = categories.map((el) => { return { key: el.ID, value: el.Name } });
         if (onlyUseful) {
             // TODO - End that
@@ -119,7 +98,7 @@ class Skills {
         }*/
     }
 
-    getCategories(onlyUseful = false) {
+    GetCategories(onlyUseful = false) {
         /*let cats = [];
         for (let i = 0; i < this.skills.length; i++) {
             let cat = this.skills[i].Category;
@@ -132,7 +111,7 @@ class Skills {
             }
 
             let curr = false;
-            const activities = this.user.activities.getAll();
+            const activities = this.user.activities.GetAll();
             for (let a = 0; a < activities.length; a++) {
                 if (activities[a].skillID == this.skills[i].ID) {
                     curr = true;
@@ -159,7 +138,7 @@ class Skills {
      * @param {Number} ID
      * @returns {String} Representation of logo (XML)
      */
-    getXmlByLogoID = (ID) => {
+    GetXmlByLogoID = (ID) => {
         let currXml = '';
         for (let i = 0; i < this.icons.length; i++) {
             const skillIcon = this.icons[i];

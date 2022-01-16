@@ -1,0 +1,39 @@
+import * as React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+
+import themeManager from '../../Managers/ThemeManager';
+
+import GLText from './GLText';
+import GLDoubleCorner from './GLDoubleCorner';
+
+function GLButton(props) {
+    const value = props.value;
+    const onPress = props.onPress;
+    const style = [ styles.containerStyle, props.containerStyle ];
+    const color = props.color || 'main';
+    const colorHex = themeManager.colors['text'][color];
+
+    return (
+        <TouchableOpacity activeOpacity={.5} onPress={onPress} style={[style, { borderColor: colorHex }]}>
+            <GLText title={value} style={styles.textButton} color={color} />
+            <GLDoubleCorner color={colorHex} />
+        </TouchableOpacity>
+    )
+}
+
+const styles = StyleSheet.create({
+    containerStyle: {
+        width: 112,
+        height: 32,
+
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        borderColor: '#FFFFFF',
+        borderWidth: 2
+    },
+    textButton: {
+    }
+});
+
+export default GLButton;

@@ -1,4 +1,4 @@
-import { random, strIsJSON } from "../Functions/Functions";
+import { Random } from "../Functions/Functions";
 
 class Quote {
     ID = 0;
@@ -20,14 +20,14 @@ class Quotes {
         this.currentQuote = null;
     }
 
-    Save() {
-        return JSON.stringify(this.quotes);
-    }
-    Load(achievements) {
-        if (strIsJSON(achievements)) {
-            this.quotes = JSON.parse(achievements);
+    Load(quotes) {
+        if (typeof(quotes) === 'object') {
+            this.quotes = quotes;
             this.currentQuote = this.GetRandomQuote();
         }
+    }
+    Save() {
+        return this.quotes;
     }
 
     /**
@@ -36,7 +36,7 @@ class Quotes {
     GetRandomQuote() {
         let quote = null;
         if (this.quotes.length > 0) {
-            const random_quote = random(0, this.quotes.length - 1);
+            const random_quote = Random(0, this.quotes.length - 1);
             quote = this.quotes[random_quote];
         }
         return quote;

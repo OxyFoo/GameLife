@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 
-import { sleep } from '../../src/Functions/Functions';
+import { Sleep } from '../../src/Functions/Functions';
 import { SpringAnimation } from '../../src/Functions/Animations';
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -22,13 +22,13 @@ class SvgComponent extends React.Component {
         clearInterval(this.interval);
     }
     Loop = async () => {
-        await sleep(100); SpringAnimation(this.state.animation1, -5, false).start();
-        await sleep(100); SpringAnimation(this.state.animation2, -5, false).start();
-        await sleep(100); SpringAnimation(this.state.animation3, -5, false).start();
-        await sleep(200);
-        await sleep(100); SpringAnimation(this.state.animation1, -40, false).start();
-        await sleep(100); SpringAnimation(this.state.animation2, -25, false).start();
-        await sleep(100); SpringAnimation(this.state.animation3, -40, false).start();
+        await Sleep(100); SpringAnimation(this.state.animation1, -5, false).start();
+        await Sleep(100); SpringAnimation(this.state.animation2, -5, false).start();
+        await Sleep(100); SpringAnimation(this.state.animation3, -5, false).start();
+        await Sleep(200);
+        await Sleep(100); SpringAnimation(this.state.animation1, -40, false).start();
+        await Sleep(100); SpringAnimation(this.state.animation2, -25, false).start();
+        await Sleep(100); SpringAnimation(this.state.animation3, -40, false).start();
     }
     render() {
         return (

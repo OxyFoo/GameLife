@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { strIsJSON } from "./Functions";
+import { StrIsJSON } from "./Functions";
 
 /**
  * @typedef {Object} DataStorage_Data
@@ -10,7 +10,7 @@ const STORAGE_KEYS = {
     SETTINGS: '@data/settings',
     INTERNAL: '@data/internal',
 
-    INTERNAL_HASH: '@settings/internal_hash',
+    INTERNAL_HASHES: '@settings/internal_hashes',
     DATE: '@tools/date'
 };
 
@@ -40,7 +40,7 @@ class DataStorage {
         let json = null;
 
         const localData = await AsyncStorage.getItem(storageKey);
-        if (strIsJSON(localData)) {
+        if (StrIsJSON(localData)) {
             json = JSON.parse(localData);
         }
 

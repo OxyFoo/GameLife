@@ -4,32 +4,32 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import user from '../Managers/UserManager';
 import langManager from './LangManager';
-import { SpringAnimation, TimingAnimation } from '../Functions/Animations';
-import { isUndefined, sleep } from '../Functions/Functions';
+import { TimingAnimation } from '../Functions/Animations';
+import { IsUndefined, Sleep } from '../Functions/Functions';
 import { BottomBar, Popup } from '../Interface/Widgets';
 
-import About from '../Interface/pageFront/about';
-import Achievements from '../Interface/pageFront/achievements';
-import Activity from '../Interface/pageFront/activity';
-import ActivityTimer from '../Interface/pageFront/activityTimer';
-import Calendar from '../Interface/pageFront/calendar';
-import Dailyquest from '../Interface/pageFront/dailyquest';
-import Display from '../Interface/pageFront/display';
-import Experience from '../Interface/pageFront/experience';
-import Home from '../Interface/pageFront/home';
-import Identity from '../Interface/pageFront/identity';
-import Leaderboard from '../Interface/pageFront/leaderboard';
-import Loading from '../Interface/pageFront/loading';
-import Login from '../Interface/pageFront/login';
-import Multiplayer from '../Interface/pageFront/multiplayer';
-import Report from '../Interface/pageFront/report';
-import Settings from '../Interface/pageFront/settings';
-import Shop from '../Interface/pageFront/shop';
-import Skill from '../Interface/pageFront/skill';
-import Skills from '../Interface/pageFront/skills';
-import Waitinternet from '../Interface/pageFront/waitinternet';
-import Waitmail from '../Interface/pageFront/waitmail';
-import Test from '../Interface/pageFront/test';
+import About from '../Interface/PageFront/about';
+import Achievements from '../Interface/PageFront/achievements';
+import Activity from '../Interface/PageFront/activity';
+import ActivityTimer from '../Interface/PageFront/activityTimer';
+import Calendar from '../Interface/PageFront/calendar';
+import Dailyquest from '../Interface/PageFront/dailyquest';
+import Display from '../Interface/PageFront/display';
+import Experience from '../Interface/PageFront/experience';
+import Home from '../Interface/PageFront/home';
+import Identity from '../Interface/PageFront/identity';
+import Leaderboard from '../Interface/PageFront/leaderboard';
+import Loading from '../Interface/PageFront/loading';
+import Login from '../Interface/PageFront/login';
+import Multiplayer from '../Interface/PageFront/multiplayer';
+import Report from '../Interface/PageFront/report';
+import Settings from '../Interface/PageFront/settings';
+import Shop from '../Interface/PageFront/shop';
+import Skill from '../Interface/PageFront/skill';
+import Skills from '../Interface/PageFront/skills';
+import Waitinternet from '../Interface/PageFront/waitinternet';
+import Waitmail from '../Interface/PageFront/waitmail';
+import Test from '../Interface/PageFront/test';
 
 class PageManager extends React.Component{
     state = {
@@ -37,7 +37,6 @@ class PageManager extends React.Component{
         page2: '',
         animOpacity1: new Animated.Value(0),
         animOpacity2: new Animated.Value(0),
-        //animOpacity: new Animated.Value(0),
         animTransition: new Animated.Value(1),
         arguments: {},
         ignorePage: false,
@@ -112,7 +111,7 @@ class PageManager extends React.Component{
 
         const prevPage = this.state.page1 || this.state.page2;
 
-        if (isUndefined(newpage) || newpage === '') {
+        if (IsUndefined(newpage) || newpage === '') {
             this.forceUpdate(); return false;
         }
 
@@ -130,7 +129,7 @@ class PageManager extends React.Component{
             this.path.push([prevPage, this.state.arguments]);
         }
 
-        const newArgs = !isUndefined(args) ? args : {};
+        const newArgs = !IsUndefined(args) ? args : {};
         this.setState({ arguments: newArgs, ignorePage: ignorePage });
 
         this.changing = true;
@@ -144,7 +143,7 @@ class PageManager extends React.Component{
         const animScaleDuration = 100;
 
         TimingAnimation(this.state.animTransition, 0, animScaleDuration).start();
-        //await sleep(animScaleDuration/4);
+        //await Sleep(animScaleDuration/4);
 
         // Switch pages animation
         if (!this.state.page1) {

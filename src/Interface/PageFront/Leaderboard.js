@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import BackLeaderboard from '../PageBack/leaderboard';
-import { GLHeader, GLText } from '../Components';
-
+import BackLeaderboard from '../PageBack/Leaderboard';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
+
+import { GLHeader, GLText } from '../Components';
 
 class Leaderboard extends BackLeaderboard {
     userBoard(props) {

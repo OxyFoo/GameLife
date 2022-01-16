@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList,Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import BackAbout from '../PageBack/about';
-import { GLHeader, GLIconButton, GLText } from '../Components';
-
+import BackAbout from '../PageBack/About';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+
+import { GLHeader, GLIconButton, GLText } from '../Components';
 
 class About extends BackAbout {
     render() {

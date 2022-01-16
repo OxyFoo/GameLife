@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Dimensions, Animated } from 'react-native';
 
-import BackActivity from '../PageBack/activity';
-import { Page, Text, Button, ComboBox, IconCheckable, TextSwitch } from '../Components';
-import { PageHeader, ActivitySchedule, ActivityExperience } from '../Widgets';
-
+import BackActivity from '../PageBack/Activity';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
+
+import { Page, Text, Button, ComboBox, IconCheckable, TextSwitch } from '../Components';
+import { PageHeader, ActivitySchedule, ActivityExperience } from '../Widgets';
 
 /**
  * TODO

@@ -3,6 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
+
 import { GetTimeToTomorrow } from '../../Functions/Time';
 
 class BackDailyquest extends React.Component {

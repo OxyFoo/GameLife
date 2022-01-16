@@ -3,6 +3,7 @@ import { Animated, Linking } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+
 import { IsEmail } from '../../Functions/Functions';
 import { TimingAnimation } from '../../Functions/Animations';
 

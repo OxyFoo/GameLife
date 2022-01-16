@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import BackReport from '../PageBack/report';
-import { GLDigit, GLDropDown, GLHeader, GLInput, GLText, GLButton } from '../Components';
-
+import BackReport from '../PageBack/Report';
 import langManager from '../../Managers/LangManager';
+
+import { GLDigit, GLDropDown, GLHeader, GLInput, GLText, GLButton } from '../Components';
 
 class Report extends BackReport {
     content = () => {

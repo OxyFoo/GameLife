@@ -83,7 +83,7 @@ class UserManager {
 
     async refreshStats() {
         this.activities.RemoveDeletedSkillsActivities();
-        this.experience.getExperience();
+        this.experience.GetExperience();
         this.interface.ChangePage();
     }
 

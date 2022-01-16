@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Image, StyleSheet, Animated } from 'react-native';
 
-import BackLogin from '../PageBack/login';
-
+import BackLogin from '../PageBack/Login';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
+
 import { Text, Button, Input, Checkbox, GLIconButton } from '../Components';
 
 class Login extends BackLogin {

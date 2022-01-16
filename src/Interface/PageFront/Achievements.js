@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
+import BackAchievements from '../PageBack/Achievements';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackAchievements from '../PageBack/achievements';
 import { GLHeader, GLText } from '../Components';
 
 class Achievements extends BackAchievements {

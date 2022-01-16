@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
+import BackSkills from '../PageBack/Skills';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackSkills from '../PageBack/skills';
 import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../Components';
 
 class Skills extends BackSkills {

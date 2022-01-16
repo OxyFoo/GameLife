@@ -1,14 +1,6 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
 
 import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
-import dataManager from '../../Managers/DataManager';
-
-import { Activity } from '../../Class/Activities';
-import { IsUndefined } from '../../Functions/Functions';
-import { SpringAnimation } from '../../Functions/Animations';
-import { GetTime } from '../../Functions/Time';
 
 class BackIdentity extends React.Component {
     constructor(props) {

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Animated, Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+
 import { TwoDigit } from '../../Functions/Functions';
-import { SpringAnimation } from '../../Functions/Animations';
 
 // Image dimensions
 const MIN_WIDTH = 96;

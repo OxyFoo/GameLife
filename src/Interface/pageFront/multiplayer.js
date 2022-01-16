@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import BackMultiplayer from '../PageBack/multiplayer';
+import BackMultiplayer from '../PageBack/Multiplayer';
+
 import { Page } from '../Components';
 
 class Multiplayer extends BackMultiplayer {

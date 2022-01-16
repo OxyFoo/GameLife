@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 
+import BackSkill from '../PageBack/Skill';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackSkill from '../PageBack/skill';
-import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 import { DateToFormatString } from '../../Functions/Time';
+import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
 
 class Skill extends BackSkill {
     render() {

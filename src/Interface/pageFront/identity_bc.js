@@ -1,15 +1,13 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Animated, Dimensions } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { View, StyleSheet, Dimensions } from 'react-native';
 
+import BackIdentity from '../PageBack/Identity';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
-import themeManager from '../../Managers/ThemeManager';
 
-import BackIdentity from '../PageBack/identity';
-import { GLDropDown, GLText, GLTextEditable } from '../Components';
 import { IsUndefined } from '../../Functions/Functions';
+import { GLDropDown, GLText, GLTextEditable } from '../Components';
 
 class Identity extends BackIdentity {
     render() {

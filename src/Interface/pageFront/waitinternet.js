@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
-import BackWaitinternet from '../PageBack/waitinternet';
-
+import BackWaitinternet from '../PageBack/WaitInternet';
 import langManager from '../../Managers/LangManager';
+
 import { Text } from '../Components';
 
 class Waitinternet extends BackWaitinternet {

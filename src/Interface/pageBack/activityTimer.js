@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import user from '../../Managers/UserManager';
-
-import { GetTime, RoundToQuarter } from '../../Functions/Time';
-import { MinMax, TwoDigit } from '../../Functions/Functions';
 import langManager from '../../Managers/LangManager';
+
+import { MinMax, TwoDigit } from '../../Functions/Functions';
+import { GetTime, RoundToQuarter } from '../../Functions/Time';
 
 const MAX_TIME = 4 * 60; // Minutes
 

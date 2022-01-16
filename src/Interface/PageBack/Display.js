@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
-import { SpringAnimation } from '../../Functions/Animations';
 
 import user from '../../Managers/UserManager';
+
+import { SpringAnimation } from '../../Functions/Animations';
 
 class BackDisplay extends React.Component {
     constructor(props) {

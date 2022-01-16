@@ -4,6 +4,7 @@ import { BackHandler } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
+
 import { DisableMorningNotifications, EnableMorningNotifications } from '../../Functions/Notifications';
 
 class BackSettings extends React.Component {

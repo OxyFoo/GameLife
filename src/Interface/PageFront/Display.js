@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Animated, Dimensions, StyleSheet } from 'react-native';
 
-import BackDisplay from '../PageBack/display';
+import BackDisplay from '../PageBack/Display';
 
 import { Page, Text, Icon, Button } from '../Components';
 

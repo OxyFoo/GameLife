@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { View, StyleSheet, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 
-import BackDailyquest from '../PageBack/dailyquest';
-import { GLButton, GLDropDown, GLHeader, GLIconButton, GLInput, GLSvg, GLText } from '../Components';
-import { IsUndefined } from '../../Functions/Functions';
-import { GetTimeToTomorrow } from '../../Functions/Time';
-
+import BackDailyquest from '../PageBack/Dailyquest';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
+
+import { IsUndefined } from '../../Functions/Functions';
+import { GetTimeToTomorrow } from '../../Functions/Time';
+import { GLButton, GLDropDown, GLHeader, GLIconButton, GLInput, GLSvg, GLText } from '../Components';
 
 class Dailyquest extends BackDailyquest {
     content = () => {

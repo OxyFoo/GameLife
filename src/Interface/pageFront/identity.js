@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Dimensions, Animated, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 
-import BackIdentity from '../PageBack/identity';
-
+import BackIdentity from '../PageBack/Identity';
 import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
-import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { Page, Text, XPBar, Container, Button } from '../Components';
+import { Page, Text, XPBar, Container } from '../Components';
 import { UserHeader, PageHeader, AvatarEditor, StatsBars } from '../Widgets';
 
 class Identity extends BackIdentity {

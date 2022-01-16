@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+
 import { Sum } from '../../Functions/Functions';
 import { Request_Async } from '../../Functions/Request';
 

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import BackActivityTimer from '../PageBack/activityTimer';
-
+import BackActivityTimer from '../PageBack/ActivityTimer';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 

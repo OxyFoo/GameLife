@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import BackShop from '../PageBack/shop';
+import BackShop from '../PageBack/Shop';
 
-import { Page, Icon, Text } from '../Components';
 import { UserHeader } from '../Widgets';
+import { Page, Icon, Text } from '../Components';
 
 class Shop extends BackShop {
     render() {

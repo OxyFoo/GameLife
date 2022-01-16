@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
+import BackHome from '../PageBack/Home';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 
-import BackHome from '../PageBack/home';
 import { Round } from '../../Functions/Functions';
 import { UserHeader, StatsBars } from '../Widgets';
 import { Button, Container, Swiper, Text, XPBar, Page } from '../Components';

@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { Animated } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { GetBlockMonth } from '../../Functions/Date';
-import { Animated } from 'react-native';
 import { SpringAnimation } from '../../Functions/Animations';
 import { GetTime, RoundToQuarter } from '../../Functions/Time';
 

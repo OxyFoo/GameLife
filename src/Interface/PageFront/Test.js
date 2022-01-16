@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, ScrollView, Switch as RNSwitch } from 'react-native';
 
+import BackTest from '../PageBack/Test';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import BackTest from '../PageBack/test';
 import { DateToFormatString } from '../../Functions/Time';
 import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch, Switch } from '../Components';
 
@@ -14,7 +14,7 @@ const TEST_VALUES = [{ID: 0, value: 'Abc 0'}, {ID: 1, value: 'Def 1'}, {ID: 2, v
 
 class Test extends BackTest {
     render() {
-        const userExperience = user.experience.getExperience();
+        const userExperience = user.experience.GetExperience();
         const totalXP = parseInt(user.xp);
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;

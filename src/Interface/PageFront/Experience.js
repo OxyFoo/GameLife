@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions} from 'react-native';
 
-import BackExperience from '../PageBack/experience';
-import { GLHeader, GLText, GLXPBar } from '../Components';
-
+import BackExperience from '../PageBack/Experience';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+
+import { GLHeader, GLText, GLXPBar } from '../Components';
 
 class Experience extends BackExperience {
     render() {

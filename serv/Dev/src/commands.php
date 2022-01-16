@@ -32,23 +32,26 @@
          * (Hash that is updated if old)
          */
         private function GetAppData() {
-            $appData = array('Version' => 0, 'DBHash' => '');
+            $appData = array('Version' => 0, 'Hashes' => '');
             $app = $this->db->QueryArray("SELECT * FROM `App`");
             $lastHashRefresh = 0;
 
             if ($app !== FALSE) {
                 for ($i = 0; $i < count($app); $i++) {
-                    $index = $app[$i]['ID'];
-                    $value = $app[$i]['Data'];
+                    $ID = $app[$i]['ID'];
+                    $data = $app[$i]['Data'];
                     $date = $app[$i]['Date'];
-                    if ($index === "Version") {
-                        $appData['Version'] = $value;
-                    } else if ($index === "DBHash") {
-                        $appData["DBHash"] = $value;
+
+                    if ($ID === "Version") {
+                        $appData['Version'] = $data;
+                    } else if ($ID === "Hashes") {
+                        $appData["Hashes"] = $data;
                         $lastHashRefresh = MinutesFromDate($date);
-                    } else if ($index === "Maintenance") {
-                        $appData["Maintenance"] = $value !== '0';
+                    } else if ($ID === "Maintenance") {
+                        $appData["Maintenance"] = $data !== '0';
                     }
+                    // TODO - Si on laisse offline les news, on les lit ici
+                    // Sinon on les prend avec les internalData, avec des hashs séparés
                 }
             }
 
@@ -57,13 +60,20 @@
                 $lang = $this->data['lang'];
                 $db_all = GetAllInternalData($this->db, $lang);
 
+                // SEPARATE HASHES
+                $hashes = array();
+                foreach ($db_all as $key => $value) {
+                    $hashes[$key] = md5(json_encode($value));
+                }
+                // SEPARATE HASHES
+
                 $data = json_encode($db_all);
                 $newHash = hash('md5', $data);
 
                 // Refresh `App` in DB
-                $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'DBHash'");
-                if ($newHash !== $appData['DBHash'] && $result === TRUE) {
-                    $appData['DBHash'] = $newHash;
+                $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHash' WHERE `ID` = 'Hashes'");
+                if ($newHash !== $appData['Hashes'] && $result === TRUE) {
+                    $appData['Hashes'] = $newHash;
                 }
             }
 
@@ -186,12 +196,16 @@
          * namely: activities, quotes, icons, titles, successes etc.
          */
         public function GetInternalData() {
+            // SEPARATE HASHES
+            $hashes = $this->data['hashes'];
+            // SEPARATE HASHES
+
             $lang = $this->data['lang'];
             $hash = $this->data['hash'];
             $appData = $this->GetAppData();
 
             if (!empty($lang) && isset($hash)) {
-                $hash_check = $appData['DBHash'];
+                $hash_check = $appData['Hashes'];
 
                 // Send all data or just 'same'
                 if ($hash != $hash_check) {

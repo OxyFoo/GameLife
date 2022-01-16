@@ -49,7 +49,7 @@ class BottomBar extends React.Component {
     goToHome = () => user.interface.ChangePage('home');
     goToCalendar = () => user.interface.ChangePage('calendar');
     goToActivity = () => user.interface.ChangePage('activity', undefined, true);
-    goToSettings = () => user.interface.ChangePage('settings');
+    goToMultiplayer = () => user.interface.ChangePage('multiplayer');
     goToShop = () => user.interface.ChangePage('shop');
 
     render() {
@@ -97,7 +97,7 @@ class BottomBar extends React.Component {
                         color='transparent'
                         borderRadius={0}
                         rippleColor='#9095FF'
-                        onPress={this.goToSettings}
+                        onPress={this.goToMultiplayer}
                     >
                         <Icon icon='social' color={isChecked(3)} />
                     </Button>

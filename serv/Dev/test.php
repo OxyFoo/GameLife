@@ -109,8 +109,8 @@
                 $date = $app[$i]['Date'];
                 if ($index === "Version") {
                     $data['Version'] = $value;
-                } else if ($index === "DBHash") {
-                    $data["DBHash"] = $value;
+                } else if ($index === "Hashes") {
+                    $data["Hashes"] = $value;
                     $data["LastHashRefresh"] = MinutesFromDate($date);
                 }
             }
@@ -118,7 +118,7 @@
         }
     } else if ($action === "setHashTest") {
         $hashTest = "Blabla";
-        $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$hashTest' WHERE `ID` = 'DBHash'");
+        $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$hashTest' WHERE `ID` = 'Hashes'");
     } else if ($action === "getAccount") {
         $ID = 1;
         $command = "SELECT * FROM `Users` WHERE `ID` = '$ID'";

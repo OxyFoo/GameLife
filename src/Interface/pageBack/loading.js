@@ -71,7 +71,6 @@ class BackLoading extends React.Component {
             if (saved) await user.onlineLoad();
             else console.error('saveUnsavedData failed');
         }
-        user.tempQuote = dataManager.quotes.GetRandomQuote();
 
         // Loading : Notifications
         if (user.settings.morningNotifications) {

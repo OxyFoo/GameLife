@@ -18,10 +18,7 @@ class Achievements {
         this.achievements = [];
     }
 
-    save() {
-        return JSON.stringify(this.achievements);
-    }
-    load(achievements) {
+    Load(achievements) {
         if (strIsJSON(achievements)) {
             this.achievements = JSON.parse(achievements);
             for (let i = 0; i < this.achievements.length; i++) {
@@ -33,6 +30,9 @@ class Achievements {
                 }
             }
         }
+    }
+    Save() {
+        return JSON.stringify(this.achievements);
     }
 
     getAchievements = (solved) => {

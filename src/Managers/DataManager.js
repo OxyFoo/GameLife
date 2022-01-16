@@ -29,9 +29,9 @@ class DataManager {
 
     async localSave() {
         const internalData = {
-            'achievements': this.achievements.save(),
+            'achievements': this.achievements.Save(),
             'contributors': this.contributors.save(),
-            'quotes': this.quotes.save(),
+            'quotes': this.quotes.Save(),
             'skills': this.skills.save(),
             'titles': this.titles.save()
         }
@@ -42,9 +42,9 @@ class DataManager {
     async localLoad() {
         const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
         if (internalData !== null) {
-            this.achievements.load(internalData['achievements']);
+            this.achievements.Load(internalData['achievements']);
             this.contributors.load(internalData['contributors']);
-            this.quotes.load(internalData['quotes']);
+            this.quotes.Load(internalData['quotes']);
             this.skills.load(internalData['skills']);
             this.titles.load(internalData['titles']);
         }
@@ -69,7 +69,9 @@ class DataManager {
                 const tables = reqInternalData.content['tables'];
                 const hash = reqInternalData.content['hash'];
 
-                this.achievements.achievements = tables['achievements'];
+                if (tables.hasOwnProperty('achievements')) this.achievements.Set(tables['achievements']);
+
+                //this.achievements.achievements = tables['achievements'];
                 this.contributors.contributors = tables['contributors'];
                 this.quotes.quotes = tables['quotes'];
                 this.skills.skills = tables['skills'];

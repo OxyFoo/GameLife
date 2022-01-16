@@ -12,6 +12,9 @@
         return $db_all;
     }
 
+    function GetNewInternalData($db) {
+    }
+
     function GetAchievements($db, $lang = 'fr') {
         $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
         if ($achievements === FALSE) return array();

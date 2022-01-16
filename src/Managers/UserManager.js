@@ -45,7 +45,6 @@ class UserManager {
         this.birth = 0;
         this.xp = 0;
         this.stats = DEFAULT_STATS;
-        this.tempQuote = null;
         this.tempSelectedTime = null;
     }
 
@@ -56,7 +55,6 @@ class UserManager {
         this.birth = 0;
         this.xp = 0;
         this.stats = DEFAULT_STATS;
-        this.tempQuote = null;
         this.tempSelectedTime = null;
         this.quests.daily = [];
         this.quests.todoList = [];

@@ -13,14 +13,20 @@ class Quotes {
          * @type {Quote[]}
          */
         this.quotes = [];
+
+        /**
+         * @type {?Quote}
+         */
+        this.currentQuote = null;
     }
 
-    save() {
+    Save() {
         return JSON.stringify(this.quotes);
     }
-    load(achievements) {
+    Load(achievements) {
         if (strIsJSON(achievements)) {
             this.quotes = JSON.parse(achievements);
+            this.currentQuote = this.GetRandomQuote();
         }
     }
 

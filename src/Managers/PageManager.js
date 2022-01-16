@@ -4,8 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import user from '../Managers/UserManager';
 import langManager from './LangManager';
-import { TimingAnimation } from '../Functions/Animations';
-import { isUndefined } from '../Functions/Functions';
+import { SpringAnimation, TimingAnimation } from '../Functions/Animations';
+import { isUndefined, sleep } from '../Functions/Functions';
 import { BottomBar, Popup } from '../Interface/Widgets';
 
 import About from '../Interface/pageFront/about';
@@ -37,6 +37,8 @@ class PageManager extends React.Component{
         page2: '',
         animOpacity1: new Animated.Value(0),
         animOpacity2: new Animated.Value(0),
+        //animOpacity: new Animated.Value(0),
+        animTransition: new Animated.Value(1),
         arguments: {},
         ignorePage: false,
 
@@ -137,26 +139,36 @@ class PageManager extends React.Component{
         return true;
     }
 
-    pageAnimation = (newpage) => {
-        const animation_duration = 200;
+    pageAnimation = async (newpage) => {
+        const animDuration = 200;
+        const animScaleDuration = 100;
+
+        TimingAnimation(this.state.animTransition, 0, animScaleDuration).start();
+        //await sleep(animScaleDuration/4);
 
         // Switch pages animation
         if (!this.state.page1) {
-            // Load page 1
-            this.setState({ page1: newpage }, () => {
-                // Clear page 2
-                TimingAnimation(this.state.animOpacity2, 0, animation_duration).start(() => { this.setState({ page2: '' }); });
-                // Show page 1
-                TimingAnimation(this.state.animOpacity1, 1, animation_duration).start();
-            });
+            setTimeout(() => {
+                // Load page 1
+                this.setState({ page1: newpage }, () => {
+                    TimingAnimation(this.state.animTransition, 1, animScaleDuration).start();
+                    // Clear page 2
+                    TimingAnimation(this.state.animOpacity2, 0, animDuration).start(() => { this.setState({ page2: '' }); });
+                    // Show page 1
+                    TimingAnimation(this.state.animOpacity1, 1, animDuration).start();
+                });
+            }, 0);
         } else {
-            // Load page 2
-            this.setState({ page2: newpage }, () => {
-                // Clear page 1
-                TimingAnimation(this.state.animOpacity1, 0, animation_duration).start(() => { this.setState({ page1: '' }); });
-                // Show page 2
-                TimingAnimation(this.state.animOpacity2, 1, animation_duration).start();
-            });
+            setTimeout(() => {
+                // Load page 2
+                this.setState({ page2: newpage }, () => {
+                    TimingAnimation(this.state.animTransition, 1, animScaleDuration).start();
+                    // Clear page 1
+                    TimingAnimation(this.state.animOpacity1, 0, animDuration).start(() => { this.setState({ page1: '' }); });
+                    // Show page 2
+                    TimingAnimation(this.state.animOpacity2, 1, animDuration).start();
+                });
+            }, 0);
         }
 
         // Bottom bar selected index animation
@@ -168,7 +180,7 @@ class PageManager extends React.Component{
 
         setTimeout(() => {
             this.changing = false;
-        }, animation_duration + 300);
+        }, animDuration + 300);
     }
 
     GetCurrentPage = () => {
@@ -208,18 +220,25 @@ class PageManager extends React.Component{
         const page1 = this.getPageContent(this.state.page1, this.state.arguments);
         const page2 = this.getPageContent(this.state.page2, this.state.arguments);
 
-        const fullscreen = { width: '100%', height: '100%' }
+        const interScale = { inputRange: [0, 1], outputRange: [0.95, 1] };
+        const interOpacity = { inputRange: [0, 1], outputRange: [0.2, 0] };
+
+        const fullscreen = { width: '100%', height: '100%' };
+        const absolute = { position: 'absolute', top: 0, left: 0 };
+        const scale = { transform: [{ scale: this.state.animTransition.interpolate(interScale) }] };
+        const page1Style = [fullscreen, absolute, scale, { opacity: this.state.animOpacity1 }];
+        const page2Style = [fullscreen, absolute, scale, { opacity: this.state.animOpacity2 }];
+        const page1Event = this.state.page1 ? 'auto' : 'none';
+        const page2Event = this.state.page2 ? 'auto' : 'none';
+        const overlayStyle = [fullscreen, absolute, { backgroundColor: '#000000', opacity: this.state.animTransition.interpolate(interOpacity) }];
 
         return (
             <LinearGradient style={fullscreen} colors={['#03052E', '#353657']}>
-                <Animated.View pointerEvents={this.state.page1 ? 'auto' : 'none'} style={[fullscreen, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity1 }]}>
-                    {page1}
-                </Animated.View>
-                <Animated.View pointerEvents={this.state.page2 ? 'auto' : 'none'} style={[fullscreen, { position: 'absolute', left: 0, top: 0, opacity: this.state.animOpacity2 }]}>
-                    {page2}
-                </Animated.View>
+                <Animated.View style={page1Style} pointerEvents={page1Event}>{page1}</Animated.View>
+                <Animated.View style={page2Style} pointerEvents={page2Event}>{page2}</Animated.View>
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.pageIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref }} />
+                <Animated.View style={overlayStyle} pointerEvents='none' />
             </LinearGradient>
         )
     }

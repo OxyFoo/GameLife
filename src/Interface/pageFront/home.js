@@ -8,6 +8,7 @@ import BackHome from '../pageBack/home';
 import { round } from '../../Functions/Functions';
 import { UserHeader, StatsBars } from '../Widgets';
 import { Button, Container, Swiper, Text, XPBar, Page } from '../Components';
+import dataManager from '../../Managers/DataManager';
 
 class Home extends BackHome {
     render() {
@@ -15,10 +16,11 @@ class Home extends BackHome {
         const userStats = user.experience.GetExperience();
         const nextLvlPc = round(userStats.xp / userStats.next, 2);
 
-        const quote = user.tempQuote === null ? null : (
+        const currentQuote = dataManager.quotes.currentQuote;
+        const quote = currentQuote === null ? null : (
             <View style={styles.swiper}>
-                <Text style={styles.citation}>{user.tempQuote.Quote}</Text>
-                <Text style={styles.author}>{user.tempQuote.Author}</Text>
+                <Text style={styles.citation}>{currentQuote.Quote}</Text>
+                <Text style={styles.author}>{currentQuote.Author}</Text>
             </View>
         );
 

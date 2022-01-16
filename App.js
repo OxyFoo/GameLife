@@ -14,7 +14,7 @@ class App extends React.Component {
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
 
         // Start the app
-        user.interface.ChangePage('test', undefined, true); return; // TEST
+        //user.interface.ChangePage('test', undefined, true); return; // TEST
         user.interface.ChangePage('loading', undefined, true);
     }
 

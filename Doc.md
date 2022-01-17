@@ -34,8 +34,11 @@
     - TODO
 
 ## News
-* Texte : Juste du texte
-* Icone + texte : Nom de l'icône qui sera affichée à gauche du texte + texte
-* Bouton + texte : Texte à gauche + Bouton de redirection à droite
-    - Redirection vers un site web
-    - Redirection vers une page de l'app
+* Texte
+    - 'Blablabla'
+* Icone
+    - 'icon;xmlIconInBase64'
+* Bouton de redirection (vers un site web ou une page de l'app)
+    - 'button;buttonText;page|web;pageNameOrWebsiteURL
+* Exemple
+    - [ 'Faites un tour dans la boutique !', 'button;Boutique;page;shop' ]

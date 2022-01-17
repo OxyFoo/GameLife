@@ -23,6 +23,8 @@ class Quotes {
     Load(quotes) {
         if (typeof(quotes) === 'object') {
             this.quotes = quotes;
+        }
+        if (this.quotes.length) {
             this.currentQuote = this.GetRandomQuote();
         }
     }

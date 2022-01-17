@@ -30,6 +30,7 @@ import TextSwitch from './Components/TextSwitch';
 import Checkbox from './Components/Checkbox';
 import Container from './Components/Container';
 import ComboBox from './Components/ComboBox';
+import News from './Components/News';
 import Swiper from './Components/Swiper';
 import Switch from './Components/Switch';
 import ProgressBar from './Components/ProgressBar';
@@ -49,6 +50,7 @@ export {
     Checkbox,
     Container,
     ComboBox,
+    News,
     Swiper,
     Switch,
     ProgressBar,

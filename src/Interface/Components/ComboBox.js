@@ -26,7 +26,8 @@ const ComboBoxProps = {
      * @type {React.Ref}
      * @description Used to prevent scroll page when scrolling list
      */
-    pageRef: null
+    pageRef: null,
+    ignoreWarning: false
 }
 
 class ComboBox extends React.Component {
@@ -73,7 +74,7 @@ class ComboBox extends React.Component {
         // Disable parent scroll
         if (this.props.pageRef !== null) {
             this.props.pageRef.DisableScroll();
-        } else {
+        } else if (!this.props.ignoreWarning) {
             console.warn('ComboBox: pageRef is null');
         }
 
@@ -201,10 +202,10 @@ const styles = StyleSheet.create({
     },
     overlayBackground: {
         position: 'absolute',
-        top: '-100%',
-        left: '-100%',
-        right: '-100%',
-        bottom: '-100%',
+        top: '-1000%',
+        left: '-1000%',
+        right: '-1000%',
+        bottom: '-1000%',
         backgroundColor: '#00000055',
         zIndex: 900,
         elevation: 900

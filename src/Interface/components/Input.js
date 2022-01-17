@@ -16,7 +16,7 @@ const InputProps = {
      * @type {'default'|'email'|'username'|'name'} - The type of the input.
      */
     textContentType: 'default',
-    onChangeText: () => {},
+    onChangeText: (newText) => {},
     enabled: true,
     active: false,
     pointerEvents: 'auto'
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: -2,
         left: 6,
-        height: 2,
+        height: 3,
         backgroundColor: 'red'
     }
 });

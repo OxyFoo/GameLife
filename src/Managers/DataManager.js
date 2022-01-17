@@ -15,6 +15,8 @@ class DataManager {
         this.titles = new Titles();
         this.quotes = new Quotes();
         this.contributors = new Contributors();
+
+        this.news = [];
     }
 
     GetText(value) {
@@ -68,6 +70,9 @@ class DataManager {
                 const reqHashes = reqInternalData.content['hashes'];
                 const reqTables = reqInternalData.content['tables'];
 
+                const reqNews = reqInternalData.content['news'];
+                if (typeof(reqNews) === 'object') this.news = reqNews;
+
                 if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
                 if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);
                 if (reqTables.hasOwnProperty('quotes')) this.quotes.Load(reqTables['quotes']);
@@ -79,10 +84,7 @@ class DataManager {
                     };
                     this.skills.Load(skills);
                 }
-                if (reqTables.hasOwnProperty('titles')) {
-                    this.titles.Load(reqTables['titles']);
-                    console.log('loaded');
-                }
+                if (reqTables.hasOwnProperty('titles')) this.titles.Load(reqTables['titles']);
 
                 await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes, false);
                 await this.LocalSave();

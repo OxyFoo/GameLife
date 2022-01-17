@@ -49,9 +49,9 @@
                         $lastHashRefresh = MinutesFromDate($date);
                     } else if ($ID === "Maintenance") {
                         $appData["Maintenance"] = $data !== '0';
+                    } else if ($ID === 'News') {
+                        $appData["News"] = json_decode($data, true);
                     }
-                    // TODO - Si on laisse offline les news, on les lit ici
-                    // Sinon on les prend avec les internalData, avec des hashs séparés
                 }
             }
 
@@ -204,11 +204,10 @@
                 $newTables = GetNewInternalData($this->db, $reqHashes, $appHashes);
 
                 // Return new hashes & data
-                if (count($newTables) > 0) {
-                    $this->output['tables'] = $newTables;
-                    $this->output['hashes'] = $appHashes;
-                    $this->output['status'] = 'ok';
-                }
+                $this->output['news'] = $appData['News'];
+                $this->output['tables'] = $newTables;
+                $this->output['hashes'] = $appHashes;
+                $this->output['status'] = 'ok';
             }
         }
 

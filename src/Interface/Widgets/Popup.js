@@ -22,6 +22,7 @@ class Popup extends React.PureComponent {
         args: null,
         callback: () => {},
         cancelable: true,
+        cross: false,
         x: 0, y: 0,
 
         animOpacity: new Animated.Value(0),
@@ -33,7 +34,7 @@ class Popup extends React.PureComponent {
         this.setState({ x: x, y: y });
     }
 
-    Open = (type, args, callback = () => {}, cancelable = true) => {
+    Open = (type, args, callback = () => {}, cancelable = true, cross = cancelable) => {
         const { opened } = this.state;
         if (opened) return false;
 
@@ -42,7 +43,8 @@ class Popup extends React.PureComponent {
             type: type,
             args: args,
             callback: callback,
-            cancelable: cancelable
+            cancelable: cancelable,
+            cross: cross
         });
 
         TimingAnimation(this.state.animOpacity, 1, 200).start();
@@ -142,7 +144,7 @@ class Popup extends React.PureComponent {
                 onTouchEnd={() => { this.forceUpdate() }}
             >
                 <View style={styles.background} onTouchStart={() => { this.Close(false) }} />
-                {this.state.cancelable && <Button style={buttonQuit} color='backgroundCard' colorText='main1' onPress={() => { this.Close(false) }}>X</Button>}
+                {this.state.cancelable || this.state.cross && <Button style={buttonQuit} color='backgroundCard' colorText='main1' onPress={() => { this.Close(this.state.cross) }}>X</Button>}
                 <Animated.View style={containerStyle} onLayout={this.onLayout}>
                     {this.content()}
                 </Animated.View>
@@ -174,7 +176,8 @@ const styles = StyleSheet.create({
     container: {
         width: '80%',
         maxHeight: '60%',
-        borderRadius: 16
+        borderRadius: 16,
+        overflow: 'hidden'
     },
 
     title: {

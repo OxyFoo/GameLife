@@ -1,62 +1,49 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-
-import langManager from '../../Managers/LangManager';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { IsUndefined } from '../../Functions/Functions';
 
 import user from '../../Managers/UserManager';
-import { Text, Icon, Input, Button } from '../Components';
+import langManager from '../../Managers/LangManager';
+
+import { GetAge } from '../../Functions/Time';
+import { Text, Icon, Button } from '../Components';
 
 const UserHeaderProps = {
     style: {},
     showAge: false,
-    editable: false
+    onPress: undefined
 }
 
 class UserHeader extends React.Component {
-    state = {
-        input: user.username
-    }
-
     onPress = () => {
-        if (!this.props.editable) return;
-        user.interface.popup.Open('custom', this.renderEdit, undefined, true);
+        if (typeof(this.props.onPress) === 'function') {
+            this.props.onPress();
+        }
     }
 
     onAvatarPress = () => {
         user.interface.ChangePage('identity');
     }
 
-    // TODO - Terminer cette popup
-    renderEdit = () => {
-        return (
-            <View>
-                <Text>TEST</Text>
-                <Input
-                    label='PSEUDO'
-                    text={this.state.input}
-                    onChangeText={(text) => { this.setState({ input: text }) }}
-                />
-            </View>
-        );
-    }
-
     render() {
-        const age = langManager.curr['identity']['value-age'].replace('{}', '18');
+        const editable = !IsUndefined(this.props.onPress);
+        const age = GetAge(user.birthTime);
         const showAge = age !== null && this.props.showAge;
-        const activeOpacity = this.props.editable ? 0.6 : 1;
+        const activeOpacity = editable ? 0.6 : 1;
 
+        const userTitle = user.GetTitle();
         const edit = <Icon icon='edit' color='border' />;
         const avatar = <Button style={styles.avatar} onPress={this.onAvatarPress} rippleColor='white' />;
-        const rightItem = this.props.editable ? edit : avatar;
+        const rightItem = editable ? edit : avatar;
 
         return (
             <TouchableOpacity style={[styles.header, this.props.style]} onPress={this.onPress} activeOpacity={activeOpacity}>
-                <View>
+                <View style={{ justifyContent: 'center', height: 84 }}>
                     <View style={styles.usernameContainer}>
                         <Text style={styles.username} color='primary'>{user.username}</Text>
-                        {showAge && <Text style={styles.age} color='secondary'>{age}</Text>}
+                        {showAge && <Text style={styles.age} color='secondary'>{langManager.curr['identity']['value-age'].replace('{}', age)}</Text>}
                     </View>
-                    <Text style={styles.title} color='secondary'>{user.GetTitle()}</Text>
+                    {userTitle !== '' && <Text style={styles.title} color='secondary'>{userTitle}</Text>}
                 </View>
                 {rightItem}
             </TouchableOpacity>
@@ -73,9 +60,7 @@ const styles = StyleSheet.create({
         marginBottom: 24,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        elevation: 1000,
-        zIndex: 1000
+        justifyContent: 'space-between'
     },
     usernameContainer: {
         flexDirection: 'row',
@@ -95,10 +80,10 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     avatar: {
-        position: 'absolute',
+        /*position: 'absolute',
         top: '20%',
-        right: 0,
-        height: '60%',
+        right: 0,*/
+        height: 48,
         aspectRatio: 1,
         borderRadius: 4,
         borderColor: 'white',

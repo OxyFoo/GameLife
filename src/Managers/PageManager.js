@@ -143,7 +143,6 @@ class PageManager extends React.Component{
         const animScaleDuration = 100;
 
         TimingAnimation(this.state.animTransition, 0, animScaleDuration).start();
-        //await Sleep(animScaleDuration/4);
 
         // Switch pages animation
         if (!this.state.page1) {
@@ -225,11 +224,13 @@ class PageManager extends React.Component{
         const fullscreen = { width: '100%', height: '100%' };
         const absolute = { position: 'absolute', top: 0, left: 0 };
         const scale = { transform: [{ scale: this.state.animTransition.interpolate(interScale) }] };
+
         const page1Style = [fullscreen, absolute, scale, { opacity: this.state.animOpacity1 }];
         const page2Style = [fullscreen, absolute, scale, { opacity: this.state.animOpacity2 }];
+        const overlayStyle = [fullscreen, absolute, { backgroundColor: '#000000', opacity: this.state.animTransition.interpolate(interOpacity) }];
+
         const page1Event = this.state.page1 ? 'auto' : 'none';
         const page2Event = this.state.page2 ? 'auto' : 'none';
-        const overlayStyle = [fullscreen, absolute, { backgroundColor: '#000000', opacity: this.state.animTransition.interpolate(interOpacity) }];
 
         return (
             <LinearGradient style={fullscreen} colors={['#03052E', '#353657']}>

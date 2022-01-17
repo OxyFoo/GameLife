@@ -221,7 +221,7 @@ class Avatar extends React.Component {
                 </Animated.View>
 
                 {/* Editor panel */}
-                <Animated.View style={editorStyle} pointerEvents={editorOpened ? 'auto' : 'none'} onLayout={this.onEditorLayout}>
+                <Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
                     <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%', marginBottom: 12 }} />
                     {this.renderSelectedStuff()}
 

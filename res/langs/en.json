@@ -247,17 +247,26 @@
 
     "identity": {
         "value-age": "{} years old",
+        "value-age-empty": "Date of birth unknown",
+        "value-title-empty": "No title selected",
+
+        "input-title": "Title",
+        "input-username": "Username",
+        "input-age": "Edit",
+        "input-select-age": "Select your day of birth",
+
+        "edit-title": "Edit your profile",
+        "edit-save": "Save",
+        "edit-cancel": "Cancel",
 
         "___OLD___": "",
-        "name-username": "Pseudo",
-        "name-title": "Title",
         "name-age": "Age",
         "name-email": "EMail",
         "name-totaltime": "Practice time",
 
         "value-totaltime": "{}h {}m",
 
-        "placeholder-username": "Pseudo",
+        "placeholder-username": "Username",
         "empty-title": "None",
 
         "name-lastachievement": "Last achievement",

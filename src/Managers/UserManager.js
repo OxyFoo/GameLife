@@ -42,7 +42,7 @@ class UserManager {
         this.username = '';
         this.usernameDate = null;
         this.title = 0;
-        this.birth = 0;
+        this.birthTime = null;
         this.xp = 0;
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;
@@ -52,7 +52,7 @@ class UserManager {
         this.username = '';
         this.usernameDate = null;
         this.title = 0;
-        this.birth = 0;
+        this.birthTime = null;
         this.xp = 0;
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;
@@ -89,7 +89,7 @@ class UserManager {
 
     GetTitle() {
         const title = dataManager.titles.GetTitleByID(user.title);
-        return title === null ? '' : dataManager.GetText(title);
+        return title === null ? '' : dataManager.GetText(title.Name);
     }
 
     async EventNewAchievement(achievement) {
@@ -155,7 +155,7 @@ class UserManager {
             'username': this.username,
             'usernameDate': this.usernameDate,
             'title': this.title,
-            'birth': this.birth,
+            'birth': this.birthTime,
             'xp': this.xp,
             'activities': this.activities.GetAll(),
             'solvedAchievements': this.achievements.solved,
@@ -200,7 +200,7 @@ class UserManager {
         if (data !== null) {
             this.username = loadKey('username');
             this.usernameDate = loadKey('usernameDate');
-            this.title = 1;//data['title'];
+            this.title = 0;//data['title'];
             //this.activities.SetAll(data['activities']);
             //this.birth = data['birth'];
             //this.xp = data['xp'];

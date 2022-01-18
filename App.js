@@ -3,6 +3,7 @@ import { AppState, LogBox, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
+
 import { CheckDate } from './src/Tools/DateCheck';
 
 class App extends React.Component {
@@ -26,6 +27,8 @@ class App extends React.Component {
                 this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);*/
                 console.error("TODO - Message d'erreur");
             }
+        } else if (state === 'background') {
+            user.OnlineSave();
         }
     }
 

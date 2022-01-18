@@ -1,8 +1,6 @@
 import { UserManager } from "../Managers/UserManager";
 import { GetMidnightTime, GetTime } from "../Functions/Time";
 
-import dataManager from "../Managers/DataManager";
-
 class Activity {
     skillID = 0;
     startTime = 0;
@@ -155,7 +153,7 @@ class Activities {
             const activity = this.activities[a];
             if (activity.startTime >= startTime && activity.startTime <= endTime) {
                 if (!onlyRelax) return true;
-                if (dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
+                if (this.user.dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
             }
         }
         return false;

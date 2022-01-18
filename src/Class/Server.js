@@ -2,6 +2,7 @@ import { BackHandler } from 'react-native';
 
 import { UserManager } from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
+
 import { Request_Async } from '../Functions/Request';
 import { GetDeviceInformations, StrIsJSON } from '../Functions/Functions';
 
@@ -55,9 +56,11 @@ class Server {
                 // TODO - Gérer la maintenance
             } else if (status === 'ok') {
                 online = true;
+                this.user.AddLog('info', 'Request: ping - OK');
             }
         } else {
-            console.error('Ping failed:', result_ping.status, '-', result_ping.content);
+            const error = result_ping.status + '-' + result_ping.content;
+            this.user.AddLog('error', 'Request: ping failed (' + error + ')');
         }
         this.online = online;
     }
@@ -72,7 +75,8 @@ class Server {
         const result_connect = await this.__reqConnect(email);
 
         if (result_connect.status !== 200) {
-            console.error('Get token failed: ' + result_connect.status + ' - ' + result_connect.content['error']);
+            const error = result_connect.status + ' - ' + result_connect.content['error'];
+            this.user.AddLog('error', 'Request: connect failed (' + error + ')');
             return STATUS.ERROR;
         }
 

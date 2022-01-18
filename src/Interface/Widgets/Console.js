@@ -4,6 +4,13 @@ import { View, Animated, StyleSheet, FlatList } from 'react-native';
 import { Text, Button } from '../Components';
 import { SpringAnimation } from '../../Functions/Animations';
 
+/**
+ * 0: Show all logs
+ * 1: Show only warnings and errors
+ * 2: Show only errors
+ */
+const LEVEL_CONSOLE = 2;
+
 const ConsoleProps = {
     enable: false
 }
@@ -21,8 +28,20 @@ class Console extends React.Component {
      * @param {String} text
      */
     AddDebug = (type, text) => {
+        // Add to app console
         const newMessage = [type, text];
         this.setState({ debug: [...this.state.debug, newMessage] });
+
+        // Add to terminal
+        let printLog = console.log;
+        if (type === 'warn') printLog = console.warn;
+        else if (type === 'error') printLog = console.error;
+
+        if (LEVEL_CONSOLE === 0 ||
+           (LEVEL_CONSOLE >= 1  && type === 'warn') ||
+           (LEVEL_CONSOLE >= 2  && type === 'error')) {
+            printLog(text);
+        }
     }
 
     open = () => {
@@ -31,6 +50,7 @@ class Console extends React.Component {
         this.refDebug.scrollToEnd();
     }
     close = () => {
+        console.log('close');
         this.setState({ opened: false });
         SpringAnimation(this.state.animation, 0).start();
     }
@@ -51,7 +71,7 @@ class Console extends React.Component {
         const translateY = { transform: [{ translateY: this.state.animation.interpolate(interY) }] };
 
         return (
-            <Animated.View style={[styles.console, translateY]}>
+            <Animated.View style={[styles.console, translateY]} pointerEvents={'box-none'}>
                 <View style={styles.content}>
                     <FlatList
                         ref={ref => { if (ref !== null) this.refDebug = ref }}
@@ -75,7 +95,7 @@ class Console extends React.Component {
                     styleAnimation={{ opacity: this.state.animation }}
                     color='main2'
                     onPress={this.close}
-                    pointerEvents={this.state.opened ? 'auto' : 'none'}
+                    pointerEvents={this.state.opened ? undefined : 'none'}
                 >
                     Close console
                 </Button>
@@ -116,7 +136,9 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         height: 60,
-        borderRadius: 4
+        borderRadius: 0,
+        borderBottomLeftRadius: 16,
+        borderBottomRightRadius: 16
     }
 });
 

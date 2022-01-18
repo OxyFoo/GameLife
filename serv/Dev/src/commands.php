@@ -222,14 +222,17 @@
     
                 if (isset($accountID)) {
                     $account = Account::GetByID($this->db, $accountID);
+
                     $username = $account['Username'];
-                    $title = $account['Title'];
+                    $usernameTime = strtotime($account['LastChangeUsername']);
+                    $title = intval($account['Title']);
+
                     $activities = $this->db->Decrypt($account['Data']);
                     $solvedAchievements = $account['SolvedAchievements'];
                     if (isset($activities, $username, $title, $solvedAchievements)) {
                         $userData = array(
                             'username' => $username,
-                            'usernameDate' => $usernameDate,
+                            'usernameTime' => $usernameTime,
                             'title' => $title,
                             'activities' => json_decode($activities, true)
                         );

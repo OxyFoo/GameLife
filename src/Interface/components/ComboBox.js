@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { Animated, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
 
+import user from '../../Managers/UserManager';
+import themeManager from '../../Managers/ThemeManager';
+import langManager from '../../Managers/LangManager';
+
 import Text from './Text';
 import Button from './Button';
 import Icon from './Icon';
 import Input from './Input';
-import themeManager from '../../Managers/ThemeManager';
-import langManager from '../../Managers/LangManager';
 import { SpringAnimation } from '../../Functions/Animations';
 
 const ComboBoxProps = {
@@ -75,7 +77,7 @@ class ComboBox extends React.Component {
         if (this.props.pageRef !== null) {
             this.props.pageRef.DisableScroll();
         } else if (!this.props.ignoreWarning) {
-            console.warn('ComboBox: pageRef is null');
+            user.AddLog('warn', 'ComboBox: pageRef is null');
         }
 
         // Scroll to top

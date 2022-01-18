@@ -1,6 +1,7 @@
-import langManager from "./LangManager";
-import dataManager from './DataManager';
 //import PageManager from "./PageManager";
+//import dataManager from './DataManager';
+
+import langManager from "./LangManager";
 
 import Achievements from '../Class/Achievements';
 import Activities from '../Class/Activities';
@@ -37,10 +38,14 @@ class UserManager {
      */
     interface;
 
+    /**
+     * @type {DataManager}
+     */
+    dataManager;
+
     constructor() {
-        // User informations
         this.username = '';
-        this.usernameDate = null;
+        this.usernameTime = null;
         this.title = 0;
         this.birthTime = null;
         this.xp = 0;
@@ -50,12 +55,14 @@ class UserManager {
 
     async clear() {
         this.username = '';
-        this.usernameDate = null;
+        this.usernameTime = null;
         this.title = 0;
         this.birthTime = null;
         this.xp = 0;
+
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;
+
         this.quests.daily = [];
         this.quests.todoList = [];
 
@@ -88,15 +95,15 @@ class UserManager {
     }
 
     GetTitle() {
-        const title = dataManager.titles.GetTitleByID(user.title);
-        return title === null ? '' : dataManager.GetText(title.Name);
+        const title = this.dataManager.titles.GetTitleByID(user.title);
+        return title === null ? '' : this.dataManager.GetText(title.Name);
     }
 
     async EventNewAchievement(achievement) {
     }
 
     DaysBeforeChangePseudo = () => {
-        const delta = GetDaysUntil(this.usernameDate);
+        const delta = GetDaysUntil(this.usernameTime);
         const remain = DAYS_PSEUDO_CHANGE - Math.round(delta);
         return [ remain, DAYS_PSEUDO_CHANGE ];
     }
@@ -116,7 +123,7 @@ class UserManager {
             const text = langManager.curr['identity']['alert-wrongpseudo-text'];
             this.interface.popup.Open('ok', [ title, text ], loadData.bind(this));
         } else if (status === "ok") {
-            this.usernameDate = new Date();
+            this.usernameTime = new Date();
             this.LocalSave();
         }
     }*/
@@ -128,8 +135,8 @@ class UserManager {
         let unlockTitles = [
             { key: 0, value: langManager.curr['identity']['empty-title'] }
         ];
-        for (let t = 0; t < dataManager.titles.titles.length; t++) {
-            const title = dataManager.titles.titles[t];
+        for (let t = 0; t < this.dataManager.titles.titles.length; t++) {
+            const title = this.dataManager.titles.titles[t];
             const cond = parseInt(title.AchievementsCondition);
             if (isNaN(cond)) {
                 continue;
@@ -153,7 +160,7 @@ class UserManager {
     LocalSave = async () => {
         const data = {
             'username': this.username,
-            'usernameDate': this.usernameDate,
+            'usernameTime': this.usernameTime,
             'title': this.title,
             'birth': this.birthTime,
             'xp': this.xp,
@@ -165,8 +172,8 @@ class UserManager {
         };
 
         const saved = await DataStorage.Save(STORAGE.USER, data);
-        if (saved) this.AddLog('info', 'User data: local save');
-        else       this.AddLog('error', 'User data: local save failed');
+        if   (saved)  this.AddLog('info', 'User data: local save');
+        else          this.AddLog('error', 'User data: local save failed');
         return saved;
     }
 
@@ -181,68 +188,61 @@ class UserManager {
             data['achievements'] = this.achievements.UNSAVED_solved;
         }
 
-        const saved = await this.server.SaveData(data);
-        if (saved) {
-            this.activities.Purge();
-            this.achievements.Purge();
-            this.AddLog('info', 'User data: online save');
-        } else {
-            this.AddLog('error', 'User data: online save failed');
+        if (Object.keys(data).length) {
+            const saved = await this.server.SaveData(data);
+            if (saved) {
+                this.activities.Purge();
+                this.achievements.Purge();
+                this.AddLog('info', 'User data: online save');
+            } else {
+                this.AddLog('error', 'User data: online save failed');
+            }
         }
     };
 
+    // TODO - Finir ça
     async LocalLoad() {
         let data = await DataStorage.Load(STORAGE.USER);
+        const contains = (key) => data.hasOwnProperty(key);
 
-        const loadKey = (key, defaultValue) => {
-            if (!data.hasOwnProperty(key)) return defaultValue;
-            return data[key];
-        }
-
-        // TODO - Finir ça
         if (data !== null) {
-            this.username = loadKey('username');
-            this.usernameDate = loadKey('usernameDate');
-            this.title = 0;//data['title'];
+            if (contains('username')) this.username = data['username'];
+            if (contains('usernameTime')) this.usernameTime = data['usernameTime'];
+            if (contains('title')) this.title = data['title'];
             //this.activities.SetAll(data['activities']);
             //this.birth = data['birth'];
             //this.xp = data['xp'];
             //this.achievements.solved = data['solvedAchievements'];
             //this.quests.daily = data['daily'];
             //this.quests.todoList = data['tasks'];
-            if (loadKey('currentActivity', null) !== null) {
-                this.activities.currentActivity = loadKey('currentActivity');
-            }
+            if (contains('currentActivity')) this.activities.currentActivity = data['currentActivity'];
+
             this.AddLog('info', 'User data: local load');
         } else {
-            this.AddLog('error', 'User data: local load failed');
+            this.AddLog('warn', 'User data: local load failed');
         }
 
         this.refreshStats();
         return data !== null;
     }
+
+    // TODO - Finir ça
     async OnlineLoad() {
         let data = await this.server.LoadUserData();
+        const contains = (key) => data.hasOwnProperty(key);
 
-        const loadKey = (key, defaultValue) => {
-            if (!data.hasOwnProperty(key)) return defaultValue;
-            return data[key];
-        }
-
-        // TODO - Finir ça
         if (data !== null) {
-            this.username = loadKey('username');
-            this.usernameDate = loadKey('usernameDate');
-            this.title = 0;//data['title'];
+            if (contains('username')) this.username = data['username'];
+            if (contains('usernameTime')) this.usernameTime = data['usernameTime'];
+            if (contains('title')) this.title = data['title'];
             //this.activities.SetAll(data['activities']);
             //this.birth = data['birth'];
             //this.xp = data['xp'];
             //this.achievements.solved = data['solvedAchievements'];
             //this.quests.daily = data['daily'];
             //this.quests.todoList = data['tasks'];
-            if (loadKey('currentActivity', null) !== null) {
-                this.activities.currentActivity = loadKey('currentActivity');
-            }
+            if (contains('currentActivity')) this.activities.currentActivity = data['currentActivity'];
+
             this.AddLog('info', 'User data: online load');
         } else {
             this.AddLog('info', 'User data: online load failed');

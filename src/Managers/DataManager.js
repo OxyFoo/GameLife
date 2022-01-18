@@ -2,6 +2,8 @@ import langManager from "./LangManager";
 import { Request_Async } from "../Functions/Request";
 import DataStorage, { STORAGE } from "../Functions/DataStorage";
 
+import user from "./UserManager";
+
 import Achievements from "../Data/Achievements";
 import Skills from "../Data/Skills";
 import Titles from "../Data/Titles";
@@ -10,8 +12,10 @@ import Contributors from "../Data/Contributors";
 
 class DataManager {
     constructor() {
+        user.dataManager = this
+
         this.achievements = new Achievements();
-        this.skills = new Skills();
+        this.skills = new Skills(this);
         this.titles = new Titles();
         this.quotes = new Quotes();
         this.contributors = new Contributors();
@@ -47,6 +51,8 @@ class DataManager {
             'titles': this.titles.Save()
         }
         const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData, false);
+        if (saved) user.AddLog('info', 'Internal data: local save');
+        else       user.AddLog('error', 'Internal data: local save failed');
         return saved;
     }
 
@@ -58,6 +64,9 @@ class DataManager {
             this.quotes.Load(internalData['quotes']);
             this.skills.Load(internalData['skills']);
             this.titles.Load(internalData['titles']);
+            user.AddLog('info', 'Internal data: local load');
+        } else {
+            user.AddLog('warn', 'Internal data: local load failed');
         }
         return internalData !== null;
     }
@@ -95,8 +104,11 @@ class DataManager {
                 }
                 if (reqTables.hasOwnProperty('titles')) this.titles.Load(reqTables['titles']);
 
+                user.AddLog('info', 'Internal data: online load');
                 await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes, false);
                 await this.LocalSave();
+            } else {
+                user.AddLog('warn', 'Internal data: online load failed');
             }
         }
     }

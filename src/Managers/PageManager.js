@@ -125,7 +125,7 @@ class PageManager extends React.Component{
         }
 
         if (!this.getPageContent(newpage)) {
-            console.error('Calling an incorrect page');
+            user.AddLog('error', 'Calling an incorrect page');
             return false;
         };
 
@@ -151,8 +151,8 @@ class PageManager extends React.Component{
         const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
         const bottomBarShow = bottomBarPages.includes(newpage);
         const index = bottomBarPages.indexOf(newpage);
-        this.setState({ pageIndex: index !== -1 ? index : 2 });
-        if (!bottomBarShow) this.setState({ bottomBarShow: bottomBarShow });
+        const newBarState = { bottomBarShow: bottomBarShow, pageIndex: index !== -1 ? index : 2 };
+        if (!bottomBarShow) this.setState(newBarState);
 
         // Start loading animation
         TimingAnimation(this.state.animTransition, 0, animScaleDuration).start();
@@ -161,7 +161,7 @@ class PageManager extends React.Component{
         if (!this.state.page1) {
             const clear = () => {
                 this.changing = false;
-                this.setState({ page2: '', bottomBarShow: bottomBarShow });
+                this.setState(Object.assign({}, { page2: '' }, newBarState));
             };
             setTimeout(() => {
                 // Load page 1
@@ -176,7 +176,7 @@ class PageManager extends React.Component{
         } else {
             const clear = () => {
                 this.changing = false;
-                this.setState({ page1: '', bottomBarShow: bottomBarShow });
+                this.setState(Object.assign({}, { page1: '' }, newBarState));
             };
             setTimeout(() => {
                 // Load page 2

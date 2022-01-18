@@ -1,5 +1,4 @@
 import { UserManager } from "../Managers/UserManager";
-import dataManager from "../Managers/DataManager";
 
 // TODO - Correct ?
 class Achievement {
@@ -36,7 +35,7 @@ class Achievements {
 
     // TODO - Add events
     CheckAchievements() {
-        const achievements = dataManager.achievements.achievements;
+        const achievements = this.user.dataManager.achievements.achievements;
         for (let a = 0; a < achievements.length; a++) {
             const achievement = achievements[a];
             const achievementID = parseInt(achievement.ID);
@@ -95,7 +94,7 @@ class Achievements {
             } else
             if (first == 'Ca') {
                 // Get Max category level
-                const categories = dataManager.skills.GetCategories(true);
+                const categories = this.user.dataManager.skills.GetCategories(true);
                 let maxLevel = 0;
                 for (let c = 0; c < categories.length; c++) {
                     const category = categories[c];
@@ -111,7 +110,7 @@ class Achievements {
                 // TODO - Bug ici, mais avant changer les catégories
                 first = first.replace('Ca', '');
                 const CategoryDepth = parseInt(first);
-                const categories = dataManager.skills.GetCategories(true);
+                const categories = this.user.dataManager.skills.GetCategories(true);
                 if (categories.length < CategoryDepth) continue;
 
                 let values = [];

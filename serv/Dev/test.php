@@ -298,6 +298,10 @@
 
             $db->Query("UPDATE `Skills` SET `Name` = '$name' WHERE `Skills`.`ID` = $ID");
         }
+    } else if ($action === 'testTIMESTAMP') {
+        $account = Account::GetByID($db, 1);
+        $usernameTime = strtotime($account['LastChangeUsername']);
+        print_r($usernameTime);
     }
 
 ?>

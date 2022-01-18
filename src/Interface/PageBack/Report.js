@@ -144,7 +144,8 @@ class BackReport extends React.Component {
             const text = langManager.curr['report']['alert-success-text'];
             user.interface.popup.Open('ok', [ title, text ], user.interface.BackPage, false);
         } else {
-            console.error('Send failed: ' + result_report.status + ' - ' + result_report.data['error']);
+            const error = result_report.status + ' - ' + result_report.data['error'];
+            user.AddLog('error', 'Report: Send failed (' + error + ')');
         }
     }
 }

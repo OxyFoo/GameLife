@@ -25,7 +25,9 @@ class BackLoading extends React.Component {
         await user.settings.Load();
         await user.server.Ping();
         const online = user.server.online;
-        user.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+        if (!online) {
+            user.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+        }
 
         this.nextStep();
 
@@ -60,7 +62,7 @@ class BackLoading extends React.Component {
 
     async loadData() {
         const online = user.server.online;
-        await user.LocalLoad();
+        let success = await user.LocalLoad();
 
         // Connect
         if (user.server.token === '') {
@@ -75,7 +77,6 @@ class BackLoading extends React.Component {
         this.nextStep();
 
         // Loading : User data
-        let success = await user.LocalLoad();
         if (online) {
             success &= await user.SaveUnsavedData();
             success &= await user.OnlineLoad();

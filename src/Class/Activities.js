@@ -25,10 +25,28 @@ class Activities {
         this.UNSAVED_activities = [];
 
         /**
-         * @type {?Array<Number, Number>}
-         * [skillID, startTime]
+         * @type {?Array<Number, Number>} [skillID, startTime]
          */
         this.currentActivity = null;
+    }
+
+    Clear() {
+        this.activities = [];
+        this.UNSAVED_activities = [];
+        this.currentActivity = null;
+    }
+    Load(activities) {
+        this.activities = activities['activities'];
+        this.UNSAVED_activities = activities['unsaved'];
+        this.currentActivity = activities['current'];
+    }
+    Save() {
+        const activities = {
+            activities: this.activities,
+            unsaved: this.UNSAVED_activities,
+            current: this.currentActivity
+        };
+        return activities;
     }
 
     /**

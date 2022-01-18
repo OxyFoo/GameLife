@@ -26,6 +26,22 @@ class Achievements {
         this.UNSAVED_solved = [];
     }
 
+    Clear() {
+        this.solved = [];
+        this.UNSAVED_solved = [];
+    }
+    Load(achievements) {
+        this.solved = achievements['solved'];
+        this.UNSAVED_solved = achievements['unsaved'];
+    }
+    Save() {
+        const achievements = {
+            solved: this.solved,
+            unsaved: this.UNSAVED_solved
+        };
+        return achievements;
+    }
+
     IsUnsaved() {
         return this.UNSAVED_solved.length > 0;
     }

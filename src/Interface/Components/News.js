@@ -4,6 +4,8 @@ import { StyleSheet, View } from 'react-native';
 import dataManager from '../../Managers/DataManager';
 
 import Text from './Text';
+import Button from './Button';
+import user from '../../Managers/UserManager';
 
 // TODO - Terminer les news (buttons + icons)
 
@@ -18,8 +20,33 @@ const News = () => {
 
     let pages = [ quote ];
     for (let i = 0; i < dataManager.news.length; i++) {
-        const text = dataManager.news[i][0];
-        const component = <Text>{text}</Text>;
+        const input = dataManager.news[i];
+        let component = <></>;
+
+        if (input.length === 1) {
+            const text = input[0];
+            component = <Text>{text}</Text>;
+        } else
+
+        if (input.length === 2) {
+            const text = input[0];
+            let button = <></>;
+            
+            const [ btType, btText, redirectType, redirectValue ] = input[1].split(';');
+
+            if (btType === 'button') {
+                let redirection = () => {};
+                if (redirectType === 'page') {
+                    redirection = () => user.interface.ChangePage(redirectValue);
+                }
+                button = <Button color='main2' onPress={redirection}>{btText}</Button>;
+            }
+            component = <>
+                            <Text>{text}</Text>
+                            {button}
+                        </>;
+        }
+
         pages.push(component);
     }
 

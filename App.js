@@ -14,8 +14,8 @@ class App extends React.Component {
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
 
-        // Start the app
-        //user.interface.ChangePage('test', undefined, true); return; // TEST
+        // Open the test page
+        //user.interface.ChangePage('test', undefined, true); return;
         user.interface.ChangePage('loading', undefined, true);
     }
 

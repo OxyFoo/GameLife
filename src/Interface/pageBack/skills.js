@@ -7,9 +7,11 @@ const SORT_LIST = langManager.curr['skills']['top-sort-list'];
 
 class BackSkills extends React.Component {
     state = {
-        height: 0,
+        height: '40%', // Start approximately at 40% of the screen height
         selectedCategories: []
     }
+
+    addActivity = () => { user.interface.ChangePage('activity', undefined, true); }
 
     switchCategory = (ID) => {
         const contains = this.state.selectedCategories.includes(ID);

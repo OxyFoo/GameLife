@@ -31,34 +31,32 @@ class BackSettings extends React.Component {
         user.settings.Save();
     }
 
-    // TODO - OLD, Remove
+    disconnect = () => {
+        const event = (button) => { if (button === 'yes') user.disconnect(); };
+        const title = langManager.curr['settings']['alert-disconnect-title'];
+        const text = langManager.curr['settings']['alert-disconnect-text'];
+        user.interface.popup.Open('yesno', [ title, text ], event);
+    }
 
-    reset = () => {
+    resetActivities = () => {
         const event = (button) => {
             if (button === 'yes') {
-                user.activities.SetAll([]);
-                // TODO - Save user data
-                //user.saveData();
+                user.activities.Clear();
+                user.LocalSave();
+                // TODO - Save online ?
             }
         }
         const title = langManager.curr['settings']['alert-reset-title'];
         const text = langManager.curr['settings']['alert-reset-text'];
         user.interface.popup.Open('yesno', [ title, text ], event);
     }
-    disconnect = () => {
-        const event = (button) => {
-            if (button === 'yes') {
-                user.disconnect();
-            }
-        }
-        const title = langManager.curr['settings']['alert-disconnect-title'];
-        const text = langManager.curr['settings']['alert-disconnect-text'];
-        user.interface.popup.Open('yesno', [ title, text ], event);
-    }
+
+    // TODO - OLD, Remove
+
     clear = () => {
         const event = (button) => {
             if (button === 'yes') {
-                user.clear();
+                user.Clear();
                 setTimeout(BackHandler.exitApp, 200);
             }
         }

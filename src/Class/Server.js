@@ -23,6 +23,7 @@ class Server {
          * @type {UserManager}
          */
         this.user = user;
+
         this.token = '';
         this.online = false;
         this.status = STATUS.OFFLINE;

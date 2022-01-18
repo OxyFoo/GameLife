@@ -29,11 +29,11 @@ class Settings extends BackSettings {
                     onSelect={this.onChangeLang}
                 />
 
-                <Text style={{ textAlign: 'left', marginBottom: 6 }} onPress={WAITPLZ}>{lang['input-theme']}</Text>
+                <Text style={{ textAlign: 'left', marginBottom: 6 }} onPress={WAITPLZ}>[{lang['input-theme']}]</Text>
                 <TextSwitch style={styles.margin} onChange={WAITPLZ} textLeft={langThemes['Dark']} textRight={langThemes['Light']} />
 
                 <View style={{ marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ textAlign: 'left' }}>{lang['input-start-sound']}</Text>
+                    <Text style={{ textAlign: 'left' }}>[{lang['input-start-sound']}]</Text>
                     <Switch
                         value={this.state.switchStartAudio}
                         onValueChanged={(value) => {
@@ -43,15 +43,15 @@ class Settings extends BackSettings {
                     />
                 </View>
 
-                <Button style={styles.margin} onPress={WAITPLZ} color='main2'>{lang['input-report']}</Button>
-                <Button style={styles.margin} onPress={WAITPLZ} color='main2'>{lang['input-disconnect']}</Button>
+                <Button style={styles.margin} onPress={WAITPLZ} color='main2'>[{lang['input-report']}]</Button>
+                <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
 
-                <Container style={styles.margin} opened={false} type='rollable'>
-                    <Button style={styles.margin} onPress={WAITPLZ} color='danger'>{lang['input-delete-activities']}</Button>
-                    <Button onPress={WAITPLZ} color='danger'>{lang['input-delete-account']}</Button>
+                <Container style={styles.margin} text={'[Suppressions]'} opened={false} type='rollable'>
+                    <Button style={styles.margin} onPress={this.resetActivities} color='danger'>{lang['input-delete-activities']}</Button>
+                    <Button onPress={WAITPLZ} color='danger'>[{lang['input-delete-account']}]</Button>
                 </Container>
 
-                <Button style={styles.margin} onPress={WAITPLZ} color='main2' borderRadius={16}>{lang['input-tuto-again']}</Button>
+                <Button style={styles.margin} onPress={WAITPLZ} color='main2' borderRadius={16}>[{lang['input-tuto-again']}]</Button>
             </Page>
         )
     }

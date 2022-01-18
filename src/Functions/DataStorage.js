@@ -6,8 +6,8 @@ import { StrIsJSON } from "./Functions";
  * @typedef {Object} DataStorage_Data
  */
 const STORAGE_KEYS = {
+    LOGIN: '@data/login',
     USER: '@data/user',
-    SETTINGS: '@data/settings',
     INTERNAL: '@data/internal',
 
     INTERNAL_HASHES: '@settings/internal_hashes',
@@ -47,7 +47,10 @@ class DataStorage {
         return json;
     }
 
-    static async clearAll() {
+    /**
+     * Unused
+     */
+    static async ClearAll() {
         await AsyncStorage.clear();
     }
 }

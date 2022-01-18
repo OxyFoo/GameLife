@@ -236,6 +236,7 @@
                             'title' => $title,
                             'activities' => json_decode($activities, true)
                         );
+                        // TODO - Terminer le chargement des données ici
                         $userData['solvedAchievements'] = $solvedAchievements !== "" ? array_map('intval', explode(',', $solvedAchievements)) : array();
                         $userData = json_encode($userData);
                         $this->output['data'] = $userData;

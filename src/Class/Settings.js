@@ -11,9 +11,9 @@ class Settings {
          */
         this.user = user;
 
-        this.onboardingWatched = false;
         this.email = '';
         this.connected = false;
+        this.onboardingWatched = false;
         this.morningNotifications = true;
     }
 
@@ -23,26 +23,27 @@ class Settings {
         this.morningNotifications = true;
     }
 
-    async Save() {
-        const data_settings = {
-            'lang': langManager.currentLangageKey,
-            'theme': themeManager.selectedTheme,
-            'email': this.email,
-            'connected': this.connected,
-            'morningNotifications': this.morningNotifications
-        };
-        await DataStorage.Save(STORAGE.SETTINGS, data_settings, false);
-    }
-
     async Load() {
-        const data_settings = await DataStorage.Load(STORAGE.SETTINGS, false);
-        if (data_settings !== null) {
-            langManager.SetLangage(data_settings['lang']);
-            themeManager.SetTheme(data_settings['theme']);
-            this.email = data_settings['email'];
-            this.connected = data_settings['connected'];
-            this.morningNotifications = data_settings['morningNotifications'];
+        const settings = await DataStorage.Load(STORAGE.LOGIN);
+        if (settings !== null) {
+            langManager.SetLangage(settings['lang']);
+            themeManager.SetTheme(settings['theme']);
+            this.email = settings['email'];
+            this.connected = settings['connected'];
+            this.onboardingWatched = settings['onboardingWatched'];
+            this.morningNotifications = settings['morningNotifications'];
         }
+    }
+    Save() {
+        const settings = {
+            lang: langManager.currentLangageKey,
+            theme: themeManager.selectedTheme,
+            email: this.email,
+            connected: this.connected,
+            onboardingWatched: this.onboardingWatched,
+            morningNotifications: this.morningNotifications
+        };
+        return DataStorage.Save(STORAGE.LOGIN, settings);
     }
 }
 

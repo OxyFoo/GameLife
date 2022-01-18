@@ -12,6 +12,22 @@ class Quests {
         this.todoList = [];
     }
 
+    Clear() {
+        this.daily = [];
+        this.todoList = [];
+    }
+    Load(quests) {
+        this.daily = quests['daily'];
+        this.todoList = quests['todolist'];
+    }
+    Save() {
+        const quests = {
+            daily: this.daily,
+            todolist: this.todoList
+        };
+        return quests;
+    }
+
     DailyAlreadyChanged() {
         let output = false;
         for (let d = 0; d < this.daily.length; d++) {

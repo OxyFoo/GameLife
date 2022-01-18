@@ -53,7 +53,7 @@ class UserManager {
         this.tempSelectedTime = null;
     }
 
-    async clear() {
+    async Clear() {
         this.username = '';
         this.usernameTime = null;
         this.title = 0;
@@ -63,11 +63,11 @@ class UserManager {
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;
 
-        this.quests.daily = [];
-        this.quests.todoList = [];
-
-        this.settings.Clear();
+        this.achievements.Clear();
+        this.activities.Clear();
+        this.quests.Clear();
         this.server.Clear();
+        this.settings.Clear();
 
         await DataStorage.clearAll();
         await this.LocalSave();
@@ -76,8 +76,7 @@ class UserManager {
     async disconnect() {
         await this.OnlineSave();
 
-        this.server.Clear();
-        this.settings.Clear();
+        this.Clear();
         await this.LocalSave();
         await this.settings.Save();
         this.interface.ChangePage('login');
@@ -164,11 +163,10 @@ class UserManager {
             'title': this.title,
             'birth': this.birthTime,
             'xp': this.xp,
-            'activities': this.activities.GetAll(),
-            'solvedAchievements': this.achievements.solved,
-            'daily': this.quests.daily,
-            'tasks': this.quests.todoList,
-            'currentActivity': this.activities.currentActivity
+
+            'achievements': this.achievements.Save(),
+            'activities': this.activities.Save(),
+            'quests': this.quests.Save()
         };
 
         const saved = await DataStorage.Save(STORAGE.USER, data);
@@ -177,6 +175,7 @@ class UserManager {
         return saved;
     }
 
+    // TODO - Finir ça
     OnlineSave = async () => {
         let data = {};
 
@@ -200,7 +199,6 @@ class UserManager {
         }
     };
 
-    // TODO - Finir ça
     async LocalLoad() {
         let data = await DataStorage.Load(STORAGE.USER);
         const contains = (key) => data.hasOwnProperty(key);
@@ -209,13 +207,12 @@ class UserManager {
             if (contains('username')) this.username = data['username'];
             if (contains('usernameTime')) this.usernameTime = data['usernameTime'];
             if (contains('title')) this.title = data['title'];
-            //this.activities.SetAll(data['activities']);
-            //this.birth = data['birth'];
-            //this.xp = data['xp'];
-            //this.achievements.solved = data['solvedAchievements'];
-            //this.quests.daily = data['daily'];
-            //this.quests.todoList = data['tasks'];
-            if (contains('currentActivity')) this.activities.currentActivity = data['currentActivity'];
+            if (contains('birthTime')) this.birthTime = data['birthTime'];
+            if (contains('xp')) this.xp = data['xp'];
+
+            if (contains('achievements')) this.achievements.Load(data['achievements']);
+            if (contains('activities')) this.activities.Load(data['activities']);
+            if (contains('quests')) this.quests.Load(data['quests']);
 
             this.AddLog('info', 'User data: local load');
         } else {

@@ -42,14 +42,15 @@ class ActivityCard extends React.Component {
     render() {
         const { activity, onPress } = this.props;
 
+        const GetName = dataManager.GetText;
         const T_start = langManager.curr['calendar']['activity-start'];
         const T_duration = langManager.curr['calendar']['activity-duration'];
 
         const skill = dataManager.skills.GetByID(activity.skillID);
         const LogoID = skill.LogoID;
         const XML = dataManager.skills.icons.find(x => x.ID === LogoID).Content;
-        const T_category = dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name;
-        const T_activity = skill.Name;
+        const T_category = GetName(dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name);
+        const T_activity = GetName(skill.Name);
         const T_start_value = TimeToFormatString(activity.startTime/60, true);
         const T_duration_value = TimeToFormatString(activity.duration);
 

@@ -50,7 +50,6 @@ class Console extends React.Component {
         this.refDebug.scrollToEnd();
     }
     close = () => {
-        console.log('close');
         this.setState({ opened: false });
         SpringAnimation(this.state.animation, 0).start();
     }

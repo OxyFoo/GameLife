@@ -8,7 +8,7 @@ class BackSkill extends React.Component {
     constructor(props) {
         super(props);
 
-        if (typeof(props.args) === 'undefined') {
+        if (typeof(props.args) === 'undefined' || !props.args.hasOwnProperty('skillID')) {
             user.interface.BackPage();
             return;
         }
@@ -17,7 +17,7 @@ class BackSkill extends React.Component {
         const skill = dataManager.skills.GetByID(skillID);
         const skillXP = user.experience.GetSkillExperience(skillID);
 
-        this.name = skill.Name;
+        this.name = dataManager.GetText(skill.Name);
         this.category = skill.Category;
         this.level = langManager.curr['level']['level'] + ' ' + skillXP.lvl;
         this.xp = skillXP.xp;

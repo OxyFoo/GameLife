@@ -22,7 +22,7 @@ class Popup extends React.PureComponent {
         args: null,
         callback: () => {},
         cancelable: true,
-        cross: false,
+        cross: true,
         x: 0, y: 0,
 
         animOpacity: new Animated.Value(0),
@@ -88,7 +88,7 @@ class Popup extends React.PureComponent {
         let buttons = <Button style={[styles.button, { width: '100%' }]} onPress={() => callback('ok')} color="main1">{ok}</Button>;
         if (this.state.type === 'yesno') buttons = (
             <>
-                <Button style={styles.button} onPress={() => callback('no')} color="background">{no}</Button>
+                <Button style={styles.button} onPress={() => callback('no')} color="background" rippleColor='white'>{no}</Button>
                 <Button style={styles.button} onPress={() => callback('yes')} color="main1">{yes}</Button>
             </>
         );
@@ -144,7 +144,7 @@ class Popup extends React.PureComponent {
                 onTouchEnd={() => { this.forceUpdate() }}
             >
                 <View style={styles.background} onTouchStart={() => { this.Close(false) }} />
-                {this.state.cancelable || this.state.cross && <Button style={buttonQuit} color='backgroundCard' colorText='main1' onPress={() => { this.Close(this.state.cross) }}>X</Button>}
+                {(this.state.cancelable || this.state.cross) && <Button style={buttonQuit} color='backgroundCard' colorText='main1' onPress={() => { this.Close(this.state.cross) }}>X</Button>}
                 <Animated.View style={containerStyle} onLayout={this.onLayout}>
                     {this.content()}
                 </Animated.View>

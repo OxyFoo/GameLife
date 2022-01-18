@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 
 import BackSkills from '../PageBack/Skills';
 import user from '../../Managers/UserManager';
@@ -9,8 +9,6 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { PageHeader } from '../Widgets';
 import { Page, Input, Text, Button, IconCheckable, Icon } from '../Components';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Skills extends BackSkills {
     renderCategory = ({ item }) => {
@@ -36,7 +34,7 @@ class Skills extends BackSkills {
         const icon = dataManager.skills.GetXmlByLogoID(LogoID);
         const backgroundActive = { backgroundColor: themeManager.GetColor('main1') };
         const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
-        const onPress = () => { console.log('TODO - Go to skill page') };
+        const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
 
         return (
             <TouchableOpacity style={[styles.skillCard, backgroundCard]} onPress={onPress} activeOpacity={.6}>
@@ -57,7 +55,14 @@ class Skills extends BackSkills {
         return (
             <View style={{ padding: '5%' }}>
                 <Text>{lang['text-empty']}</Text>
-                <Button style={styles.buttonAddActivity} borderRadius={8} color='main2'>{lang['text-add']}</Button>
+                <Button
+                    style={styles.buttonAddActivity}
+                    borderRadius={8}
+                    color='main2'
+                    onPress={this.addActivity}
+                >
+                    {lang['text-add']}
+                </Button>
             </View>
         )
     }
@@ -85,12 +90,12 @@ class Skills extends BackSkills {
 
                 </Page>
 
-                <View style={[styles.skillsParent, { height: SCREEN_HEIGHT - this.state.height }]}>
+                <View style={[styles.skillsParent, { top: this.state.height }]}>
                     <FlatList
                         style={{ flex: 1 }}
                         ListEmptyComponent={this.renderEmpty}
-                        //data={dataManager.skills.skills}
-                        data={[]}
+                        //data={[]}
+                        data={dataManager.skills.skills}
                         renderItem={this.renderSkill}
                         keyExtractor={(item, index) => 'skill-' + index}
                     />

@@ -3,12 +3,15 @@ import { StyleSheet } from 'react-native';
 
 import BackMultiplayer from '../PageBack/Multiplayer';
 
-import { Page } from '../Components';
+import { UserHeader } from '../Widgets';
+import { Page, Text } from '../Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {
         return (
-            <Page>
+            <Page canScrollOver={true}>
+                <UserHeader />
+                <Text fontSize={42}>Ya rien encore ici, TU PERMETS rooo le mec impatient lààààà</Text>
             </Page>
         )
     }

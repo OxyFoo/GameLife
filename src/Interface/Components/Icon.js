@@ -15,15 +15,19 @@ import svgCheckboxOff from '../../../res/icons/checkbox-off';
 import svgChevron from '../../../res/icons/chevron';
 import svgChrono from '../../../res/icons/chrono';
 import svgCross from '../../../res/icons/cross';
+import svgDiscord from '../../../res/icons/discord';
 import svgEdit from '../../../res/icons/edit';
 import svgHome from '../../../res/icons/home';
 import svgInfo from '../../../res/icons/info';
+import svgInstagram from '../../../res/icons/instagram';
 import svgItem from '../../../res/icons/item';
 import svgOx from '../../../res/icons/ox';
 import svgSetting from '../../../res/icons/setting';
 import svgShop from '../../../res/icons/shop';
 import svgSocial from '../../../res/icons/social';
 import svgSuccess from '../../../res/icons/success';
+import svgTiktok from '../../../res/icons/tiktok';
+
 import svgLoading from '../../../res/icons/loading';
 import svgLoadingDots from '../../../res/icons/loading-dots';
 
@@ -36,7 +40,7 @@ const IconProps = {
      */
     xml: undefined,
     /**
-     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'edit'|'home'|'info'|'item'|'ox'|'setting'|'shop'|'social'|'success'|'loading'|'loadingDots'}
+     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'home'|'info'|'instagram'|'item'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'}
      */
     icon: '',
     size: 24,
@@ -56,15 +60,18 @@ const SVGIcons = {
     chevron: svgChevron,
     chrono: svgChrono,
     cross: svgCross,
+    discord: svgDiscord,
     edit: svgEdit,
     home: svgHome,
     info: svgInfo,
+    instagram: svgInstagram,
     item: svgItem,
     ox: svgOx,
     setting: svgSetting,
     shop: svgShop,
     social: svgSocial,
     success: svgSuccess,
+    tiktok: svgTiktok,
     loading: svgLoading,
     loadingDots: svgLoadingDots
 }

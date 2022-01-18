@@ -1,6 +1,7 @@
 import ActivityCard from './Widgets/ActivityCard';
 import ActivityExperience from './Widgets/ActivityExperience';
 import ActivitySchedule from './Widgets/ActivitySchedule';
+import Console from './Widgets/Console';
 import ItemCard from './Widgets/ItemCard';
 import AvatarEditor from './Widgets/AvatarEditor';
 import BlockMonth from './Widgets/BlockMonth';
@@ -14,6 +15,7 @@ export {
     ActivityCard,
     ActivityExperience,
     ActivitySchedule,
+    Console,
     ItemCard,
     AvatarEditor,
     BlockMonth,

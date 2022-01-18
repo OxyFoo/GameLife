@@ -74,17 +74,13 @@
     },
 
     "about": {
-        "page-title": "A propos",
-
         "block-devs": "App créée par",
-        "block-staff": "Staff",
         "block-contributors": "Contributeurs",
         "block-links": "Liens",
         "text-manager": "Manager",
         "text-developer": "Développeur",
-
-        "alert-info-title": "Informations supplémentaires",
-        "alert-info-text": "Version : {}"
+        "text-version": "Version : {}",
+        "text-contributors": "Merci à vous !"
     },
 
     "achievements": {
@@ -215,7 +211,9 @@
         "con-stats": "Statistiques",
         "con-skill-experience": "Compétences",
         "btn-other-skills": "Autre comp.",
+        "btn-settings": "Paramètres",
 
+        "______OLD_______": "",
         "page-title": "Game Life",
         "title-calendar": "Calendrier",
         "title-skills": "Compétences",
@@ -381,14 +379,12 @@
     },
 
     "skills": {
-        "page-title": "Compétences",
-
-        "top-search-placeholder": "Rechercher",
-        "top-filter-default": "Filtres",
+        "input-search": "Rechercher",
         "top-sort-list": [
             "XP", "A-Z", "DATE"
         ],
-        "text-empty": "Ajoutez une activité, les compétences associées apparaîtront ici"
+        "text-empty": "Ajoutez une activité, les compétences associées apparaîtront ici",
+        "text-add": "Ajouter une activité"
     },
 
     "statistic": {

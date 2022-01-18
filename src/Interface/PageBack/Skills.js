@@ -2,29 +2,38 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import dataManager from '../../Managers/DataManager';
+
+const SORT_LIST = langManager.curr['skills']['top-sort-list'];
 
 class BackSkills extends React.Component {
-    SORT_LIST = langManager.curr['skills']['top-sort-list'];
     state = {
+        height: 0,
+        selectedCategories: []
+    }
+
+    switchCategory = (ID) => {
+        const contains = this.state.selectedCategories.includes(ID);
+        if (contains) {
+            let newCategories = [...this.state.selectedCategories];
+            const index = newCategories.indexOf(ID);
+            newCategories.splice(index, 1);
+            this.setState({ selectedCategories: newCategories });
+        } else {
+            this.setState({ selectedCategories: [ ...this.state.selectedCategories, ID ] });
+        }
+    }
+
+    /*state = {
         search: '',
         filters: dataManager.skills.GetCategories(true),
         selectedFiltersIndex: [],
         sortSelectedIndex: 0,
         ascending: true,
         skills: user.experience.GetAllSkills(undefined, undefined, 0, true)
-    }
+    }*/
 
-    back = () => { user.interface.BackPage(); }
-    addSkill = () => {
-        if (dataManager.skills.skills.length <= 1) {
-            console.warn("Aucun skill !");
-            return;
-        }
-        user.interface.ChangePage('activity');
-    }
     switchSort = () => {
-        const newIndex = (this.state.sortSelectedIndex + 1) % this.SORT_LIST.length;
+        const newIndex = (this.state.sortSelectedIndex + 1) % SORT_LIST.length;
         this.setState({ sortSelectedIndex: newIndex });
         setTimeout(this.refreshSkills, 50);
     }

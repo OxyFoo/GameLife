@@ -6,6 +6,7 @@ import { Text, Icon } from '../Components';
 
 const PageHeaderProps = {
     style: {},
+    hideHelp: false,
     onBackPress: () => {},
     onHelpPress: () => {}
 }
@@ -21,7 +22,7 @@ class PageHeader extends React.Component {
                     <Icon style={styles.headerLeftArrow} icon='arrowLeft' size={30} />
                     <Text fontSize={16}>{T_back}</Text>
                 </TouchableOpacity>
-                <Icon onPress={onHelpPress} icon='info' size={30} />
+                {!this.props.hideHelp && <Icon onPress={onHelpPress} icon='info' size={30} />}
             </View>
         );
     }

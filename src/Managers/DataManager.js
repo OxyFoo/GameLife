@@ -19,6 +19,15 @@ class DataManager {
         this.news = [];
     }
 
+    DataAreLoaded() {
+        const achievements = this.achievements.achievements.length > 0;
+        const skills = this.skills.skills.length > 0;
+        const titles = this.titles.titles.length > 0;
+        const quotes = this.quotes.quotes.length > 0;
+        const contributors = this.contributors.contributors.length > 0;
+        return achievements, skills, titles, quotes, contributors
+    }
+
     GetText(value) {
         let output = '';
         if (typeof(value) === 'object') {

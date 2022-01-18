@@ -1,4 +1,5 @@
 import { GetByKey, SortByKey } from "../Functions/Functions";
+import dataManager from "../Managers/DataManager";
 
 class Skill {
     ID = 0;
@@ -98,7 +99,8 @@ class Skills {
         }*/
     }
 
-    GetCategories(onlyUseful = false) {
+    GetCategories(/*onlyUseful = false*/) {
+        return this.categories.map(cat => ({ key: cat.ID, value: dataManager.GetText(cat.Name) }));
         /*let cats = [];
         for (let i = 0; i < this.skills.length; i++) {
             let cat = this.skills[i].Category;

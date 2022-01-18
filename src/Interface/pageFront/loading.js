@@ -8,7 +8,7 @@ import { GLLoading } from '../Components';
 class Loading extends BackLoading {
     render() {
         return (
-            <View style={styles.content}>
+            <View style={styles.content} onTouchStart={this.onToucheStart} onTouchEnd={this.onToucheEnd}>
                 <GLLoading state={this.state.icon} />
             </View>
         )

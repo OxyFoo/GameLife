@@ -1,125 +1,137 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import BackSkills from '../PageBack/Skills';
+import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { GLDropDown, GLHeader, GLIconButton, GLSearchBar, GLSkillBox, GLText } from '../Components';
+import { PageHeader } from '../Widgets';
+import { Page, Input, Text, Button, IconCheckable, Icon } from '../Components';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Skills extends BackSkills {
-    render() {
-        const sort = this.SORT_LIST[this.state.sortSelectedIndex];
-        const orderIcon = this.state.ascending ? 'chevronBottom' : 'chevronTop';
+    renderCategory = ({ item }) => {
+        const { ID, Name, LogoID } = item;
+        const checked = this.state.selectedCategories.includes(ID);
+        const icon = dataManager.skills.GetXmlByLogoID(LogoID);
+        return (
+            <IconCheckable
+                style={{ margin: '2%' }}
+                id={ID}
+                xml={icon}
+                size={32}
+                checked={checked}
+                onPress={this.switchCategory}
+            />
+        )
+    }
+
+    renderSkill = ({ item }) => {
+        const { CategoryID, Creator, ID, LogoID, Name, Stats, XP } = item;
+
+        const name = dataManager.GetText(Name);
+        const icon = dataManager.skills.GetXmlByLogoID(LogoID);
+        const backgroundActive = { backgroundColor: themeManager.GetColor('main1') };
+        const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
+        const onPress = () => { console.log('TODO - Go to skill page') };
 
         return (
-            <View style={{ flex: 1 }}>
-                {/* Header */}
-                <GLHeader
-                    title={langManager.curr['skills']['page-title']}
-                    leftIcon="back"
-                    onPressLeft={this.back}
-                    rightIcon="plus"
-                    onPressRight={this.addSkill}
-                />
-
-                {/* Topbar */}
-                <View style={[styles.topBar, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
-                    <GLSearchBar
-                        style={styles.search}
-                        onChangeText={this.changeText}
-                        placeholder={langManager.curr['skills']['top-search-placeholder']}
-                    />
-                    <GLText
-                        style={styles.sort}
-                        containerStyle={{ flex: 1 }}
-                        title={sort}
-                        onPress={this.switchSort}
-                        color={'secondary'}
-                    />
+            <TouchableOpacity style={[styles.skillCard, backgroundCard]} onPress={onPress} activeOpacity={.6}>
+                <View style={[styles.skillIcon, backgroundActive]}>
+                    <Icon xml={icon} size={64} />
                 </View>
-
-                {/* Filters out of topbar but absolute to keep in, FUCK U RN */}
-                <GLDropDown
-                    style={styles.filter}
-                    styleBox={styles.filterBox}
-                    onSelect={this.filterChange}
-                    data={this.state.filters}
-                    disabled={this.state.filters.length <= 0}
-                    value={langManager.curr['skills']['top-filter-default']}
-                    toggleMode={true}
-                />
-
-                {/* Content */}
-                <View style={styles.content}>
-                    <FlatList
-                        data={this.state.skills}
-                        keyExtractor={(item, i) => 'lang_' + i}
-                        ListEmptyComponent={() => (
-                            <GLText style={styles.emptyText} title={langManager.curr['skills']['text-empty']} />
-                        )}
-                        renderItem={({ item }) => (
-                            <GLSkillBox item={item} />
-                        )}
-                    />
-
-                    {/* Floating bottom right button */}
-                    <GLIconButton
-                        style={styles.floatingButton}
-                        icon={orderIcon}
-                        size={64}
-                        onPress={this.switchOrder}
-                    />
+                <View style={styles.skillContent}>
+                    <Text style={{ textAlign: 'left', marginBottom: 6 }} fontSize={24}>{name}</Text>
+                    <Text style={{ textAlign: 'left' }} color='secondary'>Niveau X, XX XP</Text>
+                    <Text style={{ textAlign: 'left' }} color='secondary'>25/00/20</Text>
                 </View>
+            </TouchableOpacity>
+        )
+    }
+
+    renderEmpty = () => {
+        const lang = langManager.curr['skills'];
+        return (
+            <View style={{ padding: '5%' }}>
+                <Text>{lang['text-empty']}</Text>
+                <Button style={styles.buttonAddActivity} borderRadius={8} color='main2'>{lang['text-add']}</Button>
             </View>
+        )
+    }
+
+    render() {
+        const lang = langManager.curr['skills'];
+        const setheight = (event) => this.setState({ height: event.nativeEvent.layout.height });
+
+        return (
+            <>
+                <Page canScrollOver={false} bottomOffset={0} onLayout={setheight}>
+                    <PageHeader onBackPress={user.interface.BackPage} />
+
+                    <View style={styles.row}>
+                        <Input style={{ width: '60%' }} label={lang['input-search']} />
+                        <Button style={{ width: '30%' }} borderRadius={8} color='main1'>TODO</Button>
+                    </View>
+
+                    <FlatList
+                        data={dataManager.skills.categories}
+                        renderItem={this.renderCategory}
+                        numColumns={6}
+                        keyExtractor={(item, index) => 'category-' + index}
+                    />
+
+                </Page>
+
+                <View style={[styles.skillsParent, { height: SCREEN_HEIGHT - this.state.height }]}>
+                    <FlatList
+                        style={{ flex: 1 }}
+                        ListEmptyComponent={this.renderEmpty}
+                        //data={dataManager.skills.skills}
+                        data={[]}
+                        renderItem={this.renderSkill}
+                        keyExtractor={(item, index) => 'skill-' + index}
+                    />
+                </View>
+            </>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    topBar: {
-        width: '100%',
-        height: 48,
+    row: {
+        marginBottom: 24,
         flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: '#FFFFFF',
-        borderWidth: 3,
-        borderTopWidth: 2
+        justifyContent: 'space-between'
     },
-    search: {
-        width: '40%',
-        height: '100%'
-    },
-    filter: {
+    skillsParent: {
         position: 'absolute',
-        top: 64,
-        left: '40%',
-        width: '40%',
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
+    skillCard: {
+        marginBottom: 24,
+        borderRadius: 12,
+        flexDirection: 'row'
+    },
+    skillIcon: {
+        width: 88,
+        margin: 12,
+        padding: 12,
+        borderRadius: 12
+    },
+    skillContent: {
+        paddingVertical: 12,
+        justifyContent: 'space-between'
+    },
+    buttonAddActivity: {
+        width: '50%',
         height: 48,
-        marginVertical: 0,
-        marginHorizontal: 0,
-        marginBottom: -3,
-    },
-    filterBox: {
-        height: '100%',
-        borderTopWidth: 0,
-        borderBottomWidth: 0
-    },
-    sort: {
-        width: '34%',
-        paddingVertical: 6,
-        marginLeft: '66%'
-    },
-    content: {
-        flex: 1
-    },
-    floatingButton: {
-        position: 'absolute',
-        right: 12,
-        bottom: 12
-    },
-    emptyText: {
-        marginTop: 48
+        marginTop: 24,
+        marginLeft: '25%'
     }
 });
 

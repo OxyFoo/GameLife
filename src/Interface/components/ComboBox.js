@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         width: 128,
-        height: 256,
+        maxHeight: 256,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
         zIndex: 1000,

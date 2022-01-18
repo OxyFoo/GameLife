@@ -150,7 +150,7 @@ class UserManager {
      * Load local user data
      * @returns {Promise<Boolean>}
      */
-    LocalSave = () => {
+    LocalSave = async () => {
         const data = {
             'username': this.username,
             'usernameDate': this.usernameDate,
@@ -164,8 +164,12 @@ class UserManager {
             'currentActivity': this.activities.currentActivity
         };
 
-        return DataStorage.Save(STORAGE.USER, data);
+        const saved = await DataStorage.Save(STORAGE.USER, data);
+        if (saved) this.AddLog('info', 'User data: local save');
+        else       this.AddLog('error', 'User data: local save failed');
+        return saved;
     }
+
     OnlineSave = async () => {
         let data = {};
 
@@ -181,15 +185,14 @@ class UserManager {
         if (saved) {
             this.activities.Purge();
             this.achievements.Purge();
+            this.AddLog('info', 'User data: online save');
+        } else {
+            this.AddLog('error', 'User data: online save failed');
         }
     };
 
-    LocalLoad = async () => this.loadData(false);
-    OnlineLoad = async () => this.loadData(true);
-    async loadData(online) {
-        let data;
-        if (online) data = await this.server.LoadData();
-        else        data = await DataStorage.Load(STORAGE.USER);
+    async LocalLoad() {
+        let data = await DataStorage.Load(STORAGE.USER);
 
         const loadKey = (key, defaultValue) => {
             if (!data.hasOwnProperty(key)) return defaultValue;
@@ -210,6 +213,39 @@ class UserManager {
             if (loadKey('currentActivity', null) !== null) {
                 this.activities.currentActivity = loadKey('currentActivity');
             }
+            this.AddLog('info', 'User data: local load');
+        } else {
+            this.AddLog('error', 'User data: local load failed');
+        }
+
+        this.refreshStats();
+        return data !== null;
+    }
+    async OnlineLoad() {
+        let data = await this.server.LoadUserData();
+
+        const loadKey = (key, defaultValue) => {
+            if (!data.hasOwnProperty(key)) return defaultValue;
+            return data[key];
+        }
+
+        // TODO - Finir ça
+        if (data !== null) {
+            this.username = loadKey('username');
+            this.usernameDate = loadKey('usernameDate');
+            this.title = 0;//data['title'];
+            //this.activities.SetAll(data['activities']);
+            //this.birth = data['birth'];
+            //this.xp = data['xp'];
+            //this.achievements.solved = data['solvedAchievements'];
+            //this.quests.daily = data['daily'];
+            //this.quests.todoList = data['tasks'];
+            if (loadKey('currentActivity', null) !== null) {
+                this.activities.currentActivity = loadKey('currentActivity');
+            }
+            this.AddLog('info', 'User data: online load');
+        } else {
+            this.AddLog('info', 'User data: online load failed');
         }
 
         this.refreshStats();
@@ -217,6 +253,13 @@ class UserManager {
     }
 
     IsConnected = this.server.IsConnected;
+
+    /**
+     * Show message in app console
+     * @param {'info'|'warn'|'error'} type
+     * @param {String} text
+     */
+    AddLog = (type, text) => this.interface.console.AddDebug(type, text);
 }
 
 const user = new UserManager();

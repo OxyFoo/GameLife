@@ -35,9 +35,20 @@ class Home extends BackHome {
                     color='main2'
                     borderRadius={8}
                     icon='add'
-                    onPress={() => { user.interface.ChangePage('activity', undefined, true) }}
+                    onPress={this.addActivity}
                 >
                     {lang['btn-add-task']}
+                </Button>
+
+                <Button
+                    style={styles.topSpace}
+                    color='backgroundCard'
+                    rippleColor='white'
+                    borderRadius={8}
+                    icon='setting'
+                    onPress={this.openSettings}
+                >
+                    {lang['btn-settings']}
                 </Button>
 
                 {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
@@ -59,10 +70,10 @@ class Home extends BackHome {
                     type='rollable'
                     opened={false}
                     color='main3'
-                    //rippleColor='white'
+                    rippleColor='white'
                 >
                     {/* TODO - Show best skills */}
-                    <Button style={styles.btnSmall}>{lang['btn-other-skills']}</Button>
+                    <Button style={styles.btnSmall} onPress={this.openSkills}>{lang['btn-other-skills']}</Button>
                 </Container>
 
             </Page>

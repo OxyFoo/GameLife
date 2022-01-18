@@ -4,9 +4,10 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import user from '../Managers/UserManager';
 import langManager from './LangManager';
+
 import { TimingAnimation } from '../Functions/Animations';
 import { IsUndefined } from '../Functions/Functions';
-import { BottomBar, Popup } from '../Interface/Widgets';
+import { BottomBar, Console, Popup } from '../Interface/Widgets';
 
 import About from '../Interface/PageFront/About';
 import Achievements from '../Interface/PageFront/Achievements';
@@ -42,7 +43,8 @@ class PageManager extends React.Component{
         ignorePage: false,
 
         bottomBarShow: false,
-        pageIndex: -1
+        pageIndex: -1,
+        console: false
     }
 
     constructor(props) {
@@ -70,6 +72,7 @@ class PageManager extends React.Component{
         user.interface = this;
 
         this.popup = new React.createRef();
+        this.console = new React.createRef();
     }
 
     componentDidMount() {
@@ -88,6 +91,8 @@ class PageManager extends React.Component{
 
         return true;
     }
+
+    EnableConsole = () => this.setState({ console: true });
 
     BackPage = () => {
         if (this.changing) return false;
@@ -142,43 +147,48 @@ class PageManager extends React.Component{
         const animDuration = 200;
         const animScaleDuration = 100;
 
+        // Bottom bar selected index animation
+        const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
+        const bottomBarShow = bottomBarPages.includes(newpage);
+        const index = bottomBarPages.indexOf(newpage);
+        this.setState({ pageIndex: index !== -1 ? index : 2 });
+        if (!bottomBarShow) this.setState({ bottomBarShow: bottomBarShow });
+
+        // Start loading animation
         TimingAnimation(this.state.animTransition, 0, animScaleDuration).start();
 
         // Switch pages animation
         if (!this.state.page1) {
+            const clear = () => {
+                this.changing = false;
+                this.setState({ page2: '', bottomBarShow: bottomBarShow });
+            };
             setTimeout(() => {
                 // Load page 1
                 this.setState({ page1: newpage }, () => {
                     TimingAnimation(this.state.animTransition, 1, animScaleDuration).start();
                     // Clear page 2
-                    TimingAnimation(this.state.animOpacity2, 0, animDuration).start(() => { this.setState({ page2: '' }); });
+                    TimingAnimation(this.state.animOpacity2, 0, animDuration).start(clear);
                     // Show page 1
                     TimingAnimation(this.state.animOpacity1, 1, animDuration).start();
                 });
             }, 0);
         } else {
+            const clear = () => {
+                this.changing = false;
+                this.setState({ page1: '', bottomBarShow: bottomBarShow });
+            };
             setTimeout(() => {
                 // Load page 2
                 this.setState({ page2: newpage }, () => {
                     TimingAnimation(this.state.animTransition, 1, animScaleDuration).start();
                     // Clear page 1
-                    TimingAnimation(this.state.animOpacity1, 0, animDuration).start(() => { this.setState({ page1: '' }); });
+                    TimingAnimation(this.state.animOpacity1, 0, animDuration).start(clear);
                     // Show page 2
                     TimingAnimation(this.state.animOpacity2, 1, animDuration).start();
                 });
             }, 0);
         }
-
-        // Bottom bar selected index animation
-        const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
-        const bottomBarShow = bottomBarPages.includes(newpage);
-        this.setState({ bottomBarShow: bottomBarShow });
-        const index = bottomBarPages.indexOf(newpage);
-        this.setState({ pageIndex: index !== -1 ? index : 2 });
-
-        setTimeout(() => {
-            this.changing = false;
-        }, animDuration + 300);
     }
 
     GetCurrentPage = () => {
@@ -239,6 +249,7 @@ class PageManager extends React.Component{
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.pageIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref }} />
                 <Animated.View style={overlayStyle} pointerEvents='none' />
+                <Console ref={ref => { if (ref !== null) this.console = ref }} enable={this.state.console} />
             </LinearGradient>
         )
     }

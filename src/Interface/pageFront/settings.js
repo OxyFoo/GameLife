@@ -6,18 +6,19 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { PageHeader } from '../Widgets';
-import { Page, Text, Button, Switch, TextSwitch, ComboBox } from '../Components';
+import { Page, Text, Button, Switch, TextSwitch, ComboBox, Container } from '../Components';
 
 class Settings extends BackSettings {
     render() {
         const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
+        const WAITPLZ = () => console.log('NON ce n\'est pas un bug !!!!!! C\'est juste pas terminé, MERCI de ne pas tout prendre pour des bugs MERCI BIEEEEN !!!!!!!!!!');
 
         return (
             <Page ref={ref => { if (ref !== null) this.pageRef = ref; }} bottomOffset={0}>
                 <PageHeader onBackPress={user.interface.BackPage} />
 
-                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-about']}</Button>
+                <Button style={styles.margin} color='main2' borderRadius={16} onPress={this.openAbout}>{lang['input-about']}</Button>
 
                 <ComboBox
                     style={styles.margin}
@@ -28,22 +29,29 @@ class Settings extends BackSettings {
                     onSelect={this.onChangeLang}
                 />
 
-                <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
-                <TextSwitch style={styles.margin} textLeft={langThemes['Dark']} textRight={langThemes['Light']} />
+                <Text style={{ textAlign: 'left', marginBottom: 6 }} onPress={WAITPLZ}>{lang['input-theme']}</Text>
+                <TextSwitch style={styles.margin} onChange={WAITPLZ} textLeft={langThemes['Dark']} textRight={langThemes['Light']} />
 
                 <View style={{ marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ textAlign: 'left' }}>{lang['input-start-sound']}</Text>
                     <Switch
                         value={this.state.switchStartAudio}
-                        onValueChanged={(value) => { this.setState({ switchStartAudio: value }); }}
+                        onValueChanged={(value) => {
+                            WAITPLZ();
+                            this.setState({ switchStartAudio: value });
+                        }}
                     />
                 </View>
 
-                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-report']}</Button>
-                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-disconnect']}</Button>
-                <Button style={styles.margin} color='danger' borderRadius={16}>{lang['input-delete-activities']}</Button>
-                <Button style={styles.margin} color='danger' borderRadius={16}>{lang['input-delete-account']}</Button>
-                <Button style={styles.margin} color='main2' borderRadius={16}>{lang['input-tuto-again']}</Button>
+                <Button style={styles.margin} onPress={WAITPLZ} color='main2'>{lang['input-report']}</Button>
+                <Button style={styles.margin} onPress={WAITPLZ} color='main2'>{lang['input-disconnect']}</Button>
+
+                <Container style={styles.margin} opened={false} type='rollable'>
+                    <Button style={styles.margin} onPress={WAITPLZ} color='danger'>{lang['input-delete-activities']}</Button>
+                    <Button onPress={WAITPLZ} color='danger'>{lang['input-delete-account']}</Button>
+                </Container>
+
+                <Button style={styles.margin} onPress={WAITPLZ} color='main2' borderRadius={16}>{lang['input-tuto-again']}</Button>
             </Page>
         )
     }

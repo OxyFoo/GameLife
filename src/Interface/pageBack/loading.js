@@ -13,18 +13,33 @@ class BackLoading extends React.Component {
     }
 
     componentDidMount() {
-        this.Initialisation();
+        this.initialisation();
         PlayStartSound();
     }
 
-    async Initialisation() {
+    nextStep = () => this.setState({ icon: this.state.icon + 1 });
+    onToucheStart = (event) => { this.startY = event.nativeEvent.pageY; }
+    onToucheEnd = (event) => { if (event.nativeEvent.pageY - this.startY < -200) user.interface.EnableConsole(); }
+
+    async initialisation() {
         await user.settings.Load();
         await user.server.Ping();
+        const online = user.server.online;
+        user.AddLog('warn', 'Not connected to the server, data will be saved locally only');
 
-        this.setState({ icon: 1 });
+        this.nextStep();
+
+        // Loading : Internal data
+        if (online) await dataManager.OnlineLoad();
+        else        await dataManager.LocalLoad();
+
+        const dataLoaded = dataManager.DataAreLoaded();
+        if (!dataLoaded) {
+            user.AddLog('error', 'Internal data not loaded');
+            return;
+        }
 
         const email = user.settings.email;
-        const online = user.server.online;
         const connected = user.settings.connected;
         const showOnboard = !user.settings.onboardingWatched;
         if (email === '') {
@@ -44,14 +59,8 @@ class BackLoading extends React.Component {
     }
 
     async loadData() {
-        // Loading : Internal data
         const online = user.server.online;
-        if (online) await dataManager.OnlineLoad();
-        else        await dataManager.LocalLoad();
-
         await user.LocalLoad();
-
-        // TODO - Check data (if it doesn't empty)
 
         // Connect
         if (user.server.token === '') {
@@ -63,24 +72,28 @@ class BackLoading extends React.Component {
             }
         }
 
-        this.setState({ icon: 2 });
+        this.nextStep();
 
         // Loading : User data
+        let success = await user.LocalLoad();
         if (online) {
-            await user.LocalLoad();
-            const saved = await user.SaveUnsavedData();
-            if (saved) await user.OnlineLoad();
-            else console.error('SaveUnsavedData failed');
+            success &= await user.SaveUnsavedData();
+            success &= await user.OnlineLoad();
+        }
+        if (!success) {
+            user.AddLog('error', 'User data not loaded');
+            return;
         }
 
         // Loading : Notifications
-        /*if (user.settings.morningNotifications) {
+        if (user.settings.morningNotifications) {
             await EnableMorningNotifications();
         } else {
             DisableMorningNotifications();
-        }*/
+        }
 
-        this.setState({ icon: 3 }); await Sleep(200);
+        this.nextStep();
+        await Sleep(200);
 
         if (user.activities.currentActivity === null) {
             // TODO - home

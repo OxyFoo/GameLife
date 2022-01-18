@@ -23,6 +23,8 @@ class BackSettings extends React.Component {
         }
     }
 
+    openAbout = () => user.interface.ChangePage('about', undefined, true);
+
     onChangeLang = (lang) => {
         this.setState({ selectedLang: lang });
         langManager.SetLangage(lang.key);

@@ -139,7 +139,7 @@ class Server {
      * Load all user data
      * @returns {Promise<?Object>} - Return all online data or null if failed
      */
-    async LoadData() {
+    async LoadUserData() {
         let json = null;
         const data = {
             'action': 'getUserData',

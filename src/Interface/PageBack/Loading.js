@@ -62,7 +62,7 @@ class BackLoading extends React.Component {
 
     async loadData() {
         const online = user.server.online;
-        let success = await user.LocalLoad();
+        await user.LocalLoad();
 
         // Connect
         if (user.server.token === '') {
@@ -78,10 +78,11 @@ class BackLoading extends React.Component {
 
         // Loading : User data
         if (online) {
-            success &= await user.SaveUnsavedData();
-            success &= await user.OnlineLoad();
+            await user.SaveUnsavedData();
+            await user.OnlineLoad();
+            // local save
         }
-        if (!success) {
+        if (user.username === '') {
             user.AddLog('error', 'User data not loaded');
             return;
         }

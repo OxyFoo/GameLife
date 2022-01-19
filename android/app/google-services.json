@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "911058983753",
+    "project_id": "gamelife-f7c3d",
+    "storage_bucket": "gamelife-f7c3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911058983753:android:7edf5820066ed8f24b1898",
+        "android_client_info": {
+          "package_name": "com.gamelife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911058983753-675dc7f9b8qmoc17cmc4eq469skipq5b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0Tz-RRCsAyMsmxnM0urceGgXWo57VnLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911058983753-675dc7f9b8qmoc17cmc4eq469skipq5b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "911058983753-qkqv1f1lcu84euf33afkl0p2kha1pdes.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.GameLife",
+                "app_store_id": "1587486522"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

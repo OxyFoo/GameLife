@@ -369,12 +369,9 @@
     },
 
     "skill": {
-        "page-title": "Compétence",
-
-        "text-point": "Point",
-        "text-points": "Points",
-        "text-author": "Une idée de",
-        "page-history": "Historique",
+        "text-author": "Une idée de {}",
+        "stats-title": "Statistiques",
+        "history-title": "Historique",
         "text-history": "{} pendant {} minutes"
     },
 

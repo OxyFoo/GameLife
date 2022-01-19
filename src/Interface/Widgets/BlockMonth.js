@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
-import { Text } from '../Components';
-import themeManager from '../../Managers/ThemeManager';
-import { GetMonthAndYear } from '../../Functions/Date';
 import user from '../../Managers/UserManager';
+import themeManager from '../../Managers/ThemeManager';
+
+import { Text } from '../Components';
+import { GetMonthAndYear } from '../../Functions/Date';
 
 const BlockMonthProps = {
     style: {},

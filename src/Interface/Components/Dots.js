@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
+
 import themeManager from '../../Managers/ThemeManager';
 
 const DotsProps = {

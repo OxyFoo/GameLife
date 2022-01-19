@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { TimingAnimation } from '../../Functions/Animations';
 
 import Text from './Text';
-import Button from './Button';
 import Icon from './Icon';
+import Button from './Button';
+import { TimingAnimation } from '../../Functions/Animations';
 
 const ContainerProps = {
     style: {},

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { View, Animated, StyleSheet, Dimensions } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { MinMax } from '../../Functions/Functions';
-import { TimingAnimation, SpringAnimation } from '../../Functions/Animations';
 
 import Dots from './Dots';
+import { MinMax } from '../../Functions/Functions';
+import { TimingAnimation, SpringAnimation } from '../../Functions/Animations';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 

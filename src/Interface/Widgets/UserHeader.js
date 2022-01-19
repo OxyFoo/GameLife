@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { IsUndefined } from '../../Functions/Functions';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-import { GetAge } from '../../Functions/Time';
 import { Text, Icon, Button } from '../Components';
+import { GetAge } from '../../Functions/Time';
+import { IsUndefined } from '../../Functions/Functions';
 
 const UserHeaderProps = {
     style: {},

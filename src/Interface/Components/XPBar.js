@@ -3,7 +3,7 @@ import { Animated, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { MinMax, Sleep } from '../../Functions/Functions';
-import {  SpringAnimation } from '../../Functions/Animations';
+import { SpringAnimation } from '../../Functions/Animations';
 
 const XPBarProps = {
     value: 0,

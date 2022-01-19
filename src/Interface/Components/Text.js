@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
+
 import { IsUndefined } from '../../Functions/Functions';
 
 const MAIN_FONT_NAME = 'Hind Vadodara';

@@ -81,8 +81,8 @@ class Skills {
      * @returns {?Skill} - Return skill if exists or null
      */
     GetByID = (ID) => GetByKey(this.skills, 'ID', ID);
-
-    GetByCategory = (ID) => this.skills.filter(skill => skill.CategoryID === ID);
+    GetCategoryByID = (ID) => this.categories.find(category => category.ID === ID);
+    GetByCategory = (ID) => this.skills.find(skill => skill.CategoryID === ID);
 
     // TODO - Unused ?
     GetAllCategories(onlyUseful = false) {
@@ -91,7 +91,7 @@ class Skills {
         categories = categories.map((el) => { return { key: el.ID, value: el.Name } });
         if (onlyUseful) {
             // TODO - End that
-            //categories = categories.filter((el) => {});
+            //categories = categories.find((el) => {});
         }
         return output;
         /*let sorted = this.categories.sort((a, b) => );

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
+
 import { Random, Sleep } from '../../Functions/Functions';
 import { TimingAnimation } from '../../Functions/Animations';
 

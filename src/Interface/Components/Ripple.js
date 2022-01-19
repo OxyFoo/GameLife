@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
+
 import { TimingAnimation } from '../../Functions/Animations';
 
 class Ripple extends React.Component {

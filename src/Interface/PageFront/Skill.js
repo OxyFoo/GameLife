@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import BackSkill from '../PageBack/Skill';
 import user from '../../Managers/UserManager';
@@ -7,128 +7,115 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { DateToFormatString } from '../../Functions/Time';
-import { GLBottomSwipePage, GLDoubleCorner, GLHeader, GLStats, GLSvg, GLText, GLXPBar } from '../Components';
+import { PageHeader, StatsBars } from '../Widgets';
+import { Page, Container, Text, Icon, XPBar, Button } from '../Components';
 
 class Skill extends BackSkill {
     render() {
-        return (
-            <View style={{ position: 'relative', width: '100%', height: '100%' }}>
-                {/* Header */}
-                <GLHeader
-                    title={langManager.curr['skill']['page-title']}
-                    leftIcon="back"
-                    onPressLeft={this.back}
-                />
+        const lang = langManager.curr['skill'];
+        const userStats = user.experience.GetExperience();
+        const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
-                {/* Content */}
-                <View style={styles.content}>
+        return (
+            <>
+                <Page canScrollOver={false} bottomOffset={96}>
+                    <PageHeader onBackPress={user.interface.BackPage} hideHelp />
+
+                    {/* Content */}
                     <View style={styles.skillContainer}>
-                        <View style={styles.pictureContainer}>
-                            <View style={[styles.picture, { backgroundColor: themeManager.colors['globalBackcomponent'] }]}>
-                                <GLSvg xml={this.xml} />
-                                <GLDoubleCorner />
-                            </View>
+                        <View style={[styles.pictureContainer, backgroundMain]}>
+                            <Icon size={84} xml={this.xml} />
                         </View>
                         <View style={styles.detailContainer}>
-                            <View>
-                                <GLText style={styles.detailName} title={this.name} />
-                                <GLText style={styles.detailCategory} title={this.category} color="secondary" />
-                            </View>
-                            <View>
-                                <GLText style={styles.level} title={this.level} />
-                                <GLXPBar value={this.xp} max={this.maxXP} small={true} />
-                            </View>
-                            <GLText style={styles.creator} title={this.creator} color="secondary" />
+                            <Text style={styles.bigText}>{this.name}</Text>
+                            <Text style={styles.smallText}>{this.category}</Text>
                         </View>
                     </View>
-                    <GLStats containerStyle={styles.stats} data={this.stats} />
-                </View>
-                <GLBottomSwipePage title={langManager.curr['skill']['page-history'].toUpperCase()}>
-                    <FlatList
-                        data={this.history}
-                        keyExtractor={(item, i) => 'history_' + i}
-                        renderItem={({item, i}) => {
-                            const date = DateToFormatString(new Date(item.startTime));
-                            const text = langManager.curr['skill']['text-history'];
-                            const duration = item.duration;
-                            const title = text.replace('{}', date).replace('{}', duration);
-                            const onPress = () => { user.interface.ChangePage('activity', { 'activity': item }); }
-                            return (
-                                <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-                                    <GLText
-                                        style={styles.textHistory}
-                                        title={title}
-                                    />
-                                </TouchableOpacity>
-                            )
-                        }}
-                    />
-                </GLBottomSwipePage>
-            </View>
+
+                    <View style={{ paddingHorizontal: '2%', marginBottom: 24 }}>
+                        <Text style={styles.levelText}>{this.level}</Text>
+                        <XPBar value={userStats.xp} maxValue={userStats.next} />
+
+                        {this.creator !== '' && (
+                            <Text style={styles.creator} color='secondary'>{this.creator}</Text>
+                        )}
+                    </View>
+
+                    <Container text={lang['stats-title']} style={{ marginBottom: 24 }} type='rollable' opened={true}>
+                        <StatsBars data={user.stats} />
+                    </Container>
+
+                    {this.history.length > 0 && (
+                        <Container text={lang['history-title']} type='rollable' opened={false}>
+                            <FlatList
+                                data={this.history}
+                                keyExtractor={(item, i) => 'history_' + i}
+                                renderItem={({item, i}) => {
+                                    const date = DateToFormatString(new Date(item.startTime));
+                                    const text = lang['text-history'];
+                                    const duration = item.duration;
+                                    const title = text.replace('{}', date).replace('{}', duration);
+                                    const onPress = () => { user.interface.ChangePage('activity', { 'activity': item }); }
+                                    return (
+                                        <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+                                            <Text style={styles.textHistory}>{title}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                }}
+                            />
+                        </Container>
+                    )}
+                </Page>
+                <Button style={styles.addActivity} color='main2'>Test</Button>
+            </>
         )
     }
 }
 
-const ww = Dimensions.get('window').width ; 
-const wh = Dimensions.get('window').height ;
-
 const styles = StyleSheet.create({
-    content: {
-        flex: 1
-    },
     skillContainer: {
-        marginVertical: "5%",
-        display: 'flex',
         flexDirection: 'row',
+        marginBottom: 24
     },
     pictureContainer: {
-        marginHorizontal: "5%",
-        justifyContent: 'center'
-    },
-    picture: {
-        width: ww*34/100,
-        height: ww*34/100,
-
-        borderWidth: ww*5/1000,
+        marginLeft: 6,
+        marginRight: 24,
+        padding: 16,
+        borderWidth: 2,
         borderColor: '#FFFFFF',
-
-        zIndex: -100,
-        elevation: -100
+        borderRadius: 12
     },
     detailContainer: {
         flex: 1,
-        paddingTop: "1%",
-        paddingHorizontal: "5%",
-        paddingLeft: 0,
-
-        display: 'flex',
-        justifyContent: 'space-between',
+        paddingVertical: '5%',
+        justifyContent: 'space-evenly'
     },
-    detailName: {
-        fontSize: ww * 60 / 1000,
-        textAlign: 'left',
-        lineHeight: wh * 375 / 10000,
-        
-    },
-    detailCategory: {
-        fontSize: ww * 55 / 1000,
+    bigText: {
+        fontSize: 32,
         textAlign: 'left'
     },
-    level: {
-        fontSize: ww * 50 / 1000,
-        marginBottom: 4,
+    smallText: {
+        fontSize: 22,
+        textAlign: 'left'
+    },
+    levelText: {
+        marginBottom: 6,
         textAlign: 'left'
     },
     creator: {
-        fontSize: ww * 40 / 1000,
+        marginTop: 12,
+        fontSize: 18,
         textAlign: 'left'
     },
-    stats: {
-        height: '60%',
-        padding: "6%"
-    },
     textHistory: {
-        padding: "5%"
+        padding: '5%'
+    },
+
+    addActivity: {
+        position: 'absolute',
+        left: 36,
+        right: 36,
+        bottom: 36
     }
 });
 

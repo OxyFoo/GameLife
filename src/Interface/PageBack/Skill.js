@@ -18,12 +18,13 @@ class BackSkill extends React.Component {
         const skillXP = user.experience.GetSkillExperience(skillID);
 
         this.name = dataManager.GetText(skill.Name);
-        this.category = skill.Category;
+        const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
+        this.category = dataManager.GetText(category.Name);
         this.level = langManager.curr['level']['level'] + ' ' + skillXP.lvl;
         this.xp = skillXP.xp;
         this.maxXP = skillXP.next;
         if (skill.Creator) {
-            this.creator = langManager.curr['skill']['text-author'] + ' ' + skill.Creator;
+            this.creator = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
         } else {
             this.creator = '';
         }
@@ -39,8 +40,6 @@ class BackSkill extends React.Component {
         }
         this.history.reverse();
     }
-
-    back = () => { user.interface.BackPage(); }
 }
 
 export default BackSkill;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, Dimensions } from 'react-native';
+import { Animated, StyleSheet, Dimensions } from 'react-native';
 
 import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
 

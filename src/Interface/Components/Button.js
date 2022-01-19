@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { IsUndefined } from '../../Functions/Functions';
 
 import Text from './Text';
 import Icon from './Icon';
 import Ripple from './Ripple';
+import { IsUndefined } from '../../Functions/Functions';
 
 const ButtonProps = {
     style: {},

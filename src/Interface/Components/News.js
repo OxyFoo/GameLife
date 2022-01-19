@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
 
 import Text from './Text';
 import Button from './Button';
-import user from '../../Managers/UserManager';
 
 // TODO - Terminer les news (buttons + icons)
 

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { StyleSheet, Animated, TextInput } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { TimingAnimation } from '../../Functions/Animations';
 
 import Text from './Text';
+import { TimingAnimation } from '../../Functions/Animations';
 
 const InputProps = {
     style: {},

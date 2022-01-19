@@ -2,8 +2,9 @@ import * as React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
-import Base64 from '../../Functions/Base64';
 import themeManager from '../../Managers/ThemeManager';
+
+import Base64 from '../../Functions/Base64';
 import { IsUndefined } from '../../Functions/Functions';
 
 import svgDefault from '../../../res/icons/default';

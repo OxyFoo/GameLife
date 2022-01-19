@@ -3,9 +3,9 @@ import { FlatList, StyleSheet } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
+import langManager from '../../Managers/LangManager';
 
 import { Container, Text } from '../Components';
-import langManager from '../../Managers/LangManager';
 
 const ActivityExperienceProps = {
     skillID: 0,

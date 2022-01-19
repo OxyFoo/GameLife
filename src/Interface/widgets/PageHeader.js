@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 
 import langManager from '../../Managers/LangManager';
+
 import { Text, Icon } from '../Components';
 
 const PageHeaderProps = {

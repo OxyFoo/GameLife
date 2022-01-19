@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Animated, TouchableOpacity, StyleSheet } from 'react-native';
 
-import { Activity } from '../../Class/Activities';
-import { TimingAnimation } from '../../Functions/Animations';
-import { TimeToFormatString } from '../../Functions/Time';
 import dataManager from '../../Managers/DataManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
+
 import { Icon, Text } from '../Components';
+import { Activity } from '../../Class/Activities';
+import { TimingAnimation } from '../../Functions/Animations';
+import { TimeToFormatString } from '../../Functions/Time';
 
 const ActivityCardProps = {
     style: {},

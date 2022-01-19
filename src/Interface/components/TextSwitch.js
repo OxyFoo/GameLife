@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { SpringAnimation } from '../../Functions/Animations';
 
 import Button from './Button';
+import { SpringAnimation } from '../../Functions/Animations';
 
 const TextSwitchProps = {
     style: {},

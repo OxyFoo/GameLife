@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { SpringAnimation } from '../../Functions/Animations';
+
 import themeManager from '../../Managers/ThemeManager';
+
 import Button from './Button';
+import { SpringAnimation } from '../../Functions/Animations';
 
 const SwitchProps = {
     value: false,

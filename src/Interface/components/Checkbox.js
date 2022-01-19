@@ -2,9 +2,9 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
-import { SpringAnimation } from '../../Functions/Animations';
 
 import Icon from './Icon';
+import { SpringAnimation } from '../../Functions/Animations';
 
 const CheckboxProps = {
     color: 'main1',

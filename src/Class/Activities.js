@@ -1,4 +1,4 @@
-import { UserManager } from "../Managers/UserManager";
+//import { UserManager } from "../Managers/UserManager";
 import { GetMidnightTime, GetTime } from "../Functions/Time";
 
 class Activity {

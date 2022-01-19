@@ -201,7 +201,7 @@ class PageManager extends React.Component{
             case 'about': p = <About />; break;
             case 'achievements': p = <Achievements />; break;
             case 'activity': p = <Activity args={args} />; break;
-            case 'activitytimer': p = <ActivityTimer args={args} />; break;
+            case 'activitytimer': p = <ActivityTimer />; break;
             case 'calendar': p = <Calendar />; break;
             case 'dailyquest': p = <Dailyquest />; break;
             case 'display': p = <Display args={args} />; break;

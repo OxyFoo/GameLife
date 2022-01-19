@@ -30,6 +30,7 @@ class UserManager {
     quests = new Quests(this);
     server = new Server(this);
     settings = new Settings(this);
+
     /**
      * Function loaded in componentDidMount of PageManager (in App.js)
      * I've do that to skip cycles warns

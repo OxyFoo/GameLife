@@ -1,6 +1,6 @@
 import { BackHandler } from 'react-native';
 
-import { UserManager } from '../Managers/UserManager';
+//import { UserManager } from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 
 import { Request_Async } from '../Functions/Request';

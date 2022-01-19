@@ -36,8 +36,10 @@ class PageManager extends React.Component{
     state = {
         page1: '',
         page2: '',
-        animOpacity1: new Animated.Value(0),
-        animOpacity2: new Animated.Value(0),
+        anim: {
+            page1: new Animated.Value(0),
+            page2: new Animated.Value(0)
+        },
         animTransition: new Animated.Value(1),
         arguments: {},
         ignorePage: false,
@@ -145,7 +147,7 @@ class PageManager extends React.Component{
 
     pageAnimation = async (newpage) => {
         const animDuration = 200;
-        const animScaleDuration = 100;
+        const animTransitionDuration = 50;
 
         // Bottom bar selected index animation
         const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
@@ -155,40 +157,26 @@ class PageManager extends React.Component{
         if (!bottomBarShow) this.setState(newBarState);
 
         // Start loading animation
-        TimingAnimation(this.state.animTransition, 0, animScaleDuration).start();
+        TimingAnimation(this.state.animTransition, 1, animTransitionDuration).start();
 
-        // Switch pages animation
-        if (!this.state.page1) {
-            const clear = () => {
-                this.changing = false;
-                this.setState(Object.assign({}, { page2: '' }, newBarState));
-            };
-            setTimeout(() => {
-                // Load page 1
-                this.setState({ page1: newpage }, () => {
-                    TimingAnimation(this.state.animTransition, 1, animScaleDuration).start();
-                    // Clear page 2
-                    TimingAnimation(this.state.animOpacity2, 0, animDuration).start(clear);
-                    // Show page 1
-                    TimingAnimation(this.state.animOpacity1, 1, animDuration).start();
-                });
-            }, 0);
-        } else {
-            const clear = () => {
-                this.changing = false;
-                this.setState(Object.assign({}, { page1: '' }, newBarState));
-            };
-            setTimeout(() => {
-                // Load page 2
-                this.setState({ page2: newpage }, () => {
-                    TimingAnimation(this.state.animTransition, 1, animScaleDuration).start();
-                    // Clear page 1
-                    TimingAnimation(this.state.animOpacity1, 0, animDuration).start(clear);
-                    // Show page 2
-                    TimingAnimation(this.state.animOpacity2, 1, animDuration).start();
-                });
-            }, 0);
+        // Page animation
+        const nextPage = this.state.page1 === '' ? 'page1' : 'page2';
+        const prevPage = nextPage === 'page1' ? 'page2' : 'page1';
+
+        TimingAnimation(this.state.anim[nextPage], 1, animTransitionDuration).start();
+        TimingAnimation(this.state.anim[prevPage], 0, animTransitionDuration).start();
+        const AnimationEnd = () => {
+            this.changing = false;
+            this.setState({ [prevPage]: '' });
+            TimingAnimation(this.state.animTransition, 0, animTransitionDuration).start();
+        };
+        const AnimationStart = () => {
+            const newState = Object.assign(newBarState, { [nextPage]: newpage });
+            this.setState(newState, AnimationEnd);
         }
+
+        setTimeout(AnimationStart, animTransitionDuration);
+        //setTimeout(() => { this.setState(newState, AnimationEnd); }, 10);
     }
 
     GetCurrentPage = () => {
@@ -228,15 +216,13 @@ class PageManager extends React.Component{
         const page1 = this.getPageContent(this.state.page1, this.state.arguments);
         const page2 = this.getPageContent(this.state.page2, this.state.arguments);
 
-        const interScale = { inputRange: [0, 1], outputRange: [0.95, 1] };
-        const interOpacity = { inputRange: [0, 1], outputRange: [0.2, 0] };
+        const interOpacity = { inputRange: [0, 1], outputRange: [0, 0.2] };
 
         const fullscreen = { width: '100%', height: '100%' };
         const absolute = { position: 'absolute', top: 0, left: 0 };
-        const scale = { transform: [{ scale: this.state.animTransition.interpolate(interScale) }] };
 
-        const page1Style = [fullscreen, absolute, scale, { opacity: this.state.animOpacity1 }];
-        const page2Style = [fullscreen, absolute, scale, { opacity: this.state.animOpacity2 }];
+        const page1Style = [fullscreen, absolute, { opacity: this.state.anim['page1'] }];
+        const page2Style = [fullscreen, absolute, { opacity: this.state.anim['page2'] }];
         const overlayStyle = [fullscreen, absolute, { backgroundColor: '#000000', opacity: this.state.animTransition.interpolate(interOpacity) }];
 
         const page1Event = this.state.page1 ? 'auto' : 'none';

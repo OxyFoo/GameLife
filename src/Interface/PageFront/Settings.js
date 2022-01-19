@@ -51,7 +51,7 @@ class Settings extends BackSettings {
                     <Button onPress={WAITPLZ} color='danger'>[{lang['input-delete-account']}]</Button>
                 </Container>
 
-                <Button style={styles.margin} onPress={WAITPLZ} color='main2' borderRadius={16}>[{lang['input-tuto-again']}]</Button>
+                <Button style={styles.margin} onPress={WAITPLZ} color='main1' borderRadius={16}>[{lang['input-tuto-again']}]</Button>
             </Page>
         )
     }

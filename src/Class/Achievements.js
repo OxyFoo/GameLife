@@ -1,13 +1,5 @@
 //import { UserManager } from "../Managers/UserManager";
 
-// TODO - Correct ?
-class Achievement {
-    skillID = 0;
-    //startDate = new Date();
-    startTime = 0;
-    duration = 0;
-}
-
 class Achievements {
     constructor(user) {
         /**
@@ -16,12 +8,12 @@ class Achievements {
         this.user = user;
 
         /**
-         * @type {Array<Achievement>}
+         * @type {Array<Number>}
          */
         this.solved = [];
 
         /**
-         * @type {Array<Achievement>}
+         * @type {Array<Number>}
          */
         this.UNSAVED_solved = [];
     }
@@ -47,6 +39,11 @@ class Achievements {
     }
     Purge() {
         this.UNSAVED_solved = [];
+    }
+
+    AddAchievement(achievementID) {
+        this.solved.push(achievementID);
+        this.UNSAVED_solved.push(achievementID);
     }
 
     // TODO - Add events
@@ -156,12 +153,10 @@ class Achievements {
 
             if (valid) {
                 const title = langManager.curr['achievements']['alert-achievement-title'];
-                let text = langManager.curr['achievements']['alert-achievement-text'];
-                text = text.replace('{}', achievement.Name);
+                const text = langManager.curr['achievements']['alert-achievement-text'].replace('{}', achievement.Name);
                 this.user.interface.popup.Open('ok', [ title, text ]);
 
-                this.solved.push(achievementID);
-                this.UNSAVED_solved.push(achievementID);
+                this.AddAchievement(achievementID);
                 this.user.EventNewAchievement(achievement);
             }
         }

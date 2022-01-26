@@ -32,7 +32,7 @@ class UserHeader extends React.Component {
         const activeOpacity = editable ? 0.6 : 1;
 
         const userTitle = user.GetTitle();
-        const edit = <Icon icon='edit' color='border' />;
+        const edit = <Icon icon={user.IsConnected() ? 'edit' : 'nowifi'} color='border' />;
         const avatar = <Button style={styles.avatar} onPress={this.onAvatarPress} rippleColor='white' />;
         const rightItem = editable ? edit : avatar;
 

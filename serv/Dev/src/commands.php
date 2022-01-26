@@ -216,58 +216,81 @@
          */
         public function GetUserData() {
             $token = $this->data['token'];
-            if (isset($token)) {
-                $dataFromToken = Device::GetDataFromToken($this->db, $token);
-                $accountID = $dataFromToken['accountID'];
-    
-                if (isset($accountID)) {
-                    $account = Account::GetByID($this->db, $accountID);
+            if (!isset($token)) return;
 
-                    $username = $account['Username'];
-                    $usernameTime = strtotime($account['LastChangeUsername']);
-                    $title = intval($account['Title']);
-
-                    $activities = $this->db->Decrypt($account['Data']);
-                    $solvedAchievements = $account['SolvedAchievements'];
-                    if (isset($activities, $username, $title, $solvedAchievements)) {
-                        $userData = array(
-                            'username' => $username,
-                            'usernameTime' => $usernameTime,
-                            'title' => $title,
-                            'activities' => json_decode($activities, true)
-                        );
-                        // TODO - Terminer le chargement des données ici
-                        // date_default_timezone_set('UTC');
-
-                        $userData['solvedAchievements'] = $solvedAchievements !== "" ? array_map('intval', explode(',', $solvedAchievements)) : array();
-                        $userData = json_encode($userData);
-                        $this->output['data'] = $userData;
-                        $this->output['status'] = 'ok';
-                    }
-                }
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
             }
+
+            $accountID = $dataFromToken['accountID'];
+            $account = Account::GetByID($this->db, $accountID);
+            $userData = array();
+
+            $dbDataToken = $account['DataToken'];
+            $appDataToken = $this->data['dataToken'];
+            if (!isset($appDataToken, $dbDataToken)) return;
+
+            $username = $account['Username'];
+            $usernameTime = $account['LastChangeUsername'];
+            $title = intval($account['Title']);
+            $birthtime = $account['Birthtime'];
+
+            if ($usernameTime !== NULL) strtotime($usernameTime);
+            if ($birthtime !== NULL) $birthtime = intval($birthtime);
+
+            if (isset($username, $title)) {
+                $userData['username'] = $username;
+                $userData['usernameTime'] = $usernameTime;
+                $userData['title'] = $title;
+                $userData['birthtime'] = $birthtime;
+            }
+
+            if ($appDataToken != $dbDataToken) {
+                //$activities = $this->db->Decrypt($account['Activities']);
+                $activities = $account['Activities'];
+                $userData['activities'] = json_decode($activities, true);
+                $userData['dataToken'] = $dbDataToken;
+            }
+
+            $achievements = $account['Achievements'];
+            $userData['achievements'] = strlen($achievements) ? array_map('intval', explode(',', $achievements)) : array();
+
+            $this->output['data'] = $userData;
+            $this->output['status'] = 'ok';
         }
 
         public function AddUserData() {
             $token = $this->data['token'];
             $userData = $this->data['data'];
-            if (isset($token, $userData)) {
-                $dataFromToken = Device::GetDataFromToken($this->db, $token);
-                $accountID = $dataFromToken['accountID'];
-    
-                if (isset($accountID)) {
-                    $account = Account::GetByID($this->db, $accountID);
-                    if ($account !== NULL) {
-                        // TODO - Save data here
-                        User::ExecQueue($this->db, $account, $userData);
-                        $this->output['status'] = 'ok';
-                    }
-                }
+            if (!isset($token, $userData)) return;
+
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
             }
+
+            $accountID = $dataFromToken['accountID'];
+            $account = Account::GetByID($this->db, $accountID);
+            if ($account === NULL) return;
+            $dbDataToken = $account['DataToken'];
+
+            $newDataToken = User::ExecQueue($this->db, $account, $userData);
+
+            if ($this->data['dataToken'] === $dbDataToken) {
+                $this->output['dataToken'] = $newDataToken;
+            }
+
+            $this->output['status'] = 'ok';
         }
 
         /**
          * Defines user data (activities, nickname, successes, etc)
+         * NOT USED
          */
         public function SetUserData() {
             $token = $this->data['token'];

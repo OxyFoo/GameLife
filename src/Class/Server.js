@@ -25,17 +25,19 @@ class Server {
         this.user = user;
 
         this.token = '';
+        this.dataToken = '';
         this.online = false;
         this.status = STATUS.OFFLINE;
     }
 
     Clear = () => {
         this.token = '';
+        this.dataToken = '';
         this.online = false;
         this.status = STATUS.OFFLINE;
     }
 
-    IsConnected() {
+    IsConnected = () => {
         return this.status === STATUS.CONNECTED || this.status === STATUS.BANNED;
     }
 
@@ -121,19 +123,30 @@ class Server {
      * @param {Array} data - Data to add to server
      * @returns {Promise<Boolean>} - Return success of online save
      */
-    async SaveData(data) {
+    async SaveUserData(data) {
         let success = false;
         const _data = {
             'action': 'addUserData',
             'token': this.token,
-            'data': data
+            'data': data,
+            'dataToken': this.dataToken
         };
 
         const response = await Request_Async(_data);
+        console.log(response);
         if (response.status === 200) {
-            if (response.content['status'] === 'ok') {
-                // TODO - Add "Data Token"
+            const content = response.content;
+            const status = content['status'];
+
+            if (status === 'ok') {
                 success = true;
+                if (content.hasOwnProperty('dataToken')) {
+                    this.dataToken = content['dataToken'];
+                }
+            } else if (status === 'tokenExpired') {
+                // TODO - Popup + restart
+                success = false;
+                this.user.AddLog('warn', 'Request: saveData - token expired');
             }
         }
 
@@ -148,16 +161,18 @@ class Server {
         let json = null;
         const data = {
             'action': 'getUserData',
-            'token': this.token
+            'token': this.token,
+            'dataToken': this.dataToken
         };
         const response = await Request_Async(data);
+
         if (response.status === 200) {
-            let content = response.content;
-            if (content['status'] === 'ok') {
-                if (StrIsJSON(content['data'])) {
-                    // TODO - Add "Data Token"
-                    json = JSON.parse(content['data']);
-                }
+            const content = response.content;
+            const status = content['status'];
+            const data = content['data'];
+
+            if (status === 'ok' && typeof(data) === 'object') {
+                json = data;
             }
         }
         return json;

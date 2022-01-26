@@ -77,20 +77,38 @@
             return $db->Query("UPDATE `Devices` SET `Token` = '' WHERE `ID` = '$deviceID'");
         }
 
+        private const RANDOM_LENGTH = 24;
+        private const LIMIT_TIME_HOURS = 6;
+        private const SEPARATOR = "\t";
+
         public static function GeneratePrivateToken($db, $accountID, $deviceID) {
-            $random = RandomString(24);
-            $cipher = "$deviceID\t$accountID\t$random";
+            $time = time();
+            $sep = self::SEPARATOR;
+            $random = RandomString(self::RANDOM_LENGTH);
+
+            $cipher = "$deviceID{$sep}$accountID{$sep}$time{$sep}$random";
             $middle = $db->Encrypt($cipher);
             $result = $db->Encrypt($middle, $db->keyB);
             return $result;
         }
 
         public static function GetDataFromToken($db, $token) {
+            $output = NULL;
             $middle = $db->Decrypt($token, $db->keyB);
             $data = $db->Decrypt($middle);
 
-            list($deviceID, $accountID, $random) = explode("\t", $data);
-            return array('deviceID' => $deviceID, 'accountID' => $accountID);
+            $exploded = explode(self::SEPARATOR, $data);
+            if (count($exploded) === 4) {
+                list($deviceID, $accountID, $time, $random) = $exploded;
+                if (is_numeric($deviceID) && is_numeric($accountID) && is_numeric($time) && strlen($random) === self::RANDOM_LENGTH) {
+                    $output = array(
+                        'deviceID' => $deviceID,
+                        'accountID' => $accountID,
+                        'inTime' => intval($time) + (self::LIMIT_TIME_HOURS * 3600) >= time()
+                    );
+                }
+            }
+            return $output;
         }
     }
 

@@ -9,61 +9,85 @@
             $achievements = $data['achievements'];
 
             if (isset($activities)) {
-                $this->AddActivities($db, $account, $achievements);
+                self::AddActivities($db, $account, $activities);
             }
 
             if (isset($achievements)) {
-                $this->AddAchievement($db, $account, $achievements);
+                self::AddAchievement($db, $account, $achievements);
             }
+
+            $newToken = self::RefreshDataToken($db, $account);
+            return $newToken;
         }
+
         // Format : [ ['add|rem',SkillID,DATE,DURATION], ... ]
-        private static function AddActivities($db, $account, $data) {
+        private static function AddActivities($db, $account, $activities) {
             $accountID = $account['ID'];
-            $accountData = $account['Data'];
-            for ($i = 0; $i < count($accountData); $i++) {
-                $activity = $accountData[$i];
+            $dbActivities = json_decode($account['Activities'], true);
+
+            for ($i = 0; $i < count($activities); $i++) {
+                $activity = $activities[$i];
+                if (count($activity) !== 4) continue;
 
                 $type = $activity[0];
                 $skillID = $activity[1];
-                $date = $activity[2];
+                $startTime = $activity[2];
                 $duration = $activity[3];
-                $newActivity = [ $skillID, $date, $duration ];
+                $newActivity = [ $skillID, $startTime, $duration ];
 
                 if ($type === 'add') {
-                    array_push($accountData, $newActivity);
+                    array_push($dbActivities, $newActivity);
                 } else if ($type === 'rem') {
                     // TODO - Check ça
-                    $index = array_search($newActivity, $accountData);
+                    $index = array_search($newActivity, $dbActivities);
                     if ($index !== false) {
-                        array_splice($accountData, $index, 1);
+                        array_splice($dbActivities, $index, 1);
                     }
                 }
+            }
 
-                $command = "UPDATE `Users` SET `Data` = '$accountData' WHERE `ID` = '$accountID'";
-                $result = $db->Query($command);
-                if ($result !== TRUE) {
-                    ExitWithStatus("Error: saving achievements failed");
-                }
-            }
-        }
-        // Format : [1, 2, 3, ...]
-        private static function AddAchievement($db, $account, $data) {
-            // TODO - Vérifier cette fonction
-            $accountID = $account['ID'];
-            $achievements = explode(',', $account['SolvedAchievements']);
-            for ($i = 0; $i < count($data); $i++) {
-                $achievement = $achievements[$i];
-                if (!in_array($achievement, $achievements)) {
-                    array_push($achievements, $achievement);
-                }
-            }
-            $achievementsFormat = implode(',', $achievements);
-            $command = "UPDATE `Users` SET `SolvedAchievements` = '$achievementsFormat' WHERE `ID` = '$accountID'";
+            $newActivities = json_encode($dbActivities);
+            $command = "UPDATE `Users` SET `Activities` = '$newActivities' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: saving achievements failed");
             }
         }
+
+        // Format : [1, 2, 3, ...]
+        private static function AddAchievement($db, $account, $achievements) {
+            $accountID = $account['ID'];
+            $dbAchievements = $account['Achievements'];
+
+            for ($i = 0; $i < count($achievements); $i++) {
+                $achievementID = $achievements[$i];
+                if (strlen($dbAchievements) === 0) {
+                    $dbAchievements = $achievementID;
+                } else {
+                    $dbAchievements .= ',' . $achievementID;
+                }
+            }
+
+            $command = "UPDATE `Users` SET `Achievements` = '$dbAchievements' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: saving achievements failed");
+            }
+        }
+
+        private static function RefreshDataToken($db, $account) {
+            //return 'test12';
+            $accountID = $account['ID'];
+            $newDataToken = RandomString(6);
+            $command = "UPDATE `Users` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: saving achievements failed");
+            }
+            return $newDataToken;
+        }
+
+        // TODO - Check this
 
         public static function pseudoIsFree($db, $username) {
             $p = ucfirst(strtolower($username));
@@ -99,7 +123,7 @@
 
         public static function setAchievements($db, $account, $achievements) {
             $accountID = $account['ID'];
-            $command = "UPDATE `Users` SET `SolvedAchievements` = '$achievements' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Users` SET `Achievements` = '$achievements' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving title failed");

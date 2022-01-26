@@ -5,6 +5,7 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Text, Button } from '../Components';
+import { Sleep } from '../../Functions/Functions';
 import { TimingAnimation } from '../../Functions/Animations';
 
 const PopupProps = {
@@ -34,6 +35,34 @@ class Popup extends React.PureComponent {
         this.setState({ x: x, y: y });
     }
 
+    /**
+     * Open popup after current one is closed
+     */
+    DelayOpen = async (type, args, callback, cancelable, cross) => {
+        while (this.state.opened) await Sleep(500);
+        this.Open(type, args, callback, cancelable, cross);
+    }
+
+    /**
+     * Open popup and close current one
+     */
+    ForceOpen = async (type, args, callback, cancelable, cross) => {
+        if (this.state.opened) {
+            this.Close();
+            await Sleep(250);
+        }
+        this.Open(type, args, callback, cancelable, cross);
+    }
+
+    /**
+     * Open popup
+     * @param {'ok'|'yesno'|'acceptornot'|'custom'} type
+     * @param {Array<String>} args [title, message]
+     * @param {Function} callback - Callback when popup button is pressed
+     * @param {Boolean} cancelable - if true, popup can be closed by clicking outside
+     * @param {Boolean} cross - if true, popup can be closed by clicking on X
+     * @returns 
+     */
     Open = (type, args, callback = () => {}, cancelable = true, cross = cancelable) => {
         const { opened } = this.state;
         if (opened) return false;

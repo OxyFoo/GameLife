@@ -69,34 +69,65 @@ class UserManager {
         this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
+        await this.settings.Save();
 
         await DataStorage.clearAll();
         await this.LocalSave();
     }
 
-    async disconnect() {
-        await this.OnlineSave();
-
-        this.Clear();
-        await this.LocalSave();
-        await this.settings.Save();
+    async Disconnect() {
+        await this.Clear();
         this.interface.ChangePage('login');
     }
-    async unmount() {
+    async Unmount() {
         await this.LocalSave();
         await this.OnlineSave();
         this.server.Clear();
     }
 
-    async refreshStats() {
+    async RefreshStats() {
         this.activities.RemoveDeletedSkillsActivities();
         this.experience.GetExperience();
         this.interface.ChangePage();
     }
 
-    GetTitle() {
+    GetTitle = () => {
         const title = this.dataManager.titles.GetTitleByID(user.title);
         return title === null ? '' : this.dataManager.GetText(title.Name);
+    }
+
+    SetTitle = (ID) => {
+        if (typeof(ID) !== 'number') return;
+
+        this.title = ID;
+        this.interface.forceUpdate();
+        if (this.interface.popup.state.opened)
+            this.interface.popup.forceUpdate();
+    }
+
+    // TODO - Replace by inventory system
+    //        "title.AchievementsCondition" Removed
+    /* TITRES */
+    GetUnlockTitles = () => {
+        let availableTitles = this.dataManager.titles.titles.map(title => ({ id: title.ID, value: this.dataManager.GetText(title.Name) }));
+        availableTitles.splice(0, 0, { id: 0, value: langManager.curr['identity']['input-title-none'] });
+        return availableTitles;
+
+        let unlockTitles = [
+            { key: 0, value: langManager.curr['identity']['empty-title'] }
+        ];
+        for (let t = 0; t < this.dataManager.titles.titles.length; t++) {
+            const title = this.dataManager.titles.titles[t];
+            const cond = parseInt(title.AchievementsCondition);
+            if (isNaN(cond)) {
+                continue;
+            }
+            if (cond === 0 || this.achievements.solved.includes(cond)) {
+                const newTitle = { key: title.ID, value: title.Title };
+                unlockTitles.push(newTitle);
+            }
+        }
+        return unlockTitles;
     }
 
     async EventNewAchievement(achievement) {
@@ -128,31 +159,6 @@ class UserManager {
         }
     }*/
 
-    // TODO - Replace by inventory system
-    //        "title.AchievementsCondition" Removed
-    /* TITRES */
-    GetUnlockTitles = () => {
-        let unlockTitles = [
-            { key: 0, value: langManager.curr['identity']['empty-title'] }
-        ];
-        for (let t = 0; t < this.dataManager.titles.titles.length; t++) {
-            const title = this.dataManager.titles.titles[t];
-            const cond = parseInt(title.AchievementsCondition);
-            if (isNaN(cond)) {
-                continue;
-            }
-            if (cond === 0 || this.achievements.solved.includes(cond)) {
-                const newTitle = { key: title.ID, value: title.Title };
-                unlockTitles.push(newTitle);
-            }
-        }
-        return unlockTitles;
-    }
-
-    async SaveUnsavedData() {
-        return true;
-    }
-
     /**
      * Load local user data
      * @returns {Promise<Boolean>}
@@ -165,6 +171,7 @@ class UserManager {
             'birth': this.birthTime,
             'xp': this.xp,
 
+            'dataToken': this.server.dataToken,
             'achievements': this.achievements.Save(),
             'activities': this.activities.Save(),
             'quests': this.quests.Save()
@@ -175,30 +182,6 @@ class UserManager {
         else          this.AddLog('error', 'User data: local save failed');
         return saved;
     }
-
-    // TODO - Finir ça
-    OnlineSave = async () => {
-        let data = {};
-
-        if (this.activities.IsUnsaved()) {
-            data['activities'] = this.activities.UNSAVED_activities;
-        }
-
-        if (this.achievements.IsUnsaved()) {
-            data['achievements'] = this.achievements.UNSAVED_solved;
-        }
-
-        if (Object.keys(data).length) {
-            const saved = await this.server.SaveData(data);
-            if (saved) {
-                this.activities.Purge();
-                this.achievements.Purge();
-                this.AddLog('info', 'User data: online save');
-            } else {
-                this.AddLog('error', 'User data: online save failed');
-            }
-        }
-    };
 
     async LocalLoad() {
         let data = await DataStorage.Load(STORAGE.USER);
@@ -211,6 +194,7 @@ class UserManager {
             if (contains('birthTime')) this.birthTime = data['birthTime'];
             if (contains('xp')) this.xp = data['xp'];
 
+            if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) this.achievements.Load(data['achievements']);
             if (contains('activities')) this.activities.Load(data['activities']);
             if (contains('quests')) this.quests.Load(data['quests']);
@@ -220,33 +204,68 @@ class UserManager {
             this.AddLog('warn', 'User data: local load failed');
         }
 
-        this.refreshStats();
+        this.RefreshStats();
         return data !== null;
     }
 
-    // TODO - Finir ça
+    async SaveUnsavedData() {
+        return true;
+    }
+
+    OnlineSave = async () => {
+        let data = {};
+
+        if (this.activities.IsUnsaved()) {
+            data['activities'] = this.activities.UNSAVED_activities;
+        }
+
+        if (this.achievements.IsUnsaved()) {
+            data['achievements'] = this.achievements.UNSAVED_solved;
+        }
+
+        if (Object.keys(data).length) {
+            const saved = await this.server.SaveUserData(data);
+            console.log('onaline saveeeee', saved);
+            if (saved) {
+                this.activities.Purge();
+                this.achievements.Purge();
+                await this.LocalSave();
+                this.AddLog('info', 'User data: online save');
+            } else {
+                this.AddLog('error', 'User data: online save failed');
+            }
+            console.log(data);
+        }
+    }
+
     async OnlineLoad() {
-        let data = await this.server.LoadUserData();
+        const data = await this.server.LoadUserData();
         const contains = (key) => data.hasOwnProperty(key);
+        console.log('Online load', data);
 
         if (data !== null) {
             if (contains('username')) this.username = data['username'];
             if (contains('usernameTime')) this.usernameTime = data['usernameTime'];
             if (contains('title')) this.title = data['title'];
-            //this.activities.SetAll(data['activities']);
-            //this.birth = data['birth'];
-            //this.xp = data['xp'];
-            //this.achievements.solved = data['solvedAchievements'];
-            //this.quests.daily = data['daily'];
-            //this.quests.todoList = data['tasks'];
-            if (contains('currentActivity')) this.activities.currentActivity = data['currentActivity'];
+            if (contains('birthtime')) this.birthTime = data['birthtime'];
 
+            if (contains('dataToken')) this.server.dataToken = data['dataToken'];
+            if (contains('achievements')) {
+                console.log('Data achievements', typeof(data['achievements']), data['achievements']);
+                this.achievements.solved = data['achievements'];
+            }
+            if (contains('activities')) {
+                console.log('Data activities', typeof(data['activities']), data['activities']);
+                this.activities.LoadOnline(data['activities']);
+            }
+
+            console.log(data);
             this.AddLog('info', 'User data: online load');
         } else {
             this.AddLog('info', 'User data: online load failed');
         }
 
-        this.refreshStats();
+        this.RefreshStats();
         return data !== null;
     }
 

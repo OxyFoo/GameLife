@@ -40,6 +40,13 @@ class Activities {
         this.UNSAVED_activities = activities['unsaved'];
         this.currentActivity = activities['current'];
     }
+    LoadOnline(activities) {
+        if (typeof(activities) !== 'object') return;
+        for (let i = 0; i < activities.length; i++) {
+            const activity = activities[i];
+            this.Add(activity[0], activity[1], activity[2]);
+        }
+    }
     Save() {
         const activities = {
             activities: this.activities,
@@ -126,9 +133,10 @@ class Activities {
                 output = true;
 
                 // TODO - Save (local & online or future)
-                this.user.refreshStats();
+                this.user.RefreshStats();
             }
         }
+
         return output;
     }
 
@@ -141,7 +149,7 @@ class Activities {
             }
         }
         // TODO - Save (local & online or future)
-        this.user.refreshStats();
+        this.user.RefreshStats();
     }
 
     areEquals(activity1, activity2) {

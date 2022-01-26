@@ -38,6 +38,8 @@ const TEST_STATS = {
 
 class Avatar extends React.Component {
     state = {
+        rendered: false,
+
         characterPosY: 0,
         characterHeight: 0,
         characterBottomPosY: 0,
@@ -50,6 +52,12 @@ class Avatar extends React.Component {
         itemSelectedID: null,
         itemAnim: new Animated.Value(0),
         itemSelectionHeight: 0
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({ rendered: true });
+        }, 100);
     }
 
     onCharacterLayout = (event) => {
@@ -221,7 +229,7 @@ class Avatar extends React.Component {
                 </Animated.View>
 
                 {/* Editor panel */}
-                <Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
+                {this.state.rendered && <Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
                     <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%', marginBottom: 12 }} />
                     {this.renderSelectedStuff()}
 
@@ -234,7 +242,7 @@ class Avatar extends React.Component {
                             keyExtractor={(item, index) => 'item-card-' + item.id}
                         />
                     </Animated.View>
-                </Animated.View>
+                </Animated.View>}
             </>
         );
     }

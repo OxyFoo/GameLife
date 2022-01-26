@@ -49,6 +49,25 @@ class BackTest extends React.Component {
         switch: true
     }
 
+    openSI = () => {
+        user.interface.screenInput.Open('test', 'abc', console.log);
+    }
+
+    openSL = () => {
+        const test = [
+            {id: 0, value:'abc'},
+            {id: 1, value:'def'},
+            {id: 2, value:'ghi'},
+            {id: 3, value:'jkl'},
+            {id: 4, value:'mno'},
+            {id: 5, value:'pqr'},
+            {id: 6, value:'stu'},
+            {id: 7, value:'vwx'},
+            {id: 8, value:'yz'}
+        ];
+        user.interface.screenList.Open('test', test, console.log);
+    }
+
     addSkill = () => {
         if (dataManager.skills.skills.length <= 1) {
             console.warn("Aucun skill !");

@@ -7,7 +7,7 @@ import langManager from './LangManager';
 
 import { TimingAnimation } from '../Functions/Animations';
 import { IsUndefined } from '../Functions/Functions';
-import { BottomBar, Console, Popup } from '../Interface/Widgets';
+import { BottomBar, Console, Popup, ScreenInput, ScreenList } from '../Interface/Widgets';
 
 import About from '../Interface/PageFront/About';
 import Achievements from '../Interface/PageFront/Achievements';
@@ -74,6 +74,8 @@ class PageManager extends React.Component{
         user.interface = this;
 
         this.popup = new React.createRef();
+        this.screenInput = new React.createRef();
+        this.screenList = new React.createRef();
         this.console = new React.createRef();
     }
 
@@ -164,13 +166,13 @@ class PageManager extends React.Component{
         const prevPage = nextPage === 'page1' ? 'page2' : 'page1';
 
         TimingAnimation(this.state.anim[nextPage], 1, animTransitionDuration).start();
-        TimingAnimation(this.state.anim[prevPage], 0, animTransitionDuration).start();
         const AnimationEnd = () => {
             this.changing = false;
             this.setState({ [prevPage]: '' });
             TimingAnimation(this.state.animTransition, 0, animTransitionDuration).start();
         };
         const AnimationStart = () => {
+            TimingAnimation(this.state.anim[prevPage], 0, animTransitionDuration).start();
             const newState = Object.assign(newBarState, { [nextPage]: newpage });
             this.setState(newState, AnimationEnd);
         }
@@ -232,9 +234,14 @@ class PageManager extends React.Component{
             <LinearGradient style={fullscreen} colors={['#03052E', '#353657']}>
                 <Animated.View style={page1Style} pointerEvents={page1Event}>{page1}</Animated.View>
                 <Animated.View style={page2Style} pointerEvents={page2Event}>{page2}</Animated.View>
+                <Animated.View style={overlayStyle} pointerEvents='none' />
+
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.pageIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref }} />
-                <Animated.View style={overlayStyle} pointerEvents='none' />
+
+                <ScreenList ref={ref => { if (ref !== null) this.screenList = ref }} />
+                <ScreenInput ref={ref => { if (ref !== null) this.screenInput = ref }} />
+
                 <Console ref={ref => { if (ref !== null) this.console = ref }} enable={this.state.console} />
             </LinearGradient>
         )

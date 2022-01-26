@@ -8,48 +8,46 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { Page, Text, XPBar, Container, Input, ComboBox, Button } from '../Components';
+import { Page, Text, Button, XPBar, Container } from '../Components';
 import { UserHeader, PageHeader, AvatarEditor, StatsBars } from '../Widgets';
 import { GetAge, GetTime } from '../../Functions/Time';
 
 class Identity extends BackIdentity {
-    onAvatarPress = () => {
-        user.interface.popup.Open('custom', this.renderPopupEdit, undefined, false, true);
+    openNowifiPopup() {
+        const title = langManager.curr['identity']['alert-nowifi-title'];
+        const text = langManager.curr['identity']['alert-nowifi-text'];
+        user.interface.popup.ForceOpen('ok', [ title, text ]);
     }
-
-    onChangeDateTimePicker = (date) => {
-        const YYYY = date.getFullYear();
-        const MM = twoDigit(date.getMonth() + 1);
-        const DD = twoDigit(date.getDate());
-        const selectedDate = [ YYYY, MM, DD ].join('/');
-        const age = this.calculateAge(selectedDate);
-        
-        if (age > 0) {
-            this.hideDTP();
-            this.setState({ birth: selectedDate });
-        }
-    }
+    onAvatarPress = () => user.interface.popup.Open('custom', this.renderPopupEdit, undefined, true);
 
     /**
      * Popup to edit user infos
      */
     renderPopupEdit = () => {
         const lang = langManager.curr['identity'];
-        const [ input, setInput ] = React.useState(user.username);
-        const [ title, setTitle ] = React.useState(user.title);
         const [ stateDTP, setStateDTP ] = React.useState('');
         const close = () => user.interface.popup.Close();
 
+        // Username
+        const usernameEdit = async () => {
+            if (!user.IsConnected()) {
+                this.openNowifiPopup();
+                return;
+            }
+            user.interface.screenInput.Open(lang['input-username'], user.username);
+        }
+
         // Title
-        const availableTitles = dataManager.titles.titles.map(title => ({ id: title.ID, value: dataManager.GetText(title.Name) }));
-        const onChangeTitle = (title) => setTitle(title !== null ? title.id : 0);
-        const titleTxt = title === 0 ? '' : dataManager.GetText(dataManager.titles.GetTitleByID(title).Name)
+        const availableTitles = user.GetUnlockTitles();
+        const listTitle = lang['input-select-title'];
+        const onChangeTitle = () => user.interface.screenList.Open(listTitle, availableTitles, user.SetTitle);
+        const titleTxt = user.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetTitleByID(user.title).Name);
 
         // Age
         const age = GetAge(user.birthTime);
         const ageText = age === null ? lang['value-age-empty'] : lang['value-age'].replace('{}', age);
 
-        // Age edit
+        // Age edition (Date Picker)
         const dtpStartDate = new Date(2000, 0, 1, 0, 0, 0, 0);
         const onChangeAge = (date) => { user.birthTime = GetTime(date); hideDTP(); };
         const showDTP = () => setStateDTP('date');
@@ -57,34 +55,25 @@ class Identity extends BackIdentity {
 
         return (
             <>
-                <View style={{ padding: '5%' }}>
-                    <Text style={{ marginBottom: 24 }}>{lang['edit-title']}</Text>
+                <View style={styles.popup}>
+                    <Text style={styles.popupTitle}>{lang['edit-title']}</Text>
 
-                    <ComboBox
-                        style={{ marginBottom: 24 }}
-                        title={title === 0 ? lang['value-title-empty'] : lang['input-title']}
-                        selectedValue={titleTxt}
-                        data={availableTitles}
-                        onSelect={onChangeTitle}
-                        ignoreWarning={true}
-                    />
-
-                    <Input
-                        style={{ marginBottom: 24 }}
-                        label={lang['input-username']}
-                        text={input}
-                        onChangeText={setInput}
-                    />
-
-                    <View style={styles.popupInput}>
-                        <Text containerStyle={{ width: '60%' }} style={{ textAlign: 'left' }}>{ageText}</Text>
-                        <Button style={styles.popupButtonBirth} onPress={showDTP} fontSize={12} color='main1'>{lang['input-age']}</Button>
+                    <View style={styles.popupRow}>
+                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.username}</Text>
+                        <Button style={styles.popupButtonEdit} onPress={usernameEdit} fontSize={12} color='main1'>{lang['input-edit']}</Button>
                     </View>
 
-                    <View style={styles.popupButtons}>
-                        <Button style={styles.popupButtonCancel} fontSize={14} onPress={close}>{lang['edit-cancel']}</Button>
-                        <Button style={styles.popupButtonSave} fontSize={14} color='main1'>{lang['edit-save']}</Button>
+                    <View style={styles.popupRow}>
+                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{titleTxt}</Text>
+                        <Button style={styles.popupButtonEdit} onPress={onChangeTitle} fontSize={12} color='main1'>{lang['input-edit']}</Button>
                     </View>
+
+                    <View style={styles.popupRow}>
+                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{ageText}</Text>
+                        <Button style={styles.popupButtonEdit} onPress={showDTP} fontSize={12} color='main1'>{lang['input-edit']}</Button>
+                    </View>
+
+                    <Button style={styles.popupButtonCancel} fontSize={14} onPress={close}>{lang['edit-cancel']}</Button>
                 </View>
 
                 <DateTimePickerModal
@@ -104,7 +93,7 @@ class Identity extends BackIdentity {
         const headerOpacity = this.refAvatar === null ? 1 : this.refAvatar.state.editorAnim.interpolate(interReverse);
         const headerPointer = this.refAvatar === null ? 'auto' : (this.state.editorOpened ? 'none' : 'auto');
 
-        const rowStyle = [styles.row, { borderColor: themeManager.GetColor('main1') }];
+        const rowStyle = [styles.tableRow, { borderColor: themeManager.GetColor('main1') }];
         const cellStyle = [styles.cell, { borderColor: themeManager.GetColor('main1') }];
         const row = (title, value) => (
             <View style={rowStyle}>
@@ -201,7 +190,7 @@ const styles = StyleSheet.create({
     xp: { marginBottom: 24 },
     xpRow: { flexDirection: 'row' },
     topSpace: { marginTop: 24 },
-    row: {
+    tableRow: {
         width: '100%',
         height: 48,
         flexDirection: 'row',
@@ -214,30 +203,31 @@ const styles = StyleSheet.create({
         borderRightWidth: .4
     },
 
-    popupInput: {
-        width: '90%',
-        marginLeft: '5%',
+    popup: {
+        paddingVertical: '5%',
+        paddingHorizontal: '2%'
+    },
+    popupRow: {
+        marginHorizontal: '5%',
         marginBottom: 24,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    popupButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    popupTitle: {
+        marginTop: 12,
+        marginBottom: 24,
+        fontSize: 20
     },
-    popupButtonSave: {
-        width: '55%',
-        height: 48,
-        borderRadius: 8
+    popupText: {
+        width: '60%'
     },
     popupButtonCancel: {
-        width: '40%',
         height: 48,
         borderRadius: 8,
         paddingHorizontal: 0
     },
-    popupButtonBirth: {
+    popupButtonEdit: {
         width: '35%',
         height: 38,
         borderRadius: 8,

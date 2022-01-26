@@ -17,6 +17,7 @@ const InputProps = {
      */
     textContentType: 'default',
     onChangeText: (newText) => {},
+    onSubmit: () => {},
     enabled: true,
     active: false,
     pointerEvents: 'auto'
@@ -104,6 +105,13 @@ class Input extends React.Component {
         }
     }
 
+    focus() {
+        this.refInput.focus();
+    }
+    unfocus() {
+        this.refInput.blur();
+    }
+
     render() {
         const isActive = this.state.isFocused || this.props.active;
         const interH = { inputRange: [0, 1], outputRange: [-this.state.textHeight/2, this.state.boxHeight/2 - this.state.textHeight/2 - 2] }
@@ -161,12 +169,14 @@ class Input extends React.Component {
                 </Animated.View>
 
                 <TextInput
+                    ref={(input) => { this.refInput = input; }}
                     style={styles.input}
                     selectionColor={hexActiveColor}
                     value={this.props.text}
                     onChangeText={this.props.onChangeText}
                     onFocus={this.onFocusIn}
                     onBlur={this.onFocusOut}
+                    onSubmitEditing={this.props.onSubmit}
                     textContentType={textTypes[this.props.textContentType]['ios']}
                     autoCompleteType={textTypes[this.props.textContentType]['android']}
                     autoCorrect={false}

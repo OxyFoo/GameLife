@@ -248,14 +248,17 @@
         "value-age-empty": "Date of birth unknown",
         "value-title-empty": "No title selected",
 
-        "input-title": "Title",
         "input-username": "Username",
-        "input-age": "Edit",
+        "input-select-title": "Select a title",
+        "input-title-none": "No title",
+        "input-edit": "Edit",
         "input-select-age": "Select your day of birth",
 
         "edit-title": "Edit your profile",
-        "edit-save": "Save",
         "edit-cancel": "Cancel",
+
+        "alert-nowifi-title": "No connection",
+        "alert-nowifi-text": "You must be connected to the internet to be able to modify your profile, if you are already connected to the internet restart the application",
 
         "___OLD___": "",
         "name-age": "Age",

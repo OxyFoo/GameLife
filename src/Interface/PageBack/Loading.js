@@ -78,7 +78,8 @@ class BackLoading extends React.Component {
 
         // Loading : User data
         if (online) {
-            await user.SaveUnsavedData();
+            //await user.SaveUnsavedData();
+            await user.OnlineSave();
             await user.OnlineLoad();
             // local save
         }

@@ -8,6 +8,8 @@ import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
 import PageHeader from './Widgets/PageHeader';
 import Popup from './Widgets/Popup';
+import ScreenInput from './Widgets/ScreenInput';
+import ScreenList from './Widgets/ScreenList';
 import StatsBars from './Widgets/StatsBars';
 import UserHeader from './Widgets/UserHeader';
 
@@ -22,6 +24,8 @@ export {
     BottomBar,
     PageHeader,
     Popup,
+    ScreenInput,
+    ScreenList,
     StatsBars,
     UserHeader
 }

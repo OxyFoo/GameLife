@@ -22,6 +22,7 @@ import svgHome from '../../../res/icons/home';
 import svgInfo from '../../../res/icons/info';
 import svgInstagram from '../../../res/icons/instagram';
 import svgItem from '../../../res/icons/item';
+import svgNowifi from '../../../res/icons/nowifi';
 import svgOx from '../../../res/icons/ox';
 import svgSetting from '../../../res/icons/setting';
 import svgShop from '../../../res/icons/shop';
@@ -41,7 +42,7 @@ const IconProps = {
      */
     xml: undefined,
     /**
-     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'home'|'info'|'instagram'|'item'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'}
+     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'home'|'info'|'instagram'|'item'|'nowifi'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'}
      */
     icon: '',
     size: 24,
@@ -67,6 +68,7 @@ const SVGIcons = {
     info: svgInfo,
     instagram: svgInstagram,
     item: svgItem,
+    nowifi: svgNowifi,
     ox: svgOx,
     setting: svgSetting,
     shop: svgShop,

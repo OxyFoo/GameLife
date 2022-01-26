@@ -32,7 +32,7 @@ class BackSettings extends React.Component {
     }
 
     disconnect = () => {
-        const event = (button) => { if (button === 'yes') user.disconnect(); };
+        const event = (button) => { if (button === 'yes') user.Disconnect(); };
         const title = langManager.curr['settings']['alert-disconnect-title'];
         const text = langManager.curr['settings']['alert-disconnect-text'];
         user.interface.popup.Open('yesno', [ title, text ], event);
@@ -41,8 +41,8 @@ class BackSettings extends React.Component {
     resetActivities = () => {
         const event = (button) => {
             if (button === 'yes') {
-                user.activities.Clear();
-                user.LocalSave();
+                //user.activities.Clear(); // Check / save (local) ?
+                //user.LocalSave();
                 // TODO - Save online ?
             }
         }

@@ -8,7 +8,7 @@ import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { DateToFormatString } from '../../Functions/Time';
-import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch, Switch } from '../Components';
+import { Button, Checkbox, Container, GLActivityBox, GLDoubleCorner, GLHeader, GLIconButton, GLStats, GLSvg, GLText, GLXPBar, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch, Switch, Icon } from '../Components';
 
 const TEST_VALUES = [{ID: 0, value: 'Abc 0'}, {ID: 1, value: 'Def 1'}, {ID: 2, value: 'Item 2'}, {ID: 3, value: 'Item 3'}, {ID: 4, value: 'Item 4'}];
 
@@ -26,6 +26,9 @@ class Test extends BackTest {
             <Page ref={ref => this.pageRef = ref} canScrollOver={true}>
                 <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
                 <Button color='main1' borderRadius={14} style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
+
+                <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} onPress={this.openSI}>{'Test "Screen Input"'}</Button>
+                <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
 
                 <Input style={{ marginBottom: 12 }} label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
 
@@ -65,6 +68,19 @@ class Test extends BackTest {
                     value={this.state.switch}
                     onValueChanged={(value) => { this.setState({ switch: value }); }}
                 />
+
+                <Icon
+                    icon='success'
+                    size={96}
+                    //transform="translate(2000)"
+                    //transform="matrix(-1 0 0 1 21.5 27.5)"
+                />
+
+                <View
+                    //</Page>style={{ transform: [{ matrix: [1, 1, 1, 1, 1, 1, 1, 1, 1] }] }}
+                >
+                    <Input />
+                </View>
 
                 {/*<View style={{ width: 48 }}>
                     <RNSwitch

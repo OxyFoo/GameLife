@@ -13,6 +13,8 @@ import { SpringAnimation } from '../../Functions/Animations';
 
 const ComboBoxProps = {
     style: {},
+    maxHeight: 256,
+
     activeColor: 'main1',
     title: 'Title',
     /**
@@ -154,6 +156,7 @@ class ComboBox extends React.Component {
         const animValue = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: [y+height+20, y+height] });
         const overlayPos = [styles.overlay, {
             width: width,
+            maxHeight: this.props.maxHeight,
             opacity: this.state.anim,
             transform: [{ translateX: x }, { translateY: animValue }],
             backgroundColor: themeManager.GetColor('backgroundGrey')
@@ -196,7 +199,6 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         width: 128,
-        maxHeight: 256,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
         zIndex: 1000,

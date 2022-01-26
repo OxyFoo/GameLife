@@ -145,7 +145,7 @@ class BackReport extends React.Component {
             user.interface.popup.Open('ok', [ title, text ], user.interface.BackPage, false);
         } else {
             const error = result_report.status + ' - ' + result_report.data['error'];
-            user.AddLog('error', 'Report: Send failed (' + error + ')');
+            user.interface.console.AddLog('error', 'Report: Send failed (' + error + ')');
         }
     }
 }

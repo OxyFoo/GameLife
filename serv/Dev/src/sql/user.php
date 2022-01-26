@@ -1,12 +1,13 @@
 <?php
 
-    $DAYS_PSEUDO_CHANGE = 6;
+    $DAYS_USERNAME_CHANGE = 29;
 
     class User
     {
         public static function ExecQueue($db, $account, $data) {
             $activities = $data['activities'];
             $achievements = $data['achievements'];
+            $titleID = $data['titleID'];
 
             if (isset($activities)) {
                 self::AddActivities($db, $account, $activities);
@@ -16,8 +17,59 @@
                 self::AddAchievement($db, $account, $achievements);
             }
 
-            $newToken = self::RefreshDataToken($db, $account);
-            return $newToken;
+            if (isset($titleID)) {
+                self::setTitle($db, $account, $titleID);
+            }
+        }
+
+        // Return :
+        // ok => Pseudo is changed (check if it's free)
+        // alreadyUsed => Pseudo already used
+        // alreadyChanged => Pseudo change failed (time)
+        // error => Others weird errors
+        public static function SetUsername($db, $account, $username) {
+            global $DAYS_USERNAME_CHANGE;
+
+            $output = 'error';
+            $accountID = $account['ID'];
+            $oldUsername = $account['Username'];
+            $newUsername = ucfirst(strtolower($username));
+
+            $lastUsernameTime = strtotime($account['LastChangeUsername']);
+            $nowTime = time();
+            $nowText = date('Y-m-d H:i:s', $nowTime);
+            $delta = ($nowTime - $lastUsernameTime) / (60 * 60 * 24);
+
+            if ($oldUsername != $newUsername) {
+                if ($delta >= $DAYS_USERNAME_CHANGE) {
+                    $pseudoIsFree = self::PseudoIsFree($db, $newUsername);
+                    if ($pseudoIsFree) {
+                        $command = "UPDATE `Users` SET `Username` = '$newUsername', `LastChangeUsername` = '$nowText' WHERE `ID` = '$accountID'";
+                        $result_pseudo = $db->Query($command);
+                        if ($result_pseudo !== TRUE) {
+                            ExitWithStatus("Error: Saving username failed");
+                        }
+                        $output = 'ok';
+                    } else {
+                        $output = 'alreadyUsed';
+                    }
+                } else {
+                    $output = 'alreadyChanged';
+                }
+            }
+
+            return $output;
+        }
+
+        public static function RefreshDataToken($db, $account) {
+            $accountID = $account['ID'];
+            $newDataToken = RandomString(6);
+            $command = "UPDATE `Users` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: saving achievements failed");
+            }
+            return $newDataToken;
         }
 
         // Format : [ ['add|rem',SkillID,DATE,DURATION], ... ]
@@ -75,21 +127,7 @@
             }
         }
 
-        private static function RefreshDataToken($db, $account) {
-            //return 'test12';
-            $accountID = $account['ID'];
-            $newDataToken = RandomString(6);
-            $command = "UPDATE `Users` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
-            if ($result !== TRUE) {
-                ExitWithStatus("Error: saving achievements failed");
-            }
-            return $newDataToken;
-        }
-
-        // TODO - Check this
-
-        public static function pseudoIsFree($db, $username) {
+        public static function PseudoIsFree($db, $username) {
             $p = ucfirst(strtolower($username));
             $command = "SELECT * FROM `Users` WHERE `Username` = '$p'";
             $pseudos = $db->Query($command);
@@ -99,6 +137,8 @@
             }
             return $isFree;
         }
+
+        // TODO - Check this
 
         public static function SetData($db, $account, $data) {
             $accountID = $account['ID'];
@@ -137,50 +177,6 @@
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving XP failed");
             }
-        }
-
-        // OLD function
-        // TODO - Update function ("pseudoIsFree" moved)
-        // 0 Nothing
-        // 1 Changed
-        // -1 Change failed (time)
-        // -2 Change failed (wrong)
-        public static function setPseudo($db, $account, $username) {
-            global $DAYS_PSEUDO_CHANGE;
-
-            $changed = 0;
-            $accountID = $account['ID'];
-            $oldUsername = $account['Username'];
-            $lastPseudoDate = strtotime($account['LastChangeUsername']);
-            $todayDate = time();
-            $todayText = date('Y-m-d H:i:s', $todayDate);
-            $delta = ($todayDate - $lastPseudoDate) / (60 * 60 * 24);
-            $u = ucfirst(strtolower($username));
-            if ($oldUsername != $u) {
-                if (empty($oldUsername)) {
-                    $command = "UPDATE `Users` SET `Username` = '$u', `LastChangeUsername` = '$todayText' WHERE `ID` = '$accountID'";
-                    $result_pseudo = $db->Query($command);
-                    if ($result_pseudo !== TRUE) {
-                        ExitWithStatus("Error: Saving username failed (2)");
-                    }
-                } else if ($delta >= $DAYS_PSEUDO_CHANGE) {
-                    $pseudoIsFree = $db->pseudoIsFree($accountID, $u);
-                    if ($pseudoIsFree) {
-                        $command = "UPDATE `Users` SET `Username` = '$u', `LastChangeUsername` = '$todayText' WHERE `ID` = '$accountID'";
-                        $result_pseudo = $db->Query($command);
-                        $changed = 1;
-                        if ($result_pseudo !== TRUE) {
-                            ExitWithStatus("Error: Saving username failed");
-                        }
-                    } else {
-                        $changed = -2;
-                    }
-                } else {
-                    $changed = -1;
-                }
-            }
-
-            return $changed;
         }
 
         /*public static function DelUser($db, $ID) {

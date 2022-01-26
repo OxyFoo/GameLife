@@ -66,7 +66,7 @@ class BackSettings extends React.Component {
     }
     changeLang = (lang) => {
         langManager.SetLangage(lang);
-        user.interface.ChangePage();
+        user.interface.forceUpdate();
         // TODO - Save user data
         //user.saveData(false);
     }
@@ -74,7 +74,7 @@ class BackSettings extends React.Component {
         //this.currentTheme = themeManager.selectedTheme; // Init
         if (themeManager.SetTheme(theme)) {
             this.currentTheme = theme;
-            user.interface.ChangePage();
+            user.interface.forceUpdate();
         }
     }
     changeMorningNotifications = (enabled) => {
@@ -82,7 +82,7 @@ class BackSettings extends React.Component {
         else DisableMorningNotifications();
         user.settings.morningNotifications = enabled;
         user.settings.Save();
-        user.interface.ChangePage();
+        user.interface.forceUpdate();
     }
 }
 

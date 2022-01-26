@@ -35,10 +35,10 @@ class Achievements {
         return achievements;
     }
 
-    IsUnsaved() {
+    IsUnsaved = () => {
         return this.UNSAVED_solved.length > 0;
     }
-    Purge() {
+    Purge = () => {
         this.UNSAVED_solved = [];
     }
 
@@ -47,7 +47,7 @@ class Achievements {
         this.UNSAVED_solved.push(achievementID);
     }
 
-    // TODO - Add events
+    // TODO - Add events (gifts while online saving)
     CheckAchievements() {
         const achievements = dataManager.achievements.achievements;
         for (let a = 0; a < achievements.length; a++) {

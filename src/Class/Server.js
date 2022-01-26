@@ -59,11 +59,11 @@ class Server {
                 // TODO - Gérer la maintenance
             } else if (status === 'ok') {
                 online = true;
-                this.user.AddLog('info', 'Request: ping - OK');
+                this.user.interface.console.AddLog('info', 'Request: ping - OK');
             }
         } else {
             const error = result_ping.status + '-' + result_ping.content;
-            this.user.AddLog('error', 'Request: ping failed (' + error + ')');
+            this.user.interface.console.AddLog('error', 'Request: ping failed (' + error + ')');
         }
         this.online = online;
     }
@@ -79,7 +79,7 @@ class Server {
 
         if (result_connect.status !== 200) {
             const error = result_connect.status + ' - ' + result_connect.content['error'];
-            this.user.AddLog('error', 'Request: connect failed (' + error + ')');
+            this.user.interface.console.AddLog('error', 'Request: connect failed (' + error + ')');
             return STATUS.ERROR;
         }
 
@@ -133,7 +133,6 @@ class Server {
         };
 
         const response = await Request_Async(_data);
-        console.log(response);
         if (response.status === 200) {
             const content = response.content;
             const status = content['status'];
@@ -144,9 +143,9 @@ class Server {
                     this.dataToken = content['dataToken'];
                 }
             } else if (status === 'tokenExpired') {
-                // TODO - Popup + restart
+                this.TokenExpired();
                 success = false;
-                this.user.AddLog('warn', 'Request: saveData - token expired');
+                this.user.interface.console.AddLog('warn', 'Request: saveData - token expired');
             }
         }
 
@@ -176,6 +175,45 @@ class Server {
             }
         }
         return json;
+    }
+
+    /**
+     * Save username on server
+     * @param {String} username 
+     * @returns {Promise<'ok'|'alreadyUsed'|'alreadyChanged'|'error'>}
+     */
+    async SaveUsername(username) {
+        let output = 'error';
+        const _data = {
+            'action': 'setUsername',
+            'token': this.token,
+            'username': username,
+            'dataToken': this.dataToken
+        };
+
+        const response = await Request_Async(_data);
+        if (response.status === 200) {
+            const content = response.content;
+            const status = content['status'];
+            const usernameChangeState = content['usernameChangeState'];
+
+            if (status === 'ok') {
+                output = usernameChangeState;
+                if (content.hasOwnProperty('dataToken')) {
+                    this.dataToken = content['dataToken'];
+                }
+            } else if (status === 'tokenExpired') {
+                output = 'error';
+                this.TokenExpired();
+                this.user.interface.console.AddLog('warn', 'Request: saveUsername - token expired');
+            }
+        }
+
+        return output;
+    }
+
+    // TODO - Popup + restart
+    TokenExpired() {
     }
 
     __reqPing() {

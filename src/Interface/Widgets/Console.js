@@ -24,10 +24,11 @@ class Console extends React.Component {
     }
 
     /**
+     * Show message in app console
      * @param {'info'|'warn'|'error'} type
      * @param {String} text
      */
-    AddDebug = (type, text) => {
+    AddLog = (type, text) => {
         // Add to app console
         const newMessage = [type, text];
         this.setState({ debug: [...this.state.debug, newMessage] });

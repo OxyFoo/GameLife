@@ -2,6 +2,7 @@ import dataManager from '../Managers/DataManager';
 
 import { IsUndefined } from '../Functions/Functions';
 import { GetMidnightTime, GetTime } from '../Functions/Time';
+import { DEFAULT_STATS } from '../Managers/UserManager';
 
 const allStats = [ 'int', 'soc', 'for', 'end', 'agi', 'dex' ];
 const UserXPperLevel = 20;
@@ -38,7 +39,8 @@ class Experience {
         const _endTime = _startTime + 86400 * _durationDays;
 
         // Reset stats
-        this.user.xp = 0;
+        let XP = 0;
+        let STATS = DEFAULT_STATS;
         for (let s in allStats) {
             const stat = allStats[s];
             this.user.stats[stat] = 0;
@@ -60,7 +62,7 @@ class Experience {
                 if (hoursRemain < 0) continue;
 
                 // XP
-                this.user.xp += skill.XP * durationHour;
+                XP += skill.XP * durationHour;
 
                 // Stats
                 for (let s in allStats) {
@@ -70,7 +72,7 @@ class Experience {
             }
         }
 
-        return this.getXPDict(this.user.xp, UserXPperLevel);
+        return this.getXPDict(XP, UserXPperLevel);
     }
 
     /**
@@ -86,7 +88,7 @@ class Experience {
         const refStartDate = !IsUndefined(fromDate) ? new Date(fromDate) : new Date(null);
 
         // Reset stats
-        this.user.xp = 0;
+        let XP = 0;
         for (let s in allStats) {
             const stat = allStats[s];
             this.user.stats[stat] = 0;
@@ -150,7 +152,7 @@ class Experience {
                 if (hoursRemain < 0) continue;
 
                 // XP
-                this.user.xp += skill.XP * durationHour;
+                XP += skill.XP * durationHour;
 
                 // Stats
                 for (let s in allStats) {
@@ -162,7 +164,7 @@ class Experience {
             time += 86400;
         }
 
-        return this.getXPDict(this.user.xp, UserXPperLevel);
+        return this.getXPDict(XP, UserXPperLevel);
     }
 
     GetXPTo(level) {

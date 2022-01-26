@@ -1,17 +1,13 @@
-import dataManager from './DataManager';
-import langManager from './LangManager';
-
 import Achievements from '../Class/Achievements';
 import Activities from '../Class/Activities';
 import Experience from '../Class/Experience';
+import Informations from '../Class/Informations';
 import Quests from '../Class/Quests';
 import Server from '../Class/Server';
 import Settings from '../Class/Settings';
 
-import { GetDaysUntil } from '../Functions/Time';
 import DataStorage, { STORAGE } from '../Functions/DataStorage';
 
-const DAYS_PSEUDO_CHANGE = 7;
 const DEFAULT_STATS = {
     'int': 0,
     'soc': 0,
@@ -22,42 +18,35 @@ const DEFAULT_STATS = {
 };
 
 class UserManager {
-    achievements = new Achievements(this);
-    activities = new Activities(this);
-    experience = new Experience(this);
-    quests = new Quests(this);
-    server = new Server(this);
-    settings = new Settings(this);
-
-    /**
-     * Function loaded in render of App.js to skip cycles warns
-     * @typedef {import('./PageManager').default} PageManager
-     * @type {PageManager}
-     */
-    interface;
-
     constructor() {
-        this.username = '';
-        this.usernameTime = null;
-        this.title = 0;
-        this.birthTime = null;
+        this.achievements = new Achievements(this);
+        this.activities = new Activities(this);
+        this.experience = new Experience(this);
+        this.informations = new Informations(this);
+        this.quests = new Quests(this);
+        this.server = new Server(this);
+        this.settings = new Settings(this);
+
+        /**
+         * @description Function loaded in render of App.js to access UserManager
+         * @typedef {import('./PageManager').default} PageManager
+         * @type {PageManager}
+         */
+        this.interface;
+
         this.xp = 0;
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;
     }
 
     async Clear() {
-        this.username = '';
-        this.usernameTime = null;
-        this.title = 0;
-        this.birthTime = null;
         this.xp = 0;
-
         this.stats = DEFAULT_STATS;
         this.tempSelectedTime = null;
 
         this.achievements.Clear();
         this.activities.Clear();
+        this.informations.Clear();
         this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
@@ -80,76 +69,11 @@ class UserManager {
     async RefreshStats() {
         this.activities.RemoveDeletedSkillsActivities();
         this.experience.GetExperience();
-        this.interface.ChangePage();
-    }
-
-    GetTitle = () => {
-        const title = dataManager.titles.GetTitleByID(user.title);
-        return title === null ? '' : dataManager.GetText(title.Name);
-    }
-
-    SetTitle = (ID) => {
-        if (typeof(ID) !== 'number') return;
-
-        this.title = ID;
         this.interface.forceUpdate();
-        if (this.interface.popup.state.opened)
-            this.interface.popup.forceUpdate();
-    }
-
-    // TODO - Replace by inventory system
-    //        "title.AchievementsCondition" Removed
-    /* TITRES */
-    GetUnlockTitles = () => {
-        let availableTitles = dataManager.titles.titles.map(title => ({ id: title.ID, value: dataManager.GetText(title.Name) }));
-        availableTitles.splice(0, 0, { id: 0, value: langManager.curr['identity']['input-title-none'] });
-        return availableTitles;
-
-        let unlockTitles = [
-            { key: 0, value: langManager.curr['identity']['empty-title'] }
-        ];
-        for (let t = 0; t < dataManager.titles.titles.length; t++) {
-            const title = dataManager.titles.titles[t];
-            const cond = parseInt(title.AchievementsCondition);
-            if (isNaN(cond)) {
-                continue;
-            }
-            if (cond === 0 || this.achievements.solved.includes(cond)) {
-                const newTitle = { key: title.ID, value: title.Title };
-                unlockTitles.push(newTitle);
-            }
-        }
-        return unlockTitles;
     }
 
     async EventNewAchievement(achievement) {
     }
-
-    DaysBeforeChangePseudo = () => {
-        const delta = GetDaysUntil(this.usernameTime);
-        const remain = DAYS_PSEUDO_CHANGE - Math.round(delta);
-        return [ remain, DAYS_PSEUDO_CHANGE ];
-    }
-
-    // TODO - Move
-    /*pseudoCallback = (status) => {
-        async function loadData(button) {
-            await this.loadData();
-            this.interface.ChangePage();
-        };
-        if (status === "wrongtimingpseudo") {
-            const title = langManager.curr['identity']['alert-wrongtimingpseudo-title'];
-            const text = langManager.curr['identity']['alert-wrongtimingpseudo-text'];
-            this.interface.popup.Open('ok', [ title, text ], loadData.bind(this));
-        } else if (status === "wrongpseudo") {
-            const title = langManager.curr['identity']['alert-wrongpseudo-title'];
-            const text = langManager.curr['identity']['alert-wrongpseudo-text'];
-            this.interface.popup.Open('ok', [ title, text ], loadData.bind(this));
-        } else if (status === "ok") {
-            this.usernameTime = new Date();
-            this.LocalSave();
-        }
-    }*/
 
     /**
      * Load local user data
@@ -157,21 +81,18 @@ class UserManager {
      */
     LocalSave = async () => {
         const data = {
-            'username': this.username,
-            'usernameTime': this.usernameTime,
-            'title': this.title,
-            'birth': this.birthTime,
             'xp': this.xp,
 
             'dataToken': this.server.dataToken,
             'achievements': this.achievements.Save(),
             'activities': this.activities.Save(),
+            'informations': this.informations.Save(),
             'quests': this.quests.Save()
         };
 
         const saved = await DataStorage.Save(STORAGE.USER, data);
-        if   (saved)  this.AddLog('info', 'User data: local save');
-        else          this.AddLog('error', 'User data: local save failed');
+        if   (saved)  this.interface.console.AddLog('info', 'User data: local save');
+        else          this.interface.console.AddLog('error', 'User data: local save failed');
         return saved;
     }
 
@@ -180,28 +101,21 @@ class UserManager {
         const contains = (key) => data.hasOwnProperty(key);
 
         if (data !== null) {
-            if (contains('username')) this.username = data['username'];
-            if (contains('usernameTime')) this.usernameTime = data['usernameTime'];
-            if (contains('title')) this.title = data['title'];
-            if (contains('birthTime')) this.birthTime = data['birthTime'];
             if (contains('xp')) this.xp = data['xp'];
 
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) this.achievements.Load(data['achievements']);
             if (contains('activities')) this.activities.Load(data['activities']);
+            if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('quests')) this.quests.Load(data['quests']);
 
-            this.AddLog('info', 'User data: local load');
+            this.interface.console.AddLog('info', 'User data: local load');
         } else {
-            this.AddLog('warn', 'User data: local load failed');
+            this.interface.console.AddLog('warn', 'User data: local load failed');
         }
 
         this.RefreshStats();
         return data !== null;
-    }
-
-    async SaveUnsavedData() {
-        return true;
     }
 
     OnlineSave = async () => {
@@ -215,16 +129,21 @@ class UserManager {
             data['achievements'] = this.achievements.UNSAVED_solved;
         }
 
+        if (this.informations.IsUnsaved()) {
+            data['titleID'] = this.informations.UNSAVED_title;
+        }
+
         if (Object.keys(data).length) {
             const saved = await this.server.SaveUserData(data);
-            console.log('onaline saveeeee', saved);
+            console.log('online saveeeee', saved);
             if (saved) {
                 this.activities.Purge();
                 this.achievements.Purge();
+                this.informations.Purge();
                 await this.LocalSave();
-                this.AddLog('info', 'User data: online save');
+                this.interface.console.AddLog('info', 'User data: online save');
             } else {
-                this.AddLog('error', 'User data: online save failed');
+                this.interface.console.AddLog('error', 'User data: online save failed');
             }
             console.log(data);
         }
@@ -236,10 +155,10 @@ class UserManager {
         console.log('Online load', data);
 
         if (data !== null) {
-            if (contains('username')) this.username = data['username'];
-            if (contains('usernameTime')) this.usernameTime = data['usernameTime'];
-            if (contains('title')) this.title = data['title'];
-            if (contains('birthtime')) this.birthTime = data['birthtime'];
+            if (contains('username')) this.informations.username = data['username'];
+            if (contains('usernameTime')) this.informations.usernameTime = data['usernameTime'];
+            if (contains('title')) this.informations.title = data['title'];
+            if (contains('birthtime')) this.informations.birthTime = data['birthtime'];
 
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) {
@@ -252,23 +171,14 @@ class UserManager {
             }
 
             console.log(data);
-            this.AddLog('info', 'User data: online load');
+            this.interface.console.AddLog('info', 'User data: online load');
         } else {
-            this.AddLog('info', 'User data: online load failed');
+            this.interface.console.AddLog('info', 'User data: online load failed');
         }
 
         this.RefreshStats();
         return data !== null;
     }
-
-    IsConnected = this.server.IsConnected;
-
-    /**
-     * Show message in app console
-     * @param {'info'|'warn'|'error'} type
-     * @param {String} text
-     */
-    AddLog = (type, text) => this.interface.console.AddDebug(type, text);
 }
 
 const user = new UserManager();

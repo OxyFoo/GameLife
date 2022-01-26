@@ -44,6 +44,7 @@ class Activities {
     }
     LoadOnline(activities) {
         if (typeof(activities) !== 'object') return;
+        this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
             this.Add(activity[0], activity[1], activity[2]);
@@ -72,10 +73,10 @@ class Activities {
         this.activities = activities;
     }
 
-    IsUnsaved() {
+    IsUnsaved = () => {
         return this.UNSAVED_activities.length > 0;
     }
-    Purge() {
+    Purge = () => {
         this.UNSAVED_activities = [];
     }
 

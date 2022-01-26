@@ -260,6 +260,15 @@
         "alert-nowifi-title": "No connection",
         "alert-nowifi-text": "You must be connected to the internet to be able to modify your profile, if you are already connected to the internet restart the application",
 
+        "alert-usernamewarning-title": "Change username",
+        "alert-usernamewarning-text": "You can only change your username once every {} days, so choose wisely!",
+        "alert-alreadyUsed-title": "Reserved username",
+        "alert-alreadyUsed-text": "This username is already in use, please choose another one.",
+        "alert-alreadyChanged-title": "Username already changed",
+        "alert-alreadyChanged-text": "You must wait {} days before you can change it again.",
+        "alert-error-title": "Error",
+        "alert-error-text": "Change of username impossible",
+
         "___OLD___": "",
         "name-age": "Age",
         "name-email": "EMail",
@@ -270,16 +279,7 @@
         "placeholder-username": "Username",
         "empty-title": "None",
 
-        "name-lastachievement": "Last achievement",
-
-        "alert-pseudolimit-title": "Change username",
-        "alert-pseudolimit-text": "You can only change your nickname once every {} days, so choose wisely!",
-        "alert-pseudowait-title": "Username already changed",
-        "alert-pseudowait-text": "You must wait {} days before you can change it again.",
-        "alert-wrongpseudo-title": "Reserved nickname",
-        "alert-wrongpseudo-text": "This nickname is already in use, please choose another one.",
-        "alert-wrongtimingpseudo-title": "Error",
-        "alert-wrongtimingpseudo-text": "Change of nickname impossible"
+        "name-lastachievement": "Last achievement"
     },
 
     "leaderboard": {

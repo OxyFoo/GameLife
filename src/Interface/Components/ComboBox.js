@@ -79,7 +79,7 @@ class ComboBox extends React.Component {
         if (this.props.pageRef !== null) {
             this.props.pageRef.DisableScroll();
         } else if (!this.props.ignoreWarning) {
-            user.AddLog('warn', 'ComboBox: pageRef is null');
+            user.interface.console.AddLog('warn', 'ComboBox: pageRef is null');
         }
 
         // Scroll to top

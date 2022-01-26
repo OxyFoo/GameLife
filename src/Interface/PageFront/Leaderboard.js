@@ -47,7 +47,7 @@ class Leaderboard extends BackLeaderboard {
     }
 
     render() {
-        const connected = user.IsConnected();
+        const connected = user.server.IsConnected();
         const rightIcon = !connected ? 'info' : undefined;
         const buttonText = langManager.curr['leaderboard'][this.state.time === 'week' ? 'button-week-text' : 'button-global-text'];
 
@@ -70,8 +70,8 @@ class Leaderboard extends BackLeaderboard {
 
                     <this.userBoard
                         self={true}
-                        username={user.username}
-                        title={user.title === 0 ? '' : dataManager.titles.GetTitleByID(user.title)}
+                        username={user.informations.username}
+                        title={user.informations.title === 0 ? '' : dataManager.titles.GetTitleByID(user.informations.title)}
                         xp={user.xp}
                         position={this.state.self}
                     />

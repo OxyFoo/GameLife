@@ -178,7 +178,7 @@
                 // Add account
                 // Add deviceID in confirmed devices in account
                 // Return ok
-                if (User::pseudoIsFree($this->db, $username)) {
+                if (User::PseudoIsFree($this->db, $username)) {
                     $account = Account::Add($this->db, $username, $email);
                     if ($account === NULL) {
                         $this->output['status'] = 'error';
@@ -238,7 +238,7 @@
             $title = intval($account['Title']);
             $birthtime = $account['Birthtime'];
 
-            if ($usernameTime !== NULL) strtotime($usernameTime);
+            if ($usernameTime !== NULL) $usernameTime = strtotime($usernameTime);
             if ($birthtime !== NULL) $birthtime = intval($birthtime);
 
             if (isset($username, $title)) {
@@ -255,8 +255,8 @@
                 $userData['dataToken'] = $dbDataToken;
             }
 
-            $achievements = $account['Achievements'];
-            $userData['achievements'] = strlen($achievements) ? array_map('intval', explode(',', $achievements)) : array();
+            $achievements = json_decode($account['Achievements'], true);
+            $userData['achievements'] = $achievements;
 
             $this->output['data'] = $userData;
             $this->output['status'] = 'ok';
@@ -279,12 +279,42 @@
             if ($account === NULL) return;
             $dbDataToken = $account['DataToken'];
 
-            $newDataToken = User::ExecQueue($this->db, $account, $userData);
+            User::ExecQueue($this->db, $account, $userData);
+            $newDataToken = User::RefreshDataToken($this->db, $account);
 
             if ($this->data['dataToken'] === $dbDataToken) {
                 $this->output['dataToken'] = $newDataToken;
             }
 
+            $this->output['status'] = 'ok';
+        }
+
+        public function SetUsername() {
+            $token = $this->data['token'];
+            $newUsername = $this->data['username'];
+            if (!isset($token, $newUsername)) return;
+
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
+            }
+
+            $accountID = $dataFromToken['accountID'];
+            $account = Account::GetByID($this->db, $accountID);
+            if ($account === NULL) return;
+            $dbDataToken = $account['DataToken'];
+
+            $usernameChangeState = User::SetUsername($this->db, $account, $newUsername);
+            if ($usernameChangeState === 'ok') {
+                $newDataToken = User::RefreshDataToken($this->db, $account);
+                if ($this->data['dataToken'] === $dbDataToken) {
+                    $this->output['dataToken'] = $newDataToken;
+                }
+            }
+
+            $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
         }
 

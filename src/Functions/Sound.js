@@ -9,7 +9,7 @@ function PlayStartSound() {
         try {
             SoundPlayer.playSoundFile('appli', 'mp3');
         } catch (e) {
-            user.AddLog('warn', 'Start sound: Cannot play the sound file');
+            user.interface.console.AddLog('warn', 'Start sound: Cannot play the sound file');
         }
     }
 }

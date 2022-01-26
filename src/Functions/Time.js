@@ -60,11 +60,15 @@ function GetTimeToTomorrow() {
     return HH + ':' + MM;
 }
 
-function GetDaysUntil(date) {
+/**
+ * @param {Number} time in seconds
+ * @returns {Number} time rounded to hours in seconds until now
+ */
+function GetDaysUntil(time) {
     let days = 0;
-    if (date !== null) {
+    if (time !== null) {
         const today = new Date();
-        const _date = new Date(date);
+        const _date = new Date(time * 1000);
         const delta = today.getTime() - _date.getTime();
         days = delta / (1000 * 60 * 60 * 24);
     }
@@ -112,7 +116,7 @@ function TimeToFormatString(time, withOffset = false) {
 
 /**
  * Get absolute time in seconds
- * @param {Date} date
+ * @param {Date} date (now default)
  * @returns {Number} time in seconds
  */
 function GetTime(date = new Date()) {
@@ -139,15 +143,8 @@ function GetMidnightTime(time) {
     return GetTime(_date);
 }
 
-function GetAge(time) {
-    if (time === null) return null;
-    const birthDay = new Date(time * 1000);
-    const today = new Date().getTime();
-    return new Date(today - birthDay).getUTCFullYear() - 1970;
-}
-
 export { GetDurations, GetTime,
     GetTimeToTomorrow, GetDaysUntil, RoundToQuarter,
     TimeToFormatString, DateToFormatTimeString, DateToFormatString,
-    GetMidnightTime, GetAge
+    GetMidnightTime
 };

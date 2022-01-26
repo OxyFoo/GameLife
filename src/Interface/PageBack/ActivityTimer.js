@@ -88,7 +88,7 @@ class BackActivityTimer extends React.Component {
 
         while (this.finished === false) {
             if (_duration === 0) {
-                user.AddLog('error', 'Activity: can\'t be added.');
+                user.interface.console.AddLog('error', 'Activity: can\'t be added.');
                 return;
             }
             this.finished = user.activities.Add(skillID, _startTime, _duration);

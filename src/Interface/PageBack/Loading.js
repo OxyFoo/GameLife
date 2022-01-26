@@ -26,7 +26,7 @@ class BackLoading extends React.Component {
         await user.server.Ping();
         const online = user.server.online;
         if (!online) {
-            user.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+            user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
         }
 
         this.nextStep();
@@ -37,7 +37,7 @@ class BackLoading extends React.Component {
 
         const dataLoaded = dataManager.DataAreLoaded();
         if (!dataLoaded) {
-            user.AddLog('error', 'Internal data not loaded');
+            user.interface.console.AddLog('error', 'Internal data not loaded');
             return;
         }
 
@@ -78,13 +78,12 @@ class BackLoading extends React.Component {
 
         // Loading : User data
         if (online) {
-            //await user.SaveUnsavedData();
             await user.OnlineSave();
             await user.OnlineLoad();
             // local save
         }
-        if (user.username === '') {
-            user.AddLog('error', 'User data not loaded');
+        if (user.informations.username === '') {
+            user.interface.console.AddLog('error', 'User data not loaded');
             return;
         }
 

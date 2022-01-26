@@ -260,6 +260,15 @@
         "alert-nowifi-title": "Pas de connexion",
         "alert-nowifi-text": "Vous devez être connecté à internet pour pouvoir modifier votre profil, si vous êtes déjà connecté à internet redémarrez l'application",
 
+        "alert-usernamewarning-title": "Changement de pseudo",
+        "alert-usernamewarning-text": "Vous ne pouvez changer de pseudo qu'une seule fois tous les {} jours, choisissez-bien !",
+        "alert-alreadyUsed-title": "Pseudo réservé",
+        "alert-alreadyUsed-text": "Ce pseudo est déjà utilisé, veuillez en choisir un autre.",
+        "alert-alreadyChanged-title": "Pseudo déjà modifié",
+        "alert-alreadyChanged-text": "Vous devez attendre {} jours avant de pouvoir le modifier à nouveau.",
+        "alert-error-title": "Erreur",
+        "alert-error-text": "Modification du pseudo impossible",
+
         "___OLD___": "",
         "name-age": "Age",
         "name-email": "EMail",
@@ -270,16 +279,7 @@
         "placeholder-username": "Pseudo",
         "empty-title": "Aucun",
 
-        "name-lastachievement": "Dernier succès",
-
-        "alert-pseudolimit-title": "Changement de pseudo",
-        "alert-pseudolimit-text": "Vous ne pouvez changer de pseudo qu'une seule fois tous les {} jours, choisissez-bien !",
-        "alert-pseudowait-title": "Pseudo déjà changé",
-        "alert-pseudowait-text": "Vous devez attendre {} jours avant de pouvoir le modifier à nouveau.",
-        "alert-wrongpseudo-title": "Pseudo réservé",
-        "alert-wrongpseudo-text": "Ce pseudo est déjà utilisé, veuillez en choisir un autre.",
-        "alert-wrongtimingpseudo-title": "Erreur",
-        "alert-wrongtimingpseudo-text": "Modification du pseudo impossible"
+        "name-lastachievement": "Dernier succès"
     },
 
     "leaderboard": {

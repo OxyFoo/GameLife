@@ -194,8 +194,8 @@ class Test extends BackTest {
                     {/* User - main informations 
                     <View style={styles.containerHeader}>
                         <TouchableOpacity style={styles.containerUserName} activeOpacity={.5} onPress={this.openIdentity}>
-                            <GLText title={user.username} style={styles.username} />
-                            {user.title != 0 && (<GLText title={dataManager.titles.GetTitleByID(user.title)} style={styles.title} />)}
+                            <GLText title={user.informations.username} style={styles.username} />
+                            {user.informations.title != 0 && (<GLText title={dataManager.titles.GetTitleByID(user.informations.title)} style={styles.title} />)}
                         </TouchableOpacity>
                         <GLXPBar value={XP} max={nextLvlXP} style={styles.containerUserXP} />
                     </View>*/}

@@ -21,26 +21,23 @@ class UserHeader extends React.Component {
         }
     }
 
-    onAvatarPress = () => {
-        user.interface.ChangePage('identity');
-    }
-
     render() {
+        const openIdentity = () => user.interface.ChangePage('identity');
         const editable = !IsUndefined(this.props.onPress);
-        const age = GetAge(user.birthTime);
+        const age = user.informations.GetAge();
         const showAge = age !== null && this.props.showAge;
         const activeOpacity = editable ? 0.6 : 1;
 
-        const userTitle = user.GetTitle();
-        const edit = <Icon icon={user.IsConnected() ? 'edit' : 'nowifi'} color='border' />;
-        const avatar = <Button style={styles.avatar} onPress={this.onAvatarPress} rippleColor='white' />;
+        const userTitle = user.informations.GetTitle();
+        const edit = <Icon icon={user.server.IsConnected() ? 'edit' : 'nowifi'} color='border' />;
+        const avatar = <Button style={styles.avatar} onPress={openIdentity} rippleColor='white' />;
         const rightItem = editable ? edit : avatar;
 
         return (
             <TouchableOpacity style={[styles.header, this.props.style]} onPress={this.onPress} activeOpacity={activeOpacity}>
                 <View style={{ justifyContent: 'center', height: 84 }}>
                     <View style={styles.usernameContainer}>
-                        <Text style={styles.username} color='primary'>{user.username}</Text>
+                        <Text style={styles.username} color='primary'>{user.informations.username}</Text>
                         {showAge && <Text style={styles.age} color='secondary'>{langManager.curr['identity']['value-age'].replace('{}', age)}</Text>}
                     </View>
                     {userTitle !== '' && <Text style={styles.title} color='secondary'>{userTitle}</Text>}

@@ -10,7 +10,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { Page, Text, Button, XPBar, Container } from '../Components';
 import { UserHeader, PageHeader, AvatarEditor, StatsBars } from '../Widgets';
-import { GetAge, GetTime } from '../../Functions/Time';
+import { GetTime } from '../../Functions/Time';
 
 class Identity extends BackIdentity {
     openNowifiPopup() {
@@ -18,7 +18,7 @@ class Identity extends BackIdentity {
         const text = langManager.curr['identity']['alert-nowifi-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
     }
-    onAvatarPress = () => user.interface.popup.Open('custom', this.renderPopupEdit, undefined, true);
+    openPopupEdit = () => user.interface.popup.ForceOpen('custom', this.renderPopupEdit, undefined, true);
 
     /**
      * Popup to edit user infos
@@ -30,26 +30,42 @@ class Identity extends BackIdentity {
 
         // Username
         const usernameEdit = async () => {
-            if (!user.IsConnected()) {
+            if (user.server.IsConnected()) {
+                const info = user.informations.GetInfoToChangeUsername();
+                if (user.informations.usernameTime !== null && info.remain > 0) {
+                    // Username already changed
+                    const title = lang['alert-alreadyChanged-title'];
+                    const text = lang['alert-alreadyChanged-text'].replace('{}', info.remain);
+                    user.interface.popup.ForceOpen('ok', [ title, text ], this.openPopupEdit, false);
+                    return;
+                }
+
+                // Warning to change username
+                const openChangeUsername = () => {
+                    user.interface.screenInput.Open(lang['input-username'], user.informations.username, user.informations.SetUsername);
+                    this.openPopupEdit();
+                }
+                const title = lang['alert-usernamewarning-title'];
+                const text = lang['alert-usernamewarning-text'].replace('{}', info.total).replace('{}', info.total);
+                user.interface.popup.ForceOpen('ok', [ title, text ], openChangeUsername, false);
+            } else {
                 this.openNowifiPopup();
-                return;
             }
-            user.interface.screenInput.Open(lang['input-username'], user.username);
         }
 
         // Title
-        const availableTitles = user.GetUnlockTitles();
+        const availableTitles = user.informations.GetUnlockTitles();
         const listTitle = lang['input-select-title'];
-        const onChangeTitle = () => user.interface.screenList.Open(listTitle, availableTitles, user.SetTitle);
-        const titleTxt = user.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetTitleByID(user.title).Name);
+        const onChangeTitle = () => user.interface.screenList.Open(listTitle, availableTitles, user.informations.SetTitle);
+        const titleTxt = user.informations.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetTitleByID(user.informations.title).Name);
 
         // Age
-        const age = GetAge(user.birthTime);
+        const age = user.informations.GetAge();
         const ageText = age === null ? lang['value-age-empty'] : lang['value-age'].replace('{}', age);
 
         // Age edition (Date Picker)
         const dtpStartDate = new Date(2000, 0, 1, 0, 0, 0, 0);
-        const onChangeAge = (date) => { user.birthTime = GetTime(date); hideDTP(); };
+        const onChangeAge = (date) => { user.informations.birthTime = GetTime(date); hideDTP(); };
         const showDTP = () => setStateDTP('date');
         const hideDTP = () => setStateDTP('');
 
@@ -59,7 +75,7 @@ class Identity extends BackIdentity {
                     <Text style={styles.popupTitle}>{lang['edit-title']}</Text>
 
                     <View style={styles.popupRow}>
-                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.username}</Text>
+                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.informations.username}</Text>
                         <Button style={styles.popupButtonEdit} onPress={usernameEdit} fontSize={12} color='main1'>{lang['input-edit']}</Button>
                     </View>
 
@@ -117,7 +133,7 @@ class Identity extends BackIdentity {
                 <Animated.View style={{ opacity: headerOpacity }} pointerEvents={headerPointer}>
                     <UserHeader
                         showAge={true}
-                        onPress={this.onAvatarPress}
+                        onPress={this.openPopupEdit}
                     />
 
                     <Animated.View style={styles.xp}>

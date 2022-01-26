@@ -1,10 +1,9 @@
 import { BackHandler } from 'react-native';
 
-//import { UserManager } from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 
 import { Request_Async } from '../Functions/Request';
-import { GetDeviceInformations, StrIsJSON } from '../Functions/Functions';
+import { GetDeviceInformations } from '../Functions/Functions';
 
 const STATUS = {
     OFFLINE     : 'offline',
@@ -20,6 +19,7 @@ const STATUS = {
 class Server {
     constructor(user) {
         /**
+         * @typedef {import('../Managers/UserManager').default} UserManager
          * @type {UserManager}
          */
         this.user = user;

@@ -1,13 +1,11 @@
-//import PageManager from "./PageManager";
-//import dataManager from './DataManager';
-
-import langManager from "./LangManager";
+import dataManager from './DataManager';
+import langManager from './LangManager';
 
 import Achievements from '../Class/Achievements';
 import Activities from '../Class/Activities';
-import Experience from "../Class/Experience";
+import Experience from '../Class/Experience';
 import Quests from '../Class/Quests';
-import Server from "../Class/Server";
+import Server from '../Class/Server';
 import Settings from '../Class/Settings';
 
 import { GetDaysUntil } from '../Functions/Time';
@@ -32,17 +30,11 @@ class UserManager {
     settings = new Settings(this);
 
     /**
-     * Function loaded in componentDidMount of PageManager (in App.js)
-     * I've do that to skip cycles warns
-     * (Not imported (for JSDoc) for the same reason)
+     * Function loaded in render of App.js to skip cycles warns
+     * @typedef {import('./PageManager').default} PageManager
      * @type {PageManager}
      */
     interface;
-
-    /**
-     * @type {DataManager}
-     */
-    dataManager;
 
     constructor() {
         this.username = '';
@@ -92,8 +84,8 @@ class UserManager {
     }
 
     GetTitle = () => {
-        const title = this.dataManager.titles.GetTitleByID(user.title);
-        return title === null ? '' : this.dataManager.GetText(title.Name);
+        const title = dataManager.titles.GetTitleByID(user.title);
+        return title === null ? '' : dataManager.GetText(title.Name);
     }
 
     SetTitle = (ID) => {
@@ -109,15 +101,15 @@ class UserManager {
     //        "title.AchievementsCondition" Removed
     /* TITRES */
     GetUnlockTitles = () => {
-        let availableTitles = this.dataManager.titles.titles.map(title => ({ id: title.ID, value: this.dataManager.GetText(title.Name) }));
+        let availableTitles = dataManager.titles.titles.map(title => ({ id: title.ID, value: dataManager.GetText(title.Name) }));
         availableTitles.splice(0, 0, { id: 0, value: langManager.curr['identity']['input-title-none'] });
         return availableTitles;
 
         let unlockTitles = [
             { key: 0, value: langManager.curr['identity']['empty-title'] }
         ];
-        for (let t = 0; t < this.dataManager.titles.titles.length; t++) {
-            const title = this.dataManager.titles.titles[t];
+        for (let t = 0; t < dataManager.titles.titles.length; t++) {
+            const title = dataManager.titles.titles[t];
             const cond = parseInt(title.AchievementsCondition);
             if (isNaN(cond)) {
                 continue;

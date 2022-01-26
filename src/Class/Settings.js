@@ -1,4 +1,3 @@
-//import { UserManager } from "../Managers/UserManager";
 import langManager from "../Managers/LangManager";
 import themeManager from "../Managers/ThemeManager";
 
@@ -7,6 +6,7 @@ import DataStorage, { STORAGE } from "../Functions/DataStorage";
 class Settings {
     constructor(user) {
         /**
+         * @typedef {import('../Managers/UserManager').default} UserManager
          * @type {UserManager}
          */
         this.user = user;

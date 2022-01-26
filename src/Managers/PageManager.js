@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Animated, BackHandler } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import user from '../Managers/UserManager';
 import langManager from './LangManager';
 
 import { TimingAnimation } from '../Functions/Animations';
@@ -69,13 +68,23 @@ class PageManager extends React.Component{
         this.path = [];
 
         /**
-         * Link this class to user to skip cycle warnings
+         * @type {Popup}
          */
-        user.interface = this;
-
         this.popup = new React.createRef();
+
+        /**
+         * @type {ScreenInput}
+         */
         this.screenInput = new React.createRef();
+
+        /**
+         * @type {ScreenList}
+         */
         this.screenList = new React.createRef();
+
+        /**
+         * @type {Console}
+         */
         this.console = new React.createRef();
     }
 
@@ -129,7 +138,7 @@ class PageManager extends React.Component{
         }
 
         if (!this.getPageContent(newpage)) {
-            user.AddLog('error', 'Calling an incorrect page');
+            console.warn('error', 'Calling an incorrect page');
             return false;
         };
 

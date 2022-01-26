@@ -1,9 +1,11 @@
-//import { UserManager } from "../Managers/UserManager";
-import { IsUndefined } from "../Functions/Functions";
+import dataManager from '../Managers/DataManager';
+
+import { IsUndefined } from '../Functions/Functions';
 
 class Quests {
     constructor(user) {
         /**
+         * @typedef {import('../Managers/UserManager').default} UserManager
          * @type {UserManager}
          */
         this.user = user;
@@ -72,7 +74,7 @@ class Quests {
             for (let ta = 0; ta < today_activities.length; ta++) {
                 const activity = today_activities[ta];
                 const skillID = activity.skillID;
-                const skill = this.user.dataManager.skills.GetByID(skillID);
+                const skill = dataManager.skills.GetByID(skillID);
                 const category = skill.Category;
                 if (IDs.includes(skillID)) {
                     state1 += activity.duration;
@@ -90,10 +92,10 @@ class Quests {
     }
 
     DailyGetBonusCategory(date) {
-        const skillsLength = this.user.dataManager.skills.skills.length;
+        const skillsLength = dataManager.skills.skills.length;
         const today = IsUndefined(date) ? new Date() : new Date(date);
         const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
-        const skill = this.user.dataManager.skills.skills[index];
+        const skill = dataManager.skills.skills[index];
         const category = skill.Category;
         return category;
     }

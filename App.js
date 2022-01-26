@@ -40,7 +40,7 @@ class App extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ backgroundColor: "#000000" }}>
-                <PageManager />
+                <PageManager ref={ref => { if (ref !== null) user.interface = ref }} />
             </SafeAreaView>
         )
     }

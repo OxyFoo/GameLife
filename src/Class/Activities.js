@@ -1,4 +1,5 @@
-//import { UserManager } from "../Managers/UserManager";
+import dataManager from '../Managers/DataManager';
+
 import { GetMidnightTime, GetTime } from "../Functions/Time";
 
 class Activity {
@@ -10,6 +11,7 @@ class Activity {
 class Activities {
     constructor(user) {
         /**
+         * @typedef {import('../Managers/UserManager').default} UserManager
          * @type {UserManager}
          */
         this.user = user;
@@ -179,7 +181,7 @@ class Activities {
             const activity = this.activities[a];
             if (activity.startTime >= startTime && activity.startTime <= endTime) {
                 if (!onlyRelax) return true;
-                if (this.user.dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
+                if (dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
             }
         }
         return false;

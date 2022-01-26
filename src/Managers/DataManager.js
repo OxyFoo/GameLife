@@ -2,8 +2,6 @@ import langManager from "./LangManager";
 import { Request_Async } from "../Functions/Request";
 import DataStorage, { STORAGE } from "../Functions/DataStorage";
 
-import user from "./UserManager";
-
 import Achievements from "../Data/Achievements";
 import Skills from "../Data/Skills";
 import Titles from "../Data/Titles";
@@ -12,8 +10,6 @@ import Contributors from "../Data/Contributors";
 
 class DataManager {
     constructor() {
-        user.dataManager = this
-
         this.achievements = new Achievements();
         this.skills = new Skills(this);
         this.titles = new Titles();
@@ -23,6 +19,9 @@ class DataManager {
         this.news = [];
     }
 
+    /**
+     * @returns {Promise<Boolean>} False if all the data was empty
+     */
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;
         const skills = this.skills.skills.length > 0;
@@ -42,6 +41,10 @@ class DataManager {
         return output;
     }
 
+    /**
+     * Local save Internal data
+     * @returns {Promise<Boolean>} True if the data was successfully saved
+     */
     async LocalSave() {
         const internalData = {
             'achievements': this.achievements.Save(),
@@ -51,11 +54,13 @@ class DataManager {
             'titles': this.titles.Save()
         }
         const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData, false);
-        if (saved) user.AddLog('info', 'Internal data: local save');
-        else       user.AddLog('error', 'Internal data: local save failed');
         return saved;
     }
 
+    /**
+     * Local load Internal data
+     * @returns {Promise<Boolean>} True if the data was successfully loaded
+     */
     async LocalLoad() {
         const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
         if (internalData !== null) {
@@ -64,13 +69,14 @@ class DataManager {
             this.quotes.Load(internalData['quotes']);
             this.skills.Load(internalData['skills']);
             this.titles.Load(internalData['titles']);
-            user.AddLog('info', 'Internal data: local load');
-        } else {
-            user.AddLog('warn', 'Internal data: local load failed');
         }
         return internalData !== null;
     }
 
+    /**
+     * Load Internal data from the server
+     * @returns {Promise<Boolean>} True if the data was successfully loaded
+     */
     async OnlineLoad() {
         await this.LocalLoad();
 
@@ -104,11 +110,11 @@ class DataManager {
                 }
                 if (reqTables.hasOwnProperty('titles')) this.titles.Load(reqTables['titles']);
 
-                user.AddLog('info', 'Internal data: online load');
                 await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes, false);
                 await this.LocalSave();
+                return true;
             } else {
-                user.AddLog('warn', 'Internal data: online load failed');
+                return false;
             }
         }
     }

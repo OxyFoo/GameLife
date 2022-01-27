@@ -143,9 +143,8 @@ class Server {
                     this.dataToken = content['dataToken'];
                 }
             } else if (status === 'tokenExpired') {
-                this.TokenExpired();
                 success = false;
-                this.user.interface.console.AddLog('warn', 'Request: saveData - token expired');
+                this.TokenExpired();
             }
         }
 
@@ -200,7 +199,6 @@ class Server {
             if (status === 'tokenExpired') {
                 output = 'error';
                 this.TokenExpired();
-                this.user.interface.console.AddLog('warn', 'Request: saveUsername - token expired');
             } else {
                 output = usernameChangeState;
             }
@@ -209,8 +207,40 @@ class Server {
         return output;
     }
 
+    /**
+     * Send report
+     * @param {'activity'|'suggest'|'bug'|'message'} type - Type of report to send
+     * @param {Object} data - Data to send
+     * @returns {Promise<Boolean>} - Return success of report
+     */
+    async SendReport(type, data) {
+        let output = false;
+        const _data = {
+            'action': 'addReport',
+            'token': this.token,
+            'type': type,
+            'data': JSON.stringify(data)
+        };
+
+        const response = await Request_Async(_data);
+        console.log(response);
+        if (response.status === 200) {
+            const content = response.content;
+            const status = content['status'];
+
+            if (status === 'ok') {
+                output = true;
+            } else if (status === 'tokenExpired') {
+                this.TokenExpired();
+            }
+        }
+
+        return output;
+    }
+
     // TODO - Popup + restart
     TokenExpired() {
+        this.user.interface.console.AddLog('warn', 'Request: token expired');
     }
 
     __reqPing() {

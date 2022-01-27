@@ -42,6 +42,17 @@ class Home extends BackHome {
 
                 <Button
                     style={styles.topSpace}
+                    color='main1'
+                    rippleColor='white'
+                    borderRadius={8}
+                    icon='home'
+                    onPress={this.openAchievements}
+                >
+                    {lang['btn-achievements']}
+                </Button>
+
+                <Button
+                    style={styles.topSpace}
                     color='backgroundCard'
                     rippleColor='white'
                     borderRadius={8}

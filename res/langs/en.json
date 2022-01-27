@@ -84,8 +84,6 @@
     },
 
     "achievements": {
-        "page-title": "Achievements",
-
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "You have unlocked the achievement: {}"
     },
@@ -211,6 +209,7 @@
         "con-stats": "Statistics",
         "con-skill-experience": "Skills",
         "btn-other-skills": "Other comp.",
+        "btn-achievements": "Achievements",
         "btn-settings": "Paramètres",
 
         "______OLD_______": "",
@@ -332,10 +331,12 @@
         "type-activity-name": "Name of the activity",
         "type-activity-category": "Category",
         "type-suggest-text": "Any suggestion about the application? Share your idea here",
+        "type-suggest-input": "Your suggestion",
         "type-bug-text": "Have you seen a bug? Please bring us as much details about it as possible",
         "type-bug-input1": "Details of the bug",
         "type-bug-input2": "How to reproduce it?",
         "type-message-text": "Do you have a message for us? Please send it here",
+        "type-message-input": "Message",
 
         "button-send": "Send",
 

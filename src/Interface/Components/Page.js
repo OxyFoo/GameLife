@@ -8,7 +8,8 @@ const PageProps = {
     scrollable: true,
     canScrollOver: true,
     bottomOffset: 156,
-    onLayout: (event) => {}
+    onLayout: (event) => {},
+    onStartShouldSetResponder: (event) => true,
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -132,6 +133,7 @@ class Page extends React.Component {
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
+                onStartShouldSetResponder={this.props.onStartShouldSetResponder}
             >
                 {this.props.children}
             </Animated.View>

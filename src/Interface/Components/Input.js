@@ -8,6 +8,7 @@ import { TimingAnimation } from '../../Functions/Animations';
 
 const InputProps = {
     style: {},
+    height: 56,
     label: 'Default',
     staticLabel: false,
     activeColor: 'main1',
@@ -20,6 +21,7 @@ const InputProps = {
     onSubmit: () => {},
     enabled: true,
     active: false,
+    multiline: false,
     pointerEvents: 'auto'
 }
 
@@ -128,6 +130,7 @@ class Input extends React.Component {
                 { scaleX: Animated.subtract(1, this.state.animTop) },
             ]
         }];
+        const height = { height: this.props.multiline ? 'auto': this.props.height };
 
         return (
             <Animated.View style={[styles.parent, {
@@ -170,7 +173,7 @@ class Input extends React.Component {
 
                 <TextInput
                     ref={(input) => { this.refInput = input; }}
-                    style={styles.input}
+                    style={[styles.input, height]}
                     selectionColor={hexActiveColor}
                     value={this.props.text}
                     onChangeText={this.props.onChangeText}
@@ -180,6 +183,7 @@ class Input extends React.Component {
                     textContentType={textTypes[this.props.textContentType]['ios']}
                     autoCompleteType={textTypes[this.props.textContentType]['android']}
                     autoCorrect={false}
+                    multiline={this.props.multiline}
                 />
             </Animated.View>
         );
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     input: {
-        height: 56,
+        maxHeight: 256,
         color: '#FFFFFF',
         paddingHorizontal: 12
     },

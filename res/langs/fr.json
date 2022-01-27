@@ -84,8 +84,6 @@
     },
 
     "achievements": {
-        "page-title": "Succès",
-
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Vous avez débloqué le succès : {}"
     },
@@ -211,6 +209,7 @@
         "con-stats": "Statistiques",
         "con-skill-experience": "Compétences",
         "btn-other-skills": "Autre comp.",
+        "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
 
         "______OLD_______": "",
@@ -332,10 +331,12 @@
         "type-activity-name": "Nom de l'activité",
         "type-activity-category": "Catégorie",
         "type-suggest-text": "Une suggestion à propos de l'application ? Partage-nous ton idée ici",
+        "type-suggest-input": "Suggestion",
         "type-bug-text": "Vous avez vu un bug ? Merci de nous apporter le plus de détails à propos de celui-ci",
         "type-bug-input1": "Détails du bug",
         "type-bug-input2": "Comment le reproduire ?",
         "type-message-text": "Vous avez un message à nous transmettre ? Merci de nous l'envoyer ici",
+        "type-message-input": "Message",
 
         "button-send": "Envoyer",
 

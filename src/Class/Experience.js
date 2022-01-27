@@ -40,6 +40,7 @@ class Experience {
 
         // Reset stats
         let XP = 0;
+        // Remove this
         let STATS = DEFAULT_STATS;
         for (let s in allStats) {
             const stat = allStats[s];

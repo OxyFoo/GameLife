@@ -46,6 +46,7 @@ class Achievements {
                 achievements.push(achievement);
             }
         }
+
         return achievements;
     }
 

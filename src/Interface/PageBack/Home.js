@@ -8,6 +8,7 @@ class BackHome extends React.Component {
     }
 
     addActivity = () => user.interface.ChangePage('activity', undefined, true);
+    openAchievements = () => user.interface.ChangePage('achievements');
     openSettings = () => user.interface.ChangePage('settings');
     openSkills = () => user.interface.ChangePage('skills');
 }

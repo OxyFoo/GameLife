@@ -36,6 +36,7 @@ import Switch from './Components/Switch';
 import ProgressBar from './Components/ProgressBar';
 import XPBar from './Components/XPBar';
 import Character from './Components/Character';
+import Digit from './Components/Digit';
 
 export {
     Page,
@@ -56,6 +57,7 @@ export {
     ProgressBar,
     XPBar,
     Character,
+    Digit,
 
     // Old components
     GLText,

@@ -43,7 +43,7 @@ class Settings extends BackSettings {
                     />
                 </View>
 
-                <Button style={styles.margin} onPress={WAITPLZ} color='main2'>[{lang['input-report']}]</Button>
+                <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
 
                 <Container style={styles.margin} text={'[Suppressions]'} opened={false} type='rollable'>

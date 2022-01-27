@@ -1,16 +1,18 @@
 import * as React from 'react';
+import { Dimensions } from 'react-native';
 
-import user from '../../Managers/UserManager';
+import user, { DEFAULT_STATS } from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { Sum } from '../../Functions/Functions';
-import { Request_Async } from '../../Functions/Request';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class BackReport extends React.Component {
     constructor(props) {
         super(props);
 
-        this.maxPoints = 7;
+        this.maxPoints = 6;
 
         this.types = [
             { key: 0, value: langManager.curr['report']['types']['activity'] },
@@ -18,18 +20,12 @@ class BackReport extends React.Component {
             { key: 2, value: langManager.curr['report']['types']['bug'] },
             { key: 3, value: langManager.curr['report']['types']['message'] }
         ];
-        this.stats = {
-            'sag': 0,
-            'int': 0,
-            'con': 1,
-            'for': 0,
-            'end': 0,
-            'agi': 0,
-            'dex': 0
-        };
+        this.stats = DEFAULT_STATS;
 
         this.state = {
             selectedType: 0,
+            reportHeight: 0,
+
             input_activity: {},
             input_skillname: '',
             input_skillcategory: '',
@@ -38,15 +34,7 @@ class BackReport extends React.Component {
             input_bug2: '',
             input_message: '',
             remain: 0,
-            statsRemain: {
-                'sag': 0,
-                'int': 0,
-                'con': 0,
-                'for': 0,
-                'end': 0,
-                'agi': 0,
-                'dex': 0
-            }
+            statsRemain: DEFAULT_STATS
         }
     }
 
@@ -61,7 +49,13 @@ class BackReport extends React.Component {
         user.interface.popup.Open('ok', [ title, text ]);
     }
 
-    selectType = (index) => { this.setState({ selectedType: index }); }
+    onLayout = (event) => {
+        const { y } = event.nativeEvent.layout;
+        const reportHeight = SCREEN_HEIGHT - y - 24;
+        this.setState({ reportHeight: reportHeight });
+    }
+
+    selectType = (item) => item !== null && this.setState({ selectedType: item.key });
     changeTextInputSkillName = (text) => { this.setState({ input_skillname: text }); }
     changeTextInputSkillCategory = (text) => { this.setState({ input_skillcategory: text }); }
     changeTextInputSuggest = (text) => { this.setState({ input_suggest: text }); }
@@ -86,36 +80,36 @@ class BackReport extends React.Component {
         this.setState({ statsRemain: newStatsRemain, remain: remain });
     }
 
-    async sendData() {
+    sendData = async () => {
         const type = this.state.selectedType;
         const types = [ 'activity', 'suggest', 'bug', 'message' ];
-        let report_type = "";
-        if (type >= 0 && type < types.length) {
-            report_type = types[type];
+        if (type < 0 || type >= types.length) {
+            user.interface.console.AddLog('info', 'Error report: Invalid selected type (selectedType: "' + type + '")');
+            return;
         }
 
-        let report = {};
+        let dataReport = {};
         switch (type) {
             case 0: // Activity
-                report["name"] = this.state.input_skillname;
-                report["category"] = this.state.input_skillcategory;
-                report["stats"] = this.stats;
+                dataReport["name"] = this.state.input_skillname;
+                dataReport["category"] = this.state.input_skillcategory;
+                dataReport["stats"] = this.stats;
                 break;
             case 1: // Suggest
-                report["suggest"] = this.state.input_suggest;
+                dataReport["suggest"] = this.state.input_suggest;
                 break;
             case 2: // Bug
-                report["bug-description"] = this.state.input_bug1;
-                report["bug-details"] = this.state.input_bug2;
+                dataReport["bug-description"] = this.state.input_bug1;
+                dataReport["bug-details"] = this.state.input_bug2;
                 break;
             case 3: // Message
-                report["message"] = this.state.input_message;
+                dataReport["message"] = this.state.input_message;
                 break;
         }
 
         let isFilled = true;
-        for (let key in report) {
-            if (typeof(report[key]) === 'undefined' || report[key] == '') {
+        for (let key in dataReport) {
+            if (typeof(dataReport[key]) === 'undefined' || dataReport[key] == '') {
                 isFilled = false;
                 break;
             }
@@ -131,21 +125,16 @@ class BackReport extends React.Component {
             return;
         }
 
-        let data = {
-            'action': 'report',
-            'token': user.server.token,
-            'type': report_type,
-            'data': JSON.stringify(report)
-        };
-
-        const result_report = await Request_Async(data);
-        if (result_report.status === 200) {
+        const request = await user.server.SendReport(types[type], dataReport);
+        if (request) {
             const title = langManager.curr['report']['alert-success-title'];
             const text = langManager.curr['report']['alert-success-text'];
             user.interface.popup.Open('ok', [ title, text ], user.interface.BackPage, false);
         } else {
-            const error = result_report.status + ' - ' + result_report.data['error'];
-            user.interface.console.AddLog('error', 'Report: Send failed (' + error + ')');
+            const title = langManager.curr['report']['alert-error-title'];
+            const text = langManager.curr['report']['alert-error-text'];
+            user.interface.popup.Open('ok', [ title, text ]);
+            user.interface.console.AddLog('error', 'Report: Send report failed');
         }
     }
 }

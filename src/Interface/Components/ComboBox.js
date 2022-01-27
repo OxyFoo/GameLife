@@ -11,6 +11,17 @@ import Icon from './Icon';
 import Input from './Input';
 import { SpringAnimation } from '../../Functions/Animations';
 
+class Item {
+    /**
+     * @param {Number} key 
+     * @param {String} value 
+     */
+    constructor(key = 0, value = '') {
+        this.key = key;
+        this.value = value;
+    }
+}
+
 const ComboBoxProps = {
     style: {},
     maxHeight: 256,
@@ -23,6 +34,10 @@ const ComboBoxProps = {
     data: [],
     selectedValue: '',
     setSearchBar: false,
+
+    /**
+     * @param {Item} item
+     */
     onSelect: (item) => {},
     enabled: true,
 

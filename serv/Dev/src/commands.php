@@ -376,26 +376,24 @@
         /**
          * Add a report to the database
          */
-        public function Report() {
+        public function AddReport() {
             $token = $this->data['token'];
-            $report_type = $this->data['type'];
-            $report_data = $this->data['data'];
-            $deviceID = 0;
-    
-            if (isset($token, $report_type, $report_data)) {
-                if (!empty($token)) {
-                    $dataFromToken = Device::GetDataFromToken($this->db, $token);
-                    $token_deviceID = $dataFromToken['deviceID'];
-                    if (isset($token_deviceID)) {
-                        $deviceID = $token_deviceID;
-                    }
-                }
-    
-                $report_result = AddReport($this->db, $deviceID, $report_type, $report_data);
-                if ($report_result === TRUE) {
-                    $this->output['status'] = 'ok';
-                }
+            $reportType = $this->data['type'];
+            $reportData = $this->data['data'];
+            if (!isset($token, $reportType, $reportData)) return;
+
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
             }
+            $deviceID = $dataFromToken['deviceID'];
+
+            $reportResult = AddReport($this->db, $deviceID, $reportType, $reportData);
+            if ($reportResult !== TRUE) return;
+
+            $this->output['status'] = 'ok';
         }
 
         /**

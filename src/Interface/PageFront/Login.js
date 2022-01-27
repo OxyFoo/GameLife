@@ -5,7 +5,7 @@ import BackLogin from '../PageBack/Login';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { Text, Button, Input, Checkbox, GLIconButton } from '../Components';
+import { Text, Button, Input, Checkbox } from '../Components';
 
 class Login extends BackLogin {
     render() {
@@ -90,7 +90,8 @@ class Login extends BackLogin {
                     //rippleColor='main1'
                     onPress={this.onBack}
                 >
-                    <GLIconButton icon='back' size={16} />
+                    {/* TODO - Put new icon button */}
+                    {/*<GLIconButton icon='back' size={16} />*/}
                 </Button>
             </View>
         )

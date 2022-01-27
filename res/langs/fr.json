@@ -268,6 +268,10 @@
         "alert-alreadyChanged-text": "Vous devez attendre {} jours avant de pouvoir le modifier à nouveau.",
         "alert-error-title": "Erreur",
         "alert-error-text": "Modification du pseudo impossible",
+        "alert-birthtimewarning-title": "Changement de date de naissance",
+        "alert-birthtimewarning-text": "Vous ne pouvez définir une date de naissance qu'une fois tous les {} jours, choisissez-bien !",
+        "alert-birthtimewait-title": "Changement de date de naissance",
+        "alert-birthtimewait-text": "Vous devez attendre {} jours avant de pouvoir modifier votre date de naissance à nouveau.",
 
         "___OLD___": "",
         "name-age": "Age",

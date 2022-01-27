@@ -246,6 +246,7 @@
                 $userData['usernameTime'] = $usernameTime;
                 $userData['title'] = $title;
                 $userData['birthtime'] = $birthtime;
+                $userData['lastbirthtime'] = $birthtime;
             }
 
             if ($appDataToken != $dbDataToken) {
@@ -304,15 +305,8 @@
             $accountID = $dataFromToken['accountID'];
             $account = Account::GetByID($this->db, $accountID);
             if ($account === NULL) return;
-            $dbDataToken = $account['DataToken'];
 
             $usernameChangeState = User::SetUsername($this->db, $account, $newUsername);
-            if ($usernameChangeState === 'ok') {
-                $newDataToken = User::RefreshDataToken($this->db, $account);
-                if ($this->data['dataToken'] === $dbDataToken) {
-                    $this->output['dataToken'] = $newDataToken;
-                }
-            }
 
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';

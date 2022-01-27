@@ -8,17 +8,19 @@
             $activities = $data['activities'];
             $achievements = $data['achievements'];
             $titleID = $data['titleID'];
+            $birthTime = $data['birthTime'];
 
             if (isset($activities)) {
                 self::AddActivities($db, $account, $activities);
             }
-
             if (isset($achievements)) {
                 self::AddAchievement($db, $account, $achievements);
             }
-
             if (isset($titleID)) {
                 self::setTitle($db, $account, $titleID);
+            }
+            if (isset($birthTime)) {
+                self::SetBirthtime($db, $account, $birthTime);
             }
         }
 
@@ -59,6 +61,19 @@
             }
 
             return $output;
+        }
+
+        private static function SetBirthtime($db, $account, $birthtime) {
+            $accountID = $account['ID'];
+            $lastChangeBirth = $account['LastChangeBirth'];
+            if ($lastChangeBirth !== NULL) $lastChangeBirth = strtotime($lastChangeBirth);
+            // TODO - Check last change birth time
+
+            $command = "UPDATE `Users` SET `Birthtime` = '$birthtime', `LastChangeBirth` = 'current_timestamp()' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: saving birthtime failed");
+            }
         }
 
         public static function RefreshDataToken($db, $account) {
@@ -138,6 +153,15 @@
             return $isFree;
         }
 
+        public static function setTitle($db, $account, $title) {
+            $accountID = $account['ID'];
+            $command = "UPDATE `Users` SET `Title` = '$title' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Saving title failed");
+            }
+        }
+
         // TODO - Check this
 
         public static function SetData($db, $account, $data) {
@@ -149,15 +173,6 @@
 
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving data failed");
-            }
-        }
-
-        public static function setTitle($db, $account, $title) {
-            $accountID = $account['ID'];
-            $command = "UPDATE `Users` SET `Title` = '$title' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
-            if ($result !== TRUE) {
-                ExitWithStatus("Error: Saving title failed");
             }
         }
 

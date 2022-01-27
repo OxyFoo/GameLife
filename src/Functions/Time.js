@@ -143,8 +143,20 @@ function GetMidnightTime(time) {
     return GetTime(_date);
 }
 
+/**
+ * 
+ * @param {Number} time in seconds
+ * @returns {Number} Return age in years
+ */
+function GetAge(time) {
+    if (time === null) return null;
+    const birthDay = new Date(time * 1000);
+    const today = new Date().getTime();
+    return new Date(today - birthDay).getUTCFullYear() - 1970;
+}
+
 export { GetDurations, GetTime,
     GetTimeToTomorrow, GetDaysUntil, RoundToQuarter,
     TimeToFormatString, DateToFormatTimeString, DateToFormatString,
-    GetMidnightTime
+    GetMidnightTime, GetAge
 };

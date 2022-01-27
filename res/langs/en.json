@@ -268,6 +268,10 @@
         "alert-alreadyChanged-text": "You must wait {} days before you can change it again.",
         "alert-error-title": "Error",
         "alert-error-text": "Change of username impossible",
+        "alert-birthtimewarning-title": "Change of date of birth",
+        "alert-birthtimewarning-text": "You can only set a birth date once every {} days, so choose wisely!",
+        "alert-birthtimewait-title": "Change of date of birth",
+        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
 
         "___OLD___": "",
         "name-age": "Age",

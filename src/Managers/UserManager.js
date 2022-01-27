@@ -130,7 +130,12 @@ class UserManager {
         }
 
         if (this.informations.IsUnsaved()) {
-            data['titleID'] = this.informations.UNSAVED_title;
+            if (this.informations.UNSAVED_title !== null) {
+                data['titleID'] = this.informations.UNSAVED_title;
+            }
+            if (this.informations.UNSAVED_birthTime !== null) {
+                data['birthTime'] = this.informations.UNSAVED_birthTime;
+            }
         }
 
         if (Object.keys(data).length) {
@@ -159,6 +164,7 @@ class UserManager {
             if (contains('usernameTime')) this.informations.usernameTime = data['usernameTime'];
             if (contains('title')) this.informations.title = data['title'];
             if (contains('birthtime')) this.informations.birthTime = data['birthtime'];
+            if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
 
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) {

@@ -197,15 +197,12 @@ class Server {
             const status = content['status'];
             const usernameChangeState = content['usernameChangeState'];
 
-            if (status === 'ok') {
-                output = usernameChangeState;
-                if (content.hasOwnProperty('dataToken')) {
-                    this.dataToken = content['dataToken'];
-                }
-            } else if (status === 'tokenExpired') {
+            if (status === 'tokenExpired') {
                 output = 'error';
                 this.TokenExpired();
                 this.user.interface.console.AddLog('warn', 'Request: saveUsername - token expired');
+            } else {
+                output = usernameChangeState;
             }
         }
 

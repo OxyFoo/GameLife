@@ -1,9 +1,10 @@
 import dataManager from '../Managers/DataManager';
 import langManager from '../Managers/LangManager';
 
-import { GetDaysUntil, GetTime } from '../Functions/Time';
+import { GetAge, GetDaysUntil, GetTime } from '../Functions/Time';
 
-const DAYS_PSEUDO_CHANGE = 30;
+const DAYS_USERNAME_CHANGE = 30;
+const DAYS_BIRTHTIME_CHANGE = 365;
 
 class Informations {
     constructor(user) {
@@ -17,9 +18,11 @@ class Informations {
         this.usernameTime = null;
         this.title = 0;
         this.birthTime = null;
+        this.lastBirthTime = null;
         this.xp = 0;
 
         this.UNSAVED_title = null;
+        this.UNSAVED_birthTime = null;
     }
 
     Clear() {
@@ -27,16 +30,20 @@ class Informations {
         this.usernameTime = null;
         this.title = 0;
         this.birthTime = null;
+        this.lastBirthTime = null;
         this.xp = 0;
         this.UNSAVED_title = null;
+        this.UNSAVED_birthTime = null;
     }
     Load(informations) {
         this.username = informations['username'];
         this.usernameTime = informations['usernameTime'];
         this.title = informations['title'];
         this.birthTime = informations['birthTime'];
+        this.lastBirthTime = informations['lastBirthTime'];
         this.xp = informations['xp'];
         this.UNSAVED_title = informations['UNSAVED_title'];
+        this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
     }
     Save() {
         const informations = {
@@ -44,17 +51,20 @@ class Informations {
             usernameTime: this.usernameTime,
             title: this.title,
             birthTime: this.birthTime,
+            lastBirthTime: this.lastBirthTime,
             xp: this.xp,
-            UNSAVED_title: this.UNSAVED_title
+            UNSAVED_title: this.UNSAVED_title,
+            UNSAVED_birthTime: this.UNSAVED_birthTime
         };
         return informations;
     }
 
     IsUnsaved = () => {
-        return this.UNSAVED_title !== null;
+        return this.UNSAVED_title !== null || this.UNSAVED_birthTime !== null;
     }
     Purge = () => {
         this.UNSAVED_title = null;
+        this.UNSAVED_birthTime = null;
     }
 
     SetUsername = async (username) => {
@@ -105,11 +115,13 @@ class Informations {
      * Return age in years
      * @returns {Number}
      */
-    GetAge = () => {
-        if (this.birthTime === null) return null;
-        const birthDay = new Date(this.birthTime * 1000);
-        const today = new Date().getTime();
-        return new Date(today - birthDay).getUTCFullYear() - 1970;
+    GetAge = () => GetAge(this.birthTime);
+
+    SetBirthTime = (birthTime) => {
+        this.birthTime = birthTime;
+        this.UNSAVED_birthTime = birthTime;
+        this.lastBirthTime = GetTime();
+        this.user.LocalSave();
     }
 
     // TODO - Replace by inventory system
@@ -138,10 +150,20 @@ class Informations {
 
     GetInfoToChangeUsername() {
         const delta = GetDaysUntil(this.usernameTime);
-        const remain = DAYS_PSEUDO_CHANGE - Math.round(delta);
+        const remain = DAYS_USERNAME_CHANGE - Math.round(delta);
         const output = {
             remain: remain,
-            total: DAYS_PSEUDO_CHANGE
+            total: DAYS_USERNAME_CHANGE
+        };
+        return output;
+    }
+
+    GetInfoToChangeBirthtime() {
+        const delta = GetDaysUntil(this.lastBirthTime);
+        const remain = DAYS_BIRTHTIME_CHANGE - Math.round(delta);
+        const output = {
+            remain: remain,
+            total: DAYS_BIRTHTIME_CHANGE
         };
         return output;
     }

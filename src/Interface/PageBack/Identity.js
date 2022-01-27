@@ -16,7 +16,10 @@ class BackIdentity extends React.Component {
 
         this.refPage = null;
         this.refAvatar = null;
-        this.state = { editorOpened: false };
+        this.state = {
+            stateDTP: '',
+            editorOpened: false
+        };
     }
 
     onBack = () => {

@@ -65,9 +65,25 @@ class Identity extends BackIdentity {
 
         // Age edition (Date Picker)
         const dtpStartDate = new Date(2000, 0, 1, 0, 0, 0, 0);
-        const onChangeAge = (date) => { user.informations.birthTime = GetTime(date); hideDTP(); };
-        const showDTP = () => setStateDTP('date');
-        const hideDTP = () => setStateDTP('');
+        const dtpTopDate = new Date(); dtpTopDate.setFullYear(dtpTopDate.getFullYear() - 6);
+        const dtpBottomDate = new Date(); dtpBottomDate.setFullYear(dtpBottomDate.getFullYear() - 120);
+
+        const onChangeAge = (date) => { user.informations.SetBirthTime(GetTime(date)); hideDTP(); };
+        const showDTP = () => this.setState({ stateDTP: 'date' });
+        const hideDTP = () => this.setState({ stateDTP: '' });
+        const checkChangeAge = () => {
+            const info = user.informations.GetInfoToChangeBirthtime();
+            if (info.remain > 0) {
+                const title = lang['alert-birthtimewait-title'];
+                const text = lang['alert-birthtimewait-text'].replace('{}', info.remain);
+                user.interface.popup.ForceOpen('ok', [ title, text ], this.openPopupEdit, false);
+                return;
+            }
+            const title = lang['alert-birthtimewarning-title'];
+            const text = lang['alert-birthtimewarning-text'].replace('{}', info.total);
+            const checkedChangeAge = () => { showDTP(); this.openPopupEdit(); };
+            user.interface.popup.ForceOpen('ok', [ title, text ], checkedChangeAge, false);
+        };
 
         return (
             <>
@@ -86,7 +102,7 @@ class Identity extends BackIdentity {
 
                     <View style={styles.popupRow}>
                         <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{ageText}</Text>
-                        <Button style={styles.popupButtonEdit} onPress={showDTP} fontSize={12} color='main1'>{lang['input-edit']}</Button>
+                        <Button style={styles.popupButtonEdit} onPress={checkChangeAge} fontSize={12} color='main1'>{lang['input-edit']}</Button>
                     </View>
 
                     <Button style={styles.popupButtonCancel} fontSize={14} onPress={close}>{lang['edit-cancel']}</Button>
@@ -94,11 +110,13 @@ class Identity extends BackIdentity {
 
                 <DateTimePickerModal
                     date={dtpStartDate}
-                    mode={stateDTP}
+                    maximumDate={dtpTopDate}
+                    minimumDate={dtpBottomDate}
+                    mode={this.state.stateDTP}
                     headerTextIOS={lang['input-select-age']}
                     onConfirm={onChangeAge}
                     onCancel={hideDTP}
-                    isVisible={stateDTP != ''}
+                    isVisible={this.state.stateDTP != ''}
                 />
             </>
         );

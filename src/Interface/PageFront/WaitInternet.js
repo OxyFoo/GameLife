@@ -16,7 +16,7 @@ class Waitinternet extends BackWaitinternet {
                     <Image source={require('../../../res/logo/login_circles.png')} />
                 </View>
 
-                <Text style={styles.text} color='main'>{textWait}</Text>
+                <Text style={styles.text} color='primary'>{textWait}</Text>
             </View>
         )
     }

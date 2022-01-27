@@ -10,6 +10,7 @@ const TextSwitchProps = {
     style: {},
     textLeft: 'Left',
     textRight: 'Right',
+    startRight: false,
     onChange: (index) => {}
 }
 
@@ -20,6 +21,12 @@ class TextSwitch extends React.Component {
         selectedIndex: 0
     }
 
+    componentDidMount() {
+        if (this.props.startRight) {
+            this.onChange(1, false);
+        }
+    }
+
     onLayout = (event) => {
         const { x, y, width, height } = event.nativeEvent.layout;
         if (width !== this.state.parentWidth) {
@@ -27,7 +34,7 @@ class TextSwitch extends React.Component {
         }
     }
 
-    onChange = (index) => {
+    onChange = (index, callback = true) => {
         this.props.onChange(index);
         SpringAnimation(this.state.anim, index).start();
         this.setState({ selectedIndex: index });

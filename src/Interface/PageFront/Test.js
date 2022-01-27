@@ -20,7 +20,7 @@ class Test extends BackTest {
         const LVL = userExperience.lvl;
         const nextLvlXP = userExperience.next;
 
-        const backgroundColor = { backgroundColor: themeManager.colors['globalBackcomponent'] };
+        const backgroundColor = { backgroundColor: themeManager.colors['black'] };
 
         return (
             <Page ref={ref => this.pageRef = ref} canScrollOver={true}>

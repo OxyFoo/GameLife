@@ -37,6 +37,7 @@ class PageManager extends React.Component{
             page2: new Animated.Value(0)
         },
         animTransition: new Animated.Value(1),
+        animTheme: new Animated.Value(0),
         arguments: {},
         ignorePage: false,
 
@@ -153,6 +154,10 @@ class PageManager extends React.Component{
         return true;
     }
 
+    SetTheme = (index) => {
+        TimingAnimation(this.state.animTheme, index, 100).start();
+    }
+
     pageAnimation = async (newpage) => {
         const animDuration = 200;
         const animTransitionDuration = 50;
@@ -233,9 +238,17 @@ class PageManager extends React.Component{
 
         const page1Event = this.state.page1 ? 'auto' : 'none';
         const page2Event = this.state.page2 ? 'auto' : 'none';
+        const darkBackground = ['#03052E', '#353657'];
+        const lightBackground = ['#FFFFFF', '#FFFFFF'];
+        const lightOpacity = { opacity: this.state.animTheme };
 
         return (
-            <LinearGradient style={fullscreen} colors={['#03052E', '#353657']}>
+            <LinearGradient style={fullscreen} colors={darkBackground}>
+                {/* Light background */}
+                <Animated.View style={[fullscreen, lightOpacity]} pointerEvents='none'>
+                    <LinearGradient style={fullscreen} colors={lightBackground} />
+                </Animated.View>
+
                 <Animated.View style={page1Style} pointerEvents={page1Event}>{page1}</Animated.View>
                 <Animated.View style={page2Style} pointerEvents={page2Event}>{page2}</Animated.View>
                 <Animated.View style={overlayStyle} pointerEvents='none' />

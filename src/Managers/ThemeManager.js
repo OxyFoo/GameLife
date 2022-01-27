@@ -5,6 +5,7 @@ class ThemeManager {
             main2: '#DBA1FF', // Pink
             main3: '#0B112F', // Dark (background)
             white: '#FFFFFF', // White
+            black: '#000000', // Black
             border: '#808080', // Grey
             background: '#0E1247', // Dark purple
             backgroundCard: '#384065', // Transparent purple
@@ -13,28 +14,32 @@ class ThemeManager {
             danger: '#CC0029',
 
             text: {
-                main: '#ECECEC', // Obsolete
                 primary: '#ECECEC',
                 secondary: '#808080',
                 light: '#A7A4A4',
                 error: '#CC0029'
-            },
-
-            // Obsolete
-            globalBackground: '#000020',
-            globalBackcomponent: '#000000',
-            xpBar: '#ECECEC'
-        }/*,
+            }
+        },
         Light: {
-            globalBackground: '#000020',
-            globalBackcomponent: '#000000',
-            xpBar: '#ECECEC',
+            main2: '#9095FF', // Purple
+            main1: '#DBA1FF', // Pink
+            main3: '#0B112F', // Dark (background)
+            white: '#FFFFFF', // White
+            black: '#000000', // Black
+            border: '#808080', // Grey
+            background: '#0E1247', // Dark purple
+            backgroundCard: '#384065', // Transparent purple
+            backgroundGrey: '#222740', // Grey
+            backgroundTransparent: '#FFFFFF33', // Transparent white
+            danger: '#CC0029',
+
             text: {
                 primary: '#ECECEC',
                 secondary: '#808080',
+                light: '#A7A4A4',
                 error: '#CC0029'
             }
-        }*/
+        }
     }
 
     // Default value

@@ -31,6 +31,14 @@ class BackSettings extends React.Component {
         langManager.SetLangage(lang.key);
         user.settings.Save();
     }
+    onChangeTheme = (themeIndex) => {
+        const newTheme = [ 'Dark', 'Light' ][themeIndex];
+        if (themeManager.SetTheme(newTheme)) {
+            user.interface.SetTheme(themeIndex);
+            user.interface.forceUpdate();
+            user.settings.Save();
+        }
+    }
 
     disconnect = () => {
         const event = (button) => { if (button === 'yes') user.Disconnect(); };
@@ -70,13 +78,6 @@ class BackSettings extends React.Component {
         user.interface.forceUpdate();
         // TODO - Save user data
         //user.saveData(false);
-    }
-    changeTheme = (theme) => {
-        //this.currentTheme = themeManager.selectedTheme; // Init
-        if (themeManager.SetTheme(theme)) {
-            this.currentTheme = theme;
-            user.interface.forceUpdate();
-        }
     }
     changeMorningNotifications = (enabled) => {
         if (enabled) EnableMorningNotifications();

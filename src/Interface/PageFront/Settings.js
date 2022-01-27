@@ -7,6 +7,7 @@ import langManager from '../../Managers/LangManager';
 
 import { PageHeader } from '../Widgets';
 import { Page, Text, Button, Switch, TextSwitch, ComboBox, Container } from '../Components';
+import themeManager from '../../Managers/ThemeManager';
 
 class Settings extends BackSettings {
     render() {
@@ -29,8 +30,14 @@ class Settings extends BackSettings {
                     onSelect={this.onChangeLang}
                 />
 
-                <Text style={{ textAlign: 'left', marginBottom: 6 }} onPress={WAITPLZ}>[{lang['input-theme']}]</Text>
-                <TextSwitch style={styles.margin} onChange={WAITPLZ} textLeft={langThemes['Dark']} textRight={langThemes['Light']} />
+                <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
+                <TextSwitch
+                    style={styles.margin}
+                    onChange={this.onChangeTheme}
+                    textLeft={langThemes['Dark']}
+                    textRight={langThemes['Light']}
+                    startRight={themeManager.selectedTheme === 'Light'}
+                />
 
                 <View style={{ marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ textAlign: 'left' }}>[{lang['input-start-sound']}]</Text>

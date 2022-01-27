@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
+import themeManager from '../../Managers/ThemeManager';
 
 import { Sleep } from '../../Functions/Functions';
 import { PlayStartSound } from '../../Functions/Sound';
@@ -28,6 +29,9 @@ class BackLoading extends React.Component {
         if (!online) {
             user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
         }
+
+        // Set background theme
+        user.interface.SetTheme(themeManager.selectedTheme === 'Dark' ? 0 : 1);
 
         this.nextStep();
 

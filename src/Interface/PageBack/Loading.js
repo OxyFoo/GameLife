@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
+import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Sleep } from '../../Functions/Functions';
@@ -15,7 +16,6 @@ class BackLoading extends React.Component {
 
     componentDidMount() {
         this.initialisation();
-        PlayStartSound();
     }
 
     nextStep = () => this.setState({ icon: this.state.icon + 1 });
@@ -24,6 +24,13 @@ class BackLoading extends React.Component {
 
     async initialisation() {
         await user.settings.Load();
+
+        // Play sound
+        if (user.settings.startAudio) {
+            PlayStartSound();
+        }
+
+        // Ping request
         await user.server.Ping();
         const online = user.server.online;
         if (!online) {
@@ -73,7 +80,14 @@ class BackLoading extends React.Component {
             const email = user.settings.email;
             const status = await user.server.Connect(email);
             if (status === 'newDevice' || status === 'waitMailConfirmation') {
+                // Mail not confirmed
                 while (!user.interface.ChangePage('waitmail', { email: email }, true)) await Sleep(100);
+                return;
+            } else if (status === 'free') {
+                // Account is deleted
+                const title = langManager.curr['login']['alert-deletedaccount-title'];
+                const text = langManager.curr['login']['alert-deletedaccount-text'];
+                user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(false), false);
                 return;
             }
         }
@@ -102,7 +116,6 @@ class BackLoading extends React.Component {
         await Sleep(200);
 
         if (user.activities.currentActivity === null) {
-            // TODO - home
             while (!user.interface.ChangePage('home')) await Sleep(100);
         } else {
             while (!user.interface.ChangePage('activitytimer', undefined, true)) await Sleep(100);

@@ -19,7 +19,7 @@ class BackSettings extends React.Component {
         this.state = {
             selectedLang: current,
             dataLangs: dataLangs,
-            switchStartAudio: false
+            switchStartAudio: user.settings.startAudio
         }
     }
 
@@ -39,9 +39,20 @@ class BackSettings extends React.Component {
             user.settings.Save();
         }
     }
+    onChangeStartAudio = (value) => {
+        this.setState({ switchStartAudio: value });
+        user.settings.startAudio = value;
+        user.settings.Save();
+    }
 
     disconnect = () => {
-        const event = (button) => { if (button === 'yes') user.Disconnect(); };
+        const event = async (button) => {
+            if (button === 'yes' && !await user.Disconnect()) {
+                const title = langManager.curr['settings']['alert-disconnecterror-title'];
+                const text = langManager.curr['settings']['alert-disconnecterror-text'];
+                user.interface.popup.DelayOpen('ok', [ title, text ], undefined, false);
+            }
+        };
         const title = langManager.curr['settings']['alert-disconnect-title'];
         const text = langManager.curr['settings']['alert-disconnect-text'];
         user.interface.popup.Open('yesno', [ title, text ], event);

@@ -24,7 +24,7 @@ class BackWaitmail extends React.Component {
     }
 
     Login = async () => {
-        const { email } = this.props.args;
+        const email = user.settings.email;
 
         // Login
         const status = await user.server.Connect(email);

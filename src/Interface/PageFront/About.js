@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import BackAbout from '../PageBack/About';
 import user from '../../Managers/UserManager';
@@ -9,6 +9,14 @@ import { PageHeader } from '../Widgets';
 import { Page, Text, Icon } from '../Components';
 
 class About extends BackAbout {
+    renderContributor({ item: contributor }) {
+        return (
+            <TouchableOpacity activeOpacity={.8}>
+                <Text>{contributor.value}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     render() {
         const lang = langManager.curr['about'];
         const versionText = lang['text-version'].replace('{}', this.version);
@@ -41,7 +49,7 @@ class About extends BackAbout {
                             style={styles.contributors}
                             data={this.contributors}
                             keyExtractor={(item, i) => 'contributors_' + i}
-                            renderItem={({item}) => <Text>{item.value}</Text>}
+                            renderItem={this.renderContributor}
                         />
                     </View>
 

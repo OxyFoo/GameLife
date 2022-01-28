@@ -36,8 +36,14 @@ class Switch extends React.Component {
     render() {
         const color = this.props.value ? themeManager.GetColor('main1') : themeManager.GetColor('backgroundCard');
 
-        const barStyle = [ styles.bar, { backgroundColor: themeManager.GetColor('background') } ];
-        const btnStyle = [ styles.circle, { backgroundColor: color, transform: [{ translateX: this.state.anim }] } ];
+        const barStyle = [ styles.bar, {
+            borderColor: color,
+            backgroundColor: themeManager.GetColor('background')
+        } ];
+        const btnStyle = [ styles.circle, {
+            backgroundColor: color, transform: [{ translateX: this.state.anim }]
+        } ];
+
         return (
             <View>
                 <View style={barStyle} onTouchStart={this.onPress} />
@@ -64,7 +70,8 @@ const styles = StyleSheet.create({
     bar: {
         width: 56,
         height: 28,
-        borderRadius: 14
+        borderRadius: 14,
+        borderWidth: 1
     }
 });
 

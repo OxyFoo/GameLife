@@ -312,7 +312,10 @@
         "error-signin-server": "An error has occurred.",
         "error-signin-pseudoWrong": "Please enter a correct username.",
         "error-signin-pseudoUsed": "This username is already in use.",
-        "error-signin-disagree": "Please accept the terms and conditions."
+        "error-signin-disagree": "Please accept the terms and conditions.",
+
+        "alert-deletedaccount-title": "Account deleted",
+        "alert-deletedaccount-text": "Your account has been deleted, we apologize for the inconvenience."
     },
 
     "report": {
@@ -367,7 +370,9 @@
         "alert-reset-title": "Reset",
         "alert-reset-text": "Delete all account activities?",
         "alert-disconnect-title": "Disconnecting",
-        "alert-disconnect-text": "Do you want to log out? Data will only be saved locally"
+        "alert-disconnect-text": "Do you want to log out? Data will only be saved locally",
+        "alert-disconnecterror-title": "Error",
+        "alert-disconnecterror-text": "An error has occurred, please check your internet connection or please try again later."
     },
 
     "shop": {

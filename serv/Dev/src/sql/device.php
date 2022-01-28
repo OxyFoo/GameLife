@@ -102,8 +102,8 @@
                 list($deviceID, $accountID, $time, $random) = $exploded;
                 if (is_numeric($deviceID) && is_numeric($accountID) && is_numeric($time) && strlen($random) === self::RANDOM_LENGTH) {
                     $output = array(
-                        'deviceID' => $deviceID,
-                        'accountID' => $accountID,
+                        'deviceID' => intval($deviceID),
+                        'accountID' => intval($accountID),
                         'inTime' => intval($time) + (self::LIMIT_TIME_HOURS * 3600) >= time()
                     );
                 }

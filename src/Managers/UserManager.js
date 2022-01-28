@@ -52,13 +52,18 @@ class UserManager {
         this.settings.Clear();
         await this.settings.Save();
 
-        await DataStorage.clearAll();
+        await DataStorage.ClearAll();
         await this.LocalSave();
     }
 
-    async Disconnect() {
-        await this.Clear();
-        this.interface.ChangePage('login');
+    async Disconnect(request = true) {
+        let output = false;
+        if (!request || await this.server.Disconnect()) {
+            await this.Clear();
+            this.interface.ChangePage('login');
+            output = true;
+        }
+        return output;
     }
     async Unmount() {
         await this.LocalSave();

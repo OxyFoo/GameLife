@@ -18,8 +18,8 @@
     $state = 'InvalidState';
     $action = $data->action;
     $lang = $data->lang;
-    $accountID = $data->accountID;
-    $deviceID = $data->deviceID;
+    $accountID = intval($data->accountID);
+    $deviceID = intval($data->deviceID);
     $deviceToken = $data->deviceToken;
 
     if (isset($action, $accountID, $deviceID, $deviceToken)) {

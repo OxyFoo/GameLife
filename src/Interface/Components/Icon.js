@@ -33,6 +33,10 @@ import svgTiktok from '../../../res/icons/tiktok';
 import svgLoading from '../../../res/icons/loading';
 import svgLoadingDots from '../../../res/icons/loading-dots';
 
+/**
+ * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'home'|'info'|'instagram'|'item'|'nowifi'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'} Icons
+ */
+
 const IconProps = {
     style: {},
     containerStyle: {},
@@ -42,7 +46,7 @@ const IconProps = {
      */
     xml: undefined,
     /**
-     * @type {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'home'|'info'|'instagram'|'item'|'nowifi'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'}
+     * @type {Icons}
      */
     icon: '',
     size: 24,

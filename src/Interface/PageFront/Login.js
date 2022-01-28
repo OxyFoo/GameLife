@@ -34,7 +34,7 @@ class Login extends BackLogin {
                     <Animated.View
                         style={[
                             styles.container,
-                            { height: Animated.add(86, Animated.multiply(160, this.state.animSignin)) }
+                            { height: Animated.add(92, Animated.multiply(160, this.state.animSignin)) }
                         ]}
                     >
                         {/* Email */}
@@ -87,12 +87,9 @@ class Login extends BackLogin {
                     style={styles.backButton}
                     styleAnimation={{transform: [{ translateX: Animated.add(-128, Animated.multiply(128, this.state.animSignin)) }] }}
                     color="main1"
-                    //rippleColor='main1'
+                    icon='arrowLeft'
                     onPress={this.onBack}
-                >
-                    {/* TODO - Put new icon button */}
-                    {/*<GLIconButton icon='back' size={16} />*/}
-                </Button>
+                />
             </View>
         )
     }
@@ -107,7 +104,7 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '100%',
-        // height: 86 - 240 : 86+154*anim
+        // height: 92 - 240 : 92+154*anim
         paddingVertical: '5%',
         display: 'flex',
         alignItems: 'center',

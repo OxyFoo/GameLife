@@ -223,14 +223,33 @@ class Server {
         };
 
         const response = await Request_Async(_data);
-        console.log(response);
         if (response.status === 200) {
             const content = response.content;
-            const status = content['status'];
+            const contentStatus = content['status'];
 
-            if (status === 'ok') {
+            if (contentStatus === 'ok') {
                 output = true;
-            } else if (status === 'tokenExpired') {
+            } else if (contentStatus === 'tokenExpired') {
+                this.TokenExpired();
+            }
+        }
+
+        return output;
+    }
+
+    async Disconnect() {
+        let output = false;
+        const _data = {
+            'action': 'disconnect',
+            'token': this.token
+        };
+
+        const response = await Request_Async(_data);
+        if (response.status === 200) {
+            const contentStatus = response.content['status'];
+            if (contentStatus === 'ok') {
+                output = true;
+            } else if (contentStatus === 'tokenExpired') {
                 this.TokenExpired();
             }
         }

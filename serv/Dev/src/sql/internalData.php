@@ -51,35 +51,13 @@
 
     function GetContributors($db) {
         $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
+        if ($helpers === FALSE) return array();
 
-        $helpers_sorted = array();
-
-        if ($helpers !== FALSE) {
-            // Sort
-            $priority = 0;
-            while (!!count($helpers)) {
-                $founded = 0;
-                for ($i = 0; $i < count($helpers); $i++) {
-                    if ($helpers[$i]["Priority"] == $priority) {
-                        array_push($helpers_sorted, $helpers[$i]);
-                        array_splice($helpers, $i, 1);
-                        $founded = 1;
-                        break;
-                    }
-                }
-                if (!$founded) {
-                    $priority++;
-                }
-            }
+        for ($i = 0; $i < count($helpers); $i++) {
+            $helpers[$i]['ID'] = intval($helpers[$i]['ID']);
         }
 
-        for ($i = 0; $i < count($helpers_sorted); $i++) {
-            $helpers_sorted[$i]['ID'] = intval($helpers_sorted[$i]['ID']);
-            $helpers_sorted[$i]['Type'] = json_decode($helpers_sorted[$i]['Type']);
-            $helpers_sorted[$i]['Priority'] = intval($helpers_sorted[$i]['Priority']);
-        }
-
-        return $helpers_sorted;
+        return $helpers;
     }
 
     function GetQuotes($db) {

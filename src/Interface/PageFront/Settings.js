@@ -40,13 +40,10 @@ class Settings extends BackSettings {
                 />
 
                 <View style={{ marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ textAlign: 'left' }}>[{lang['input-start-sound']}]</Text>
+                    <Text style={{ textAlign: 'left' }}>{lang['input-start-sound']}</Text>
                     <Switch
                         value={this.state.switchStartAudio}
-                        onValueChanged={(value) => {
-                            WAITPLZ();
-                            this.setState({ switchStartAudio: value });
-                        }}
+                        onValueChanged={this.onChangeStartAudio}
                     />
                 </View>
 

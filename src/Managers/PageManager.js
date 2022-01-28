@@ -245,7 +245,7 @@ class PageManager extends React.Component{
         return (
             <LinearGradient style={fullscreen} colors={darkBackground}>
                 {/* Light background */}
-                <Animated.View style={[fullscreen, lightOpacity]} pointerEvents='none'>
+                <Animated.View style={[absolute, fullscreen, lightOpacity]} pointerEvents='none'>
                     <LinearGradient style={fullscreen} colors={lightBackground} />
                 </Animated.View>
 

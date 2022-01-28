@@ -19,6 +19,7 @@
         case 'setUsername': $commands->SetUsername(); break;
         case 'addReport': $commands->AddReport(); break;
         case 'getDate': $commands->GetDate(); break;
+        case 'disconnect': $commands->Disconnect(); break;
     }
 
     $output = $commands->GetOutput();

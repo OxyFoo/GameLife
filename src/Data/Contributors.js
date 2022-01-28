@@ -1,8 +1,6 @@
 class Contributor {
     ID = 0;
-    Lang = '';
-    Quote = '';
-    Author = '';
+    Name = '';
 }
 
 class Contributors {

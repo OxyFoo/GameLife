@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Keyboard } from 'react-native';
 
 import user, { DEFAULT_STATS } from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
@@ -64,6 +64,11 @@ class BackReport extends React.Component {
     changeTextInputBug2 = (text) => { this.setState({ input_bug2: text }); }
     changeTextInputMessage = (text) => { this.setState({ input_message: text }); }
 
+    keyboardDismiss = () => {
+        Keyboard.dismiss();
+        return true;
+    }
+
     changeDigit = (index, value) => {
         if (Object.keys(this.stats).includes(index)) {
             this.stats[index] = value;
@@ -127,9 +132,10 @@ class BackReport extends React.Component {
         }
 
         this.setState({ sending: true });
+        const sendSuccessfully = await user.server.SendReport(types[type], dataReport);
+        this.setState({ sending: false });
 
-        const request = await user.server.SendReport(types[type], dataReport);
-        if (request) {
+        if (sendSuccessfully) {
             const title = langManager.curr['report']['alert-success-title'];
             const text = langManager.curr['report']['alert-success-text'];
             user.interface.popup.Open('ok', [ title, text ], user.interface.BackPage, false);
@@ -138,7 +144,6 @@ class BackReport extends React.Component {
             const text = langManager.curr['report']['alert-error-text'];
             user.interface.popup.Open('ok', [ title, text ]);
             user.interface.console.AddLog('error', 'Report: Send report failed');
-            this.setState({ sending: false });
         }
     }
 }

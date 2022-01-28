@@ -36,14 +36,12 @@
 
         public static function AddDevice($db, $deviceID, $account, $cellName) {
             $accountID = $account['ID'];
-            $cell = explode(',', $account[$cellName]);
-            if ($cell[0] !== '') {
-                array_push($cell, $deviceID);
-                $newCell = join(',', $cell);
-            } else {
-                $newCell = $deviceID;
-            }
-            $result = $db->Query("UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'");
+            $cell = json_decode($account[$cellName], TRUE);
+            array_push($cell, $deviceID);
+            $newCell = json_encode($cell);
+
+            $command = "UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Device adding failed");
             }
@@ -51,13 +49,16 @@
 
         public static function RemDevice($db, $deviceID, $account, $cellName) {
             $accountID = $account['ID'];
-            $cell = explode(',', $account[$cellName]);
+            $cell = json_decode($account[$cellName], TRUE);
             if (!in_array($deviceID, $cell)) {
-                ExitWithStatus("Error: Device removing failed");
+                ExitWithStatus("Error: Device removing failed (device not found)");
             }
+
             unset($cell[array_search($deviceID, $cell)]);
-            $newCell = join(',', $cell);
-            $result = $db->Query("UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'");
+            $newCell = json_encode($cell);
+
+            $command = "UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Device removing failed");
             }
@@ -71,8 +72,8 @@
          */
         public static function CheckDevicePermissions($deviceID, $account) {
             $output = -1;
-            $devices = explode(',', $account['Devices']);
-            $devicesWait = explode(',', $account['DevicesWait']);
+            $devices = json_decode($account['Devices'], TRUE);
+            $devicesWait = json_decode($account['DevicesWait'], TRUE);
 
             if (in_array($deviceID, $devices)) $output = 0;
             else if (in_array($deviceID, $devicesWait)) $output = 1;

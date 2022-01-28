@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, StyleSheet, Keyboard } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 
 import BackReport from '../PageBack/Report';
 import langManager from '../../Managers/LangManager';
@@ -118,7 +118,7 @@ class Report extends BackReport {
         const { selectedType, reportHeight } = this.state;
 
         return (
-            <Page onStartShouldSetResponder={Keyboard.dismiss} canScrollOver={false} bottomOffset={0}>
+            <Page onStartShouldSetResponder={this.keyboardDismiss} canScrollOver={false} bottomOffset={0}>
                 <PageHeader
                     style={{ marginBottom: 24 }}
                     onBackPress={this.back}

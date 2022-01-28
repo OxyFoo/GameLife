@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import BackAchievements from '../PageBack/Achievements';
 import user from '../../Managers/UserManager';
@@ -13,32 +13,34 @@ class Achievements extends BackAchievements {
     renderAchievement({ item: achievement }) {
         const name = dataManager.GetText(achievement.Name);
         const description = dataManager.GetText(achievement.Description);
-        const style = user.achievements.solved.includes(parseInt(achievement.ID)) ?
-                      [styles.achievementsBox, { backgroundColor: themeManager.colors['black'] }] :
-                      [styles.achievementsBox, styles.unsolved, { backgroundColor: themeManager.colors['black'] }];
+        const isSolved = user.achievements.solved.includes(parseInt(achievement.ID));
+
+        const style = isSolved ? [styles.achievementsBox, { backgroundColor: themeManager.colors['black'] }] :
+                                 [styles.achievementsBox, styles.unsolved, { backgroundColor: themeManager.colors['black'] }];
 
         return (
-            <View style={styles.achievementsContainer}>
+            <TouchableOpacity style={styles.achievementsContainer} activeOpacity={.6}>
                 <View style={style}>
                     <Text style={styles.title}>{name}</Text>
                     <Text style={styles.description} color='secondary'>{description}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 
     render() {
         return (
-            <Page canScrollOver={false} bottomOffset={0}>
+            <Page scrollable={false} bottomOffset={0}>
                 <PageHeader onBackPress={user.interface.BackPage} />
 
-                <FlatList
-                    style={{ height: '85%' }}
-                    data={this.achievement}
-                    keyExtractor={(item, i) => 'achievement-' + i}
-                    renderItem={this.renderAchievement}
-                    numColumns={2}
-                />
+                <View style={{ height: '85%' }}>
+                    <FlatList
+                        numColumns={2}
+                        data={this.achievement}
+                        keyExtractor={(item, i) => 'achievement-' + i}
+                        renderItem={this.renderAchievement}
+                    />
+                </View>
             </Page>
         )
     }

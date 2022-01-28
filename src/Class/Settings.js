@@ -14,12 +14,15 @@ class Settings {
         this.email = '';
         this.connected = false;
         this.onboardingWatched = false;
+
+        this.startAudio = true;
         this.morningNotifications = true;
     }
 
     Clear() {
         this.email = '';
         this.connected = false;
+        this.startAudio = true;
         this.morningNotifications = true;
     }
 
@@ -31,6 +34,7 @@ class Settings {
             this.email = settings['email'];
             this.connected = settings['connected'];
             this.onboardingWatched = settings['onboardingWatched'];
+            this.startAudio = settings['startAudio'];
             this.morningNotifications = settings['morningNotifications'];
         }
     }
@@ -41,6 +45,7 @@ class Settings {
             email: this.email,
             connected: this.connected,
             onboardingWatched: this.onboardingWatched,
+            startAudio: this.startAudio,
             morningNotifications: this.morningNotifications
         };
         return DataStorage.Save(STORAGE.LOGIN, settings);

@@ -84,7 +84,7 @@
                 }
 
                 // Check permissions
-                $deviceID = $device['ID'];
+                $deviceID = intval($device['ID']);
                 $perm = Account::CheckDevicePermissions($deviceID, $account);
                 switch ($perm) {
                     case 0: // OK
@@ -292,6 +292,27 @@
          */
         public function GetDate() {
             $this->output['time'] = time();
+        }
+
+        public function Disconnect() {
+            $token = $this->data['token'];
+            if (!isset($token)) return;
+
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
+            }
+
+            $deviceID = $dataFromToken['deviceID'];
+            $accountID = $dataFromToken['accountID'];
+            $account = Account::GetByID($this->db, $accountID);
+            if ($account === NULL) return;
+
+            Account::RemDevice($this->db, $deviceID, $account, 'Devices');
+
+            $this->output['status'] = 'ok';
         }
 
     }

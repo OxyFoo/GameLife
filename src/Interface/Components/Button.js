@@ -12,6 +12,9 @@ const ButtonProps = {
     style: {},
     styleAnimation: undefined,
     fontSize: 16,
+    /**
+     * @type {import('./Icon').Icons}
+     */
     icon: '',
     iconSize: 24,
     iconColor: 'white',

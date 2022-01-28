@@ -13,13 +13,10 @@
         case 'ping': $commands->Ping(); break;
         case 'login': $commands->Login(); break;
         case 'signin': $commands->Signin(); break;
-        case 'getToken': $commands->GetToken(); break;
         case 'getInternalData': $commands->GetInternalData(); break;
         case 'getUserData': $commands->GetUserData(); break;
         case 'addUserData': $commands->AddUserData(); break;
         case 'setUsername': $commands->SetUsername(); break;
-        //case 'setUserData': $commands->SetUserData(); break;
-        //case 'getLeaderboard': $commands->GetLeaderboard(); break;
         case 'addReport': $commands->AddReport(); break;
         case 'getDate': $commands->GetDate(); break;
     }

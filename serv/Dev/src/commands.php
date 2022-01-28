@@ -7,6 +7,7 @@
     require('./src/functions/functions.php');
 
     require('./src/sql/account.php');
+    require('./src/sql/app.php');
     require('./src/sql/device.php');
     require('./src/sql/user.php');
     require('./src/sql/internalData.php');
@@ -28,65 +29,12 @@
         }
 
         /**
-         * Retrieve the application version and the database hash
-         * (Hash that is updated if old)
-         */
-        private function GetAppData() {
-            $appData = array('Version' => 0, 'Hashes' => '');
-            $app = $this->db->QueryArray("SELECT * FROM `App`");
-            $lastHashRefresh = 0;
-
-            if ($app !== FALSE) {
-                for ($i = 0; $i < count($app); $i++) {
-                    $ID = $app[$i]['ID'];
-                    $data = $app[$i]['Data'];
-                    $date = $app[$i]['Date'];
-
-                    if ($ID === "Version") {
-                        $appData['Version'] = $data;
-                    } else if ($ID === "Hashes") {
-                        $appData["Hashes"] = json_decode($data, true);
-                        $lastHashRefresh = MinutesFromDate($date);
-                    } else if ($ID === "Maintenance") {
-                        $appData["Maintenance"] = $data !== '0';
-                    } else if ($ID === 'News') {
-                        $appData["News"] = json_decode($data, true);
-                    }
-                }
-            }
-
-            if ($lastHashRefresh > 60) {
-                // Refresh database hash
-                $db_all = GetAllInternalData($this->db);
-
-                // Get all hashes
-                $hashSkills = md5(json_encode(array($db_all['skills'], $db_all['skillsIcon'], $db_all['skillsCategory'])));
-                $hashEquips = md5(json_encode(array($db_all['achievements'], $db_all['titles'])));
-                $hashApptxt = md5(json_encode(array($db_all['contributors'], $db_all['quotes'])));
-                $newHashes = array(
-                    'skills' => $hashSkills,
-                    'equips' => $hashEquips,
-                    'apptxt' => $hashApptxt
-                );
-
-                // Refresh `App` in DB
-                $newHashesString = json_encode($newHashes);
-                $result = $this->db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHashesString' WHERE `ID` = 'Hashes'");
-                if ($result === TRUE && $newHash !== $appData['Hashes']) {
-                    $appData['Hashes'] = $newHashes;
-                }
-            }
-
-            return $appData;
-        }
-
-        /**
          * Function to ping the server from the app
          * It also allows to store the device in the database (model + OS)
          * And to check the application version or if it is in maintenance mode
          */
         public function Ping() {
-            $appData = $this->GetAppData();
+            $appData = GetAppData($this->db);
             $version = $this->data['version'];
             $serverVersion = $appData['Version'];
             if (isset($version) && $version == $serverVersion) {
@@ -196,7 +144,7 @@
          * namely: activities, quotes, icons, titles, successes etc.
          */
         public function GetInternalData() {
-            $appData = $this->GetAppData();
+            $appData = GetAppData($this->db);
             $reqHashes = $this->data['hashes'];
 
             if (isset($reqHashes) || $reqHashes === NULL) {
@@ -227,7 +175,7 @@
 
             $accountID = $dataFromToken['accountID'];
             $account = Account::GetByID($this->db, $accountID);
-            $userData = array();
+            if ($account === NULL) return;
 
             $dbDataToken = $account['DataToken'];
             $appDataToken = $this->data['dataToken'];
@@ -241,6 +189,7 @@
             if ($usernameTime !== NULL) $usernameTime = strtotime($usernameTime);
             if ($birthtime !== NULL) $birthtime = intval($birthtime);
 
+            $userData = array();
             if (isset($username, $title)) {
                 $userData['username'] = $username;
                 $userData['usernameTime'] = $usernameTime;
@@ -283,6 +232,8 @@
             User::ExecQueue($this->db, $account, $userData);
             $newDataToken = User::RefreshDataToken($this->db, $account);
 
+            // TODO - Save XP
+
             if ($this->data['dataToken'] === $dbDataToken) {
                 $this->output['dataToken'] = $newDataToken;
             }
@@ -311,67 +262,6 @@
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
         }
-
-        /**
-         * Defines user data (activities, nickname, successes, etc)
-         * NOT USED
-         */
-        public function SetUserData() {
-            $token = $this->data['token'];
-            $userData = $this->data['data'];
-            if (isset($token, $userData)) {
-                $dataFromToken = Device::GetDataFromToken($this->db, $token);
-                $accountID = $dataFromToken['accountID'];
-                $account = Account::GetByID($this->db, $accountID);
-
-                if (isset($account, $userData)) {
-                    // Get & remove user from data
-                    $decoded = json_decode($userData);
-                    $pseudo = $decoded->pseudo;
-                    $title = $decoded->title;
-                    $solvedAchievements = implode(',', $decoded->solvedAchievements);
-                    $xp = $decoded->xp;
-                    unset($decoded->pseudo);
-                    unset($decoded->title);
-                    unset($decoded->solvedAchievements);
-                    $userData = json_encode($decoded);
-    
-                    User::SetData($this->db, $account, $userData);
-                    User::setTitle($this->db, $account, $title);
-                    User::setAchievements($this->db, $account, $solvedAchievements);
-                    User::setXP($this->db, $account, $xp);
-                    $pseudoChanged = User::setPseudo($this->db, $account, $pseudo);
-                    if ($pseudoChanged === -1) {
-                        $this->output['status'] = 'wrongtimingpseudo';
-                        // App modifiée ?
-                    } else if ($pseudoChanged === -2) {
-                        $this->output['status'] = 'wrongpseudo';
-                    } else {
-                        $this->output['status'] = 'ok';
-                    }
-                }
-            }
-        }
-
-        /**
-         * Retrieves the top 100 users from the leaderboard
-         * 
-         * (Obsolete code, one SQL command + formatting is enough!)
-         */
-        /*public function GetLeaderboard() {
-            $token = $this->data['token'];
-            $time = $this->data['time'];
-            if (isset($token)) {
-                $dataFromToken = Device::GetDataFromToken($this->db, $token);
-                $accountID = $dataFromToken['accountID'];
-                $account = Account::GetByID($this->db, $accountID);
-                if (isset($account)) {
-                    $this->output['self'] = GetSelfPosition($this->db, $account, $time);
-                }
-            }
-            $this->output['leaderboard'] = GetLeaderboard($this->db, $time);
-            $this->output['status'] = 'ok';
-        }*/
 
         /**
          * Add a report to the database

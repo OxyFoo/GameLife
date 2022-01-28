@@ -142,7 +142,14 @@ class Report extends BackReport {
                     {selectedType === 2 && this.renderBug()}
                     {selectedType === 3 && this.renderMessage()}
 
-                    <Button style={styles.button} color='main2' onPress={this.sendData}>{lang['button-send']}</Button>
+                    <Button
+                        style={styles.button}
+                        color='main2'
+                        onPress={this.sendData}
+                        loading={this.state.sending}
+                    >
+                        {lang['button-send']}
+                    </Button>
                 </View>
             </Page>
         )

@@ -23,6 +23,7 @@ class BackReport extends React.Component {
         this.stats = DEFAULT_STATS;
 
         this.state = {
+            sending: false,
             selectedType: 0,
             reportHeight: 0,
 
@@ -125,6 +126,8 @@ class BackReport extends React.Component {
             return;
         }
 
+        this.setState({ sending: true });
+
         const request = await user.server.SendReport(types[type], dataReport);
         if (request) {
             const title = langManager.curr['report']['alert-success-title'];
@@ -135,6 +138,7 @@ class BackReport extends React.Component {
             const text = langManager.curr['report']['alert-error-text'];
             user.interface.popup.Open('ok', [ title, text ]);
             user.interface.console.AddLog('error', 'Report: Send report failed');
+            this.setState({ sending: false });
         }
     }
 }

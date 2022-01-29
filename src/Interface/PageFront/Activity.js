@@ -13,17 +13,17 @@ import { PageHeader, ActivitySchedule, ActivityExperience } from '../Widgets';
 /**
  * TODO
  * [] Afficher / charger / enregistrer les commentaires (a part ? Mettre un ID aux activités ?)
- * [] Enregistrer localement / en ligne une activité
+ * [x] Enregistrer localement / en ligne une activité
  * [x] Supprimer localement / en ligne une activité
  * [x] Page d'ajout terminé (ou commencement + bloquer sur cette page + compteur)
  */
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SCREEN_WIDTH  = Dimensions.get('window').width;
 
 class Activity extends BackActivity {
     renderCategory = ({ item }) => {
-        const { ID, icon, checked } = item;
+        const { ID, icon } = item;
+        const checked = this.state.selectedCategory === ID;
         return (
             <IconCheckable
                 style={{ margin: '2%' }}

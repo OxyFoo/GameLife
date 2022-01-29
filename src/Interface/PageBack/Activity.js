@@ -15,6 +15,7 @@ class BackActivity extends React.Component {
         super(props);
 
         const visualisationMode = this.props.args.hasOwnProperty('activity');
+        const isSetSkillID = this.props.args.hasOwnProperty('skillID');
 
         /**
          * @type {Activity}
@@ -28,24 +29,33 @@ class BackActivity extends React.Component {
             const ID = category.ID;
             const Name = dataManager.GetText(category.Name);
             const Icon = dataManager.skills.GetXmlByLogoID(category.LogoID);
-            const Checked = visualisationMode ? skill.CategoryID === ID : false;
-            categories.push({ ID: ID, name: Name, icon: Icon, checked: Checked });
+            categories.push({ ID: ID, name: Name, icon: Icon });
         }
 
         const skills = dataManager.skills.skills.map(skill => ({ id: skill.ID, value: dataManager.GetText(skill.Name) }));
-        const emptySkill = { id: 0, value: '' };
 
         let activitySchedule;
         if (visualisationMode) activitySchedule = [ activity.startTime, activity.duration ];
         else if (user.tempSelectedTime !== null) activitySchedule = [ user.tempSelectedTime, 15 ];
 
+        let selectedSkill = { id: 0, value: '' };
+        if (isSetSkillID) {
+            const { skillID } = this.props.args;
+            const skill = dataManager.skills.GetByID(skillID);
+            selectedSkill = { id: skillID, value: dataManager.GetText(skill.Name) };
+        }
+        if (visualisationMode) {
+            selectedSkill = { id: activity.skillID, value: dataManager.GetText(skill.Name) };
+        }
+
         this.state = {
             categories: categories,
+            selectedCategory: visualisationMode ? skill.CategoryID : null,
             skills: skills,
 
             visualisationMode: visualisationMode,
             startnowMode: 0,
-            selectedSkill: visualisationMode ? { id: activity.skillID, value: dataManager.GetText(skill.Name) } : emptySkill,
+            selectedSkill: selectedSkill,
             posY: 0,
             animPosY: new Animated.Value(visualisationMode ? 0 : 1),
 
@@ -56,20 +66,16 @@ class BackActivity extends React.Component {
         }
     }
 
-    selectCategory = (ID, checked) => {
-        let { categories } = this.state;
-        const newCategories = categories.map(cat => ({
-            ...cat, checked: cat.ID === ID ? checked : false
-        }));
-        this.setState({ categories: newCategories });
-
-        this.selectActivity(null);
-
-        let newActivities = dataManager.skills.GetByCategory(ID);
-        if (ID !== 0) newActivities = newActivities.map(skill => ({ id: skill.ID, value: dataManager.GetText(skill.Name) }));
-        this.setState({ skills: newActivities });
+    componentDidMount() {
+        const isSetSkillID = this.props.args.hasOwnProperty('skillID');
+        if (isSetSkillID) {
+            SpringAnimation(this.state.animPosY, 0).start();
+        }
     }
 
+    selectCategory = (ID, checked) => {
+        this.setState({ selectedCategory: checked ? ID : null });
+    }
     selectActivity = (skill) => {
         SpringAnimation(this.state.animPosY, skill === null ? 1 : 0).start();
         if (skill === null) skill = { id: 0, value: '' };
@@ -82,7 +88,7 @@ class BackActivity extends React.Component {
 
     getCategoryName = () => {
         let output = langManager.curr['activity']['input-activity'];
-        const selectedCategory = this.state.categories.find(category => category.checked);
+        const selectedCategory = this.state.categories.find(category => category.ID === this.state.selectedCategory);
         if (!IsUndefined(selectedCategory)) {
             output = selectedCategory.name;
         }

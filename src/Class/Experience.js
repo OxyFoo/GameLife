@@ -194,29 +194,26 @@ class Experience {
 
     GetSkillExperience(skillID) {
         let totalXP = 0;
-        let stats = {};
-
-        for (let s in allStats) {
-            stats[allStats[s]] = 0;
-        }
+        let lastTime = 0;
+        const now = GetTime();
 
         const activities = this.getAllActivities();
         for (let a in activities) {
             const activity = activities[a];
             if (activity.skillID == skillID) {
+                const startTime = activity.startTime;
+                if (startTime <= now && startTime > lastTime) {
+                    lastTime = startTime;
+                }
                 const durationHour = activity.duration / 60;
                 const skill = dataManager.skills.GetByID(skillID);
                 totalXP += skill.XP * durationHour;
-                for (let s in allStats) {
-                    const localXP = skill.Stats[allStats[s]] * durationHour;
-                    stats[allStats[s]] += localXP;
-                }
+
             }
         }
 
-        // TODO - vérifier les valeurs !!!
         let experience = this.getXPDict(totalXP, SkillXPperLevel);
-        experience['stat'] = stats;
+        experience['lastTime'] = lastTime;
 
         return experience;
     }

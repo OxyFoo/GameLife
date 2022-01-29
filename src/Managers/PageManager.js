@@ -28,6 +28,10 @@ import Waitinternet from '../Interface/PageFront/WaitInternet';
 import Waitmail from '../Interface/PageFront/WaitMail';
 import Test from '../Interface/PageFront/Test';
 
+/**
+ * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
+ */
+
 class PageManager extends React.Component{
     state = {
         page1: '',
@@ -122,6 +126,14 @@ class PageManager extends React.Component{
         return true;
     }
 
+    /**
+     * Open page
+     * @param {PageName} newpage 
+     * @param {Object} args 
+     * @param {Boolean} ignorePage 
+     * @param {Boolean} forceUpdate 
+     * @returns 
+     */
     ChangePage = (newpage, args, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
 

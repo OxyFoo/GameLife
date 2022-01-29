@@ -13,7 +13,8 @@ class Home extends BackHome {
     render() {
         const lang = langManager.curr['home'];
         const userStats = user.experience.GetExperience();
-        const nextLvlPc = Round(userStats.xp / userStats.next, 2);
+        const nextLvlPc = Round(100 * userStats.xp / userStats.next, 0);
+        const lvl = langManager.curr['level']['level'];
 
         return (
             <Page canScrollOver={true}>
@@ -21,7 +22,7 @@ class Home extends BackHome {
 
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
-                        <Text style={{ marginRight: 8 }}>LVL</Text>
+                        <Text style={{ marginRight: 8 }}>{lvl}</Text>
                         <Text color='main2'>{userStats.lvl}</Text>
                     </View>
                     <Text>{nextLvlPc}%</Text>

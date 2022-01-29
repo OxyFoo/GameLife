@@ -2,27 +2,108 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-
-const SORT_LIST = langManager.curr['skills']['top-sort-list'];
+import dataManager from '../../Managers/DataManager';
+import { SortByKey } from '../../Functions/Functions';
+import { GetTime } from '../../Functions/Time';
 
 class BackSkills extends React.Component {
-    state = {
-        height: '40%', // Start approximately at 40% of the screen height
-        selectedCategories: []
+    constructor(props) {
+        super(props);
+
+        this.sortList = langManager.curr['skills']['top-sort-list'];
+
+        // Get all skills
+        const now = GetTime();
+        const usersActivities = user.activities.activities.filter(activity => activity.startTime <= now);
+        const usersActivitiesID = usersActivities.map(activity => activity.skillID);
+        const filter = skill => usersActivitiesID.includes(skill.ID);
+        const getInfos = skill => ({
+            ...skill,
+            Name: dataManager.GetText(skill.Name),
+            Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+            experience: user.experience.GetSkillExperience(skill.ID)
+        });
+        this.allSkills = dataManager.skills.skills.filter(filter);
+        this.allSkills = this.allSkills.map(getInfos);
+
+        this.state = {
+            height: '40%', // Start approximately at 40% of the screen height
+            search: '',
+            ascending: true,
+            sortSelectedIndex: 0,
+            selectedCategories: [],
+            skills: this.allSkills
+        }
+    }
+
+    componentDidMount() {
+        this.refreshSkills();
     }
 
     addActivity = () => { user.interface.ChangePage('activity', undefined, true); }
 
-    switchCategory = (ID) => {
+    onSwitchCategory = (ID) => {
+        let newSelectedCategories = [];
         const contains = this.state.selectedCategories.includes(ID);
         if (contains) {
-            let newCategories = [...this.state.selectedCategories];
-            const index = newCategories.indexOf(ID);
-            newCategories.splice(index, 1);
-            this.setState({ selectedCategories: newCategories });
+            newSelectedCategories = [...this.state.selectedCategories];
+            const index = newSelectedCategories.indexOf(ID);
+            newSelectedCategories.splice(index, 1);
         } else {
-            this.setState({ selectedCategories: [ ...this.state.selectedCategories, ID ] });
+            newSelectedCategories = [ ...this.state.selectedCategories, ID ];
         }
+
+        this.setState({ selectedCategories: newSelectedCategories }, this.refreshSkills);
+    }
+    onChangeSearch = (search) => {
+        this.setState({ search: search }, this.refreshSkills);
+    }
+    onSwitchSort = () => {
+        const newIndex = (this.state.sortSelectedIndex + 1) % this.sortList.length;
+        this.setState({ sortSelectedIndex: newIndex }, this.refreshSkills);
+    }
+    switchOrder = () => {
+        this.setState({ ascending: !this.state.ascending }, this.refreshSkills);
+    }
+
+    refreshSkills = () => {
+        let newSkills = this.allSkills;
+        const { search, selectedCategories } = this.state;
+
+        // Cagtegories filter
+        if (selectedCategories.length) {
+            const filter = skill => selectedCategories.includes(skill.CategoryID);
+            newSkills = this.allSkills.filter(filter);
+        }
+
+        // Search filter
+        if (search !== '') {
+            const filter = skill => {
+                const name = dataManager.GetText(skill.Name).toLowerCase();
+                return name.includes(search.toLowerCase());
+            }
+            newSkills = newSkills.filter(filter);
+        }
+
+        // Sort
+        const sort = this.state.sortSelectedIndex;
+        if (sort === 0) { // Sort by xp
+            const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
+            const compare = (a, b) => format(a['experience']['totalXP']) < format(b['experience']['totalXP']) ? -1 : 1;
+            newSkills = newSkills.sort(compare);
+        } else if (sort === 1) { // Sort by name
+            newSkills = SortByKey(newSkills, 'Name').reverse();
+        } else if (sort === 2) { // Sort by date
+            const compare = (a, b) => a['experience']['lastTime'] < b['experience']['lastTime'] ? -1 : 1;
+            newSkills = newSkills.sort(compare);
+        }
+
+        // Ascending
+        if (this.state.ascending) {
+            newSkills = newSkills.reverse();
+        }
+
+        this.setState({ skills: newSkills });
     }
 
     /*state = {
@@ -34,15 +115,6 @@ class BackSkills extends React.Component {
         skills: user.experience.GetAllSkills(undefined, undefined, 0, true)
     }*/
 
-    switchSort = () => {
-        const newIndex = (this.state.sortSelectedIndex + 1) % SORT_LIST.length;
-        this.setState({ sortSelectedIndex: newIndex });
-        setTimeout(this.refreshSkills, 50);
-    }
-    switchOrder = () => {
-        this.setState({ ascending: !this.state.ascending });
-        setTimeout(this.refreshSkills, 50);
-    }
     changeText = (newText) => {
         this.setState({ search: newText });
         setTimeout(this.refreshSkills, 50);
@@ -52,7 +124,7 @@ class BackSkills extends React.Component {
         setTimeout(this.refreshSkills, 50);
     }
 
-    refreshSkills = () => {
+    /*refreshSkills = () => {
         const search = this.state.search;
         let filters = [];
         for (let i = 0; i < this.state.selectedFiltersIndex.length; i++) {
@@ -62,7 +134,7 @@ class BackSkills extends React.Component {
         const ascending = this.state.ascending;
         const skills = user.experience.GetAllSkills(search, filters, sort, ascending);
         this.setState({ skills: skills });
-    }
+    }*/
 }
 
 export default BackSkills;

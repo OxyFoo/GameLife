@@ -77,7 +77,7 @@ function GetDaysUntil(time) {
 
 /**
  * Return date with format : dd/mm/yyyy
- * @param {Date} date
+ * @param {Date|Number} date or time in ms
  * @returns {String} dd/mm/yyyy
  */
 function DateToFormatString(date) {

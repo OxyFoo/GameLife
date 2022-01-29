@@ -9,7 +9,7 @@ const PageProps = {
     canScrollOver: true,
     bottomOffset: 156,
     onLayout: (event) => {},
-    onStartShouldSetResponder: (event) => true,
+    onStartShouldSetResponder: (event) => false,
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;

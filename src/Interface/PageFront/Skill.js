@@ -11,6 +11,19 @@ import { PageHeader, StatsBars } from '../Widgets';
 import { Page, Container, Text, Icon, XPBar, Button } from '../Components';
 
 class Skill extends BackSkill {
+    renderHistoryItem = ({item, i}) => {
+        const date = DateToFormatString(item.startTime * 1000);
+        const text = langManager.curr['skill']['text-history'];
+        const duration = item.duration;
+        const title = text.replace('{}', date).replace('{}', duration);
+        const onPress = () => { user.interface.ChangePage('activity', { 'activity': item }); }
+        return (
+            <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+                <Text style={styles.textHistory}>{title}</Text>
+            </TouchableOpacity>
+        )
+    }
+
     render() {
         const lang = langManager.curr['skill'];
         const userStats = user.experience.GetExperience();
@@ -42,7 +55,7 @@ class Skill extends BackSkill {
                     </View>
 
                     <Container text={lang['stats-title']} style={{ marginBottom: 24 }} type='rollable' opened={true}>
-                        <StatsBars data={user.stats} />
+                        <StatsBars data={user.stats} supData={this.stats} />
                     </Container>
 
                     {this.history.length > 0 && (
@@ -50,23 +63,19 @@ class Skill extends BackSkill {
                             <FlatList
                                 data={this.history}
                                 keyExtractor={(item, i) => 'history_' + i}
-                                renderItem={({item, i}) => {
-                                    const date = DateToFormatString(new Date(item.startTime));
-                                    const text = lang['text-history'];
-                                    const duration = item.duration;
-                                    const title = text.replace('{}', date).replace('{}', duration);
-                                    const onPress = () => { user.interface.ChangePage('activity', { 'activity': item }); }
-                                    return (
-                                        <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-                                            <Text style={styles.textHistory}>{title}</Text>
-                                        </TouchableOpacity>
-                                    )
-                                }}
+                                renderItem={this.renderHistoryItem}
                             />
                         </Container>
                     )}
                 </Page>
-                <Button style={styles.addActivity} color='main2'>Test</Button>
+
+                <Button
+                    style={styles.addActivity}
+                    color='main2'
+                    onPress={this.addActivity}
+                >
+                    {lang['text-add']}
+                </Button>
             </>
         )
     }

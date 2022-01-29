@@ -105,7 +105,6 @@
                 if ($type === 'add') {
                     array_push($dbActivities, $newActivity);
                 } else if ($type === 'rem') {
-                    // TODO - Check ça
                     $index = array_search($newActivity, $dbActivities);
                     if ($index !== false) {
                         array_splice($dbActivities, $index, 1);

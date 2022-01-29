@@ -40,6 +40,11 @@ class BackSkill extends React.Component {
         }
         this.history.reverse();
     }
+
+    addActivity = () => {
+        const skillID = this.props.args['skillID'];
+        user.interface.ChangePage('activity', { skillID: skillID }, true);
+    }
 }
 
 export default BackSkill;

@@ -9,8 +9,15 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { PageHeader } from '../Widgets';
 import { Page, Input, Text, Button, IconCheckable, Icon } from '../Components';
+import { DateToFormatString } from '../../Functions/Time';
 
 class Skills extends BackSkills {
+    constructor(props) {
+        super(props);
+        this.backgroundActive = { backgroundColor: themeManager.GetColor('main1') };
+        this.backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
+    }
+
     renderCategory = ({ item }) => {
         const { ID, Name, LogoID } = item;
         const checked = this.state.selectedCategories.includes(ID);
@@ -22,29 +29,28 @@ class Skills extends BackSkills {
                 xml={icon}
                 size={32}
                 checked={checked}
-                onPress={this.switchCategory}
+                onPress={this.onSwitchCategory}
             />
         )
     }
 
     renderSkill = ({ item }) => {
-        const { CategoryID, Creator, ID, LogoID, Name, Stats, XP } = item;
+        const { CategoryID, Creator, ID, LogoID, Logo, Name, Stats, XP, experience } = item;
 
-        const name = dataManager.GetText(Name);
-        const icon = dataManager.skills.GetXmlByLogoID(LogoID);
-        const backgroundActive = { backgroundColor: themeManager.GetColor('main1') };
-        const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
+        const xpLang = langManager.curr['level'];
+        const { lvl, xp, lastTime } = experience;
+        const last = DateToFormatString(lastTime * 1000);
         const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
 
         return (
-            <TouchableOpacity style={[styles.skillCard, backgroundCard]} onPress={onPress} activeOpacity={.6}>
-                <View style={[styles.skillIcon, backgroundActive]}>
-                    <Icon xml={icon} size={64} />
+            <TouchableOpacity style={[styles.skillCard, this.backgroundCard]} onPress={onPress} activeOpacity={.6}>
+                <View style={[styles.skillIcon, this.backgroundActive]}>
+                    <Icon xml={Logo} size={64} />
                 </View>
                 <View style={styles.skillContent}>
-                    <Text style={{ textAlign: 'left', marginBottom: 6 }} fontSize={24}>{name}</Text>
-                    <Text style={{ textAlign: 'left' }} color='secondary'>Niveau X, XX XP</Text>
-                    <Text style={{ textAlign: 'left' }} color='secondary'>25/00/20</Text>
+                    <Text style={{ textAlign: 'left', marginBottom: 6 }} fontSize={24}>{Name}</Text>
+                    <Text style={{ textAlign: 'left' }} color='secondary'>{`${xpLang['level']} ${lvl}, ${xp} ${xpLang['xp']}`}</Text>
+                    <Text style={{ textAlign: 'left' }} color='secondary'>{last}</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -70,6 +76,7 @@ class Skills extends BackSkills {
     render() {
         const lang = langManager.curr['skills'];
         const setheight = (event) => this.setState({ height: event.nativeEvent.layout.height });
+        const sortType = this.sortList[this.state.sortSelectedIndex];
 
         return (
             <>
@@ -77,8 +84,21 @@ class Skills extends BackSkills {
                     <PageHeader onBackPress={user.interface.BackPage} />
 
                     <View style={styles.row}>
-                        <Input style={{ width: '60%' }} label={lang['input-search']} />
-                        <Button style={{ width: '30%' }} borderRadius={8} color='main1'>TODO</Button>
+                        <Input
+                            style={{ width: '65%' }}
+                            label={lang['input-search']}
+                            text={this.state.search}
+                            onChangeText={this.onChangeSearch}
+                        />
+                        <Button
+                            style={{ width: '30%', paddingHorizontal: 12 }}
+                            borderRadius={8}
+                            color='backgroundCard'
+                            icon='filter'
+                            onPress={this.onSwitchSort}
+                        >
+                            {sortType}
+                        </Button>
                     </View>
 
                     <FlatList
@@ -94,12 +114,19 @@ class Skills extends BackSkills {
                     <FlatList
                         style={{ flex: 1 }}
                         ListEmptyComponent={this.renderEmpty}
-                        //data={[]}
-                        data={dataManager.skills.skills}
+                        data={this.state.skills}
                         renderItem={this.renderSkill}
                         keyExtractor={(item, index) => 'skill-' + index}
                     />
                 </View>
+
+                <Button
+                    style={styles.buttonSort}
+                    color='main2'
+                    icon='chevron'
+                    iconAngle={this.state.ascending ? 90 : -90}
+                    onPress={this.switchOrder}
+                />
             </>
         )
     }
@@ -115,7 +142,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 0
+        bottom: 0,
+        paddingHorizontal: '5%'
     },
     skillCard: {
         marginBottom: 24,
@@ -137,6 +165,13 @@ const styles = StyleSheet.create({
         height: 48,
         marginTop: 24,
         marginLeft: '25%'
+    },
+    buttonSort: {
+        position: 'absolute',
+        right: 24,
+        bottom: 24,
+        aspectRatio: 1,
+        paddingHorizontal: 0
     }
 });
 

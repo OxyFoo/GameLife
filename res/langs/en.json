@@ -385,7 +385,8 @@
         "text-author": "An idea from {}",
         "stats-title": "Statistiques",
         "history-title": "History",
-        "text-history": "{} during {} minutes"
+        "text-history": "{} during {} minutes",
+        "text-add": "Add activity"
     },
 
     "skills": {

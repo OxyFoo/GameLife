@@ -18,6 +18,7 @@ import svgChrono from '../../../res/icons/chrono';
 import svgCross from '../../../res/icons/cross';
 import svgDiscord from '../../../res/icons/discord';
 import svgEdit from '../../../res/icons/edit';
+import svgFilter from '../../../res/icons/filter';
 import svgHome from '../../../res/icons/home';
 import svgInfo from '../../../res/icons/info';
 import svgInstagram from '../../../res/icons/instagram';
@@ -34,7 +35,7 @@ import svgLoading from '../../../res/icons/loading';
 import svgLoadingDots from '../../../res/icons/loading-dots';
 
 /**
- * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'home'|'info'|'instagram'|'item'|'nowifi'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'} Icons
+ * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'home'|'info'|'instagram'|'item'|'nowifi'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'} Icons
  */
 
 const IconProps = {
@@ -68,6 +69,7 @@ const SVGIcons = {
     cross: svgCross,
     discord: svgDiscord,
     edit: svgEdit,
+    filter: svgFilter,
     home: svgHome,
     info: svgInfo,
     instagram: svgInstagram,

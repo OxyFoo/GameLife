@@ -65,16 +65,16 @@ function Day(props) {
         </View>
     );
 }
-const ItemDay = React.memo(Day, (a, b) => a == b);
+const ItemDay = React.memo(Day, (a, b) => false);
 
 class BlockMonth extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { mounted: false }
+    state = {
+        mounted: false
     }
+
     componentDidMount() {
         const enable = () => { this.setState({ mounted: true }); };
-        const time = this.props.showTitle ? 500 : 0;
+        const time = this.props.showTitle ? 1000 : 0;
         setTimeout(enable, time);
     }
     shouldComponentUpdate(nextProps, nextState) {

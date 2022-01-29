@@ -66,7 +66,7 @@ class BackReport extends React.Component {
 
     keyboardDismiss = () => {
         Keyboard.dismiss();
-        return true;
+        return false;
     }
 
     changeDigit = (index, value) => {

@@ -22,12 +22,6 @@ En 3 mots : Gestion RPG IRL
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
 * [AdMob](https://rnfb-docs.netlify.app/admob/usage) depends on [React Native Firebase](https://rnfirebase.io) (nécessaire pour admob)
 
-### Unused (removed)
-* [React native Gesture Handler](https://www.npmjs.com/package/react-native-gesture-handler)
-* [React Native AES Crypto](https://www.npmjs.com/package/react-native-aes-crypto)
-* [React Native Admob](https://react-native-admob.github.io/admob)
-* [React Native Paper](https://www.npmjs.com/package/react-native-paper)
-
 ## Erreurs
 
 <details>

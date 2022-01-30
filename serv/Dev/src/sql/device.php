@@ -9,6 +9,10 @@
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Adding device in DB failed");
             }
+            $ID = $db->GetLastInsertID();
+            $command2 = "SELECT * FROM `Devices` WHERE `ID` = '$ID'";
+            $devices = $db->QueryArray($command2);
+            return $devices !== FALSE && count($devices) ? $devices[0] : NULL;
         }
 
         public static function Get($db, $deviceIdentifier, $deviceName, $searchAll = FALSE) {

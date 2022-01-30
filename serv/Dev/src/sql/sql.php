@@ -71,6 +71,10 @@
             return $this->Query($command);
         }
 
+        public function GetLastInsertID() {
+            return $this->conn->insert_id;
+        }
+
         public function SendMail($email, $deviceID, $accountID, $lang) {
             $device = Device::GetByID($this, $deviceID);
             $deviceID = $device['ID'];

@@ -3,16 +3,13 @@
 ## Idée
 En 3 mots : Gestion RPG IRL
 
-## Font
-Si beug avec les font, aller les supprimer dans info.plist et dans resources
-
 ## Sources
-### Sites
+### Useful links
 * [AppIcon.co](https://appicon.co/)
 * [JS benchmarks](https://jsben.ch/WqlIl)
-* [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
-* [Custom shapes in RN](https://codedaily.io/tutorials/The-Shapes-of-React-Native)
 * [Base64 Class (Cross-Browser)](https://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript)
+* [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
+* [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
 
 ### React native packages
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
@@ -23,6 +20,7 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Push Notification](https://www.npmjs.com/package/react-native-push-notification) and [Push Notification IOS](https://github.com/react-native-push-notification/ios)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
+* [AdMob](https://rnfb-docs.netlify.app/admob/usage) depends on [React Native Firebase](https://rnfirebase.io) (nécessaire pour admob)
 
 ### Unused (removed)
 * [React native Gesture Handler](https://www.npmjs.com/package/react-native-gesture-handler)
@@ -30,5 +28,11 @@ Si beug avec les font, aller les supprimer dans info.plist et dans resources
 * [React Native Admob](https://react-native-admob.github.io/admob)
 * [React Native Paper](https://www.npmjs.com/package/react-native-paper)
 
-### Others
-* [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
+## Erreurs
+
+<details>
+<summary>Fonts</summary>
+<p>
+Si beug avec les font, aller les supprimer dans info.plist et dans resources
+</p>
+</details>

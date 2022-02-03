@@ -9,36 +9,45 @@ import { Container, Text } from '../Components';
 
 const ActivityExperienceProps = {
     skillID: 0,
-    durationHour: 1
+    duration: 1
 }
 
 class ActivityExperience extends React.Component {
-    renderExperience = ({ item }) => {
-        const { skillID, durationHour } = this.props;
-        const skill = dataManager.skills.GetByID((skillID));
-        const pts = skill.Stats[item] * durationHour;
+    renderExperience = ({ item: { statKey, statName, statValue } }) => {
         return (
             <Text containerStyle={{ width: '50%' }} style={styles.attr}>
-                {'+' + pts + ' ' + langManager.curr['statistics']['names'][item]}
+                {'+' + statValue + ' ' + statName}
             </Text>
         )
     }
-    render() {
-        const { skillID, durationHour } = this.props;
-        const skill = dataManager.skills.GetByID((skillID));
 
+    render() {
+        const { skillID, duration } = this.props;
+
+        const skill = dataManager.skills.GetByID(skillID);
         if (skill === null || skill.XP <= 0) {
             return (<></>);
         }
 
-        const containerTitle = '+' + (skill.XP * durationHour) + ' ' + langManager.curr['level']['xp'];
+        const XPamount = skill.XP * (duration / 60);
+        const XPtext = langManager.curr['level']['xp'];
+        const containerTitle = `+ ${XPamount} ${XPtext}`;
+
+        const data = user.statsKey
+            .filter(stat => skill.Stats[stat] > 0)
+            .map(statKey => ({
+                statKey: statKey,
+                statName: langManager.curr['statistics']['names'][statKey],
+                statValue: skill.Stats[statKey] * (duration / 60)
+            }));
+
         return (
             <Container text={containerTitle} style={styles.fullWidth}>
                 <FlatList
                     style={{ flexGrow: 1 }}
                     columnWrapperStyle={{ marginBottom: 8 }}
                     scrollEnabled={false}
-                    data={Object.keys(user.stats).filter(stat => skill.Stats[stat] > 0)}
+                    data={data}
                     keyExtractor={(item, i) => 'xp-' + i}
                     numColumns={2}
                     renderItem={this.renderExperience}

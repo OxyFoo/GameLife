@@ -14,7 +14,7 @@ const TEST_VALUES = [{ID: 0, value: 'Abc 0'}, {ID: 1, value: 'Def 1'}, {ID: 2, v
 
 class Test extends BackTest {
     render() {
-        const userExperience = user.experience.GetExperience();
+        const userExperience = user.experience.GetExperience().xpInfo;
         const totalXP = parseInt(user.xp);
         const XP = userExperience.xp;
         const LVL = userExperience.lvl;

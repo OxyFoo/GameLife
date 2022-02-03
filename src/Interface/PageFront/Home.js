@@ -12,7 +12,7 @@ import { Button, Container, Swiper, Text, XPBar, Page, News } from '../Component
 class Home extends BackHome {
     render() {
         const lang = langManager.curr['home'];
-        const userStats = user.experience.GetExperience();
+        const userStats = user.experience.GetExperience().xpInfo;
         const nextLvlPc = Round(100 * userStats.xp / userStats.next, 0);
         const lvl = langManager.curr['level']['level'];
 

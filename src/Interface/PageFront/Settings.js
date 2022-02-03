@@ -39,23 +39,26 @@ class Settings extends BackSettings {
                     startRight={themeManager.selectedTheme === 'Light'}
                 />
 
-                <View style={{ marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ textAlign: 'left' }}>{lang['input-start-sound']}</Text>
+                <View style={styles.inline}>
+                    <Text style={styles.inlineText}>{lang['input-start-sound']}</Text>
                     <Switch
                         value={this.state.switchStartAudio}
                         onValueChanged={this.onChangeStartAudio}
                     />
                 </View>
 
+                <View style={styles.inline}>
+                    <Text style={styles.inlineText}>{lang['input-daily-notif']}</Text>
+                    <Switch
+                        value={this.state.switchMorningNotifs}
+                        onValueChanged={this.onChangeMorningNotifications}
+                    />
+                </View>
+
                 <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
-
-                <Container style={styles.margin} text={'[Suppressions]'} opened={false} type='rollable'>
-                    <Button style={styles.margin} onPress={this.resetActivities} color='danger'>{lang['input-delete-activities']}</Button>
-                    <Button onPress={WAITPLZ} color='danger'>[{lang['input-delete-account']}]</Button>
-                </Container>
-
                 <Button style={styles.margin} onPress={WAITPLZ} color='main1' borderRadius={16}>[{lang['input-tuto-again']}]</Button>
+                <Button style={styles.margin} onPress={WAITPLZ} color='danger'>[{lang['input-delete-account']}]</Button>
             </Page>
         )
     }
@@ -64,6 +67,14 @@ class Settings extends BackSettings {
 const styles = StyleSheet.create({
     margin: {
         marginBottom: 24
+    },
+    inline: {
+        marginBottom: 24,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    inlineText: {
+        textAlign: 'left'
     }
 });
 

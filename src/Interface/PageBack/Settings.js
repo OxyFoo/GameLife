@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { BackHandler } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
@@ -19,7 +18,8 @@ class BackSettings extends React.Component {
         this.state = {
             selectedLang: current,
             dataLangs: dataLangs,
-            switchStartAudio: user.settings.startAudio
+            switchStartAudio: user.settings.startAudio,
+            switchMorningNotifs: user.settings.morningNotifications
         }
     }
 
@@ -39,9 +39,16 @@ class BackSettings extends React.Component {
             user.settings.Save();
         }
     }
-    onChangeStartAudio = (value) => {
-        this.setState({ switchStartAudio: value });
-        user.settings.startAudio = value;
+    onChangeStartAudio = (enabled) => {
+        this.setState({ switchStartAudio: enabled });
+        user.settings.startAudio = enabled;
+        user.settings.Save();
+    }
+    onChangeMorningNotifications = (enabled) => {
+        if (enabled) EnableMorningNotifications();
+        else DisableMorningNotifications();
+        this.setState({ switchMorningNotifs: enabled });
+        user.settings.morningNotifications = enabled;
         user.settings.Save();
     }
 
@@ -56,46 +63,6 @@ class BackSettings extends React.Component {
         const title = langManager.curr['settings']['alert-disconnect-title'];
         const text = langManager.curr['settings']['alert-disconnect-text'];
         user.interface.popup.Open('yesno', [ title, text ], event);
-    }
-
-    resetActivities = () => {
-        const event = (button) => {
-            if (button === 'yes') {
-                //user.activities.Clear(); // Check / save (local) ?
-                //user.LocalSave();
-                // TODO - Save online ?
-            }
-        }
-        const title = langManager.curr['settings']['alert-reset-title'];
-        const text = langManager.curr['settings']['alert-reset-text'];
-        user.interface.popup.Open('yesno', [ title, text ], event);
-    }
-
-    // TODO - OLD, Remove
-
-    clear = () => {
-        const event = (button) => {
-            if (button === 'yes') {
-                user.Clear();
-                setTimeout(BackHandler.exitApp, 200);
-            }
-        }
-        const title = langManager.curr['settings']['alert-clear-title'];
-        const text = langManager.curr['settings']['alert-clear-text'];
-        user.interface.popup.Open('yesno', [ title, text ], event);
-    }
-    changeLang = (lang) => {
-        langManager.SetLangage(lang);
-        user.interface.forceUpdate();
-        // TODO - Save user data
-        //user.saveData(false);
-    }
-    changeMorningNotifications = (enabled) => {
-        if (enabled) EnableMorningNotifications();
-        else DisableMorningNotifications();
-        user.settings.morningNotifications = enabled;
-        user.settings.Save();
-        user.interface.forceUpdate();
     }
 }
 

@@ -13,7 +13,7 @@ class Achievements extends BackAchievements {
     renderAchievement({ item: achievement }) {
         const name = dataManager.GetText(achievement.Name);
         const description = dataManager.GetText(achievement.Description);
-        const isSolved = user.achievements.solved.includes(parseInt(achievement.ID));
+        const isSolved = user.achievements.Get().includes(parseInt(achievement.ID));
 
         const style = isSolved ? [styles.achievementsBox, { backgroundColor: themeManager.colors['black'] }] :
                                  [styles.achievementsBox, styles.unsolved, { backgroundColor: themeManager.colors['black'] }];

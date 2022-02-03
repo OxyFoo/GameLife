@@ -26,7 +26,7 @@ class Skill extends BackSkill {
 
     render() {
         const lang = langManager.curr['skill'];
-        const userStats = user.experience.GetExperience();
+        const userStats = user.experience.GetExperience().xpInfo;
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
         return (

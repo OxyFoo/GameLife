@@ -74,16 +74,25 @@ class BackActivity extends React.Component {
     }
 
     selectCategory = (ID, checked) => {
-        this.setState({ selectedCategory: checked ? ID : null });
+        const filter = skill => !checked || skill.CategoryID === ID;
+        const maper = skill => ({ id: skill.ID, value: dataManager.GetText(skill.Name) });
+        const skills = dataManager.skills.skills.filter(filter).map(maper);
+        this.setState({ selectedCategory: checked ? ID : null, skills: skills });
     }
     selectActivity = (skill) => {
         SpringAnimation(this.state.animPosY, skill === null ? 1 : 0).start();
-        if (skill === null) skill = { id: 0, value: '' };
-        this.setState({ selectedSkill: skill });
+        let callback = () => {};
+        if (skill === null) {
+            skill = { id: 0, value: '' };
+            callback = () => this.pageRef.GotoY(0);
+        }
+        this.setState({ selectedSkill: skill }, callback);
     }
 
     onChangeMode = (index) => {
-        this.setState({ startnowMode: index === 1 });
+        this.setState({ startnowMode: index === 1 }, () => {
+            if (index === 1) this.pageRef.GotoY(0);
+        });
     }
 
     getCategoryName = () => {

@@ -6,10 +6,13 @@ import { MinMax, Sleep } from '../../Functions/Functions';
 import { SpringAnimation } from '../../Functions/Animations';
 
 const XPBarProps = {
+    style: {},
     value: 0,
     maxValue: 10,
     supValue: 0,
-    style: {}
+
+    /** @type {Number} To set the delay of the animation (delay * 200ms) */
+    delay: 0
 }
 
 class XPBar extends React.Component {
@@ -20,7 +23,7 @@ class XPBar extends React.Component {
     }
 
     componentDidMount() {
-        this.startAnimations();
+        setTimeout(this.startAnimations, this.props.delay * 200);
     }
 
     onLayout = (event) => {

@@ -8,17 +8,21 @@ import Settings from '../Class/Settings';
 
 import DataStorage, { STORAGE } from '../Functions/DataStorage';
 
-const DEFAULT_STATS = {
-    'int': 0,
-    'soc': 0,
-    'for': 0,
-    'end': 0,
-    'agi': 0,
-    'dex': 0
-};
+/**
+ * @typedef {import('../Class/Experience').XPInfo} XPInfo
+ * @typedef {Object} Stats
+ * @property {XPInfo} int
+ * @property {XPInfo} soc
+ * @property {XPInfo} for
+ * @property {XPInfo} end
+ * @property {XPInfo} agi
+ * @property {XPInfo} dex
+ */
 
 class UserManager {
     constructor() {
+        this.statsKey = [ 'int', 'soc', 'for', 'end', 'agi', 'dex' ];
+
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
         this.experience = new Experience(this);
@@ -35,13 +39,16 @@ class UserManager {
         this.interface;
 
         this.xp = 0;
-        this.stats = DEFAULT_STATS;
+        /**
+         * @type {Stats}
+         */
+        this.stats = this.experience.GetEmptyExperience();
         this.tempSelectedTime = null;
     }
 
     async Clear() {
         this.xp = 0;
-        this.stats = DEFAULT_STATS;
+        this.stats = this.experience.GetEmptyExperience();
         this.tempSelectedTime = null;
 
         this.achievements.Clear();
@@ -73,7 +80,11 @@ class UserManager {
 
     async RefreshStats() {
         this.activities.RemoveDeletedSkillsActivities();
-        this.experience.GetExperience();
+
+        const { stats, xpInfo } = this.experience.GetExperience();
+        this.stats = stats;
+        this.xp = xpInfo.totalXP;
+
         this.interface.forceUpdate();
     }
 
@@ -127,7 +138,7 @@ class UserManager {
         let data = {};
 
         if (this.activities.IsUnsaved()) {
-            data['activities'] = this.activities.UNSAVED_activities;
+            data['activities'] = this.activities.GetUnsaved();
         }
 
         if (this.achievements.IsUnsaved()) {
@@ -195,4 +206,4 @@ class UserManager {
 const user = new UserManager();
 
 export default user;
-export { UserManager, DEFAULT_STATS };
+export { UserManager };

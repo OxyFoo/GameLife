@@ -44,7 +44,6 @@ class Activity extends BackActivity {
         const panelPosY = this.state.animPosY.interpolate(inter);
         const skillID = this.state.selectedSkill.id;
         const skill = dataManager.skills.GetByID((skillID));
-        const durationHour = this.state.activityDuration / 60;
 
         return (
             <Page ref={ref => this.pageRef = ref} scrollable={this.state.selectedSkill.id !== 0} canScrollOver={false} bottomOffset={0}>
@@ -115,7 +114,7 @@ class Activity extends BackActivity {
                             <Text style={styles.title} bold>{(skill !== null && skill.XP > 0) ? lang['title-experience'] : lang['title-no-experience']}</Text>
                             <ActivityExperience
                                 skillID={this.state.selectedSkill.id}
-                                durationHour={durationHour}
+                                duration={this.state.activityDuration}
                             />
 
                             {/* Commentary */}

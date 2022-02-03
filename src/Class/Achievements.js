@@ -34,22 +34,27 @@ class Achievements {
         };
         return achievements;
     }
+    Get() {
+        return [ ...this.solved, ...this.UNSAVED_solved ];
+    }
 
     IsUnsaved = () => {
         return this.UNSAVED_solved.length > 0;
     }
     Purge = () => {
+        this.solved = [ this.solved, this.UNSAVED_solved ];
         this.UNSAVED_solved = [];
     }
 
     AddAchievement(achievementID) {
-        this.solved.push(achievementID);
         this.UNSAVED_solved.push(achievementID);
     }
 
     // TODO - Add events (gifts while online saving)
     CheckAchievements() {
         const achievements = dataManager.achievements.achievements;
+        const stats = this.user.experience.GetExperience().stats;
+
         for (let a = 0; a < achievements.length; a++) {
             const achievement = achievements[a];
             const achievementID = parseInt(achievement.ID);
@@ -88,7 +93,7 @@ class Achievements {
                 if (isTime) {
                     // Get total time
                     value = 0;
-                    const activities = this.user.activities.GetAll();
+                    const activities = this.user.activities.Get();
                     for (const a in activities) {
                         if (activities[a].ID == skillID) {
                             value += activities[a].duration / 60;
@@ -103,7 +108,7 @@ class Achievements {
                 // Stat level
                 first = first.replace('St', '');
                 const statKey = first;
-                const statLevel = this.user.experience.GetStatExperience(statKey).lvl;
+                const statLevel = stats[statKey].lvl;
                 value = statLevel;
             } else
             if (first == 'Ca') {

@@ -315,7 +315,7 @@
         "error-signin-disagree": "Veuillez accepter les conditions générales.",
 
         "alert-deletedaccount-title": "Compte supprimé",
-        "alert-deletedaccount-text": "Votre compte a été supprimé, veuillez nous excuser pour la gêne occasionnée."
+        "alert-deletedaccount-text": "Votre compte a été supprimé."
     },
 
     "report": {
@@ -362,13 +362,8 @@
         "input-report": "Report",
         "input-disconnect": "Se déconnecter",
         "input-tuto-again": "Revoir le tutoriel",
-        "input-delete-activities": "Supprimer toutes les activités",
         "input-delete-account": "Supprimer le compte",
 
-        "alert-clear-title": "Supprimer",
-        "alert-clear-text": "Réinitialiser toutes les données de l'app ?",
-        "alert-reset-title": "Réinitialiser",
-        "alert-reset-text": "Supprimer toutes les activités du compte ?",
         "alert-disconnect-title": "Se déconnecter",
         "alert-disconnect-text": "Voulez-vous vous déconnecter ?",
         "alert-disconnecterror-title": "Erreur",

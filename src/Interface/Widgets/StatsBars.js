@@ -7,21 +7,27 @@ import langManager from '../../Managers/LangManager';
 import { Icon, Swiper, Text, XPBar } from '../Components';
 import { IsUndefined } from '../../Functions/Functions';
 
+/**
+ * @typedef {import('../../Managers/UserManager').Stats} Stats
+ * @typedef {import('../../Class/Experience').XPInfo} XPInfo
+ */
+
 const StatsBarsProps = {
     style: {},
+
+    /** @type {Stats} */
     data: undefined,
-    supData: undefined,
-    /**
-     * @type {'all'|'int'|'soc'|'for'|'end'|'agi'|'dex'}
-     */
-    bars: 'all'
+
+    /** @type {Array<Number>} - Optionnal, add secondary value, same length of user stats */
+    supData: user.statsKey.map(() => 0)
 }
 
 function popupContent(initStatKey) {
     const statBox = (statKey) => {
         const statName = langManager.curr['statistics']['names'][statKey];
         const statDescription = langManager.curr['statistics']['descriptions'][statKey];
-        const bar = statComponent(statKey, 0, 0, false);
+        const stats = user.experience.GetExperience().stats;
+        const bar = statComponent(statKey, stats[statKey], 0, 0, false);
 
         return (
             <>
@@ -54,12 +60,17 @@ function popupContent(initStatKey) {
     );
 }
 
-function statComponent(item, sup, index, clickable = true) {
-    const statKey = item;
-
-    const stat = user.experience.GetStatExperience(statKey);
-    const statName = langManager.curr['statistics']['names'][statKey];
-    const total = Math.round(stat.totalXP);
+/**
+ * @param {String} statKey - Stat key
+ * @param {XPInfo} stat - Stat info
+ * @param {Number} sup
+ * @param {Number} index
+ * @param {Boolean} clickable
+ * @returns {React.ReactElement}
+ */
+function statComponent(statKey, stat, sup, index, clickable = true) {
+    const statName = clickable ? langManager.curr['statistics']['names'][statKey] : '';
+    const langLevel = langManager.curr['level'];
 
     const popupRender = () => popupContent(statKey);
     const pressEvent = !clickable ? undefined : () => {
@@ -69,10 +80,10 @@ function statComponent(item, sup, index, clickable = true) {
     return (
         <TouchableOpacity style={styles.fullW} key={'skill_' + index} activeOpacity={IsUndefined(pressEvent) ? 1 : .5} onPress={pressEvent}>
             <View style={styles.XPHeader}>
-                <Text>{clickable ? statName : ''}</Text>
+                <Text>{statName}</Text>
                 <View style={styles.headerText}>
-                    <Text style={styles.headerLvl}>LVL {stat.lvl}</Text>
-                    <Text>{stat.xp}/{stat.next} - {total}XP</Text>
+                    <Text style={styles.headerLvl}>{langLevel['level-small']} {stat.lvl}</Text>
+                    <Text>{stat.xp}/{stat.next} - {stat.totalXP}{langLevel['xp']}</Text>
                 </View>
             </View>
             <XPBar
@@ -85,25 +96,21 @@ function statComponent(item, sup, index, clickable = true) {
     )
 }
 
-function StatsBars(props) {
-    let output = <></>;
-    const containerStyle = [ styles.fullW, props.containerStyle ];
+class StatsBars extends React.PureComponent {
+    render() {
+        let output = <></>;
+        const { data, supData, style } = this.props;
+        if (IsUndefined(data)) return output;
 
-    if (!IsUndefined(props.data)) {
-        const keys = Object.keys(props.data);
-        const supData = IsUndefined(props.supData) ? Array(keys.length).fill(0) : Object.values(props.supData);
-        if (props.bars === 'all') {
-            output = keys.map((item, i) => statComponent(item, supData[i], i));
-        } else {
-            output = statComponent(props.bars, props.data[props.bars], 0);
-        }
+        const addStatBar = (item, i) => statComponent(item, data[item], supData[i], i);
+        output = Object.keys(data).map(addStatBar);
+
+        return (
+            <View style={[ styles.fullW, style ]}>
+                {output}
+            </View>
+        );
     }
-
-    return (
-        <View style={containerStyle}>
-            {output}
-        </View>
-    );
 }
 
 StatsBars.prototype.props = StatsBarsProps;

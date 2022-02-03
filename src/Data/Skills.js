@@ -114,7 +114,7 @@ class Skills {
             }
 
             let curr = false;
-            const activities = this.user.activities.GetAll();
+            const activities = this.user.activities.Get();
             for (let a = 0; a < activities.length; a++) {
                 if (activities[a].skillID == this.skills[i].ID) {
                     curr = true;
@@ -155,4 +155,5 @@ class Skills {
     }
 }
 
+export { Skill };
 export default Skills;

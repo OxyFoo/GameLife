@@ -2,17 +2,16 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 
+import { GetTime } from '../../Functions/Time';
+
 class BackIdentity extends React.Component {
     constructor(props) {
         super(props);
 
-        this.totalActivityLength = user.activities.activities.length;
-
-        const totalActivityTime = user.activities.GetTotalDuration();
-        this.totalActivityTime = Math.floor(totalActivityTime / 60);
-
-        const playTime = this.totalActivityTime <= 0 ? 0 : user.activities.GetTimeFromFirst() / 60;
-        this.playTime = Math.floor(playTime / 60);
+        const activities = user.activities.Get();
+        this.totalActivityLength = activities.length;
+        this.totalActivityTime = this.getTotalDuration(activities);
+        this.playTime = this.getTimeFromFirst(activities);
 
         this.refPage = null;
         this.refAvatar = null;
@@ -20,6 +19,29 @@ class BackIdentity extends React.Component {
             stateDTP: '',
             editorOpened: false
         };
+    }
+
+    /**
+     * @returns {Number} in hours
+     */
+    getTotalDuration(activities) {
+        let totalDuration = 0;
+        for (let a in activities) {
+            totalDuration += activities[a].duration;
+        }
+        const totalDurationHour = totalDuration / 60;
+        return Math.floor(totalDurationHour);
+    }
+    /**
+     * @returns {Number} in days
+     */
+    getTimeFromFirst(activities) {
+        if (!activities.length) return 0;
+
+        const initTime = user.activities.Get()[0].startTime;
+        const initDate = new Date(initTime * 1000);
+        const diff = (GetTime() - GetTime(initDate)) / (60 * 60 * 24);
+        return Math.floor(diff);
     }
 
     onBack = () => {

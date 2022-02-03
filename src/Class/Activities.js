@@ -1,6 +1,9 @@
 import dataManager from '../Managers/DataManager';
 
 import { GetMidnightTime, GetTime } from "../Functions/Time";
+import { SortByKey } from '../Functions/Functions';
+
+const MaxHourPerDay = 12;
 
 class Activity {
     skillID = 0;
@@ -27,6 +30,11 @@ class Activities {
         this.UNSAVED_activities = [];
 
         /**
+         * @type {Array<Activity>}
+         */
+        this.UNSAVED_deletions = [];
+
+        /**
          * @type {?Array<Number, Number>} [skillID, startTime]
          */
         this.currentActivity = null;
@@ -35,12 +43,15 @@ class Activities {
     Clear() {
         this.activities = [];
         this.UNSAVED_activities = [];
+        this.UNSAVED_deletions = [];
         this.currentActivity = null;
     }
     Load(activities) {
-        this.activities = activities['activities'];
-        this.UNSAVED_activities = activities['unsaved'];
-        this.currentActivity = activities['current'];
+        const contains = (key) => activities.hasOwnProperty(key);
+        if (contains('activities')) this.activities = activities['activities'];
+        if (contains('unsaved'))    this.UNSAVED_activities = activities['unsaved'];
+        if (contains('deletions'))  this.UNSAVED_deletions = activities['deletions'];
+        if (contains('current'))    this.currentActivity = activities['current'];
     }
     LoadOnline(activities) {
         if (typeof(activities) !== 'object') return;
@@ -49,112 +60,176 @@ class Activities {
             const activity = activities[i];
             this.Add(activity[0], activity[1], activity[2]);
         }
+        console.log('ONLINELOAD', activities);
     }
     Save() {
         const activities = {
             activities: this.activities,
             unsaved: this.UNSAVED_activities,
+            deletions: this.UNSAVED_deletions,
             current: this.currentActivity
         };
         return activities;
     }
-
     /**
-     * @returns {Activity[]} activities
+     * @returns {Array<Activity>}
      */
-    GetAll() {
-        return this.activities;
-    }
-
-    /**
-     * @param {Activity[]} activities 
-     */
-    SetAll(activities) {
-        this.activities = activities;
+    Get() {
+        let activities = [ ...this.activities, ...this.UNSAVED_activities ];
+        return SortByKey(activities, 'startTime');
     }
 
     IsUnsaved = () => {
-        return this.UNSAVED_activities.length > 0;
+        return this.UNSAVED_activities.length || this.UNSAVED_deletions.length;
+    }
+    GetUnsaved = () => {
+        let unsaved = [];
+        for (let a in this.UNSAVED_activities) {
+            const activity = this.UNSAVED_activities[a];
+            unsaved.push([ 'add', activity.skillID, activity.startTime, activity.duration ]);
+        }
+        for (let a in this.UNSAVED_deletions) {
+            const activity = this.UNSAVED_deletions[a];
+            unsaved.push([ 'rem', activity.skillID, activity.startTime, activity.duration ]);
+        }
+        return unsaved;
     }
     Purge = () => {
+        this.activities.push(...this.UNSAVED_activities);
         this.UNSAVED_activities = [];
-    }
 
-    // TODO - Update or remove
-    RemoveDeletedSkillsActivities() {
-        /*for (let a in this.activities) {
-            let activity = this.activities[a];
-            let skillID = activity.skillID;
-            const skill = dataManager.skills.GetByID(skillID);
-            if (skill === null) {
-                this.Remove(activity);
-                this.RemoveDeletedSkillsActivities();
-                break;
+        for (let i = this.UNSAVED_deletions.length - 1; i >= 0; i--) {
+            const index = this.getIndex(this.activities, this.UNSAVED_deletions[i]);
+            if (index !== null) {
+                this.activities.splice(index, 1);
             }
-        }*/
+        }
+        this.UNSAVED_deletions = [];
     }
 
-    Add(skillID, startTime, duration) {
-        let output = false;
+    GetUseful() {
+        const now = GetTime();
+        const activities = this.user.activities.Get().filter(a => a.startTime <= now);
 
+        let lastMidnight = 0;
+        let hoursRemain = MaxHourPerDay;
+        let usefulActivities = [];
+        for (let i in activities) {
+            const activity = activities[i];
+            const midnight = GetMidnightTime(activity.startTime);
+            const skill = dataManager.skills.GetByID(activity.skillID);
+            const durationHour = activity.duration / 60;
+
+            if (lastMidnight !== midnight) {
+                lastMidnight = midnight;
+                hoursRemain = MaxHourPerDay;
+            }
+
+            // Limit
+            if (skill.XP > 0) hoursRemain -= durationHour;
+            if (hoursRemain < 0) continue;
+
+            usefulActivities.push(activity);
+        }
+
+        return usefulActivities;
+    }
+
+    RemoveDeletedSkillsActivities() {
+        let activities = [ ...this.activities, ...this.UNSAVED_activities ];
+        let deletions = [];
+        for (let a in activities) {
+            let activity = activities[a];
+            const skill = dataManager.skills.GetByID(activity.skillID);
+            if (skill === null) deletions.push(activity);
+        }
+        deletions.map(this.Remove);
+    }
+
+    /**
+     * Add activity
+     * @param {Number} skillID - Skill ID
+     * @param {Number} startTime - Unix timestamp in seconds
+     * @param {Number} duration - in minutes
+     * @returns {'added'|'notFree'|'tooEarly'|'alreadyExist'}
+     */
+    Add(skillID, startTime, duration) {
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;
         newActivity.duration = duration;
 
+        // Limit date
         const limitDate = new Date();
         limitDate.setFullYear(2020, 1, 1);
-        if (startTime < GetTime(limitDate)) return false;
+        if (startTime < GetTime(limitDate)) {
+            return 'tooEarly';
+        }
 
         // Check if not exist
-        let exists = false;
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
+        const indexActivity = this.getIndex(this.activities, newActivity);
+        const indexUnsaved = this.getIndex(this.UNSAVED_activities, newActivity);
+        const indexDeletion = this.getIndex(this.UNSAVED_deletions, newActivity);
 
-            const sameSkillID = activity.skillID === newActivity.skillID;
-            const sameStartDate = activity.startTime === newActivity.startTime;
-            if (sameSkillID && sameStartDate) {
-                exists = true;
+        if (indexActivity === null && indexUnsaved === null) {
+            if (!this.TimeIsFree(startTime, duration)) {
+                return 'notFree';
             }
+            this.UNSAVED_activities.push(newActivity);
+            if (indexDeletion !== null) {
+                this.UNSAVED_deletions.splice(indexDeletion, 1);
+            }
+            return 'added';
         }
 
-        if (!exists) {
-            if (this.TimeIsFree(startTime, duration)) {
-                // Add - Sort by date
-                /*const activityDate = new Date(startTime);
-                for (let a = 0; a < this.activities.length; a++) {
-                    const arrayDate = new Date(this.activities[a].startTime);
-                    if (activityDate < arrayDate) {
-                        this.activities.splice(a, 0, newActivity);
-                        output = true;
-                        break;
-                    }
-                }*/
-                //if (!output) {}
-                this.activities.push(newActivity);
-                this.UNSAVED_activities.push(['add', newActivity.skillID, newActivity.startTime, newActivity.duration ]);
-                output = true;
-
-                // TODO - Save (local & online or future)
-                this.user.RefreshStats();
-            }
-        }
-
-        return output;
+        return 'alreadyExist';
     }
 
+    /**
+     * Remove activity
+     * @param {Activity} activity
+     * @returns {'removed'|'notExist'}
+     */
     Remove(activity) {
-        for (let i = 0; i < this.activities.length; i++) {
-            if (this.areEquals(this.activities[i], activity)) {
-                this.activities.splice(i, 1);
-                this.UNSAVED_activities.push(['rem', activity.skillID, activity.startTime, activity.duration ]);
-                break;
+        const indexActivity = this.getIndex(this.activities, activity);
+        const indexUnsaved = this.getIndex(this.UNSAVED_activities, activity);
+        const indexDeletion = this.getIndex(this.UNSAVED_deletions, activity);
+        let deleted = null;
+
+        if (indexActivity !== null) {
+            deleted = this.activities.splice(indexActivity, 1)[0];
+            if (indexDeletion === null) {
+                this.UNSAVED_deletions.push(deleted);
             }
         }
-        // TODO - Save (local & online or future)
-        this.user.RefreshStats();
+        if (indexUnsaved !== null) {
+            deleted = this.UNSAVED_activities.splice(indexUnsaved, 1)[0];
+            if (indexDeletion === null) {
+                this.UNSAVED_deletions.push(deleted);
+            }
+        }
+
+        return deleted !== null ? 'removed' : 'notExist';
     }
 
+    /**
+     * @param {Activity} activity 
+     * @returns {Number?} - Index of activity or null if not found
+     */
+    getIndex(arr, activity) {
+        for (let i in arr) {
+            const equals = this.areEquals(arr[i], activity);
+            if (equals) return i;
+        }
+        return null;
+    }
+
+    /**
+     * Compare two activities
+     * @param {Activity} activity1
+     * @param {Activity} activity2
+     * @returns {Boolean}
+     */
     areEquals(activity1, activity2) {
         const sameSkillID = activity1.skillID === activity2.skillID;
         const sameStartTime = activity1.startTime === activity2.startTime;
@@ -170,7 +245,7 @@ class Activities {
     GetByTime(time = GetTime(new Date())) {
         const startTime = GetMidnightTime(time);
         const endTime = startTime + 86400;
-        return this.activities.filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
+        return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
     }
     ContainActivity(date = new Date(), onlyRelax = false) {
         date.setHours(0, 0, 0, 0);
@@ -191,34 +266,6 @@ class Activities {
         //const condRelaxActivity = (activity) => activity.startTime >= startTime && activity.startTime <= endTime && this.activities[0]. === 0;
         //const find = this.activities.find(activity => );
         //return !IsUndefined(find);
-    }
-
-    GetFirstTime() {
-        let time = null;
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
-            if (time === null || activity.startTime < time) {
-                time = activity.startTime;
-            }
-        }
-        return time;
-    }
-    GetTimeFromFirst() {
-        const initTime = this.GetFirstTime();
-        if (initTime === null) return null;
-
-        const initDate = new Date(initTime * 1000);
-        const now = new Date();
-        const diff = GetTime(now) - GetTime(initDate);
-        return diff;
-    }
-    GetTotalDuration() {
-        let totalDuration = 0;
-        for (let a in this.activities) {
-            const activity = this.activities[a];
-            totalDuration += activity.duration;
-        }
-        return totalDuration;
     }
 
     TimeIsFree(time, duration) {

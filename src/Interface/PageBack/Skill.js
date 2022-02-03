@@ -31,7 +31,7 @@ class BackSkill extends React.Component {
         this.stats = skill.Stats;
         this.xml = dataManager.skills.GetXmlByLogoID(skill.LogoID);
         this.history = [];
-        const userActivities = user.activities.GetAll();
+        const userActivities = user.activities.Get();
         for (let a in userActivities) {
             const activity = userActivities[a];
             if (activity.skillID === skillID) {

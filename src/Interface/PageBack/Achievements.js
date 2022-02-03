@@ -6,7 +6,7 @@ import dataManager from '../../Managers/DataManager';
 class BackAchievements extends React.Component {
     constructor(props) {
         super(props);
-        this.achievement = dataManager.achievements.GetAchievements(user.achievements.solved);
+        this.achievement = dataManager.achievements.GetAchievements(user.achievements.Get());
     }
 }
 

@@ -63,8 +63,9 @@ class Quests {
         else return null;
     }
 
+    // TODO - REMOVE or replace GetByTime function
     DailyTodayCheck() {
-        let state1 = 0;
+        /*let state1 = 0;
         let state2 = 0;
 
         const dailyBonusCategory = this.DailyGetBonusCategory();
@@ -88,7 +89,7 @@ class Quests {
         state1 /= 60;
         state2 /= 15;
 
-        return [ state1, state2 ];
+        return [ state1, state2 ];*/
     }
 
     DailyGetBonusCategory(date) {

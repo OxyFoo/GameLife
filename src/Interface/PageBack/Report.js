@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dimensions, Keyboard } from 'react-native';
 
-import user, { DEFAULT_STATS } from '../../Managers/UserManager';
+import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { Sum } from '../../Functions/Functions';
@@ -20,7 +20,7 @@ class BackReport extends React.Component {
             { key: 2, value: langManager.curr['report']['types']['bug'] },
             { key: 3, value: langManager.curr['report']['types']['message'] }
         ];
-        this.stats = DEFAULT_STATS;
+        this.stats = Object.assign({}, ...this.user.statsKey.map(i => ({[i]: 0})));
 
         this.state = {
             sending: false,
@@ -35,7 +35,7 @@ class BackReport extends React.Component {
             input_bug2: '',
             input_message: '',
             remain: 0,
-            statsRemain: DEFAULT_STATS
+            statsRemain: this.stats
         }
     }
 

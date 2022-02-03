@@ -14,7 +14,7 @@ class BackSkills extends React.Component {
 
         // Get all skills
         const now = GetTime();
-        const usersActivities = user.activities.activities.filter(activity => activity.startTime <= now);
+        const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
         const filter = skill => usersActivitiesID.includes(skill.ID);
         const getInfos = skill => ({
@@ -106,15 +106,6 @@ class BackSkills extends React.Component {
         this.setState({ skills: newSkills });
     }
 
-    /*state = {
-        search: '',
-        filters: dataManager.skills.GetCategories(true),
-        selectedFiltersIndex: [],
-        sortSelectedIndex: 0,
-        ascending: true,
-        skills: user.experience.GetAllSkills(undefined, undefined, 0, true)
-    }*/
-
     changeText = (newText) => {
         this.setState({ search: newText });
         setTimeout(this.refreshSkills, 50);
@@ -123,18 +114,6 @@ class BackSkills extends React.Component {
         this.setState({ selectedFiltersIndex: indexes });
         setTimeout(this.refreshSkills, 50);
     }
-
-    /*refreshSkills = () => {
-        const search = this.state.search;
-        let filters = [];
-        for (let i = 0; i < this.state.selectedFiltersIndex.length; i++) {
-            filters.push(this.state.filters[this.state.selectedFiltersIndex[i]].value);
-        }
-        const sort = this.state.sortSelectedIndex;
-        const ascending = this.state.ascending;
-        const skills = user.experience.GetAllSkills(search, filters, sort, ascending);
-        this.setState({ skills: skills });
-    }*/
 }
 
 export default BackSkills;

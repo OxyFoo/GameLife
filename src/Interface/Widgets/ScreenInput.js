@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, Animated, Keyboard, StyleSheet, Dimensions } from 'react-native';
+
 import { TimingAnimation } from '../../Functions/Animations';
 
 import { Button, Input } from '../Components'
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const ScreenInputProps = {
 }
@@ -12,16 +15,37 @@ class ScreenInput extends React.Component {
         opened: false,
         label: '',
         text: '',
+        multiline: false,
         anim: new Animated.Value(0),
+        keyboardHeight: 0,
         callback: () => {}
     }
 
-    Open = (label = 'Input', initialText = '', callback = (text) => {}) => {
+    componentDidMount() {
+        Keyboard.addListener('keyboardDidShow', this.onKeyboardShow);
+        Keyboard.addListener('keyboardDidHide', this.onKeyboardHide);
+    }
+    componentWillUnmount() {
+        Keyboard.removeAllListeners('keyboardDidShow');
+        Keyboard.removeAllListeners('keyboardDidHide');
+    }
+    onKeyboardShow = (event) => {
+        const { height, screenY } = event.endCoordinates;
+        this.setState({ keyboardHeight: Math.ceil(SCREEN_HEIGHT - screenY) });
+    }
+    onKeyboardHide = () => {
+        this.setState({ keyboardHeight: 0 });
+        this.refInput.unfocus();
+        this.Close(false);
+    }
+
+    Open = (label = 'Input', initialText = '', callback = (text) => {}, multiline = false) => {
         TimingAnimation(this.state.anim, 1, 200).start();
         this.setState({
             opened: true,
             label: label,
             text: initialText,
+            multiline: multiline,
             callback: callback
         }, this.refInput.focus);
     }
@@ -62,6 +86,8 @@ class ScreenInput extends React.Component {
         const { opened, anim, label, text } = this.state;
         const opacity = { opacity: anim };
         const event = opened ? 'auto' : 'none';
+        const bottom = { transform: [{ translateY: -this.state.keyboardHeight - 56 }] };
+        //console.log(this.state.keyboardHeight, event);
 
         return (
             <Animated.View style={[styles.parent, opacity]} pointerEvents={event}>
@@ -70,21 +96,25 @@ class ScreenInput extends React.Component {
                     onTouchStart={this.onPressIn}
                     onTouchEnd={this.onPressOut}
                 />
-                <Input
-                    ref={(ref) => { if (ref !== null) this.refInput = ref; }}
-                    style={styles.input}
-                    label={label}
-                    text={text}
-                    onChangeText={this.onChangeText}
-                    onSubmit={this.onValid}
-                />
-                <Button
-                    style={styles.button}
-                    color='main1'
-                    icon='chevron'
-                    iconAngle={90}
-                    onPress={this.onValid}
-                />
+                <View style={[styles.panel, bottom]}>
+                    <Input
+                        ref={(ref) => { if (ref !== null) this.refInput = ref; }}
+                        style={styles.input}
+                        label={label}
+                        text={text}
+                        onChangeText={this.onChangeText}
+                        onSubmit={this.onValid}
+                        multiline={this.state.multiline}
+                        maxLength={1024}
+                    />
+                    <Button
+                        style={styles.button}
+                        color='main1'
+                        icon='chevron'
+                        iconAngle={90}
+                        onPress={this.onValid}
+                    />
+                </View>
             </Animated.View>
         );
     }
@@ -99,12 +129,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0,
-        paddingHorizontal: 12,
-
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        justifyContent: 'space-between'
+        bottom: 0
     },
     background: {
         position: 'absolute',
@@ -114,6 +139,17 @@ const styles = StyleSheet.create({
         bottom: 0,
         opacity: .8,
         backgroundColor: '#000000'
+    },
+    panel: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        paddingHorizontal: 12,
+
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between'
     },
     input: {
         width: '75%'

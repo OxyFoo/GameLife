@@ -38,25 +38,6 @@ import svgLoadingDots from '../../../res/icons/loading-dots';
  * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'home'|'info'|'instagram'|'item'|'nowifi'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'} Icons
  */
 
-const IconProps = {
-    style: {},
-    containerStyle: {},
-    /**
-     * @description Display an icon from XML base64 encoded ('icon' sikp if define)
-     * @type {String}
-     */
-    xml: undefined,
-    /**
-     * @type {Icons}
-     */
-    icon: '',
-    size: 24,
-    angle: 0,
-    color: 'white',
-    onPress: undefined,
-    show: true
-}
-
 const SVGIcons = {
     default: svgDefault,
     add: svgAdd,
@@ -83,6 +64,25 @@ const SVGIcons = {
     tiktok: svgTiktok,
     loading: svgLoading,
     loadingDots: svgLoadingDots
+}
+
+const IconProps = {
+    style: {},
+    containerStyle: {},
+    /**
+     * @description Display an icon from XML base64 encoded ('icon' sikp if define)
+     * @type {String}
+     */
+    xml: undefined,
+    /**
+     * @type {Icons}
+     */
+    icon: '',
+    size: 24,
+    angle: 0,
+    color: 'white',
+    onPress: undefined,
+    show: true
 }
 
 class Icon extends React.Component {

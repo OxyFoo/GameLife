@@ -59,7 +59,7 @@ class BackActivity extends React.Component {
             posY: 0,
             animPosY: new Animated.Value(visualisationMode ? 0 : 1),
 
-            commentary: null,
+            comment: visualisationMode ? activity.comment : null,
             activityStart: visualisationMode ? activity.startTime : null,
             activityDuration: visualisationMode ? activity.duration : 15,
             ActivitySchedule: activitySchedule
@@ -108,14 +108,44 @@ class BackActivity extends React.Component {
         this.setState({ activityStart: startTime, activityDuration: duration });
     }
 
+    onAddComment = () => {
+        if (this.state.comment !== null) return;
+        const save = () => this.state.visualisationMode && this.AddActivity();
+        const callback = (text) => {
+            this.setState({ comment: text.length ? text : null }, save);
+        };
+        const titleCommentary = langManager.curr['activity']['title-commentary']
+        user.interface.screenInput.Open(titleCommentary, '', callback, true);
+    }
+    onEditComment = () => {
+        const titleCommentary = langManager.curr['activity']['title-commentary']
+        const save = () => this.state.visualisationMode && this.AddActivity();
+        const callback = (text) => {
+            this.setState({ comment: text.length ? text : null }, save);
+        };
+        user.interface.screenInput.Open(titleCommentary, this.state.comment, callback, true);
+    }
+    onRemComment = () => {
+        const title = langManager.curr['activity']['alert-remactivity-title'];
+        const text = langManager.curr['activity']['alert-remactivity-text'];
+        const save = () => this.state.visualisationMode && this.AddActivity();
+        const callback = (btn) => btn === 'yes' && this.setState({ comment: null }, save);
+        user.interface.popup.Open('yesno', [ title, text ], callback);
+    }
+
     AddActivity = () => {
         const skillID = this.state.selectedSkill.id;
-        const { activityStart, activityDuration } = this.state;
-        if (user.activities.Add(skillID, activityStart, activityDuration)) {
+        const { activityStart, activityDuration, comment } = this.state;
+
+        const addState = user.activities.Add(skillID, activityStart, activityDuration, comment);
+        console.log(addState);
+        if (addState === 'added') {
             const text = langManager.curr['activity']['display-activity-text'];
             const button = langManager.curr['activity']['display-activity-button'];
             user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
-        } else {
+        } else if (addState === 'edited') {
+            user.interface.BackPage();
+        } else if (addState === 'notFree') {
             const title = langManager.curr['activity']['alert-wrongtiming-title'];
             const text = langManager.curr['activity']['alert-wrongtiming-text'];
             user.interface.popup.Open('ok', [ title, text ]);

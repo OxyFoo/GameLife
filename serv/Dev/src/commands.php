@@ -200,8 +200,10 @@
 
             if ($appDataToken != $dbDataToken) {
                 //$activities = $this->db->Decrypt($account['Activities']);
-                $activities = $account['Activities'];
-                $userData['activities'] = json_decode($activities, true);
+                //$activities = $account['Activities'];
+                //$userData['activities'] = json_decode($activities, true);
+
+                $userData['activities'] = User::GetActivities($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;
             }
 

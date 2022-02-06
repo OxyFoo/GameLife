@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Animated, TextInput } from 'react-native';
 
+import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import Text from './Text';
@@ -13,6 +14,7 @@ const InputProps = {
     staticLabel: false,
     activeColor: 'main1',
     text: '',
+    maxLength: null,
     /**
      * @type {'default'|'email'|'username'|'name'} - The type of the input.
      */
@@ -47,6 +49,22 @@ class Input extends React.Component {
         textHeight: 0
     }
 
+    componentDidMount() {
+        if (this.props.staticLabel || this.props.text.length > 0) {
+            this.movePlaceHolderBorder();
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.staticLabel) {
+            this.movePlaceHolderBorder();
+        }
+        if (prevProps.text !== this.props.text) {
+            if (this.props.text.length > 0) this.movePlaceHolderBorder();
+            else if (!this.state.isFocused) this.movePlaceHolderIn();
+        }
+    }
+
     onBoxLayout = (event) => {
         const { height } = event.nativeEvent.layout;
         if (height !== this.state.boxHeight) {
@@ -61,22 +79,6 @@ class Input extends React.Component {
         }
         if (height !== this.state.textHeight) {
             this.setState({ textHeight: height });
-        }
-    }
-
-    componentDidMount() {
-        if (this.props.staticLabel || this.props.text.length > 0) {
-            this.movePlaceHolderBorder();
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.staticLabel) {
-            this.movePlaceHolderBorder();
-        }
-        if (prevProps.text !== this.props.text) {
-            if (this.props.text.length > 0) this.movePlaceHolderBorder();
-            else if (!this.state.isFocused) this.movePlaceHolderIn();
         }
     }
 
@@ -121,10 +123,10 @@ class Input extends React.Component {
         const hexActiveColor = themeManager.GetColor(activeColor);
         const hexBackgroundColor = themeManager.GetColor('background');
         const textColor = isActive ? themeManager.GetColor(this.props.activeColor) : 'primary';
-        const interC = { inputRange: [0, 1], outputRange: [hexBackgroundColor+'FF', hexBackgroundColor+'00'] }
+
         const opacity = this.props.enabled ? 1 : 0.6;
         const barStyle = [styles.bar, {
-            width: this.state.textWidth * 0.75 + 12,
+            width: this.state.textWidth * 0.75 + (this.state.textWidth ? 12 : 0),
             backgroundColor: hexBackgroundColor,
             transform: [
                 { scaleX: Animated.subtract(1, this.state.animTop) },
@@ -184,6 +186,7 @@ class Input extends React.Component {
                     autoCompleteType={textTypes[this.props.textContentType]['android']}
                     autoCorrect={false}
                     multiline={this.props.multiline}
+                    maxLength={this.props.maxLength}
                 />
             </Animated.View>
         );

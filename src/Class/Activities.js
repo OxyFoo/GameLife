@@ -9,6 +9,7 @@ class Activity {
     skillID = 0;
     startTime = 0;
     duration = 0;
+    comment = null;
 }
 
 class Activities {
@@ -58,7 +59,8 @@ class Activities {
         this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
-            this.Add(activity[0], activity[1], activity[2]);
+            if (activity.length !== 4) continue;
+            this.Add(activity[0], activity[1], activity[2], activity[3]);
         }
         console.log('ONLINELOAD', activities);
     }
@@ -86,7 +88,7 @@ class Activities {
         let unsaved = [];
         for (let a in this.UNSAVED_activities) {
             const activity = this.UNSAVED_activities[a];
-            unsaved.push([ 'add', activity.skillID, activity.startTime, activity.duration ]);
+            unsaved.push([ 'add', activity.skillID, activity.startTime, activity.duration, activity.comment ]);
         }
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
@@ -151,13 +153,16 @@ class Activities {
      * @param {Number} skillID - Skill ID
      * @param {Number} startTime - Unix timestamp in seconds
      * @param {Number} duration - in minutes
-     * @returns {'added'|'notFree'|'tooEarly'|'alreadyExist'}
+     * @param {String} comment - Optional comment
+     * @returns {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'}
      */
-    Add(skillID, startTime, duration) {
+    Add(skillID, startTime, duration, comment) {
+        console.log('comment:', comment);
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;
         newActivity.duration = duration;
+        newActivity.comment = comment;
 
         // Limit date
         const limitDate = new Date();
@@ -171,6 +176,7 @@ class Activities {
         const indexUnsaved = this.getIndex(this.UNSAVED_activities, newActivity);
         const indexDeletion = this.getIndex(this.UNSAVED_deletions, newActivity);
 
+        // Activity not exist, add it
         if (indexActivity === null && indexUnsaved === null) {
             if (!this.TimeIsFree(startTime, duration)) {
                 return 'notFree';
@@ -180,6 +186,20 @@ class Activities {
                 this.UNSAVED_deletions.splice(indexDeletion, 1);
             }
             return 'added';
+        }
+        // Activity exist, update it
+        else {
+            let activity = indexActivity !== null ? this.activities[indexActivity] : this.UNSAVED_activities[indexUnsaved];
+            if (activity.comment !== comment) {
+                if (indexActivity !== null) this.activities.splice(indexActivity, 1);
+                if (indexUnsaved  !== null) this.UNSAVED_activities.splice(indexUnsaved, 1);
+
+                this.UNSAVED_activities.push(newActivity);
+                if (indexDeletion !== null) {
+                    this.UNSAVED_deletions.splice(indexDeletion, 1);
+                }
+                return 'edited';
+            }
         }
 
         return 'alreadyExist';

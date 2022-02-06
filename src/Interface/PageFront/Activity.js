@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Dimensions, Animated } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions, TouchableOpacity, Animated } from 'react-native';
 
 import BackActivity from '../PageBack/Activity';
 import user from '../../Managers/UserManager';
@@ -7,7 +7,7 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { Page, Text, Button, ComboBox, IconCheckable, TextSwitch } from '../Components';
+import { Page, Text, Button, ComboBox, IconCheckable, TextSwitch, Icon } from '../Components';
 import { PageHeader, ActivitySchedule, ActivityExperience } from '../Widgets';
 
 /**
@@ -38,7 +38,8 @@ class Activity extends BackActivity {
     }
     render() {
         const lang = langManager.curr['activity'];
-        const backgroundColor = themeManager.GetColor('backgroundGrey');
+        const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundGrey') };
+        const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         const inter = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
         const panelPosY = this.state.animPosY.interpolate(inter);
@@ -46,7 +47,12 @@ class Activity extends BackActivity {
         const skill = dataManager.skills.GetByID((skillID));
 
         return (
-            <Page ref={ref => this.pageRef = ref} scrollable={this.state.selectedSkill.id !== 0} canScrollOver={false} bottomOffset={0}>
+            <Page
+                ref={ref => this.pageRef = ref}
+                scrollable={this.state.selectedSkill.id !== 0}
+                canScrollOver={false}
+                bottomOffset={0}
+            >
                 <PageHeader
                     onBackPress={user.interface.BackPage}
                 />
@@ -81,9 +87,9 @@ class Activity extends BackActivity {
                 <Animated.View
                     style={[
                         styles.panel,
+                        backgroundColor,
                         {
                             minHeight: SCREEN_HEIGHT - this.state.posY - 12,
-                            backgroundColor: backgroundColor,
                             transform: [{ translateY: panelPosY }]
                         }
                     ]}
@@ -118,13 +124,33 @@ class Activity extends BackActivity {
                             />
 
                             {/* Commentary */}
-                            {/*this.state.commentary === null ? (
-                                <Button style={styles.comButton} color='main1' fontSize={14}>{lang['add-commentary']}</Button>
+                            {this.state.comment === null ? (
+                                <Button
+                                    style={styles.comButton}
+                                    onPress={this.onAddComment}
+                                    color='main1'
+                                    fontSize={14}
+                                >
+                                    {lang['add-commentary']}
+                                </Button>
                             ) : (
-                                <Text style={styles.title} bold>{lang['title-commentary']}</Text>
-                            )*/}
+                                <View style={{ marginBottom: 48 }}>
+                                    {/* Comment title */}
+                                    <Text style={styles.title} bold>{lang['title-commentary']}</Text>
 
-                            {/* Save / Remove button */}
+                                    {/* Comment content */}
+                                    <TouchableOpacity
+                                        style={[styles.commentPanel, backgroundCard]}
+                                        activeOpacity={.6}
+                                        onPress={this.onEditComment}
+                                        onLongPress={this.onRemComment}
+                                    >
+                                        <Text style={styles.comment}>{this.state.comment}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+
+                            {/* Add / Remove button */}
                             {this.state.visualisationMode ? (
                                 <Button onPress={this.RemActivity} color='main2'>{lang['btn-remove']}</Button>
                             ) : (
@@ -166,6 +192,14 @@ const styles = StyleSheet.create({
         height: 48,
         marginBottom: 48,
         marginHorizontal: '5%'
+    },
+    commentPanel: {
+        padding: '5%',
+        borderRadius: 24
+    },
+    comment: {
+        fontSize: 16,
+        textAlign: 'left'
     }
 });
 

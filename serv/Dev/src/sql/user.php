@@ -87,36 +87,57 @@
             return $newDataToken;
         }
 
+        public static function GetActivities($db, $account) {
+            $accountID = $account['ID'];
+            $command = "SELECT `SkillID`, `StartTime`, `Duration`, `Comment` FROM `Activities` WHERE `UserID` = '$accountID'";
+            $rows = $db->QueryArray($command);
+            if ($rows === NULL) {
+                ExitWithStatus("Error: getting activities failed");
+            }
+            $activities = array();
+            for ($i = 0; $i < count($rows); $i++) {
+                $skillID = intval($rows[$i]['SkillID']);
+                $startTime = intval($rows[$i]['StartTime']);
+                $duration = intval($rows[$i]['Duration']);
+                $comment = $rows[$i]['Comment'];
+                array_push($activities, [ $skillID, $startTime, $duration, $comment ]);
+            }
+            return $activities;
+        }
+
         // Format : [ ['add|rem',SkillID,DATE,DURATION], ... ]
         private static function AddActivities($db, $account, $activities) {
             $accountID = $account['ID'];
-            $dbActivities = json_decode($account['Activities'], true);
 
             for ($i = 0; $i < count($activities); $i++) {
                 $activity = $activities[$i];
-                if (count($activity) !== 4) continue;
+                if (count($activity) < 4 || count($activity) > 5) continue;
 
                 $type = $activity[0];
                 $skillID = $activity[1];
                 $startTime = $activity[2];
                 $duration = $activity[3];
-                $newActivity = [ $skillID, $startTime, $duration ];
+
+                // Check if activity exists
+                $exists = $db->QueryArray("SELECT `ID` FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
+                if ($exists === NULL) ExitWithStatus("Error: adding activity failed");
+                $exists = count($exists) > 0;
 
                 if ($type === 'add') {
-                    array_push($dbActivities, $newActivity);
-                } else if ($type === 'rem') {
-                    $index = array_search($newActivity, $dbActivities);
-                    if ($index !== false) {
-                        array_splice($dbActivities, $index, 1);
+                    if ($exists) {
+                        $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
+                        if ($r !== TRUE) ExitWithStatus("Error: saving activities failed (remove)");
                     }
+                    $comment = 'NULL';
+                    if (!is_null($activity[4]) && !empty($activity[4])) {
+                        $comment = "'".$activity[4]."'";
+                    }
+                    $r = $db->Query("INSERT INTO `Activities` (`UserID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES ('$accountID', '$skillID', '$startTime', '$duration', $comment)");
+                    if ($r !== TRUE) ExitWithStatus("Error: saving activities failed");
+                } else if ($type === 'rem' && $exists) {
+                    $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
+                    if ($r !== TRUE) ExitWithStatus("Error: saving activities failed (remove)");
                 }
-            }
-
-            $newActivities = json_encode($dbActivities);
-            $command = "UPDATE `Users` SET `Activities` = '$newActivities' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
-            if ($result !== TRUE) {
-                ExitWithStatus("Error: saving achievements failed");
             }
         }
 

@@ -92,7 +92,7 @@
         }
     } else if ($action === "quotes") {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
-        if ($quotes !== FALSE) {
+        if ($quotes !== NULL) {
             foreach ($quotes as $quote) {
                 $q = $quote['Quote'];
                 $a = $quote['Author'];
@@ -101,7 +101,7 @@
         }
     } else if ($action === "getData") {
         $app = $db->QueryArray("SELECT * FROM `App`");
-        if ($app !== FALSE) {
+        if ($app !== NULL) {
             $data = array();
             for ($i = 0; $i < count($app); $i++) {
                 $index = $app[$i]['ID'];
@@ -302,6 +302,13 @@
         $account = Account::GetByID($db, 1);
         $usernameTime = strtotime($account['LastChangeUsername']);
         print_r($usernameTime);
+    } else if ($action === 'testQuery') {
+        $t1 = microtime(true);
+        $activities = $db->QueryArray("SELECT * FROM `Activities` WHERE `UserID` = '14'");
+        $t2 = microtime(true);
+        $delta = ($t2 - $t1) * 1000;
+        //print_r($activities);
+        print_r("<br/>$delta ms");
     }
 
 ?>

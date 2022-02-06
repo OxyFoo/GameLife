@@ -9,7 +9,7 @@
         $app = $db->QueryArray("SELECT * FROM `App`");
         $lastHashRefresh = 0;
 
-        if ($app !== FALSE) {
+        if ($app !== NULL) {
             for ($i = 0; $i < count($app); $i++) {
                 $ID = $app[$i]['ID'];
                 $data = $app[$i]['Data'];

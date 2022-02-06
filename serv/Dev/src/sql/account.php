@@ -17,7 +17,7 @@
             $command = "SELECT * FROM `Users` WHERE `Email` = '$email'";
             $accounts = $db->QueryArray($command);
 
-            if ($accounts !== FALSE && count($accounts) === 1) {
+            if ($accounts !== NULL && count($accounts) === 1) {
                 $account = $accounts[0];
             }
 
@@ -28,7 +28,7 @@
             $account = NULL;
             $command = "SELECT * FROM `Users` WHERE `ID` = '$ID'";
             $accounts = $db->QueryArray($command);
-            if ($accounts !== FALSE && count($accounts) === 1) {
+            if ($accounts !== NULL && count($accounts) === 1) {
                 $account = $accounts[0];
             }
             return $account;

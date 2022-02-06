@@ -12,7 +12,7 @@
             $ID = $db->GetLastInsertID();
             $command2 = "SELECT * FROM `Devices` WHERE `ID` = '$ID'";
             $devices = $db->QueryArray($command2);
-            return $devices !== FALSE && count($devices) ? $devices[0] : NULL;
+            return $devices !== NULL && count($devices) ? $devices[0] : NULL;
         }
 
         public static function Get($db, $deviceIdentifier, $deviceName, $searchAll = FALSE) {
@@ -21,10 +21,12 @@
             if (!$searchAll) $command .= " WHERE `Name` = '$deviceName'";
 
             $devices = $db->QueryArray($command);
-            for ($d = 0; $d < count($devices); $d++) {
-                if (password_verify($deviceIdentifier, $devices[$d]['Identifier'])) {
-                    $device = $devices[$d];
-                    break;
+            if ($devices !== NULL) {
+                for ($d = 0; $d < count($devices); $d++) {
+                    if (password_verify($deviceIdentifier, $devices[$d]['Identifier'])) {
+                        $device = $devices[$d];
+                        break;
+                    }
                 }
             }
 
@@ -65,7 +67,7 @@
             $device = NULL;
             $command = "SELECT * FROM `Devices` WHERE `ID` = '$ID'";
             $devices = $db->QueryArray($command);
-            if ($devices !== FALSE && count($devices) === 1) {
+            if ($devices !== NULL && count($devices) === 1) {
                 $device = $devices[0];
             }
             return $device;

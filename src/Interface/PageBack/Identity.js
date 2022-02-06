@@ -38,7 +38,7 @@ class BackIdentity extends React.Component {
     getTimeFromFirst(activities) {
         if (!activities.length) return 0;
 
-        const initTime = user.activities.Get()[0].startTime;
+        const initTime = activities[0].startTime;
         const initDate = new Date(initTime * 1000);
         const diff = (GetTime() - GetTime(initDate)) / (60 * 60 * 24);
         return Math.floor(diff);

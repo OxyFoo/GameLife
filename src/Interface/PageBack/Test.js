@@ -4,27 +4,6 @@ import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
 
 class BackTest extends React.Component {
-    constructor(props) {
-        super(props);
-
-        // Average XP
-        const firstDate = new Date(user.activities.Get()[0].startTime * 1000);
-        firstDate.setHours(0, 0, 0);
-        const delta = (new Date()) - firstDate;
-        const delta_days = Math.ceil(delta / (1000 * 60 * 60 * 24));
-        this.averageXPperDay = Math.max(0, parseInt(user.xp / delta_days));
-
-        // User activities
-        const show = 3;
-        const userActivities = user.activities.Get();
-        this.activities = [];
-        for (let i = userActivities.length-1; i > userActivities.length - show - 1; i--) {
-            if (i >= 0) {
-                this.activities.push(userActivities[i]);
-            }
-        }
-    }
-
     state = {
         test: '',
         testChecked: false,

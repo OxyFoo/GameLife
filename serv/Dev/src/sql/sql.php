@@ -45,7 +45,7 @@
         }
 
         public function QueryArray($command) {
-            $output = FALSE;
+            $output = NULL;
             $query = $this->Query($command);
             if ($query !== FALSE) {
                 $output = array();

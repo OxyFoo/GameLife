@@ -19,7 +19,12 @@ class BackIdentity extends React.Component {
             stateDTP: '',
             editorOpened: false
         };
+    
+        this.skills = user.activities.GetLasts();
     }
+
+    openSkills = () => user.interface.ChangePage('skills');
+    openAchievements = () => user.interface.ChangePage('achievements');
 
     /**
      * @returns {Number} in hours

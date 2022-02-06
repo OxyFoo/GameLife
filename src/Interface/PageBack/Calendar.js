@@ -32,6 +32,7 @@ class BackCalendar extends React.Component {
 
         this.state = {
             months: months,
+            monthsMounted: false,
 
             opened: false,
             animating: false,
@@ -164,6 +165,9 @@ class BackCalendar extends React.Component {
             user.tempSelectedTime = RoundToQuarter(GetTime(date));
         } else {
             // Unselect day (calendar mode)
+            if (!this.state.monthsMounted) {
+                this.setState({ monthsMounted: true });
+            }
             if (this.state.opened) {
                 await this.hidePanel();
             }
@@ -171,7 +175,7 @@ class BackCalendar extends React.Component {
                 selectedDate: null,
                 selectedMonth: null,
                 selectedYear: null,
-                currWeek: []
+                currWeek: [],
             });
         }
     }

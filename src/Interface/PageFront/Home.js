@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
 import BackHome from '../PageBack/Home';
 import user from '../../Managers/UserManager';
@@ -7,9 +7,21 @@ import langManager from '../../Managers/LangManager';
 
 import { Round } from '../../Functions/Functions';
 import { UserHeader, StatsBars } from '../Widgets';
-import { Button, Container, Swiper, Text, XPBar, Page, News } from '../Components';
+import { Button, Container, Swiper, Text, XPBar, Page, News, Icon } from '../Components';
 
 class Home extends BackHome {
+    renderSkill = ({ item: { ID, Name, Logo } }) => {
+        const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
+        return (
+            <TouchableOpacity style={styles.skill} onPress={onPress} activeOpacity={.6}>
+                <View style={styles.skillImage}>
+                    <Icon xml={Logo} size={52} color='main1' />
+                </View>
+                <Text fontSize={12}>{Name}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     render() {
         const lang = langManager.curr['home'];
         const userStats = user.experience.GetExperience().xpInfo;
@@ -39,17 +51,6 @@ class Home extends BackHome {
                     onPress={this.addActivity}
                 >
                     {lang['btn-add-task']}
-                </Button>
-
-                <Button
-                    style={styles.topSpace}
-                    color='main1'
-                    rippleColor='white'
-                    borderRadius={8}
-                    icon='home'
-                    onPress={this.openAchievements}
-                >
-                    {lang['btn-achievements']}
                 </Button>
 
                 <Button
@@ -84,10 +85,14 @@ class Home extends BackHome {
                     color='main3'
                     rippleColor='white'
                 >
-                    {/* TODO - Show best skills */}
+                    <FlatList
+                        data={this.skills}
+                        renderItem={this.renderSkill}
+                        keyExtractor={(item, index) => 'skill-' + index}
+                        numColumns={3}
+                    />
                     <Button style={styles.btnSmall} onPress={this.openSkills}>{lang['btn-other-skills']}</Button>
                 </Container>
-
             </Page>
         );
     }
@@ -108,8 +113,23 @@ const styles = StyleSheet.create({
         marginTop: 24
     },
 
+    skill: {
+        width: '33%',
+        alignItems: 'center'
+    },
+    skillImage: {
+        width: '60%',
+        aspectRatio: 1,
+        marginBottom: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 4
+    },
+
     btnSmall: {
         height: 46,
+        marginTop: 24,
         marginHorizontal: '20%',
         borderRadius: 8
     }

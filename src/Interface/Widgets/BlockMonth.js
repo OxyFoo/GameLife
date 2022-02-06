@@ -18,7 +18,8 @@ const BlockMonthProps = {
     onLayout: () => {},
     onPressDay: (day, month, year) => {},
     today: new Date(),
-    selectedDay: null
+    selectedDay: null,
+    mounted: true
 }
 
 function isSameDay(date, day, month, year) {
@@ -68,22 +69,9 @@ function Day(props) {
 const ItemDay = React.memo(Day, (a, b) => false);
 
 class BlockMonth extends React.Component {
-    state = {
-        mounted: false
-    }
-
-    componentDidMount() {
-        const enable = () => { this.setState({ mounted: true }); };
-        const time = this.props.showTitle ? 1000 : 0;
-        setTimeout(enable, time);
-    }
     shouldComponentUpdate(nextProps, nextState) {
-        const { data, selectedDay } = nextProps;
-        const { data: currData, selectedDay: currSelectedDay } = this.props;
-
-        const { mounted } = this.state;
-        const { mounted: currMounted } = nextState;
-
+        const { data, selectedDay, mounted } = nextProps;
+        const { data: currData, selectedDay: currSelectedDay, mounted: currMounted } = this.props;
         return data !== currData || selectedDay !== currSelectedDay || mounted !== currMounted;
     }
 
@@ -101,7 +89,7 @@ class BlockMonth extends React.Component {
         return (
             <View style={[styles.container, height, this.props.style]} onLayout={this.props.onLayout}>
                 {this.props.showTitle && <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>}
-                {this.state.mounted && (
+                {this.props.mounted && (
                     <FlatList
                         data={days}
                         numColumns={7}

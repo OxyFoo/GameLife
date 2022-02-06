@@ -40,6 +40,7 @@ class Calendar extends BackCalendar {
                 year={item.year}
                 data={item.data}
                 onPressDay={this.daySelect}
+                mounted={this.state.monthsMounted}
             />
         );
 

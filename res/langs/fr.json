@@ -35,7 +35,9 @@
         "names": {
             "date": "Date",
             "start-time": "Début",
-            "duration": "Durée"
+            "duration": "Durée",
+            "day": "Jour",
+            "days": "Jours"
         },
         "month": [
             "Janvier",
@@ -249,6 +251,17 @@
         "value-age-empty": "Date de naissance inconnue",
         "value-title-empty": "Aucun titre sélectionné",
 
+        "row-title": "Informations",
+        "row-since": "Depuis",
+        "row-activities": "Nombre d'activités",
+        "row-time": "Nombre d'heures",
+
+        "container-achievements-title": "Derniers succès",
+        "container-achievements-all": "Tous les succès",
+        "container-stats-title": "Statistiques",
+        "container-skills-title": "Compétences",
+        "conatiner-skills-all": "Autre comp.",
+
         "input-username": "Pseudo",
         "input-select-title": "Sélectionnez un titre",
         "input-title-none": "Aucun titre",
@@ -272,19 +285,7 @@
         "alert-birthtimewarning-title": "Changement de date de naissance",
         "alert-birthtimewarning-text": "Vous ne pouvez définir une date de naissance qu'une fois tous les {} jours, choisissez-bien !",
         "alert-birthtimewait-title": "Changement de date de naissance",
-        "alert-birthtimewait-text": "Vous devez attendre {} jours avant de pouvoir modifier votre date de naissance à nouveau.",
-
-        "___OLD___": "",
-        "name-age": "Age",
-        "name-email": "EMail",
-        "name-totaltime": "Temps de pratique",
-
-        "value-totaltime": "{}h {}m",
-
-        "placeholder-username": "Pseudo",
-        "empty-title": "Aucun",
-
-        "name-lastachievement": "Dernier succès"
+        "alert-birthtimewait-text": "Vous devez attendre {} jours avant de pouvoir modifier votre date de naissance à nouveau."
     },
 
     "leaderboard": {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, TouchableOpacity, FlatList, StyleSheet, Animated } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import BackIdentity from '../PageBack/Identity';
@@ -8,7 +8,7 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { Page, Text, Button, XPBar, Container } from '../Components';
+import { Page, Text, Button, XPBar, Container, Icon } from '../Components';
 import { UserHeader, PageHeader, AvatarEditor, StatsBars } from '../Widgets';
 import { GetTime } from '../../Functions/Time';
 
@@ -25,7 +25,6 @@ class Identity extends BackIdentity {
      */
     renderPopupEdit = () => {
         const lang = langManager.curr['identity'];
-        const [ stateDTP, setStateDTP ] = React.useState('');
         const close = () => user.interface.popup.Close();
 
         // Username
@@ -122,7 +121,21 @@ class Identity extends BackIdentity {
         );
     }
 
+    renderSkill = ({ item: { ID, Name, Logo } }) => {
+        const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
+        return (
+            <TouchableOpacity style={styles.skill} onPress={onPress} activeOpacity={.6}>
+                <View style={styles.skillImage}>
+                    <Icon xml={Logo} size={52} color='main1' />
+                </View>
+                <Text fontSize={12}>{Name}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     render() {
+        const lang = langManager.curr['identity'];
+        const langDates = langManager.curr['dates']['names'];
         const interReverse = { inputRange: [0, 1], outputRange: [1, 0] };
         const headerOpacity = this.refAvatar === null ? 1 : this.refAvatar.state.editorAnim.interpolate(interReverse);
         const headerPointer = this.refAvatar === null ? 'auto' : (this.state.editorOpened ? 'none' : 'auto');
@@ -131,7 +144,7 @@ class Identity extends BackIdentity {
         const cellStyle = [styles.cell, { borderColor: themeManager.GetColor('main1') }];
         const row = (title, value) => (
             <View style={rowStyle}>
-                <Text fontSize={14} containerStyle={cellStyle} style={{ textAlign: 'left' }}>{title}</Text>
+                <Text fontSize={14} containerStyle={cellStyle} style={{ textAlign: 'left' }}>{lang[title]}</Text>
                 <Text fontSize={14} containerStyle={[cellStyle, { borderRightWidth: 0 }]} style={{ textAlign: 'left' }}>{value}</Text>
             </View>
         );
@@ -172,21 +185,21 @@ class Identity extends BackIdentity {
                 <Container
                     style={styles.topSpace}
                     styleContainer={{ padding: 0 }}
-                    text={'TITLE 0'}
+                    text={lang['row-title']}
                     type='static'
                     opened={true}
                     color='main1'
                     backgroundColor='backgroundCard'
                 >
-                    {row('DEPUIS', this.playTime)}
-                    {row('ACTIVITES', this.totalActivityLength)}
-                    {row('TEMPS ACTIVITES', this.totalActivityTime)}
+                    {row('row-since', this.playTime + ' ' + (this.playTime <= 1 ? langDates['day'] : langDates['days']))}
+                    {row('row-activities', this.totalActivityLength)}
+                    {row('row-time', this.totalActivityTime)}
                 </Container>
 
                 <View style={{ paddingHorizontal: '5%' }}>
                     <Container
                         style={styles.topSpace}
-                        text={'TITLE 1'}
+                        text={lang['container-stats-title']}
                         type='rollable'
                         opened={false}
                         color='backgroundCard'
@@ -196,24 +209,38 @@ class Identity extends BackIdentity {
 
                     <Container
                         style={styles.topSpace}
-                        text={'TITLE 2'}
+                        text={lang['container-skills-title']}
                         type='rollable'
                         opened={false}
                         color='backgroundCard'
                     >
-                        {/* TODO - Show best skills */}
+                        <FlatList
+                            data={this.skills}
+                            renderItem={this.renderSkill}
+                            keyExtractor={(item, index) => 'skill-' + index}
+                            numColumns={3}
+                        />
+                        <Button style={styles.btnSmall} onPress={this.openSkills}>{lang['conatiner-skills-all']}</Button>
                     </Container>
                 </View>
 
                 <Container
                     style={styles.topSpace}
-                    text={'TITLE 3'}
+                    text={lang['container-achievements-title']}
                     type='static'
                     opened={true}
                     color='main1'
                     backgroundColor='backgroundCard'
                 >
                     {/* TODO - Show last achievements */}
+                    <Button
+                        style={styles.achievementButton}
+                        onPress={this.openAchievements}
+                        color='main2'
+                        fontSize={14}
+                    >
+                        {lang['container-achievements-all']}
+                    </Button>
                 </Container>
             </Page>
         )
@@ -235,6 +262,32 @@ const styles = StyleSheet.create({
         paddingHorizontal: '5%',
         justifyContent: 'center',
         borderRightWidth: .4
+    },
+    achievementButton: {
+        width: '60%',
+        height: 48,
+        marginLeft: '20%'
+    },
+    
+    skill: {
+        width: '33%',
+        alignItems: 'center'
+    },
+    skillImage: {
+        width: '60%',
+        aspectRatio: 1,
+        marginBottom: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 4
+    },
+
+    btnSmall: {
+        height: 46,
+        marginTop: 24,
+        marginHorizontal: '20%',
+        borderRadius: 8
     },
 
     popup: {

@@ -36,15 +36,77 @@ class Activity extends BackActivity {
             />
         )
     }
-    render() {
-        const lang = langManager.curr['activity'];
-        const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundGrey') };
-        const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
-        const inter = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
-        const panelPosY = this.state.animPosY.interpolate(inter);
+    renderPanelDetails = () => {
+        const lang = langManager.curr['activity'];
+        const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
         const skillID = this.state.selectedSkill.id;
         const skill = dataManager.skills.GetByID((skillID));
+        return (
+            <View>
+                {/* Schedule */}
+                <Text style={styles.title} bold>{lang['title-schedule']}</Text>
+                <ActivitySchedule
+                    editable={!this.state.visualisationMode}
+                    onChange={this.onChangeSchedule}
+                    initialValue={this.state.ActivitySchedule}
+                />
+
+                {/* Experience */}
+                <Text style={styles.title} bold>{(skill !== null && skill.XP > 0) ? lang['title-experience'] : lang['title-no-experience']}</Text>
+                <ActivityExperience
+                    skillID={this.state.selectedSkill.id}
+                    duration={this.state.activityDuration}
+                />
+
+                {/* Commentary */}
+                {this.state.comment === null ? (
+                    <Button
+                        style={styles.comButton}
+                        onPress={this.onAddComment}
+                        color='main1'
+                        fontSize={14}
+                    >
+                        {lang['add-commentary']}
+                    </Button>
+                ) : (
+                    <View style={{ marginBottom: 48 }}>
+                        {/* Comment title */}
+                        <Text style={styles.title} bold>{lang['title-commentary']}</Text>
+
+                        {/* Comment content */}
+                        <TouchableOpacity
+                            style={[styles.commentPanel, backgroundCard]}
+                            activeOpacity={.6}
+                            onPress={this.onEditComment}
+                            onLongPress={this.onRemComment}
+                        >
+                            <Text style={styles.comment}>{this.state.comment}</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+
+                {/* Add / Remove button */}
+                {this.state.visualisationMode ? (
+                    <Button onPress={this.RemActivity} color='main2'>{lang['btn-remove']}</Button>
+                ) : (
+                    <Button onPress={this.AddActivity} color='main2'>{lang['btn-add']}</Button>
+                )}
+            </View>
+        );
+    }
+
+    render() {
+        const lang = langManager.curr['activity'];
+        const inter = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
+        const panelPosY = this.state.animPosY.interpolate(inter);
+        const stylePanel = [styles.panel,
+            {
+                minHeight: SCREEN_HEIGHT - this.state.posY - 12,
+                transform: [{ translateY: panelPosY }],
+                backgroundColor: themeManager.GetColor('backgroundGrey')
+            }
+        ];
 
         return (
             <Page
@@ -84,15 +146,9 @@ class Activity extends BackActivity {
 
                 </View>
 
+                {/* Panel */}
                 <Animated.View
-                    style={[
-                        styles.panel,
-                        backgroundColor,
-                        {
-                            minHeight: SCREEN_HEIGHT - this.state.posY - 12,
-                            transform: [{ translateY: panelPosY }]
-                        }
-                    ]}
+                    style={stylePanel}
                     onLayout={(event) => { this.setState({ posY: event.nativeEvent.layout.y }) }}
                 >
                     {!this.state.visualisationMode &&
@@ -107,56 +163,7 @@ class Activity extends BackActivity {
                     {this.state.startnowMode ? (
                         <Button onPress={this.StartActivity} color='main2'>{lang['btn-start']}</Button>
                     ) : (
-                        <View>
-                            {/* Schedule */}
-                            <Text style={styles.title} bold>{lang['title-schedule']}</Text>
-                            <ActivitySchedule
-                                editable={!this.state.visualisationMode}
-                                onChange={this.onChangeSchedule}
-                                initialValue={this.state.ActivitySchedule}
-                            />
-
-                            {/* Experience */}
-                            <Text style={styles.title} bold>{(skill !== null && skill.XP > 0) ? lang['title-experience'] : lang['title-no-experience']}</Text>
-                            <ActivityExperience
-                                skillID={this.state.selectedSkill.id}
-                                duration={this.state.activityDuration}
-                            />
-
-                            {/* Commentary */}
-                            {this.state.comment === null ? (
-                                <Button
-                                    style={styles.comButton}
-                                    onPress={this.onAddComment}
-                                    color='main1'
-                                    fontSize={14}
-                                >
-                                    {lang['add-commentary']}
-                                </Button>
-                            ) : (
-                                <View style={{ marginBottom: 48 }}>
-                                    {/* Comment title */}
-                                    <Text style={styles.title} bold>{lang['title-commentary']}</Text>
-
-                                    {/* Comment content */}
-                                    <TouchableOpacity
-                                        style={[styles.commentPanel, backgroundCard]}
-                                        activeOpacity={.6}
-                                        onPress={this.onEditComment}
-                                        onLongPress={this.onRemComment}
-                                    >
-                                        <Text style={styles.comment}>{this.state.comment}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-
-                            {/* Add / Remove button */}
-                            {this.state.visualisationMode ? (
-                                <Button onPress={this.RemActivity} color='main2'>{lang['btn-remove']}</Button>
-                            ) : (
-                                <Button onPress={this.AddActivity} color='main2'>{lang['btn-add']}</Button>
-                            )}
-                        </View>
+                        <this.renderPanelDetails />
                     )}
                 </Animated.View>
 

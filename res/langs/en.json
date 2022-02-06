@@ -35,7 +35,9 @@
         "names": {
             "date": "Date",
             "start-time": "Start",
-            "duration": "Duration"
+            "duration": "Duration",
+            "day": "Day",
+            "days": "Days"
         },
         "month": [
             "January",
@@ -249,6 +251,17 @@
         "value-age-empty": "Date of birth unknown",
         "value-title-empty": "No title selected",
 
+        "row-title": "Informations",
+        "row-since": "Since",
+        "row-activities": "Number of activities",
+        "row-time": "Time spent",
+
+        "container-achievements-title": "Last achievements",
+        "container-achievements-all": "All achievements",
+        "container-stats-title": "Statistics",
+        "container-skills-title": "Skills",
+        "conatiner-skills-all": "All skills",
+
         "input-username": "Username",
         "input-select-title": "Select a title",
         "input-title-none": "No title",
@@ -272,19 +285,7 @@
         "alert-birthtimewarning-title": "Change of date of birth",
         "alert-birthtimewarning-text": "You can only set a birth date once every {} days, so choose wisely!",
         "alert-birthtimewait-title": "Change of date of birth",
-        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
-
-        "___OLD___": "",
-        "name-age": "Age",
-        "name-email": "EMail",
-        "name-totaltime": "Practice time",
-
-        "value-totaltime": "{}h {}m",
-
-        "placeholder-username": "Username",
-        "empty-title": "None",
-
-        "name-lastachievement": "Last achievement"
+        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again."
     },
 
     "leaderboard": {

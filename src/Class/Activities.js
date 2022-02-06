@@ -137,6 +137,25 @@ class Activities {
         return usefulActivities;
     }
 
+    GetLasts(number = 6) {
+        const now = GetTime();
+        const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
+        const usersActivitiesID = usersActivities.map(activity => activity.skillID);
+    
+        const filter = skill => usersActivitiesID.includes(skill.ID);
+        const compare = (a, b) => a['experience']['lastTime'] < b['experience']['lastTime'] ? -1 : 1;
+        const getInfos = skill => ({
+            ...skill,
+            Name: dataManager.GetText(skill.Name),
+            Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+            experience: this.user.experience.GetSkillExperience(skill.ID)
+        });
+    
+        let skills = dataManager.skills.skills.filter(filter);
+        skills = skills.map(getInfos).sort(compare);
+        return skills.slice(0, number);
+    }
+
     RemoveDeletedSkillsActivities() {
         let activities = [ ...this.activities, ...this.UNSAVED_activities ];
         let deletions = [];
@@ -157,7 +176,6 @@ class Activities {
      * @returns {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'}
      */
     Add(skillID, startTime, duration, comment) {
-        console.log('comment:', comment);
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;

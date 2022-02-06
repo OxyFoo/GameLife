@@ -303,8 +303,14 @@
         $usernameTime = strtotime($account['LastChangeUsername']);
         print_r($usernameTime);
     } else if ($action === 'testQuery') {
+        // Average: 0.27ms/query
         $t1 = microtime(true);
         $activities = $db->QueryArray("SELECT * FROM `Activities` WHERE `UserID` = '14'");
+        /*for ($i = 0; $i < 100*1000; $i++) {
+            $db->Query("INSERT INTO `Activities` (`UserID`, `SkillID`, `StartTime`, `Duration`) VALUES ('0', '0', '0', '0')");
+            $id = $db->GetLastInsertID();
+            $db->Query("DELETE FROM `Activities` WHERE `ID` = '$id'");
+        }*/
         $t2 = microtime(true);
         $delta = ($t2 - $t1) * 1000;
         //print_r($activities);

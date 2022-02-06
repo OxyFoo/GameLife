@@ -99,6 +99,7 @@
                 $skillID = intval($rows[$i]['SkillID']);
                 $startTime = intval($rows[$i]['StartTime']);
                 $duration = intval($rows[$i]['Duration']);
+                // TODO - Decrypt comment
                 $comment = $rows[$i]['Comment'];
                 array_push($activities, [ $skillID, $startTime, $duration, $comment ]);
             }
@@ -130,6 +131,7 @@
                     }
                     $comment = 'NULL';
                     if (!is_null($activity[4]) && !empty($activity[4])) {
+                        // TODO - Encrypt comment
                         $comment = "'".$activity[4]."'";
                     }
                     $r = $db->Query("INSERT INTO `Activities` (`UserID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES ('$accountID', '$skillID', '$startTime', '$duration', $comment)");

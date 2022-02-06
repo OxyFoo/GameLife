@@ -58,9 +58,12 @@ class Experience {
             }
         }
 
-        const getStatInfo = (key) => this.getXPDict(stats[key], StatXPperLevel);
+        for (let key in stats) {
+            stats[key] = this.getXPDict(stats[key], StatXPperLevel);
+        }
+
         const output = {
-            'stats': statsKeys.map(getStatInfo),
+            'stats': stats,
             'xpInfo': this.getXPDict(XP, UserXPperLevel)
         }
         return output;

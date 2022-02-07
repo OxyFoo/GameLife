@@ -65,13 +65,11 @@ function GetTimeToTomorrow() {
  * @returns {Number} time rounded to hours in seconds until now
  */
 function GetDaysUntil(time) {
-    let days = 0;
-    if (time !== null) {
-        const today = new Date();
-        const _date = new Date(time * 1000);
-        const delta = today.getTime() - _date.getTime();
-        days = delta / (1000 * 60 * 60 * 24);
-    }
+    if (time === null) return null;
+    const today = GetTime();
+    const _date = GetTime(new Date(time * 1000));
+    const delta = today - _date;
+    const days = delta / (1000 * 60 * 60 * 24);
     return days;
 }
 

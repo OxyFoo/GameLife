@@ -152,7 +152,7 @@ class Informations {
         const delta = GetDaysUntil(this.usernameTime);
         const remain = DAYS_USERNAME_CHANGE - Math.round(delta);
         const output = {
-            remain: remain,
+            remain: delta === null ? 0 : remain,
             total: DAYS_USERNAME_CHANGE
         };
         return output;
@@ -162,7 +162,7 @@ class Informations {
         const delta = GetDaysUntil(this.lastBirthTime);
         const remain = DAYS_BIRTHTIME_CHANGE - Math.round(delta);
         const output = {
-            remain: remain,
+            remain: delta === null ? 0 : remain,
             total: DAYS_BIRTHTIME_CHANGE
         };
         return output;

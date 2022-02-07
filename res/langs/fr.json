@@ -285,7 +285,9 @@
         "alert-birthtimewarning-title": "Changement de date de naissance",
         "alert-birthtimewarning-text": "Vous ne pouvez définir une date de naissance qu'une fois tous les {} jours, choisissez-bien !",
         "alert-birthtimewait-title": "Changement de date de naissance",
-        "alert-birthtimewait-text": "Vous devez attendre {} jours avant de pouvoir modifier votre date de naissance à nouveau."
+        "alert-birthtimewait-text": "Vous devez attendre {} jours avant de pouvoir modifier votre date de naissance à nouveau.",
+        "alert-birthconfirm-title": "Confirmation",
+        "alert-birthconfirm-text": "Vous avez bien {} ans ?"
     },
 
     "leaderboard": {

@@ -10,7 +10,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { Page, Text, Button, XPBar, Container, Icon } from '../Components';
 import { UserHeader, PageHeader, AvatarEditor, StatsBars } from '../Widgets';
-import { GetTime } from '../../Functions/Time';
+import { GetAge, GetTime } from '../../Functions/Time';
 
 class Identity extends BackIdentity {
     openNowifiPopup() {
@@ -67,17 +67,35 @@ class Identity extends BackIdentity {
         const dtpTopDate = new Date(); dtpTopDate.setFullYear(dtpTopDate.getFullYear() - 6);
         const dtpBottomDate = new Date(); dtpBottomDate.setFullYear(dtpBottomDate.getFullYear() - 120);
 
-        const onChangeAge = (date) => { user.informations.SetBirthTime(GetTime(date)); hideDTP(); };
+        const setBirthTime = (bt, time) => {
+            if (bt === 'yes') {
+                user.informations.SetBirthTime(time);
+            }
+            this.openPopupEdit();
+        }
+        const onChangeAge = (date) => {
+            hideDTP();
+            // Confirmation after changing age
+            const time = GetTime(date);
+            const age = GetAge(time);
+            const title = lang['alert-birthconfirm-title'];
+            const text = lang['alert-birthconfirm-text'].replace('{}', age);
+            user.interface.popup.ForceOpen('yesno', [ title, text ], (bt) => setBirthTime(bt, time), false);
+        };
         const showDTP = () => this.setState({ stateDTP: 'date' });
         const hideDTP = () => this.setState({ stateDTP: '' });
         const checkChangeAge = () => {
             const info = user.informations.GetInfoToChangeBirthtime();
+
+            // Try to change too early
             if (info.remain > 0) {
                 const title = lang['alert-birthtimewait-title'];
                 const text = lang['alert-birthtimewait-text'].replace('{}', info.remain);
                 user.interface.popup.ForceOpen('ok', [ title, text ], this.openPopupEdit, false);
                 return;
             }
+
+            // Confirmation before changing age
             const title = lang['alert-birthtimewarning-title'];
             const text = lang['alert-birthtimewarning-text'].replace('{}', info.total);
             const checkedChangeAge = () => { showDTP(); this.openPopupEdit(); };

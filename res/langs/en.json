@@ -285,7 +285,9 @@
         "alert-birthtimewarning-title": "Change of date of birth",
         "alert-birthtimewarning-text": "You can only set a birth date once every {} days, so choose wisely!",
         "alert-birthtimewait-title": "Change of date of birth",
-        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again."
+        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
+        "alert-birthconfirm-title": "Confirmation",
+        "alert-birthconfirm-text": "Are you {} years old?"
     },
 
     "leaderboard": {

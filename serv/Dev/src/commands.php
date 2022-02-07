@@ -98,6 +98,17 @@
                         $this->output['status'] = 'ok';
                         break;
                     case 1: // Wait mail confirmation
+                        // Remove the device after 30 minutes
+                        $remainMailTime = strtotime($account['LastSendMail']);
+                        $now = time();
+                        $max = 30 * 60;
+                        $remainTime = $max - ($now - $remainMailTime);
+                        if ($remainTime <= 0) {
+                            $remainTime = 0;
+                            Account::RemDevice($this->db, $deviceID, $account, 'DevicesWait');
+                            $this->Login();
+                        }
+                        $this->output['remainMailTime'] = $remainTime;
                         $this->output['status'] = 'waitMailConfirmation';
                         break;
                     default: // Device isn't in account
@@ -105,7 +116,7 @@
                         $accountID = $account['ID'];
                         Account::RefreshLastDate($this->db, $accountID);
                         Account::AddDevice($this->db, $deviceID, $account, 'DevicesWait');
-                        Device::RefreshToken($this->db, $deviceID);
+                        Device::RefreshMailToken($this->db, $deviceID, $accountID);
                         $this->db->SendMail($email, $deviceID, $accountID, $lang);
                         $this->output['status'] = 'newDevice';
                         break;

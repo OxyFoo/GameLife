@@ -78,7 +78,7 @@ class BackLoading extends React.Component {
         // Connect
         if (user.server.token === '') {
             const email = user.settings.email;
-            const status = await user.server.Connect(email);
+            const { status } = await user.server.Connect(email);
             if (status === 'newDevice' || status === 'waitMailConfirmation') {
                 // Mail not confirmed
                 while (!user.interface.ChangePage('waitmail', { email: email }, true)) await Sleep(100);

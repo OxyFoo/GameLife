@@ -89,7 +89,7 @@ class BackLogin extends React.Component {
             await this.Signin();
         } else {
             // Login
-            const status = await user.server.Connect(email);
+            const { status } = await user.server.Connect(email);
             if (status === 'free') {
                 this.setState({ signinMode: true });
                 TimingAnimation(this.state.animSignin, 1, 400, false).start();
@@ -116,7 +116,7 @@ class BackLogin extends React.Component {
         } else if (this.state.errorUsername.length) {
             this.setState({ errorUsername: '' });
         }
-        
+
         if (!this.state.cguAccepted) {
             this.setState({ errorCgu: langManager.curr['login']['error-signin-disagree'] });
             return;

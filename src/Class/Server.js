@@ -71,25 +71,31 @@ class Server {
     /**
      * Try to connect to the server, with email (and device informations)
      * @param {string} email - Email of the user
-     * @returns {Promise<String>} - Status of the user connection
+     * @returns {Promise<{status: String, remainMailTime: Number}>} - Status of the user connection
      */
     Connect = async (email) => {
         let status = null;
+        let remainMailTime = null;
+
         const result_connect = await this.__reqConnect(email);
+        const content = result_connect.content;
 
         if (result_connect.status !== 200) {
-            const error = result_connect.status + ' - ' + result_connect.content['error'];
+            const error = result_connect.status + ' - ' + content['error'];
             this.user.interface.console.AddLog('error', 'Request: connect failed (' + error + ')');
             return STATUS.ERROR;
         }
 
-        if (Object.values(STATUS).includes(result_connect.content['status'])) {
-            status = result_connect.content['status'];
+        if (Object.values(STATUS).includes(content['status'])) {
+            status = content['status'];
             this.status = status;
+            if (content.hasOwnProperty('remainMailTime')) {
+                remainMailTime = content['remainMailTime'];
+            }
         }
 
         if (status === STATUS.CONNECTED || status === STATUS.BANNED) {
-            const token = result_connect.content['token'];
+            const token = content['token'];
             if (typeof(token) !== 'undefined' && token.length) {
                 this.token = token;
             } else {
@@ -97,7 +103,11 @@ class Server {
             }
         }
 
-        return status;
+        const output = {
+            status: status,
+            remainMailTime: remainMailTime
+        };
+        return output;
     }
 
     /**

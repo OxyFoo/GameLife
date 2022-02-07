@@ -7,14 +7,26 @@ const REFRESH_DELAY = 10; // seconds
 class BackWaitmail extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            time: null
+        }
     }
 
     componentDidMount() {
+        this.tick = setInterval(this.onTick, 1000);
         this.interval = setInterval(this.Login, REFRESH_DELAY * 1000);
+        this.Login();
     }
 
     componentWillUnmount() {
+        clearInterval(this.tick);
         clearInterval(this.interval);
+    }
+
+    onTick = () => {
+        if (this.state.time !== null) {
+            this.setState({ time: Math.max(0, this.state.time - 1) });
+        }
     }
 
     onBack = () => {
@@ -27,7 +39,9 @@ class BackWaitmail extends React.Component {
         const email = user.settings.email;
 
         // Login
-        const status = await user.server.Connect(email);
+        const { status, remainMailTime } = await user.server.Connect(email);
+        this.setState({ time: remainMailTime });
+
         if (status === 'free') {
             // Error, account not exists
             this.onBack();

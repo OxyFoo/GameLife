@@ -424,8 +424,10 @@
     },
 
     "wait": {
-        "text-wait-internet": "Vous devez être connecté à internet pour pouvoir vous connecter !",
-        "text-wait-email": "Un mail vous a été envoyé pour autoriser votre appareil à vous connecter.\n\nLe mail peut s'envoyer après quelque minutes, vérifiez vos spam."
+        "wait-internet-text": "Vous devez être connecté à internet pour pouvoir vous connecter !",
+        "wait-email-text": "Un mail vous a été envoyé pour autoriser votre appareil à vous connecter.\n\nLe mail peut s'envoyer après quelque minutes, vérifiez vos spam.",
+        "wait-email-remain": "Renvoi du mail dans {}m{}s",
+        "wait-email-send": "Mail envoyé !"
     },
 
     "widget": {

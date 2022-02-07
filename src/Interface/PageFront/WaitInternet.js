@@ -8,7 +8,7 @@ import { Text } from '../Components';
 
 class Waitinternet extends BackWaitinternet {
     render() {
-        const textWait = langManager.curr['wait']['text-wait-internet'];
+        const textWait = langManager.curr['wait']['wait-internet-text'];
 
         return (
             <View style={styles.body}>

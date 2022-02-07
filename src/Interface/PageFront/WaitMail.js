@@ -10,7 +10,18 @@ import { Text, Button, ProgressBar } from '../Components';
 class Waitmail extends BackWaitmail {
     render() {
         const email = user.settings.email;
-        const textWait = langManager.curr['wait']['text-wait-email'];
+        const langWait = langManager.curr['wait'];
+        const textWait = langWait['wait-email-text'];
+
+        const { time } = this.state;
+        let timeText = '';
+        if (time === 0) {
+            timeText = langWait['wait-email-send'];
+        } else if (time !== null) {
+            const SS = time % 60;
+            const MM = (time - SS) / 60;
+            timeText = langWait['wait-email-remain'].replace('{}', MM).replace('{}', SS);
+        }
 
         return (
             <View style={styles.body}>
@@ -23,6 +34,7 @@ class Waitmail extends BackWaitmail {
 
                 {/* ProgressBar & Back button */}
                 <View style={styles.progressBar}>
+                    <Text style={styles.resendText}>{timeText}</Text>
                     <ProgressBar />
                 </View>
                 <Button
@@ -66,6 +78,11 @@ const styles = StyleSheet.create({
     title: {
         marginBottom: 64,
         textDecorationLine: 'underline'
+    },
+    resendText: {
+        fontSize: 14,
+        textAlign: 'right',
+        marginBottom: 6
     }
 });
 

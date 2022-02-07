@@ -73,10 +73,11 @@
             return $device;
         }
 
-        public static function RefreshToken($db, $deviceID) {
+        public static function RefreshMailToken($db, $deviceID, $accountID) {
             $token = RandomString();
-            $result = $db->Query("UPDATE `Devices` SET `Token` = '$token' WHERE `ID` = '$deviceID'");
-            return $result;
+            $result1 = $db->Query("UPDATE `Devices` SET `Token` = '$token' WHERE `ID` = '$deviceID'");
+            $result2 = $db->Query("UPDATE `Users` SET `LastSendMail` = current_timestamp() WHERE `ID` = '$accountID'");
+            return $result1 || $result2;
         }
 
         public static function RemoveToken($db, $deviceID) {

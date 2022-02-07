@@ -1,6 +1,7 @@
 <?php
 
     require('./src/config.php');
+    require('./src/functions/mail.php');
     require('./src/sql/account.php');
     require('./src/sql/device.php');
     require('./src/sql/user.php');
@@ -25,8 +26,18 @@
     if (isset($action, $accountID, $deviceID, $deviceToken)) {
         $device = Device::GetByID($db, $deviceID);
         if ($device !== NULL) {
-            if ($device['Token'] === $deviceToken) {
-                if ($action === 'accept') {
+            if ($action === 'view' && isset($_GET['accept'])) {
+                // Check accept data
+                $acceptData = json_decode($db->Decrypt(base64_decode($_GET['accept'])));
+                if ($acceptData->action === 'accept' && isset($acceptData->accountID, $acceptData->deviceID, $acceptData->deviceToken)) {
+                    $content = GetMailContent($device['Name'], $_GET['accept'], NULL, $lang);
+                    echo($content['message']);
+                    unset($db);
+                    exit(0);
+                }
+            }
+            else if ($action === 'accept') {
+                if ($device['Token'] === $deviceToken) {
                     $account = Account::GetByID($db, $accountID);
                     $perm = Account::CheckDevicePermissions($deviceID, $account);
                     if ($perm === 1) {
@@ -34,12 +45,10 @@
                         Device::RemoveToken($db, $deviceID);
                         Account::AddDevice($db, $deviceID, $account, 'Devices');
                         $state = "Accept";
-                    } else {
-                        $state = "InvalidPerm";
                     }
+                } else {
+                    $state = "InvalidToken";
                 }
-            } else {
-                $state = "InvalidToken";
             }
         }
     }

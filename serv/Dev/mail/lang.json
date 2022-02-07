@@ -3,12 +3,14 @@
         "subject": "GameLife : Nouvel appareil",
         "title": "Êtes-vous sûr(e) de vouloir devenir un joueur ?",
         "text": "Cette action est irreversible et peut vous faire devenir meilleur, ou bien pire...",
-        "bt_accept": "Accepter"
+        "bt_accept": "Accepter",
+        "link": "Si le mail ne s'affiche pas correctement cliquez <a href='%link%'>ICI</a>"
     },
     "en": {
-        "subject": "GameLife : New device",
+        "subject": "GameLife: New device",
         "title": "Are you sure you want to become a player?",
         "text": "This action is there is no way to undo it and can make you better, or worse...",
-        "bt_accept": "Accept"
+        "bt_accept": "Accept",
+        "link": "If the email does not display correctly click <a href='%link%'>HERE</a>"
     }
 }

@@ -83,9 +83,12 @@
 
             $accept = array('action' => 'accept', 'accountID' => $accountID,
                             'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $lang);
+            $view = array('action' => 'view', 'accountID' => $accountID,
+                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $lang);
             $text_accept = base64_encode($this->Encrypt(json_encode($accept)));
+            $text_view = base64_encode($this->Encrypt(json_encode($view)));
 
-            SendSigninMail($email, $deviceName, $text_accept, $lang);
+            SendSigninMail($email, $deviceName, $text_accept, $text_view, $lang);
         }
 
         public function Encrypt($str, $key = null) {

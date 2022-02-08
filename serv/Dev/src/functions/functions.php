@@ -100,4 +100,10 @@
         return round($date_delta, 2);
     }
 
+    function UsernameIsCorrect($username) {
+        $isOkLength = iconv_strlen($username) >= 4 && iconv_strlen($username) <= 24;
+        // TODO - Check username validity (blacklist words, ...)
+        return $isOkLength;
+    }
+
 ?>

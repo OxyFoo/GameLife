@@ -189,7 +189,7 @@ class Server {
     /**
      * Save username on server
      * @param {String} username 
-     * @returns {Promise<'ok'|'alreadyUsed'|'alreadyChanged'|'error'>}
+     * @returns {Promise<'ok'|'alreadyUsed'|'alreadyChanged'|'incorrect'|'error'>}
      */
     async SaveUsername(username) {
         let output = 'error';
@@ -207,7 +207,6 @@ class Server {
             const usernameChangeState = content['usernameChangeState'];
 
             if (status === 'tokenExpired') {
-                output = 'error';
                 this.TokenExpired();
             } else {
                 output = usernameChangeState;

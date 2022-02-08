@@ -280,6 +280,8 @@
         "alert-alreadyUsed-text": "This username is already in use, please choose another one.",
         "alert-alreadyChanged-title": "Username already changed",
         "alert-alreadyChanged-text": "You must wait {} days before you can change it again.",
+        "alert-incorrect-title": "Incorrect username",
+        "alert-incorrect-text": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
         "alert-error-title": "Error",
         "alert-error-text": "Change of username impossible",
         "alert-birthtimewarning-title": "Change of date of birth",

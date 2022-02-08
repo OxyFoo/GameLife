@@ -28,11 +28,11 @@
         // ok => Pseudo is changed (check if it's free)
         // alreadyUsed => Pseudo already used
         // alreadyChanged => Pseudo change failed (time)
+        // incorrect => Pseudo is incorrect (wrong length...)
         // error => Others weird errors
         public static function SetUsername($db, $account, $username) {
             global $DAYS_USERNAME_CHANGE;
 
-            $output = 'error';
             $accountID = $account['ID'];
             $oldUsername = $account['Username'];
             $newUsername = ucfirst(strtolower($username));
@@ -42,25 +42,16 @@
             $nowText = date('Y-m-d H:i:s', $nowTime);
             $delta = ($nowTime - $lastUsernameTime) / (60 * 60 * 24);
 
-            if ($oldUsername != $newUsername) {
-                if ($delta >= $DAYS_USERNAME_CHANGE) {
-                    $pseudoIsFree = self::PseudoIsFree($db, $newUsername);
-                    if ($pseudoIsFree) {
-                        $command = "UPDATE `Users` SET `Username` = '$newUsername', `LastChangeUsername` = '$nowText' WHERE `ID` = '$accountID'";
-                        $result_pseudo = $db->Query($command);
-                        if ($result_pseudo !== TRUE) {
-                            ExitWithStatus("Error: Saving username failed");
-                        }
-                        $output = 'ok';
-                    } else {
-                        $output = 'alreadyUsed';
-                    }
-                } else {
-                    $output = 'alreadyChanged';
-                }
-            }
+            if ($oldUsername === $newUsername) return 'error';
+            if ($delta < $DAYS_USERNAME_CHANGE) return 'alreadyChanged';
+            if (!UsernameIsCorrect($newUsername)) return 'incorrect';
+            if (!self::PseudoIsFree($db, $newUsername)) return 'alreadyUsed';
 
-            return $output;
+            $command = "UPDATE `Users` SET `Username` = '$newUsername', `LastChangeUsername` = '$nowText' WHERE `ID` = '$accountID'";
+            $result_pseudo = $db->Query($command);
+            if ($result_pseudo !== TRUE) ExitWithStatus("Error: Saving username failed");
+
+            return 'ok';
         }
 
         private static function SetBirthtime($db, $account, $birthtime) {
@@ -69,7 +60,7 @@
             if ($lastChangeBirth !== NULL) $lastChangeBirth = strtotime($lastChangeBirth);
             // TODO - Check last change birth time
 
-            $command = "UPDATE `Users` SET `Birthtime` = '$birthtime', `LastChangeBirth` = 'current_timestamp()' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Users` SET `Birthtime` = '$birthtime', `LastChangeBirth` = current_timestamp() WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: saving birthtime failed");

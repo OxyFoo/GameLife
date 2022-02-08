@@ -1,144 +1,15 @@
 import * as React from 'react';
 import { View, TouchableOpacity, FlatList, StyleSheet, Animated } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import BackIdentity from '../PageBack/Identity';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
-import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Page, Text, Button, XPBar, Container, Icon } from '../Components';
-import { UserHeader, PageHeader, AvatarEditor, StatsBars } from '../Widgets';
-import { GetAge, GetTime } from '../../Functions/Time';
+import { UserHeader, PageHeader, AvatarEditor, StatsBars, IdentityEditor } from '../Widgets';
 
 class Identity extends BackIdentity {
-    openNowifiPopup() {
-        const title = langManager.curr['identity']['alert-nowifi-title'];
-        const text = langManager.curr['identity']['alert-nowifi-text'];
-        user.interface.popup.ForceOpen('ok', [ title, text ]);
-    }
-    openPopupEdit = () => user.interface.popup.ForceOpen('custom', this.renderPopupEdit, undefined, true);
-
-    /**
-     * Popup to edit user infos
-     */
-    renderPopupEdit = () => {
-        const lang = langManager.curr['identity'];
-        const close = () => user.interface.popup.Close();
-
-        // Username
-        const usernameEdit = async () => {
-            if (user.server.IsConnected()) {
-                const info = user.informations.GetInfoToChangeUsername();
-                if (user.informations.usernameTime !== null && info.remain > 0) {
-                    // Username already changed
-                    const title = lang['alert-alreadyChanged-title'];
-                    const text = lang['alert-alreadyChanged-text'].replace('{}', info.remain);
-                    user.interface.popup.ForceOpen('ok', [ title, text ], this.openPopupEdit, false);
-                    return;
-                }
-
-                // Warning to change username
-                const openChangeUsername = () => {
-                    user.interface.screenInput.Open(lang['input-username'], user.informations.username, user.informations.SetUsername);
-                    this.openPopupEdit();
-                }
-                const title = lang['alert-usernamewarning-title'];
-                const text = lang['alert-usernamewarning-text'].replace('{}', info.total).replace('{}', info.total);
-                user.interface.popup.ForceOpen('ok', [ title, text ], openChangeUsername, false);
-            } else {
-                this.openNowifiPopup();
-            }
-        }
-
-        // Title
-        const availableTitles = user.informations.GetUnlockTitles();
-        const listTitle = lang['input-select-title'];
-        const onChangeTitle = () => user.interface.screenList.Open(listTitle, availableTitles, user.informations.SetTitle);
-        const titleTxt = user.informations.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetTitleByID(user.informations.title).Name);
-
-        // Age
-        const age = user.informations.GetAge();
-        const ageText = age === null ? lang['value-age-empty'] : lang['value-age'].replace('{}', age);
-
-        // Age edition (Date Picker)
-        const dtpStartDate = new Date(2000, 0, 1, 0, 0, 0, 0);
-        const dtpTopDate = new Date(); dtpTopDate.setFullYear(dtpTopDate.getFullYear() - 6);
-        const dtpBottomDate = new Date(); dtpBottomDate.setFullYear(dtpBottomDate.getFullYear() - 120);
-
-        const setBirthTime = (bt, time) => {
-            if (bt === 'yes') {
-                user.informations.SetBirthTime(time);
-            }
-            this.openPopupEdit();
-        }
-        const onChangeAge = (date) => {
-            hideDTP();
-            // Confirmation after changing age
-            const time = GetTime(date);
-            const age = GetAge(time);
-            const title = lang['alert-birthconfirm-title'];
-            const text = lang['alert-birthconfirm-text'].replace('{}', age);
-            user.interface.popup.ForceOpen('yesno', [ title, text ], (bt) => setBirthTime(bt, time), false);
-        };
-        const showDTP = () => this.setState({ stateDTP: 'date' });
-        const hideDTP = () => this.setState({ stateDTP: '' });
-        const checkChangeAge = () => {
-            const info = user.informations.GetInfoToChangeBirthtime();
-
-            // Try to change too early
-            if (info.remain > 0) {
-                const title = lang['alert-birthtimewait-title'];
-                const text = lang['alert-birthtimewait-text'].replace('{}', info.remain);
-                user.interface.popup.ForceOpen('ok', [ title, text ], this.openPopupEdit, false);
-                return;
-            }
-
-            // Confirmation before changing age
-            const title = lang['alert-birthtimewarning-title'];
-            const text = lang['alert-birthtimewarning-text'].replace('{}', info.total);
-            const checkedChangeAge = () => { showDTP(); this.openPopupEdit(); };
-            user.interface.popup.ForceOpen('ok', [ title, text ], checkedChangeAge, false);
-        };
-
-        return (
-            <>
-                <View style={styles.popup}>
-                    <Text style={styles.popupTitle}>{lang['edit-title']}</Text>
-
-                    <View style={styles.popupRow}>
-                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.informations.username}</Text>
-                        <Button style={styles.popupButtonEdit} onPress={usernameEdit} fontSize={12} color='main1'>{lang['input-edit']}</Button>
-                    </View>
-
-                    <View style={styles.popupRow}>
-                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{titleTxt}</Text>
-                        <Button style={styles.popupButtonEdit} onPress={onChangeTitle} fontSize={12} color='main1'>{lang['input-edit']}</Button>
-                    </View>
-
-                    <View style={styles.popupRow}>
-                        <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{ageText}</Text>
-                        <Button style={styles.popupButtonEdit} onPress={checkChangeAge} fontSize={12} color='main1'>{lang['input-edit']}</Button>
-                    </View>
-
-                    <Button style={styles.popupButtonCancel} fontSize={14} onPress={close}>{lang['edit-cancel']}</Button>
-                </View>
-
-                <DateTimePickerModal
-                    date={dtpStartDate}
-                    maximumDate={dtpTopDate}
-                    minimumDate={dtpBottomDate}
-                    mode={this.state.stateDTP}
-                    headerTextIOS={lang['input-select-age']}
-                    onConfirm={onChangeAge}
-                    onCancel={hideDTP}
-                    isVisible={this.state.stateDTP != ''}
-                />
-            </>
-        );
-    }
-
     renderSkill = ({ item: { ID, Name, Logo } }) => {
         const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
         return (
@@ -167,6 +38,12 @@ class Identity extends BackIdentity {
             </View>
         );
 
+        const onIdentityEditor = () => {
+            if (this.refIdentityEditor !== null) {
+                this.refIdentityEditor.Open();
+            }
+        }
+
         return (
             <Page
                 ref={ref => this.refPage = ref}
@@ -182,7 +59,7 @@ class Identity extends BackIdentity {
                 <Animated.View style={{ opacity: headerOpacity }} pointerEvents={headerPointer}>
                     <UserHeader
                         showAge={true}
-                        onPress={this.openPopupEdit}
+                        onPress={onIdentityEditor}
                     />
 
                     <Animated.View style={styles.xp}>
@@ -260,8 +137,10 @@ class Identity extends BackIdentity {
                         {lang['container-achievements-all']}
                     </Button>
                 </Container>
+
+                <IdentityEditor ref={ref => { if (ref !== null) this.refIdentityEditor = ref }} />
             </Page>
-        )
+        );
     }
 }
 
@@ -306,37 +185,6 @@ const styles = StyleSheet.create({
         marginTop: 24,
         marginHorizontal: '20%',
         borderRadius: 8
-    },
-
-    popup: {
-        paddingVertical: '5%',
-        paddingHorizontal: '2%'
-    },
-    popupRow: {
-        marginHorizontal: '5%',
-        marginBottom: 24,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    popupTitle: {
-        marginTop: 12,
-        marginBottom: 24,
-        fontSize: 20
-    },
-    popupText: {
-        width: '60%'
-    },
-    popupButtonCancel: {
-        height: 48,
-        borderRadius: 8,
-        paddingHorizontal: 0
-    },
-    popupButtonEdit: {
-        width: '35%',
-        height: 38,
-        borderRadius: 8,
-        paddingHorizontal: 0
     }
 });
 

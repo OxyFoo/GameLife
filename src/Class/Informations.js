@@ -68,7 +68,6 @@ class Informations {
     }
 
     SetUsername = async (username) => {
-        const lang = langManager.curr['identity'];
         const request = await this.user.server.SaveUsername(username);
 
         if (request === 'ok') {
@@ -81,20 +80,9 @@ class Informations {
             if (this.user.interface.popup.state.opened) {
                 this.user.interface.popup.forceUpdate();
             }
-        } else if (request === 'alreadyUsed') {
-            const title = lang['alert-alreadyUsed-title'];
-            const text = lang['alert-alreadyUsed-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ]);
-        } else if (request === 'alreadyChanged') {
-            const info = this.GetInfoToChangeUsername();
-            const title = lang['alert-alreadyChanged-title'];
-            const text = lang['alert-alreadyChanged-text'].replace('{}', info.remain).replace('{}', info.remain);
-            this.user.interface.popup.ForceOpen('ok', [ title, text ]);
-        } else if (request === 'error') {
-            const title = lang['alert-error-title'];
-            const text = lang['alert-error-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ]);
         }
+
+        return request;
     }
 
     GetTitle = () => {

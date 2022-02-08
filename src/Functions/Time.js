@@ -62,14 +62,14 @@ function GetTimeToTomorrow() {
 
 /**
  * @param {Number} time in seconds
- * @returns {Number} time rounded to hours in seconds until now
+ * @returns {Number?} time rounded to hours in days until now
  */
 function GetDaysUntil(time) {
     if (time === null) return null;
     const today = GetTime();
     const _date = GetTime(new Date(time * 1000));
     const delta = today - _date;
-    const days = delta / (1000 * 60 * 60 * 24);
+    const days = delta / (60 * 60 * 24);
     return days;
 }
 

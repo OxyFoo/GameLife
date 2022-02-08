@@ -105,7 +105,7 @@ class ScreenInput extends React.Component {
                         onChangeText={this.onChangeText}
                         onSubmit={this.onValid}
                         multiline={this.state.multiline}
-                        maxLength={1024}
+                        maxLength={this.state.multiline ? 1024 : 64}
                     />
                     <Button
                         style={styles.button}

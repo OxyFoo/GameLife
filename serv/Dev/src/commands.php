@@ -196,9 +196,11 @@
             $usernameTime = $account['LastChangeUsername'];
             $title = intval($account['Title']);
             $birthtime = $account['Birthtime'];
+            $lastbirthtime = $account['LastChangeBirth'];
 
             if ($usernameTime !== NULL) $usernameTime = strtotime($usernameTime);
             if ($birthtime !== NULL) $birthtime = intval($birthtime);
+            if ($lastbirthtime !== NULL) $lastbirthtime = strtotime($lastbirthtime);
 
             $userData = array();
             if (isset($username, $title)) {
@@ -206,7 +208,7 @@
                 $userData['usernameTime'] = $usernameTime;
                 $userData['title'] = $title;
                 $userData['birthtime'] = $birthtime;
-                $userData['lastbirthtime'] = $birthtime;
+                $userData['lastbirthtime'] = $lastbirthtime;
             }
 
             if ($appDataToken != $dbDataToken) {

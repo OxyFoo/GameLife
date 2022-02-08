@@ -15,8 +15,9 @@ class BackIdentity extends React.Component {
 
         this.refPage = null;
         this.refAvatar = null;
+        this.refIdentityEditor = null;
+
         this.state = {
-            stateDTP: '',
             editorOpened: false
         };
     

@@ -116,6 +116,11 @@
                         'accountID' => intval($accountID),
                         'inTime' => intval($time) + (self::LIMIT_TIME_HOURS * 3600) >= time()
                     );
+                    // Check account existence
+                    $account = Account::GetByID($db, $accountID);
+                    if ($account === NULL) {
+                        $output['inTime'] = FALSE;
+                    }
                 }
             }
             return $output;

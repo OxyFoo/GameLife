@@ -1,7 +1,5 @@
 <?php
 
-    $URL = "https://oxyfoo.com/App/GameLife/Dev/auth.php";
-
     function GetMailLangText($langKey = 'fr') {
         $lang_content = file_get_contents("mail/lang.json");
         $lang_json = json_decode($lang_content);
@@ -14,7 +12,7 @@
         $headers = array(
             'MIME-Version' => '1.0',
             'Content-type' => 'text/html; charset=UTF-8',
-            'From' => 'signin@oxyfoo.com',
+            'From' => 'GameLife',
             'Subject' => $subject,
             'Reply-To' => 'contact@oxyfoo.com',
             'X-Mailer' => 'PHP/'.phpversion()
@@ -22,7 +20,7 @@
         return $headers;
     }
     function GetMailContent($title, $text, $textButton, $textLink, $deviceName, $actionButton, $actionView) {
-        global $URL;
+        global $URL; // In config.php
 
         $link_button = "$URL?data=$actionButton";
         $link_view = "$URL?data=$actionView&action=$actionButton";

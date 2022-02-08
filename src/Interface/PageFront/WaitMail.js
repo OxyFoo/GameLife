@@ -15,9 +15,9 @@ class Waitmail extends BackWaitmail {
 
         const { time } = this.state;
         let timeText = '';
-        if (time === 0) {
+        if (time === true) {
             timeText = langWait['wait-email-send'];
-        } else if (time !== null) {
+        } else if (typeof(time) === 'number') {
             const SS = time % 60;
             const MM = (time - SS) / 60;
             timeText = langWait['wait-email-remain'].replace('{}', MM).replace('{}', SS);

@@ -206,10 +206,6 @@
                 ExitWithStatus("Error: Saving XP failed");
             }
         }
-
-        /*public static function DelUser($db, $ID) {
-            $db->Query("DELETE FROM `Users` WHERE `ID` = '$ID'");
-        }*/
     }
 
 ?>

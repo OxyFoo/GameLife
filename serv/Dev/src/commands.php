@@ -17,7 +17,7 @@
         public function __construct($data) {
             $this->data = $data;
             $this->db = new DataBase();
-            $this->output = array("status" => "fail");
+            $this->output = array("status" => "error");
         }
 
         public function __destruct() {
@@ -72,55 +72,59 @@
             $deviceIdentifier = $this->data['deviceID'];
             $deviceName = $this->data['deviceName'];
             $email = $this->data['email'];
-            $lang = $this->data['lang'];
+            $langKey = $this->data['lang'];
 
-            if (isset($deviceIdentifier, $deviceName, $email, $lang)) {
-                $account = Account::GetByEmail($this->db, $email);
-                $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+            if (!isset($deviceIdentifier, $deviceName, $email, $langKey)) {
+                return;
+            }
 
-                if ($account === NULL) {
-                    $this->output['status'] = 'free';
-                    return;
-                }
+            $account = Account::GetByEmail($this->db, $email);
+            $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
 
-                // Check permissions
-                $deviceID = intval($device['ID']);
-                $perm = Account::CheckDevicePermissions($deviceID, $account);
-                switch ($perm) {
-                    case 0: // OK
-                        if ($account['Banned'] != 0) {
-                            $this->output['status'] = 'ban';
-                            break;
-                        }
-                        $accountID = $account['ID'];
-                        Account::RefreshLastDate($this->db, $accountID);
-                        $this->output['token'] = Device::GeneratePrivateToken($this->db, $accountID, $deviceID);
-                        $this->output['status'] = 'ok';
+            if ($account === NULL) {
+                $this->output['status'] = 'free';
+                return;
+            }
+
+            // Check permissions
+            $deviceID = intval($device['ID']);
+            $perm = Account::CheckDevicePermissions($deviceID, $account);
+            switch ($perm) {
+                case 0: // OK
+                    if ($account['Banned'] != 0) {
+                        $this->output['status'] = 'ban';
                         break;
-                    case 1: // Wait mail confirmation
-                        // Remove the device after 30 minutes
-                        $remainMailTime = strtotime($account['LastSendMail']);
-                        $now = time();
-                        $max = 30 * 60;
-                        $remainTime = $max - ($now - $remainMailTime);
-                        if ($remainTime <= 0) {
-                            $remainTime = 0;
-                            Account::RemDevice($this->db, $deviceID, $account, 'DevicesWait');
-                            $this->Login();
-                        }
-                        $this->output['remainMailTime'] = $remainTime;
-                        $this->output['status'] = 'waitMailConfirmation';
+                    }
+                    $accountID = $account['ID'];
+                    Account::RefreshLastDate($this->db, $accountID);
+                    $this->output['token'] = Device::GeneratePrivateToken($this->db, $accountID, $deviceID);
+                    $this->output['status'] = 'ok';
+                    break;
+                case 1: // Wait mail confirmation
+                    // Remove the device after 30 minutes
+                    $remainMailTime = strtotime($account['LastSendMail']);
+                    $now = time();
+                    $max = 30 * 60;
+                    $remainTime = $max - ($now - $remainMailTime);
+                    if ($remainTime <= 0) {
+                        $remainTime = 0;
+                        Account::RemDevice($this->db, $deviceID, $account, 'DevicesWait');
+                        $this->output['status'] = 'remDevice';
                         break;
-                    default: // Device isn't in account
-                    case -1:
-                        $accountID = $account['ID'];
-                        Account::RefreshLastDate($this->db, $accountID);
-                        Account::AddDevice($this->db, $deviceID, $account, 'DevicesWait');
-                        Device::RefreshMailToken($this->db, $deviceID, $accountID);
-                        $this->db->SendMail($email, $deviceID, $accountID, $lang);
-                        $this->output['status'] = 'newDevice';
-                        break;
-                }
+                    }
+                    $this->output['remainMailTime'] = $remainTime;
+                    $this->output['status'] = 'waitMailConfirmation';
+                    break;
+                default: // Device isn't in account
+                case -1:
+                    $accountID = $account['ID'];
+                    Account::RefreshLastDate($this->db, $accountID);
+                    Account::AddDevice($this->db, $deviceID, $account, 'DevicesWait');
+                    $newToken = Device::RefreshMailToken($this->db, $deviceID, $accountID);
+
+                    $sended = $this->db->SendMail($email, $device, $newToken, $accountID, $langKey, 'add');
+                    if ($sended) $this->output['status'] = 'newDevice';
+                    break;
             }
         }
 
@@ -131,23 +135,23 @@
             $username = $this->data['username'];
             $lang = $this->data['lang'];
 
-            if (isset($deviceIdentifier, $deviceName, $email, $username, $lang)) {
-                // Check username
-                    // Return pseudoUsed
-                // Add account
-                // Add deviceID in confirmed devices in account
-                // Return ok
-                if (User::PseudoIsFree($this->db, $username)) {
-                    $account = Account::Add($this->db, $username, $email);
-                    if ($account === NULL) {
-                        $this->output['status'] = 'error';
-                    } else {
-                        $this->output['status'] = 'ok';
-                    }
-                } else {
-                    $this->output['status'] = 'pseudoUsed';
-                }
+            if (!isset($deviceIdentifier, $deviceName, $email, $username, $lang)) {
+                return;
             }
+
+            if (!User::PseudoIsFree($this->db, $username)) {
+                $this->output['status'] = 'pseudoUsed';
+                return;
+            }
+            if (!UsernameIsCorrect($username)) {
+                $this->output['status'] = 'pseudoIncorrect';
+                return;
+            }
+
+            $account = Account::Add($this->db, $username, $email);
+            if ($account === NULL) return;
+
+            $this->output['status'] = 'ok';
         }
 
         /**
@@ -326,6 +330,33 @@
             if ($account === NULL) return;
 
             Account::RemDevice($this->db, $deviceID, $account, 'Devices');
+
+            $this->output['status'] = 'ok';
+        }
+
+        public function DeleteAccount() {
+            $token = $this->data['token'];
+            $email = $this->data['email'];
+            $langKey = $this->data['lang'];
+            if (!isset($token, $email, $langKey)) return;
+
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
+            }
+            $deviceID = $dataFromToken['deviceID'];
+            $accountID = $dataFromToken['accountID'];
+            $account = Account::GetByID($this->db, $accountID);
+            if ($account === NULL) return;
+            $device = Device::GetByID($this->db, $deviceID);
+            if ($device === NULL) return;
+
+            Account::RefreshLastDate($this->db, $accountID);
+            $newToken = Device::RefreshMailToken($this->db, $deviceID, $accountID);
+            $sended = $this->db->SendMail($email, $device, $newToken, $accountID, $langKey, 'rem');
+            if (!$sended) return;
 
             $this->output['status'] = 'ok';
         }

@@ -130,7 +130,9 @@ class BackLogin extends React.Component {
         if (signinStatus === 'pseudoUsed') {
             this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoUsed'] });
         }
-
+        else if (signinStatus === 'pseudoIncorrect') {
+            this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoIncorrect'] });
+        }
         else if (signinStatus === null) {
             this.setState({
                 username: '',

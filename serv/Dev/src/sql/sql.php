@@ -75,20 +75,32 @@
             return $this->conn->insert_id;
         }
 
-        public function SendMail($email, $deviceID, $accountID, $lang) {
-            $device = Device::GetByID($this, $deviceID);
+        /**
+         * Types : add, rem
+         */
+        public function SendMail($email, $device, $deviceToken, $accountID, $langKey, $type) {
+            if ($type !== 'add' && $type !== 'rem') return FALSE;
+
             $deviceID = $device['ID'];
             $deviceName = $device['Name'];
-            $deviceToken = $device['Token'];
 
             $accept = array('action' => 'accept', 'accountID' => $accountID,
-                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $lang);
+                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
+            $delete = array('action' => 'delete', 'accountID' => $accountID,
+                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
             $view = array('action' => 'view', 'accountID' => $accountID,
-                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $lang);
-            $text_accept = base64_encode($this->Encrypt(json_encode($accept)));
-            $text_view = base64_encode($this->Encrypt(json_encode($view)));
+                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
+            $actionAccept = base64_encode($this->Encrypt(json_encode($accept)));
+            $actionDelete = base64_encode($this->Encrypt(json_encode($delete)));
+            $actionView = base64_encode($this->Encrypt(json_encode($view)));
 
-            SendSigninMail($email, $deviceName, $text_accept, $text_view, $lang);
+            $output = FALSE;
+            if ($type === 'add') {
+                $output = SendSigninMail($email, $deviceName, $actionAccept, $actionView, $langKey);
+            } else if ($type === 'rem') {
+                $output = SendDeleteAccountMail($email, $deviceName, $actionDelete, $actionView, $langKey);
+            }
+            return $output;
         }
 
         public function Encrypt($str, $key = null) {

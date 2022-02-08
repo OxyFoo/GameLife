@@ -1,16 +1,40 @@
 {
     "fr": {
-        "subject": "GameLife : Nouvel appareil",
-        "title": "Êtes-vous sûr(e) de vouloir devenir un joueur ?",
-        "text": "Cette action est irreversible et peut vous faire devenir meilleur, ou bien pire...",
-        "bt_accept": "Accepter",
-        "link": "Si le mail ne s'affiche pas correctement cliquez <a href='%link%'>ICI</a>"
+        "signin-subject": "GameLife : Nouvel appareil",
+        "signin-title": "Êtes-vous sûr(e) de vouloir devenir un joueur ?",
+        "signin-text": "Cette action est irreversible et peut vous faire devenir meilleur, ou bien pire...",
+        "signin-button": "Accepter",
+
+        "delete-subject": "GameLife : Suppression de votre compte",
+        "delete-title": "Êtes-vous sûr(e) de vouloir supprimer votre compte ?",
+        "delete-text": "Cette action est irreversible et supprimera toutes vos données.",
+        "delete-button": "Supprimer",
+
+        "link": "Si le mail ne s'affiche pas correctement cliquez <a href='%link%'>ICI</a>",
+
+        "auth-title": "GAMELIFE",
+        "auth-accept": "Votre appareil a été accepté avec succès",
+        "auth-invalid-token": "Token invalide<br>Cet appareil a peut-être déjà été validé",
+        "auth-invalid-state": "Une erreur est survenue.",
+        "auth-remove-account": "Le compte ainsi que ses données ont bien été supprimés"
     },
     "en": {
-        "subject": "GameLife: New device",
-        "title": "Are you sure you want to become a player?",
-        "text": "This action is there is no way to undo it and can make you better, or worse...",
-        "bt_accept": "Accept",
-        "link": "If the email does not display correctly click <a href='%link%'>HERE</a>"
+        "signin-subject": "GameLife: New device",
+        "signin-title": "Are you sure you want to become a player?",
+        "signin-text": "This action is there is no way to undo it and can make you better, or worse...",
+        "signin-button": "Accept",
+
+        "delete-subject": "GameLife : Deleting your account",
+        "delete-title": "Are you sure you want to delete your account?",
+        "delete-text": "This action is irreversible and will delete all your data.",
+        "delete-button": "Delete",
+
+        "link": "If the email does not display correctly click <a href='%link%'>HERE</a>",
+
+        "auth-title": "GAMELIFE",
+        "auth-accept": "Your device has been successfully accepted",
+        "auth-invalid-token": "Invalid token<br>This device has maybe already been validated",
+        "auth-invalid-state": "An error has occurred.",
+        "auth-remove-account": "The account and its data have been deleted"
     }
 }

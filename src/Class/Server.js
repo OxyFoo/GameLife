@@ -12,6 +12,7 @@ const STATUS = {
     WAITMAIL    : 'waitMailConfirmation',
     BANNED      : 'ban',
     NEWDEVICE   : 'newDevice',
+    REMDEVICE   : 'remDevice',
     MAINTENANCE : 'maintenance',
     ERROR       : 'error'
 };
@@ -71,7 +72,7 @@ class Server {
     /**
      * Try to connect to the server, with email (and device informations)
      * @param {string} email - Email of the user
-     * @returns {Promise<{status: String, remainMailTime: Number}>} - Status of the user connection
+     * @returns {Promise<{status: 'free'|'ban'|'ok'|'newDevice'|'remDevice'|'waitMailConfirmation', remainMailTime: Number?}>} - Status of the user connection
      */
     Connect = async (email) => {
         let status = null;
@@ -114,14 +115,14 @@ class Server {
      * Send a request to the server to create a new user account
      * @param {String} email - Email of the user
      * @param {String} username - Pseudo of the user
-     * @returns {Promise<String>} - Status of the user signin
+     * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'?>} - Status of the user signin
      */
     Signin = async (email, username) => {
         let signin = null;
         const result = await this.__reqSignin(email, username);
         if (result.status === 200) {
             const status = result.content['status'];
-            if (status === 'ok' || status === 'pseudoUsed') {
+            if (status === 'ok' || status === 'pseudoUsed' || status === 'pseudoIncorrect') {
                 signin = status;
             }
         }
@@ -153,7 +154,6 @@ class Server {
                     this.dataToken = content['dataToken'];
                 }
             } else if (status === 'tokenExpired') {
-                success = false;
                 this.TokenExpired();
             }
         }
@@ -266,9 +266,31 @@ class Server {
         return output;
     }
 
-    // TODO - Popup + restart
+    async DeleteAccount() {
+        let output = false;
+        const _data = {
+            'action': 'deleteAccount',
+            'email': this.user.settings.email,
+            'lang': langManager.currentLangageKey,
+            'token': this.token
+        }
+        const response = await Request_Async(_data);
+        if (response.status === 200) {
+            const contentStatus = response.content['status'];
+            if (contentStatus === 'ok') {
+                output = true;
+            } else if (contentStatus === 'tokenExpired') {
+                this.TokenExpired();
+            }
+        }
+        return output;
+    }
+
     TokenExpired() {
         this.user.interface.console.AddLog('warn', 'Request: token expired');
+        const title = langManager.curr['server']['alert-tokenexpired-title'];
+        const text = langManager.curr['server']['alert-tokenexpired-text'];
+        this.user.interface.popup.ForceOpen('ok', [ title, text ], BackHandler.exitApp, false);
     }
 
     __reqPing() {

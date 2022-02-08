@@ -16,26 +16,51 @@
     $decrypted = $db->Decrypt($decoded);
     $data = json_decode($decrypted);
 
-    $state = 'InvalidState';
+    $state = 'auth-invalid-state';
     $action = $data->action;
-    $lang = $data->lang;
+    $langKey = $data->lang;
     $accountID = intval($data->accountID);
     $deviceID = intval($data->deviceID);
     $deviceToken = $data->deviceToken;
+    $lang = GetMailLangText($langKey);
+
+    function EchoAndExit($content) {
+        global $db;
+        echo($content);
+        unset($db);
+        exit(0);
+    }
 
     if (isset($action, $accountID, $deviceID, $deviceToken)) {
         $device = Device::GetByID($db, $deviceID);
         if ($device !== NULL) {
-            if ($action === 'view' && isset($_GET['accept'])) {
+
+            if ($action === 'view' && isset($_GET['action'])) {
                 // Check accept data
-                $acceptData = json_decode($db->Decrypt(base64_decode($_GET['accept'])));
-                if ($acceptData->action === 'accept' && isset($acceptData->accountID, $acceptData->deviceID, $acceptData->deviceToken)) {
-                    $content = GetMailContent($device['Name'], $_GET['accept'], NULL, $lang);
-                    echo($content['message']);
-                    unset($db);
-                    exit(0);
+                $acceptData = json_decode($db->Decrypt(base64_decode($_GET['action'])));
+                if (isset($acceptData->accountID, $acceptData->deviceID, $acceptData->deviceToken)) {
+                    if ($acceptData->action === 'accept') {
+
+                        $title = $lang->{'signin-title'};
+                        $text = $lang->{'signin-text'};
+                        $textButton = $lang->{'signin-button'};
+                        $textLink = $lang->link;
+                        $content = GetMailContent($title, $text, $textButton, $textLink, $device['Name'], $_GET['action'], NULL);
+                        EchoAndExit($content);
+
+                    } else if ($acceptData->action === 'delete') {
+
+                        $title = $lang->{'delete-title'};
+                        $text = $lang->{'delete-text'};
+                        $textButton = $lang->{'delete-button'};
+                        $textLink = $lang->link;
+                        $content = GetMailContent($title, $text, $textButton, $textLink, $device['Name'], $_GET['action'], NULL);
+                        EchoAndExit($content);
+
+                    }
                 }
             }
+
             else if ($action === 'accept') {
                 if ($device['Token'] === $deviceToken) {
                     $account = Account::GetByID($db, $accountID);
@@ -44,21 +69,33 @@
                         Account::RemDevice($db, $deviceID, $account, 'DevicesWait');
                         Device::RemoveToken($db, $deviceID);
                         Account::AddDevice($db, $deviceID, $account, 'Devices');
-                        $state = "Accept";
+                        $state = "auth-accept";
                     }
                 } else {
-                    $state = "InvalidToken";
+                    $state = "auth-invalid-token";
                 }
             }
+
+            else if ($action === 'delete') {
+                if ($device['Token'] === $deviceToken) {
+                    $account = Account::GetByID($db, $accountID);
+                    if ($account !== NULL) {
+                        Device::RemoveToken($db, $deviceID);
+                        if (Account::DelAccount($db, $accountID)) {
+                            $state = "auth-remove-account";
+                        }
+                    }
+                } else {
+                    $state = "auth-invalid-token";
+                }
+            }
+
         }
     }
 
-    $fileLang = file_get_contents('mail/auth.json');
-    $langJson = json_decode($fileLang)->$lang;
-
     $content = file_get_contents('mail/mail-auth.html');
-    $content = str_replace('%title%', $langJson->Title, $content);
-    $content = str_replace('%text%', $langJson->$state, $content);
+    $content = str_replace('%title%', $lang->{'auth-title'}, $content);
+    $content = str_replace('%text%', $lang->$state, $content);
     echo($content);
 
     unset($db);

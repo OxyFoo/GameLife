@@ -14,17 +14,15 @@ class BackWaitmail extends React.Component {
 
     componentDidMount() {
         this.tick = setInterval(this.onTick, 1000);
-        this.interval = setInterval(this.Login, REFRESH_DELAY * 1000);
         this.Login();
     }
 
     componentWillUnmount() {
         clearInterval(this.tick);
-        clearInterval(this.interval);
     }
 
     onTick = () => {
-        if (this.state.time !== null) {
+        if (typeof(this.state.time) === 'number' && this.state.time > 0) {
             this.setState({ time: Math.max(0, this.state.time - 1) });
         }
     }
@@ -40,18 +38,24 @@ class BackWaitmail extends React.Component {
 
         // Login
         const { status, remainMailTime } = await user.server.Connect(email);
-        this.setState({ time: remainMailTime });
 
-        if (status === 'free') {
-            // Error, account not exists
-            this.onBack();
-        } else if (status === 'ok' || status === 'ban') {
+        if (status === 'ok' || status === 'ban') {
             user.settings.connected = true;
             await user.settings.Save();
             user.interface.ChangePage('loading', undefined, true);
+        }
+
+        else if (status === 'free') {
+            // Error, account not exists
+            this.onBack();
         } else if (status === 'newDevice') {
-            // TODO - Mail sent
-            console.log('Mail sent');
+            this.setState({ time: true });
+            setTimeout(this.Login, REFRESH_DELAY * 1000);
+        } else if (status === 'waitMailConfirmation') {
+            this.setState({ time: remainMailTime });
+            setTimeout(this.Login, REFRESH_DELAY * 1000);
+        } else if (status === 'remDevice') {
+            this.Login();
         }
     }
 }

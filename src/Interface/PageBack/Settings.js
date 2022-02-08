@@ -64,6 +64,26 @@ class BackSettings extends React.Component {
         const text = langManager.curr['settings']['alert-disconnect-text'];
         user.interface.popup.Open('yesno', [ title, text ], event);
     }
+
+    deleteAccount = () => {
+        const event = async (button) => {
+            if (button === 'yes') {
+                const success = await user.server.DeleteAccount();
+                if (success) {
+                    const title = langManager.curr['settings']['alert-deletedmailsent-title'];
+                    const text = langManager.curr['settings']['alert-deletedmailsent-text'];
+                    user.interface.popup.Open('ok', [ title, text ], event, false);
+                } else {
+                    const title = langManager.curr['settings']['alert-deletedfailed-title'];
+                    const text = langManager.curr['settings']['alert-deletedfailed-text'];
+                    user.interface.popup.ForceOpen('ok', [ title, text ]);
+                }
+            }
+        };
+        const title = langManager.curr['settings']['alert-deleteaccount-title'];
+        const text = langManager.curr['settings']['alert-deleteaccount-text'];
+        user.interface.popup.Open('yesno', [ title, text ], event);
+    }
 }
 
 export default BackSettings;

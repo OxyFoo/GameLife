@@ -77,7 +77,10 @@
             $token = RandomString();
             $result1 = $db->Query("UPDATE `Devices` SET `Token` = '$token' WHERE `ID` = '$deviceID'");
             $result2 = $db->Query("UPDATE `Users` SET `LastSendMail` = current_timestamp() WHERE `ID` = '$accountID'");
-            return $result1 || $result2;
+            if ($result1 !== TRUE || $result2 !== TRUE) {
+                ExitWithStatus("Error: Refreshing mail token in DB failed");
+            }
+            return $token;
         }
 
         public static function RemoveToken($db, $deviceID) {

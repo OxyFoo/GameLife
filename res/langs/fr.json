@@ -75,6 +75,11 @@
         "btn-continue": "Continuer"
     },
 
+    "server": {
+        "alert-tokenexpired-title": "Le token de connexion a expiré",
+        "alert-tokenexpired-text": "L'application va se fermer, veuillez la relancer."
+    },
+
     "about": {
         "block-devs": "App créée par",
         "block-contributors": "Contributeurs",
@@ -319,6 +324,7 @@
         "error-signin-server": "Une erreur est survenue.",
         "error-signin-pseudoWrong": "Veuillez entrer un pseudo correct.",
         "error-signin-pseudoUsed": "Ce pseudo est déjà utilisé.",
+        "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Veuillez accepter les conditions générales.",
 
         "alert-deletedaccount-title": "Compte supprimé",
@@ -374,7 +380,13 @@
         "alert-disconnect-title": "Se déconnecter",
         "alert-disconnect-text": "Voulez-vous vous déconnecter ?",
         "alert-disconnecterror-title": "Erreur",
-        "alert-disconnecterror-text": "Une erreur est survenue, vérifier votre connexion internet ou veuillez réessayer plus tard."
+        "alert-disconnecterror-text": "Une erreur est survenue, vérifier votre connexion internet ou veuillez réessayer plus tard.",
+        "alert-deleteaccount-title": "Supprimer le compte",
+        "alert-deleteaccount-text": "Êtes-vous sûr de vouloir supprimer votre compte ? Un mail de confirmation vous sera envoyé.",
+        "alert-deletedmailsent-title": "Mail envoyé",
+        "alert-deletedmailsent-text": "Un mail de confirmation vous a été envoyé, vérifiez votre boîte mail.",
+        "alert-deletedfailed-title": "Échec",
+        "alert-deletedfailed-text": "Le mail n'a pas été envoyé, vérifiez votre connexion internet ou veuillez réessayer plus tard."
     },
 
     "shop": {

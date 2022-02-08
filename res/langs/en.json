@@ -75,6 +75,11 @@
         "btn-continue": "Continue"
     },
 
+    "server": {
+        "alert-tokenexpired-title": "The connection token has expired",
+        "alert-tokenexpired-text": "The application will close, please restart it."
+    },
+
     "about": {
         "block-devs": "App made by",
         "block-contributors": "Contributors",
@@ -319,6 +324,7 @@
         "error-signin-server": "An error has occurred.",
         "error-signin-pseudoWrong": "Please enter a correct username.",
         "error-signin-pseudoUsed": "This username is already in use.",
+        "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
 
         "alert-deletedaccount-title": "Account deleted",
@@ -374,7 +380,13 @@
         "alert-disconnect-title": "Disconnecting",
         "alert-disconnect-text": "Do you want to log out? Data will only be saved locally",
         "alert-disconnecterror-title": "Error",
-        "alert-disconnecterror-text": "An error has occurred, please check your internet connection or please try again later."
+        "alert-disconnecterror-text": "An error has occurred, please check your internet connection or please try again later.",
+        "alert-deleteaccount-title": "Delete account",
+        "alert-deleteaccount-text": "Are you sure you want to delete your account? A confirmation email will be sent to you.",
+        "alert-deletedmailsent-title": "Mail sent",
+        "alert-deletedmailsent-text": "A confirmation email has been sent to you, check your mailbox.",
+        "alert-deletedfailed-title": "Failure",
+        "alert-deletedfailed-text": "The email was not sent, please check your internet connection or try again later."
     },
 
     "shop": {

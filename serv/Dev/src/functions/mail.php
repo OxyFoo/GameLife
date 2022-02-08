@@ -2,52 +2,66 @@
 
     $URL = "https://oxyfoo.com/App/GameLife/Dev/auth.php";
 
-    function GetMailContent($deviceName, $actionAccept, $actionView, $lang) {
-        global $URL;
-
-        $link_accept = "$URL?data=$actionAccept";
-        $link_view = "$URL?data=$actionView&accept=$actionAccept";
-        
+    function GetMailLangText($langKey = 'fr') {
         $lang_content = file_get_contents("mail/lang.json");
         $lang_json = json_decode($lang_content);
 
         $selected_lang = 'fr';
-        if ($lang_json->$lang) {
-            $selected_lang = $lang;
-        }
-
-        $subject = $lang_json->$selected_lang->subject;
-        $title = $lang_json->$selected_lang->title;
-        $text = $lang_json->$selected_lang->text;
-        $bt_accept = $lang_json->$selected_lang->bt_accept;
-        $link = $lang_json->$selected_lang->link;
-
-        $message = $actionView !== NULL ? str_replace("%link%", $link_view, $link) : '';
-        $message .= file_get_contents("mail/mail-check.html");
-        $message = str_replace("%title%", $title, $message);
-        $message = str_replace("%text%", $text, $message);
-        $message = str_replace("%bt_accept%", $bt_accept, $message);
-        $message = str_replace("%link_accept%", $link_accept, $message);
-        $message = str_replace("%device%", $deviceName, $message);
-
-        return array('subject' => $subject, 'message' => $message);
+        if ($lang_json->$lang) $selected_lang = $lang;
+        return $lang_json->$selected_lang;
     }
-
-    function SendSigninMail($email, $deviceName, $actionAccept, $actionView, $lang = 'fr') {
-        $mailContent = GetMailContent($deviceName, $actionAccept, $actionView, $lang);
-        $message = $mailContent['message'];
-        $subject = $mailContent['subject'];
-
+    function GetMailHeader($subject) {
         $headers = array(
             'MIME-Version' => '1.0',
             'Content-type' => 'text/html; charset=UTF-8',
             'From' => 'signin@oxyfoo.com',
             'Subject' => $subject,
-            'Reply-To' => 'contact@geremy.eu',
+            'Reply-To' => 'contact@oxyfoo.com',
             'X-Mailer' => 'PHP/'.phpversion()
         );
+        return $headers;
+    }
+    function GetMailContent($title, $text, $textButton, $textLink, $deviceName, $actionButton, $actionView) {
+        global $URL;
 
-        mail($email, $subject, $message, $headers);
+        $link_button = "$URL?data=$actionButton";
+        $link_view = "$URL?data=$actionView&action=$actionButton";
+
+        $content = $actionView !== NULL ? str_replace("%link%", $link_view, $textLink) : '';
+        $content .= file_get_contents("mail/mail-check.html");
+        $content = str_replace("%title%", $title, $content);
+        $content = str_replace("%text%", $text, $content);
+        $content = str_replace("%button%", $textButton, $content);
+        $content = str_replace("%buttonLink%", $link_button, $content);
+        $content = str_replace("%device%", $deviceName, $content);
+
+        return $content;
+    }
+
+    function SendSigninMail($email, $deviceName, $actionButton, $actionView, $langKey = 'fr') {
+        $lang = GetMailLangText($langKey);
+        $subject = $lang->{'signin-subject'};
+        $title = $lang->{'signin-title'};
+        $text = $lang->{'signin-text'};
+        $textButton = $lang->{'signin-button'};
+        $textLink = $lang->link;
+
+        $content = GetMailContent($title, $text, $textButton, $textLink, $deviceName, $actionButton, $actionView);
+        $headers = GetMailHeader($subject);
+        return mail($email, $subject, $content, $headers);
+    }
+
+    function SendDeleteAccountMail($email, $deviceName, $actionButton, $actionView, $langKey = 'fr') {
+        $lang = GetMailLangText($langKey);
+        $subject = $lang->{'delete-subject'};
+        $title = $lang->{'delete-title'};
+        $text = $lang->{'delete-text'};
+        $textButton = $lang->{'delete-button'};
+        $textLink = $lang->link;
+
+        $content = GetMailContent($title, $text, $textButton, $textLink, $deviceName, $actionButton, $actionView);
+        $headers = GetMailHeader($subject);
+        return mail($email, $subject, $content, $headers);
     }
 
 ?>

@@ -13,7 +13,6 @@ class Settings extends BackSettings {
     render() {
         const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
-        const WAITPLZ = () => console.log('NON ce n\'est pas un bug !!!!!! C\'est juste pas terminé, MERCI de ne pas tout prendre pour des bugs MERCI BIEEEEN !!!!!!!!!!');
 
         return (
             <Page ref={ref => { if (ref !== null) this.pageRef = ref; }} bottomOffset={0}>
@@ -57,8 +56,8 @@ class Settings extends BackSettings {
 
                 <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
-                <Button style={styles.margin} onPress={WAITPLZ} color='main1' borderRadius={16}>[{lang['input-tuto-again']}]</Button>
-                <Button style={styles.margin} onPress={WAITPLZ} color='danger'>[{lang['input-delete-account']}]</Button>
+                <Button style={styles.margin} onPress={() => {}} color='main1' borderRadius={16}>[{lang['input-tuto-again']}]</Button>
+                <Button style={styles.margin} onPress={this.deleteAccount} color='danger'>{lang['input-delete-account']}</Button>
             </Page>
         )
     }

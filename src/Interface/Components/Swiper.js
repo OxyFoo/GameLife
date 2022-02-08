@@ -20,7 +20,8 @@ const SwiperProps = {
      */
     pages: [],
     initIndex: 0,
-    backgroundColor: 'backgroundTransparent'
+    backgroundColor: 'backgroundTransparent',
+    onSwipe: (index) => {}
 }
 
 class Swiper extends React.Component {
@@ -57,12 +58,14 @@ class Swiper extends React.Component {
         this.posX = nextIndex;
         SpringAnimation(this.state.positionX, nextIndex, false).start();
         SpringAnimation(this.state.positionDots, nextIndex, false).start();
+        this.props.onSwipe(nextIndex);
     }
     Prev = () => {
         const prevIndex = this.posX === 0 ? this.props.pages.length - 1 : this.posX - 1;
         this.posX = prevIndex;
         SpringAnimation(this.state.positionX, prevIndex, false).start();
         SpringAnimation(this.state.positionDots, prevIndex, false).start();
+        this.props.onSwipe(prevIndex);
     }
 
     onTouchStart = (event) => {
@@ -92,16 +95,17 @@ class Swiper extends React.Component {
         TimingAnimation(this.state.positionDots, MinMax(0, newPosX, this.props.pages.length - 1), 0.1, false).start();
     }
     onTouchEnd = (event) => {
-        let newPage = 0;
+        let newIndex = 0;
         const dec = (this.posX % 1) + this.acc;
-        if (dec > 0.5) newPage = Math.ceil(this.posX);
-        else           newPage = Math.floor(this.posX);
-        newPage = MinMax(0, newPage, this.props.pages.length - 1);
+        if (dec > 0.5) newIndex = Math.ceil(this.posX);
+        else           newIndex = Math.floor(this.posX);
+        newIndex = MinMax(0, newIndex, this.props.pages.length - 1);
 
         this.nextIn = this.props.delayNext;
-        this.posX = newPage;
-        SpringAnimation(this.state.positionX, newPage, false).start();
-        SpringAnimation(this.state.positionDots, newPage, false).start();
+        this.posX = newIndex;
+        SpringAnimation(this.state.positionX, newIndex, false).start();
+        SpringAnimation(this.state.positionDots, newIndex, false).start();
+        this.props.onSwipe(newIndex);
     }
 
     onLayoutPage = (event) => {

@@ -1,11 +1,11 @@
 <?php
 
-    function GetMailLangText($langKey = 'fr') {
+    function GetMailLangText($langKey) {
         $lang_content = file_get_contents("mail/lang.json");
         $lang_json = json_decode($lang_content);
 
         $selected_lang = 'fr';
-        if ($lang_json->$lang) $selected_lang = $lang;
+        if ($lang_json->$langKey) $selected_lang = $langKey;
         return $lang_json->$selected_lang;
     }
     function GetMailHeader($subject) {
@@ -36,7 +36,7 @@
         return $content;
     }
 
-    function SendSigninMail($email, $deviceName, $actionButton, $actionView, $langKey = 'fr') {
+    function SendSigninMail($email, $deviceName, $actionButton, $actionView, $langKey) {
         $lang = GetMailLangText($langKey);
         $subject = $lang->{'signin-subject'};
         $title = $lang->{'signin-title'};
@@ -49,7 +49,7 @@
         return mail($email, $subject, $content, $headers);
     }
 
-    function SendDeleteAccountMail($email, $deviceName, $actionButton, $actionView, $langKey = 'fr') {
+    function SendDeleteAccountMail($email, $deviceName, $actionButton, $actionView, $langKey) {
         $lang = GetMailLangText($langKey);
         $subject = $lang->{'delete-subject'};
         $title = $lang->{'delete-title'};

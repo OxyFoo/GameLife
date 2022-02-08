@@ -133,9 +133,8 @@
             $deviceName = $this->data['deviceName'];
             $email = $this->data['email'];
             $username = $this->data['username'];
-            $lang = $this->data['lang'];
 
-            if (!isset($deviceIdentifier, $deviceName, $email, $username, $lang)) {
+            if (!isset($deviceIdentifier, $deviceName, $email, $username)) {
                 return;
             }
 

@@ -47,6 +47,7 @@ class UserManager {
     }
 
     async Clear() {
+        const onboarding = this.settings.onboardingWatched;
         this.xp = 0;
         this.stats = this.experience.GetEmptyExperience();
         this.tempSelectedTime = null;
@@ -61,6 +62,10 @@ class UserManager {
 
         await DataStorage.ClearAll();
         await this.LocalSave();
+
+        // Keep onboarding state
+        this.settings.onboardingWatched = onboarding;
+        this.settings.Save();
     }
 
     async Disconnect(request = true) {
@@ -139,6 +144,7 @@ class UserManager {
 
         if (this.activities.IsUnsaved()) {
             data['activities'] = this.activities.GetUnsaved();
+            data['xp'] = this.xp;
         }
 
         if (this.achievements.IsUnsaved()) {

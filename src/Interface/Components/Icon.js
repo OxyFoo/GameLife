@@ -19,11 +19,16 @@ import svgCross from '../../../res/icons/cross';
 import svgDiscord from '../../../res/icons/discord';
 import svgEdit from '../../../res/icons/edit';
 import svgFilter from '../../../res/icons/filter';
+import svgFlagEnglish from '../../../res/icons/flag-english';
+import svgFlagFrench from '../../../res/icons/flag-french';
 import svgHome from '../../../res/icons/home';
 import svgInfo from '../../../res/icons/info';
 import svgInstagram from '../../../res/icons/instagram';
 import svgItem from '../../../res/icons/item';
 import svgNowifi from '../../../res/icons/nowifi';
+import svgOnboarding1 from '../../../res/icons/onboarding1';
+import svgOnboarding2 from '../../../res/icons/onboarding2';
+import svgOnboarding3 from '../../../res/icons/onboarding3';
 import svgOx from '../../../res/icons/ox';
 import svgSetting from '../../../res/icons/setting';
 import svgShop from '../../../res/icons/shop';
@@ -35,7 +40,7 @@ import svgLoading from '../../../res/icons/loading';
 import svgLoadingDots from '../../../res/icons/loading-dots';
 
 /**
- * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'home'|'info'|'instagram'|'item'|'nowifi'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'} Icons
+ * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'} Icons
  */
 
 const SVGIcons = {
@@ -51,11 +56,16 @@ const SVGIcons = {
     discord: svgDiscord,
     edit: svgEdit,
     filter: svgFilter,
+    flagEnglish: svgFlagEnglish,
+    flagFrench: svgFlagFrench,
     home: svgHome,
     info: svgInfo,
     instagram: svgInstagram,
     item: svgItem,
     nowifi: svgNowifi,
+    onboarding1: svgOnboarding1,
+    onboarding2: svgOnboarding2,
+    onboarding3: svgOnboarding3,
     ox: svgOx,
     setting: svgSetting,
     shop: svgShop,

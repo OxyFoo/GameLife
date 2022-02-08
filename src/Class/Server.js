@@ -316,7 +316,6 @@ class Server {
             'action': 'signin',
             'email': email,
             'username': username,
-            'lang': langManager.currentLangageKey,
             ...GetDeviceInformations()
         };
         return Request_Async(data);

@@ -143,6 +143,7 @@ class BackActivity extends React.Component {
             const text = langManager.curr['activity']['display-activity-text'];
             const button = langManager.curr['activity']['display-activity-button'];
             user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
+            user.RefreshStats();
         } else if (addState === 'edited') {
             user.interface.BackPage();
         } else if (addState === 'notFree') {

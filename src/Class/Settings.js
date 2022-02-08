@@ -28,14 +28,15 @@ class Settings {
 
     async Load() {
         const settings = await DataStorage.Load(STORAGE.LOGIN);
+        const contains = (key) => settings.hasOwnProperty(key);
         if (settings !== null) {
-            langManager.SetLangage(settings['lang']);
-            themeManager.SetTheme(settings['theme']);
-            this.email = settings['email'];
-            this.connected = settings['connected'];
-            this.onboardingWatched = settings['onboardingWatched'];
-            this.startAudio = settings['startAudio'];
-            this.morningNotifications = settings['morningNotifications'];
+            if (contains('lang')) langManager.SetLangage(settings['lang']);
+            if (contains('theme')) themeManager.SetTheme(settings['theme']);
+            if (contains('email')) this.email = settings['email'];
+            if (contains('connected')) this.connected = settings['connected'];
+            if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
+            if (contains('startAudio')) this.startAudio = settings['startAudio'];
+            if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
         }
     }
     Save() {

@@ -77,9 +77,7 @@ class IdentityEditor extends React.PureComponent {
         if (!username.length || username === user.informations.username) return;
         const state = await user.informations.SetUsername(username);
 
-        if (state === 'ok') {
-            this.Open();
-        } else if (state === 'alreadyUsed') {
+        if (state === 'alreadyUsed') {
             const title = lang['alert-alreadyUsed-title'];
             const text = lang['alert-alreadyUsed-text'];
             user.interface.popup.ForceOpen('ok', [ title, text ], this.openUsername);

@@ -19,6 +19,7 @@ import Identity from '../Interface/PageFront/Identity';
 import Loading from '../Interface/PageFront/Loading';
 import Login from '../Interface/PageFront/Login';
 import Multiplayer from '../Interface/PageFront/Multiplayer';
+import Onboarding from '../Interface/PageFront/Onboarding';
 import Report from '../Interface/PageFront/Report';
 import Settings from '../Interface/PageFront/Settings';
 import Shop from '../Interface/PageFront/Shop';
@@ -29,7 +30,7 @@ import Waitmail from '../Interface/PageFront/WaitMail';
 import Test from '../Interface/PageFront/Test';
 
 /**
- * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
+ * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
  */
 
 class PageManager extends React.Component{
@@ -223,6 +224,7 @@ class PageManager extends React.Component{
             case 'loading': p = <Loading args={args} />; break;
             case 'login': p = <Login />; break;
             case 'multiplayer': p = <Multiplayer />; break;
+            case 'onboarding': p = <Onboarding />; break;
             case 'report': p = <Report />; break;
             case 'settings': p = <Settings />; break;
             case 'shop': p = <Shop />; break;

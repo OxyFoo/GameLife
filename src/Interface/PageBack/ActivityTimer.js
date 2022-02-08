@@ -98,6 +98,7 @@ class BackActivityTimer extends React.Component {
         const text = langManager.curr['activity']['display-activity-text'];
         const button = langManager.curr['activity']['display-activity-button'];
         user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
+        user.RefreshStats();
     }
 }
 

@@ -6,12 +6,16 @@
     {
         public static function ExecQueue($db, $account, $data) {
             $activities = $data['activities'];
+            $xp = $data['xp'];
             $achievements = $data['achievements'];
             $titleID = $data['titleID'];
             $birthTime = $data['birthTime'];
 
             if (isset($activities)) {
                 self::AddActivities($db, $account, $activities);
+            }
+            if (isset($xp)) {
+                self::setXP($db, $account['ID'], $xp);
             }
             if (isset($achievements)) {
                 self::AddAchievement($db, $account, $achievements);
@@ -175,6 +179,14 @@
             }
         }
 
+        private static function setXP($db, $accountID, $xp) {
+            $command = "UPDATE `Users` SET `XP` = '$xp' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Saving XP failed");
+            }
+        }
+
         // TODO - Check this
 
         public static function SetData($db, $account, $data) {
@@ -195,15 +207,6 @@
             $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving title failed");
-            }
-        }
-
-        public static function setXP($db, $account, $xp) {
-            $accountID = $account['ID'];
-            $command = "UPDATE `Users` SET `XP` = '$xp' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
-            if ($result !== TRUE) {
-                ExitWithStatus("Error: Saving XP failed");
             }
         }
     }

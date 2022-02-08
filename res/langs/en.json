@@ -80,6 +80,15 @@
         "alert-tokenexpired-text": "The application will close, please restart it."
     },
 
+    "onboarding": {
+        "next": "Next",
+        "start": "Start",
+        "select-language": "Select your language",
+        "page1": "Welcome to Game-Life, the logbook that turns you into a video game character!",
+        "page2": "Note your activities in the application to increase your avatar's experience and level!",
+        "page3": "Deviens meilleur chaque jour, seul ou avec tes amis !"
+    },
+
     "about": {
         "block-devs": "App made by",
         "block-contributors": "Contributors",

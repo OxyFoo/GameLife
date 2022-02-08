@@ -69,8 +69,6 @@ class About extends BackAbout {
     }
 }
 
-// TODO - Use SVG icons
-
 const styles = StyleSheet.create({
     page: {
         flex: 1,

@@ -80,6 +80,15 @@
         "alert-tokenexpired-text": "L'application va se fermer, veuillez la relancer."
     },
 
+    "onboarding": {
+        "next": "Suivant",
+        "start": "Commencer",
+        "select-language": "Choisissez votre langue",
+        "page1": "Bienvenue dans Game-Life, le journal de bord qui vous transforme en personnage de jeux vidéo !",
+        "page2": "Note tes activités dans l'application pour monter ton avatar en expérience et en niveau !",
+        "page3": "Deviens meilleur chaque jour, seul ou avec tes amis !"
+    },
+
     "about": {
         "block-devs": "App créée par",
         "block-contributors": "Contributeurs",

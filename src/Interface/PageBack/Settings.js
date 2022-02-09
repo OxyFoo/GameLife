@@ -4,6 +4,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
+import { GetTime } from '../../Functions/Time';
 import { DisableMorningNotifications, EnableMorningNotifications } from '../../Functions/Notifications';
 
 class BackSettings extends React.Component {
@@ -19,7 +20,8 @@ class BackSettings extends React.Component {
             selectedLang: current,
             dataLangs: dataLangs,
             switchStartAudio: user.settings.startAudio,
-            switchMorningNotifs: user.settings.morningNotifications
+            switchMorningNotifs: user.settings.morningNotifications,
+            sendingMail: false
         }
     }
 
@@ -68,21 +70,35 @@ class BackSettings extends React.Component {
     deleteAccount = () => {
         const event = async (button) => {
             if (button === 'yes') {
+                const end = () => this.setState({ sendingMail: false });
+                this.setState({ sendingMail: true });
                 const success = await user.server.DeleteAccount();
                 if (success) {
+                    // Mail sent
                     const title = langManager.curr['settings']['alert-deletedmailsent-title'];
                     const text = langManager.curr['settings']['alert-deletedmailsent-text'];
-                    user.interface.popup.Open('ok', [ title, text ], event, false);
+                    user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
+                    user.tempMailSent = now;
                 } else {
+                    // Mail sent failed
                     const title = langManager.curr['settings']['alert-deletedfailed-title'];
                     const text = langManager.curr['settings']['alert-deletedfailed-text'];
-                    user.interface.popup.ForceOpen('ok', [ title, text ]);
+                    user.interface.popup.ForceOpen('ok', [ title, text ], end);
                 }
             }
         };
-        const title = langManager.curr['settings']['alert-deleteaccount-title'];
-        const text = langManager.curr['settings']['alert-deleteaccount-text'];
-        user.interface.popup.Open('yesno', [ title, text ], event);
+        const now = GetTime();
+        if (user.tempMailSent === null || now - user.tempMailSent > 1 * 60) {
+            // Confirmation popup
+            const title = langManager.curr['settings']['alert-deleteaccount-title'];
+            const text = langManager.curr['settings']['alert-deleteaccount-text'];
+            user.interface.popup.Open('yesno', [ title, text ], event);
+        } else {
+            // Too early
+            const title = langManager.curr['settings']['alert-deletedmailtooearly-title'];
+            const text = langManager.curr['settings']['alert-deletedmailtooearly-text'];
+            user.interface.popup.DelayOpen('ok', [ title, text ]);
+        }
     }
 }
 

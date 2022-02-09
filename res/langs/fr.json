@@ -394,6 +394,8 @@
         "alert-deleteaccount-text": "Êtes-vous sûr de vouloir supprimer votre compte ? Un mail de confirmation vous sera envoyé.",
         "alert-deletedmailsent-title": "Mail envoyé",
         "alert-deletedmailsent-text": "Un mail de confirmation vous a été envoyé, vérifiez votre boîte mail.",
+        "alert-deletedmailtooearly-title": "Mail déjà envoyé",
+        "alert-deletedmailtooearly-text": "Un mail de confirmation vous a déjà été envoyé, veuillez patienter quelques minutes avant d'en renvoyer un, vérifiez votre boîte mail.",
         "alert-deletedfailed-title": "Échec",
         "alert-deletedfailed-text": "Le mail n'a pas été envoyé, vérifiez votre connexion internet ou veuillez réessayer plus tard."
     },

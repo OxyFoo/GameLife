@@ -394,6 +394,8 @@
         "alert-deleteaccount-text": "Are you sure you want to delete your account? A confirmation email will be sent to you.",
         "alert-deletedmailsent-title": "Mail sent",
         "alert-deletedmailsent-text": "A confirmation email has been sent to you, check your mailbox.",
+        "alert-deletedmailtooearly-title": "Mail already sent",
+        "alert-deletedmailtooearly-text": "A confirmation email has already been sent to you, please wait a few minutes before sending one, check your mailbox.",
         "alert-deletedfailed-title": "Failure",
         "alert-deletedfailed-text": "The email was not sent, please check your internet connection or try again later."
     },

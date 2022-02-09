@@ -44,9 +44,10 @@ class UserManager {
          */
         this.stats = this.experience.GetEmptyExperience();
         this.tempSelectedTime = null;
+        this.tempMailSent = null;
     }
 
-    async Clear() {
+    async Clear(keepOnboardingState = true) {
         const onboarding = this.settings.onboardingWatched;
         this.xp = 0;
         this.stats = this.experience.GetEmptyExperience();
@@ -63,9 +64,10 @@ class UserManager {
         await DataStorage.ClearAll();
         await this.LocalSave();
 
-        // Keep onboarding state
-        this.settings.onboardingWatched = onboarding;
-        this.settings.Save();
+        if (keepOnboardingState) {
+            this.settings.onboardingWatched = onboarding;
+            this.settings.Save();
+        }
     }
 
     async Disconnect(request = true) {

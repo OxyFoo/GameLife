@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, FlatList } from 'react-native';
+import { View, Animated, FlatList, StyleSheet, BackHandler } from 'react-native';
 
 import { Text, Button } from '../Components';
 import { SpringAnimation } from '../../Functions/Animations';
+import user from '../../Managers/UserManager';
 
 /**
  * 0: Show all logs
@@ -19,6 +20,7 @@ class Console extends React.Component {
     state = {
         opened: false,
         animation: new Animated.Value(0),
+        animationButton: new Animated.Value(0),
 
         debug: []
     }
@@ -53,6 +55,15 @@ class Console extends React.Component {
     close = () => {
         this.setState({ opened: false });
         SpringAnimation(this.state.animation, 0).start();
+        SpringAnimation(this.state.animationButton, 0).start();
+    }
+    showDeleteButton = () => {
+        SpringAnimation(this.state.animationButton, -72).start();
+    }
+
+    deleteAll = async () => {
+        user.Clear(false);
+        BackHandler.exitApp();
     }
 
     renderText = ({ item }) => {
@@ -69,6 +80,7 @@ class Console extends React.Component {
 
         const interY = { inputRange: [0, 1], outputRange: [-256, 0] };
         const translateY = { transform: [{ translateY: this.state.animation.interpolate(interY) }] };
+        const buttonDelete = { opacity: this.state.animation, transform: [{ translateY: this.state.animationButton }] };
 
         return (
             <Animated.View style={[styles.console, translateY]} pointerEvents={'box-none'}>
@@ -91,10 +103,22 @@ class Console extends React.Component {
                 </Button>
 
                 <Button
+                    style={styles.buttonDelete}
+                    styleAnimation={buttonDelete}
+                    fontSize={14}
+                    color='main1'
+                    onPress={this.deleteAll}
+                    pointerEvents={this.state.opened ? undefined : 'none'}
+                >
+                    Remove all data
+                </Button>
+
+                <Button
                     style={styles.buttonClose}
                     styleAnimation={{ opacity: this.state.animation }}
                     color='main2'
                     onPress={this.close}
+                    onLongPress={this.showDeleteButton}
                     pointerEvents={this.state.opened ? undefined : 'none'}
                 >
                     Close console
@@ -125,6 +149,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#000'
     },
     buttonOpen: {
+        width: '40%',
+        height: 36,
+        paddingHorizontal: 0,
+        borderRadius: 8
+    },
+    buttonDelete: {
+        position: 'absolute',
+        bottom: 0,
         width: '40%',
         height: 36,
         paddingHorizontal: 0,

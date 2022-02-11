@@ -126,6 +126,14 @@
             }
             return $output;
         }
+
+        public static function Delete($db, $ID) {
+            $command = "DELETE FROM `Devices` WHERE `ID` = '$ID'";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Deleting device in DB failed");
+            }
+        }
     }
 
 ?>

@@ -88,7 +88,7 @@
             }
         }
 
-        public static function DelAccount($db, $accountID) {
+        public static function Delete($db, $accountID) {
             $remActivities = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID'");
             $remUser = $db->Query("DELETE FROM `Users` WHERE `ID` = '$accountID'");
             return $remActivities && $remUser;

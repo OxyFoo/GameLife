@@ -16,7 +16,6 @@ var errors = [];
  */
 var alive = true;
 
-var USERS_NUMBER = 250;
 var USERS_ENDS = 0;
 var TIME_START = 0;
 var TIME_END = 0;
@@ -32,15 +31,15 @@ function TestAll() {
         return;
     }
 
+    USERS_ENDS = 0;
     TIME_END = 0;
-    USERS_NUMBER = usersNumber;
     elSelectActivityNumber.disabled = true;
     elSelectUserNumber.disabled = true;
     elButtonGlobalTest.onclick = TestAllEnd;
     elButtonGlobalTest.innerHTML = 'Stop';
 
     TIME_START = performance.now();
-    users = Array(USERS_NUMBER).fill(0).map(() => new User());
+    users = Array(usersNumber).fill(0).map(() => new User());
     users.forEach(u => u.TestAll(activitiesNumber));
 }
 function TestAllEnd() {
@@ -49,8 +48,6 @@ function TestAllEnd() {
     alive = false;
     elButtonGlobalTest.innerHTML = 'Delete all';
     elButtonGlobalTest.onclick = Clear;
-    elSelectActivityNumber.disabled = false;
-    elSelectUserNumber.disabled = false;
 }
 elButtonGlobalTest.onclick = TestAll;
 
@@ -65,6 +62,8 @@ async function Clear() {
     for (let i = 0; i < users.length; i++) {
         await users[i].DeleteAccount();
     }
+    users = [];
+    alive = true;
 
     elButtonGlobalTest.disabled = false;
     elButtonGlobalTest.innerHTML = 'Start test';

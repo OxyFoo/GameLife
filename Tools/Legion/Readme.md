@@ -27,4 +27,4 @@
 - [x] Réécrire le code
 - [x] Responsive
 - [ ] Afficher les erreurs
-- [ ] Suppression des comptes après les tests
+- [x] Suppression des comptes après les tests

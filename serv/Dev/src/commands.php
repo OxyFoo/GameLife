@@ -18,6 +18,7 @@
             $this->data = $data;
             $this->db = new DataBase();
             $this->output = array("status" => "error");
+            $this->enableBots = false;
         }
 
         public function __destruct() {
@@ -151,9 +152,12 @@
             if ($account === NULL) return;
 
             // Legion - mail bypass
-            $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
-            $deviceID = intval($device['ID']);
-            Account::AddDevice($this->db, $deviceID, $account, 'Devices');
+            if (strpos($email, 'bot-') === 0) {
+                if (!$this->enableBots) return;
+                $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+                $deviceID = intval($device['ID']);
+                Account::AddDevice($this->db, $deviceID, $account, 'Devices');
+            }
 
             $this->output['status'] = 'ok';
         }
@@ -354,6 +358,14 @@
             if ($account === NULL) return;
             $device = Device::GetByID($this->db, $deviceID);
             if ($device === NULL) return;
+
+            if (strpos($email, 'bot-') === 0) {
+                if (!$this->enableBots) return;
+                Device::Delete($this->db, $deviceID);
+                Account::Delete($this->db, $accountID);
+                $this->output['status'] = 'ok';
+                return;
+            }
 
             Account::RefreshLastDate($this->db, $accountID);
             $newToken = Device::RefreshMailToken($this->db, $deviceID, $accountID);

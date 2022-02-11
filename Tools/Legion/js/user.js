@@ -180,15 +180,32 @@ class User {
         }
 
         USERS_ENDS++;
-        if (USERS_ENDS === USERS_NUMBER) {
+        if (USERS_ENDS === users.length) {
             TestAllEnd();
         }
     }
 
     async DeleteAccount() {
-        if (this.signin) {
-            // TODO
+        const Delete = () => {
+            this.component.remove();
+            this.Update();
         }
-        this.component.remove();
+        if (this.signin) {
+            const data = {
+                action: 'deleteAccount',
+                email: this.email,
+                token: this.token,
+                lang: 'fr'
+            };
+            const result = await Request_Async(data);
+            if (result.status === 200) {
+                this.timesOfRequests.push(result.time);
+                if (result.content.status === 'ok') {
+                    Delete();
+                }
+            }
+        } else {
+            Delete();
+        }
     }
 }

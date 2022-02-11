@@ -81,7 +81,7 @@
                     $account = Account::GetByID($db, $accountID);
                     if ($account !== NULL) {
                         Device::RemoveToken($db, $deviceID);
-                        if (Account::DelAccount($db, $accountID)) {
+                        if (Account::Delete($db, $accountID)) {
                             $state = "auth-remove-account";
                         }
                     }

@@ -150,6 +150,11 @@
             $account = Account::Add($this->db, $username, $email);
             if ($account === NULL) return;
 
+            // Legion - mail bypass
+            $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+            $deviceID = intval($device['ID']);
+            Account::AddDevice($this->db, $deviceID, $account, 'Devices');
+
             $this->output['status'] = 'ok';
         }
 
@@ -249,8 +254,6 @@
 
             User::ExecQueue($this->db, $account, $userData);
             $newDataToken = User::RefreshDataToken($this->db, $account);
-
-            // TODO - Save XP
 
             if ($this->data['dataToken'] === $dbDataToken) {
                 $this->output['dataToken'] = $newDataToken;

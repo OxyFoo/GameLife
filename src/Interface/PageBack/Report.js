@@ -20,7 +20,7 @@ class BackReport extends React.Component {
             { key: 2, value: langManager.curr['report']['types']['bug'] },
             { key: 3, value: langManager.curr['report']['types']['message'] }
         ];
-        this.stats = Object.assign({}, ...this.user.statsKey.map(i => ({[i]: 0})));
+        this.stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
 
         this.state = {
             sending: false,

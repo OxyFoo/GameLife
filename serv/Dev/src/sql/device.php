@@ -30,9 +30,10 @@
                 }
             }
 
-            if ($device === NULL && !$searchAll) {
-                return Device::Get($db, $deviceIdentifier, $deviceName, TRUE);
-            }
+            // TODO - Find a better way to do this
+            //if ($device === NULL && !$searchAll) {
+            //    return Device::Get($db, $deviceIdentifier, $deviceName, TRUE);
+            //}
 
             return $device;
         }

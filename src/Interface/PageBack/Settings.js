@@ -83,7 +83,7 @@ class BackSettings extends React.Component {
                     // Mail sent failed
                     const title = langManager.curr['settings']['alert-deletedfailed-title'];
                     const text = langManager.curr['settings']['alert-deletedfailed-text'];
-                    user.interface.popup.ForceOpen('ok', [ title, text ], end);
+                    user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
                 }
             }
         };

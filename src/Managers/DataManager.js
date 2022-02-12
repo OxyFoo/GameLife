@@ -1,6 +1,6 @@
 import langManager from "./LangManager";
-import { Request_Async } from "../Functions/Request";
-import DataStorage, { STORAGE } from "../Functions/DataStorage";
+import { Request_Async } from "../Utils/Request";
+import DataStorage, { STORAGE } from "../Utils/DataStorage";
 
 import Achievements from "../Data/Achievements";
 import Skills from "../Data/Skills";

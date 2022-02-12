@@ -5,7 +5,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { Icon, Swiper, Text, XPBar } from '../Components';
-import { IsUndefined } from '../../Functions/Functions';
+import { IsUndefined } from '../../Utils/Functions';
 
 /**
  * @typedef {import('../../Managers/UserManager').Stats} Stats

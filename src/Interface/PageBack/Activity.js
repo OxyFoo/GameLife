@@ -6,9 +6,9 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 
 import { Activity } from '../../Class/Activities';
-import { IsUndefined } from '../../Functions/Functions';
-import { SpringAnimation } from '../../Functions/Animations';
-import { GetTime } from '../../Functions/Time';
+import { IsUndefined } from '../../Utils/Functions';
+import { SpringAnimation } from '../../Utils/Animations';
+import { GetTime } from '../../Utils/Time';
 
 class BackActivity extends React.Component {
     constructor(props) {

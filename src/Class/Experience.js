@@ -1,6 +1,6 @@
 import dataManager from '../Managers/DataManager';
 
-import { GetTime } from '../Functions/Time';
+import { GetTime } from '../Utils/Time';
 
 const UserXPperLevel = 20;
 const StatXPperLevel = 2;

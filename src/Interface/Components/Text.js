@@ -3,7 +3,7 @@ import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
-import { IsUndefined } from '../../Functions/Functions';
+import { IsUndefined } from '../../Utils/Functions';
 
 const MAIN_FONT_NAME = 'Hind Vadodara';
 

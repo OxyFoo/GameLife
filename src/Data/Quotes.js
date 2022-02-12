@@ -1,4 +1,4 @@
-import { Random } from "../Functions/Functions";
+import { Random } from "../Utils/Functions";
 
 class Quote {
     ID = 0;

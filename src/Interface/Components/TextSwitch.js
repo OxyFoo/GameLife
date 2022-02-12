@@ -4,7 +4,7 @@ import { Animated, StyleSheet, View } from 'react-native';
 import themeManager from '../../Managers/ThemeManager';
 
 import Button from './Button';
-import { SpringAnimation } from '../../Functions/Animations';
+import { SpringAnimation } from '../../Utils/Animations';
 
 const TextSwitchProps = {
     style: {},

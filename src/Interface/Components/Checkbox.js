@@ -4,7 +4,7 @@ import { View, Animated, StyleSheet } from 'react-native';
 import themeManager from '../../Managers/ThemeManager';
 
 import Icon from './Icon';
-import { SpringAnimation } from '../../Functions/Animations';
+import { SpringAnimation } from '../../Utils/Animations';
 
 const CheckboxProps = {
     color: 'main1',

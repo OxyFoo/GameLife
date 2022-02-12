@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 
-import { GetTime } from '../../Functions/Time';
+import { GetTime } from '../../Utils/Time';
 
 class BackIdentity extends React.Component {
     constructor(props) {

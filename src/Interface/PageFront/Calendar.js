@@ -7,7 +7,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { Icon, Page, Text } from '../Components';
 import { ActivityCard, BlockMonth, UserHeader } from '../Widgets';
-import { GetFullDate, GetMonthAndYear } from '../../Functions/Date';
+import { GetFullDate, GetMonthAndYear } from '../../Utils/Date';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 

@@ -5,8 +5,8 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { Text, Icon, Button } from '../Components';
-import { GetAge } from '../../Functions/Time';
-import { IsUndefined } from '../../Functions/Functions';
+import { GetAge } from '../../Utils/Time';
+import { IsUndefined } from '../../Utils/Functions';
 
 const UserHeaderProps = {
     style: {},

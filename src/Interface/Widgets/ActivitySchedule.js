@@ -6,8 +6,8 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Text, Button, Separator } from '../Components';
-import { SpringAnimation } from '../../Functions/Animations';
-import { DateToFormatString, DateToFormatTimeString, GetDurations, GetTime } from '../../Functions/Time';
+import { SpringAnimation } from '../../Utils/Animations';
+import { DateToFormatString, DateToFormatTimeString, GetDurations, GetTime } from '../../Utils/Time';
 
 const ActivityScheduleProps = {
     mainColor: 'main1',

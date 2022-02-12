@@ -1,7 +1,7 @@
 import dataManager from '../Managers/DataManager';
 import langManager from '../Managers/LangManager';
 
-import { GetAge, GetDaysUntil, GetTime } from '../Functions/Time';
+import { GetAge, GetDaysUntil, GetTime } from '../Utils/Time';
 
 const DAYS_USERNAME_CHANGE = 30;
 const DAYS_BIRTHTIME_CHANGE = 365;

@@ -4,8 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import langManager from './LangManager';
 
-import { TimingAnimation } from '../Functions/Animations';
-import { IsUndefined } from '../Functions/Functions';
+import { TimingAnimation } from '../Utils/Animations';
+import { IsUndefined } from '../Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList } from '../Interface/Widgets';
 
 import About from '../Interface/PageFront/About';

@@ -4,8 +4,8 @@ import { SvgXml } from 'react-native-svg';
 
 import themeManager from '../../Managers/ThemeManager';
 
-import Base64 from '../../Functions/Base64';
-import { IsUndefined } from '../../Functions/Functions';
+import Base64 from '../../Utils/Base64';
+import { IsUndefined } from '../../Utils/Functions';
 
 import svgDefault from '../../../res/icons/default';
 import svgAdd from '../../../res/icons/add';

@@ -1,7 +1,7 @@
 import dataManager from '../Managers/DataManager';
 
-import { GetMidnightTime, GetTime } from "../Functions/Time";
-import { SortByKey } from '../Functions/Functions';
+import { GetMidnightTime, GetTime } from "../Utils/Time";
+import { SortByKey } from '../Utils/Functions';
 
 const MaxHourPerDay = 12;
 

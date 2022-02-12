@@ -1,4 +1,4 @@
-import { GetByKey, SortByKey } from "../Functions/Functions";
+import { GetByKey, SortByKey } from "../Utils/Functions";
 
 class Skill {
     ID = 0;

@@ -7,7 +7,7 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 
 import { Text, Button } from '../Components';
-import { GetAge, GetTime } from '../../Functions/Time';
+import { GetAge, GetTime } from '../../Utils/Time';
 
 class IdentityEditor extends React.PureComponent {
     state = {

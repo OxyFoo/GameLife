@@ -3,8 +3,8 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-import { MinMax, TwoDigit } from '../../Functions/Functions';
-import { GetTime, RoundToQuarter } from '../../Functions/Time';
+import { MinMax, TwoDigit } from '../../Utils/Functions';
+import { GetTime, RoundToQuarter } from '../../Utils/Time';
 
 const MAX_TIME = 4 * 60; // Minutes
 

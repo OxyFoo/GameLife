@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Animated, StyleSheet, Dimensions } from 'react-native';
 
-import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
+import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
 
 const PageProps = {
     style: {},

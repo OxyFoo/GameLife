@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { MinMax, Sleep } from '../../Functions/Functions';
-import { SpringAnimation } from '../../Functions/Animations';
+import { MinMax, Sleep } from '../../Utils/Functions';
+import { SpringAnimation } from '../../Utils/Animations';
 
 const XPBarProps = {
     style: {},

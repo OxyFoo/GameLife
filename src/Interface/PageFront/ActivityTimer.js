@@ -7,7 +7,7 @@ import langManager from '../../Managers/LangManager';
 
 import { Page, Text, Button } from '../Components';
 import { ActivityExperience } from '../Widgets';
-import { DateToFormatTimeString } from '../../Functions/Time';
+import { DateToFormatTimeString } from '../../Utils/Time';
 
 class ActivityTimer extends BackActivityTimer {
     render() {

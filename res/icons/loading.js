@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 
-import { Sleep } from '../../src/Functions/Functions';
-import { SpringAnimation } from '../../src/Functions/Animations';
+import { Sleep } from '../../src/Utils/Functions';
+import { SpringAnimation } from '../../src/Utils/Animations';
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 

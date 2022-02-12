@@ -1,7 +1,7 @@
 import langManager from "../Managers/LangManager";
 import themeManager from "../Managers/ThemeManager";
 
-import DataStorage, { STORAGE } from "../Functions/DataStorage";
+import DataStorage, { STORAGE } from "../Utils/DataStorage";
 
 class Settings {
     constructor(user) {

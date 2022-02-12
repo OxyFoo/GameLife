@@ -5,7 +5,7 @@ import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import Text from './Text';
-import { TimingAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Utils/Animations';
 
 const InputProps = {
     style: {},

@@ -4,8 +4,8 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { GetTime } from '../../Functions/Time';
-import { DisableMorningNotifications, EnableMorningNotifications } from '../../Functions/Notifications';
+import { GetTime } from '../../Utils/Time';
+import { DisableMorningNotifications, EnableMorningNotifications } from '../../Utils/Notifications';
 
 class BackSettings extends React.Component {
     constructor(props) {

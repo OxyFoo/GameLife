@@ -9,7 +9,7 @@ import Text from './Text';
 import Button from './Button';
 import Icon from './Icon';
 import Input from './Input';
-import { SpringAnimation } from '../../Functions/Animations';
+import { SpringAnimation } from '../../Utils/Animations';
 
 class Item {
     /**

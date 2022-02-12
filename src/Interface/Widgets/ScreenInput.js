@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Animated, Keyboard, StyleSheet, Dimensions } from 'react-native';
 
-import { TimingAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Utils/Animations';
 
 import { Button, Input } from '../Components'
 

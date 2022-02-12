@@ -4,7 +4,7 @@ import { Dimensions, Keyboard } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-import { Sum } from '../../Functions/Functions';
+import { Sum } from '../../Utils/Functions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 

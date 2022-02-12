@@ -2,8 +2,8 @@ import { BackHandler } from 'react-native';
 
 import langManager from '../Managers/LangManager';
 
-import { Request_Async } from '../Functions/Request';
-import { GetDeviceInformations } from '../Functions/Functions';
+import { Request_Async } from '../Utils/Request';
+import { GetDeviceInformations } from '../Utils/Functions';
 
 const STATUS = {
     OFFLINE     : 'offline',

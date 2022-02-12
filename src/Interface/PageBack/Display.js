@@ -3,7 +3,7 @@ import { Animated } from 'react-native';
 
 import user from '../../Managers/UserManager';
 
-import { SpringAnimation } from '../../Functions/Animations';
+import { SpringAnimation } from '../../Utils/Animations';
 
 class BackDisplay extends React.Component {
     constructor(props) {

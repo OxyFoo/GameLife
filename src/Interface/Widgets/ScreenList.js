@@ -4,8 +4,8 @@ import { View, Animated, TouchableHighlight, StyleSheet, FlatList } from 'react-
 import themeManager from '../../Managers/ThemeManager';
 
 import { Separator, Text } from '../Components';
-import { SpringAnimation, TimingAnimation } from '../../Functions/Animations';
-import { Sleep } from '../../Functions/Functions';
+import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
+import { Sleep } from '../../Utils/Functions';
 
 const ScreenListProps = {
 }

@@ -5,8 +5,8 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import ItemCard from './ItemCard';
-import { Sleep } from '../../Functions/Functions';
-import { SpringAnimation } from '../../Functions/Animations';
+import { Sleep } from '../../Utils/Functions';
+import { SpringAnimation } from '../../Utils/Animations';
 import { Text, Button, Character, Separator, Icon } from '../Components';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;

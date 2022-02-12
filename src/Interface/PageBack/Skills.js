@@ -3,8 +3,8 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
-import { SortByKey } from '../../Functions/Functions';
-import { GetTime } from '../../Functions/Time';
+import { SortByKey } from '../../Utils/Functions';
+import { GetTime } from '../../Utils/Time';
 
 class BackSkills extends React.Component {
     constructor(props) {

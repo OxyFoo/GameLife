@@ -5,7 +5,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import Icon from './Icon';
 import Button from './Button';
-import { IsUndefined } from '../../Functions/Functions';
+import { IsUndefined } from '../../Utils/Functions';
 
 const IconCheckableProps = {
     style: {},

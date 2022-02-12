@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-import { Sleep } from '../../src/Functions/Functions';
-import { TimingAnimation } from '../../src/Functions/Animations';
+import { Sleep } from '../../src/Utils/Functions';
+import { TimingAnimation } from '../../src/Utils/Animations';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 

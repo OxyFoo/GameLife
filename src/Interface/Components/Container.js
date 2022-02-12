@@ -6,7 +6,7 @@ import themeManager from '../../Managers/ThemeManager';
 import Text from './Text';
 import Icon from './Icon';
 import Button from './Button';
-import { TimingAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Utils/Animations';
 
 const ContainerProps = {
     style: {},

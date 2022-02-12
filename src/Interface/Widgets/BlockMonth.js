@@ -5,7 +5,7 @@ import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Text } from '../Components';
-import { GetMonthAndYear } from '../../Functions/Date';
+import { GetMonthAndYear } from '../../Utils/Date';
 
 const BlockMonthProps = {
     style: {},

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import Text from './Text';
-import { Range } from '../../Functions/Functions';
-import { TimingAnimation, SpringAnimation } from '../../Functions/Animations';
+import { Range } from '../../Utils/Functions';
+import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
 
 const DigitProps = {
     /**

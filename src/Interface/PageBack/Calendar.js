@@ -4,9 +4,9 @@ import { Animated } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-import { GetBlockMonth } from '../../Functions/Date';
-import { SpringAnimation } from '../../Functions/Animations';
-import { GetTime, RoundToQuarter } from '../../Functions/Time';
+import { GetBlockMonth } from '../../Utils/Date';
+import { SpringAnimation } from '../../Utils/Animations';
+import { GetTime, RoundToQuarter } from '../../Utils/Time';
 
 class BackCalendar extends React.Component {
     constructor(props) {

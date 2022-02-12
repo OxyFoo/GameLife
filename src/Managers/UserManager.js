@@ -6,7 +6,7 @@ import Quests from '../Class/Quests';
 import Server from '../Class/Server';
 import Settings from '../Class/Settings';
 
-import DataStorage, { STORAGE } from '../Functions/DataStorage';
+import DataStorage, { STORAGE } from '../Utils/DataStorage';
 
 /**
  * @typedef {import('../Class/Experience').XPInfo} XPInfo

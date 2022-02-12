@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Animated, FlatList, StyleSheet, BackHandler } from 'react-native';
 
 import { Text, Button } from '../Components';
-import { SpringAnimation } from '../../Functions/Animations';
+import { SpringAnimation } from '../../Utils/Animations';
 import user from '../../Managers/UserManager';
 
 /**

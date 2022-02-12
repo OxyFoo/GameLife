@@ -3,7 +3,7 @@ import { Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
-import { TimingAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Utils/Animations';
 
 class Ripple extends React.Component {
     constructor(props) {

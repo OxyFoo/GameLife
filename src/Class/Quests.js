@@ -1,6 +1,6 @@
 import dataManager from '../Managers/DataManager';
 
-import { IsUndefined } from '../Functions/Functions';
+import { IsUndefined } from '../Utils/Functions';
 
 class Quests {
     constructor(user) {

@@ -7,8 +7,8 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { Icon, Text } from '../Components';
 import { Activity } from '../../Class/Activities';
-import { TimingAnimation } from '../../Functions/Animations';
-import { TimeToFormatString } from '../../Functions/Time';
+import { TimingAnimation } from '../../Utils/Animations';
+import { TimeToFormatString } from '../../Utils/Time';
 
 const ActivityCardProps = {
     style: {},

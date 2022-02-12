@@ -5,9 +5,9 @@ import dataManager from '../../Managers/DataManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { Sleep } from '../../Functions/Functions';
-import { PlayStartSound } from '../../Functions/Sound';
-import { DisableMorningNotifications, EnableMorningNotifications } from '../../Functions/Notifications';
+import { Sleep } from '../../Utils/Functions';
+import { PlayStartSound } from '../../Utils/Sound';
+import { DisableMorningNotifications, EnableMorningNotifications } from '../../Utils/Notifications';
 
 class BackLoading extends React.Component {
     state = {

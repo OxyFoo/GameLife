@@ -6,7 +6,7 @@ import themeManager from '../../Managers/ThemeManager';
 import Text from './Text';
 import Icon from './Icon';
 import Ripple from './Ripple';
-import { IsUndefined } from '../../Functions/Functions';
+import { IsUndefined } from '../../Utils/Functions';
 
 const ButtonProps = {
     style: {},
@@ -25,6 +25,7 @@ const ButtonProps = {
     colorText: 'primary',
     rippleColor: '#000000',
     borderRadius: 20,
+    textComponent: true,
     /**
      * Setting used to ignore button event, to get header icon press event
      * @param {Boolean} nonClickable
@@ -112,7 +113,7 @@ class Button extends React.Component {
                 onLayout={this.onLayout}
                 pointerEvents={this.props.pointerEvents}
             >
-                {content}
+                {this.props.textComponent ? content : children}
                 <Ripple
                     ref={this.rippleRef}
                     parentWidth={this.state.width}

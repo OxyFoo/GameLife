@@ -9,7 +9,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { PageHeader } from '../Widgets';
 import { Page, Input, Text, Button, IconCheckable, Icon } from '../Components';
-import { DateToFormatString } from '../../Functions/Time';
+import { DateToFormatString } from '../../Utils/Time';
 
 class Skills extends BackSkills {
     constructor(props) {

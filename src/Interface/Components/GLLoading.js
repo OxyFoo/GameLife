@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, Animated } from 'react-native';
 
-import { TimingAnimation } from '../../Functions/Animations';
+import { TimingAnimation } from '../../Utils/Animations';
 
 const LOGO_DIR = '../../../res/logo/';
 const LOGOS = [

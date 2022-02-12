@@ -5,8 +5,8 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Text, Button } from '../Components';
-import { Sleep } from '../../Functions/Functions';
-import { TimingAnimation } from '../../Functions/Animations';
+import { Sleep } from '../../Utils/Functions';
+import { TimingAnimation } from '../../Utils/Animations';
 
 const PopupProps = {
     type: null,

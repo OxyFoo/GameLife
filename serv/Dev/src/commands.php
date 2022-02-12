@@ -92,14 +92,13 @@
             $perm = Account::CheckDevicePermissions($deviceID, $account);
             switch ($perm) {
                 case 0: // OK
-                    if ($account['Banned'] != 0) {
-                        $this->output['status'] = 'ban';
-                        break;
-                    }
                     $accountID = $account['ID'];
                     Account::RefreshLastDate($this->db, $accountID);
                     $this->output['token'] = Device::GeneratePrivateToken($this->db, $accountID, $deviceID);
                     $this->output['status'] = 'ok';
+
+                    $isBanned = $account['Banned'] != 0 || $device['Banned'] != 0;
+                    if ($isBanned) $this->output['status'] = 'ban';
                     break;
                 case 1: // Wait mail confirmation
                     // Remove the device after 30 minutes
@@ -224,10 +223,6 @@
             }
 
             if ($appDataToken != $dbDataToken) {
-                //$activities = $this->db->Decrypt($account['Activities']);
-                //$activities = $account['Activities'];
-                //$userData['activities'] = json_decode($activities, true);
-
                 $userData['activities'] = User::GetActivities($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;
             }

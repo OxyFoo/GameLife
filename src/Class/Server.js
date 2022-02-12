@@ -95,6 +95,9 @@ class Server {
             }
         }
 
+        if (status === STATUS.BANNED) {
+            this.user.interface.console.AddLog('warn', 'Request: connect - BANNED');
+        }
         if (status === STATUS.CONNECTED || status === STATUS.BANNED) {
             const token = content['token'];
             if (typeof(token) !== 'undefined' && token.length) {

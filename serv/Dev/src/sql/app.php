@@ -15,15 +15,15 @@
                 $data = $app[$i]['Data'];
                 $date = $app[$i]['Date'];
 
-                if ($ID === "Version") {
+                if ($ID === 'Version') {
                     $appData['Version'] = $data;
-                } else if ($ID === "Hashes") {
-                    $appData["Hashes"] = json_decode($data, true);
+                } else if ($ID === 'Hashes') {
+                    $appData['Hashes'] = json_decode($data, true);
                     $lastHashRefresh = MinutesFromDate($date);
-                } else if ($ID === "Maintenance") {
-                    $appData["Maintenance"] = $data !== '0';
+                } else if ($ID === 'Maintenance') {
+                    $appData['Maintenance'] = $data !== '0';
                 } else if ($ID === 'News') {
-                    $appData["News"] = json_decode($data, true);
+                    $appData['News'] = json_decode($data, true);
                 }
             }
         }

@@ -16,6 +16,7 @@ const ButtonProps = {
      * @type {import('./Icon').Icons}
      */
     icon: '',
+    iconXml: undefined,
     iconSize: 24,
     iconColor: 'white',
     iconAngle: 0,
@@ -75,7 +76,7 @@ class Button extends React.Component {
     render() {
         const children = this.props.children;
         const hasChildren = !IsUndefined(children);
-        const hasIcon = this.props.icon !== '';
+        const hasIcon = this.props.icon !== '' || !IsUndefined(this.props.iconXml);
         const isLoading = this.props.loading;
         const onlyOneChild = !hasChildren || !hasIcon || isLoading;
 
@@ -99,7 +100,7 @@ class Button extends React.Component {
         } else {
             content = <>
                         {hasChildren && <Text style={styles.text} color={this.props.colorText} fontSize={this.props.fontSize}>{children}</Text>}
-                        {hasIcon     && <Icon icon={this.props.icon} size={this.props.iconSize} color={this.props.iconColor} angle={this.props.iconAngle} />}
+                        {hasIcon     && <Icon icon={this.props.icon} xml={this.props.iconXml} size={this.props.iconSize} color={this.props.iconColor} angle={this.props.iconAngle} />}
                     </>;
         }
 

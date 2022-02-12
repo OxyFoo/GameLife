@@ -7,6 +7,7 @@ import Skills from "../Data/Skills";
 import Titles from "../Data/Titles";
 import Quotes from "../Data/Quotes";
 import Contributors from "../Data/Contributors";
+import News from "../Data/News";
 
 class DataManager {
     constructor() {
@@ -15,8 +16,7 @@ class DataManager {
         this.titles = new Titles();
         this.quotes = new Quotes();
         this.contributors = new Contributors();
-
-        this.news = [];
+        this.news = new News();
     }
 
     /**
@@ -95,7 +95,7 @@ class DataManager {
                 const reqTables = reqInternalData.content['tables'];
 
                 const reqNews = reqInternalData.content['news'];
-                if (typeof(reqNews) === 'object') this.news = reqNews;
+                if (typeof(reqNews) === 'object') this.news.Load(reqNews);
 
                 if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
                 if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);

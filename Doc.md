@@ -35,11 +35,32 @@
     - TODO
 
 ## News
-* Texte
-    - 'Blablabla'
-* Icone
-    - 'icon;xmlIconInBase64'
-* Bouton de redirection (vers un site web ou une page de l'app)
-    - 'button;text;page|web;pageNameOrWebsiteURL
-* Exemple
-    - [ 'Faites un tour dans la boutique !', 'button;Boutique;page;shop' ]
+* Template exemple
+
+[
+    {
+        "ID": 0,
+        "Content": {
+            "fr": "Vide",
+            "en": "Empty"
+        },
+        "Icon": null,
+        "ButtonText": null,
+        "ButtonEvent": null,
+        "TextAlign": "auto"
+    },
+    {
+        "ID": 1,
+        "Content": {
+            "fr": "Test - Texte en français",
+            "en": "Test - Text in english"
+        },
+        "Icon": "cdsiuchdsidcsuhscd___ICONe_en_xml_base64",
+        "ButtonText": {
+            "fr": "Ouvir le shop",
+            "en": "Open shop"
+        },
+        "ButtonEvent": "shop",
+        "TextAlign": "right"
+    }
+]

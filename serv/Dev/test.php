@@ -6,6 +6,7 @@
     require('./src/functions/mail.php');
     require('./src/functions/functions.php');
 
+    require('./src/sql/app.php');
     require('./src/sql/account.php');
     require('./src/sql/device.php');
     require('./src/sql/user.php');
@@ -315,6 +316,11 @@
         $delta = ($t2 - $t1) * 1000;
         //print_r($activities);
         print_r("<br/>$delta ms");
+    } else if ($action === 'readNews') {
+        $appData = GetAppData($db);
+        $news = $appData['News'];
+        //print_r($appData);
+        print_r($news[0]);
     }
 
 ?>

@@ -1,5 +1,5 @@
-import { Request_Async } from '../Functions/Request';
-import DataStorage, { STORAGE } from '../Functions/DataStorage';
+import { Request_Async } from '../Utils/Request';
+import DataStorage, { STORAGE } from '../Utils/DataStorage';
 
 async function CheckDate() {
     let safe = true;

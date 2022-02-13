@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackShop from '../PageBack/Shop';
+import user from '../../Managers/UserManager';
 
 import { UserHeader } from '../Widgets';
 import { Page, Icon, Text } from '../Components';
@@ -12,7 +13,7 @@ class Shop extends BackShop {
             <Page canScrollOver={true}>
                 <UserHeader />
                 <View style={styles.wallet}>
-                    <Text style={styles.ox} color='main1'>{'100'}</Text>
+                    <Text style={styles.ox} color='main1'>{user.informations.ox}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
             </Page>

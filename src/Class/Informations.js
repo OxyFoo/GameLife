@@ -20,6 +20,7 @@ class Informations {
         this.birthTime = null;
         this.lastBirthTime = null;
         this.xp = 0;
+        this.ox = 0;
 
         this.UNSAVED_title = null;
         this.UNSAVED_birthTime = null;
@@ -32,6 +33,7 @@ class Informations {
         this.birthTime = null;
         this.lastBirthTime = null;
         this.xp = 0;
+        this.ox = 0;
         this.UNSAVED_title = null;
         this.UNSAVED_birthTime = null;
     }
@@ -42,6 +44,7 @@ class Informations {
         this.birthTime = informations['birthTime'];
         this.lastBirthTime = informations['lastBirthTime'];
         this.xp = informations['xp'];
+        this.ox = informations['ox'];
         this.UNSAVED_title = informations['UNSAVED_title'];
         this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
     }
@@ -53,6 +56,7 @@ class Informations {
             birthTime: this.birthTime,
             lastBirthTime: this.lastBirthTime,
             xp: this.xp,
+            ox: this.ox,
             UNSAVED_title: this.UNSAVED_title,
             UNSAVED_birthTime: this.UNSAVED_birthTime
         };

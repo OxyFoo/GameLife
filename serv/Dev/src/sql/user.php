@@ -185,23 +185,19 @@
             }
         }
 
-        // TODO - Check this
-
-        public static function SetData($db, $account, $data) {
-            $accountID = $account['ID'];
-            $crypted = $db->Encrypt($data);
-
-            $command = "UPDATE `Users` SET `Data` = '$crypted' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
-
-            if ($result !== TRUE) {
-                ExitWithStatus("Error: Saving data failed");
+        public static function GetOx($db, $accountID) {
+            $command = "SELECT `Ox` FROM `Users` WHERE `ID` = '$accountID'";
+            $query = $db->QueryArray($command);
+            if ($query === NULL || count($query) === 0) {
+                ExitWithStatus("Error: Getting ox failed");
             }
+            $ox = $query[0]['Ox'];
+            return $ox;
         }
 
-        public static function setAchievements($db, $account, $achievements) {
-            $accountID = $account['ID'];
-            $command = "UPDATE `Users` SET `Achievements` = '$achievements' WHERE `ID` = '$accountID'";
+        // Add Ox to the account, negative to remove
+        public static function AddOx($db, $accountID, $value) {
+            $command = "UPDATE `Users` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Saving title failed");

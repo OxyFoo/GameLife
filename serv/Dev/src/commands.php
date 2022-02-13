@@ -208,6 +208,7 @@
             $title = intval($account['Title']);
             $birthtime = $account['Birthtime'];
             $lastbirthtime = $account['LastChangeBirth'];
+            $ox = intval($account['Ox']);
 
             if ($usernameTime !== NULL) $usernameTime = strtotime($usernameTime);
             if ($birthtime !== NULL) $birthtime = intval($birthtime);
@@ -220,6 +221,7 @@
                 $userData['title'] = $title;
                 $userData['birthtime'] = $birthtime;
                 $userData['lastbirthtime'] = $lastbirthtime;
+                $userData['ox'] = $ox;
             }
 
             if ($appDataToken != $dbDataToken) {

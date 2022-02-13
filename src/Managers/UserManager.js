@@ -189,6 +189,7 @@ class UserManager {
             if (contains('title')) this.informations.title = data['title'];
             if (contains('birthtime')) this.informations.birthTime = data['birthtime'];
             if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
+            if (contains('ox')) this.informations.ox = data['ox'];
 
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) {

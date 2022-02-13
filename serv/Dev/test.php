@@ -321,6 +321,11 @@
         $news = $appData['News'];
         //print_r($appData);
         print_r($news[0]);
+    } else if ($action === 'addOx') {
+        User::AddOx($db, 1, -14);
+    } else if ($action === 'getOx') {
+        $ox = User::GetOx($db, 1);
+        print_r($ox);
     }
 
 ?>

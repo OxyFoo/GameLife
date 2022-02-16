@@ -1,6 +1,6 @@
 import Achievements from '../Class/Achievements';
 import Activities from '../Class/Activities';
-//import Admob from '../Class/Admob';
+import Admob from '../Class/Admob';
 import Experience from '../Class/Experience';
 import Informations from '../Class/Informations';
 import Quests from '../Class/Quests';
@@ -26,7 +26,7 @@ class UserManager {
 
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
-        //this.admob = new Admob(this);
+        this.admob = new Admob(this);
         this.experience = new Experience(this);
         this.informations = new Informations(this);
         this.quests = new Quests(this);
@@ -48,7 +48,7 @@ class UserManager {
         this.tempSelectedTime = null;
         this.tempMailSent = null;
 
-        this.intervalSave = setInterval(this.OnlineLoad.bind(this), 5 * 60 * 1000);
+        this.intervalSave = setInterval(this.OnlineSave.bind(this), 5 * 60 * 1000);
     }
 
     async Clear(keepOnboardingState = true) {

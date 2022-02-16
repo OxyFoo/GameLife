@@ -33,15 +33,15 @@ class Admob {
             enabled: false,
             version: ''
         };
-        this.isOS14OrNewer = this.#isiOS14OrNewer();
+        this.isOS14OrNewer = this.__isiOS14OrNewer();
         this.isInEeaOrUnknown = false;
-        this.#getIsInEeaOrUnknown()
+        this.__getIsInEeaOrUnknown()
             .then(isInEeaOrUnknown => this.isInEeaOrUnknown = isInEeaOrUnknown);
-        //this.LoadAds();
     }
 
     async LoadAds() {
         if (Platform.OS !== 'ios' && Platform.OS !== 'android') return false;
+        const nonPersonalized = true;
 
         if (FIREBASE['react-native'][Platform.OS].hasOwnProperty('rewarded')) {
             const rewarded = FIREBASE['react-native'][Platform.OS]['rewarded'];
@@ -50,7 +50,8 @@ class Admob {
                 this.ads.rewarded[adName] = RewardedAd.createForAdRequest(adUnitId, {
                     requestNonPersonalizedAdsOnly: nonPersonalized,
                     keywords: ['video-game', 'sports']
-                });;
+                });
+                //this.ads.rewarded[adName].load();
             });
         }
 
@@ -61,7 +62,8 @@ class Admob {
                 this.ads.interstitial[adName] = InterstitialAd.createForAdRequest(adUnitId, {
                     requestNonPersonalizedAdsOnly: nonPersonalized,
                     keywords: ['video-game', 'sports']
-                });;
+                });
+                //this.ads.interstitial[adName].load();
             });
         }
 
@@ -72,7 +74,7 @@ class Admob {
         // TODO - Recode this
         try {
             if (this.ios_tracking.version !== VERSION) {
-                await this.#trackingTransparencyPopup();
+                await this.__trackingTransparencyPopup();
             }
         }
         catch (error) {
@@ -83,7 +85,7 @@ class Admob {
         if (this.ios_tracking.enabled) {
             try {
                 if (this.ad_consent.version !== VERSION) {
-                    await this.#adConsentPopup();
+                    await this.__adConsentPopup();
                 }
             }
             catch (error) {
@@ -97,8 +99,8 @@ class Admob {
     }
 
     // TODO - What it is & Finish it
-    async #adConsentPopup() {
-        const ad_consent_id = FIREBASE['react-native']['admob']['app_id'];
+    async __adConsentPopup() {
+        const ad_consent_id = FIREBASE['react-native'][Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_android_app_id'];
         const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
         // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
     
@@ -126,7 +128,7 @@ class Admob {
     }
 
     // TODO - What it is & Finish it
-    async #trackingTransparencyPopup(force = false) {
+    async __trackingTransparencyPopup(force = false) {
         const trackingStatus = await getTrackingStatus();
         if (trackingStatus !== 'unavailable') {
             const trackingStatus = await requestTrackingPermission();
@@ -151,11 +153,11 @@ class Admob {
         return CGU_LINK + lang;
     }
 
-    #isiOS14OrNewer() {
+    __isiOS14OrNewer() {
         return Platform.OS === 'ios' && Platform.Version >= 14;
     }
-    async #getIsInEeaOrUnknown() {
-        const ad_consent_id = FIREBASE['react-native']['admob']['app_id'];
+    async __getIsInEeaOrUnknown() {
+        const ad_consent_id = FIREBASE['react-native']['admob_app_id'];
         const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
         return consentInfo.isRequestLocationInEeaOrUnknown;
     }

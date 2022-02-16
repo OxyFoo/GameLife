@@ -5,7 +5,7 @@ import BackShop from '../PageBack/Shop';
 import user from '../../Managers/UserManager';
 
 import { UserHeader } from '../Widgets';
-import { Page, Icon, Text } from '../Components';
+import { Page, Icon, Text, Button } from '../Components';
 
 class Shop extends BackShop {
     render() {
@@ -16,6 +16,14 @@ class Shop extends BackShop {
                     <Text style={styles.ox} color='main1'>{user.informations.ox}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
+
+                <Button style={styles.pubButton} onPress={this.watchAd} color='main2' textComponent={false}>
+                    <Text>Regarder une pub</Text>
+                    <View style={styles.pubIcon}>
+                        <Text style={styles.pubText}>+10</Text>
+                        <Icon icon='ox' color='white' size={24} />
+                    </View>
+                </Button>
             </Page>
         )
     }
@@ -28,7 +36,11 @@ const styles = StyleSheet.create({
     },
     ox: {
         marginRight: 6
-    }
+    },
+
+    pubButton: { justifyContent: 'space-between', borderRadius: 14 },
+    pubText: { marginRight: 6 },
+    pubIcon: { flexDirection: 'row' }
 });
 
 export default Shop;

@@ -109,6 +109,7 @@ class BackLoading extends React.Component {
             DisableMorningNotifications();
         }
 
+        user.admob.LoadAds();
         this.nextStep();
         await Sleep(200);
 

@@ -4,7 +4,7 @@ import { AppState, LogBox, SafeAreaView } from 'react-native';
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
 
-import { CheckDate } from './src/Tools/DateCheck';
+import { CheckDate } from './src/Utils/DateCheck';
 
 class App extends React.Component {
     componentDidMount() {

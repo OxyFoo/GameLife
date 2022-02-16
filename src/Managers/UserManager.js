@@ -1,5 +1,6 @@
 import Achievements from '../Class/Achievements';
 import Activities from '../Class/Activities';
+//import Admob from '../Class/Admob';
 import Experience from '../Class/Experience';
 import Informations from '../Class/Informations';
 import Quests from '../Class/Quests';
@@ -25,6 +26,7 @@ class UserManager {
 
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
+        //this.admob = new Admob(this);
         this.experience = new Experience(this);
         this.informations = new Informations(this);
         this.quests = new Quests(this);
@@ -45,6 +47,8 @@ class UserManager {
         this.stats = this.experience.GetEmptyExperience();
         this.tempSelectedTime = null;
         this.tempMailSent = null;
+
+        this.intervalSave = setInterval(this.OnlineLoad.bind(this), 5 * 60 * 1000);
     }
 
     async Clear(keepOnboardingState = true) {
@@ -80,6 +84,7 @@ class UserManager {
         return output;
     }
     async Unmount() {
+        clearInterval(this.intervalSave);
         await this.LocalSave();
         await this.OnlineSave();
         this.server.Clear();
@@ -179,6 +184,7 @@ class UserManager {
     }
 
     async OnlineLoad() {
+        if (!this.server.online) return false;
         const data = await this.server.LoadUserData();
         const contains = (key) => data.hasOwnProperty(key);
         console.log('Online load', data);

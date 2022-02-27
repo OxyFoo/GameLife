@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import langManager from './LangManager';
 
 import { TimingAnimation } from '../Utils/Animations';
-import { IsUndefined } from '../Utils/Functions';
+import { IsUndefined, Range } from '../Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList } from '../Interface/Widgets';
 
 import About from '../Interface/PageFront/About';
@@ -33,21 +33,21 @@ import Test from '../Interface/PageFront/Test';
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
  */
 
+const pageNumber = 3;
+
 class PageManager extends React.Component{
     state = {
-        page1: '',
-        page2: '',
-        anim: {
-            page1: new Animated.Value(0),
-            page2: new Animated.Value(0)
-        },
+        pageIndex: 0,
+        pageArguments: {},
+        pages: Array(pageNumber).fill(''),
+        pagesAnimations: Array(pageNumber).fill(0).map(() => new Animated.Value(0)),
+
         animTransition: new Animated.Value(1),
         animTheme: new Animated.Value(0),
-        arguments: {},
-        ignorePage: false,
 
+        ignorePage: false,
         bottomBarShow: false,
-        pageIndex: -1,
+        bottomBarIndex: -1,
         console: false
     }
 
@@ -122,7 +122,7 @@ class PageManager extends React.Component{
         this.changing = true;
         const [ prevPage, prevArgs ] = this.path[this.path.length - 1];
         this.path.length = this.path.length - 1;
-        this.setState({ arguments: prevArgs, ignorePage: false });
+        this.setState({ pageArguments: prevArgs, ignorePage: false });
         this.pageAnimation(prevPage);
         return true;
     }
@@ -138,7 +138,7 @@ class PageManager extends React.Component{
     ChangePage = (newpage, args, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
 
-        const prevPage = this.state.page1 || this.state.page2;
+        const prevPage = this.state.pages[this.state.pageIndex];
 
         if (IsUndefined(newpage) || newpage === '') {
             this.forceUpdate(); return false;
@@ -155,11 +155,11 @@ class PageManager extends React.Component{
 
         // If current (prev) page is not ignored, add it to path, except first loading (no first pages)
         if (!this.state.ignorePage && prevPage != '') {
-            this.path.push([prevPage, this.state.arguments]);
+            this.path.push([prevPage, this.state.pageArguments]);
         }
 
         const newArgs = !IsUndefined(args) ? args : {};
-        this.setState({ arguments: newArgs, ignorePage: ignorePage });
+        this.setState({ pageArguments: newArgs, ignorePage: ignorePage });
 
         this.changing = true;
         this.pageAnimation(newpage);
@@ -179,34 +179,37 @@ class PageManager extends React.Component{
         const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
         const bottomBarShow = bottomBarPages.includes(newpage);
         const index = bottomBarPages.indexOf(newpage);
-        const newBarState = { bottomBarShow: bottomBarShow, pageIndex: index !== -1 ? index : 2 };
+        const newBarState = { bottomBarShow: bottomBarShow, bottomBarIndex: index !== -1 ? index : 2 };
         if (!bottomBarShow) this.setState(newBarState);
 
+        const { pages, pageIndex, pagesAnimations, animTransition } = this.state;
+        let nextIndex = pageIndex;
+        if (pages.includes(newpage)) nextIndex = pages.indexOf(newpage);
+        else if (pages[pageIndex])   nextIndex = (pageIndex + 1) % pageNumber;
+
         // Start loading animation
-        TimingAnimation(this.state.animTransition, 1, animTransitionDuration).start();
+        TimingAnimation(animTransition, 1, animTransitionDuration).start();
 
-        // Page animation
-        const nextPage = this.state.page1 === '' ? 'page1' : 'page2';
-        const prevPage = nextPage === 'page1' ? 'page2' : 'page1';
-
-        TimingAnimation(this.state.anim[nextPage], 1, animTransitionDuration).start();
         const AnimationEnd = () => {
             this.changing = false;
-            this.setState({ [prevPage]: '' });
-            TimingAnimation(this.state.animTransition, 0, animTransitionDuration).start();
+            this.setState({ pageIndex: nextIndex });
+            TimingAnimation(animTransition, 0, animTransitionDuration).start();
+            TimingAnimation(pagesAnimations[nextIndex], 1, animTransitionDuration).start();
         };
         const AnimationStart = () => {
-            TimingAnimation(this.state.anim[prevPage], 0, animTransitionDuration).start();
-            const newState = Object.assign(newBarState, { [nextPage]: newpage });
+            TimingAnimation(pagesAnimations[pageIndex], 0, animTransitionDuration).start();
+            pages.splice(nextIndex, 1, newpage);
+            const newPages = { pages: pages };
+            const newState = Object.assign(newBarState, newPages);
             this.setState(newState, AnimationEnd);
         }
 
         setTimeout(AnimationStart, animTransitionDuration);
-        //setTimeout(() => { this.setState(newState, AnimationEnd); }, 10);
     }
 
     GetCurrentPage = () => {
-        return this.state.page1 || this.state.page2;
+        const { pages, pageIndex } = this.state;
+        return pages[pageIndex];
     }
 
     getPageContent(page, args) {
@@ -238,23 +241,23 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const page1 = this.getPageContent(this.state.page1, this.state.arguments);
-        const page2 = this.getPageContent(this.state.page2, this.state.arguments);
+        const { pages, pageIndex, pageArguments, pagesAnimations, animTransition, animTheme } = this.state;
 
         const interOpacity = { inputRange: [0, 1], outputRange: [0, 0.2] };
-
         const fullscreen = { width: '100%', height: '100%' };
         const absolute = { position: 'absolute', top: 0, left: 0 };
+        const overlayStyle = [fullscreen, absolute, { backgroundColor: '#000000', opacity: animTransition.interpolate(interOpacity) }];
 
-        const page1Style = [fullscreen, absolute, { opacity: this.state.anim['page1'] }];
-        const page2Style = [fullscreen, absolute, { opacity: this.state.anim['page2'] }];
-        const overlayStyle = [fullscreen, absolute, { backgroundColor: '#000000', opacity: this.state.animTransition.interpolate(interOpacity) }];
-
-        const page1Event = this.state.page1 ? 'auto' : 'none';
-        const page2Event = this.state.page2 ? 'auto' : 'none';
         const darkBackground = ['#03052E', '#353657'];
         const lightBackground = ['#FFFFFF', '#FFFFFF'];
-        const lightOpacity = { opacity: this.state.animTheme };
+        const lightOpacity = { opacity: animTheme };
+
+        const newPage = (index) => {
+            const page = this.getPageContent(pages[index], pageArguments);
+            const style = [ fullscreen, absolute, { opacity: pagesAnimations[index] } ];
+            const event = pageIndex === index ? 'auto' : 'none';
+            return <Animated.View key={'page-'+index} style={style} pointerEvents={event}>{page}</Animated.View>;
+        }
 
         return (
             <LinearGradient style={fullscreen} colors={darkBackground}>
@@ -263,11 +266,10 @@ class PageManager extends React.Component{
                     <LinearGradient style={fullscreen} colors={lightBackground} />
                 </Animated.View>
 
-                <Animated.View style={page1Style} pointerEvents={page1Event}>{page1}</Animated.View>
-                <Animated.View style={page2Style} pointerEvents={page2Event}>{page2}</Animated.View>
+                {Range(pageNumber).map(i => newPage(i))}
                 <Animated.View style={overlayStyle} pointerEvents='none' />
 
-                <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.pageIndex} />
+                <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref }} />
 
                 <ScreenList ref={ref => { if (ref !== null) this.screenList = ref }} />

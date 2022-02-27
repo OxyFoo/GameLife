@@ -36,9 +36,6 @@ class BottomBar extends React.Component {
             this.setState({ selectedIndex: newIndex });
             SpringAnimation(this.state.animBarX, newIndex * .2 * this.state.barWidth).start();
         }
-
-        // Show / hide settings button
-        const settingOpacity = user.interface.GetCurrentPage() === 'home' ? 1 : 0;
     }
 
     onLayout = (event) => {
@@ -54,9 +51,10 @@ class BottomBar extends React.Component {
 
     render() {
         const isChecked = (index) => index === this.state.selectedIndex ? '#9095FF' : '#6e6e6e';
+        const stylePos = { transform: [{ translateY: this.state.animPosY }] };
 
         return (
-            <Animated.View style={[styles.parent, { transform: [{ translateY: this.state.animPosY }] }]} pointerEvents={'box-none'}>
+            <Animated.View style={[styles.parent, stylePos]} pointerEvents={'box-none'}>
                 <View style={styles.body} onLayout={this.onLayout}>
                     {/* Selection bar */}
                     <Animated.View style={[styles.bar, { transform: [{ translateX: this.state.animBarX }] }]} />

@@ -3,7 +3,7 @@ import { StyleSheet, TouchableHighlight } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
-import { Character } from '../Components';
+import { Character, Frame, FrameContent } from '../Components';
 
 const AvatarCardProps = {
     selectedId: -1,
@@ -11,6 +11,14 @@ const AvatarCardProps = {
 }
 
 class ItemCard extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.character = new Character('test', 'male_test');
+        this.frameContent = new FrameContent();
+        this.frameContent.AddCharacter(this.character);
+    }
+
     onPress = () => {
         this.props.onPress(this.props.item.id);
     }
@@ -29,7 +37,7 @@ class ItemCard extends React.Component {
                 underlayColor={themeManager.GetColor('main1', null, .5)}
                 touchSoundDisabled={true}
             >
-                <Character />
+                <Frame content={this.frameContent} />
             </TouchableHighlight>
         );
     }

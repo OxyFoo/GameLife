@@ -7,7 +7,7 @@ import themeManager from '../../Managers/ThemeManager';
 import ItemCard from './ItemCard';
 import { Sleep } from '../../Utils/Functions';
 import { SpringAnimation } from '../../Utils/Animations';
-import { Text, Button, Character, Separator, Icon } from '../Components';
+import { Text, Button, Character, Separator, Icon, Frame, FrameContent } from '../Components';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -18,13 +18,13 @@ const AvatarProps = {
 
 const TEST_ITEMS = [
     { id: 0, name: 'Test1', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    { id: 1, name: 'Test2', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    { id: 2, name: 'Test3', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    { id: 3, name: 'Test4', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    { id: 4, name: 'Test5', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    { id: 5, name: 'Test6', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    { id: 6, name: 'Test7', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    { id: 7, name: 'Test8', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS }
+    //{ id: 1, name: 'Test2', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
+    //{ id: 2, name: 'Test3', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
+    //{ id: 3, name: 'Test4', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
+    //{ id: 4, name: 'Test5', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
+    //{ id: 5, name: 'Test6', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
+    //{ id: 6, name: 'Test7', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
+    //{ id: 7, name: 'Test8', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS }
 ];
 
 const TEST_STATS = {
@@ -51,7 +51,14 @@ class Avatar extends React.Component {
         itemSelected: false,
         itemSelectedID: null,
         itemAnim: new Animated.Value(0),
-        itemSelectionHeight: 0
+        itemSelectionHeight: 0,
+
+        frameContent: new FrameContent()
+    }
+
+    constructor(props) {
+        super(props);
+        this.state.frameContent.AddCharacter(new Character('test', 'male_test'));
     }
 
     componentDidMount() {
@@ -216,7 +223,8 @@ class Avatar extends React.Component {
                             <Button style={[styles.box, styles.smallBox]} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={24} rippleColor='white' />
                         </View>
                         <Animated.View style={avatarStyle}>
-                            <Character />
+                            {/*<Character width={1000} height={1000} />*/}
+                            <Frame content={this.state.frameContent} />
                             {!editorOpened && <Button style={styles.avatarOverlay} onPress={this.OpenEditor} />}
                         </Animated.View>
                     </View>

@@ -1,0 +1,46 @@
+{
+    "$schema": "./schema.json",
+    "settings": {
+        "loop": "pingpong",
+        "sync": true
+    },
+    "poses": [
+        {
+            "sleep": 0,
+            "duration": 1000,
+            "rotations": {
+                "bust": { "rZ": 0 },
+                "head": { "rZ": 20 },
+                "left_arm": { "rZ": 40 },
+                "left_forearm": { "rZ": -200 },
+                "left_hand": { "rZ": -20 },
+                "right_arm": { "rZ": -40 },
+                "right_forearm": { "rZ": 80 },
+                "right_hand": { "rZ": 0 },
+                "left_thigh": { "rZ": 0 },
+                "left_leg": { "rZ": 0 },
+                "left_foot": { "rZ": 0 },
+                "right_thigh": { "rZ": 0 },
+                "right_leg": { "rZ": 0 },
+                "right_foot": { "rZ": 0 }
+            }
+        },
+        {
+            "sleep": 0,
+            "duration": 1000,
+            "rotations": {
+                "head": { "rZ": 0 },
+                "left_forearm": { "rZ": -200 },
+                "right_forearm": { "rZ": 80 }
+            }
+        },
+        {
+            "sleep": 0,
+            "duration": 1000,
+            "rotations": {
+                "left_forearm": { "rZ": -120 },
+                "right_forearm": { "rZ": 20 }
+            }
+        }
+    ]
+}

@@ -1,18 +1,45 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
-import Svg from 'react-native-svg';
+import { Animated } from 'react-native';
 
-import Character_Classic from '../../../res/stuffs/humans/human_classic';
-import Character_Male_Test from '../../../res/stuffs/humans/human_male_test';
+import { CHARACTERS, ANIMATIONS } from '../../../res/stuffs/humans/Characters';
 
+import { Sleep } from '../../Utils/Functions';
 import { TimingAnimation, WithFunction } from '../../Utils/Animations';
+
+/**
+ * @typedef {import('../../../res/stuffs/humans/Characters').PartsName} PartsName
+ * @typedef {import('../../../res/stuffs/humans/Characters').CharactersName} CharactersName
+ * @typedef {import('../../../res/stuffs/humans/Characters').AnimationsName} AnimationsName
+ * @typedef {import('./Frame').default} Frame
+ */
+
+class Animated3D {
+    constructor(x = 0, y = 0, z = 0) {
+        this.x = new Animated.Value(x);
+        this.y = new Animated.Value(y);
+        this.z = new Animated.Value(z);
+    }
+
+    Update(angles, duration) {
+        if (typeof(angles) !== 'object') {
+            throw new Error('Animated3D.Update: angles must be an object');
+        }
+
+        let animations = [];
+        const addAnim = (anim, value) => animations.push(TimingAnimation(anim, value, duration));
+        if (angles.hasOwnProperty('rX')) addAnim(this.x, angles['rX']);
+        if (angles.hasOwnProperty('rY')) addAnim(this.y, angles['rY']);
+        if (angles.hasOwnProperty('rZ')) addAnim(this.z, angles['rZ']);
+        return animations;
+    }
+}
 
 class Part {
     /**
      * @param {String} name Name of body part
      * @param {Number} l Distance from parent in pixels (for initial position)
      * @param {Number} a Angle distance from parent in degrees (for initial position)
-     * @param {Animated.Value} rotation Rotation of body part in degrees
+     * @param {Animated3D} rotation Rotation of body part in degrees
      * @param {Number} [zIndex=0] Z-index of body part
      */
     constructor(name, l, a, rotation, zIndex = 0) {
@@ -22,7 +49,6 @@ class Part {
         // Initial position from parent
         this.l = l;
         this.a = a;
-        //this.r = 0;
 
         // Current absolute position
         this.rotation = rotation;
@@ -49,13 +75,6 @@ class Part {
         child.parent = this;
         this.childs.push(child);
     }
-    /**
-     * @param {String} name
-     * @returns {Part?}
-     */
-    GetChild(name) {
-        return this.childs.find(part => part.name === name) || null;
-    }
 
     /**
      * @description Return an array of all parent parts in order from root to this part (including this part)
@@ -71,86 +90,25 @@ class Part {
         return parents;
     }
 
-    render() {
-        //const TETA = this.a * Math.PI / 180;
-        //let posX = Animated.add(this.pos.x, this.l * Math.cos(TETA));
-        //let posY = Animated.add(this.pos.y, this.l * Math.sin(TETA));
-        //let rot = this.rotation;
-        //console.log(this.name, this.pos, this.rotation);
-
-        /*if (this.parent !== null) {
-            const TETA = (this.parent.r + this.a) * Math.PI / 180;
-            posX = Animated.add(posX, this.l * Math.cos(TETA));
-            posY = Animated.add(posY, this.l * Math.sin(TETA));
-            //this.r += this.parent.r;
-        }*/
-
-        /*let el = this;
-        while (el.parent !== null) {
-            let totalRotation = Animated.add(el.a, el.parent.rotation);
-            totalRotation = Animated.add(totalRotation, el.parent.a);
-            const TETA = Animated.multiply(totalRotation, Math.PI / 180);
-
-            const COS = TETA.interpolate(WithFunction(Math.cos, 20, 2*Math.PI));
-            const SIN = TETA.interpolate(WithFunction(Math.sin, 20, 2*Math.PI));
-            const radiusX = Animated.multiply(this.l, COS);
-            const radiusY = Animated.multiply(this.l, SIN);
-
-            posX = Animated.add(posX, radiusX);
-            posY = Animated.add(posY, radiusY);
-            posX = Animated.add(posX, el.parent.pos.x);
-            posY = Animated.add(posY, el.parent.pos.y);
-
-            const parentRotation = Animated.add(el.parent.a, el.parent.rotation);
-            rot = Animated.add(rot, el.r);
-            rot = Animated.add(rot, parentRotation);
-            el = el.parent;
-        }*/
-        /*const calculateParentPos = (el) => {
-            if (el.parent !== null) {
-                const totalRotation = Animated.add(el.a, el.parent.rotation);
-                const TETA = Animated.multiply(totalRotation, Math.PI / 180);
-
-                const COS = TETA.interpolate(WithFunction(Math.cos, 20, 2*Math.PI));
-                const SIN = TETA.interpolate(WithFunction(Math.sin, 20, 2*Math.PI));
-                const radiusX = Animated.multiply(this.l, COS);
-                const radiusY = Animated.multiply(this.l, SIN);
-
-                const X = Animated.add(el.parent.pos.x, radiusX);
-                const Y = Animated.add(el.parent.pos.y, radiusY);
-
-                const parentRotation = Animated.add(el.parent.a, el.parent.rotation);
-                R = Animated.add(parentRotation, el.r);
-                return [ X, Y, R ];
-
-                calculateParentPos(el.parent);
-            }
-        }*/
-
-
-
+    calculateParentPos = () => {
         let posX = this.pos.x;
         let posY = this.pos.y;
-        let rotZ = this.rotation;
+        let rotZ = this.rotation.z;
 
         /** @param {Part} el */
         const calculateParentPos = (el) => {
             if (el.parent !== null) {
-                const parentRotation = Animated.modulo(Animated.add(el.parent.rotation, el.parent.a), 360);
-                //const totalRotation = Animated.modulo(Animated.add(parentRotation, el.a), 360);
-                const totalRotation = Animated.modulo(Animated.add(el.parent.rotation, el.a), 360);
-
-                let _totalRotation = new Animated.Value(0);
+                let currentRotation = new Animated.Value(0);
                 const elChilds = el.getParents();
                 for (let i = 0; i < elChilds.length-1; i++) {
                     const child = elChilds[i];
-                    const childRotation = Animated.add(child.a % 360, child.rotation);
-                    _totalRotation = Animated.add(_totalRotation, childRotation);
+                    const childRotation = Animated.add(child.a % 360, child.rotation.z);
+                    currentRotation = Animated.add(currentRotation, childRotation);
                 }
-                _totalRotation = Animated.add(_totalRotation, el.a);
-                _totalRotation = Animated.modulo(_totalRotation, 360);
+                currentRotation = Animated.add(currentRotation, el.a);
+                currentRotation = Animated.modulo(currentRotation, 360);
 
-                const TETA = Animated.multiply(_totalRotation, Math.PI / 180);
+                const TETA = Animated.multiply(currentRotation, Math.PI / 180);
                 const COS = TETA.interpolate(WithFunction(Math.cos, 20, 2*Math.PI));
                 const SIN = TETA.interpolate(WithFunction(Math.sin, 20, 2*Math.PI));
                 const radiusX = Animated.multiply(el.l, COS);
@@ -158,18 +116,41 @@ class Part {
 
                 const parentX = Animated.add(el.parent.pos.x, radiusX);
                 const parentY = Animated.add(el.parent.pos.y, radiusY);
+                const parentR = Animated.modulo(Animated.add(el.parent.rotation.z, el.parent.a), 360);
 
                 posX = Animated.add(posX, parentX);
                 posY = Animated.add(posY, parentY);
-                rotZ = Animated.add(rotZ, parentRotation);
+                rotZ = Animated.add(rotZ, parentR);
 
                 calculateParentPos(el.parent);
             }
         }
         calculateParentPos(this);
 
-        const character = (
-            <Character_Male_Test
+        return { posX, posY, rotZ };
+    }
+
+    /**
+     * @param {CharactersName} character
+     * @returns {JSX.Element}
+     */
+    renderAll(character) {
+        /** @param {Part} part @returns {Array<Part>} */
+        const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
+        const allParts = getAllChilds(this).sort((a, b) => a.zIndex - b.zIndex);
+        return allParts.map(part => part.render(character));
+    }
+
+    /**
+     * @param {CharactersName} character 
+     * @returns {JSX.Element}
+     */
+    render(character) {
+        const { posX, posY, rotZ } = this.calculateParentPos();
+        const Charac = CHARACTERS[character];
+
+        return (
+            <Charac
                 key={'part-' + this.name + '-' + Math.random()}
                 part={this.name}
                 fill='#e0a98b'
@@ -179,69 +160,65 @@ class Part {
                 zIndex={this.zIndex}
             />
         );
-
-        if (this.name !== 'bust') return character;
-
-        /** @param {Part} part */
-        const allRender = (part) => part == this ? character : part.render();
-        // TODO - Now: show only this and childs, but in future: show all parts from bust
-        const components = [this, ...this.childs].sort((a, b) => a.zIndex - b.zIndex).map(allRender);
-        return (components);
     }
 }
 
-const CharacterProps = {
-}
+class Character {
+    /**
+     * @param {String} name Name of character
+     * @param {CharactersName} skin
+     * @param {{ x: Number, y: Number }} pos
+     */
+    constructor(name, skin, pos = { x: 450, y: 280 }) {
+        this.name = name;
+        this.skin = skin;
+        this.pos = pos;
 
-class Character extends React.Component {
-    state = {
-        positions: {
-            bust: new Animated.ValueXY({ x: 0, y: 0 })
-        },
-        rotations: {
-            bust: new Animated.Value(0),
-            head: new Animated.Value(0),
-            left_arm: new Animated.Value(0),
-            left_forearm: new Animated.Value(-130),
-            left_hand: new Animated.Value(20),
-            right_arm: new Animated.Value(0),
-            right_forearm: new Animated.Value(-20),
-            right_hand: new Animated.Value(-20),
-            left_thigh: new Animated.Value(0),
-            left_leg: new Animated.Value(0),
-            left_foot: new Animated.Value(0),
-            right_thigh: new Animated.Value(0),
-            right_leg: new Animated.Value(0),
-            right_foot: new Animated.Value(0)
+        this.animating = false;
+        this.parentFrame = null;
+        this.hide = false;
+        this.outOfBounds = false;
+
+        this.position = new Animated.ValueXY({ x: 0, y: 0 });
+        this.position.addListener(this.__setPosition.bind(this));
+        this.SetPositionAbsolute(this.pos.x, this.pos.y, 0);
+
+        /** @type {Array<Animated3D>} */
+        this.rotations = {
+            bust: new Animated3D(),
+            head: new Animated3D(),
+            left_arm: new Animated3D(),
+            left_forearm: new Animated3D(0, 0, -130),
+            left_hand: new Animated3D(0, 0, 20),
+            right_arm: new Animated3D(),
+            right_forearm: new Animated3D(0, 0, -20),
+            right_hand: new Animated3D(0, 0, -20),
+            left_thigh: new Animated3D(),
+            left_leg: new Animated3D(),
+            left_foot: new Animated3D(),
+            right_thigh: new Animated3D(),
+            right_leg: new Animated3D(),
+            right_foot: new Animated3D()
         }
-    }
 
-    constructor(props) {
-        super(props);
+        this.body = new Part('bust', 0, 0, this.rotations.bust);
+        this.body.SetPosition(this.position);
+        const head = new Part('head', 10, 120, this.rotations.head, 1);
 
-        const pos = this.state.positions;
-        const rot = this.state.rotations;
-        this.pos = { x: 450, y: 280 };
-        pos.bust.addListener(this.__setPosition.bind(this));
+        const left_arm = new Part('left_arm', 110, 140, this.rotations.left_arm, -1);
+        const left_forearm = new Part('left_forearm', 120, -25, this.rotations.left_forearm);
+        const left_hand = new Part('left_hand', 100, 105, this.rotations.left_hand);
 
-        this.body = new Part('bust', 0, 0, rot.bust, 1);
-        this.body.SetPosition(pos.bust);
-        const head = new Part('head', 0, 0, rot.head, 2);
+        const right_arm = new Part('right_arm', 110, 30, this.rotations.right_arm, -1);
+        const right_forearm = new Part('right_forearm', 140, 40, this.rotations.right_forearm, -1);
+        const right_hand = new Part('right_hand', 90, 25, this.rotations.right_hand);
 
-        const left_arm = new Part('left_arm', 100, 135, rot.left_arm, 2);
-        const left_forearm = new Part('left_forearm', 120, -25, rot.left_forearm, 2);
-        const left_hand = new Part('left_hand', 100, 105, rot.left_hand, 5);
-
-        const right_arm = new Part('right_arm', 110, 30, rot.right_arm, -1);
-        const right_forearm = new Part('right_forearm', 140, 40, rot.right_forearm);
-        const right_hand = new Part('right_hand', 90, 25, rot.right_hand);
-
-        const left_thigh = new Part('left_thigh', 0, 0, rot.left_thigh);
-        const left_leg = new Part('left_leg', 0, 0, rot.left_leg);
-        const left_foot = new Part('left_foot', 0, 0, rot.left_foot);
-        const right_thigh = new Part('right_thigh', 0, 0, rot.right_thigh);
-        const right_leg = new Part('right_leg', 0, 0, rot.right_leg);
-        const right_foot = new Part('right_foot', 0, 0, rot.right_foot);
+        const left_thigh = new Part('left_thigh', 300, 80, this.rotations.left_thigh, -1);
+        const left_leg = new Part('left_leg', 0, 0, this.rotations.left_leg);
+        const left_foot = new Part('left_foot', 0, 0, this.rotations.left_foot);
+        const right_thigh = new Part('right_thigh', 0, 0, this.rotations.right_thigh);
+        const right_leg = new Part('right_leg', 0, 0, this.rotations.right_leg);
+        const right_foot = new Part('right_foot', 0, 0, this.rotations.right_foot);
 
         this.body.AddChild(head);
         // Left arm
@@ -261,110 +238,120 @@ class Character extends React.Component {
         //right_thigh.AddChild(right_leg);
         //this.body.AddChild(right_thigh);
 
-        //this.character = this.body.render();
-    }
-
-    componentDidMount() {
-        //const angles = [ 0, 90, -10, 0, -20, 40, 20, -25, -30, 0, -20, -40, 0 ];
-        //const angles = [ 20, 40, 0, -20, -40, 40, 60, -25, -30, 0, -20, -40, 0 ];
-        this.SetPartRotation('head', 10, 1000);
-        this.SetPositionAbsolute(this.pos.x, this.pos.y, 0);
-
-        const ToIdle = () => {
-            this.SetPartRotation('bust', 0, 1000);
-            this.SetPartRotation('head', 0, 1000);
-            this.SetPartRotation('left_arm', 0, 1000);
-            this.SetPartRotation('left_forearm', -130, 1000);
-            this.SetPartRotation('left_hand', 20, 1000);
-            this.SetPartRotation('right_arm', 0, 1000);
-            this.SetPartRotation('right_forearm', -20, 1000);
-            this.SetPartRotation('right_hand', -20, 1000);
-            this.SetPartRotation('left_thigh', 0, 1000);
-            this.SetPartRotation('left_leg', 0, 1000);
-            this.SetPartRotation('left_foot', 0, 1000);
-            this.SetPartRotation('right_thigh', 0, 1000);
-            this.SetPartRotation('right_leg', 0, 1000);
-            this.SetPartRotation('right_foot', 0, 1000);
-        }
-
-        const ToMuscles = () => {
-            this.SetPartRotation('bust', 0, 1000);
-            this.SetPartRotation('head', 20, 1000);
-            this.SetPartRotation('left_arm', 40, 1000);
-            this.SetPartRotation('left_forearm', -200, 1000);
-            this.SetPartRotation('left_hand', -20, 1000);
-            this.SetPartRotation('right_arm', 0, 1000);
-            this.SetPartRotation('right_forearm', -20, 1000);
-            this.SetPartRotation('right_hand', -20, 1000);
-            this.SetPartRotation('left_thigh', 0, 1000);
-            this.SetPartRotation('left_leg', 0, 1000);
-            this.SetPartRotation('left_foot', 0, 1000);
-            this.SetPartRotation('right_thigh', 0, 1000);
-            this.SetPartRotation('right_leg', 0, 1000);
-            this.SetPartRotation('right_foot', 0, 1000);
-        }
-
-        //setTimeout(ToIdle, 1000);
-        setTimeout(ToMuscles, 100);
-
         return;
-        setTimeout(() => this.SetPartRotation('left_arm', 400, 750), 1000);
-        setTimeout(() => this.SetPartRotation('left_forearm', -20, 750), 2000);
-        setTimeout(() => this.SetPartRotation('bust', -20, 750), 3000);
-        //setTimeout(() => this.SetPartRotation('left_hand', -20, 750), 4000);
-        //setTimeout(() => this.SetPositionRelative(150, 150), 4000);
+        setTimeout(() => {
+            this.SetAnimation('muscles');
+            this.SetPositionRelative(0, 100);
+        }, 5000);
     }
 
-    SetPositionAbsolute(x, y, duration = 1000) {
-        TimingAnimation(this.state.positions.bust, { x, y }, duration).start();
-    }
-    SetPositionRelative(x, y, duration = 1000) {
-        const newX = this.pos.x + x;
-        const newY = this.pos.y + y;
-        TimingAnimation(this.state.positions.bust, { x: newX, y: newY }, duration).start();
-    }
-    __setPosition({ x, y }) {
-        this.pos = { x, y };
+    unmount() {
+        this.animating = false;
+        if (this.position.hasListeners()) {
+            this.position.removeAllListeners();
+        }
     }
 
     /**
-     * @param {'bust'|'head'|'left_arm'|'left_forearm'|'left_hand'|'right_arm'|'right_forearm'|'right_hand'|'left_thigh'|'left_leg'|'left_foot'|'right_thigh'|'right_leg'|'right_foot'} partName
-     * @param {Number} angle Rotations of body part
+     * @param {Frame} frame 
      */
-    SetPartRotation = (partName, angle = 0, duration = 1000) => {
-        if (!Object.keys(this.state.rotations).includes(partName)) {
-            console.warn('Character: Wrong part name');
-            return;
-        }
-        TimingAnimation(this.state.rotations[partName], angle, duration).start();
+    SetFrame(frame) {
+        this.parentFrame = frame;
     }
 
+    Show = () => this.hide = false;
+    Hide = () => this.hide = true;
+
+    /**
+     * @param {Number} x Default is current position
+     * @param {Number} y Default is current position
+     * @param {Number} [duration=1000] Duration in ms
+     */
+    SetPositionAbsolute(x = this.pos.x, y = this.pos.y, duration = 1000) {
+        TimingAnimation(this.position, { x, y }, duration).start();
+    }
+
+    /**
+     * @param {Number} [x=0]
+     * @param {Number} [y=0]
+     * @param {Number} [duration=1000] Duration in ms
+     */
+    SetPositionRelative(x = 0, y = 0, duration = 1000) {
+        const newX = this.pos.x + x;
+        const newY = this.pos.y + y;
+        TimingAnimation(this.position, { x: newX, y: newY }, duration).start();
+    }
+
+    /**
+     * @param {PartsName} partsRotations
+     * @param {Number} [duration=1000]
+     * @returns {Promise<void>}
+     */
+    SetPartsRotation = (partsRotations, duration = 1000) => {
+        let anims = [];
+        const setRotation = (partName) => anims.push(...this.rotations[partName].Update(partsRotations[partName], duration));
+        Object.keys(partsRotations).map(setRotation);
+        Animated.parallel(anims).start();
+    }
+
+    /**
+     * @param {AnimationsName} animation
+     */
+    SetAnimation = async (animation) => {
+        if (this.animating) return;
+
+        const { settings, poses } = ANIMATIONS[animation];
+        const { loop, sync } = settings;
+
+        const applyAnim = async (index) => {
+            if (!this.animating) return;
+            const { sleep, duration, rotations } = poses[index];
+            await Sleep(sleep);
+            this.SetPartsRotation(rotations, duration);
+            if (sync) await Sleep(duration);
+        }
+
+        this.animating = true;
+        while (this.animating) {
+            for (let i = 0; i < poses.length; i++) {
+                await applyAnim(i);
+            }
+            if (loop === 'once') {
+                this.animating = false;
+                break;
+            } else if (loop === 'pingpong' && poses.length > 2) {
+                for (let i = poses.length-2; i >= 1; i--) {
+                    await applyAnim(i);
+                }
+            }
+        }
+    }
+
+    __setPosition({ x, y }) {
+        this.pos = { x, y };
+
+        if (this.parentFrame !== null) {
+            const { width, height } = this.parentFrame.props;
+            const delta = 200;
+            const outOfBounds = x < -delta || y < -delta || x > width+delta || y > height+delta;
+            if (this.outOfBounds !== outOfBounds) {
+                this.outOfBounds = outOfBounds;
+                this.__refresh();
+            }
+        }
+    }
+
+    __refresh() {
+        if (this.parentFrame !== null) {
+            this.parentFrame.forceUpdate();
+        }
+    }
+
+    /** @returns {JSX.Element} */
     render() {
-        return (
-            <View style={styles.canvas}>
-                <Svg viewBox='0 0 1000 1000'>
-                    {this.body.render()}
-                </Svg>
-            </View>
-        );
+        if (this.outOfBounds || this.hide) return null;
+        return this.body.renderAll(this.skin);
     }
 }
-
-Character.prototype.props = CharacterProps;
-Character.defaultProps = CharacterProps;
-
-const styles = StyleSheet.create({
-    canvas: {
-        width: '100%',
-        height: '100%'
-    },
-    part: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%'
-    }
-});
 
 export default Character;

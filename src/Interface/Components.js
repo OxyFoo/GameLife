@@ -17,6 +17,8 @@ import XPBar from './Components/XPBar';
 import Character from './Components/Character';
 import Digit from './Components/Digit';
 import GLLoading from './Components/GLLoading';
+import Frame from './Components/Frame';
+import { FrameContent } from './Components/Frame';
 
 export {
     Page,
@@ -38,5 +40,7 @@ export {
     XPBar,
     Character,
     Digit,
-    GLLoading
+    GLLoading,
+    Frame,
+    FrameContent
 }

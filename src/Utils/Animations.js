@@ -17,5 +17,22 @@ function SpringAnimation(anim, toValue, native = true) {
     });
 }
 
-export { TimingAnimation, SpringAnimation };
+/**
+ * @description Used to interpolate animated with function
+ * @param {Function} func
+ * @param {Number} [steps=50]
+ * @returns Input and output interpolation function
+ */
+function WithFunction(func, steps = 50, max = 1) {
+    let inputRange = [];
+    let outputRange = [];
+    for (let i = 0; i <= steps; ++i) {
+        const value = (i / steps) * max;
+        inputRange.push(value);
+        outputRange.push(func(value));
+    }
+    return { inputRange: inputRange, outputRange: outputRange };
+}
+
+export { TimingAnimation, SpringAnimation, WithFunction };
 export default () => {};

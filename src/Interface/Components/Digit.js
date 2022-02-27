@@ -87,7 +87,7 @@ class Digit extends React.Component {
                 {i}
             </Text>
         );
-        return Range(maxValue).map(digit);
+        return Range(maxValue+1).map(digit);
     }
 
     render() {

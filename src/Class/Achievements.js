@@ -24,8 +24,9 @@ class Achievements {
         this.UNSAVED_solved = [];
     }
     Load(achievements) {
-        this.solved = achievements['solved'];
-        this.UNSAVED_solved = achievements['unsaved'];
+        const contains = (key) => achievements.hasOwnProperty(key);
+        if (contains('solved')) this.solved = achievements['solved'];
+        if (contains('unsaved')) this.UNSAVED_solved = achievements['unsaved'];
     }
     Save() {
         const achievements = {

@@ -5,7 +5,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { TimingAnimation } from '../../Utils/Animations';
 
-class Ripple extends React.Component {
+class Ripple extends React.PureComponent {
     constructor(props) {
         super(props);
         this.anim_ended = true;

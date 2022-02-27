@@ -25,7 +25,6 @@ class Settings {
         this.startAudio = true;
         this.morningNotifications = true;
     }
-
     async Load() {
         const settings = await DataStorage.Load(STORAGE.LOGIN);
         const contains = (key) => settings.hasOwnProperty(key);

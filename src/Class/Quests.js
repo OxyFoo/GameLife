@@ -19,8 +19,9 @@ class Quests {
         this.todoList = [];
     }
     Load(quests) {
-        this.daily = quests['daily'];
-        this.todoList = quests['todolist'];
+        const contains = (key) => quests.hasOwnProperty(key);
+        if (contains('daily')) this.daily = quests['daily'];
+        if (contains('todolist')) this.todoList = quests['todolist'];
     }
     Save() {
         const quests = {

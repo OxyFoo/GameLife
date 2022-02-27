@@ -23,7 +23,7 @@ class Onboarding extends BackOnboarding {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.flagRow} onPress={this.selectFrench} activeOpacity={.6}>
                     <Icon icon='flagFrench' size={64} />
-                    <Text style={styles.flagText}>{langManager.langages.en.name}</Text>
+                    <Text style={styles.flagText}>{langManager.langages.fr.name}</Text>
                 </TouchableOpacity>
             </View>
         );

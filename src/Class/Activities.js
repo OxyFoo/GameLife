@@ -60,7 +60,7 @@ class Activities {
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
             if (activity.length !== 4) continue;
-            this.Add(activity[0], activity[1], activity[2], activity[3]);
+            this.Add(activity[0], activity[1], activity[2], activity[3], true);
         }
         console.log('ONLINELOAD', activities);
     }
@@ -173,9 +173,10 @@ class Activities {
      * @param {Number} startTime - Unix timestamp in seconds
      * @param {Number} duration - in minutes
      * @param {String} comment - Optional comment
+     * @param {Boolean} [alreadySaved=false] - If false, save activity in UNSAVED_activities
      * @returns {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'}
      */
-    Add(skillID, startTime, duration, comment) {
+    Add(skillID, startTime, duration, comment, alreadySaved = false) {
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;
@@ -199,7 +200,8 @@ class Activities {
             if (!this.TimeIsFree(startTime, duration)) {
                 return 'notFree';
             }
-            this.UNSAVED_activities.push(newActivity);
+            if (alreadySaved) this.activities.push(newActivity);
+            else      this.UNSAVED_activities.push(newActivity);
             if (indexDeletion !== null) {
                 this.UNSAVED_deletions.splice(indexDeletion, 1);
             }

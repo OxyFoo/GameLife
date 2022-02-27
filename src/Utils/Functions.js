@@ -100,7 +100,7 @@ function GetDeviceInformations(OS = false, version = false) {
 }
 
 function Range(length) {
-    return Array.from({ length: length+1 }, (_, i) => i);
+    return Array.from({ length: length }, (_, i) => i);
 }
 
 function Sleep(ms) {

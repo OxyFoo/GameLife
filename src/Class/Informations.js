@@ -38,15 +38,16 @@ class Informations {
         this.UNSAVED_birthTime = null;
     }
     Load(informations) {
-        this.username = informations['username'];
-        this.usernameTime = informations['usernameTime'];
-        this.title = informations['title'];
-        this.birthTime = informations['birthTime'];
-        this.lastBirthTime = informations['lastBirthTime'];
-        this.xp = informations['xp'];
-        this.ox = informations['ox'];
-        this.UNSAVED_title = informations['UNSAVED_title'];
-        this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
+        const contains = (key) => informations.hasOwnProperty(key);
+        if (contains('username')) this.username = informations['username'];
+        if (contains('usernameTime')) this.usernameTime = informations['usernameTime'];
+        if (contains('title')) this.title = informations['title'];
+        if (contains('birthTime')) this.birthTime = informations['birthTime'];
+        if (contains('lastBirthTime')) this.lastBirthTime = informations['lastBirthTime'];
+        if (contains('xp')) this.xp = informations['xp'];
+        if (contains('ox')) this.ox = informations['ox'];
+        if (contains('UNSAVED_title')) this.UNSAVED_title = informations['UNSAVED_title'];
+        if (contains('UNSAVED_birthTime')) this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
     }
     Save() {
         const informations = {

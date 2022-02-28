@@ -246,6 +246,7 @@ class Character {
     }
 
     unmount() {
+        this.SetFrame(null);
         this.animating = false;
         if (this.position.hasListeners()) {
             this.position.removeAllListeners();
@@ -253,7 +254,7 @@ class Character {
     }
 
     /**
-     * @param {Frame} frame 
+     * @param {Frame?} frame 
      */
     SetFrame(frame) {
         this.parentFrame = frame;
@@ -349,6 +350,7 @@ class Character {
 
     /** @returns {JSX.Element} */
     render() {
+        if (this.parentFrame === null) return null;
         if (this.outOfBounds || this.hide) return null;
         return this.body.renderAll(this.skin);
     }

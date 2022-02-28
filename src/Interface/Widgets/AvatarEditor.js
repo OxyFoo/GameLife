@@ -58,7 +58,9 @@ class Avatar extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state.frameContent.AddCharacter(new Character('test', 'male_test'));
+
+        const charac = new Character('test', 'male_test');
+        this.state.frameContent.AddCharacter(charac);
     }
 
     componentDidMount() {
@@ -246,7 +248,13 @@ class Avatar extends React.Component {
                         <FlatList
                             data={TEST_ITEMS}
                             numColumns={3}
-                            renderItem={({item}) => <ItemCard item={item} onPress={this.SetSelectItem} selectedId={itemSelectedID} />}
+                            renderItem={({item}) => (
+                                <ItemCard
+                                    item={item}
+                                    onPress={this.SetSelectItem}
+                                    selectedId={itemSelectedID}
+                                />
+                            )}
                             keyExtractor={(item, index) => 'item-card-' + item.id}
                         />
                     </Animated.View>

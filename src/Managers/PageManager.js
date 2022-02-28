@@ -33,13 +33,15 @@ import Test from '../Interface/PageFront/Test';
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
  */
 
-const pageNumber = 3;
+const debugMode = true;
+const pageNumber = 5;
 
 class PageManager extends React.Component{
     state = {
         pageIndex: 0,
         pageArguments: {},
         pages: Array(pageNumber).fill(''),
+        pagesContent: Array(pageNumber).fill(null),
         pagesAnimations: Array(pageNumber).fill(0).map(() => new Animated.Value(0)),
 
         animTransition: new Animated.Value(1),
@@ -172,39 +174,46 @@ class PageManager extends React.Component{
     }
 
     pageAnimation = async (newpage) => {
-        const animDuration = 200;
-        const animTransitionDuration = 50;
+        const animDuration = 120;
+        this.T = new Date().getTime();
 
         // Bottom bar selected index animation
         const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
         const bottomBarShow = bottomBarPages.includes(newpage);
         const index = bottomBarPages.indexOf(newpage);
         const newBarState = { bottomBarShow: bottomBarShow, bottomBarIndex: index !== -1 ? index : 2 };
-        if (!bottomBarShow) this.setState(newBarState);
+        if (!bottomBarShow) this.setState(newBarState); // Hide bar before animation if needed
 
-        const { pages, pageIndex, pagesAnimations, animTransition } = this.state;
-        let nextIndex = pageIndex;
-        if (pages.includes(newpage)) nextIndex = pages.indexOf(newpage);
-        else if (pages[pageIndex])   nextIndex = (pageIndex + 1) % pageNumber;
+        const ShowNewPage = () => {
+            this.changing = false;
+            this.setState({ ...newBarState, pageIndex: nextIndex }, () => {
+                const elapsedTime = (new Date().getTime()) - this.T;
+                if (debugMode) console.log('Page changed in ' + elapsedTime + 'ms');
+            });
+            Animated.parallel([
+                TimingAnimation(animTransition, 0, animDuration),
+                TimingAnimation(pagesAnimations[nextIndex], 1, animDuration)
+            ]).start();
+        };
+
+        const { pages, pageIndex, pagesContent, pagesAnimations, pageArguments, animTransition } = this.state;
 
         // Start loading animation
-        TimingAnimation(animTransition, 1, animTransitionDuration).start();
+        TimingAnimation(animTransition, 1, animDuration).start();
+        TimingAnimation(pagesAnimations[pageIndex], 0, animDuration).start();
 
-        const AnimationEnd = () => {
-            this.changing = false;
-            this.setState({ pageIndex: nextIndex });
-            TimingAnimation(animTransition, 0, animTransitionDuration).start();
-            TimingAnimation(pagesAnimations[nextIndex], 1, animTransitionDuration).start();
-        };
-        const AnimationStart = () => {
-            TimingAnimation(pagesAnimations[pageIndex], 0, animTransitionDuration).start();
+        let nextIndex = pageIndex;
+        if (pages.includes(newpage)) {
+            nextIndex = pages.indexOf(newpage);
+            ShowNewPage();
+        } else {
+            if (pages[pageIndex]) {
+                nextIndex = (pageIndex + 1) % pageNumber;
+            }
             pages.splice(nextIndex, 1, newpage);
-            const newPages = { pages: pages };
-            const newState = Object.assign(newBarState, newPages);
-            this.setState(newState, AnimationEnd);
+            pagesContent.splice(nextIndex, 1, this.getPageContent(newpage, pageArguments));
+            this.setState({ pages: pages, pagesContent: pagesContent }, ShowNewPage);
         }
-
-        setTimeout(AnimationStart, animTransitionDuration);
     }
 
     GetCurrentPage = () => {
@@ -241,7 +250,7 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const { pages, pageIndex, pageArguments, pagesAnimations, animTransition, animTheme } = this.state;
+        const { pageIndex, pagesContent, pagesAnimations, animTransition, animTheme } = this.state;
 
         const interOpacity = { inputRange: [0, 1], outputRange: [0, 0.2] };
         const fullscreen = { width: '100%', height: '100%' };
@@ -253,11 +262,13 @@ class PageManager extends React.Component{
         const lightOpacity = { opacity: animTheme };
 
         const newPage = (index) => {
-            const page = this.getPageContent(pages[index], pageArguments);
+            const content = pagesContent[index];
             const style = [ fullscreen, absolute, { opacity: pagesAnimations[index] } ];
             const event = pageIndex === index ? 'auto' : 'none';
-            return <Animated.View key={'page-'+index} style={style} pointerEvents={event}>{page}</Animated.View>;
+            return <Animated.View key={'page-'+index} style={style} pointerEvents={event}>{content}</Animated.View>;
         }
+
+        if (debugMode) console.log(this.state.pages);
 
         return (
             <LinearGradient style={fullscreen} colors={darkBackground}>

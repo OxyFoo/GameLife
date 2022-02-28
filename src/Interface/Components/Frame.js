@@ -62,12 +62,14 @@ class Frame extends React.Component {
         }
     }
     componentWillUnmount() {
-        this.props.content.RemoveAll();
+        if (this.props.content !== null) {
+            this.props.content.RemoveAll();
+        }
     }
     render() {
-        const { width, height } = this.props;
+        const { width, height, content } = this.props;
         const viewBox = [ 0, 0, width, height ].join(' ');
-        const characters = this.props.content.RenderAll();
+        const characters = content !== null ? content.RenderAll() : null;
 
         return (
             <View style={styles.canvas}>

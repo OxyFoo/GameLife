@@ -39,6 +39,7 @@ const pageNumber = 5;
 class PageManager extends React.Component{
     state = {
         pageIndex: 0,
+        pageIndexNext: Math.min(1, pageNumber - 1),
         pageArguments: {},
         pages: Array(pageNumber).fill(''),
         pagesContent: Array(pageNumber).fill(null),
@@ -196,7 +197,7 @@ class PageManager extends React.Component{
             ]).start();
         };
 
-        const { pages, pageIndex, pagesContent, pagesAnimations, pageArguments, animTransition } = this.state;
+        const { pages, pageIndex, pageIndexNext, pagesContent, pagesAnimations, pageArguments, animTransition } = this.state;
 
         // Start loading animation
         TimingAnimation(animTransition, 1, animDuration).start();
@@ -208,11 +209,12 @@ class PageManager extends React.Component{
             ShowNewPage();
         } else {
             if (pages[pageIndex]) {
-                nextIndex = (pageIndex + 1) % pageNumber;
+                nextIndex = pageIndexNext;
+                this.setState({ pageIndexNext: (pageIndexNext + 1) % pageNumber });
             }
             pages.splice(nextIndex, 1, newpage);
             pagesContent.splice(nextIndex, 1, this.getPageContent(newpage, pageArguments));
-            this.setState({ pages: pages, pagesContent: pagesContent }, ShowNewPage);
+            this.setState({ pages, pagesContent }, ShowNewPage);
         }
     }
 

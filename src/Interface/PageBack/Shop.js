@@ -7,22 +7,26 @@ class BackShop extends React.Component {
     constructor(props) {
         super(props);
 
-        this.unsubscriber = user.admob.ads.rewarded.shop.onAdEvent(this.onWatchAd);
-        user.admob.ads.rewarded.shop.load();
+        this.rewardedShop = user.admob.GetRewardedAd('shop', this.onAdEvent);
     }
     componentWillUnmount() {
-        this.unsubscriber();
+        user.admob.ClearEvents('shop');
     }
 
     watchAd = () => {
-        if (user.admob.ads.rewarded.shop.loaded) {
-            user.admob.ads.rewarded.shop.show();
-        } else {
-            console.log('Ad not loaded');
+        if (this.rewardedShop === null) {
+            console.log('Ad not created');
+            return;
         }
+        if (!this.rewardedShop.loaded) {
+            console.log('Ad not loaded');
+            return;
+        }
+
+        this.rewardedShop.show();
     }
     /** @type {FirebaseAdMobTypes.AdEventListener} */
-    onWatchAd = (type, error, data) => {
+    onAdEvent = (type, error, data) => {
         console.log(type, error, data);
     }
 }

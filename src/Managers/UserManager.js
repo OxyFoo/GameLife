@@ -3,6 +3,7 @@ import Activities from '../Class/Activities';
 import Admob from '../Class/Admob';
 import Experience from '../Class/Experience';
 import Informations from '../Class/Informations';
+import Multiplayer from '../Class/Multiplayer';
 import Quests from '../Class/Quests';
 import Server from '../Class/Server';
 import Settings from '../Class/Settings';
@@ -29,6 +30,7 @@ class UserManager {
         this.admob = new Admob(this);
         this.experience = new Experience(this);
         this.informations = new Informations(this);
+        this.multiplayer = new Multiplayer(this);
         this.quests = new Quests(this);
         this.server = new Server(this);
         this.settings = new Settings(this);
@@ -114,6 +116,7 @@ class UserManager {
             'dataToken': this.server.dataToken,
             'achievements': this.achievements.Save(),
             'activities': this.activities.Save(),
+            'admob': this.admob.Save(),
             'informations': this.informations.Save(),
             'quests': this.quests.Save()
         };
@@ -134,6 +137,7 @@ class UserManager {
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) this.achievements.Load(data['achievements']);
             if (contains('activities')) this.activities.Load(data['activities']);
+            if (contains('admob')) this.admob.Load(data['admob']);
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('quests')) this.quests.Load(data['quests']);
 

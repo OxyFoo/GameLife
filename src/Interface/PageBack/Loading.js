@@ -110,6 +110,8 @@ class BackLoading extends React.Component {
         }
 
         user.admob.LoadAds();
+        //await user.admob.ShowPopup();
+
         this.nextStep();
         await Sleep(200);
 

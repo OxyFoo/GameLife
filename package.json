@@ -25,7 +25,8 @@
     "react-native-push-notification": "^8.1.1",
     "react-native-shadow-2": "^5.1.2",
     "react-native-sound-player": "^0.11.1",
-    "react-native-svg": "^12.1.1"
+    "react-native-svg": "^12.1.1",
+    "react-native-tracking-transparency": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

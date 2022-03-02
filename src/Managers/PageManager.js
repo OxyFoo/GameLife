@@ -33,7 +33,7 @@ import Test from '../Interface/PageFront/Test';
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
  */
 
-const debugMode = true;
+const debugMode = false;
 const pageNumber = 5;
 
 class PageManager extends React.Component{

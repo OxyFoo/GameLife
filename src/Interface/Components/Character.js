@@ -138,7 +138,29 @@ class Part {
         /** @param {Part} part @returns {Array<Part>} */
         const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
         const allParts = getAllChilds(this).sort((a, b) => a.zIndex - b.zIndex);
-        return allParts.map(part => part.render(character));
+        return [...allParts.map(p => p.renderShadow(character)), ...allParts.map(part => part.render(character))];
+    }
+
+    /**
+     * @param {CharactersName} character 
+     * @returns {JSX.Element}
+     */
+    renderShadow(character) {
+        const { posX, posY, rotZ } = this.calculateParentPos();
+        const Charac = CHARACTERS[character];
+
+        return (
+            <Charac
+                key={'part-shadow-' + this.name + '-' + Math.random()}
+                part={this.name}
+                fill='none'
+                posX={posX}
+                posY={posY}
+                rotation={rotZ}
+                stroke={4}
+                zIndex={-9999}
+            />
+        );
     }
 
     /**

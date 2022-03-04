@@ -27,13 +27,14 @@ const HumanComponentProps = {
     fill: undefined,
     posX: 0,
     posY: 0,
+    stroke: 0,
     rotation: 0,
     zIndex: 0
 };
 
 class SvgComponent extends React.Component {
     render() {
-        const { part, fill, posX, posY, rotation, zIndex } = this.props;
+        const { part, fill, posX, posY, stroke, rotation, zIndex } = this.props;
 
         if (!Object.keys(components).includes(part)) return null;
         const styleZIndex = { zIndex: zIndex, elevation: zIndex };
@@ -49,6 +50,7 @@ class SvgComponent extends React.Component {
                 style={[transforms, styleZIndex]}
                 fill={fill || 'white'}
                 stroke='#000000'
+                strokeWidth={stroke * 2}
             >
                 {components[part]}
             </AnimatedG>

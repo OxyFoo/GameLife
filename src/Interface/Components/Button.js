@@ -26,11 +26,7 @@ const ButtonProps = {
     rippleColor: '#000000',
     borderRadius: 20,
     textComponent: true,
-    /**
-     * Setting used to ignore button event, to get header icon press event
-     * @param {Boolean} nonClickable
-     */
-    nonClickable: false, // TODO - Teriner la remontée jusqu'au containers
+    enabled: true,
     onPress: () => {},
     onLongPress: () => {},
     onLayout: (event) => {},
@@ -63,7 +59,7 @@ class Button extends React.Component {
         const isPress = deltaX < 20 && deltaY < 20;
 
         const { onPress, onLongPress } = this.props;
-        if (isPress && !this.props.loading) {
+        if (isPress && !this.props.loading && this.props.enabled) {
             if (deltaT < 500) onPress();
             else onLongPress();
         }
@@ -81,14 +77,16 @@ class Button extends React.Component {
         const isLoading = this.props.loading;
         const onlyOneChild = !hasChildren || !hasIcon || isLoading;
 
-        const color = themeManager.GetColor(this.props.color);
+        let color = themeManager.GetColor(this.props.color);
+        if (!this.props.enabled) color = '#535C68';
         const align = onlyOneChild ? 'center' : 'space-between';
         const style = [
             styles.body,
             {
                 justifyContent: align,
                 borderRadius: this.props.borderRadius,
-                backgroundColor: color
+                backgroundColor: color,
+                opacity: this.props.enabled ? 1 : 0.6
             },
             this.props.style,
             this.props.styleAnimation

@@ -285,6 +285,28 @@
             $this->output['status'] = 'ok';
         }
 
+        public function AdWatched() {
+            $token = $this->data['token'];
+            if (!isset($token)) return;
+
+            // TODO - Check if there is ad to watch
+
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
+            }
+            $accountID = $dataFromToken['accountID'];
+
+            $oxAmount = 10;
+            User::AddOx($this->db, $accountID, $oxAmount);
+            $ox = User::GetOx($this->db, $accountID);
+
+            $this->output['ox'] = $ox;
+            $this->output['status'] = 'ok';
+        }
+
         /**
          * Add a report to the database
          */

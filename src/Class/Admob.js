@@ -84,7 +84,6 @@ class Admob {
                     keywords: ['video-game', 'sports']
                 });
                 this.ads.push(newAd);
-                console.log('Ad added: ' + adName);
             });
         }
 
@@ -98,7 +97,6 @@ class Admob {
                     keywords: ['video-game', 'sports']
                 });
                 this.ads.push(newAd);
-                console.log('Ad added: ' + adName);
             });
         }
 

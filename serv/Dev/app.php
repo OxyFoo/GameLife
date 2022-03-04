@@ -17,6 +17,7 @@
         case 'getUserData': $commands->GetUserData(); break;
         case 'addUserData': $commands->AddUserData(); break;
         case 'setUsername': $commands->SetUsername(); break;
+        case 'adWatched': $commands->AdWatched(); break;
         case 'addReport': $commands->AddReport(); break;
         case 'getDate': $commands->GetDate(); break;
         case 'disconnect': $commands->Disconnect(); break;

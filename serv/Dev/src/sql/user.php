@@ -191,7 +191,7 @@
             if ($query === NULL || count($query) === 0) {
                 ExitWithStatus("Error: Getting ox failed");
             }
-            $ox = $query[0]['Ox'];
+            $ox = intval($query[0]['Ox']);
             return $ox;
         }
 

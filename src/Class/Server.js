@@ -324,6 +324,11 @@ class Server {
         return Request_Async(data);
     }
 
+    AdWatched() {
+        let data = { 'action': 'adWatched', 'token': this.token };
+        return Request_Async(data);
+    }
+
     GetLeaderboard(week = false) {
         let data = {
             'action': 'getLeaderboard',

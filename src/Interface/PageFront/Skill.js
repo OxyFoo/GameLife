@@ -6,7 +6,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { DateToFormatString } from '../../Utils/Time';
+import { DateToFormatString } from '../../Utils/Date';
 import { PageHeader, StatsBars } from '../Widgets';
 import { Page, Container, Text, Icon, XPBar, Button } from '../Components';
 

@@ -1,3 +1,7 @@
+/**
+ * @description Base64 encode / decode
+ * @link http://www.webtoolkit.info/javascript_base64.html
+ */
 const Base64 = {
     _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     Encode: function(e) {

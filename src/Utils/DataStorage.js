@@ -48,10 +48,10 @@ class DataStorage {
     }
 
     /**
-     * Unused
+     * Clear all data from storage
      */
-    static async ClearAll() {
-        await AsyncStorage.clear();
+    static ClearAll() {
+        return AsyncStorage.clear();
     }
 }
 

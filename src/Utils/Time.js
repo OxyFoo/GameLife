@@ -1,28 +1,57 @@
 import { TwoDigit } from "./Functions";
 
 /**
- * TODO - Unused ?
- * @param {Number} days_number
- * @param {Number} step_minutes
- * @returns {Array} Array of dict : { key: k, value: dd HH:MM, fulldate: date } over a period of days_number each step_minutes
+ * Get absolute time in seconds
+ * @param {Date} date (now default)
+ * @returns {Number} time in seconds
  */
-function getDates(days_number = 2, step_minutes = 15) {
-    let dates = [];
+function GetTime(date = new Date()) {
+    return Math.floor(date.getTime() / 1000);
+}
 
-    let date = new Date();
-    let today = new Date();
-    date.setMinutes(parseInt(date.getMinutes()/step_minutes)*step_minutes, 0, 0);
-    for (let i = 0; i < (60 / step_minutes) * 24 * days_number; i++) {
-        const HH = TwoDigit(date.getHours());
-        const MM = TwoDigit(date.getMinutes());
-        const day = date.getDate() === today.getDate() ? '' : date.getDate() + '/' + (date.getMonth() + 1) + ' ';
-        const newDate = day + ' ' + HH + ':' + MM;
-        const newDict = { key: dates.length, value: newDate, fulldate: date.toString() };
-        dates.push(newDict);
-        date.setMinutes(date.getMinutes() - step_minutes);
-    }
+/**
+ * Return date with format : HH:MM
+ * @param {Number} time
+ * @param {Boolean} withOffset
+ * @returns {String} HH:MM
+ */
+function TimeToFormatString(time, withOffset = false) {
+    const offset = withOffset ? new Date().getTimezoneOffset() : 0;
+    const minutesInDay = (time - offset) % 1440;
+    const HH = Math.floor(minutesInDay / 60);
+    const MM = Math.floor(minutesInDay - HH * 60);
+    return [ HH, MM ].map(TwoDigit).join(':');
+}
 
-    return dates;
+/**
+ * @param {Number} time in seconds
+ * @returns {Number} time rounded to quarters in seconds
+ */
+function RoundToQuarter(time) {
+    const date = new Date(time * 1000);
+    date.setMinutes(Math.round(date.getMinutes() / 15) * 15, 0, 0);
+    return GetTime(date);
+}
+
+/**
+ * @param {Number} Time in seconds 
+ * @returns {Number} Time in seconds
+ */
+function GetMidnightTime(time) {
+    const _date = new Date(time * 1000);
+    _date.setHours(1, 0, 0, 0); // Set to midnight
+    return GetTime(_date);
+}
+
+/**
+ * @param {Number} time in seconds
+ * @returns {Number} Return age in years
+ */
+function GetAge(time) {
+    if (time === null) return null;
+    const birthDay = new Date(time * 1000);
+    const today = new Date().getTime();
+    return new Date(today - birthDay).getUTCFullYear() - 1970;
 }
 
 /**
@@ -73,88 +102,5 @@ function GetDaysUntil(time) {
     return days;
 }
 
-/**
- * Return date with format : dd/mm/yyyy
- * @param {Date|Number} date or time in ms
- * @returns {String} dd/mm/yyyy
- */
-function DateToFormatString(date) {
-    const _date = new Date(date);
-    const dd = TwoDigit(_date.getDate());
-    const mm = TwoDigit(_date.getMonth() + 1);
-    const yyyy = _date.getFullYear();
-    return [ dd, mm, yyyy ].join('/');
-}
-
-/**
- * Return date with format : HH:MM
- * @param {Date} date
- * @returns {String} HH:MM
- */
-function DateToFormatTimeString(date) {
-    const _date = new Date(date);
-    const HH = TwoDigit(_date.getHours());
-    const MM = TwoDigit(_date.getMinutes());
-    return [ HH, MM ].join(':');
-}
-
-/**
- * Return date with format : HH:MM
- * @param {Number} time
- * @param {Boolean} withOffset
- * @returns {String} HH:MM
- */
-function TimeToFormatString(time, withOffset = false) {
-    const offset = withOffset ? new Date().getTimezoneOffset() : 0;
-    const minutesInDay = (time - offset) % 1440;
-    const HH = Math.floor(minutesInDay / 60);
-    const MM = Math.floor(minutesInDay - HH * 60);
-    return [ HH, MM ].map(TwoDigit).join(':');
-}
-
-/**
- * Get absolute time in seconds
- * @param {Date} date (now default)
- * @returns {Number} time in seconds
- */
-function GetTime(date = new Date()) {
-    return Math.floor(date.getTime() / 1000);
-}
-
-/**
- * @param {Number} time in seconds
- * @returns {Number} time rounded to quarters in seconds
- */
-function RoundToQuarter(time) {
-    const date = new Date(time * 1000);
-    date.setMinutes(Math.round(date.getMinutes() / 15) * 15, 0, 0);
-    return GetTime(date);
-}
-
-/**
- * @param {Number} Time in seconds 
- * @returns {Number} Time in seconds
- */
-function GetMidnightTime(time) {
-    const _date = new Date(time * 1000);
-    _date.setHours(1, 0, 0, 0); // Set to midnight
-    return GetTime(_date);
-}
-
-/**
- * 
- * @param {Number} time in seconds
- * @returns {Number} Return age in years
- */
-function GetAge(time) {
-    if (time === null) return null;
-    const birthDay = new Date(time * 1000);
-    const today = new Date().getTime();
-    return new Date(today - birthDay).getUTCFullYear() - 1970;
-}
-
-export { GetDurations, GetTime,
-    GetTimeToTomorrow, GetDaysUntil, RoundToQuarter,
-    TimeToFormatString, DateToFormatTimeString, DateToFormatString,
-    GetMidnightTime, GetAge
-};
+export { GetTime, TimeToFormatString, RoundToQuarter, GetMidnightTime, GetAge,
+    GetDurations, GetTimeToTomorrow, GetDaysUntil };

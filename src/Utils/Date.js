@@ -12,24 +12,7 @@ const DAYS = {
 }
 
 /**
- * Return number of weeks in month (test function)
- * @param {Number} month
- * @param {Number} year
- * @returns {Number}
- */
-function WeeksCount(month, year) {
-    const date = new Date(year, month, 1);
-    let count = 0;
-    do {
-        if (!count || date.getDay() === DAYS.monday) count++;
-        date.setDate(date.getDate() + 1);
-    } while (date.getMonth() === month);
-    return count;
-}
-
-/**
  * Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
- * 
  * @param {Number} month
  * @param {Number} year
  * @returns {Number[][]}
@@ -54,6 +37,12 @@ function GetBlockMonth(month, year, start = DAYS.monday) {
     return output;
 }
 
+/**
+ * @param {Number} month - Month number (0-11)
+ * @param {Number} year - Year
+ * @param {Boolean} forceYear - Force year in title
+ * @returns {String} Return month title with year if needed (forceYear or different year than current one)
+ */
 function GetMonthAndYear(month, year, forceYear = false) {
     let title = langManager.curr['dates']['month'][month];
     if (new Date().getFullYear() !== year || forceYear) {
@@ -62,6 +51,10 @@ function GetMonthAndYear(month, year, forceYear = false) {
     return title;
 }
 
+/**
+ * @param {Date} date
+ * @returns {String} Return date in format "Monday 1 January 2020"
+ */
 function GetFullDate(date) {
     const _date = new Date(date);
     const months = langManager.curr['dates']['month'];
@@ -73,4 +66,30 @@ function GetFullDate(date) {
     return days[D] + ' ' + DD + ' ' + months[M] + ' ' + YYYY;
 }
 
-export { DAYS, GetBlockMonth, GetMonthAndYear, GetFullDate };
+/**
+ * Return date with format : dd/mm/yyyy
+ * @param {Date|Number} date or time in ms
+ * @returns {String} dd/mm/yyyy
+ */
+function DateToFormatString(date) {
+    const _date = new Date(date);
+    const dd = TwoDigit(_date.getDate());
+    const mm = TwoDigit(_date.getMonth() + 1);
+    const yyyy = _date.getFullYear();
+    return [ dd, mm, yyyy ].join('/');
+}
+
+/**
+ * Return date with format : HH:MM
+ * @param {Date} date
+ * @returns {String} HH:MM
+ */
+function DateToFormatTimeString(date) {
+    const _date = new Date(date);
+    const HH = TwoDigit(_date.getHours());
+    const MM = TwoDigit(_date.getMinutes());
+    return [ HH, MM ].join(':');
+}
+
+export { DAYS, GetBlockMonth, GetMonthAndYear, GetFullDate,
+    DateToFormatString, DateToFormatTimeString };

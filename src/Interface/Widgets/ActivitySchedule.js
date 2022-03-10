@@ -8,7 +8,8 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { Text, Button, Separator } from '../Components';
 import { SpringAnimation } from '../../Utils/Animations';
-import { DateToFormatString, DateToFormatTimeString, GetDurations, GetTime } from '../../Utils/Time';
+import { GetDurations, GetTime } from '../../Utils/Time';
+import { DateToFormatString, DateToFormatTimeString } from '../../Utils/Date';
 
 /**
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme

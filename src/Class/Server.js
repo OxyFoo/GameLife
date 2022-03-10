@@ -3,7 +3,7 @@ import { BackHandler } from 'react-native';
 import langManager from '../Managers/LangManager';
 
 import { Request_Async } from '../Utils/Request';
-import { GetDeviceInformations } from '../Utils/Functions';
+import { GetDeviceInformations } from '../Utils/Device';
 
 const STATUS = {
     OFFLINE     : 'offline',

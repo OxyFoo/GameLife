@@ -7,7 +7,6 @@ En 3 mots : Gestion RPG IRL
 ### Useful links
 * [AppIcon.co](https://appicon.co/)
 * [JS benchmarks](https://jsben.ch/WqlIl)
-* [Base64 Class (Cross-Browser)](https://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript)
 * [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
 * [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
 

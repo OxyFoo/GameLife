@@ -6,8 +6,8 @@ function TwoDigit(n) {
 
 /**
  * @param {Number} number 
- * @param {Number} decimal 
- * @returns {Number}
+ * @param {Number} [decimal=0] 
+ * @returns {Number} - Return number rounded to decimal
  */
 function Round(number, decimal = 0) {
     const dec = decimal.toString();
@@ -32,6 +32,10 @@ function MinMax(min, value, max) {
     return output;
 }
 
+/**
+ * @param {String} str - String to check if it's a valid json
+ * @returns {Boolean} - Return true if string is a valid json
+ */
 function StrIsJSON(str) {
     let isJSON = true;
     try { JSON.parse(str); }
@@ -40,7 +44,7 @@ function StrIsJSON(str) {
 }
 
 /**
- * @param {Array} array 
+ * @param {Array} array
  * @param {String} key - Key of array
  * @returns {Array} - Return sorted array
  */
@@ -51,11 +55,11 @@ function SortByKey(array, key) {
 }
 
 /**
- * 
- * @param {Array} array 
- * @param {String} key 
- * @param {*} value 
- * @returns {?Object} Return object or null if didn't exists
+ * Return element in array of object by key and value
+ * @param {Array} array
+ * @param {String} key
+ * @param {*} value
+ * @returns {Object?} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
     const result = array.find((element) => element[key] == value);
@@ -64,7 +68,7 @@ function GetByKey(array, key, value) {
 
 /**
  * @param {String} email
- * @returns {Boolean} - true if str "email" is a valid email
+ * @returns {Boolean} - True if str "email" is a valid email
  */
 function IsEmail(email) {
     let isEmail = false;
@@ -76,29 +80,11 @@ function IsEmail(email) {
 }
 
 /**
- * 
- * @param {Boolean} OS - true to get the name and the version of the OS
- * @param {Boolean} version - true to get the version of the app
- * @returns Dictionary of currect device
+ * Range function
+ * @example Range(5) => [0, 1, 2, 3, 4]
+ * @param {Number} length 
+ * @returns {Array}
  */
-function GetDeviceInformations(OS = false, version = false) {
-    let device = {};
-
-    device.deviceID = DeviceInfo.getUniqueId();
-    device.deviceName = DeviceInfo.getDeviceNameSync();
-
-    if (OS) {
-        device.deviceOSName = DeviceInfo.getSystemName();
-        device.deviceOSVersion = DeviceInfo.getSystemVersion();
-    }
-    if (version) {
-        const appVersion = require('../../package.json').version;
-        device.version = appVersion;
-    }
-
-    return device;
-}
-
 function Range(length) {
     return Array.from({ length: length }, (_, i) => i);
 }
@@ -117,5 +103,4 @@ function Random(min, max) {
 
 export { TwoDigit, Round, Sum, Range, StrIsJSON,
     SortByKey, GetByKey, IsEmail,
-    GetDeviceInformations, IsUndefined, MinMax,
-    Sleep, Random };
+    IsUndefined, MinMax, Sleep, Random };

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
@@ -8,14 +9,19 @@ import { Text } from '../Components';
 import { GetMonthAndYear } from '../../Utils/Date';
 
 const BlockMonthProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
     data: [],
     month: new Date().getMonth(),
     year: new Date().getFullYear(),
     startDay: undefined,
     onBack: undefined,
     showTitle: true,
-    onLayout: () => {},
+
+    /** @param {LayoutChangeEvent} event */
+    onLayout: (event) => {},
+
     onPressDay: (day, month, year) => {},
     today: new Date(),
     selectedDay: null,

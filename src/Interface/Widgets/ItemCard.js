@@ -5,8 +5,15 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { Character, Frame, FrameContent } from '../Components';
 
+// TODO - Define item (item in user inventory)
+
 const AvatarCardProps = {
+    item: {},
+
+    /** @type {Number} - ID of card (used to check selected card) */
     selectedId: -1,
+
+    /** @param {Number} ID */
     onPress: (ID) => {}
 }
 
@@ -34,7 +41,7 @@ class ItemCard extends React.Component {
             <TouchableHighlight
                 style={[styles.card, background]}
                 onPress={this.onPress}
-                underlayColor={themeManager.GetColor('main1', null, .5)}
+                underlayColor={themeManager.GetColor('main1', .5)}
                 touchSoundDisabled={true}
             >
                 <Frame content={this.frameContent} />

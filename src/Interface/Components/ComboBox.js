@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Animated, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
+import { View, Animated, TouchableHighlight, FlatList, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
@@ -10,6 +11,10 @@ import Button from './Button';
 import Icon from './Icon';
 import Input from './Input';
 import { SpringAnimation } from '../../Utils/Animations';
+
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ */
 
 class Item {
     /**
@@ -23,22 +28,28 @@ class Item {
 }
 
 const ComboBoxProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {Number} */
     maxHeight: 256,
 
+    /** @type {ColorTheme} */
     activeColor: 'main1',
+
+    /** @type {String} */
     title: 'Title',
-    /**
-     * @type {Array<{id: 0, value: ''}>}
-     */
+
+    /** @type {Array<{id: 0, value: ''}>} */
     data: [],
+
     selectedValue: '',
     setSearchBar: false,
 
-    /**
-     * @param {Item} item
-     */
+    /** @param {Item} item */
     onSelect: (item) => {},
+
+    /** @type {Boolean} If false press event disabled */
     enabled: true,
 
     /**
@@ -46,6 +57,8 @@ const ComboBoxProps = {
      * @description Used to prevent scroll page when scrolling list
      */
     pageRef: null,
+
+    /** @type {Boolean} If false, warning will be shown if pageRef is not defined */
     ignoreWarning: false
 }
 
@@ -78,6 +91,7 @@ class ComboBox extends React.Component {
         }
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const  { x: _x, y: _y, width: _width, height: _height } = this.state.parent;
         const  { x, y, width, height } = event.nativeEvent.layout;
@@ -153,7 +167,7 @@ class ComboBox extends React.Component {
             >
                 <Text style={styles.itemText}>{value}</Text>
             </TouchableHighlight>
-        )
+        );
     }
     renderChevron = () => {
         const angle = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
@@ -164,7 +178,7 @@ class ComboBox extends React.Component {
                     <Icon icon='chevron' size={20} angle={-90} />
                 </Animated.View>
             </View>
-        )
+        );
     }
     render() {
         const  { x, y, width, height } = this.state.parent;

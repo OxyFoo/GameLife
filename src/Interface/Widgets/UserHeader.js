@@ -1,16 +1,21 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { Text, Icon, Button } from '../Components';
-import { GetAge } from '../../Utils/Time';
 import { IsUndefined } from '../../Utils/Functions';
 
 const UserHeaderProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {Boolean} */
     showAge: false,
+
+    /** @type {Function?} */
     onPress: undefined
 }
 
@@ -77,9 +82,6 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     avatar: {
-        /*position: 'absolute',
-        top: '20%',
-        right: 0,*/
         height: 48,
         aspectRatio: 1,
         borderRadius: 4,

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
+import { LayoutChangeEvent } from 'react-native';
 
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
@@ -8,11 +9,14 @@ import { Text, Button } from '../Components';
 import { Sleep } from '../../Utils/Functions';
 import { TimingAnimation } from '../../Utils/Animations';
 
+/**
+ * @typedef {Object} PopupTypes
+ * @property {'ok'} ok
+ * @property {'yes'|'no'} yesno
+ * @property {'accept'|'refuse'} acceptornot
+ */
+
 const PopupProps = {
-    type: null,
-    args: null,
-    cancelable: true,
-    callback: () => {}
 }
 
 class Popup extends React.PureComponent {
@@ -30,6 +34,7 @@ class Popup extends React.PureComponent {
         animScale: new Animated.Value(.9)
     }
 
+    /** @param {LayoutChangeEvent} e */
     onLayout = (e) => {
         const { x, y, } = e.nativeEvent.layout;
         this.setState({ x: x, y: y });
@@ -55,13 +60,13 @@ class Popup extends React.PureComponent {
     }
 
     /**
-     * Open popup
-     * @param {'ok'|'yesno'|'acceptornot'|'custom'} type
-     * @param {Array<String>} args [title, message]
-     * @param {Function} callback - Callback when popup button is pressed
+     * @template {keyof PopupTypes} T
+     * @param {T} type
+     * @param {Array<String>} args - [title, message]
+     * @param {(button: PopupTypes[T]) => void} callback - Callback when popup button is pressed
      * @param {Boolean} cancelable - if true, popup can be closed by clicking outside
      * @param {Boolean} cross - if true, popup can be closed by clicking on X
-     * @returns 
+     * @returns {Boolean} - if popup was opened
      */
     Open = (type, args, callback = () => {}, cancelable = true, cross = cancelable) => {
         const { opened } = this.state;
@@ -81,6 +86,12 @@ class Popup extends React.PureComponent {
 
         return true;
     }
+
+    /**
+     * Close popup
+     * @param {Boolean} forceClose 
+     * @returns {Boolean} - True if popup was closed
+     */
     Close = (forceClose = true) => {
         const { opened, cancelable } = this.state;
         if (opened && (cancelable || forceClose)) {
@@ -178,7 +189,7 @@ class Popup extends React.PureComponent {
                     {this.content()}
                 </Animated.View>
             </Animated.View>
-        )
+        );
     }
 }
 

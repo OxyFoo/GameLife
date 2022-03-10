@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
+import { LayoutChangeEvent } from 'react-native';
 
 import user from '../../Managers/UserManager';
 
@@ -38,6 +39,7 @@ class BottomBar extends React.Component {
         }
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width } = event.nativeEvent.layout;
         this.setState({ barWidth: width });
@@ -123,7 +125,7 @@ class BottomBar extends React.Component {
                     />
                 </Animated.View>
             </Animated.View>
-        )
+        );
     }
 }
 

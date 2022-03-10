@@ -12,11 +12,11 @@ class Test extends BackTest {
     render() {
         return (
             <Page ref={ref => this.pageRef = ref} canScrollOver={true}>
-                <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
-                <Button color='main1' borderRadius={14} style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
+                <Button color='main2' style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
+                <Button color='main1' style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
 
-                <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} onPress={this.openSI}>{'Test "Screen Input"'}</Button>
-                <Button color='main2' borderRadius={14} style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                <Button color='main2' style={{ marginBottom: 12 }} onPress={this.openSI}>{'Test "Screen Input"'}</Button>
+                <Button color='main2' style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
 
                 <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
                     <Digit />
@@ -38,7 +38,13 @@ class Test extends BackTest {
 
                 <TextSwitch style={{ marginBottom: 12 }} />
 
-                <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
+                <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='userAdd' onIconPress={() => {console.log('YES')}}>
+                    <XPBar value={0} style={{ marginBottom: 12 }} />
+                    <XPBar value={4} style={{ marginBottom: 12 }} />
+                    <XPBar value={10} style={{ marginBottom: 12 }} />
+                </Container>
+
+                <Container text='Rollable' color='main2' style={{ marginBottom: 12 }} type='rollable' opened={true} icon='chrono'>
                     <XPBar value={0} style={{ marginBottom: 12 }} />
                     <XPBar value={4} style={{ marginBottom: 12 }} />
                     <XPBar value={10} style={{ marginBottom: 12 }} />
@@ -49,13 +55,13 @@ class Test extends BackTest {
                     pages={[
                         <>
                             <Text style={{ marginBottom: 12 }}>{'Page 1'}</Text>
-                            <Button color='main1' borderRadius={14}>{'Quêtes journalières'}</Button>
+                            <Button color='main1'>{'Quêtes journalières'}</Button>
                         </>,
                         <>
                             <Text>{'Page 2'}</Text>
                             <XPBar value={10} style={{ marginBottom: 24 }} />
                         </>,
-                        <Button color='main2' borderRadius={14}>{'Page 3'}</Button>
+                        <Button color='main2'>{'Page 3'}</Button>
                     ]}
                 />
 

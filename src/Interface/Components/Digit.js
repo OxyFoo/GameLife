@@ -1,19 +1,32 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
+import { LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import Text from './Text';
 import { Range } from '../../Utils/Functions';
 import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ */
+
 const DigitProps = {
-    /**
-     * @type {String} - The text to get in callback
-     */
+    /** @type {String} - The text to get in callback */
     name: 'index',
+
+    /** @type {ColorTheme} */
     color: 'primary',
+
+    /** @type {Boolean} If true, value can't be changed */
     lock: false,
+
+    /** @type {Number} */
     initValue: 0,
+
+    /** @type {Number} */
     maxValue: 6,
+
+    /** @type {Function} */
     callback: (name, index) => {}
 }
 
@@ -24,6 +37,7 @@ class Digit extends React.Component {
         animLeft: new Animated.Value(0)
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width } = event.nativeEvent.layout;
         const margins = 8;
@@ -43,15 +57,18 @@ class Digit extends React.Component {
         SpringAnimation(this.state.animLeft, x).start();
     }
 
+    /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.firstX = event.nativeEvent.pageX;
     }
+    /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         const posX = event.nativeEvent.pageX;
         const delta = (this.firstX - posX) / 2;
         this.newPosX = this.digitX + delta;
         TimingAnimation(this.state.animLeft, this.newPosX, 0.1).start();
     }
+    /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
         if (this.props.lock) {
             this.SetDigitsPosX(this.digitX);

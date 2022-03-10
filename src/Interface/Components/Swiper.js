@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet, Dimensions } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
@@ -9,18 +10,36 @@ import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ */
+
 const SwiperProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {Number?} If undefined, height equals to max height of pages content */
     height: undefined,
+
+    /** @type {Number} */
     borderRadius: 16,
+
+    /** @type {Boolean} If true, automatically swipe to the next page */
     enableAutoNext: true,
+
+    /** @type {Number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
     delayNext: 10,
-    /**
-     * @type {Array<Object>}
-     */
+
+    /** @type {Array<React.Component>} */
     pages: [],
+
+    /** @type {Number} */
     initIndex: 0,
+
+    /** @type {ColorTheme} */
     backgroundColor: 'backgroundTransparent',
+
+    /** @type {(index: Number) => void} Callback is called when page index change */
     onSwipe: (index) => {}
 }
 
@@ -68,6 +87,7 @@ class Swiper extends React.Component {
         this.props.onSwipe(prevIndex);
     }
 
+    /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.nextIn = this.props.delayNext;
         this.firstPosX = this.posX;
@@ -76,6 +96,7 @@ class Swiper extends React.Component {
         this.tickPos = 0;
         this.tickTime = Date.now();
     }
+    /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         // Position
         const currPosX = event.nativeEvent.pageX;
@@ -94,6 +115,7 @@ class Swiper extends React.Component {
         TimingAnimation(this.state.positionX, newPosX, 0.1, false).start();
         TimingAnimation(this.state.positionDots, MinMax(0, newPosX, this.props.pages.length - 1), 0.1, false).start();
     }
+    /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
         let newIndex = 0;
         const dec = (this.posX % 1) + this.acc;
@@ -108,6 +130,7 @@ class Swiper extends React.Component {
         this.props.onSwipe(newIndex);
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayoutPage = (event) => {
         const { height } = event.nativeEvent.layout;
         const { maxHeight } = this.state;

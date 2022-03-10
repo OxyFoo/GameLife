@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
@@ -7,23 +8,37 @@ import { IsUndefined } from '../../Utils/Functions';
 
 const MAIN_FONT_NAME = 'Hind Vadodara';
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ */
+
 const TextProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
-    bold: undefined,
+    
+    /** @type {StyleProp<ViewStyle>} */
     containerStyle: {},
+
+    /** @type {Number} */
     fontSize: 18,
+
+    /** @type {ColorThemeText} */
     color: 'primary',
+
+    /** @type {Function?} */
     onPress: undefined,
-    onLayout: undefined
+
+    /** @type {LayoutChangeEvent?} */
+    onLayout: undefined,
+
+    bold: undefined
 }
 
 class Text extends React.Component {
     render() {
         const onPress = this.props.onPress;
-        let color = themeManager.GetColor(this.props.color, 'text');
-        if (color === null) {
-            color = themeManager.GetColor(this.props.color);
-        }
+        const color = themeManager.GetColor(this.props.color);
 
         return (
             <TouchableOpacity

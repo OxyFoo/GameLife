@@ -17,7 +17,7 @@ class Shop extends BackShop {
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
 
-                <Button style={styles.pubButton} onPress={this.watchAd} color='main2' textComponent={false} enabled={this.state.adLoaded}>
+                <Button style={styles.pubButton} onPress={this.watchAd} color='main2' enabled={this.state.adLoaded}>
                     <Text>Regarder une pub</Text>
                     <View style={styles.pubIcon}>
                         <Text style={styles.pubText}>+10</Text>

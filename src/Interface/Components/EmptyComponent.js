@@ -1,7 +1,16 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
+
+/**
+ * @typedef {import('./Icon').Icons} Icons
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ */
 
 const NewComponentProps = {
+    /** @type {StyleProp<ViewStyle>} */
+    style: {}
 }
 
 class NewComponent extends React.Component {

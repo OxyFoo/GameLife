@@ -159,7 +159,7 @@ class Avatar extends React.Component {
 
                 <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%' }} />
             </Animated.View>
-        )
+        );
     }
 
     render() {

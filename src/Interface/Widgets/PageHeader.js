@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import langManager from '../../Managers/LangManager';
 
 import { Text, Icon } from '../Components';
 
 const PageHeaderProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
-    hideHelp: false,
     onBackPress: () => {},
-    onHelpPress: () => {}
+    onHelpPress: () => {},
+    hideHelp: undefined
 }
 
 class PageHeader extends React.Component {

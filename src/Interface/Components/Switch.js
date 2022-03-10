@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
@@ -7,7 +7,10 @@ import Button from './Button';
 import { SpringAnimation } from '../../Utils/Animations';
 
 const SwitchProps = {
+    /** @type {Boolean} State of switch component */
     value: false,
+
+    /** @type {Function} Is called when state change */
     onValueChanged: (value) => {}
 }
 

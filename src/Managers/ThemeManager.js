@@ -1,3 +1,9 @@
+/**
+ * @typedef {'Dark'|'Light'} Theme
+ * @typedef {'primary'|'secondary'|'light'|'error'} ColorThemeText Color name or hexadecimal color
+ * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'danger'} ColorTheme Color name or hexadecimal color
+ */
+
 class ThemeManager {
     THEMES = {
         Dark: {
@@ -48,18 +54,22 @@ class ThemeManager {
     // Get the color of the theme
     colors = this.THEMES[this.selectedTheme];
 
+    /**
+     * @description Define the theme
+     * @param {Theme} theme
+     * @returns {Boolean} - True if theme is valid
+     */
     SetTheme(theme) {
-        let output = false;
         if (this.isTheme(theme)) {
-            output = true;
             this.selectedTheme = theme;
             this.colors = this.THEMES[theme];
+            return true;
         }
-        return output;
+        return false;
     }
 
     /**
-     * Check if theme is valid
+     * @description Check if theme is valid
      * @param {String} theme - Theme name
      * @returns {Boolean} - True if theme is valid
      */
@@ -68,40 +78,31 @@ class ThemeManager {
     }
 
     /**
-     * @param {String} str - Name of theme color or hex color
-     * @param {?String} subTheme - Key of subtheme (eg: text)
-     * @param {Number} opacity - Opacity of color, between 0 and 1
-     * @returns {String} - Hex color
+     * @description Get the theme color by name (or return the color if already hex color)
+     * @param {ColorTheme|ColorThemeText} color - Name of theme color or hex color
+     * @param {Number} [opacity=1] - Opacity of color, between 0 and 1
+     * @returns {String} - Hex color (or same color than input if not found and not hex)
      */
-    GetColor(str, subTheme = null, opacity = 1) {
-        let output = null;
+    GetColor(color, opacity = 1) {
+        if (color.startsWith('#')) return this.ApplyOpacity(color, opacity);
+        if (this.colors.hasOwnProperty(color)) return this.ApplyOpacity(this.colors[color], opacity);
+        if (this.colors.text.hasOwnProperty(color)) return this.ApplyOpacity(this.colors.text[color], opacity);
+        return color;
+    }
 
-        // If already hex color, keep it
-        if (str.includes('#')) {
-            output = str;
-        }
+    /**
+     * @description Apply opacity to a color (hex to hex)
+     * @param {String} hexColor - Hex color
+     * @param {Number} [opacity=1] - Opacity of color, between 0 and 1
+     * @returns {String?} - Hex color (or null if not hex color)
+     */
+    ApplyOpacity(hexColor, opacity = 1) {
+        if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 7) return null;
+        if (opacity === 1) return hexColor;
 
-        // If not hex color, get the color from current theme
-        else {
-            let selectedColors = this.colors;
-            if (subTheme !== null && selectedColors.hasOwnProperty(subTheme)) {
-                selectedColors = selectedColors[subTheme];
-            }
-            if (selectedColors.hasOwnProperty(str)) {
-                output = selectedColors[str];
-            }
-        }
-
-        // Apply opacity
-        if (output !== null && output.startsWith('#') && opacity < 1) {
-            let opacityStr = Math.round(opacity * 255).toString(16);
-            if (opacityStr.length === 1) {
-                opacityStr = '0' + opacityStr;
-            }
-            output = output.substring(0, 7) + opacityStr;
-        }
-
-        return output;
+        let hexOpacityColor = Math.round(opacity * 255).toString(16);
+        if (hexOpacityColor.length === 1) hexOpacityColor = '0' + hexOpacityColor;
+        return hexColor.substring(0, 7) + hexOpacityColor;
     }
 }
 

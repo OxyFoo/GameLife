@@ -1,15 +1,28 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
 import Icon from './Icon';
 import { SpringAnimation } from '../../Utils/Animations';
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ */
+
 const CheckboxProps = {
-    color: 'main1',
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {ColorTheme} */
+    color: 'main1',
+
+    /** @type {Boolean} */
     checked: false,
+
+    /** @type {Function?} Event called when checkbox state change */
     onChange: undefined
 }
 

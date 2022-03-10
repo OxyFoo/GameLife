@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
@@ -13,6 +14,7 @@ import { IsUndefined } from '../../Utils/Functions';
  */
 
 const StatsBarsProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
 
     /** @type {Stats} */
@@ -93,7 +95,7 @@ function statComponent(statKey, stat, sup, index, clickable = true) {
                 supValue={sup}
             />
         </TouchableOpacity>
-    )
+    );
 }
 
 class StatsBars extends React.PureComponent {

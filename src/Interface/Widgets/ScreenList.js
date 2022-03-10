@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Animated, TouchableHighlight, StyleSheet, FlatList } from 'react-native';
+import { View, Animated, TouchableHighlight, FlatList, StyleSheet } from 'react-native';
+import { LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
@@ -31,7 +32,7 @@ class ScreenList extends React.Component {
      * Open the screen list
      * @param {String} label 
      * @param {Array<Object>} data List of data { id: 0, value: '' }
-     * @param {Function(Number)} callback (id) => {}
+     * @param {(id: Number) => void} callback (id) => {}
      */
     Open = (label = 'Input', data = [], callback = (id) => {}) => {
         TimingAnimation(this.state.anim, 1, 200).start();
@@ -46,6 +47,10 @@ class ScreenList extends React.Component {
             SpringAnimation(this.state.positionY, this.posY).start();
         });
     }
+
+    /**
+     * Close the screen list
+     */
     Close = () => {
         TimingAnimation(this.state.anim, 0, 200).start();
         this.setState({
@@ -57,11 +62,13 @@ class ScreenList extends React.Component {
         SpringAnimation(this.state.positionY, this.posY).start();
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayoutPanel = (event) => {
         const { height } = event.nativeEvent.layout;
         this.height = height;
     }
 
+    /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         if (this.inMove) return;
 
@@ -72,6 +79,8 @@ class ScreenList extends React.Component {
         this.inMove = true;
         this.tickTime = Date.now();
     }
+
+    /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         // Position
         const posY = event.nativeEvent.pageY;
@@ -88,6 +97,8 @@ class ScreenList extends React.Component {
         this.posY = Math.max(this.posY, -this.height);
         TimingAnimation(this.state.positionY, this.posY, 0.1).start();
     }
+
+    /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
         this.posY -= this.accY * .25;
         this.posY = Math.max(this.posY, -this.height);
@@ -114,7 +125,7 @@ class ScreenList extends React.Component {
             >
                 <Text style={styles.itemText}>{value}</Text>
             </TouchableHighlight>
-        )
+        );
     }
 
     render() {

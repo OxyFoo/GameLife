@@ -1,14 +1,26 @@
 import * as React from 'react';
 import { Animated, StyleSheet, Dimensions } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
 
 const PageProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {Boolean} If true, user can vertical scroll the page */
     scrollable: true,
+
+    /** @type {Boolean} If true, user can scroll a little over the page for add a smooth effect */
     canScrollOver: true,
+
+    /** @type {Number} */
     bottomOffset: 156,
+
+    /** @type {LayoutChangeEvent} */
     onLayout: (event) => {},
+
+    /** @type {GestureResponderEvent} */
     onStartShouldSetResponder: (event) => false,
 }
 
@@ -34,6 +46,7 @@ class Page extends React.Component {
     EnableScroll = () => this.scrollEnabled = true;
     DisableScroll = () => this.scrollEnabled = false;
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const  { x, y, width, height } = event.nativeEvent.layout;
         if (height !== this.state.height) {
@@ -79,6 +92,7 @@ class Page extends React.Component {
         return value;
     }
 
+    /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         if (!this.scrollEnabled) return;
 
@@ -90,6 +104,7 @@ class Page extends React.Component {
         this.tickTime = Date.now();
     }
 
+    /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         if (!this.scrollEnabled) return;
 
@@ -109,6 +124,7 @@ class Page extends React.Component {
         TimingAnimation(this.state.positionY, this.posY, 0.1).start();
     }
 
+    /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
         if (!this.scrollEnabled) return;
 

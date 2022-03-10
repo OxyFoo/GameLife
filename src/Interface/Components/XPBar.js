@@ -1,14 +1,22 @@
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { MinMax, Sleep } from '../../Utils/Functions';
 import { SpringAnimation } from '../../Utils/Animations';
 
 const XPBarProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {Number} */
     value: 0,
+
+    /** @type {Number} */
     maxValue: 10,
+
+    /** @type {Number} */
     supValue: 0,
 
     /** @type {Number} To set the delay of the animation (delay * 200ms) */
@@ -26,6 +34,7 @@ class XPBar extends React.Component {
         setTimeout(this.startAnimations, this.props.delay * 200);
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width } = event.nativeEvent.layout;
         this.setState({ width: width });
@@ -62,7 +71,7 @@ class XPBar extends React.Component {
                     <Animated.View style={cover} />
                 </Animated.View>
             </View>
-        )
+        );
     }
 }
 

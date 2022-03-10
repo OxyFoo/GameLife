@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
@@ -7,10 +8,19 @@ import Button from './Button';
 import { SpringAnimation } from '../../Utils/Animations';
 
 const TextSwitchProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {String} Text to show in left part */
     textLeft: 'Left',
+
+    /** @type {String} Text to show in right part */
     textRight: 'Right',
-    startRight: false,
+
+    /** @type {'left'|'right'} First selected part */
+    start: false,
+
+    /** @type {Function} Called when seleted part change */
     onChange: (index) => {}
 }
 
@@ -22,11 +32,12 @@ class TextSwitch extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.startRight) {
+        if (this.props.start === 'right') {
             this.onChange(1, false);
         }
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { x, y, width, height } = event.nativeEvent.layout;
         if (width !== this.state.parentWidth) {
@@ -35,7 +46,7 @@ class TextSwitch extends React.Component {
     }
 
     onChange = (index, callback = true) => {
-        this.props.onChange(index);
+        if (callback) this.props.onChange(index);
         SpringAnimation(this.state.anim, index).start();
         this.setState({ selectedIndex: index });
     }

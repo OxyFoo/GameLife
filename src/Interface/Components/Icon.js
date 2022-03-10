@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, TouchableOpacity } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import themeManager from '../../Managers/ThemeManager';
@@ -35,12 +36,15 @@ import svgShop from '../../../res/icons/shop';
 import svgSocial from '../../../res/icons/social';
 import svgSuccess from '../../../res/icons/success';
 import svgTiktok from '../../../res/icons/tiktok';
+import svgUserAdd from '../../../res/icons/user-add';
+import svgWorld from '../../../res/icons/world';
 
 import svgLoading from '../../../res/icons/loading';
 import svgLoadingDots from '../../../res/icons/loading-dots';
 
 /**
- * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'loading'|'loadingDots'} Icons
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
  */
 
 const SVGIcons = {
@@ -72,26 +76,39 @@ const SVGIcons = {
     social: svgSocial,
     success: svgSuccess,
     tiktok: svgTiktok,
+    userAdd: svgUserAdd,
+    world: svgWorld,
+
     loading: svgLoading,
     loadingDots: svgLoadingDots
 }
 
 const IconProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {StyleProp<ViewStyle>} */
     containerStyle: {},
-    /**
-     * @description Display an icon from XML base64 encoded ('icon' sikp if define)
-     * @type {String}
-     */
+
+    /** @type {String} Display an icon from XML base64 encoded ('icon' skip if define) */
     xml: undefined,
-    /**
-     * @type {Icons}
-     */
+
+    /** @type {Icons} */
     icon: '',
+
+    /** @type {Number} Size of icon in pixels */
     size: 24,
+
+    /** @type {Number} Rotation angle in degrees */
     angle: 0,
+
+    /** @type {ColorTheme} */
     color: 'white',
+
+    /** @type {Function?} */
     onPress: undefined,
+
+    /** @type {Boolean} */
     show: true
 }
 

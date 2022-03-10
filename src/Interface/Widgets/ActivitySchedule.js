@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Animated, FlatList, StyleSheet } from 'react-native';
+import { LayoutChangeEvent } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import langManager from '../../Managers/LangManager';
@@ -9,14 +10,23 @@ import { Text, Button, Separator } from '../Components';
 import { SpringAnimation } from '../../Utils/Animations';
 import { DateToFormatString, DateToFormatTimeString, GetDurations, GetTime } from '../../Utils/Time';
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ */
+
 const ActivityScheduleProps = {
+    /** @type {ColorTheme} */
     mainColor: 'main1',
+
+    /** @type {Boolean} If false, disable user edition */
     editable: true,
+
     /**
      * @param {Date} startTime - The starting time of the activity
      * @param {Number} durationTime - Duration of the activity in minutes
      */
     onChange: (startTime, durationTime) => {},
+
     initialValue: [ null, null ]
 }
 
@@ -58,7 +68,9 @@ class ActivitySchedule extends React.Component {
         }
     }*/
 
+    /** @param {LayoutChangeEvent} ev */
     onLayout = (ev) => this.setState({ parent: ev.nativeEvent.layout });
+
     changeSelectionMode = () => {
         const newValue = this.state.selectionMode ? 0 : 1;
         if (newValue === 0 || this.props.editable) {
@@ -67,6 +79,7 @@ class ActivitySchedule extends React.Component {
         }
     }
 
+    /** @param {'date'|'time'} mode */
     showDTP = (mode) => this.setState({ DTPMode: mode });
     hideDTP = () => this.setState({ DTPMode: '' });
     selectDuration = (key) => {
@@ -74,6 +87,8 @@ class ActivitySchedule extends React.Component {
         this.props.onChange(time, DURATION[key].duration);
         this.setState({ selectedDurationKey: key });
     }
+
+    /** @param {Date} date */
     onChangeDateTimePicker = (date) => {
         const { DTPMode, selectedDate, selectedDurationKey } = this.state;
         const newDate = new Date(date);

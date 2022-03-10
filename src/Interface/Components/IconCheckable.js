@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
@@ -7,15 +8,36 @@ import Icon from './Icon';
 import Button from './Button';
 import { IsUndefined } from '../../Utils/Functions';
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ */
+
 const IconCheckableProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {String} Display an icon from XML base64 encoded */
     xml: '',
+
+    /** @type {Number} Size of the icon */
     size: 24,
+
+    /** @type {ColorTheme} */
     colorOn: 'main1',
+
+    /** @type {ColorTheme} */
     colorOff: 'backgroundGrey',
+
+    /** @type {Number} Used as ID parameter in "onPress" event */
     id: 0,
+
+    /** @type {Boolean} If true, icon is checked */
     checked: undefined,
+
+    /** @type {Function<Number, Boolean>} */
     onPress: (id, checked) => {},
+
+    /** @type {Boolean} If true, icon is pressable */
     pressable: true
 }
 
@@ -36,24 +58,26 @@ class IconCheckable extends React.Component {
     }
 
     switch = () => {
-        const { id } = this.props;
+        const { id, pressable, onPress } = this.props;
         const { checked } = this.state;
 
-        if (this.props.pressable) {
+        if (pressable) {
             this.setState({ checked: !checked });
-            this.props.onPress(id, !checked);
+            onPress(id, !checked);
         }
     }
 
     render() {
-        const hexOn = themeManager.GetColor(this.props.colorOn);
-        const hexOff = themeManager.GetColor(this.props.colorOff);
+        const { style, colorOn, colorOff, xml, size } = this.props;
+
+        const hexOn = themeManager.GetColor(colorOn);
+        const hexOff = themeManager.GetColor(colorOff);
         const iconColor = this.state.checked ? hexOff : hexOn;
         const backgroundColor = this.state.checked ? hexOn : hexOff;
 
         const padding = 6;
-        const btnSize = this.props.size + padding*2;
-        const buttonStyle = [ styles.box, { height: btnSize, paddingVertical: padding, paddingHorizontal: padding }, this.props.style ];
+        const btnSize = size + padding*2;
+        const buttonStyle = [ styles.box, { height: btnSize, paddingVertical: padding, paddingHorizontal: padding }, style ];
 
         return (
             <>
@@ -64,9 +88,9 @@ class IconCheckable extends React.Component {
                     onPress={this.switch}
                 >
                     <Icon
-                        xml={this.props.xml}
+                        xml={xml}
                         color={iconColor}
-                        size={this.props.size} 
+                        size={size} 
                     />
                 </Button>
             </>

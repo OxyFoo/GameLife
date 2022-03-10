@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { View, Animated, FlatList, StyleSheet, BackHandler } from 'react-native';
 
+import user from '../../Managers/UserManager';
+
 import { Text, Button } from '../Components';
 import { SpringAnimation } from '../../Utils/Animations';
-import user from '../../Managers/UserManager';
 
 /**
  * 0: Show all logs
@@ -29,10 +30,11 @@ class Console extends React.Component {
      * Show message in app console
      * @param {'info'|'warn'|'error'} type
      * @param {String} text
+     * @param {Array<any>} params
      */
-    AddLog = (type, text) => {
+    AddLog = (type, text, ...params) => {
         // Add to app console
-        const newMessage = [type, text];
+        const newMessage = [type, text + params.join(' ')];
         this.setState({ debug: [...this.state.debug, newMessage] });
 
         // Add to terminal
@@ -43,7 +45,7 @@ class Console extends React.Component {
         if (LEVEL_CONSOLE === 0 ||
            (LEVEL_CONSOLE >= 1  && type === 'warn') ||
            (LEVEL_CONSOLE >= 2  && type === 'error')) {
-            printLog(text);
+            printLog(text, ...params);
         }
     }
 

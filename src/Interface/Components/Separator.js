@@ -1,9 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ */
+
 const SeparatorProps = {
+    /** @type {ColorTheme} */
     color: 'white'
 }
 

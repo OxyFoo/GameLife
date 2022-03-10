@@ -35,7 +35,7 @@ class Settings extends BackSettings {
                     onChange={this.onChangeTheme}
                     textLeft={langThemes['Dark']}
                     textRight={langThemes['Light']}
-                    startRight={themeManager.selectedTheme === 'Light'}
+                    start={themeManager.selectedTheme === 'Dark' ? 'left' : 'right'}
                 />
 
                 <View style={styles.inline}>

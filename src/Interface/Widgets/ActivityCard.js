@@ -1,30 +1,31 @@
 import * as React from 'react';
 import { Animated, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle, GestureResponderEvent } from 'react-native';
 
 import dataManager from '../../Managers/DataManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Icon, Text } from '../Components';
-import { Activity } from '../../Class/Activities';
 import { TimingAnimation } from '../../Utils/Animations';
 import { TimeToFormatString } from '../../Utils/Time';
 
+/**
+ * @typedef {import('../../Class/Activities').Activity} Activity
+ */
+
 const ActivityCardProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /**
-     * @type {Activity}
-     */
+    /** @type {Activity} */
     activity: {},
 
-    /**
-     * Used to delay before displaying the activity card.
-     * @type {number}
-     */
+    /** @type {number=0} Used to delay before displaying the activity card */
     index: 0,
 
-    onPress: () => {}
+    /** @param {GestureResponderEvent} event */
+    onPress: (event) => {}
 }
 
 class ActivityCard extends React.Component {
@@ -61,7 +62,7 @@ class ActivityCard extends React.Component {
             {
                 opacity: this.state.anim,
                 transform: [ { translateY: this.state.anim.interpolate(inter) } ],
-                backgroundColor: themeManager.GetColor('backgroundCard', null, skill.XP === 0 ? 0.5 : 1)
+                backgroundColor: themeManager.GetColor('backgroundCard', skill.XP === 0 ? 0.5 : 1)
             },
             this.props.style
         ];

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Animated, Keyboard, StyleSheet, Dimensions } from 'react-native';
+import { GestureResponderEvent } from 'react-native';
 
 import { TimingAnimation } from '../../Utils/Animations';
 
@@ -39,6 +40,13 @@ class ScreenInput extends React.Component {
         this.Close(false);
     }
 
+    /**
+     * Open the screen input
+     * @param {String} label - Title of the input
+     * @param {String} initialText - Initial text of the input
+     * @param {(text: String) => void} callback - Callback called when the input is validated
+     * @param {Boolean} multiline - If true, the input is multiline
+     */
     Open = (label = 'Input', initialText = '', callback = (text) => {}, multiline = false) => {
         TimingAnimation(this.state.anim, 1, 200).start();
         this.setState({
@@ -49,6 +57,11 @@ class ScreenInput extends React.Component {
             callback: callback
         }, this.refInput.focus);
     }
+
+    /**
+     * Close the screen input
+     * @param {Boolean} valid - If true, the callback is called
+     */
     Close = (valid = false) => {
         if (valid) {
             this.state.callback(this.state.text);
@@ -60,11 +73,13 @@ class ScreenInput extends React.Component {
         });
     }
 
+    /** @param {GestureResponderEvent} event */
     onPressIn = (event) => {
         const { pageX, pageY } = event.nativeEvent;
         this.posX = pageX;
         this.posY = pageY;
     }
+    /** @param {GestureResponderEvent} event */
     onPressOut = (event) => {
         const { pageX, pageY } = event.nativeEvent;
         const deltaX = Math.abs(pageX - this.posX);
@@ -87,7 +102,6 @@ class ScreenInput extends React.Component {
         const opacity = { opacity: anim };
         const event = opened ? 'auto' : 'none';
         const bottom = { transform: [{ translateY: -this.state.keyboardHeight - 56 }] };
-        //console.log(this.state.keyboardHeight, event);
 
         return (
             <Animated.View style={[styles.parent, opacity]} pointerEvents={event}>

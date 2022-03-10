@@ -5,6 +5,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 
+import { Page } from '../Components';
 import { Activity } from '../../Class/Activities';
 import { IsUndefined } from '../../Utils/Functions';
 import { SpringAnimation } from '../../Utils/Animations';
@@ -16,6 +17,11 @@ class BackActivity extends React.Component {
 
         const visualisationMode = this.props.args.hasOwnProperty('activity');
         const isSetSkillID = this.props.args.hasOwnProperty('skillID');
+
+        /**
+         * @type {Page}
+         */
+        this.pageRef = null;
 
         /**
          * @type {Activity}
@@ -80,12 +86,16 @@ class BackActivity extends React.Component {
         this.setState({ selectedCategory: checked ? ID : null, skills: skills });
     }
     selectActivity = (skill) => {
-        SpringAnimation(this.state.animPosY, skill === null ? 1 : 0).start();
-        let callback = () => {};
+        let callback = () => SpringAnimation(this.state.animPosY, 0).start();
+
         if (skill === null) {
             skill = { id: 0, value: '' };
-            callback = () => this.pageRef.GotoY(0);
+            callback = () => {
+                this.pageRef.GotoY(0);
+                SpringAnimation(this.state.animPosY, 1).start();
+            }
         }
+
         this.setState({ selectedSkill: skill }, callback);
     }
 

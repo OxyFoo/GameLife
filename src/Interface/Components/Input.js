@@ -1,29 +1,58 @@
 import * as React from 'react';
-import { StyleSheet, Animated, TextInput } from 'react-native';
+import { TextInput, Animated, StyleSheet } from 'react-native';
+import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
-import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import Text from './Text';
 import { TimingAnimation } from '../../Utils/Animations';
 
+/**
+ * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ */
+
 const InputProps = {
+    /** @type {StyleProp<ViewStyle>} */
     style: {},
+
+    /** @type {Number} */
     height: 56,
+
+    /** @type {String} */
     label: 'Default',
+
+    /** @type {Boolean} If true, label still always at the top of input */
     staticLabel: false,
+
+    /** @type {ColorTheme} */
     activeColor: 'main1',
+
+    /** @type {String} Content of input */
     text: '',
+
+    /** @type {Number?} Set max length of input content */
     maxLength: null,
-    /**
-     * @type {'default'|'email'|'username'|'name'} - The type of the input.
-     */
+
+    /** @type {'default'|'email'|'username'|'name'} - The type of the input. */
     textContentType: 'default',
+
+    /** @type {Function<String>} */
     onChangeText: (newText) => {},
+
+    /** @type {Function} */
     onSubmit: () => {},
+
+    /** @type {Boolean} If false, user can't select or edit the input content */
     enabled: true,
+
+    /** @type {Boolean} If true, force focus (set active color) */
     active: false,
+
+    /** @type {Boolean} */
     multiline: false,
+
+    /** @type {'auto'|'box-only'|'box-none'|'none'} */
     pointerEvents: 'auto'
 }
 
@@ -65,6 +94,7 @@ class Input extends React.Component {
         }
     }
 
+    /** @param {LayoutChangeEvent} event */
     onBoxLayout = (event) => {
         const { height } = event.nativeEvent.layout;
         if (height !== this.state.boxHeight) {
@@ -72,6 +102,7 @@ class Input extends React.Component {
         }
     }
 
+    /** @param {LayoutChangeEvent} event */
     onTextLayout = (event) => {
         const { width, height } = event.nativeEvent.layout;
         if (width !== this.state.textWidth) {

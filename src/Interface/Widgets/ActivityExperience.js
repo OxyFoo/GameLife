@@ -18,7 +18,7 @@ class ActivityExperience extends React.Component {
             <Text containerStyle={{ width: '50%' }} style={styles.attr}>
                 {'+' + statValue + ' ' + statName}
             </Text>
-        )
+        );
     }
 
     render() {

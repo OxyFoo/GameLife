@@ -289,7 +289,7 @@
             $token = $this->data['token'];
             if (!isset($token)) return;
 
-            // TODO - Check if there is ad to watch
+            // TODO - Check if there is ad to watch & return remain
 
             $dataFromToken = Device::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
@@ -394,6 +394,30 @@
             $this->output['status'] = 'ok';
         }
 
+        public function CheckToken() {
+            $token = $this->data['token'];
+            if (!isset($token)) return;
+
+            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === NULL) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
+            }
+            $deviceID = $dataFromToken['deviceID'];
+            $accountID = $dataFromToken['accountID'];
+            $account = Account::GetByID($this->db, $accountID);
+            if ($account === NULL) return;
+
+            $data = array(
+                'deviceID' => $deviceID,
+                'accountID' => $accountID,
+                'friends' => $account['Friends']
+            );
+
+            $this->output['data'] = $data;
+            $this->output['status'] = 'ok';
+        }
     }
 
 ?>

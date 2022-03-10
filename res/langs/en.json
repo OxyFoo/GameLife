@@ -134,37 +134,12 @@
         "timeralert-cancel-text": "Are you sure you want to cancel this activity?",
 
         "display-activity-text": "Your activity has been created!",
-        "display-activity-button": "Back home",
-
-        "__OLD": "",
-        "page-title": "Activity",
-        "input-category": "Category",
-        "input-activity2": "Activity",
-        "input-start": "Start",
-        "input-duration": "Duration",
-
-        "input-category-default": "Select",
-        "input-activity-default": "Select"
+        "display-activity-button": "Back home"
     },
 
     "calendar": {
         "activity-start": "Start",
-        "activity-duration": "Duration",
-
-        "___OLD___": "OLD",
-        "page-title": "Calendar",
-
-        "header1-action": "Edit",
-        "header2-title": "Daily quests",
-        "header2-time": "Time left: ",
-        "header2-action": "See",
-
-        "skill-time": "Start/Duration",
-        "skill-xp": "Experience",
-        "value-xp": "+{} XP",
-
-        "alert-notfill-title": "Incorrec",
-        "alert-notfill-text": "Please fill in all fields before continuing"
+        "activity-duration": "Duration"
     },
 
     "dailyquest": {
@@ -206,21 +181,6 @@
         "alert-taskremove-text": "You have already checked this task, press no to uncheck it, or yes to delete it"
     },
 
-    "experience": {
-        "page-title": "XP Management",
-
-        "name-total": "XP Total",
-        "name-average": "Average XP/day",
-        "name-day": "Daily XP",
-        "name-week": "Weekly XP",
-        "name-month": "Monthly XP",
-        "name-year": "XP of the year",
-
-        "XPLeftToReach": "XP left to reach",
-        "name-next": "Next level",
-        "name-next-x": "Level {}"
-    },
-
     "home": {
         "btn-add-task": "Add tasks",
         "btn-quests": "Quests",
@@ -229,26 +189,6 @@
         "btn-other-skills": "Other comp.",
         "btn-achievements": "Achievements",
         "btn-settings": "Paramètres",
-
-        "______OLD_______": "",
-        "page-title": "Game Life",
-        "title-calendar": "Calendar",
-        "title-skills": "Skills",
-        "text-seeall": "Show more",
-
-        "shortcut-shop": "Shop",
-        "shortcut-identity": "Identity",
-        "shortcut-skills": "Skills",
-        "shortcut-calendar": "Calendar",
-        "shortcut-dailyquest": "Daily quest",
-        "shortcut-stats": "Caracteristics",
-        "shortcut-level": "Level",
-        "shortcut-leaderboard": "Leaderboard",
-        "shortcut-achievements": "Achievements",
-        "shortcut-report": "Report",
-        "shortcut-settings": "Settings",
-        "shortcut-about": "About",
-        "shortcut-addactivity": "Add activity",
 
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
@@ -340,6 +280,13 @@
         "alert-deletedaccount-text": "Your account has been deleted."
     },
 
+    "multiplayer": {
+        "connection-loading": "Connection in progress",
+        "connection-offline": "Please connect to the internet and restart the application to access this page.",
+        "connection-failed": "The connection to the server failed, please try again later.",
+        "button-retry": "Retry"
+    },
+
     "report": {
         "page-title": "Report",
 
@@ -400,12 +347,6 @@
         "alert-deletedfailed-text": "The email was not sent, please check your internet connection or try again later."
     },
 
-    "shop": {
-        "page-title": "shop",
-
-        "wait": "The shop will be available soon!"
-    },
-
     "skill": {
         "text-author": "An idea from {}",
         "stats-title": "Statistiques",
@@ -421,10 +362,6 @@
         ],
         "text-empty": "Add an activity, the associated skills will appear here",
         "text-add": "Add an activiy"
-    },
-
-    "statistic": {
-        "page-title": "Caracteristics"
     },
 
     "statistics": {

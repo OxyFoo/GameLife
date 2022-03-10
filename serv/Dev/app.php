@@ -22,6 +22,8 @@
         case 'getDate': $commands->GetDate(); break;
         case 'disconnect': $commands->Disconnect(); break;
         case 'deleteAccount': $commands->DeleteAccount(); break;
+
+        case 'checkToken': $commands->CheckToken(); break;
     }
 
     $output = $commands->GetOutput();

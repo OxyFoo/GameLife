@@ -134,37 +134,12 @@
         "timeralert-cancel-text": "Voulez-vous annuler cette activité ?",
 
         "display-activity-text": "Votre activité a bien été créé !",
-        "display-activity-button": "Retour vers l'accueil",
-
-        "__OLD": "",
-        "page-title": "Activité",
-        "input-category": "Catégorie",
-        "input-activity2": "Activité",
-        "input-start": "Début",
-        "input-duration": "Durée",
-
-        "input-category-default": "Sélectionner",
-        "input-activity-default": "Sélectionner"
+        "display-activity-button": "Retour vers l'accueil"
     },
 
     "calendar": {
         "activity-start": "Début",
-        "activity-duration": "Durée",
-
-        "___OLD___": "OLD",
-        "page-title": "Calendrier",
-
-        "header1-action": "Modifier",
-        "header2-title": "Quêtes du jour",
-        "header2-time": "Temps restant : ",
-        "header2-action": "Voir",
-
-        "skill-time": "Début/Durée",
-        "skill-xp": "Expérience",
-        "value-xp": "+{} XP",
-
-        "alert-notfill-title": "Incorrect",
-        "alert-notfill-text": "Veuillez remplir tous les champs avant de continuer"
+        "activity-duration": "Durée"
     },
 
     "dailyquest": {
@@ -206,21 +181,6 @@
         "alert-taskremove-text": "Vous avez déjà coché cette tâche, appuyez sur non pour la décocher, ou sur oui pour la supprimer"
     },
 
-    "experience": {
-        "page-title": "Gestion XP",
-
-        "name-total": "XP Total",
-        "name-average": "Moyenne d'XP/jour",
-        "name-day": "XP du jour",
-        "name-week": "XP de la semaine",
-        "name-month": "XP du mois",
-        "name-year": "XP de l'année",
-
-        "XPLeftToReach": "XP restant pour atteindre",
-        "name-next": "Niveau suivant",
-        "name-next-x": "Niveau {}"
-    },
-
     "home": {
         "btn-add-task": "Ajouter des tâches",
         "btn-quests": "Quêtes",
@@ -229,26 +189,6 @@
         "btn-other-skills": "Autre comp.",
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
-
-        "______OLD_______": "",
-        "page-title": "Game Life",
-        "title-calendar": "Calendrier",
-        "title-skills": "Compétences",
-        "text-seeall": "Voir plus",
-
-        "shortcut-shop": "Boutique",
-        "shortcut-identity": "Identité",
-        "shortcut-skills": "Compétences",
-        "shortcut-calendar": "Calendrier",
-        "shortcut-dailyquest": "Quêtes journalières",
-        "shortcut-stats": "Statistiques",
-        "shortcut-level": "Niveau",
-        "shortcut-leaderboard": "Classement",
-        "shortcut-achievements": "Succès",
-        "shortcut-report": "Report",
-        "shortcut-settings": "Réglages",
-        "shortcut-about": "A propos",
-        "shortcut-addactivity": "Ajouter une activité",
 
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
@@ -340,6 +280,13 @@
         "alert-deletedaccount-text": "Votre compte a été supprimé."
     },
 
+    "multiplayer": {
+        "connection-loading": "Connexion en cours",
+        "connection-offline": "Veuillez vous connecter à internet et redémarrer l'application pour accéder à cette page.",
+        "connection-failed": "La connexion au serveur a échouée, veuillez réessayer plus tard.",
+        "button-retry": "Réessayer"
+    },
+
     "report": {
         "page-title": "Report",
 
@@ -400,12 +347,6 @@
         "alert-deletedfailed-text": "Le mail n'a pas été envoyé, vérifiez votre connexion internet ou veuillez réessayer plus tard."
     },
 
-    "shop": {
-        "page-title": "Boutique",
-
-        "wait": "La boutique sera disponible bientôt !"
-    },
-
     "skill": {
         "text-author": "Une idée de {}",
         "stats-title": "Statistiques",
@@ -421,10 +362,6 @@
         ],
         "text-empty": "Ajoutez une activité, les compétences associées apparaîtront ici",
         "text-add": "Ajouter une activité"
-    },
-
-    "statistic": {
-        "page-title": "Caractéristiques"
     },
 
     "statistics": {

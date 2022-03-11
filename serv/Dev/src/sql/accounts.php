@@ -1,6 +1,6 @@
 <?php
 
-    class Account
+    class Accounts
     {
         public static function Add($db, $username, $email) {
             // Add new empty account
@@ -9,7 +9,7 @@
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Adding device in DB failed");
             }
-            return Account::GetByEmail($db, $email);
+            return Accounts::GetByEmail($db, $email);
         }
 
         public static function GetByEmail($db, $email) {

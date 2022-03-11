@@ -2,9 +2,9 @@
 
     require('./src/config.php');
     require('./src/functions/mail.php');
-    require('./src/sql/account.php');
-    require('./src/sql/device.php');
-    require('./src/sql/user.php');
+    require('./src/sql/accounts.php');
+    require('./src/sql/devices.php');
+    require('./src/sql/users.php');
     require('./src/sql/sql.php');
 
     $raw_data = $_GET['data'];
@@ -32,7 +32,7 @@
     }
 
     if (isset($action, $accountID, $deviceID, $deviceToken)) {
-        $device = Device::GetByID($db, $deviceID);
+        $device = Devices::GetByID($db, $deviceID);
         if ($device !== NULL) {
 
             if ($action === 'view' && isset($_GET['action'])) {
@@ -63,12 +63,12 @@
 
             else if ($action === 'accept') {
                 if ($device['Token'] === $deviceToken) {
-                    $account = Account::GetByID($db, $accountID);
-                    $perm = Account::CheckDevicePermissions($deviceID, $account);
+                    $account = Accounts::GetByID($db, $accountID);
+                    $perm = Accounts::CheckDevicePermissions($deviceID, $account);
                     if ($perm === 1) {
-                        Account::RemDevice($db, $deviceID, $account, 'DevicesWait');
-                        Device::RemoveToken($db, $deviceID);
-                        Account::AddDevice($db, $deviceID, $account, 'Devices');
+                        Accounts::RemDevice($db, $deviceID, $account, 'DevicesWait');
+                        Devices::RemoveToken($db, $deviceID);
+                        Accounts::AddDevice($db, $deviceID, $account, 'Devices');
                         $state = "auth-accept";
                     }
                 } else {
@@ -78,10 +78,10 @@
 
             else if ($action === 'delete') {
                 if ($device['Token'] === $deviceToken) {
-                    $account = Account::GetByID($db, $accountID);
+                    $account = Accounts::GetByID($db, $accountID);
                     if ($account !== NULL) {
-                        Device::RemoveToken($db, $deviceID);
-                        if (Account::Delete($db, $accountID)) {
+                        Devices::RemoveToken($db, $deviceID);
+                        if (Accounts::Delete($db, $accountID)) {
                             $state = "auth-remove-account";
                         }
                     }

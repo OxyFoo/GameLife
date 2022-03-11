@@ -2,6 +2,56 @@
 
     class Device
     {
+        /** @var int $ID */
+        public $ID;
+
+        /** @var string $Identifier */
+        public $Identifier;
+
+        /** @var string $Name */
+        public $Name;
+
+        /** @var string $OSName "Android" or "iOS" */
+        public $OSName;
+
+        /** @var string $OSVersion */
+        public $OSVersion;
+
+        /** @var string $Token */
+        public $Token;
+
+        /** @var bool $Banned */
+        public $Banned;
+
+        /** @var DateTime $Created */
+        public $Created;
+
+        /** @var DateTime $Updated */
+        public $Updated;
+
+        public function __construct($device) {
+            $this->ID = intval($device['ID']);
+            $this->Identifier = $device['Identifier'];
+            $this->Name = $device['Name'];
+            $this->OSName = $device['OSName'];
+            $this->OSVersion = $device['OSVersion'];
+            $this->Token = $device['Token'];
+            $this->Banned = $device['Banned'] != '0';
+            $this->Created = $device['Created'];
+            $this->Updated = $device['Updated'];
+        }
+    }
+
+    class Devices
+    {
+        /**
+         * @param DataBase $db
+         * @param string $deviceIdentifier
+         * @param string $deviceName
+         * @param string $osName
+         * @param string $osVersion
+         * @return Device|NULL
+         */
         public static function Add($db, $deviceIdentifier, $deviceName, $osName, $osVersion) {
             $hashID = password_hash($deviceIdentifier, PASSWORD_BCRYPT);
             $command = "INSERT INTO `Devices` (`Identifier`, `Name`, `OSName`, `OSVersion`) VALUES ('$hashID', '$deviceName', '$osName', '$osVersion')";
@@ -9,16 +59,18 @@
             if ($result !== TRUE) {
                 ExitWithStatus("Error: Adding device in DB failed");
             }
-            $ID = $db->GetLastInsertID();
-            $command2 = "SELECT * FROM `Devices` WHERE `ID` = '$ID'";
-            $devices = $db->QueryArray($command2);
-            return $devices !== NULL && count($devices) ? $devices[0] : NULL;
+            return Devices::GetByID($db, $db->GetLastInsertID());
         }
 
-        public static function Get($db, $deviceIdentifier, $deviceName, $searchAll = FALSE) {
+        /**
+         * @param DataBase $db
+         * @param string $deviceIdentifier
+         * @param string $deviceName
+         * @return Device|NULL
+         */
+        public static function Get($db, $deviceIdentifier, $deviceName) {
             $device = NULL;
-            $command = "SELECT * FROM `Devices`";
-            if (!$searchAll) $command .= " WHERE `Name` = '$deviceName'";
+            $command = "SELECT * FROM `Devices` WHERE `Name` = '$deviceName'";
 
             $devices = $db->QueryArray($command);
             if ($devices !== NULL) {
@@ -30,40 +82,14 @@
                 }
             }
 
-            // TODO - Find a better way to do this
-            //if ($device === NULL && !$searchAll) {
-            //    return Device::Get($db, $deviceIdentifier, $deviceName, TRUE);
-            //}
-
             return $device;
         }
 
-        public static function Refresh($db, $device, $deviceName, $osName, $osVersion) {
-            if ($device['Name'] != $deviceName || $device['OSName'] != $osName || $device['OSVersion'] != $osVersion) {
-                $ID = $device['ID'];
-                $edit = array(
-                    'Name' => $deviceName,
-                    'OSName' => $osName,
-                    'OSVersion'  => $osVersion,
-                    'Updated' => 'CURRENT_TIMESTAMP()'
-                );
-                $cond = array('ID' => $ID);
-                $result = $db->QueryEdit('Devices', $edit, $cond);
-                if ($result !== TRUE) {
-                    ExitWithStatus("Error: Refreshing device in DB failed");
-                }
-            }
-        }
-
-        public static function AddStatistic($db, $device, $type = "0") {
-            $deviceID = $device['ID'];
-            $command = "INSERT INTO `Statistics` (`DeviceID`, `Type`) VALUES ('$deviceID', '$type')";
-            $result = $db->Query($command);
-            if ($result !== TRUE) {
-                ExitWithStatus("Error: Adding device statistic in DB failed");
-            }
-        }
-
+        /**
+         * @param DataBase $db
+         * @param int $ID
+         * @return Device|NULL
+         */
         public static function GetByID($db, $ID) {
             $device = NULL;
             $command = "SELECT * FROM `Devices` WHERE `ID` = '$ID'";
@@ -72,6 +98,45 @@
                 $device = $devices[0];
             }
             return $device;
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Device $device
+         * @param string $deviceName
+         * @param string $osName
+         * @param string $osVersion
+         * @return void
+         */
+        public static function Refresh($db, $device, $deviceName, $osName, $osVersion) {
+            if ($device->Name != $deviceName || $device->OSName != $osName || $device->OSVersion != $osVersion) {
+                $edit = array(
+                    'Name' => $deviceName,
+                    'OSName' => $osName,
+                    'OSVersion'  => $osVersion,
+                    'Updated' => 'CURRENT_TIMESTAMP()'
+                );
+                $cond = array('ID' => $device->ID);
+                $result = $db->QueryEdit('Devices', $edit, $cond);
+                if ($result !== TRUE) {
+                    ExitWithStatus("Error: Refreshing device in DB failed");
+                }
+            }
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Device $device
+         * @param string $type
+         * @return void
+         */
+        public static function AddStatistic($db, $device, $type = "0") {
+            $deviceID = $device->ID;
+            $command = "INSERT INTO `Statistics` (`DeviceID`, `Type`) VALUES ('$deviceID', '$type')";
+            $result = $db->Query($command);
+            if ($result !== TRUE) {
+                ExitWithStatus("Error: Adding device statistic in DB failed");
+            }
         }
 
         public static function RefreshMailToken($db, $deviceID, $accountID) {
@@ -118,7 +183,7 @@
                         'inTime' => intval($time) + (self::LIMIT_TIME_HOURS * 3600) >= time()
                     );
                     // Check account existence
-                    $account = Account::GetByID($db, $accountID);
+                    $account = Accounts::GetByID($db, $accountID);
                     if ($account === NULL) {
                         $output['inTime'] = FALSE;
                     }

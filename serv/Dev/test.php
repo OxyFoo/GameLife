@@ -7,9 +7,9 @@
     require('./src/functions/functions.php');
 
     require('./src/sql/app.php');
-    require('./src/sql/account.php');
-    require('./src/sql/device.php');
-    require('./src/sql/user.php');
+    require('./src/sql/accounts.php');
+    require('./src/sql/devices.php');
+    require('./src/sql/users.php');
     require('./src/sql/internalData.php');
     require('./src/sql/sql.php');
 
@@ -150,7 +150,7 @@
         $result = $db->QueryEdit('Devices', $edit, $cond);
         print_r($result);
     } else if ($action === 'date') {
-        $account = Account::GetByID($db, '1');
+        $account = Accounts::GetByID($db, '1');
         //print_r($account);
         $date = $account['LastChangeUsername'];
         if ($date === NULL) {
@@ -300,7 +300,7 @@
             $db->Query("UPDATE `Skills` SET `Name` = '$name' WHERE `Skills`.`ID` = $ID");
         }
     } else if ($action === 'testTIMESTAMP') {
-        $account = Account::GetByID($db, 1);
+        $account = Accounts::GetByID($db, 1);
         $usernameTime = strtotime($account['LastChangeUsername']);
         print_r($usernameTime);
     } else if ($action === 'testQuery') {
@@ -322,9 +322,9 @@
         //print_r($appData);
         print_r($news[0]);
     } else if ($action === 'addOx') {
-        User::AddOx($db, 1, -14);
+        Users::AddOx($db, 1, -14);
     } else if ($action === 'getOx') {
-        $ox = User::GetOx($db, 1);
+        $ox = Users::GetOx($db, 1);
         print_r($ox);
     }
 

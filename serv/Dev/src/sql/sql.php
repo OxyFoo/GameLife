@@ -4,6 +4,9 @@
 
     class DataBase
     {
+        /**
+         * @var mysqli $conn
+         */
         private $conn;
         private $db_hostname;
         private $db_name;
@@ -77,12 +80,15 @@
 
         /**
          * Types : add, rem
+         * Send mail to user with link to confirm account creation or account deletion
+         * @param string $email
+         * @param Device $device
          */
         public function SendMail($email, $device, $deviceToken, $accountID, $langKey, $type) {
             if ($type !== 'add' && $type !== 'rem') return FALSE;
 
-            $deviceID = $device['ID'];
-            $deviceName = $device['Name'];
+            $deviceID = $device->ID;
+            $deviceName = $device->Name;
 
             $accept = array('action' => 'accept', 'accountID' => $accountID,
                             'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $langKey);

@@ -2,7 +2,7 @@
 
     $DAYS_USERNAME_CHANGE = 29;
 
-    class User
+    class Users
     {
         public static function ExecQueue($db, $account, $data) {
             $activities = $data['activities'];
@@ -185,6 +185,12 @@
             }
         }
 
+        /**
+         * Get the Ox amount of the account
+         * @param DataBase $db
+         * @param int $accountID
+         * @return int Ox amount
+         */
         public static function GetOx($db, $accountID) {
             $command = "SELECT `Ox` FROM `Users` WHERE `ID` = '$accountID'";
             $query = $db->QueryArray($command);
@@ -195,7 +201,12 @@
             return $ox;
         }
 
-        // Add Ox to the account, negative to remove
+        /**
+         * Add or remove Ox to the account
+         * @param DataBase $db
+         * @param int $accountID
+         * @param int $value Value to add or negative to remove
+         */
         public static function AddOx($db, $accountID, $value) {
             $command = "UPDATE `Users` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);

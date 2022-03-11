@@ -6,16 +6,20 @@
     require('./src/functions/mail.php');
     require('./src/functions/functions.php');
 
-    require('./src/sql/account.php');
+    require('./src/sql/accounts.php');
     require('./src/sql/app.php');
-    require('./src/sql/device.php');
-    require('./src/sql/user.php');
+    require('./src/sql/devices.php');
+    require('./src/sql/users.php');
     require('./src/sql/internalData.php');
     require('./src/sql/sql.php');
 
     class Commands {
+        /** @var DataBase $db */
+        private $db;
+
         public function __construct($data) {
             $this->data = $data;
+
             $this->db = new DataBase();
             $this->output = array("status" => "error");
             $this->enableBots = false;
@@ -45,15 +49,15 @@
                 $osVersion = $this->data['deviceOSVersion'];
 
                 if (isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
-                    $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+                    $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
                     if ($device === NULL) {
-                        $device = Device::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
+                        $device = Devices::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
                     }
                     if ($device === NULL) {
                         $this->output['status'] = 'error';
                     } else {
-                        Device::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
-                        Device::AddStatistic($this->db, $device);
+                        Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
+                        Devices::AddStatistic($this->db, $device);
                         $this->output['status'] = 'ok';
                     }
                 }
@@ -79,8 +83,8 @@
                 return;
             }
 
-            $account = Account::GetByEmail($this->db, $email);
-            $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+            $account = Accounts::GetByEmail($this->db, $email);
+            $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
 
             if ($account === NULL) {
                 $this->output['status'] = 'free';
@@ -88,16 +92,15 @@
             }
 
             // Check permissions
-            $deviceID = intval($device['ID']);
-            $perm = Account::CheckDevicePermissions($deviceID, $account);
+            $perm = Accounts::CheckDevicePermissions($device->ID, $account);
             switch ($perm) {
                 case 0: // OK
                     $accountID = $account['ID'];
-                    Account::RefreshLastDate($this->db, $accountID);
-                    $this->output['token'] = Device::GeneratePrivateToken($this->db, $accountID, $deviceID);
+                    Accounts::RefreshLastDate($this->db, $accountID);
+                    $this->output['token'] = Devices::GeneratePrivateToken($this->db, $accountID, $device->ID);
                     $this->output['status'] = 'ok';
 
-                    $isBanned = $account['Banned'] != 0 || $device['Banned'] != 0;
+                    $isBanned = $account['Banned'] != 0 || $device->Banned;
                     if ($isBanned) $this->output['status'] = 'ban';
                     break;
                 case 1: // Wait mail confirmation
@@ -108,7 +111,7 @@
                     $remainTime = $max - ($now - $remainMailTime);
                     if ($remainTime <= 0) {
                         $remainTime = 0;
-                        Account::RemDevice($this->db, $deviceID, $account, 'DevicesWait');
+                        Accounts::RemDevice($this->db, $device->ID, $account, 'DevicesWait');
                         $this->output['status'] = 'remDevice';
                         break;
                     }
@@ -118,9 +121,9 @@
                 default: // Device isn't in account
                 case -1:
                     $accountID = $account['ID'];
-                    Account::RefreshLastDate($this->db, $accountID);
-                    Account::AddDevice($this->db, $deviceID, $account, 'DevicesWait');
-                    $newToken = Device::RefreshMailToken($this->db, $deviceID, $accountID);
+                    Accounts::RefreshLastDate($this->db, $accountID);
+                    Accounts::AddDevice($this->db, $device->ID, $account, 'DevicesWait');
+                    $newToken = Devices::RefreshMailToken($this->db, $device->ID, $accountID);
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $accountID, $langKey, 'add');
                     if ($sended) $this->output['status'] = 'newDevice';
@@ -138,7 +141,7 @@
                 return;
             }
 
-            if (!User::PseudoIsFree($this->db, $username)) {
+            if (!Users::PseudoIsFree($this->db, $username)) {
                 $this->output['status'] = 'pseudoUsed';
                 return;
             }
@@ -147,15 +150,15 @@
                 return;
             }
 
-            $account = Account::Add($this->db, $username, $email);
+            $account = Accounts::Add($this->db, $username, $email);
             if ($account === NULL) return;
 
             // Legion - mail bypass
             if (strpos($email, 'bot-') === 0) {
                 if (!$this->enableBots) return;
-                $device = Device::Get($this->db, $deviceIdentifier, $deviceName);
+                $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
                 $deviceID = intval($device['ID']);
-                Account::AddDevice($this->db, $deviceID, $account, 'Devices');
+                Accounts::AddDevice($this->db, $deviceID, $account, 'Devices');
             }
 
             $this->output['status'] = 'ok';
@@ -188,7 +191,7 @@
             $token = $this->data['token'];
             if (!isset($token)) return;
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -196,7 +199,7 @@
             }
 
             $accountID = $dataFromToken['accountID'];
-            $account = Account::GetByID($this->db, $accountID);
+            $account = Accounts::GetByID($this->db, $accountID);
             if ($account === NULL) return;
 
             $dbDataToken = $account['DataToken'];
@@ -225,7 +228,7 @@
             }
 
             if ($appDataToken != $dbDataToken) {
-                $userData['activities'] = User::GetActivities($this->db, $account);
+                $userData['activities'] = Users::GetActivities($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;
             }
 
@@ -241,7 +244,7 @@
             $userData = $this->data['data'];
             if (!isset($token, $userData)) return;
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -249,12 +252,12 @@
             }
 
             $accountID = $dataFromToken['accountID'];
-            $account = Account::GetByID($this->db, $accountID);
+            $account = Accounts::GetByID($this->db, $accountID);
             if ($account === NULL) return;
             $dbDataToken = $account['DataToken'];
 
-            User::ExecQueue($this->db, $account, $userData);
-            $newDataToken = User::RefreshDataToken($this->db, $account);
+            Users::ExecQueue($this->db, $account, $userData);
+            $newDataToken = Users::RefreshDataToken($this->db, $account);
 
             if ($this->data['dataToken'] === $dbDataToken) {
                 $this->output['dataToken'] = $newDataToken;
@@ -268,7 +271,7 @@
             $newUsername = $this->data['username'];
             if (!isset($token, $newUsername)) return;
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -276,10 +279,10 @@
             }
 
             $accountID = $dataFromToken['accountID'];
-            $account = Account::GetByID($this->db, $accountID);
+            $account = Accounts::GetByID($this->db, $accountID);
             if ($account === NULL) return;
 
-            $usernameChangeState = User::SetUsername($this->db, $account, $newUsername);
+            $usernameChangeState = Users::SetUsername($this->db, $account, $newUsername);
 
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
@@ -291,7 +294,7 @@
 
             // TODO - Check if there is ad to watch & return remain
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -300,8 +303,8 @@
             $accountID = $dataFromToken['accountID'];
 
             $oxAmount = 10;
-            User::AddOx($this->db, $accountID, $oxAmount);
-            $ox = User::GetOx($this->db, $accountID);
+            Users::AddOx($this->db, $accountID, $oxAmount);
+            $ox = Users::GetOx($this->db, $accountID);
 
             $this->output['ox'] = $ox;
             $this->output['status'] = 'ok';
@@ -316,7 +319,7 @@
             $reportData = $this->data['data'];
             if (!isset($token, $reportType, $reportData)) return;
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -342,7 +345,7 @@
             $token = $this->data['token'];
             if (!isset($token)) return;
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -351,10 +354,10 @@
 
             $deviceID = $dataFromToken['deviceID'];
             $accountID = $dataFromToken['accountID'];
-            $account = Account::GetByID($this->db, $accountID);
+            $account = Accounts::GetByID($this->db, $accountID);
             if ($account === NULL) return;
 
-            Account::RemDevice($this->db, $deviceID, $account, 'Devices');
+            Accounts::RemDevice($this->db, $deviceID, $account, 'Devices');
 
             $this->output['status'] = 'ok';
         }
@@ -365,7 +368,7 @@
             $langKey = $this->data['lang'];
             if (!isset($token, $email, $langKey)) return;
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -373,21 +376,21 @@
             }
             $deviceID = $dataFromToken['deviceID'];
             $accountID = $dataFromToken['accountID'];
-            $account = Account::GetByID($this->db, $accountID);
+            $account = Accounts::GetByID($this->db, $accountID);
             if ($account === NULL) return;
-            $device = Device::GetByID($this->db, $deviceID);
+            $device = Devices::GetByID($this->db, $deviceID);
             if ($device === NULL) return;
 
             if (strpos($email, 'bot-') === 0) {
                 if (!$this->enableBots) return;
-                Device::Delete($this->db, $deviceID);
-                Account::Delete($this->db, $accountID);
+                Devices::Delete($this->db, $deviceID);
+                Accounts::Delete($this->db, $accountID);
                 $this->output['status'] = 'ok';
                 return;
             }
 
-            Account::RefreshLastDate($this->db, $accountID);
-            $newToken = Device::RefreshMailToken($this->db, $deviceID, $accountID);
+            Accounts::RefreshLastDate($this->db, $accountID);
+            $newToken = Devices::RefreshMailToken($this->db, $deviceID, $accountID);
             $sended = $this->db->SendMail($email, $device, $newToken, $accountID, $langKey, 'rem');
             if (!$sended) return;
 
@@ -398,7 +401,7 @@
             $token = $this->data['token'];
             if (!isset($token)) return;
 
-            $dataFromToken = Device::GetDataFromToken($this->db, $token);
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === NULL) return;
             if (!$dataFromToken['inTime']) {
                 $this->output['status'] = 'tokenExpired';
@@ -406,7 +409,7 @@
             }
             $deviceID = $dataFromToken['deviceID'];
             $accountID = $dataFromToken['accountID'];
-            $account = Account::GetByID($this->db, $accountID);
+            $account = Accounts::GetByID($this->db, $accountID);
             if ($account === NULL) return;
 
             $data = array(

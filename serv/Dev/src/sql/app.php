@@ -2,14 +2,13 @@
 
     /**
      * Retrieve the application version and the database hash
-     * (Hash that is updated if old)
      */
     function GetAppData($db) {
-        $appData = array('Version' => 0, 'Hashes' => '');
+        $appData = array('Version' => 0, 'Hashes' => '', 'Maintenance' => false, 'News' => array());
         $app = $db->QueryArray("SELECT * FROM `App`");
         $lastHashRefresh = 0;
 
-        if ($app !== NULL) {
+        if ($app !== null) {
             for ($i = 0; $i < count($app); $i++) {
                 $ID = $app[$i]['ID'];
                 $data = $app[$i]['Data'];
@@ -45,7 +44,7 @@
             // Refresh `App` in DB
             $newHashesString = json_encode($newHashes);
             $result = $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHashesString' WHERE `ID` = 'Hashes'");
-            if ($result === TRUE && $newHash !== $appData['Hashes']) {
+            if ($result !== false && $newHashes !== $appData['Hashes']) {
                 $appData['Hashes'] = $newHashes;
             }
         }

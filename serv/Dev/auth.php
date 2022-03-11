@@ -2,6 +2,8 @@
 
     require('./src/config.php');
     require('./src/functions/mail.php');
+    require('./src/classes/account.php');
+    require('./src/classes/device.php');
     require('./src/sql/accounts.php');
     require('./src/sql/devices.php');
     require('./src/sql/users.php');
@@ -33,7 +35,7 @@
 
     if (isset($action, $accountID, $deviceID, $deviceToken)) {
         $device = Devices::GetByID($db, $deviceID);
-        if ($device !== NULL) {
+        if ($device !== null) {
 
             if ($action === 'view' && isset($_GET['action'])) {
                 // Check accept data
@@ -45,7 +47,7 @@
                         $text = $lang->{'signin-text'};
                         $textButton = $lang->{'signin-button'};
                         $textLink = $lang->link;
-                        $content = GetMailContent($title, $text, $textButton, $textLink, $device['Name'], $_GET['action'], NULL);
+                        $content = GetMailContent($title, $text, $textButton, $textLink, $device->Name, $_GET['action'], null);
                         EchoAndExit($content);
 
                     } else if ($acceptData->action === 'delete') {
@@ -54,7 +56,7 @@
                         $text = $lang->{'delete-text'};
                         $textButton = $lang->{'delete-button'};
                         $textLink = $lang->link;
-                        $content = GetMailContent($title, $text, $textButton, $textLink, $device['Name'], $_GET['action'], NULL);
+                        $content = GetMailContent($title, $text, $textButton, $textLink, $device->Name, $_GET['action'], null);
                         EchoAndExit($content);
 
                     }
@@ -62,8 +64,8 @@
             }
 
             else if ($action === 'accept') {
-                if ($device['Token'] === $deviceToken) {
-                    $account = Accounts::GetByID($db, $accountID);
+                $account = Accounts::GetByID($db, $accountID);
+                if ($device->Token === $deviceToken && $account !== null) {
                     $perm = Accounts::CheckDevicePermissions($deviceID, $account);
                     if ($perm === 1) {
                         Accounts::RemDevice($db, $deviceID, $account, 'DevicesWait');
@@ -77,13 +79,11 @@
             }
 
             else if ($action === 'delete') {
-                if ($device['Token'] === $deviceToken) {
-                    $account = Accounts::GetByID($db, $accountID);
-                    if ($account !== NULL) {
-                        Devices::RemoveToken($db, $deviceID);
-                        if (Accounts::Delete($db, $accountID)) {
-                            $state = "auth-remove-account";
-                        }
+                $account = Accounts::GetByID($db, $accountID);
+                if ($device->Token === $deviceToken && $account !== null) {
+                    Devices::RemoveToken($db, $deviceID);
+                    if (Accounts::Delete($db, $accountID)) {
+                        $state = "auth-remove-account";
                     }
                 } else {
                     $state = "auth-invalid-token";

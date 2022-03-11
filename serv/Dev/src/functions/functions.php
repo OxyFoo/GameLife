@@ -1,30 +1,9 @@
 <?php
 
-    function GetIP() {
-        $ip = "";
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
-    }
-
-    function GetCountryCode() {
-        $output = 'en';
-        $ip = GetIP();
-        if (filter_var($ip, FILTER_VALIDATE_IP)) {
-			$ipdat = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip));
-			$code = strtolower($ipdat->geoplugin_countryCode);
-            if ($code) {
-                $output = $code;
-            }
-        }
-        return $output;
-    }
-
+    /**
+     * @param int $length Length of the random string
+     * @return string Random string
+     */
     function RandomString($length = 32) {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/[]{}_#!;:?%()|';
         $charactersLength = strlen($characters);
@@ -36,6 +15,10 @@
         return $randomString;
     }
 
+    /**
+     * Set status to "error" and exit with an error message
+     * @param string $message Message to return
+     */
     function ExitWithStatus($message) {
         $output = array('status' => 'error', 'error' => $message);
         echo(json_encode($output));
@@ -73,11 +56,11 @@
         while (count($dict) > 0) {
             $added = 0;
             for ($s = 0; $s < count($sorted); $s++) {
-                if (!isset($dict[$i]["Name"], $sorted[$s]["Name"])) {
+                if (!isset($dict[$i][$cell], $sorted[$s][$cell])) {
                     continue;
                 }
-                $Name = $dict[$i]["Name"];
-                $NameRef = $sorted[$s]["Name"];
+                $Name = $dict[$i][$cell];
+                $NameRef = $sorted[$s][$cell];
                 $arr = array($NameRef, $Name);
                 if (!isSorted($arr)) {
                     array_splice($sorted, $s, 0, array($dict[$i]));

@@ -1,5 +1,9 @@
 <?php
 
+    /**
+     * @param DataBase $db
+     * @return object
+     */
     function GetAllInternalData($db) {
         $db_all = array();
         $db_all['achievements'] = GetAchievements($db);
@@ -12,24 +16,28 @@
         return $db_all;
     }
 
+    /**
+     * Hashes names :
+     *     - skills : skills, skillsIcon, skillsCategory
+     *     - equips : achievements, titles
+     *     - apptxt : contributors, quotes
+     * @param DataBase $db
+     * @param object $reqHashes 3 hashes to compare
+     * @param object $appHashes 3 hashes to compare
+     */
     function GetNewInternalData($db, $reqHashes, $appHashes) {
-        // Hashes :
-        // - skills : skills, skillsIcon, skillsCategory
-        // - equips : achievements, titles
-        // - apptxt : contributors, quotes
-
         $newTables = array();
 
-        if ($reqHashes === NULL || $reqHashes['skills'] !== $appHashes['skills']) {
+        if ($reqHashes === null || $reqHashes['skills'] !== $appHashes['skills']) {
             $newTables['skills'] = GetSkills($db);
             $newTables['skillsIcon'] = GetSkillsIcon($db);
             $newTables['skillsCategory'] = GetSkillsCategory($db);
         }
-        if ($reqHashes === NULL || $reqHashes['equips'] !== $appHashes['equips']) {
+        if ($reqHashes === null || $reqHashes['equips'] !== $appHashes['equips']) {
             $newTables['achievements'] = GetAchievements($db);
             $newTables['titles'] = GetTitles($db);
         }
-        if ($reqHashes === NULL || $reqHashes['apptxt'] !== $appHashes['apptxt']) {
+        if ($reqHashes === null || $reqHashes['apptxt'] !== $appHashes['apptxt']) {
             $newTables['contributors'] = GetContributors($db);
             $newTables['quotes'] = GetQuotes($db);
         }
@@ -39,7 +47,7 @@
 
     function GetAchievements($db) {
         $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
-        if ($achievements === NULL) return array();
+        if ($achievements === null) return array();
         for ($i = 0; $i < count($achievements); $i++) {
             $achievements[$i]['ID'] = intval($achievements[$i]['ID']);
             $achievements[$i]['Type'] = intval($achievements[$i]['Type']);
@@ -51,7 +59,7 @@
 
     function GetContributors($db) {
         $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
-        if ($helpers === NULL) return array();
+        if ($helpers === null) return array();
 
         for ($i = 0; $i < count($helpers); $i++) {
             $helpers[$i]['ID'] = intval($helpers[$i]['ID']);
@@ -62,7 +70,7 @@
 
     function GetQuotes($db) {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
-        if ($quotes === NULL) return array();
+        if ($quotes === null) return array();
         for ($i = 0; $i < count($quotes); $i++) {
             $quotes[$i]['ID'] = intval($quotes[$i]['ID']);
         }
@@ -74,7 +82,7 @@
         $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
 
         $skills_safe = array();
-        if ($skills !== NULL && $categories !== NULL) {
+        if ($skills !== null && $categories !== null) {
             for ($i = 0; $i < count($skills); $i++) {
                 $skills[$i]["ID"] = intval($skills[$i]["ID"]);
                 $skills[$i]["XP"] = intval($skills[$i]["XP"]);
@@ -141,7 +149,7 @@
 
     function GetSkillsIcon($db) {
         $skillsIcon = $db->QueryArray("SELECT * FROM `SkillsIcon`");
-        if ($skillsIcon === NULL) return array();
+        if ($skillsIcon === null) return array();
         for ($i = 0; $i < count($skillsIcon); $i++) {
             $skillsIcon[$i]["ID"] = intval($skillsIcon[$i]["ID"]);
         }
@@ -150,7 +158,7 @@
 
     function GetSkillsCategory($db) {
         $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
-        if ($categories === NULL) return array();
+        if ($categories === null) return array();
         for ($i = 0; $i < count($categories); $i++) {
             $categories[$i]["ID"] = intval($categories[$i]["ID"]);
             $categories[$i]['Name'] = json_decode($categories[$i]['Name']);
@@ -160,7 +168,7 @@
 
     function GetTitles($db) {
         $titles = $db->QueryArray("SELECT * FROM `Titles`");
-        if ($titles === NULL) return array();
+        if ($titles === null) return array();
         for ($i = 0; $i < count($titles); $i++) {
             $titles[$i]["ID"] = intval($titles[$i]["ID"]);
             $titles[$i]["Name"] = json_decode($titles[$i]["Name"]);

@@ -4,6 +4,11 @@
 
     class Users
     {
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param object $data Array of data to add { 'activities': [], 'xp': 0, 'achievements': [], 'titleID': 0, 'birthTime': 0 }
+         */
         public static function ExecQueue($db, $account, $data) {
             $activities = $data['activities'];
             $xp = $data['xp'];
@@ -15,7 +20,7 @@
                 self::AddActivities($db, $account, $activities);
             }
             if (isset($xp)) {
-                self::setXP($db, $account['ID'], $xp);
+                self::setXP($db, $account->ID, $xp);
             }
             if (isset($achievements)) {
                 self::AddAchievement($db, $account, $achievements);
@@ -28,22 +33,27 @@
             }
         }
 
-        // Return :
-        // ok => Pseudo is changed (check if it's free)
-        // alreadyUsed => Pseudo already used
-        // alreadyChanged => Pseudo change failed (time)
-        // incorrect => Pseudo is incorrect (wrong length...)
-        // error => Others weird errors
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param string $username
+         * @return string \
+         *     ok => Pseudo is changed (check if it's free)\
+         *     alreadyUsed => Pseudo already used\
+         *     alreadyChanged => Pseudo change failed (time)\
+         *     incorrect => Pseudo is incorrect (wrong length...)\
+         *     error => Others weird errors
+         */
         public static function SetUsername($db, $account, $username) {
             global $DAYS_USERNAME_CHANGE;
 
-            $accountID = $account['ID'];
-            $oldUsername = $account['Username'];
+            $accountID = $account->ID;
+            $oldUsername = $account->Username;
             $newUsername = ucfirst(strtolower($username));
 
-            $lastUsernameTime = strtotime($account['LastChangeUsername']);
             $nowTime = time();
             $nowText = date('Y-m-d H:i:s', $nowTime);
+            $lastUsernameTime = $account->LastChangeUsername === null ? $nowTime : $account->LastChangeUsername;
             $delta = ($nowTime - $lastUsernameTime) / (60 * 60 * 24);
 
             if ($oldUsername === $newUsername) return 'error';
@@ -53,40 +63,61 @@
 
             $command = "UPDATE `Users` SET `Username` = '$newUsername', `LastChangeUsername` = '$nowText' WHERE `ID` = '$accountID'";
             $result_pseudo = $db->Query($command);
-            if ($result_pseudo !== TRUE) ExitWithStatus("Error: Saving username failed");
+            if ($result_pseudo === false) ExitWithStatus("Error: Saving username failed");
 
             return 'ok';
         }
 
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param int $birthtime Timestamp
+         */
         private static function SetBirthtime($db, $account, $birthtime) {
-            $accountID = $account['ID'];
-            $lastChangeBirth = $account['LastChangeBirth'];
-            if ($lastChangeBirth !== NULL) $lastChangeBirth = strtotime($lastChangeBirth);
-            // TODO - Check last change birth time
+            $accountID = $account->ID;
+
+            // If account lastchangebirth is from year ago, we can change birthtime
+            $nowTime = time();
+            $lastBirthTime = $account->LastChangeBirth === null ? 0 : $account->LastChangeBirth;
+            $delta = ($nowTime - $lastBirthTime) / (60 * 60 * 24);
+            if ($delta < 360) {
+                // TODO - Suspicion of hacking
+                ExitWithStatus("Error: you tried to change birthtime too often");
+            }
 
             $command = "UPDATE `Users` SET `Birthtime` = '$birthtime', `LastChangeBirth` = current_timestamp() WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
-            if ($result !== TRUE) {
+            if ($result === false) {
                 ExitWithStatus("Error: saving birthtime failed");
             }
         }
 
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @return string New data token
+         */
         public static function RefreshDataToken($db, $account) {
-            $accountID = $account['ID'];
+            $accountID = $account->ID;
             $newDataToken = RandomString(6);
             $command = "UPDATE `Users` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
-            if ($result !== TRUE) {
+            if ($result === false) {
                 ExitWithStatus("Error: saving achievements failed");
             }
             return $newDataToken;
         }
 
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @return array activity => [ skillID, startTime, duration, comment ]
+         */
         public static function GetActivities($db, $account) {
-            $accountID = $account['ID'];
+            $accountID = $account->ID;
             $command = "SELECT `SkillID`, `StartTime`, `Duration`, `Comment` FROM `Activities` WHERE `UserID` = '$accountID'";
             $rows = $db->QueryArray($command);
-            if ($rows === NULL) {
+            if ($rows === null) {
                 ExitWithStatus("Error: getting activities failed");
             }
             $activities = array();
@@ -101,8 +132,13 @@
         }
 
         // Format : [ ['add|rem',SkillID,DATE,DURATION], ... ]
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param array $activities activity => [ skillID, startTime, duration, comment ]
+         */
         private static function AddActivities($db, $account, $activities) {
-            $accountID = $account['ID'];
+            $accountID = $account->ID;
 
             for ($i = 0; $i < count($activities); $i++) {
                 $activity = $activities[$i];
@@ -115,72 +151,83 @@
 
                 // Check if activity exists
                 $exists = $db->QueryArray("SELECT `ID` FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
-                if ($exists === NULL) ExitWithStatus("Error: adding activity failed");
+                if ($exists === null) ExitWithStatus("Error: adding activity failed");
                 $exists = count($exists) > 0;
 
                 if ($type === 'add') {
                     if ($exists) {
                         $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
-                        if ($r !== TRUE) ExitWithStatus("Error: saving activities failed (remove)");
+                        if ($r === false) ExitWithStatus("Error: saving activities failed (remove)");
                     }
                     $comment = 'NULL';
                     if (!is_null($activity[4]) && !empty($activity[4])) {
                         $comment = "'".$db->Encrypt($activity[4])."'";
                     }
                     $r = $db->Query("INSERT INTO `Activities` (`UserID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES ('$accountID', '$skillID', '$startTime', '$duration', $comment)");
-                    if ($r !== TRUE) ExitWithStatus("Error: saving activities failed");
+                    if ($r === false) ExitWithStatus("Error: saving activities failed");
                 } else if ($type === 'rem' && $exists) {
                     $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
-                    if ($r !== TRUE) ExitWithStatus("Error: saving activities failed (remove)");
+                    if ($r === false) ExitWithStatus("Error: saving activities failed (remove)");
                 }
             }
         }
 
-        // Format : [1, 2, 3, ...]
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param int[] $achievements
+         */
         private static function AddAchievement($db, $account, $achievements) {
-            $accountID = $account['ID'];
-            $dbAchievements = $account['Achievements'];
-
-            for ($i = 0; $i < count($achievements); $i++) {
-                $achievementID = $achievements[$i];
-                if (strlen($dbAchievements) === 0) {
-                    $dbAchievements = $achievementID;
-                } else {
-                    $dbAchievements .= ',' . $achievementID;
-                }
-            }
+            $accountID = $account->ID;
+            $allAchievements = $account->Achievements;
+            array_push($allAchievements, ...$achievements);
+            $dbAchievements = json_encode($allAchievements);
 
             $command = "UPDATE `Users` SET `Achievements` = '$dbAchievements' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
-            if ($result !== TRUE) {
+            if ($result === false) {
                 ExitWithStatus("Error: saving achievements failed");
             }
         }
 
+        /**
+         * @param DataBase $db
+         * @param string $username
+         * @return bool True if username is free, false otherwise
+         */
         public static function PseudoIsFree($db, $username) {
             $p = ucfirst(strtolower($username));
             $command = "SELECT * FROM `Users` WHERE `Username` = '$p'";
             $pseudos = $db->Query($command);
-            $isFree = false;
-            if ($pseudos !== FALSE) {
-                $isFree = $pseudos->num_rows === 0;
+            if ($pseudos !== false) {
+                return $pseudos->num_rows === 0;
             }
-            return $isFree;
+            return false;
         }
 
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param int $title
+         */
         public static function setTitle($db, $account, $title) {
-            $accountID = $account['ID'];
+            $accountID = $account->ID;
             $command = "UPDATE `Users` SET `Title` = '$title' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
-            if ($result !== TRUE) {
+            if ($result === false) {
                 ExitWithStatus("Error: Saving title failed");
             }
         }
 
+        /**
+         * @param DataBase $db
+         * @param int $accountID
+         * @param int $xp
+         */
         private static function setXP($db, $accountID, $xp) {
             $command = "UPDATE `Users` SET `XP` = '$xp' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
-            if ($result !== TRUE) {
+            if ($result === false) {
                 ExitWithStatus("Error: Saving XP failed");
             }
         }
@@ -194,7 +241,7 @@
         public static function GetOx($db, $accountID) {
             $command = "SELECT `Ox` FROM `Users` WHERE `ID` = '$accountID'";
             $query = $db->QueryArray($command);
-            if ($query === NULL || count($query) === 0) {
+            if ($query === null || count($query) === 0) {
                 ExitWithStatus("Error: Getting ox failed");
             }
             $ox = intval($query[0]['Ox']);
@@ -210,7 +257,7 @@
         public static function AddOx($db, $accountID, $value) {
             $command = "UPDATE `Users` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
-            if ($result !== TRUE) {
+            if ($result === false) {
                 ExitWithStatus("Error: Saving title failed");
             }
         }

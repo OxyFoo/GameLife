@@ -17,7 +17,7 @@
         public $keyB;
         private $algorithm;
 
-        public function __construct($init_conn = TRUE) {
+        public function __construct($init_conn = true) {
             list(
                 $this->db_hostname,
                 $this->db_name,
@@ -48,9 +48,9 @@
         }
 
         public function QueryArray($command) {
-            $output = NULL;
+            $output = null;
             $query = $this->Query($command);
-            if ($query !== FALSE) {
+            if ($query !== false) {
                 $output = array();
                 while ($row = $query->fetch_assoc()) {
                     array_push($output, $row);
@@ -79,32 +79,32 @@
         }
 
         /**
-         * Types : add, rem
          * Send mail to user with link to confirm account creation or account deletion
          * @param string $email
          * @param Device $device
+         * @param string $deviceToken
+         * @param int $accountID
+         * @param string $langKey
+         * @param string|'add'|'rem' $type
          */
-        public function SendMail($email, $device, $deviceToken, $accountID, $langKey, $type) {
-            if ($type !== 'add' && $type !== 'rem') return FALSE;
-
-            $deviceID = $device->ID;
-            $deviceName = $device->Name;
+        public function SendMail($email, $device, $deviceToken, $accountID, $langKey, $type="") {
+            if ($type !== 'add' && $type !== 'rem') return false;
 
             $accept = array('action' => 'accept', 'accountID' => $accountID,
-                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
+                            'deviceID' => $device->ID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
             $delete = array('action' => 'delete', 'accountID' => $accountID,
-                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
+                            'deviceID' => $device->ID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
             $view = array('action' => 'view', 'accountID' => $accountID,
-                            'deviceID' => $deviceID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
+                            'deviceID' => $device->ID, 'deviceToken' => $deviceToken, 'lang' => $langKey);
             $actionAccept = base64_encode($this->Encrypt(json_encode($accept)));
             $actionDelete = base64_encode($this->Encrypt(json_encode($delete)));
             $actionView = base64_encode($this->Encrypt(json_encode($view)));
 
-            $output = FALSE;
+            $output = false;
             if ($type === 'add') {
-                $output = SendSigninMail($email, $deviceName, $actionAccept, $actionView, $langKey);
+                $output = SendSigninMail($email, $device->Name, $actionAccept, $actionView, $langKey);
             } else if ($type === 'rem') {
-                $output = SendDeleteAccountMail($email, $deviceName, $actionDelete, $actionView, $langKey);
+                $output = SendDeleteAccountMail($email, $device->Name, $actionDelete, $actionView, $langKey);
             }
             return $output;
         }

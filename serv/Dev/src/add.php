@@ -12,6 +12,12 @@
         return $result;
     }
 
+    /**
+     * @param DataBase $db
+     * @param int $deviceID
+     * @param string $type
+     * @param string $data
+     */
     function AddReport($db, $deviceID, $type, $data) {
         $command = "INSERT INTO `Reports` (`DeviceID`, `Type`, `Content`) VALUES ('$deviceID', '$type', '$data')";
         $result = $db->Query($command);

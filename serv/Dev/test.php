@@ -6,6 +6,9 @@
     require('./src/functions/mail.php');
     require('./src/functions/functions.php');
 
+    require('./src/classes/account.php');
+    require('./src/classes/device.php');
+
     require('./src/sql/app.php');
     require('./src/sql/accounts.php');
     require('./src/sql/devices.php');
@@ -93,7 +96,7 @@
         }
     } else if ($action === "quotes") {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
-        if ($quotes !== NULL) {
+        if ($quotes !== null) {
             foreach ($quotes as $quote) {
                 $q = $quote['Quote'];
                 $a = $quote['Author'];
@@ -102,7 +105,7 @@
         }
     } else if ($action === "getData") {
         $app = $db->QueryArray("SELECT * FROM `App`");
-        if ($app !== NULL) {
+        if ($app !== null) {
             $data = array();
             for ($i = 0; $i < count($app); $i++) {
                 $index = $app[$i]['ID'];
@@ -152,8 +155,8 @@
     } else if ($action === 'date') {
         $account = Accounts::GetByID($db, '1');
         //print_r($account);
-        $date = $account['LastChangeUsername'];
-        if ($date === NULL) {
+        $date = $account->LastChangeUsername;
+        if ($date === null) {
             print_r("AH");
         }
         print_r($date);
@@ -301,7 +304,7 @@
         }
     } else if ($action === 'testTIMESTAMP') {
         $account = Accounts::GetByID($db, 1);
-        $usernameTime = strtotime($account['LastChangeUsername']);
+        $usernameTime = strtotime($account->LastChangeUsername);
         print_r($usernameTime);
     } else if ($action === 'testQuery') {
         // Average: 0.27ms/query

@@ -1,5 +1,9 @@
 <?php
 
+    /**
+     * @param string $langKey Default language is "fr"
+     * @return object JSON object with the language text
+     */
     function GetMailLangText($langKey) {
         $lang_content = file_get_contents("mail/lang.json");
         $lang_json = json_decode($lang_content);
@@ -8,6 +12,11 @@
         if ($lang_json->$langKey) $selected_lang = $langKey;
         return $lang_json->$selected_lang;
     }
+
+    /**
+     * @param string $subject Subject of the email
+     * @return array Headers of the email
+     */
     function GetMailHeader($subject) {
         $headers = array(
             'MIME-Version' => '1.0',
@@ -19,13 +28,14 @@
         );
         return $headers;
     }
+
     function GetMailContent($title, $text, $textButton, $textLink, $deviceName, $actionButton, $actionView) {
         global $URL; // In config.php
 
         $link_button = "$URL?data=$actionButton";
         $link_view = "$URL?data=$actionView&action=$actionButton";
 
-        $content = $actionView !== NULL ? str_replace("%link%", $link_view, $textLink) : '';
+        $content = $actionView !== null ? str_replace("%link%", $link_view, $textLink) : '';
         $content .= file_get_contents("mail/mail-check.html");
         $content = str_replace("%title%", $title, $content);
         $content = str_replace("%text%", $text, $content);

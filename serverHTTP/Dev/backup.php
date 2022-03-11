@@ -35,7 +35,7 @@
         TextToFile($table, $content);
     }
 
-    BackupTable('Users');
+    BackupTable('Accounts');
     BackupTable('Devices');
 
 ?>

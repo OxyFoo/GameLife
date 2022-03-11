@@ -106,7 +106,7 @@
         public static function RefreshMailToken($db, $deviceID, $accountID) {
             $token = RandomString();
             $result1 = $db->Query("UPDATE `Devices` SET `Token` = '$token' WHERE `ID` = '$deviceID'");
-            $result2 = $db->Query("UPDATE `Users` SET `LastSendMail` = current_timestamp() WHERE `ID` = '$accountID'");
+            $result2 = $db->Query("UPDATE `Accounts` SET `LastSendMail` = current_timestamp() WHERE `ID` = '$accountID'");
             if ($result1 === false || $result2 === false) {
                 ExitWithStatus("Error: Refreshing mail token in DB failed");
             }

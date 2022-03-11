@@ -61,7 +61,7 @@
             if (!UsernameIsCorrect($newUsername)) return 'incorrect';
             if (!self::PseudoIsFree($db, $newUsername)) return 'alreadyUsed';
 
-            $command = "UPDATE `Users` SET `Username` = '$newUsername', `LastChangeUsername` = '$nowText' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `Username` = '$newUsername', `LastChangeUsername` = '$nowText' WHERE `ID` = '$accountID'";
             $result_pseudo = $db->Query($command);
             if ($result_pseudo === false) ExitWithStatus("Error: Saving username failed");
 
@@ -85,7 +85,7 @@
                 ExitWithStatus("Error: you tried to change birthtime too often");
             }
 
-            $command = "UPDATE `Users` SET `Birthtime` = '$birthtime', `LastChangeBirth` = current_timestamp() WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `Birthtime` = '$birthtime', `LastChangeBirth` = current_timestamp() WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: saving birthtime failed");
@@ -100,7 +100,7 @@
         public static function RefreshDataToken($db, $account) {
             $accountID = $account->ID;
             $newDataToken = RandomString(6);
-            $command = "UPDATE `Users` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: saving achievements failed");
@@ -183,7 +183,7 @@
             array_push($allAchievements, ...$achievements);
             $dbAchievements = json_encode($allAchievements);
 
-            $command = "UPDATE `Users` SET `Achievements` = '$dbAchievements' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `Achievements` = '$dbAchievements' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: saving achievements failed");
@@ -197,7 +197,7 @@
          */
         public static function PseudoIsFree($db, $username) {
             $p = ucfirst(strtolower($username));
-            $command = "SELECT * FROM `Users` WHERE `Username` = '$p'";
+            $command = "SELECT * FROM `Accounts` WHERE `Username` = '$p'";
             $pseudos = $db->Query($command);
             if ($pseudos !== false) {
                 return $pseudos->num_rows === 0;
@@ -212,7 +212,7 @@
          */
         public static function setTitle($db, $account, $title) {
             $accountID = $account->ID;
-            $command = "UPDATE `Users` SET `Title` = '$title' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `Title` = '$title' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Saving title failed");
@@ -225,7 +225,7 @@
          * @param int $xp
          */
         private static function setXP($db, $accountID, $xp) {
-            $command = "UPDATE `Users` SET `XP` = '$xp' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `XP` = '$xp' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Saving XP failed");
@@ -239,7 +239,7 @@
          * @return int Ox amount
          */
         public static function GetOx($db, $accountID) {
-            $command = "SELECT `Ox` FROM `Users` WHERE `ID` = '$accountID'";
+            $command = "SELECT `Ox` FROM `Accounts` WHERE `ID` = '$accountID'";
             $query = $db->QueryArray($command);
             if ($query === null || count($query) === 0) {
                 ExitWithStatus("Error: Getting ox failed");
@@ -255,7 +255,7 @@
          * @param int $value Value to add or negative to remove
          */
         public static function AddOx($db, $accountID, $value) {
-            $command = "UPDATE `Users` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Saving title failed");

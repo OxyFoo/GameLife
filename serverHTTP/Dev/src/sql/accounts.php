@@ -10,7 +10,7 @@
          * @return Account|null
          */
         public static function Add($db, $username, $email) {
-            $command = "INSERT INTO `Users` (`Username`, `Email`) VALUES ('$username', '$email')";
+            $command = "INSERT INTO `Accounts` (`Username`, `Email`) VALUES ('$username', '$email')";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Adding device in DB failed");
@@ -25,7 +25,7 @@
          */
         public static function GetByID($db, $ID) {
             $account = null;
-            $command = "SELECT * FROM `Users` WHERE `ID` = '$ID'";
+            $command = "SELECT * FROM `Accounts` WHERE `ID` = '$ID'";
             $accounts = $db->QueryArray($command);
             if ($accounts !== null && count($accounts) === 1) {
                 $account = new Account($accounts[0]);
@@ -40,7 +40,7 @@
          */
         public static function GetByEmail($db, $email) {
             $account = null;
-            $command = "SELECT * FROM `Users` WHERE `Email` = '$email'";
+            $command = "SELECT * FROM `Accounts` WHERE `Email` = '$email'";
             $accounts = $db->QueryArray($command);
 
             if ($accounts !== null && count($accounts) === 1) {
@@ -65,7 +65,7 @@
             array_push($cell, $deviceID);
             $newCell = json_encode($cell);
 
-            $command = "UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Device adding failed");
@@ -91,7 +91,7 @@
             unset($cell[array_search($deviceID, $cell)]);
             $newCell = json_encode($cell);
 
-            $command = "UPDATE `Users` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
+            $command = "UPDATE `Accounts` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Device removing failed");
@@ -120,7 +120,7 @@
          * @param int $accountID
          */
         public static function RefreshLastDate($db, $accountID) {
-            $result = $db->Query("UPDATE `Users` SET `LastConnDate` = current_timestamp() WHERE `ID` = '$accountID'");
+            $result = $db->Query("UPDATE `Accounts` SET `LastConnDate` = current_timestamp() WHERE `ID` = '$accountID'");
             if ($result === false) {
                 ExitWithStatus("Error: Saving last date failed");
             }
@@ -134,7 +134,7 @@
          */
         public static function Delete($db, $accountID) {
             $remActivities = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID'");
-            $remUser = $db->Query("DELETE FROM `Users` WHERE `ID` = '$accountID'");
+            $remUser = $db->Query("DELETE FROM `Accounts` WHERE `ID` = '$accountID'");
             return $remActivities && $remUser;
         }
     }

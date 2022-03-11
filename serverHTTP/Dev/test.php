@@ -125,7 +125,7 @@
         $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$hashTest' WHERE `ID` = 'Hashes'");
     } else if ($action === "getAccount") {
         $ID = 1;
-        $command = "SELECT * FROM `Users` WHERE `ID` = '$ID'";
+        $command = "SELECT * FROM `Accounts` WHERE `ID` = '$ID'";
         $account = $db->Query($command);
         $accountData = $account->fetch_assoc();
         $activities = $db->Decrypt($accountData['Activities']);

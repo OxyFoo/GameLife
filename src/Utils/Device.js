@@ -1,3 +1,5 @@
+import DeviceInfo from 'react-native-device-info';
+
 /**
  * Get device informations
  * @param {Boolean} OS - true to get the name and the version of the OS

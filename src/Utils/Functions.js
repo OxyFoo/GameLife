@@ -1,5 +1,3 @@
-import DeviceInfo from 'react-native-device-info';
-
 function TwoDigit(n) {
     return ('00' + n).slice(-2);
 }

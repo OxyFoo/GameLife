@@ -74,6 +74,7 @@ class Activities {
         return activities;
     }
     /**
+     * Return all activities (save and unsaved) sorted by start time (ascending)
      * @returns {Array<Activity>}
      */
     Get() {

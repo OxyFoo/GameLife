@@ -56,7 +56,7 @@ class Settings extends BackSettings {
 
                 <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
-                <Button style={styles.margin} onPress={() => {}} color='main1' borderRadius={16}>[{lang['input-tuto-again']}]</Button>
+                <Button style={styles.margin} onPress={() => {}} color='main1' borderRadius={16}>{'[' + lang['input-tuto-again'] + ']'}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={this.state.sendingMail}>{lang['input-delete-account']}</Button>
             </Page>
         )

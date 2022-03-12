@@ -113,6 +113,12 @@ class Informations {
         this.adRemaining--;
         this.user.interface.console.AddLog('info', 'Remaining ad:', this.adRemaining);
         this.user.LocalSave();
+
+        if (this.adRemaining <= 0) {
+            const title = langManager.curr['server']['alert-adempty-title'];
+            const message = langManager.curr['server']['alert-adempty-text'];
+            this.user.interface.popup.Open('ok', [ title, message ], undefined, false);
+        }
     }
 
     /**

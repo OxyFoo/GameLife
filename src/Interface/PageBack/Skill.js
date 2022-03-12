@@ -8,8 +8,10 @@ class BackSkill extends React.Component {
     constructor(props) {
         super(props);
 
+        this.enabled = true;
         if (typeof(props.args) === 'undefined' || !props.args.hasOwnProperty('skillID')) {
-            user.interface.BackPage();
+            this.enabled = false;
+            user.interface.BackPage(true);
             return;
         }
 
@@ -30,15 +32,9 @@ class BackSkill extends React.Component {
         }
         this.stats = Object.values(skill.Stats);
         this.xml = dataManager.skills.GetXmlByLogoID(skill.LogoID);
-        this.history = [];
+
         const userActivities = user.activities.Get();
-        for (let a in userActivities) {
-            const activity = userActivities[a];
-            if (activity.skillID === skillID) {
-                this.history.push(activity);
-            }
-        }
-        this.history.reverse();
+        this.history = userActivities.filter((a) => a.skillID === skillID).reverse();
     }
 
     addActivity = () => {

@@ -33,17 +33,29 @@ import Test from '../Interface/PageFront/Test';
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
  */
 
-const debugMode = false;
-const pageNumber = 5;
+const DEBUG_MODE = false;
+const PAGE_NUMBER = 5;
+
+/** @type {Array<PageName>} */
+const CACHE_IGNORE = [
+    'about',
+    'onboarding',
+    'loading',
+    'login',
+    'waitinternet',
+    'waitmail',
+    'display',
+    'skill'
+];
 
 class PageManager extends React.Component{
     state = {
         pageIndex: 0,
-        pageIndexNext: Math.min(1, pageNumber - 1),
+        pageIndexNext: Math.min(1, PAGE_NUMBER - 1),
         pageArguments: {},
-        pages: Array(pageNumber).fill(''),
-        pagesContent: Array(pageNumber).fill(null),
-        pagesAnimations: Array(pageNumber).fill(0).map(() => new Animated.Value(0)),
+        pages: Array(PAGE_NUMBER).fill(''),
+        pagesContent: Array(PAGE_NUMBER).fill(null),
+        pagesAnimations: Array(PAGE_NUMBER).fill(0).map(() => new Animated.Value(0)),
 
         animTransition: new Animated.Value(1),
         animTheme: new Animated.Value(0),
@@ -110,7 +122,18 @@ class PageManager extends React.Component{
         return true;
     }
 
-    BackPage = () => {
+    setStateSync = (state) => new Promise((resolve) => this.setState(state, resolve));
+
+    /**
+     * Try to get last page content
+     * @param {Boolean} [force=false] If true, try to get back until page changed
+     * @returns {Boolean} True if page changed
+     */
+    BackPage = (force = false) => {
+        if (force && this.changing) {
+            setTimeout(() => this.BackPage(true), 100);
+            return false;
+        }
         if (this.changing) return false;
         if (this.path.length < 1) {
             const title = langManager.curr['home']['alert-exit-title'];
@@ -129,13 +152,13 @@ class PageManager extends React.Component{
 
     /**
      * Open page
-     * @param {PageName} newpage 
-     * @param {Object} args 
-     * @param {Boolean} ignorePage 
-     * @param {Boolean} forceUpdate 
+     * @param {PageName} newpage
+     * @param {Object} pageArguments
+     * @param {Boolean} ignorePage
+     * @param {Boolean} forceUpdate
      * @returns 
      */
-    ChangePage = (newpage, args, ignorePage = false, forceUpdate = false) => {
+    ChangePage = (newpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
 
         const prevPage = this.state.pages[this.state.pageIndex];
@@ -158,11 +181,8 @@ class PageManager extends React.Component{
             this.path.push([prevPage, this.state.pageArguments]);
         }
 
-        const newArgs = !IsUndefined(args) ? args : {};
-        this.setState({ pageArguments: newArgs, ignorePage: ignorePage });
-
         this.changing = true;
-        this.pageAnimation(newpage);
+        this.setState({ pageArguments, ignorePage }, () => this.pageAnimation(newpage));
 
         return true;
     }
@@ -171,28 +191,16 @@ class PageManager extends React.Component{
         TimingAnimation(this.state.animTheme, index, 100).start();
     }
 
-    pageAnimation = async (newpage) => {
+    pageAnimation = async (newPage) => {
         const animDuration = 120;
         this.T = new Date().getTime();
 
         // Bottom bar selected index animation
         const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
-        const bottomBarShow = bottomBarPages.includes(newpage);
-        const index = bottomBarPages.indexOf(newpage);
+        const bottomBarShow = bottomBarPages.includes(newPage);
+        const index = bottomBarPages.indexOf(newPage);
         const newBarState = { bottomBarShow: bottomBarShow, bottomBarIndex: index !== -1 ? index : 2 };
         if (!bottomBarShow) this.setState(newBarState); // Hide bar before animation if needed
-
-        const ShowNewPage = () => {
-            this.changing = false;
-            this.setState({ ...newBarState, pageIndex: nextIndex }, () => {
-                const elapsedTime = (new Date().getTime()) - this.T;
-                if (debugMode) console.log('Page changed in ' + elapsedTime + 'ms');
-            });
-            Animated.parallel([
-                TimingAnimation(animTransition, 0, animDuration),
-                TimingAnimation(pagesAnimations[nextIndex], 1, animDuration)
-            ]).start();
-        };
 
         const { pages, pageIndex, pageIndexNext, pagesContent, pagesAnimations, pageArguments, animTransition } = this.state;
 
@@ -201,18 +209,40 @@ class PageManager extends React.Component{
         TimingAnimation(pagesAnimations[pageIndex], 0, animDuration).start();
 
         let nextIndex = pageIndex;
-        if (pages.includes(newpage)) {
-            nextIndex = pages.indexOf(newpage);
-            ShowNewPage();
+
+        // Not keep cache for some pages
+        if (pages.some(p => CACHE_IGNORE.indexOf(p) !== -1)) {
+            const notInCachePage = pages.find(p => CACHE_IGNORE.indexOf(p) !== -1);
+            nextIndex = pages.indexOf(notInCachePage);
+            pages.splice(nextIndex, 1, '');
+            pagesContent.splice(nextIndex, 1, null);
+            await this.setStateSync({ pages, pagesContent });
+        }
+
+        if (pages.includes(newPage)) {
+            nextIndex = pages.indexOf(newPage);
         } else {
             if (pages[pageIndex]) {
                 nextIndex = pageIndexNext;
-                this.setState({ pageIndexNext: (pageIndexNext + 1) % pageNumber });
+                if (!CACHE_IGNORE.includes(newPage)) {
+                    this.setState({ pageIndexNext: (pageIndexNext + 1) % PAGE_NUMBER });
+                }
             }
-            pages.splice(nextIndex, 1, newpage);
-            pagesContent.splice(nextIndex, 1, this.getPageContent(newpage, pageArguments));
-            this.setState({ pages, pagesContent }, ShowNewPage);
+            pages.splice(nextIndex, 1, newPage);
+            pagesContent.splice(nextIndex, 1, this.getPageContent(newPage, pageArguments));
+            await this.setStateSync({ pages, pagesContent });
         }
+
+        await this.setStateSync({ ...newBarState, pageIndex: nextIndex });
+
+        this.changing = false;
+        const elapsedTime = (new Date().getTime()) - this.T;
+        if (DEBUG_MODE) console.log('Page changed in ' + elapsedTime + 'ms');
+
+        Animated.parallel([
+            TimingAnimation(animTransition, 0, animDuration),
+            TimingAnimation(pagesAnimations[nextIndex], 1, animDuration)
+        ]).start();
     }
 
     GetCurrentPage = () => {
@@ -267,7 +297,7 @@ class PageManager extends React.Component{
             return <Animated.View key={'page-'+index} style={style} pointerEvents={event}>{content}</Animated.View>;
         }
 
-        if (debugMode) console.log(this.state.pages);
+        if (DEBUG_MODE) console.log(this.state.pages);
 
         return (
             <LinearGradient style={fullscreen} colors={darkBackground}>
@@ -276,7 +306,7 @@ class PageManager extends React.Component{
                     <LinearGradient style={fullscreen} colors={lightBackground} />
                 </Animated.View>
 
-                {Range(pageNumber).map(i => newPage(i))}
+                {Range(PAGE_NUMBER).map(i => newPage(i))}
                 <Animated.View style={overlayStyle} pointerEvents='none' />
 
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />

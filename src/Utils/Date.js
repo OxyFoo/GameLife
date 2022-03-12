@@ -1,5 +1,5 @@
 import langManager from "../Managers/LangManager";
-import { IsUndefined } from "./Functions";
+import { IsUndefined, TwoDigit } from "./Functions";
 
 const DAYS = {
     sunday: 0,

@@ -29,6 +29,7 @@ class Skill extends BackSkill {
         const userStats = user.experience.GetExperience().xpInfo;
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
+        if (!this.enabled) return null;
         return (
             <>
                 <Page canScrollOver={false} bottomOffset={96}>

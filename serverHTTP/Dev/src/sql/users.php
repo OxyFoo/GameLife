@@ -81,7 +81,7 @@
             $lastBirthTime = $account->LastChangeBirth === null ? 0 : $account->LastChangeBirth;
             $delta = ($nowTime - $lastBirthTime) / (60 * 60 * 24);
             if ($delta < 360) {
-                // TODO - Suspicion of hacking
+                // Suspicion of cheating
                 ExitWithStatus("Error: you tried to change birthtime too often");
             }
 
@@ -258,7 +258,20 @@
             $command = "UPDATE `Accounts` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
             if ($result === false) {
-                ExitWithStatus("Error: Saving title failed");
+                ExitWithStatus("Error: Editing ox failed");
+            }
+        }
+
+        /**
+         * Decrement ad remaining
+         * @param DataBase $db
+         * @param int $accountID
+         */
+        public static function DecrementAdRemaining($db, $accountID) {
+            $command = "UPDATE `Accounts` SET `AdRemaining` = `AdRemaining` - '1' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result === false) {
+                ExitWithStatus("Error: Decrement AdRemaining failed");
             }
         }
     }

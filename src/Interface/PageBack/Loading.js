@@ -20,7 +20,7 @@ class BackLoading extends React.Component {
 
     nextStep = () => this.setState({ icon: this.state.icon + 1 });
     onToucheStart = (event) => { this.startY = event.nativeEvent.pageY; }
-    onToucheEnd = (event) => { if (event.nativeEvent.pageY - this.startY < -200) user.interface.EnableConsole(); }
+    onToucheEnd = (event) => { if (event.nativeEvent.pageY - this.startY < -200) user.interface.console.Enable(); }
 
     async initialisation() {
         await user.settings.Load();
@@ -109,6 +109,9 @@ class BackLoading extends React.Component {
             DisableMorningNotifications();
         }
 
+        if (user.informations.adRemaining === 0) {
+            user.interface.console.AddLog('info', 'No more ads available');
+        }
         user.admob.LoadAds();
         //await user.admob.ShowPopup();
 

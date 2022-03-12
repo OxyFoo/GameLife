@@ -44,8 +44,10 @@ class BackShop extends React.Component {
                 break;
             case 'rewarded_earned_reward':
                 const response = await user.server.AdWatched();
+                user.interface.console.AddLog('info', 'Ad watched', response);
                 if (response.status === 200 && response.content['status'] === 'ok') {
                     user.informations.ox = response.content['ox'];
+                    user.informations.DecrementAdRemaining();
                     this.forceUpdate();
                 }
                 break;

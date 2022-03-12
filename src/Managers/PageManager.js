@@ -50,8 +50,7 @@ class PageManager extends React.Component{
 
         ignorePage: false,
         bottomBarShow: false,
-        bottomBarIndex: -1,
-        console: false
+        bottomBarIndex: -1
     }
 
     constructor(props) {
@@ -110,8 +109,6 @@ class PageManager extends React.Component{
 
         return true;
     }
-
-    EnableConsole = () => this.setState({ console: true });
 
     BackPage = () => {
         if (this.changing) return false;
@@ -288,7 +285,7 @@ class PageManager extends React.Component{
                 <ScreenList ref={ref => { if (ref !== null) this.screenList = ref }} />
                 <ScreenInput ref={ref => { if (ref !== null) this.screenInput = ref }} />
 
-                <Console ref={ref => { if (ref !== null) this.console = ref }} enable={this.state.console} />
+                <Console ref={ref => { if (ref !== null) this.console = ref }} />
             </LinearGradient>
         )
     }

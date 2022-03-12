@@ -14,17 +14,19 @@ import { SpringAnimation } from '../../Utils/Animations';
 const LEVEL_CONSOLE = 2;
 
 const ConsoleProps = {
-    enable: false
 }
 
 class Console extends React.Component {
     state = {
+        enabled: false,
         opened: false,
         animation: new Animated.Value(0),
         animationButton: new Animated.Value(0),
 
         debug: []
     }
+
+    Enable = () => this.setState({ enabled: true });
 
     /**
      * Show message in app console
@@ -33,8 +35,11 @@ class Console extends React.Component {
      * @param {Array<any>} params
      */
     AddLog = (type, text, ...params) => {
+        if (type === 'error') this.Enable();
+
         // Add to app console
-        const newMessage = [type, text + params.join(' ')];
+        const toString = (v) => typeof(v) === 'object' ? JSON.stringify(v) : v;
+        const newMessage = [type, [text, ...params].map(toString).join(' ')];
         this.setState({ debug: [...this.state.debug, newMessage] });
 
         // Add to terminal
@@ -78,7 +83,7 @@ class Console extends React.Component {
         );
     }
     render() {
-        if (!this.props.enable) return null;
+        if (!this.state.enabled) return null;
 
         const interY = { inputRange: [0, 1], outputRange: [-256, 0] };
         const translateY = { transform: [{ translateY: this.state.animation.interpolate(interY) }] };

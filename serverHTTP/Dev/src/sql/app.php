@@ -2,6 +2,7 @@
 
     /**
      * Retrieve the application version and the database hash
+     * @param DataBase $db
      */
     function GetAppData($db) {
         $appData = array('Version' => 0, 'Hashes' => '', 'Maintenance' => false, 'News' => array());
@@ -28,28 +29,36 @@
         }
 
         if ($lastHashRefresh > 60) {
-            // Refresh database hash
-            $db_all = GetAllInternalData($db);
-
-            // Get all hashes
-            $hashSkills = md5(json_encode(array($db_all['skills'], $db_all['skillsIcon'], $db_all['skillsCategory'])));
-            $hashEquips = md5(json_encode(array($db_all['achievements'], $db_all['titles'])));
-            $hashApptxt = md5(json_encode(array($db_all['contributors'], $db_all['quotes'])));
-            $newHashes = array(
-                'skills' => $hashSkills,
-                'equips' => $hashEquips,
-                'apptxt' => $hashApptxt
-            );
-
-            // Refresh `App` in DB
-            $newHashesString = json_encode($newHashes);
-            $result = $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHashesString' WHERE `ID` = 'Hashes'");
-            if ($result !== false && $newHashes !== $appData['Hashes']) {
-                $appData['Hashes'] = $newHashes;
-            }
+            // RefreshHashes($db);
         }
 
         return $appData;
+    }
+
+    /**
+     * Calculate hashes of all internal data
+     * @param DataBase $db
+     */
+    function RefreshHashes($db) {
+        // Refresh database hash
+        $db_all = GetAllInternalData($db);
+
+        // Get all hashes
+        $hashSkills = md5(json_encode(array($db_all['skills'], $db_all['skillsIcon'], $db_all['skillsCategory'])));
+        $hashEquips = md5(json_encode(array($db_all['achievements'], $db_all['titles'])));
+        $hashApptxt = md5(json_encode(array($db_all['contributors'], $db_all['quotes'])));
+        $newHashes = array(
+            'skills' => $hashSkills,
+            'equips' => $hashEquips,
+            'apptxt' => $hashApptxt
+        );
+
+        // Refresh `App` in DB
+        $newHashesString = json_encode($newHashes);
+        $result = $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHashesString' WHERE `ID` = 'Hashes'");
+        if ($result === false) {
+            ExitWithStatus('Failed to update database hashes');
+        }
     }
 
 ?>

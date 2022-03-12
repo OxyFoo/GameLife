@@ -217,6 +217,7 @@
                 $userData['birthtime'] = $account->Birthtime;
                 $userData['lastbirthtime'] = $account->LastChangeBirth;
                 $userData['ox'] = $account->Ox;
+                $userData['adRemaining'] = $account->AdRemaining;
                 $userData['achievements'] = $account->Achievements;
             }
 
@@ -281,8 +282,6 @@
             $token = $this->data['token'];
             if (!isset($token)) return;
 
-            // TODO - Check if there is ad to watch & return remain
-
             $dataFromToken = Devices::GetDataFromToken($this->db, $token);
             if ($dataFromToken === null) return;
             if (!$dataFromToken['inTime']) {
@@ -292,10 +291,17 @@
 
             $oxAmount = 10;
             $accountID = $dataFromToken['accountID'];
-            Users::AddOx($this->db, $accountID, $oxAmount);
-            $ox = Users::GetOx($this->db, $accountID);
+            $account = Accounts::GetByID($this->db, $accountID);
 
-            $this->output['ox'] = $ox;
+            if ($account->AdRemaining === 0) {
+                // Suspicion of cheating
+                ExitWithStatus('AaaahhhhaAAAAA');
+            }
+
+            Users::DecrementAdRemaining($this->db, $accountID);
+            Users::AddOx($this->db, $accountID, $oxAmount);
+
+            $this->output['ox'] = $account->Ox + $oxAmount;
             $this->output['status'] = 'ok';
         }
 

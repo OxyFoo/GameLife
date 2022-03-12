@@ -59,6 +59,12 @@
             return $output;
         }
 
+        /**
+         * @param string $table
+         * @param array $cells Format { 'key' => 'value' }
+         * @param array $conditions Format { 'key' => 'value' }
+         * @return \mysqli_result|bool
+         */
         public function QueryEdit($table, $cells, $conditions) {
             $formatCells = array();
             $formatConds = array();

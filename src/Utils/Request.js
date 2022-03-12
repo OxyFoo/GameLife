@@ -1,6 +1,6 @@
 const URL = __DEV__ ?
     "https://oxyfoo.com/App/GameLife/Dev/app.php" :
-    "https://oxyfoo.com/App/GameLife/Public/app.php";
+    "https://oxyfoo.com/App/GameLife/Prod/app.php";
 
 const defaultHeaders = {
     'Accept': 'application/json',

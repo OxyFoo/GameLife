@@ -61,7 +61,7 @@
                 ExitWithStatus("Error: Invalid cell name");
             }
             $accountID = $account->ID;
-            $cell = json_decode($account->{$cellName}, true);
+            $cell = $account->{$cellName};
             array_push($cell, $deviceID);
             $newCell = json_encode($cell);
 
@@ -83,7 +83,7 @@
                 ExitWithStatus("Error: Invalid cell name");
             }
             $accountID = $account->ID;
-            $cell = json_decode($account->{$cellName}, true);
+            $cell = $account->{$cellName};
             if (!in_array($deviceID, $cell)) {
                 ExitWithStatus("Error: Device removing failed (device not found)");
             }

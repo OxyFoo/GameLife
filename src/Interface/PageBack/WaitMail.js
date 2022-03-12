@@ -14,11 +14,13 @@ class BackWaitmail extends React.Component {
 
     componentDidMount() {
         this.tick = setInterval(this.onTick, 1000);
+        this.login = setInterval(this.Login, REFRESH_DELAY * 1000);
         this.Login();
     }
 
     componentWillUnmount() {
         clearInterval(this.tick);
+        clearInterval(this.login);
     }
 
     onTick = () => {
@@ -44,18 +46,15 @@ class BackWaitmail extends React.Component {
             await user.settings.Save();
             user.interface.ChangePage('loading', undefined, true);
         }
-
         else if (status === 'free') {
             // Error, account not exists
             this.onBack();
         } else if (status === 'newDevice') {
             this.setState({ time: true });
-            setTimeout(this.Login, REFRESH_DELAY * 1000);
         } else if (status === 'waitMailConfirmation') {
             this.setState({ time: remainMailTime });
-            setTimeout(this.Login, REFRESH_DELAY * 1000);
         } else if (status === 'remDevice') {
-            this.Login();
+            await this.Login();
         }
     }
 }

@@ -30,7 +30,7 @@ class BackLogin extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(this.checkConnection, 500);
+        this.checkConnection();
     }
 
     checkConnection = async () => {
@@ -86,12 +86,13 @@ class BackLogin extends React.Component {
         }
 
         if (this.state.signinMode) {
-            await this.Signin();
+            const success = await this.Signin();
+            if (!success) this.setState({ loading: false });
         } else {
             // Login
             const { status } = await user.server.Connect(email);
             if (status === 'free') {
-                this.setState({ signinMode: true });
+                this.setState({ loading: false, signinMode: true });
                 TimingAnimation(this.state.animSignin, 1, 400, false).start();
             } else if (status === 'ok' || status === 'ban') {
                 user.settings.email = email;
@@ -104,11 +105,15 @@ class BackLogin extends React.Component {
                 user.interface.ChangePage('waitmail', { email: email });
             } else if (status === 'error') {
                 this.checkConnection();
+                this.setState({ loading: false });
             }
         }
-        this.setState({ loading: false });
     }
 
+    /**
+     * Signin, return true if success (& next page loading) or false if error
+     * @returns {Promise<boolean>}
+     */
     async Signin() {
         if (!this.state.username.length) {
             this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoWrong'] });
@@ -141,15 +146,16 @@ class BackLogin extends React.Component {
             });
             this.onBack();
         }
-
         else if (signinStatus === 'ok') {
             if (this.state.errorUsername.length) {
-                this.setState({ errorUsername: '' });
+                await new Promise(resolve => this.setState({ errorUsername: '' }, resolve));
             }
             user.settings.email = email;
             await user.settings.Save();
             user.interface.ChangePage('waitmail', { email: email });
+            return true;
         }
+        return false;
     }
 
     onBack = () => {

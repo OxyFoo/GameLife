@@ -6,7 +6,6 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Sleep } from '../../Utils/Functions';
-import { PlayStartSound } from '../../Utils/Sound';
 import { DisableMorningNotifications, EnableMorningNotifications } from '../../Utils/Notifications';
 
 class BackLoading extends React.Component {
@@ -24,11 +23,6 @@ class BackLoading extends React.Component {
 
     async initialisation() {
         await user.settings.Load();
-
-        // Play sound
-        if (user.settings.startAudio) {
-            PlayStartSound();
-        }
 
         // Ping request
         await user.server.Ping();

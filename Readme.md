@@ -14,7 +14,6 @@ En 3 mots : Gestion RPG IRL
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
-* [React Native Sound Player](https://www.npmjs.com/package/react-native-sound-player)
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
 * [React Native Push Notification](https://www.npmjs.com/package/react-native-push-notification) and [Push Notification IOS](https://github.com/react-native-push-notification/ios)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)

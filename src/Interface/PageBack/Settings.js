@@ -19,7 +19,6 @@ class BackSettings extends React.Component {
         this.state = {
             selectedLang: current,
             dataLangs: dataLangs,
-            switchStartAudio: user.settings.startAudio,
             switchMorningNotifs: user.settings.morningNotifications,
             sendingMail: false
         }
@@ -40,11 +39,6 @@ class BackSettings extends React.Component {
             user.interface.forceUpdate();
             user.settings.Save();
         }
-    }
-    onChangeStartAudio = (enabled) => {
-        this.setState({ switchStartAudio: enabled });
-        user.settings.startAudio = enabled;
-        user.settings.Save();
     }
     onChangeMorningNotifications = (enabled) => {
         if (enabled) EnableMorningNotifications();

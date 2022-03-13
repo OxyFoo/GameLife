@@ -39,14 +39,6 @@ class Settings extends BackSettings {
                 />
 
                 <View style={styles.inline}>
-                    <Text style={styles.inlineText}>{lang['input-start-sound']}</Text>
-                    <Switch
-                        value={this.state.switchStartAudio}
-                        onValueChanged={this.onChangeStartAudio}
-                    />
-                </View>
-
-                <View style={styles.inline}>
                     <Text style={styles.inlineText}>{lang['input-daily-notif']}</Text>
                     <Switch
                         value={this.state.switchMorningNotifs}

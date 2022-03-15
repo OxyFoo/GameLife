@@ -6,24 +6,24 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { PageHeader } from '../Widgets';
-import { Page, Text, Button, Switch, TextSwitch, ComboBox, Container } from '../Components';
+import { Page, Text, Button, Switch, TextSwitch, ComboBox } from '../Components';
 import themeManager from '../../Managers/ThemeManager';
 
 class Settings extends BackSettings {
-    render() {
+    render = () => {
         const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
 
         return (
-            <Page ref={ref => { if (ref !== null) this.pageRef = ref; }} bottomOffset={0}>
+            <Page ref={ref => !this.state.pageRef && this.setState({ pageRef: ref })} bottomOffset={0}>
                 <PageHeader onBackPress={user.interface.BackPage} />
 
                 <Button style={styles.margin} color='main2' borderRadius={16} onPress={this.openAbout}>{lang['input-about']}</Button>
 
                 <ComboBox
+                    pageRef={this.state.pageRef}
                     style={styles.margin}
                     title={lang['input-langage']}
-                    pageRef={this.pageRef}
                     data={this.state.dataLangs}
                     selectedValue={this.state.selectedLang.value}
                     onSelect={this.onChangeLang}
@@ -33,8 +33,9 @@ class Settings extends BackSettings {
                 <TextSwitch
                     style={styles.margin}
                     onChange={this.onChangeTheme}
-                    textLeft={langThemes['Dark']}
-                    textRight={langThemes['Light']}
+                    // TODO - Finish themes
+                    textLeft={'[' + langThemes['Dark'] + ']'}
+                    textRight={'[' + langThemes['Light'] + ']'}
                     start={themeManager.selectedTheme === 'Dark' ? 'left' : 'right'}
                 />
 

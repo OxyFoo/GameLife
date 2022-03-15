@@ -8,6 +8,7 @@ import { Button, Icon, Page, Swiper, Text } from '../Components';
 import themeManager from '../../Managers/ThemeManager';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const IMAGE_WIDTH = SCREEN_WIDTH - 64;
 
 class Onboarding extends BackOnboarding {
     renderPage0 = () => {
@@ -33,7 +34,7 @@ class Onboarding extends BackOnboarding {
         const lang = langManager.curr['onboarding'];
         return (
             <View style={styles.onboarding}>
-                <Icon style={styles.onboardingImage} size={SCREEN_WIDTH * .9} icon='onboarding1' />
+                <Icon style={styles.onboardingImage} size={IMAGE_WIDTH} icon='onboarding1' />
                 <Text fontSize={24}>{lang['page1']}</Text>
             </View>
         );
@@ -43,7 +44,7 @@ class Onboarding extends BackOnboarding {
         const lang = langManager.curr['onboarding'];
         return (
             <View style={styles.onboarding}>
-                <Icon style={styles.onboardingImage} size={SCREEN_WIDTH * .9} icon='onboarding2' />
+                <Icon style={styles.onboardingImage} size={IMAGE_WIDTH} icon='onboarding2' />
                 <Text fontSize={24}>{lang['page2']}</Text>
             </View>
         );
@@ -53,7 +54,7 @@ class Onboarding extends BackOnboarding {
         const lang = langManager.curr['onboarding'];
         return (
             <View style={styles.onboarding}>
-                <Icon style={styles.onboardingImage} size={SCREEN_WIDTH * .9} icon='onboarding3' />
+                <Icon style={styles.onboardingImage} size={IMAGE_WIDTH} icon='onboarding3' />
                 <Text fontSize={24}>{lang['page3']}</Text>
             </View>
         );
@@ -88,9 +89,7 @@ class Onboarding extends BackOnboarding {
 
 const styles = StyleSheet.create({
     parent: {
-        //flex: 1,
         height: '100%',
-        padding: 16,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 16

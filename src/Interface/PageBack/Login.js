@@ -98,11 +98,11 @@ class BackLogin extends React.Component {
                 user.settings.email = email;
                 user.settings.connected = true;
                 await user.settings.Save();
-                user.interface.ChangePage('loading');
+                user.interface.ChangePage('loading', undefined, true);
             } else if (status === 'waitMailConfirmation' || status === 'newDevice') {
                 user.settings.email = email;
                 await user.settings.Save();
-                user.interface.ChangePage('waitmail', { email: email });
+                user.interface.ChangePage('waitmail', { email: email }, true);
             } else if (status === 'error') {
                 this.checkConnection();
                 this.setState({ loading: false });
@@ -152,7 +152,7 @@ class BackLogin extends React.Component {
             }
             user.settings.email = email;
             await user.settings.Save();
-            user.interface.ChangePage('waitmail', { email: email });
+            user.interface.ChangePage('waitmail', { email: email }, true);
             return true;
         }
         return false;

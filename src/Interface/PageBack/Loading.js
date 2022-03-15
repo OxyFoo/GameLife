@@ -50,12 +50,12 @@ class BackLoading extends React.Component {
         const connected = user.settings.connected;
         const showOnboard = !user.settings.onboardingWatched;
         if (showOnboard) {
-            user.interface.ChangePage('onboarding');
+            user.interface.ChangePage('onboarding', undefined, true);
             return;
         }
         if (email === '') {
             if (online) user.interface.ChangePage('login', undefined, true);
-            else             user.interface.ChangePage('waitinternet', undefined, true);
+            else        user.interface.ChangePage('waitinternet', undefined, true);
         } else {
             if (connected) this.loadData();
             else           user.interface.ChangePage('waitmail', undefined, true);

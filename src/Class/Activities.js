@@ -62,7 +62,9 @@ class Activities {
             if (activity.length !== 4) continue;
             this.Add(activity[0], activity[1], activity[2], activity[3], true);
         }
-        console.log('ONLINELOAD', activities);
+        const dataToken = this.user.server.dataToken;
+        const length = this.activities.length;
+        this.user.interface.console.AddLog('info', `${length} activities loaded (data token: ${dataToken})`);
     }
     Save() {
         const activities = {

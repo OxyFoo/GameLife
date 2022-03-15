@@ -4,6 +4,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
+import { Page } from '../Components';
 import { GetTime } from '../../Utils/Time';
 import { DisableMorningNotifications, EnableMorningNotifications } from '../../Utils/Notifications';
 
@@ -17,6 +18,8 @@ class BackSettings extends React.Component {
         const current = dataLangs.find(lang => lang.key === langManager.currentLangageKey);
 
         this.state = {
+            /** @type {Page} */
+            pageRef: null,
             selectedLang: current,
             dataLangs: dataLangs,
             switchMorningNotifs: user.settings.morningNotifications,

@@ -44,6 +44,7 @@ class Server {
 
     Ping = async () => {
         let online = false;
+        const debugIndex = this.user.interface.console.AddLog('info', 'Request: ping...');
         const result_ping = await this.__reqPing();
         if (result_ping.status === 200) {
             const status = result_ping.content['status'];
@@ -60,7 +61,7 @@ class Server {
                 // TODO - Gérer la maintenance
             } else if (status === 'ok') {
                 online = true;
-                this.user.interface.console.AddLog('info', 'Request: ping - OK');
+                this.user.interface.console.EditLog(debugIndex, 'Request: ping - OK');
             }
         } else {
             const error = result_ping.status + '-' + result_ping.content;

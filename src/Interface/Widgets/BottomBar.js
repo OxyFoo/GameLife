@@ -135,22 +135,24 @@ BottomBar.defaultProps = BottomBarProps;
 const styles = StyleSheet.create({
     parent: {
         position: 'absolute',
+        width: '100%',
+        height: 96,
         bottom: 48,
         left: 0,
-        width: '80%',
-        height: 96,
         paddingTop: 48,
-        marginHorizontal: '10%'
+        alignItems: 'center'
     },
     body: {
         flex: 1,
+        width: '80%',
+        minWidth: 260,
+        maxWidth: 320,
         borderRadius: 20,
         flexDirection: 'row',
         backgroundColor: '#03052E'
     },
     button: {
         flex: 1,
-        width: '100%',
         height: '100%',
         borderRadius: 0,
         justifyContent: 'center'

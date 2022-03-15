@@ -148,7 +148,7 @@ class BackActivity extends React.Component {
         const { activityStart, activityDuration, comment } = this.state;
 
         const addState = user.activities.Add(skillID, activityStart, activityDuration, comment);
-        console.log(addState);
+        user.interface.console.AddLog('info', 'Try to add activity:', addState);
         if (addState === 'added') {
             const text = langManager.curr['activity']['display-activity-text'];
             const button = langManager.curr['activity']['display-activity-button'];

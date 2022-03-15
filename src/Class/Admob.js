@@ -168,6 +168,7 @@ class Admob {
         const ad_consent_id = FIREBASE['react-native'][Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_android_app_id'];
         const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
         if (IsUndefined(consentInfo)) return;
+        // TODO - Add debug to console interface
         console.log('ad_consent_id', ad_consent_id);
         // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
 

@@ -10,6 +10,8 @@ import Settings from '../Class/Settings';
 
 import DataStorage, { STORAGE } from '../Utils/DataStorage';
 
+const DEBUG_DATA = false;
+
 /**
  * @typedef {import('../Class/Experience').XPInfo} XPInfo
  * @typedef {Object} Stats
@@ -121,13 +123,15 @@ class UserManager {
             'quests': this.quests.Save()
         };
 
+        const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
         const saved = await DataStorage.Save(STORAGE.USER, data);
-        if   (saved)  this.interface.console.AddLog('info', 'User data: local save');
+        if   (saved)  this.interface.console.EditLog(debugIndex, 'User data: local save');
         else          this.interface.console.AddLog('error', 'User data: local save failed');
         return saved;
     }
 
     async LocalLoad() {
+        const debugIndex = this.interface.console.AddLog('info', 'User data: local loading...');
         let data = await DataStorage.Load(STORAGE.USER);
         const contains = (key) => data.hasOwnProperty(key);
 
@@ -141,7 +145,7 @@ class UserManager {
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('quests')) this.quests.Load(data['quests']);
 
-            this.interface.console.AddLog('info', 'User data: local load');
+            this.interface.console.EditLog(debugIndex, 'User data: local load success');
         } else {
             this.interface.console.AddLog('warn', 'User data: local load failed');
         }
@@ -172,26 +176,27 @@ class UserManager {
         }
 
         if (Object.keys(data).length) {
+            const debugIndex = this.interface.console.AddLog('info', 'User data: Online saving...');
             const saved = await this.server.SaveUserData(data);
-            console.log('online saveeeee', saved);
             if (saved) {
                 this.activities.Purge();
                 this.achievements.Purge();
                 this.informations.Purge();
                 await this.LocalSave();
-                this.interface.console.AddLog('info', 'User data: online save');
+                this.interface.console.EditLog(debugIndex, 'User data: Online save success');
             } else {
                 this.interface.console.AddLog('error', 'User data: online save failed');
             }
-            console.log(data);
+            if (DEBUG_DATA) console.log('User data online save:', data);
         }
     }
 
     async OnlineLoad() {
         if (!this.server.online) return false;
+        const debugIndex = this.interface.console.AddLog('info', 'User data: Online loading...');
         const data = await this.server.LoadUserData();
         const contains = (key) => data.hasOwnProperty(key);
-        console.log('Online load', data);
+        if (DEBUG_DATA) console.log('User data online load:', data);
 
         if (data !== null) {
             if (contains('username')) this.informations.username = data['username'];
@@ -201,19 +206,11 @@ class UserManager {
             if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
             if (contains('ox')) this.informations.ox = data['ox'];
             if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
-
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
-            if (contains('achievements')) {
-                console.log('Data achievements', typeof(data['achievements']), data['achievements']);
-                this.achievements.solved = data['achievements'];
-            }
-            if (contains('activities')) {
-                console.log('Data activities', typeof(data['activities']), data['activities']);
-                this.activities.LoadOnline(data['activities']);
-            }
+            if (contains('achievements')) this.achievements.solved = data['achievements'];
+            if (contains('activities')) this.activities.LoadOnline(data['activities']);
 
-            console.log(data);
-            this.interface.console.AddLog('info', 'User data: online load');
+            this.interface.console.EditLog(debugIndex, 'User data: online load success');
         } else {
             this.interface.console.AddLog('info', 'User data: online load failed');
         }

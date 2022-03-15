@@ -194,6 +194,7 @@ class PageManager extends React.Component{
     pageAnimation = async (newPage) => {
         const animDuration = 120;
         this.T = new Date().getTime();
+        if (DEBUG_MODE) console.log('PageManager path:', this.path);
 
         // Bottom bar selected index animation
         const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];

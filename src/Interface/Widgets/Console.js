@@ -7,18 +7,18 @@ import { Text, Button } from '../Components';
 import { SpringAnimation } from '../../Utils/Animations';
 
 /**
- * 0: Show all logs
- * 1: Show only warnings and errors
+ * 0: Show all logs\
+ * 1: Show only warnings and errors\
  * 2: Show only errors
  */
-const LEVEL_CONSOLE = 2;
+const LEVEL_CONSOLE = 0;
 
 const ConsoleProps = {
 }
 
 class Console extends React.Component {
     state = {
-        enabled: false,
+        enabled: __DEV__,
         opened: false,
         animation: new Animated.Value(0),
         animationButton: new Animated.Value(0),
@@ -27,20 +27,21 @@ class Console extends React.Component {
     }
 
     Enable = () => this.setState({ enabled: true });
+    Disable = () => this.setState({ enabled: false });
 
     /**
      * Show message in app console
      * @param {'info'|'warn'|'error'} type
      * @param {String} text
      * @param {Array<any>} params
+     * @returns {Number} index of the message
      */
     AddLog = (type, text, ...params) => {
-        if (type === 'error') this.Enable();
-
         // Add to app console
-        const toString = (v) => typeof(v) === 'object' ? JSON.stringify(v) : v;
-        const newMessage = [type, [text, ...params].map(toString).join(' ')];
-        this.setState({ debug: [...this.state.debug, newMessage] });
+        let messages = [...this.state.debug];
+        const newMessage = [type, this.formatText(text, ...params)];
+        messages.push(newMessage);
+        this.setState({ debug: messages });
 
         // Add to terminal
         let printLog = console.log;
@@ -52,6 +53,38 @@ class Console extends React.Component {
            (LEVEL_CONSOLE >= 2  && type === 'error')) {
             printLog(text, ...params);
         }
+
+        return messages.length - 1;
+    }
+
+    /**
+     * Edit text in console, to update state debug
+     * @param {Number} index
+     * @param {String} text
+     * @param {Array<any>} params
+     * @returns {Boolean} Success of edition
+     */
+    EditLog = (index, text, ...params) => {
+        let messages = [...this.state.debug];
+        if (index < 0 || index >= messages.length) return false;
+
+        const type = messages[index][0];
+        const newMessage = [type, this.formatText(text, ...params)];
+        messages.splice(index, 1, newMessage);
+        this.setState({ debug: messages });
+
+        if (LEVEL_CONSOLE === 0 ||
+           (LEVEL_CONSOLE >= 1  && type === 'warn') ||
+           (LEVEL_CONSOLE >= 2  && type === 'error')) {
+            console.log(`Edit (${index}):`, text, ...params);
+        }
+
+        return true;
+    }
+
+    formatText = (text, ...params) => {
+        const toString = (v) => typeof(v) === 'object' ? JSON.stringify(v) : v;
+        return [text, ...params].map(toString).join(' ');
     }
 
     open = () => {
@@ -105,6 +138,7 @@ class Console extends React.Component {
                     fontSize={14}
                     color='main1'
                     onPress={this.open}
+                    onLongPress={this.Disable}
                 >
                     Open console
                 </Button>

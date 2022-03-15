@@ -163,7 +163,7 @@ Page.defaultProps = PageProps;
 const styles = StyleSheet.create({
     parent: {
         width: '100%',
-        padding: '5%',
+        padding: 32,
         backgroundColor: '#00000001'
     }
 });

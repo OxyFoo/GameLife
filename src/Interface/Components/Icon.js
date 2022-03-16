@@ -121,12 +121,13 @@ class Icon extends React.Component {
 
         if (show && !IsUndefined(xml)) {
             if (typeof(xml) !== 'string' || xml.length < 10) {
-                return <Icon icon='default' width={size} height={size} color={color} />
+                output = <Icon icon='default' size={size} color={color} />;
+            } else {
+                const XML = Base64.Decode(xml).split('#FFFFFF').join(color);
+                output = <View style={[containerStyle, style]}>
+                            <SvgXml xml={XML} width={size} height={size} />
+                        </View>;
             }
-            const XML = Base64.Decode(xml).split('#FFFFFF').join(color);
-            output = <View style={[containerStyle, style]}>
-                        <SvgXml xml={XML} width={size} height={size} />
-                    </View>;
         } else if (show && icon !== '' && SVGIcons.hasOwnProperty(icon)) {
             const _Icon = SVGIcons[icon];
             output = <View style={[containerStyle, style]}>

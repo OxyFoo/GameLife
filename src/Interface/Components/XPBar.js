@@ -33,6 +33,11 @@ class XPBar extends React.Component {
     componentDidMount() {
         setTimeout(this.startAnimations, this.props.delay * 200);
     }
+    componentDidUpdate(prevProps) {
+        if (prevProps.value !== this.props.value || prevProps.maxValue !== this.props.maxValue) {
+            this.startAnimations();
+        }
+    }
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {

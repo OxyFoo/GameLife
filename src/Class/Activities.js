@@ -39,6 +39,11 @@ class Activities {
          * @type {?Array<Number, Number>} [skillID, startTime]
          */
         this.currentActivity = null;
+
+        /**
+         * @type {{[name: String]: function}}
+         */
+        this.callbacks = {};
     }
 
     Clear() {
@@ -110,6 +115,39 @@ class Activities {
             }
         }
         this.UNSAVED_deletions = [];
+    }
+
+    /**
+     * Add a callback, called when an activity is updated (added, removed, modified)
+     * @param {String} name
+     * @param {Function} callback
+     * @returns {Boolean} true if the callback was added
+     */
+    AddCallback = (name, callback) => {
+        if  (typeof(name) !== 'string') return false;
+        if  (typeof(callback) !== 'function') return false;
+        if  (this.callbacks.hasOwnProperty(name)) return false;
+        this.callbacks[name] = callback;
+        return true;
+    }
+    /**
+     * Remove a callback by name
+     * @param {String} name
+     * @returns {Boolean} true if the callback was removed
+     */
+    RemoveCallback = (name) => {
+        if (typeof(name) !== 'string') return false;
+        if (!this.callbacks.hasOwnProperty(name)) return false;
+        delete this.callbacks[name];
+        return true;
+    }
+    update = async () => {
+        await this.user.RefreshStats();
+        const names = Object.keys(this.callbacks);
+        for (let i = 0; i < names.length; i++) {
+            const name = names[i];
+            this.callbacks[name]();
+        }
     }
 
     GetUseful() {
@@ -208,6 +246,7 @@ class Activities {
             if (indexDeletion !== null) {
                 this.UNSAVED_deletions.splice(indexDeletion, 1);
             }
+            this.update();
             return 'added';
         }
         // Activity exist, update it
@@ -221,6 +260,7 @@ class Activities {
                 if (indexDeletion !== null) {
                     this.UNSAVED_deletions.splice(indexDeletion, 1);
                 }
+                this.update();
                 return 'edited';
             }
         }
@@ -252,7 +292,12 @@ class Activities {
             }
         }
 
-        return deleted !== null ? 'removed' : 'notExist';
+        if (deleted !== null) {
+            this.update();
+            return 'removed';
+        }
+
+        return 'notExist';
     }
 
     /**

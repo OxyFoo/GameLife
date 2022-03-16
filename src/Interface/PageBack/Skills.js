@@ -11,20 +11,7 @@ class BackSkills extends React.Component {
         super(props);
 
         this.sortList = langManager.curr['skills']['top-sort-list'];
-
-        // Get all skills
-        const now = GetTime();
-        const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
-        const usersActivitiesID = usersActivities.map(activity => activity.skillID);
-        const filter = skill => usersActivitiesID.includes(skill.ID);
-        const getInfos = skill => ({
-            ...skill,
-            Name: dataManager.GetText(skill.Name),
-            Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-            experience: user.experience.GetSkillExperience(skill.ID)
-        });
-        this.allSkills = dataManager.skills.skills.filter(filter);
-        this.allSkills = this.allSkills.map(getInfos);
+        this.allSkills = this.getAllSkills();
 
         this.state = {
             height: '40%', // Start approximately at 40% of the screen height
@@ -35,9 +22,30 @@ class BackSkills extends React.Component {
             skills: this.allSkills
         }
     }
-
     componentDidMount() {
         this.refreshSkills();
+        user.activities.AddCallback('skills', () => {
+            this.allSkills = this.getAllSkills();
+            this.refreshSkills();
+        });
+    }
+    componentWillUnmount() {
+        user.activities.RemoveCallback('skills');
+    }
+
+    getAllSkills() {
+        const now = GetTime();
+        const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
+        const usersActivitiesID = usersActivities.map(activity => activity.skillID);
+        const filter = skill => usersActivitiesID.includes(skill.ID);
+        const getInfos = skill => ({
+            ...skill,
+            Name: dataManager.GetText(skill.Name),
+            Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+            experience: user.experience.GetSkillExperience(skill.ID)
+        });
+        const allSkills = dataManager.skills.skills.filter(filter);
+        return allSkills.map(getInfos);
     }
 
     addActivity = () => { user.interface.ChangePage('activity', undefined, true); }

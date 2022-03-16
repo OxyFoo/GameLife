@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle, GestureResponderEvent } from 'react-native';
 
 import langManager from '../../Managers/LangManager';
 
@@ -9,8 +9,12 @@ import { Text, Icon } from '../Components';
 const PageHeaderProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
-    onBackPress: () => {},
-    onHelpPress: () => {},
+
+    /** @param {GestureResponderEvent?} */
+    onBackPress: (event) => {},
+
+    /** @param {GestureResponderEvent?} */
+    onHelpPress: (event) => {},
     hideHelp: undefined
 }
 

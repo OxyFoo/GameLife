@@ -2,9 +2,15 @@ import fr from '../../res/langs/fr.json';
 import en from '../../res/langs/en.json';
 
 DEFAULT_LANG = 'fr';
+/**
+ * @typedef {import('../../res/langs/fr.json')} Lang
+ */
 
 class LangManager {
     constructor() {
+        /** @type {Lang?} */
+        this.curr = null;
+
         this.langages = {
             'fr': fr,
             'en': en

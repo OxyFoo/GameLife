@@ -31,12 +31,11 @@ class Settings extends BackSettings {
 
                 <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
                 <TextSwitch
-                    style={styles.margin}
-                    onChange={this.onChangeTheme}
                     // TODO - Finish themes
-                    textLeft={'[' + langThemes['Dark'] + ']'}
-                    textRight={'[' + langThemes['Light'] + ']'}
-                    start={themeManager.selectedTheme === 'Dark' ? 'left' : 'right'}
+                    style={styles.margin}
+                    texts={[ langThemes['Dark'], langThemes['Light'] ]}
+                    onChange={this.onChangeTheme}
+                    start={themeManager.selectedTheme === 'Dark' ? 0 : 1}
                 />
 
                 <View style={styles.inline}>

@@ -119,7 +119,7 @@
         "btn-start": "Start",
         "btn-add": "Add",
         "btn-remove": "Remove",
-        "add-commentary": "Add commentary",
+        "add-commentary": "Add a commentary",
 
         "alert-remove-title": "Delete ?",
         "alert-remove-text": "Are you sure you want to eliminate this activity?",
@@ -185,7 +185,7 @@
 
     "home": {
         "btn-add-task": "Add tasks",
-        "btn-quests": "Quests",
+        "btn-todo": "Todo",
         "con-stats": "Statistics",
         "con-skill-experience": "Skills",
         "btn-other-skills": "Other comp.",
@@ -386,6 +386,19 @@
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
             "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision tasks, writing tasks on a computer or even with musical instruments."
         }
+    },
+
+    "task": {
+        "input-title": "Title",
+        "input-schedule": "Scheduling",
+        "input-subtasks": "Subtasks",
+        "input-description": "Description",
+        "add-commentary": "Add a commentary",
+        "title-commentary": "Commentary"
+    },
+
+    "todo": {
+        "container-title": "Todo list"
     },
 
     "wait": {

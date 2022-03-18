@@ -36,7 +36,7 @@ class Test extends BackTest {
                     onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: 0, value: ''} : item }); }}
                 />
 
-                <TextSwitch style={{ marginBottom: 12 }} />
+                <TextSwitch style={{ marginBottom: 12 }} texts={[ 'Test 1', 'Test 2' ]} />
 
                 <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='userAdd' onIconPress={() => {console.log('YES')}}>
                     <XPBar value={0} style={{ marginBottom: 12 }} />

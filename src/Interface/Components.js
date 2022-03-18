@@ -19,6 +19,7 @@ import Digit from './Components/Digit';
 import GLLoading from './Components/GLLoading';
 import Frame from './Components/Frame';
 import { FrameContent } from './Components/Frame';
+import TaskElement from './Components/TaskElement';
 
 export {
     Page,
@@ -42,5 +43,6 @@ export {
     Digit,
     GLLoading,
     Frame,
-    FrameContent
+    FrameContent,
+    TaskElement
 }

@@ -195,7 +195,7 @@ class ActivitySchedule extends React.Component {
                     onLayout={this.onLayout}
                     onPress={this.changeSelectionMode}
                 >
-                    <View>
+                    <View style={{ marginRight: 8 }}>
                         <View style={styles.row}>
                             <Text style={styles.title}>
                                 {DATES['date'] + ': '}
@@ -243,6 +243,7 @@ const styles = StyleSheet.create({
         padding: '2%',
         marginHorizontal: '10%',
         marginBottom: 48,
+        justifyContent: 'center',
         borderRadius: 8,
         zIndex: 900,
         elevation: 900

@@ -23,7 +23,7 @@ const TextProps = {
     /** @type {Number} */
     fontSize: 18,
 
-    /** @type {ColorThemeText} */
+    /** @type {ColorTheme|ColorThemeText} */
     color: 'primary',
 
     /** @type {Function?} */

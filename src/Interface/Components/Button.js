@@ -34,7 +34,7 @@ const ButtonProps = {
     /** @type {Number} */
     iconSize: 24,
 
-    /** @type {ColorTheme} */
+    /** @type {ColorTheme|ColorThemeText} */
     iconColor: 'white',
 
     /** @type {Number} Angle in degrees */
@@ -43,13 +43,13 @@ const ButtonProps = {
     /** @type {Boolean} If true, content will be replaced by loading icon & press event disabled */
     loading: false,
 
-    /** @type {ColorTheme} */
+    /** @type {ColorTheme|ColorThemeText} */
     color: 'transparent',
 
-    /** @type {ColorThemeText} */
+    /** @type {ColorTheme|ColorThemeText} */
     colorText: 'primary',
 
-    /** @type {ColorTheme} */
+    /** @type {ColorTheme|ColorThemeText} */
     rippleColor: '#000000',
 
     /** @type {Number} */
@@ -179,7 +179,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     text: {
-        color: '#FFFFFF',
         textTransform: 'uppercase'
     }
 });

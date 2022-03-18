@@ -19,6 +19,9 @@ const ContainerProps = {
     style: {},
 
     /** @type {StyleProp<ViewStyle>} */
+    styleHeader: {},
+
+    /** @type {StyleProp<ViewStyle>} */
     styleContainer: {},
 
     /** @type {String} */
@@ -109,6 +112,7 @@ class Container extends React.Component {
 
         const headerRollable = (
             <Button
+                style={this.props.styleHeader}
                 styleAnimation={borderStyle}
                 color={color}
                 icon={''}
@@ -127,7 +131,7 @@ class Container extends React.Component {
         );
         const headerStatic = (
             <Button
-                style={{ justifyContent: 'space-between' }}
+                style={[{ justifyContent: 'space-between' }, this.props.styleHeader]}
                 styleAnimation={borderStyle}
                 color={color}
                 rippleColor='transparent'

@@ -42,7 +42,11 @@ class ActivityExperience extends React.Component {
             }));
 
         return (
-            <Container text={containerTitle} style={styles.fullWidth}>
+            <Container
+                text={containerTitle}
+                style={styles.fullWidth}
+                styleHeader={{ justifyContent: 'center' }}
+            >
                 <FlatList
                     style={{ flexGrow: 1 }}
                     columnWrapperStyle={{ marginBottom: 8 }}

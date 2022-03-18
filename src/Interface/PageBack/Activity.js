@@ -124,7 +124,7 @@ class BackActivity extends React.Component {
         const callback = (text) => {
             this.setState({ comment: text.length ? text : null }, save);
         };
-        const titleCommentary = langManager.curr['activity']['title-commentary']
+        const titleCommentary = langManager.curr['activity']['title-commentary'];
         user.interface.screenInput.Open(titleCommentary, '', callback, true);
     }
     onEditComment = () => {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
+import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import Button from './Button';
@@ -11,16 +12,13 @@ const TextSwitchProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {String} Text to show in left part */
-    textLeft: 'Left',
+    /** @type {Array<String>} */
+    texts: [],
 
-    /** @type {String} Text to show in right part */
-    textRight: 'Right',
+    /** @type {Number} Initial selection */
+    startAt: 0,
 
-    /** @type {'left'|'right'} First selected part */
-    start: false,
-
-    /** @type {Function} Called when seleted part change */
+    /** @param {Number} index Called when seleted part change */
     onChange: (index) => {}
 }
 
@@ -32,8 +30,10 @@ class TextSwitch extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.start === 'right') {
-            this.onChange(1, false);
+        if (this.props.startAt >= this.props.texts.length) {
+            user.interface.console.AddLog('warn', 'TextSwitch startAt is out of bounds');
+        } else if (this.props.startAt > 0) {
+            this.onChange(this.props.startAt, false);
         }
     }
 
@@ -52,17 +52,44 @@ class TextSwitch extends React.Component {
     }
 
     render() {
+        if (this.props.texts.length === 0) {
+            user.interface.console.AddLog('warn', 'TextSwitch has no children');
+            return null;
+        }
+
+        const childrenCount = this.props.texts.length;
         const parentStyle = [styles.parent, { borderColor: themeManager.GetColor('main1') }, this.props.style];
         const rippleColor = themeManager.GetColor('white');
         const selectColor = themeManager.GetColor('main1');
-        const selectionInter = { inputRange: [0, 1], outputRange: [0, this.state.parentWidth/2] };
-        const selectionStyle = [styles.selection, { width: this.state.parentWidth/2-12, backgroundColor: selectColor, transform: [{ translateX: this.state.anim.interpolate(selectionInter) }] }];
+        const selectionInter = { inputRange: [0, 1], outputRange: [0, this.state.parentWidth/childrenCount] };
+        const selectionStyle = [
+            styles.selection,
+            {
+                width: this.state.parentWidth/childrenCount - 12,
+                backgroundColor: selectColor,
+                transform: [
+                    { translateX: this.state.anim.interpolate(selectionInter) }
+                ]
+            }
+        ];
+
+        const width = { width: (100 - 5 * (childrenCount - 1)) / childrenCount + '%' };
+        const addButtons = (text, index) => (
+            <Button
+                key={'bt-switch-' + index}
+                style={[styles.button, width]}
+                onPress={() => this.onChange(index)}
+                rippleColor={rippleColor}
+                fontSize={12}
+            >
+                {text}
+            </Button>
+        );
 
         return (
             <View style={parentStyle} onLayout={this.onLayout}>
                 <Animated.View style={selectionStyle} />
-                <Button style={[styles.button, { marginRight: '5%' }]} onPress={() => { this.onChange(0) }} rippleColor={rippleColor} fontSize={12}>{this.props.textLeft}</Button>
-                <Button style={styles.button} onPress={() => { this.onChange(1) }} rippleColor={rippleColor} fontSize={12}>{this.props.textRight}</Button>
+                {this.props.texts.map(addButtons)}
             </View>
         );
     }
@@ -75,6 +102,7 @@ const styles = StyleSheet.create({
     parent: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-between',
         height: 55,
         padding: 4,
         borderWidth: 1.6,
@@ -83,14 +111,14 @@ const styles = StyleSheet.create({
     button: {
         width: '47.5%',
         height: '100%',
-        borderRadius: 8
+        borderRadius: 8,
+        paddingHorizontal: 6
     },
     selection: {
         position: 'absolute',
         top: 4,
         bottom: 4,
         left: 4,
-        width: '50%',
         borderRadius: 12
     }
 });

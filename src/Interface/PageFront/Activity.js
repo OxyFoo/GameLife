@@ -111,11 +111,13 @@ class Activity extends BackActivity {
         return (
             <Page
                 ref={ref => this.pageRef = ref}
+                style={{ paddingHorizontal: 0, paddingBottom: 0 }}
                 scrollable={this.state.selectedSkill.id !== 0}
                 canScrollOver={false}
                 bottomOffset={0}
             >
                 <PageHeader
+                    style={{ paddingHorizontal: 32 }}
                     onBackPress={user.interface.BackPage}
                 />
 
@@ -154,8 +156,7 @@ class Activity extends BackActivity {
                     {!this.state.visualisationMode &&
                         <TextSwitch
                             style={{ marginBottom: 24 }}
-                            textLeft={lang['swiper-already']}
-                            textRight={lang['swiper-now']}
+                            texts={[ lang['swiper-already'], lang['swiper-now'] ]}
                             onChange={this.onChangeMode}
                         />
                     }
@@ -174,7 +175,8 @@ class Activity extends BackActivity {
 
 const styles = StyleSheet.create({
     parent: {
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: 32
     },
     title: {
         marginBottom: 24,
@@ -185,10 +187,10 @@ const styles = StyleSheet.create({
         marginBottom: 48
     },
     panel: {
-        width: '110%',
-        marginLeft: '-5%',
-        padding: '5%',
-        borderRadius: 24
+        padding: 32,
+        borderRadius: 24,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0
     },
     panelChild: {
         position: 'absolute',
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
     comButton: {
         height: 48,
         marginBottom: 48,
-        marginHorizontal: '5%'
+        marginHorizontal: 20
     },
     commentPanel: {
         padding: '5%',

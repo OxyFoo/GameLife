@@ -10,9 +10,10 @@ const FIREBASE = require('../../firebase.json');
 const VERSION = require('../../package.json').version;
 
 /**
- * @typedef {'shop'} RewardedAds
+ * @typedef {'shop'|'todo'} RewardedAds
  * @typedef {String} InterstitialAds
  * @typedef {RewardedAds|InterstitialAds} AdNames
+ * @typedef {'add10Ox'|'custom'} AdTypes
  */
 
 class Ad {
@@ -105,13 +106,16 @@ class Admob {
 
     /**
      * @param {RewardedAds} adName 
-     * @param {FirebaseAdMobTypes.AdEventListener} event
+     * @param {AdTypes} type
+     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean)
      * @returns {FirebaseAdMobTypes.RewardedAd?}
      */
-    GetRewardedAd(adName, event) {
+    GetRewardedAd(adName, type = 'custom', event = () => {}) {
         let rewarded = this.ads.find(ad => ad.name === adName && ad.type === 'rewarded') || null;
         if (rewarded === null) return null;
 
+
+        if (type === 'add10Ox') event = (type, error, data) => this.Event10Ox(type, error, data, rewarded, event);
         const unsubscriber = rewarded.ad.onAdEvent(event);
         rewarded.unsubscriber = unsubscriber;
         if (!rewarded.ad.loaded) {
@@ -122,19 +126,55 @@ class Admob {
 
     /**
      * @param {InterstitialAds} adName 
-     * @param {FirebaseAdMobTypes.AdEventListener} event
+     * @param {AdTypes} type
+     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean)
      * @returns {FirebaseAdMobTypes.InterstitialAd?}
      */
-    GetInterstitialAd(adName, event) {
+    GetInterstitialAd(adName, type = 'custom', event = () => {}) {
         let interstitial = this.ads.find(ad => ad.name === adName && ad.type === 'interstitial') || null;
         if (interstitial === null) return null;
 
+
+        if (type === 'add10Ox') event = (type, error, data) => this.Event10Ox(type, error, data, interstitial, event);
         const unsubscriber = interstitial.ad.onAdEvent(event);
         interstitial.unsubscriber = unsubscriber;
         if (!interstitial.ad.loaded) {
             interstitial.ad.load();
         }
         return interstitial.ad;
+    }
+
+    /**
+     * @type {FirebaseAdMobTypes.AdEventListener}
+     * @param {Ad} ad
+     * @param {Function?} callback
+     */
+    Event10Ox = async (type, error, data, ad, callback) => {
+        if (!!error) {
+            this.user.interface.console.AddLog('error', 'Ad error:', error);
+            return;
+        }
+
+        switch (type) {
+            case 'rewarded_loaded':
+                if (callback) callback(true);
+                break;
+            case 'rewarded_earned_reward':
+                const response = await this.user.server.AdWatched();
+                this.user.interface.console.AddLog('info', 'Ad watched', response);
+                if (response.status === 200 && response.content['status'] === 'ok') {
+                    this.user.informations.ox = response.content['ox'];
+                    this.user.informations.DecrementAdRemaining();
+                    if (callback) callback(null);
+                }
+                break;
+            case 'opened':
+                if (callback) callback(false);
+                break;
+            case 'closed':
+                ad.ad.load();
+                break;
+        }
     }
 
     /**

@@ -11,7 +11,7 @@ class BackShop extends React.Component {
     constructor(props) {
         super(props);
 
-        this.rewardedShop = user.admob.GetRewardedAd('shop', this.onAdEvent);
+        this.rewardedShop = user.admob.GetRewardedAd('shop', 'custom', this.onAdEvent);
         this.state.adLoaded = this.rewardedShop.loaded;
     }
     componentWillUnmount() {

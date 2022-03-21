@@ -10,6 +10,7 @@ import { IsUndefined } from '../../Utils/Functions';
 
 /**
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const IconCheckableProps = {
@@ -22,10 +23,10 @@ const IconCheckableProps = {
     /** @type {Number} Size of the icon */
     size: 24,
 
-    /** @type {ColorTheme} */
+    /** @type {ColorTheme|ColorThemeText} */
     colorOn: 'main1',
 
-    /** @type {ColorTheme} */
+    /** @type {ColorTheme|ColorThemeText} */
     colorOff: 'backgroundGrey',
 
     /** @type {Number} Used as ID parameter in "onPress" event */
@@ -34,7 +35,10 @@ const IconCheckableProps = {
     /** @type {Boolean} If true, icon is checked */
     checked: undefined,
 
-    /** @type {Function<Number, Boolean>} */
+    /**
+     * @param {Number} id
+     * @param {Boolean} checked
+     */
     onPress: (id, checked) => {},
 
     /** @type {Boolean} If true, icon is pressable */

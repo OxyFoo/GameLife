@@ -125,8 +125,8 @@
         "alert-remove-text": "Êtes-vous sûr de vouloir supprimer cette activité ?",
         "alert-wrongtiming-title": "Impossible !",
         "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre.",
-        "alert-remactivity-title": "Suppression ?",
-        "alert-remactivity-text": "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
+        "alert-remcomment-title": "Suppression ?",
+        "alert-remcomment-text": "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
 
         "timer-launch": "Heure de lancement :",
         "timer-gain": "Gains par heure",

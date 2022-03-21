@@ -136,8 +136,8 @@ class BackActivity extends React.Component {
         user.interface.screenInput.Open(titleCommentary, this.state.comment, callback, true);
     }
     onRemComment = () => {
-        const title = langManager.curr['activity']['alert-remactivity-title'];
-        const text = langManager.curr['activity']['alert-remactivity-text'];
+        const title = langManager.curr['activity']['alert-remcomment-title'];
+        const text = langManager.curr['activity']['alert-remcomment-text'];
         const save = () => this.state.visualisationMode && this.AddActivity();
         const callback = (btn) => btn === 'yes' && this.setState({ comment: null }, save);
         user.interface.popup.Open('yesno', [ title, text ], callback);

@@ -97,7 +97,7 @@ class ThemeManager {
      * @returns {String?} - Hex color (or null if not hex color)
      */
     ApplyOpacity(hexColor, opacity = 1) {
-        if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 7) return null;
+        if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 4) return null;
         if (opacity === 1) return hexColor;
 
         let hexOpacityColor = Math.round(opacity * 255).toString(16);

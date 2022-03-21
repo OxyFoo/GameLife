@@ -67,9 +67,8 @@ class Activities {
             if (activity.length !== 4) continue;
             this.Add(activity[0], activity[1], activity[2], activity[3], true);
         }
-        const dataToken = this.user.server.dataToken;
         const length = this.activities.length;
-        this.user.interface.console.AddLog('info', `${length} activities loaded (data token: ${dataToken})`);
+        this.user.interface.console.AddLog('info', `${length} activities loaded`);
     }
     Save() {
         const activities = {
@@ -236,6 +235,10 @@ class Activities {
         const indexUnsaved = this.getIndex(this.UNSAVED_activities, newActivity);
         const indexDeletion = this.getIndex(this.UNSAVED_deletions, newActivity);
 
+        if (indexDeletion !== null) {
+            this.UNSAVED_deletions.splice(indexDeletion, 1);
+        }
+
         // Activity not exist, add it
         if (indexActivity === null && indexUnsaved === null) {
             if (!this.TimeIsFree(startTime, duration)) {
@@ -243,9 +246,6 @@ class Activities {
             }
             if (alreadySaved) this.activities.push(newActivity);
             else      this.UNSAVED_activities.push(newActivity);
-            if (indexDeletion !== null) {
-                this.UNSAVED_deletions.splice(indexDeletion, 1);
-            }
             this.update();
             return 'added';
         }
@@ -257,9 +257,6 @@ class Activities {
                 if (indexUnsaved  !== null) this.UNSAVED_activities.splice(indexUnsaved, 1);
 
                 this.UNSAVED_activities.push(newActivity);
-                if (indexDeletion !== null) {
-                    this.UNSAVED_deletions.splice(indexDeletion, 1);
-                }
                 this.update();
                 return 'edited';
             }
@@ -301,7 +298,8 @@ class Activities {
     }
 
     /**
-     * @param {Activity} activity 
+     * @param {Array<Activity>} arr
+     * @param {Activity} activity
      * @returns {Number?} - Index of activity or null if not found
      */
     getIndex(arr, activity) {
@@ -336,7 +334,7 @@ class Activities {
         return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
     }
     ContainActivity(date = new Date(), onlyRelax = false) {
-        date.setHours(0, 0, 0, 0);
+        date.setHours(1, 0, 0, 0);
         const startTime = GetTime(date);
         date.setHours(23, 59, 59, 999);
         const endTime = GetTime(date);

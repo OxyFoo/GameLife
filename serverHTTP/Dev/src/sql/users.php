@@ -11,6 +11,7 @@
          */
         public static function ExecQueue($db, $account, $data) {
             $activities = $data['activities'];
+            $tasks = $data['tasks'];
             $xp = $data['xp'];
             $achievements = $data['achievements'];
             $titleID = $data['titleID'];
@@ -18,6 +19,9 @@
 
             if (isset($activities)) {
                 self::AddActivities($db, $account, $activities);
+            }
+            if (isset($tasks)) {
+                self::AddTasks($db, $account, $tasks);
             }
             if (isset($xp)) {
                 self::setXP($db, $account->ID, $xp);
@@ -157,17 +161,86 @@
                 if ($type === 'add') {
                     if ($exists) {
                         $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
-                        if ($r === false) ExitWithStatus("Error: saving activities failed (remove)");
+                        if ($r === false) ExitWithStatus("Error: saving activities failed (preadd)");
                     }
                     $comment = 'NULL';
                     if (!is_null($activity[4]) && !empty($activity[4])) {
                         $comment = "'".$db->Encrypt($activity[4])."'";
                     }
                     $r = $db->Query("INSERT INTO `Activities` (`UserID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES ('$accountID', '$skillID', '$startTime', '$duration', $comment)");
-                    if ($r === false) ExitWithStatus("Error: saving activities failed");
+                    if ($r === false) ExitWithStatus("Error: saving activities failed (add)");
                 } else if ($type === 'rem' && $exists) {
                     $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
                     if ($r === false) ExitWithStatus("Error: saving activities failed (remove)");
+                }
+            }
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @return array tasks => [ Title, startTime, duration, comment ]
+         */
+        public static function GetTasks($db, $account) {
+            $accountID = $account->ID;
+            $command = "SELECT `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks` FROM `Tasks` WHERE `UserID` = '$accountID'";
+            $tasks = $db->QueryArray($command);
+            if ($tasks === null) {
+                ExitWithStatus("Error: getting tasks failed");
+            }
+            for ($i = 0; $i < count($tasks); $i++) {
+                if ($tasks[$i]['Description'] !== null) {
+                    $tasks[$i]['Description'] = $db->Decrypt($tasks[$i]['Description']);
+                }
+                if ($tasks[$i]['Deadline'] !== null) {
+                    $tasks[$i]['Deadline'] = intval($tasks[$i]['Deadline']);
+                }
+                if ($tasks[$i]['Schedule'] !== null) {
+                    $tasks[$i]['Schedule'] = json_decode($tasks[$i]['Schedule'], true);
+                }
+                $tasks[$i]['Subtasks'] = json_decode($tasks[$i]['Subtasks'], true);
+            }
+            return $tasks;
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param array $tasks
+         */
+        private static function AddTasks($db, $account, $tasks) {
+            $accountID = $account->ID;
+
+            for ($i = 0; $i < count($tasks); $i++) {
+                $task = $tasks[$i];
+                if (count($task) !== 6) continue;
+
+                $Action = $task['Action'];
+                $Title = $task['Title'];
+                $Description = $task['Description'];
+                $Deadline = $task['Deadline'];
+                $Schedule = $task['Schedule'];
+                $Subtasks = json_encode($task['Subtasks']);
+
+                $Description = $Description === null ? 'NULL' : "'".$db->Encrypt($Description)."'";
+                $Deadline = $Deadline === null ? 'NULL' : "'$Deadline'";
+                $Schedule = $Schedule === null ? 'NULL' : "'".json_encode($Schedule)."'";
+
+                // Check if task exists
+                $exists = $db->QueryArray("SELECT `ID` FROM `Tasks` WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
+                if ($exists === null) ExitWithStatus("Error: adding task failed");
+                $exists = count($exists) > 0;
+
+                if ($Action === 'add') {
+                    if ($exists) {
+                        $r = $db->Query("DELETE FROM `Tasks` WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
+                        if ($r === false) ExitWithStatus("Error: saving tasks failed (preadd)");
+                    }
+                    $r = $db->Query("INSERT INTO `Tasks` (`UserID`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks`) VALUES ('$accountID', '$Title', $Description, $Deadline, $Schedule, '$Subtasks')");
+                    if ($r === false) ExitWithStatus("Error: saving tasks failed (add)");
+                } else if ($Action === 'rem' && $exists) {
+                    $r = $db->Query("DELETE FROM `Tasks` WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
+                    if ($r === false) ExitWithStatus("Error: saving tasks failed (remove)");
                 }
             }
         }

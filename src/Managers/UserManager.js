@@ -7,6 +7,7 @@ import Multiplayer from '../Class/Multiplayer';
 import Quests from '../Class/Quests';
 import Server from '../Class/Server';
 import Settings from '../Class/Settings';
+import Tasks from '../Class/Tasks';
 
 import DataStorage, { STORAGE } from '../Utils/DataStorage';
 
@@ -36,6 +37,7 @@ class UserManager {
         this.quests = new Quests(this);
         this.server = new Server(this);
         this.settings = new Settings(this);
+        this.tasks = new Tasks(this);
 
         /**
          * @description Function loaded in render of App.js to access UserManager
@@ -67,6 +69,7 @@ class UserManager {
         this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
+        this.tasks.Clear();
         await this.settings.Save();
 
         await DataStorage.ClearAll();
@@ -120,7 +123,8 @@ class UserManager {
             'activities': this.activities.Save(),
             'admob': this.admob.Save(),
             'informations': this.informations.Save(),
-            'quests': this.quests.Save()
+            'quests': this.quests.Save(),
+            'tasks': this.tasks.Save()
         };
 
         const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
@@ -144,6 +148,7 @@ class UserManager {
             if (contains('admob')) this.admob.Load(data['admob']);
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('quests')) this.quests.Load(data['quests']);
+            if (contains('tasks')) this.tasks.Load(data['tasks']);
 
             this.interface.console.EditLog(debugIndex, 'User data: local load success');
         } else {
@@ -160,6 +165,10 @@ class UserManager {
         if (this.activities.IsUnsaved()) {
             data['activities'] = this.activities.GetUnsaved();
             data['xp'] = this.xp;
+        }
+
+        if (this.tasks.IsUnsaved()) {
+            data['tasks'] = this.tasks.GetUnsaved();
         }
 
         if (this.achievements.IsUnsaved()) {
@@ -182,6 +191,7 @@ class UserManager {
                 this.activities.Purge();
                 this.achievements.Purge();
                 this.informations.Purge();
+                this.tasks.Purge();
                 await this.LocalSave();
                 this.interface.console.EditLog(debugIndex, 'User data: Online save success');
             } else {
@@ -206,9 +216,13 @@ class UserManager {
             if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
             if (contains('ox')) this.informations.ox = data['ox'];
             if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
-            if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) this.achievements.solved = data['achievements'];
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
+            if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);
+            if (contains('dataToken')) {
+                this.server.dataToken = data['dataToken'];
+                this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');
+            }
 
             this.interface.console.EditLog(debugIndex, 'User data: online load success');
         } else {

@@ -224,6 +224,7 @@
             // Some data, load only if needed
             if ($appDataToken != $dbDataToken) {
                 $userData['activities'] = Users::GetActivities($this->db, $account);
+                $userData['tasks'] = Users::GetTasks($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;
             }
 

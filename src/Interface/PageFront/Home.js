@@ -55,6 +55,16 @@ class Home extends BackHome {
 
                 <Button
                     style={styles.topSpace}
+                    color='main1'
+                    borderRadius={8}
+                    icon='chrono'
+                    onPress={this.openTasks}
+                >
+                    {lang['btn-todo']}
+                </Button>
+
+                <Button
+                    style={styles.topSpace}
                     color='backgroundCard'
                     rippleColor='white'
                     borderRadius={8}

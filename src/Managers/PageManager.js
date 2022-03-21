@@ -25,27 +25,33 @@ import Settings from '../Interface/PageFront/Settings';
 import Shop from '../Interface/PageFront/Shop';
 import Skill from '../Interface/PageFront/Skill';
 import Skills from '../Interface/PageFront/Skills';
+import Task from '../Interface/PageFront/Task';
+import Tasks from '../Interface/PageFront/Tasks';
 import Waitinternet from '../Interface/PageFront/WaitInternet';
 import Waitmail from '../Interface/PageFront/WaitMail';
 import Test from '../Interface/PageFront/Test';
 
 /**
- * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'test'} PageName
+ * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
  */
 
 const DEBUG_MODE = false;
-const PAGE_NUMBER = 5;
+const PAGE_NUMBER = 4;
 
 /** @type {Array<PageName>} */
 const CACHE_IGNORE = [
     'about',
+    'activity',
     'onboarding',
     'loading',
     'login',
     'waitinternet',
     'waitmail',
     'display',
-    'skill'
+    'skill',
+    'shop',
+    'task',
+    'tasks'
 ];
 
 class PageManager extends React.Component{
@@ -254,27 +260,29 @@ class PageManager extends React.Component{
     getPageContent(page, args) {
         let p;
         switch (page) {
-            case 'about': p = <About />; break;
-            case 'achievements': p = <Achievements />; break;
-            case 'activity': p = <Activity args={args} />; break;
-            case 'activitytimer': p = <ActivityTimer />; break;
-            case 'calendar': p = <Calendar />; break;
-            case 'display': p = <Display args={args} />; break;
-            case 'experience': p = <Experience />; break;
-            case 'home': p = <Home />; break;
-            case 'identity': p = <Identity />; break;
-            case 'loading': p = <Loading args={args} />; break;
-            case 'login': p = <Login />; break;
-            case 'multiplayer': p = <Multiplayer />; break;
-            case 'onboarding': p = <Onboarding />; break;
-            case 'report': p = <Report />; break;
-            case 'settings': p = <Settings />; break;
-            case 'shop': p = <Shop />; break;
-            case 'skill': p = <Skill args={args} />; break;
-            case 'skills': p = <Skills />; break;
-            case 'waitinternet': p = <Waitinternet />; break;
-            case 'waitmail': p = <Waitmail args={args} />; break;
-            case 'test': p = <Test />; break;
+            case 'about':           p = <About />; break;
+            case 'achievements':    p = <Achievements />; break;
+            case 'activity':        p = <Activity args={args} />; break;
+            case 'activitytimer':   p = <ActivityTimer />; break;
+            case 'calendar':        p = <Calendar />; break;
+            case 'display':         p = <Display args={args} />; break;
+            case 'experience':      p = <Experience />; break;
+            case 'home':            p = <Home />; break;
+            case 'identity':        p = <Identity />; break;
+            case 'loading':         p = <Loading args={args} />; break;
+            case 'login':           p = <Login />; break;
+            case 'multiplayer':     p = <Multiplayer />; break;
+            case 'onboarding':      p = <Onboarding />; break;
+            case 'report':          p = <Report />; break;
+            case 'settings':        p = <Settings />; break;
+            case 'shop':            p = <Shop />; break;
+            case 'skill':           p = <Skill args={args} />; break;
+            case 'skills':          p = <Skills />; break;
+            case 'task':            p = <Task args={args} />; break;
+            case 'tasks':           p = <Tasks />; break;
+            case 'waitinternet':    p = <Waitinternet />; break;
+            case 'waitmail':        p = <Waitmail args={args} />; break;
+            case 'test':            p = <Test />; break;
         }
         return p;
     }
@@ -307,7 +315,7 @@ class PageManager extends React.Component{
                     <LinearGradient style={fullscreen} colors={lightBackground} />
                 </Animated.View>
 
-                {Range(PAGE_NUMBER).map(i => newPage(i))}
+                {Range(PAGE_NUMBER).map(newPage)}
                 <Animated.View style={overlayStyle} pointerEvents='none' />
 
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />

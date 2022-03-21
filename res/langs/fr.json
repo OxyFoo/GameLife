@@ -37,7 +37,10 @@
             "start-time": "Début",
             "duration": "Durée",
             "day": "Jour",
-            "days": "Jours"
+            "days": "Jours",
+            "never": "Jamais",
+            "weekly": "Semaine",
+            "monthly": "Mois"
         },
         "month": [
             "Janvier",
@@ -389,16 +392,33 @@
     },
 
     "task": {
+        "title-schedule": "Planification",
+        "title-subtasks": "Sous-tâches",
+        "title-commentary": "Commentaire",
         "input-title": "Titre",
-        "input-schedule": "Planification",
-        "input-subtasks": "Sous-tâches",
+        "input-deadline-title": "Date limite",
+        "input-deadline-empty": "Aucune",
+        "input-repeat-title": "Répétition",
         "input-description": "Description",
-        "add-commentary": "Ajouter un commentaire",
-        "title-commentary": "Commentaire"
+
+        "button-commentary": "Ajouter un commentaire",
+        "button-add": "Ajouter",
+        "button-save": "Sauvegarder",
+        "button-remove": "Supprimer",
+
+        "error-title-empty": "Le titre ne peut pas être vide",
+        "error-title-exists": "Une tâche avec ce titre existe déjà",
+
+        "alert-remcomment-title": "Suppression ?",
+        "alert-remcomment-text": "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
+        "alert-remtask-title": "Suppression ?",
+        "alert-remtask-text": "Êtes-vous sûr de vouloir supprimer cette tâche ?"
     },
 
-    "todo": {
-        "container-title": "Todo liste"
+    "tasks": {
+        "container-title": "Todo liste",
+        "tasks-empty-title": "Vous n'avez pas encore de tâche",
+        "tasks-empty-button": "En ajouter une"
     },
 
     "wait": {

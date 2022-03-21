@@ -17,7 +17,8 @@ class ThemeManager {
             backgroundCard: '#384065', // Transparent purple
             backgroundGrey: '#222740', // Grey
             backgroundTransparent: '#FFFFFF33', // Transparent white
-            danger: '#CC0029',
+            success: '#27AE60', // Green
+            danger: '#C0392B', // Red
 
             text: {
                 primary: '#ECECEC',
@@ -37,6 +38,7 @@ class ThemeManager {
             backgroundCard: '#384065', // Transparent purple
             backgroundGrey: '#222740', // Grey
             backgroundTransparent: '#FFFFFF33', // Transparent white
+            success: '#27AE60', // Green
             danger: '#CC0029',
 
             text: {

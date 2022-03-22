@@ -1,16 +1,15 @@
-import { GetTime } from "../Utils/Time";
 import { SortByKey } from '../Utils/Functions';
-
-/**
- * @typedef {Object} Subtask
- * @property {Boolean} checked
- * @property {String} title
- */
 
 /**
  * @typedef {Object} Schedule
  * @property {'week'|'month'} Type
  * @property {Array<Number>} Repeat
+ */
+
+/**
+ * @typedef {Object} Subtask
+ * @property {Boolean} Checked
+ * @property {String} Title
  */
 
 class Task {
@@ -64,12 +63,6 @@ class Tasks {
     }
     LoadOnline(tasks) {
         if (typeof(tasks) !== 'object') return;
-        /*this.SAVED_tasks = [];
-        for (let i = 0; i < tasks.length; i++) {
-            const task = tasks[i];
-            if (Object.keys(task).length !== 5) continue;
-            console.log(this.Add(...task, true));
-        }*/
         this.SAVED_tasks = tasks.map(task => Object.assign(new Task(), task));
         const length = this.SAVED_tasks.length;
         this.user.interface.console.AddLog('info', `${length} tasks loaded`);
@@ -88,6 +81,7 @@ class Tasks {
      */
     Get() {
         let tasks = [ ...this.SAVED_tasks, ...this.UNSAVED_tasks ];
+        return tasks;
         return SortByKey(tasks, 'startTime');
     }
 
@@ -127,7 +121,7 @@ class Tasks {
      * @param {'week'|'month'|null} repeatMode - Repeat mode
      * @param {Array<Number>} repeatDays - Repeat days
      * @param {Array<Subtask>} subtasks - Subtasks informations
-     * @param {Boolean} [alreadySaved=false] - If false, save task in UNSAVED_activities
+     * @param {Boolean} [alreadySaved=false] - If false, save task in UNSAVED_tasks
      * @returns {'added'|'alreadyExist'}
      */
     Add(title, description, deadline, repeatMode, repeatDays, subtasks, alreadySaved = false) {
@@ -153,7 +147,7 @@ class Tasks {
             this.UNSAVED_deletions.splice(indexDeletion, 1);
         }
 
-        // Activity not exist, add it
+        // Task not exist, add it
         if (indexTask === null && indexUnsaved === null) {
             if (alreadySaved) this.SAVED_tasks.push(newTask);
             else              this.UNSAVED_tasks.push(newTask);

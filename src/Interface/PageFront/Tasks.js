@@ -28,7 +28,6 @@ class Tasks extends BackTasks {
 
                 <Container
                     styleContainer={styles.tasksContainer}
-                    
                     type='static'
                     icon='add'
                     text={lang['container-title']}
@@ -39,7 +38,7 @@ class Tasks extends BackTasks {
                         data={this.tasks}
                         keyExtractor={(item, index) => 'task-' + index.toString()}
                         renderItem={({ item }) => (
-                            <TaskElement item={item} />
+                            <TaskElement task={item} onTaskCheck={this.onTaskCheck} />
                         )}
                         ListEmptyComponent={() => (
                             <>

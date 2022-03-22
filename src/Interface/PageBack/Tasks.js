@@ -10,7 +10,6 @@ class BackTasks extends React.Component {
     constructor(props) {
         super(props);
         this.tasks = user.tasks.Get();
-        console.log(this.tasks);
         this.rewardedShop = user.admob.GetRewardedAd('todo', 'add10Ox', this.adStateChange);
         this.state.adLoaded = this.rewardedShop.loaded;
     }
@@ -20,6 +19,9 @@ class BackTasks extends React.Component {
 
     addTask = () => {
         user.interface.ChangePage('task', undefined, true);
+    }
+    onTaskCheck = () => {
+        // TODO
     }
 
     watchAd = () => {

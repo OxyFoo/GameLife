@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
 import BackTask from '../PageBack/Task';
 import user from '../../Managers/UserManager';
@@ -10,6 +10,35 @@ import { PageHeader, TaskSchedule } from '../Widgets';
 import { Button, Icon, Input, Page, TaskElement, Text } from '../Components';
 
 class Task extends BackTask {
+    renderSubtasks = () => {
+        if (!this.state.subtasks.length) return null;
+
+        const lang = langManager.curr['task'];
+        const background = { backgroundColor: themeManager.GetColor('main1') };
+
+        return (
+            <View style={[styles.subtasksContainer, background]}>
+                <FlatList
+                    style={{ height: 'auto' }}
+                    data={this.state.subtasks}
+                    keyExtractor={(item, index) => 'task-' + index.toString()}
+                    renderItem={({ item, index }) => (
+                        <TaskElement
+                            subtask={item}
+                            onSubtaskEdit={(checked, title) => this.onEditSubtask(index, checked, title)}
+                            onSubtaskDelete={() => this.onDeleteSubtask(index)}
+                        />
+                    )}
+                    ListEmptyComponent={() => (
+                        <>
+                            <Text style={styles.emptyText}>{lang['tasks-empty-title']}</Text>
+                            <Button onPress={this.addTask} color='main1'>{lang['tasks-empty-button']}</Button>
+                        </>
+                    )}
+                />
+            </View>
+        );
+    }
     renderCommentary = () => {
         const lang = langManager.curr['task'];
         const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
@@ -62,7 +91,7 @@ class Task extends BackTask {
         const initValues = action === 'new' ? null : [deadline, repeatMode, repeatDays];
 
         return (
-            <Page bottomOffset={0}>
+            <Page onStartShouldSetResponder={this.keyboardDismiss} bottomOffset={0}>
                 <PageHeader
                     onBackPress={() => user.interface.BackPage()}
                 />
@@ -83,11 +112,10 @@ class Task extends BackTask {
 
                 <View style={[styles.row, styles.sectionTitle]}>
                     <Text fontSize={22}>{lang['title-subtasks']}</Text>
-                    <Icon icon='add' />
+                    <Icon icon='add' onPress={this.addSubtask} />
                 </View>
-                <Text>[[Components: subtasks]]</Text>
-
-                {this.renderCommentary()}
+                <this.renderSubtasks />
+                <this.renderCommentary />
 
                 <Button
                     style={styles.button}
@@ -115,6 +143,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    subtasksContainer: {
+        padding: 28,
+        paddingTop: 14,
+        borderRadius: 8
     },
     comButton: {
         height: 48,

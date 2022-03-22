@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { StyleProp, ViewStyle } from 'react-native';
 
 import user from '../../Managers/UserManager';
@@ -8,9 +8,12 @@ import Text from './Text';
 import Icon from './Icon';
 import Button from './Button';
 import { DateToFormatString } from '../../Utils/Date';
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
 
 /**
  * @typedef {import('../../Class/Tasks').Task} Task
+ * @typedef {import('../../Class/Tasks').Subtask} Subtask
  * @typedef {import('./Icon').Icons} Icons
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
  * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
@@ -21,7 +24,19 @@ const TaskProps = {
     style: {},
 
     /** @type {Task} */
-    item: {}
+    task: null,
+
+    /** @type {Subtask} */
+    subtask: null,
+
+    onTaskCheck: () => {},
+    /**
+     * On edit subtask
+     * @param {Boolean} checked
+     * @param {String} title
+     */
+    onSubtaskEdit: (checked, title) => {},
+    onSubtaskDelete: () => {}
 }
 
 class TaskElement extends React.Component {
@@ -29,35 +44,30 @@ class TaskElement extends React.Component {
         checked: false
     };
 
-    onCheckboxPress = () => {
+    renderTask() {
         const { checked } = this.state;
-        this.setState({ checked: !checked });
-    }
-
-    openTask = () => {
-        const { item } = this.props;
-        user.interface.ChangePage('task', { task: item });
-    }
-
-    render() {
-        const { checked } = this.state;
-        const { style, item } = this.props;
-        const { Title, Description, Deadline, Schedule } = item;
+        const { style, task } = this.props;
+        const { Title, Description, Deadline, Schedule } = task;
 
         let text = '';
         if (Deadline !== null) text = DateToFormatString(Deadline*1000);
 
+        const openTask = () => user.interface.ChangePage('task', { task });
+
+        // TODO - Add daily mode (circle)
+        // TODO - Add right text automatically (deadline if defined, schedule else (X/month/week...))
+
         return (
             <TouchableOpacity
                 style={[styles.parent, style]}
-                onPress={this.openTask}
+                onPress={openTask}
                 activeOpacity={.6}
             >
                 <View style={styles.title}>
                     <Button
                         style={styles.checkbox}
                         color={checked ? '#fff' : 'transparent'}
-                        onPress={this.onCheckboxPress}
+                        onPress={this.props.onTaskCheck}
                     >
                         {checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
                     </Button>
@@ -66,6 +76,53 @@ class TaskElement extends React.Component {
                 <Text>{text}</Text>
             </TouchableOpacity>
         );
+    }
+
+    renderSubtask() {
+        const { style, subtask } = this.props;
+        const { Checked, Title } = subtask;
+        const textColor = { color: themeManager.GetColor('primary') };
+        const hexActiveColor = themeManager.GetColor('main1');
+        const decoration = { textDecorationLine: Checked ? 'line-through' : 'none' };
+
+        const remove = () => {
+            const title = langManager.curr['task']['alert-remsubtask-title'];
+            const text = langManager.curr['task']['alert-remsubtask-text'];
+            const callback = (btn) => btn === 'yes' && this.props.onSubtaskDelete();
+            user.interface.popup.Open('yesno', [title, text], callback);
+        }
+
+        return (
+            <TouchableOpacity
+                style={[styles.parent, style]}
+                onLongPress={remove}
+                activeOpacity={.6}
+            >
+                <View style={styles.title}>
+                    <Button
+                        style={styles.checkbox}
+                        color={Checked ? '#fff' : 'transparent'}
+                        onPress={() => this.props.onSubtaskEdit(!Checked, Title)}
+                    >
+                        {Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
+                    </Button>
+                    <TextInput
+                        style={[styles.input, textColor, decoration]}
+                        value={Title}
+                        onChangeText={text => this.props.onSubtaskEdit(Checked, text)}
+                        selectionColor={hexActiveColor}
+                        multiline={true}
+                        maxLength={256}
+                    />
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
+    render() {
+        const { task, subtask } = this.props;
+        if (task !== null) return this.renderTask();
+        if (subtask !== null) return this.renderSubtask();
     }
 }
 
@@ -91,6 +148,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#fff',
         borderRadius: 8
+    },
+    input: {
+        flex: 1
     }
 });
 

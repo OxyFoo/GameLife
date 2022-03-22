@@ -412,7 +412,9 @@
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
         "alert-remtask-title": "Suppression ?",
-        "alert-remtask-text": "Êtes-vous sûr de vouloir supprimer cette tâche ?"
+        "alert-remtask-text": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
+        "alert-remsubtask-title": "Suppression ?",
+        "alert-remsubtask-text": "Êtes-vous sûr de vouloir supprimer cette sous-tâche ?"
     },
 
     "tasks": {

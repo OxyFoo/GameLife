@@ -1,10 +1,12 @@
 import * as React from 'react';
+import { Keyboard } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 /**
  * @typedef {import('../../Class/Tasks').Task} Task
+ * @typedef {import('../../Class/Tasks').Subtask} Subtask
  * @typedef {import('../Widgets/TaskSchedule').OnChangeScheduleEvent} OnChangeScheduleEvent
  */
 
@@ -19,6 +21,7 @@ class BackTask extends React.Component {
             action: 'new',
             title: '',
             description: null,
+            /** @type {Array<Subtask>} */
             subtasks: [],
             error: '',
     
@@ -37,7 +40,7 @@ class BackTask extends React.Component {
                 newTask: false,
                 title: task.Title,
                 description: task.Description,
-                subtasks: task.Subtasks,
+                subtasks: [...task.Subtasks],
                 error: '',
         
                 deadline: task.Deadline,
@@ -54,6 +57,11 @@ class BackTask extends React.Component {
     componentDidMount() {
         const title = this.props.args.task?.Title || '';
         this.onChangeTitle(title, true);
+    }
+
+    keyboardDismiss = () => {
+        Keyboard.dismiss();
+        return false;
     }
 
     onChangeTitle = (title, init = false) => {
@@ -76,6 +84,31 @@ class BackTask extends React.Component {
     onChangeSchedule = (deadline, repeatMode, repeatDays) => {
         const action = this.taskName === null ? this.state.action : 'edit';
         this.setState({ deadline, repeatMode, repeatDays, action });
+    }
+
+    addSubtask = () => {
+        let { subtasks } = this.state;
+        const action = this.taskName === null ? this.state.action : 'edit';
+        subtasks.push({
+            Checked: false,
+            Title: ''
+        });
+        this.setState({ action, subtasks });
+    }
+    onEditSubtask = (index, checked, title) => {
+        let { subtasks } = this.state;
+        const action = this.taskName === null ? this.state.action : 'edit';
+        subtasks.splice(index, 1, {
+            Checked: checked,
+            Title: title
+        });
+        this.setState({ action, subtasks });
+    }
+    onDeleteSubtask = (index) => {
+        let { subtasks } = this.state;
+        const action = this.taskName === null ? this.state.action : 'edit';
+        subtasks.splice(index, 1);
+        this.setState({ action, subtasks });
     }
 
     onAddComment = () => {

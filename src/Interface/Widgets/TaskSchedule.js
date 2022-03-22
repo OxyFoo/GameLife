@@ -182,7 +182,7 @@ class TaskSchedule extends React.Component {
 
                     <Text>{lang['input-repeat-title']}</Text>
                     <TextSwitch
-                        style={{ height: 48 }}
+                        style={{ height: 48, marginTop: 12 }}
                         texts={timeIntervals}
                         onChange={this.switchMode}
                         startAt={this.state.repeatMode}

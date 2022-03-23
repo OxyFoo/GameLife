@@ -185,7 +185,7 @@ class UserManager {
         }
 
         if (Object.keys(data).length) {
-            const debugIndex = this.interface.console.AddLog('info', 'User data: Online saving...');
+            const debugIndex = this.interface.console.AddLog('info', 'User data: online saving...');
             const saved = await this.server.SaveUserData(data);
             if (saved) {
                 this.activities.Purge();
@@ -193,7 +193,7 @@ class UserManager {
                 this.informations.Purge();
                 this.tasks.Purge();
                 await this.LocalSave();
-                this.interface.console.EditLog(debugIndex, 'User data: Online save success');
+                this.interface.console.EditLog(debugIndex, 'User data: online save success');
             } else {
                 this.interface.console.AddLog('error', 'User data: online save failed');
             }
@@ -203,7 +203,7 @@ class UserManager {
 
     async OnlineLoad() {
         if (!this.server.online) return false;
-        const debugIndex = this.interface.console.AddLog('info', 'User data: Online loading...');
+        const debugIndex = this.interface.console.AddLog('info', 'User data: online loading...');
         const data = await this.server.LoadUserData();
         const contains = (key) => data.hasOwnProperty(key);
         if (DEBUG_DATA) console.log('User data online load:', data);

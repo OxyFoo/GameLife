@@ -432,6 +432,7 @@
 
     "other": {
         "ad-button-text": "Regarder une pub",
+        "ad-button-empty": "Il n'y a plus de pub disponible",
         "widget-button-editTime": "Modifier"
     }
 }

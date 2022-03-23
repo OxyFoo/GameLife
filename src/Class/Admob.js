@@ -151,7 +151,7 @@ class Admob {
      */
     Event10Ox = async (type, error, data, ad, callback) => {
         if (!!error) {
-            this.user.interface.console.AddLog('error', 'Ad error:', error);
+            this.user.interface.console.AddLog('error', 'Ad error:', error.message);
             return;
         }
 

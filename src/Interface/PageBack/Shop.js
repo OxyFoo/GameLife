@@ -34,7 +34,7 @@ class BackShop extends React.Component {
     /** @type {FirebaseAdMobTypes.AdEventListener} */
     onAdEvent = async (type, error, data) => {
         if (!!error) {
-            user.interface.console.AddLog('error', 'Ad error: ' + error);
+            user.interface.console.AddLog('error', 'Ad error:', error.message);
             return;
         }
 

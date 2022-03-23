@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle, GestureResponderEvent } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import themeManager from '../../Managers/ThemeManager';
@@ -26,6 +26,7 @@ import svgHome from '../../../res/icons/home';
 import svgInfo from '../../../res/icons/info';
 import svgInstagram from '../../../res/icons/instagram';
 import svgItem from '../../../res/icons/item';
+import svgMoveVertical from '../../../res/icons/move-vertical';
 import svgNowifi from '../../../res/icons/nowifi';
 import svgOnboarding1 from '../../../res/icons/onboarding1';
 import svgOnboarding2 from '../../../res/icons/onboarding2';
@@ -44,7 +45,11 @@ import svgLoadingDots from '../../../res/icons/loading-dots';
 
 /**
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
+ * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'moveVertical'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
+ */
+/**
+ * @callback GestureEvent
+ * @param {GestureResponderEvent} event
  */
 
 const SVGIcons = {
@@ -66,6 +71,7 @@ const SVGIcons = {
     info: svgInfo,
     instagram: svgInstagram,
     item: svgItem,
+    moveVertical: svgMoveVertical,
     nowifi: svgNowifi,
     onboarding1: svgOnboarding1,
     onboarding2: svgOnboarding2,
@@ -105,8 +111,14 @@ const IconProps = {
     /** @type {ColorTheme} */
     color: 'white',
 
-    /** @type {Function?} */
-    onPress: undefined,
+    /** @type {GestureEvent?} */
+    onPress: null,
+
+    /** @type {GestureEvent?} */
+    onPressIn: null,
+
+    /** @type {GestureEvent?} */
+    onPressOut: null,
 
     /** @type {Boolean} */
     show: true
@@ -115,8 +127,8 @@ const IconProps = {
 class Icon extends React.Component {
     render() {
         let output;
-        const { style, icon, xml, size, angle, onPress, show } = this.props;
-        const containerStyle = { width: size, height: size };
+        const { style, containerStyle, icon, xml, size, angle, onPress, onPressIn, onPressOut, show } = this.props;
+        const containerSize = { width: size, height: size };
         const color = themeManager.GetColor(this.props.color);
 
         if (show && !IsUndefined(xml)) {
@@ -124,23 +136,25 @@ class Icon extends React.Component {
                 output = <Icon icon='default' size={size} color={color} />;
             } else {
                 const XML = Base64.Decode(xml).split('#FFFFFF').join(color);
-                output = <View style={[containerStyle, style]}>
+                output = <View style={[containerSize, style]}>
                             <SvgXml xml={XML} width={size} height={size} />
                         </View>;
             }
         } else if (show && icon !== '' && SVGIcons.hasOwnProperty(icon)) {
             const _Icon = SVGIcons[icon];
-            output = <View style={[containerStyle, style]}>
+            output = <View style={[containerSize, style]}>
                         <_Icon width={size} height={size} color={color} rotation={angle} />
                     </View>;
         } else {
-            output = <View style={[containerStyle, style]} />;
+            output = <View style={[containerSize, style]} />;
         }
 
-        if (!IsUndefined(onPress)) {
+        if (onPress !== null || onPressIn !== null || onPressOut !== null) {
             output = <TouchableOpacity
-                        style={[containerStyle, this.props.containerStyle]}
-                        onPress={this.props.onPress}
+                        style={[containerSize, containerStyle]}
+                        onPress={onPress}
+                        onPressIn={onPressIn}
+                        onPressOut={onPressOut}
                         activeOpacity={.5}
                     >
                         {output}

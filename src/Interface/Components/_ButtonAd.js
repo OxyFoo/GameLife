@@ -23,17 +23,24 @@ class ButtonAd extends React.PureComponent {
             return null;
         }
 
+        const { oxAmount, free } = this.props;
         const lang = langManager.curr['other'];
-        const enabled = this.props.free && user.informations.adRemaining > 0;
+        const enabled = free && user.informations.adRemaining > 0;
         const style = [styles.adButton, this.props.style];
+        const text = lang['ad-button-text'];
+
+        let error = null;
+        if (!free) error = lang['ad-button-empty'];
 
         return (
             <Button color='main2' {...this.props} style={style} enabled={enabled}>
-                <Text>{lang['ad-button-text']}</Text>
-                <View style={styles.adIcon}>
-                    <Text style={styles.adText}>+{this.props.oxAmount}</Text>
-                    <Icon icon='ox' color='white' size={24} />
-                </View>
+                <Text>{error || text}</Text>
+                {!error && (
+                    <View style={styles.adIcon}>
+                        <Text style={styles.adText}>+{oxAmount}</Text>
+                        <Icon icon='ox' color='white' size={24} />
+                    </View>
+                )}
             </Button>
         );
     }

@@ -18,13 +18,11 @@ class Tasks extends BackTasks {
                     onBackPress={() => user.interface.BackPage()}
                 />
 
-                <Button style={[styles.adButton, styles.spaceBottom]} onPress={this.watchAd} color='main2' enabled={this.state.adLoaded && user.informations.adRemaining > 0}>
-                    <Text>[Regarder une pub]</Text>
-                    <View style={styles.adIcon}>
-                        <Text style={styles.adText}>+10</Text>
-                        <Icon icon='ox' color='white' size={24} />
-                    </View>
-                </Button>
+                <Button.Ad
+                    style={styles.spaceBottom}
+                    onPress={this.watchAd}
+                    free={this.state.adLoaded}
+                />
 
                 <Container
                     styleContainer={styles.tasksContainer}

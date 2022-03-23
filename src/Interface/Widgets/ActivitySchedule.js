@@ -115,7 +115,7 @@ class ActivitySchedule extends React.Component {
             transform: [{ translateX: x }, { translateY: animValue }],
             backgroundColor: themeManager.GetColor('backgroundGrey')
         }];
-        const lang = langManager.curr['widget'];
+        const lang = langManager.curr['other'];
         const mainColor = themeManager.GetColor('main1');
 
         return (
@@ -130,7 +130,7 @@ class ActivitySchedule extends React.Component {
                             fontSize={14}
                             color='main1'
                         >
-                            {lang['btn-edit-time']}
+                            {lang['widget-button-editTime']}
                         </Button>
                     </View>
 
@@ -143,7 +143,7 @@ class ActivitySchedule extends React.Component {
                             fontSize={14}
                             color='main1'
                         >
-                            {lang['btn-edit-time']}
+                            {lang['widget-button-editTime']}
                         </Button>
                     </View>
 

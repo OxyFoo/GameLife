@@ -430,7 +430,8 @@
         "wait-email-send": "Mail sent !"
     },
 
-    "widget": {
-        "btn-edit-time": "Change"
+    "other": {
+        "ad-button-text": "Watch the ad",
+        "widget-button-editTime": "Change"
     }
 }

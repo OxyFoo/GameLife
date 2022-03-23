@@ -13,7 +13,6 @@ class Task extends BackTask {
     renderSubtasks = () => {
         if (!this.state.subtasks.length) return null;
 
-        const lang = langManager.curr['task'];
         const background = { backgroundColor: themeManager.GetColor('main1') };
 
         return (
@@ -28,12 +27,6 @@ class Task extends BackTask {
                             onSubtaskEdit={(checked, title) => this.onEditSubtask(index, checked, title)}
                             onSubtaskDelete={() => this.onDeleteSubtask(index)}
                         />
-                    )}
-                    ListEmptyComponent={() => (
-                        <>
-                            <Text style={styles.emptyText}>{lang['tasks-empty-title']}</Text>
-                            <Button onPress={this.addTask} color='main1'>{lang['tasks-empty-button']}</Button>
-                        </>
                     )}
                 />
             </View>

@@ -7,6 +7,7 @@ import themeManager from '../../Managers/ThemeManager';
 import Text from './Text';
 import Icon from './Icon';
 import Ripple from './Ripple';
+import ButtonAd, { ButtonAdProps } from './_ButtonAd';
 import { IsUndefined } from '../../Utils/Functions';
 
 /**
@@ -80,6 +81,9 @@ class Button extends React.Component {
         this.posX = 0; this.posY = 0; this.time = 0;
         this.state = { width: 0 };
     }
+
+    /** @param {ButtonProps|ButtonAdProps} props */
+    static Ad = (props) => <ButtonAd button={Button} {...props} />;
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {

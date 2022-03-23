@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 
 import BackTasks from '../PageBack/Tasks';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
 import { PageHeader } from '../Widgets';
-import { Button, Container, Icon, Page, TaskElement, Text } from '../Components';
+import { Button, Container, Page, TaskElement, Text } from '../Components';
 
 class Tasks extends BackTasks {
     render() {

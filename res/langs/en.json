@@ -433,6 +433,7 @@
     "other": {
         "ad-button-text": "Watch the ad",
         "ad-button-empty": "There are no more ads available",
+        "ad-button-error": "Unable to load ads",
         "widget-button-editTime": "Change"
     }
 }

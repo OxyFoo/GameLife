@@ -75,9 +75,7 @@ const ButtonProps = {
 class Button extends React.Component {
     constructor(props) {
         super(props);
-        if (this.props.enabled) {
-            this.rippleRef = React.createRef(); 
-        }
+        this.rippleRef = React.createRef();
         this.posX = 0; this.posY = 0; this.time = 0;
         this.state = { width: 0 };
     }

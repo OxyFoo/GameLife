@@ -11,7 +11,7 @@ class BackTasks extends React.Component {
         super(props);
         this.tasks = user.tasks.Get();
         this.rewardedShop = user.admob.GetRewardedAd('todo', 'add10Ox', this.adStateChange);
-        this.state.adLoaded = this.rewardedShop.loaded;
+        this.state.adLoaded = this.rewardedShop !== null ? this.rewardedShop.loaded : null;
     }
     componentWillUnmount() {
         user.admob.ClearEvents('todo');
@@ -38,11 +38,7 @@ class BackTasks extends React.Component {
     }
 
     adStateChange = (loaded) => {
-        if (typeof(loaded) === 'boolean') {
-            this.setState({ adLoaded: loaded });
-        } else {
-            this.forceUpdate();
-        }
+        this.setState({ adLoaded: loaded });
     }
 }
 

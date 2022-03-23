@@ -107,16 +107,16 @@ class Admob {
     /**
      * @param {RewardedAds} adName 
      * @param {AdTypes} type
-     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean)
+     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean or null)
      * @returns {FirebaseAdMobTypes.RewardedAd?}
      */
     GetRewardedAd(adName, type = 'custom', event = () => {}) {
         let rewarded = this.ads.find(ad => ad.name === adName && ad.type === 'rewarded') || null;
         if (rewarded === null) return null;
 
-
-        if (type === 'add10Ox') event = (type, error, data) => this.Event10Ox(type, error, data, rewarded, event);
-        const unsubscriber = rewarded.ad.onAdEvent(event);
+        let _event = event;
+        if (type === 'add10Ox') _event = (type, error, data) => this.Event10Ox(type, error, data, rewarded, event);
+        const unsubscriber = rewarded.ad.onAdEvent(_event);
         rewarded.unsubscriber = unsubscriber;
         if (!rewarded.ad.loaded) {
             rewarded.ad.load();
@@ -127,16 +127,16 @@ class Admob {
     /**
      * @param {InterstitialAds} adName 
      * @param {AdTypes} type
-     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean)
+     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean or null)
      * @returns {FirebaseAdMobTypes.InterstitialAd?}
      */
     GetInterstitialAd(adName, type = 'custom', event = () => {}) {
         let interstitial = this.ads.find(ad => ad.name === adName && ad.type === 'interstitial') || null;
         if (interstitial === null) return null;
 
-
-        if (type === 'add10Ox') event = (type, error, data) => this.Event10Ox(type, error, data, interstitial, event);
-        const unsubscriber = interstitial.ad.onAdEvent(event);
+        let _event = event;
+        if (type === 'add10Ox') _event = (type, error, data) => this.Event10Ox(type, error, data, interstitial, event);
+        const unsubscriber = interstitial.ad.onAdEvent(_event);
         interstitial.unsubscriber = unsubscriber;
         if (!interstitial.ad.loaded) {
             interstitial.ad.load();
@@ -152,6 +152,7 @@ class Admob {
     Event10Ox = async (type, error, data, ad, callback) => {
         if (!!error) {
             this.user.interface.console.AddLog('error', 'Ad error:', error.message);
+            if (callback) callback(null);
             return;
         }
 
@@ -165,7 +166,7 @@ class Admob {
                 if (response.status === 200 && response.content['status'] === 'ok') {
                     this.user.informations.ox = response.content['ox'];
                     this.user.informations.DecrementAdRemaining();
-                    if (callback) callback(null);
+                    if (callback) callback(false);
                 }
                 break;
             case 'opened':

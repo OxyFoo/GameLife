@@ -11,7 +11,7 @@ const ButtonAdProps = {
     button: null,
     oxAmount: 10,
 
-    /** @type {Boolean} True if ad is free */
+    /** @type {Boolean?} True if ad is free */
     free: false
 }
 
@@ -30,7 +30,8 @@ class ButtonAd extends React.PureComponent {
         const text = lang['ad-button-text'];
 
         let error = null;
-        if (!free) error = lang['ad-button-empty'];
+        if (free === false) error = lang['ad-button-empty'];
+        else if (free === null) error = lang['ad-button-error'];
 
         return (
             <Button color='main2' {...this.props} style={style} enabled={enabled}>

@@ -29,6 +29,9 @@ const TaskProps = {
     /** @type {Subtask} */
     subtask: null,
 
+    /** Icon to drag => onTouchStart event */
+    onDrag: () => {},
+
     onTaskCheck: () => {},
     /**
      * On edit subtask
@@ -46,7 +49,7 @@ class TaskElement extends React.Component {
 
     renderTask() {
         const { checked } = this.state;
-        const { style, task } = this.props;
+        const { style, task, onDrag } = this.props;
         const { Title, Description, Deadline, Schedule } = task;
 
         let text = '';
@@ -58,23 +61,26 @@ class TaskElement extends React.Component {
         // TODO - Add right text automatically (deadline if defined, schedule else (X/month/week...))
 
         return (
-            <TouchableOpacity
-                style={[styles.parent, style]}
-                onPress={openTask}
-                activeOpacity={.6}
-            >
-                <View style={styles.title}>
-                    <Button
-                        style={styles.checkbox}
-                        color={checked ? '#fff' : 'transparent'}
-                        onPress={this.props.onTaskCheck}
-                    >
-                        {checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
-                    </Button>
+            <View style={[styles.parentTask, style]}>
+                <Button
+                    style={styles.checkbox}
+                    color={checked ? '#fff' : 'transparent'}
+                    onPress={this.props.onTaskCheck}
+                >
+                    {checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
+                </Button>
+                <TouchableOpacity
+                    style={styles.title}
+                    onPress={openTask}
+                    activeOpacity={.6}
+                >
                     <Text>{Title}</Text>
+                    <Text>{text}</Text>
+                </TouchableOpacity>
+                <View onTouchStart={() => onDrag()}>
+                    <Icon icon='moveVertical' color='main1' />
                 </View>
-                <Text>{text}</Text>
-            </TouchableOpacity>
+            </View>
         );
     }
 
@@ -93,19 +99,19 @@ class TaskElement extends React.Component {
         }
 
         return (
-            <TouchableOpacity
-                style={[styles.parent, style]}
-                onLongPress={remove}
-                activeOpacity={.6}
-            >
-                <View style={styles.title}>
-                    <Button
-                        style={styles.checkbox}
-                        color={Checked ? '#fff' : 'transparent'}
-                        onPress={() => this.props.onSubtaskEdit(!Checked, Title)}
-                    >
-                        {Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
-                    </Button>
+            <View style={[styles.parentSubask, style]}>
+                <Button
+                    style={styles.checkbox}
+                    color={Checked ? '#fff' : 'transparent'}
+                    onPress={() => this.props.onSubtaskEdit(!Checked, Title)}
+                >
+                    {Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
+                </Button>
+                <TouchableOpacity
+                    style={styles.title}
+                    onLongPress={remove}
+                    activeOpacity={.6}
+                >
                     <TextInput
                         style={[styles.input, textColor, decoration]}
                         value={Title}
@@ -113,9 +119,10 @@ class TaskElement extends React.Component {
                         selectionColor={hexActiveColor}
                         multiline={true}
                         maxLength={256}
+                        placeholder={langManager.curr['task']['input-subtask-placeholder']}
                     />
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+            </View>
         );
     }
 
@@ -130,15 +137,25 @@ TaskElement.prototype.props = TaskProps;
 TaskElement.defaultProps = TaskProps;
 
 const styles = StyleSheet.create({
-    parent: {
+    parentTask: {
+        height: 32,
+        marginTop: 14,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 14
+        justifyContent: 'space-between'
+    },
+    parentSubask: {
+        marginTop: 14,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     title: {
+        flex: 1,
+        height: '100%',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     checkbox: {
         width: 32,
@@ -150,7 +167,12 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
     input: {
-        flex: 1
+        flex: 1,
+        height: '100%',
+        borderColor: '#fff',
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
+        borderBottomRightRadius: 8
     }
 });
 

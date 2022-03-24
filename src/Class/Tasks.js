@@ -48,18 +48,32 @@ class Tasks {
          * @type {Array<Task>}
          */
         this.UNSAVED_deletions = [];
+
+        /**
+         * @type {Array<String>}
+         */
+        this.sortTitles = [];
+
+        /**
+         * TODO
+         * @description Not saved, only to undo last deletion
+         * @type {Task?}
+         */
+        this.lastDeletedTask = null;
     }
 
     Clear() {
         this.SAVED_tasks = [];
         this.UNSAVED_tasks = [];
         this.UNSAVED_deletions = [];
+        this.sortTitles = [];
     }
     Load(tasks) {
         const contains = (key) => tasks.hasOwnProperty(key);
         if (contains('tasks'))      this.SAVED_tasks = tasks['tasks'];
         if (contains('unsaved'))    this.UNSAVED_tasks = tasks['unsaved'];
         if (contains('deletions'))  this.UNSAVED_deletions = tasks['deletions'];
+        if (contains('sortTitles')) this.sortTitles = tasks['sortTitles'];
     }
     LoadOnline(tasks) {
         if (typeof(tasks) !== 'object') return;
@@ -71,7 +85,8 @@ class Tasks {
         const tasks = {
             tasks: this.SAVED_tasks,
             unsaved: this.UNSAVED_tasks,
-            deletions: this.UNSAVED_deletions
+            deletions: this.UNSAVED_deletions,
+            sortTitles: this.sortTitles
         };
         return tasks;
     }
@@ -81,8 +96,10 @@ class Tasks {
      */
     Get() {
         let tasks = [ ...this.SAVED_tasks, ...this.UNSAVED_tasks ];
-        return tasks;
-        return SortByKey(tasks, 'startTime');
+        // Add new tasks title at the top & remove deleted tasks title
+        tasks.forEach(task => this.sortTitles.findIndex(title => task.Title === title) === -1 && this.sortTitles.splice(0, 0, task.Title));
+        this.sortTitles = this.sortTitles.filter(title => tasks.findIndex(task => task.Title === title) !== -1);
+        return this.sortTitles.map(title => tasks.find(task => task.Title === title));
     }
 
     IsUnsaved = () => {
@@ -121,10 +138,9 @@ class Tasks {
      * @param {'week'|'month'|null} repeatMode - Repeat mode
      * @param {Array<Number>} repeatDays - Repeat days
      * @param {Array<Subtask>} subtasks - Subtasks informations
-     * @param {Boolean} [alreadySaved=false] - If false, save task in UNSAVED_tasks
      * @returns {'added'|'alreadyExist'}
      */
-    Add(title, description, deadline, repeatMode, repeatDays, subtasks, alreadySaved = false) {
+    Add(title, description, deadline, repeatMode, repeatDays, subtasks) {
         const newTask = new Task();
         newTask.Title = title;
         newTask.Description = description;
@@ -149,8 +165,7 @@ class Tasks {
 
         // Task not exist, add it
         if (indexTask === null && indexUnsaved === null) {
-            if (alreadySaved) this.SAVED_tasks.push(newTask);
-            else              this.UNSAVED_tasks.push(newTask);
+            this.UNSAVED_tasks.push(newTask);
             return 'added';
         }
 
@@ -205,6 +220,32 @@ class Tasks {
         }
 
         return 'notExist';
+    }
+
+    /**
+     * Change sort order of tasks titles
+     * @param {Task} task
+     * @param {Number} newIndex
+     * @returns {Boolean} Success of the operation
+     */
+    Move(task, newIndex) {
+        this.Get(); // Update sortTitles
+        if (!this.sortTitles.includes(task.Title)) {
+            this.user.interface.console.AddLog('warn', `Tasks - move failed: task not found (${task.Title} ${newIndex})`);
+            return false;
+        }
+        if (newIndex < 0 || newIndex > this.sortTitles.length) {
+            this.user.interface.console.AddLog('warn', `Tasks - move failed: index out of range (${task.Title} ${newIndex})`);
+            return false;
+        }
+        const oldIndex = this.sortTitles.indexOf(task.Title);
+        if (oldIndex === newIndex) {
+            this.user.interface.console.AddLog('warn', `Tasks - move failed: same index (${task.Title} ${newIndex})`);
+            return false;
+        }
+        this.sortTitles.splice(oldIndex, 1);
+        this.sortTitles.splice(newIndex, 0, task.Title);
+        return true;
     }
 
     /**

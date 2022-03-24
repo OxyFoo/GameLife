@@ -192,6 +192,7 @@ class TaskSchedule extends React.Component {
 
                 <DateTimePickerModal
                     date={defaultDate}
+                    minimumDate={defaultDate}
                     mode={this.state.DTPMode}
                     onConfirm={this.onChangeDateTimePicker}
                     onCancel={this.hideDTP}

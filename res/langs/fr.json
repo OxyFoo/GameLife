@@ -400,6 +400,7 @@
         "input-deadline-empty": "Aucune",
         "input-repeat-title": "Répétition",
         "input-description": "Description",
+        "input-subtask-placeholder": "Sous-tâche",
 
         "button-commentary": "Ajouter un commentaire",
         "button-add": "Ajouter",

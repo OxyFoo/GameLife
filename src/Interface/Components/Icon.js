@@ -114,12 +114,6 @@ const IconProps = {
     /** @type {GestureEvent?} */
     onPress: null,
 
-    /** @type {GestureEvent?} */
-    onPressIn: null,
-
-    /** @type {GestureEvent?} */
-    onPressOut: null,
-
     /** @type {Boolean} */
     show: true
 }
@@ -127,7 +121,7 @@ const IconProps = {
 class Icon extends React.Component {
     render() {
         let output;
-        const { style, containerStyle, icon, xml, size, angle, onPress, onPressIn, onPressOut, show } = this.props;
+        const { style, containerStyle, icon, xml, size, angle, onPress, show } = this.props;
         const containerSize = { width: size, height: size };
         const color = themeManager.GetColor(this.props.color);
 
@@ -149,12 +143,10 @@ class Icon extends React.Component {
             output = <View style={[containerSize, style]} />;
         }
 
-        if (onPress !== null || onPressIn !== null || onPressOut !== null) {
+        if (onPress !== null) {
             output = <TouchableOpacity
                         style={[containerSize, containerStyle]}
                         onPress={onPress}
-                        onPressIn={onPressIn}
-                        onPressOut={onPressOut}
                         activeOpacity={.5}
                     >
                         {output}

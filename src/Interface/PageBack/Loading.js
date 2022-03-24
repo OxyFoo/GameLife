@@ -67,7 +67,7 @@ class BackLoading extends React.Component {
         await user.LocalLoad();
 
         // Connect
-        if (user.server.token === '') {
+        if (online && user.server.token === '') {
             const email = user.settings.email;
             const { status } = await user.server.Connect(email);
             if (status === 'newDevice' || status === 'waitMailConfirmation') {
@@ -103,6 +103,7 @@ class BackLoading extends React.Component {
             DisableMorningNotifications();
         }
 
+        // Load ads
         if (user.informations.adRemaining === 0) {
             user.interface.console.AddLog('info', 'No more ads available');
         }

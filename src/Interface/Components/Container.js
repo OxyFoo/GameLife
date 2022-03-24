@@ -58,7 +58,10 @@ const ContainerProps = {
     onChangeState: (opened) => {},
 
     /** @type {Function?} For static container with an icon, event of icon press */
-    onIconPress: undefined
+    onIconPress: undefined,
+
+    /** @type {(event: LayoutChangeEvent) => void} event */
+    onLayout: undefined
 }
 
 class Container extends React.Component {
@@ -164,7 +167,7 @@ class Container extends React.Component {
         };
 
         return (
-            <View style={this.props.style}>
+            <View style={this.props.style} onLayout={this.props.onLayout}>
                 {this.renderHeader()}
                 <Animated.View
                     style={[styles.content, contentStyle]}

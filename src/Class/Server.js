@@ -64,8 +64,8 @@ class Server {
                 this.user.interface.console.EditLog(debugIndex, 'Request: ping - OK');
             }
         } else {
-            const error = result_ping.status + '-' + result_ping.content;
-            this.user.interface.console.AddLog('error', 'Request: ping failed (' + error + ')');
+            const { status, content } = result_ping;
+            this.user.interface.console.AddLog('error', 'Request - ping failed:', status, content?.error || content);
         }
         this.online = online;
     }
@@ -83,8 +83,8 @@ class Server {
         const content = result_connect.content;
 
         if (result_connect.status !== 200) {
-            const error = result_connect.status + ' - ' + content['error'];
-            this.user.interface.console.AddLog('error', 'Request: connect failed (' + error + ')');
+            const { status, content } = result_connect;
+            this.user.interface.console.AddLog('error', 'Request - connect failed:', status, content?.error || content);
             return STATUS.ERROR;
         }
 

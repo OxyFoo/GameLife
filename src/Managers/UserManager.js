@@ -159,8 +159,10 @@ class UserManager {
         return data !== null;
     }
 
+    /** @returns {Promise<Boolean>} True if data is saved */
     OnlineSave = async () => {
         let data = {};
+        let saved = false;
 
         if (this.activities.IsUnsaved()) {
             data['activities'] = this.activities.GetUnsaved();
@@ -186,7 +188,7 @@ class UserManager {
 
         if (Object.keys(data).length) {
             const debugIndex = this.interface.console.AddLog('info', 'User data: online saving...');
-            const saved = await this.server.SaveUserData(data);
+            saved = await this.server.SaveUserData(data);
             if (saved) {
                 this.activities.Purge();
                 this.achievements.Purge();
@@ -199,6 +201,8 @@ class UserManager {
             }
             if (DEBUG_DATA) console.log('User data online save:', data);
         }
+
+        return saved;
     }
 
     async OnlineLoad() {

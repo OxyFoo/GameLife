@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { AppState, LogBox, SafeAreaView } from 'react-native';
+import { AppStateStatus } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
@@ -8,8 +9,8 @@ import { CheckDate } from './src/Utils/DateCheck';
 
 class App extends React.Component {
     componentDidMount() {
-        // Ignore the warning
-        LogBox.ignoreLogs(['new NativeEventEmitter']);
+        // Ignore the warning (NativeEventEmitter & No connection promise rejection)
+        LogBox.ignoreLogs(['new NativeEventEmitter', 'Possible Unhandled Promise Rejection (id: 0)']);
 
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
@@ -19,6 +20,7 @@ class App extends React.Component {
         user.interface.ChangePage('loading', undefined, true);
     }
 
+    /** @param {AppStateStatus} state */
     async componentChangeState(state) {
         if (state === 'active') {
             if (!CheckDate()) {
@@ -27,8 +29,8 @@ class App extends React.Component {
                 this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);*/
                 console.error("TODO - Message d'erreur");
             }
-        } else if (state === 'background') {
-            user.OnlineSave();
+        } else if (state === 'background' || state === 'inactive') {
+            await user.OnlineSave() || await user.LocalSave();
         }
     }
 
@@ -42,7 +44,7 @@ class App extends React.Component {
             <SafeAreaView style={{ backgroundColor: "#000000" }}>
                 <PageManager ref={ref => { if (ref !== null) user.interface = ref }} />
             </SafeAreaView>
-        )
+        );
     }
 }
 

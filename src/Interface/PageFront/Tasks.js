@@ -5,8 +5,8 @@ import BackTasks from '../PageBack/Tasks';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-import { PageHeader } from '../Widgets';
-import { Button, Container, Page, TaskElement, Text } from '../Components';
+import { Button, Container, Page, Text } from '../Components';
+import { PageHeader, TaskElement } from '../Widgets';
 
 class Tasks extends BackTasks {
     renderSelection = () => {

@@ -4,9 +4,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 
 import user from '../../Managers/UserManager';
 
-import Text from './Text';
-import Icon from './Icon';
-import Button from './Button';
+import { Text, Icon, Button } from '../Components';
 import { DateToFormatString } from '../../Utils/Date';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
@@ -14,7 +12,7 @@ import themeManager from '../../Managers/ThemeManager';
 /**
  * @typedef {import('../../Class/Tasks').Task} Task
  * @typedef {import('../../Class/Tasks').Subtask} Subtask
- * @typedef {import('./Icon').Icons} Icons
+ * @typedef {import('../Components/Icon').Icons} Icons
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
  * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
  */

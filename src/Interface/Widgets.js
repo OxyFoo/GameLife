@@ -12,6 +12,7 @@ import Popup from './Widgets/Popup';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import StatsBars from './Widgets/StatsBars';
+import TaskElement from './Widgets/TaskElement';
 import TaskSchedule from './Widgets/TaskSchedule';
 import UserHeader from './Widgets/UserHeader';
 
@@ -30,6 +31,7 @@ export {
     ScreenInput,
     ScreenList,
     StatsBars,
+    TaskElement,
     TaskSchedule,
     UserHeader
 }

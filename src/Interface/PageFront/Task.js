@@ -6,8 +6,8 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { PageHeader, TaskSchedule } from '../Widgets';
-import { Button, Icon, Input, Page, TaskElement, Text } from '../Components';
+import { Button, Icon, Input, Page, Text } from '../Components';
+import { PageHeader, TaskElement, TaskSchedule } from '../Widgets';
 
 class Task extends BackTask {
     renderSubtasks = () => {

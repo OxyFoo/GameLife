@@ -19,9 +19,9 @@ class Shop extends BackShop {
 
                 <Button.Ad
                     style={styles.adButton}
-                    onPress={this.watchAd}
+                    state={this.state.adState}
                     color='main2'
-                    free={this.state.adLoaded}
+                    onPress={this.watchAd}
                 />
             </Page>
         )

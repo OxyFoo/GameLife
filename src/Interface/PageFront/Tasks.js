@@ -11,6 +11,7 @@ import { Button, Container, Page, TaskElement, Text } from '../Components';
 class Tasks extends BackTasks {
     render() {
         const lang = langManager.curr['tasks'];
+        const { adState } = this.state;
 
         return (
             <Page canScrollOver={false} bottomOffset={96}>
@@ -20,8 +21,8 @@ class Tasks extends BackTasks {
 
                 <Button.Ad
                     style={styles.spaceBottom}
+                    state={adState}
                     onPress={this.watchAd}
-                    free={this.state.adLoaded}
                 />
 
                 <Container

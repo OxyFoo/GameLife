@@ -431,9 +431,12 @@
     },
 
     "other": {
-        "ad-button-text": "Regarder une pub",
-        "ad-button-empty": "Il n'y a plus de pub disponible",
-        "ad-button-error": "Impossible de charger les pubs",
+        "ad-button-states": {
+            "ready": "Regarder une pub",
+            "notAvailable": "Il n'y a plus de pub disponible",
+            "wait": "Chargement en cours",
+            "error": "Impossible de charger les pubs"
+        },
         "widget-button-editTime": "Modifier"
     }
 }

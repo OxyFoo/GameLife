@@ -13,7 +13,12 @@ const VERSION = require('../../package.json').version;
  * @typedef {'shop'|'todo'} RewardedAds
  * @typedef {String} InterstitialAds
  * @typedef {RewardedAds|InterstitialAds} AdNames
- * @typedef {'add10Ox'|'custom'} AdTypes
+ * 
+ * @typedef {'ready'|'notAvailable'|'wait'|'error'} AdStates
+ * 
+ * @typedef {Object} AdTypes
+ * @property {FirebaseAdMobTypes.AdEventListener} custom
+ * @property {(state: AdStates) => void} add10Ox
  */
 
 class Ad {
@@ -105,9 +110,10 @@ class Admob {
     }
 
     /**
+     * @template {keyof AdTypes} T
      * @param {RewardedAds} adName 
-     * @param {AdTypes} type
-     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean or null)
+     * @param {T} type
+     * @param {AdTypes[T]?} event
      * @returns {FirebaseAdMobTypes.RewardedAd?}
      */
     GetRewardedAd(adName, type = 'custom', event = () => {}) {
@@ -125,9 +131,10 @@ class Admob {
     }
 
     /**
+     * @template {keyof AdTypes} T
      * @param {InterstitialAds} adName 
-     * @param {AdTypes} type
-     * @param {FirebaseAdMobTypes.AdEventListener|Function?} event (adEventListener if the type is custom otherwide it's a callback to refresh button state with boolean or null)
+     * @param {T} type
+     * @param {AdTypes[T]?} event
      * @returns {FirebaseAdMobTypes.InterstitialAd?}
      */
     GetInterstitialAd(adName, type = 'custom', event = () => {}) {
@@ -147,18 +154,23 @@ class Admob {
     /**
      * @type {FirebaseAdMobTypes.AdEventListener}
      * @param {Ad} ad
-     * @param {Function?} callback
+     * @param {AdTypes['add10Ox']} callback
      */
-    Event10Ox = async (type, error, data, ad, callback) => {
+    Event10Ox = async (type, error, data, ad, callback = () => {}) => {
         if (!!error) {
             this.user.interface.console.AddLog('error', 'Ad error:', error.message);
-            if (callback) callback(null);
+            callback('error');
+            return;
+        }
+
+        if (this.user.informations.adRemaining <= 0 || !this.user.server.online) {
+            callback('notAvailable');
             return;
         }
 
         switch (type) {
             case 'rewarded_loaded':
-                if (callback) callback(true);
+                callback('ready');
                 break;
             case 'rewarded_earned_reward':
                 const response = await this.user.server.AdWatched();
@@ -166,14 +178,17 @@ class Admob {
                 if (response.status === 200 && response.content['status'] === 'ok') {
                     this.user.informations.ox = response.content['ox'];
                     this.user.informations.DecrementAdRemaining();
-                    if (callback) callback(false);
+                    callback('wait');
                 }
                 break;
             case 'opened':
-                if (callback) callback(false);
+                callback('wait');
                 break;
             case 'closed':
                 ad.ad.load();
+                break;
+            default:
+                callback('error');
                 break;
         }
     }

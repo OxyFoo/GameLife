@@ -7,12 +7,16 @@ import langManager from '../../Managers/LangManager';
 import Text from './Text';
 import Icon from './Icon';
 
+/**
+ * @typedef {import('../../Class/Admob').AdStates} AdStates
+ */
+
 const ButtonAdProps = {
     button: null,
     oxAmount: 10,
 
-    /** @type {Boolean?} True if ad is free */
-    free: false
+    /** @type {AdStates} */
+    state: 'wait'
 }
 
 class ButtonAd extends React.PureComponent {
@@ -23,20 +27,16 @@ class ButtonAd extends React.PureComponent {
             return null;
         }
 
-        const { oxAmount, free } = this.props;
-        const lang = langManager.curr['other'];
-        const enabled = free && user.informations.adRemaining > 0;
+        const { oxAmount, state } = this.props;
+        const lang = langManager.curr['other']['ad-button-states'];
+        const text = lang.hasOwnProperty(state) ? lang[state] : '???';
         const style = [styles.adButton, this.props.style];
-        const text = lang['ad-button-text'];
-
-        let error = null;
-        if (free === false) error = lang['ad-button-empty'];
-        else if (free === null) error = lang['ad-button-error'];
+        const enabled = state === 'ready';
 
         return (
             <Button color='main2' {...this.props} style={style} enabled={enabled}>
-                <Text>{error || text}</Text>
-                {!error && (
+                <Text>{text}</Text>
+                {enabled && (
                     <View style={styles.adIcon}>
                         <Text style={styles.adText}>+{oxAmount}</Text>
                         <Icon icon='ox' color='white' size={24} />

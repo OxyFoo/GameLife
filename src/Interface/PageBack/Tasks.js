@@ -2,9 +2,15 @@ import * as React from 'react';
 
 import user from '../../Managers/UserManager';
 
+/**
+ * @typedef {import('../../Class/Admob').AdStates} AdStates
+ * @typedef {import('../../Class/Admob').AdTypes['add10Ox']} AdEvent
+ */
+
 class BackTasks extends React.Component {
     state = {
-        adLoaded: false
+        /** @type {AdStates} */
+        adState: 'wait',
     }
 
     constructor(props) {
@@ -37,9 +43,8 @@ class BackTasks extends React.Component {
         this.rewardedShop.show();
     }
 
-    adStateChange = (loaded) => {
-        this.setState({ adLoaded: loaded });
-    }
+    /** @type {AdEvent} */
+    adStateChange = (state) => this.setState({ adState: state });
 }
 
 export default BackTasks;

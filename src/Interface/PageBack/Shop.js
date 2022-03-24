@@ -1,18 +1,21 @@
 import * as React from 'react';
-import { FirebaseAdMobTypes } from '@react-native-firebase/admob';
 
 import user from '../../Managers/UserManager';
 
+/**
+ * @typedef {import('../../Class/Admob').AdStates} AdStates
+ * @typedef {import('../../Class/Admob').AdTypes['add10Ox']} AdEvent
+ */
+
 class BackShop extends React.Component {
     state = {
-        adLoaded: false
+        /** @type {AdStates} */
+        adState: 'wait'
     }
 
     constructor(props) {
         super(props);
-
-        this.rewardedShop = user.admob.GetRewardedAd('shop', 'custom', this.onAdEvent);
-        this.state.adLoaded = this.rewardedShop.loaded;
+        this.rewardedShop = user.admob.GetRewardedAd('shop', 'add10Ox', this.onAdStateChange);
     }
     componentWillUnmount() {
         user.admob.ClearEvents('shop');
@@ -31,34 +34,8 @@ class BackShop extends React.Component {
         this.rewardedShop.show();
     }
 
-    /** @type {FirebaseAdMobTypes.AdEventListener} */
-    onAdEvent = async (type, error, data) => {
-        if (!!error) {
-            user.interface.console.AddLog('error', 'Ad error:', error.message);
-            return;
-        }
-
-        switch (type) {
-            case 'rewarded_loaded':
-                this.setState({ adLoaded: true });
-                break;
-            case 'rewarded_earned_reward':
-                const response = await user.server.AdWatched();
-                user.interface.console.AddLog('info', 'Ad watched', response);
-                if (response.status === 200 && response.content['status'] === 'ok') {
-                    user.informations.ox = response.content['ox'];
-                    user.informations.DecrementAdRemaining();
-                    this.forceUpdate();
-                }
-                break;
-            case 'opened':
-                this.setState({ adLoaded: false });
-                break;
-            case 'closed':
-                this.rewardedShop.load();
-                break;
-        }
-    }
+    /** @type {AdEvent} */
+    onAdStateChange = (state) => this.setState({ adState: state });
 }
 
 export default BackShop;

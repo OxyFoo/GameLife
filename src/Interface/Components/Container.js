@@ -173,7 +173,7 @@ class Container extends React.Component {
                     style={[styles.content, contentStyle]}
                     onLayout={this.onLayout}
                 >
-                    <View style={[{ padding: '5%' }, this.props.styleContainer]}>
+                    <View style={[{ padding: 24 }, this.props.styleContainer]}>
                         {children}
                     </View>
                 </Animated.View>

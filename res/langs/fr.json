@@ -415,13 +415,19 @@
         "alert-remtask-title": "Suppression ?",
         "alert-remtask-text": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
         "alert-remsubtask-title": "Suppression ?",
-        "alert-remsubtask-text": "Êtes-vous sûr de vouloir supprimer cette sous-tâche ?"
+        "alert-remsubtask-text": "Êtes-vous sûr de vouloir supprimer cette sous-tâche ?",
+        "alert-subtaskslimit-title": "Limite atteinte",
+        "alert-subtaskslimit-text": "Vous ne pouvez pas avoir plus de 20 sous-tâches."
     },
 
     "tasks": {
         "container-title": "Todo liste",
         "tasks-empty-title": "Vous n'avez pas encore de tâche",
-        "tasks-empty-button": "En ajouter une"
+        "tasks-empty-button": "En ajouter une",
+        "tasks-undo-button": "Annuler la suppression",
+
+        "alert-taskslimit-title": "Limite de tâches atteinte",
+        "alert-taskslimit-text": "Vous avez atteint la limite des tâches, veuillez en supprimer certaines pour en ajouter d'autres."
     },
 
     "wait": {

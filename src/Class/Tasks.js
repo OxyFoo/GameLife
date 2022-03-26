@@ -216,6 +216,7 @@ class Tasks {
         }
 
         if (deleted !== null) {
+            this.lastDeletedTask = deleted;
             return 'removed';
         }
 
@@ -229,7 +230,6 @@ class Tasks {
      * @returns {Boolean} Success of the operation
      */
     Move(task, newIndex) {
-        this.Get(); // Update sortTitles
         if (!this.sortTitles.includes(task.Title)) {
             this.user.interface.console.AddLog('warn', `Tasks - move failed: task not found (${task.Title} ${newIndex})`);
             return false;
@@ -245,6 +245,24 @@ class Tasks {
         }
         this.sortTitles.splice(oldIndex, 1);
         this.sortTitles.splice(newIndex, 0, task.Title);
+        return true;
+    }
+
+    /**
+     * Restore last deleted task
+     * @returns {Boolean} Success of the operation
+     */
+    Undo() {
+        if (this.lastDeletedTask === null) return false;
+
+        // Delete task from UNSAVED_deletions
+        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, this.lastDeletedTask);
+        if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
+
+        // Save task in UNSAVED_tasks
+        this.UNSAVED_tasks.push(this.lastDeletedTask);
+        this.lastDeletedTask = null;
+
         return true;
     }
 

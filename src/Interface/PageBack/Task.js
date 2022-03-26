@@ -88,6 +88,14 @@ class BackTask extends React.Component {
 
     addSubtask = () => {
         let { subtasks } = this.state;
+
+        if (subtasks.length >= 20) {
+            const title = langManager.curr['task']['alert-subtaskslimit-title'];
+            const text = langManager.curr['task']['alert-subtaskslimit-text'];
+            user.interface.popup.Open('ok', [title, text]);
+            return;
+        }
+
         const action = this.taskName === null ? this.state.action : 'edit';
         subtasks.push({
             Checked: false,

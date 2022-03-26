@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { View, Animated, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { StyleProp, ViewStyle } from 'react-native';
 
 import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
+import themeManager from '../../Managers/ThemeManager';
 
 import { Text, Icon, Button } from '../Components';
 import { DateToFormatString } from '../../Utils/Date';
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import { TimingAnimation } from '../../Utils/Animations';
 
 /**
  * @typedef {import('../../Class/Tasks').Task} Task
@@ -27,43 +28,61 @@ const TaskProps = {
     /** @type {Subtask} */
     subtask: null,
 
-    /** Icon to drag => onTouchStart event */
+    /** Icon to drag => onTouchStart event (task only) */
     onDrag: () => {},
 
-    onTaskCheck: () => {},
     /**
-     * On edit subtask
+     * @param {Task} task
+     * @returns {Promise<Boolean>}
+     */
+    onTaskCheck: async (task) => true,
+
+    /**
      * @param {Boolean} checked
      * @param {String} title
      */
     onSubtaskEdit: (checked, title) => {},
-    onSubtaskDelete: () => {}
+    onSubtaskDelete: () => {},
+
+    isLast: false
 }
 
 class TaskElement extends React.Component {
     state = {
-        checked: false
+        checked: false,
+        animOpacity: new Animated.Value(1)
     };
 
     renderTask() {
-        const { checked } = this.state;
-        const { style, task, onDrag } = this.props;
+        const { checked, animOpacity } = this.state;
+        const { style, task, onDrag, isLast } = this.props;
         const { Title, Description, Deadline, Schedule } = task;
 
         let text = '';
         if (Deadline !== null) text = DateToFormatString(Deadline*1000);
 
         const openTask = () => user.interface.ChangePage('task', { task });
+        const onCheck = () => {
+            const callback = () => {
+                this.props.onTaskCheck(task);
+                if (!isLast) {
+                    this.setState({ checked: false });
+                    TimingAnimation(animOpacity, 1, 10).start();
+                }
+            }
+            this.setState({ checked: true });
+            TimingAnimation(animOpacity, 0, 500).start(callback);
+        }
 
         // TODO - Add daily mode (circle)
         // TODO - Add right text automatically (deadline if defined, schedule else (X/month/week...))
 
         return (
-            <View style={[styles.parentTask, style]}>
+            <Animated.View style={[styles.parentTask, style, { opacity: animOpacity }]} pointerEvents={!checked ? 'auto' : 'none'}>
                 <Button
                     style={styles.checkbox}
                     color={checked ? '#fff' : 'transparent'}
-                    onPress={this.props.onTaskCheck}
+                    onPress={onCheck}
                 >
                     {checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
                 </Button>
@@ -78,7 +97,7 @@ class TaskElement extends React.Component {
                 <View onTouchStart={() => onDrag()}>
                     <Icon icon='moveVertical' color='main1' />
                 </View>
-            </View>
+            </Animated.View>
         );
     }
 

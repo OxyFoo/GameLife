@@ -3,8 +3,9 @@ import { Animated, FlatList } from 'react-native';
 import { GestureResponderEvent, LayoutChangeEvent, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 
 import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
 
-import { TimingAnimation } from '../../Utils/Animations';
+import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
 import { MinMax } from '../../Utils/Functions';
 
 /**
@@ -25,7 +26,9 @@ class BackTasks extends React.Component {
         draggedItem: null,
         mouseY: new Animated.Value(0),
         top: 0,
-        height: 0
+        height: 0,
+
+        animUndoY: new Animated.Value(56 + 48 + 12)
     }
 
     constructor(props) {
@@ -44,10 +47,37 @@ class BackTasks extends React.Component {
     }
 
     addTask = () => {
+        if (this.state.tasks.length >= 8) {
+            const title = langManager.curr['tasks']['alert-taskslimit-title'];
+            const text = langManager.curr['tasks']['alert-taskslimit-text'];
+            user.interface.popup.Open('ok', [title, text]);
+            return;
+        }
         user.interface.ChangePage('task', undefined, true);
     }
-    onTaskCheck = () => {
-        // TODO
+    /** @param {Task} task */
+    onTaskCheck = async (task) => {
+        // Open undo button
+        SpringAnimation(this.state.animUndoY, 0).start();
+        this.undoTimeout = setTimeout(() => {
+            // Close undo button after 10 seconds
+            SpringAnimation(this.state.animUndoY, 56 + 48 + 12).start();
+        }, 10 * 1000);
+
+        await new Promise((resolve, reject) => {
+            const success = user.tasks.Remove(task) === 'removed';
+            if (success) this.setState({ tasks: [...user.tasks.Get()] }, resolve);
+            else resolve();
+        });
+    }
+
+    undo = () => {
+        // Close undo button
+        SpringAnimation(this.state.animUndoY, 56 + 48 + 12).start();
+        clearTimeout(this.undoTimeout);
+
+        user.tasks.Undo();
+        this.setState({ tasks: [...user.tasks.Get()] });
     }
 
     /** @param {import('../../Class/Tasks').Task} item */
@@ -82,8 +112,9 @@ class BackTasks extends React.Component {
             const index = Math.floor((newY + scrollY) / 46);
             const currIndex = user.tasks.sortTitles.indexOf(draggedItem.Title);
             if (index !== currIndex) {
-                user.tasks.Move(draggedItem, index);
+                if (user.tasks.Move(draggedItem, index)) {
                 this.setState({ tasks: user.tasks.Get() });
+            }
             }
 
             const scrollOffset = 48;

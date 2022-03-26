@@ -23,7 +23,7 @@ class Tasks extends BackTasks {
     }
     render() {
         const lang = langManager.curr['tasks'];
-        const { adState, scrollable, draggedItem } = this.state;
+        const { adState, scrollable, draggedItem, tasks } = this.state;
 
         const renderItem = ({ item }) => (
             <TaskElement
@@ -31,6 +31,7 @@ class Tasks extends BackTasks {
                 task={item}
                 onTaskCheck={this.onTaskCheck}
                 onDrag={() => this.onDrag(item)}
+                isLast={tasks[tasks.length - 1].Title === item.Title}
             />
         );
         const renderEmpty = () => (
@@ -41,45 +42,57 @@ class Tasks extends BackTasks {
         );
 
         return (
-            <Page scrollable={false} bottomOffset={0}>
-                <PageHeader
-                    onBackPress={() => user.interface.BackPage()}
-                />
-
-                <Button.Ad
-                    style={styles.spaceBottom}
-                    state={adState}
-                    onPress={this.watchAd}
-                />
-
-                <Container
-                    styleContainer={styles.tasksContainer}
-                    type='static'
-                    icon='add'
-                    text={lang['container-title']}
-                    onLayout={this.onLayout}
-                    onIconPress={this.addTask}
-                >
-                    {this.renderSelection()}
-                    <FlatList
-                        ref={ref => this.refFlatlist = ref}
-                        style={{ height: 'auto' }}
-
-                        onTouchStart={this.onTouchStart}
-                        onTouchMove={this.onTouchMove}
-                        onTouchEnd={this.onTouchEnd}
-                        onScroll={this.onScroll}
-                        onContentSizeChange={(w, h) => this.flatlist.contentSizeHeight = h}
-                        onLayout={(event) => this.flatlist.layoutMeasurementHeight = event.nativeEvent.layout.height}
-
-                        data={this.state.tasks}
-                        scrollEnabled={scrollable}
-                        keyExtractor={(item, index) => 'task-' + index.toString()}
-                        renderItem={renderItem}
-                        ListEmptyComponent={renderEmpty}
+            <>
+                <Page scrollable={false} bottomOffset={0}>
+                    <PageHeader
+                        onBackPress={() => user.interface.BackPage()}
                     />
-                </Container>
-            </Page>
+
+                    <Button.Ad
+                        style={styles.spaceBottom}
+                        state={adState}
+                        onPress={this.watchAd}
+                    />
+
+                    <Container
+                        styleContainer={styles.tasksContainer}
+                        type='static'
+                        icon='add'
+                        text={lang['container-title']}
+                        onLayout={this.onLayout}
+                        onIconPress={this.addTask}
+                    >
+                        {this.renderSelection()}
+                        <FlatList
+                            ref={ref => this.refFlatlist = ref}
+                            style={{ height: 'auto' }}
+
+                            onTouchStart={this.onTouchStart}
+                            onTouchMove={this.onTouchMove}
+                            onTouchEnd={this.onTouchEnd}
+                            onScroll={this.onScroll}
+                            onContentSizeChange={(w, h) => this.flatlist.contentSizeHeight = h}
+                            onLayout={(event) => this.flatlist.layoutMeasurementHeight = event.nativeEvent.layout.height}
+
+                            data={tasks}
+                            extraData={tasks}
+                            scrollEnabled={scrollable}
+                            keyExtractor={(item, index) => 'task-' + index.toString()}
+                            renderItem={renderItem}
+                            ListEmptyComponent={renderEmpty}
+                        />
+                    </Container>
+                </Page>
+                <Button
+                    style={styles.undo}
+                    styleAnimation={{ transform: [{ translateY: this.state.animUndoY }] }}
+                    color='main1'
+                    onPress={this.undo}
+                    enabled={user.tasks.lastDeletedTask !== null}
+                >
+                    {lang['tasks-undo-button']}
+                </Button>
+            </>
         );
     }
 }
@@ -95,6 +108,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#00000080',
         zIndex: 10
+    },
+    undo: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        margin: 48
     },
     tasksContainer: { padding: 28, paddingTop: 14 },
     spaceBottom: { marginBottom: 32 },

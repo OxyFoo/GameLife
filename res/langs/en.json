@@ -415,13 +415,19 @@
         "alert-remtask-title": "Delete task?",
         "alert-remtask-text": "Are you sure you want to delete this task?",
         "alert-remsubtask-title": "Delete task?",
-        "alert-remsubtask-text": "Are you sure you want to delete this subtask?"
+        "alert-remsubtask-text": "Are you sure you want to delete this subtask?",
+        "alert-subtaskslimit-title": "Limit reached",
+        "alert-subtaskslimit-text": "You can't add more than 20 subtasks to this task"
     },
 
     "tasks": {
         "container-title": "Todo list",
         "tasks-empty-title": "No task",
-        "tasks-empty-button": "Add a task"
+        "tasks-empty-button": "Add a task",
+        "tasks-undo-button": "Undo the deletion",
+
+        "alert-taskslimit-title": "Limit reached",
+        "alert-taskslimit-text": "You have reached the limit of tasks, please delete some of them to add more."
     },
 
     "wait": {

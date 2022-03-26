@@ -40,6 +40,8 @@ class BackTasks extends React.Component {
             layoutMeasurementHeight: 0,
             contentOffsetY: 0,
         }
+    }
+    componentDidMount() {
         this.rewardedShop = user.admob.GetRewardedAd('todo', 'add10Ox', this.adStateChange);
     }
     componentWillUnmount() {
@@ -113,8 +115,8 @@ class BackTasks extends React.Component {
             const currIndex = user.tasks.sortTitles.indexOf(draggedItem.Title);
             if (index !== currIndex) {
                 if (user.tasks.Move(draggedItem, index)) {
-                this.setState({ tasks: user.tasks.Get() });
-            }
+                    this.setState({ tasks: user.tasks.Get() });
+                }
             }
 
             const scrollOffset = 48;
@@ -136,18 +138,7 @@ class BackTasks extends React.Component {
         this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
     }
 
-    watchAd = () => {
-        if (this.rewardedShop === null) {
-            user.interface.console.AddLog('warn', 'Ad not created');
-            return;
-        }
-        if (!this.rewardedShop.loaded) {
-            user.interface.console.AddLog('warn', 'Ad not loaded');
-            return;
-        }
-
-        this.rewardedShop.show();
-    }
+    watchAd = () => this.rewardedShop.show();
 
     /** @type {AdEvent} */
     adStateChange = (state) => this.setState({ adState: state });

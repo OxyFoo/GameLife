@@ -124,7 +124,9 @@ class Admob {
         if (type === 'add10Ox') _event = (type, error, data) => this.Event10Ox(type, error, data, rewarded, event);
         const unsubscriber = rewarded.ad.onAdEvent(_event);
         rewarded.unsubscriber = unsubscriber;
-        if (!rewarded.ad.loaded) {
+        if (type === 'add10Ox' && rewarded.ad?.loaded) {
+            event('ready');
+        } else if (!rewarded.ad.loaded) {
             rewarded.ad.load();
         }
         return rewarded.ad;
@@ -145,7 +147,9 @@ class Admob {
         if (type === 'add10Ox') _event = (type, error, data) => this.Event10Ox(type, error, data, interstitial, event);
         const unsubscriber = interstitial.ad.onAdEvent(_event);
         interstitial.unsubscriber = unsubscriber;
-        if (!interstitial.ad.loaded) {
+        if (type === 'add10Ox' && interstitial.ad?.loaded) {
+            event('ready');
+        } else if (!interstitial.ad.loaded) {
             interstitial.ad.load();
         }
         return interstitial.ad;

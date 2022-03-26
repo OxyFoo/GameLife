@@ -54,7 +54,9 @@ class UserManager {
         this.tempSelectedTime = null;
         this.tempMailSent = null;
 
-        this.intervalSave = setInterval(this.OnlineSave.bind(this), 5 * 60 * 1000);
+        const saveTime = 5 * 60 * 1000; // 5 minutes
+        const save = this.server.online ? this.OnlineSave : this.LocalSave;
+        this.intervalSave = setInterval(save, saveTime);
     }
 
     async Clear(keepOnboardingState = true) {

@@ -426,6 +426,9 @@
         "tasks-empty-button": "Add a task",
         "tasks-undo-button": "Undo the deletion",
 
+        "task-type-deadline": "Ends on:",
+        "task-type-repeat": "Next repetition:",
+
         "alert-taskslimit-title": "Limit reached",
         "alert-taskslimit-text": "You have reached the limit of tasks, please delete some of them to add more."
     },

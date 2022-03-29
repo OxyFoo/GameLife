@@ -42,7 +42,7 @@ class TaskSchedule extends React.Component {
         const { initValues } = this.props;
         if (initValues !== null && initValues.length === 3) {
             this.state.deadline = initValues[0];
-            this.state.deadlineText = DateToFormatString(initValues[0]);
+            this.state.deadlineText = DateToFormatString(initValues[0] * 1000);
             if (initValues[1] === 'week') this.state.repeatMode = 1;
             if (initValues[1] === 'month') this.state.repeatMode = 2;
             this.state.selectedDays = initValues[2];
@@ -95,10 +95,10 @@ class TaskSchedule extends React.Component {
         this.hideDTP();
 
         if (DTPMode === 'date') {
-            newDate.setHours(1, 0, 0, 0);
+            newDate.setUTCHours(0, 0, 0, 0);
             this.setState({
                 deadline: GetTime(newDate),
-                deadlineText: DateToFormatString(newDate)
+                deadlineText: DateToFormatString(newDate * 1000)
             }, this.onChange);
         }
     }
@@ -156,8 +156,8 @@ class TaskSchedule extends React.Component {
         const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
         const textDeadline = this.state.deadline === null ? lang['input-deadline-empty'] : this.state.deadlineText;
         const defaultDate = new Date();
-        defaultDate.setHours(1, 0, 0, 0);
-        defaultDate.setDate(defaultDate.getDate() + 1);
+        defaultDate.setUTCHours(0, 0, 0, 0);
+        defaultDate.setUTCDate(defaultDate.getUTCDate() + 1);
 
         const dateNames = langManager.curr['dates']['names'];
         const timeIntervals = [ dateNames['never'], dateNames['weekly'], dateNames['monthly'] ];
@@ -169,7 +169,6 @@ class TaskSchedule extends React.Component {
                     <View style={[styles.row, { marginBottom: 12 }]}>
                         <Text>{lang['input-deadline-title']}</Text>
                         <Button
-                            //color='main1'
                             colorText='main1'
                             style={styles.smallBtn}
                             fontSize={14}

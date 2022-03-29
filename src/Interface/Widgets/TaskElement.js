@@ -6,8 +6,9 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
+import { GetTime } from '../../Utils/Time';
+import { DateToFormatString, GetDay } from '../../Utils/Date';
 import { Text, Icon, Button } from '../Components';
-import { DateToFormatString } from '../../Utils/Date';
 import { TimingAnimation } from '../../Utils/Animations';
 
 /**
@@ -48,18 +49,69 @@ const TaskProps = {
 }
 
 class TaskElement extends React.Component {
+    text = '';
     state = {
         checked: false,
         animOpacity: new Animated.Value(1)
     };
 
+    componentDidMount() {
+        const { task } = this.props;
+        const { Deadline, Schedule } = task;
+
+        const d = new Date();
+        d.setUTCHours(0, 0, 0, 0);
+        const now = GetTime();
+
+        /** @type {'schedule'|'deadline'|null} */
+        let deadlineType = null;
+
+        /** @type {Number?} Minimum number of days */
+        let minDeltaDays = null;
+
+        // Search next schedule
+        let i = 0;
+        if (Schedule !== null && Schedule.Repeat.length) {
+            deadlineType = 'schedule';
+            while (minDeltaDays === null) {
+                const weekMatch = Schedule.Type === 'week' && Schedule.Repeat.includes(GetDay(d));
+                const monthMatch = Schedule.Type === 'month' && Schedule.Repeat.includes(d.getUTCDate());
+                if (weekMatch || monthMatch) minDeltaDays = i + 1;
+                //console.log(Schedule, GetDay(d), d.getUTCDate(), minDeltaDays);
+                d.setUTCDate(d.getUTCDate() + 1); i++;
+            }
+        }
+
+        // Search next deadline (if earlier than schedule or no schedule)
+        if (Deadline !== null) {
+            const delta = (Deadline - now) / (60 * 60 * 24);
+            if (minDeltaDays === null || delta < minDeltaDays) {
+                deadlineType = 'deadline';
+                minDeltaDays = delta;
+                nextDaysToDeadline = Math.floor(delta);
+            }
+        }
+
+        // Define text (deadline or schedule)
+        const lang = langManager.curr['tasks'];
+        if (deadlineType === 'deadline') {
+            this.text = lang['task-type-deadline'] + ' ' + DateToFormatString(Deadline * 1000);
+        } else if (deadlineType === 'schedule') {
+            const nextDate = new Date((now + (minDeltaDays * 24 * 60 * 60)) * 1000);
+            this.text = lang['task-type-repeat'] + ' ' + DateToFormatString(nextDate);
+        }
+
+        // Define color (red if overdue, orange if today, white otherwise)
+        /** @type {ColorThemeText} */
+        this.colorText = 'primary';
+        if (minDeltaDays !== null && minDeltaDays < 0) this.colorText = 'error';
+        else if (minDeltaDays !== null && minDeltaDays < 1) this.colorText = 'warning';
+    }
+
     renderTask() {
         const { checked, animOpacity } = this.state;
         const { style, task, onDrag, isLast } = this.props;
-        const { Title, Description, Deadline, Schedule } = task;
-
-        let text = '';
-        if (Deadline !== null) text = DateToFormatString(Deadline*1000);
+        const { Title } = task;
 
         const openTask = () => user.interface.ChangePage('task', { task });
         const onCheck = () => {
@@ -75,7 +127,6 @@ class TaskElement extends React.Component {
         }
 
         // TODO - Add daily mode (circle)
-        // TODO - Add right text automatically (deadline if defined, schedule else (X/month/week...))
 
         return (
             <Animated.View style={[styles.parentTask, style, { opacity: animOpacity }]} pointerEvents={!checked ? 'auto' : 'none'}>
@@ -91,8 +142,8 @@ class TaskElement extends React.Component {
                     onPress={openTask}
                     activeOpacity={.6}
                 >
-                    <Text>{Title}</Text>
-                    <Text>{text}</Text>
+                    <Text style={styles.titleText}>{Title}</Text>
+                    {!!this.text.length && <Text style={styles.dateText} color={this.colorText}>{this.text}</Text>}
                 </TouchableOpacity>
                 <View onTouchStart={() => onDrag()}>
                     <Icon icon='moveVertical' color='main1' />
@@ -164,15 +215,20 @@ const styles = StyleSheet.create({
     parentSubask: {
         marginTop: 14,
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        alignItems: 'center'
     },
     title: {
         flex: 1,
         height: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'center'
+    },
+    titleText: {
+        height: 24,
+        textAlign: 'left'
+    },
+    dateText: {
+        textAlign: 'right',
+        fontSize: 12
     },
     checkbox: {
         width: 32,

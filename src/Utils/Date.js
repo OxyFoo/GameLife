@@ -11,6 +11,11 @@ const DAYS = {
     saturday: 6
 }
 
+function GetDay(date, firstDay = DAYS.monday) {
+    const day = new Date(date).getUTCDay();
+    return (day + 5 + firstDay) % 7;
+}
+
 /**
  * Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
  * @param {Number} month
@@ -91,5 +96,5 @@ function DateToFormatTimeString(date) {
     return [ HH, MM ].join(':');
 }
 
-export { DAYS, GetBlockMonth, GetMonthAndYear, GetFullDate,
+export { DAYS, GetDay, GetBlockMonth, GetMonthAndYear, GetFullDate,
     DateToFormatString, DateToFormatTimeString };

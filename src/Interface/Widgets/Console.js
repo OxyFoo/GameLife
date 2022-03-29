@@ -7,6 +7,10 @@ import { Text, Button } from '../Components';
 import { SpringAnimation } from '../../Utils/Animations';
 
 /**
+ * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ */
+
+/**
  * 0: Show all logs\
  * 1: Show only warnings and errors\
  * 2: Show only errors
@@ -108,11 +112,14 @@ class Console extends React.Component {
 
     renderText = ({ item }) => {
         const [type, text] = item;
-        let color = '#ECECEC';
-        if (type === 'warn') color = '#F1C40F';
-        else if (type === 'error') color = '#E74C3C';
+
+        /** @type {ColorThemeText} */
+        let color = 'primary';
+        if (type === 'warn') color = 'warning';
+        else if (type === 'error') color = 'error';
+
         return (
-            <Text style={{ textAlign: 'left' }} color={color}>{text}</Text>
+            <Text style={styles.text} color={color}>{text}</Text>
         );
     }
     render() {
@@ -188,6 +195,9 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 16,
         borderBottomRightRadius: 16,
         backgroundColor: '#000'
+    },
+    text: {
+        textAlign: 'left'
     },
     buttonOpen: {
         width: '40%',

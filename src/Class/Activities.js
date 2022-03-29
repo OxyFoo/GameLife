@@ -334,9 +334,9 @@ class Activities {
         return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
     }
     ContainActivity(date = new Date(), onlyRelax = false) {
-        date.setHours(1, 0, 0, 0);
+        date.setUTCHours(0, 0, 0, 0);
         const startTime = GetTime(date);
-        date.setHours(23, 59, 59, 999);
+        date.setUTCHours(23, 59, 59, 999);
         const endTime = GetTime(date);
 
         for (let a = 0; a < this.activities.length; a++) {

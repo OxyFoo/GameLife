@@ -1,6 +1,6 @@
 /**
  * @typedef {'Dark'|'Light'} Theme
- * @typedef {'primary'|'secondary'|'light'|'error'} ColorThemeText Color name or hexadecimal color
+ * @typedef {'primary'|'secondary'|'light'|'warning'|'error'} ColorThemeText Color name or hexadecimal color
  * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'danger'} ColorTheme Color name or hexadecimal color
  */
 
@@ -24,6 +24,7 @@ class ThemeManager {
                 primary: '#ECECEC',
                 secondary: '#808080',
                 light: '#A7A4A4',
+                warning: '#F1C40F',
                 error: '#CC0029'
             }
         },
@@ -45,6 +46,7 @@ class ThemeManager {
                 primary: '#ECECEC',
                 secondary: '#808080',
                 light: '#A7A4A4',
+                warning: '#F1C40F',
                 error: '#CC0029'
             }
         }

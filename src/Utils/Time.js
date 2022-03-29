@@ -39,7 +39,7 @@ function RoundToQuarter(time) {
  */
 function GetMidnightTime(time) {
     const _date = new Date(time * 1000);
-    _date.setHours(1, 0, 0, 0); // Set to midnight
+    _date.setUTCHours(1, 0, 0, 0); // Set to midnight
     return GetTime(_date);
 }
 

@@ -43,15 +43,12 @@ const TaskProps = {
      * @param {String} title
      */
     onSubtaskEdit: (checked, title) => {},
-    onSubtaskDelete: () => {},
-
-    isLast: false
+    onSubtaskDelete: () => {}
 }
 
 class TaskElement extends React.Component {
     text = '';
     state = {
-        checked: false,
         animOpacity: new Animated.Value(1)
     };
 
@@ -109,33 +106,37 @@ class TaskElement extends React.Component {
     }
 
     renderTask() {
-        const { checked, animOpacity } = this.state;
-        const { style, task, onDrag, isLast } = this.props;
-        const { Title } = task;
+        const { animOpacity } = this.state;
+        const { style, task, onDrag } = this.props;
+        const { Title, Schedule, Checked } = task;
+        const isTodo = Schedule === null;
 
         const openTask = () => user.interface.ChangePage('task', { task });
         const onCheck = () => {
-            const callback = () => {
+            if (isTodo) {
+                // Check, hide & callback to remove
+                user.tasks.Check(task, true);
+                const callback = () => this.props.onTaskCheck(task);
+                TimingAnimation(animOpacity, 0, 500).start(callback);
+            } else {
+                // Switch check state & callback to edit
                 this.props.onTaskCheck(task);
-                if (!isLast) {
-                    this.setState({ checked: false });
-                    TimingAnimation(animOpacity, 1, 10).start();
-                }
             }
-            this.setState({ checked: true });
-            TimingAnimation(animOpacity, 0, 500).start(callback);
         }
 
-        // TODO - Add daily mode (circle)
+        const buttonStyle = [
+            styles.checkbox,
+            { borderRadius: isTodo ? 8 : 200 }
+        ];
 
         return (
-            <Animated.View style={[styles.parentTask, style, { opacity: animOpacity }]} pointerEvents={!checked ? 'auto' : 'none'}>
+            <Animated.View style={[styles.parentTask, style, { opacity: animOpacity }]} pointerEvents={!Checked || !isTodo ? 'auto' : 'none'}>
                 <Button
-                    style={styles.checkbox}
-                    color={checked ? '#fff' : 'transparent'}
+                    style={buttonStyle}
+                    color={Checked ? '#fff' : 'transparent'}
                     onPress={onCheck}
                 >
-                    {checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
+                    {Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
                 </Button>
                 <TouchableOpacity
                     style={styles.title}

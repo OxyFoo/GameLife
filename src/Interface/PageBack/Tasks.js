@@ -59,6 +59,12 @@ class BackTasks extends React.Component {
     }
     /** @param {Task} task */
     onTaskCheck = async (task) => {
+        if (task.Schedule !== null) {
+            user.tasks.Check(task, !task.Checked);
+            this.forceUpdate();
+            return;
+        }
+
         // Open undo button
         SpringAnimation(this.state.animUndoY, 0).start();
         this.undoTimeout = setTimeout(() => {

@@ -27,11 +27,11 @@ class Tasks extends BackTasks {
 
         const renderItem = ({ item }) => (
             <TaskElement
+                key={item.Title}
                 style={{ opacity: draggedItem !== null && item.Title === draggedItem.Title ? .25 : 1 }}
                 task={item}
                 onTaskCheck={this.onTaskCheck}
                 onDrag={() => this.onDrag(item)}
-                isLast={tasks[tasks.length - 1].Title === item.Title}
             />
         );
         const renderEmpty = () => (

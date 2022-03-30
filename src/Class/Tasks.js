@@ -1,5 +1,3 @@
-import { SortByKey } from '../Utils/Functions';
-
 /**
  * @typedef {Object} Schedule
  * @property {'week'|'month'} Type
@@ -13,6 +11,7 @@ import { SortByKey } from '../Utils/Functions';
  */
 
 class Task {
+    Checked = false;
     Title = '';
     Description = '';
 
@@ -42,7 +41,7 @@ class Tasks {
         /**
          * @type {Array<Task>}
          */
-        this.UNSAVED_tasks = [];
+        this.UNSAVED_additions = [];
 
         /**
          * @type {Array<Task>}
@@ -64,14 +63,14 @@ class Tasks {
 
     Clear() {
         this.SAVED_tasks = [];
-        this.UNSAVED_tasks = [];
+        this.UNSAVED_additions = [];
         this.UNSAVED_deletions = [];
         this.sortTitles = [];
     }
     Load(tasks) {
         const contains = (key) => tasks.hasOwnProperty(key);
         if (contains('tasks'))      this.SAVED_tasks = tasks['tasks'];
-        if (contains('unsaved'))    this.UNSAVED_tasks = tasks['unsaved'];
+        if (contains('additions'))  this.UNSAVED_additions = tasks['additions'];
         if (contains('deletions'))  this.UNSAVED_deletions = tasks['deletions'];
         if (contains('sortTitles')) this.sortTitles = tasks['sortTitles'];
     }
@@ -84,7 +83,7 @@ class Tasks {
     Save() {
         const tasks = {
             tasks: this.SAVED_tasks,
-            unsaved: this.UNSAVED_tasks,
+            additions: this.UNSAVED_additions,
             deletions: this.UNSAVED_deletions,
             sortTitles: this.sortTitles
         };
@@ -95,7 +94,7 @@ class Tasks {
      * @returns {Array<Task>}
      */
     Get() {
-        let tasks = [ ...this.SAVED_tasks, ...this.UNSAVED_tasks ];
+        let tasks = [ ...this.SAVED_tasks, ...this.UNSAVED_additions ];
         // Add new tasks title at the top & remove deleted tasks title
         tasks.forEach(task => this.sortTitles.findIndex(title => task.Title === title) === -1 && this.sortTitles.splice(0, 0, task.Title));
         this.sortTitles = this.sortTitles.filter(title => tasks.findIndex(task => task.Title === title) !== -1);
@@ -103,12 +102,12 @@ class Tasks {
     }
 
     IsUnsaved = () => {
-        return this.UNSAVED_tasks.length || this.UNSAVED_deletions.length;
+        return this.UNSAVED_additions.length || this.UNSAVED_deletions.length;
     }
     GetUnsaved = () => {
         let unsaved = [];
-        for (let a in this.UNSAVED_tasks) {
-            const task = this.UNSAVED_tasks[a];
+        for (let a in this.UNSAVED_additions) {
+            const task = this.UNSAVED_additions[a];
             unsaved.push({ Action: 'add', ...task });
         }
         for (let a in this.UNSAVED_deletions) {
@@ -118,8 +117,8 @@ class Tasks {
         return unsaved;
     }
     Purge = () => {
-        this.SAVED_tasks.push(...this.UNSAVED_tasks);
-        this.UNSAVED_tasks = [];
+        this.SAVED_tasks.push(...this.UNSAVED_additions);
+        this.UNSAVED_additions = [];
 
         for (let i = this.UNSAVED_deletions.length - 1; i >= 0; i--) {
             const index = this.GetIndex(this.SAVED_tasks, this.UNSAVED_deletions[i]);
@@ -142,6 +141,7 @@ class Tasks {
      */
     Add(title, description, deadline, repeatMode, repeatDays, subtasks) {
         const newTask = new Task();
+        newTask.Checked = false;
         newTask.Title = title;
         newTask.Description = description;
         newTask.Deadline = deadline;
@@ -156,7 +156,7 @@ class Tasks {
 
         // Check if not exist
         const indexTask = this.GetIndex(this.SAVED_tasks, newTask);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_tasks, newTask);
+        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, newTask);
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, newTask);
 
         if (indexDeletion !== null) {
@@ -165,7 +165,7 @@ class Tasks {
 
         // Task not exist, add it
         if (indexTask === null && indexUnsaved === null) {
-            this.UNSAVED_tasks.push(newTask);
+            this.UNSAVED_additions.push(newTask);
             return 'added';
         }
 
@@ -198,7 +198,7 @@ class Tasks {
      */
     Remove(task) {
         const indexTask = this.GetIndex(this.SAVED_tasks, task);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_tasks, task);
+        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, task);
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, task);
         let deleted = null;
 
@@ -209,7 +209,7 @@ class Tasks {
             }
         }
         if (indexUnsaved !== null) {
-            deleted = this.UNSAVED_tasks.splice(indexUnsaved, 1)[0];
+            deleted = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
             if (indexDeletion === null) {
                 this.UNSAVED_deletions.push(deleted);
             }
@@ -249,6 +249,29 @@ class Tasks {
     }
 
     /**
+     * Change sort order of tasks titles
+     * @param {Task} task
+     * @param {Boolean} checked
+     * @returns {Boolean} Success of the operation
+     */
+    Check(task, checked) {
+        let selectedTask = null;
+        const indexTask = this.GetIndex(this.SAVED_tasks, task);
+        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, task);
+
+        if (indexTask !== null) selectedTask = this.SAVED_tasks.splice(indexTask, 1)[0];
+        if (indexUnsaved !== null) selectedTask = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
+        if (selectedTask === null) {
+            this.user.interface.console.AddLog('warn', `Tasks - check failed: task not found (${task.Title} ${checked})`);
+            return false;
+        }
+
+        selectedTask.Checked = checked;
+        this.UNSAVED_additions.push(selectedTask);
+        return true;
+    }
+
+    /**
      * Restore last deleted task
      * @returns {Boolean} Success of the operation
      */
@@ -259,8 +282,8 @@ class Tasks {
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, this.lastDeletedTask);
         if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
 
-        // Save task in UNSAVED_tasks
-        this.UNSAVED_tasks.push(this.lastDeletedTask);
+        // Save task in UNSAVED_additions
+        this.UNSAVED_additions.push(this.lastDeletedTask);
         this.lastDeletedTask = null;
 
         return true;

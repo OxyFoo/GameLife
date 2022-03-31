@@ -21,7 +21,7 @@ const PageProps = {
     onLayout: (event) => {},
 
     /** @type {GestureResponderEvent} */
-    onStartShouldSetResponder: (event) => false,
+    onStartShouldSetResponder: (event) => false
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;

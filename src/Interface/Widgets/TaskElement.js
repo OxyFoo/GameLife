@@ -47,12 +47,13 @@ const TaskProps = {
 }
 
 class TaskElement extends React.Component {
-    text = '';
     state = {
         animOpacity: new Animated.Value(1)
     };
 
-    componentDidMount() {
+    constructor(props) {
+        super(props);
+
         const { task } = this.props;
         const { Deadline, Schedule } = task;
 
@@ -85,11 +86,11 @@ class TaskElement extends React.Component {
             if (minDeltaDays === null || delta < minDeltaDays) {
                 deadlineType = 'deadline';
                 minDeltaDays = delta;
-                nextDaysToDeadline = Math.floor(delta);
             }
         }
 
         // Define text (deadline or schedule)
+        this.text = '';
         const lang = langManager.curr['tasks'];
         if (deadlineType === 'deadline') {
             this.text = lang['task-type-deadline'] + ' ' + DateToFormatString(Deadline * 1000);

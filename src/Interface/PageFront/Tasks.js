@@ -27,7 +27,6 @@ class Tasks extends BackTasks {
 
         const renderItem = ({ item }) => (
             <TaskElement
-                key={item.Title}
                 style={{ opacity: draggedItem !== null && item.Title === draggedItem.Title ? .25 : 1 }}
                 task={item}
                 onTaskCheck={this.onTaskCheck}
@@ -67,17 +66,17 @@ class Tasks extends BackTasks {
                             ref={ref => this.refFlatlist = ref}
                             style={{ height: 'auto' }}
 
-                            onTouchStart={this.onTouchStart}
-                            onTouchMove={this.onTouchMove}
-                            onTouchEnd={this.onTouchEnd}
                             onScroll={this.onScroll}
                             onContentSizeChange={(w, h) => this.flatlist.contentSizeHeight = h}
                             onLayout={(event) => this.flatlist.layoutMeasurementHeight = event.nativeEvent.layout.height}
+                            onTouchStart={this.onTouchStart}
+                            onTouchMove={this.onTouchMove}
+                            onTouchEnd={this.onTouchEnd}
 
                             data={tasks}
                             extraData={tasks}
                             scrollEnabled={scrollable}
-                            keyExtractor={(item, index) => 'task-' + index.toString()}
+                            keyExtractor={(item) => 'task-' + item.Title}
                             renderItem={renderItem}
                             ListEmptyComponent={renderEmpty}
                         />

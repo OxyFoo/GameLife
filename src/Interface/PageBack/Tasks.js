@@ -116,28 +116,27 @@ class BackTasks extends React.Component {
         const newY = MinMax(0, pageY - top, height);
         TimingAnimation(this.state.mouseY, newY, 0).start();
 
-        if (draggedItem !== null) {
-            const index = Math.floor((newY + scrollY) / 46);
-            const currIndex = user.tasks.sortTitles.indexOf(draggedItem.Title);
-            if (index !== currIndex) {
-                if (user.tasks.Move(draggedItem, index)) {
-                    this.setState({ tasks: user.tasks.Get() });
-                }
-            }
-
-            const scrollOffset = 48;
-            if (newY < scrollOffset && scrollY > 0) {
-                const newOffset = Math.max(0, scrollY - scrollOffset);
-                this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
-            } else if (newY > height - scrollOffset && scrollY < scrollYMax) {
-                const newOffset = Math.min(scrollYMax, scrollY + scrollOffset);
-                this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
-            }
+        if (draggedItem === null) return;
+        const index = Math.floor((newY + scrollY) / 46);
+        const currIndex = user.tasks.sortTitles.indexOf(draggedItem.Title);
+        if (index !== currIndex && user.tasks.Move(draggedItem, index)) {
+            this.setState({ tasks: user.tasks.Get() });
+        }
+        const scrollOffset = 48;
+        if (newY < scrollOffset && scrollY > 0) {
+            const newOffset = Math.max(0, scrollY - scrollOffset);
+            this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
+        } else if (newY > height - scrollOffset && scrollY < scrollYMax) {
+            const newOffset = Math.min(scrollYMax, scrollY + scrollOffset);
+            this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
         }
     }
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
-        this.setState({ scrollable: true, draggedItem: null });
+        this.setState({
+            scrollable: true,
+            draggedItem: null
+        });
     }
     /** @param {NativeSyntheticEvent<NativeScrollEvent>} event */
     onScroll = (event) => {

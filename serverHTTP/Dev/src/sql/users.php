@@ -199,6 +199,9 @@
                 if ($tasks[$i]['Schedule'] !== null) {
                     $tasks[$i]['Schedule'] = json_decode($tasks[$i]['Schedule'], true);
                 }
+                if ($tasks[$i]['Subtasks'] !== '[]') {
+                    $tasks[$i]['Subtasks'] = $db->Decrypt($tasks[$i]['Subtasks']);
+                }
                 $tasks[$i]['Subtasks'] = json_decode($tasks[$i]['Subtasks'], true);
             }
             return $tasks;
@@ -217,16 +220,18 @@
                 if (count($task) !== 7) continue;
 
                 $Action = $task['Action'];
-                $Checked = intval($task['Checked']);
+                $Checked = $task['Checked'];
                 $Title = $task['Title'];
                 $Description = $task['Description'];
                 $Deadline = $task['Deadline'];
                 $Schedule = $task['Schedule'];
                 $Subtasks = json_encode($task['Subtasks']);
 
+                $Checked = $Checked === null ? 'NULL' : "'$Checked'";
                 $Description = $Description === null ? 'NULL' : "'".$db->Encrypt($Description)."'";
                 $Deadline = $Deadline === null ? 'NULL' : "'$Deadline'";
                 $Schedule = $Schedule === null ? 'NULL' : "'".json_encode($Schedule)."'";
+                if ($Subtasks !== '[]') $Subtasks = $db->Encrypt($Subtasks);
 
                 // Check if task exists
                 $exists = $db->QueryArray("SELECT `ID` FROM `Tasks` WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
@@ -235,16 +240,14 @@
 
                 if ($Action === 'add') {
                     if ($exists) {
-                        //$r = $db->Query("DELETE FROM `Tasks` WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
-                        //if ($r === false) ExitWithStatus("Error: saving tasks failed (preadd)");
                         $r = $db->Query("UPDATE `Tasks` SET
-                            `UserID` = '$accountID', `Checked` = '$Checked',
+                            `UserID` = '$accountID', `Checked` = $Checked,
                             `Title` = '$Title', `Description` = $Description,
                             `Deadline` = $Deadline, `Schedule` = $Schedule, `Subtasks` = '$Subtasks'
                             WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
                         if ($r === false) ExitWithStatus("Error: saving tasks failed (update)");
                     } else {
-                        $r = $db->Query("INSERT INTO `Tasks` (`UserID`, `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks`) VALUES ('$accountID', '$Checked', '$Title', $Description, $Deadline, $Schedule, '$Subtasks')");
+                        $r = $db->Query("INSERT INTO `Tasks` (`UserID`, `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks`) VALUES ('$accountID', $Checked, '$Title', $Description, $Deadline, $Schedule, '$Subtasks')");
                         if ($r === false) ExitWithStatus("Error: saving tasks failed (add)");
                     }
                 } else if ($Action === 'rem' && $exists) {

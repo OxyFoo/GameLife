@@ -7,6 +7,7 @@ import langManager from '../../Managers/LangManager';
 
 import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
 import { MinMax } from '../../Utils/Functions';
+import { GetTime } from '../../Utils/Time';
 
 /**
  * @typedef {import('../../Class/Tasks').Task} Task
@@ -60,7 +61,8 @@ class BackTasks extends React.Component {
     /** @param {Task} task */
     onTaskCheck = async (task) => {
         if (task.Schedule !== null) {
-            user.tasks.Check(task, !task.Checked);
+            const checked = task.Checked === null ? GetTime() : null;
+            user.tasks.Check(task, checked);
             this.forceUpdate();
             return;
         }

@@ -11,7 +11,8 @@
  */
 
 class Task {
-    Checked = false;
+    /** @type {Number?} Time in seconds or null if unchecked */
+    Checked = null;
     Title = '';
     Description = '';
 
@@ -133,7 +134,7 @@ class Tasks {
      * Add task
      * @param {String} title - Title of the task
      * @param {Number} description - Description of the task
-     * @param {Number} deadline - Unix timestamp in seconds
+     * @param {Number?} deadline - Unix timestamp in seconds
      * @param {'week'|'month'|null} repeatMode - Repeat mode
      * @param {Array<Number>} repeatDays - Repeat days
      * @param {Array<Subtask>} subtasks - Subtasks informations
@@ -141,7 +142,7 @@ class Tasks {
      */
     Add(title, description, deadline, repeatMode, repeatDays, subtasks) {
         const newTask = new Task();
-        newTask.Checked = false;
+        newTask.Checked = null;
         newTask.Title = title;
         newTask.Description = description;
         newTask.Deadline = deadline;
@@ -152,7 +153,7 @@ class Tasks {
                 Repeat: repeatDays
             };
         }
-        newTask.Subtasks = subtasks;
+        newTask.Subtasks = subtasks.filter(st => !!st.Title);
 
         // Check if not exist
         const indexTask = this.GetIndex(this.SAVED_tasks, newTask);
@@ -177,7 +178,7 @@ class Tasks {
      * @param {Task} oldTask - Task to edit
      * @param {String} title - Title of the task
      * @param {Number} description - Description of the task
-     * @param {Number} deadline - Unix timestamp in seconds
+     * @param {Number?} deadline - Unix timestamp in seconds
      * @param {'week'|'month'|null} repeatMode - Repeat mode
      * @param {Array<Number>} repeatDays - Repeat days
      * @param {Array<Subtask>} subtasks - Subtasks informations
@@ -251,7 +252,7 @@ class Tasks {
     /**
      * Change sort order of tasks titles
      * @param {Task} task
-     * @param {Boolean} checked
+     * @param {Number?} checked Time in seconds or null if unchecked
      * @returns {Boolean} Success of the operation
      */
     Check(task, checked) {
@@ -282,7 +283,8 @@ class Tasks {
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, this.lastDeletedTask);
         if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
 
-        // Save task in UNSAVED_additions
+        // Save unchecked task in UNSAVED_additions
+        this.lastDeletedTask.Checked = null;
         this.UNSAVED_additions.push(this.lastDeletedTask);
         this.lastDeletedTask = null;
 

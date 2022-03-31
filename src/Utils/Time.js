@@ -6,7 +6,9 @@ import { TwoDigit } from "./Functions";
  * @returns {Number} time in seconds
  */
 function GetTime(date = new Date()) {
-    return Math.floor(date.getTime() / 1000);
+    // Convert to UTC
+    const utc = date.getTime() - (date.getTimezoneOffset() * 60 * 1000);
+    return Math.floor(utc / 1000);
 }
 
 /**

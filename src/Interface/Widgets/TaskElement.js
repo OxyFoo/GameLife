@@ -54,6 +54,11 @@ class TaskElement extends React.Component {
     constructor(props) {
         super(props);
 
+        const { task, subtask } = this.props;
+        if (task !== null) this.mountTask();
+    }
+
+    mountTask() {
         const { task } = this.props;
         const { Deadline, Schedule } = task;
 
@@ -134,10 +139,10 @@ class TaskElement extends React.Component {
             <Animated.View style={[styles.parentTask, style, { opacity: animOpacity }]} pointerEvents={!Checked || !isTodo ? 'auto' : 'none'}>
                 <Button
                     style={buttonStyle}
-                    color={Checked ? '#fff' : 'transparent'}
+                    color={!!Checked ? '#fff' : 'transparent'}
                     onPress={onCheck}
                 >
-                    {Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
+                    {!!Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
                 </Button>
                 <TouchableOpacity
                     style={styles.title}
@@ -174,24 +179,19 @@ class TaskElement extends React.Component {
                     style={styles.checkbox}
                     color={Checked ? '#fff' : 'transparent'}
                     onPress={() => this.props.onSubtaskEdit(!Checked, Title)}
+                    onLongPress={remove}
                 >
                     {Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
                 </Button>
-                <TouchableOpacity
-                    style={styles.title}
-                    onLongPress={remove}
-                    activeOpacity={.6}
-                >
-                    <TextInput
-                        style={[styles.input, textColor, decoration]}
-                        value={Title}
-                        onChangeText={text => this.props.onSubtaskEdit(Checked, text)}
-                        selectionColor={hexActiveColor}
-                        multiline={true}
-                        maxLength={256}
-                        placeholder={langManager.curr['task']['input-subtask-placeholder']}
-                    />
-                </TouchableOpacity>
+                <TextInput
+                    style={[styles.input, textColor, decoration]}
+                    value={Title}
+                    onChangeText={text => this.props.onSubtaskEdit(Checked, text)}
+                    selectionColor={hexActiveColor}
+                    multiline={true}
+                    maxLength={256}
+                    placeholder={langManager.curr['task']['input-subtask-placeholder']}
+                />
             </View>
         );
     }

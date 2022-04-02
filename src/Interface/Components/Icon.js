@@ -12,6 +12,7 @@ import svgDefault from '../../../res/icons/default';
 import svgAdd from '../../../res/icons/add';
 import svgArrowLeft from '../../../res/icons/arrow-left';
 import svgCalendar from '../../../res/icons/calendar';
+import svgCheck from '../../../res/icons/check';
 import svgCheckboxOn from '../../../res/icons/checkbox-on';
 import svgCheckboxOff from '../../../res/icons/checkbox-off';
 import svgChevron from '../../../res/icons/chevron';
@@ -45,7 +46,7 @@ import svgLoadingDots from '../../../res/icons/loading-dots';
 
 /**
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'moveVertical'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
+ * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'check'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'moveVertical'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
  */
 /**
  * @callback GestureEvent
@@ -57,6 +58,7 @@ const SVGIcons = {
     add: svgAdd,
     arrowLeft: svgArrowLeft,
     calendar: svgCalendar,
+    check: svgCheck,
     checkboxOn: svgCheckboxOn,
     checkboxOff: svgCheckboxOff,
     chevron: svgChevron,

@@ -11,7 +11,14 @@ const DAYS = {
     saturday: 6
 }
 
+/**
+ * Return day number (0-6)
+ * @param {Date|Number} date Date object or unix time in seconds
+ * @param {Number} firstDay
+ * @returns {Number} 0-6
+ */
 function GetDay(date, firstDay = DAYS.monday) {
+    if (typeof(date) === 'number') date = new Date(date * 1000);
     const day = new Date(date).getUTCDay();
     return (day + 5 + firstDay) % 7;
 }
@@ -96,5 +103,42 @@ function DateToFormatTimeString(date) {
     return [ HH, MM ].join(':');
 }
 
-export { DAYS, GetDay, GetBlockMonth, GetMonthAndYear, GetFullDate,
-    DateToFormatString, DateToFormatTimeString };
+/**
+ * @param {Array<Number>} days - Array of week days (0-6)
+ * @param {Number} start Time in seconds
+ * @param {Number} end Time in seconds
+ * @returns {Boolean} Days contained between start and end
+ */
+function WeekDayBetween(days, start, end) {
+    if (end < start) return false;
+    let day = GetDay(start);
+    const endDay = GetDay(end);
+    while (day !== endDay) {
+        if (days.includes(day)) return true;
+        day = (day + 1) % 7;
+    }
+    return false;
+}
+
+/**
+ * @param {Array<Number>} days - Array of month days (0-30)
+ * @param {Number} start Time in seconds
+ * @param {Number} end Time in seconds
+ * @returns {Boolean} Days contained between start and end
+ */
+function MonthDayBetween(days, start, end) {
+    if (end < start) return false;
+    let day = GetDay(start);
+    const endDay = GetDay(end);
+    while (day !== endDay) {
+        if (days.includes(day)) return true;
+        day = (day + 1) % 31;
+    }
+    return false;
+}
+
+export {
+    DAYS, GetDay, GetBlockMonth, GetMonthAndYear, GetFullDate,
+    DateToFormatString, DateToFormatTimeString,
+    WeekDayBetween, MonthDayBetween
+};

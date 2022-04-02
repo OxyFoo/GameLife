@@ -142,7 +142,7 @@ class TaskElement extends React.Component {
                     color={!!Checked ? '#fff' : 'transparent'}
                     onPress={onCheck}
                 >
-                    {!!Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
+                    {!!Checked && <Icon icon='check' color='main1' size={16} />}
                 </Button>
                 <TouchableOpacity
                     style={styles.title}
@@ -181,7 +181,7 @@ class TaskElement extends React.Component {
                     onPress={() => this.props.onSubtaskEdit(!Checked, Title)}
                     onLongPress={remove}
                 >
-                    {Checked && <Icon icon='chevron' color='main1' size={16} angle={80} />}
+                    {Checked && <Icon icon='check' color='main1' size={16} />}
                 </Button>
                 <TextInput
                     style={[styles.input, textColor, decoration]}

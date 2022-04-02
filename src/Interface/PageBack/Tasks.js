@@ -19,7 +19,7 @@ class BackTasks extends React.Component {
     state = {
         /** @type {AdStates} */
         adState: 'wait',
-        tasks: user.tasks.Get(),
+        tasks: [],
 
         scrollable: true,
 
@@ -41,6 +41,9 @@ class BackTasks extends React.Component {
             layoutMeasurementHeight: 0,
             contentOffsetY: 0,
         }
+
+        user.tasks.RefreshScheduleTasks();
+        this.state.tasks = user.tasks.Get();
     }
     componentDidMount() {
         this.rewardedShop = user.admob.GetRewardedAd('todo', 'add10Ox', this.adStateChange);

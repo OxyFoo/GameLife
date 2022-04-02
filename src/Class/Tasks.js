@@ -1,3 +1,6 @@
+import { GetTime } from '../Utils/Time';
+import { MonthDayBetween, WeekDayBetween } from '../Utils/Date';
+
 /**
  * @typedef {Object} Schedule
  * @property {'week'|'month'} Type
@@ -128,6 +131,28 @@ class Tasks {
             }
         }
         this.UNSAVED_deletions = [];
+    }
+
+    RefreshScheduleTasks() {
+        const tasks = this.Get();
+        for (let i = 0; i < tasks.length; i++) {
+            let task = tasks[i];
+            if (task.Checked === null || task.Schedule === null) continue;
+            const now = GetTime();
+            if (task.Schedule.Type === 'week') {
+                const reset = WeekDayBetween(task.Schedule.Repeat, task.Checked, now);
+                if (reset) {
+                    this.Remove(task);
+                    this.Undo();
+                }
+            } else if (task.Schedule.Type === 'month') {
+                const reset = MonthDayBetween(task.Schedule.Repeat, task.Checked, now);
+                if (reset) {
+                    this.Remove(task);
+                    this.Undo();
+                }
+            }
+        }
     }
 
     /**

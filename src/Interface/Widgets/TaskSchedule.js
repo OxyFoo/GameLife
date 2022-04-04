@@ -98,7 +98,7 @@ class TaskSchedule extends React.Component {
             newDate.setUTCHours(0, 0, 0, 0);
             this.setState({
                 deadline: GetTime(newDate),
-                deadlineText: DateToFormatString(newDate * 1000)
+                deadlineText: DateToFormatString(newDate)
             }, this.onChange);
         }
     }

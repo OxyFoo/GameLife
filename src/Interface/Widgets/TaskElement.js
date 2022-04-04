@@ -79,8 +79,7 @@ class TaskElement extends React.Component {
             while (minDeltaDays === null) {
                 const weekMatch = Schedule.Type === 'week' && Schedule.Repeat.includes(GetDay(d));
                 const monthMatch = Schedule.Type === 'month' && Schedule.Repeat.includes(d.getUTCDate());
-                if (weekMatch || monthMatch) minDeltaDays = i + 1;
-                //console.log(Schedule, GetDay(d), d.getUTCDate(), minDeltaDays);
+                if (weekMatch || monthMatch) minDeltaDays = i;
                 d.setUTCDate(d.getUTCDate() + 1); i++;
             }
         }

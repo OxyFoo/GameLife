@@ -6,7 +6,7 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Sleep } from '../../Utils/Functions';
-import { DisableMorningNotifications, EnableMorningNotifications } from '../../Utils/Notifications';
+import Notifications from '../../Utils/Notifications';
 
 class BackLoading extends React.Component {
     state = {
@@ -98,17 +98,18 @@ class BackLoading extends React.Component {
 
         // Loading : Notifications
         if (user.settings.morningNotifications) {
-            await EnableMorningNotifications();
+            await Notifications.Mornings.Enable();
         } else {
-            DisableMorningNotifications();
+            Notifications.Mornings.Disable();
         }
 
         // Load ads
         if (user.informations.adRemaining === 0) {
             user.interface.console.AddLog('info', 'No more ads available');
         }
+
+        await user.admob.ShowPopup();
         user.admob.LoadAds();
-        //await user.admob.ShowPopup();
 
         this.nextStep();
         await Sleep(200);

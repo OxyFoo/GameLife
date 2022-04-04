@@ -6,7 +6,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import { Page } from '../Components';
 import { GetTime } from '../../Utils/Time';
-import { DisableMorningNotifications, EnableMorningNotifications } from '../../Utils/Notifications';
+import Notifications from '../../Utils/Notifications';
 
 class BackSettings extends React.Component {
     constructor(props) {
@@ -44,8 +44,8 @@ class BackSettings extends React.Component {
         }
     }
     onChangeMorningNotifications = (enabled) => {
-        if (enabled) EnableMorningNotifications();
-        else DisableMorningNotifications();
+        if (enabled) Notifications.Mornings.Enable();
+        else Notifications.Mornings.Disable();
         this.setState({ switchMorningNotifs: enabled });
         user.settings.morningNotifications = enabled;
         user.settings.Save();

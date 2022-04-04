@@ -53,11 +53,6 @@ class Admob {
             enabled: false,
             version: ''
         };
-
-        this.isOS14OrNewer = this.__isiOS14OrNewer();
-        this.isInEeaOrUnknown = false;
-        this.__getIsInEeaOrUnknown()
-            .then(isInEeaOrUnknown => this.isInEeaOrUnknown = isInEeaOrUnknown);
     }
 
     Load(adSettings) {
@@ -89,6 +84,7 @@ class Admob {
                     requestNonPersonalizedAdsOnly: nonPersonalized,
                     keywords: ['video-game', 'sports']
                 });
+                newAd.ad.load();
                 this.ads.push(newAd);
             });
         }
@@ -102,6 +98,7 @@ class Admob {
                     requestNonPersonalizedAdsOnly: nonPersonalized,
                     keywords: ['video-game', 'sports']
                 });
+                newAd.ad.load();
                 this.ads.push(newAd);
             });
         }
@@ -208,15 +205,19 @@ class Admob {
         }
     }
 
+    /**
+     * @description Show tracking popup (for iOS only),
+     * consent popup (for both iOS and Android) and save choices
+     */
     async ShowPopup() {
-        const ConsoleError = (err) => this.user.interface.console.AddLog('error', err);
+        const ConsoleError = (err) => this.user.interface.console.AddLog('error', 'Ad consent popup:', err);
         await this.__trackingTransparencyPopup().catch(ConsoleError);
         await this.__adConsentPopup().catch(ConsoleError);
         await this.user.LocalSave();
     }
 
     /**
-     * Show non personalized ad consent popup
+     * Show non personalized ad consent popup (both iOS and Android)
      * @param {Boolean} force Show popup even if user has already accepted
      */
     async __adConsentPopup(force = false) {
@@ -226,6 +227,7 @@ class Admob {
 
         let nonPersonalized = true;
         const ad_consent_id = FIREBASE['react-native'][Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_android_app_id'];
+        console.log(ad_consent_id);
         const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
         if (IsUndefined(consentInfo)) return;
         // TODO - Add debug to console interface
@@ -251,7 +253,7 @@ class Admob {
     }
 
     /**
-     * Show consent tracking popup for iOS 14+
+     * Show consent tracking popup for iOS 14+ (android or old iOS are skipped)
      * @param {Boolean} force Show popup even if user has already accepted
      */
     async __trackingTransparencyPopup(force = false) {
@@ -278,15 +280,6 @@ class Admob {
             lang = langManager.currentLangageKey;
         }
         return CGU_LINK + lang;
-    }
-
-    __isiOS14OrNewer() {
-        return Platform.OS === 'ios' && Platform.Version >= 14;
-    }
-    async __getIsInEeaOrUnknown() {
-        const ad_consent_id = FIREBASE['react-native']['admob_app_id'];
-        const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
-        return consentInfo.isRequestLocationInEeaOrUnknown;
     }
 }
 

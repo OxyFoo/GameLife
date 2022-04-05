@@ -60,7 +60,6 @@
                         $this->output['status'] = 'error';
                     } else {
                         Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
-                        Devices::AddStatistic($this->db, $device);
                         $this->output['status'] = 'ok';
                     }
                 }
@@ -110,6 +109,7 @@
             switch ($perm) {
                 case 0: // OK
                     Accounts::RefreshLastDate($this->db, $account->ID);
+                    $this->db->AddStatistic($device->ID, 'appState', "Login: {$account->Email}");
                     $this->output['token'] = Devices::GeneratePrivateToken($this->db, $account->ID, $device->ID);
                     $this->output['status'] = 'ok';
 
@@ -137,7 +137,10 @@
                     $newToken = Devices::RefreshMailToken($this->db, $device->ID, $account->ID);
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
-                    if ($sended) $this->output['status'] = 'newDevice';
+                    if ($sended) {
+                        $this->db->AddStatistic($device->ID, 'mailSent', "Link account: $email");
+                        $this->output['status'] = 'newDevice';
+                    }
                     break;
             }
         }
@@ -255,10 +258,11 @@
                 return;
             }
 
+            $deviceID = $dataFromToken['deviceID'];
             $account = Accounts::GetByID($this->db, $dataFromToken['accountID']);
             if ($account === null) return;
 
-            Users::ExecQueue($this->db, $account, $userData);
+            Users::ExecQueue($this->db, $account, $deviceID, $userData);
             $newDataToken = Users::RefreshDataToken($this->db, $account);
 
             // Update dataToken if app is already up to date
@@ -281,11 +285,15 @@
                 return;
             }
 
+            $deviceID = $dataFromToken['deviceID'];
             $account = Accounts::GetByID($this->db, $dataFromToken['accountID']);
             if ($account === null) return;
 
             $usernameChangeState = Users::SetUsername($this->db, $account, $newUsername);
 
+            if ($usernameChangeState === 'ok') {
+                $this->db->AddStatistic($deviceID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername} ({$account->Email})");
+            }
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
         }
@@ -302,17 +310,24 @@
             }
 
             $oxAmount = 10;
+            $deviceID = $dataFromToken['deviceID'];
             $accountID = $dataFromToken['accountID'];
             $account = Accounts::GetByID($this->db, $accountID);
+            if ($account === null) return;
 
             if ($account->AdRemaining === 0) {
                 // Suspicion of cheating
-                ExitWithStatus('AaaahhhhaAAAAA');
+                $this->db->AddStatistic($deviceID, 'cheatSuspicion', "Try to watch another ad ({$account->Email})");
+                $this->output['ox'] = $account->Ox;
+                $this->output['status'] = 'ok';
+                return;
             }
 
             Users::DecrementAdRemaining($this->db, $accountID);
             Users::AddOx($this->db, $accountID, $oxAmount);
 
+            $newOxAmount = $account->Ox + $oxAmount;
+            $this->db->AddStatistic($deviceID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
             $this->output['ox'] = $account->Ox + $oxAmount;
             $this->output['status'] = 'ok';
         }
@@ -366,6 +381,7 @@
 
             Accounts::RemDevice($this->db, $deviceID, $account, 'Devices');
 
+            $this->db->AddStatistic($deviceID, 'appState', "Disconnect: {$account->Email}");
             $this->output['status'] = 'ok';
         }
 
@@ -400,9 +416,11 @@
             Accounts::RefreshLastDate($this->db, $account->ID);
             $newToken = Devices::RefreshMailToken($this->db, $device->ID, $account->ID);
             $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'rem');
-            if (!$sended) return;
 
-            $this->output['status'] = 'ok';
+            if ($sended) {
+                $this->db->AddStatistic($device->ID, 'mailSent', "Delete account: $email");
+                $this->output['status'] = 'ok';
+            }
         }
 
         /**

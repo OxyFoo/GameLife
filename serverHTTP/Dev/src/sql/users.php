@@ -7,9 +7,10 @@
         /**
          * @param DataBase $db
          * @param Account $account
+         * @param int $deviceID
          * @param object $data Array of data to add { 'activities': [], 'xp': 0, 'achievements': [], 'titleID': 0, 'birthTime': 0 }
          */
-        public static function ExecQueue($db, $account, $data) {
+        public static function ExecQueue($db, $account, $deviceID, $data) {
             $activities = $data['activities'];
             $tasks = $data['tasks'];
             $xp = $data['xp'];
@@ -33,7 +34,7 @@
                 self::setTitle($db, $account, $titleID);
             }
             if (isset($birthTime)) {
-                self::SetBirthtime($db, $account, $birthTime);
+                self::SetBirthtime($db, $account, $deviceID, $birthTime);
             }
         }
 
@@ -57,7 +58,7 @@
 
             $nowTime = time();
             $nowText = date('Y-m-d H:i:s', $nowTime);
-            $lastUsernameTime = $account->LastChangeUsername === null ? $nowTime : $account->LastChangeUsername;
+            $lastUsernameTime = $account->LastChangeUsername === null ? 0 : $account->LastChangeUsername;
             $delta = ($nowTime - $lastUsernameTime) / (60 * 60 * 24);
 
             if ($oldUsername === $newUsername) return 'error';
@@ -75,9 +76,10 @@
         /**
          * @param DataBase $db
          * @param Account $account
+         * @param int $deviceID
          * @param int $birthtime Timestamp
          */
-        private static function SetBirthtime($db, $account, $birthtime) {
+        private static function SetBirthtime($db, $account, $deviceID, $birthtime) {
             $accountID = $account->ID;
 
             // If account lastchangebirth is from year ago, we can change birthtime
@@ -86,6 +88,7 @@
             $delta = ($nowTime - $lastBirthTime) / (60 * 60 * 24);
             if ($delta < 360) {
                 // Suspicion of cheating
+                $db->AddStatistic($deviceID, 'cheatSuspicion', "Try to change birthtime too often ({$account->Email})");
                 ExitWithStatus("Error: you tried to change birthtime too often");
             }
 

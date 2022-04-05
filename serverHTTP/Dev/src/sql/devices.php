@@ -82,22 +82,6 @@
         }
 
         /**
-         * TODO - Add type arguments
-         * @param DataBase $db
-         * @param Device $device
-         * @param string $type
-         * @return void
-         */
-        public static function AddStatistic($db, $device, $type = "0") {
-            $deviceID = $device->ID;
-            $command = "INSERT INTO `Statistics` (`DeviceID`, `Type`) VALUES ('$deviceID', '$type')";
-            $result = $db->Query($command);
-            if ($result === false) {
-                ExitWithStatus("Error: Adding device statistic in DB failed");
-            }
-        }
-
-        /**
          * @param DataBase $db
          * @param int $deviceID
          * @param int $accountID

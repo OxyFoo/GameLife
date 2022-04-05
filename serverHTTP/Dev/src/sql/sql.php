@@ -85,6 +85,21 @@
         }
 
         /**
+         * @param int $deviceID
+         * @param 'mailSent'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition' $type
+         * @param string $data
+         * @return void
+         */
+        public function AddStatistic($deviceID, $type, $data = null) {
+            $Data = $data === null ? 'NULL' : "'$data'";
+            $command = "INSERT INTO `Logs` (`DeviceID`, `Type`, `Data`) VALUES ('$deviceID', '$type', $Data)";
+            $result = $this->Query($command);
+            if ($result === false) {
+                ExitWithStatus("Error: Adding device statistic in DB failed");
+            }
+        }
+
+        /**
          * Send mail to user with link to confirm account creation or account deletion
          * @param string $email
          * @param Device $device

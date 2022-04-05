@@ -292,6 +292,20 @@
 
         /**
          * @param DataBase $db
+         * @param int $deviceID
+         * @return bool True if the device has not reached the created count limit
+         */
+        public static function CreationIsFree($db, $deviceID) {
+            $command = "SELECT * FROM `Accounts` WHERE `CreatedBy` = '$deviceID'";
+            $accounts = $db->Query($command);
+            if ($accounts !== false) {
+                return $accounts->num_rows < 3;
+            }
+            return false;
+        }
+
+        /**
+         * @param DataBase $db
          * @param Account $account
          * @param int $title
          */

@@ -99,6 +99,12 @@
                 return;
             }
 
+            // Check if account has less than 5 devices
+            if (!in_array($device->ID, $account->Devices) && count($account->Devices) >= 5) {
+                $this->output['status'] = 'limitDevice';
+                return;
+            }
+
             // Check permissions
             $perm = Accounts::CheckDevicePermissions($device->ID, $account);
             switch ($perm) {
@@ -146,6 +152,13 @@
                 return;
             }
 
+            $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+            if ($device === null) return;
+
+            if (!Users::CreationIsFree($this->db, $device->ID)) {
+                $this->output['status'] = 'limitAccount';
+                return;
+            }
             if (!Users::PseudoIsFree($this->db, $username)) {
                 $this->output['status'] = 'pseudoUsed';
                 return;
@@ -155,13 +168,11 @@
                 return;
             }
 
-            $account = Accounts::Add($this->db, $username, $email);
+            $account = Accounts::Add($this->db, $username, $email, $device->ID);
             if ($account === null) return;
 
             // Legion - mail bypass
-            if (strpos($email, 'bot-') === 0) {
-                if (!$this->enableBots) return;
-                $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+            if (strpos($email, 'bot-') === 0 && $this->enableBots) {
                 Accounts::AddDevice($this->db, $device->ID, $account, 'Devices');
             }
 

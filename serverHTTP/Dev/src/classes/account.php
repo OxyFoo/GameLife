@@ -56,11 +56,14 @@
         /** @var int|null $LastChangeBirth */
         public $LastChangeBirth;
 
-        /** @var int|null $FirstConnDate */
-        public $FirstConnDate;
-
         /** @var int|null $LastConnDate */
         public $LastConnDate;
+
+        /** @var int $CreatedAt */
+        public $CreatedAt;
+
+        /** @var int|null $CreatedBy */
+        public $CreatedBy;
 
         public function __construct($account) {
             $this->ID = intval($account['ID']);
@@ -81,8 +84,9 @@
             $this->LastSendMail = $account['LastSendMail'] === null ? null : strtotime($account['LastSendMail']);
             $this->LastChangeUsername = $account['LastChangeUsername'] === null ? null : strtotime($account['LastChangeUsername']);
             $this->LastChangeBirth = $account['LastChangeBirth'] === null ? null : strtotime($account['LastChangeBirth']);
-            $this->FirstConnDate = $account['FirstConnDate'] === null ? null : strtotime($account['FirstConnDate']);
             $this->LastConnDate = $account['LastConnDate'] === null ? null : strtotime($account['LastConnDate']);
+            $this->CreatedAt = strtotime($account['CreatedAt']);
+            $this->CreatedBy = $account['CreatedBy'] === null ? null : strtotime($account['CreatedBy']);
         }
     }
 

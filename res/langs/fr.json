@@ -282,7 +282,13 @@
         "error-signin-disagree": "Veuillez accepter les conditions générales.",
 
         "alert-deletedaccount-title": "Compte supprimé",
-        "alert-deletedaccount-text": "Votre compte a été supprimé."
+        "alert-deletedaccount-text": "Votre compte a été supprimé.",
+        "alert-limitAccount-title": "Trop de compte",
+        "alert-limitAccount-text": "Vous ne pouvez pas créer plus de 3 comptes avec un seul appareil.",
+        "alert-limitDevice-title": "Trop d'appareils sur ce compte",
+        "alert-limitDevice-text": "Vous ne pouvez pas avoir plus de 5 appareils connectés sur un seul compte.",
+        "alert-deviceRemoved-title": "Appareil retiré",
+        "alert-deviceRemoved-text": "Votre appareil a été retiré car vous avez déjà le nombre maximum d'appareils sur ce compte."
     },
 
     "multiplayer": {

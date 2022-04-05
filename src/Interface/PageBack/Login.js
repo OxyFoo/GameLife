@@ -91,7 +91,13 @@ class BackLogin extends React.Component {
         } else {
             // Login
             const { status } = await user.server.Connect(email);
-            if (status === 'free') {
+            if (status === 'limitDevice') {
+                // Too many devices
+                const title = langManager.curr['login']['alert-limitDevice-title'];
+                const text = langManager.curr['login']['alert-limitDevice-text'];
+                user.interface.popup.ForceOpen('ok', [ title, text ]);
+                this.setState({ loading: false });
+            } else if (status === 'free') {
                 this.setState({ loading: false, signinMode: true });
                 TimingAnimation(this.state.animSignin, 1, 400, false).start();
             } else if (status === 'ok' || status === 'ban') {
@@ -132,7 +138,11 @@ class BackLogin extends React.Component {
         const { email, username } = this.state;
         const signinStatus = await user.server.Signin(email, username);
 
-        if (signinStatus === 'pseudoUsed') {
+        if (signinStatus === 'limitAccount') {
+            const title = langManager.curr['login']['alert-limitAccount-title'];
+            const text = langManager.curr['login']['alert-limitAccount-text'];
+            user.interface.popup.Open('ok', [ title, text ]);
+        } else if (signinStatus === 'pseudoUsed') {
             this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoUsed'] });
         }
         else if (signinStatus === 'pseudoIncorrect') {

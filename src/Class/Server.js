@@ -14,7 +14,8 @@ const STATUS = {
     NEWDEVICE   : 'newDevice',
     REMDEVICE   : 'remDevice',
     MAINTENANCE : 'maintenance',
-    ERROR       : 'error'
+    ERROR       : 'error',
+    LIMITDEVICE : 'limitDevice'
 };
 
 class Server {
@@ -73,7 +74,7 @@ class Server {
     /**
      * Try to connect to the server, with email (and device informations)
      * @param {string} email - Email of the user
-     * @returns {Promise<{status: 'free'|'ban'|'ok'|'newDevice'|'remDevice'|'waitMailConfirmation', remainMailTime: Number?}>} - Status of the user connection
+     * @returns {Promise<{status: 'free'|'ban'|'ok'|'newDevice'|'remDevice'|'waitMailConfirmation'|'limitDevice', remainMailTime: Number?}>} - Status of the user connection
      */
     Connect = async (email) => {
         let status = null;
@@ -119,14 +120,15 @@ class Server {
      * Send a request to the server to create a new user account
      * @param {String} email - Email of the user
      * @param {String} username - Pseudo of the user
-     * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'?>} - Status of the user signin
+     * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'?>} - Status of the user signin
      */
     Signin = async (email, username) => {
         let signin = null;
         const result = await this.__reqSignin(email, username);
         if (result.status === 200) {
             const status = result.content['status'];
-            if (status === 'ok' || status === 'pseudoUsed' || status === 'pseudoIncorrect') {
+            const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
+            if (allStatus.includes(status)) {
                 signin = status;
             }
         }

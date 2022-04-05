@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import user from '../../Managers/UserManager';
+import langManager from '../../Managers/LangManager';
 
 const REFRESH_DELAY = 10; // seconds
 
@@ -41,7 +42,12 @@ class BackWaitmail extends React.Component {
         // Login
         const { status, remainMailTime } = await user.server.Connect(email);
 
-        if (status === 'ok' || status === 'ban') {
+        if (status === 'limitDevice') {
+            // Too many devices
+            const title = langManager.curr['login']['alert-limitDevice-title'];
+            const text = langManager.curr['login']['alert-limitDevice-text'];
+            user.interface.popup.ForceOpen('ok', [ title, text ], this.onBack);
+        } else if (status === 'ok' || status === 'ban') {
             user.settings.connected = true;
             await user.settings.Save();
             user.interface.ChangePage('loading', undefined, true);

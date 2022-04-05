@@ -7,10 +7,11 @@
          * @param DataBase $db
          * @param string $username
          * @param string $email
+         * @param int $deviceID
          * @return Account|null
          */
-        public static function Add($db, $username, $email) {
-            $command = "INSERT INTO `Accounts` (`Username`, `Email`) VALUES ('$username', '$email')";
+        public static function Add($db, $username, $email, $deviceID) {
+            $command = "INSERT INTO `Accounts` (`Username`, `Email`, `CreatedBy`) VALUES ('$username', '$email', '$deviceID')";
             $result = $db->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Adding device in DB failed");

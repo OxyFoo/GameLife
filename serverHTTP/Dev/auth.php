@@ -66,15 +66,19 @@
             else if ($action === 'accept') {
                 $account = Accounts::GetByID($db, $accountID);
                 if ($device->Token === $deviceToken && $account !== null) {
-                    $perm = Accounts::CheckDevicePermissions($deviceID, $account);
-                    if ($perm === 1) {
-                        Accounts::RemDevice($db, $deviceID, $account, 'DevicesWait');
-                        Devices::RemoveToken($db, $deviceID);
-                        Accounts::AddDevice($db, $deviceID, $account, 'Devices');
-                        $state = "auth-accept";
+                    if (count($account->Devices) >= 5) {
+                        $state = 'auth-device-limit-reached';
+                    } else {
+                        $perm = Accounts::CheckDevicePermissions($deviceID, $account);
+                        if ($perm === 1) {
+                            Accounts::RemDevice($db, $deviceID, $account, 'DevicesWait');
+                            Devices::RemoveToken($db, $deviceID);
+                            Accounts::AddDevice($db, $deviceID, $account, 'Devices');
+                            $state = 'auth-accept';
+                        }
                     }
                 } else {
-                    $state = "auth-invalid-token";
+                    $state = 'auth-invalid-token';
                 }
             }
 
@@ -82,10 +86,10 @@
                 if ($device->Token === $deviceToken) {
                     Devices::RemoveToken($db, $deviceID);
                     if (Accounts::Delete($db, $accountID)) {
-                        $state = "auth-remove-account";
+                        $state = 'auth-remove-account';
                     }
                 } else {
-                    $state = "auth-invalid-token";
+                    $state = 'auth-invalid-token';
                 }
             }
 

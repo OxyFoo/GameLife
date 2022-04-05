@@ -16,7 +16,8 @@
         "auth-accept": "Votre appareil a été accepté avec succès",
         "auth-invalid-token": "Token invalide<br>Cet appareil a peut-être déjà été validé",
         "auth-invalid-state": "Une erreur est survenue.",
-        "auth-remove-account": "Le compte ainsi que ses données ont bien été supprimés"
+        "auth-remove-account": "Le compte ainsi que ses données ont bien été supprimés",
+        "auth-device-limit-reached": "Vous avez atteint le nombre maximum d'appareils autorisés sur un seul compte."
     },
     "en": {
         "signin-subject": "GameLife: New device",
@@ -35,6 +36,7 @@
         "auth-accept": "Your device has been successfully accepted",
         "auth-invalid-token": "Invalid token<br>This device has maybe already been validated",
         "auth-invalid-state": "An error has occurred.",
-        "auth-remove-account": "The account and its data have been deleted"
+        "auth-remove-account": "The account and its data have been deleted",
+        "auth-device-limit-reached": "You have reached the maximum number of authorized devices on one account."
     }
 }

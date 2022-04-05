@@ -70,7 +70,13 @@ class BackLoading extends React.Component {
         if (online && user.server.token === '') {
             const email = user.settings.email;
             const { status } = await user.server.Connect(email);
-            if (status === 'newDevice' || status === 'waitMailConfirmation') {
+            if (status === 'limitDevice') {
+                // Too many devices
+                const title = langManager.curr['login']['alert-deviceRemoved-title'];
+                const text = langManager.curr['login']['alert-deviceRemoved-text'];
+                user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(false), false);
+                return;
+            } else if (status === 'newDevice' || status === 'waitMailConfirmation') {
                 // Mail not confirmed
                 while (!user.interface.ChangePage('waitmail', { email: email }, true)) await Sleep(100);
                 return;

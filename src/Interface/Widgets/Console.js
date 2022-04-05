@@ -58,6 +58,11 @@ class Console extends React.Component {
             printLog(text, ...params);
         }
 
+        // If error, send to server
+        if (type === 'error' && !__DEV__ && user.server.online) {
+            user.server.SendReport('error', messages.slice(-4));
+        }
+
         return messages.length - 1;
     }
 

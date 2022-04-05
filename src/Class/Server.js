@@ -224,7 +224,7 @@ class Server {
 
     /**
      * Send report
-     * @param {'activity'|'suggest'|'bug'|'message'} type - Type of report to send
+     * @param {'activity'|'suggest'|'bug'|'message'|'error'} type - Type of report to send
      * @param {Object} data - Data to send
      * @returns {Promise<Boolean>} - Return success of report
      */

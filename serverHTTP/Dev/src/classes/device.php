@@ -20,6 +20,9 @@
         /** @var string $Token */
         public $Token;
 
+        /** @var bool $DevMode */
+        public $DevMode;
+
         /** @var bool $Banned */
         public $Banned;
 
@@ -36,6 +39,7 @@
             $this->OSName = $device['OSName'];
             $this->OSVersion = $device['OSVersion'];
             $this->Token = $device['Token'];
+            $this->DevMode = $device['DevMode'] != '0';
             $this->Banned = $device['Banned'] != '0';
             $this->Created = $device['Created'];
             $this->Updated = $device['Updated'];

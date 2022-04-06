@@ -22,7 +22,7 @@ const ConsoleProps = {
 
 class Console extends React.Component {
     state = {
-        enabled: __DEV__,
+        enabled: false,
         opened: false,
         animation: new Animated.Value(0),
         animationButton: new Animated.Value(0),

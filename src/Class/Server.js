@@ -49,6 +49,7 @@ class Server {
         const result_ping = await this.__reqPing();
         if (result_ping.status === 200) {
             const status = result_ping.content['status'];
+            const devMode = result_ping.content['devMode'];
             // Return status & popup out of this class
             if (status === 'update') {
                 const title = langManager.curr['home']['alert-update-title'];
@@ -62,6 +63,7 @@ class Server {
                 // TODO - Gérer la maintenance
             } else if (status === 'ok') {
                 online = true;
+                if (devMode) this.user.interface.console.Enable();
                 this.user.interface.console.EditLog(debugIndex, 'Request: ping - OK');
             }
         } else {

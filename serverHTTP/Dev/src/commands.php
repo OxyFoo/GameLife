@@ -60,6 +60,7 @@
                         $this->output['status'] = 'error';
                     } else {
                         Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
+                        $this->output['devMode'] = $device->DevMode;
                         $this->output['status'] = 'ok';
                     }
                 }

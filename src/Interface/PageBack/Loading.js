@@ -19,7 +19,7 @@ class BackLoading extends React.Component {
 
     nextStep = () => this.setState({ icon: this.state.icon + 1 });
     onToucheStart = (event) => { this.startY = event.nativeEvent.pageY; }
-    onToucheEnd = (event) => { if (event.nativeEvent.pageY - this.startY < -200) user.interface.console.Enable(); }
+    onToucheEnd = (event) => { if (event.nativeEvent.pageY - this.startY < -200 && !user.server.online) user.interface.console.Enable(); }
 
     async initialisation() {
         await user.settings.Load();

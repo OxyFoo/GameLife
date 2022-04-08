@@ -39,10 +39,18 @@ class Settings extends BackSettings {
                 />
 
                 <View style={styles.inline}>
-                    <Text style={styles.inlineText}>{lang['input-daily-notif']}</Text>
+                    <Text style={styles.inlineText}>{lang['input-notif-morning']}</Text>
                     <Switch
                         value={this.state.switchMorningNotifs}
                         onValueChanged={this.onChangeMorningNotifications}
+                    />
+                </View>
+
+                <View style={styles.inline}>
+                    <Text style={styles.inlineText}>{lang['input-notif-evening']}</Text>
+                    <Switch
+                        value={this.state.switchEveningNotifs}
+                        onValueChanged={this.onChangeEveningNotifications}
                     />
                 </View>
 

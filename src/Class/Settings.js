@@ -16,12 +16,14 @@ class Settings {
         this.onboardingWatched = false;
 
         this.morningNotifications = true;
+        this.eveningNotifications = true;
     }
 
     Clear() {
         this.email = '';
         this.connected = false;
         this.morningNotifications = true;
+        this.eveningNotifications = true;
     }
     async Load() {
         const settings = await DataStorage.Load(STORAGE.LOGIN);
@@ -33,6 +35,7 @@ class Settings {
             if (contains('connected')) this.connected = settings['connected'];
             if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
             if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
+            if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
         }
     }
     Save() {
@@ -42,7 +45,8 @@ class Settings {
             email: this.email,
             connected: this.connected,
             onboardingWatched: this.onboardingWatched,
-            morningNotifications: this.morningNotifications
+            morningNotifications: this.morningNotifications,
+            eveningNotifications: this.eveningNotifications,
         };
         return DataStorage.Save(STORAGE.LOGIN, settings);
     }

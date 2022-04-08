@@ -8,24 +8,6 @@ import dataManager from '../Managers/DataManager';
 
 import { Random, Range } from './Functions';
 
-/**
- * @typedef {Object} Channel
- * @property {String} ID Channel ID for android
- * @property {() => { Title, Body }} generate Function to generate notification content
- * @property {Number} hour Hour of the day [0, 23]
- * @property {Number} [minutes=0] Minutes of the hour [0, 59]
- */
-
-/** @returns {Channel} */
-const CreateChannel = (ID, generate, hour, minutes = 0) => ({ ID, generate, hour, minutes });
-const CHANNELS = {
-    morning: CreateChannel('morning', Notifications.Mornings.generate, 0, 9),
-    //evening: CreateChannel('evening', null, 1, 19),
-    //tasks:   CreateChannel('tasks',   null, 2, 13),
-};
-
-const CHANNEL_ID = '1test';
-const SET_HOUR = 9;
 const MAX_DAYS = 30;
 
 const Management = {
@@ -63,51 +45,56 @@ const Management = {
     }
 };
 
-/**
- * @param {Channel} channel
- */
-async function Setup(channel, ) {
+/** @param {Notification} notif */
+async function Setup(notif) {
     let enabled = false;
     if (Platform.OS === 'ios') {
-        enabled = await Management.checkPermissionsIOS(); // TODO - force popup ?
+        enabled = await Management.checkPermissionsIOS();
     } else if (Platform.OS === 'android') {
-        enabled = await Management.addChannelAndroid(channel.ID);
+        enabled = await Management.addChannelAndroid(notif.ID);
     } else {
         user.interface.console.AddLog('warn', 'Notifications.Setup', `Platform ${Platform.OS} is not supported`);
     }
 
-    if (enabled) AddNotifications(channel);
+    if (enabled) {
+        await notif.Disable();
+        await AddNotifications(notif);
+    }
     return enabled;
 }
 
-/**
- * @param {Channel} channel
- */
-function AddNotifications(channel) {
-    const { ID, generate, hour, minutes } = channel;
+/** @param {Notification} notif */
+async function AddNotifications(notif) {
+    const { ID, __generate, hour, minutes } = notif;
+
     // Define SET_HOUR h tomorrow
     const date = new Date();
     date.setHours(hour, minutes, 0, 0);
 
     // Set all notifications for MAX_DAYS days
     for (let i = 0; i < MAX_DAYS; i++) {
-        const { Title, Body } = generate();
+        const content = __generate(i, date);
 
-        if (Platform.OS === 'ios') {
-            PushNotificationIOS.addNotificationRequest({
-                id: ID + i.toString(),
-                title: Title,
-                body: Body,
-                fireDate: date,
-                isCritical: false
-            });
-        } else if (Platform.OS === 'android') {
-            PushNotification.localNotificationSchedule({
-                channelId: ID,
-                title: Title,
-                message: Body,
-                date: date
-            });
+        if (content !== null) {
+            const { Title, Body } = content;
+
+            if (Platform.OS === 'ios') {
+                PushNotificationIOS.addNotificationRequest({
+                    id: ID + i.toString(),
+                    title: Title,
+                    body: Body,
+                    fireDate: date,
+                    isCritical: false
+                });
+            } else if (Platform.OS === 'android') {
+                PushNotification.localNotificationSchedule({
+                    id: ID + i.toString(),
+                    channelId: ID,
+                    title: Title,
+                    message: Body,
+                    date: date
+                });
+            }
         }
 
         date.setDate(date.getDate() + 1);
@@ -115,39 +102,90 @@ function AddNotifications(channel) {
 }
 
 /**
- * @param {Channel} channel
+ * @returns {Promise<NotificationRequest[]|PushNotificationScheduledLocalObject[]>}
  */
-function Remove(channel) {
-    const { ID: channelID } = channel;
+function GetAllNotifications() {
+    return new Promise((resolve) => {
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.getPendingNotificationRequests(resolve);
+        } else if (Platform.OS === 'android') {
+            PushNotification.getScheduledLocalNotifications(resolve);
+        }
+    });
+}
+
+/** @param {Notification} notif */
+async function Remove(notif) {
+    const { ID } = notif;
+
+    const allNotifs = await GetAllNotifications();
+    const IDs = Range(MAX_DAYS).map(i => ID + i.toString()).filter(id => allNotifs.find(notif => notif.id === id));
+
     if (Platform.OS === 'ios') {
-        const IDs = Range(MAX_DAYS).map(i => channelID + i.toString());
         PushNotificationIOS.removePendingNotificationRequests(IDs);
     } else if (Platform.OS === 'android') {
-        PushNotification.channelExists(channelID, (exists) => {
-            if (exists) PushNotification.deleteChannel(channelID);
-        });
+        PushNotification.cancelLocalNotification(IDs);
     }
 }
 
+/**
+ * @typedef {Object} Notification
+ * @property {String} ID Channel ID for android
+ * @property {Number} hour Hour of the day [0, 23]
+ * @property {Number} [minutes=0] Minutes of the hour [0, 59]
+ * @property {(index: Number, date: Date) => { Title: String, Body: String } | null} __generate Function to generate notification content
+ *
+ * @property {() => Promise<Boolean>} Enable
+ * @property {() => Promise<void>} Disable
+ */
+
 class Notifications {
-    /**
-     * @description Daily notifications at 9am with a random quote to start the day
-     */
-    static Mornings = {
-        Enable: () => Setup(CHANNELS.morning),
-        Disable: () => Remove(CHANNELS.morning),
-        generate: () => {
-            const titles = langManager.curr['notifications']['titles'];
-            const random_title = Random(0, titles.length - 1);
-            const Title = titles[random_title];
+    /** @type {Notification} */
+    static Morning = {
+        ID: 'morning',
+        hour: 9,
+        minutes: 0,
+        __generate: () => {
+            const Title = langManager.curr['notifications']['morning']['title'];
             const quote = dataManager.quotes.GetRandomQuote();
             const Body = quote.Quote + ' (' + quote.Author + ')';
             return { Title, Body };
-        }
+        },
+
+        Enable: () => Setup(Notifications.Morning),
+        Disable: () => Remove(Notifications.Morning)
     };
 
+    /** @type {Notification} */
+    static Evening = {
+        ID: 'evening',
+        hour: 19,
+        minutes: 0,
+        __generate: () => {
+            const Title = langManager.curr['notifications']['evening']['title'];
+            const messages = langManager.curr['notifications']['evening']['messages'];
+            const Body = messages[Random(0, messages.length)];
+            return { Title, Body };
+        },
+
+        Enable: () => Setup(Notifications.Evening),
+        Disable: () => Remove(Notifications.Evening)
+    }
+
     static DisableAll() {
-        Notifications.Mornings.Disable();
+        if (Platform.OS === 'ios') PushNotificationIOS.removeAllPendingNotificationRequests();
+        else if (Platform.OS === 'android') PushNotification.cancelAllLocalNotifications();
+    }
+
+    // TODO - Remove, only for testing
+    static GetAllNotifications() {
+        return new Promise((resolve) => {
+            if (Platform.OS === 'ios') {
+                PushNotificationIOS.getPendingNotificationRequests(resolve);
+            } else if (Platform.OS === 'android') {
+                PushNotification.getScheduledLocalNotifications(resolve);
+            }
+        });
     }
 }
 

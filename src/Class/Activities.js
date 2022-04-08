@@ -325,7 +325,7 @@ class Activities {
 
     /**
      * Get activities in a specific date
-     * @param {Number} time - Time to define day (auto define of midnights)
+     * @param {Number} time - Time in seconds to define day (auto define of midnights)
      * @returns {Activity[]} activities
      */
     GetByTime(time = GetTime(new Date())) {

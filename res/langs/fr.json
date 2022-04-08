@@ -7,19 +7,19 @@
     },
 
     "notifications": {
-        "titles": [
-            "Citation du jour",
-            "Pensée du jour",
-            "Un peu de motivation !",
-            "Une citation sympa pour commencer la journée !",
-            "Une lueur d'espoir ?",
-            "Mais que dirais Luffy ?",
-            "T'es pas loin de la fin !",
-            "Encore un p'tit effort !",
-            "Tu vas y arriver !",
-            "Ca finira bien, promis",
-            "Jamais 9 sans 10 comme dirait l'autre : Bonjour, la citation du jour"
-        ]
+        "morning": {
+            "title": "GAME LIFE"
+        },
+        "evening": {
+            "title": "GAME LIFE",
+            "messages": [
+                "Tu as gagné des niveaux aujourd'hui ? N'oublie pas de le noter dans l'app !",
+                "Tu as fait des activités aujourd'hui ? N'oublie pas de le noter dans l'app !",
+                "Tu as gagné de l'expérience aujourd'hui ? N'oublie pas de le noter dans l'app !",
+                "Tu as appris un nouveau truc aujourd'hui ? N'oublie pas de le noter dans l'app !",
+                "Hey ! C'est bientôt la fin de journée, tu as pensé à rentrer tes activités ?"
+            ]
+        }
     },
 
     "level": {
@@ -337,7 +337,8 @@
         "input-about": "À propos de nous",
         "input-langage": "Langues",
         "input-theme": "Thèmes",
-        "input-daily-notif": "Notifications quotidiennes",
+        "input-notif-morning": "Notifications matinales",
+        "input-notif-evening": "Notifications sérotinal",
         "input-report": "Report",
         "input-disconnect": "Se déconnecter",
         "input-tuto-again": "Revoir le tutoriel",

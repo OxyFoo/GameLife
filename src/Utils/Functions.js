@@ -9,7 +9,7 @@ function TwoDigit(n) {
  */
 function Round(number, decimal = 0) {
     const dec = decimal.toString();
-    return  +(Math.round(number + ('e+' + dec)) + ('e-' + dec));
+    return  +(Math.floor(number + ('e+' + dec)) + ('e-' + dec));
 }
 
 function Sum(arr) {
@@ -92,11 +92,16 @@ function Sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, T));
 }
 
-function Random(min, max) {
-    const m = min || 0;
-    const M = max || 1;
-    let R = Math.random() * (M - m) + m;
-    return parseInt(R);
+/**
+ * Generate random number between [min, max[
+ * @param {Number} min
+ * @param {Number} max
+ * @param {Number} decimal Number of decimals to keep
+ * @returns 
+ */
+function Random(min = 0, max = 1, decimal = 0) {
+    const r = Math.random() * (max - min) + min;
+    return Round(r, decimal);
 }
 
 export { TwoDigit, Round, Sum, Range, StrIsJSON,

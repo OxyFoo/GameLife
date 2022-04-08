@@ -23,6 +23,7 @@ class BackSettings extends React.Component {
             selectedLang: current,
             dataLangs: dataLangs,
             switchMorningNotifs: user.settings.morningNotifications,
+            switchEveningNotifs: user.settings.eveningNotifications,
             sendingMail: false
         }
     }
@@ -44,10 +45,17 @@ class BackSettings extends React.Component {
         }
     }
     onChangeMorningNotifications = (enabled) => {
-        if (enabled) Notifications.Mornings.Enable();
-        else Notifications.Mornings.Disable();
+        if (enabled) Notifications.Morning.Enable();
+        else Notifications.Morning.Disable();
         this.setState({ switchMorningNotifs: enabled });
         user.settings.morningNotifications = enabled;
+        user.settings.Save();
+    }
+    onChangeEveningNotifications = (enabled) => {
+        if (enabled) Notifications.Evening.Enable();
+        else Notifications.Evening.Disable();
+        this.setState({ switchEveningNotifs: enabled });
+        user.settings.eveningNotifications = enabled;
         user.settings.Save();
     }
 

@@ -7,19 +7,19 @@
     },
 
     "notifications": {
-        "titles": [
-            "Quote of the day",
-            "Thought for the day",
-            "A little motivation!",
-            "A nice quote to start the day!",
-            "A glimmer of hope ?",
-            "But what would you Luffy say ?",
-            "You're not far from the end !",
-            "One more little effort !",
-            "You're going to make it !",
-            "It will end well, I promise",
-            "Never 9 without 10 as the other would say : Good morning, quote of the day"
-        ]
+        "morning": {
+            "title": "GAME LIFE"
+        },
+        "evening": {
+            "title": "GAME LIFE",
+            "messages": [
+                "Did you gain levels today? Don't forget to note it in the app!",
+                "Did you do any activities today? Don't forget to note it in the app!",
+                "Did you gain experience today? Don't forget to note it in the app!",
+                "Did you learn something new today? Don't forget to write it down in the app!",
+                "Hey, it's almost the end of the day, did you remember to enter your activities?"
+            ]
+        }
     },
 
     "level": {
@@ -337,7 +337,8 @@
         "input-about": "About us",
         "input-langage": "Langages",
         "input-theme": "Themes",
-        "input-daily-notif": "Daily notifications",
+        "input-notif-morning": "Morning notifications",
+        "input-notif-evening": "Evening notifications",
         "input-report": "Report",
         "input-disconnect": "Disconnect",
         "input-tuto-again": "Review the tutorial",

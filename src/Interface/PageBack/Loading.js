@@ -111,11 +111,11 @@ class BackLoading extends React.Component {
             await Notifications.Evening.Enable();
         }
 
-        /*const notifs = await Notifications.GetAllNotifications();
-        notifs.forEach(element => {
-            console.log(element.id);
-        });
-        console.log(notifs.length);*/
+        if (false) {
+            const notifs = await Notifications.GetAllNotifications();
+            notifs.forEach(n => console.log(n));
+            console.log(notifs.length);
+        }
 
         // Load ads
         if (user.informations.adRemaining === 0) {

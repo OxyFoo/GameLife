@@ -15,7 +15,7 @@ import { SpringAnimation } from '../../Utils/Animations';
  * 1: Show only warnings and errors\
  * 2: Show only errors
  */
-const LEVEL_CONSOLE = 0;
+const LEVEL_CONSOLE = 1;
 
 const ConsoleProps = {
 }

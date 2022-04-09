@@ -14,7 +14,7 @@ const Management = {
     async checkPermissionsIOS(forcePopup = false) {
         let authorization = false;
         const perms = { alert: true, badge: true, sound: true, critical: true };
-        const currPerms = await new Promise((resolve, reject) => {
+        const currPerms = await new Promise((resolve) => {
             PushNotificationIOS.checkPermissions(currPerms => {
                 resolve(currPerms.authorizationStatus);
             });
@@ -27,39 +27,47 @@ const Management = {
         }
         return authorization;
     },
-    async addChannelAndroid(channelID) {
+    async addChannelAndroid(channelId, channelName) {
         let output = true;
 
         let exists = await new Promise((resolve) => {
-            PushNotification.channelExists(channelID, resolve);
+            PushNotification.channelExists(channelId, resolve);
         });
 
         if (!exists) {
             output = await new Promise((resolve) => {
-                const channel = { channelId: channelID, channelName: 'Quotes notifications' };
+                const channel = { channelId, channelName };
                 PushNotification.createChannel(channel, resolve);
             });
         }
 
         return output;
+    },
+    async removeChannelAndroid(channelId) {
+        let exists = await new Promise((resolve) => {
+            PushNotification.channelExists(channelId, resolve);
+        });
+        if (exists) PushNotification.deleteChannel(channelId);
     }
 };
 
 /** @param {Notification} notif */
 async function Setup(notif) {
     let enabled = false;
+
+    await notif.Disable();
+
     if (Platform.OS === 'ios') {
         enabled = await Management.checkPermissionsIOS();
     } else if (Platform.OS === 'android') {
-        enabled = await Management.addChannelAndroid(notif.ID);
+        const channelId = notif.ID;
+        const channelName = langManager.curr['notifications'].hasOwnProperty(channelId) ? langManager.curr['notifications'][channelId]['name'] : channelId;
+        enabled = await Management.addChannelAndroid(channelId, channelName);
     } else {
         user.interface.console.AddLog('warn', 'Notifications.Setup', `Platform ${Platform.OS} is not supported`);
     }
 
-    if (enabled) {
-        await notif.Disable();
-        await AddNotifications(notif);
-    }
+    if (enabled) await AddNotifications(notif);
     return enabled;
 }
 
@@ -124,7 +132,8 @@ async function Remove(notif) {
     if (Platform.OS === 'ios') {
         PushNotificationIOS.removePendingNotificationRequests(IDs);
     } else if (Platform.OS === 'android') {
-        PushNotification.cancelLocalNotification(IDs);
+        IDs.forEach(id => PushNotification.cancelLocalNotification(id));
+        await Management.removeChannelAndroid(ID);
     }
 }
 
@@ -172,9 +181,9 @@ class Notifications {
         Disable: () => Remove(Notifications.Evening)
     }
 
-    static DisableAll() {
-        if (Platform.OS === 'ios') PushNotificationIOS.removeAllPendingNotificationRequests();
-        else if (Platform.OS === 'android') PushNotification.cancelAllLocalNotifications();
+    static async DisableAll() {
+        await Notifications.Morning.Disable();
+        await Notifications.Evening.Disable();
     }
 
     // TODO - Remove, only for testing

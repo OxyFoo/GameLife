@@ -8,9 +8,11 @@
 
     "notifications": {
         "morning": {
+            "name": "Notifications matinales",
             "title": "GAME LIFE"
         },
         "evening": {
+            "name": "Notifications sérotinales",
             "title": "GAME LIFE",
             "messages": [
                 "Tu as gagné des niveaux aujourd'hui ? N'oublie pas de le noter dans l'app !",

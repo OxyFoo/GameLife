@@ -35,12 +35,11 @@ class Calendar extends BackCalendar {
 
         const month = ({ item }) => (
             <BlockMonth
-                //style={{ maxHeight: 260, minHeight: 260 }}
+                style={{ maxHeight: 260, minHeight: 260 }}
                 month={item.month}
                 year={item.year}
                 data={item.data}
                 onPressDay={this.daySelect}
-                mounted={this.state.monthsMounted}
             />
         );
 
@@ -61,7 +60,7 @@ class Calendar extends BackCalendar {
                         <Icon onPress={() => {this.weekSelect(-1)}} icon='chevron' color='main1' size={18} angle={180} />
                         <BlockMonth
                             style={styles.weekRow}
-                            showTitle={false}
+                            onlyWeek={true}
                             data={[this.state.currWeek]}
                             month={selectedMonth}
                             year={selectedYear}
@@ -92,7 +91,7 @@ class Calendar extends BackCalendar {
                         style={styles.months}
                         data={this.state.months}
                         renderItem={month}
-                        keyExtractor={(item, index) => 'm-' + index}
+                        keyExtractor={(item, index) => `${item.month}-${item.year}`}
                         //windowSize={12}
                         //initialNumToRender={2}
                         getItemLayout={(data, index) => (
@@ -146,7 +145,7 @@ const styles = StyleSheet.create({
     },
     pannel: {
         width: '100%',
-        height: '86%',
+        height: '90%',
         marginTop: 12,
         paddingBottom: 100,
         borderTopLeftRadius: 16,

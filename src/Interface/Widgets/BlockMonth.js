@@ -17,15 +17,16 @@ const BlockMonthProps = {
     year: new Date().getFullYear(),
     startDay: undefined,
     onBack: undefined,
-    showTitle: true,
+
+    /** @description Show only one week, without title */
+    onlyWeek: false,
 
     /** @param {LayoutChangeEvent} event */
     onLayout: (event) => {},
 
     onPressDay: (day, month, year) => {},
     today: new Date(),
-    selectedDay: null,
-    mounted: true
+    selectedDay: null
 }
 
 function isSameDay(date, day, month, year) {
@@ -75,10 +76,21 @@ function Day(props) {
 const ItemDay = React.memo(Day, (a, b) => false);
 
 class BlockMonth extends React.Component {
+    state = {
+        mounted: false
+    }
+
+    componentDidMount() {
+        // Load months after mount to increase performance
+        const mount = () => this.setState({ mounted: true});
+        if (this.props.onlyWeek) mount();
+        else setTimeout(mount, 10);
+    }
     shouldComponentUpdate(nextProps, nextState) {
-        const { data, selectedDay, mounted } = nextProps;
-        const { data: currData, selectedDay: currSelectedDay, mounted: currMounted } = this.props;
-        return data !== currData || selectedDay !== currSelectedDay || mounted !== currMounted;
+        const { data, selectedDay } = nextProps;
+        const { data: currData, selectedDay: currSelectedDay } = this.props;
+        if (nextState.mounted !== this.state.mounted) return true;
+        return data !== currData || selectedDay !== currSelectedDay;
     }
 
     render() {
@@ -90,12 +102,12 @@ class BlockMonth extends React.Component {
 
         const days = data.flat();
         const title = GetMonthAndYear(month, year);
-        const height = { height: this.props.showTitle ? 260 : 'auto' };
+        const height = { height: !this.props.onlyWeek ? 260 : 'auto' };
 
         return (
             <View style={[styles.container, height, this.props.style]} onLayout={this.props.onLayout}>
-                {this.props.showTitle && <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>}
-                {this.props.mounted && (
+                {!this.props.onlyWeek && <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>}
+                {(this.props.onlyWeek || this.state.mounted) && (
                     <FlatList
                         data={days}
                         numColumns={7}

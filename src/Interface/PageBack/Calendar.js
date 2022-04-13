@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
+import { FlatList } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
+import { Sleep } from '../../Utils/Functions';
 import { GetBlockMonth } from '../../Utils/Date';
 import { SpringAnimation } from '../../Utils/Animations';
 import { GetTime, RoundToQuarter } from '../../Utils/Time';
@@ -15,6 +17,10 @@ class BackCalendar extends React.Component {
         // Infinite scroll vars
         this.ratioY = 0;
         this.offsetY = 0;
+        this.isReached = false;
+
+        /** @type {FlatList} */
+        this.flatlist = null;
 
         const today = new Date();
         const date = today.getDate();
@@ -22,13 +28,10 @@ class BackCalendar extends React.Component {
         const year = today.getFullYear();
         this.before = [ month, year ];
         this.after = [ month, year ];
-        this.flatlist = null;
 
         let months = [{ month: month, year: year, data: GetBlockMonth(month, year) }];
-        for (let i = 0; i < 2; i++) {
-            months = this.addMonthToTop(months, false);
-            months = this.addMonthToBottom(months, false);
-        }
+        months = this.addMonthToTop(months, 4, false);
+        months = this.addMonthToBottom(months, 4, false);
 
         this.state = {
             months: months,
@@ -42,7 +45,6 @@ class BackCalendar extends React.Component {
             selectedYear: year,
             currWeek: [],
             currActivities: [],
-            isReached: false
         };
     }
 
@@ -54,7 +56,7 @@ class BackCalendar extends React.Component {
         this.daySelect(Day, Month, FullYear);
 
         // TODO - Doesn't works on iOS
-        this.flatlist.scrollToIndex({ index: 2, animated: false });
+        this.flatlist.scrollToIndex({ index: 4, animated: false });
     }
 
     componentWillUnmount() {
@@ -72,26 +74,27 @@ class BackCalendar extends React.Component {
         this.offsetY = offsetY;
         this.ratioY = offsetY / maxOffsetY;
 
-        
-        // TODO - Finish infinite scroll
-        //console.log('Scroll', this.state.isReached, offsetY);
-        return;
+        // TODO - Update infinite scroll
+        //console.log('Scroll', this.isReached, offsetY, this.ratioY);
+        //return;
 
-        if (this.state.isReached) return false;
-
-        if (this.ratioY < 0.25 || this.ratioY > 0.75) {
-            new Promise((resolve) => {
-                this.setState({ isReached: true }, () => {
-                    //console.log('adding');
+        const offsetLimit = 0;
+        if (!this.isReached && (this.ratioY <= offsetLimit || this.ratioY >= 1 - offsetLimit)) {
+            (async () => {
+                this.isReached = true;
+                let delta = 0;
+                await new Promise((resolve) => {
                     let newMonths = [];
-                    if (this.ratioY < 0.25) newMonths = this.addMonthToTop();
-                    if (this.ratioY > 0.75) newMonths = this.addMonthToBottom();
-                    this.setState({ months: newMonths, isReached: false }, () => {
-                        //console.log('added');
-                        resolve();
-                    });
+                    if (this.ratioY <= offsetLimit) newMonths = this.addMonthToTop(this.state.months, 2);
+                    if (this.ratioY >= 1 - offsetLimit) newMonths = this.addMonthToBottom(this.state.months, 2);
+                    delta = Math.abs(newMonths.length - this.state.months.length);
+                    this.setState({ months: newMonths }, resolve);
                 });
-            });
+                const newOffsetY = this.offsetY + delta * (this.ratioY <= offsetLimit ? 284 : -284);
+                this.flatlist.scrollToOffset({ offset: newOffsetY, animated: false });
+                await Sleep(10);
+                this.isReached = false;
+            })();
         }
     }
 
@@ -103,46 +106,38 @@ class BackCalendar extends React.Component {
         return [ month, year ];
     }
 
-    addMonthToTop = (currMonths = null, autoRemove = true) => {
-        this.before = this.editMonth(this.before, -1);
-        if (autoRemove) this.after = this.editMonth(this.after, -1);
+    addMonthToTop = (currMonths, number = 1, autoRemove = true) => {
+        if (autoRemove) {
+            this.after = this.editMonth(this.after, -number);
+            currMonths.length -= number;
+        }
 
-        const [ month, year ] = this.before;
-
-        if (currMonths === null) currMonths = this.state.months;
-        if (autoRemove) currMonths.splice(-1, 1);
-        const addMonths = { month: month, year: year, data: GetBlockMonth(month, year) };
-        const newMonths = [ addMonths, ...currMonths ];
+        let newMonths = [ ...currMonths ];
+        for (let i = 0; i < number; i++) {
+            this.before = this.editMonth(this.before, -1);
+            const [ month, year ] = this.before;
+            const addMonths = { month: month, year: year, data: GetBlockMonth(month, year) };
+            newMonths.splice(0, 0, addMonths);
+        }
 
         return newMonths;
-        return new Promise((resolve, reject) => {
-            if (!autoRemove) {
-            } else {
-                this.flatlist.scrollToOffset({ offset: this.offsetY + 284, animated: false });
-                this.setState({ months: newMonths });
-            }
-        });
     }
 
-    addMonthToBottom = (currMonths = null, autoRemove = true) => {
-        this.after = this.editMonth(this.after, 1);
-        if (autoRemove) this.before = this.editMonth(this.before, 1);
+    addMonthToBottom = (currMonths, number = 1, autoRemove = true) => {
+        if (autoRemove) {
+            this.before = this.editMonth(this.before, number);
+            currMonths.splice(0, number);
+        }
 
-        const [ month, year ] = this.after;
-
-        if (currMonths === null) currMonths = this.state.months;
-        if (autoRemove) currMonths.splice(0, 1);
-        const addMonths = { month: month, year: year, data: GetBlockMonth(month, year) };
-        const newMonths = [ ...currMonths, addMonths ];
+        let newMonths = [ ...currMonths ];
+        for (let i = 0; i < number; i++) {
+            this.after = this.editMonth(this.after, 1);
+            const [ month, year ] = this.after;
+            const addMonths = { month: month, year: year, data: GetBlockMonth(month, year) };
+            newMonths.push(addMonths);
+        }
 
         return newMonths;
-        return new Promise((resolve, reject) => {
-            if (!autoRemove) {
-            } else {
-                this.flatlist.scrollToOffset({ offset: this.offsetY - 284, animated: false });
-                this.setState({ months: newMonths });
-            }
-        });
     }
 
     daySelect = async (day = null, month = null, year = null) => {

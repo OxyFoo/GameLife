@@ -81,8 +81,7 @@ class Tasks {
     LoadOnline(tasks) {
         if (typeof(tasks) !== 'object') return;
         this.SAVED_tasks = tasks.map(task => Object.assign(new Task(), task));
-        const length = this.SAVED_tasks.length;
-        this.user.interface.console.AddLog('info', `${length} tasks loaded`);
+        this.user.interface.console.AddLog('info', `${this.SAVED_tasks.length} tasks loaded`);
     }
     Save() {
         const tasks = {

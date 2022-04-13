@@ -55,11 +55,11 @@ const Management = {
 async function Setup(notif) {
     let enabled = false;
 
-    await notif.Disable();
-
     if (Platform.OS === 'ios') {
+        await notif.Disable();
         enabled = await Management.checkPermissionsIOS();
     } else if (Platform.OS === 'android') {
+        await notif.Disable();
         const channelId = notif.ID;
         const channelName = langManager.curr['notifications'].hasOwnProperty(channelId) ? langManager.curr['notifications'][channelId]['name'] : channelId;
         enabled = await Management.addChannelAndroid(channelId, channelName);

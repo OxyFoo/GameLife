@@ -52,7 +52,7 @@ class BackReport extends React.Component {
 
     onLayout = (event) => {
         const { y } = event.nativeEvent.layout;
-        const reportHeight = SCREEN_HEIGHT - y - 24;
+        const reportHeight = SCREEN_HEIGHT - y - 48;
         this.setState({ reportHeight: reportHeight });
     }
 

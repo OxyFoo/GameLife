@@ -124,8 +124,7 @@ class ScreenInput extends React.Component {
                     <Button
                         style={styles.button}
                         color='main1'
-                        icon='chevron'
-                        iconAngle={90}
+                        icon='check'
                         onPress={this.onValid}
                     />
                 </View>

@@ -90,6 +90,7 @@ class Onboarding extends BackOnboarding {
 const styles = StyleSheet.create({
     parent: {
         height: '100%',
+        padding: 24,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 16

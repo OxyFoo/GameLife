@@ -47,6 +47,9 @@
         return $newTables;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetAchievements($db) {
         $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
         if ($achievements === null) return array();
@@ -59,6 +62,9 @@
         return $achievements;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetContributors($db) {
         $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
         if ($helpers === null) return array();
@@ -70,6 +76,9 @@
         return $helpers;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetItems($db) {
         $items = $db->QueryArray("SELECT * FROM `Items`");
         if ($items === null) return array();
@@ -97,6 +106,9 @@
         return $items;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetQuotes($db) {
         $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
         if ($quotes === null) return array();
@@ -106,6 +118,9 @@
         return $quotes;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetSkills($db) {
         $skills = $db->QueryArray("SELECT * FROM `Skills`");
         $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
@@ -176,6 +191,9 @@
         return $skills_sorted;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetSkillsIcon($db) {
         $skillsIcon = $db->QueryArray("SELECT * FROM `SkillsIcon`");
         if ($skillsIcon === null) return array();
@@ -185,6 +203,9 @@
         return $skillsIcon;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetSkillsCategory($db) {
         $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
         if ($categories === null) return array();
@@ -195,6 +216,9 @@
         return $categories;
     }
 
+    /**
+     * @param DataBase $db
+     */
     function GetTitles($db) {
         $titles = $db->QueryArray("SELECT * FROM `Titles`");
         if ($titles === null) return array();

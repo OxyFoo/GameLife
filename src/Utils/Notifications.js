@@ -56,10 +56,10 @@ async function Setup(notif) {
     let enabled = false;
 
     if (Platform.OS === 'ios') {
-        await notif.Disable();
+        await Remove(notif, false); // notif.Disable();
         enabled = await Management.checkPermissionsIOS();
     } else if (Platform.OS === 'android') {
-        await notif.Disable();
+        await Remove(notif, false); // notif.Disable();
         const channelId = notif.ID;
         const channelName = langManager.curr['notifications'].hasOwnProperty(channelId) ? langManager.curr['notifications'][channelId]['name'] : channelId;
         enabled = await Management.addChannelAndroid(channelId, channelName);
@@ -122,8 +122,12 @@ function GetAllNotifications() {
     });
 }
 
-/** @param {Notification} notif */
-async function Remove(notif) {
+/**
+ * @param {Notification} notif
+ * @param {Boolean} removeChannel Used to remove channel (android only)
+ * @returns {Promise<void>}
+ */
+async function Remove(notif, removeChannel = true) {
     const { ID } = notif;
 
     const allNotifs = await GetAllNotifications();

@@ -14,6 +14,7 @@ import { TimingAnimation } from '../../Utils/Animations';
  * @property {'ok'} ok
  * @property {'yes'|'no'} yesno
  * @property {'accept'|'refuse'} acceptornot
+ * @property {null} custom
  */
 
 const PopupProps = {
@@ -41,15 +42,7 @@ class Popup extends React.PureComponent {
     }
 
     /**
-     * Open popup after current one is closed
-     */
-    DelayOpen = async (type, args, callback, cancelable, cross) => {
-        while (this.state.opened) await Sleep(500);
-        this.Open(type, args, callback, cancelable, cross);
-    }
-
-    /**
-     * Open popup and close current one
+     * Open popup after close current one
      */
     ForceOpen = async (type, args, callback, cancelable, cross) => {
         if (this.state.opened) {
@@ -66,11 +59,11 @@ class Popup extends React.PureComponent {
      * @param {(button: PopupTypes[T]) => void} callback - Callback when popup button is pressed
      * @param {Boolean} cancelable - if true, popup can be closed by clicking outside
      * @param {Boolean} cross - if true, popup can be closed by clicking on X
-     * @returns {Boolean} - if popup was opened
+     * @returns {Promise<void>} - Promise resolved when popup is opened
      */
-    Open = (type, args, callback = () => {}, cancelable = true, cross = cancelable) => {
+    async Open(type, args, callback = () => {}, cancelable = true, cross = cancelable) {
         const { opened } = this.state;
-        if (opened) return false;
+        while (opened) await Sleep(500);
 
         this.setState({
             opened: true,
@@ -83,8 +76,6 @@ class Popup extends React.PureComponent {
 
         TimingAnimation(this.state.animOpacity, 1, 200).start();
         TimingAnimation(this.state.animScale, 1, 200).start();
-
-        return true;
     }
 
     /**
@@ -142,7 +133,7 @@ class Popup extends React.PureComponent {
         return (
             <>
                 <Text style={styles.title}>{title}</Text>
-                <Text>{message}</Text>
+                <Text style={styles.message}>{message}</Text>
                 <View style={styles.row}>{buttons}</View>
             </>
         )
@@ -222,7 +213,11 @@ const styles = StyleSheet.create({
 
     title: {
         fontSize: 20,
-        marginVertical: 24
+        marginVertical: 24,
+        paddingHorizontal: 8
+    },
+    message: {
+        paddingHorizontal: 8
     },
     row: {
         width: '100%',

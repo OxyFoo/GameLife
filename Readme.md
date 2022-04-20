@@ -7,6 +7,7 @@ En 3 mots : Gestion RPG IRL
 ### Useful links
 * [AppIcon.co](https://appicon.co/)
 * [JS benchmarks](https://jsben.ch/WqlIl)
+* [PHP Sandbox](https://sandbox.onlinephpfunctions.com/)
 * [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
 * [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
 

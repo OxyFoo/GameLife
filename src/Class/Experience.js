@@ -105,43 +105,32 @@ class Experience {
         return experience;
     }
 
-    // TODO - Update
-    GetSkillCategoryExperience(category, relative = false) {
+    /**
+     * @param {Number} categoryID
+     * @returns {XPInfo}
+     */
+    GetSkillCategoryExperience(categoryID) {
         let totalXP = 0;
 
-        if (relative) {
-            // Get max skill experience
-            let maxSkillXP = 0;
-            const skills = dataManager.skills.skills;
-            for (let s = 0; s < skills.length; s++) {
-                const skill = skills[s];
-                if (skill.Category != category) continue;
-                const skillID = skill.ID;
-                const skillXP = this.GetSkillExperience(skillID);
-                if (skillXP.totalXP > maxSkillXP) {
-                    maxSkillXP = skillXP.totalXP;
-                }
-            }
-            totalXP = maxSkillXP;
-        } else {
-            const activities = this.getUsefulActivities();
-            for (let a in activities) {
-                const activity = activities[a];
-                const skillID = activity.skillID;
-                const skill = dataManager.skills.GetByID(skillID);
-                const cat = skill.Category;
-    
-                if (cat == category) {
-                    const durationHour = activity.duration / 60;
-                    totalXP += skill.XP * durationHour;
-                }
+        const activities = this.getUsefulActivities();
+        for (let a in activities) {
+            const activity = activities[a];
+            const skill = dataManager.skills.GetByID(activity.skillID);
+
+            if (skill.CategoryID === categoryID) {
+                const durationHour = activity.duration / 60;
+                totalXP += skill.XP * durationHour;
             }
         }
 
-        let experience = this.getXPDict(totalXP, SkillXPperLevel);
-        return experience;
+        return this.getXPDict(totalXP, SkillXPperLevel);
     }
 
+    /**
+     * @param {Number} totalXP
+     * @param {Number} xpPerLevel
+     * @returns {XPInfo}
+     */
     getXPDict(totalXP = 0, xpPerLevel = 1) {
         let xp = parseInt(totalXP);
         let lvl = 0;

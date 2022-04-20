@@ -160,6 +160,8 @@ class UserManager {
 
     /** @returns {Promise<Boolean>} True if data is saved */
     OnlineSave = async () => {
+        if (!this.server.online) return false;
+
         let data = {};
         let saved = false;
 

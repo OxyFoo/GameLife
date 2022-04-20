@@ -3,7 +3,6 @@ import { AdsConsent, AdsConsentStatus, FirebaseAdMobTypes, InterstitialAd, Rewar
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency';
 
 import langManager from '../Managers/LangManager';
-import { IsUndefined } from '../Utils/Functions';
 
 const CGU_LINK = 'https://oxyfoo.com/cgu/';
 const FIREBASE = require('../../firebase.json');
@@ -46,7 +45,7 @@ class Admob {
         this.ads = [];
 
         this.ad_consent = {
-            nonPersonalized: false,
+            nonPersonalized: true,
             version: ''
         };
         this.ios_tracking = {
@@ -226,15 +225,14 @@ class Admob {
         }
 
         let nonPersonalized = true;
-        const ad_consent_id = FIREBASE['react-native'][Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_android_app_id'];
-        console.log(ad_consent_id);
+        const ad_consent_id = FIREBASE['react-native'][Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_app_id'];
         const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
-        if (IsUndefined(consentInfo)) return;
-        // TODO - Add debug to console interface
-        console.log('ad_consent_id', ad_consent_id);
-        // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
 
-        if (consentInfo.isRequestLocationInEeaOrUnknown) {
+        // TODO - Debug on ios (tester les 2 codes)
+        console.log('ad_consent_id', ad_consent_id);
+
+        // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
+        if (consentInfo && consentInfo.isRequestLocationInEeaOrUnknown) {
             const formResult = await AdsConsent.showForm({
                 privacyPolicy: this.GetLinkCGU(),
                 withPersonalizedAds: true,
@@ -246,10 +244,10 @@ class Admob {
             if (status === AdsConsentStatus.PERSONALIZED) {
                 nonPersonalized = false;
             }
-        }
 
-        this.ad_consent.nonPersonalized = nonPersonalized;
-        this.ad_consent.version = VERSION;
+            this.ad_consent.nonPersonalized = nonPersonalized;
+            this.ad_consent.version = VERSION;
+        }
     }
 
     /**

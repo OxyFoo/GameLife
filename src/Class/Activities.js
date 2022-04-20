@@ -149,6 +149,10 @@ class Activities {
         }
     }
 
+    /**
+     * @description Get activities that have brought xp
+     * @returns {Array<Activity>}
+     */
     GetUseful() {
         const now = GetTime();
         const activities = this.user.activities.Get().filter(a => a.startTime <= now);

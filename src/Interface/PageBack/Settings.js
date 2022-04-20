@@ -64,7 +64,7 @@ class BackSettings extends React.Component {
             if (button === 'yes' && !await user.Disconnect()) {
                 const title = langManager.curr['settings']['alert-disconnecterror-title'];
                 const text = langManager.curr['settings']['alert-disconnecterror-text'];
-                user.interface.popup.DelayOpen('ok', [ title, text ], undefined, false);
+                user.interface.popup.Open('ok', [ title, text ], undefined, false);
             }
         };
         const title = langManager.curr['settings']['alert-disconnect-title'];
@@ -102,7 +102,7 @@ class BackSettings extends React.Component {
             // Too early
             const title = langManager.curr['settings']['alert-deletedmailtooearly-title'];
             const text = langManager.curr['settings']['alert-deletedmailtooearly-text'];
-            user.interface.popup.DelayOpen('ok', [ title, text ]);
+            user.interface.popup.Open('ok', [ title, text ]);
         }
     }
 }

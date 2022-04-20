@@ -4,9 +4,10 @@ import { View, TouchableOpacity, FlatList, StyleSheet, Animated } from 'react-na
 import BackIdentity from '../PageBack/Identity';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
+import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { Page, Text, Button, XPBar, Container, Icon } from '../Components';
+import { Page, Text, Button, XPBar, Container, Icon, Separator } from '../Components';
 import { UserHeader, PageHeader, AvatarEditor, StatsBars, IdentityEditor } from '../Widgets';
 
 class Identity extends BackIdentity {
@@ -18,6 +19,15 @@ class Identity extends BackIdentity {
                     <Icon xml={Logo} size={52} color='main1' />
                 </View>
                 <Text fontSize={12}>{Name}</Text>
+            </TouchableOpacity>
+        );
+    }
+
+    renderAchievement = ({ item }) => {
+        const Title = dataManager.GetText(item.Name);
+        return (
+            <TouchableOpacity onPress={() => this.onAchievementPress(item.ID)} activeOpacity={.6}>
+                <Text style={{ marginVertical: 12 }} fontSize={16}>{Title}</Text>
             </TouchableOpacity>
         );
     }
@@ -91,7 +101,7 @@ class Identity extends BackIdentity {
                     {row('row-time', this.totalActivityTime)}
                 </Container>
 
-                <View style={{ paddingHorizontal: '5%' }}>
+                <View style={{ paddingHorizontal: 12 }}>
                     <Container
                         style={styles.topSpace}
                         text={lang['container-stats-title']}
@@ -115,7 +125,12 @@ class Identity extends BackIdentity {
                             keyExtractor={(item, index) => 'skill-' + index}
                             numColumns={3}
                         />
-                        <Button style={styles.btnSmall} onPress={this.openSkills}>{lang['conatiner-skills-all']}</Button>
+                        <Button
+                            style={styles.btnSmall}
+                            onPress={this.openSkills}
+                        >
+                            {lang['conatiner-skills-all']}
+                        </Button>
                     </Container>
                 </View>
 
@@ -127,12 +142,17 @@ class Identity extends BackIdentity {
                     color='main1'
                     backgroundColor='backgroundCard'
                 >
-                    {/* TODO - Show last achievements */}
+                    <FlatList
+                        data={this.lastAchievements}
+                        renderItem={this.renderAchievement}
+                        keyExtractor={(item, index) => 'skill-' + index}
+                        ItemSeparatorComponent={() => (
+                            <Separator.Horizontal style={{ height: .4 }} color='main1' />
+                        )}
+                    />
                     <Button
-                        style={styles.achievementButton}
+                        style={styles.btnSmall}
                         onPress={this.openAchievements}
-                        color='main2'
-                        fontSize={14}
                     >
                         {lang['container-achievements-all']}
                     </Button>
@@ -156,14 +176,9 @@ const styles = StyleSheet.create({
     },
     cell: {
         width: '50%',
-        paddingHorizontal: '5%',
+        paddingHorizontal: 16,
         justifyContent: 'center',
         borderRightWidth: .4
-    },
-    achievementButton: {
-        width: '60%',
-        height: 48,
-        marginLeft: '20%'
     },
     
     skill: {
@@ -183,7 +198,7 @@ const styles = StyleSheet.create({
     btnSmall: {
         height: 46,
         marginTop: 24,
-        marginHorizontal: '20%',
+        marginHorizontal: 24,
         borderRadius: 8
     }
 });

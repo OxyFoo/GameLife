@@ -1,36 +1,45 @@
+/**
+ * @typedef {'common'|'rare'|'epic'|'legendary'|'heroic'} Rarity
+ * @typedef {Object} Buff
+ * @property {Number} 
+ * @property {Number} int
+ * @property {Number} soc
+ * @property {Number} for
+ * @property {Number} end
+ * @property {Number} agi
+ * @property {Number} dex
+ */
+
 class Item {
-    ID = 0;
-    Name = '';
-    Description = '';
-    CategoryID = 0; // TODO - Faire un système de catégorie fixe
-    Stats = {
-        'int': 0,
-        'soc': 0,
-        'for': 0,
-        'end': 0,
-        'agi': 0,
-        'dex': 0
-    };
-    Color = ''; // TODO - Faire un système de couleur fixe
-    XML = ''; // TODO - Gérer les XML avec les ID
+    ID = '';
+    Name = { fr: '', en: '' };
+    Description = { fr: '', en: '' };
+    /** @type {Rarity} */
+    Rarity = '';
+    /** @type {Array<Buff>} */
+    Buffs = [];
+    Value = 0;
+
+    //Color = ''; // TODO - Faire un système de couleur fixe
+    //XML = ''; // TODO - Gérer les XML avec les ID
 }
 
 class Items {
     constructor() {
-        /**
-         * @type {Item[]}
-         */
+        /** @type {Array<Item>} */
         this.items = [];
     }
 
-    Save() {
-        return this.items;
-    }
     Load(items) {
         if (typeof(items) === 'object') {
             this.items = items;
         }
     }
+    Save() {
+        return this.items;
+    }
+
+    GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
 }
 
 export default Items;

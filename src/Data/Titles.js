@@ -24,7 +24,7 @@ class Titles {
      * @param {Number} ID 
      * @returns {?Title}
      */
-    GetTitleByID = (ID) => this.titles.find(title => title.ID == ID) || null;
+    GetByID = (ID) => this.titles.find(title => title.ID == ID) || null;
 }
 
 export default Titles;

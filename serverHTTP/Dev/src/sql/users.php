@@ -268,7 +268,14 @@
         private static function AddAchievement($db, $account, $achievements) {
             $accountID = $account->ID;
             $allAchievements = $account->Achievements;
-            array_push($allAchievements, ...$achievements);
+            foreach ($achievements as $achievementID) {
+                if (!in_array($achievementID, $allAchievements)) {
+                    $rewardAdded = Users::ExecReward($db, $accountID, $achievementID);
+                    if ($rewardAdded) {
+                        array_push($allAchievements, ...$achievements);
+                    }
+                }
+            }
             $dbAchievements = json_encode($allAchievements);
 
             $command = "UPDATE `Accounts` SET `Achievements` = '$dbAchievements' WHERE `ID` = '$accountID'";
@@ -276,6 +283,43 @@
             if ($result === false) {
                 ExitWithStatus("Error: saving achievements failed");
             }
+        }
+
+        /**
+         * @param DataBase $db
+         * @param int $accountID
+         * @param int $achievementID
+         * @return bool True if reward was executed
+         */
+        private static function ExecReward($db, $accountID, $achievementID) {
+            $command = "SELECT `Rewards` FROM `Achievements` WHERE `ID` = '$achievementID'";
+            $result = $db->QueryArray($command);
+            if ($result === false) return false;
+            $rewards = explode(',', $result[0]['Rewards']);
+
+            foreach ($rewards as $reward) {
+                $elements = explode(' ', $reward);
+                if (count($elements) !== 2) continue;
+                $type = $elements[0];
+                $value = $elements[1];
+                if ($type === 'OX') {
+                    Users::AddOx($db, $accountID, $value);
+                } else if ($type === 'XP') {
+                    // TODO - Set XP (add precise "activity")
+                } else if ($type === 'title') {
+                    // TODO - Add title
+                } else if ($type === 'item') {
+                    // TODO - Add item
+                    $command = "INSERT INTO `Items` (`UserID`, `ItemID`, `Count`) VALUES ('$accountID', '$value', 1)";
+                    $result = $db->Query($command);
+                    if ($result === false) return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static function AddItem($db, $accountID, $itemID) {
         }
 
         /**

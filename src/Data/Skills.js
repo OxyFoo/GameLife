@@ -46,6 +46,9 @@ class Skills {
          */
         this.categories = [];
 
+        /**
+         * @type {import('../Managers/DataManager').DataManager}
+         */
         this._dataManager = dataManager;
     }
 
@@ -78,63 +81,11 @@ class Skills {
 
     /**
      * @param {Number} ID
-     * @returns {?Skill} - Return skill if exists or null
+     * @returns {Skill?} - Return skill if exists or null
      */
     GetByID = (ID) => GetByKey(this.skills, 'ID', ID);
     GetCategoryByID = (ID) => this.categories.find(category => category.ID === ID);
     GetByCategory = (ID) => this.skills.find(skill => skill.CategoryID === ID);
-
-    // TODO - Unused ?
-    GetAllCategories(onlyUseful = false) {
-        let output = [];
-        let categories = SortByKey(this.categories, 'Name');
-        categories = categories.map((el) => { return { key: el.ID, value: el.Name } });
-        if (onlyUseful) {
-            // TODO - End that
-            //categories = categories.find((el) => {});
-        }
-        return output;
-        /*let sorted = this.categories.sort((a, b) => );
-        for (let i = 0; i < this.categories.length; i++) {
-            if ()
-        }*/
-    }
-
-    GetCategories(/*onlyUseful = false*/) {
-        return this.categories.map(cat => ({ key: cat.ID, value: this._dataManager.GetText(cat.Name) }));
-        /*let cats = [];
-        for (let i = 0; i < this.skills.length; i++) {
-            let cat = this.skills[i].Category;
-            // Search
-            let isInCats = false;
-            for (let c = 0; c < cats.length; c++) {
-                if (cats[c].value == cat) {
-                    isInCats = true;
-                }
-            }
-
-            let curr = false;
-            const activities = this.user.activities.Get();
-            for (let a = 0; a < activities.length; a++) {
-                if (activities[a].skillID == this.skills[i].ID) {
-                    curr = true;
-                }
-            }
-
-            if (!isInCats && (!onlyUseful || curr) && !cats.includes(cat)) {
-                cats.push(cat);
-            }
-        }
-
-        // Sort
-        cats.sort();
-        let cats_sorted = [];
-        for (const c in cats) {
-            cats_sorted.push({ key: parseInt(c), value: cats[c] });
-        }
-
-        return cats_sorted;*/
-    }
 
     /**
      * Return XML of logo by ID

@@ -8,6 +8,7 @@
         $db_all = array();
         $db_all['achievements'] = GetAchievements($db);
         $db_all['contributors'] = GetContributors($db);
+        $db_all['items'] = GetItems($db);
         $db_all['quotes'] = GetQuotes($db);
         $db_all['skills'] = GetSkills($db);
         $db_all['skillsIcon'] = GetSkillsIcon($db);
@@ -19,7 +20,7 @@
     /**
      * Hashes names :
      *     - skills : skills, skillsIcon, skillsCategory
-     *     - equips : achievements, titles
+     *     - equips : achievements, titles, items
      *     - apptxt : contributors, quotes
      * @param DataBase $db
      * @param object $reqHashes 3 hashes to compare
@@ -36,6 +37,7 @@
         if ($reqHashes === null || $reqHashes['equips'] !== $appHashes['equips']) {
             $newTables['achievements'] = GetAchievements($db);
             $newTables['titles'] = GetTitles($db);
+            $newTables['items'] = GetItems($db);
         }
         if ($reqHashes === null || $reqHashes['apptxt'] !== $appHashes['apptxt']) {
             $newTables['contributors'] = GetContributors($db);
@@ -66,6 +68,33 @@
         }
 
         return $helpers;
+    }
+
+    function GetItems($db) {
+        $items = $db->QueryArray("SELECT * FROM `Items`");
+        if ($items === null) return array();
+
+        $rarities = array(
+            0 => 'common',
+            1 => 'rare',
+            2 => 'epic',
+            3 => 'legendary',
+            4 => 'heroic'
+        );
+
+        for ($i = 0; $i < count($items); $i++) {
+            $items[$i]['Name'] = json_decode($items[$i]['Name']);
+            $items[$i]['Description'] = json_decode($items[$i]['Description']);
+            $items[$i]['Buffs'] = json_decode($items[$i]['Buffs']);
+            $items[$i]['Value'] = intval($items[$i]['Value']);
+
+            // Convert rarity int to string
+            $value = intval($items[$i]['Rarity']);
+            if (!key_exists($value, $rarities)) $value = 0;
+            $items[$i]['Rarity'] = $rarities[$value];
+        }
+
+        return $items;
     }
 
     function GetQuotes($db) {

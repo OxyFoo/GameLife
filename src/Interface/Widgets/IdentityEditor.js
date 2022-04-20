@@ -125,7 +125,7 @@ class IdentityEditor extends React.PureComponent {
         const availableTitles = user.informations.GetUnlockTitles();
         const listTitle = lang['input-select-title'];
         const onChangeTitle = () => user.interface.screenList.Open(listTitle, availableTitles, user.informations.SetTitle);
-        const titleTxt = user.informations.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetTitleByID(user.informations.title).Name);
+        const titleTxt = user.informations.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetByID(user.informations.title).Name);
 
         // Age
         const age = user.informations.GetAge();

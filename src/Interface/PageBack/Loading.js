@@ -37,8 +37,8 @@ class BackLoading extends React.Component {
         this.nextStep();
 
         // Loading : Internal data
-        if (online) await dataManager.OnlineLoad();
-        else        await dataManager.LocalLoad();
+        if (online) await dataManager.OnlineLoad(user);
+        else        await dataManager.LocalLoad(user);
 
         const dataLoaded = dataManager.DataAreLoaded();
         if (!dataLoaded) {

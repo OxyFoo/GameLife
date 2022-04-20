@@ -107,8 +107,30 @@
     },
 
     "achievements": {
+        "operators": {
+            "LT": "inférieur à",
+            "GT": "supérieur à"
+        },
+        "conditions": {
+            "header": "Condition : ",
+            "B": "Avoir un niveau de batterie {} {}%",
+            "Sk": "Atteindre le niveau {} pour la compétence \"{}\"",
+            "SkT": "Pratiquer pendant {} heures la compétence \"{}\"",
+            "St": "Attendre le niveau {} avec la statistique \"{}\"",
+            "HCa": "Atteindre le niveau {} dans {} catégorie(s)",
+            "Ca": "Atteindre le niveau {} dans la catégorie \"{}\""
+        },
+        "rewards": {
+            "title": "Nouveau titre : {}",
+            "item": "Nouvel items : {}",
+            "xp": "{} points d'XP",
+            "ox": "{} OX"
+        },
+
         "alert-achievement-title": "Succès déverouillé",
-        "alert-achievement-text": "Vous avez débloqué le succès : {}"
+        "alert-achievement-text": "Vous avez débloqué le succès : {}",
+        "alert-reward-title": "Récompense récupérée",
+        "alert-reward-text": "Vous avez récupéré les récompenses suivantes :"
     },
 
     "activity": {

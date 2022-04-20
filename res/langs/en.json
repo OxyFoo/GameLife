@@ -107,8 +107,30 @@
     },
 
     "achievements": {
+        "operators": {
+            "LT": "Less than",
+            "GT": "Greater than"
+        },
+        "conditions": {
+            "header": "Condition: ",
+            "B": "Having a battery level {} {}%",
+            "Sk": "Reach {} level for skill \"{}\"",
+            "SkT": "Practice for {} hours the skill \"{}\"",
+            "St": "Wait for level {} with the statistic \"{}\"",
+            "HCa": "Reach a level {} in {} category(ies)",
+            "Ca": "Reach level {} in category {}"
+        },
+        "rewards": {
+            "title": "New title: {}",
+            "item": "New item: {}",
+            "xp": "{} XP points",
+            "ox": "{} OX"
+        },
+
         "alert-achievement-title": "Unlocked achievement",
-        "alert-achievement-text": "You have unlocked the achievement: {}"
+        "alert-achievement-text": "You have unlocked the achievement: {}",
+        "alert-reward-title": "You have earned a reward",
+        "alert-reward-text": "You have earned rewards:"
     },
 
     "activity": {

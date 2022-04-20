@@ -109,9 +109,6 @@ class UserManager {
         this.interface.forceUpdate();
     }
 
-    async EventNewAchievement(achievement) {
-    }
-
     /**
      * Load local user data
      * @returns {Promise<Boolean>}
@@ -222,7 +219,7 @@ class UserManager {
             if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
             if (contains('ox')) this.informations.ox = data['ox'];
             if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
-            if (contains('achievements')) this.achievements.solved = data['achievements'];
+            if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);
             if (contains('dataToken')) {

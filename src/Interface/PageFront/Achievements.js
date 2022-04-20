@@ -3,26 +3,32 @@ import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import BackAchievements from '../PageBack/Achievements';
 import user from '../../Managers/UserManager';
-import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Page, Text } from '../Components';
 import { PageHeader } from '../Widgets';
 
 class Achievements extends BackAchievements {
-    renderAchievement({ item: achievement }) {
-        const name = dataManager.GetText(achievement.Name);
-        const description = dataManager.GetText(achievement.Description);
-        const isSolved = user.achievements.Get().includes(parseInt(achievement.ID));
+    renderAchievement = ({ item: achievement }) => {
+        const { ID, Name, Description, isSolved } = achievement;
 
-        const style = isSolved ? [styles.achievementsBox, { backgroundColor: themeManager.colors['black'] }] :
-                                 [styles.achievementsBox, styles.unsolved, { backgroundColor: themeManager.colors['black'] }];
+        const style = [
+            styles.achievementsBox,
+            {
+                borderColor: themeManager.GetColor(isSolved ? 'main1' : '#888888'),
+                backgroundColor: themeManager.GetColor('backgroundGrey')
+            }
+        ];
 
         return (
-            <TouchableOpacity style={styles.achievementsContainer} activeOpacity={.6}>
+            <TouchableOpacity
+                style={styles.achievementsContainer}
+                onPress={() => this.onAchievementPress(ID)}
+                activeOpacity={.6}
+            >
                 <View style={style}>
-                    <Text style={styles.title}>{name}</Text>
-                    <Text style={styles.description} color='secondary'>{description}</Text>
+                    <Text style={styles.title}>{Name}</Text>
+                    <Text style={styles.description} color='secondary'>{Description}</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -33,14 +39,13 @@ class Achievements extends BackAchievements {
             <Page scrollable={false} bottomOffset={0}>
                 <PageHeader onBackPress={user.interface.BackPage} />
 
-                <View style={{ height: '85%' }}>
-                    <FlatList
-                        numColumns={2}
-                        data={this.achievement}
-                        keyExtractor={(item, i) => 'achievement-' + i}
-                        renderItem={this.renderAchievement}
-                    />
-                </View>
+                <FlatList
+                    style={{ height: '85%' }}
+                    numColumns={2}
+                    data={this.achievement}
+                    keyExtractor={(item, i) => 'achievement-' + i}
+                    renderItem={this.renderAchievement}
+                />
             </Page>
         )
     }
@@ -49,19 +54,15 @@ class Achievements extends BackAchievements {
 const styles = StyleSheet.create({
     achievementsContainer: {
         width: '50%',
-        padding: '3%'
+        padding: 6
     },
     achievementsBox: {
         height: 172,
         display: 'flex',
         justifyContent: 'space-evenly',
-        padding: '4%',
-        borderColor: '#FFFFFF',
-        borderWidth: 4,
+        padding: 6,
+        borderWidth: 2,
         borderRadius: 8
-    },
-    unsolved: {
-        borderColor: '#888888'
     },
     title: {
         minHeight: 30,

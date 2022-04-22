@@ -101,11 +101,10 @@
 
         /**
          * @param DataBase $db
-         * @param Account $account
+         * @param int $accountID
          * @return string New data token
          */
-        public static function RefreshDataToken($db, $account) {
-            $accountID = $account->ID;
+        public static function RefreshDataToken($db, $accountID) {
             $newDataToken = RandomString(6);
             $command = "UPDATE `Accounts` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
@@ -122,7 +121,7 @@
          */
         public static function GetActivities($db, $account) {
             $accountID = $account->ID;
-            $command = "SELECT `SkillID`, `StartTime`, `Duration`, `Comment` FROM `Activities` WHERE `UserID` = '$accountID'";
+            $command = "SELECT `SkillID`, `StartTime`, `Duration`, `Comment` FROM `Activities` WHERE `AccountID` = '$accountID'";
             $rows = $db->QueryArray($command);
             if ($rows === null) {
                 ExitWithStatus("Error: getting activities failed");
@@ -157,26 +156,65 @@
                 $duration = $activity[3];
 
                 // Check if activity exists
-                $exists = $db->QueryArray("SELECT `ID` FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
+                $exists = $db->QueryArray("SELECT `ID` FROM `Activities` WHERE `AccountID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
                 if ($exists === null) ExitWithStatus("Error: adding activity failed");
                 $exists = count($exists) > 0;
 
                 if ($type === 'add') {
                     if ($exists) {
-                        $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
+                        $r = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
                         if ($r === false) ExitWithStatus("Error: saving activities failed (preadd)");
                     }
                     $comment = 'NULL';
                     if (!is_null($activity[4]) && !empty($activity[4])) {
                         $comment = "'".$db->Encrypt($activity[4])."'";
                     }
-                    $r = $db->Query("INSERT INTO `Activities` (`UserID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES ('$accountID', '$skillID', '$startTime', '$duration', $comment)");
+                    $r = $db->Query("INSERT INTO `Activities` (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES ('$accountID', '$skillID', '$startTime', '$duration', $comment)");
                     if ($r === false) ExitWithStatus("Error: saving activities failed (add)");
                 } else if ($type === 'rem' && $exists) {
-                    $r = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
+                    $r = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
                     if ($r === false) ExitWithStatus("Error: saving activities failed (remove)");
                 }
             }
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param 'stuff' | 'title' $type
+         * @return array
+         */
+        public static function GetInventory($db, $account, $type) {
+            $accountID = $account->ID;
+            $command = "SELECT `ItemID`, `CreatedBy`, `CreatedAt` FROM `Inventories` WHERE `AccountID` = '$accountID' AND `Type` = '$type'";
+            $rows = $db->QueryArray($command);
+            if ($rows === null) {
+                ExitWithStatus("Error: getting inventory failed");
+            }
+            if ($type === 'stuff') {
+                for ($i = 0; $i < count($rows); $i++) {
+                    $rows[$i]['ItemID'] = intval($rows[$i]['ItemID']);
+                }
+            } else if ($type === 'title') {
+                for ($i = 0; $i < count($rows); $i++) {
+                    $rows[$i] = intval($rows[$i]['ItemID']);
+                }
+            }
+            return $rows;
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param 'stuff' | 'title' $type
+         * @return bool
+         */
+        public static function AddItem($db, $account, $itemID, $type) {
+            $accountID = $account->ID;
+            $createdBy = $account->Username;
+            $command = "INSERT INTO `Inventories` (`AccountID`, `ItemID`, `Type`, `CreatedBy`) VALUES ('$accountID', '$itemID', '$type', '$createdBy')";
+            $result = $db->Query($command);
+            return $result !== false;
         }
 
         /**
@@ -186,7 +224,7 @@
          */
         public static function GetTasks($db, $account) {
             $accountID = $account->ID;
-            $command = "SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks` FROM `Tasks` WHERE `UserID` = '$accountID'";
+            $command = "SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks` FROM `Tasks` WHERE `AccountID` = '$accountID'";
             $tasks = $db->QueryArray($command);
             if ($tasks === null) {
                 ExitWithStatus("Error: getting tasks failed");
@@ -237,24 +275,24 @@
                 if ($Subtasks !== '[]') $Subtasks = $db->Encrypt($Subtasks);
 
                 // Check if task exists
-                $exists = $db->QueryArray("SELECT `ID` FROM `Tasks` WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
+                $exists = $db->QueryArray("SELECT `ID` FROM `Tasks` WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
                 if ($exists === null) ExitWithStatus("Error: adding task failed");
                 $exists = count($exists) > 0;
 
                 if ($Action === 'add') {
                     if ($exists) {
                         $r = $db->Query("UPDATE `Tasks` SET
-                            `UserID` = '$accountID', `Checked` = $Checked,
+                            `AccountID` = '$accountID', `Checked` = $Checked,
                             `Title` = '$Title', `Description` = $Description,
                             `Deadline` = $Deadline, `Schedule` = $Schedule, `Subtasks` = '$Subtasks'
-                            WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
+                            WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
                         if ($r === false) ExitWithStatus("Error: saving tasks failed (update)");
                     } else {
-                        $r = $db->Query("INSERT INTO `Tasks` (`UserID`, `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks`) VALUES ('$accountID', $Checked, '$Title', $Description, $Deadline, $Schedule, '$Subtasks')");
+                        $r = $db->Query("INSERT INTO `Tasks` (`AccountID`, `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks`) VALUES ('$accountID', $Checked, '$Title', $Description, $Deadline, $Schedule, '$Subtasks')");
                         if ($r === false) ExitWithStatus("Error: saving tasks failed (add)");
                     }
                 } else if ($Action === 'rem' && $exists) {
-                    $r = $db->Query("DELETE FROM `Tasks` WHERE `UserID` = '$accountID' AND `Title` = '$Title'");
+                    $r = $db->Query("DELETE FROM `Tasks` WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
                     if ($r === false) ExitWithStatus("Error: saving tasks failed (remove)");
                 }
             }
@@ -270,7 +308,7 @@
             $allAchievements = $account->Achievements;
             foreach ($achievements as $achievementID) {
                 if (!in_array($achievementID, $allAchievements)) {
-                    $rewardAdded = Users::ExecReward($db, $accountID, $achievementID);
+                    $rewardAdded = Users::ExecReward($db, $account, $achievementID);
                     if ($rewardAdded) {
                         array_push($allAchievements, ...$achievements);
                     }
@@ -287,39 +325,36 @@
 
         /**
          * @param DataBase $db
-         * @param int $accountID
+         * @param Account $account
          * @param int $achievementID
          * @return bool True if reward was executed
          */
-        private static function ExecReward($db, $accountID, $achievementID) {
+        private static function ExecReward($db, $account, $achievementID) {
             $command = "SELECT `Rewards` FROM `Achievements` WHERE `ID` = '$achievementID'";
             $result = $db->QueryArray($command);
             if ($result === false) return false;
             $rewards = explode(',', $result[0]['Rewards']);
 
+            $output = false;
             foreach ($rewards as $reward) {
                 $elements = explode(' ', $reward);
                 if (count($elements) !== 2) continue;
                 $type = $elements[0];
                 $value = $elements[1];
                 if ($type === 'OX') {
-                    Users::AddOx($db, $accountID, $value);
+                    $output = Users::AddOx($db, $account->ID, $value);
                 } else if ($type === 'XP') {
                     // TODO - Set XP (add precise "activity")
-                } else if ($type === 'title') {
-                    // TODO - Add title
-                } else if ($type === 'item') {
-                    // TODO - Add item
-                    $command = "INSERT INTO `Items` (`UserID`, `ItemID`, `Count`) VALUES ('$accountID', '$value', 1)";
-                    $result = $db->Query($command);
-                    if ($result === false) return false;
+                } else if ($type === 'Title') {
+                    $output = Users::AddItem($db, $account, $value, 'title');
+                    if ($output) Users::RefreshDataToken($db, $account->ID);
+                } else if ($type === 'Item') {
+                    $output = Users::AddItem($db, $account, $value, 'stuff');
+                    if ($output) Users::RefreshDataToken($db, $account->ID);
                 }
             }
 
-            return true;
-        }
-
-        private static function AddItem($db, $accountID, $itemID) {
+            return $output;
         }
 
         /**
@@ -403,9 +438,7 @@
         public static function AddOx($db, $accountID, $value) {
             $command = "UPDATE `Accounts` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
             $result = $db->Query($command);
-            if ($result === false) {
-                ExitWithStatus("Error: Editing ox failed");
-            }
+            return $result !== false;
         }
 
         /**

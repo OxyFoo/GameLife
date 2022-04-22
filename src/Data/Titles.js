@@ -27,4 +27,5 @@ class Titles {
     GetByID = (ID) => this.titles.find(title => title.ID == ID) || null;
 }
 
+export { Title };
 export default Titles;

@@ -134,30 +134,6 @@ class Informations {
         this.user.LocalSave();
     }
 
-    // TODO - Replace by inventory system
-    //        "title.AchievementsCondition" Removed
-    GetUnlockTitles = () => {
-        let availableTitles = dataManager.titles.titles.map(title => ({ id: title.ID, value: dataManager.GetText(title.Name) }));
-        availableTitles.splice(0, 0, { id: 0, value: langManager.curr['identity']['input-title-none'] });
-        return availableTitles;
-
-        let unlockTitles = [
-            { key: 0, value: langManager.curr['identity']['empty-title'] }
-        ];
-        for (let t = 0; t < dataManager.titles.titles.length; t++) {
-            const title = dataManager.titles.titles[t];
-            const cond = parseInt(title.AchievementsCondition);
-            if (isNaN(cond)) {
-                continue;
-            }
-            if (cond === 0 || this.achievements.solved.includes(cond)) {
-                const newTitle = { key: title.ID, value: title.Title };
-                unlockTitles.push(newTitle);
-            }
-        }
-        return unlockTitles;
-    }
-
     GetInfoToChangeUsername() {
         const delta = GetDaysUntil(this.usernameTime);
         const remain = DAYS_USERNAME_CHANGE - Math.round(delta);

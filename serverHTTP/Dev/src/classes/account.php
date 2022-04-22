@@ -29,9 +29,6 @@
         /** @var int[] $DevicesWait */
         public $DevicesWait;
 
-        /** @var object $Friends */
-        public $Friends;
-
         /** @var int $Ox */
         public $Ox;
 
@@ -75,7 +72,6 @@
             $this->Banned = $account['Banned'] != '0';
             $this->Devices = json_decode($account['Devices'], true);
             $this->DevicesWait = json_decode($account['DevicesWait'], true);
-            $this->Friends = json_decode($account['Friends'], true);
             $this->Ox = intval($account['Ox']);
             $this->XP = intval($account['XP']);
             $this->AdRemaining = intval($account['AdRemaining']);

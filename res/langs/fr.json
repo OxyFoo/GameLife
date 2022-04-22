@@ -267,6 +267,8 @@
         "alert-incorrect-text": "Votre pseudo ne doit doit être compris entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
         "alert-error-title": "Erreur",
         "alert-error-text": "Modification du pseudo impossible",
+        "alert-emptytitle-title": "Pas de titres disponibles",
+        "alert-emptytitle-text": "Vous n'avez pas encore de titre à sélectionner",
         "alert-birthtimewarning-title": "Changement de date de naissance",
         "alert-birthtimewarning-text": "Vous ne pouvez définir une date de naissance qu'une fois tous les {} jours, choisissez-bien !",
         "alert-birthtimewait-title": "Changement de date de naissance",

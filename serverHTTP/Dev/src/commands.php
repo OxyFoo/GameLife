@@ -239,6 +239,10 @@
             // Some data, load only if needed
             if ($appDataToken != $dbDataToken) {
                 $userData['activities'] = Users::GetActivities($this->db, $account);
+                $userData['inventory'] = array(
+                    'stuffs' => Users::GetInventory($this->db, $account, 'stuff'),
+                    'titles' => Users::GetInventory($this->db, $account, 'title')
+                );
                 $userData['tasks'] = Users::GetTasks($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;
             }
@@ -264,7 +268,7 @@
             if ($account === null) return;
 
             Users::ExecQueue($this->db, $account, $deviceID, $userData);
-            $newDataToken = Users::RefreshDataToken($this->db, $account);
+            $newDataToken = Users::RefreshDataToken($this->db, $account->ID);
 
             // Update dataToken if app is already up to date
             if ($this->data['dataToken'] === $account->DataToken) {
@@ -444,8 +448,9 @@
 
             $data = array(
                 'deviceID' => $deviceID,
-                'accountID' => $accountID,
-                'friends' => $account->Friends
+                'accountID' => $accountID
+                // TODO - return friends (servTCP ?)
+                //'friends' => $account->Friends
             );
 
             $this->output['data'] = $data;

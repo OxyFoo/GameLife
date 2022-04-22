@@ -9,6 +9,10 @@ import dataManager from '../../Managers/DataManager';
 import { Text, Button } from '../Components';
 import { GetAge, GetTime } from '../../Utils/Time';
 
+/**
+ * @typedef {import('../../Data/Titles').Title} Title
+ */
+
 class IdentityEditor extends React.PureComponent {
     state = {
         stateDTP: ''
@@ -122,9 +126,26 @@ class IdentityEditor extends React.PureComponent {
         }
 
         // Title
-        const availableTitles = user.informations.GetUnlockTitles();
-        const listTitle = lang['input-select-title'];
-        const onChangeTitle = () => user.interface.screenList.Open(listTitle, availableTitles, user.informations.SetTitle);
+        /** @param {Title} title */
+        const titleToDataMap = (title) => ({ id: title.ID, value: dataManager.GetText(title.Name) });
+        const emptyTitle = { id: 0, value: lang['input-title-none'] };
+        const userTitles = user.inventory.GetTitles().map(titleToDataMap);
+        const availableTitles = [ emptyTitle, ...userTitles ];
+        const onChangeTitle = () => {
+            if (!userTitles.length) {
+                // No titles available
+                const title = lang['alert-emptytitle-title'];
+                const text = lang['alert-emptytitle-text'];
+                user.interface.popup.ForceOpen('ok', [ title, text ], this.Open, false);
+                return;
+            }
+            const callback = (id) => {
+                user.informations.SetTitle(id);
+                this.forceUpdate();
+            };
+            const listTitle = lang['input-select-title'];
+            user.interface.screenList.Open(listTitle, availableTitles, callback);
+        }
         const titleTxt = user.informations.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetByID(user.informations.title).Name);
 
         // Age

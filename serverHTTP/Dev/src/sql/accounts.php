@@ -134,7 +134,7 @@
          * @return bool Success of deletion
          */
         public static function Delete($db, $accountID) {
-            $remActivities = $db->Query("DELETE FROM `Activities` WHERE `UserID` = '$accountID'");
+            $remActivities = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID'");
             $remUser = $db->Query("DELETE FROM `Accounts` WHERE `ID` = '$accountID'");
             return $remActivities && $remUser;
         }

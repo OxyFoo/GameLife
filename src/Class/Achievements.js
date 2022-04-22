@@ -2,6 +2,7 @@ import dataManager from '../Managers/DataManager';
 import langManager from '../Managers/LangManager';
 
 import { GetTime } from '../Utils/Time';
+import { GetBattery } from '../Utils/Device';
 
 class Achievements {
     constructor(user) {
@@ -54,17 +55,17 @@ class Achievements {
         this.UNSAVED_solved = [];
     }
 
-    async AddAchievement(achievementID) {
+    AddAchievement = async (achievementID) => {
         this.UNSAVED_solved.push(achievementID);
-        await this.user.LocalSave();
         await this.user.OnlineSave();
+        await this.user.OnlineLoad(true);
     }
 
     /**
      * Show popup with achievement informations
      * @param {Number} achievementID 
      */
-    ShowCardPopup(achievementID) {
+    ShowCardPopup = (achievementID) => {
         const solvedIndexes = this.Get();
         const achievement = dataManager.achievements.GetByID(achievementID);
         const title = dataManager.GetText(achievement.Name);
@@ -80,11 +81,11 @@ class Achievements {
      * Show popup with achievement rewards
      * @param {Number} achievementID 
      */
-    ShowRewardPopup(achievementID) {
+    ShowRewardPopup = (achievementID) => {
         const title = langManager.curr['achievements']['alert-reward-title'];
         let text = langManager.curr['achievements']['alert-reward-text'] + '\n\n';
         text += this.getRewardsText(achievementID);
-        this.user.interface.popup.Open('ok', [ title, text ]);
+        this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
     }
 
     /**
@@ -179,8 +180,7 @@ class Achievements {
         return output;
     }
 
-    // TODO - Add events (gifts while online saving)
-    CheckAchievements() {
+    CheckAchievements = () => {
         const achievements = dataManager.achievements.achievements;
         const stats = this.user.experience.GetExperience().stats;
 
@@ -196,28 +196,24 @@ class Achievements {
 
             let completed = false;
             let value = null;
-            let skillID = 0;
             const categories = dataManager.skills.categories;
 
             // Get value to compare
             switch (Condition.Comparator.Type) {
                 case 'B': // Battery level
-                    if (!deviceInfoModule.isEmulatorSync()) {
-                        const batteryLevel = deviceInfoModule.getBatteryLevelSync();
-                        value = batteryLevel;
-                    }
+                    value = GetBattery();
                     break;
                 case 'Sk': // Skill level
-                    skillID = Condition.Comparator.Value;
+                    const skillID = Condition.Comparator.Value;
                     value = this.user.experience.GetSkillExperience(skillID).lvl;
                     break;
                 case 'SkT': // Skill time
-                    skillID = Condition.Comparator.Value;
+                    const skillTimeID = Condition.Comparator.Value;
                     value = 0;
                     const now = GetTime();
                     const activities = this.user.activities.Get();
                     for (const a in activities) {
-                        if (activities[a].skillID === skillID && activities[a].startTime < now) {
+                        if (activities[a].skillID === skillTimeID && activities[a].startTime < now) {
                             value += activities[a].duration / 60;
                         }
                     }

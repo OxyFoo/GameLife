@@ -171,14 +171,15 @@ class Server {
 
     /**
      * Load all user data
+     * @param {Boolean} [force=false] Force to load data from server (use empty dataToken)
      * @returns {Promise<?Object>} Return all online data or null if failed
      */
-    async LoadUserData() {
+    async LoadUserData(force = false) {
         let json = null;
         const data = {
             'action': 'getUserData',
             'token': this.token,
-            'dataToken': this.dataToken
+            'dataToken': force ? '' : this.dataToken
         };
         const response = await Request_Async(data);
 

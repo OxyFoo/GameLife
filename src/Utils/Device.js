@@ -24,4 +24,13 @@ function GetDeviceInformations(OS = false, version = false) {
     return device;
 }
 
-export { GetDeviceInformations };
+/**
+ * Return the current battery level, or null if not available (emulator)
+ * @returns {Number?}
+ */
+function GetBattery() {
+    if (DeviceInfo.isEmulatorSync()) return null;
+    return DeviceInfo.getBatteryLevelSync();
+}
+
+export { GetDeviceInformations, GetBattery };

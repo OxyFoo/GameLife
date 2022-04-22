@@ -127,6 +127,7 @@ class BackLoading extends React.Component {
 
         this.nextStep();
         await Sleep(200);
+        user.StartTimers();
 
         if (user.activities.currentActivity === null) {
             while (!user.interface.ChangePage('home')) await Sleep(100);

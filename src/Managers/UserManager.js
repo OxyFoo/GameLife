@@ -3,6 +3,7 @@ import Activities from '../Class/Activities';
 import Admob from '../Class/Admob';
 import Experience from '../Class/Experience';
 import Informations from '../Class/Informations';
+import Inventory from '../Class/Inventory';
 import Multiplayer from '../Class/Multiplayer';
 import Quests from '../Class/Quests';
 import Server from '../Class/Server';
@@ -33,6 +34,7 @@ class UserManager {
         this.admob = new Admob(this);
         this.experience = new Experience(this);
         this.informations = new Informations(this);
+        this.inventory = new Inventory(this);
         this.multiplayer = new Multiplayer(this);
         this.quests = new Quests(this);
         this.server = new Server(this);
@@ -53,10 +55,15 @@ class UserManager {
         this.stats = this.experience.GetEmptyExperience();
         this.tempSelectedTime = null;
         this.tempMailSent = null;
-
+    }
+    
+    StartTimers() {
         const saveTime = 5 * 60 * 1000; // 5 minutes
         const save = this.server.online ? this.OnlineSave : this.LocalSave;
         this.intervalSave = setInterval(save, saveTime);
+
+        const achievementsTime = 1 * 60 * 1000; // 1 minute
+        this.intervalAchievements = setInterval(this.achievements.CheckAchievements, achievementsTime);
     }
 
     async Clear(keepOnboardingState = true) {
@@ -68,6 +75,7 @@ class UserManager {
         this.achievements.Clear();
         this.activities.Clear();
         this.informations.Clear();
+        this.inventory.Clear();
         this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
@@ -94,6 +102,7 @@ class UserManager {
     }
     async Unmount() {
         clearInterval(this.intervalSave);
+        clearInterval(this.intervalAchievements);
         await this.LocalSave();
         await this.OnlineSave();
         this.server.Clear();
@@ -122,6 +131,7 @@ class UserManager {
             'activities': this.activities.Save(),
             'admob': this.admob.Save(),
             'informations': this.informations.Save(),
+            'inventory': this.inventory.Save(),
             'quests': this.quests.Save(),
             'tasks': this.tasks.Save()
         };
@@ -146,6 +156,7 @@ class UserManager {
             if (contains('activities')) this.activities.Load(data['activities']);
             if (contains('admob')) this.admob.Load(data['admob']);
             if (contains('informations')) this.informations.Load(data['informations']);
+            if (contains('inventory')) this.inventory.Load(data['inventory']);
             if (contains('quests')) this.quests.Load(data['quests']);
             if (contains('tasks')) this.tasks.Load(data['tasks']);
 
@@ -195,8 +206,8 @@ class UserManager {
                 this.achievements.Purge();
                 this.informations.Purge();
                 this.tasks.Purge();
-                await this.LocalSave();
                 this.interface.console.EditLog(debugIndex, 'User data: online save success');
+                await this.LocalSave();
             } else {
                 this.interface.console.AddLog('error', 'User data: online save failed');
             }
@@ -206,10 +217,10 @@ class UserManager {
         return saved;
     }
 
-    async OnlineLoad() {
+    async OnlineLoad(force = false) {
         if (!this.server.online) return false;
         const debugIndex = this.interface.console.AddLog('info', 'User data: online loading...');
-        const data = await this.server.LoadUserData();
+        const data = await this.server.LoadUserData(force);
         const contains = (key) => data.hasOwnProperty(key);
         if (DEBUG_DATA) console.log('User data online load:', data);
 
@@ -221,6 +232,7 @@ class UserManager {
             if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
             if (contains('ox')) this.informations.ox = data['ox'];
             if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
+            if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);

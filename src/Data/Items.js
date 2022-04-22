@@ -42,4 +42,5 @@ class Items {
     GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
 }
 
+export { Item };
 export default Items;

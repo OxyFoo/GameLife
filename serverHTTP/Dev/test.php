@@ -309,9 +309,9 @@
     } else if ($action === 'testQuery') {
         // Average: 0.27ms/query
         $t1 = microtime(true);
-        $activities = $db->QueryArray("SELECT * FROM `Activities` WHERE `UserID` = '14'");
+        $activities = $db->QueryArray("SELECT * FROM `Activities` WHERE `AccountID` = '14'");
         /*for ($i = 0; $i < 100*1000; $i++) {
-            $db->Query("INSERT INTO `Activities` (`UserID`, `SkillID`, `StartTime`, `Duration`) VALUES ('0', '0', '0', '0')");
+            $db->Query("INSERT INTO `Activities` (`AccountID`, `SkillID`, `StartTime`, `Duration`) VALUES ('0', '0', '0', '0')");
             $id = $db->GetLastInsertID();
             $db->Query("DELETE FROM `Activities` WHERE `ID` = '$id'");
         }*/

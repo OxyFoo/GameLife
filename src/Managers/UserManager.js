@@ -225,9 +225,9 @@ class UserManager {
         if (DEBUG_DATA) console.log('User data online load:', data);
 
         if (data !== null) {
-            if (contains('username')) this.informations.username = data['username'];
+            if (contains('username')) this.informations.username.Set(data['username']);
             if (contains('usernameTime')) this.informations.usernameTime = data['usernameTime'];
-            if (contains('title')) this.informations.title = data['title'];
+            if (contains('title')) this.informations.title.Set(data['title']);
             if (contains('birthtime')) this.informations.birthTime = data['birthtime'];
             if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
             if (contains('ox')) this.informations.ox = data['ox'];

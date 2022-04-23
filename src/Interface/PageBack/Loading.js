@@ -97,7 +97,7 @@ class BackLoading extends React.Component {
             await user.OnlineLoad();
             // local save
         }
-        if (user.informations.username === '') {
+        if (user.informations.username.Get() === '') {
             user.interface.console.AddLog('error', 'User data not loaded');
             return;
         }

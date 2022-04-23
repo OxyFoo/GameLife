@@ -20,6 +20,25 @@ const UserHeaderProps = {
 }
 
 class UserHeader extends React.Component {
+    state = {
+        username: user.informations.username.Get(),
+        titleText: user.informations.GetTitleText()
+    }
+    componentDidMount() {
+        this.nameListener = user.informations.username.AddListener(this.update);
+        this.titleListener = user.informations.title.AddListener(this.update);
+    }
+    componentWillUnmount() {
+        user.informations.username.RemoveListener(this.nameListener);
+        user.informations.title.RemoveListener(this.titleListener);
+    }
+    update = () => {
+        this.setState({
+            username: user.informations.username.Get(),
+            titleText: user.informations.GetTitleText()
+        });
+    }
+
     onPress = () => {
         if (typeof(this.props.onPress) === 'function') {
             this.props.onPress();
@@ -33,7 +52,6 @@ class UserHeader extends React.Component {
         const showAge = age !== null && this.props.showAge;
         const activeOpacity = editable ? 0.6 : 1;
 
-        const userTitle = user.informations.GetTitle();
         const edit = <Icon icon={user.server.IsConnected() ? 'edit' : 'nowifi'} color='border' />;
         const avatar = <Button style={styles.avatar} onPress={openIdentity} rippleColor='white' />;
         const rightItem = editable ? edit : avatar;
@@ -42,10 +60,10 @@ class UserHeader extends React.Component {
             <TouchableOpacity style={[styles.header, this.props.style]} onPress={this.onPress} activeOpacity={activeOpacity}>
                 <View style={{ justifyContent: 'center', height: 84 }}>
                     <View style={styles.usernameContainer}>
-                        <Text style={styles.username} color='primary'>{user.informations.username}</Text>
+                        <Text style={styles.username} color='primary'>{this.state.username}</Text>
                         {showAge && <Text style={styles.age} color='secondary'>{langManager.curr['identity']['value-age'].replace('{}', age)}</Text>}
                     </View>
-                    {userTitle !== '' && <Text style={styles.title} color='secondary'>{userTitle}</Text>}
+                    {this.state.titleText !== '' && <Text style={styles.title} color='secondary'>{this.state.titleText}</Text>}
                 </View>
                 {rightItem}
             </TouchableOpacity>

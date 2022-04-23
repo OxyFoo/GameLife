@@ -73,12 +73,12 @@ class IdentityEditor extends React.PureComponent {
 
     openUsername = () => {
         const lang = langManager.curr['identity'];
-        user.interface.screenInput.Open(lang['input-username'], user.informations.username, this.onChangeUsername);
+        user.interface.screenInput.Open(lang['input-username'], user.informations.username.Get(), this.onChangeUsername);
         this.Open();
     }
     onChangeUsername = async (username) => {
         const lang = langManager.curr['identity'];
-        if (!username.length || username === user.informations.username) return;
+        if (!username.length || username === user.informations.username.Get()) return;
         const state = await user.informations.SetUsername(username);
 
         if (state === 'alreadyUsed') {
@@ -146,7 +146,8 @@ class IdentityEditor extends React.PureComponent {
             const listTitle = lang['input-select-title'];
             user.interface.screenList.Open(listTitle, availableTitles, callback);
         }
-        const titleTxt = user.informations.title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetByID(user.informations.title).Name);
+        const title = user.informations.title.Get();
+        const titleTxt = title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetByID(title).Name);
 
         // Age
         const age = user.informations.GetAge();
@@ -157,7 +158,7 @@ class IdentityEditor extends React.PureComponent {
                 <Text style={styles.popupTitle}>{lang['edit-title']}</Text>
 
                 <View style={styles.popupRow}>
-                    <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.informations.username}</Text>
+                    <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.informations.username.Get()}</Text>
                     <Button style={styles.popupButtonEdit} onPress={usernameEdit} fontSize={12} color='main1'>{lang['input-edit']}</Button>
                 </View>
 

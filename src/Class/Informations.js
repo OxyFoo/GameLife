@@ -1,6 +1,7 @@
 import dataManager from '../Managers/DataManager';
 import langManager from '../Managers/LangManager';
 
+import DynamicVar from '../Utils/DynamicVar';
 import { GetAge, GetDaysUntil, GetTime } from '../Utils/Time';
 
 const DAYS_USERNAME_CHANGE = 30;
@@ -14,9 +15,9 @@ class Informations {
          */
         this.user = user;
 
-        this.username = '';
+        this.username = new DynamicVar('');
         this.usernameTime = null;
-        this.title = 0;
+        this.title = new DynamicVar(0);
         this.birthTime = null;
         this.lastBirthTime = null;
         this.xp = 0;
@@ -28,9 +29,9 @@ class Informations {
     }
 
     Clear() {
-        this.username = '';
+        this.username = new DynamicVar('');
         this.usernameTime = null;
-        this.title = 0;
+        this.title = new DynamicVar(0);
         this.birthTime = null;
         this.lastBirthTime = null;
         this.xp = 0;
@@ -41,9 +42,9 @@ class Informations {
     }
     Load(informations) {
         const contains = (key) => informations.hasOwnProperty(key);
-        if (contains('username')) this.username = informations['username'];
+        if (contains('username')) this.username.Set(informations['username']);
         if (contains('usernameTime')) this.usernameTime = informations['usernameTime'];
-        if (contains('title')) this.title = informations['title'];
+        if (contains('title')) this.title.Set(informations['title']);
         if (contains('birthTime')) this.birthTime = informations['birthTime'];
         if (contains('lastBirthTime')) this.lastBirthTime = informations['lastBirthTime'];
         if (contains('xp')) this.xp = informations['xp'];
@@ -54,9 +55,9 @@ class Informations {
     }
     Save() {
         const informations = {
-            username: this.username,
+            username: this.username.Get(),
             usernameTime: this.usernameTime,
-            title: this.title,
+            title: this.title.Get(),
             birthTime: this.birthTime,
             lastBirthTime: this.lastBirthTime,
             xp: this.xp,
@@ -80,7 +81,7 @@ class Informations {
         const request = await this.user.server.SaveUsername(username);
 
         if (request === 'ok') {
-            this.username = username;
+            this.username.Set(username);
             this.usernameTime = GetTime();
             this.user.LocalSave();
 
@@ -94,14 +95,14 @@ class Informations {
         return request;
     }
 
-    GetTitle = () => {
-        const title = dataManager.titles.GetByID(this.title);
+    GetTitleText = () => {
+        const title = dataManager.titles.GetByID(this.title.Get());
         return title === null ? '' : dataManager.GetText(title.Name);
     }
     SetTitle = (ID) => {
         if (typeof(ID) !== 'number') return;
 
-        this.title = ID;
+        this.title.Set(ID);
         this.UNSAVED_title = ID;
         this.user.interface.forceUpdate();
         if (this.user.interface.popup.state.opened)

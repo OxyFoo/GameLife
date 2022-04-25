@@ -56,10 +56,19 @@ class FrameContent {
 }
 
 class Frame extends React.Component {
+    tmpLength = 0;
     componentDidUpdate() {
-        if (this.props.content !== null) {
-            this.props.content.characters.forEach(character => character.SetFrame(this));
+        const { content } = this.props;
+        if (content !== null && content.characters.length !== this.tmpLength) {
+            this.tmpLength = content.characters.length;
+            content.characters.forEach(character => character.SetFrame(this));
+            this.forceUpdate();
         }
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!nextProps.hasOwnProperty('content') || nextProps.content === null) return true;
+        const differentProps = nextProps.content.characters.length !== this.tmpLength;
+        return differentProps;
     }
     componentWillUnmount() {
         if (this.props.content !== null) {

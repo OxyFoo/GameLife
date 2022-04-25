@@ -1,5 +1,4 @@
-import Character_Classic from './human_classic';
-import Character_Male_Test from './human_male_test';
+import Male_Test from './male_test';
 
 import animIdle from '../animations/muscles.json';
 import animMuscles from '../animations/muscles.json';
@@ -26,7 +25,7 @@ import animMuscles from '../animations/muscles.json';
  */
 
 const CHARACTERS = {
-    'male_test': Character_Male_Test
+    'male_test': Male_Test
 };
 
 const ANIMATIONS = {

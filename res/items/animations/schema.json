@@ -1,6 +1,10 @@
 {
     "$schema": "http://json-schema.org/schema",
     "definitions": {
+        "position": {
+            "type": "integer",
+            "default": 0
+        },
         "angle": {
             "type": "integer",
             "default": 0,
@@ -51,6 +55,15 @@
                         "type": "integer",
                         "default": 1000,
                         "description": "The duration of the pose in seconds"
+                    },
+                    "translation": {
+                        "type": "object",
+                        "description": "The translation of the pose (bust)",
+                        "properties": {
+                            "x": { "$ref": "#/definitions/position" },
+                            "y": { "$ref": "#/definitions/position" },
+                            "z": { "$ref": "#/definitions/position" }
+                        }
                     },
                     "rotations": {
                         "type": "object",

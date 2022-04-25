@@ -17,7 +17,7 @@ const AvatarProps = {
 }
 
 const TEST_ITEMS = [
-    { id: 0, name: 'Test1', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
+    //{ id: 0, name: 'Test1', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
     //{ id: 1, name: 'Test2', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
     //{ id: 2, name: 'Test3', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
     //{ id: 3, name: 'Test4', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },

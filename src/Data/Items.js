@@ -39,6 +39,7 @@ class Items {
         return this.items;
     }
 
+    /** @returns {Item?} */
     GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
 }
 

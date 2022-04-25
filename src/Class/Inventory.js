@@ -24,6 +24,15 @@ class Inventory {
 
         /** @type {Array<Stuff>} */
         this.stuffs = [];
+
+        this.equipments = {
+            hair: null,
+            hat: null,
+            head: null,
+            body: 'teeshirt_01',
+            legs: null,
+            feet: null
+        }
     }
 
     Clear() {

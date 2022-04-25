@@ -125,7 +125,6 @@ class Body {
         // Translation
         const pos = { x: translation?.x || 0, y: translation?.y || 0 };
         anims.push(TimingAnimation(this.firstPart.animPosition, pos, duration));
-        //this.character.SetPositionRelative(translation?.x, translation?.y, duration);
 
         Animated.parallel(anims).start();
     }

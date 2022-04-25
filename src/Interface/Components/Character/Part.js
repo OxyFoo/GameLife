@@ -2,7 +2,10 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import { G } from 'react-native-svg';
 
+import user from '../../../Managers/UserManager';
+
 import { WithFunction } from '../../../Utils/Animations';
+import { STUFFS } from '../../../../res/items/stuffs/Stuffs';
 import { CHARACTERS } from '../../../../res/items/humans/Characters';
 
 /**
@@ -117,8 +120,6 @@ class Part {
 
         const fill = '#e0a98b';
         const { posX, posY, rotZ } = this.calculateParentPos();
-        const SVG = CHARACTERS[character]['svg'][this.name];
-        const shadow = CHARACTERS[character]['shadows'][this.name];
 
         const styleZIndex = { zIndex: this.zIndex, elevation: this.zIndex };
         const styleZIndexShadow = { zIndex: this.zIndex - 1000, elevation: this.zIndex - 1000 };
@@ -129,6 +130,23 @@ class Part {
             { rotateZ: animRotation }
         ]};
 
+        let SVGs = [ CHARACTERS[character]['svg'][this.name] ];
+        let shadows = [ CHARACTERS[character]['shadows'][this.name] ];
+
+        const inventoryItems = user.inventory.equipments;
+        for (const slot in inventoryItems) {
+            const ID = inventoryItems[slot];
+            if (ID === null) continue;
+            if (!STUFFS.hasOwnProperty(ID)) continue;
+
+            if (STUFFS[ID].hasOwnProperty('svg') && STUFFS[ID]['svg'].hasOwnProperty(this.name)) {
+                SVGs.push(STUFFS[ID]['svg'][this.name]);
+            }
+            if (STUFFS[ID].hasOwnProperty('shadows') && STUFFS[ID]['shadows'].hasOwnProperty(this.name)) {
+                shadows.push(STUFFS[ID]['shadows'][this.name]);
+            }
+        }
+
         if (partType === 'body') {
             return (
                 <AnimatedG
@@ -136,8 +154,7 @@ class Part {
                     style={[transforms, styleZIndex]}
                     fill={fill || 'white'}
                 >
-                    {SVG}
-                    {/*this.name === 'bust' && <Teeshirt01 />*/}
+                    {SVGs}
                 </AnimatedG>
             );
         } else if (partType === 'shadow') {
@@ -149,7 +166,7 @@ class Part {
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >
-                    {shadow}
+                    {shadows}
                 </AnimatedG>
             );
         } else if (partType === 'stuff') {

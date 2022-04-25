@@ -1,5 +1,9 @@
 <?php
 
+    /**
+     * Script called directly from application.
+     */
+
     require('./src/commands.php');
 
     $input = file_get_contents('php://input');

@@ -1,5 +1,9 @@
 <?php
 
+    /**
+     * Script called from user mail (link device or delete account).
+     */
+
     require('./src/config.php');
     require('./src/functions/mail.php');
     require('./src/classes/account.php');

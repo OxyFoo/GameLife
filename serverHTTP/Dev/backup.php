@@ -1,5 +1,9 @@
 <?php
 
+    /**
+     * Script called every weeks to backup database.
+     */
+
     require('./src/sql.php');
     require('./src/add.php');
 

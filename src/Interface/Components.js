@@ -1,46 +1,44 @@
-import Page from './Components/Page';
-import Text from './Components/Text';
-import Input from './Components/Input';
+import Button from './Components/Button';
+import Character from './Components/Character/Character';
+import Checkbox from './Components/Checkbox';
+import ComboBox from './Components/ComboBox';
+import Container from './Components/Container';
+import Digit from './Components/Digit';
+import Frame, { FrameContent } from './Components/Character/Frame';
+import GLLoading from './Components/GLLoading';
 import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
-import Button from './Components/Button';
-import Separator from './Components/Separator';
-import TextSwitch from './Components/TextSwitch';
-import Checkbox from './Components/Checkbox';
-import Container from './Components/Container';
-import ComboBox from './Components/ComboBox';
+import Input from './Components/Input';
 import News from './Components/News';
+import Page from './Components/Page';
+import ProgressBar from './Components/ProgressBar';
+import Separator from './Components/Separator';
 import Swiper from './Components/Swiper';
 import Switch from './Components/Switch';
-import ProgressBar from './Components/ProgressBar';
+import Text from './Components/Text';
+import TextSwitch from './Components/TextSwitch';
 import XPBar from './Components/XPBar';
-import Character from './Components/Character';
-import Digit from './Components/Digit';
-import GLLoading from './Components/GLLoading';
-import Frame from './Components/Frame';
-import { FrameContent } from './Components/Frame';
 
 export {
-    Page,
-
-    Text,
-    Input,
+    Button,
+    Character,
+    Checkbox,
+    ComboBox,
+    Container,
+    Digit,
+    Frame,
+    FrameContent,
+    GLLoading,
     Icon,
     IconCheckable,
-    Button,
-    Separator,
-    TextSwitch,
-    Checkbox,
-    Container,
-    ComboBox,
+    Input,
     News,
+    Page,
+    ProgressBar,
+    Separator,
     Swiper,
     Switch,
-    ProgressBar,
-    XPBar,
-    Character,
-    Digit,
-    GLLoading,
-    Frame,
-    FrameContent
+    Text,
+    TextSwitch,
+    XPBar
 }

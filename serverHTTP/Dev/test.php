@@ -1,5 +1,9 @@
 <?php
 
+    /**
+     * Only used for tests (with GET params).
+     */
+
     require('./src/add.php');
     require('./src/config.php');
 

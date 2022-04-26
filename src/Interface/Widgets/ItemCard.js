@@ -21,7 +21,7 @@ class ItemCard extends React.Component {
     constructor(props) {
         super(props);
 
-        this.character = new Character('test', 'male_test');
+        this.character = new Character('itemcard-' + this.props.selectedId, 'male_test');
         this.frameContent = new FrameContent();
         this.frameContent.AddCharacter(this.character);
     }

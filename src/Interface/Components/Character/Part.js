@@ -150,23 +150,23 @@ class Part {
         if (partType === 'body') {
             return (
                 <AnimatedG
-                    key={'part-' + this.name}
+                    key={`part-${this.name}`}
                     style={[transforms, styleZIndex]}
                     fill={fill || 'white'}
                 >
-                    {SVGs}
+                    {SVGs.map((SVG, i) => <G key={'part' + i}>{SVG}</G>)}
                 </AnimatedG>
             );
         } else if (partType === 'shadow') {
             return (
                 <AnimatedG
-                    key={'part-shadow-' + this.name}
+                    key={`part-shadow-${this.name}`}
                     style={[transforms, styleZIndexShadow]}
                     //fill={fill || 'white'}
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >
-                    {shadows}
+                    {shadows.map((shadow, i) => <G key={'part' + i}>{shadow}</G>)}
                 </AnimatedG>
             );
         } else if (partType === 'stuff') {

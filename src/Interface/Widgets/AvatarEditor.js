@@ -55,7 +55,7 @@ class Avatar extends React.Component {
         editorHeight: 0,
 
         /** @type {Slot} */
-        slotSelected: 'hair',
+        slotSelected: 'body',
         itemSelected: false,
         itemSelectedID: null,
         itemAnim: new Animated.Value(0),
@@ -229,10 +229,10 @@ class Avatar extends React.Component {
                 {/* Character */}
                 <Animated.View style={characterStyle} onLayout={this.onCharacterLayout}>
                     <Animated.View style={[styles.column, columnOpacity]}>
-                        <Button style={styles.box} onPress={() => selectSlot('hair')} color={background('hair')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
-                        <Button style={styles.box} onPress={() => selectSlot('face')} color={background('face')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('body')} color={background('body')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('gloves')} color={background('gloves')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('legs')} color={background('legs')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('shoes')} color={background('shoes')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
                     </Animated.View>
                     <View style={styles.column2}>
                         <View style={styles.row}>
@@ -248,10 +248,10 @@ class Avatar extends React.Component {
                         </Animated.View>
                     </View>
                     <Animated.View style={[styles.column, columnOpacity]}>
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('hair')} color={background('hair')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('face')} color={background('face')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('accessory')} color={background('accessory')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('weapon')} color={background('weapon')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
                     </Animated.View>
                 </Animated.View>
 

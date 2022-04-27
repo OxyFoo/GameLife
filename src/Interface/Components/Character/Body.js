@@ -19,6 +19,7 @@ class Body {
         this.character = character;
 
         this.animating = false;
+        this.animations = null;
         this.position = new Animated.ValueXY({ x: 0, y: 0 });
         this.rotations = {
             bust: new Animated3D(),
@@ -133,6 +134,10 @@ class Body {
      */
     StopAnimation = () => {
         this.animating = false;
+        if (this.animations !== null) {
+            this.animations.stop();
+            this.animations = null;
+        }
     }
 
     /**
@@ -152,12 +157,13 @@ class Body {
         const pos = { x: translation?.x || 0, y: translation?.y || 0 };
         anims.push(TimingAnimation(this.firstPart.animPosition, pos, duration));
 
-        Animated.parallel(anims).start();
+        const end = () => { this.animating = null; };
+        this.animations = Animated.parallel(anims);
+        this.animations.start(end);
     }
 
     /** @returns {JSX.Element} */
     renderAll() {
-        console.log('Render all!');
         /** @param {Part} part @returns {Array<Part>} */
         const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
         const allParts = getAllChilds(this.firstPart).sort((a, b) => a.zIndex - b.zIndex);

@@ -74,10 +74,10 @@ class Identity extends BackIdentity {
 
                     <Animated.View style={styles.xp}>
                         <View style={styles.xpRow}>
-                            <Text>LVL X</Text>
-                            <Text>BLABLA</Text>
+                            <Text>{langManager.curr['level']['level'] + ' ' + this.userXP.xpInfo.lvl}</Text>
+                            <Text>{this.userXP.xpInfo.xp + '/' + this.userXP.xpInfo.next}</Text>
                         </View>
-                        <XPBar value={8} maxValue={10} />
+                        <XPBar value={this.userXP.xpInfo.xp} maxValue={this.userXP.xpInfo.next} />
                     </Animated.View>
                 </Animated.View>
 
@@ -166,7 +166,7 @@ class Identity extends BackIdentity {
 
 const styles = StyleSheet.create({
     xp: { marginBottom: 24 },
-    xpRow: { flexDirection: 'row' },
+    xpRow: { flexDirection: 'row', justifyContent: 'space-between' },
     topSpace: { marginTop: 24 },
     tableRow: {
         width: '100%',

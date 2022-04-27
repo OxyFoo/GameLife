@@ -9,6 +9,7 @@ import { Page, Icon, Text, Button } from '../Components';
 
 class Shop extends BackShop {
     render() {
+        const adRemaining = user.informations.adRemaining;
         return (
             <Page canScrollOver={true}>
                 <UserHeader />
@@ -19,7 +20,7 @@ class Shop extends BackShop {
 
                 <Button.Ad
                     style={styles.adButton}
-                    state={this.state.adState}
+                    state={adRemaining <= 0 ? 'notAvailable' : this.state.adState}
                     color='main2'
                     onPress={this.watchAd}
                 />

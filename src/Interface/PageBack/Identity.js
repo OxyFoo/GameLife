@@ -9,6 +9,8 @@ class BackIdentity extends React.Component {
     constructor(props) {
         super(props);
 
+        this.userXP = user.experience.GetExperience();
+
         const activities = user.activities.Get();
         this.totalActivityLength = activities.length;
         this.totalActivityTime = this.getTotalDuration(activities);

@@ -24,6 +24,7 @@ class Tasks extends BackTasks {
     render() {
         const lang = langManager.curr['tasks'];
         const { adState, scrollable, draggedItem, tasks } = this.state;
+        const adRemaining = user.informations.adRemaining;
 
         const renderItem = ({ item }) => (
             <TaskElement
@@ -49,7 +50,7 @@ class Tasks extends BackTasks {
 
                     <Button.Ad
                         style={styles.spaceBottom}
-                        state={adState}
+                        state={adRemaining <= 0 ? 'notAvailable' : adState}
                         onPress={this.watchAd}
                     />
 

@@ -110,7 +110,7 @@
             switch ($perm) {
                 case 0: // OK
                     Accounts::RefreshLastDate($this->db, $account->ID);
-                    $this->db->AddStatistic($device->ID, 'appState', "Login: {$account->Email}");
+                    $this->db->AddStatistic($account->ID, $device->ID, 'appState', "Login: {$account->Email}");
                     $this->output['token'] = Devices::GeneratePrivateToken($this->db, $account->ID, $device->ID);
                     $this->output['status'] = 'ok';
 
@@ -139,7 +139,7 @@
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                     if ($sended) {
-                        $this->db->AddStatistic($device->ID, 'mailSent', "Link account: $email");
+                        $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Link account: $email");
                         $this->output['status'] = 'newDevice';
                     }
                     break;
@@ -232,7 +232,7 @@
                 $userData['birthtime'] = $account->Birthtime;
                 $userData['lastbirthtime'] = $account->LastChangeBirth;
                 $userData['ox'] = $account->Ox;
-                $userData['adRemaining'] = $account->AdRemaining;
+                $userData['adRemaining'] = Users::GetAdRemaining($this->db, $account->ID);
                 $userData['achievements'] = $account->Achievements;
             }
 
@@ -297,7 +297,7 @@
             $usernameChangeState = Users::SetUsername($this->db, $account, $newUsername);
 
             if ($usernameChangeState === 'ok') {
-                $this->db->AddStatistic($deviceID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername} ({$account->Email})");
+                $this->db->AddStatistic($account->ID, $deviceID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername} ({$account->Email})");
             }
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
@@ -320,19 +320,18 @@
             $account = Accounts::GetByID($this->db, $accountID);
             if ($account === null) return;
 
-            if ($account->AdRemaining === 0) {
+            if (Users::GetAdRemaining($this->db, $account->ID) <= 0) {
                 // Suspicion of cheating
-                $this->db->AddStatistic($deviceID, 'cheatSuspicion', "Try to watch another ad ({$account->Email})");
+                $this->db->AddStatistic($accountID, $deviceID, 'cheatSuspicion', "Try to watch another ad ({$account->Email})");
                 $this->output['ox'] = $account->Ox;
                 $this->output['status'] = 'ok';
                 return;
             }
 
-            Users::DecrementAdRemaining($this->db, $accountID);
             Users::AddOx($this->db, $accountID, $oxAmount);
 
             $newOxAmount = $account->Ox + $oxAmount;
-            $this->db->AddStatistic($deviceID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
+            $this->db->AddStatistic($accountID, $deviceID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
             $this->output['ox'] = $account->Ox + $oxAmount;
             $this->output['status'] = 'ok';
         }
@@ -386,7 +385,7 @@
 
             Accounts::RemDevice($this->db, $deviceID, $account, 'Devices');
 
-            $this->db->AddStatistic($deviceID, 'appState', "Disconnect: {$account->Email}");
+            $this->db->AddStatistic($accountID, $deviceID, 'appState', "Disconnect: {$account->Email}");
             $this->output['status'] = 'ok';
         }
 
@@ -423,7 +422,7 @@
             $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'rem');
 
             if ($sended) {
-                $this->db->AddStatistic($device->ID, 'mailSent', "Delete account: $email");
+                $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Delete account: $email");
                 $this->output['status'] = 'ok';
             }
         }

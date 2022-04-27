@@ -92,14 +92,15 @@
         }
 
         /**
+         * @param int $accountID 0 if not connected
          * @param int $deviceID
          * @param 'mailSent'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition' $type
          * @param string $data
          * @return void
          */
-        public function AddStatistic($deviceID, $type, $data = null) {
+        public function AddStatistic($accountID, $deviceID, $type, $data = null) {
             $Data = $data === null ? 'NULL' : "'$data'";
-            $command = "INSERT INTO `Logs` (`DeviceID`, `Type`, `Data`) VALUES ('$deviceID', '$type', $Data)";
+            $command = "INSERT INTO `Logs` (`AccountID`, `DeviceID`, `Type`, `Data`) VALUES ('$accountID', '$deviceID', '$type', $Data)";
             $result = $this->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Adding device statistic in DB failed");

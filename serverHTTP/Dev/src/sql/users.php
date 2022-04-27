@@ -1,6 +1,7 @@
 <?php
 
     $DAYS_USERNAME_CHANGE = 29;
+    $MAX_WACHABLE_ADS = 10;
 
     class Users
     {
@@ -88,7 +89,7 @@
             $delta = ($nowTime - $lastBirthTime) / (60 * 60 * 24);
             if ($delta < 360) {
                 // Suspicion of cheating
-                $db->AddStatistic($deviceID, 'cheatSuspicion', "Try to change birthtime too often ({$account->Email})");
+                $db->AddStatistic($accountID, $deviceID, 'cheatSuspicion', "Try to change birthtime too often ({$account->Email})");
                 ExitWithStatus("Error: you tried to change birthtime too often");
             }
 
@@ -442,16 +443,21 @@
         }
 
         /**
-         * Decrement ad remaining
+         * Add or remove Ox to the account
          * @param DataBase $db
          * @param int $accountID
          */
-        public static function DecrementAdRemaining($db, $accountID) {
-            $command = "UPDATE `Accounts` SET `AdRemaining` = `AdRemaining` - '1' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
-            if ($result === false) {
-                ExitWithStatus("Error: Decrement AdRemaining failed");
+        public static function GetAdRemaining($db, $accountID) {
+            global $MAX_WACHABLE_ADS;
+            $nextDay = date('d') + 1;
+            $dateNow = date('Y-m-d 00:00:00');
+            $tomorrow = date("Y-m-$nextDay 00:00:00");
+            $command = "SELECT * FROM `Logs` WHERE `AccountID` = '$accountID' AND `Type` = 'adWatched' AND `Date` BETWEEN '$dateNow' AND '$tomorrow'";
+            $result = $db->QueryArray($command);
+            if ($result === null) {
+                ExitWithStatus("Error: Getting ad remaining failed");
             }
+            return $MAX_WACHABLE_ADS - count($result);
         }
     }
 

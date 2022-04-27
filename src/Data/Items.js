@@ -1,5 +1,8 @@
 /**
  * @typedef {'common'|'rare'|'epic'|'legendary'|'heroic'} Rarity
+ * 
+ * @typedef {'hair'|'face'|'accessory'|'weapon'|'body'|'gloves'|'legs'|'shoes'} Slot
+ * 
  * @typedef {Object} Buff
  * @property {Number} 
  * @property {Number} int
@@ -12,6 +15,8 @@
 
 class Item {
     ID = '';
+    /** @type {Slot} */
+    Slot = '';
     Name = { fr: '', en: '' };
     Description = { fr: '', en: '' };
     /** @type {Rarity} */
@@ -36,6 +41,11 @@ class Items {
         }
     }
     Save() {
+        return this.items;
+    }
+
+    /** @returns {Array<Item>} */
+    Get() {
         return this.items;
     }
 

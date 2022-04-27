@@ -6,7 +6,7 @@ import dataManager from '../Managers/DataManager';
  */
 
 class Stuff {
-    ItemID = 0;
+    ItemID = '';
     CreatedBy = 0;
     CreatedAt = 0;
 }
@@ -62,7 +62,7 @@ class Inventory {
     /** @returns {Array<Title>} */
     GetTitles = () => this.titles.map(dataManager.titles.GetByID);
     /** @returns {Array<Item>} */
-    GetStuffs = () => this.stuffs.map(dataManager.items.GetByID);
+    GetStuffs = () => this.stuffs;
 }
 
 export default Inventory;

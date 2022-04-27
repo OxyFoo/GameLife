@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, Animated, FlatList, Dimensions, StyleSheet } from 'react-native';
 
+import user from '../../Managers/UserManager';
+import dataManager from '../../Managers/DataManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
@@ -36,6 +38,10 @@ const TEST_STATS = {
     'dex': 5
 };
 
+/**
+ * @typedef {import('../../Data/Items').Slot} Slot
+ */
+
 class Avatar extends React.Component {
     state = {
         rendered: false,
@@ -48,6 +54,8 @@ class Avatar extends React.Component {
         editorAnim: new Animated.Value(0),
         editorHeight: 0,
 
+        /** @type {Slot} */
+        slotSelected: 'hair',
         itemSelected: false,
         itemSelectedID: null,
         itemAnim: new Animated.Value(0),
@@ -59,6 +67,7 @@ class Avatar extends React.Component {
     constructor(props) {
         super(props);
 
+        this.items = user.inventory.GetStuffs();
         const charac = new Character('test', 'male_test');
         this.state.frameContent.AddCharacter(charac);
     }
@@ -122,9 +131,9 @@ class Avatar extends React.Component {
         const { itemSelectedID } = this.state;
         let name = '', description = '';
         if (itemSelectedID !== null) {
-            const item = TEST_ITEMS.find(item => item.id === itemSelectedID);
-            name = item.name;
-            description = item.description;
+            const item = dataManager.items.GetByID(itemSelectedID);
+            name = dataManager.GetText(item.Name);
+            description = dataManager.GetText(item.Description);
         }
 
         return (
@@ -181,7 +190,7 @@ class Avatar extends React.Component {
             styles.editor,
             {
                 top: characterBottomPosY + 12,
-                height: SCREEN_HEIGHT - characterBottomPosY + 120,
+                height: SCREEN_HEIGHT - characterBottomPosY + 148,
                 opacity: editorAnim,
                 backgroundColor: themeManager.GetColor('background'),
                 transform: [{ translateY: editorTranslateY }]
@@ -207,13 +216,21 @@ class Avatar extends React.Component {
             transform: [{ translateY: itemAnim.interpolate(interSelectionY) }]
         };
 
+        /** @param {Slot} slot */
+        const selectSlot = (slot) => this.setState({ slotSelected: slot });
+    
+        /** @param {Slot} slot */
+        const background = (slot) => this.state.slotSelected === slot ? 'main2' : 'backgroundCard';
+
+        const items = this.items.filter(item => item.Slot === this.state.slotSelected);
+
         return (
             <>
                 {/* Character */}
                 <Animated.View style={characterStyle} onLayout={this.onCharacterLayout}>
                     <Animated.View style={[styles.column, columnOpacity]}>
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
-                        <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('hair')} color={background('hair')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
+                        <Button style={styles.box} onPress={() => selectSlot('face')} color={background('face')} icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
                         <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
                         <Button style={styles.box} onPress={() => {  }} color='backgroundCard' icon='item' iconColor='main1' iconSize={30} rippleColor='white' />
                     </Animated.View>
@@ -246,7 +263,7 @@ class Avatar extends React.Component {
                     {/* Other stuffs */}
                     <Animated.View style={[selectionStyle]}>
                         <FlatList
-                            data={TEST_ITEMS}
+                            data={items}
                             numColumns={3}
                             renderItem={({item}) => (
                                 <ItemCard

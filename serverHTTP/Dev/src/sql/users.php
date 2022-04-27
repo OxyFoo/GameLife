@@ -187,18 +187,19 @@
          */
         public static function GetInventory($db, $account, $type) {
             $accountID = $account->ID;
-            $command = "SELECT `ItemID`, `CreatedBy`, `CreatedAt` FROM `Inventories` WHERE `AccountID` = '$accountID' AND `Type` = '$type'";
+            $cell = $type === 'stuff' ? 'ItemID' : 'TitleID';
+            $command = "SELECT `$cell`, `CreatedBy`, `CreatedAt` FROM `Inventories` WHERE `AccountID` = '$accountID' AND `Type` = '$type'";
             $rows = $db->QueryArray($command);
             if ($rows === null) {
                 ExitWithStatus("Error: getting inventory failed");
             }
             if ($type === 'stuff') {
                 for ($i = 0; $i < count($rows); $i++) {
-                    $rows[$i]['ItemID'] = intval($rows[$i]['ItemID']);
+                    $rows[$i]['ItemID'] = $rows[$i]['ItemID'];
                 }
             } else if ($type === 'title') {
                 for ($i = 0; $i < count($rows); $i++) {
-                    $rows[$i] = intval($rows[$i]['ItemID']);
+                    $rows[$i] = intval($rows[$i]['TitleID']);
                 }
             }
             return $rows;
@@ -213,7 +214,8 @@
         public static function AddItem($db, $account, $itemID, $type) {
             $accountID = $account->ID;
             $createdBy = $account->Username;
-            $command = "INSERT INTO `Inventories` (`AccountID`, `ItemID`, `Type`, `CreatedBy`) VALUES ('$accountID', '$itemID', '$type', '$createdBy')";
+            $cell = $type === 'stuff' ? 'ItemID' : 'TitleID';
+            $command = "INSERT INTO `Inventories` (`AccountID`, `Type`, `$cell`, `CreatedBy`) VALUES ('$accountID', '$type', '$itemID', '$createdBy')";
             $result = $db->Query($command);
             return $result !== false;
         }

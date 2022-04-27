@@ -10,7 +10,7 @@ import { CHARACTERS } from '../../../../res/items/humans/Characters';
 
 /**
  * @typedef {import('./Body').default} Body
- * @typedef {import('./Character').PartsName} PartsName
+ * @typedef {import('../../../../res/items/humans/Characters').PartsName} PartsName
  */
 
 const AnimatedG = Animated.createAnimatedComponent(G);
@@ -18,7 +18,7 @@ const AnimatedG = Animated.createAnimatedComponent(G);
 class Part {
     /**
      * @param {Body} body Parent body
-     * @param {keyof PartsName} name Name of body part
+     * @param {PartsName} name Name of body part
      * @param {Number} [zIndex=0] Z-index of body part
      */
     constructor(body, name, zIndex = 0) {
@@ -34,7 +34,7 @@ class Part {
 
         // Current absolute position
         this.position = this.name === 'bust' ? this.body.position : { x: 0, y: 0 };
-        this.rotation = this.body.rotations[this.name];
+        this.rotation = this.body.rotations.hasOwnProperty(this.name) ? this.body.rotations[this.name] : { rX: 0, rY: 0, rZ: 0 };
         this.animPosition = new Animated.ValueXY({ x: 0, y: 0 });
 
         /** @type {Part} */
@@ -69,7 +69,7 @@ class Part {
     calculateParentPos = () => {
         let posX = this.position.x;
         let posY = this.position.y;
-        let rotZ = this.body.rotations[this.name].rZ;
+        let rotZ = this.rotation.rZ;
 
         /** @param {Part} el */
         const calculateParentPos = (el) => {
@@ -92,7 +92,7 @@ class Part {
 
                 const parentX = Animated.add(el.parent.position.x, radiusX);
                 const parentY = Animated.add(el.parent.position.y, radiusY);
-                const parentR = Animated.modulo(Animated.add(el.parent.rotation.rZ, el.parent.a), 360);
+                const parentR = Animated.modulo(el.parent.rotation.rZ, 360);
 
                 posX = Animated.add(posX, parentX);
                 posY = Animated.add(posY, parentY);
@@ -162,7 +162,6 @@ class Part {
                 <AnimatedG
                     key={`part-shadow-${this.name}`}
                     style={[transforms, styleZIndexShadow]}
-                    //fill={fill || 'white'}
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >

@@ -26,6 +26,17 @@
 | Titles | Inventory (title) |
 | Inventories | Inventory |
 
+* Stuffs
+    - body
+    - gloves
+    - legs
+    - shoes
+
+    - hair
+    - face
+    - accessory
+    - weapon
+
 
 
 ## Succès

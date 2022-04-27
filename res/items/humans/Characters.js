@@ -1,27 +1,15 @@
 import Male_Test from './male_test';
 
-import animIdle from '../animations/muscles.json';
+import animIdle from '../animations/idle.json';
 import animMuscles from '../animations/muscles.json';
 
 /**
  * @typedef {'male_test'} CharactersName
  * @typedef {'idle'|'muscles'} AnimationsName
  *
- * @typedef PartsName
- * @property {{rX: Number, rY: Number, rZ: Number}} bust
- * @property {{rX: Number, rY: Number, rZ: Number}} head
- * @property {{rX: Number, rY: Number, rZ: Number}} left_arm
- * @property {{rX: Number, rY: Number, rZ: Number}} left_forearm
- * @property {{rX: Number, rY: Number, rZ: Number}} left_hand
- * @property {{rX: Number, rY: Number, rZ: Number}} right_arm
- * @property {{rX: Number, rY: Number, rZ: Number}} right_forearm
- * @property {{rX: Number, rY: Number, rZ: Number}} right_hand
- * @property {{rX: Number, rY: Number, rZ: Number}} left_thigh
- * @property {{rX: Number, rY: Number, rZ: Number}} left_leg
- * @property {{rX: Number, rY: Number, rZ: Number}} left_foot
- * @property {{rX: Number, rY: Number, rZ: Number}} right_thigh
- * @property {{rX: Number, rY: Number, rZ: Number}} right_leg
- * @property {{rX: Number, rY: Number, rZ: Number}} right_foot
+ * @typedef {'left_ear'|'left_eye'|'left_eyebrow'|'right_ear'|'right_eye'|'right_eyebrow'|'nose'|'mouth'} PartsFace
+ * @typedef {'bust'|'head'|'left_arm'|'left_forearm'|'left_hand'|'right_arm'|'right_forearm'|'right_hand'|'left_thigh'|'left_leg'|'left_foot'|'right_thigh'|'right_leg'|'right_foot'} PartsBody
+ * @typedef {PartsFace|PartsBody} PartsName
  */
 
 const CHARACTERS = {

@@ -6,10 +6,10 @@ En 3 mots : Gestion RPG IRL
 ## Sources
 ### Useful links
 * [AppIcon.co](https://appicon.co/)
-* [JS benchmarks](https://jsben.ch/WqlIl)
 * [PHP Sandbox](https://sandbox.onlinephpfunctions.com/)
-* [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
+* [JS benchmarks](https://jsben.ch/WqlIl)
 * [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
+* [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
 
 ### React native packages
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)

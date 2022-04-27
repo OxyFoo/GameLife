@@ -1,10 +1,7 @@
-import { Animated } from 'react-native';
-
 import Body from './Body';
 import { TimingAnimation } from '../../../Utils/Animations';
 
 /**
- * @typedef {import('../../../../res/items/humans/Characters').PartsName} PartsName
  * @typedef {import('../../../../res/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('../../../../res/items/humans/Characters').AnimationsName} AnimationsName
  * @typedef {import('./Frame').default} Frame
@@ -28,18 +25,20 @@ class Character {
         this.body = new Body(this);
         this.body.position.addListener(this.__setPosition.bind(this));
         this.SetPositionAbsolute(this.pos.x, this.pos.y, 0);
+        this.SetAnimation('idle');
 
-
+        // Comment "return" to tests (position, animations, etc)
         return;
+
         setTimeout(() => {
             this.SetAnimation('muscles');
             this.SetPositionRelative(0, 100);
-        }, 5000);
+        }, 3000);
     }
 
     unmount() {
         this.SetFrame(null);
-        this.body.animating = false;
+        this.body.StopAnimation();
         if (this.body.position.hasListeners()) {
             this.body.position.removeAllListeners();
         }

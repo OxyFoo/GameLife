@@ -5,6 +5,7 @@ import dataManager from '../../Managers/DataManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
+import { Character } from '../Components';
 import { Sleep } from '../../Utils/Functions';
 import Notifications from '../../Utils/Notifications';
 
@@ -127,6 +128,10 @@ class BackLoading extends React.Component {
 
         this.nextStep();
         await Sleep(200);
+
+        user.character = new Character('user', 'male_01', user.inventory.GetEquipments());
+        user.character.SetAnimation('idle');
+
         user.StartTimers();
 
         if (user.activities.currentActivity === null) {

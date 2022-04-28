@@ -117,7 +117,7 @@ class DataManager {
 
                 if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
                 if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);
-                if (reqTables.hasOwnProperty('items')) this.items.Load(reqTables['contributors']);
+                if (reqTables.hasOwnProperty('items')) this.items.Load(reqTables['items']);
                 if (reqTables.hasOwnProperty('quotes')) this.quotes.Load(reqTables['quotes']);
                 if (reqTables.hasOwnProperty('skills')) {
                     const skills = {

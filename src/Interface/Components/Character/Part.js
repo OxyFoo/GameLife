@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import { G } from 'react-native-svg';
 
-import user from '../../../Managers/UserManager';
-
 import { WithFunction } from '../../../Utils/Animations';
 import { STUFFS } from '../../../../res/items/stuffs/Stuffs';
 import { CHARACTERS } from '../../../../res/items/humans/Characters';
@@ -110,7 +108,7 @@ class Part {
     }
 
     /**
-     * @param {'body'|'shadow'|'stuff'} partType
+     * @param {'body'|'bodyShadow'|'stuff'|'stuffShadow'} partType
      * @returns {JSX.Element}
      */
     render(partType) {
@@ -130,20 +128,22 @@ class Part {
             { rotateZ: animRotation }
         ]};
 
-        let SVGs = [ CHARACTERS[character]['svg'][this.name] ];
-        let shadows = [ CHARACTERS[character]['shadows'][this.name] ];
+        const svgCharacter = CHARACTERS[character]['svg'][this.name];
+        const svgCharacterShadow = CHARACTERS[character]['shadows'][this.name];
 
-        const inventoryItems = user.inventory.equipments;
-        for (const slot in inventoryItems) {
-            const ID = inventoryItems[slot];
-            if (ID === null) continue;
+        let svgItems = [];
+        let svgItemsShadows = [];
+
+        const inventoryItems = this.body.character.items;
+        for (let i = 0; i < inventoryItems.length; i++) {
+            const ID = inventoryItems[i];
             if (!STUFFS.hasOwnProperty(ID)) continue;
 
             if (STUFFS[ID].hasOwnProperty('svg') && STUFFS[ID]['svg'].hasOwnProperty(this.name)) {
-                SVGs.push(STUFFS[ID]['svg'][this.name]);
+                svgItems.push(STUFFS[ID]['svg'][this.name]);
             }
             if (STUFFS[ID].hasOwnProperty('shadows') && STUFFS[ID]['shadows'].hasOwnProperty(this.name)) {
-                shadows.push(STUFFS[ID]['shadows'][this.name]);
+                svgItemsShadows.push(STUFFS[ID]['shadows'][this.name]);
             }
         }
 
@@ -154,10 +154,10 @@ class Part {
                     style={[transforms, styleZIndex]}
                     fill={fill || 'white'}
                 >
-                    {SVGs.map((SVG, i) => <G key={'part' + i}>{SVG}</G>)}
+                    {svgCharacter}
                 </AnimatedG>
             );
-        } else if (partType === 'shadow') {
+        } else if (partType === 'bodyShadow') {
             return (
                 <AnimatedG
                     key={`part-shadow-${this.name}`}
@@ -165,10 +165,30 @@ class Part {
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >
-                    {shadows.map((shadow, i) => <G key={'part' + i}>{shadow}</G>)}
+                    {svgCharacterShadow}
                 </AnimatedG>
             );
         } else if (partType === 'stuff') {
+            return (
+                <AnimatedG
+                    key={`stuff-${this.name}`}
+                    style={[transforms, styleZIndex]}
+                    fill={fill || 'white'}
+                >
+                    {svgItems.map((SVG, i) => <G key={'stuff' + i}>{SVG}</G>)}
+                </AnimatedG>
+            );
+        } else if (partType === 'stuffShadow') {
+            return (
+                <AnimatedG
+                    key={`stuff-shadow-${this.name}`}
+                    style={[transforms, styleZIndexShadow]}
+                    stroke='#000000'
+                    strokeWidth={4 * 2}
+                >
+                    {svgItemsShadows.map((shadow, i) => <G key={'stuff-shadow' + i}>{shadow}</G>)}
+                </AnimatedG>
+            );
         }
     }
 }

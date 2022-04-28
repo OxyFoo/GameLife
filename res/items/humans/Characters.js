@@ -1,10 +1,10 @@
-import Male_Test from './male_test';
+import Male_01 from './male_01';
 
 import animIdle from '../animations/idle.json';
 import animMuscles from '../animations/muscles.json';
 
 /**
- * @typedef {'male_test'} CharactersName
+ * @typedef {'male_01'} CharactersName
  * @typedef {'idle'|'muscles'} AnimationsName
  *
  * @typedef {'left_ear'|'left_eye'|'left_eyebrow'|'right_ear'|'right_eye'|'right_eyebrow'|'nose'|'mouth'} PartsFace
@@ -13,7 +13,7 @@ import animMuscles from '../animations/muscles.json';
  */
 
 const CHARACTERS = {
-    'male_test': Male_Test
+    male_01: Male_01
 };
 
 const ANIMATIONS = {

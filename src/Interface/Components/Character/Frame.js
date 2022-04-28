@@ -15,9 +15,10 @@ const FrameProps = {
 }
 
 class FrameContent {
-    constructor() {
+    constructor(onlyItems = false) {
         /** @type {Array<Character>} */
         this.characters = [];
+        this.onlyItems = onlyItems;
     }
 
     /**
@@ -51,12 +52,14 @@ class FrameContent {
         this.characters = [];
     }
     RenderAll() {
-        return this.characters.map(character => character.render());
+        return this.characters.map(character => character.render(this.onlyItems));
     }
 }
 
 class Frame extends React.Component {
+    // Use to update the content only when the content is changed
     tmpLength = 0;
+
     componentDidUpdate() {
         const { content } = this.props;
         if (content !== null && content.characters.length !== this.tmpLength) {

@@ -38,6 +38,9 @@
         /** @var int[] $Achievements */
         public $Achievements;
 
+        /** @var object $Equipments */
+        public $Equipments;
+
         /** @var string $DataToken */
         public $DataToken;
 
@@ -72,6 +75,7 @@
             $this->Ox = intval($account['Ox']);
             $this->XP = intval($account['XP']);
             $this->Achievements = json_decode($account['Achievements'], true);
+            $this->Equipments = json_decode($account['Equipments'], true);
             $this->DataToken = $account['DataToken'];
             $this->LastSendMail = $account['LastSendMail'] === null ? null : strtotime($account['LastSendMail']);
             $this->LastChangeUsername = $account['LastChangeUsername'] === null ? null : strtotime($account['LastChangeUsername']);

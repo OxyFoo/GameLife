@@ -9,7 +9,7 @@ import themeManager from '../../Managers/ThemeManager';
 import ItemCard from './ItemCard';
 import { Sleep } from '../../Utils/Functions';
 import { SpringAnimation } from '../../Utils/Animations';
-import { Text, Button, Character, Separator, Icon, Frame, FrameContent } from '../Components';
+import { Text, Button, Separator, Icon, Frame, FrameContent } from '../Components';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -17,17 +17,6 @@ const AvatarProps = {
     refParent: null,
     onChangeState: (opened) => {}
 }
-
-const TEST_ITEMS = [
-    //{ id: 0, name: 'Test1', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    //{ id: 1, name: 'Test2', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    //{ id: 2, name: 'Test3', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    //{ id: 3, name: 'Test4', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    //{ id: 4, name: 'Test5', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    //{ id: 5, name: 'Test6', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    //{ id: 6, name: 'Test7', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS },
-    //{ id: 7, name: 'Test8', description: 'Balblabla balblabla balblabla balblabla balblabla balblabla balblabla balblabla', stats: TEST_STATS }
-];
 
 const TEST_STATS = {
     'int': 1,
@@ -66,10 +55,7 @@ class Avatar extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.items = user.inventory.GetStuffs();
-        const charac = new Character('test', 'male_test');
-        this.state.frameContent.AddCharacter(charac);
+        this.state.frameContent.AddCharacter(user.character);
     }
 
     componentDidMount() {
@@ -222,7 +208,8 @@ class Avatar extends React.Component {
         /** @param {Slot} slot */
         const background = (slot) => this.state.slotSelected === slot ? 'main2' : 'backgroundCard';
 
-        const items = this.items.filter(item => item.Slot === this.state.slotSelected);
+        const allItems = user.inventory.GetStuffs();
+        const items = allItems.filter(item => item.Slot === this.state.slotSelected);
 
         return (
             <>
@@ -272,7 +259,7 @@ class Avatar extends React.Component {
                                     selectedId={itemSelectedID}
                                 />
                             )}
-                            keyExtractor={(item, index) => 'item-card-' + item.id}
+                            keyExtractor={(item, index) => 'item-card-' + item.ID}
                         />
                     </Animated.View>
                 </Animated.View>}

@@ -1,38 +1,44 @@
 import * as React from 'react';
 import { StyleSheet, TouchableHighlight } from 'react-native';
 
+import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
+import dataManager from '../../Managers/DataManager';
 
+import { STUFFS } from '../../../res/items/stuffs/Stuffs';
 import { Character, Frame, FrameContent } from '../Components';
 
-// TODO - Define item (item in user inventory)
+/**
+ * @typedef {import('../../Class/Inventory').Item} Item
+ */
 
 const AvatarCardProps = {
+    /** @type {Item} */
     item: {},
 
-    /** @type {Number} - ID of card (used to check selected card) */
+    /** @type {String?} - ID of card (used to check selected card) */
     selectedId: -1,
 
-    /** @param {Number} ID */
+    /** @param {String?} ID */
     onPress: (ID) => {}
 }
 
-class ItemCard extends React.Component {
+class ItemCard extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.character = new Character('itemcard-' + this.props.selectedId, 'male_test');
-        this.frameContent = new FrameContent();
+        this.character = new Character('itemcard-' + this.props.selectedId, 'male_01', [ props.item.ID ]);
+        this.frameContent = new FrameContent(true);
         this.frameContent.AddCharacter(this.character);
     }
 
     onPress = () => {
-        this.props.onPress(this.props.item.id);
+        this.props.onPress(this.props.item.ID);
     }
 
     render() {
         const { item } = this.props;
-        const isSelected = item.id === this.props.selectedId;
+        const isSelected = item.ID === this.props.selectedId;
         const background = {
             backgroundColor: themeManager.GetColor(isSelected ? 'main1' : 'backgroundCard')
         };

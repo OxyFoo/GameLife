@@ -14,6 +14,7 @@
         public static function ExecQueue($db, $account, $deviceID, $data) {
             $activities = $data['activities'];
             $tasks = $data['tasks'];
+            $equipments = $data['equipments'];
             $xp = $data['xp'];
             $achievements = $data['achievements'];
             $titleID = $data['titleID'];
@@ -24,6 +25,9 @@
             }
             if (isset($tasks)) {
                 self::AddTasks($db, $account, $tasks);
+            }
+            if (isset($equipments)) {
+                self::SetEquipments($db, $account, $equipments);
             }
             if (isset($xp)) {
                 self::setXP($db, $account->ID, $xp);
@@ -298,6 +302,21 @@
                     $r = $db->Query("DELETE FROM `Tasks` WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
                     if ($r === false) ExitWithStatus("Error: saving tasks failed (remove)");
                 }
+            }
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param object $equipments
+         */
+        private static function SetEquipments($db, $account, $equipments) {
+            $accountID = $account->ID;
+            $equipmentsText = json_encode($equipments);
+            $command = "UPDATE `Accounts` SET `Equipments` = '$equipmentsText' WHERE `ID` = '$accountID'";
+            $result = $db->Query($command);
+            if ($result === false) {
+                ExitWithStatus("Error: saving equipments failed");
             }
         }
 

@@ -2,22 +2,25 @@ import Body from './Body';
 import { TimingAnimation } from '../../../Utils/Animations';
 
 /**
+ * @typedef {import('./Frame').default} Frame
  * @typedef {import('../../../../res/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('../../../../res/items/humans/Characters').AnimationsName} AnimationsName
- * @typedef {import('./Frame').default} Frame
  */
 
 class Character {
     /**
      * @param {String} name Name of character
      * @param {CharactersName} skin
+     * @param {Array<String>} items
      * @param {{ x: Number, y: Number }} pos
      */
-    constructor(name, skin, pos = { x: 450, y: 280 }) {
+    constructor(name, skin, items, pos = { x: 450, y: 280 }) {
         this.name = name;
         this.skin = skin;
         this.pos = pos;
 
+        /** @type {Array<String>} */
+        this.items = items;
         this.parentFrame = null;
         this.hide = false;
         this.outOfBounds = false;
@@ -25,7 +28,6 @@ class Character {
         this.body = new Body(this);
         this.body.position.addListener(this.__setPosition.bind(this));
         this.SetPositionAbsolute(this.pos.x, this.pos.y, 0);
-        this.SetAnimation('idle');
 
         // Comment "return" to tests (position, animations, etc)
         return;
@@ -99,11 +101,14 @@ class Character {
         }
     }
 
-    /** @returns {JSX.Element} */
-    render() {
+    /**
+     * @param {boolean} [onlyItems=false]
+     * @returns {JSX.Element}
+     */
+    render(onlyItems = false) {
         if (this.parentFrame === null) return null;
         if (this.outOfBounds || this.hide) return null;
-        return this.body.renderAll();
+        return !onlyItems ? this.body.renderAll() : this.body.renderItems();
     }
 }
 

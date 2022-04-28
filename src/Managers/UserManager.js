@@ -15,6 +15,7 @@ import DataStorage, { STORAGE } from '../Utils/DataStorage';
 const DEBUG_DATA = false;
 
 /**
+ * @typedef {import('../Interface/Components').Character} Character
  * @typedef {import('../Class/Experience').XPInfo} XPInfo
  * @typedef {Object} Stats
  * @property {XPInfo} int
@@ -47,6 +48,12 @@ class UserManager {
          * @type {PageManager}
          */
         this.interface;
+
+        /**
+         * @description User's character, loaded at start of app
+         * @type {Character}
+         */
+        this.character = null;
 
         this.xp = 0;
         /**
@@ -185,6 +192,10 @@ class UserManager {
             data['tasks'] = this.tasks.GetUnsaved();
         }
 
+        if (this.inventory.IsUnsaved()) {
+            data['equipments'] = this.inventory.GetUnsaved();
+        }
+
         if (this.achievements.IsUnsaved()) {
             data['achievements'] = this.achievements.UNSAVED_solved;
         }
@@ -207,6 +218,7 @@ class UserManager {
                 this.informations.Purge();
                 this.tasks.Purge();
                 this.interface.console.EditLog(debugIndex, 'User data: online save success');
+                console.log(data);
                 await this.LocalSave();
             } else {
                 this.interface.console.AddLog('error', 'User data: online save failed');

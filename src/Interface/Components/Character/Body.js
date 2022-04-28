@@ -157,9 +157,19 @@ class Body {
         const pos = { x: translation?.x || 0, y: translation?.y || 0 };
         anims.push(TimingAnimation(this.firstPart.animPosition, pos, duration));
 
-        const end = () => { this.animating = null; };
         this.animations = Animated.parallel(anims);
-        this.animations.start(end);
+        this.animations.start();
+    }
+
+    /** @returns {JSX.Element} */
+    renderItems() {
+        /** @param {Part} part @returns {Array<Part>} */
+        const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
+        const allParts = getAllChilds(this.firstPart).sort((a, b) => a.zIndex - b.zIndex);
+        return [
+            ...allParts.map(p => p.render('stuffShadow')),
+            ...allParts.map(part => part.render('stuff'))
+        ];
     }
 
     /** @returns {JSX.Element} */
@@ -168,8 +178,10 @@ class Body {
         const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
         const allParts = getAllChilds(this.firstPart).sort((a, b) => a.zIndex - b.zIndex);
         return [
-            ...allParts.map(p => p.render('shadow')),
-            ...allParts.map(part => part.render('body'))
+            ...allParts.map(p => p.render('bodyShadow')),
+            ...allParts.map(p => p.render('stuffShadow')),
+            ...allParts.map(part => part.render('body')),
+            ...allParts.map(part => part.render('stuff'))
         ];
     }
 }

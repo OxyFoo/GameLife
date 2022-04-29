@@ -27,7 +27,7 @@ class ItemCard extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.character = new Character('itemcard-' + this.props.selectedId, 'male_01', [ props.item.ID ]);
+        this.character = new Character('itemcard-' + this.props.selectedId, 'male_01', [ this.props.item.ID ]);
         this.frameContent = new FrameContent(true);
         this.frameContent.AddCharacter(this.character);
     }

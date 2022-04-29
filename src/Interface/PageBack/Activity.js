@@ -5,6 +5,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 
+import Notifications from '../../Utils/Notifications';
 import { Page } from '../Components';
 import { Activity } from '../../Class/Activities';
 import { IsUndefined } from '../../Utils/Functions';
@@ -150,6 +151,7 @@ class BackActivity extends React.Component {
         const addState = user.activities.Add(skillID, activityStart, activityDuration, comment);
         user.interface.console.AddLog('info', 'Try to add activity:', addState);
         if (addState === 'added') {
+            Notifications.Evening.RemoveToday();
             const text = langManager.curr['activity']['display-activity-text'];
             const button = langManager.curr['activity']['display-activity-button'];
             user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);

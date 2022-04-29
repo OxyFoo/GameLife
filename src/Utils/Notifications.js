@@ -60,8 +60,9 @@ async function Setup(notif) {
         enabled = await Management.checkPermissionsIOS();
     } else if (Platform.OS === 'android') {
         await Remove(notif, false); // notif.Disable();
+        const lang = langManager.curr['notifications'];
         const channelId = notif.ID;
-        const channelName = langManager.curr['notifications'].hasOwnProperty(channelId) ? langManager.curr['notifications'][channelId]['name'] : channelId;
+        const channelName = lang.hasOwnProperty(channelId) ? lang[channelId]['name'] : channelId;
         enabled = await Management.addChannelAndroid(channelId, channelName);
     } else {
         user.interface.console.AddLog('warn', 'Notifications.Setup', `Platform ${Platform.OS} is not supported`);
@@ -88,7 +89,7 @@ async function AddNotifications(notif) {
 
             if (Platform.OS === 'ios') {
                 PushNotificationIOS.addNotificationRequest({
-                    id: ID + i.toString(),
+                    id: `${ID}-${i}`,
                     title: Title,
                     body: Body,
                     fireDate: date,
@@ -96,7 +97,7 @@ async function AddNotifications(notif) {
                 });
             } else if (Platform.OS === 'android') {
                 PushNotification.localNotificationSchedule({
-                    id: ID + i.toString(),
+                    //id: `${ID}-${i}`,
                     channelId: ID,
                     title: Title,
                     message: Body,
@@ -150,6 +151,7 @@ async function Remove(notif, removeChannel = true) {
  *
  * @property {() => Promise<Boolean>} Enable
  * @property {() => Promise<void>} Disable
+ * @property {() => Promise<void>} RemoveToday (only for Evening notifications)
  */
 
 class Notifications {
@@ -174,7 +176,7 @@ class Notifications {
         ID: 'evening',
         hour: 19,
         minutes: 0,
-        __generate: () => {
+        __generate: (index) => {
             const Title = langManager.curr['notifications']['evening']['title'];
             const messages = langManager.curr['notifications']['evening']['messages'];
             const Body = messages[Random(0, messages.length)];
@@ -182,12 +184,16 @@ class Notifications {
         },
 
         Enable: () => Setup(Notifications.Evening),
-        Disable: () => Remove(Notifications.Evening)
+        Disable: () => Remove(Notifications.Evening),
+        RemoveToday: () => {}
     }
 
     static async DisableAll() {
-        await Notifications.Morning.Disable();
-        await Notifications.Evening.Disable();
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.removeAllPendingNotificationRequests();
+        } else if (Platform.OS === 'android') {
+            PushNotification.cancelAllLocalNotifications();
+        }
     }
 
     // TODO - Remove, only for testing

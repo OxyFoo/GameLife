@@ -104,13 +104,15 @@ class BackLoading extends React.Component {
         }
 
         // Loading : Notifications
-        //Notifications.DisableAll();
+        await Notifications.DisableAll();
         if (user.settings.morningNotifications) {
             await Notifications.Morning.Enable();
         }
         if (user.settings.eveningNotifications) {
             await Notifications.Evening.Enable();
         }
+        const t = await Notifications.GetAllNotifications();
+        console.log(t.length);
 
         if (false) {
             const notifs = await Notifications.GetAllNotifications();

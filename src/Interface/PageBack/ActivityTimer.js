@@ -3,6 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
+import Notifications from '../../Utils/Notifications';
 import { MinMax, TwoDigit } from '../../Utils/Functions';
 import { GetTime, RoundToQuarter } from '../../Utils/Time';
 
@@ -94,6 +95,8 @@ class BackActivityTimer extends React.Component {
             this.finished = user.activities.Add(skillID, _startTime, _duration);
             _duration -= 15;
         }
+
+        Notifications.Evening.RemoveToday();
 
         const text = langManager.curr['activity']['display-activity-text'];
         const button = langManager.curr['activity']['display-activity-button'];

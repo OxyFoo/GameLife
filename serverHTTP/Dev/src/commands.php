@@ -233,6 +233,7 @@
                 $userData['lastbirthtime'] = $account->LastChangeBirth;
                 $userData['ox'] = $account->Ox;
                 $userData['adRemaining'] = Users::GetAdRemaining($this->db, $account->ID);
+                $userData['adTotalWatched'] = Users::GetAdWatched($this->db, $account->ID);
                 $userData['achievements'] = $account->Achievements;
             }
 

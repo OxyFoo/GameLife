@@ -23,6 +23,7 @@ class Informations {
         this.xp = 0;
         this.ox = 0;
         this.adRemaining = 0;
+        this.adTotalWatched = 0;
 
         this.UNSAVED_title = null;
         this.UNSAVED_birthTime = null;
@@ -50,6 +51,7 @@ class Informations {
         if (contains('xp')) this.xp = informations['xp'];
         if (contains('ox')) this.ox = informations['ox'];
         if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
+        if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
         if (contains('UNSAVED_title')) this.UNSAVED_title = informations['UNSAVED_title'];
         if (contains('UNSAVED_birthTime')) this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
     }
@@ -63,6 +65,7 @@ class Informations {
             xp: this.xp,
             ox: this.ox,
             adRemaining: this.adRemaining,
+            adTotalWatched: this.adTotalWatched,
             UNSAVED_title: this.UNSAVED_title,
             UNSAVED_birthTime: this.UNSAVED_birthTime
         };
@@ -112,6 +115,7 @@ class Informations {
 
     DecrementAdRemaining = () => {
         this.adRemaining--;
+        this.adTotalWatched++;
         this.user.interface.console.AddLog('info', 'Remaining ad:', this.adRemaining);
         this.user.LocalSave();
 

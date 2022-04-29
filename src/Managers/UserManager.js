@@ -244,6 +244,7 @@ class UserManager {
             if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
             if (contains('ox')) this.informations.ox = data['ox'];
             if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
+            if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
             if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('activities')) this.activities.LoadOnline(data['activities']);

@@ -1,4 +1,4 @@
-const COMPARATORS = [ 'B', 'Sk', 'SkT', 'St', 'HCa', 'Ca' ];
+const COMPARATORS = [ 'B', 'Lvl', 'Sk', 'SkT', 'St', 'HCa', 'Ca', 'It', 'Ad' ];
 const OPERATORS = [ 'LT', 'GT' ];
 const REWARDS = [ 'Title', 'Item', 'XP', 'OX' ];
 
@@ -23,7 +23,7 @@ class Achievement {
 
 class Condition {
     Comparator = {
-        /** @type {'B'|'Sk'|'SkT'|'St'|'HCa'|'Ca'} */
+        /** @type {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'} */
         Type: '',
 
         Value: 0

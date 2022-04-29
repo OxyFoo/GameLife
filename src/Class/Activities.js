@@ -118,6 +118,7 @@ class Activities {
 
     /**
      * Add a callback, called when an activity is updated (added, removed, modified)
+     * TODO - Replace by DynamicVar
      * @param {String} name
      * @param {Function} callback
      * @returns {Boolean} true if the callback was added

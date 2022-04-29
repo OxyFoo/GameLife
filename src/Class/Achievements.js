@@ -108,6 +108,11 @@ class Achievements {
                 output = output.replace('{}', parseInt(Value * 100));
                 output += '\n';
                 break;
+            case 'Lvl':
+                output += condText['Lvl'];
+                output = output.replace('{}', Value);
+                output += '\n';
+                break;
             case 'Sk':
             case 'SkT':
                 const skill = dataManager.skills.GetByID(Value);
@@ -136,6 +141,16 @@ class Achievements {
                 output += condText[Comparator.Type];
                 output = output.replace('{}', Value);
                 output = output.replace('{}', Comparator.Value);
+                output += '\n';
+                break;
+            case 'It':
+                output += condText['It'];
+                output = output.replace('{}', Value);
+                output += '\n';
+                break;
+            case 'Ad':
+                output += condText['Ad'];
+                output = output.replace('{}', Value);
                 output += '\n';
                 break;
         }
@@ -203,6 +218,9 @@ class Achievements {
                 case 'B': // Battery level
                     value = GetBattery();
                     break;
+                case 'Lvl': // Level
+                    value = this.user.experience.GetExperience().xpInfo.lvl;
+                    break;
                 case 'Sk': // Skill level
                     const skillID = Condition.Comparator.Value;
                     value = this.user.experience.GetSkillExperience(skillID).lvl;
@@ -238,6 +256,12 @@ class Achievements {
                 case 'Ca': // Category level
                     const categoryXP = this.user.experience.GetSkillCategoryExperience(categories[c].ID);
                     value = categoryXP.lvl;
+                    break;
+                case 'It': // Number of items
+                    value = this.user.inventory.GetStuffs().length;
+                    break;
+                case 'Ad': // Number of watched ads
+                    value = this.user.informations.adTotalWatched;
                     break;
             }
 

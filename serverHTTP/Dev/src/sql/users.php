@@ -464,7 +464,7 @@
         }
 
         /**
-         * Add or remove Ox to the account
+         * Get ad remaining to watch for today
          * @param DataBase $db
          * @param int $accountID
          */
@@ -479,6 +479,20 @@
                 ExitWithStatus("Error: Getting ad remaining failed");
             }
             return $MAX_WACHABLE_ADS - count($result);
+        }
+
+        /**
+         * Get number of all ads watched
+         * @param DataBase $db
+         * @param int $accountID
+         */
+        public static function GetAdWatched($db, $accountID) {
+            $command = "SELECT * FROM `Logs` WHERE `AccountID` = '$accountID' AND `Type` = 'adWatched'";
+            $result = $db->QueryArray($command);
+            if ($result === null) {
+                ExitWithStatus("Error: Getting ad remaining failed");
+            }
+            return count($result);
         }
     }
 

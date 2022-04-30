@@ -33,7 +33,7 @@
                 self::setXP($db, $account->ID, $xp);
             }
             if (isset($achievements)) {
-                self::AddAchievement($db, $account, $achievements);
+                Achievements::AddAchievement($db, $account, $achievements);
             }
             if (isset($titleID)) {
                 self::setTitle($db, $account, $titleID);
@@ -322,65 +322,6 @@
 
         /**
          * @param DataBase $db
-         * @param Account $account
-         * @param int[] $achievements
-         */
-        private static function AddAchievement($db, $account, $achievements) {
-            $accountID = $account->ID;
-            $allAchievements = $account->Achievements;
-            foreach ($achievements as $achievementID) {
-                if (!in_array($achievementID, $allAchievements)) {
-                    $rewardAdded = Users::ExecReward($db, $account, $achievementID);
-                    if ($rewardAdded) {
-                        array_push($allAchievements, ...$achievements);
-                    }
-                }
-            }
-            $dbAchievements = json_encode($allAchievements);
-
-            $command = "UPDATE `Accounts` SET `Achievements` = '$dbAchievements' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
-            if ($result === false) {
-                ExitWithStatus("Error: saving achievements failed");
-            }
-        }
-
-        /**
-         * @param DataBase $db
-         * @param Account $account
-         * @param int $achievementID
-         * @return bool True if reward was executed
-         */
-        private static function ExecReward($db, $account, $achievementID) {
-            $command = "SELECT `Rewards` FROM `Achievements` WHERE `ID` = '$achievementID'";
-            $result = $db->QueryArray($command);
-            if ($result === false) return false;
-            $rewards = explode(',', $result[0]['Rewards']);
-
-            $output = false;
-            foreach ($rewards as $reward) {
-                $elements = explode(' ', $reward);
-                if (count($elements) !== 2) continue;
-                $type = $elements[0];
-                $value = $elements[1];
-                if ($type === 'OX') {
-                    $output = Users::AddOx($db, $account->ID, $value);
-                } else if ($type === 'XP') {
-                    // TODO - Set XP (add precise "activity")
-                } else if ($type === 'Title') {
-                    $output = Users::AddItem($db, $account, $value, 'title');
-                    if ($output) Users::RefreshDataToken($db, $account->ID);
-                } else if ($type === 'Item') {
-                    $output = Users::AddItem($db, $account, $value, 'stuff');
-                    if ($output) Users::RefreshDataToken($db, $account->ID);
-                }
-            }
-
-            return $output;
-        }
-
-        /**
-         * @param DataBase $db
          * @param string $username
          * @return bool True if username is free, false otherwise
          */
@@ -493,6 +434,30 @@
                 ExitWithStatus("Error: Getting ad remaining failed");
             }
             return count($result);
+        }
+
+        /**
+         * Get number of all ads watched
+         * @param DataBase $db
+         * @param int $accountID
+         * @return string|null Return reward if any, null otherwise
+         */
+        public static function CheckGiftCode($db, $accountID, $code) {
+            $command = "SELECT `Rewards`, `Available` FROM `GiftCodes` WHERE `ID` = '$code'";
+            $gift = $db->QueryArray($command);
+            if ($gift === null || count($gift) === 0) {
+                return null;
+            }
+
+            $rewards = $gift[0]['Rewards'];
+            $available = $gift[0]['Available'];
+            if ($available == 0) return null;
+
+            $command2 = "SELECT `ID` FROM `Logs` WHERE `AccountID` = '$accountID' AND `Type` = 'giftCode' AND `Data` = '$code'";
+            $usedGifts = $db->QueryArray($command2);
+            if ($usedGifts === null || count($usedGifts) > 0) return null;
+
+            return $rewards;
         }
     }
 

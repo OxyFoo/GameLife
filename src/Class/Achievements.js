@@ -4,10 +4,15 @@ import langManager from '../Managers/LangManager';
 import { GetTime } from '../Utils/Time';
 import { GetBattery } from '../Utils/Device';
 
+/**
+ * @typedef {import('../Managers/UserManager').default} UserManager
+ * @typedef {import('../Data/Achievements').Condition} Condition
+ * @typedef {import('../Data/Achievements').Reward} Reward
+ */
+
 class Achievements {
     constructor(user) {
         /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
          * @type {UserManager}
          */
         this.user = user;
@@ -71,8 +76,8 @@ class Achievements {
         const title = dataManager.GetText(achievement.Name);
         let description = dataManager.GetText(achievement.Description) + '\n';
         if (achievement.Type === 1 || solvedIndexes.includes(achievementID)) {
-            description += this.getConditionText(achievement.ID);
-            description += this.getRewardsText(achievement.ID);
+            description += this.getConditionText(achievement.Condition);
+            description += this.getRewardsText(achievement.Rewards);
         }
         this.user.interface.popup.Open('ok', [ title, description ]);
     }
@@ -82,21 +87,21 @@ class Achievements {
      * @param {Number} achievementID 
      */
     ShowRewardPopup = (achievementID) => {
+        const achievement = dataManager.achievements.GetByID(achievementID);
         const title = langManager.curr['achievements']['alert-reward-title'];
         let text = langManager.curr['achievements']['alert-reward-text'] + '\n\n';
-        text += this.getRewardsText(achievementID);
+        text += this.getRewardsText(achievement.Rewards);
         this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
     }
 
     /**
      * Return condition text with correct langage
-     * @param {Number} achievementID
+     * @param {Condition} condition
      * @returns {String}
      */
-    getConditionText = (achievementID) => {
-        const achievement = dataManager.achievements.GetByID(achievementID);
-        if (achievement.Condition === null) return '';
-        const { Comparator, Operator, Value } = achievement.Condition;
+    getConditionText = (condition) => {
+        if (condition === null) return '';
+        const { Comparator, Operator, Value } = condition;
 
         const operators = langManager.curr['achievements']['operators'];
         const condText = langManager.curr['achievements']['conditions'];
@@ -160,14 +165,13 @@ class Achievements {
 
     /**
      * Return rewards text with correct langage
-     * @param {Number} ID
+     * @param {Array<Reward>} rewards
      * @returns {String}
      */
-    getRewardsText = (ID) => {
+    getRewardsText = (rewards) => {
         let output = '';
-        const achievement = dataManager.achievements.GetByID(ID);
-        for (let i = 0; i < achievement.Rewards.length; i++) {
-            const reward = achievement.Rewards[i];
+        for (let i = 0; i < rewards.length; i++) {
+            const reward = rewards[i];
             const value = reward.Value;
             switch (reward.Type) {
                 case 'Title':

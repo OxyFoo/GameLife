@@ -335,6 +335,11 @@ class Server {
         return Request_Async(data);
     }
 
+    GiftCode(code) {
+        let data = { 'action': 'giftCode', 'code': code, 'token': this.token };
+        return Request_Async(data);
+    }
+
     GetLeaderboard(week = false) {
         let data = {
             'action': 'getLeaderboard',

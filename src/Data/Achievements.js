@@ -171,5 +171,5 @@ class Achievements {
     }
 }
 
-export { Achievement };
+export { Achievement, Condition, Reward };
 export default Achievements;

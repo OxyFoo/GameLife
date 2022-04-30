@@ -10,6 +10,7 @@
     require('./src/classes/device.php');
 
     require('./src/sql/accounts.php');
+    require('./src/sql/achievements.php');
     require('./src/sql/app.php');
     require('./src/sql/devices.php');
     require('./src/sql/users.php');
@@ -110,7 +111,7 @@
             switch ($perm) {
                 case 0: // OK
                     Accounts::RefreshLastDate($this->db, $account->ID);
-                    $this->db->AddStatistic($account->ID, $device->ID, 'appState', "Login: {$account->Email}");
+                    $this->db->AddStatistic($account->ID, $device->ID, 'appState', "Login");
                     $this->output['token'] = Devices::GeneratePrivateToken($this->db, $account->ID, $device->ID);
                     $this->output['status'] = 'ok';
 
@@ -139,7 +140,7 @@
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                     if ($sended) {
-                        $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Link account: $email");
+                        $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Link account");
                         $this->output['status'] = 'newDevice';
                     }
                     break;
@@ -176,8 +177,13 @@
             if ($account === null) return;
 
             // Legion - mail bypass
-            if (strpos($email, 'bot-') === 0 && $this->enableBots) {
+            $byPass = $this->enableBots && strpos($email, 'bot-') === 0;
+            if ($byPass) {
                 Accounts::AddDevice($this->db, $device->ID, $account, 'Devices');
+            }
+
+            if (!$byPass) {
+                $this->db->AddStatistic($account->ID, $device->ID, 'appState', "Signin: {$account->Email}");
             }
 
             $this->output['status'] = 'ok';
@@ -299,7 +305,7 @@
             $usernameChangeState = Users::SetUsername($this->db, $account, $newUsername);
 
             if ($usernameChangeState === 'ok') {
-                $this->db->AddStatistic($account->ID, $deviceID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername} ({$account->Email})");
+                $this->db->AddStatistic($account->ID, $deviceID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername}");
             }
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
@@ -324,7 +330,7 @@
 
             if (Users::GetAdRemaining($this->db, $account->ID) <= 0) {
                 // Suspicion of cheating
-                $this->db->AddStatistic($accountID, $deviceID, 'cheatSuspicion', "Try to watch another ad ({$account->Email})");
+                $this->db->AddStatistic($accountID, $deviceID, 'cheatSuspicion', "Try to watch another ad");
                 $this->output['ox'] = $account->Ox;
                 $this->output['status'] = 'ok';
                 return;
@@ -369,6 +375,40 @@
             $this->output['time'] = time();
         }
 
+        /**
+         * Check code & return rewards
+         */
+        public function GiftCode() {
+            $token = $this->data['token'];
+            $code = $this->data['code'];
+            if (!isset($token, $code)) return;
+
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === null) return;
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
+            }
+
+            $deviceID = $dataFromToken['deviceID'];
+            $accountID = $dataFromToken['accountID'];
+            $gift = Users::CheckGiftCode($this->db, $accountID, $code);
+
+            if ($gift !== null) {
+                $account = Accounts::GetByID($this->db, $accountID);
+                $rewardAdded = Achievements::ExecReward($this->db, $account, explode(',', $gift));
+                if (!$rewardAdded) {
+                    $this->output['status'] = 'fail';
+                    return;
+                }
+                $this->db->Query("UPDATE `GiftCodes` SET `Available` = `Available` - 1 WHERE `ID` = '$code'");
+                $this->db->AddStatistic($accountID, $deviceID, 'giftCode', $code);
+            }
+
+            $this->output['gift'] = $gift;
+            $this->output['status'] = 'ok';
+        }
+
         public function Disconnect() {
             $token = $this->data['token'];
             if (!isset($token)) return;
@@ -387,7 +427,7 @@
 
             Accounts::RemDevice($this->db, $deviceID, $account, 'Devices');
 
-            $this->db->AddStatistic($accountID, $deviceID, 'appState', "Disconnect: {$account->Email}");
+            $this->db->AddStatistic($accountID, $deviceID, 'appState', "Disconnect");
             $this->output['status'] = 'ok';
         }
 
@@ -424,7 +464,7 @@
             $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'rem');
 
             if ($sended) {
-                $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Delete account: $email");
+                $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Delete account");
                 $this->output['status'] = 'ok';
             }
         }

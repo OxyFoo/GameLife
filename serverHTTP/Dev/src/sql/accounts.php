@@ -135,8 +135,9 @@
          */
         public static function Delete($db, $accountID) {
             $remActivities = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID'");
+            $remInventory = $db->Query("DELETE FROM `Inventories` WHERE `AccountID` = '$accountID'");
             $remUser = $db->Query("DELETE FROM `Accounts` WHERE `ID` = '$accountID'");
-            return $remActivities && $remUser;
+            return $remActivities !== false && $remUser !== false && $remInventory !== false;
         }
     }
 

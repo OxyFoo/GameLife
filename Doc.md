@@ -59,7 +59,7 @@ Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
 * Comparant
     - Number : Soit le nombre d'heure, soit de niveau
 
-### Récompenses
+### Récompenses (& GiftCodes Rewards)
 Syntaxe : ``` TYPE ID ``` ou ``` TYPE Quantité ```
 Exemple : ``` Title 8 ``` ou ``` OX 20,Item 50 ```
 Séparés par des virgules, sans espaces

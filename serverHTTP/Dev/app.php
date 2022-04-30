@@ -24,6 +24,7 @@
         case 'adWatched': $commands->AdWatched(); break;
         case 'addReport': $commands->AddReport(); break;
         case 'getDate': $commands->GetDate(); break;
+        case 'giftCode': $commands->GiftCode(); break;
         case 'disconnect': $commands->Disconnect(); break;
         case 'deleteAccount': $commands->DeleteAccount(); break;
 

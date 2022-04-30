@@ -387,6 +387,23 @@
         "alert-deletedfailed-text": "Le mail n'a pas été envoyé, vérifiez votre connexion internet ou veuillez réessayer plus tard."
     },
 
+    "shop": {
+        "button-shop": "Boutique",
+        "button-code": "Utiliser un code",
+
+        "alert-code-title": "Utiliser un code",
+        "alert-code-text": "Vous pouvez gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant les codes dans nos vidéos Tiktok et Youtube\n\t- En gagnant un concours sur Instagram ou Twitter",
+        "alert-code-input": "Code",
+        "alert-code-button": "Valider",
+
+        "reward-failed-title": "Échec",
+        "reward-failed-text": "Une erreur est survenue, veuillez réessayer plus tard.",
+        "reward-wrong-title": "Code incorrect",
+        "reward-wrong-text": "Le code que vous avez entré est incorrect.",
+        "reward-success-title": "Code utilisé",
+        "reward-success-text": "Vous avez récupéré les récompenses suivantes :"
+    },
+
     "skill": {
         "text-author": "Une idée de {}",
         "stats-title": "Statistiques",

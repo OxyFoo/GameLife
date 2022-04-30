@@ -6,6 +6,7 @@
 
     require('./src/config.php');
     require('./src/functions/mail.php');
+    require('./src/functions/functions.php');
     require('./src/classes/account.php');
     require('./src/classes/device.php');
     require('./src/sql/accounts.php');
@@ -78,7 +79,7 @@
                             Accounts::RemDevice($db, $deviceID, $account, 'DevicesWait');
                             Devices::RemoveToken($db, $deviceID);
                             Accounts::AddDevice($db, $deviceID, $account, 'Devices');
-                            $db->AddStatistic($accountID, $deviceID, 'accountState', "Account link device: {$account->Email}");
+                            $db->AddStatistic($accountID, $deviceID, 'accountState', 'Account link device');
                             $state = 'auth-accept';
                         }
                     }
@@ -92,7 +93,7 @@
                     Devices::RemoveToken($db, $deviceID);
                     $account = Accounts::GetByID($db, $accountID);
                     if (Accounts::Delete($db, $accountID)) {
-                        $db->AddStatistic($accountID, $deviceID, 'accountState', "Account deleted: {$account->Email}");
+                        $db->AddStatistic($accountID, $deviceID, 'accountState', 'Account deleted');
                         $state = 'auth-remove-account';
                     }
                 } else {

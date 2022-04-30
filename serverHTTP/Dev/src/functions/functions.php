@@ -16,6 +16,21 @@
     }
 
     /**
+     * Return IP address of the client or "UNKNOWN" if failed
+     * @link https://stackoverflow.com/questions/3003145/how-to-get-the-client-ip-address-in-php
+     * @return string
+     */
+    function GetClientIP() {
+        $keys = array('REMOTE_ADDR', 'HTTP_FORWARDED', 'HTTP_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED');
+        foreach ($keys as $k) {
+            if (!empty($_SERVER[$k])) {
+                return $_SERVER[$k];
+            }
+        }
+        return "UNKNOWN";
+    }
+
+    /**
      * Set status to "error" and exit with an error message
      * @param string $message Message to return
      */

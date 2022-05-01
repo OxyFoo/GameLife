@@ -96,7 +96,7 @@ class Home extends BackHome {
                     rippleColor='white'
                 >
                     <FlatList
-                        data={this.skills}
+                        data={this.state.skills}
                         renderItem={this.renderSkill}
                         keyExtractor={(item, index) => 'skill-' + index}
                         numColumns={3}

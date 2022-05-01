@@ -132,8 +132,8 @@
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Vous avez débloqué le succès : {}",
-        "alert-reward-title": "Récompense récupérée",
-        "alert-reward-text": "Vous avez récupéré les récompenses suivantes :"
+        "alert-reward-title": "Récompense obtenues",
+        "alert-reward-text": "Vous avez obtenu les récompenses suivantes :"
     },
 
     "activity": {
@@ -401,7 +401,7 @@
         "reward-wrong-title": "Code incorrect",
         "reward-wrong-text": "Le code que vous avez entré est incorrect.",
         "reward-success-title": "Code utilisé",
-        "reward-success-text": "Vous avez récupéré les récompenses suivantes :"
+        "reward-success-text": "Vous avez obtenu les récompenses suivantes :"
     },
 
     "skill": {

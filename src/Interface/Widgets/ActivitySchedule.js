@@ -28,6 +28,12 @@ const ActivityScheduleProps = {
      */
     onChange: (startTime, durationTime) => {},
 
+    /**
+     * Called when component is opened or closed
+     * @param {Boolean} opened 
+     */
+    onChangeState: (opened) => {},
+
     initialValue: [ null, null ]
 }
 
@@ -74,9 +80,11 @@ class ActivitySchedule extends React.Component {
 
     changeSelectionMode = () => {
         const newValue = this.state.selectionMode ? 0 : 1;
+        // If panel is already open, or it's closed and editable
         if (newValue === 0 || this.props.editable) {
+            const callback = () => this.props.onChangeState(newValue === 1);
             SpringAnimation(this.state.anim, newValue).start();
-            this.setState({ selectionMode: !this.state.selectionMode });
+            this.setState({ selectionMode: !this.state.selectionMode }, callback);
         }
     }
 

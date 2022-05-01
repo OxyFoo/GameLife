@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     },
     age: {
         marginLeft: 6,
+        marginBottom: 2,
         fontSize: 20
     },
     title: {

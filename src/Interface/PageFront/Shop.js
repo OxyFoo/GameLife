@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Keyboard } from 'react-native';
 
 import BackShop from '../PageBack/Shop';
 import user from '../../Managers/UserManager';
@@ -17,6 +17,7 @@ class Shop extends BackShop {
 
         const checkCode = async () => {
             if (!code.length) return;
+            Keyboard.dismiss();
             setLoading(true);
             const result = await user.server.GiftCode(code);
             if (result.status !== 200 || result.content['status'] !== 'ok') {

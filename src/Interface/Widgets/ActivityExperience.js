@@ -5,6 +5,7 @@ import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
 import langManager from '../../Managers/LangManager';
 
+import { Round } from '../../Utils/Functions';
 import { Container, Text } from '../Components';
 
 const ActivityExperienceProps = {
@@ -14,9 +15,10 @@ const ActivityExperienceProps = {
 
 class ActivityExperience extends React.Component {
     renderExperience = ({ item: { statKey, statName, statValue } }) => {
+        const value = Round(statValue, 2);
         return (
             <Text containerStyle={{ width: '50%' }} style={styles.attr}>
-                {'+' + statValue + ' ' + statName}
+                {'+' + value + ' ' + statName}
             </Text>
         );
     }
@@ -29,7 +31,7 @@ class ActivityExperience extends React.Component {
             return (<></>);
         }
 
-        const XPamount = skill.XP * (duration / 60);
+        const XPamount = Round(skill.XP * (duration / 60), 2);
         const XPtext = langManager.curr['level']['xp'];
         const containerTitle = `+ ${XPamount} ${XPtext}`;
 

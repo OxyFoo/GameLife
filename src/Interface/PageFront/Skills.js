@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import BackSkills from '../PageBack/Skills';
 import user from '../../Managers/UserManager';
@@ -11,6 +11,8 @@ import { DateToFormatString } from '../../Utils/Date';
 import { PageHeader } from '../Widgets';
 import { Page, Input, Text, Button, IconCheckable, Icon } from '../Components';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
 class Skills extends BackSkills {
     constructor(props) {
         super(props);
@@ -19,12 +21,15 @@ class Skills extends BackSkills {
     }
 
     renderCategory = ({ item }) => {
+        if (item === 0) {
+            return <View style={{ width: 44, height: 44 }} />;
+        }
         const { ID, Name, LogoID } = item;
         const checked = this.state.selectedCategories.includes(ID);
         const icon = dataManager.skills.GetXmlByLogoID(LogoID);
         return (
             <IconCheckable
-                style={{ margin: '2%' }}
+                style={{ marginBottom: 8 }}
                 id={ID}
                 xml={icon}
                 size={32}
@@ -78,6 +83,9 @@ class Skills extends BackSkills {
         const setheight = (event) => this.setState({ height: event.nativeEvent.layout.height });
         const sortType = this.sortList[this.state.sortSelectedIndex];
 
+        let categories = dataManager.skills.categories;
+        if (categories.length % 6 !== 0) categories.push(...Array(6 - (categories.length % 6)).fill(0));
+
         return (
             <>
                 <Page canScrollOver={false} bottomOffset={0} onLayout={setheight}>
@@ -85,13 +93,13 @@ class Skills extends BackSkills {
 
                     <View style={styles.row}>
                         <Input
-                            style={{ width: '65%' }}
+                            style={{ width: SCREEN_WIDTH - 80 - 96 }}
                             label={lang['input-search']}
                             text={this.state.search}
                             onChangeText={this.onChangeSearch}
                         />
                         <Button
-                            style={{ width: '30%', paddingHorizontal: 12 }}
+                            style={{ width: 96, paddingHorizontal: 12 }}
                             borderRadius={8}
                             color='backgroundCard'
                             icon='filter'
@@ -102,7 +110,8 @@ class Skills extends BackSkills {
                     </View>
 
                     <FlatList
-                        data={dataManager.skills.categories}
+                        data={categories}
+                        columnWrapperStyle={{ justifyContent: 'space-between' }}
                         renderItem={this.renderCategory}
                         numColumns={6}
                         keyExtractor={(item, index) => 'category-' + index}

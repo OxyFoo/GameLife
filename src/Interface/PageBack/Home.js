@@ -3,14 +3,13 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 
 class BackHome extends React.Component {
-    constructor(props) {
-        super(props);
-        this.skills = user.activities.GetLasts();
-    }
+    state = {
+        skills: user.activities.GetLasts()
+    };
+
     componentDidMount() {
         user.activities.AddCallback('home', () => {
-            this.skills = user.activities.GetLasts();
-            this.forceUpdate();
+            this.setState({ skills: user.activities.GetLasts() });
         });
     }
     componentWillUnmount() {

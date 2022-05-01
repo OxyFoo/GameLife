@@ -78,17 +78,16 @@ class BackSkills extends React.Component {
         let newSkills = this.allSkills;
         const { search, selectedCategories } = this.state;
 
-        // Cagtegories filter
+        // Categories filter
         if (selectedCategories.length) {
             const filter = skill => selectedCategories.includes(skill.CategoryID);
-            newSkills = this.allSkills.filter(filter);
+            newSkills = newSkills.filter(filter);
         }
 
         // Search filter
         if (search !== '') {
             const filter = skill => {
-                const name = dataManager.GetText(skill.Name).toLowerCase();
-                return name.includes(search.toLowerCase());
+                return skill.Name.toLowerCase().includes(search.toLowerCase());
             }
             newSkills = newSkills.filter(filter);
         }

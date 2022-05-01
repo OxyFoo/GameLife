@@ -405,6 +405,7 @@
                 $this->db->AddStatistic($accountID, $deviceID, 'giftCode', $code);
             }
 
+            sleep(1); // To avoid bruteforce
             $this->output['gift'] = $gift;
             $this->output['status'] = 'ok';
         }

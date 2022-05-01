@@ -352,13 +352,14 @@ class Activities {
             }
         }
         return false;
-
-        //const condNormalActivity = (activity) => activity.startTime >= startTime && activity.startTime <= endTime;
-        //const condRelaxActivity = (activity) => activity.startTime >= startTime && activity.startTime <= endTime && this.activities[0]. === 0;
-        //const find = this.activities.find(activity => );
-        //return !IsUndefined(find);
     }
 
+    /**
+     * 
+     * @param {Number} time Time in seconds
+     * @param {Number} duration Duration in minutes
+     * @returns {Boolean} True if time is free
+     */
     TimeIsFree(time, duration) {
         let output = true;
         const startTime = time;

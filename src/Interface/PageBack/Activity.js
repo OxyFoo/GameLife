@@ -38,6 +38,9 @@ class BackActivity extends React.Component {
             const Icon = dataManager.skills.GetXmlByLogoID(category.LogoID);
             categories.push({ ID: ID, name: Name, icon: Icon });
         }
+        if (categories.length % 6 !== 0) {
+            categories.push(...Array(6 - (categories.length % 6)).fill(0));
+        }
 
         const skills = dataManager.skills.skills.map(skill => ({ id: skill.ID, value: dataManager.GetText(skill.Name) }));
 
@@ -119,6 +122,15 @@ class BackActivity extends React.Component {
         this.setState({ activityStart: startTime, activityDuration: duration });
     }
 
+    onChangeStateSchedule = (opened) => {
+        if (opened) {
+            this.pageRef.GotoY(-300);
+            this.pageRef.DisableScroll();
+        } else {
+            this.pageRef.EnableScroll();
+        }
+    }
+
     onAddComment = () => {
         if (this.state.comment !== null) return;
         const save = () => this.state.visualisationMode && this.AddActivity();
@@ -149,7 +161,6 @@ class BackActivity extends React.Component {
         const { activityStart, activityDuration, comment } = this.state;
 
         const addState = user.activities.Add(skillID, activityStart, activityDuration, comment);
-        user.interface.console.AddLog('info', 'Try to add activity:', addState);
         if (addState === 'added') {
             Notifications.Evening.RemoveToday();
             const text = langManager.curr['activity']['display-activity-text'];

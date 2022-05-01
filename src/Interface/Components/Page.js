@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, StyleSheet, Dimensions } from 'react-native';
+import { Animated, StyleSheet, Dimensions, Platform } from 'react-native';
 import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
@@ -40,7 +40,7 @@ class Page extends React.Component {
     }
 
     GotoY = (y) => {
-        this.posY = this.limitValues(y, true);
+        this.posY = this.limitValues(y, this.props.canScrollOver);
         SpringAnimation(this.state.positionY, this.posY).start();
     }
     EnableScroll = () => this.scrollEnabled = true;
@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     parent: {
         width: '100%',
         padding: 32,
+        paddingBottom: Platform.OS === 'ios' ? 48 : 32,
         backgroundColor: '#00000001'
     }
 });

@@ -10,23 +10,18 @@ import themeManager from '../../Managers/ThemeManager';
 import { Page, Text, Button, ComboBox, IconCheckable, TextSwitch, Icon } from '../Components';
 import { PageHeader, ActivitySchedule, ActivityExperience } from '../Widgets';
 
-/**
- * TODO
- * [] Afficher / charger / enregistrer les commentaires (a part ? Mettre un ID aux activités ?)
- * [x] Enregistrer localement / en ligne une activité
- * [x] Supprimer localement / en ligne une activité
- * [x] Page d'ajout terminé (ou commencement + bloquer sur cette page + compteur)
- */
-
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Activity extends BackActivity {
     renderCategory = ({ item }) => {
+        if (item === 0) {
+            return <View style={{ width: 44, height: 44 }} />;
+        }
         const { ID, icon } = item;
         const checked = this.state.selectedCategory === ID;
         return (
             <IconCheckable
-                style={{ margin: '2%' }}
+                style={{ marginBottom: 8 }}
                 id={ID}
                 xml={icon}
                 size={32}
@@ -49,6 +44,7 @@ class Activity extends BackActivity {
                 <ActivitySchedule
                     editable={!this.state.visualisationMode}
                     onChange={this.onChangeSchedule}
+                    onChangeState={this.onChangeStateSchedule}
                     initialValue={this.state.ActivitySchedule}
                 />
 
@@ -127,6 +123,7 @@ class Activity extends BackActivity {
                     <Text style={styles.title} bold>{lang['title-category']}</Text>
                     <FlatList
                         style={styles.fullWidth}
+                        columnWrapperStyle={{ justifyContent: 'space-between' }}
                         data={this.state.categories}
                         renderItem={this.renderCategory}
                         numColumns={6}

@@ -42,6 +42,7 @@ const PAGE_NUMBER = 4;
 const CACHE_IGNORE = [
     'about',
     'activity',
+    'activityTimer',
     'onboarding',
     'loading',
     'login',

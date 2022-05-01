@@ -229,7 +229,8 @@ const styles = StyleSheet.create({
     },
     dateText: {
         textAlign: 'right',
-        fontSize: 12
+        fontSize: 12,
+        marginBottom: 2
     },
     checkbox: {
         width: 32,

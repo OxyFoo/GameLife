@@ -160,7 +160,8 @@ class Notifications {
         ID: 'morning',
         hour: 9,
         minutes: 0,
-        __generate: () => {
+        __generate: (index) => {
+            if (index === 0) return null;
             const Title = langManager.curr['notifications']['morning']['title'];
             const quote = dataManager.quotes.GetRandomQuote();
             const Body = quote.Quote + ' (' + quote.Author + ')';
@@ -177,6 +178,7 @@ class Notifications {
         hour: 19,
         minutes: 0,
         __generate: (index) => {
+            if (index === 0) return null;
             const Title = langManager.curr['notifications']['evening']['title'];
             const messages = langManager.curr['notifications']['evening']['messages'];
             const Body = messages[Random(0, messages.length)];
@@ -185,7 +187,7 @@ class Notifications {
 
         Enable: () => Setup(Notifications.Evening),
         Disable: () => Remove(Notifications.Evening),
-        RemoveToday: () => {}
+        RemoveToday: () => {} // TODO
     }
 
     static async DisableAll() {

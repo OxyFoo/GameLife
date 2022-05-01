@@ -333,6 +333,15 @@
     } else if ($action === 'getOx') {
         $ox = Users::GetOx($db, 1);
         print_r($ox);
+    } else if ($action === 'query') {
+        $giftCodes = $db->QueryArray("SELECT `Rewards`, `Available` FROM `GiftCodes` WHERE `ID` = 'AEIOUY'");
+        if ($giftCodes === false || count($giftCodes) === 0) {
+            echo('Fail');
+        } else {
+            $rewards = $giftCodes[0]['Rewards'];
+            $available = $giftCodes[0]['Available'];
+            echo("$rewards, $available");
+        }
     }
 
 ?>

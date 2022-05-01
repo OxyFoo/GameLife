@@ -100,7 +100,8 @@
          */
         public function AddStatistic($accountID, $deviceID, $type, $data = null) {
             $Data = $data === null ? 'NULL' : "'$data'";
-            $command = "INSERT INTO `Logs` (`AccountID`, `DeviceID`, `Type`, `Data`) VALUES ('$accountID', '$deviceID', '$type', $Data)";
+            $IP = GetClientIP();
+            $command = "INSERT INTO `Logs` (`AccountID`, `DeviceID`, `IP`, `Type`, `Data`) VALUES ('$accountID', '$deviceID', '$IP', '$type', $Data)";
             $result = $this->Query($command);
             if ($result === false) {
                 ExitWithStatus("Error: Adding device statistic in DB failed");

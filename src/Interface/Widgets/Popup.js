@@ -10,6 +10,12 @@ import { Sleep } from '../../Utils/Functions';
 import { TimingAnimation } from '../../Utils/Animations';
 
 /**
+ * @typedef {Object} ContentArgs
+ * @property {[String, String]} ok
+ * @property {[String, String]} yesno
+ * @property {[String, String]} acceptornot
+ * @property {() => void} custom
+ * 
  * @typedef {Object} PopupTypes
  * @property {'ok'} ok
  * @property {'yes'|'no'} yesno
@@ -55,7 +61,7 @@ class Popup extends React.PureComponent {
     /**
      * @template {keyof PopupTypes} T
      * @param {T} type
-     * @param {Array<String>} args - [title, message]
+     * @param {ContentArgs[T]} args - [title, message]
      * @param {(button: PopupTypes[T]) => void} callback - Callback when popup button is pressed
      * @param {Boolean} cancelable - if true, popup can be closed by clicking outside
      * @param {Boolean} cross - if true, popup can be closed by clicking on X

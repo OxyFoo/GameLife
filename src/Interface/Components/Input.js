@@ -37,7 +37,7 @@ const InputProps = {
     /** @type {'default'|'email'|'username'|'name'} - The type of the input. */
     textContentType: 'default',
 
-    /** @type {Function<String>} */
+    /** @param {String} newText */
     onChangeText: (newText) => {},
 
     /** @type {Function} */

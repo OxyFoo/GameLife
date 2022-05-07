@@ -36,13 +36,12 @@ function RoundToQuarter(time) {
 }
 
 /**
- * @param {Number} Time in seconds 
+ * @param {Number} time in seconds 
  * @returns {Number} Time in seconds
  */
 function GetMidnightTime(time) {
-    const _date = new Date(time * 1000);
-    _date.setUTCHours(1, 0, 0, 0); // Set to midnight
-    return GetTime(_date);
+    time -= time % (24 * 60 * 60);
+    return time;
 }
 
 /**

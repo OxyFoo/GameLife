@@ -253,11 +253,6 @@ class PageManager extends React.Component{
         ]).start();
     }
 
-    GetCurrentPage = () => {
-        const { pages, pageIndex } = this.state;
-        return pages[pageIndex];
-    }
-
     getPageContent(page, args) {
         let p;
         switch (page) {

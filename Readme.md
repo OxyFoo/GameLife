@@ -21,6 +21,7 @@ En 3 mots : Gestion RPG IRL
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
 * [AdMob](https://rnfb-docs.netlify.app/admob/usage) depends on [React Native Firebase](https://rnfirebase.io) (nécessaire pour admob)
 * [React Native Tracking Transparency](https://www.npmjs.com/package/react-native-tracking-transparency)
+* [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin)
 
 ## Erreurs
 

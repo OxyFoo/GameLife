@@ -72,7 +72,6 @@ babel.config.js
 /__tests__
 .gitattributes
 .vscode/
-metro.config.js
 config.php
 Backups
 Readmeme.md

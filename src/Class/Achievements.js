@@ -186,10 +186,6 @@ class Achievements {
                     const itemLine = langManager.curr['achievements']['rewards']['item'].replace('{}', itemName);
                     output += '\n' + itemLine + '\n';
                     break;
-                case 'XP':
-                    const xpLine = langManager.curr['achievements']['rewards']['xp'].replace('{}', value);
-                    output += '\n' + xpLine + '\n';
-                    break;
                 case 'OX':
                     const oxLine = langManager.curr['achievements']['rewards']['ox'].replace('{}', value);
                     output += '\n' + oxLine + '\n';

@@ -1,12 +1,13 @@
 const COMPARATORS = [ 'B', 'Lvl', 'Sk', 'SkT', 'St', 'HCa', 'Ca', 'It', 'Ad' ];
 const OPERATORS = [ 'LT', 'GT' ];
-const REWARDS = [ 'Title', 'Item', 'XP', 'OX' ];
+const REWARDS = [ 'Title', 'Item', 'OX' ];
 
 class Achievement {
     ID = 0;
 
     /**
-     * @type {0|1}\
+     * @type {-1|0|1}\
+     * -1: not shown if unsolved, all visible if solved\
      * 0: show condition and reward only when solved\
      * 1: all is visible
      */
@@ -35,7 +36,7 @@ class Condition {
 }
 
 class Reward {
-    /** @type {'Title'|'Item'|'XP'|'OX'} */
+    /** @type {'Title'|'Item'|'OX'} */
     Type = '';
     Value = 0;
 }
@@ -162,7 +163,7 @@ class Achievements {
         // Get others
         for (let a = 0; a < this.achievements.length; a++) {
             const achievement = this.achievements[a];
-            if (!solvedIndexes.includes(achievement.ID)) {
+            if (!solvedIndexes.includes(achievement.ID) && achievement.Type !== -1) {
                 achievements.push(achievement);
             }
         }

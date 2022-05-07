@@ -126,7 +126,6 @@
         "rewards": {
             "title": "New title: {}",
             "item": "New item: {}",
-            "xp": "{} XP points",
             "ox": "{} OX"
         },
 

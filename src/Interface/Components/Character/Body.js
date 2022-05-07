@@ -1,18 +1,20 @@
+import * as React from 'react';
 import { Animated } from 'react-native';
 
 import Part from './Part';
+import { RenderPart } from './Part';
+import { Animated3D } from './Utils';
 import { Sleep } from '../../../Utils/Functions';
-import Animated3D from '../../../Utils/Animated3D';
 import { TimingAnimation } from '../../../Utils/Animations';
 import { ANIMATIONS } from '../../../../res/items/humans/Characters';
 
 /**
+ * @typedef {import('./Character').default} Character
  * @typedef {import('../../../../res/items/humans/Characters').PartsName} PartsName
  */
 
 class Body {
     /**
-     * @typedef {import('./Character').default} Character
      * @param {Character} character Parent character
      */
     constructor(character) {
@@ -166,9 +168,10 @@ class Body {
         /** @param {Part} part @returns {Array<Part>} */
         const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
         const allParts = getAllChilds(this.firstPart).sort((a, b) => a.zIndex - b.zIndex);
+        const characName = this.character.name;
         return [
-            ...allParts.map(p => p.render('stuffShadow')),
-            ...allParts.map(part => part.render('stuff'))
+            ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
+            ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
         ];
     }
 
@@ -177,11 +180,12 @@ class Body {
         /** @param {Part} part @returns {Array<Part>} */
         const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
         const allParts = getAllChilds(this.firstPart).sort((a, b) => a.zIndex - b.zIndex);
+        const characName = this.character.name;
         return [
-            ...allParts.map(p => p.render('bodyShadow')),
-            ...allParts.map(p => p.render('stuffShadow')),
-            ...allParts.map(part => part.render('body')),
-            ...allParts.map(part => part.render('stuff'))
+            ...allParts.map((p, i)    => <RenderPart key={`${characName}-bodyShadow-${i}`} part={p} partType={'bodyShadow'} />),
+            ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
+            ...allParts.map((part, i) => <RenderPart key={`${characName}-body-${i}`} part={part} partType={'body'} />),
+            ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
         ];
     }
 }

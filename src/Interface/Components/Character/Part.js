@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import { G } from 'react-native-svg';
 
-import { WithFunction } from '../../../Utils/Animations';
 import { STUFFS } from '../../../../res/items/stuffs/Stuffs';
 import { CHARACTERS } from '../../../../res/items/humans/Characters';
+import { CalculateParentPos } from './Utils';
 
 /**
  * @typedef {import('./Body').default} Body
@@ -51,63 +51,6 @@ class Part {
     }
 
     /**
-     * @description Return an array of all parent parts in order from root to this part (including this part)
-     * @returns {Array<Part>}
-     */
-    getParents() {
-        let parents = [ this ];
-        let parent = this.parent;
-        while (parent !== null) {
-            parents.splice(0, 0, parent);
-            parent = parent.parent;
-        }
-        return parents;
-    }
-
-    calculateParentPos = () => {
-        let posX = this.position.x;
-        let posY = this.position.y;
-        let rotZ = this.rotation.rZ;
-
-        /** @param {Part} el */
-        const calculateParentPos = (el) => {
-            if (el.parent !== null) {
-                let currentRotation = new Animated.Value(0);
-                const elChilds = el.getParents();
-                for (let i = 0; i < elChilds.length-1; i++) {
-                    const child = elChilds[i];
-                    const childRotation = Animated.add(child.a % 360, child.rotation.rZ);
-                    currentRotation = Animated.add(currentRotation, childRotation);
-                }
-                currentRotation = Animated.add(currentRotation, el.a);
-                currentRotation = Animated.modulo(currentRotation, 360);
-
-                const TETA = Animated.multiply(currentRotation, Math.PI / 180);
-                const COS = TETA.interpolate(WithFunction(Math.cos, 20, 2*Math.PI));
-                const SIN = TETA.interpolate(WithFunction(Math.sin, 20, 2*Math.PI));
-                const radiusX = Animated.multiply(el.l, COS);
-                const radiusY = Animated.multiply(el.l, SIN);
-
-                const parentX = Animated.add(el.parent.position.x, radiusX);
-                const parentY = Animated.add(el.parent.position.y, radiusY);
-                const parentR = Animated.modulo(el.parent.rotation.rZ, 360);
-
-                posX = Animated.add(posX, parentX);
-                posY = Animated.add(posY, parentY);
-                rotZ = Animated.add(rotZ, parentR);
-
-                calculateParentPos(el.parent);
-            }
-        }
-        calculateParentPos(this);
-
-        posX = Animated.add(posX, this.body.firstPart.animPosition.x);
-        posY = Animated.add(posY, this.body.firstPart.animPosition.y);
-
-        return { posX, posY, rotZ };
-    }
-
-    /**
      * @param {'body'|'bodyShadow'|'stuff'|'stuffShadow'} partType
      * @returns {JSX.Element}
      */
@@ -117,7 +60,10 @@ class Part {
         if (!CHARACTERS[character]['svg'].hasOwnProperty(this.name)) return null;
 
         const fill = '#e0a98b';
-        const { posX, posY, rotZ } = this.calculateParentPos();
+        if (!this.valuesTest) {
+            this.valuesTest = CalculateParentPos.bind(this)();
+        }
+        const { posX, posY, rotZ } = this.valuesTest;
 
         const styleZIndex = { zIndex: this.zIndex, elevation: this.zIndex };
         const styleZIndexShadow = { zIndex: this.zIndex - 1000, elevation: this.zIndex - 1000 };
@@ -193,4 +139,16 @@ class Part {
     }
 }
 
+function RP(props) {
+    let [ active, setActive ] = React.useState(false);
+    React.useEffect(() => {
+        setTimeout(() => {
+            setActive(true);
+        }, 100 + Math.random() * 1000);
+    }, [active]);
+    return !active ? null : props.part?.render(props.partType);
+}
+const RenderPart = React.memo(RP, (prevProps, nextProps) => false);
+
+export { RenderPart };
 export default Part;

@@ -39,11 +39,13 @@ class Character {
     }
 
     unmount() {
-        this.SetFrame(null);
         this.body.StopAnimation();
         if (this.body.position.hasListeners()) {
             this.body.position.removeAllListeners();
         }
+        this.Hide();
+        this.__refresh();
+        this.SetFrame(null);
     }
 
     /**
@@ -51,6 +53,7 @@ class Character {
      */
     SetFrame(frame) {
         this.parentFrame = frame;
+        this.__refresh();
     }
 
     Show = () => this.hide = false;

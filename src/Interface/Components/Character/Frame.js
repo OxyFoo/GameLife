@@ -2,6 +2,10 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Svg from 'react-native-svg';
 
+import themeManager from '../../../Managers/ThemeManager';
+
+import Icon from '../Icon';
+
 /**
  * @typedef {import('./Character').default} Character
  */
@@ -10,84 +14,58 @@ const FrameProps = {
     width: 1000,
     height: 1000,
 
-    /** @type {FrameContent?} */
-    content: null
-}
-
-class FrameContent {
-    constructor(onlyItems = false) {
-        /** @type {Array<Character>} */
-        this.characters = [];
-        this.onlyItems = onlyItems;
-    }
-
-    /**
-     * @param {Character} character 
-     */
-    AddCharacter(character) {
-        this.characters.push(character);
-    }
-    /**
-     * @param {string} characterName
-     * @returns {Character?}
-    */
-    GetCharacterByName(characterName) {
-        return this.characters.find(character => character.name === characterName) || null;
-    }
-    /**
-     * @param {String} characterName
-     * @returns {Boolean} True if the character was found and removed
-     */
-    RemoveCharacterByName(characterName) {
-        const character = this.GetCharacterByName(characterName);
-        if (character !== null) {
-            character.unmount();
-            this.characters.splice(this.characters.indexOf(character), 1);
-            return true;
-        }
-        return false;
-    }
-    RemoveAll() {
-        this.characters.forEach(character => character.unmount());
-        this.characters = [];
-    }
-    RenderAll() {
-        return this.characters.map(character => character.render(this.onlyItems));
-    }
+    /** @type {Array<Character>} */
+    characters: []
 }
 
 class Frame extends React.Component {
-    // Use to update the content only when the content is changed
-    tmpLength = 0;
+    state = {
+        mounted: false
+    }
 
-    componentDidUpdate() {
-        const { content } = this.props;
-        if (content !== null && content.characters.length !== this.tmpLength) {
-            this.tmpLength = content.characters.length;
-            content.characters.forEach(character => character.SetFrame(this));
-            this.forceUpdate();
-        }
+    componentDidMount() {
+        this.updateCharacters(this.props.characters);
+
+        // Loading page
+        setTimeout(() => { this.setState({ mounted: true }) }, 1400);
     }
     shouldComponentUpdate(nextProps, nextState) {
-        if (!nextProps.hasOwnProperty('content') || nextProps.content === null) return true;
-        const differentProps = nextProps.content.characters.length !== this.tmpLength;
-        return differentProps;
+        if (nextState.mounted !== this.state.mounted) {
+            return true;
+        }
+
+        if (nextProps.characters.length !== this.props.characters.length) {
+            this.updateCharacters(nextProps.characters);
+            return true;
+        }
+
+        return false;
     }
     componentWillUnmount() {
-        if (this.props.content !== null) {
-            this.props.content.RemoveAll();
-        }
+        const { characters } = this.props;
+        characters.forEach(character => character.unmount());
     }
+
+    /** @param {Array<Character>} characters */
+    updateCharacters(characters) {
+        characters.forEach(character => character.parentFrame === null && character.SetFrame(this));
+    }
+
     render() {
-        const { width, height, content } = this.props;
+        const { width, height, characters } = this.props;
         const viewBox = [ 0, 0, width, height ].join(' ');
-        const characters = content !== null ? content.RenderAll() : null;
+        const loadingColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
             <View style={styles.canvas}>
                 <Svg viewBox={viewBox}>
-                    {characters}
+                    {characters.map(charac => charac.render())}
                 </Svg>
+                {!this.state.mounted && (
+                    <View style={[styles.loading, loadingColor]}>
+                        <Icon icon='loadingDots' />
+                    </View>
+                )}
             </View>
         );
     }
@@ -101,6 +79,16 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
+    loading: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     part: {
         position: 'absolute',
         top: 0,
@@ -110,5 +98,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { FrameContent };
 export default Frame;

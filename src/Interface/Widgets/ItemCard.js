@@ -6,7 +6,7 @@ import themeManager from '../../Managers/ThemeManager';
 import dataManager from '../../Managers/DataManager';
 
 import { STUFFS } from '../../../res/items/stuffs/Stuffs';
-import { Character, Frame, FrameContent } from '../Components';
+import { Character, Frame } from '../Components';
 
 /**
  * @typedef {import('../../Class/Inventory').Item} Item
@@ -28,8 +28,6 @@ class ItemCard extends React.PureComponent {
         super(props);
 
         this.character = new Character('itemcard-' + this.props.selectedId, 'male_01', [ this.props.item.ID ]);
-        this.frameContent = new FrameContent(true);
-        this.frameContent.AddCharacter(this.character);
     }
 
     onPress = () => {
@@ -50,7 +48,7 @@ class ItemCard extends React.PureComponent {
                 underlayColor={themeManager.GetColor('main1', .5)}
                 touchSoundDisabled={true}
             >
-                <Frame content={this.frameContent} />
+                <Frame />
             </TouchableHighlight>
         );
     }

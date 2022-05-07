@@ -15,7 +15,6 @@ import DataStorage, { STORAGE } from '../Utils/DataStorage';
 const DEBUG_DATA = false;
 
 /**
- * @typedef {import('../Interface/Components').Character} Character
  * @typedef {import('../Class/Experience').XPInfo} XPInfo
  * @typedef {Object} Stats
  * @property {XPInfo} int
@@ -43,17 +42,11 @@ class UserManager {
         this.tasks = new Tasks(this);
 
         /**
-         * @description Function loaded in render of App.js to access UserManager
+         * @description Ref loaded here from render of App.js to skip cyclic dependency
          * @typedef {import('./PageManager').default} PageManager
          * @type {PageManager}
          */
         this.interface;
-
-        /**
-         * @description User's character, loaded at start of app
-         * @type {Character}
-         */
-        this.character = null;
 
         this.xp = 0;
         /**

@@ -4,7 +4,7 @@ import Checkbox from './Components/Checkbox';
 import ComboBox from './Components/ComboBox';
 import Container from './Components/Container';
 import Digit from './Components/Digit';
-import Frame, { FrameContent } from './Components/Character/Frame';
+import Frame from './Components/Character/Frame';
 import GLLoading from './Components/GLLoading';
 import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
@@ -27,7 +27,6 @@ export {
     Container,
     Digit,
     Frame,
-    FrameContent,
     GLLoading,
     Icon,
     IconCheckable,

@@ -9,7 +9,7 @@ import themeManager from '../../Managers/ThemeManager';
 import ItemCard from './ItemCard';
 import { Sleep } from '../../Utils/Functions';
 import { SpringAnimation } from '../../Utils/Animations';
-import { Text, Button, Separator, Icon, Frame, FrameContent } from '../Components';
+import { Text, Button, Separator, Icon, Frame, Character } from '../Components';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -33,8 +33,6 @@ const TEST_STATS = {
 
 class Avatar extends React.Component {
     state = {
-        rendered: false,
-
         characterPosY: 0,
         characterHeight: 0,
         characterBottomPosY: 0,
@@ -48,20 +46,13 @@ class Avatar extends React.Component {
         itemSelected: false,
         itemSelectedID: null,
         itemAnim: new Animated.Value(0),
-        itemSelectionHeight: 0,
-
-        frameContent: new FrameContent()
+        itemSelectionHeight: 0
     }
 
     constructor(props) {
         super(props);
-        this.state.frameContent.AddCharacter(user.character);
-    }
-
-    componentDidMount() {
-        setTimeout(() => {
-            this.setState({ rendered: true });
-        }, 100);
+        this.character = new Character('user', 'male_01', user.inventory.GetEquipments());
+        this.character.SetAnimation('idle');
     }
 
     onCharacterLayout = (event) => {
@@ -230,7 +221,7 @@ class Avatar extends React.Component {
                         </View>
                         <Animated.View style={avatarStyle}>
                             {/*<Character width={1000} height={1000} />*/}
-                            <Frame content={this.state.frameContent} />
+                            <Frame characters={[ this.character ]} />
                             {!editorOpened && <Button style={styles.avatarOverlay} onPress={this.OpenEditor} />}
                         </Animated.View>
                     </View>
@@ -243,7 +234,7 @@ class Avatar extends React.Component {
                 </Animated.View>
 
                 {/* Editor panel */}
-                {this.state.rendered && <Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
+                {<Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
                     <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%', marginBottom: 12 }} />
                     {this.renderSelectedStuff()}
 
@@ -309,7 +300,8 @@ const styles = StyleSheet.create({
         width: '80%',
         aspectRatio: 1,
         borderRadius: 16,
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
+        overflow: 'hidden'
     },
     avatarOverlay: {
         position: 'absolute',

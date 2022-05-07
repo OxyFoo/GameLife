@@ -21,6 +21,15 @@
                 "Tu as appris un nouveau truc aujourd'hui ? N'oublie pas de le noter dans l'app !",
                 "Hey ! C'est bientôt la fin de journée, tu as pensé à rentrer tes activités ?"
             ]
+        },
+        "tasks": {
+            "name": "Notifications des tâches",
+            "title": "GAME LIFE - Tâches",
+            "message": {
+                "half-time": "Il te reste la moitié du temps prévu pour terminer la[-es] tâche[s] : {}",
+                "last-time": "La[-es] tâche[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
+                "today-time": "La[-es] tâche[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
+            }
         }
     },
 

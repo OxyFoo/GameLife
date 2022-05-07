@@ -6,6 +6,8 @@ import user from '../Managers/UserManager';
 import langManager from '../Managers/LangManager';
 import dataManager from '../Managers/DataManager';
 
+import { ParsePlural } from './String';
+import { GetTime } from './Time';
 import { Random, Range } from './Functions';
 
 const MAX_DAYS = 30;
@@ -188,6 +190,45 @@ class Notifications {
         Enable: () => Setup(Notifications.Evening),
         Disable: () => Remove(Notifications.Evening),
         RemoveToday: () => {} // TODO
+    }
+
+    /** @type {Notification} */
+    static Tasks = {
+        ID: 'tasks',
+        hour: 10,
+        minutes: 0,
+        __generate: () => {
+            // TODO - Finish that
+            return null;
+            const now = GetTime();
+            const day = 24 * 60 * 60;
+            const tasks = user.tasks.Get();
+            let halftime = {}, tomorrow = {}, today = {};
+
+            for (let i = 0; i < tasks.length; i++) {
+                const { Title, Checked, Starttime, Deadline, Schedule } = tasks[i];
+                if (Checked || Deadline < Starttime) continue;
+
+                const midTime = (Deadline - Starttime) / 2;
+                if (Schedule !== null) {
+                } else if (Deadline !== null) {
+                    if (Deadline > now && Deadline < now + day) {
+                        // Today
+                    } else if (Deadline < now && Deadline > now - day) {
+                        // Tomorrow
+                    } else if (midTime > now && midTime < now + day) {
+                        // Mid date
+                    }
+                    const date = Deadline;
+                    
+                }
+            }
+            //ParsePlural()
+            return null;
+        },
+
+        Enable: () => Setup(Notifications.Tasks),
+        Disable: () => Remove(Notifications.Tasks)
     }
 
     static async DisableAll() {

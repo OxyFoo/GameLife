@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Animated, StyleSheet, Dimensions, Platform } from 'react-native';
+import { Animated, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
 import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
+
+const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
 
 const PageProps = {
     /** @type {StyleProp<ViewStyle>} */
@@ -143,8 +145,9 @@ class Page extends React.Component {
         const position = { transform: [{ translateY: this.state.positionY }] };
 
         return (
-            <Animated.View
+            <AnimatedKeyboardAvoidingView
                 style={[styles.parent, this.props.style, position]}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 onLayout={this.onLayout}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
@@ -152,7 +155,7 @@ class Page extends React.Component {
                 onStartShouldSetResponder={this.props.onStartShouldSetResponder}
             >
                 {this.props.children}
-            </Animated.View>
+            </AnimatedKeyboardAvoidingView>
         );
     }
 }

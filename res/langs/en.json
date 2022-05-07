@@ -21,6 +21,15 @@
                 "Did you learn something new today? Don't forget to write it down in the app!",
                 "Hey, it's almost the end of the day, did you remember to enter your activities?"
             ]
+        },
+        "tasks": {
+            "name": "Task notifications",
+            "title": "GAME LIFE - Tasks",
+            "message": {
+                "half-time": "You have half the time left to complete the task[s]: {}",
+                "last-time": "The following task[s] are due tomorrow: {}, so hurry up and finish them!",
+                "today-time": "The following task[s] are finished today: {}, hurry up and finish them!"
+            }
         }
     },
 

@@ -20,6 +20,9 @@ class Task {
     Description = '';
 
     /** @type {Number?} Timestamp in seconds */
+    Starttime = 0;
+
+    /** @type {Number?} Timestamp in seconds */
     Deadline = null;
 
     /** @type {Schedule?} Null to don't repeat */
@@ -169,6 +172,7 @@ class Tasks {
         newTask.Checked = null;
         newTask.Title = title;
         newTask.Description = description;
+        newTask.Starttime = GetTime();
         newTask.Deadline = deadline;
         newTask.Schedule = null;
         if (repeatMode !== null && !!repeatDays.length) {

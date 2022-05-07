@@ -271,6 +271,7 @@
                 $Checked = $task['Checked'];
                 $Title = $task['Title'];
                 $Description = $task['Description'];
+                $Starttime = $task['Starttime'];
                 $Deadline = $task['Deadline'];
                 $Schedule = $task['Schedule'];
                 $Subtasks = json_encode($task['Subtasks']);
@@ -291,7 +292,8 @@
                         $r = $db->Query("UPDATE `Tasks` SET
                             `AccountID` = '$accountID', `Checked` = $Checked,
                             `Title` = '$Title', `Description` = $Description,
-                            `Deadline` = $Deadline, `Schedule` = $Schedule, `Subtasks` = '$Subtasks'
+                            `Starttime` = '$Starttime', `Deadline` = $Deadline,
+                            `Schedule` = $Schedule, `Subtasks` = '$Subtasks'
                             WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
                         if ($r === false) ExitWithStatus("Error: saving tasks failed (update)");
                     } else {

@@ -111,14 +111,6 @@ class BackLoading extends React.Component {
         if (user.settings.eveningNotifications) {
             await Notifications.Evening.Enable();
         }
-        const t = await Notifications.GetAllNotifications();
-        console.log(t.length);
-
-        if (false) {
-            const notifs = await Notifications.GetAllNotifications();
-            notifs.forEach(n => console.log(n));
-            console.log(notifs.length);
-        }
 
         // Load ads
         if (user.informations.adRemaining === 0) {
@@ -130,9 +122,6 @@ class BackLoading extends React.Component {
 
         this.nextStep();
         await Sleep(200);
-
-        user.character = new Character('user', 'male_01', user.inventory.GetEquipments());
-        user.character.SetAnimation('idle');
 
         user.StartTimers();
 

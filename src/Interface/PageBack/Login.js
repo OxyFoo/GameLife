@@ -4,7 +4,7 @@ import { Animated, Linking } from 'react-native';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
-import { IsEmail } from '../../Utils/Functions';
+import { IsEmail } from '../../Utils/String';
 import { TimingAnimation } from '../../Utils/Animations';
 
 const MAX_EMAIL_LENGTH = 320;

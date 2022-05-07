@@ -31,17 +31,6 @@ function MinMax(min, value, max) {
 }
 
 /**
- * @param {String} str - String to check if it's a valid json
- * @returns {Boolean} - Return true if string is a valid json
- */
-function StrIsJSON(str) {
-    let isJSON = true;
-    try { JSON.parse(str); }
-    catch (e) { isJSON = false; }
-    return isJSON;
-}
-
-/**
  * @param {Array} array
  * @param {String} key - Key of array
  * @returns {Array} - Return sorted array
@@ -62,19 +51,6 @@ function SortByKey(array, key) {
 function GetByKey(array, key, value) {
     const result = array.find((element) => element[key] == value);
     return !IsUndefined(result) ? result : null;
-}
-
-/**
- * @param {String} email
- * @returns {Boolean} - True if str "email" is a valid email
- */
-function IsEmail(email) {
-    let isEmail = false;
-    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (typeof(email) === 'string' && email.length && reg.test(email)) {
-        isEmail = true;
-    }
-    return isEmail;
 }
 
 /**
@@ -104,6 +80,5 @@ function Random(min = 0, max = 1, decimal = 0) {
     return Round(r, decimal);
 }
 
-export { TwoDigit, Round, Sum, Range, StrIsJSON,
-    SortByKey, GetByKey, IsEmail,
+export { TwoDigit, Round, Sum, Range, SortByKey, GetByKey,
     IsUndefined, MinMax, Sleep, Random };

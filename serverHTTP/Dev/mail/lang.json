@@ -10,7 +10,7 @@
         "delete-text": "Cette action est irreversible et supprimera toutes vos données.",
         "delete-button": "Supprimer",
 
-        "link": "Si le mail ne s'affiche pas correctement cliquez <a href='%link%'>ICI</a>",
+        "link": "<p style=\"padding: 6px; color: black; background-color: #ecf0f1\">Si le mail ne s'affiche pas correctement cliquez <a href='%link%'>ICI</a></p>",
 
         "auth-title": "GAMELIFE",
         "auth-accept": "Votre appareil a été accepté avec succès",
@@ -30,7 +30,7 @@
         "delete-text": "This action is irreversible and will delete all your data.",
         "delete-button": "Delete",
 
-        "link": "If the email does not display correctly click <a href='%link%'>HERE</a>",
+        "link": "<p style=\"padding: 6px; color: black; background-color: #ecf0f1\">If the email does not display correctly click <a href='%link%'>HERE</a></p>",
 
         "auth-title": "GAMELIFE",
         "auth-accept": "Your device has been successfully accepted",

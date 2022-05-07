@@ -49,20 +49,14 @@ class BackCalendar extends React.Component {
     }
 
     componentDidMount() {
-        const selectedDate = user.tempSelectedTime === null ? new Date() : new Date(user.tempSelectedTime * 1000);
-        const Day = selectedDate.getDate();
-        const Month = selectedDate.getMonth();
-        const FullYear = selectedDate.getFullYear();
+        const today = new Date();
+        const Day = today.getDate();
+        const Month = today.getMonth();
+        const FullYear = today.getFullYear();
         this.daySelect(Day, Month, FullYear);
 
         // TODO - Doesn't works on iOS
         this.flatlist.scrollToIndex({ index: 4, animated: false });
-    }
-
-    componentWillUnmount() {
-        if (user.interface.GetCurrentPage() !== 'activity') {
-            user.tempSelectedTime = null;
-        }
     }
 
     onScroll = (e) => {

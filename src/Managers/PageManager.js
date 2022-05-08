@@ -2,34 +2,12 @@ import * as React from 'react';
 import { Animated, BackHandler } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import * as Pages from '../Interface/Pages';
 import langManager from './LangManager';
 
 import { TimingAnimation } from '../Utils/Animations';
 import { IsUndefined, Range } from '../Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList } from '../Interface/Widgets';
-
-import About from '../Interface/PageFront/About';
-import Achievements from '../Interface/PageFront/Achievements';
-import Activity from '../Interface/PageFront/Activity';
-import ActivityTimer from '../Interface/PageFront/ActivityTimer';
-import Calendar from '../Interface/PageFront/Calendar';
-import Display from '../Interface/PageFront/Display';
-import Home from '../Interface/PageFront/Home';
-import Identity from '../Interface/PageFront/Identity';
-import Loading from '../Interface/PageFront/Loading';
-import Login from '../Interface/PageFront/Login';
-import Multiplayer from '../Interface/PageFront/Multiplayer';
-import Onboarding from '../Interface/PageFront/Onboarding';
-import Report from '../Interface/PageFront/Report';
-import Settings from '../Interface/PageFront/Settings';
-import Shop from '../Interface/PageFront/Shop';
-import Skill from '../Interface/PageFront/Skill';
-import Skills from '../Interface/PageFront/Skills';
-import Task from '../Interface/PageFront/Task';
-import Tasks from '../Interface/PageFront/Tasks';
-import Waitinternet from '../Interface/PageFront/WaitInternet';
-import Waitmail from '../Interface/PageFront/WaitMail';
-import Test from '../Interface/PageFront/Test';
 
 /**
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
@@ -256,29 +234,29 @@ class PageManager extends React.Component{
     getPageContent(page, args) {
         let p;
         switch (page) {
-            case 'about':           p = <About />; break;
-            case 'achievements':    p = <Achievements />; break;
-            case 'activity':        p = <Activity args={args} />; break;
-            case 'activitytimer':   p = <ActivityTimer />; break;
-            case 'calendar':        p = <Calendar />; break;
-            case 'display':         p = <Display args={args} />; break;
-            case 'experience':      p = <Experience />; break;
-            case 'home':            p = <Home />; break;
-            case 'identity':        p = <Identity />; break;
-            case 'loading':         p = <Loading args={args} />; break;
-            case 'login':           p = <Login />; break;
-            case 'multiplayer':     p = <Multiplayer />; break;
-            case 'onboarding':      p = <Onboarding />; break;
-            case 'report':          p = <Report />; break;
-            case 'settings':        p = <Settings />; break;
-            case 'shop':            p = <Shop />; break;
-            case 'skill':           p = <Skill args={args} />; break;
-            case 'skills':          p = <Skills />; break;
-            case 'task':            p = <Task args={args} />; break;
-            case 'tasks':           p = <Tasks />; break;
-            case 'waitinternet':    p = <Waitinternet />; break;
-            case 'waitmail':        p = <Waitmail args={args} />; break;
-            case 'test':            p = <Test />; break;
+            case 'about':           p = <Pages.About />; break;
+            case 'achievements':    p = <Pages.Achievements />; break;
+            case 'activity':        p = <Pages.Activity args={args} />; break;
+            case 'activitytimer':   p = <Pages.ActivityTimer />; break;
+            case 'calendar':        p = <Pages.Calendar />; break;
+            case 'display':         p = <Pages.Display args={args} />; break;
+            case 'experience':      p = <Pages.Experience />; break;
+            case 'home':            p = <Pages.Home />; break;
+            case 'identity':        p = <Pages.Identity />; break;
+            case 'loading':         p = <Pages.Loading args={args} />; break;
+            case 'login':           p = <Pages.Login />; break;
+            case 'multiplayer':     p = <Pages.Multiplayer />; break;
+            case 'onboarding':      p = <Pages.Onboarding />; break;
+            case 'report':          p = <Pages.Report />; break;
+            case 'settings':        p = <Pages.Settings />; break;
+            case 'shop':            p = <Pages.Shop />; break;
+            case 'skill':           p = <Pages.Skill args={args} />; break;
+            case 'skills':          p = <Pages.Skills />; break;
+            case 'task':            p = <Pages.Task args={args} />; break;
+            case 'tasks':           p = <Pages.Tasks />; break;
+            case 'waitinternet':    p = <Pages.Waitinternet />; break;
+            case 'waitmail':        p = <Pages.Waitmail args={args} />; break;
+            case 'test':            p = <Pages.Test />; break;
         }
         return p;
     }

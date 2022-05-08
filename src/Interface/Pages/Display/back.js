@@ -29,8 +29,8 @@ class BackDisplay extends React.Component {
         SpringAnimation(this.state.anim, 1).start();
     }
 
-    ToHome = () => {
-        user.interface.ChangePage('home');
+    Back = () => {
+        user.interface.BackPage();
     }
 }
 

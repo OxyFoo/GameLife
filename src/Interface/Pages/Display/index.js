@@ -15,7 +15,7 @@ class Display extends BackDisplay {
                     <Icon icon={this.icon} size={SCREEN_WIDTH * .8} />
                 </Animated.View>
                 <Text>{this.text}</Text>
-                <Button style={{ width: '80%' }} color='main1' onPress={this.ToHome}>{this.button}</Button>
+                <Button style={{ width: '80%' }} color='main1' onPress={this.Back}>{this.button}</Button>
             </Page>
         )
     }

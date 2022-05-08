@@ -46,6 +46,12 @@ class BackCalendar extends React.Component {
             currWeek: [],
             currActivities: [],
         };
+
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            const date = new Date(this.state.selectedYear, this.state.selectedMonth, this.state.selectedDate);
+            const currActivities = user.activities.GetByTime(GetTime(date, true)).reverse();
+            this.setState({ currActivities });
+        });
     }
 
     componentDidMount() {
@@ -57,6 +63,10 @@ class BackCalendar extends React.Component {
 
         // TODO - Doesn't works on iOS
         this.flatlist.scrollToIndex({ index: 4, animated: false });
+    }
+
+    componentWillUnmount() {
+        user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     onScroll = (e) => {

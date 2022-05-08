@@ -1,9 +1,9 @@
-import { GetByKey, SortByKey } from "../Utils/Functions";
+import { GetByKey } from '../Utils/Functions';
 
 class Skill {
     ID = 0;
     Name = { fr: '', en: '' };
-    CategoryID = 0; // TODO - Catégories par ID, dans ce fichier
+    CategoryID = 0;
     Stats = {
         'int': 0,
         'soc': 0,

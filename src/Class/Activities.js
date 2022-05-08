@@ -1,7 +1,8 @@
 import dataManager from '../Managers/DataManager';
 
-import { GetMidnightTime, GetTime } from "../Utils/Time";
+import DynamicVar from '../Utils/DynamicVar';
 import { SortByKey } from '../Utils/Functions';
+import { GetMidnightTime, GetTime } from '../Utils/Time';
 
 const MaxHourPerDay = 12;
 
@@ -36,6 +37,11 @@ class Activities {
         this.UNSAVED_deletions = [];
 
         /**
+         * @description Contain all activities, updated when adding, editing or removing
+         */
+        this.allActivities = new DynamicVar([]);
+
+        /**
          * @type {?Array<Number, Number>} [skillID, startTime]
          */
         this.currentActivity = null;
@@ -58,6 +64,7 @@ class Activities {
         if (contains('unsaved'))    this.UNSAVED_activities = activities['unsaved'];
         if (contains('deletions'))  this.UNSAVED_deletions = activities['deletions'];
         if (contains('current'))    this.currentActivity = activities['current'];
+        this.allActivities.Set(this.Get());
     }
     LoadOnline(activities) {
         if (typeof(activities) !== 'object') return;
@@ -67,6 +74,7 @@ class Activities {
             if (activity.length !== 4) continue;
             this.Add(activity[0], activity[1], activity[2], activity[3], true);
         }
+        this.allActivities.Set(this.Get());
         const length = this.activities.length;
         this.user.interface.console.AddLog('info', `${length} activities loaded`);
     }
@@ -114,40 +122,6 @@ class Activities {
             }
         }
         this.UNSAVED_deletions = [];
-    }
-
-    /**
-     * Add a callback, called when an activity is updated (added, removed, modified)
-     * TODO - Replace by DynamicVar
-     * @param {String} name
-     * @param {Function} callback
-     * @returns {Boolean} true if the callback was added
-     */
-    AddCallback = (name, callback) => {
-        if  (typeof(name) !== 'string') return false;
-        if  (typeof(callback) !== 'function') return false;
-        if  (this.callbacks.hasOwnProperty(name)) return false;
-        this.callbacks[name] = callback;
-        return true;
-    }
-    /**
-     * Remove a callback by name
-     * @param {String} name
-     * @returns {Boolean} true if the callback was removed
-     */
-    RemoveCallback = (name) => {
-        if (typeof(name) !== 'string') return false;
-        if (!this.callbacks.hasOwnProperty(name)) return false;
-        delete this.callbacks[name];
-        return true;
-    }
-    update = async () => {
-        await this.user.RefreshStats();
-        const names = Object.keys(this.callbacks);
-        for (let i = 0; i < names.length; i++) {
-            const name = names[i];
-            this.callbacks[name]();
-        }
     }
 
     /**
@@ -251,7 +225,7 @@ class Activities {
             }
             if (alreadySaved) this.activities.push(newActivity);
             else      this.UNSAVED_activities.push(newActivity);
-            this.update();
+            this.allActivities.Set(this.Get());
             return 'added';
         }
         // Activity exist, update it
@@ -262,7 +236,7 @@ class Activities {
                 if (indexUnsaved  !== null) this.UNSAVED_activities.splice(indexUnsaved, 1);
 
                 this.UNSAVED_activities.push(newActivity);
-                this.update();
+                this.allActivities.Set(this.Get());
                 return 'edited';
             }
         }
@@ -295,7 +269,7 @@ class Activities {
         }
 
         if (deleted !== null) {
-            this.update();
+            this.allActivities.Set(this.Get());
             return 'removed';
         }
 

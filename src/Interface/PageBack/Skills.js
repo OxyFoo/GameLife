@@ -24,13 +24,13 @@ class BackSkills extends React.Component {
     }
     componentDidMount() {
         this.refreshSkills();
-        user.activities.AddCallback('skills', () => {
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.allSkills = this.getAllSkills();
             this.refreshSkills();
         });
     }
     componentWillUnmount() {
-        user.activities.RemoveCallback('skills');
+        user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     getAllSkills() {

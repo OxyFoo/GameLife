@@ -8,12 +8,12 @@ class BackHome extends React.Component {
     };
 
     componentDidMount() {
-        user.activities.AddCallback('home', () => {
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({ skills: user.activities.GetLasts() });
         });
     }
     componentWillUnmount() {
-        user.activities.RemoveCallback('home');
+        user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     addActivity = () => user.interface.ChangePage('activity', undefined, true);

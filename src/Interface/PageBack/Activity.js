@@ -5,12 +5,15 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 
-import Notifications from '../../Utils/Notifications';
 import { Page } from '../Components';
-import { Activity } from '../../Class/Activities';
+import { GetTime } from '../../Utils/Time';
 import { IsUndefined } from '../../Utils/Functions';
 import { SpringAnimation } from '../../Utils/Animations';
-import { GetTime } from '../../Utils/Time';
+import Notifications from '../../Utils/Notifications';
+
+/**
+ * @typedef {import('../../Class/Activities').Activity} Activity
+ */
 
 class BackActivity extends React.Component {
     constructor(props) {

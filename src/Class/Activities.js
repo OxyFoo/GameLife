@@ -330,16 +330,22 @@ class Activities {
 
     /**
      * Get activities in a specific date
-     * @param {Number} time - Time in seconds to define day (auto define of midnights)
+     * @param {Number} time Time in seconds to define day (auto define of midnights)
      * @returns {Activity[]} activities
      */
-    GetByTime(time = GetTime(new Date())) {
+    GetByTime(time = GetTime()) {
         const startTime = GetMidnightTime(time);
         const endTime = startTime + 86400;
         return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
     }
-    ContainActivity(date = new Date(), onlyRelax = false) {
-        date.setUTCHours(0, 0, 0, 0);
+
+    /**
+     * @param {Date} date Date to define day (auto define of midnights)
+     * @param {Boolean} [ignoreRelax=true] If true, return true if there is activity wich gives XP or not
+     * @returns {Boolean} True if date contain activities
+     */
+    ContainActivity(date = new Date(), ignoreRelax = true) {
+        date.setUTCHours(1, 0, 0, 0);
         const startTime = GetTime(date);
         date.setUTCHours(23, 59, 59, 999);
         const endTime = GetTime(date);
@@ -347,7 +353,7 @@ class Activities {
         for (let a = 0; a < this.activities.length; a++) {
             const activity = this.activities[a];
             if (activity.startTime >= startTime && activity.startTime <= endTime) {
-                if (!onlyRelax) return true;
+                if (ignoreRelax) return true;
                 if (dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
             }
         }

@@ -6,9 +6,9 @@ import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { Range } from '../../Utils/Functions';
-import { Text, Button, TextSwitch } from '../Components';
 import { DateToFormatString } from '../../Utils/Date';
-import { GetTime } from '../../Utils/Time';
+import { GetDate, GetTime } from '../../Utils/Time';
+import { Text, Button, TextSwitch } from '../Components';
 
 /**
  * @callback OnChangeScheduleEvent
@@ -42,7 +42,7 @@ class TaskSchedule extends React.Component {
         const { initValues } = this.props;
         if (initValues !== null && initValues.length === 3) {
             this.state.deadline = initValues[0];
-            this.state.deadlineText = DateToFormatString(initValues[0] * 1000);
+            this.state.deadlineText = DateToFormatString(GetDate(initValues[0]));
             if (initValues[1] === 'week') this.state.repeatMode = 1;
             if (initValues[1] === 'month') this.state.repeatMode = 2;
             this.state.selectedDays = initValues[2];

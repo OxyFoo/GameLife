@@ -33,6 +33,33 @@ class ActivityCard extends React.Component {
         anim: new Animated.Value(0)
     }
 
+    constructor(props) {
+        super(props);
+
+        const { activity } = this.props;
+        const GetName = dataManager.GetText;
+        const offsetUTC = new Date().getTimezoneOffset() * 60;
+
+        const skill = dataManager.skills.GetByID(activity.skillID);
+        const LogoID = skill.LogoID;
+        this.XML = dataManager.skills.icons.find(x => x.ID === LogoID).Content;
+        this.textCategory = GetName(dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name);
+        this.textActivity = GetName(skill.Name);
+        this.textStart_value = TimeToFormatString(activity.startTime - offsetUTC);
+        this.textDuration_value = TimeToFormatString(activity.duration * 60);
+
+        const inter = { inputRange: [0, 1], outputRange: [30, 0] };
+        this.parentStyle = [
+            styles.parent,
+            {
+                opacity: this.state.anim,
+                transform: [ { translateY: this.state.anim.interpolate(inter) } ],
+                backgroundColor: themeManager.GetColor('backgroundCard', skill.XP === 0 ? 0.5 : 1)
+            },
+            this.props.style
+        ];
+    }
+
     componentDidMount() {
         setTimeout(this.show, 200 + this.props.index * 100);
     }
@@ -42,38 +69,17 @@ class ActivityCard extends React.Component {
     }
 
     render() {
-        const { activity, onPress } = this.props;
-
-        const GetName = dataManager.GetText;
+        const { onPress } = this.props;
         const T_start = langManager.curr['calendar']['activity-start'];
         const T_duration = langManager.curr['calendar']['activity-duration'];
 
-        const skill = dataManager.skills.GetByID(activity.skillID);
-        const LogoID = skill.LogoID;
-        const XML = dataManager.skills.icons.find(x => x.ID === LogoID).Content;
-        const T_category = GetName(dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name);
-        const T_activity = GetName(skill.Name);
-        const T_start_value = TimeToFormatString(activity.startTime/60, true);
-        const T_duration_value = TimeToFormatString(activity.duration);
-
-        const inter = { inputRange: [0, 1], outputRange: [30, 0] };
-        const parentView = [
-            styles.parent,
-            {
-                opacity: this.state.anim,
-                transform: [ { translateY: this.state.anim.interpolate(inter) } ],
-                backgroundColor: themeManager.GetColor('backgroundCard', skill.XP === 0 ? 0.5 : 1)
-            },
-            this.props.style
-        ];
-
         return (
-            <Animated.View style={parentView}>
+            <Animated.View style={this.parentStyle}>
                 <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={.5}>
-                    <Icon xml={XML} color='main1' size={38} />
-                    <Text style={styles.text} fontSize={16}>{T_category + ' - ' + T_activity}</Text>
-                    <Text style={styles.text} fontSize={14} color='light'>{T_start + ': ' + T_start_value}</Text>
-                    <Text style={styles.text} fontSize={14} color='light'>{T_duration + ': ' + T_duration_value}</Text>
+                    <Icon xml={this.XML} color='main1' size={38} />
+                    <Text style={styles.text} fontSize={16}>{this.textCategory + ' - ' + this.textActivity}</Text>
+                    <Text style={styles.text} fontSize={14} color='light'>{T_start + ': ' + this.textStart_value}</Text>
+                    <Text style={styles.text} fontSize={14} color='light'>{T_duration + ': ' + this.textDuration_value}</Text>
                 </TouchableOpacity>
             </Animated.View>
         );

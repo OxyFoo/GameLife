@@ -1,5 +1,7 @@
-import langManager from "../Managers/LangManager";
-import { IsUndefined, TwoDigit } from "./Functions";
+import langManager from '../Managers/LangManager';
+
+import { GetDate } from './Time';
+import { IsUndefined, TwoDigit } from './Functions';
 
 const DAYS = {
     sunday: 0,
@@ -13,13 +15,12 @@ const DAYS = {
 
 /**
  * Return day number (0-6)
- * @param {Date|Number} date Date object or unix time in seconds
+ * @param {Date} date Date object
  * @param {Number} firstDay
  * @returns {Number} 0-6
  */
 function GetDay(date, firstDay = DAYS.monday) {
-    if (typeof(date) === 'number') date = new Date(date * 1000);
-    const day = new Date(date).getUTCDay();
+    const day = date.getUTCDay();
     return (day + 5 + firstDay) % 7;
 }
 
@@ -80,14 +81,13 @@ function GetFullDate(date) {
 
 /**
  * Return date with format : dd/mm/yyyy
- * @param {Date|Number} date or time in ms
+ * @param {Date} date
  * @returns {String} dd/mm/yyyy
  */
 function DateToFormatString(date) {
-    const _date = new Date(date);
-    const dd = TwoDigit(_date.getDate());
-    const mm = TwoDigit(_date.getMonth() + 1);
-    const yyyy = _date.getFullYear();
+    const dd = TwoDigit(date.getDate());
+    const mm = TwoDigit(date.getMonth() + 1);
+    const yyyy = date.getFullYear();
     return [ dd, mm, yyyy ].join('/');
 }
 
@@ -97,9 +97,8 @@ function DateToFormatString(date) {
  * @returns {String} HH:MM
  */
 function DateToFormatTimeString(date) {
-    const _date = new Date(date);
-    const HH = TwoDigit(_date.getHours());
-    const MM = TwoDigit(_date.getMinutes());
+    const HH = TwoDigit(date.getHours());
+    const MM = TwoDigit(date.getMinutes());
     return [ HH, MM ].join(':');
 }
 
@@ -111,8 +110,8 @@ function DateToFormatTimeString(date) {
  */
 function WeekDayBetween(days, start, end) {
     if (end < start) return false;
-    let day = GetDay(start);
-    const endDay = GetDay(end);
+    let day = GetDay(GetDate(start));
+    const endDay = GetDay(GetDate(end));
     while (day !== endDay) {
         if (days.includes(day)) return true;
         day = (day + 1) % 7;
@@ -128,8 +127,8 @@ function WeekDayBetween(days, start, end) {
  */
 function MonthDayBetween(days, start, end) {
     if (end < start) return false;
-    let day = GetDay(start);
-    const endDay = GetDay(end);
+    let day = GetDay(GetDate(start));
+    const endDay = GetDay(GetDate(end));
     while (day !== endDay) {
         if (days.includes(day)) return true;
         day = (day + 1) % 31;

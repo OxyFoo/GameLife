@@ -130,7 +130,7 @@ class Informations {
      * Return age in years
      * @returns {Number}
      */
-    GetAge = () => GetAge(this.birthTime);
+    GetAge = () => this.birthTime === null ? null : GetAge(this.birthTime);
 
     SetBirthTime = (birthTime) => {
         this.birthTime = birthTime;
@@ -140,7 +140,7 @@ class Informations {
     }
 
     GetInfoToChangeUsername() {
-        const delta = GetDaysUntil(this.usernameTime);
+        const delta = this.usernameTime === null ? null : GetDaysUntil(this.usernameTime);
         const remain = DAYS_USERNAME_CHANGE - Math.round(delta);
         const output = {
             remain: delta === null ? 0 : remain,
@@ -150,7 +150,7 @@ class Informations {
     }
 
     GetInfoToChangeBirthtime() {
-        const delta = GetDaysUntil(this.lastBirthTime);
+        const delta = this.lastBirthTime === null ? null : GetDaysUntil(this.lastBirthTime);
         const remain = DAYS_BIRTHTIME_CHANGE - Math.round(delta);
         const output = {
             remain: delta === null ? 0 : remain,

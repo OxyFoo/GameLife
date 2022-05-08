@@ -5,14 +5,15 @@ import BackActivityTimer from '../PageBack/ActivityTimer';
 import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 
+import { GetDate } from '../../Utils/Time';
+import { DateToFormatTimeString } from '../../Utils/Date';
 import { Page, Text, Button } from '../Components';
 import { ActivityExperience } from '../Widgets';
-import { DateToFormatTimeString } from '../../Utils/Date';
 
 class ActivityTimer extends BackActivityTimer {
     render() {
         const lang = langManager.curr['activity'];
-        const textLaunch = lang['timer-launch'] + ' ' + DateToFormatTimeString(this.state.startTime * 1000);
+        const textLaunch = lang['timer-launch'] + ' ' + DateToFormatTimeString(GetDate(this.state.startTime));
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
         const time = this.getTimer();

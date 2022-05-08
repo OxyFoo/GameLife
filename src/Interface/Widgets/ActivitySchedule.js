@@ -6,10 +6,10 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
+import { GetDate, GetDurations, GetTime } from '../../Utils/Time';
+import { DateToFormatString, DateToFormatTimeString } from '../../Utils/Date';
 import { Text, Button, Separator } from '../Components';
 import { SpringAnimation } from '../../Utils/Animations';
-import { GetDurations, GetTime } from '../../Utils/Time';
-import { DateToFormatString, DateToFormatTimeString } from '../../Utils/Date';
 
 /**
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
@@ -47,7 +47,7 @@ class ActivitySchedule extends React.Component {
         selectionMode: false,
         parent: { width: 0, height: 0, x: 0, y: 0 },
 
-        selectedDate: this.props.initialValue[0] === null ? STARTDATE : new Date(this.props.initialValue[0] * 1000),
+        selectedDate: this.props.initialValue[0] === null ? STARTDATE : GetDate(this.props.initialValue[0]),
         selectedDurationKey: this.props.initialValue[1] === null ? 3 : DURATION.find(d => d.duration === this.props.initialValue[1]).key,
         /**
          * @type {'date'|'time'|'datetime'}
@@ -56,15 +56,18 @@ class ActivitySchedule extends React.Component {
     }
 
     componentDidMount() {
-        const { selectedDate, selectedDurationKey} = this.state;
-        const time = GetTime(selectedDate);
-        this.props.onChange(time, DURATION[selectedDurationKey].duration);
+        // TODO - WTF is this ?
+        //const { selectedDate, selectedDurationKey} = this.state;
+        //const time = GetTime(selectedDate);
+        //this.props.onChange(time, DURATION[selectedDurationKey].duration);
     }
+
+    // TODO - Remove that ?
     /*componentDidUpdate(prevProps) {
         if (this.props.value[0] !== null && this.props.value[0] !== prevProps.value[0]) {
             const durations = DURATION.filter(d => d.duration === this.props.value[1]);
             if (durations.length) {
-                const date = new Date(this.props.value[0] * 1000);
+                const date = GetDate(this.props.value[0]);
                 const key = durations[0].key;
                 this.setState({
                     selectedDate: date,

@@ -7,6 +7,7 @@ import langManager from '../../Managers/LangManager';
 import dataManager from '../../Managers/DataManager';
 import themeManager from '../../Managers/ThemeManager';
 
+import { GetDate } from '../../Utils/Time';
 import { DateToFormatString } from '../../Utils/Date';
 import { PageHeader } from '../Widgets';
 import { Page, Input, Text, Button, IconCheckable, Icon } from '../Components';
@@ -44,7 +45,7 @@ class Skills extends BackSkills {
 
         const xpLang = langManager.curr['level'];
         const { lvl, xp, lastTime } = experience;
-        const last = DateToFormatString(lastTime * 1000);
+        const last = DateToFormatString(GetDate(lastTime));
         const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
 
         return (

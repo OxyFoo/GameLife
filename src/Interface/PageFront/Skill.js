@@ -6,13 +6,14 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
+import { GetDate } from '../../Utils/Time';
 import { DateToFormatString } from '../../Utils/Date';
 import { PageHeader, StatsBars } from '../Widgets';
 import { Page, Container, Text, Icon, XPBar, Button } from '../Components';
 
 class Skill extends BackSkill {
     renderHistoryItem = ({item, i}) => {
-        const date = DateToFormatString(item.startTime * 1000);
+        const date = DateToFormatString(GetDate(item.startTime));
         const text = langManager.curr['skill']['text-history'];
         const duration = item.duration;
         const title = text.replace('{}', date).replace('{}', duration);

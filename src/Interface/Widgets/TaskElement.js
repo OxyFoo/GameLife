@@ -6,7 +6,7 @@ import user from '../../Managers/UserManager';
 import langManager from '../../Managers/LangManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import { GetTime } from '../../Utils/Time';
+import { GetDate, GetTime } from '../../Utils/Time';
 import { DateToFormatString, GetDay } from '../../Utils/Date';
 import { Text, Icon, Button } from '../Components';
 import { TimingAnimation } from '../../Utils/Animations';
@@ -63,7 +63,7 @@ class TaskElement extends React.Component {
         const { Deadline, Schedule } = task;
 
         const d = new Date();
-        d.setUTCHours(0, 0, 0, 0);
+        d.setUTCHours(1, 0, 0, 0);
         const now = GetTime();
 
         /** @type {'schedule'|'deadline'|null} */
@@ -97,9 +97,9 @@ class TaskElement extends React.Component {
         this.text = '';
         const lang = langManager.curr['tasks'];
         if (deadlineType === 'deadline') {
-            this.text = lang['task-type-deadline'] + ' ' + DateToFormatString(Deadline * 1000);
+            this.text = lang['task-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
         } else if (deadlineType === 'schedule') {
-            const nextDate = new Date((now + (minDeltaDays * 24 * 60 * 60)) * 1000);
+            const nextDate = GetDate(now + (minDeltaDays * 24 * 60 * 60));
             this.text = lang['task-type-repeat'] + ' ' + DateToFormatString(nextDate);
         }
 

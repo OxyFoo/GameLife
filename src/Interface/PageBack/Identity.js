@@ -3,7 +3,7 @@ import * as React from 'react';
 import user from '../../Managers/UserManager';
 import dataManager from '../../Managers/DataManager';
 
-import { GetTime } from '../../Utils/Time';
+import { GetDate, GetTime } from '../../Utils/Time';
 
 class BackIdentity extends React.Component {
     constructor(props) {
@@ -52,7 +52,7 @@ class BackIdentity extends React.Component {
         if (!activities.length) return 0;
 
         const initTime = activities[0].startTime;
-        const initDate = new Date(initTime * 1000);
+        const initDate = GetDate(initTime);
         const diff = (GetTime() - GetTime(initDate)) / (60 * 60 * 24);
         return Math.floor(diff);
     }

@@ -147,7 +147,7 @@ class Page extends React.Component {
         return (
             <AnimatedKeyboardAvoidingView
                 style={[styles.parent, this.props.style, position]}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                behavior={'padding'}
                 onLayout={this.onLayout}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}

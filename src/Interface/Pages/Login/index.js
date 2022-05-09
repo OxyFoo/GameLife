@@ -5,7 +5,7 @@ import BackLogin from './back';
 import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
-import { Text, Button, Input, Checkbox } from '../../Components';
+import { Page, Text, Button, Input, Checkbox } from '../../Components';
 
 class Login extends BackLogin {
     render() {
@@ -22,58 +22,56 @@ class Login extends BackLogin {
         const cguColor = themeManager.GetColor('main1');
 
         return (
-            <View style={{ flex: 1 }}>
-                <View style={styles.body}>
-                    <Image style={styles.backgroundCircles} source={require('../../../../res/logo/login_circles.png')} />
-                    <Image style={styles.backgroundImage} source={require('../../../../res/logo/login_hand.png')} />
+            <Page style={styles.body} bottomOffset={0} canScrollOver={false}>
+                <Image style={styles.backgroundCircles} source={this.imageBackground} />
+                <Image style={styles.backgroundImage} source={this.imageMain} />
 
-                    <Text style={styles.title} color='primary'>{pageTitle}</Text>
-                    <Text style={styles.text} color='secondary'>{pageText}</Text>
+                <Text style={styles.title} color='primary'>{pageTitle}</Text>
+                <Text style={styles.text} color='secondary'>{pageText}</Text>
 
-                    {/* Content */}
-                    <Animated.View
-                        style={[
-                            styles.container,
-                            { height: Animated.add(92, Animated.multiply(160, this.state.animSignin)) }
-                        ]}
-                    >
-                        {/* Email */}
-                        <Input
-                            style={styles.input}
-                            label={titleEmail}
-                            text={this.state.email}
-                            onChangeText={this.onChangeEmail}
-                            textContentType='email'
-                            enabled={!this.state.signinMode}
+                {/* Content */}
+                <Animated.View
+                    style={[
+                        styles.container,
+                        { height: Animated.add(100, Animated.multiply(160, this.state.animSignin)) }
+                    ]}
+                >
+                    {/* Email */}
+                    <Input
+                        style={styles.input}
+                        label={titleEmail}
+                        text={this.state.email}
+                        onChangeText={this.onChangeEmail}
+                        textContentType='email'
+                        enabled={!this.state.signinMode}
+                    />
+                    <Text style={styles.error} color={'error'}>{this.state.errorEmail}</Text>
+
+                    {/* Username */}
+                    <Input
+                        style={styles.input}
+                        label={titleUsername}
+                        text={this.state.username}
+                        onChangeText={this.onChangeUsername}
+                        textContentType='name'
+                        enabled={this.state.signinMode}
+                    />
+                    <Text style={styles.error} color={'error'}>{this.state.errorUsername}</Text>
+
+                    {/* CGU */}
+                    <View style={styles.cgu}>
+                        <Checkbox
+                            style={{ marginRight: 4 }}
+                            checked={this.state.cguAccepted}
+                            onChange={this.onChangeCGU}
                         />
-                        <Text style={styles.error} color={'error'}>{this.state.errorEmail}</Text>
+                        <Text onPress={this.onChangeCGU} fontSize={14} color='secondary'>{cguTexts[0]}</Text>
+                        <Text onPress={this.CGURedirect} fontSize={12} color={cguColor}>{cguClick}</Text>
+                        <Text onPress={this.onChangeCGU} fontSize={14} color='secondary'>{cguTexts[1]}</Text>
+                    </View>
+                    <Text style={styles.error} color={'error'}>{this.state.errorCgu}</Text>
+                </Animated.View>
 
-                        {/* Username */}
-                        <Input
-                            style={styles.input}
-                            label={titleUsername}
-                            text={this.state.username}
-                            onChangeText={this.onChangeUsername}
-                            textContentType='name'
-                            enabled={this.state.signinMode}
-                        />
-                        <Text style={styles.error} color={'error'}>{this.state.errorUsername}</Text>
-
-                        {/* CGU */}
-                        <View style={styles.cgu}>
-                            <Checkbox
-                                style={{ marginRight: 4 }}
-                                checked={this.state.cguAccepted}
-                                onChange={this.onChangeCGU}
-                            />
-                            <Text onPress={this.onChangeCGU} fontSize={14} color='secondary'>{cguTexts[0]}</Text>
-                            <Text onPress={this.CGURedirect} fontSize={12} color={cguColor}>{cguClick}</Text>
-                            <Text onPress={this.onChangeCGU} fontSize={14} color='secondary'>{cguTexts[1]}</Text>
-                        </View>
-                        <Text style={styles.error} color={'error'}>{this.state.errorCgu}</Text>
-                    </Animated.View>
-
-                </View>
                 <Button
                     style={styles.button}
                     styleAnimation={{ left: Animated.multiply(84, this.state.animSignin) }}
@@ -90,7 +88,7 @@ class Login extends BackLogin {
                     icon='arrowLeft'
                     onPress={this.onBack}
                 />
-            </View>
+            </Page>
         )
     }
 }
@@ -98,14 +96,13 @@ class Login extends BackLogin {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        padding: '5%',
         display: 'flex',
         alignItems: 'center'
     },
     container: {
         width: '100%',
-        // height: 92 - 240 : 92+154*anim
-        paddingVertical: '5%',
+        // height: 100 - 240 : 92+154*anim
+        paddingVertical: 24,
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden'
@@ -125,7 +122,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline'
     },
     text: {
-        margin: '5%',
+        margin: 12,
         textAlign: 'center',
         fontSize: 16
     },

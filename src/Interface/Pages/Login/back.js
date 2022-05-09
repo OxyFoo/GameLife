@@ -14,6 +14,9 @@ class BackLogin extends React.Component {
     constructor(props) {
         super(props);
 
+        this.imageBackground = require('../../../../res/logo/login_circles.png');
+        this.imageMain = require('../../../../res/logo/login_hand.png');
+
         this.state = {
             loading: false,
             signinMode: false,
@@ -41,7 +44,7 @@ class BackLogin extends React.Component {
     }
 
     onChangeEmail = (newText) => {
-        newText = newText.trim().toLowerCase();
+        newText = newText.trim();
         if (newText.length > MAX_EMAIL_LENGTH) {
             newText = newText.substring(0, MAX_EMAIL_LENGTH);
         }

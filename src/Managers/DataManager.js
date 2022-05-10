@@ -23,7 +23,7 @@ class DataManager {
     }
 
     /**
-     * @returns {Promise<Boolean>} False if all the data was empty
+     * @returns {Boolean} False if at least one data is empty
      */
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;

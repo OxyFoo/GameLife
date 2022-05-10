@@ -1,6 +1,7 @@
 import dataManager from '../Managers/DataManager';
 import langManager from '../Managers/LangManager';
 
+import DynamicVar from '../Utils/DynamicVar';
 import { GetTime } from '../Utils/Time';
 import { GetBattery } from '../Utils/Device';
 
@@ -8,6 +9,7 @@ import { GetBattery } from '../Utils/Device';
  * @typedef {import('../Managers/UserManager').default} UserManager
  * @typedef {import('../Data/Achievements').Condition} Condition
  * @typedef {import('../Data/Achievements').Reward} Reward
+ * @typedef {import('../Data/Achievements').Achievement} Achievement
  */
 
 class Achievements {
@@ -26,6 +28,11 @@ class Achievements {
          * @type {Array<Number>}
          */
         this.UNSAVED_solved = [];
+
+        /**
+         * @description Contain all activities, updated when adding, editing or removing
+         */
+        this.allSolved = new DynamicVar([]);
     }
 
     Clear() {
@@ -36,9 +43,11 @@ class Achievements {
         const contains = (key) => achievements.hasOwnProperty(key);
         if (contains('solved')) this.solved = achievements['solved'];
         if (contains('unsaved')) this.UNSAVED_solved = achievements['unsaved'];
+        this.allSolved.Set(this.Get());
     }
     LoadOnline(achievements) {
         this.solved = achievements;
+        this.allSolved.Set(achievements);
     }
     Save() {
         const achievements = {
@@ -49,6 +58,16 @@ class Achievements {
     }
     Get() {
         return [ ...this.solved, ...this.UNSAVED_solved ];
+    }
+
+    /**
+     * Get last achievements
+     * @param {Number} [last=3] Number of achievements to return
+     * @returns {Array<Achievement>}
+     */
+    GetLast(last = 3) {
+        const completeAchievements = this.Get().reverse().slice(0, last);
+        return completeAchievements.map(dataManager.achievements.GetByID);
     }
 
     IsUnsaved = () => {
@@ -62,6 +81,7 @@ class Achievements {
 
     AddAchievement = async (achievementID) => {
         this.UNSAVED_solved.push(achievementID);
+        this.allSolved.Set(this.Get());
         await this.user.OnlineSave();
         await this.user.OnlineLoad(true);
     }

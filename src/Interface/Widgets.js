@@ -1,3 +1,4 @@
+import AchievementsGroup from './Widgets/AchievementsGroup';
 import ActivityCard from './Widgets/ActivityCard';
 import ActivityExperience from './Widgets/ActivityExperience';
 import ActivitySchedule from './Widgets/ActivitySchedule';
@@ -12,11 +13,13 @@ import Popup from './Widgets/Popup';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import StatsBars from './Widgets/StatsBars';
+import SkillsGroup from './Widgets/SkillsGroup';
 import TaskElement from './Widgets/TaskElement';
 import TaskSchedule from './Widgets/TaskSchedule';
 import UserHeader from './Widgets/UserHeader';
 
 export {
+    AchievementsGroup,
     ActivityCard,
     ActivityExperience,
     ActivitySchedule,
@@ -31,6 +34,7 @@ export {
     ScreenInput,
     ScreenList,
     StatsBars,
+    SkillsGroup,
     TaskElement,
     TaskSchedule,
     UserHeader

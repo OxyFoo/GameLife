@@ -251,10 +251,8 @@
         "row-time": "Time spent",
 
         "container-achievements-title": "Last achievements",
-        "container-achievements-all": "All achievements",
         "container-stats-title": "Statistics",
         "container-skills-title": "Skills",
-        "conatiner-skills-all": "All skills",
 
         "input-username": "Username",
         "input-select-title": "Select a title",
@@ -508,6 +506,8 @@
             "wait": "Loading the next ad",
             "error": "Unable to load ads"
         },
-        "widget-button-editTime": "Change"
+        "widget-button-editTime": "Change",
+        "widget-achievements-all": "All achievements",
+        "widget-skills-all": "All skills"
     }
 }

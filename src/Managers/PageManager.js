@@ -111,7 +111,7 @@ class PageManager extends React.Component{
 
     /**
      * Try to get last page content
-     * @param {Boolean} [force=false] If true, try to get back until page changed
+     * @param {Boolean} [force=false] If true, try to get back until page is changing
      * @returns {Boolean} True if page changed
      */
     BackPage = (force = false) => {
@@ -141,7 +141,7 @@ class PageManager extends React.Component{
      * @param {Object} pageArguments
      * @param {Boolean} ignorePage
      * @param {Boolean} forceUpdate
-     * @returns 
+     * @returns {Boolean} True if changing page started
      */
     ChangePage = (newpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
@@ -172,6 +172,10 @@ class PageManager extends React.Component{
         return true;
     }
 
+    /**
+     * Change theme
+     * @param {Number} index 0: Dark theme (default), 1: Light theme
+     */
     SetTheme = (index) => {
         TimingAnimation(this.state.animTheme, index, 100).start();
     }

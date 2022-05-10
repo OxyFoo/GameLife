@@ -12,6 +12,26 @@ import { GetFullDate, GetMonthAndYear } from '../../../Utils/Date';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Calendar extends BackCalendar {
+
+    card = ({ item, index }) => (
+        <ActivityCard
+            style={{ maxWidth: '48%' }}
+            activity={item}
+            index={index}
+            onPress={() => { user.interface.ChangePage('activity', { activity: item }) }}
+        />
+    );
+
+    month = ({ item }) => (
+        <BlockMonth
+            style={{ maxHeight: 260, minHeight: 260 }}
+            month={item.month}
+            year={item.year}
+            data={item.data}
+            onPressDay={this.daySelect}
+        />
+    );
+
     render() {
         const { selectedDate, selectedMonth, selectedYear, animation } = this.state;
 
@@ -23,25 +43,6 @@ class Calendar extends BackCalendar {
 
         const title = selectedDate === null ? '' : GetMonthAndYear(selectedMonth, selectedYear);
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
-
-        const card = ({ item, index }) => (
-            <ActivityCard
-                style={{ maxWidth: '48%' }}
-                activity={item}
-                index={index}
-                onPress={() => { user.interface.ChangePage('activity', { activity: item }) }}
-            />
-        )
-
-        const month = ({ item }) => (
-            <BlockMonth
-                style={{ maxHeight: 260, minHeight: 260 }}
-                month={item.month}
-                year={item.year}
-                data={item.data}
-                onPressDay={this.daySelect}
-            />
-        );
 
         return (
             <Page style={{ padding: 0 }} scrollable={false}>
@@ -79,7 +80,7 @@ class Calendar extends BackCalendar {
                             columnWrapperStyle={{ marginBottom: '5%', justifyContent: 'space-between' }}
                             data={this.state.currActivities}
                             numColumns={2}
-                            renderItem={card}
+                            renderItem={this.card}
                             keyExtractor={(item, index) => 's-' + index}
                         />
                     </View>
@@ -90,7 +91,7 @@ class Calendar extends BackCalendar {
                         ref={(ref) => { this.flatlist = ref}}
                         style={styles.months}
                         data={this.state.months}
-                        renderItem={month}
+                        renderItem={this.month}
                         keyExtractor={(item, index) => `${item.month}-${item.year}`}
                         //windowSize={12}
                         //initialNumToRender={2}

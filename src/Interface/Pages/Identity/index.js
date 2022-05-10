@@ -1,37 +1,15 @@
 import * as React from 'react';
-import { View, TouchableOpacity, FlatList, StyleSheet, Animated } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
 
 import BackIdentity from './back';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
 import themeManager from '../../../Managers/ThemeManager';
 
-import { Page, Text, Button, XPBar, Container, Icon, Separator } from '../../Components';
-import { UserHeader, PageHeader, AvatarEditor, StatsBars, IdentityEditor } from '../../Widgets';
+import { Page, Text, XPBar, Container } from '../../Components';
+import { UserHeader, PageHeader, AvatarEditor, StatsBars, IdentityEditor, SkillsGroup, AchievementsGroup } from '../../Widgets';
 
 class Identity extends BackIdentity {
-    renderSkill = ({ item: { ID, Name, Logo } }) => {
-        const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
-        return (
-            <TouchableOpacity style={styles.skill} onPress={onPress} activeOpacity={.6}>
-                <View style={styles.skillImage}>
-                    <Icon xml={Logo} size={52} color='main1' />
-                </View>
-                <Text fontSize={12}>{Name}</Text>
-            </TouchableOpacity>
-        );
-    }
-
-    renderAchievement = ({ item }) => {
-        const Title = dataManager.GetText(item.Name);
-        return (
-            <TouchableOpacity onPress={() => this.onAchievementPress(item.ID)} activeOpacity={.6}>
-                <Text style={{ marginVertical: 12 }} fontSize={16}>{Title}</Text>
-            </TouchableOpacity>
-        );
-    }
-
     render() {
         const lang = langManager.curr['identity'];
         const langDates = langManager.curr['dates']['names'];
@@ -48,12 +26,6 @@ class Identity extends BackIdentity {
             </View>
         );
 
-        const onIdentityEditor = () => {
-            if (this.refIdentityEditor !== null) {
-                this.refIdentityEditor.Open();
-            }
-        }
-
         return (
             <Page
                 ref={ref => this.refPage = ref}
@@ -69,7 +41,7 @@ class Identity extends BackIdentity {
                 <Animated.View style={{ opacity: headerOpacity }} pointerEvents={headerPointer}>
                     <UserHeader
                         showAge={true}
-                        onPress={onIdentityEditor}
+                        onPress={this.openIdentityEditor}
                     />
 
                     <Animated.View style={styles.xp}>
@@ -119,18 +91,9 @@ class Identity extends BackIdentity {
                         opened={false}
                         color='backgroundCard'
                     >
-                        <FlatList
-                            data={this.skills}
-                            renderItem={this.renderSkill}
-                            keyExtractor={(item, index) => 'skill-' + index}
-                            numColumns={3}
+                        <SkillsGroup
+                            showAllButton={true}
                         />
-                        <Button
-                            style={styles.btnSmall}
-                            onPress={this.openSkills}
-                        >
-                            {lang['conatiner-skills-all']}
-                        </Button>
                     </Container>
                 </View>
 
@@ -142,23 +105,12 @@ class Identity extends BackIdentity {
                     color='main1'
                     backgroundColor='backgroundCard'
                 >
-                    <FlatList
-                        data={this.lastAchievements}
-                        renderItem={this.renderAchievement}
-                        keyExtractor={(item, index) => 'skill-' + index}
-                        ItemSeparatorComponent={() => (
-                            <Separator.Horizontal style={{ height: .4 }} color='main1' />
-                        )}
+                    <AchievementsGroup
+                        showAllButton={true}
                     />
-                    <Button
-                        style={styles.btnSmall}
-                        onPress={this.openAchievements}
-                    >
-                        {lang['container-achievements-all']}
-                    </Button>
                 </Container>
 
-                <IdentityEditor ref={ref => { if (ref !== null) this.refIdentityEditor = ref }} />
+                <IdentityEditor ref={ref => this.refIdentityEditor = ref } />
             </Page>
         );
     }
@@ -179,27 +131,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         justifyContent: 'center',
         borderRightWidth: .4
-    },
-    
-    skill: {
-        width: '33%',
-        alignItems: 'center'
-    },
-    skillImage: {
-        width: '60%',
-        aspectRatio: 1,
-        marginBottom: 6,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 4
-    },
-
-    btnSmall: {
-        height: 46,
-        marginTop: 24,
-        marginHorizontal: 24,
-        borderRadius: 8
     }
 });
 

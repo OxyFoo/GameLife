@@ -44,7 +44,7 @@ class Reward {
 class Achievements {
     constructor() {
         /**
-         * @type {Achievement[]}
+         * @type {Array<Achievement>}
          */
         this.achievements = [];
     }

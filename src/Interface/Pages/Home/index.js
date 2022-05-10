@@ -1,31 +1,19 @@
 import * as React from 'react';
-import { View, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackHome from './back';
-import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
 import { Round } from '../../../Utils/Functions';
-import { UserHeader, StatsBars } from '../../Widgets';
-import { Button, Container, Swiper, Text, XPBar, Page, News, Icon } from '../../Components';
+import { UserHeader, StatsBars, SkillsGroup } from '../../Widgets';
+import { Button, Container, Swiper, Text, XPBar, Page, News } from '../../Components';
 
 class Home extends BackHome {
-    renderSkill = ({ item: { ID, Name, Logo } }) => {
-        const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
-        return (
-            <TouchableOpacity style={styles.skill} onPress={onPress} activeOpacity={.6}>
-                <View style={styles.skillImage}>
-                    <Icon xml={Logo} size={52} color='main1' />
-                </View>
-                <Text fontSize={12}>{Name}</Text>
-            </TouchableOpacity>
-        );
-    }
-
     render() {
+        const { experience: { stats, xpInfo } } = this.state;
         const lang = langManager.curr['home'];
-        const userStats = user.experience.GetExperience().xpInfo;
-        const nextLvlPc = Round(100 * userStats.xp / userStats.next, 0);
+
+        const nextLvlPc = Round(100 * xpInfo.xp / xpInfo.next, 0);
         const lvl = langManager.curr['level']['level'];
 
         return (
@@ -35,11 +23,11 @@ class Home extends BackHome {
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
                         <Text style={{ marginRight: 8 }}>{lvl}</Text>
-                        <Text color='main2'>{userStats.lvl}</Text>
+                        <Text color='main2'>{xpInfo.lvl}</Text>
                     </View>
                     <Text>{nextLvlPc}%</Text>
                 </View>
-                <XPBar value={userStats.xp} maxValue={userStats.next} />
+                <XPBar value={xpInfo.xp} maxValue={xpInfo.next} />
 
                 <Swiper style={styles.topSpace} pages={News()} />
 
@@ -84,7 +72,7 @@ class Home extends BackHome {
                     color='main3'
                     rippleColor='white'
                 >
-                    <StatsBars data={user.stats} />
+                    <StatsBars data={stats} />
                 </Container>
 
                 <Container
@@ -95,13 +83,9 @@ class Home extends BackHome {
                     color='main3'
                     rippleColor='white'
                 >
-                    <FlatList
-                        data={this.state.skills}
-                        renderItem={this.renderSkill}
-                        keyExtractor={(item, index) => 'skill-' + index}
-                        numColumns={3}
+                    <SkillsGroup
+                        showAllButton={true}
                     />
-                    <Button style={styles.btnSmall} onPress={this.openSkills}>{lang['btn-other-skills']}</Button>
                 </Container>
             </Page>
         );
@@ -121,27 +105,6 @@ const styles = StyleSheet.create({
 
     topSpace: {
         marginTop: 24
-    },
-
-    skill: {
-        width: '33%',
-        alignItems: 'center'
-    },
-    skillImage: {
-        width: '60%',
-        aspectRatio: 1,
-        marginBottom: 6,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 4
-    },
-
-    btnSmall: {
-        height: 46,
-        marginTop: 24,
-        marginHorizontal: '20%',
-        borderRadius: 8
     }
 });
 

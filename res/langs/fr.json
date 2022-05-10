@@ -251,10 +251,8 @@
         "row-time": "Nombre d'heures",
 
         "container-achievements-title": "Derniers succès",
-        "container-achievements-all": "Tous les succès",
         "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
-        "conatiner-skills-all": "Autre comp.",
 
         "input-username": "Pseudo",
         "input-select-title": "Sélectionnez un titre",
@@ -508,6 +506,8 @@
             "wait": "Chargement en cours",
             "error": "Impossible de charger les pubs"
         },
-        "widget-button-editTime": "Modifier"
+        "widget-button-editTime": "Modifier",
+        "widget-achievements-all": "Tous les succès",
+        "widget-skills-all": "Autre comp."
     }
 }

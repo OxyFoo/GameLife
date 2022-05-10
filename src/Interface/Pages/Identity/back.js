@@ -1,11 +1,18 @@
 import * as React from 'react';
 
 import user from '../../../Managers/UserManager';
-import dataManager from '../../../Managers/DataManager';
 
 import { GetDate, GetTime } from '../../../Utils/Time';
 
+/**
+ * @typedef {import('../../Widgets/IdentityEditor').default} IdentityEditor
+ */
+
 class BackIdentity extends React.Component {
+    state = {
+        editorOpened: false
+    }
+
     constructor(props) {
         super(props);
 
@@ -16,23 +23,14 @@ class BackIdentity extends React.Component {
         this.totalActivityTime = this.getTotalDuration(activities);
         this.playTime = this.getTimeFromFirst(activities);
 
-        const completeAchievements = user.achievements.Get().reverse().slice(0, 3);
-        this.lastAchievements = completeAchievements.map(dataManager.achievements.GetByID);
-
         this.refPage = null;
         this.refAvatar = null;
-        this.refIdentityEditor = null;
 
-        this.state = {
-            editorOpened: false
-        };
-    
-        this.skills = user.activities.GetLasts();
+        /** @type {IdentityEditor} */
+        this.refIdentityEditor = null;
     }
 
-    openSkills = () => user.interface.ChangePage('skills');
-    openAchievements = () => user.interface.ChangePage('achievements');
-    onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);
+    openIdentityEditor = () => this.refIdentityEditor?.Open();
 
     /**
      * @returns {Number} in hours

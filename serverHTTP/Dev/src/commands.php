@@ -241,6 +241,7 @@
                 $userData['adRemaining'] = Users::GetAdRemaining($this->db, $account->ID);
                 $userData['adTotalWatched'] = Users::GetAdWatched($this->db, $account->ID);
                 $userData['achievements'] = $account->Achievements;
+                $userData['achievementQueue'] = $account->AchievementQueue;
             }
 
             // Some data, load only if needed

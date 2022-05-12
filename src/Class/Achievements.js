@@ -30,6 +30,11 @@ class Achievements {
         this.UNSAVED_solved = [];
 
         /**
+         * @type {Number?}
+         */
+        this.achievementQueue = null;
+
+        /**
          * @description Contain all activities, updated when adding, editing or removing
          */
         this.allSolved = new DynamicVar([]);
@@ -82,6 +87,7 @@ class Achievements {
     AddAchievement = async (achievementID) => {
         this.UNSAVED_solved.push(achievementID);
         this.allSolved.Set(this.Get());
+        await this.user.LocalSave();
         await this.user.OnlineSave();
         await this.user.OnlineLoad(true);
     }
@@ -108,9 +114,10 @@ class Achievements {
      */
     ShowRewardPopup = (achievementID) => {
         const achievement = dataManager.achievements.GetByID(achievementID);
+        const reward = this.getRewardsText(achievement.Rewards);
+        if (!reward) return;
         const title = langManager.curr['achievements']['alert-reward-title'];
-        let text = langManager.curr['achievements']['alert-reward-text'] + '\n\n';
-        text += this.getRewardsText(achievement.Rewards);
+        const text = langManager.curr['achievements']['alert-reward-text'] + '\n\n' + reward;
         this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
     }
 
@@ -221,9 +228,10 @@ class Achievements {
 
         for (let a = 0; a < achievements.length; a++) {
             const achievement = achievements[a];
+            const isInQueue = this.achievementQueue !== null && this.achievementQueue === achievement.ID;
 
             // Skip if already solved or hasn't conditions
-            if (this.solved.includes(achievement.ID) || achievement.Condition === null) {
+            if (!isInQueue && (this.solved.includes(achievement.ID) || achievement.Condition === null)) {
                 continue;
             }
 
@@ -234,7 +242,7 @@ class Achievements {
             const categories = dataManager.skills.categories;
 
             // Get value to compare
-            switch (Condition.Comparator.Type) {
+            switch (Condition?.Comparator.Type) {
                 case 'B': // Battery level
                     value = GetBattery();
                     break;
@@ -285,26 +293,29 @@ class Achievements {
                     break;
             }
 
-            if (value === null) {
-                continue;
+            if (isInQueue) {
+                completed = true;
+                this.achievementQueue = null;
             }
 
-            switch (Condition.Operator) {
-                case 'GT':
-                    if (value >= Condition.Value)
-                        completed = true;
-                    break;
-                case 'LT':
-                    if (value < Condition.Value)
-                        completed = true;
-                    break;
+            if (value !== null) {
+                switch (Condition.Operator) {
+                    case 'GT':
+                        if (value >= Condition.Value)
+                            completed = true;
+                        break;
+                    case 'LT':
+                        if (value < Condition.Value)
+                            completed = true;
+                        break;
+                }
             }
 
             if (completed) {
                 const achievementName = dataManager.GetText(achievement.Name);
                 const title = langManager.curr['achievements']['alert-achievement-title'];
                 const text = langManager.curr['achievements']['alert-achievement-text'].replace('{}', achievementName);
-                this.user.interface.popup.Open('ok', [ title, text ]);
+                this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
 
                 this.AddAchievement(achievement.ID);
             }

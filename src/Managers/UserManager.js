@@ -63,6 +63,7 @@ class UserManager {
         this.intervalSave = setInterval(save, saveTime);
 
         const achievementsTime = 1 * 60 * 1000; // 1 minute
+        this.achievements.CheckAchievements();
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, achievementsTime);
     }
 
@@ -211,7 +212,6 @@ class UserManager {
                 this.informations.Purge();
                 this.tasks.Purge();
                 this.interface.console.EditLog(debugIndex, 'User data: online save success');
-                console.log(data);
                 await this.LocalSave();
             } else {
                 this.interface.console.AddLog('error', 'User data: online save failed');
@@ -240,6 +240,7 @@ class UserManager {
             if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
             if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
+            if (contains('achievementQueue')) this.achievements.achievementQueue = data['achievementQueue'];
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);
             if (contains('dataToken')) {

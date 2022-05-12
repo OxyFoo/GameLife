@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import user from '../../../Managers/UserManager';
+import renderGiftCodePopup from './giftCodePopup';
 
 /**
  * @typedef {import('../../../Class/Admob').AdStates} AdStates
@@ -23,8 +24,7 @@ class BackShop extends React.Component {
     watchAd = () => this.rewardedShop.show();
     openShopBuy = () => {};
 
-    renderCodePopup() {}
-    openPopupCode = () => user.interface.popup.Open('custom', this.renderCodePopup.bind(this));
+    openPopupCode = () => user.interface.popup.Open('custom', renderGiftCodePopup.bind(this));
 
     /** @type {AdEvent} */
     onAdStateChange = (state) => this.setState({ adState: state });

@@ -89,7 +89,7 @@ class Skills extends BackSkills {
 
         return (
             <>
-                <Page canScrollOver={false} bottomOffset={0} onLayout={setheight}>
+                <Page canScrollOver={false} onLayout={setheight}>
                     <PageHeader onBackPress={user.interface.BackPage} />
 
                     <View style={styles.row}>

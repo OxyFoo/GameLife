@@ -84,7 +84,7 @@ class Task extends BackTask {
         const initValues = action === 'new' ? null : [deadline, repeatMode, repeatDays];
 
         return (
-            <Page onStartShouldSetResponder={this.keyboardDismiss} bottomOffset={0}>
+            <Page onStartShouldSetResponder={this.keyboardDismiss}>
                 <PageHeader
                     onBackPress={() => user.interface.BackPage()}
                 />

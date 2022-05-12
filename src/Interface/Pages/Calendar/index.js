@@ -45,7 +45,7 @@ class Calendar extends BackCalendar {
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
 
         return (
-            <Page style={{ padding: 0 }} scrollable={false}>
+            <Page style={{ padding: 0 }} scrollable={false} bottomOffset={156}>
                 <UserHeader style={{ padding: '5%', paddingBottom: 0 }} />
 
                 <Animated.View style={styleContent}>
@@ -81,7 +81,7 @@ class Calendar extends BackCalendar {
                             data={this.state.currActivities}
                             numColumns={2}
                             renderItem={this.card}
-                            keyExtractor={(item, index) => 's-' + index}
+                            keyExtractor={(item, index) => `activity-card-s-${index}-${item.startTime}`}
                         />
                     </View>
                 </Animated.View>

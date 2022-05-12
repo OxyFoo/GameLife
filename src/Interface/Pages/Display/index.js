@@ -10,12 +10,12 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 class Display extends BackDisplay {
     render() {
         return (
-            <Page style={styles.page} canScrollOver={true} bottomOffset={0}>
+            <Page style={styles.page} canScrollOver={true}>
                 <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                     <Icon icon={this.icon} size={SCREEN_WIDTH * .8} />
                 </Animated.View>
                 <Text>{this.text}</Text>
-                <Button style={{ width: '80%' }} color='main1' onPress={this.Back}>{this.button}</Button>
+                <Button style={styles.button} color='main1' onPress={this.Back}>{this.button}</Button>
             </Page>
         )
     }
@@ -26,9 +26,12 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         paddingTop: '30%',
-        paddingBottom: '10%',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    button: {
+        width: '80%',
+        marginBottom: 48
     }
 });
 

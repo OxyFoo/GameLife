@@ -19,7 +19,7 @@ class ActivityTimer extends BackActivityTimer {
         const time = this.getTimer();
 
         return (
-            <Page style={styles.content} bottomOffset={0}>
+            <Page style={styles.content}>
                 <View>
                     <Text style={styles.title} fontSize={20}>{textLaunch}</Text>
                     <Text fontSize={48}>{time}</Text>

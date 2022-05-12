@@ -31,10 +31,9 @@ class Identity extends BackIdentity {
                 ref={ref => this.refPage = ref}
                 scrollable={!this.state.editorOpened}
                 canScrollOver={false}
-                bottomOffset={0}
             >
                 <PageHeader
-                    style={{ marginBottom: 0 }}
+                    style={{ marginBottom: 12 }}
                     onBackPress={this.onBack}
                 />
 
@@ -44,7 +43,7 @@ class Identity extends BackIdentity {
                         onPress={this.openIdentityEditor}
                     />
 
-                    <Animated.View style={styles.xp}>
+                    <Animated.View style={styles.botSpace}>
                         <View style={styles.xpRow}>
                             <Text>{langManager.curr['level']['level'] + ' ' + this.userXP.xpInfo.lvl}</Text>
                             <Text>{this.userXP.xpInfo.xp + '/' + this.userXP.xpInfo.next}</Text>
@@ -98,7 +97,7 @@ class Identity extends BackIdentity {
                 </View>
 
                 <Container
-                    style={styles.topSpace}
+                    style={[styles.topSpace, styles.botSpace]}
                     text={lang['container-achievements-title']}
                     type='static'
                     opened={true}
@@ -117,9 +116,9 @@ class Identity extends BackIdentity {
 }
 
 const styles = StyleSheet.create({
-    xp: { marginBottom: 24 },
-    xpRow: { flexDirection: 'row', justifyContent: 'space-between' },
     topSpace: { marginTop: 24 },
+    botSpace: { marginBottom: 24 },
+    xpRow: { flexDirection: 'row', justifyContent: 'space-between' },
     tableRow: {
         width: '100%',
         height: 48,

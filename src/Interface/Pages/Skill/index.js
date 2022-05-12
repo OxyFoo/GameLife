@@ -33,7 +33,7 @@ class Skill extends BackSkill {
         if (!this.enabled) return null;
         return (
             <>
-                <Page canScrollOver={false} bottomOffset={96}>
+                <Page canScrollOver={false} bottomOffset={104}>
                     <PageHeader onBackPress={user.interface.BackPage} hideHelp />
 
                     {/* Content */}

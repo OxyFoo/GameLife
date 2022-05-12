@@ -80,7 +80,7 @@ class Shop extends BackShop {
         const adRemaining = user.informations.adRemaining;
 
         return (
-            <Page canScrollOver={true}>
+            <Page canScrollOver={true} bottomOffset={156}>
                 <UserHeader />
                 <View style={styles.wallet}>
                     <Text style={styles.ox} color='main1'>{user.informations.ox}</Text>

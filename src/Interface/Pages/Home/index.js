@@ -17,7 +17,7 @@ class Home extends BackHome {
         const lvl = langManager.curr['level']['level'];
 
         return (
-            <Page canScrollOver={true}>
+            <Page canScrollOver={true} bottomOffset={156}>
                 <UserHeader />
 
                 <View style={styles.XPHeader}>

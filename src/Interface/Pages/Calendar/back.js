@@ -10,6 +10,10 @@ import { GetBlockMonth } from '../../../Utils/Date';
 import { SpringAnimation } from '../../../Utils/Animations';
 import { GetTime, RoundToQuarter } from '../../../Utils/Time';
 
+/**
+ * @typedef {import('../../../Class/Activities').Activity} Activity
+ */
+
 class BackCalendar extends React.Component {
     constructor(props) {
         super(props);
@@ -44,6 +48,8 @@ class BackCalendar extends React.Component {
             selectedMonth: month,
             selectedYear: year,
             currWeek: [],
+
+            /** @type {Array<Activity>} */
             currActivities: [],
         };
 

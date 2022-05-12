@@ -110,7 +110,6 @@ class Activity extends BackActivity {
                 style={{ paddingHorizontal: 0, paddingBottom: 0 }}
                 scrollable={this.state.selectedSkill.id !== 0}
                 canScrollOver={false}
-                bottomOffset={0}
             >
                 <PageHeader
                     style={{ paddingHorizontal: 32 }}

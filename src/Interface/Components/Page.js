@@ -17,7 +17,7 @@ const PageProps = {
     canScrollOver: true,
 
     /** @type {Number} */
-    bottomOffset: 156,
+    bottomOffset: 0,
 
     /** @type {LayoutChangeEvent} */
     onLayout: (event) => {},

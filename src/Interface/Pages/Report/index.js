@@ -118,7 +118,7 @@ class Report extends BackReport {
         const { selectedType, reportHeight } = this.state;
 
         return (
-            <Page onStartShouldSetResponder={this.keyboardDismiss} canScrollOver={false} bottomOffset={0}>
+            <Page onStartShouldSetResponder={this.keyboardDismiss} canScrollOver={false}>
                 <PageHeader
                     style={{ marginBottom: 24 }}
                     onBackPress={this.back}

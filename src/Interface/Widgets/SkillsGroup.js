@@ -37,7 +37,7 @@ class SkillsGroup extends React.Component {
         return (
             <TouchableOpacity
                 style={styles.skill}
-                onPress={() => this.openSkills(ID)}
+                onPress={() => this.openSkill(ID)}
                 activeOpacity={.6}
             >
                 <View style={styles.skillImage}>

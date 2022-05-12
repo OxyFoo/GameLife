@@ -21,7 +21,7 @@ class Multiplayer extends BackMultiplayer {
         console.log(server);
 
         return (
-            <Page canScrollOver={true}>
+            <Page canScrollOver={true} bottomOffset={156}>
                 <UserHeader />
                 {pages[server]()}
             </Page>

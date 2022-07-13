@@ -42,6 +42,7 @@
 
 ## Succès
 ### Conditions
+<pre>
 Syntaxe : ``` COMPARATEUR OPERATEUR COMPARANT ```
 Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
 * Comparateur
@@ -59,6 +60,7 @@ Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
     - GT : grater (or equal) than
 * Comparant
     - Number : Soit le nombre d'heure, soit de niveau
+</pre>
 
 ### Récompenses (& GiftCodes Rewards)
 Syntaxe : ``` TYPE ID ``` ou ``` TYPE Quantité ```
@@ -74,7 +76,7 @@ Séparés par des virgules, sans espaces
 
 ## News
 * Template exemple
-
+<pre>
 [
     {
         "ID": 0,
@@ -102,3 +104,4 @@ Séparés par des virgules, sans espaces
         "TextAlign": "right"
     }
 ]
+</pre>

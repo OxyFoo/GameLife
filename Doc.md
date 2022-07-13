@@ -42,9 +42,9 @@
 
 ## Succès
 ### Conditions
-<pre>
-Syntaxe : ``` COMPARATEUR OPERATEUR COMPARANT ```
+Syntaxe : ``` COMPARATEUR OPERATEUR COMPARANT ```\
 Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
+<pre>
 * Comparateur
     - B : Batterie (ratio de la batterie [0; 1])
     - Lvl~ : Niveau du joueur
@@ -63,15 +63,16 @@ Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
 </pre>
 
 ### Récompenses (& GiftCodes Rewards)
-Syntaxe : ``` TYPE ID ``` ou ``` TYPE Quantité ```
+Syntaxe : ``` TYPE ID ``` ou ``` TYPE Quantité ```\
 Exemple : ``` Title 8 ``` ou ``` OX 20,Item 50 ```
+<pre>
 Séparés par des virgules, sans espaces
 * Types
     - Title + ID
     - Item + ID
     - XP + Quantité
     - OX + Quantité
-
+</pre>
 
 
 ## News

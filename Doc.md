@@ -27,11 +27,12 @@
 | Inventories | Inventory |
 
 * Stuffs
-    - body
-    - gloves
-    - legs
+    - hair
+    - top
+    - bottom
     - shoes
 
+* Disabled
     - hair
     - face
     - accessory
@@ -45,14 +46,14 @@ Syntaxe : ``` COMPARATEUR OPERATEUR COMPARANT ```
 Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
 * Comparateur
     - B : Batterie (ratio de la batterie [0; 1])
-    - Lvl$ : Niveau du joueur
-    - Sk$ : Niveau du skill avec l'ID $
-    - SkT$ : Temps en heure du skill avec l'ID $
-    - St$ : Niveau d'une statistique (joueur) avec $ => 0 = int, 1 = soc, 2 = for, 3 = end, 4 = agi, 5 = dex
-    - Ca$ : Niveau d'une catégorie avec l'ID $
-    - HCa$ : Niveau de la $ème catégorie la plus élevée
-    - It$ : Nombre d'items accumulés
-    - Ad$ : Nombre de publicités regardées
+    - Lvl~ : Niveau du joueur
+    - Sk~ : Niveau du skill avec l'ID ~
+    - SkT~ : Temps en heure du skill avec l'ID ~
+    - St~ : Niveau d'une statistique (joueur) avec ~ => 0 = int, 1 = soc, 2 = for, 3 = end, 4 = agi, 5 = dex
+    - Ca~ : Niveau d'une catégorie avec l'ID ~
+    - HCa~ : Niveau de la ~ème catégorie la plus élevée
+    - It~ : Nombre d'items accumulés
+    - Ad~ : Nombre de publicités regardées
 * Opérateur
     - LT : less than
     - GT : grater (or equal) than

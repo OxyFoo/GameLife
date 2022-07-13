@@ -1,7 +1,7 @@
 /**
  * @typedef {'common'|'rare'|'epic'|'legendary'|'heroic'} Rarity
  * 
- * @typedef {'hair'|'face'|'accessory'|'weapon'|'body'|'gloves'|'legs'|'shoes'} Slot
+ * @typedef {'hair'|'face'|'accessory'|'weapon'|'top'|'gloves'|'bottom'|'shoes'} Slot
  * 
  * @typedef {Object} Buff
  * @property {Number} 

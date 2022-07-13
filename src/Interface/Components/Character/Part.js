@@ -3,7 +3,7 @@ import { Animated } from 'react-native';
 import { G } from 'react-native-svg';
 
 import { STUFFS } from '../../../../res/items/stuffs/Stuffs';
-import { CHARACTERS } from '../../../../res/items/humans/Characters';
+import { CHARACTERS, COLORS } from '../../../../res/items/humans/Characters';
 import { CalculateParentPos } from './Utils';
 
 /**
@@ -25,8 +25,9 @@ class Part {
         this.zIndex = zIndex;
 
         // Initial position from parent
+        const SEXE = this.body.character.sexe;
         const character = this.body.character.skin;
-        const offsets = CHARACTERS[character]['offsets'][this.name];
+        const offsets = CHARACTERS[SEXE][character]['offsets'][this.name];
         this.l = offsets[0];
         this.a = offsets[1];
 
@@ -55,11 +56,12 @@ class Part {
      * @returns {JSX.Element}
      */
     render(partType) {
+        const SEXE = this.body.character.sexe;
         const character = this.body.character.skin;
-        if (!CHARACTERS.hasOwnProperty(character)) return null;
-        if (!CHARACTERS[character]['svg'].hasOwnProperty(this.name)) return null;
+        if (!CHARACTERS[SEXE].hasOwnProperty(character)) return null;
+        if (!CHARACTERS[SEXE][character]['svg'].hasOwnProperty(this.name)) return null;
 
-        const fill = '#e0a98b';
+        const fill = COLORS[this.body.character.skinColor];
         if (!this.valuesTest) {
             this.valuesTest = CalculateParentPos.bind(this)();
         }
@@ -74,8 +76,8 @@ class Part {
             { rotateZ: animRotation }
         ]};
 
-        const svgCharacter = CHARACTERS[character]['svg'][this.name];
-        const svgCharacterShadow = CHARACTERS[character]['shadows'][this.name];
+        const svgCharacter = CHARACTERS[SEXE][character]['svg'][this.name];
+        const svgCharacterShadow = CHARACTERS[SEXE][character]['shadow'][this.name];
 
         let svgItems = [];
         let svgItemsShadows = [];
@@ -83,13 +85,13 @@ class Part {
         const inventoryItems = this.body.character.items;
         for (let i = 0; i < inventoryItems.length; i++) {
             const ID = inventoryItems[i];
-            if (!STUFFS.hasOwnProperty(ID)) continue;
+            if (!STUFFS[SEXE].hasOwnProperty(ID)) continue;
 
-            if (STUFFS[ID].hasOwnProperty('svg') && STUFFS[ID]['svg'].hasOwnProperty(this.name)) {
-                svgItems.push(STUFFS[ID]['svg'][this.name]);
+            if (STUFFS[SEXE][ID].hasOwnProperty('svg') && STUFFS[SEXE][ID]['svg'].hasOwnProperty(this.name)) {
+                svgItems.push(STUFFS[SEXE][ID]['svg'][this.name]);
             }
-            if (STUFFS[ID].hasOwnProperty('shadows') && STUFFS[ID]['shadows'].hasOwnProperty(this.name)) {
-                svgItemsShadows.push(STUFFS[ID]['shadows'][this.name]);
+            if (STUFFS[SEXE][ID].hasOwnProperty('shadow') && STUFFS[SEXE][ID]['shadow'].hasOwnProperty(this.name)) {
+                svgItemsShadows.push(STUFFS[SEXE][ID]['shadow'][this.name]);
             }
         }
 
@@ -119,7 +121,6 @@ class Part {
                 <AnimatedG
                     key={`stuff-${this.name}`}
                     style={[transforms, styleZIndex]}
-                    fill={fill || 'white'}
                 >
                     {svgItems.map((SVG, i) => <G key={'stuff' + i}>{SVG}</G>)}
                 </AnimatedG>

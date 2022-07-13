@@ -15,7 +15,10 @@ import DataStorage, { STORAGE } from '../Utils/DataStorage';
 const DEBUG_DATA = false;
 
 /**
+ * @typedef {import('../Interface/Components').Character} Character
+ * @typedef {import('./PageManager').default} PageManager
  * @typedef {import('../Class/Experience').XPInfo} XPInfo
+ * 
  * @typedef {Object} Stats
  * @property {XPInfo} int
  * @property {XPInfo} soc
@@ -43,16 +46,18 @@ class UserManager {
 
         /**
          * @description Ref loaded here from render of App.js to skip cyclic dependency
-         * @typedef {import('./PageManager').default} PageManager
          * @type {PageManager}
          */
         this.interface;
 
+        /** @type {Character} */
+        this.character;
+
         this.xp = 0;
-        /**
-         * @type {Stats}
-         */
+
+        /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
+
         this.tempSelectedTime = null;
         this.tempMailSent = null;
     }

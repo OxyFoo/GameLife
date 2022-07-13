@@ -4,6 +4,8 @@ import dataManager from '../Managers/DataManager';
  * @typedef {import('../Data/Items').Slot} Slot
  * @typedef {import('../Data/Items').Item} Item
  * @typedef {import('../Data/Titles').Title} Title
+ * @typedef {import('../../res/items/humans/Characters').CharactersName} CharactersName
+ * @typedef {import('../../res/items/humans/Characters').Sexes} Sexes
  */
 
 class Stuff {
@@ -23,18 +25,34 @@ class Inventory {
         /** @type {Array<Number>} */
         this.titles = [];
 
-        /** @type {Array<Stuff>} */
+        /**
+         * @description Array of owned stuffs
+         * @type {Array<Stuff>}
+         */
         this.stuffs = [];
 
-        this.equipmentsEdited = false;
+        /** @type {Sexes} */
+        this.sexe = 'MALE';
+
+        /** @type {CharactersName} */
+        this.skin = 'skin_01';
+
+        /** @type {Number} */
+        this.skinColor = 1;
+
         this.equipments = {
             hair: null,
-            hat: null,
-            head: null,
-            body: 'teeshirt_01',
-            legs: null,
-            feet: null
+            top: 'teeshirt_01',
+
+            bottom: null,
+            shoes: null
         }
+
+        /**
+         * Set to true if inventory is edited (skin, equipment, etc)
+         * @type {Boolean}
+         */
+        this.equipmentsEdited = false;
     }
 
     Clear() {

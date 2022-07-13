@@ -27,7 +27,8 @@ class ItemCard extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.character = new Character('itemcard-' + this.props.selectedId, 'male_01', [ this.props.item.ID ]);
+        const { item } = this.props;
+        this.character = new Character('itemcard-' + this.props.selectedId, 'MALE', 'skin_01', 0, [ item.ID ]);
     }
 
     onPress = () => {
@@ -48,7 +49,7 @@ class ItemCard extends React.PureComponent {
                 underlayColor={themeManager.GetColor('main1', .5)}
                 touchSoundDisabled={true}
             >
-                <Frame />
+                <Frame characters={[ this.character ]} onlyItems={true} loadingTime={400} />
             </TouchableHighlight>
         );
     }
@@ -65,7 +66,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
 
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        overflow: 'hidden'
     }
 });
 

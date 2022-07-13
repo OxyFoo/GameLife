@@ -15,7 +15,13 @@ const FrameProps = {
     height: 1000,
 
     /** @type {Array<Character>} */
-    characters: []
+    characters: [],
+
+    /** @type {Boolean} */
+    onlyItems: false,
+
+    /** @type {Number} Time to wait for loading - TODO - Automatic end after loading */
+    loadingTime: 1400
 }
 
 class Frame extends React.Component {
@@ -27,7 +33,9 @@ class Frame extends React.Component {
         this.updateCharacters(this.props.characters);
 
         // Loading page
-        setTimeout(() => { this.setState({ mounted: true }) }, 1400);
+        setTimeout(() => {
+            this.setState({ mounted: true })
+        }, this.props.loadingTime);
     }
     shouldComponentUpdate(nextProps, nextState) {
         if (nextState.mounted !== this.state.mounted) {
@@ -52,14 +60,14 @@ class Frame extends React.Component {
     }
 
     render() {
-        const { width, height, characters } = this.props;
+        const { width, height, characters, onlyItems } = this.props;
         const viewBox = [ 0, 0, width, height ].join(' ');
         const loadingColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
             <View style={styles.canvas}>
                 <Svg viewBox={viewBox}>
-                    {characters.map(charac => charac.render())}
+                    {characters.map(charac => charac.render(onlyItems))}
                 </Svg>
                 {!this.state.mounted && (
                     <View style={[styles.loading, loadingColor]}>

@@ -5,18 +5,23 @@ import { TimingAnimation } from '../../../Utils/Animations';
  * @typedef {import('./Frame').default} Frame
  * @typedef {import('../../../../res/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('../../../../res/items/humans/Characters').AnimationsName} AnimationsName
+ * @typedef {import('../../../../res/items/humans/Characters').Sexes} Sexes
  */
 
 class Character {
     /**
      * @param {String} name Name of character
+     * @param {Sexes} sexe
      * @param {CharactersName} skin
+     * @param {Number} skinColor
      * @param {Array<String>} items
      * @param {{ x: Number, y: Number }} pos
      */
-    constructor(name, skin, items, pos = { x: 450, y: 280 }) {
+    constructor(name, sexe, skin, skinColor, items, pos = { x: 450, y: 280 }) {
         this.name = name;
+        this.sexe = sexe;
         this.skin = skin;
+        this.skinColor = skinColor;
         this.pos = pos;
 
         /** @type {Array<String>} */

@@ -5,6 +5,7 @@ import dataManager from '../../../Managers/DataManager';
 import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
+import { Character } from '../../Components';
 import { Sleep } from '../../../Utils/Functions';
 import Notifications from '../../../Utils/Notifications';
 
@@ -115,13 +116,19 @@ class BackLoading extends React.Component {
         if (user.informations.adRemaining === 0) {
             user.interface.console.AddLog('info', 'No more ads available');
         }
-
         await user.admob.ShowPopup();
         user.admob.LoadAds();
 
         this.nextStep();
         await Sleep(200);
 
+        user.character = new Character(
+            'player',
+            user.inventory.sexe,
+            user.inventory.skin,
+            user.inventory.skinColor,
+            user.inventory.equipments
+        );
         user.StartTimers();
 
         if (user.activities.currentActivity === null) {

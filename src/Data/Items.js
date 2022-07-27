@@ -1,10 +1,7 @@
 /**
- * @typedef {'common'|'rare'|'epic'|'legendary'|'heroic'} Rarity
- * 
  * @typedef {'hair'|'face'|'accessory'|'weapon'|'top'|'gloves'|'bottom'|'shoes'} Slot
  * 
  * @typedef {Object} Buff
- * @property {Number} 
  * @property {Number} int
  * @property {Number} soc
  * @property {Number} for
@@ -13,14 +10,21 @@
  * @property {Number} dex
  */
 
+const Rarity = {
+    common: 0,
+    rare: 1,
+    epic: 2,
+    legendary: 3,
+    event: 4
+}
+
 class Item {
     ID = '';
     /** @type {Slot} */
     Slot = '';
     Name = { fr: '', en: '' };
     Description = { fr: '', en: '' };
-    /** @type {Rarity} */
-    Rarity = '';
+    Rarity = Rarity.common;
     /** @type {Array<Buff>} */
     Buffs = [];
     Value = 0;
@@ -53,5 +57,5 @@ class Items {
     GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
 }
 
-export { Item };
+export { Item, Rarity };
 export default Items;

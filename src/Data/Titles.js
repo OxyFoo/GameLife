@@ -6,7 +6,7 @@ class Title {
 class Titles {
     constructor() {
         /**
-         * @type {Title[]}
+         * @type {Array<Title>}
          */
         this.titles = [];
     }
@@ -17,6 +17,11 @@ class Titles {
         }
     }
     Save() {
+        return this.titles;
+    }
+
+    /** @returns {Array<Title>} */
+    Get = () => {
         return this.titles;
     }
 

@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Animated, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
 import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
+import themeManager from '../../Managers/ThemeManager';
+
 import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
 
 const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
@@ -18,6 +20,12 @@ const PageProps = {
 
     /** @type {Number} */
     bottomOffset: 0,
+
+    /** @type {React.Component} */
+    topOverlay: null,
+
+    /** @type {Number} */
+    topOverlayHeight: 64,
 
     /** @type {LayoutChangeEvent} */
     onLayout: (event) => {},
@@ -38,7 +46,10 @@ class Page extends React.Component {
     }
     state = {
         height: 0,
-        positionY: new Animated.Value(0)
+        positionY: new Animated.Value(0),
+
+        topOverlayShow: false,
+        topOverlayPosition: new Animated.Value(1)
     }
 
     GotoY = (y) => {
@@ -58,6 +69,20 @@ class Page extends React.Component {
             });
         }
         this.props.onLayout(event);
+    }
+
+    /** @param {Number} scrollY */
+    onScroll = (scrollY) => {
+        const { topOverlay, topOverlayHeight } = this.props;
+        if (topOverlay !== null) {
+            if (-scrollY > topOverlayHeight && !this.state.topOverlayShow) {
+                this.setState({ topOverlayShow: true });
+                TimingAnimation(this.state.topOverlayPosition, 0, 200).start();
+            } else if (-scrollY < topOverlayHeight && this.state.topOverlayShow) {
+                this.setState({ topOverlayShow: false });
+                TimingAnimation(this.state.topOverlayPosition, 1, 200).start();
+            }
+        }
     }
 
     limitValues = (value, canScrollOver = false) => {
@@ -124,6 +149,7 @@ class Page extends React.Component {
         // Update
         this.posY = this.limitValues(newPosY, this.props.canScrollOver);
         TimingAnimation(this.state.positionY, this.posY, 0.1).start();
+        this.onScroll(this.posY);
     }
 
     /** @param {GestureResponderEvent} event */
@@ -139,23 +165,45 @@ class Page extends React.Component {
         } else {
             TimingAnimation(this.state.positionY, newPosY, 200).start();
         }
+        this.onScroll(this.posY);
+    }
+
+    renderOverlay() {
+        if (this.props.topOverlay === null) return null;
+
+        const { topOverlayPosition } = this.state;
+        const { topOverlay, topOverlayHeight } = this.props;
+
+        const animation = Animated.multiply(topOverlayPosition, -(topOverlayHeight + 32));
+        const position = { transform: [{ translateY: animation }] };
+        const backgroundColor = { backgroundColor: themeManager.GetColor('main3') };
+        const borderColor = { borderColor: themeManager.GetColor('main1') };
+
+        return (
+            <Animated.View style={[styles.topOverlay, position, borderColor, backgroundColor]}>
+                {topOverlay}
+            </Animated.View>
+        );
     }
 
     render() {
         const position = { transform: [{ translateY: this.state.positionY }] };
 
         return (
-            <AnimatedKeyboardAvoidingView
-                style={[styles.parent, this.props.style, position]}
-                behavior={'padding'}
-                onLayout={this.onLayout}
-                onTouchStart={this.onTouchStart}
-                onTouchMove={this.onTouchMove}
-                onTouchEnd={this.onTouchEnd}
-                onStartShouldSetResponder={this.props.onStartShouldSetResponder}
-            >
-                {this.props.children}
-            </AnimatedKeyboardAvoidingView>
+            <>
+                <AnimatedKeyboardAvoidingView
+                    style={[styles.parent, this.props.style, position]}
+                    behavior={'padding'}
+                    onLayout={this.onLayout}
+                    onTouchStart={this.onTouchStart}
+                    onTouchMove={this.onTouchMove}
+                    onTouchEnd={this.onTouchEnd}
+                    onStartShouldSetResponder={this.props.onStartShouldSetResponder}
+                >
+                    {this.props.children}
+                </AnimatedKeyboardAvoidingView>
+                {this.renderOverlay()}
+            </>
         );
     }
 }
@@ -169,6 +217,15 @@ const styles = StyleSheet.create({
         padding: 32,
         paddingBottom: Platform.OS === 'ios' ? 48 : 32,
         backgroundColor: '#00000001'
+    },
+    topOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        paddingVertical: 0,
+        paddingHorizontal: 32,
+        borderBottomWidth: 1
     }
 });
 

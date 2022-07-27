@@ -32,7 +32,9 @@ const TextProps = {
     /** @type {LayoutChangeEvent?} */
     onLayout: undefined,
 
-    bold: undefined
+    bold: undefined,
+
+    numberOfLines: undefined
 }
 
 class Text extends React.Component {
@@ -48,6 +50,7 @@ class Text extends React.Component {
                 disabled={IsUndefined(onPress)}
             >
                 <RNText
+                    numberOfLines={this.props.numberOfLines}
                     style={[
                         styles.text,
                         {

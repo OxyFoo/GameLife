@@ -22,8 +22,7 @@ class BackShop extends React.Component {
     }
 
     watchAd = () => this.rewardedShop.show();
-    openShopBuy = () => {};
-
+    openShopItems = () => user.interface.ChangePage('shopitems');
     openPopupCode = () => user.interface.popup.Open('custom', renderGiftCodePopup.bind(this));
 
     /** @type {AdEvent} */

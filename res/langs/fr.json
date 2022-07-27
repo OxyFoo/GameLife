@@ -410,6 +410,17 @@
         "reward-success-text": "Vous avez obtenu les récompenses suivantes :"
     },
 
+    "shopItems": {
+        "container-titles": "Titres",
+        "container-items": "Items",
+        "container-dyer": "Teinturier",
+        "select-dyer": "Sélectionner un item",
+
+        "error-no-titles": "Une erreur est survenue lors du chargement des titres à vendre, veuillez réessayer plus tard.",
+        "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard.",
+        "error-inventory-empty": "Vous ne possédez aucun item"
+    },
+
     "skill": {
         "text-author": "Une idée de {}",
         "stats-title": "Statistiques",

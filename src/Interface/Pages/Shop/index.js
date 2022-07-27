@@ -35,7 +35,7 @@ class Shop extends BackShop {
                     icon='chevron'
                     iconColor='main1'
                     enabled={user.server.online}
-                    onPress={this.openShopBuy}
+                    onPress={this.openShopItems}
                 >{lang['button-shop']}</Button>
 
                 <Button
@@ -60,9 +60,7 @@ const styles = StyleSheet.create({
     },
 
     button: { marginTop: 24 },
-    adButton: { justifyContent: 'space-between', borderRadius: 14 },
-    adText: { marginRight: 6 },
-    adIcon: { flexDirection: 'row' }
+    adButton: { justifyContent: 'space-between', borderRadius: 14 }
 });
 
 export default Shop;

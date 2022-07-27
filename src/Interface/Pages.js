@@ -13,6 +13,7 @@ import Onboarding from './Pages/Onboarding/index';
 import Report from './Pages/Report/index';
 import Settings from './Pages/Settings/index';
 import Shop from './Pages/Shop/index';
+import ShopItems from './Pages/ShopItems';
 import Skill from './Pages/Skill/index';
 import Skills from './Pages/Skills/index';
 import Task from './Pages/Task/index';
@@ -37,6 +38,7 @@ export {
     Report,
     Settings,
     Shop,
+    ShopItems,
     Skill,
     Skills,
     Task,

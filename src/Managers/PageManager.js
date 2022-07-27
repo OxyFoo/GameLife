@@ -10,7 +10,7 @@ import { IsUndefined, Range } from '../Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList } from '../Interface/Widgets';
 
 /**
- * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
+ * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
  */
 
 const DEBUG_MODE = false;
@@ -29,6 +29,7 @@ const CACHE_IGNORE = [
     'display',
     'skill',
     'shop',
+    'shopitems',
     'task',
     'tasks'
 ];
@@ -235,32 +236,37 @@ class PageManager extends React.Component{
         ]).start();
     }
 
+    /**
+     * @param {PageName} page
+     * @param {Object} [args]
+     */
     getPageContent(page, args) {
         let p;
         switch (page) {
-            case 'about':           p = <Pages.About />; break;
-            case 'achievements':    p = <Pages.Achievements />; break;
-            case 'activity':        p = <Pages.Activity args={args} />; break;
-            case 'activitytimer':   p = <Pages.ActivityTimer />; break;
-            case 'calendar':        p = <Pages.Calendar />; break;
-            case 'display':         p = <Pages.Display args={args} />; break;
-            case 'experience':      p = <Pages.Experience />; break;
-            case 'home':            p = <Pages.Home />; break;
-            case 'identity':        p = <Pages.Identity />; break;
-            case 'loading':         p = <Pages.Loading args={args} />; break;
-            case 'login':           p = <Pages.Login />; break;
-            case 'multiplayer':     p = <Pages.Multiplayer />; break;
-            case 'onboarding':      p = <Pages.Onboarding />; break;
-            case 'report':          p = <Pages.Report />; break;
-            case 'settings':        p = <Pages.Settings />; break;
-            case 'shop':            p = <Pages.Shop />; break;
-            case 'skill':           p = <Pages.Skill args={args} />; break;
-            case 'skills':          p = <Pages.Skills />; break;
-            case 'task':            p = <Pages.Task args={args} />; break;
-            case 'tasks':           p = <Pages.Tasks />; break;
-            case 'waitinternet':    p = <Pages.Waitinternet />; break;
-            case 'waitmail':        p = <Pages.Waitmail args={args} />; break;
-            case 'test':            p = <Pages.Test />; break;
+            case 'about':           p = <Pages.About />;                    break;
+            case 'achievements':    p = <Pages.Achievements />;             break;
+            case 'activity':        p = <Pages.Activity args={args} />;     break;
+            case 'activitytimer':   p = <Pages.ActivityTimer />;            break;
+            case 'calendar':        p = <Pages.Calendar />;                 break;
+            case 'display':         p = <Pages.Display args={args} />;      break;
+            case 'experience':      p = <Pages.Experience />;               break;
+            case 'home':            p = <Pages.Home />;                     break;
+            case 'identity':        p = <Pages.Identity />;                 break;
+            case 'loading':         p = <Pages.Loading args={args} />;      break;
+            case 'login':           p = <Pages.Login />;                    break;
+            case 'multiplayer':     p = <Pages.Multiplayer />;              break;
+            case 'onboarding':      p = <Pages.Onboarding />;               break;
+            case 'report':          p = <Pages.Report />;                   break;
+            case 'settings':        p = <Pages.Settings />;                 break;
+            case 'shop':            p = <Pages.Shop />;                     break;
+            case 'shopitems':       p = <Pages.ShopItems />;                break;
+            case 'skill':           p = <Pages.Skill args={args} />;        break;
+            case 'skills':          p = <Pages.Skills />;                   break;
+            case 'task':            p = <Pages.Task args={args} />;         break;
+            case 'tasks':           p = <Pages.Tasks />;                    break;
+            case 'waitinternet':    p = <Pages.Waitinternet />;             break;
+            case 'waitmail':        p = <Pages.Waitmail args={args} />;     break;
+            case 'test':            p = <Pages.Test />;                     break;
         }
         return p;
     }

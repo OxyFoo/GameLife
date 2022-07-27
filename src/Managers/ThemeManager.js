@@ -50,7 +50,31 @@ class ThemeManager {
                 error: '#CC0029'
             }
         }
-    }
+    };
+
+    ABSOLUTE = {
+        rarity_common: [
+            '#3D8B25',
+            '#0F5904'
+        ],
+        rarity_rare: [
+            '#1B72C1',
+            '#0D4389'
+        ],
+        rarity_epic: [
+            '#B650D8',
+            '#712AA0'
+        ],
+        rarity_legendary: [
+            '#E7743B',
+            '#A74A1E'
+        ],
+        rarity_event: [
+            '#1B72C1',
+            '#B650D8',
+            '#E7743B'
+        ]
+    };
 
     // Default value
     selectedTheme = 'Dark';
@@ -92,6 +116,15 @@ class ThemeManager {
         if (this.colors.hasOwnProperty(color)) return this.ApplyOpacity(this.colors[color], opacity);
         if (this.colors.text.hasOwnProperty(color)) return this.ApplyOpacity(this.colors.text[color], opacity);
         return color;
+    }
+
+    /**
+     * @description Get absolute color (independant of theme)
+     * @param {ABSOLUTE} color - Name of absolute color
+     * @param {Number} [opacity=1] - Opacity of color, between 0 and 1
+     */
+    GetAbsoluteColors() {
+        return this.ABSOLUTE;
     }
 
     /**

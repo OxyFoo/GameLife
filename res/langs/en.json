@@ -410,6 +410,17 @@
         "reward-success-text": "You have earned rewards:"
     },
 
+    "shopItems": {
+        "container-titles": "Titles",
+        "container-items": "Items",
+        "container-dyer": "Dyer",
+        "select-dyer": "Select an item",
+
+        "error-no-titles": "An error occurred while loading the securities for sale, please try again later.",
+        "error-no-items": "An error occurred while loading the items for sale, please try again later.",
+        "error-inventory-empty": "You do not have any items"
+    },
+
     "skill": {
         "text-author": "An idea from {}",
         "stats-title": "Statistiques",

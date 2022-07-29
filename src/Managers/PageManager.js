@@ -10,7 +10,7 @@ import { IsUndefined, Range } from '../Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList } from '../Interface/Widgets';
 
 /**
- * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'identity'|'loading'|'login'|'multiplayer'|'onboarding'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
+ * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
  */
 
 const DEBUG_MODE = false;
@@ -251,11 +251,11 @@ class PageManager extends React.Component{
             case 'display':         p = <Pages.Display args={args} />;      break;
             case 'experience':      p = <Pages.Experience />;               break;
             case 'home':            p = <Pages.Home />;                     break;
-            case 'identity':        p = <Pages.Identity />;                 break;
             case 'loading':         p = <Pages.Loading args={args} />;      break;
             case 'login':           p = <Pages.Login />;                    break;
             case 'multiplayer':     p = <Pages.Multiplayer />;              break;
             case 'onboarding':      p = <Pages.Onboarding />;               break;
+            case 'profile':         p = <Pages.Profile />;                  break;
             case 'report':          p = <Pages.Report />;                   break;
             case 'settings':        p = <Pages.Settings />;                 break;
             case 'shop':            p = <Pages.Shop />;                     break;

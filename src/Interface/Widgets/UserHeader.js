@@ -46,14 +46,14 @@ class UserHeader extends React.Component {
     }
 
     render() {
-        const openIdentity = () => user.interface.ChangePage('identity');
+        const openProfile = () => user.interface.ChangePage('profile');
         const editable = !IsUndefined(this.props.onPress);
         const age = user.informations.GetAge();
         const showAge = age !== null && this.props.showAge;
         const activeOpacity = editable ? 0.6 : 1;
 
         const edit = <Icon icon={user.server.IsConnected() ? 'edit' : 'nowifi'} color='border' />;
-        const avatar = <Button style={styles.avatar} onPress={openIdentity} rippleColor='white' />;
+        const avatar = <Button style={styles.avatar} onPress={openProfile} rippleColor='white' />;
         const rightItem = editable ? edit : avatar;
 
         return (
@@ -61,7 +61,7 @@ class UserHeader extends React.Component {
                 <View style={{ justifyContent: 'center', height: 84 }}>
                     <View style={styles.usernameContainer}>
                         <Text style={styles.username} color='primary'>{this.state.username}</Text>
-                        {showAge && <Text style={styles.age} color='secondary'>{langManager.curr['identity']['value-age'].replace('{}', age)}</Text>}
+                        {showAge && <Text style={styles.age} color='secondary'>{langManager.curr['profile']['value-age'].replace('{}', age)}</Text>}
                     </View>
                     {this.state.titleText !== '' && <Text style={styles.title} color='secondary'>{this.state.titleText}</Text>}
                 </View>

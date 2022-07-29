@@ -2,18 +2,18 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
-import dataManager from '../../Managers/DataManager';
+import user from '../../../Managers/UserManager';
+import langManager from '../../../Managers/LangManager';
+import dataManager from '../../../Managers/DataManager';
 
-import { Text, Button } from '../Components';
-import { GetAge, GetTime } from '../../Utils/Time';
+import { Text, Button } from '../../Components';
+import { GetAge, GetTime } from '../../../Utils/Time';
 
 /**
- * @typedef {import('../../Data/Titles').Title} Title
+ * @typedef {import('../../../Data/Titles').Title} Title
  */
 
-class IdentityEditor extends React.PureComponent {
+class ProfileEditor extends React.PureComponent {
     state = {
         stateDTP: ''
     }
@@ -26,13 +26,14 @@ class IdentityEditor extends React.PureComponent {
     }
 
     OpenNowifiPopup = () => {
-        const title = langManager.curr['identity']['alert-nowifi-title'];
-        const text = langManager.curr['identity']['alert-nowifi-text'];
+        const lang = langManager.curr['profile'];
+        const title = lang['alert-nowifi-title'];
+        const text = lang['alert-nowifi-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
     }
 
     dtpOpen = () => {
-        const lang = langManager.curr['identity'];
+        const lang = langManager.curr['profile'];
         const info = user.informations.GetInfoToChangeBirthtime();
 
         // Try to change too early
@@ -53,7 +54,7 @@ class IdentityEditor extends React.PureComponent {
         user.interface.popup.ForceOpen('ok', [ title, text ], checkedChangeAge, false);
     }
     dtpSelect = (date) => {
-        const lang = langManager.curr['identity'];
+        const lang = langManager.curr['profile'];
         this.dtpClose();
         const setBirthTime = (bt, time) => {
             if (bt === 'yes') user.informations.SetBirthTime(time);
@@ -72,12 +73,12 @@ class IdentityEditor extends React.PureComponent {
     }
 
     openUsername = () => {
-        const lang = langManager.curr['identity'];
+        const lang = langManager.curr['profile'];
         user.interface.screenInput.Open(lang['input-username'], user.informations.username.Get(), this.onChangeUsername);
         this.Open();
     }
     onChangeUsername = async (username) => {
-        const lang = langManager.curr['identity'];
+        const lang = langManager.curr['profile'];
         if (!username.length || username === user.informations.username.Get()) return;
         const state = await user.informations.SetUsername(username);
 
@@ -102,7 +103,7 @@ class IdentityEditor extends React.PureComponent {
     }
 
     popupRender() {
-        const lang = langManager.curr['identity'];
+        const lang = langManager.curr['profile'];
 
         // Username
         const usernameEdit = async () => {
@@ -178,7 +179,7 @@ class IdentityEditor extends React.PureComponent {
     }
 
     render() {
-        const lang = langManager.curr['identity'];
+        const lang = langManager.curr['profile'];
         const dtpStartDate = new Date(2000, 0, 1, 0, 0, 0, 0);
         const dtpTopDate = new Date(); dtpTopDate.setFullYear(dtpTopDate.getFullYear() - 6);
         const dtpBottomDate = new Date(); dtpBottomDate.setFullYear(dtpBottomDate.getFullYear() - 120);
@@ -231,4 +232,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default IdentityEditor;
+export default ProfileEditor;

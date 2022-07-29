@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
-import BackIdentity from './back';
+import BackProfile from './back';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
+import ProfileEditor from './ProfileEditor';
 import { Page, Text, XPBar, Container } from '../../Components';
-import { UserHeader, PageHeader, AvatarEditor, StatsBars, IdentityEditor, SkillsGroup, AchievementsGroup } from '../../Widgets';
+import { UserHeader, PageHeader, AvatarEditor, StatsBars, SkillsGroup, AchievementsGroup } from '../../Widgets';
 
-class Identity extends BackIdentity {
+class Profile extends BackProfile {
     render() {
-        const lang = langManager.curr['identity'];
+        const lang = langManager.curr['profile'];
         const langDates = langManager.curr['dates']['names'];
         const interReverse = { inputRange: [0, 1], outputRange: [1, 0] };
         const headerOpacity = this.refAvatar === null ? 1 : this.refAvatar.state.editorAnim.interpolate(interReverse);
@@ -40,7 +41,7 @@ class Identity extends BackIdentity {
                 <Animated.View style={{ opacity: headerOpacity }} pointerEvents={headerPointer}>
                     <UserHeader
                         showAge={true}
-                        onPress={this.openIdentityEditor}
+                        onPress={this.openProfileEditor}
                     />
 
                     <Animated.View style={styles.botSpace}>
@@ -109,7 +110,7 @@ class Identity extends BackIdentity {
                     />
                 </Container>
 
-                <IdentityEditor ref={ref => this.refIdentityEditor = ref } />
+                <ProfileEditor ref={ref => this.refProfileEditor = ref } />
             </Page>
         );
     }
@@ -133,4 +134,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Identity;
+export default Profile;

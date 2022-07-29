@@ -37,7 +37,7 @@ class BackTest extends React.Component {
         }
         user.interface.ChangePage('activity');
     }
-    openIdentity = () => { user.interface.ChangePage('identity'); }
+    openProfile = () => { user.interface.ChangePage('profile'); }
     openCalendar = () => { user.interface.ChangePage('calendar'); }
     openSkill = (skillID) => { user.interface.ChangePage('skill', { skillID: skillID }); }
     openSkills = () => { user.interface.ChangePage('skills'); }

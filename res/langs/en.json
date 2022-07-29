@@ -240,52 +240,6 @@
         "alert-dateerror-text": "It seems that you changed the date, maybe in order to cheat? I hope it won't happen again ^^"
     },
 
-    "identity": {
-        "value-age": "{} years old",
-        "value-age-empty": "Date of birth unknown",
-        "value-title-empty": "No title selected",
-
-        "row-title": "Informations",
-        "row-since": "Since",
-        "row-activities": "Number of activities",
-        "row-time": "Time spent",
-
-        "container-achievements-title": "Last achievements",
-        "container-stats-title": "Statistics",
-        "container-skills-title": "Skills",
-
-        "input-username": "Username",
-        "input-select-title": "Select a title",
-        "input-title-none": "No title",
-        "input-edit": "Edit",
-        "input-select-age": "Select your day of birth",
-
-        "edit-title": "Edit your profile",
-        "edit-cancel": "Cancel",
-
-        "alert-nowifi-title": "No connection",
-        "alert-nowifi-text": "You must be connected to the internet to be able to modify your profile, if you are already connected to the internet restart the application",
-
-        "alert-usernamewarning-title": "Change username",
-        "alert-usernamewarning-text": "You can only change your username once every {} days, so choose wisely!",
-        "alert-alreadyUsed-title": "Reserved username",
-        "alert-alreadyUsed-text": "This username is already in use, please choose another one.",
-        "alert-alreadyChanged-title": "Username already changed",
-        "alert-alreadyChanged-text": "You must wait {} days before you can change it again.",
-        "alert-incorrect-title": "Incorrect username",
-        "alert-incorrect-text": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
-        "alert-error-title": "Error",
-        "alert-error-text": "Change of username impossible",
-        "alert-emptytitle-title": "No title available",
-        "alert-emptytitle-text": "You have not titles yet",
-        "alert-birthtimewarning-title": "Change of date of birth",
-        "alert-birthtimewarning-text": "You can only set a birth date once every {} days, so choose wisely!",
-        "alert-birthtimewait-title": "Change of date of birth",
-        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
-        "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-text": "Are you {} years old?"
-    },
-
     "leaderboard": {
         "page-title": "Leaderboard",
 
@@ -331,6 +285,52 @@
         "connection-offline": "Please connect to the internet and restart the application to access this page.",
         "connection-failed": "The connection to the server failed, please try again later.",
         "button-retry": "Retry"
+    },
+
+    "profile": {
+        "value-age": "{} years old",
+        "value-age-empty": "Date of birth unknown",
+        "value-title-empty": "No title selected",
+
+        "row-title": "Informations",
+        "row-since": "Since",
+        "row-activities": "Number of activities",
+        "row-time": "Time spent",
+
+        "container-achievements-title": "Last achievements",
+        "container-stats-title": "Statistics",
+        "container-skills-title": "Skills",
+
+        "input-username": "Username",
+        "input-select-title": "Select a title",
+        "input-title-none": "No title",
+        "input-edit": "Edit",
+        "input-select-age": "Select your day of birth",
+
+        "edit-title": "Edit your profile",
+        "edit-cancel": "Cancel",
+
+        "alert-nowifi-title": "No connection",
+        "alert-nowifi-text": "You must be connected to the internet to be able to modify your profile, if you are already connected to the internet restart the application",
+
+        "alert-usernamewarning-title": "Change username",
+        "alert-usernamewarning-text": "You can only change your username once every {} days, so choose wisely!",
+        "alert-alreadyUsed-title": "Reserved username",
+        "alert-alreadyUsed-text": "This username is already in use, please choose another one.",
+        "alert-alreadyChanged-title": "Username already changed",
+        "alert-alreadyChanged-text": "You must wait {} days before you can change it again.",
+        "alert-incorrect-title": "Incorrect username",
+        "alert-incorrect-text": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
+        "alert-error-title": "Error",
+        "alert-error-text": "Change of username impossible",
+        "alert-emptytitle-title": "No title available",
+        "alert-emptytitle-text": "You have not titles yet",
+        "alert-birthtimewarning-title": "Change of date of birth",
+        "alert-birthtimewarning-text": "You can only set a birth date once every {} days, so choose wisely!",
+        "alert-birthtimewait-title": "Change of date of birth",
+        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
+        "alert-birthconfirm-title": "Confirmation",
+        "alert-birthconfirm-text": "Are you {} years old?"
     },
 
     "report": {

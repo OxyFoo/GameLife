@@ -5,10 +5,10 @@ import user from '../../../Managers/UserManager';
 import { GetDate, GetTime } from '../../../Utils/Time';
 
 /**
- * @typedef {import('../../Widgets/IdentityEditor').default} IdentityEditor
+ * @typedef {import('./ProfileEditor').default} ProfileEditor
  */
 
-class BackIdentity extends React.Component {
+class BackProfile extends React.Component {
     state = {
         editorOpened: false
     }
@@ -26,11 +26,11 @@ class BackIdentity extends React.Component {
         this.refPage = null;
         this.refAvatar = null;
 
-        /** @type {IdentityEditor} */
-        this.refIdentityEditor = null;
+        /** @type {ProfileEditor} */
+        this.refProfileEditor = null;
     }
 
-    openIdentityEditor = () => this.refIdentityEditor?.Open();
+    openProfileEditor = () => this.refProfileEditor?.Open();
 
     /**
      * @returns {Number} in hours
@@ -64,4 +64,4 @@ class BackIdentity extends React.Component {
     }
 }
 
-export default BackIdentity;
+export default BackProfile;

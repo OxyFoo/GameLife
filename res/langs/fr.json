@@ -240,52 +240,6 @@
         "alert-dateerror-text": "Il semblerait que tu aies modifié la date, peut-être dans le but de tricher ? J'espère que cela ne se reproduira plus ^^"
     },
 
-    "identity": {
-        "value-age": "{} ans",
-        "value-age-empty": "Date de naissance inconnue",
-        "value-title-empty": "Aucun titre sélectionné",
-
-        "row-title": "Informations",
-        "row-since": "Depuis",
-        "row-activities": "Nombre d'activités",
-        "row-time": "Nombre d'heures",
-
-        "container-achievements-title": "Derniers succès",
-        "container-stats-title": "Statistiques",
-        "container-skills-title": "Compétences",
-
-        "input-username": "Pseudo",
-        "input-select-title": "Sélectionnez un titre",
-        "input-title-none": "Aucun titre",
-        "input-edit": "Modifier",
-        "input-select-age": "Sélectionnez votre jour de naissance",
-
-        "edit-title": "Editer le profil",
-        "edit-cancel": "Retour",
-
-        "alert-nowifi-title": "Pas de connexion",
-        "alert-nowifi-text": "Vous devez être connecté à internet pour pouvoir modifier votre profil, si vous êtes déjà connecté à internet redémarrez l'application",
-
-        "alert-usernamewarning-title": "Changement de pseudo",
-        "alert-usernamewarning-text": "Vous ne pouvez changer de pseudo qu'une seule fois tous les {} jours, choisissez-bien !",
-        "alert-alreadyUsed-title": "Pseudo réservé",
-        "alert-alreadyUsed-text": "Ce pseudo est déjà utilisé, veuillez en choisir un autre.",
-        "alert-alreadyChanged-title": "Pseudo déjà modifié",
-        "alert-alreadyChanged-text": "Vous devez attendre {} jours avant de pouvoir le modifier à nouveau.",
-        "alert-incorrect-title": "Pseudo incorrect",
-        "alert-incorrect-text": "Votre pseudo ne doit doit être compris entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
-        "alert-error-title": "Erreur",
-        "alert-error-text": "Modification du pseudo impossible",
-        "alert-emptytitle-title": "Pas de titres disponibles",
-        "alert-emptytitle-text": "Vous n'avez pas encore de titre à sélectionner",
-        "alert-birthtimewarning-title": "Changement de date de naissance",
-        "alert-birthtimewarning-text": "Vous ne pouvez définir une date de naissance qu'une fois tous les {} jours, choisissez-bien !",
-        "alert-birthtimewait-title": "Changement de date de naissance",
-        "alert-birthtimewait-text": "Vous devez attendre {} jours avant de pouvoir modifier votre date de naissance à nouveau.",
-        "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-text": "Vous avez bien {} ans ?"
-    },
-
     "leaderboard": {
         "page-title": "Classement",
 
@@ -331,6 +285,52 @@
         "connection-offline": "Veuillez vous connecter à internet et redémarrer l'application pour accéder à cette page.",
         "connection-failed": "La connexion au serveur a échouée, veuillez réessayer plus tard.",
         "button-retry": "Réessayer"
+    },
+
+    "profile": {
+        "value-age": "{} ans",
+        "value-age-empty": "Date de naissance inconnue",
+        "value-title-empty": "Aucun titre sélectionné",
+
+        "row-title": "Informations",
+        "row-since": "Depuis",
+        "row-activities": "Nombre d'activités",
+        "row-time": "Nombre d'heures",
+
+        "container-achievements-title": "Derniers succès",
+        "container-stats-title": "Statistiques",
+        "container-skills-title": "Compétences",
+
+        "input-username": "Pseudo",
+        "input-select-title": "Sélectionnez un titre",
+        "input-title-none": "Aucun titre",
+        "input-edit": "Modifier",
+        "input-select-age": "Sélectionnez votre jour de naissance",
+
+        "edit-title": "Editer le profil",
+        "edit-cancel": "Retour",
+
+        "alert-nowifi-title": "Pas de connexion",
+        "alert-nowifi-text": "Vous devez être connecté à internet pour pouvoir modifier votre profil, si vous êtes déjà connecté à internet redémarrez l'application",
+
+        "alert-usernamewarning-title": "Changement de pseudo",
+        "alert-usernamewarning-text": "Vous ne pouvez changer de pseudo qu'une seule fois tous les {} jours, choisissez-bien !",
+        "alert-alreadyUsed-title": "Pseudo réservé",
+        "alert-alreadyUsed-text": "Ce pseudo est déjà utilisé, veuillez en choisir un autre.",
+        "alert-alreadyChanged-title": "Pseudo déjà modifié",
+        "alert-alreadyChanged-text": "Vous devez attendre {} jours avant de pouvoir le modifier à nouveau.",
+        "alert-incorrect-title": "Pseudo incorrect",
+        "alert-incorrect-text": "Votre pseudo ne doit doit être compris entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
+        "alert-error-title": "Erreur",
+        "alert-error-text": "Modification du pseudo impossible",
+        "alert-emptytitle-title": "Pas de titres disponibles",
+        "alert-emptytitle-text": "Vous n'avez pas encore de titre à sélectionner",
+        "alert-birthtimewarning-title": "Changement de date de naissance",
+        "alert-birthtimewarning-text": "Vous ne pouvez définir une date de naissance qu'une fois tous les {} jours, choisissez-bien !",
+        "alert-birthtimewait-title": "Changement de date de naissance",
+        "alert-birthtimewait-text": "Vous devez attendre {} jours avant de pouvoir modifier votre date de naissance à nouveau.",
+        "alert-birthconfirm-title": "Confirmation",
+        "alert-birthconfirm-text": "Vous avez bien {} ans ?"
     },
 
     "report": {

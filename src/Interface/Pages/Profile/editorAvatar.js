@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { View, Animated, FlatList, Dimensions, StyleSheet } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import dataManager from '../../Managers/DataManager';
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import user from '../../../Managers/UserManager';
+import dataManager from '../../../Managers/DataManager';
+import langManager from '../../../Managers/LangManager';
+import themeManager from '../../../Managers/ThemeManager';
 
-import ItemCard from './ItemCard';
-import { Sleep } from '../../Utils/Functions';
-import { SpringAnimation } from '../../Utils/Animations';
-import { Text, Button, Separator, Icon, Frame, Character } from '../Components';
+import ItemCard from '../../Widgets/ItemCard';
+import { Sleep } from '../../../Utils/Functions';
+import { SpringAnimation } from '../../../Utils/Animations';
+import { Text, Button, Separator, Icon, Frame, Character } from '../../Components';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -28,10 +28,10 @@ const TEST_STATS = {
 };
 
 /**
- * @typedef {import('../../Data/Items').Slot} Slot
+ * @typedef {import('../../../Data/Items').Slot} Slot
  */
 
-class Avatar extends React.Component {
+class EditorAvatar extends React.Component {
     state = {
         characterPosY: 0,
         characterHeight: 0,
@@ -260,8 +260,8 @@ class Avatar extends React.Component {
     }
 }
 
-Avatar.prototype.props = AvatarProps;
-Avatar.defaultProps = AvatarProps;
+EditorAvatar.prototype.props = AvatarProps;
+EditorAvatar.defaultProps = AvatarProps;
 
 const styles = StyleSheet.create({
     parent: {
@@ -343,4 +343,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Avatar;
+export default EditorAvatar;

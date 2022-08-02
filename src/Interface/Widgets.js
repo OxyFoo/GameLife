@@ -4,7 +4,6 @@ import ActivityExperience from './Widgets/ActivityExperience';
 import ActivitySchedule from './Widgets/ActivitySchedule';
 import Console from './Widgets/Console';
 import ItemCard from './Widgets/ItemCard';
-import AvatarEditor from './Widgets/AvatarEditor';
 import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
 import PageHeader from './Widgets/PageHeader';
@@ -24,7 +23,6 @@ export {
     ActivitySchedule,
     Console,
     ItemCard,
-    AvatarEditor,
     BlockMonth,
     BottomBar,
     PageHeader,

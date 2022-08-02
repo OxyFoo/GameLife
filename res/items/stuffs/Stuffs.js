@@ -16,10 +16,10 @@ const STUFFS = {
         shoes_01: m_shoes_01
     },
     FEMALE: {
-        hair_01: f_hair_01,
-        top_01: f_top_01,
-        bottom_01: f_bottom_01,
-        shoes_01: f_shoes_01
+        //hair_01: f_hair_01,
+        //top_01: f_top_01,
+        //bottom_01: f_bottom_01,
+        //shoes_01: f_shoes_01
     }
 };
 

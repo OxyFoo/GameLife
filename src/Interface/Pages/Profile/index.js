@@ -6,9 +6,10 @@ import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
-import ProfileEditor from './ProfileEditor';
+import EditorAvatar from './editorAvatar';
+import EditorProfile from './editorProfile';
 import { Page, Text, XPBar, Container } from '../../Components';
-import { UserHeader, PageHeader, AvatarEditor, StatsBars, SkillsGroup, AchievementsGroup } from '../../Widgets';
+import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from '../../Widgets';
 
 class Profile extends BackProfile {
     render() {
@@ -53,7 +54,7 @@ class Profile extends BackProfile {
                     </Animated.View>
                 </Animated.View>
 
-                <AvatarEditor
+                <EditorAvatar
                     ref={ref => this.refAvatar = ref}
                     refParent={this}
                     onChangeState={opened => this.setState({ editorOpened: opened }) }
@@ -110,7 +111,7 @@ class Profile extends BackProfile {
                     />
                 </Container>
 
-                <ProfileEditor ref={ref => this.refProfileEditor = ref } />
+                <EditorProfile ref={ref => this.refProfileEditor = ref } />
             </Page>
         );
     }

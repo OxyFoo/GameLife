@@ -5,7 +5,7 @@ import user from '../../../Managers/UserManager';
 import { GetDate, GetTime } from '../../../Utils/Time';
 
 /**
- * @typedef {import('./ProfileEditor').default} ProfileEditor
+ * @typedef {import('./editorProfile').default} ProfileEditor
  */
 
 class BackProfile extends React.Component {

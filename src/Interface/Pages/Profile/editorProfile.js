@@ -13,7 +13,7 @@ import { GetAge, GetTime } from '../../../Utils/Time';
  * @typedef {import('../../../Data/Titles').Title} Title
  */
 
-class ProfileEditor extends React.PureComponent {
+class EditorProfile extends React.PureComponent {
     state = {
         stateDTP: ''
     }
@@ -232,4 +232,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ProfileEditor;
+export default EditorProfile;

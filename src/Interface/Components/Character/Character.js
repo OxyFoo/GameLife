@@ -14,10 +14,9 @@ class Character {
      * @param {Sexes} sexe
      * @param {CharactersName} skin
      * @param {Number} skinColor
-     * @param {Array<String>} items
      * @param {{ x: Number, y: Number }} pos
      */
-    constructor(name, sexe, skin, skinColor, items, pos = { x: 450, y: 280 }) {
+    constructor(name, sexe, skin, skinColor, pos = { x: 450, y: 280 }) {
         this.name = name;
         this.sexe = sexe;
         this.skin = skin;
@@ -25,7 +24,7 @@ class Character {
         this.pos = pos;
 
         /** @type {Array<String>} */
-        this.items = items;
+        this.items = [];
         this.parentFrame = null;
         this.hide = false;
         this.outOfBounds = false;
@@ -63,6 +62,18 @@ class Character {
 
     Show = () => this.hide = false;
     Hide = () => this.hide = true;
+
+    /**
+     * Set items from array of items IDs
+     * @param {Array<string>} items
+     */
+    SetEquipment = (items) => {
+        if (!Array.isArray(items)) {
+            throw new Error('items must be an array');
+        }
+        this.items = [...items];
+        this.__refresh();
+    }
 
     /**
      * @param {Number} x Default is current position
@@ -116,7 +127,7 @@ class Character {
     render(onlyItems = false) {
         if (this.parentFrame === null) return null;
         if (this.outOfBounds || this.hide) return null;
-        return !onlyItems ? this.body.renderAll() : this.body.renderItems();
+        return onlyItems ? this.body.renderItems() : this.body.renderAll();
     }
 }
 

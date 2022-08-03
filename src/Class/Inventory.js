@@ -42,7 +42,7 @@ class Inventory {
 
         this.equipments = {
             hair: null,
-            top: 'teeshirt_01',
+            top: 'top_01',
 
             bottom: null,
             shoes: null
@@ -50,6 +50,7 @@ class Inventory {
 
         /**
          * Set to true if inventory is edited (skin, equipment, etc)
+         * Used to know if we need to save it
          * @type {Boolean}
          */
         this.equipmentsEdited = false;
@@ -100,13 +101,22 @@ class Inventory {
 
     /**
      * @param {Slot} slot 
-     * @param {String} item 
+     * @param {String} itemID 
      */
-    SetEquipment = (slot, item) => {
-        if (this.equipments[slot] === item) return;
-        if (!this.equipments.hasOwnProperty(slot)) return;
-        this.equipments[slot] = item;
+    Equip = (slot, itemID) => {
+        if (!this.equipments.hasOwnProperty(slot)) {
+            this.user.interface.console.AddLog('error', `Slot ${slot} doesn't exist`);
+            return;
+        }
+        if (this.equipments[slot] === itemID) {
+            return;
+        }
+
+        this.equipments[slot] = itemID;
         this.equipmentsEdited = true;
+
+        // Refresh user character
+        this.user.character.SetEquipment(this.GetEquipments());
     }
 
     /** @returns {Array<Title>} */

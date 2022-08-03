@@ -126,9 +126,9 @@ class BackLoading extends React.Component {
             'player',
             user.inventory.sexe,
             user.inventory.skin,
-            user.inventory.skinColor,
-            user.inventory.equipments
+            user.inventory.skinColor
         );
+        user.character.SetEquipment(user.inventory.GetEquipments());
         user.StartTimers();
 
         if (user.activities.currentActivity === null) {

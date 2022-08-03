@@ -1,5 +1,6 @@
 /**
- * @typedef {'hair'|'face'|'accessory'|'weapon'|'top'|'gloves'|'bottom'|'shoes'} Slot
+ * @typedef {'hair'|'face'|'accessory'|'weapon'|'top'|'gloves'|'bottom'|'shoes'} _OldSlot
+ * @typedef {'hair'|'top'|'bottom'|'shoes'} Slot
  * 
  * @typedef {Object} Buff
  * @property {Number} int

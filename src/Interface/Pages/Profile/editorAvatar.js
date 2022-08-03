@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, FlatList, Dimensions, StyleSheet } from 'react-native';
+import { View, Animated, FlatList, Dimensions } from 'react-native';
 
 import user from '../../../Managers/UserManager';
 import dataManager from '../../../Managers/DataManager';
@@ -7,6 +7,7 @@ import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
 import ItemCard from '../../Widgets/ItemCard';
+import styles from './editorAvatarStyle';
 import { Sleep } from '../../../Utils/Functions';
 import { SpringAnimation } from '../../../Utils/Animations';
 import { Text, Button, Separator, Icon, Frame, Character } from '../../Components';
@@ -51,7 +52,8 @@ class EditorAvatar extends React.Component {
 
     constructor(props) {
         super(props);
-        this.character = new Character('user', 'MALE', 'skin_01', user.inventory.GetEquipments());
+        this.character = new Character('user', 'MALE', 'skin_01');
+        this.character.SetEquipment(user.inventory.GetEquipments());
         //this.character.SetAnimation('idle');
     }
 
@@ -107,18 +109,23 @@ class EditorAvatar extends React.Component {
 
         const { itemSelectedID } = this.state;
         let name = '', description = '';
+        let onSellPress = () => {}, onEquipPress = () => {};
         if (itemSelectedID !== null) {
             const item = dataManager.items.GetByID(itemSelectedID);
             name = dataManager.GetText(item.Name);
             description = dataManager.GetText(item.Description);
+            onSellPress = () => {};
+            onEquipPress = () => {
+                user.inventory.Equip(item.Slot, item.ID);
+            };
         }
 
         return (
             <Animated.View style={[styles.editorCurrent, translationY]} onLayout={this.onItemSelectionLayout}>
                 <Icon containerStyle={styles.editorClose} onPress={() => this.SetSelectItem()} icon='cross' color='main1' />
 
-                <Text style={{ marginBottom: 12 }} fontSize={24} bold>{name}</Text>
-                <Text style={{ marginBottom: 12 }} fontSize={16} color='secondary'>{description}</Text>
+                <Text style={styles.editorText} fontSize={24} bold>{name}</Text>
+                <Text style={styles.editorText} fontSize={16} color='secondary'>{description}</Text>
 
                 {/* Stats (buffs) - Unused */}
                 {/*<View style={{ marginBottom: 24 }}>
@@ -140,9 +147,9 @@ class EditorAvatar extends React.Component {
                 </View>*/}
 
                 {/* Current stuff actions */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 }}>
-                    <Button style={{ width: '40%', paddingHorizontal: 4 }} borderRadius={12} color='main1'>Vendre +XX Ox</Button>
-                    <Button style={{ width: '56%' }} borderRadius={12} color='main2'>EQUIPER</Button>
+                <View style={styles.editorStuffParent}>
+                    <Button style={styles.editorStuffSellBtn} onPress={() => {}} color='main1'>{"[Vendre +XX Ox]"}</Button>
+                    <Button style={styles.editorStuffEquipBtn} onPress={onEquipPress} color='main2'>{"[EQUIPER]"}</Button>
                 </View>
 
                 <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%' }} />
@@ -196,7 +203,10 @@ class EditorAvatar extends React.Component {
         };
 
         /** @param {Slot} slot */
-        const selectSlot = (slot) => this.setState({ slotSelected: slot });
+        const selectSlot = (slot) => {
+            this.setState({ slotSelected: slot });
+            this.SetSelectItem(); // Reset selection
+        };
     
         /** @param {Slot} slot */
         const background = (slot) => this.state.slotSelected === slot ? 'main2' : 'backgroundCard';
@@ -262,85 +272,5 @@ class EditorAvatar extends React.Component {
 
 EditorAvatar.prototype.props = AvatarProps;
 EditorAvatar.defaultProps = AvatarProps;
-
-const styles = StyleSheet.create({
-    parent: {
-        width: '100%',
-        marginBottom: 24,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-
-    columnSide: {
-        width: '15%',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    columnMiddle: {
-        width: '70%',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-
-    box: {
-        width: '90%',
-        aspectRatio: 1,
-        marginVertical: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 4
-    },
-    row: {
-        width: '90%',
-        flexDirection: 'row',
-        justifyContent: 'space-evenly'
-    },
-    smallBox: {
-        width: '10%',
-        paddingHorizontal: '8%'
-    },
-    avatar: {
-        width: '80%',
-        aspectRatio: 1,
-        borderRadius: 16,
-        backgroundColor: '#FFFFFF',
-        overflow: 'hidden'
-    },
-    avatarOverlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        borderRadius: 16
-    },
-
-    editor: {
-        position: 'absolute',
-        padding: '5%',
-        paddingTop: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        elevation: 100,
-        overflow: 'hidden'
-    },
-    editorCurrent: {
-        marginBottom: 12
-    },
-    editorClose: {
-        position: 'absolute',
-        top: 0,
-        right: 12,
-        zIndex: 100,
-        elevation: 100
-    },
-    stuffStats: {
-        width: '25%',
-        marginRight: '5%',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    }
-});
 
 export default EditorAvatar;

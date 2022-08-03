@@ -28,7 +28,8 @@ class ItemCard extends React.PureComponent {
         super(props);
 
         const { item } = this.props;
-        this.character = new Character('itemcard-' + this.props.selectedId, 'MALE', 'skin_01', 0, [ item.ID ]);
+        this.character = new Character('itemcard-' + item.ID, 'MALE', 'skin_01', 0);
+        this.character.SetEquipment([ item.ID ]);
     }
 
     onPress = () => {

@@ -117,15 +117,19 @@ class Part {
                 </AnimatedG>
             );
         } else if (partType === 'stuff') {
+            if (svgItems.length === 0) return null;
+
             return (
                 <AnimatedG
                     key={`stuff-${this.name}`}
                     style={[transforms, styleZIndex]}
                 >
-                    {svgItems.map((SVG, i) => <G key={'stuff' + i}>{SVG}</G>)}
+                    {svgItems.map((SVG, i) => <G key={`stuff-${this.name}-${i}`}>{SVG}</G>)}
                 </AnimatedG>
             );
         } else if (partType === 'stuffShadow') {
+            if (svgItemsShadows.length === 0) return null;
+
             return (
                 <AnimatedG
                     key={`stuff-shadow-${this.name}`}
@@ -133,7 +137,7 @@ class Part {
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >
-                    {svgItemsShadows.map((shadow, i) => <G key={'stuff-shadow' + i}>{shadow}</G>)}
+                    {svgItemsShadows.map((shadow, i) => <G key={`stuff-shadow-${this.name}-${i}`}>{shadow}</G>)}
                 </AnimatedG>
             );
         }

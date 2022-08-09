@@ -43,10 +43,71 @@
             }
         }
 
+        function IsSafe($string) {
+            return !preg_match('/[^a-zA-Z0-9_]/', $string);
+        }
+
+        /**
+         * Used to select, insert, update or delete data.
+         * @param string $table The table to replace in query.
+         * @param string $command The query command to execute.
+         * @param string $types The types of the parameters. ('i'(nteger), 'd'(ouble), 's'(tring), 'b'(lob))
+         * @param array $variables The variables to bind to the query.
+         * @return array|int|false Array if query type is select, otherwise the number of affected rows or false if the query failed.
+         * @throws Exception if the connection is not open.
+         */
+        public function QueryPrepare($table, $command, $types = '', $variables = array()) {
+            if ($this->conn === null) {
+                throw(new Exception('Connection not opened'));
+            }
+            if (!$this->IsSafe($table)) {
+                throw(new Exception('Invalid table name'));
+            }
+            if (gettype($variables) !== 'array') {
+                throw(new Exception('Invalid variables type (must be an array)'));
+            }
+
+            $replace = 0;
+            $command = str_replace('`TABLE`', "`$table`", $command, $replace);
+            if ($replace === 0) {
+                $command = str_replace('TABLE', "`$table`", $command, $replace);
+            }
+
+            $query = $this->conn->prepare($command);
+            if ($query === false) return false;
+
+            if (count($variables)) {
+                $bind = $query->bind_param($types, ...$variables);
+                if ($bind === false) return false;
+            }
+
+            try {
+                $result = $query->execute();
+                if ($result === false) return false;
+            } catch (Exception $e) {
+                //print_r($e);
+                return false;
+            }
+
+            $output = $query->affected_rows;
+            if (StartsWith($command, 'SELECT')) {
+                $output = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+            }
+
+            $query->close();
+            return $output;
+        }
+
+        /**
+         * @deprecated
+         */
         public function Query($command) {
             return $this->conn->query($command);
         }
 
+        /**
+         * @deprecated
+         */
         public function QueryArray($command) {
             $output = null;
             $query = $this->Query($command);

@@ -192,7 +192,7 @@ class UserManager {
         }
 
         if (this.inventory.IsUnsaved()) {
-            data['equipments'] = this.inventory.GetUnsaved();
+            data['avatar'] = this.inventory.GetUnsaved();
         }
 
         if (this.achievements.IsUnsaved()) {

@@ -55,15 +55,15 @@ class Skills {
     Load(data) {
         if (typeof(data) === 'object') {
             if (data.hasOwnProperty('skills')) this.skills = data.skills;
-            if (data.hasOwnProperty('skillsIcons')) this.icons = data.skillsIcons;
-            if (data.hasOwnProperty('skillsCategories')) this.categories = data.skillsCategories;
+            if (data.hasOwnProperty('skillsIcon')) this.icons = data.skillsIcon;
+            if (data.hasOwnProperty('skillsCategory')) this.categories = data.skillsCategory;
         }
     }
     Save() {
         const data = {
             skills: this.skills,
-            skillsIcons: this.icons,
-            skillsCategories: this.categories
+            skillsIcon: this.icons,
+            skillsCategory: this.categories
         };
         return data;
     }

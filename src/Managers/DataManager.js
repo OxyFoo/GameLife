@@ -119,14 +119,7 @@ class DataManager {
                 if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);
                 if (reqTables.hasOwnProperty('items')) this.items.Load(reqTables['items']);
                 if (reqTables.hasOwnProperty('quotes')) this.quotes.Load(reqTables['quotes']);
-                if (reqTables.hasOwnProperty('skills')) {
-                    const skills = {
-                        skills: reqTables['skills'],
-                        skillsIcons: reqTables['skillsIcon'],
-                        skillsCategories: reqTables['skillsCategory']
-                    };
-                    this.skills.Load(skills);
-                }
+                if (reqTables.hasOwnProperty('skills')) this.skills.Load(reqTables);
                 if (reqTables.hasOwnProperty('titles')) this.titles.Load(reqTables['titles']);
 
                 await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes, false);

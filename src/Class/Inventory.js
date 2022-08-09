@@ -31,29 +31,28 @@ class Inventory {
          */
         this.stuffs = [];
 
-        /** @type {Sexes} */
-        this.sexe = 'MALE';
+        this.avatar = {
+            /** @type {Sexes} */
+            Sexe: 'MALE',
 
-        /** @type {CharactersName} */
-        this.skin = 'skin_01';
+            /** @type {CharactersName} */
+            Skin: 'skin_01',
 
-        /** @type {Number} */
-        this.skinColor = 1;
+            /** @type {Number} */
+            SkinColor: 1,
 
-        this.equipments = {
-            hair: null,
-            top: 'top_01',
-
-            bottom: null,
-            shoes: null
-        }
+            Hair: '',
+            Top: '',
+            Bottom: '',
+            Shoes: ''
+        };
 
         /**
-         * Set to true if inventory is edited (skin, equipment, etc)
+         * Set to true if avatar is edited
          * Used to know if we need to save it
          * @type {Boolean}
          */
-        this.equipmentsEdited = false;
+        this.avatarEdited = false;
     }
 
     Clear() {
@@ -64,13 +63,7 @@ class Inventory {
         const contains = (key) => inventory.hasOwnProperty(key);
         if (contains('titles')) this.titles = inventory['titles'];
         if (contains('stuffs')) this.stuffs = inventory['stuffs'].map(task => Object.assign(new Stuff(), task));
-        if (contains('equipments') && typeof(inventory['equipments']) === 'object') {
-            for (const slot in inventory['equipments']) {
-                if (this.equipments.hasOwnProperty(slot)) {
-                    this.equipments[slot] = inventory['equipments'][slot];
-                }
-            }
-        }
+        if (contains('avatar') && typeof(inventory['avatar']) === 'object') this.avatar = inventory['avatar'];
         this.user.interface.console.AddLog('info', `${this.titles.length} titles loaded`);
         this.user.interface.console.AddLog('info', `${this.stuffs.length} stuffs loaded`);
     }
@@ -78,25 +71,25 @@ class Inventory {
         const contains = (key) => data.hasOwnProperty(key);
         if (contains('titles')) this.titles = data['titles'];
         if (contains('stuffs')) this.stuffs = data['stuffs'];
-        if (contains('equipments')) this.equipments = data['equipments'];
+        if (contains('avatar')) this.avatar = data['avatar'];
     }
     Save() {
         const data = {
             titles: this.titles,
             stuffs: this.stuffs,
-            equipments: this.equipments
+            avatar: this.avatar
         };
         return data;
     }
 
     IsUnsaved = () => {
-        return this.equipmentsEdited;
+        return this.avatarEdited;
     }
     GetUnsaved = () => {
-        return this.equipments;
+        return this.avatar;
     }
     Purge = () => {
-        this.equipmentsEdited = false;
+        this.avatarEdited = false;
     }
 
     /**
@@ -104,16 +97,16 @@ class Inventory {
      * @param {String} itemID 
      */
     Equip = (slot, itemID) => {
-        if (!this.equipments.hasOwnProperty(slot)) {
+        if (!this.avatar.hasOwnProperty(slot)) {
             this.user.interface.console.AddLog('error', `Slot ${slot} doesn't exist`);
             return;
         }
-        if (this.equipments[slot] === itemID) {
+        if (this.avatar[slot] === itemID) {
             return;
         }
 
-        this.equipments[slot] = itemID;
-        this.equipmentsEdited = true;
+        this.avatar[slot] = itemID;
+        this.avatarEdited = true;
 
         // Refresh user character
         this.user.character.SetEquipment(this.GetEquipments());
@@ -124,7 +117,14 @@ class Inventory {
     /** @returns {Array<Item>} */
     GetStuffs = () => this.stuffs.map((stuff) => dataManager.items.GetByID(stuff.ItemID));
     /** @returns {Array<String>} */
-    GetEquipments = () => Object.values(this.equipments).filter(item => item !== null);
+    GetEquipments = () => {
+        return [
+            this.avatar.Hair,
+            this.avatar.Top,
+            this.avatar.Bottom,
+            this.avatar.Shoes
+        ];
+    }
 }
 
 export default Inventory;

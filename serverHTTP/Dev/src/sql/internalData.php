@@ -51,7 +51,7 @@
      * @param DataBase $db
      */
     function GetAchievements($db) {
-        $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
+        $achievements = $db->QueryArray('SELECT * FROM `Achievements`');
         if ($achievements === null) return array();
         for ($i = 0; $i < count($achievements); $i++) {
             $achievements[$i]['ID'] = intval($achievements[$i]['ID']);
@@ -66,7 +66,7 @@
      * @param DataBase $db
      */
     function GetContributors($db) {
-        $helpers = $db->QueryArray("SELECT * FROM `Contributors`");
+        $helpers = $db->QueryArray('SELECT * FROM `Contributors`');
         if ($helpers === null) return array();
 
         for ($i = 0; $i < count($helpers); $i++) {
@@ -80,7 +80,7 @@
      * @param DataBase $db
      */
     function GetItems($db) {
-        $items = $db->QueryArray("SELECT * FROM `Items`");
+        $items = $db->QueryArray('SELECT * FROM `Items`');
         if ($items === null) return array();
 
         for ($i = 0; $i < count($items); $i++) {
@@ -98,7 +98,7 @@
      * @param DataBase $db
      */
     function GetQuotes($db) {
-        $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
+        $quotes = $db->QueryArray('SELECT * FROM `Quotes`');
         if ($quotes === null) return array();
         for ($i = 0; $i < count($quotes); $i++) {
             $quotes[$i]['ID'] = intval($quotes[$i]['ID']);
@@ -110,60 +110,60 @@
      * @param DataBase $db
      */
     function GetSkills($db) {
-        $skills = $db->QueryArray("SELECT * FROM `Skills`");
-        $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
+        $skills = $db->QueryArray('SELECT * FROM `Skills`');
+        $categories = $db->QueryArray('SELECT * FROM `SkillsCategory`');
 
         $skills_safe = array();
         if ($skills !== null && $categories !== null) {
             for ($i = 0; $i < count($skills); $i++) {
-                $skills[$i]["ID"] = intval($skills[$i]["ID"]);
-                $skills[$i]["XP"] = intval($skills[$i]["XP"]);
+                $skills[$i]['ID'] = intval($skills[$i]['ID']);
+                $skills[$i]['XP'] = intval($skills[$i]['XP']);
 
                 // Get old stats
-                $Intelligence = $skills[$i]["Intelligence"];
-                $Social = $skills[$i]["Social"];
-                $Strength = $skills[$i]["Strength"];
-                $Stamina = $skills[$i]["Stamina"];
-                $Dexterity = $skills[$i]["Dexterity"];
-                $Agility = $skills[$i]["Agility"];
+                $Intelligence = $skills[$i]['Intelligence'];
+                $Social       = $skills[$i]['Social'];
+                $Strength     = $skills[$i]['Strength'];
+                $Stamina      = $skills[$i]['Stamina'];
+                $Dexterity    = $skills[$i]['Dexterity'];
+                $Agility      = $skills[$i]['Agility'];
 
                 // Remove old stats
-                unset($skills[$i]["Intelligence"]);
-                unset($skills[$i]["Social"]);
-                unset($skills[$i]["Strength"]);
-                unset($skills[$i]["Stamina"]);
-                unset($skills[$i]["Dexterity"]);
-                unset($skills[$i]["Agility"]);
+                unset($skills[$i]['Intelligence']);
+                unset($skills[$i]['Social']);
+                unset($skills[$i]['Strength']);
+                unset($skills[$i]['Stamina']);
+                unset($skills[$i]['Dexterity']);
+                unset($skills[$i]['Agility']);
 
                 // Add new stats
                 $Stats = array(
-                    "int" => intval($Intelligence),
-                    "soc" => intval($Social),
-                    "for" => intval($Strength),
-                    "end" => intval($Stamina),
-                    "agi" => intval($Agility),
-                    "dex" => intval($Dexterity)
+                    'int' => intval($Intelligence),
+                    'soc' => intval($Social),
+                    'for' => intval($Strength),
+                    'end' => intval($Stamina),
+                    'agi' => intval($Agility),
+                    'dex' => intval($Dexterity)
                 );
-                $skills[$i]["Stats"] = $Stats;
+                $skills[$i]['Stats'] = $Stats;
 
                 // Verifications
-                $Name = $skills[$i]["Name"];
-                $CategoryID = $skills[$i]["CategoryID"];
+                $Name = $skills[$i]['Name'];
+                $CategoryID = $skills[$i]['CategoryID'];
                 if (empty($Name) || $CategoryID === 0) {
                     continue;
                 }
                 $skills[$i]['Name'] = json_decode($Name);
-                $skills[$i]["CategoryID"] = intval($CategoryID);
+                $skills[$i]['CategoryID'] = intval($CategoryID);
 
                 // Logo
-                $LogoID = $skills[$i]["LogoID"];
-                $skills[$i]["LogoID"] = intval($LogoID);
-                if ($LogoID == 0) {
+                $LogoID = intval($skills[$i]['LogoID']);
+                $skills[$i]['LogoID'] = $LogoID;
+                if ($LogoID === 0) {
                     for ($c = 0; $c < count($categories); $c++) {
-                        if ($categories[$c]["ID"] == $CategoryID) {
-                            $categoryLogoID = $categories[$c]["LogoID"];
+                        if ($categories[$c]['ID'] == $CategoryID) {
+                            $categoryLogoID = $categories[$c]['LogoID'];
                             if ($categoryLogoID != 0) {
-                                $skills[$i]["LogoID"] = intval($categoryLogoID);
+                                $skills[$i]['LogoID'] = intval($categoryLogoID);
                             }
                             break;
                         }
@@ -174,7 +174,7 @@
             }
         }
 
-        $skills_sorted = SortDictBy($skills_safe, "Name");
+        $skills_sorted = SortDictBy($skills_safe, 'Name');
 
         return $skills_sorted;
     }
@@ -183,10 +183,10 @@
      * @param DataBase $db
      */
     function GetSkillsIcon($db) {
-        $skillsIcon = $db->QueryArray("SELECT * FROM `SkillsIcon`");
+        $skillsIcon = $db->QueryArray('SELECT * FROM `SkillsIcon`');
         if ($skillsIcon === null) return array();
         for ($i = 0; $i < count($skillsIcon); $i++) {
-            $skillsIcon[$i]["ID"] = intval($skillsIcon[$i]["ID"]);
+            $skillsIcon[$i]['ID'] = intval($skillsIcon[$i]['ID']);
         }
         return $skillsIcon;
     }
@@ -195,10 +195,10 @@
      * @param DataBase $db
      */
     function GetSkillsCategory($db) {
-        $categories = $db->QueryArray("SELECT * FROM `SkillsCategory`");
+        $categories = $db->QueryArray('SELECT * FROM `SkillsCategory`');
         if ($categories === null) return array();
         for ($i = 0; $i < count($categories); $i++) {
-            $categories[$i]["ID"] = intval($categories[$i]["ID"]);
+            $categories[$i]['ID'] = intval($categories[$i]['ID']);
             $categories[$i]['Name'] = json_decode($categories[$i]['Name']);
         }
         return $categories;
@@ -208,11 +208,11 @@
      * @param DataBase $db
      */
     function GetTitles($db) {
-        $titles = $db->QueryArray("SELECT * FROM `Titles`");
+        $titles = $db->QueryArray('SELECT * FROM `Titles`');
         if ($titles === null) return array();
         for ($i = 0; $i < count($titles); $i++) {
-            $titles[$i]["ID"] = intval($titles[$i]["ID"]);
-            $titles[$i]["Name"] = json_decode($titles[$i]["Name"]);
+            $titles[$i]['ID'] = intval($titles[$i]['ID']);
+            $titles[$i]['Name'] = json_decode($titles[$i]['Name']);
         }
         return $titles;
     }

@@ -250,7 +250,7 @@
                 $userData['inventory'] = array(
                     'stuffs' => Users::GetInventory($this->db, $account, 'stuff'),
                     'titles' => Users::GetInventory($this->db, $account, 'title'),
-                    'equipments' => $account->Equipments
+                    'avatar' => Users::GetAvatar($this->db, $account)
                 );
                 $userData['tasks'] = Users::GetTasks($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;

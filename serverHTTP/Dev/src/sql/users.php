@@ -14,7 +14,7 @@
         public static function ExecQueue($db, $account, $deviceID, $data) {
             $activities = $data['activities'];
             $tasks = $data['tasks'];
-            $equipments = $data['equipments'];
+            $avatar = $data['avatar'];
             $xp = $data['xp'];
             $achievements = $data['achievements'];
             $titleID = $data['titleID'];
@@ -26,8 +26,8 @@
             if (isset($tasks)) {
                 self::AddTasks($db, $account, $tasks);
             }
-            if (isset($equipments)) {
-                self::SetEquipments($db, $account, $equipments);
+            if (isset($avatar)) {
+                self::SetAvatar($db, $account, $avatar);
             }
             if (isset($xp)) {
                 self::setXP($db, $account->ID, $xp);
@@ -310,15 +310,58 @@
         /**
          * @param DataBase $db
          * @param Account $account
-         * @param object $equipments
          */
-        private static function SetEquipments($db, $account, $equipments) {
-            $accountID = $account->ID;
-            $equipmentsText = json_encode($equipments);
-            $command = "UPDATE `Accounts` SET `Equipments` = '$equipmentsText' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+        public static function GetAvatar($db, $account) {
+            $command = "SELECT * FROM TABLE WHERE `ID` = ?";
+            $avatar = $db->QueryPrepare('Avatars', $command, 'i', [ $account->ID ]);
+            if ($avatar === false) ExitWithStatus("Error: getting avatar failed");
+
+            if (count($avatar) === 0) {
+                $command_add = "INSERT INTO TABLE (`ID`) VALUES (?)";
+                $result = $db->QueryPrepare('Avatars', $command_add, 'i', [ $account->ID ]);
+                if ($result === false) ExitWithStatus("Error: adding avatar failed");
+
+                return self::GetAvatar($db, $account);
+            }
+
+            $avatar = $avatar[0];
+            unset($avatar['ID']);
+
+            return $avatar;
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param object $avatar
+         */
+        private static function SetAvatar($db, $account, $avatar) {
+            $Sexe = $avatar['Sexe'];
+            $Skin = $avatar['Skin'];
+            $SkinColor = $avatar['SkinColor'];
+            $Hair = $avatar['Hair'];
+            $Top = $avatar['Top'];
+            $Bottom = $avatar['Bottom'];
+            $Shoes = $avatar['Shoes'];
+
+            if (!isset($Sexe, $Skin, $SkinColor, $Hair, $Top, $Bottom, $Shoes)) {
+                ExitWithStatus("Error: invalid avatar");
+            }
+
+            $command = "UPDATE TABLE SET
+                `Sexe` = ?, `Skin` = ?, `SkinColor` = ?,
+                `Hair` = ?, `Top` = ?, `Bottom` = ?, `Shoes` = ?
+                WHERE `ID` = ?";
+
+            $args = [
+                $Sexe, $Skin, $SkinColor,
+                $Hair, $Top, $Bottom, $Shoes,
+                $account->ID
+            ];
+
+            $result = $db->QueryPrepare('Avatars', $command, 'ssissssi', $args);
             if ($result === false) {
-                ExitWithStatus("Error: saving equipments failed");
+                ExitWithStatus("Error: saving avatar failed");
             }
         }
 

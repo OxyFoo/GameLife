@@ -1,5 +1,9 @@
 <?php
 
+    function StartsWith($haystack, $needle) {
+        return $needle === '' || strpos($haystack, $needle) === 0;
+    }
+
     /**
      * @param int $length Length of the random string
      * @return string Random string

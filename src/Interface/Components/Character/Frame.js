@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Svg from 'react-native-svg';
 
 import themeManager from '../../../Managers/ThemeManager';
+import { Sleep } from '../../../Utils/Functions';
 
 import Icon from '../Icon';
 
@@ -11,8 +12,12 @@ import Icon from '../Icon';
  */
 
 const FrameProps = {
-    width: 1000,
-    height: 1000,
+    size: {
+        x: 0,
+        y: 0,
+        width: 1000,
+        height: 1000
+    },
 
     /** @type {Array<Character>} */
     characters: [],
@@ -20,25 +25,24 @@ const FrameProps = {
     /** @type {Boolean} */
     onlyItems: false,
 
-    /** @type {Number} Time to wait for loading - TODO - Automatic end after loading */
+    /** @type {Number} Time to wait before loading in ms */
+    delayTime: 0,
+
+    /** @type {Number} Time to wait for loading in ms - TODO - Automatic end after loading */
     loadingTime: 1400
 }
 
 class Frame extends React.Component {
+    _mounted = true;
     state = {
-        mounted: false
+        loaded: false
     }
 
     componentDidMount() {
-        this.updateCharacters(this.props.characters);
-
-        // Loading page
-        setTimeout(() => {
-            this.setState({ mounted: true })
-        }, this.props.loadingTime);
+        setTimeout(this.startLoading.bind(this), this.props.delayTime);
     }
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextState.mounted !== this.state.mounted) {
+        if (nextState.loaded !== this.state.loaded) {
             return true;
         }
 
@@ -52,6 +56,16 @@ class Frame extends React.Component {
     componentWillUnmount() {
         const { characters } = this.props;
         characters.forEach(character => character.unmount());
+        this._mounted = false;
+    }
+
+    async startLoading() {
+        if (!this._mounted) return;
+        this.updateCharacters(this.props.characters);
+
+        await Sleep(this.props.loadingTime);
+        if (!this._mounted) return;
+        this.setState({ loaded: true });
     }
 
     /** @param {Array<Character>} characters */
@@ -60,8 +74,8 @@ class Frame extends React.Component {
     }
 
     render() {
-        const { width, height, characters, onlyItems } = this.props;
-        const viewBox = [ 0, 0, width, height ].join(' ');
+        const { size, characters, onlyItems } = this.props;
+        const viewBox = [ size.x, size.y, size.width, size.height ].join(' ');
         const loadingColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
@@ -69,7 +83,7 @@ class Frame extends React.Component {
                 <Svg viewBox={viewBox}>
                     {characters.map(charac => charac.render(onlyItems))}
                 </Svg>
-                {!this.state.mounted && (
+                {!this.state.loaded && (
                     <View style={[styles.loading, loadingColor]}>
                         <Icon icon='loadingDots' />
                     </View>

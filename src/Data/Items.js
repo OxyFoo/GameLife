@@ -19,8 +19,17 @@ const Rarity = {
     event: 4
 }
 
+const itemContainerSize = {
+    default: { x: 0, y: 0, width: 1000, height: 1000 },
+    hair: { x: 100, y: -50, width: 700, height: 550 },
+    top: { x: 180, y: 200, width: 400, height: 550 },
+    bottom: { x: 200, y: 320, width: 600, height: 400 },
+    shoes: { x: 300, y: 600, width: 400, height: 400 }
+};
+
 class Item {
     ID = '';
+    Variant = null;
     /** @type {Slot} */
     Slot = '';
     Name = { fr: '', en: '' };
@@ -54,8 +63,17 @@ class Items {
         return this.items;
     }
 
-    /** @returns {Item?} */
+    /**
+     * @param {String} ID
+     * @returns {Item?}
+     */
     GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
+
+    /**
+     * @param {'default'|Slot} slot
+     * @returns {{ x: Number, y: Number, width: Number, height: Number }}
+     */
+    GetContainerSize = (slot) => itemContainerSize[slot];
 }
 
 export { Item, Rarity };

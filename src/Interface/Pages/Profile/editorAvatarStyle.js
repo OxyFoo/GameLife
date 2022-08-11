@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
 
     box: {
         width: '90%',
+        padding: 0,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
         aspectRatio: 1,
         marginVertical: 8,
         alignItems: 'center',

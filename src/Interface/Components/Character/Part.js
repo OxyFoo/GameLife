@@ -147,9 +147,15 @@ class Part {
 function RP(props) {
     let [ active, setActive ] = React.useState(false);
     React.useEffect(() => {
+        let isMounted = true;
+
         setTimeout(() => {
-            setActive(true);
+            if (isMounted) setActive(true);
         }, 100 + Math.random() * 1000);
+
+        return () => {
+            isMounted = false;
+        }
     }, [active]);
     return !active ? null : props.part?.render(props.partType);
 }

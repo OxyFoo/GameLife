@@ -3,7 +3,7 @@ import Svg, { G, LinearGradient, Stop, Path, Ellipse } from 'react-native-svg';
 
 const component = {
     svg: {
-        left_thigh: <G id="couleurs">
+        right_thigh: <G id="couleurs">
         <LinearGradient id="path36033_0" gradientUnits="userSpaceOnUse" x1={-1.4722} y1={92.2495} x2={2.1365} y2={-11.8876} gradientTransform="matrix(2.8346 0 0 2.8346 0 4.553604e-02)" >
           <Stop offset={0} style={{ stopColor: "#5B83B1", }} />
           <Stop offset={1} style={{ stopColor: "#CFD1D2", }} />
@@ -74,7 +74,7 @@ const component = {
       </G>
     },
     shadow: {
-        left_thigh: <G id="contours" className="st9">
+        right_thigh: <G id="contours" className="st9">
           <Path d="M-50.1,5.9c0,0,87.5,3,126.8-9.6" />
           <Path d="M-50.1,5.9c0,0-28.3,83.3-18.9,169.3" />
           <Path d="M-70.9,153.7c0,0-22.2,37.7-15.9,89.6" />

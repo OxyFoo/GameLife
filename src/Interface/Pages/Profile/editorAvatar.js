@@ -18,15 +18,6 @@ const AvatarProps = {
     onChangeState: (opened) => {}
 }
 
-const TEST_STATS = {
-    'int': 1,
-    'soc': 2,
-    'for': 0,
-    'end': 4,
-    'agi': 0,
-    'dex': 5
-};
-
 /**
  * @typedef {import('../../../Data/Items').Slot} Slot
  * @typedef {'skin'|'skinColor'} SkinSlot
@@ -225,25 +216,6 @@ class EditorAvatar extends React.Component {
 
                 <Text style={styles.editorText} fontSize={24} bold>{name}</Text>
                 <Text style={styles.editorText} fontSize={16} color='secondary'>{description}</Text>
-
-                {/* Stats (buffs) - Unused */}
-                {/*<View style={{ marginBottom: 24 }}>
-                    <FlatList
-                        columnWrapperStyle={{ justifyContent: 'center', marginLeft: '5%' }}
-                        data={Object.keys(TEST_STATS)}
-                        numColumns={3}
-                        renderItem={({item}) => {
-                            const value = TEST_STATS[item];
-                            return (
-                                <View style={[styles.stuffStats, { opacity: value === 0 ? .5 : 1 }]}>
-                                    <Text style={{ textAlign: 'left' }} fontSize={12} color='secondary'>{langManager.curr['statistics']['names'][item] + ':'}</Text>
-                                    <Text style={{ textAlign: 'left' }} fontSize={12} color={value === 0 ? 'secondary' : 'primary'}>{'+' + value}</Text>
-                                </View>
-                            )
-                        }}
-                        keyExtractor={(item, index) => 'stat' + index}
-                    />
-                </View>*/}
 
                 {/* Current stuff actions */}
                 <View style={styles.editorStuffParent}>

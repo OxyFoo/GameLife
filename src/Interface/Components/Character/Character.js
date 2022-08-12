@@ -16,7 +16,7 @@ class Character {
      * @param {Number} skinColor
      * @param {{ x: Number, y: Number }} pos
      */
-    constructor(name, sexe, skin, skinColor, pos = { x: 450, y: 280 }) {
+    constructor(name, sexe, skin, skinColor, pos = { x: 450, y: 340 }) {
         this.name = name;
         this.sexe = sexe;
         this.skin = skin;

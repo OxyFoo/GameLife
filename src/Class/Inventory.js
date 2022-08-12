@@ -116,7 +116,7 @@ class Inventory {
     GetTitles = () => this.titles.map(dataManager.titles.GetByID);
     /** @returns {Array<Item>} */
     GetStuffs = () => this.stuffs.map((stuff) => dataManager.items.GetByID(stuff.ItemID));
-    /** @returns {Array<String>} */
+    /** @returns {Array<String>} Get list of equipped items */
     GetEquipments = () => {
         return [
             this.avatar.Hair,

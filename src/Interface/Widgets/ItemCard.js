@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
 import dataManager from '../../Managers/DataManager';
+import themeManager from '../../Managers/ThemeManager';
 
-import { STUFFS } from '../../../res/items/stuffs/Stuffs';
 import { Character, Frame } from '../Components';
 
 /**

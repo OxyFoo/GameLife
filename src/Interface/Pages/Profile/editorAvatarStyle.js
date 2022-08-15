@@ -75,12 +75,10 @@ const styles = StyleSheet.create({
         zIndex: 100,
         elevation: 100
     },
-    /*stuffStats: {
-        width: '25%',
-        marginRight: '5%',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    }*/
+    editorTitle: {
+        marginBottom: 12,
+        marginHorizontal: 24
+    },
     editorText: {
         marginBottom: 12
     },

@@ -70,16 +70,15 @@
                 $type = $elements[0];
                 $value = $elements[1];
                 if ($type === 'OX') {
-                    $output = Users::AddOx($db, $account->ID, $value);
+                    $output |= Users::AddOx($db, $account->ID, $value);
                 } else if ($type === 'Title') {
-                    $output = Users::AddItem($db, $account, $value, 'title');
-                    if ($output) Users::RefreshDataToken($db, $account->ID);
+                    $output |= Users::AddInventoryTitle($db, $account, intval($value));
                 } else if ($type === 'Item') {
-                    $output = Users::AddItem($db, $account, $value, 'stuff');
-                    if ($output) Users::RefreshDataToken($db, $account->ID);
+                    $output |= Users::AddInventoryItem($db, $account, $value);
                 }
             }
 
+            if ($output) Users::RefreshDataToken($db, $account->ID);
             return $output;
         }
     }

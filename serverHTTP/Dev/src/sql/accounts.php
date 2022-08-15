@@ -11,12 +11,29 @@
          * @return Account|null
          */
         public static function Add($db, $username, $email, $deviceID) {
-            $command = "INSERT INTO `Accounts` (`Username`, `Email`, `CreatedBy`) VALUES ('$username', '$email', '$deviceID')";
-            $result = $db->Query($command);
-            if ($result === false) {
-                ExitWithStatus("Error: Adding device in DB failed");
+            // Add account
+            $command = "INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`) VALUES (?, ?, ?)";
+            $args = [ $username, $email, $deviceID ];
+            $result = $db->QueryPrepare('Accounts', $command, 'ssi', $args);
+            if ($result === false) ExitWithStatus("Error: Adding device in DB failed");
+            $account = Accounts::GetByID($db, $db->GetLastInsertID());
+
+            // Add default items
+            $items = [ 'hair_01', 'top_01', 'bottom_01', 'shoes_01' ];
+            $IDs = [];
+            foreach ($items as $item) {
+                $itemAdded = Users::AddInventoryItem($db, $account, $item);
+                if (!$itemAdded) ExitWithStatus("Error: Adding default item failed");
+                array_push($IDs, $db->GetLastInsertID());
             }
-            return Accounts::GetByID($db, $db->GetLastInsertID());
+
+            // Add avatar with default items
+            $command = "INSERT INTO TABLE (`ID`, `Hair`, `Top`, `Bottom`, `Shoes`) VALUES (?, ?, ?, ?, ?)";
+            $args = [ $account->ID, ...$IDs ];
+            $result = $db->QueryPrepare('Avatars', $command, 'iiiii', $args);
+            if ($result === false) ExitWithStatus("Error: adding avatar failed");
+
+            return $account;
         }
 
         /**
@@ -134,8 +151,10 @@
          * @return bool Success of deletion
          */
         public static function Delete($db, $accountID) {
+            $remActivities = $db->Query("DELETE FROM `Avatars` WHERE `ID` = '$accountID'");
             $remActivities = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID'");
             $remInventory = $db->Query("DELETE FROM `Inventories` WHERE `AccountID` = '$accountID'");
+            $remInventory = $db->Query("DELETE FROM `InventoriesTitles` WHERE `AccountID` = '$accountID'");
             $remUser = $db->Query("DELETE FROM `Accounts` WHERE `ID` = '$accountID'");
             return $remActivities !== false && $remUser !== false && $remInventory !== false;
         }

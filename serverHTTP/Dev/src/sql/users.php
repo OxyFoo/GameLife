@@ -186,25 +186,17 @@
         /**
          * @param DataBase $db
          * @param Account $account
-         * @param 'stuff' | 'title' $type
          * @return array
          */
-        public static function GetInventory($db, $account, $type) {
+        public static function GetInventory($db, $account) {
             $accountID = $account->ID;
-            $cell = $type === 'stuff' ? 'ItemID' : 'TitleID';
-            $command = "SELECT `$cell`, `CreatedBy`, `CreatedAt` FROM `Inventories` WHERE `AccountID` = '$accountID' AND `Type` = '$type'";
+            $command = "SELECT `ID`, `ItemID`, `CreatedBy`, `CreatedAt` FROM `Inventories` WHERE `AccountID` = '$accountID'";
             $rows = $db->QueryArray($command);
             if ($rows === null) {
                 ExitWithStatus("Error: getting inventory failed");
             }
-            if ($type === 'stuff') {
-                for ($i = 0; $i < count($rows); $i++) {
-                    $rows[$i]['ItemID'] = $rows[$i]['ItemID'];
-                }
-            } else if ($type === 'title') {
-                for ($i = 0; $i < count($rows); $i++) {
-                    $rows[$i] = intval($rows[$i]['TitleID']);
-                }
+            for ($i = 0; $i < count($rows); $i++) {
+                $rows[$i]['ID'] = intval($rows[$i]['ID']);
             }
             return $rows;
         }
@@ -212,15 +204,44 @@
         /**
          * @param DataBase $db
          * @param Account $account
-         * @param 'stuff' | 'title' $type
-         * @return bool
+         * @return array
          */
-        public static function AddItem($db, $account, $itemID, $type) {
+        public static function GetInventoryTitles($db, $account) {
             $accountID = $account->ID;
-            $createdBy = $account->Username;
-            $cell = $type === 'stuff' ? 'ItemID' : 'TitleID';
-            $command = "INSERT INTO `Inventories` (`AccountID`, `Type`, `$cell`, `CreatedBy`) VALUES ('$accountID', '$type', '$itemID', '$createdBy')";
-            $result = $db->Query($command);
+            $command = "SELECT `ItemID` FROM `InventoriesTitles` WHERE `AccountID` = '$accountID'";
+            $rows = $db->QueryArray($command);
+            if ($rows === null) {
+                ExitWithStatus("Error: getting inventory failed");
+            }
+            for ($i = 0; $i < count($rows); $i++) {
+                $rows[$i] = intval($rows[$i]['ItemID']);
+            }
+            return $rows;
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param string $itemID
+         * @return bool Success
+         */
+        public static function AddInventoryItem($db, $account, $itemID) {
+            $command = "INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)";
+            $args = array($account->ID, $itemID, $account->ID);
+            $result = $db->QueryPrepare('Inventories', $command, 'isi', $args);
+            return $result !== false;
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param int $itemID
+         * @return bool Success
+         */
+        public static function AddInventoryTitle($db, $account, $itemID) {
+            $command = "INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)";
+            $args = array($account->ID, $itemID, $account->ID);
+            $result = $db->QueryPrepare('InventoriesTitles', $command, 'iii', $args);
             return $result !== false;
         }
 
@@ -315,17 +336,24 @@
             $command = "SELECT * FROM TABLE WHERE `ID` = ?";
             $avatar = $db->QueryPrepare('Avatars', $command, 'i', [ $account->ID ]);
             if ($avatar === false) ExitWithStatus("Error: getting avatar failed");
-
-            if (count($avatar) === 0) {
-                $command_add = "INSERT INTO TABLE (`ID`) VALUES (?)";
-                $result = $db->QueryPrepare('Avatars', $command_add, 'i', [ $account->ID ]);
-                if ($result === false) ExitWithStatus("Error: adding avatar failed");
-
-                return self::GetAvatar($db, $account);
-            }
+            if (count($avatar) === 0) ExitWithStatus("Error: avatar not found");
 
             $avatar = $avatar[0];
+
+            $avatar['sexe']      = $avatar['Sexe'];
+            $avatar['skin']      = $avatar['Skin'];
+            $avatar['skinColor'] = intval($avatar['SkinColor']);
+            $avatar['hair']      = intval($avatar['Hair']);
+            $avatar['top']       = intval($avatar['Top']);
+            $avatar['bottom']    = intval($avatar['Bottom']);
+            $avatar['shoes']     = intval($avatar['Shoes']);
+
             unset($avatar['ID']);
+            unset($avatar['SkinColor']);
+            unset($avatar['Hair']);
+            unset($avatar['Top']);
+            unset($avatar['Bottom']);
+            unset($avatar['Shoes']);
 
             return $avatar;
         }
@@ -336,13 +364,13 @@
          * @param object $avatar
          */
         private static function SetAvatar($db, $account, $avatar) {
-            $Sexe = $avatar['Sexe'];
-            $Skin = $avatar['Skin'];
-            $SkinColor = $avatar['SkinColor'];
-            $Hair = $avatar['Hair'];
-            $Top = $avatar['Top'];
-            $Bottom = $avatar['Bottom'];
-            $Shoes = $avatar['Shoes'];
+            $Sexe      = $avatar['sexe'];
+            $Skin      = $avatar['skin'];
+            $SkinColor = $avatar['skinColor'];
+            $Hair      = $avatar['hair'];
+            $Top       = $avatar['top'];
+            $Bottom    = $avatar['bottom'];
+            $Shoes     = $avatar['shoes'];
 
             if (!isset($Sexe, $Skin, $SkinColor, $Hair, $Top, $Bottom, $Shoes)) {
                 ExitWithStatus("Error: invalid avatar");
@@ -485,6 +513,7 @@
          * Get number of all ads watched
          * @param DataBase $db
          * @param int $accountID
+         * @param string $code
          * @return string|null Return reward if any, null otherwise
          */
         public static function CheckGiftCode($db, $accountID, $code) {

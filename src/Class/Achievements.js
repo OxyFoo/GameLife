@@ -286,7 +286,7 @@ class Achievements {
                     value = categoryXP.lvl;
                     break;
                 case 'It': // Number of items
-                    value = this.user.inventory.GetStuffs().length;
+                    value = this.user.inventory.stuffs.length;
                     break;
                 case 'Ad': // Number of watched ads
                     value = this.user.informations.adTotalWatched;

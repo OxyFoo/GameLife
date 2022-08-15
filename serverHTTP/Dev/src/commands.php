@@ -248,9 +248,9 @@
             if ($appDataToken != $dbDataToken) {
                 $userData['activities'] = Users::GetActivities($this->db, $account);
                 $userData['inventory'] = array(
-                    'stuffs' => Users::GetInventory($this->db, $account, 'stuff'),
-                    'titles' => Users::GetInventory($this->db, $account, 'title'),
-                    'avatar' => Users::GetAvatar($this->db, $account)
+                    'avatar' => Users::GetAvatar($this->db, $account),
+                    'stuffs' => Users::GetInventory($this->db, $account),
+                    'titles' => Users::GetInventoryTitles($this->db, $account)
                 );
                 $userData['tasks'] = Users::GetTasks($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;
@@ -402,7 +402,7 @@
                     $this->output['status'] = 'fail';
                     return;
                 }
-                $this->db->Query("UPDATE `GiftCodes` SET `Available` = `Available` - 1 WHERE `ID` = '$code'");
+                $this->db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [$code]);
                 $this->db->AddStatistic($accountID, $deviceID, 'giftCode', $code);
             }
 

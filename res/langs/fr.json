@@ -333,6 +333,16 @@
         "alert-birthconfirm-text": "Vous avez bien {} ans ?"
     },
 
+    "profile-avatar": {
+        "button-sell": "Vendre +{} OX",
+        "button-equip": "Équiper",
+
+        "alert-isequipped-title": "Impossible",
+        "alert-isequipped-text": "Vous devez équiper un autre item pour pouvoir vendre celui-ci.",
+        "alert-confirmsell-title": "Vendre",
+        "alert-confirmsell-text": "Êtes-vous sûr(e) de vouloir vendre cet item ?"
+    },
+
     "report": {
         "page-title": "Report",
 

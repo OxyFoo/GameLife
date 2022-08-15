@@ -7,25 +7,21 @@ import themeManager from '../../Managers/ThemeManager';
 import { Character, Frame } from '../Components';
 
 /**
- * @typedef {import('../../Class/Inventory').Item} Item
- * @typedef {import('../../Class/Inventory').Slot} Slot
+ * @typedef {import('../../Class/Inventory').Stuff} Stuff
  */
 
 const AvatarCardProps = {
-    /** @type {Item} */
-    item: {},
+    /** @type {Stuff} */
+    stuff: {},
 
-    /** @type {String?} ID of card (used to check selected card) */
-    selectedId: null,
-
-    /** @type {'default'|Slot} ID of card */
-    itemType: 'default',
+    /** @type {boolean} */
+    isSelected: false,
 
     /** @type {boolean} Show border if item is equipped */
     isEquipped: false,
 
-    /** @param {String?} ID */
-    onPress: (ID) => {}
+    /** @param {Stuff?} stuff */
+    onPress: (stuff) => {}
 }
 
 class ItemCard extends React.PureComponent {
@@ -33,7 +29,8 @@ class ItemCard extends React.PureComponent {
         super(props);
 
         
-        const { item } = this.props;
+        const { stuff } = this.props;
+        const item = dataManager.items.GetByID(stuff.ItemID);
         if (item !== null) {
             this.character = new Character('itemcard-' + item.ID, 'MALE', 'skin_01', 0);
             this.character.SetEquipment([ item.ID ]);
@@ -41,14 +38,16 @@ class ItemCard extends React.PureComponent {
     }
 
     onPress = () => {
-        this.props.onPress(this.props.item.ID);
+        const { stuff } = this.props;
+        this.props.onPress(stuff);
     }
 
     render() {
-        const { item, isEquipped } = this.props;
+        const { stuff, isEquipped, isSelected } = this.props;
+
+        const item = dataManager.items.GetByID(stuff.ItemID);
         if (item === null) return null;
 
-        const isSelected = item.ID === this.props.selectedId;
         const background = {
             backgroundColor: themeManager.GetColor(isSelected ? 'main1' : 'backgroundCard')
         };

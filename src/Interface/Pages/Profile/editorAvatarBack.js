@@ -1,0 +1,195 @@
+import * as React from 'react';
+import { Animated } from 'react-native';
+
+import user from '../../../Managers/UserManager';
+import langManager from '../../../Managers/LangManager';
+
+import { Sleep } from '../../../Utils/Functions';
+import { SpringAnimation } from '../../../Utils/Animations';
+import { Character } from '../../Components';
+
+const AvatarProps = {
+    refParent: null,
+    onChangeState: (opened) => {}
+}
+
+/**
+ * @typedef {import('../../../Class/Inventory').Stuff} Stuff
+ * @typedef {import('../../../Data/Items').Slot} Slot
+ * @typedef {'skin'|'skinColor'} SkinSlot
+ * @typedef {Slot|SkinSlot} AvatarSlot
+ */
+
+/**
+ * @type {Array<string>} Used to store the list of available slots for the avatar.
+ */
+const Slots = [ 'hair', 'top', 'bottom', 'shoes' ];
+
+class EditorAvatarBack extends React.Component {
+    state = {
+        characterPosY: 0,
+        characterHeight: 0,
+        characterBottomPosY: 0,
+
+        editorOpened: false,
+        editorAnim: new Animated.Value(0),
+        editorHeight: 0,
+
+        /** @type {AvatarSlot?} */
+        slotSelected: null,
+
+        /** @type {Stuff?} */
+        stuffSelected: null,
+
+        /** @type {Array<Stuff>?} */
+        stuffsSelected: null,
+
+        /** @type {boolean} */
+        itemSelected: false,
+
+        itemAnim: new Animated.Value(0),
+        itemSelectionHeight: 0
+    }
+
+    constructor(props) {
+        super(props);
+
+        /** @type {{[key: string]: Character}} */
+        this.slotCharacters = {};
+        Slots.forEach(slot => {
+            this.slotCharacters[slot] = new Character('itemslot-' + slot, 'MALE', 'skin_01', 0)
+        });
+        this.updateEquippedItems();
+    }
+
+    componentDidMount() {
+        // Default opened slot
+        this.selectSlot('hair');
+    }
+
+    onCharacterLayout = (event) => {
+        const { y, height } = event.nativeEvent.layout;
+        this.setState({ characterBottomPosY: y + height, characterHeight: height });
+
+        if (this.state.characterPosY === 0) {
+            this.setState({ characterPosY: y });
+        }
+    }
+    onEditorLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ editorHeight: height });
+    }
+    onItemSelectionLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ itemSelectionHeight: height });
+    }
+
+    OpenEditor = () => {
+        this.setState({ editorOpened: true });
+        this.props.onChangeState(true);
+
+        SpringAnimation(this.state.editorAnim, 1).start();
+        if (this.props.refParent.refPage !== null) {
+            this.props.refParent.refPage.GotoY(0);
+        }
+    }
+    CloseEditor = () => {
+        this.setState({ editorOpened: false });
+        this.props.onChangeState(false);
+
+        SpringAnimation(this.state.editorAnim, 0).start();
+    }
+
+    updateEquippedItems = () => {
+        Slots.forEach(slot => {
+            const character = this.slotCharacters[slot];
+
+            if (!user.inventory.avatar.hasOwnProperty(slot)) {
+                user.interface.console.AddLog('error', `Slot ${slot} doesn't exist`);
+                return;
+            }
+
+            const stuffID = user.inventory.avatar[slot];
+            const stuff = user.inventory.GetStuffByID(stuffID);
+            if (stuff !== null) {
+                if (character.items.length === 0 || character.items[0] !== stuff.ItemID) {
+                    character.SetEquipment([ stuff.ItemID ]);
+                }
+            }
+        });
+    }
+
+    /** @param {AvatarSlot} slot */
+    selectSlot = (slot) => {
+        const stuffs = user.inventory.GetStuffsBySlot(slot);
+
+        this.setState({
+            slotSelected: slot,
+            stuffsSelected: stuffs
+        });
+        this.selectItem(); // Reset selection
+    };
+
+    /** @param {Stuff} stuff */
+    selectItem = async (stuff = null) => {
+        this.setState({ stuffSelected: stuff });
+
+        if (stuff === null) {
+            this.setState({ itemSelected: false });
+            SpringAnimation(this.state.itemAnim, 0).start();
+        } else {
+            SpringAnimation(this.state.itemAnim, 1).start();
+            await Sleep(200); this.setState({ itemSelected: true });
+        }
+    }
+
+    /** @param {AvatarSlot} slot */
+    getButtonBackground = (slot) => {
+        return this.state.slotSelected === slot ? 'main2' : 'backgroundCard';
+    }
+
+    buttonSellPress = () => {
+        const lang = langManager.curr['profile-avatar'];
+        const { stuffSelected } = this.state;
+
+        // No item selected (Not supposed to be called)
+        if (stuffSelected === null) {
+            return;
+        }
+
+        // Item already equipped
+        const equippedStuff = user.inventory.GetEquipments();
+        if (equippedStuff.includes(stuffSelected.ID)) {
+            const title = lang['alert-isequipped-title'];
+            const text = lang['alert-isequipped-text'];
+            user.interface.popup.Open('ok', [ title, text ]);
+            return;
+        }
+
+        // Confirm sell
+        const title = lang['alert-confirmsell-title'];
+        const text = lang['alert-confirmsell-text'];
+        user.interface.popup.Open('yesno', [ title, text ], (btn) => {
+            if (btn === 'no') {
+                return;
+            }
+
+            // TODO - Sell item
+        });
+    }
+
+    buttonEquipPress = () => {
+        const { slotSelected, stuffSelected } = this.state;
+        if (stuffSelected === null) {
+            return;
+        }
+
+        user.inventory.Equip(slotSelected, stuffSelected.ID);
+        this.forceUpdate();
+    }
+}
+
+EditorAvatarBack.prototype.props = AvatarProps;
+EditorAvatarBack.defaultProps = AvatarProps;
+
+export default EditorAvatarBack;

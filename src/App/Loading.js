@@ -113,11 +113,11 @@ async function LoadData(nextStep) {
 
     user.character = new Character(
         'player',
-        user.inventory.avatar.Sexe,
-        user.inventory.avatar.Skin,
-        user.inventory.avatar.SkinColor
+        user.inventory.avatar.sexe,
+        user.inventory.avatar.skin,
+        user.inventory.avatar.skinColor
     );
-    user.character.SetEquipment(user.inventory.GetEquipments());
+    user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     user.StartTimers();
 
     if (user.activities.currentActivity === null) {

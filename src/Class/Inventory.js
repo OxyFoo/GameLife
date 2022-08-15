@@ -2,13 +2,13 @@ import dataManager from '../Managers/DataManager';
 
 /**
  * @typedef {import('../Data/Items').Slot} Slot
- * @typedef {import('../Data/Items').Item} Item
  * @typedef {import('../Data/Titles').Title} Title
  * @typedef {import('../../res/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('../../res/items/humans/Characters').Sexes} Sexes
  */
 
 class Stuff {
+    ID = 0;
     ItemID = '';
     CreatedBy = 0;
     CreatedAt = 0;
@@ -33,18 +33,18 @@ class Inventory {
 
         this.avatar = {
             /** @type {Sexes} */
-            Sexe: 'MALE',
+            sexe: 'MALE',
 
             /** @type {CharactersName} */
-            Skin: 'skin_01',
+            skin: 'skin_01',
 
             /** @type {Number} */
-            SkinColor: 1,
+            skinColor: 1,
 
-            Hair: '',
-            Top: '',
-            Bottom: '',
-            Shoes: ''
+            hair: 0,
+            top: 0,
+            bottom: 0,
+            shoes: 0
         };
 
         /**
@@ -93,38 +93,58 @@ class Inventory {
     }
 
     /**
-     * @param {Slot} slot 
-     * @param {String} itemID 
+     * @param {Slot} slot
+     * @param {number} stuffID
      */
-    Equip = (slot, itemID) => {
+    Equip = (slot, stuffID) => {
         if (!this.avatar.hasOwnProperty(slot)) {
             this.user.interface.console.AddLog('error', `Slot ${slot} doesn't exist`);
             return;
         }
-        if (this.avatar[slot] === itemID) {
+        if (this.avatar[slot] === stuffID) {
             return;
         }
 
-        this.avatar[slot] = itemID;
+        this.avatar[slot] = stuffID;
         this.avatarEdited = true;
 
         // Refresh user character
-        this.user.character.SetEquipment(this.GetEquipments());
+        this.user.character.SetEquipment(this.GetEquippedItemsID());
     }
 
     /** @returns {Array<Title>} */
     GetTitles = () => this.titles.map(dataManager.titles.GetByID);
-    /** @returns {Array<Item>} */
-    GetStuffs = () => this.stuffs.map((stuff) => dataManager.items.GetByID(stuff.ItemID));
-    /** @returns {Array<String>} Get list of equipped items */
+
+    /**
+     * @param {number} ID
+     * @returns {Stuff?}
+     */
+    GetStuffByID = (ID) => this.stuffs.find(stuff => stuff.ID === ID) || null;
+
+    /**
+     * @param {Slot} slot
+     * @returns {Array<Stuff>}
+     */
+    GetStuffsBySlot = (slot) => {
+        return this.stuffs.filter((stuff) => {
+            const item = dataManager.items.GetByID(stuff.ItemID);
+            return item.Slot === slot;
+        });
+    }
+
+    /** @returns {Array<number>} Get list ID of equipped stuffs */
     GetEquipments = () => {
         return [
-            this.avatar.Hair,
-            this.avatar.Top,
-            this.avatar.Bottom,
-            this.avatar.Shoes
+            this.avatar.hair,
+            this.avatar.top,
+            this.avatar.bottom,
+            this.avatar.shoes
         ];
     }
+
+    /** @returns {Array<string>} */
+    GetEquippedItemsID = () => this.GetEquipments().map((ID) => this.GetStuffByID(ID)?.ItemID);
 }
 
+export { Stuff };
 export default Inventory;

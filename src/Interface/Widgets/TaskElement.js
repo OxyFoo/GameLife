@@ -40,7 +40,7 @@ const TaskProps = {
 
     /**
      * @param {Boolean} checked
-     * @param {String} title
+     * @param {string} title
      */
     onSubtaskEdit: (checked, title) => {},
     onSubtaskDelete: () => {}
@@ -69,7 +69,7 @@ class TaskElement extends React.Component {
         /** @type {'schedule'|'deadline'|null} */
         let deadlineType = null;
 
-        /** @type {Number?} Minimum number of days */
+        /** @type {number?} Minimum number of days */
         let minDeltaDays = null;
 
         // Search next schedule

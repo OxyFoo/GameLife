@@ -20,17 +20,17 @@ class Achievements {
         this.user = user;
 
         /**
-         * @type {Array<Number>}
+         * @type {Array<number>}
          */
         this.solved = [];
 
         /**
-         * @type {Array<Number>}
+         * @type {Array<number>}
          */
         this.UNSAVED_solved = [];
 
         /**
-         * @type {Number?}
+         * @type {number?}
          */
         this.achievementQueue = null;
 
@@ -67,7 +67,7 @@ class Achievements {
 
     /**
      * Get last achievements
-     * @param {Number} [last=3] Number of achievements to return
+     * @param {number} [last=3] Number of achievements to return
      * @returns {Array<Achievement>}
      */
     GetLast(last = 3) {
@@ -94,7 +94,7 @@ class Achievements {
 
     /**
      * Show popup with achievement informations
-     * @param {Number} achievementID 
+     * @param {number} achievementID 
      */
     ShowCardPopup = (achievementID) => {
         const solvedIndexes = this.Get();
@@ -110,7 +110,7 @@ class Achievements {
 
     /**
      * Show popup with achievement rewards
-     * @param {Number} achievementID 
+     * @param {number} achievementID 
      */
     ShowRewardPopup = (achievementID) => {
         const achievement = dataManager.achievements.GetByID(achievementID);
@@ -124,7 +124,7 @@ class Achievements {
     /**
      * Return condition text with correct langage
      * @param {Condition} condition
-     * @returns {String}
+     * @returns {string}
      */
     getConditionText = (condition) => {
         if (condition === null) return '';
@@ -193,7 +193,7 @@ class Achievements {
     /**
      * Return rewards text with correct langage
      * @param {Array<Reward>} rewards
-     * @returns {String}
+     * @returns {string}
      */
     getRewardsText = (rewards) => {
         let output = '';

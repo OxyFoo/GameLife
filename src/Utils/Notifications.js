@@ -145,11 +145,11 @@ async function Remove(notif, removeChannel = true) {
 }
 
 /**
- * @typedef {Object} Notification
- * @property {String} ID Channel ID for android
- * @property {Number} hour Hour of the day [0, 23]
- * @property {Number} [minutes=0] Minutes of the hour [0, 59]
- * @property {(index: Number, date: Date) => { Title: String, Body: String } | null} __generate Function to generate notification content
+ * @typedef {object} Notification
+ * @property {string} ID Channel ID for android
+ * @property {number} hour Hour of the day [0, 23]
+ * @property {number} [minutes=0] Minutes of the hour [0, 59]
+ * @property {(index: number, date: Date) => { Title: string, Body: string } | null} __generate Function to generate notification content
  *
  * @property {() => Promise<Boolean>} Enable
  * @property {() => Promise<void>} Disable

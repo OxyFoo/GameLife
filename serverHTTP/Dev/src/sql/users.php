@@ -57,7 +57,6 @@
         public static function SetUsername($db, $account, $username) {
             global $DAYS_USERNAME_CHANGE;
 
-            $accountID = $account->ID;
             $oldUsername = $account->Username;
             $newUsername = ucfirst(strtolower($username));
 
@@ -71,9 +70,10 @@
             if (!UsernameIsCorrect($newUsername)) return 'incorrect';
             if (!self::PseudoIsFree($db, $newUsername)) return 'alreadyUsed';
 
-            $command = "UPDATE `Accounts` SET `Username` = '$newUsername', `LastChangeUsername` = '$nowText' WHERE `ID` = '$accountID'";
-            $result_pseudo = $db->Query($command);
-            if ($result_pseudo === false) ExitWithStatus("Error: Saving username failed");
+            $command = 'UPDATE TABLE SET `Username` = ?, `LastChangeUsername` = ? WHERE `ID` = ?';
+            $args = [ $newUsername, $nowText, $account->ID ];
+            $result_pseudo = $db->QueryPrepare('Accounts', $command, 'ssi', $args);
+            if ($result_pseudo === false) ExitWithStatus('Error: Saving username failed');
 
             return 'ok';
         }
@@ -85,22 +85,21 @@
          * @param int $birthtime Timestamp
          */
         private static function SetBirthtime($db, $account, $deviceID, $birthtime) {
-            $accountID = $account->ID;
-
             // If account lastchangebirth is from year ago, we can change birthtime
             $nowTime = time();
             $lastBirthTime = $account->LastChangeBirth === null ? 0 : $account->LastChangeBirth;
             $delta = ($nowTime - $lastBirthTime) / (60 * 60 * 24);
             if ($delta < 360) {
                 // Suspicion of cheating
-                $db->AddStatistic($accountID, $deviceID, 'cheatSuspicion', "Try to change birthtime too often ({$account->Email})");
-                ExitWithStatus("Error: you tried to change birthtime too often");
+                $db->AddStatistic($account->ID, $deviceID, 'cheatSuspicion', "Try to change birthtime too often ({$account->Email})");
+                ExitWithStatus('Error: you tried to change birthtime too often');
             }
 
-            $command = "UPDATE `Accounts` SET `Birthtime` = '$birthtime', `LastChangeBirth` = current_timestamp() WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            $command = 'UPDATE TABLE SET `Birthtime` = ?, `LastChangeBirth` = current_timestamp() WHERE `ID` = ?';
+            $args = [ $birthtime, $account->ID ];
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', $args);
             if ($result === false) {
-                ExitWithStatus("Error: saving birthtime failed");
+                ExitWithStatus('Error: saving birthtime failed');
             }
         }
 
@@ -111,10 +110,11 @@
          */
         public static function RefreshDataToken($db, $accountID) {
             $newDataToken = RandomString(6);
-            $command = "UPDATE `Accounts` SET `DataToken` = '$newDataToken' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            $command = 'UPDATE TABLE SET `DataToken` = ? WHERE `ID` = ?';
+            $args = [ $newDataToken, $accountID ];
+            $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
             if ($result === false) {
-                ExitWithStatus("Error: saving achievements failed");
+                ExitWithStatus('Error: saving achievements failed');
             }
             return $newDataToken;
         }
@@ -125,11 +125,10 @@
          * @return array activity => [ skillID, startTime, duration, comment ]
          */
         public static function GetActivities($db, $account) {
-            $accountID = $account->ID;
-            $command = "SELECT `SkillID`, `StartTime`, `Duration`, `Comment` FROM `Activities` WHERE `AccountID` = '$accountID'";
-            $rows = $db->QueryArray($command);
+            $command = 'SELECT `SkillID`, `StartTime`, `Duration`, `Comment` FROM TABLE WHERE `AccountID` = ?';
+            $rows = $db->QueryPrepare('Activities', $command, 'i', [ $account->ID ]);
             if ($rows === null) {
-                ExitWithStatus("Error: getting activities failed");
+                ExitWithStatus('Error: getting activities failed');
             }
             $activities = array();
             for ($i = 0; $i < count($rows); $i++) {
@@ -149,8 +148,6 @@
          * @param array $activities activity => [ skillID, startTime, duration, comment ]
          */
         private static function AddActivities($db, $account, $activities) {
-            $accountID = $account->ID;
-
             for ($i = 0; $i < count($activities); $i++) {
                 $activity = $activities[$i];
                 if (count($activity) < 4 || count($activity) > 5) continue;
@@ -161,24 +158,29 @@
                 $duration = $activity[3];
 
                 // Check if activity exists
-                $exists = $db->QueryArray("SELECT `ID` FROM `Activities` WHERE `AccountID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
-                if ($exists === null) ExitWithStatus("Error: adding activity failed");
+                $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
+                $args = [ $account->ID, $skillID, $startTime, $duration ];
+                $exists = $db->QueryPrepare('Activities', $command, 'iiii', $args);
+                if ($exists === null) ExitWithStatus('Error: adding activity failed');
                 $exists = count($exists) > 0;
 
                 if ($type === 'add') {
                     if ($exists) {
-                        $r = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
-                        if ($r === false) ExitWithStatus("Error: saving activities failed (preadd)");
+                        $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
+                        $r = $db->QueryPrepare('Activities', $command, 'iiii', [ $account->ID, $skillID, $startTime, $duration ]);
+                        if ($r === false) ExitWithStatus('Error: saving activities failed (preadd)');
                     }
                     $comment = 'NULL';
                     if (!is_null($activity[4]) && !empty($activity[4])) {
                         $comment = "'".$db->Encrypt($activity[4])."'";
                     }
-                    $r = $db->Query("INSERT INTO `Activities` (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES ('$accountID', '$skillID', '$startTime', '$duration', $comment)");
-                    if ($r === false) ExitWithStatus("Error: saving activities failed (add)");
+                    $command = 'INSERT INTO TABLE (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`) VALUES (?, ?, ?, ?, ?)';
+                    $r = $db->QueryPrepare('Activities', $command, 'iiiis', [ $account->ID, $skillID, $startTime, $duration, $comment ]);
+                    if ($r === false) ExitWithStatus('Error: saving activities failed (add)');
                 } else if ($type === 'rem' && $exists) {
-                    $r = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID' AND `SkillID` = '$skillID' AND `StartTime` = '$startTime' AND `Duration` = '$duration'");
-                    if ($r === false) ExitWithStatus("Error: saving activities failed (remove)");
+                    $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
+                    $r = $db->QueryPrepare('Activities', $command, 'iiii', [ $account->ID, $skillID, $startTime, $duration ]);
+                    if ($r === false) ExitWithStatus('Error: saving activities failed (remove)');
                 }
             }
         }
@@ -189,11 +191,10 @@
          * @return array
          */
         public static function GetInventory($db, $account) {
-            $accountID = $account->ID;
-            $command = "SELECT `ID`, `ItemID`, `CreatedBy`, `CreatedAt` FROM `Inventories` WHERE `AccountID` = '$accountID'";
-            $rows = $db->QueryArray($command);
+            $command = 'SELECT `ID`, `ItemID`, `CreatedBy`, `CreatedAt` FROM TABLE WHERE `AccountID` = ?';
+            $rows = $db->QueryPrepare('Inventories', $command, 'i', [ $account->ID ]);
             if ($rows === null) {
-                ExitWithStatus("Error: getting inventory failed");
+                ExitWithStatus('Error: getting inventory failed');
             }
             for ($i = 0; $i < count($rows); $i++) {
                 $rows[$i]['ID'] = intval($rows[$i]['ID']);
@@ -207,11 +208,10 @@
          * @return array
          */
         public static function GetInventoryTitles($db, $account) {
-            $accountID = $account->ID;
-            $command = "SELECT `ItemID` FROM `InventoriesTitles` WHERE `AccountID` = '$accountID'";
-            $rows = $db->QueryArray($command);
+            $command = 'SELECT `ItemID` FROM TABLE WHERE `AccountID` = ?';
+            $rows = $db->QueryPrepare('InventoriesTitles', $command, 'i', [ $account->ID ]);
             if ($rows === null) {
-                ExitWithStatus("Error: getting inventory failed");
+                ExitWithStatus('Error: getting inventory failed');
             }
             for ($i = 0; $i < count($rows); $i++) {
                 $rows[$i] = intval($rows[$i]['ItemID']);
@@ -226,7 +226,7 @@
          * @return bool Success
          */
         public static function AddInventoryItem($db, $account, $itemID) {
-            $command = "INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)";
+            $command = 'INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = array($account->ID, $itemID, $account->ID);
             $result = $db->QueryPrepare('Inventories', $command, 'isi', $args);
             return $result !== false;
@@ -239,7 +239,7 @@
          * @return bool Success
          */
         public static function AddInventoryTitle($db, $account, $itemID) {
-            $command = "INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)";
+            $command = 'INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = array($account->ID, $itemID, $account->ID);
             $result = $db->QueryPrepare('InventoriesTitles', $command, 'iii', $args);
             return $result !== false;
@@ -251,11 +251,10 @@
          * @return array tasks => [ Title, startTime, duration, comment ]
          */
         public static function GetTasks($db, $account) {
-            $accountID = $account->ID;
-            $command = "SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks` FROM `Tasks` WHERE `AccountID` = '$accountID'";
-            $tasks = $db->QueryArray($command);
+            $command = 'SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks` FROM TABLE WHERE `AccountID` = ?';
+            $tasks = $db->QueryPrepare('Tasks', $command, 'i', [ $account->ID ]);
             if ($tasks === null) {
-                ExitWithStatus("Error: getting tasks failed");
+                ExitWithStatus('Error: getting tasks failed');
             }
             for ($i = 0; $i < count($tasks); $i++) {
                 $tasks[$i]['Checked'] = boolval($tasks[$i]['Checked']);
@@ -282,8 +281,6 @@
          * @param array $tasks
          */
         private static function AddTasks($db, $account, $tasks) {
-            $accountID = $account->ID;
-
             for ($i = 0; $i < count($tasks); $i++) {
                 $task = $tasks[$i];
                 if (count($task) !== 7) continue;
@@ -297,33 +294,51 @@
                 $Schedule = $task['Schedule'];
                 $Subtasks = json_encode($task['Subtasks']);
 
-                $Checked = $Checked === null ? 'NULL' : "'$Checked'";
-                $Description = $Description === null ? 'NULL' : "'".$db->Encrypt($Description)."'";
-                $Deadline = $Deadline === null ? 'NULL' : "'$Deadline'";
-                $Schedule = $Schedule === null ? 'NULL' : "'".json_encode($Schedule)."'";
+                if ($Description !== null) $Description = $db->Encrypt($Description);
+                if ($Schedule !== null) $Schedule = json_encode($Schedule);
                 if ($Subtasks !== '[]') $Subtasks = $db->Encrypt($Subtasks);
 
                 // Check if task exists
-                $exists = $db->QueryArray("SELECT `ID` FROM `Tasks` WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
-                if ($exists === null) ExitWithStatus("Error: adding task failed");
+                $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Title` = ?';
+                $exists = $db->QueryPrepare('Tasks', $command, [ $account->ID, $Title ]);
+                if ($exists === null) ExitWithStatus('Error: adding task failed');
                 $exists = count($exists) > 0;
 
                 if ($Action === 'add') {
                     if ($exists) {
-                        $r = $db->Query("UPDATE `Tasks` SET
-                            `AccountID` = '$accountID', `Checked` = $Checked,
-                            `Title` = '$Title', `Description` = $Description,
-                            `Starttime` = '$Starttime', `Deadline` = $Deadline,
-                            `Schedule` = $Schedule, `Subtasks` = '$Subtasks'
-                            WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
-                        if ($r === false) ExitWithStatus("Error: saving tasks failed (update)");
+                        $command = 'UPDATE TABLE SET
+                            `AccountID` = ?,
+                            `Checked` = ?,
+                            `Title` = ?,
+                            `Description` = ?,
+                            `Starttime` = ?,
+                            `Deadline` = ?,
+                            `Schedule` = ?,
+                            `Subtasks` = ?
+                            WHERE `AccountID` = ? AND `Title` = ?';
+                        $args = [
+                            $account->ID,
+                            $Checked,
+                            $Title,
+                            $Description,
+                            $Starttime,
+                            $Deadline,
+                            $Schedule,
+                            $Subtasks,
+                            $account->ID, $Title
+                        ];
+                        $r = $db->QueryPrepare('Tasks', $command, 'isssiissis', $args);
+                        if ($r === false) ExitWithStatus('Error: saving tasks failed (update)');
                     } else {
-                        $r = $db->Query("INSERT INTO `Tasks` (`AccountID`, `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks`) VALUES ('$accountID', $Checked, '$Title', $Description, $Deadline, $Schedule, '$Subtasks')");
-                        if ($r === false) ExitWithStatus("Error: saving tasks failed (add)");
+                        $command = 'INSERT INTO TABLE (`AccountID`, `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subtasks`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                        $args = [ $account->ID, $Checked, $Title, $Description, $Deadline, $Schedule, $Subtasks ];
+                        $r = $db->QueryPrepare('Tasks', $command, 'isssiis', $args);
+                        if ($r === false) ExitWithStatus('Error: saving tasks failed (add)');
                     }
                 } else if ($Action === 'rem' && $exists) {
-                    $r = $db->Query("DELETE FROM `Tasks` WHERE `AccountID` = '$accountID' AND `Title` = '$Title'");
-                    if ($r === false) ExitWithStatus("Error: saving tasks failed (remove)");
+                    $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `Title` = ?';
+                    $r = $db->QueryPrepare('Tasks', $command, 'is', [ $account->ID, $Title ]);
+                    if ($r === false) ExitWithStatus('Error: saving tasks failed (remove)');
                 }
             }
         }
@@ -333,10 +348,10 @@
          * @param Account $account
          */
         public static function GetAvatar($db, $account) {
-            $command = "SELECT * FROM TABLE WHERE `ID` = ?";
+            $command = 'SELECT * FROM TABLE WHERE `ID` = ?';
             $avatar = $db->QueryPrepare('Avatars', $command, 'i', [ $account->ID ]);
-            if ($avatar === false) ExitWithStatus("Error: getting avatar failed");
-            if (count($avatar) === 0) ExitWithStatus("Error: avatar not found");
+            if ($avatar === false) ExitWithStatus('Error: getting avatar failed');
+            if (count($avatar) === 0) ExitWithStatus('Error: avatar not found');
 
             $avatar = $avatar[0];
 
@@ -373,13 +388,13 @@
             $Shoes     = $avatar['shoes'];
 
             if (!isset($Sexe, $Skin, $SkinColor, $Hair, $Top, $Bottom, $Shoes)) {
-                ExitWithStatus("Error: invalid avatar");
+                ExitWithStatus('Error: invalid avatar');
             }
 
-            $command = "UPDATE TABLE SET
+            $command = 'UPDATE TABLE SET
                 `Sexe` = ?, `Skin` = ?, `SkinColor` = ?,
                 `Hair` = ?, `Top` = ?, `Bottom` = ?, `Shoes` = ?
-                WHERE `ID` = ?";
+                WHERE `ID` = ?';
 
             $args = [
                 $Sexe, $Skin, $SkinColor,
@@ -387,9 +402,9 @@
                 $account->ID
             ];
 
-            $result = $db->QueryPrepare('Avatars', $command, 'ssissssi', $args);
+            $result = $db->QueryPrepare('Avatars', $command, 'ssiiiiii', $args);
             if ($result === false) {
-                ExitWithStatus("Error: saving avatar failed");
+                ExitWithStatus('Error: saving avatar failed');
             }
         }
 
@@ -400,10 +415,10 @@
          */
         public static function PseudoIsFree($db, $username) {
             $p = ucfirst(strtolower($username));
-            $command = "SELECT * FROM `Accounts` WHERE `Username` = '$p'";
-            $pseudos = $db->Query($command);
+            $command = 'SELECT * FROM TABLE WHERE `Username` = ?';
+            $pseudos = $db->QueryPrepare('Accounts', $command, 's', [ $p ]);
             if ($pseudos !== false) {
-                return $pseudos->num_rows === 0;
+                return count($pseudos) === 0;
             }
             return false;
         }
@@ -414,10 +429,10 @@
          * @return bool True if the device has not reached the created count limit
          */
         public static function CreationIsFree($db, $deviceID) {
-            $command = "SELECT * FROM `Accounts` WHERE `CreatedBy` = '$deviceID'";
-            $accounts = $db->Query($command);
+            $command = 'SELECT * FROM TABLE WHERE `CreatedBy` = ?';
+            $accounts = $db->QueryPrepare('Accounts', $command, 'i', [ $deviceID ]);
             if ($accounts !== false) {
-                return $accounts->num_rows < 3;
+                return count($accounts) < 3;
             }
             return false;
         }
@@ -428,11 +443,10 @@
          * @param int $title
          */
         public static function setTitle($db, $account, $title) {
-            $accountID = $account->ID;
-            $command = "UPDATE `Accounts` SET `Title` = '$title' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            $command = 'UPDATE TABLE SET `Title` = ? WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'si', [ $title, $account->ID ]);
             if ($result === false) {
-                ExitWithStatus("Error: Saving title failed");
+                ExitWithStatus('Error: Saving title failed');
             }
         }
 
@@ -442,10 +456,10 @@
          * @param int $xp
          */
         private static function setXP($db, $accountID, $xp) {
-            $command = "UPDATE `Accounts` SET `XP` = '$xp' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            $command = 'UPDATE TABLE SET `XP` = ? WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $xp, $accountID ]);
             if ($result === false) {
-                ExitWithStatus("Error: Saving XP failed");
+                ExitWithStatus('Error: Saving XP failed');
             }
         }
 
@@ -456,10 +470,10 @@
          * @return int Ox amount
          */
         public static function GetOx($db, $accountID) {
-            $command = "SELECT `Ox` FROM `Accounts` WHERE `ID` = '$accountID'";
-            $query = $db->QueryArray($command);
-            if ($query === null || count($query) === 0) {
-                ExitWithStatus("Error: Getting ox failed");
+            $command = 'SELECT `Ox` FROM TABLE WHERE `ID` = ?';
+            $query = $db->QueryPrepare('Accounts', $command, 'i', [ $accountID ]);
+            if ($query === false || count($query) === 0) {
+                ExitWithStatus('Error: Getting ox failed');
             }
             $ox = intval($query[0]['Ox']);
             return $ox;
@@ -472,8 +486,8 @@
          * @param int $value Value to add or negative to remove
          */
         public static function AddOx($db, $accountID, $value) {
-            $command = "UPDATE `Accounts` SET `Ox` = `Ox` + '$value' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            $command = 'UPDATE TABLE SET `Ox` = `Ox` + ? WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $value, $accountID ]);
             return $result !== false;
         }
 
@@ -487,10 +501,11 @@
             $nextDay = date('d') + 1;
             $dateNow = date('Y-m-d 00:00:00');
             $tomorrow = date("Y-m-$nextDay 00:00:00");
-            $command = "SELECT * FROM `Logs` WHERE `AccountID` = '$accountID' AND `Type` = 'adWatched' AND `Date` BETWEEN '$dateNow' AND '$tomorrow'";
-            $result = $db->QueryArray($command);
+            $command = "SELECT * FROM TABLE WHERE `AccountID` = ? AND `Type` = 'adWatched' AND `Date` BETWEEN ? AND ?";
+            // TODO - Check dates (string ?)
+            $result = $db->QueryPrepare('Logs', $command, 'iss', [ $accountID, $dateNow, $tomorrow ]);
             if ($result === null) {
-                ExitWithStatus("Error: Getting ad remaining failed");
+                ExitWithStatus('Error: Getting ad remaining failed');
             }
             return $MAX_WACHABLE_ADS - count($result);
         }
@@ -501,10 +516,10 @@
          * @param int $accountID
          */
         public static function GetAdWatched($db, $accountID) {
-            $command = "SELECT * FROM `Logs` WHERE `AccountID` = '$accountID' AND `Type` = 'adWatched'";
-            $result = $db->QueryArray($command);
+            $command = "SELECT * FROM TABLE WHERE `AccountID` = ? AND `Type` = 'adWatched'";
+            $result = $db->QueryPrepare('Logs', $command, 'i', [ $accountID ]);
             if ($result === null) {
-                ExitWithStatus("Error: Getting ad remaining failed");
+                ExitWithStatus('Error: Getting ad remaining failed');
             }
             return count($result);
         }
@@ -517,8 +532,8 @@
          * @return string|null Return reward if any, null otherwise
          */
         public static function CheckGiftCode($db, $accountID, $code) {
-            $command = "SELECT `Rewards`, `Available` FROM `GiftCodes` WHERE `ID` = '$code'";
-            $gift = $db->QueryArray($command);
+            $command = 'SELECT `Rewards`, `Available` FROM TABLE WHERE `ID` = ?';
+            $gift = $db->QueryPrepare('GiftCodes', $command, 's', [ $code ]);
             if ($gift === null || count($gift) === 0) {
                 return null;
             }
@@ -527,8 +542,8 @@
             $available = $gift[0]['Available'];
             if ($available == 0) return null;
 
-            $command2 = "SELECT `ID` FROM `Logs` WHERE `AccountID` = '$accountID' AND `Type` = 'giftCode' AND `Data` = '$code'";
-            $usedGifts = $db->QueryArray($command2);
+            $command2 = "SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'giftCode' AND `Data` = ?";
+            $usedGifts = $db->QueryPrepare('Logs', $command2, 'is', [ $accountID, $code ]);
             if ($usedGifts === null || count($usedGifts) > 0) return null;
 
             return $rewards;

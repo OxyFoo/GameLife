@@ -13,22 +13,22 @@ const defaultHeaders = {
 class ReqResponse {
     /**
      * @readonly
-     * @property {Number} status - The status of the request.
+     * @property {number} status - The status of the request.
      */
     status = null;
 
     /**
      * @readonly
-     * @property {Object} data - The data of the request or error information if failed.
+     * @property {object} data - The data of the request or error information if failed.
      */
     content = null;
 }
 
 /**
- * @param {Object} data
- * @param {String} url - Default : App server
+ * @param {object} data
+ * @param {string} url - Default : App server
  * @param {'GET' | 'POST'} method  - Default : 'POST'
- * @param {Object} headers - Default :
+ * @param {object} headers - Default :
  * {'Accept': 'application/json', 'Content-Type': 'application/json'}
  * @returns {Promise<ReqResponse>}
  */

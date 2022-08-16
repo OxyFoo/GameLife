@@ -11,7 +11,7 @@ import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
  */
 
 const DigitProps = {
-    /** @type {String} - The text to get in callback */
+    /** @type {string} - The text to get in callback */
     name: 'index',
 
     /** @type {ColorTheme} */
@@ -20,10 +20,10 @@ const DigitProps = {
     /** @type {Boolean} If true, value can't be changed */
     lock: false,
 
-    /** @type {Number} */
+    /** @type {number} */
     initValue: 0,
 
-    /** @type {Number} */
+    /** @type {number} */
     maxValue: 6,
 
     /** @type {Function} */

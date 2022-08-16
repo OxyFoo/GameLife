@@ -16,10 +16,10 @@ const InputProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Number} */
+    /** @type {number} */
     height: 56,
 
-    /** @type {String} */
+    /** @type {string} */
     label: 'Default',
 
     /** @type {Boolean} If true, label still always at the top of input */
@@ -28,16 +28,16 @@ const InputProps = {
     /** @type {ColorTheme} */
     activeColor: 'main1',
 
-    /** @type {String} Content of input */
+    /** @type {string} Content of input */
     text: '',
 
-    /** @type {Number?} Set max length of input content */
+    /** @type {number?} Set max length of input content */
     maxLength: null,
 
     /** @type {'default'|'email'|'username'|'name'} - The type of the input. */
     textContentType: 'default',
 
-    /** @param {String} newText */
+    /** @param {string} newText */
     onChangeText: (newText) => {},
 
     /** @type {Function} */

@@ -12,9 +12,9 @@ import { Text, Button, TextSwitch } from '../Components';
 
 /**
  * @callback OnChangeScheduleEvent
- * @param {Number?} deadline - Unix timestamp in seconds
+ * @param {number?} deadline - Unix timestamp in seconds
  * @param {'week'|'month'} repeatMode - Repeat mode
- * @param {Array<Number>?} repeatDays - Array of days of week
+ * @param {Array<number>?} repeatDays - Array of days of week
  */
 
 const TaskScheduleProps = {

@@ -4,7 +4,7 @@ import { TwoDigit } from './Functions';
  * Get absolute UTC time in seconds
  * @param {Date} [date] (now default)
  * @param {Boolean} [localUTC=false] (global default)
- * @returns {Number} time in seconds
+ * @returns {number} time in seconds
  */
 function GetTime(date = new Date(), localUTC = false) {
     let time = Math.floor(date.getTime() / 1000);
@@ -16,7 +16,7 @@ function GetTime(date = new Date(), localUTC = false) {
 
 /**
  * Get date from time to Date object
- * @param {Number} time in seconds
+ * @param {number} time in seconds
  * @returns {Date} Date object in local UTC
  */
 function GetDate(time) {
@@ -27,8 +27,8 @@ function GetDate(time) {
 
 /**
  * Return time to format: HH:MM
- * @param {Number} time in seconds
- * @returns {String} HH:MM
+ * @param {number} time in seconds
+ * @returns {string} HH:MM
  */
 function TimeToFormatString(time) {
     const minutesInDay = Math.floor(time / 60) % (24 * 60);
@@ -38,8 +38,8 @@ function TimeToFormatString(time) {
 }
 
 /**
- * @param {Number} time in seconds
- * @returns {Number} time rounded to quarters in seconds
+ * @param {number} time in seconds
+ * @returns {number} time rounded to quarters in seconds
  */
 function RoundToQuarter(time) {
     let mod = time % 900;
@@ -48,8 +48,8 @@ function RoundToQuarter(time) {
 }
 
 /**
- * @param {Number} time in seconds 
- * @returns {Number} Time in seconds
+ * @param {number} time in seconds 
+ * @returns {number} Time in seconds
  */
 function GetMidnightTime(time) {
     time -= time % (24 * 60 * 60);
@@ -58,8 +58,8 @@ function GetMidnightTime(time) {
 
 /**
  * Get age in years from date of birth
- * @param {Number} time in seconds
- * @returns {Number}
+ * @param {number} time in seconds
+ * @returns {number}
  */
 function GetAge(time) {
     const birthDay = GetDate(time);
@@ -69,8 +69,8 @@ function GetAge(time) {
 
 /**
  * 
- * @param {Number} max_hour
- * @param {Number} step_minutes
+ * @param {number} max_hour
+ * @param {number} step_minutes
  * @returns {Array<{key: 0, value: '00:00', duration: 0}>} Array of dict : { key: k, value: HH:MM, duration: minutes } over a period of max_hour each step_minutes
  */
 function GetDurations(max_hour = 4, step_minutes = 15) {
@@ -92,7 +92,7 @@ function GetDurations(max_hour = 4, step_minutes = 15) {
 
 /**
  * Time until tomorrow midnight
- * @returns {String} HH:MM
+ * @returns {string} HH:MM
  */
 function GetTimeToTomorrow() {
     const today = GetTime(undefined, true);
@@ -101,8 +101,8 @@ function GetTimeToTomorrow() {
 }
 
 /**
- * @param {Number} time in seconds
- * @returns {Number?} time rounded to hours in days until now
+ * @param {number} time in seconds
+ * @returns {number?} time rounded to hours in days until now
  */
 function GetDaysUntil(time) {
     const today = GetTime();

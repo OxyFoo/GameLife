@@ -24,7 +24,7 @@ const ActivityScheduleProps = {
 
     /**
      * @param {Date} startTime - The starting time of the activity
-     * @param {Number} durationTime - Duration of the activity in minutes
+     * @param {number} durationTime - Duration of the activity in minutes
      */
     onChange: (startTime, durationTime) => {},
 

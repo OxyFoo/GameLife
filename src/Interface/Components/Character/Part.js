@@ -17,7 +17,7 @@ class Part {
     /**
      * @param {Body} body Parent body
      * @param {PartsName} name Name of body part
-     * @param {Number} [zIndex=0] Z-index of body part
+     * @param {number} [zIndex=0] Z-index of body part
      */
     constructor(body, name, zIndex = 0) {
         this.body = body;

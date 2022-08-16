@@ -16,8 +16,8 @@ const DAYS = {
 /**
  * Return day number (0-6)
  * @param {Date} date Date object
- * @param {Number} firstDay
- * @returns {Number} 0-6
+ * @param {number} firstDay
+ * @returns {number} 0-6
  */
 function GetDay(date, firstDay = DAYS.monday) {
     const day = date.getUTCDay();
@@ -26,9 +26,9 @@ function GetDay(date, firstDay = DAYS.monday) {
 
 /**
  * Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
- * @param {Number} month
- * @param {Number} year
- * @returns {Number[][]}
+ * @param {number} month
+ * @param {number} year
+ * @returns {number[][]}
  */
 function GetBlockMonth(month, year, start = DAYS.monday) {
     if (IsUndefined(month)) month = new Date().getMonth();
@@ -51,10 +51,10 @@ function GetBlockMonth(month, year, start = DAYS.monday) {
 }
 
 /**
- * @param {Number} month - Month number (0-11)
- * @param {Number} year - Year
+ * @param {number} month - Month number (0-11)
+ * @param {number} year - Year
  * @param {Boolean} forceYear - Force year in title
- * @returns {String} Return month title with year if needed (forceYear or different year than current one)
+ * @returns {string} Return month title with year if needed (forceYear or different year than current one)
  */
 function GetMonthAndYear(month, year, forceYear = false) {
     let title = langManager.curr['dates']['month'][month];
@@ -66,7 +66,7 @@ function GetMonthAndYear(month, year, forceYear = false) {
 
 /**
  * @param {Date} date
- * @returns {String} Return date in format "Monday 1 January 2020"
+ * @returns {string} Return date in format "Monday 1 January 2020"
  */
 function GetFullDate(date) {
     const _date = new Date(date);
@@ -82,7 +82,7 @@ function GetFullDate(date) {
 /**
  * Return date with format : dd/mm/yyyy
  * @param {Date} date
- * @returns {String} dd/mm/yyyy
+ * @returns {string} dd/mm/yyyy
  */
 function DateToFormatString(date) {
     const dd = TwoDigit(date.getDate());
@@ -94,7 +94,7 @@ function DateToFormatString(date) {
 /**
  * Return date with format : HH:MM
  * @param {Date} date
- * @returns {String} HH:MM
+ * @returns {string} HH:MM
  */
 function DateToFormatTimeString(date) {
     const HH = TwoDigit(date.getHours());
@@ -103,9 +103,9 @@ function DateToFormatTimeString(date) {
 }
 
 /**
- * @param {Array<Number>} days - Array of week days (0-6)
- * @param {Number} start Time in seconds
- * @param {Number} end Time in seconds
+ * @param {Array<number>} days - Array of week days (0-6)
+ * @param {number} start Time in seconds
+ * @param {number} end Time in seconds
  * @returns {Boolean} Days contained between start and end
  */
 function WeekDayBetween(days, start, end) {
@@ -120,9 +120,9 @@ function WeekDayBetween(days, start, end) {
 }
 
 /**
- * @param {Array<Number>} days - Array of month days (0-30)
- * @param {Number} start Time in seconds
- * @param {Number} end Time in seconds
+ * @param {Array<number>} days - Array of month days (0-30)
+ * @param {number} start Time in seconds
+ * @param {number} end Time in seconds
  * @returns {Boolean} Days contained between start and end
  */
 function MonthDayBetween(days, start, end) {

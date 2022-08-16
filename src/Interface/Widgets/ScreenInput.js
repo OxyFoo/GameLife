@@ -42,9 +42,9 @@ class ScreenInput extends React.Component {
 
     /**
      * Open the screen input
-     * @param {String} label - Title of the input
-     * @param {String} initialText - Initial text of the input
-     * @param {(text: String) => void} callback - Callback called when the input is validated
+     * @param {string} label - Title of the input
+     * @param {string} initialText - Initial text of the input
+     * @param {(text: string) => void} callback - Callback called when the input is validated
      * @param {Boolean} multiline - If true, the input is multiline
      */
     Open = (label = 'Input', initialText = '', callback = (text) => {}, multiline = false) => {

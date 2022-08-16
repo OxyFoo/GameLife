@@ -11,10 +11,10 @@ const DotsProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Number} Number of pages (dots displayed in component) */
+    /** @type {number} Number of pages (dots displayed in component) */
     pagesLength: 1,
 
-    /** @type {Number} Current page (dot displayed as active) */
+    /** @type {number} Current page (dot displayed as active) */
     position: 0,
 
     /** @type {ColorTheme} */

@@ -30,9 +30,9 @@ class ScreenList extends React.Component {
 
     /**
      * Open the screen list
-     * @param {String} label 
-     * @param {Array<Object>} data List of data { id: 0, value: '' }
-     * @param {(id: Number) => void} callback (id) => {}
+     * @param {string} label 
+     * @param {Array<object>} data List of data { id: 0, value: '' }
+     * @param {(id: number) => void} callback (id) => {}
      */
     Open = (label = 'Input', data = [], callback = (id) => {}) => {
         TimingAnimation(this.state.anim, 1, 200).start();

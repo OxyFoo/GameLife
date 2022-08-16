@@ -60,17 +60,15 @@
             if ($this->conn === null) {
                 throw(new Exception('Connection not opened'));
             }
-            if (!$this->IsSafe($table)) {
+            if ($table !== null && !$this->IsSafe($table)) {
                 throw(new Exception('Invalid table name'));
             }
             if (gettype($variables) !== 'array') {
                 throw(new Exception('Invalid variables type (must be an array)'));
             }
 
-            $replace = 0;
-            $command = str_replace('`TABLE`', "`$table`", $command, $replace);
-            if ($replace === 0) {
-                $command = str_replace('TABLE', "`$table`", $command, $replace);
+            if ($table !== null) {
+                $command = str_replace('TABLE', "`$table`", $command);
             }
 
             $query = $this->conn->prepare($command);
@@ -98,54 +96,19 @@
             return $output;
         }
 
-        /**
-         * @deprecated
-         */
-        public function Query($command) {
-            return $this->conn->query($command);
-        }
-
-        /**
-         * @deprecated
-         */
-        public function QueryArray($command) {
-            $output = null;
-            $query = $this->Query($command);
-            if ($query !== false) {
-                $output = array();
-                while ($row = $query->fetch_assoc()) {
-                    array_push($output, $row);
-                }
-            }
-            return $output;
-        }
-
         public function GetTables() {
-            $tables = $this->QueryArray("SHOW TABLES");
+            $tables = null;
+            $query = $this->conn->query('SHOW TABLES');
+            if ($query === false) return false;
+
+            $tables = array();
+            while ($row = $query->fetch_assoc()) {
+                array_push($tables, $row);
+            }
             if ($tables === null) return null;
+
             $tableMap = fn($table) => $table["Tables_in_{$this->db_name}"];
             return array_map($tableMap, $tables);
-        }
-
-        /**
-         * @param string $table
-         * @param array $cells Format { 'key' => 'value' }
-         * @param array $conditions Format { 'key' => 'value' }
-         * @return \mysqli_result|bool
-         */
-        public function QueryEdit($table, $cells, $conditions) {
-            $formatCells = array();
-            $formatConds = array();
-            foreach ($cells as $key => $value) {
-                array_push($formatCells, "`$key` = '$value'");
-            }
-            foreach ($conditions as $key => $value) {
-                array_push($formatConds, "`$key` = '$value'");
-            }
-            $SET = implode(',', $formatCells);
-            $COND = implode(' AND ', $formatConds);
-            $command = "UPDATE `$table` SET $SET WHERE $COND";
-            return $this->Query($command);
         }
 
         public function GetLastInsertID() {
@@ -160,12 +123,12 @@
          * @return void
          */
         public function AddStatistic($accountID, $deviceID, $type, $data = null) {
-            $Data = $data === null ? 'NULL' : "'$data'";
             $IP = GetClientIP();
-            $command = "INSERT INTO `Logs` (`AccountID`, `DeviceID`, `IP`, `Type`, `Data`) VALUES ('$accountID', '$deviceID', '$IP', '$type', $Data)";
-            $result = $this->Query($command);
+            $command = 'INSERT INTO TABLE (`AccountID`, `DeviceID`, `IP`, `Type`, `Data`) VALUES (?, ?, ?, ?, ?)';
+            $args = [ $accountID, $deviceID, $IP, $type, $data ];
+            $result = $this->QueryPrepare('Logs', $command, 'iisss', $args);
             if ($result === false) {
-                ExitWithStatus("Error: Adding device statistic in DB failed");
+                ExitWithStatus('Error: Adding device statistic in DB failed');
             }
         }
 
@@ -178,7 +141,7 @@
          * @param string $langKey
          * @param string|'add'|'rem' $type
          */
-        public function SendMail($email, $device, $deviceToken, $accountID, $langKey, $type="") {
+        public function SendMail($email, $device, $deviceToken, $accountID, $langKey, $type='') {
             if ($type !== 'add' && $type !== 'rem') return false;
 
             $accept = array('action' => 'accept', 'accountID' => $accountID,
@@ -201,14 +164,14 @@
         }
 
         public function Encrypt($str, $key = null) {
-            $output = "";
+            $output = '';
             $k = $key === null ? $this->keyA : $key;
             if ($str) $output = openssl_encrypt($str, $this->algorithm, $k);
             return $output;
         }
 
         public function Decrypt($str, $key = null) {
-            $output = "";
+            $output = '';
             $k = $key === null ? $this->keyA : $key;
             if ($str) $output = openssl_decrypt($str, $this->algorithm, $k);
             return $output;

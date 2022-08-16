@@ -33,7 +33,7 @@ class BackProfile extends React.Component {
     openProfileEditor = () => this.refProfileEditor?.Open();
 
     /**
-     * @returns {Number} in hours
+     * @returns {number} in hours
      */
     getTotalDuration(activities) {
         let totalDuration = 0;
@@ -44,7 +44,7 @@ class BackProfile extends React.Component {
         return Math.floor(totalDurationHour);
     }
     /**
-     * @returns {Number} in days
+     * @returns {number} in days
      */
     getTimeFromFirst(activities) {
         if (!activities.length) return 0;

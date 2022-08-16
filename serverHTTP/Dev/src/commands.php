@@ -25,7 +25,7 @@
             $this->data = $data;
 
             $this->db = new DataBase();
-            $this->output = array("status" => "error");
+            $this->output = array('status' => 'error');
             $this->enableBots = false;
         }
 
@@ -69,7 +69,7 @@
                 $this->output['status'] = 'downdate';
             } else if ($serverVersion > $appData) {
                 $this->output['status'] = 'update';
-            } else if ($appData["Maintenance"]) {
+            } else if ($appData['Maintenance']) {
                 $this->output['status'] = 'maintenance';
             }
         }
@@ -111,7 +111,7 @@
             switch ($perm) {
                 case 0: // OK
                     Accounts::RefreshLastDate($this->db, $account->ID);
-                    $this->db->AddStatistic($account->ID, $device->ID, 'appState', "Login");
+                    $this->db->AddStatistic($account->ID, $device->ID, 'appState', 'Login');
                     $this->output['token'] = Devices::GeneratePrivateToken($this->db, $account->ID, $device->ID);
                     $this->output['status'] = 'ok';
 
@@ -140,7 +140,7 @@
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                     if ($sended) {
-                        $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Link account");
+                        $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', 'Link account');
                         $this->output['status'] = 'newDevice';
                     }
                     break;
@@ -331,16 +331,16 @@
 
             if (Users::GetAdRemaining($this->db, $account->ID) <= 0) {
                 // Suspicion of cheating
-                $this->db->AddStatistic($accountID, $deviceID, 'cheatSuspicion', "Try to watch another ad");
+                $this->db->AddStatistic($account->ID, $deviceID, 'cheatSuspicion', 'Try to watch another ad');
                 $this->output['ox'] = $account->Ox;
                 $this->output['status'] = 'ok';
                 return;
             }
 
-            Users::AddOx($this->db, $accountID, $oxAmount);
+            Users::AddOx($this->db, $account->ID, $oxAmount);
 
             $newOxAmount = $account->Ox + $oxAmount;
-            $this->db->AddStatistic($accountID, $deviceID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
+            $this->db->AddStatistic($account->ID, $deviceID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
             $this->output['ox'] = $account->Ox + $oxAmount;
             $this->output['status'] = 'ok';
         }
@@ -402,7 +402,7 @@
                     $this->output['status'] = 'fail';
                     return;
                 }
-                $this->db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [$code]);
+                $this->db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [ $code ]);
                 $this->db->AddStatistic($accountID, $deviceID, 'giftCode', $code);
             }
 
@@ -429,7 +429,7 @@
 
             Accounts::RemDevice($this->db, $deviceID, $account, 'Devices');
 
-            $this->db->AddStatistic($accountID, $deviceID, 'appState', "Disconnect");
+            $this->db->AddStatistic($account->ID, $deviceID, 'appState', 'Disconnect');
             $this->output['status'] = 'ok';
         }
 
@@ -466,7 +466,7 @@
             $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'rem');
 
             if ($sended) {
-                $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', "Delete account");
+                $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', 'Delete account');
                 $this->output['status'] = 'ok';
             }
         }

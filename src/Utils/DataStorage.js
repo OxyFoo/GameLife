@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StrIsJSON } from "./String";
 
 /**
- * @typedef {Object} DataStorage_Data
+ * @typedef {object} DataStorage_Data
  */
 const STORAGE_KEYS = {
     LOGIN: '@data/login',
@@ -17,7 +17,7 @@ const STORAGE_KEYS = {
 class DataStorage {
     /**
      * @param {DataStorage_Data} storageKey - Storage key
-     * @param {Object} data - Data to save (JSON object)
+     * @param {object} data - Data to save (JSON object)
      * @returns {Promise<Boolean>} - True if data was saved
      */
     static async Save(storageKey, data) {
@@ -34,7 +34,7 @@ class DataStorage {
 
     /**
      * @param {DataStorage_Data} storageKey - Storage key
-     * @returns {Promise<?Object>} - Data (JSON object) or null if an error occurred
+     * @returns {Promise<?object>} - Data (JSON object) or null if an error occurred
      */
     static async Load(storageKey) {
         let json = null;

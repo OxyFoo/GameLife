@@ -25,10 +25,10 @@ const FrameProps = {
     /** @type {Boolean} */
     onlyItems: false,
 
-    /** @type {Number} Time to wait before loading in ms */
+    /** @type {number} Time to wait before loading in ms */
     delayTime: 0,
 
-    /** @type {Number} Time to wait for loading in ms - TODO - Automatic end after loading */
+    /** @type {number} Time to wait for loading in ms - TODO - Automatic end after loading */
     loadingTime: 1400
 }
 

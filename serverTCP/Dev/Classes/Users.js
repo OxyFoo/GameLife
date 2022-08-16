@@ -7,7 +7,7 @@ class User {
     deviceID = 0;
     accountID = 0;
     friendsID = {
-        /** @type {Array<Number>} Account IDs */
+        /** @type {Array<number>} Account IDs */
         all: []
     };
     /** @type {WebSocket.connection} */
@@ -22,8 +22,8 @@ class Users {
 
     /**
      * @param {WebSocket.connection} connection
-     * @param {String} token
-     * @returns {Promise<Number?>} - User ID (if success)
+     * @param {string} token
+     * @returns {Promise<number?>} - User ID (if success)
      */
     Add = async (connection, token) => {
         const settings = { 'action': 'checkToken', 'token': token };
@@ -52,7 +52,7 @@ class Users {
     }
 
     /**
-     * @param {Number} deviceID
+     * @param {number} deviceID
      */
     Rem = (deviceID) => {
         const index = this.AllUsers.findIndex(user => user.deviceID === deviceID);
@@ -64,7 +64,7 @@ class Users {
     }
 
     /**
-     * @param {Number} accountID 
+     * @param {number} accountID 
      * @returns {User?} - User with the account ID
      */
     GetByAccountID = (accountID) => {
@@ -73,7 +73,7 @@ class Users {
 
     /**
      * @description Send a message to all friends to notify them that the user is connected or disconnected
-     * @param {Number} accountID
+     * @param {number} accountID
      * @param {Boolean} mode - true: connect, false: disconnect
      */
     checkEvents = (accountID, mode) => {

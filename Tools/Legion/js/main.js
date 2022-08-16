@@ -6,7 +6,7 @@ var users = [];
 
 /**
  * @description All errors messages
- * @type {Array<String>}
+ * @type {Array<string>}
  */
 var errors = [];
 

@@ -1,17 +1,5 @@
 <?php
 
-    function AddHelper($db, $type, $name, $trad) {
-        $command = "INSERT INTO `Helpers` (`Type`, `Name`, `TypeTrad`) VALUES ('$type', '$name', '$trad')";
-        $result = $db->Query($command);
-        return $result;
-    }
-
-    function AddSkill($db, $Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility) {
-        $command = "INSERT INTO `Skills` (`Name`, `Translations`, `CategoryID`, `Wisdom`, `Intelligence`, `Confidence`, `Strength`, `Stamina`, `Dexterity`, `Agility`) VALUES ('$Name', '$Translations', '$CategoryID', '$Wisdom', '$Intelligence', '$Confidence', '$Strength', '$Stamina', '$Dexterity', '$Agility')";
-        $result = $db->Query($command);
-        return $result;
-    }
-
     /**
      * @param DataBase $db
      * @param int $deviceID
@@ -19,8 +7,9 @@
      * @param string $data
      */
     function AddReport($db, $deviceID, $type, $data) {
-        $command = "INSERT INTO `Reports` (`DeviceID`, `Type`, `Content`) VALUES ('$deviceID', '$type', '$data')";
-        $result = $db->Query($command);
+        $command = 'INSERT INTO TABLE (`DeviceID`, `Type`, `Content`) VALUES (?, ?, ?)';
+        $args = [ $deviceID, $type, $data ];
+        $result = $db->QueryPrepare('Reports', $command, 'iss', $args);
         return $result;
     }
 

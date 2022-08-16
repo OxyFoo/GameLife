@@ -1,9 +1,9 @@
 /**
  * Return indexes of available items [en fonction] du jour
- * @param {String} username Used to randomize the indexes
- * @param {Object} items Available items, keys are indexes and values is probability (0-1) (all to 1 = same probability)
- * @param {Number} length Number of item indexes to return
- * @returns {Array<String|Number>}
+ * @param {string} username Used to randomize the indexes
+ * @param {object} items Available items, keys are indexes and values is probability (0-1) (all to 1 = same probability)
+ * @param {number} length Number of item indexes to return
+ * @returns {Array<string|number>}
  */
 function GetRandomIndexesByDay(username, items, length) {
     const today = new Date();

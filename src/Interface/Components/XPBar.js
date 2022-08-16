@@ -10,16 +10,16 @@ const XPBarProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Number} */
+    /** @type {number} */
     value: 0,
 
-    /** @type {Number} */
+    /** @type {number} */
     maxValue: 10,
 
-    /** @type {Number} */
+    /** @type {number} */
     supValue: 0,
 
-    /** @type {Number} To set the delay of the animation (delay * 200ms) */
+    /** @type {number} To set the delay of the animation (delay * 200ms) */
     delay: 0
 }
 

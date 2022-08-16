@@ -24,7 +24,7 @@ const ContainerProps = {
     /** @type {StyleProp<ViewStyle>} */
     styleContainer: {},
 
-    /** @type {String} */
+    /** @type {string} */
     text: 'Title',
 
     /** @type {ColorThemeText} */

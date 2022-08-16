@@ -18,28 +18,28 @@ const SwiperProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Number?} If undefined, height equals to max height of pages content */
+    /** @type {number?} If undefined, height equals to max height of pages content */
     height: undefined,
 
-    /** @type {Number} */
+    /** @type {number} */
     borderRadius: 16,
 
     /** @type {Boolean} If true, automatically swipe to the next page */
     enableAutoNext: true,
 
-    /** @type {Number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
+    /** @type {number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
     delayNext: 10,
 
     /** @type {Array<React.Component>} */
     pages: [],
 
-    /** @type {Number} */
+    /** @type {number} */
     initIndex: 0,
 
     /** @type {ColorTheme} */
     backgroundColor: 'backgroundTransparent',
 
-    /** @type {(index: Number) => void} Callback is called when page index change */
+    /** @type {(index: number) => void} Callback is called when page index change */
     onSwipe: (index) => {}
 }
 

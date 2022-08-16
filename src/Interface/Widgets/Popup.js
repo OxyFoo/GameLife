@@ -10,13 +10,13 @@ import { Sleep } from '../../Utils/Functions';
 import { TimingAnimation } from '../../Utils/Animations';
 
 /**
- * @typedef {Object} ContentArgs
- * @property {[String, String]} ok
- * @property {[String, String]} yesno
- * @property {[String, String]} acceptornot
+ * @typedef {object} ContentArgs
+ * @property {[string, string]} ok
+ * @property {[string, string]} yesno
+ * @property {[string, string]} acceptornot
  * @property {() => void} custom
  * 
- * @typedef {Object} PopupTypes
+ * @typedef {object} PopupTypes
  * @property {'ok'} ok
  * @property {'yes'|'no'} yesno
  * @property {'accept'|'refuse'} acceptornot

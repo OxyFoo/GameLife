@@ -14,7 +14,7 @@ class BackTask extends React.Component {
     constructor(props) {
         super(props);
 
-        /** @type {String?} */
+        /** @type {string?} */
         this.taskName = null;
 
         this.state = {

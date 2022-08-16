@@ -2,13 +2,13 @@
  * @typedef {'hair'|'face'|'accessory'|'weapon'|'top'|'gloves'|'bottom'|'shoes'} _OldSlot
  * @typedef {'hair'|'top'|'bottom'|'shoes'} Slot
  * 
- * @typedef {Object} Buff
- * @property {Number} int
- * @property {Number} soc
- * @property {Number} for
- * @property {Number} end
- * @property {Number} agi
- * @property {Number} dex
+ * @typedef {object} Buff
+ * @property {number} int
+ * @property {number} soc
+ * @property {number} for
+ * @property {number} end
+ * @property {number} agi
+ * @property {number} dex
  */
 
 const Rarity = {
@@ -64,14 +64,14 @@ class Items {
     }
 
     /**
-     * @param {String} ID
+     * @param {string} ID
      * @returns {Item?}
      */
     GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
 
     /**
      * @param {'default'|Slot} slot
-     * @returns {{ x: Number, y: Number, width: Number, height: Number }}
+     * @returns {{ x: number, y: number, width: number, height: number }}
      */
     GetContainerSize = (slot) => itemContainerSize[slot];
 }

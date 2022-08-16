@@ -2,27 +2,27 @@ import { GetTime } from '../Utils/Time';
 import { MonthDayBetween, WeekDayBetween } from '../Utils/Date';
 
 /**
- * @typedef {Object} Schedule
+ * @typedef {object} Schedule
  * @property {'week'|'month'} Type
- * @property {Array<Number>} Repeat
+ * @property {Array<number>} Repeat
  */
 
 /**
- * @typedef {Object} Subtask
+ * @typedef {object} Subtask
  * @property {Boolean} Checked
- * @property {String} Title
+ * @property {string} Title
  */
 
 class Task {
-    /** @type {Number?} Time in seconds or null if unchecked */
+    /** @type {number?} Time in seconds or null if unchecked */
     Checked = null;
     Title = '';
     Description = '';
 
-    /** @type {Number?} Timestamp in seconds */
+    /** @type {number?} Timestamp in seconds */
     Starttime = 0;
 
-    /** @type {Number?} Timestamp in seconds */
+    /** @type {number?} Timestamp in seconds */
     Deadline = null;
 
     /** @type {Schedule?} Null to don't repeat */
@@ -56,7 +56,7 @@ class Tasks {
         this.UNSAVED_deletions = [];
 
         /**
-         * @type {Array<String>}
+         * @type {Array<string>}
          */
         this.sortTitles = [];
 
@@ -159,11 +159,11 @@ class Tasks {
 
     /**
      * Add task
-     * @param {String} title - Title of the task
-     * @param {Number} description - Description of the task
-     * @param {Number?} deadline - Unix timestamp in seconds
+     * @param {string} title - Title of the task
+     * @param {number} description - Description of the task
+     * @param {number?} deadline - Unix timestamp in seconds
      * @param {'week'|'month'|null} repeatMode - Repeat mode
-     * @param {Array<Number>} repeatDays - Repeat days
+     * @param {Array<number>} repeatDays - Repeat days
      * @param {Array<Subtask>} subtasks - Subtasks informations
      * @returns {'added'|'alreadyExist'}
      */
@@ -204,11 +204,11 @@ class Tasks {
     /**
      * Edit task
      * @param {Task} oldTask - Task to edit
-     * @param {String} title - Title of the task
-     * @param {Number} description - Description of the task
-     * @param {Number?} deadline - Unix timestamp in seconds
+     * @param {string} title - Title of the task
+     * @param {number} description - Description of the task
+     * @param {number?} deadline - Unix timestamp in seconds
      * @param {'week'|'month'|null} repeatMode - Repeat mode
-     * @param {Array<Number>} repeatDays - Repeat days
+     * @param {Array<number>} repeatDays - Repeat days
      * @param {Array<Subtask>} subtasks - Subtasks informations
      * @returns {'edited'|'notExist'}
      */
@@ -255,7 +255,7 @@ class Tasks {
     /**
      * Change sort order of tasks titles
      * @param {Task} task
-     * @param {Number} newIndex
+     * @param {number} newIndex
      * @returns {Boolean} Success of the operation
      */
     Move(task, newIndex) {
@@ -280,7 +280,7 @@ class Tasks {
     /**
      * Change sort order of tasks titles
      * @param {Task} task
-     * @param {Number?} checked Time in seconds or null if unchecked
+     * @param {number?} checked Time in seconds or null if unchecked
      * @returns {Boolean} Success of the operation
      */
     Check(task, checked) {
@@ -322,7 +322,7 @@ class Tasks {
     /**
      * @param {Array<Task>} arr
      * @param {Task} task
-     * @returns {Number?} - Index of task or null if not found
+     * @returns {number?} - Index of task or null if not found
      */
     GetIndex(arr, task) {
         const index = arr.findIndex(a => a.Title === task.Title);

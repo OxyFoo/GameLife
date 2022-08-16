@@ -18,13 +18,13 @@ const PageProps = {
     /** @type {Boolean} If true, user can scroll a little over the page for add a smooth effect */
     canScrollOver: true,
 
-    /** @type {Number} */
+    /** @type {number} */
     bottomOffset: 0,
 
     /** @type {React.Component} */
     topOverlay: null,
 
-    /** @type {Number} */
+    /** @type {number} */
     topOverlayHeight: 64,
 
     /** @type {LayoutChangeEvent} */
@@ -71,7 +71,7 @@ class Page extends React.Component {
         this.props.onLayout(event);
     }
 
-    /** @param {Number} scrollY */
+    /** @param {number} scrollY */
     onScroll = (scrollY) => {
         const { topOverlay, topOverlayHeight } = this.props;
         if (topOverlay !== null) {

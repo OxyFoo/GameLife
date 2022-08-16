@@ -10,8 +10,8 @@ class Animated3D {
     }
 
     /**
-     * @param {{ rX: Number, rY: Number, rZ: Number }} angles
-     * @param {Number} duration Time in milliseconds
+     * @param {{ rX: number, rY: number, rZ: number }} angles
+     * @param {number} duration Time in milliseconds
      * @returns {Array<Animated.CompositeAnimation>}
      */
     Update(angles, duration) {

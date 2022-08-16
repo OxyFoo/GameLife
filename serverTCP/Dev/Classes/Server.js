@@ -15,7 +15,7 @@ class Server {
     }
 
     /**
-     * @param {Number} port
+     * @param {number} port
      */
     Listen = (port) => {
         if (!this.server.listening) {

@@ -80,7 +80,7 @@ class Skills {
     }
 
     /**
-     * @param {Number} ID
+     * @param {number} ID
      * @returns {Skill?} - Return skill if exists or null
      */
     GetByID = (ID) => GetByKey(this.skills, 'ID', ID);
@@ -89,8 +89,8 @@ class Skills {
 
     /**
      * Return XML of logo by ID
-     * @param {Number} ID
-     * @returns {String} Representation of logo (XML)
+     * @param {number} ID
+     * @returns {string} Representation of logo (XML)
      */
     GetXmlByLogoID = (ID) => {
         let currXml = '';

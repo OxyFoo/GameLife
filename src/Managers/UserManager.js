@@ -19,7 +19,7 @@ const DEBUG_DATA = false;
  * @typedef {import('./PageManager').default} PageManager
  * @typedef {import('../Class/Experience').XPInfo} XPInfo
  * 
- * @typedef {Object} Stats
+ * @typedef {object} Stats
  * @property {XPInfo} int
  * @property {XPInfo} soc
  * @property {XPInfo} for

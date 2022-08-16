@@ -18,8 +18,8 @@ import { SpringAnimation } from '../../Utils/Animations';
 
 class Item {
     /**
-     * @param {Number} key 
-     * @param {String} value 
+     * @param {number} key 
+     * @param {string} value 
      */
     constructor(key = 0, value = '') {
         this.key = key;
@@ -31,13 +31,13 @@ const ComboBoxProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Number} */
+    /** @type {number} */
     maxHeight: 256,
 
     /** @type {ColorTheme} */
     activeColor: 'main1',
 
-    /** @type {String} */
+    /** @type {string} */
     title: 'Title',
 
     /** @type {Array<{id: 0, value: ''}>} */

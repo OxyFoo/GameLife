@@ -78,7 +78,8 @@
             return;
         }
         if (isset($type, $name)) {
-            AddHelper($db, $type, $name, $trad);
+            $command = "INSERT INTO TABLE (`Type`, `Name`, `TypeTrad`) VALUES (?, ?, ?)";
+            $result = $db->QueryPrepare('Helpers', $command, 'sss', [ $type, $name, $trad ]);
         }
     } else if ($action == "quickAddSkill") {
         $pwd = $_POST["Password"];
@@ -96,10 +97,12 @@
             return;
         }
         if (isset($Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility)) {
-            AddSkill($db, $Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility);
+            $command = "INSERT INTO TABLE (`Name`, `Translations`, `CategoryID`, `Wisdom`, `Intelligence`, `Confidence`, `Strength`, `Stamina`, `Dexterity`, `Agility`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $args = [ $Name, $Translations, $CategoryID, $Wisdom, $Intelligence, $Confidence, $Strength, $Stamina, $Dexterity, $Agility ];
+            $result = $db->QueryPrepare('Skills', $command, 'ssiiiiiiii', $args);
         }
     } else if ($action === "quotes") {
-        $quotes = $db->QueryArray("SELECT * FROM `Quotes`");
+        $quotes = $db->QueryPrepare('Quotes', "SELECT * FROM TABLE");
         if ($quotes !== null) {
             foreach ($quotes as $quote) {
                 $q = $quote['Quote'];
@@ -108,7 +111,7 @@
             }
         }
     } else if ($action === "getData") {
-        $app = $db->QueryArray("SELECT * FROM `App`");
+        $app = $db->QueryPrepare('App', "SELECT * FROM TABLE");
         if ($app !== null) {
             $data = array();
             for ($i = 0; $i < count($app); $i++) {
@@ -126,13 +129,12 @@
         }
     } else if ($action === "setHashTest") {
         $hashTest = "Blabla";
-        $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$hashTest' WHERE `ID` = 'Hashes'");
+        $db->QueryPrepare('App', "UPDATE TABLE SET `Date` = current_timestamp(), `Data` = ? WHERE `ID` = 'Hashes'", 's', [ $hashTest ]);
     } else if ($action === "getAccount") {
         $ID = 1;
-        $command = "SELECT * FROM `Accounts` WHERE `ID` = '$ID'";
-        $account = $db->Query($command);
-        $accountData = $account->fetch_assoc();
-        $activities = $db->Decrypt($accountData['Activities']);
+        $command = "SELECT * FROM TABLE WHERE `ID` = ?";
+        $account = $db->QueryPrepare('Accounts', $command, 'i', [ $ID ]);
+        $activities = $db->Decrypt($account['Activities']);
         //print_r($account);
         //echo("<br />");
         //print_r($accountData);
@@ -143,19 +145,6 @@
         //$err = trigger_error("ErrorHandler", 512);
         $err = http_response_code(500);
         print_r($err);
-    } else if ($action === "queryEdit") {
-        $ID = '140';
-        $edit = array(
-            'Name' => 'A',
-            'OSName' => 'B',
-            'OSVersion'  => 'C',
-            'Updated' => 'CURRENT_TIMESTAMP()'
-        );
-        $cond = array('ID' => $ID);
-        //$update_command = "UPDATE `Devices` SET `OSName` = '$osName', `OSVersion` = '$osVersion', `Updated` = CURRENT_TIMESTAMP() WHERE `Devices`.`ID` = $ID";
-        //$result = $db->Query($update_command);
-        $result = $db->QueryEdit('Devices', $edit, $cond);
-        print_r($result);
     } else if ($action === 'date') {
         $account = Accounts::GetByID($db, '1');
         //print_r($account);
@@ -170,7 +159,7 @@
         echo("<br />");
         print_r(strtotime('0000-00-00 00:00:00'));
     } else if ($action === 'success') {
-        $achievements = $db->QueryArray("SELECT * FROM `Achievements`");
+        $achievements = $db->QueryPrepare('Achievements', "SELECT * FROM TABLE");
         /*foreach ($achievements as $key => $value) {
             print_r($key);
             print_r("=>");
@@ -179,7 +168,7 @@
         }*/
         echo(json_encode($achievements));
     } else if ($action === 'removeTranslations') {
-        $skills = $db->QueryArray("SELECT * FROM `Skills`");
+        $skills = $db->QueryPrepare('Skills', "SELECT * FROM TABLE");
         $list = array(
             '{"fr":"Corde à sauter","en":"Jumping rope", "es":"Cuerda de saltar"}',
             '{"fr":"Accrobranche","en":"Tree climbing"}',
@@ -304,7 +293,7 @@
                 echo("<br />");
             }*/
 
-            $db->Query("UPDATE `Skills` SET `Name` = '$name' WHERE `Skills`.`ID` = $ID");
+            $db->QueryPrepare('Skills', "UPDATE TABLE SET `Name` = ? WHERE `Skills`.`ID` = ?", 's', [ $name, $ID ]);
         }
     } else if ($action === 'testTIMESTAMP') {
         $account = Accounts::GetByID($db, 1);
@@ -313,11 +302,11 @@
     } else if ($action === 'testQuery') {
         // Average: 0.27ms/query
         $t1 = microtime(true);
-        $activities = $db->QueryArray("SELECT * FROM `Activities` WHERE `AccountID` = '14'");
+        $activities = $db->QueryPrepare('Activities', "SELECT * FROM TABLE WHERE `AccountID` = '14'");
         /*for ($i = 0; $i < 100*1000; $i++) {
-            $db->Query("INSERT INTO `Activities` (`AccountID`, `SkillID`, `StartTime`, `Duration`) VALUES ('0', '0', '0', '0')");
+            $db->QueryPrepare('Activities', "INSERT INTO TABLE (`AccountID`, `SkillID`, `StartTime`, `Duration`) VALUES ('0', '0', '0', '0')");
             $id = $db->GetLastInsertID();
-            $db->Query("DELETE FROM `Activities` WHERE `ID` = '$id'");
+            $db->QueryPrepare('Activities', "DELETE FROM TABLE WHERE `ID` = ?", 'i', [ $id ]);
         }*/
         $t2 = microtime(true);
         $delta = ($t2 - $t1) * 1000;
@@ -334,7 +323,7 @@
         $ox = Users::GetOx($db, 1);
         print_r($ox);
     } else if ($action === 'query') {
-        $giftCodes = $db->QueryArray("SELECT `Rewards`, `Available` FROM `GiftCodes` WHERE `ID` = 'AEIOUY'");
+        $giftCodes = $db->QueryPrepare('GiftCodes', "SELECT `Rewards`, `Available` FROM TABLE WHERE `ID` = 'AEIOUY'");
         if ($giftCodes === false || count($giftCodes) === 0) {
             echo('Fail');
         } else {
@@ -342,6 +331,26 @@
             $available = $giftCodes[0]['Available'];
             echo("$rewards, $available");
         }
+    } else if ($action === 'newQuery') {
+        $test = $db->QueryPrepare('GiftCodes', "SELECT * FROM TABLE");
+        print_r($test);
+
+        echo('<br />');
+        $test2 = $db->QueryPrepare('GiftCodes', "SELECT * FROM TABLE");
+        print_r($test2);
+
+        echo('<br />');
+        $test3 = $db->QueryPrepare('GiftCodes', "UPDATE TABLE SET `Available` = ? WHERE `ID` = ?", 'is', array(2, 'AEIOUY'));
+        print_r($test3);
+
+        echo('<br />');
+        $test4 = $db->QueryPrepare('GiftCodes', "SELECT * FROM TABLE");
+        print_r($test4);
+
+        echo('<br />');
+        $test5 = $db->GetTables();
+        if ($test5 === false) echo('Fail');
+        else print_r($test5);
     }
 
 ?>

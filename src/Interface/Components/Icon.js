@@ -98,16 +98,16 @@ const IconProps = {
     /** @type {StyleProp<ViewStyle>} */
     containerStyle: {},
 
-    /** @type {String} Display an icon from XML base64 encoded ('icon' skip if define) */
+    /** @type {string} Display an icon from XML base64 encoded ('icon' skip if define) */
     xml: undefined,
 
     /** @type {Icons} */
     icon: '',
 
-    /** @type {Number} Size of icon in pixels */
+    /** @type {number} Size of icon in pixels */
     size: 24,
 
-    /** @type {Number} Rotation angle in degrees */
+    /** @type {number} Rotation angle in degrees */
     angle: 0,
 
     /** @type {ColorTheme} */

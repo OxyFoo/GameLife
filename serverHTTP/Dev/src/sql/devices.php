@@ -12,8 +12,9 @@
          */
         public static function Add($db, $deviceIdentifier, $deviceName, $osName, $osVersion) {
             $hashID = password_hash($deviceIdentifier, PASSWORD_BCRYPT);
-            $command = "INSERT INTO `Devices` (`Identifier`, `Name`, `OSName`, `OSVersion`) VALUES ('$hashID', '$deviceName', '$osName', '$osVersion')";
-            $result = $db->Query($command);
+            $command = "INSERT INTO TABLE (`Identifier`, `Name`, `OSName`, `OSVersion`) VALUES (?, ?, ?, ?)";
+            $args = [ $hashID, $deviceName, $osName, $osVersion ];
+            $result = $db->QueryPrepare('Devices', $command, 'ssss', $args);
             if ($result === false) {
                 ExitWithStatus("Error: Adding device in DB failed");
             }
@@ -28,9 +29,9 @@
          */
         public static function Get($db, $deviceIdentifier, $deviceName) {
             $device = null;
-            $command = "SELECT * FROM `Devices` WHERE `Name` = '$deviceName'";
+            $command = "SELECT * FROM TABLE WHERE `Name` = ?";
 
-            $devices = $db->QueryArray($command);
+            $devices = $db->QueryPrepare('Devices', $command, 's', [ $deviceName ]);
             if ($devices !== null) {
                 for ($d = 0; $d < count($devices); $d++) {
                     if (password_verify($deviceIdentifier, $devices[$d]['Identifier'])) {
@@ -50,8 +51,8 @@
          */
         public static function GetByID($db, $ID) {
             $device = null;
-            $command = "SELECT * FROM `Devices` WHERE `ID` = '$ID'";
-            $devices = $db->QueryArray($command);
+            $command = "SELECT * FROM TABLE WHERE `ID` = ?";
+            $devices = $db->QueryPrepare('Devices', $command, 'i', [ $ID ]);
             if ($devices !== null && count($devices) === 1) {
                 $device = new Device($devices[0]);
             }
@@ -67,16 +68,11 @@
          */
         public static function Refresh($db, $device, $deviceName, $osName, $osVersion) {
             if ($device->Name != $deviceName || $device->OSName != $osName || $device->OSVersion != $osVersion) {
-                $edit = array(
-                    'Name' => $deviceName,
-                    'OSName' => $osName,
-                    'OSVersion'  => $osVersion,
-                    'Updated' => 'CURRENT_TIMESTAMP()'
-                );
-                $cond = array('ID' => $device->ID);
-                $result = $db->QueryEdit('Devices', $edit, $cond);
+                $command = 'UPDATE TABLE SET `Name` = ?, `OSName` = ?, `OSVersion` = ?, `Updated` = CURRENT_TIMESTAMP() WHERE `ID` = ?';
+                $args = [ $deviceName, $osName, $osVersion, $device->ID ];
+                $result = $db->QueryPrepare('Devices', $command, 'sssi', $args);
                 if ($result === false) {
-                    ExitWithStatus("Error: Refreshing device in DB failed");
+                    ExitWithStatus('Error: Refreshing device in DB failed');
                 }
             }
         }
@@ -89,10 +85,10 @@
          */
         public static function RefreshMailToken($db, $deviceID, $accountID) {
             $token = RandomString();
-            $result1 = $db->Query("UPDATE `Devices` SET `Token` = '$token' WHERE `ID` = '$deviceID'");
-            $result2 = $db->Query("UPDATE `Accounts` SET `LastSendMail` = current_timestamp() WHERE `ID` = '$accountID'");
+            $result1 = $db->QueryPrepare('Devices', 'UPDATE TABLE SET `Token` = ? WHERE `ID` = ?', 'si', [ $token, $deviceID ]);
+            $result2 = $db->QueryPrepare('Accounts', 'UPDATE TABLE SET `LastSendMail` = current_timestamp() WHERE `ID` = ?', 'i', [ $accountID ]);
             if ($result1 === false || $result2 === false) {
-                ExitWithStatus("Error: Refreshing mail token in DB failed");
+                ExitWithStatus('Error: Refreshing mail token in DB failed');
             }
             return $token;
         }
@@ -103,7 +99,7 @@
          * @return \mysqli_result|bool
          */
         public static function RemoveToken($db, $deviceID) {
-            return $db->Query("UPDATE `Devices` SET `Token` = '' WHERE `ID` = '$deviceID'");
+            return $db->QueryPrepare('Devices', "UPDATE TABLE SET `Token` = '' WHERE `ID` = ?", 'i', [ $deviceID ]);
         }
 
         private const RANDOM_LENGTH = 24;
@@ -161,10 +157,10 @@
          * @param int $ID
          */
         public static function Delete($db, $ID) {
-            $command = "DELETE FROM `Devices` WHERE `ID` = '$ID'";
-            $result = $db->Query($command);
+            $command = 'DELETE FROM TABLE WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Devices', $command, 'i', [ $ID ]);
             if ($result === false) {
-                ExitWithStatus("Error: Deleting device in DB failed");
+                ExitWithStatus('Error: Deleting device in DB failed');
             }
         }
     }

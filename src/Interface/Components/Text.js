@@ -20,7 +20,7 @@ const TextProps = {
     /** @type {StyleProp<ViewStyle>} */
     containerStyle: {},
 
-    /** @type {Number} */
+    /** @type {number} */
     fontSize: 18,
 
     /** @type {ColorTheme|ColorThemeText} */

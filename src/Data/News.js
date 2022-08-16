@@ -12,7 +12,7 @@ class New {
 
     /**
      * @description XML of icon or null, if button is defined, icon will show in button
-     * @type {String?}
+     * @type {string?}
      */
     Icon = null;
 
@@ -24,7 +24,7 @@ class New {
 
     /**
      * @description Page name or url (https) to open
-     * @type {String?}
+     * @type {string?}
      */
     ButtonEvent = null;
 

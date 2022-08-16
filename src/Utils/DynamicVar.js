@@ -17,7 +17,7 @@ class DynamicVar {
     /**
      * Add function to be called when the variable is updated
      * @param {Function} callback 
-     * @returns {Number?} ID of the listener if it was added, null otherwise
+     * @returns {number?} ID of the listener if it was added, null otherwise
      */
     AddListener(callback) {
         if (typeof(callback) !== 'function') return null;
@@ -30,7 +30,7 @@ class DynamicVar {
     }
     /**
      * Remove function to be called when the variable is updated
-     * @param {Number} id ID of the listener to remove
+     * @param {number} id ID of the listener to remove
      * @returns {Boolean} True if the function was found and removed
      */
     RemoveListener(id) {

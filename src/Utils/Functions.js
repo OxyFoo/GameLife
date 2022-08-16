@@ -3,9 +3,9 @@ function TwoDigit(n) {
 }
 
 /**
- * @param {Number} number 
- * @param {Number} [decimal=0] 
- * @returns {Number} - Return number rounded to decimal
+ * @param {number} number 
+ * @param {number} [decimal=0] 
+ * @returns {number} - Return number rounded to decimal
  */
 function Round(number, decimal = 0) {
     const dec = decimal.toString();
@@ -32,7 +32,7 @@ function MinMax(min, value, max) {
 
 /**
  * @param {Array} array
- * @param {String} key - Key of array
+ * @param {string} key - Key of array
  * @returns {Array} - Return sorted array
  */
 function SortByKey(array, key) {
@@ -44,9 +44,9 @@ function SortByKey(array, key) {
 /**
  * Return element in array of object by key and value
  * @param {Array} array
- * @param {String} key
+ * @param {string} key
  * @param {*} value
- * @returns {Object?} Return object or null if didn't exists
+ * @returns {object?} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
     const result = array.find((element) => element[key] == value);
@@ -56,7 +56,7 @@ function GetByKey(array, key, value) {
 /**
  * Range function
  * @example Range(5) => [0, 1, 2, 3, 4]
- * @param {Number} length 
+ * @param {number} length 
  * @returns {Array}
  */
 function Range(length) {
@@ -70,9 +70,9 @@ function Sleep(ms) {
 
 /**
  * Generate random number between [min, max[
- * @param {Number} min
- * @param {Number} max
- * @param {Number} decimal Number of decimals to keep
+ * @param {number} min
+ * @param {number} max
+ * @param {number} decimal Number of decimals to keep
  * @returns 
  */
 function Random(min = 0, max = 1, decimal = 0) {

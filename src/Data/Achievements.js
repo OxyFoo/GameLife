@@ -31,7 +31,7 @@ class Condition {
     };
     /** @type {'LT'|'GT'} */
     Operator = '';
-    /** @type {Number} */
+    /** @type {number} */
     Value = 0;
 }
 
@@ -69,7 +69,7 @@ class Achievements {
     }
 
     /**
-     * @param {String} condition
+     * @param {string} condition
      * @returns {Condition?}
      */
     parseCondition(condition) {
@@ -108,7 +108,7 @@ class Achievements {
     }
 
     /**
-     * @param {String} reward
+     * @param {string} reward
      * @returns {Array<Reward>}
      */
     parseReward(reward) {
@@ -137,14 +137,14 @@ class Achievements {
     }
 
     /**
-     * @param {Number} ID
+     * @param {number} ID
      * @returns {Achievement?}
      */
     GetByID = (ID) => this.achievements.find(a => a.ID === ID) || null;
 
     /**
      * Returns all achievements that are visible, with solved first
-     * @param {Array<Number>} solvedIndexes 
+     * @param {Array<number>} solvedIndexes 
      * @returns {Array<Achievement>}
      */
     GetAll = (solvedIndexes) => {

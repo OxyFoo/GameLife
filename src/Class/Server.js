@@ -76,7 +76,7 @@ class Server {
     /**
      * Try to connect to the server, with email (and device informations)
      * @param {string} email Email of the user
-     * @returns {Promise<{status: 'free'|'ban'|'ok'|'newDevice'|'remDevice'|'waitMailConfirmation'|'limitDevice', remainMailTime: Number?}>} Status of the user connection
+     * @returns {Promise<{status: 'free'|'ban'|'ok'|'newDevice'|'remDevice'|'waitMailConfirmation'|'limitDevice', remainMailTime: number?}>} Status of the user connection
      */
     Connect = async (email) => {
         let status = null;
@@ -120,8 +120,8 @@ class Server {
 
     /**
      * Send a request to the server to create a new user account
-     * @param {String} email Email of the user
-     * @param {String} username Pseudo of the user
+     * @param {string} email Email of the user
+     * @param {string} username Pseudo of the user
      * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'?>} Status of the user signin
      */
     Signin = async (email, username) => {
@@ -172,7 +172,7 @@ class Server {
     /**
      * Load all user data
      * @param {Boolean} [force=false] Force to load data from server (use empty dataToken)
-     * @returns {Promise<?Object>} Return all online data or null if failed
+     * @returns {Promise<?object>} Return all online data or null if failed
      */
     async LoadUserData(force = false) {
         let json = null;
@@ -197,7 +197,7 @@ class Server {
 
     /**
      * Save username on server
-     * @param {String} username
+     * @param {string} username
      * @returns {Promise<'ok'|'alreadyUsed'|'alreadyChanged'|'incorrect'|'error'>}
      */
     async SaveUsername(username) {
@@ -228,7 +228,7 @@ class Server {
     /**
      * Send report
      * @param {'activity'|'suggest'|'bug'|'message'|'error'} type Type of report to send
-     * @param {Object} data Data to send
+     * @param {object} data Data to send
      * @returns {Promise<Boolean>} Return success of report
      */
     async SendReport(type, data) {

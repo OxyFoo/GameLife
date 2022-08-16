@@ -20,7 +20,7 @@ function SpringAnimation(anim, toValue, native = true) {
 /**
  * @description Used to interpolate animated with function
  * @param {Function} func
- * @param {Number} [steps=50]
+ * @param {number} [steps=50]
  * @returns Input and output interpolation function
  */
 function WithFunction(func, steps = 50, max = 1) {

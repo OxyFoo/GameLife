@@ -10,12 +10,12 @@ const VERSION = require('../../package.json').version;
 
 /**
  * @typedef {'shop'|'todo'} RewardedAds
- * @typedef {String} InterstitialAds
+ * @typedef {string} InterstitialAds
  * @typedef {RewardedAds|InterstitialAds} AdNames
  * 
  * @typedef {'ready'|'notAvailable'|'wait'|'error'} AdStates
  * 
- * @typedef {Object} AdTypes
+ * @typedef {object} AdTypes
  * @property {FirebaseAdMobTypes.AdEventListener} custom
  * @property {(state: AdStates) => void} add10Ox
  */

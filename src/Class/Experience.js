@@ -11,11 +11,11 @@ const SkillXPperLevel = 20;
  * @typedef {import('../Managers/UserManager').default} UserManager
  * @typedef {import('../Managers/UserManager').Stats} Stats
  * 
- * @typedef {Object} XPInfo
- * @property {Number} xp - Current XP
- * @property {Number} lvl - Current level
- * @property {Number} next - XP to next level
- * @property {Number} totalXP - Total XP
+ * @typedef {object} XPInfo
+ * @property {number} xp - Current XP
+ * @property {number} lvl - Current level
+ * @property {number} next - XP to next level
+ * @property {number} totalXP - Total XP
  */
 
 class Experience {
@@ -106,7 +106,7 @@ class Experience {
     }
 
     /**
-     * @param {Number} categoryID
+     * @param {number} categoryID
      * @returns {XPInfo}
      */
     GetSkillCategoryExperience(categoryID) {
@@ -127,8 +127,8 @@ class Experience {
     }
 
     /**
-     * @param {Number} totalXP
-     * @param {Number} xpPerLevel
+     * @param {number} totalXP
+     * @param {number} xpPerLevel
      * @returns {XPInfo}
      */
     getXPDict(totalXP = 0, xpPerLevel = 1) {

@@ -23,22 +23,22 @@ const ButtonProps = {
     /** @type {StyleProp<ViewStyle>?} */
     styleAnimation: undefined,
 
-    /** @type {Number} */
+    /** @type {number} */
     fontSize: 16,
 
     /** @type {Icons} */
     icon: '',
 
-    /** @type {String?} */
+    /** @type {string?} */
     iconXml: undefined,
 
-    /** @type {Number} */
+    /** @type {number} */
     iconSize: 24,
 
     /** @type {ColorTheme|ColorThemeText} */
     iconColor: 'white',
 
-    /** @type {Number} Angle in degrees */
+    /** @type {number} Angle in degrees */
     iconAngle: 0,
 
     /** @type {Boolean} If true, content will be replaced by loading icon & press event disabled */
@@ -53,7 +53,7 @@ const ButtonProps = {
     /** @type {ColorTheme|ColorThemeText} */
     rippleColor: '#000000',
 
-    /** @type {Number} */
+    /** @type {number} */
     borderRadius: 12,
 
     /** @type {Boolean} If false, background is gray & press event disabled */

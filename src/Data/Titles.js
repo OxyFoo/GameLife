@@ -26,7 +26,7 @@ class Titles {
     }
 
     /**
-     * @param {Number} ID 
+     * @param {number} ID 
      * @returns {?Title}
      */
     GetByID = (ID) => this.titles.find(title => title.ID == ID) || null;

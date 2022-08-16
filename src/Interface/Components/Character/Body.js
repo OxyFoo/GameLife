@@ -144,9 +144,9 @@ class Body {
 
     /**
      * Apply animation to character 
-     * @param {Object} translation
-     * @param {Object} partsRotations { ..., PartsName: Animated3D, ... }
-     * @param {Number} [duration=1000]
+     * @param {object} translation
+     * @param {object} partsRotations { ..., PartsName: Animated3D, ... }
+     * @param {number} [duration=1000]
      */
     __applyAnimation = (translation, partsRotations, duration = 1000) => {
         let anims = [];

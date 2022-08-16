@@ -1,5 +1,5 @@
 /**
- * @param {String} str - String to check if it's a valid json
+ * @param {string} str - String to check if it's a valid json
  * @returns {Boolean} - Return true if string is a valid json
  */
  function StrIsJSON(str) {
@@ -10,7 +10,7 @@
 }
 
 /**
- * @param {String} email
+ * @param {string} email
  * @returns {Boolean} - True if str "email" is a valid email
  */
  function IsEmail(email) {
@@ -28,9 +28,9 @@
  * "[" and "]" are added if the sentence is plural, removing the characters
  * preceding them by the same number as the number of "-"
  * @example Text : "The following sentence[s] is[--are] singular[--------plural]"
- * @param {String} text
+ * @param {string} text
  * @param {Boolean} plural
- * @returns {String}
+ * @returns {string}
  */
  function ParsePlural(text, plural = false) {
     while (text.indexOf('[') !== -1) {

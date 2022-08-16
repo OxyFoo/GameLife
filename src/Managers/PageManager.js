@@ -139,7 +139,7 @@ class PageManager extends React.Component{
     /**
      * Open page
      * @param {PageName} newpage
-     * @param {Object} pageArguments
+     * @param {object} pageArguments
      * @param {Boolean} ignorePage
      * @param {Boolean} forceUpdate
      * @returns {Boolean} True if changing page started
@@ -175,7 +175,7 @@ class PageManager extends React.Component{
 
     /**
      * Change theme
-     * @param {Number} index 0: Dark theme (default), 1: Light theme
+     * @param {number} index 0: Dark theme (default), 1: Light theme
      */
     SetTheme = (index) => {
         TimingAnimation(this.state.animTheme, index, 100).start();
@@ -238,7 +238,7 @@ class PageManager extends React.Component{
 
     /**
      * @param {PageName} page
-     * @param {Object} [args]
+     * @param {object} [args]
      */
     getPageContent(page, args) {
         let p;

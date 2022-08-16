@@ -12,13 +12,13 @@ const TextSwitchProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Array<String>} */
+    /** @type {Array<string>} */
     texts: [],
 
-    /** @type {Number} Initial selection */
+    /** @type {number} Initial selection */
     startAt: 0,
 
-    /** @param {Number} index Called when seleted part change */
+    /** @param {number} index Called when seleted part change */
     onChange: (index) => {}
 }
 

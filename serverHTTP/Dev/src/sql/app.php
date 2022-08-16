@@ -6,7 +6,7 @@
      */
     function GetAppData($db) {
         $appData = array('Version' => 0, 'Hashes' => '', 'Maintenance' => false, 'News' => array());
-        $app = $db->QueryArray("SELECT * FROM `App`");
+        $app = $db->QueryPrepare('App', 'SELECT * FROM TABLE');
         $lastHashRefresh = 0;
 
         if ($app !== null) {
@@ -55,7 +55,8 @@
 
         // Refresh `App` in DB
         $newHashesString = json_encode($newHashes);
-        $result = $db->Query("UPDATE `App` SET `Date` = current_timestamp(), `Data` = '$newHashesString' WHERE `ID` = 'Hashes'");
+        $command = "UPDATE TABLE SET `Date` = current_timestamp(), `Data` = ? WHERE `ID` = 'Hashes'";
+        $result = $db->QueryPrepare('App', $command, 's', [ $newHashesString ]);
         if ($result === false) {
             ExitWithStatus('Failed to update database hashes');
         }

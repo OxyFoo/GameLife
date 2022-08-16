@@ -31,7 +31,7 @@
                 return $_SERVER[$k];
             }
         }
-        return "UNKNOWN";
+        return 'UNKNOWN';
     }
 
     /**

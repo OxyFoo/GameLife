@@ -14,7 +14,7 @@
         global $db;
 
         $format = "[\n";
-        $array = $db->QueryArray("SELECT * FROM `$table`");
+        $array = $db->QueryPrepare($table, 'SELECT * FROM TABLE');
         $nb_length = count($array);
         for ($i = 0; $i < $nb_length; $i++) {
             $line = json_encode($array[$i]);
@@ -27,7 +27,7 @@
 
     function TextToFile($table, $text) {
         global $dir;
-        $date = date("y-m-d");
+        $date = date('y-m-d');
         $name = "{$date}_{$table}.json";
         $fp = fopen("$dir/$name", 'w');
         fwrite($fp, $text);

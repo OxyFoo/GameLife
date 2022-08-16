@@ -36,9 +36,9 @@ class Console extends React.Component {
     /**
      * Show message in app console
      * @param {'info'|'warn'|'error'} type
-     * @param {String} text
+     * @param {string} text
      * @param {Array<any>} params
-     * @returns {Number} index of the message
+     * @returns {number} index of the message
      */
     AddLog = (type, text, ...params) => {
         // Add to app console
@@ -68,8 +68,8 @@ class Console extends React.Component {
 
     /**
      * Edit text in console, to update state debug
-     * @param {Number} index
-     * @param {String} text
+     * @param {number} index
+     * @param {string} text
      * @param {Array<any>} params
      * @returns {Boolean} Success of edition
      */

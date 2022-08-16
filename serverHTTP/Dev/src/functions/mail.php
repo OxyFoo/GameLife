@@ -5,7 +5,7 @@
      * @return object JSON object with the language text
      */
     function GetMailLangText($langKey) {
-        $lang_content = file_get_contents("mail/lang.json");
+        $lang_content = file_get_contents('mail/lang.json');
         $lang_json = json_decode($lang_content);
 
         $selected_lang = 'fr';
@@ -35,13 +35,13 @@
         $link_button = "$URL?data=$actionButton";
         $link_view = "$URL?data=$actionView&action=$actionButton";
 
-        $content = $actionView !== null ? str_replace("%link%", $link_view, $textLink) : '';
-        $content .= file_get_contents("mail/mail-check.html");
-        $content = str_replace("%title%", $title, $content);
-        $content = str_replace("%text%", $text, $content);
-        $content = str_replace("%button%", $textButton, $content);
-        $content = str_replace("%buttonLink%", $link_button, $content);
-        $content = str_replace("%device%", $deviceName, $content);
+        $content = $actionView !== null ? str_replace('%link%', $link_view, $textLink) : '';
+        $content .= file_get_contents('mail/mail-check.html');
+        $content = str_replace('%title%', $title, $content);
+        $content = str_replace('%text%', $text, $content);
+        $content = str_replace('%button%', $textButton, $content);
+        $content = str_replace('%buttonLink%', $link_button, $content);
+        $content = str_replace('%device%', $deviceName, $content);
 
         return $content;
     }

@@ -71,7 +71,7 @@ class Multiplayer {
     }
 
     /**
-     * @param {String|Object} message
+     * @param {string|object} message
      * @returns {Boolean} Whether the message was sent successfully
      */
     Send = (message) => {

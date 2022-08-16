@@ -98,7 +98,7 @@ class ThemeManager {
 
     /**
      * @description Check if theme is valid
-     * @param {String} theme - Theme name
+     * @param {string} theme - Theme name
      * @returns {Boolean} - True if theme is valid
      */
     isTheme(theme) {
@@ -108,8 +108,8 @@ class ThemeManager {
     /**
      * @description Get the theme color by name (or return the color if already hex color)
      * @param {ColorTheme|ColorThemeText} color - Name of theme color or hex color
-     * @param {Number} [opacity=1] - Opacity of color, between 0 and 1
-     * @returns {String} - Hex color (or same color than input if not found and not hex)
+     * @param {number} [opacity=1] - Opacity of color, between 0 and 1
+     * @returns {string} - Hex color (or same color than input if not found and not hex)
      */
     GetColor(color, opacity = 1) {
         if (color.startsWith('#')) return this.ApplyOpacity(color, opacity);
@@ -121,7 +121,7 @@ class ThemeManager {
     /**
      * @description Get absolute color (independant of theme)
      * @param {ABSOLUTE} color - Name of absolute color
-     * @param {Number} [opacity=1] - Opacity of color, between 0 and 1
+     * @param {number} [opacity=1] - Opacity of color, between 0 and 1
      */
     GetAbsoluteColors() {
         return this.ABSOLUTE;
@@ -129,9 +129,9 @@ class ThemeManager {
 
     /**
      * @description Apply opacity to a color (hex to hex)
-     * @param {String} hexColor - Hex color
-     * @param {Number} [opacity=1] - Opacity of color, between 0 and 1
-     * @returns {String?} - Hex color (or null if not hex color)
+     * @param {string} hexColor - Hex color
+     * @param {number} [opacity=1] - Opacity of color, between 0 and 1
+     * @returns {string?} - Hex color (or null if not hex color)
      */
     ApplyOpacity(hexColor, opacity = 1) {
         if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 4) return null;

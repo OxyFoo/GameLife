@@ -22,7 +22,7 @@ class Inventory {
          */
         this.user = user;
 
-        /** @type {Array<Number>} */
+        /** @type {Array<number>} */
         this.titles = [];
 
         /**
@@ -38,7 +38,7 @@ class Inventory {
             /** @type {CharactersName} */
             skin: 'skin_01',
 
-            /** @type {Number} */
+            /** @type {number} */
             skinColor: 1,
 
             hair: 0,

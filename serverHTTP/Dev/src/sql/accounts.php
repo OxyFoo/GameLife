@@ -12,10 +12,10 @@
          */
         public static function Add($db, $username, $email, $deviceID) {
             // Add account
-            $command = "INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`) VALUES (?, ?, ?)";
+            $command = 'INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = [ $username, $email, $deviceID ];
             $result = $db->QueryPrepare('Accounts', $command, 'ssi', $args);
-            if ($result === false) ExitWithStatus("Error: Adding device in DB failed");
+            if ($result === false) ExitWithStatus('Error: Adding device in DB failed');
             $account = Accounts::GetByID($db, $db->GetLastInsertID());
 
             // Add default items
@@ -23,15 +23,15 @@
             $IDs = [];
             foreach ($items as $item) {
                 $itemAdded = Users::AddInventoryItem($db, $account, $item);
-                if (!$itemAdded) ExitWithStatus("Error: Adding default item failed");
+                if (!$itemAdded) ExitWithStatus('Error: Adding default item failed');
                 array_push($IDs, $db->GetLastInsertID());
             }
 
             // Add avatar with default items
-            $command = "INSERT INTO TABLE (`ID`, `Hair`, `Top`, `Bottom`, `Shoes`) VALUES (?, ?, ?, ?, ?)";
+            $command = 'INSERT INTO TABLE (`ID`, `Hair`, `Top`, `Bottom`, `Shoes`) VALUES (?, ?, ?, ?, ?)';
             $args = [ $account->ID, ...$IDs ];
             $result = $db->QueryPrepare('Avatars', $command, 'iiiii', $args);
-            if ($result === false) ExitWithStatus("Error: adding avatar failed");
+            if ($result === false) ExitWithStatus('Error: adding avatar failed');
 
             return $account;
         }
@@ -43,8 +43,8 @@
          */
         public static function GetByID($db, $ID) {
             $account = null;
-            $command = "SELECT * FROM `Accounts` WHERE `ID` = '$ID'";
-            $accounts = $db->QueryArray($command);
+            $command = 'SELECT * FROM TABLE WHERE `ID` = ?';
+            $accounts = $db->QueryPrepare('Accounts', $command, 'i', [ $ID ]);
             if ($accounts !== null && count($accounts) === 1) {
                 $account = new Account($accounts[0]);
             }
@@ -58,8 +58,8 @@
          */
         public static function GetByEmail($db, $email) {
             $account = null;
-            $command = "SELECT * FROM `Accounts` WHERE `Email` = '$email'";
-            $accounts = $db->QueryArray($command);
+            $command = 'SELECT * FROM TABLE WHERE `Email` = ?';
+            $accounts = $db->QueryPrepare('Accounts', $command, 's', [ $email ]);
 
             if ($accounts !== null && count($accounts) === 1) {
                 $account = new Account($accounts[0]);
@@ -75,18 +75,26 @@
          * @param string $cellName "Devices" or "DevicesWait"
          */
         public static function AddDevice($db, $deviceID, $account, $cellName) {
-            if ($cellName !== "Devices" && $cellName !== "DevicesWait") {
-                ExitWithStatus("Error: Invalid cell name");
+            if ($cellName !== 'Devices' && $cellName !== 'DevicesWait') {
+                ExitWithStatus('Error: Invalid cell name');
             }
-            $accountID = $account->ID;
+            if (!$db->IsSafe($cellName)) {
+                ExitWithStatus('Error: Invalid cell name');
+            }
+
             $cell = $account->{$cellName};
             array_push($cell, $deviceID);
             $newCell = json_encode($cell);
 
-            $command = "UPDATE `Accounts` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            if ($newCell === false) {
+                ExitWithStatus('Error: JSON encode failed');
+            }
+
+            $command = "UPDATE TABLE SET `$cellName` = ? WHERE `ID` = ?";
+            $args = [ $newCell, $account->ID ];
+            $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
             if ($result === false) {
-                ExitWithStatus("Error: Device adding failed");
+                ExitWithStatus('Error: Device adding failed');
             }
         }
 
@@ -97,22 +105,29 @@
          * @param string $cellName "Devices" or "DevicesWait"
          */
         public static function RemDevice($db, $deviceID, $account, $cellName) {
-            if ($cellName !== "Devices" && $cellName !== "DevicesWait") {
-                ExitWithStatus("Error: Invalid cell name");
+            if ($cellName !== 'Devices' && $cellName !== 'DevicesWait') {
+                ExitWithStatus('Error: Invalid cell name');
             }
-            $accountID = $account->ID;
+            if (!$db->IsSafe($cellName)) {
+                ExitWithStatus('Error: Invalid cell name');
+            }
+
             $cell = $account->{$cellName};
             if (!in_array($deviceID, $cell)) {
-                ExitWithStatus("Error: Device removing failed (device not found)");
+                ExitWithStatus('Error: Device removing failed (device not found)');
             }
 
             unset($cell[array_search($deviceID, $cell)]);
             $newCell = json_encode($cell);
+            if ($newCell === false) {
+                ExitWithStatus('Error: JSON encode failed');
+            }
 
-            $command = "UPDATE `Accounts` SET `$cellName` = '$newCell' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            $command = "UPDATE TABLE SET `$cellName` = ? WHERE `ID` = ?";
+            $args = [ $newCell, $account->ID ];
+            $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
             if ($result === false) {
-                ExitWithStatus("Error: Device removing failed");
+                ExitWithStatus('Error: Device removing failed');
             }
         }
 
@@ -138,9 +153,10 @@
          * @param int $accountID
          */
         public static function RefreshLastDate($db, $accountID) {
-            $result = $db->Query("UPDATE `Accounts` SET `LastConnDate` = current_timestamp() WHERE `ID` = '$accountID'");
+            $command = 'UPDATE TABLE SET `LastConnDate` = current_timestamp() WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'i', [ $accountID ]);
             if ($result === false) {
-                ExitWithStatus("Error: Saving last date failed");
+                ExitWithStatus('Error: Saving last date failed');
             }
         }
 
@@ -151,11 +167,11 @@
          * @return bool Success of deletion
          */
         public static function Delete($db, $accountID) {
-            $remActivities = $db->Query("DELETE FROM `Avatars` WHERE `ID` = '$accountID'");
-            $remActivities = $db->Query("DELETE FROM `Activities` WHERE `AccountID` = '$accountID'");
-            $remInventory = $db->Query("DELETE FROM `Inventories` WHERE `AccountID` = '$accountID'");
-            $remInventory = $db->Query("DELETE FROM `InventoriesTitles` WHERE `AccountID` = '$accountID'");
-            $remUser = $db->Query("DELETE FROM `Accounts` WHERE `ID` = '$accountID'");
+            $remActivities = $db->QueryPrepare('Avatars',           'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
+            $remActivities = $db->QueryPrepare('Activities',        'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+            $remInventory  = $db->QueryPrepare('Inventories',       'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+            $remInventory  = $db->QueryPrepare('InventoriesTitles', 'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+            $remUser       = $db->QueryPrepare('Accounts',          'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
             return $remActivities !== false && $remUser !== false && $remInventory !== false;
         }
     }

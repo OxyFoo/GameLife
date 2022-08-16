@@ -17,10 +17,10 @@ const IconCheckableProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {String} Display an icon from XML base64 encoded */
+    /** @type {string} Display an icon from XML base64 encoded */
     xml: '',
 
-    /** @type {Number} Size of the icon */
+    /** @type {number} Size of the icon */
     size: 24,
 
     /** @type {ColorTheme|ColorThemeText} */
@@ -29,14 +29,14 @@ const IconCheckableProps = {
     /** @type {ColorTheme|ColorThemeText} */
     colorOff: 'backgroundGrey',
 
-    /** @type {Number} Used as ID parameter in "onPress" event */
+    /** @type {number} Used as ID parameter in "onPress" event */
     id: 0,
 
     /** @type {Boolean} If true, icon is checked */
     checked: undefined,
 
     /**
-     * @param {Number} id
+     * @param {number} id
      * @param {Boolean} checked
      */
     onPress: (id, checked) => {},

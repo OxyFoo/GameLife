@@ -7,7 +7,6 @@
          * @param int[] $achievements
          */
         public static function AddAchievement($db, $account, $achievements) {
-            $accountID = $account->ID;
             $allAchievements = $account->Achievements;
             $achievementQueueComplete = false;
 
@@ -19,8 +18,12 @@
 
                 // Check if is new achievement: get reward and add to account
                 if (!in_array($achievementID, $allAchievements)) {
-                    $command = "SELECT `Rewards` FROM `Achievements` WHERE `ID` = '$achievementID'";
-                    $rawRewards = $db->QueryArray($command)[0]['Rewards'];
+                    $command = 'SELECT `Rewards` FROM TABLE WHERE `ID` = ?';
+                    $result = $db->QueryPrepare('Achievements', $command, 'i', [ $achievementID ]);
+                    if ($result === false) {
+                        ExitWithStatus('Error: Failed to get achievement reward');
+                    }
+                    $rawRewards = $result[0]['Rewards'];
                     $rewardAdded = false;
 
                     // Add rewards
@@ -40,19 +43,22 @@
                 }
             }
             $dbAchievements = json_encode($allAchievements);
+            if ($dbAchievements === false) {
+                ExitWithStatus('Error: JSON encode failed');
+            }
 
             if ($achievementQueueComplete) {
-                $command = "UPDATE `Accounts` SET `AchievementQueue` = NULL WHERE `ID` = '$accountID'";
-                $result = $db->Query($command);
+                $command = 'UPDATE TABLE SET `AchievementQueue` = NULL WHERE `ID` = ?';
+                $result = $db->QueryPrepare('Accounts', $command, 'i', [ $account->ID ]);
                 if ($result === false) {
-                    ExitWithStatus("Error: saving achievementQueue failed");
+                    ExitWithStatus('Error: saving achievementQueue failed');
                 }
             }
 
-            $command = "UPDATE `Accounts` SET `Achievements` = '$dbAchievements' WHERE `ID` = '$accountID'";
-            $result = $db->Query($command);
+            $command = 'UPDATE TABLE SET `Achievements` = ? WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'si', [ $dbAchievements, $account->ID ]);
             if ($result === false) {
-                ExitWithStatus("Error: saving achievements failed");
+                ExitWithStatus('Error: saving achievements failed');
             }
         }
 

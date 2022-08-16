@@ -10,11 +10,11 @@ import { TimingAnimation } from '../../../Utils/Animations';
 
 class Character {
     /**
-     * @param {String} name Name of character
+     * @param {string} name Name of character
      * @param {Sexes} sexe
      * @param {CharactersName} skin
-     * @param {Number} skinColor
-     * @param {{ x: Number, y: Number }} pos
+     * @param {number} skinColor
+     * @param {{ x: number, y: number }} pos
      */
     constructor(name, sexe, skin, skinColor, pos = { x: 450, y: 340 }) {
         this.name = name;
@@ -23,7 +23,7 @@ class Character {
         this.skinColor = skinColor;
         this.pos = pos;
 
-        /** @type {Array<String>} */
+        /** @type {Array<string>} */
         this.items = [];
         this.parentFrame = null;
         this.hide = false;
@@ -76,18 +76,18 @@ class Character {
     }
 
     /**
-     * @param {Number} x Default is current position
-     * @param {Number} y Default is current position
-     * @param {Number} [duration=1000] Duration in ms
+     * @param {number} x Default is current position
+     * @param {number} y Default is current position
+     * @param {number} [duration=1000] Duration in ms
      */
     SetPositionAbsolute(x = this.pos.x, y = this.pos.y, duration = 1000) {
         TimingAnimation(this.body.position, { x, y }, duration).start();
     }
 
     /**
-     * @param {Number} [x=0]
-     * @param {Number} [y=0]
-     * @param {Number} [duration=1000] Duration in ms
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [duration=1000] Duration in ms
      */
     SetPositionRelative(x = 0, y = 0, duration = 1000) {
         const newX = this.pos.x + x;

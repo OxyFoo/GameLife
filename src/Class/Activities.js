@@ -42,12 +42,12 @@ class Activities {
         this.allActivities = new DynamicVar([]);
 
         /**
-         * @type {?Array<Number, Number>} [skillID, startTime]
+         * @type {?Array<number, number>} [skillID, startTime]
          */
         this.currentActivity = null;
 
         /**
-         * @type {{[name: String]: function}}
+         * @type {{[name: string]: function}}
          */
         this.callbacks = {};
     }
@@ -188,10 +188,10 @@ class Activities {
 
     /**
      * Add activity
-     * @param {Number} skillID - Skill ID
-     * @param {Number} startTime - Unix timestamp in seconds
-     * @param {Number} duration - in minutes
-     * @param {String} comment - Optional comment
+     * @param {number} skillID - Skill ID
+     * @param {number} startTime - Unix timestamp in seconds
+     * @param {number} duration - in minutes
+     * @param {string} comment - Optional comment
      * @param {Boolean} [alreadySaved=false] - If false, save activity in UNSAVED_activities
      * @returns {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'}
      */
@@ -279,7 +279,7 @@ class Activities {
     /**
      * @param {Array<Activity>} arr
      * @param {Activity} activity
-     * @returns {Number?} - Index of activity or null if not found
+     * @returns {number?} - Index of activity or null if not found
      */
     getIndex(arr, activity) {
         for (let i in arr) {
@@ -304,7 +304,7 @@ class Activities {
 
     /**
      * Get activities in a specific date
-     * @param {Number} time Time in seconds to define day (auto define of midnights)
+     * @param {number} time Time in seconds to define day (auto define of midnights)
      * @returns {Activity[]} activities
      */
     GetByTime(time = GetTime()) {
@@ -336,8 +336,8 @@ class Activities {
 
     /**
      * 
-     * @param {Number} time Time in seconds
-     * @param {Number} duration Duration in minutes
+     * @param {number} time Time in seconds
+     * @param {number} duration Duration in minutes
      * @returns {Boolean} True if time is free
      */
     TimeIsFree(time, duration) {

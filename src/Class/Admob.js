@@ -173,10 +173,12 @@ class Admob {
                 callback('ready');
                 break;
             case 'rewarded_earned_reward':
-                const response = await this.user.server.AdWatched();
+                const response = await this.user.server.Request('adWatched');
+                if (response === null) break;
+
                 this.user.interface.console.AddLog('info', 'Ad watched', response);
-                if (response.status === 200 && response.content['status'] === 'ok') {
-                    this.user.informations.ox = response.content['ox'];
+                if (response['status'] === 'ok') {
+                    this.user.informations.ox = response['ox'];
                     this.user.informations.DecrementAdRemaining();
                     callback('wait');
                 }

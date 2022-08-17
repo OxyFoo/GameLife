@@ -73,15 +73,46 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 2
+        borderRadius: 2,
+        overflow: 'hidden'
+    },
+    itemFrame: {
+        width: '95%',
+        height: '95%'
     },
     itemPrice: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        transform: [{ translateY: -12 }]
     },
     itemPriceOx: {
         fontSize: 16,
         marginRight: 4
+    },
+
+    itemPopup: {
+        padding: 24
+    },
+    itemPopupTitle: {
+        fontSize: 22
+    },
+    itemPopupText: {
+        marginTop: 12,
+        fontSize: 14,
+        textAlign: 'center'
+    },
+    itemPopupButton: {
+        marginTop: 24
+    },
+
+    titlePopup: {
+        padding: 24
+    },
+    titlePopupTitle: {
+        fontSize: 22
+    },
+    titlePopupButton: {
+        marginTop: 24
     }
 });
 

@@ -124,13 +124,18 @@ class Achievements {
             if (!REWARDS.includes(elements[0])) {
                 return [];
             }
-            if (elements.length !== 2 || isNaN(parseInt(elements[1]))) {
+            if (elements.length !== 2) {
                 return [];
             }
     
             let newReward = new Reward();
             newReward.Type = elements[0];
-            newReward.Value = parseInt(elements[1]);
+            newReward.Value = elements[1];
+
+            if (!isNaN(parseInt(newReward.Value))) {
+                newReward.Value = parseInt(newReward.Value);
+            }
+
             output.push(newReward);
         }
         return output;

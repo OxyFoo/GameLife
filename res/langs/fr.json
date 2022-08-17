@@ -93,7 +93,9 @@
         "alert-tokenexpired-title": "Le token de connexion a expiré",
         "alert-tokenexpired-text": "L'application va se fermer, veuillez la relancer.",
         "alert-adempty-title": "Plus de pubs",
-        "alert-adempty-text": "Vous n'avez plus de pubs disponibles pour aujourd'hui."
+        "alert-adempty-text": "Vous n'avez plus de pubs disponibles pour aujourd'hui.",
+        "alert-error-title": "Erreur",
+        "alert-error-text": "Une erreur est survenue, veuillez réessayer plus tard."
     },
 
     "onboarding": {
@@ -134,7 +136,7 @@
         },
         "rewards": {
             "title": "Nouveau titre : {}",
-            "item": "Nouvel items : {}",
+            "item": "Nouvel item : {}",
             "ox": "{} OX"
         },
 
@@ -425,6 +427,8 @@
         "container-items": "Items",
         "container-dyer": "Teinturier",
         "select-dyer": "Sélectionner un item",
+
+        "popup-button-buy": "Acheter pour {} OX",
 
         "error-no-titles": "Une erreur est survenue lors du chargement des titres à vendre, veuillez réessayer plus tard.",
         "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard.",

@@ -1,6 +1,7 @@
 class Title {
     ID = 0;
     Name = { fr: '', en: '' };
+    Value = 0;
 }
 
 class Titles {

@@ -97,14 +97,18 @@ class UserManager {
         }
     }
 
+    /**
+     * @param {boolean} [request=true]
+     * @returns {Promise<boolean>}
+     */
     async Disconnect(request = true) {
-        let output = false;
-        if (!request || await this.server.Disconnect()) {
-            await this.Clear();
-            this.interface.ChangePage('login');
-            output = true;
-        }
-        return output;
+        const result = await this.server.Request('disconnect');
+        if (result === null) return false;
+        if (request && result['status'] !== 'ok') return false;
+
+        await this.Clear();
+        this.interface.ChangePage('login');
+        return true;
     }
     async Unmount() {
         clearInterval(this.intervalSave);

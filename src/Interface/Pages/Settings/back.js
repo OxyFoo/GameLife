@@ -77,8 +77,15 @@ class BackSettings extends React.Component {
             if (button === 'yes') {
                 const end = () => this.setState({ sendingMail: false });
                 this.setState({ sendingMail: true });
-                const success = await user.server.DeleteAccount();
-                if (success) {
+
+                const data = {
+                    email: user.settings.email,
+                    lang: langManager.currentLangageKey
+                }
+                const result = await user.server.Request('deleteAccount', data);
+                if (result === null) return;
+
+                if (result['status'] === 'ok') {
                     // Mail sent
                     const title = langManager.curr['settings']['alert-deletedmailsent-title'];
                     const text = langManager.curr['settings']['alert-deletedmailsent-text'];

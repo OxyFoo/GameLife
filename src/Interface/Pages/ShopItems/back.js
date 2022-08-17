@@ -3,6 +3,7 @@ import * as React from 'react';
 import user from '../../../Managers/UserManager';
 import dataManager from '../../../Managers/DataManager';
 
+import { Character } from '../../Components';
 import { GetRandomIndexesByDay } from '../../../Utils/Items';
 import { renderTitlePopup, renderItemPopup, renderItemEditorPopup } from './itemPopup';
 
@@ -17,7 +18,8 @@ const SHOP_NUMBER_ITEMS = 8;
 class BackShopItems extends React.Component {
     state = {
         titlesAvailable: null,
-        itemsAvailable: null
+        itemsAvailable: null,
+        itemsCharacters: null
     }
 
     constructor(props) {
@@ -33,6 +35,13 @@ class BackShopItems extends React.Component {
         let itemsIndexes = {};
         items.filter(i => i.Rarity <= 3).map(i => itemsIndexes[i.ID] = rarities[i.Rarity] );
         this.state.itemsAvailable = GetRandomIndexesByDay(user.informations.username.Get(), itemsIndexes, SHOP_NUMBER_ITEMS);
+
+        this.state.itemsCharacters = [];
+        this.state.itemsAvailable.forEach(itemID => {
+            const character = new Character('shop-character-' + itemID, 'MALE', 'skin_01', 0);
+            character.SetEquipment([ itemID ]);
+            this.state.itemsCharacters[itemID] = character;
+        });
     }
 
     componentDidMount() {
@@ -40,8 +49,14 @@ class BackShopItems extends React.Component {
     componentWillUnmount() {
     }
 
-    openTitlePopup = () => user.interface.popup.Open('custom', renderTitlePopup.bind(this));
-    openItemPopup = () => user.interface.popup.Open('custom', renderItemPopup.bind(this));
+    openTitlePopup = (title) => {
+        const render = () => renderTitlePopup.bind(this)(title);
+        user.interface.popup.Open('custom', render);
+    }
+    openItemPopup = (item) => {
+        const render = () => renderItemPopup.bind(this)(item);
+        user.interface.popup.Open('custom', render);
+    }
     openItemEditorPopup = () => user.interface.popup.Open('custom', renderItemEditorPopup.bind(this));
 }
 

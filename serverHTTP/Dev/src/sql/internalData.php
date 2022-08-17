@@ -211,8 +211,9 @@
         $titles = $db->QueryPrepare('Titles', 'SELECT * FROM TABLE');
         if ($titles === null) return array();
         for ($i = 0; $i < count($titles); $i++) {
-            $titles[$i]['ID'] = intval($titles[$i]['ID']);
-            $titles[$i]['Name'] = json_decode($titles[$i]['Name']);
+            $titles[$i]['ID']    = intval($titles[$i]['ID']);
+            $titles[$i]['Name']  = json_decode($titles[$i]['Name']);
+            $titles[$i]['Value'] = intval($titles[$i]['Value']);
         }
         return $titles;
     }

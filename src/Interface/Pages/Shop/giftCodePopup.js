@@ -16,8 +16,11 @@ function renderGiftCodePopup() {
         if (!code.length) return;
         Keyboard.dismiss();
         setLoading(true);
-        const result = await user.server.GiftCode(code);
-        if (result.status !== 200 || result.content['status'] !== 'ok') {
+
+        const result = await user.server.Request('giftCode', { code });
+        if (result === null) return;
+
+        if (result['status'] !== 'ok') {
             // Error
             const title = lang['reward-failed-title'];
             const text = lang['reward-failed-text'];
@@ -25,12 +28,12 @@ function renderGiftCodePopup() {
             return;
         }
 
-        const gift = result.content['gift'];
+        const gift = result['gift'];
         if (gift === null) {
             // Incorrect code
             const title = lang['reward-wrong-title'];
             const text = lang['reward-wrong-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+            user.interface.popup.ForceOpen('ok', [ title, text ], this.openPopupCode, false);
             return;
         }
 

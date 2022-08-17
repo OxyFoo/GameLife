@@ -348,7 +348,7 @@
         /**
          * Add a report to the database
          */
-        public function AddReport() {
+        public function Report() {
             $token = $this->data['token'];
             $reportType = $this->data['type'];
             $reportData = $this->data['data'];

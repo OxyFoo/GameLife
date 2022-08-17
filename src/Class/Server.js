@@ -18,6 +18,10 @@ const STATUS = {
     LIMITDEVICE : 'limitDevice'
 };
 
+/**
+ * @typedef {'ping'|'login'|'signin'|'disconnect'|'addUserData'|'getUserData'|'setUsername'|'deleteAccount'|'giftCode'|'adWatched'|'report'} RequestTypes
+ */
+
 class Server {
     constructor(user) {
         /**
@@ -44,33 +48,36 @@ class Server {
     }
 
     Ping = async () => {
-        let online = false;
         const debugIndex = this.user.interface.console.AddLog('info', 'Request: ping...');
-        const result_ping = await this.__reqPing();
-        if (result_ping.status === 200) {
-            const status = result_ping.content['status'];
-            const devMode = result_ping.content['devMode'];
-            // Return status & popup out of this class
-            if (status === 'update') {
-                const title = langManager.curr['home']['alert-update-title'];
-                const text = langManager.curr['home']['alert-update-text'];
-                this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);
-            } else if (status === 'downdate') {
-                const title = langManager.curr['home']['alert-newversion-title'];
-                const text = langManager.curr['home']['alert-newversion-text'];
-                this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
-            } else if (status === STATUS.MAINTENANCE) {
-                // TODO - Gérer la maintenance
-            } else if (status === 'ok') {
-                online = true;
-                if (devMode) this.user.interface.console.Enable();
-                this.user.interface.console.EditLog(debugIndex, 'Request: ping - OK');
-            }
-        } else {
-            const { status, content } = result_ping;
-            this.user.interface.console.AddLog('error', 'Request - ping failed:', status, content?.error || content);
+        const response = await this.Request('ping', GetDeviceInformations(true, true));
+
+        if (response === null) {
+            this.user.interface.console.AddLog('error', 'Request: ping error');
+            this.online = false;
+            return;
         }
-        this.online = online;
+
+        const status = response['status'];
+        const devMode = response['devMode'];
+
+        // Return status & popup out of this class
+        if (status === 'update') {
+            const title = langManager.curr['home']['alert-update-title'];
+            const text = langManager.curr['home']['alert-update-text'];
+            this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);
+        } else if (status === 'downdate') {
+            this.online = false;
+            const title = langManager.curr['home']['alert-newversion-title'];
+            const text = langManager.curr['home']['alert-newversion-text'];
+            this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        } else if (status === STATUS.MAINTENANCE) {
+            this.online = false;
+            // TODO - Gérer la maintenance
+        } else if (status === 'ok') {
+            this.online = true;
+            if (devMode) this.user.interface.console.Enable();
+            this.user.interface.console.EditLog(debugIndex, 'Request: ping - OK');
+        }
     }
 
     /**
@@ -82,20 +89,20 @@ class Server {
         let status = null;
         let remainMailTime = null;
 
-        const result_connect = await this.__reqConnect(email);
-        const content = result_connect.content;
+        const lang = langManager.currentLangageKey;
+        const device = GetDeviceInformations();
+        const result_connect = await this.Request('login', { email, lang, ...device });
 
-        if (result_connect.status !== 200) {
-            const { status, content } = result_connect;
-            this.user.interface.console.AddLog('error', 'Request - connect failed:', status, content?.error || content);
+        if (result_connect === null) {
+            this.user.interface.console.AddLog('error', 'Request - connect failed:', result_connect);
             return STATUS.ERROR;
         }
 
-        if (Object.values(STATUS).includes(content['status'])) {
-            status = content['status'];
+        if (Object.values(STATUS).includes(result_connect['status'])) {
+            status = result_connect['status'];
             this.status = status;
-            if (content.hasOwnProperty('remainMailTime')) {
-                remainMailTime = content['remainMailTime'];
+            if (result_connect.hasOwnProperty('remainMailTime')) {
+                remainMailTime = result_connect['remainMailTime'];
             }
         }
 
@@ -103,7 +110,7 @@ class Server {
             this.user.interface.console.AddLog('warn', 'Request: connect - BANNED');
         }
         if (status === STATUS.CONNECTED || status === STATUS.BANNED) {
-            const token = content['token'];
+            const token = result_connect['token'];
             if (typeof(token) !== 'undefined' && token.length) {
                 this.token = token;
             } else {
@@ -125,74 +132,56 @@ class Server {
      * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'?>} Status of the user signin
      */
     Signin = async (email, username) => {
-        let signin = null;
-        const result = await this.__reqSignin(email, username);
-        if (result.status === 200) {
-            const status = result.content['status'];
-            const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
-            if (allStatus.includes(status)) {
-                signin = status;
-            }
-        }
-        return signin;
+        const device = GetDeviceInformations();
+        const response = await this.Request('signin', { email, username, ...device });
+        if (response === null) return null;
+
+        const status = response['status'];
+        const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
+        if (!allStatus.includes(status)) return null;
+
+        return status;
     }
 
     /**
      * Send data unsaved on server
      * @param {Array} data Data to add to server
-     * @returns {Promise<Boolean>} Return success of online save
+     * @returns {Promise<boolean>} Return success of online save
      */
     async SaveUserData(data) {
-        let success = false;
         const _data = {
-            'action': 'addUserData',
-            'token': this.token,
             'data': data,
             'dataToken': this.dataToken
         };
+        const response = await this.Request('addUserData', _data);
+        if (response === null) return false;
 
-        const response = await Request_Async(_data);
-        if (response.status === 200) {
-            const content = response.content;
-            const status = content['status'];
+        const status = response['status'];
+        if (status !== 'ok') return false;
 
-            if (status === 'ok') {
-                success = true;
-                if (content.hasOwnProperty('dataToken')) {
-                    this.dataToken = content['dataToken'];
-                }
-            } else if (status === 'tokenExpired') {
-                this.TokenExpired();
-            }
+        if (response.hasOwnProperty('dataToken')) {
+            this.dataToken = response['dataToken'];
         }
 
-        return success;
+        return true;
     }
 
     /**
      * Load all user data
-     * @param {Boolean} [force=false] Force to load data from server (use empty dataToken)
-     * @returns {Promise<?object>} Return all online data or null if failed
+     * @param {boolean} [force=false] Force to load data from server (use empty dataToken)
+     * @returns {Promise<object?>} Return all online data or null if failed
      */
     async LoadUserData(force = false) {
-        let json = null;
-        const data = {
-            'action': 'getUserData',
-            'token': this.token,
-            'dataToken': force ? '' : this.dataToken
-        };
-        const response = await Request_Async(data);
+        const _data = { 'dataToken': force ? '' : this.dataToken };
+        const response = await this.Request('getUserData', _data);
+        if (response === null) return null;
 
-        if (response.status === 200) {
-            const content = response.content;
-            const status = content['status'];
-            const data = content['data'];
-
-            if (status === 'ok' && typeof(data) === 'object') {
-                json = data;
-            }
+        const { status, data } = response;
+        if (status !== 'ok' || typeof(data) !== 'object') {
+            return null;
         }
-        return json;
+
+        return data;
     }
 
     /**
@@ -201,98 +190,35 @@ class Server {
      * @returns {Promise<'ok'|'alreadyUsed'|'alreadyChanged'|'incorrect'|'error'>}
      */
     async SaveUsername(username) {
-        let output = 'error';
         const _data = {
-            'action': 'setUsername',
-            'token': this.token,
             'username': username,
             'dataToken': this.dataToken
         };
+        const response = await this.Request('setUsername', _data);
+        if (response === null) return 'error';
 
-        const response = await Request_Async(_data);
-        if (response.status === 200) {
-            const content = response.content;
-            const status = content['status'];
-            const usernameChangeState = content['usernameChangeState'];
-
-            if (status === 'tokenExpired') {
-                this.TokenExpired();
-            } else {
-                output = usernameChangeState;
-            }
-        }
-
-        return output;
+        const { status, usernameChangeState } = response;
+        return usernameChangeState;
     }
 
     /**
      * Send report
      * @param {'activity'|'suggest'|'bug'|'message'|'error'} type Type of report to send
      * @param {object} data Data to send
-     * @returns {Promise<Boolean>} Return success of report
+     * @returns {Promise<boolean>} Return success of report
      */
     async SendReport(type, data) {
-        let output = false;
         const _data = {
-            'action': 'addReport',
-            'token': this.token,
             'type': type,
             'data': JSON.stringify(data)
         };
+        const response = this.Request('report', _data);
+        if (response === null) return false;
 
-        const response = await Request_Async(_data);
-        if (response.status === 200) {
-            const content = response.content;
-            const contentStatus = content['status'];
+        const status = response['status'];
+        if (status !== 'ok') return false
 
-            if (contentStatus === 'ok') {
-                output = true;
-            } else if (contentStatus === 'tokenExpired') {
-                this.TokenExpired();
-            }
-        }
-
-        return output;
-    }
-
-    async Disconnect() {
-        let output = false;
-        const _data = {
-            'action': 'disconnect',
-            'token': this.token
-        };
-
-        const response = await Request_Async(_data);
-        if (response.status === 200) {
-            const contentStatus = response.content['status'];
-            if (contentStatus === 'ok') {
-                output = true;
-            } else if (contentStatus === 'tokenExpired') {
-                this.TokenExpired();
-            }
-        }
-
-        return output;
-    }
-
-    async DeleteAccount() {
-        let output = false;
-        const _data = {
-            'action': 'deleteAccount',
-            'email': this.user.settings.email,
-            'lang': langManager.currentLangageKey,
-            'token': this.token
-        }
-        const response = await Request_Async(_data);
-        if (response.status === 200) {
-            const contentStatus = response.content['status'];
-            if (contentStatus === 'ok') {
-                output = true;
-            } else if (contentStatus === 'tokenExpired') {
-                this.TokenExpired();
-            }
-        }
-        return output;
+        return true;
     }
 
     TokenExpired() {
@@ -302,42 +228,35 @@ class Server {
         this.user.interface.popup.ForceOpen('ok', [ title, text ], BackHandler.exitApp, false);
     }
 
-    __reqPing() {
-        const data = {
-            'action': 'ping',
-            ...GetDeviceInformations(true, true)
-        };
-        return Request_Async(data);
-    }
+    /**
+     * @param {RequestTypes} type Type of request
+     * @param {object} [data={}] Data to send
+     * @param {boolean} [force=false] Force to send data to server (use empty dataToken)
+     * @returns {Promise<{ status: string, content: string }|null>} Return response from server or null if failed
+     */
+    async Request(type, data = {}, force = false) {
+        let reqData = { 'action': type, ...data };
+        if (this.token || force) {
+            reqData['token'] = this.token;
+        }
 
-    __reqConnect(email) {
-        const data = {
-            'action': 'login',
-            'email': email,
-            'lang': langManager.currentLangageKey,
-            ...GetDeviceInformations()
-        };
-        return Request_Async(data);
-    }
+        const response = await Request_Async(reqData);
+        if (response.status !== 200) {
+            // Request failed
+            this.user.interface.console.AddLog('warn', 'Request: error - ', response);
+            const title = langManager.curr['server']['alert-error-title'];
+            const text = langManager.curr['server']['alert-errorr-text'];
+            this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
+            return null;
+        }
 
-    __reqSignin(email, username) {
-        const data = {
-            'action': 'signin',
-            'email': email,
-            'username': username,
-            ...GetDeviceInformations()
-        };
-        return Request_Async(data);
-    }
+        if (response.content['status'] === 'tokenExpired') {
+            // Token expired
+            this.TokenExpired();
+            return null;
+        }
 
-    AdWatched() {
-        let data = { 'action': 'adWatched', 'token': this.token };
-        return Request_Async(data);
-    }
-
-    GiftCode(code) {
-        let data = { 'action': 'giftCode', 'code': code, 'token': this.token };
-        return Request_Async(data);
+        return response.content;
     }
 
     GetLeaderboard(week = false) {

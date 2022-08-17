@@ -68,7 +68,7 @@ class Popup extends React.PureComponent {
      * @returns {Promise<void>} - Promise resolved when popup is opened
      */
     async Open(type, args, callback = () => {}, cancelable = true, cross = cancelable) {
-        while (this.state.opened) await Sleep(500);
+        while (this.state.opened) await Sleep(200);
 
         this.setState({
             opened: true,

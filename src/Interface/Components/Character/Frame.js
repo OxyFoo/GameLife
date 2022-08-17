@@ -12,6 +12,9 @@ import Icon from '../Icon';
  */
 
 const FrameProps = {
+    /** @type {StyleProp<ViewStyle>} */
+    style: {},
+
     size: {
         x: 0,
         y: 0,
@@ -74,12 +77,12 @@ class Frame extends React.Component {
     }
 
     render() {
-        const { size, characters, onlyItems } = this.props;
+        const { style, size, characters, onlyItems } = this.props;
         const viewBox = [ size.x, size.y, size.width, size.height ].join(' ');
         const loadingColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
-            <View style={styles.canvas}>
+            <View style={[styles.canvas, style]}>
                 <Svg viewBox={viewBox}>
                     {characters.map(charac => charac.render(onlyItems))}
                 </Svg>

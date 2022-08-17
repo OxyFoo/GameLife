@@ -93,7 +93,9 @@
         "alert-tokenexpired-title": "The connection token has expired",
         "alert-tokenexpired-text": "The application will close, please restart it.",
         "alert-adempty-title": "No ads available",
-        "alert-adempty-text": "You have no more ads available for today."
+        "alert-adempty-text": "You have no more ads available for today.",
+        "alert-error-title": "Error",
+        "alert-error-text": "An error has occurred, please try again later."
     },
 
     "onboarding": {
@@ -425,6 +427,8 @@
         "container-items": "Items",
         "container-dyer": "Dyer",
         "select-dyer": "Select an item",
+
+        "popup-button-buy": "Buy for {} OX",
 
         "error-no-titles": "An error occurred while loading the securities for sale, please try again later.",
         "error-no-items": "An error occurred while loading the items for sale, please try again later.",

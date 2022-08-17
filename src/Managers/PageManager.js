@@ -65,6 +65,12 @@ class PageManager extends React.Component{
         this.backable = true;
 
         /**
+         * @description Custom back button handler
+         * @type {function?}
+         */
+        this.customBackHandle = null;
+
+        /**
          * @description Represent all pages before current page
          * Increment when changing page
          */
@@ -99,9 +105,26 @@ class PageManager extends React.Component{
         BackHandler.removeEventListener('hardwareBackPress', this.backHandle);
     }
 
+    /**
+     * @param {function} handle
+     * @returns {boolean} True if handle is set
+     */
+    SetCustomBackHandle(handle) {
+        if (typeof(handle) !== 'function') {
+            return false;
+        }
+        this.customBackHandle = handle;
+    }
+    ResetCustomBackHandle() {
+        this.customBackHandle = null;
+    }
     backHandle = () => {
         if (!this.backable) return false;
 
+        if (this.customBackHandle !== null) {
+            this.customBackHandle();
+            return true;
+        }
         if (this.popup.Close()) return true;
         if (this.BackPage()) return true;
 

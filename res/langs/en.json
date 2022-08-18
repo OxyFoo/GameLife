@@ -341,8 +341,12 @@
 
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "You must equip another item in order to sell this one.",
-        "alert-confirmsell-title": "Sell",
-        "alert-confirmsell-text": "Are you sure you want to sell this item?"
+        "alert-sellconfirm-title": "Sell",
+        "alert-sellconfirm-text": "Are you sure you want to sell this item for {} OX?",
+        "alert-sellfailed-title": "Failed sale",
+        "alert-sellfailed-text": "Unable to sell the item, an error has occurred, please try again later.",
+        "alert-sellsuccess-title": "Sold!",
+        "alert-sellsuccess-text": "Congrats! The item \"{}\" was sold for {} OX"
     },
 
     "report": {
@@ -429,6 +433,15 @@
         "select-dyer": "Select an item",
 
         "popup-button-buy": "Buy for {} OX",
+
+        "alert-buysuccess-title": "Successful purchase",
+        "alert-buysuccess-text": "You have purchased the item \"{}\" for {} OX",
+        "alert-buytitlesuccess-title": "Successful purchase",
+        "alert-buytitlesuccess-text": "You have purchased the title \"{}\" for {} OX",
+        "alert-buyfailed-title": "Purchase failed",
+        "alert-buyfailed-text": "Unable to purchase the item, an error has occurred, please try again later.",
+        "alert-notenoughox-title": "Insufficient",
+        "alert-notenoughox-text": "You don't have enough Ox to buy this item.",
 
         "error-no-titles": "An error occurred while loading the securities for sale, please try again later.",
         "error-no-items": "An error occurred while loading the items for sale, please try again later.",

@@ -341,8 +341,12 @@
 
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "Vous devez équiper un autre item pour pouvoir vendre celui-ci.",
-        "alert-confirmsell-title": "Vendre",
-        "alert-confirmsell-text": "Êtes-vous sûr(e) de vouloir vendre cet item ?"
+        "alert-sellconfirm-title": "Vendre",
+        "alert-sellconfirm-text": "Êtes-vous sûr(e) de vouloir vendre cet item pour {} OX ?",
+        "alert-sellfailed-title": "Vente échouée",
+        "alert-sellfailed-text": "Impossible de vendre l'item, une erreur est survenue, veuillez réessayer plus tard.",
+        "alert-sellsuccess-title": "Vendu !",
+        "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} OX"
     },
 
     "report": {
@@ -429,6 +433,15 @@
         "select-dyer": "Sélectionner un item",
 
         "popup-button-buy": "Acheter pour {} OX",
+
+        "alert-buysuccess-title": "Achat réussi",
+        "alert-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} OX",
+        "alert-buytitlesuccess-title": "Achat réussi",
+        "alert-buytitlesuccess-text": "Vous avez bien acheté le titre \"{}\" pour {} OX",
+        "alert-buyfailed-title": "Achat échoué",
+        "alert-buyfailed-text": "Impossible d'acheter l'item, une erreur est survenue, veuillez réessayer plus tard.",
+        "alert-notenoughox-title": "Insuffisant",
+        "alert-notenoughox-text": "Vous n'avez pas assez d'Ox pour acheter cet item.",
 
         "error-no-titles": "Une erreur est survenue lors du chargement des titres à vendre, veuillez réessayer plus tard.",
         "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard.",

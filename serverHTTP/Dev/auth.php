@@ -4,15 +4,7 @@
      * Script called from user mail (link device or delete account).
      */
 
-    require('./src/config.php');
-    require('./src/functions/mail.php');
-    require('./src/functions/functions.php');
-    require('./src/classes/account.php');
-    require('./src/classes/device.php');
-    require('./src/sql/accounts.php');
-    require('./src/sql/devices.php');
-    require('./src/sql/users.php');
-    require('./src/sql/sql.php');
+    require('./src/commands.php');
 
     $raw_data = $_GET['data'];
     if (!isset($raw_data)) exit();

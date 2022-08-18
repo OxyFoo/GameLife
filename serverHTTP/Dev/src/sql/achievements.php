@@ -78,9 +78,9 @@
                 if ($type === 'OX') {
                     $output |= Users::AddOx($db, $account->ID, $value);
                 } else if ($type === 'Title') {
-                    $output |= Users::AddInventoryTitle($db, $account, intval($value));
+                    $output |= Items::AddInventoryTitle($db, $account, intval($value));
                 } else if ($type === 'Item') {
-                    $output |= Users::AddInventoryItem($db, $account, $value);
+                    $output |= Items::AddInventoryItem($db, $account, $value);
                 }
             }
 

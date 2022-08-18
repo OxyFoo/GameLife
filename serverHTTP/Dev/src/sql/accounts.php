@@ -22,7 +22,7 @@
             $items = [ 'hair_01', 'top_01', 'bottom_01', 'shoes_01' ];
             $IDs = [];
             foreach ($items as $item) {
-                $itemAdded = Users::AddInventoryItem($db, $account, $item);
+                $itemAdded = Items::AddInventoryItem($db, $account, $item);
                 if (!$itemAdded) ExitWithStatus('Error: Adding default item failed');
                 array_push($IDs, $db->GetLastInsertID());
             }

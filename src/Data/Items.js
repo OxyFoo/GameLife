@@ -63,6 +63,11 @@ class Items {
         return this.items;
     }
 
+    /** @returns {Array<Item>} */
+    GetBuyable() {
+        return this.items.filter(i => i.Rarity <= 3);
+    }
+
     /**
      * @param {string} ID
      * @returns {Item?}

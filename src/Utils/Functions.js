@@ -3,9 +3,9 @@ function TwoDigit(n) {
 }
 
 /**
- * @param {number} number 
- * @param {number} [decimal=0] 
- * @returns {number} - Return number rounded to decimal
+ * @param {number} number
+ * @param {number} [decimal=0]
+ * @returns {number} Return number rounded to decimal
  */
 function Round(number, decimal = 0) {
     const dec = decimal.toString();
@@ -32,8 +32,8 @@ function MinMax(min, value, max) {
 
 /**
  * @param {Array} array
- * @param {string} key - Key of array
- * @returns {Array} - Return sorted array
+ * @param {string} key Key of array
+ * @returns {Array} Return sorted array
  */
 function SortByKey(array, key) {
     const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
@@ -56,7 +56,7 @@ function GetByKey(array, key, value) {
 /**
  * Range function
  * @example Range(5) => [0, 1, 2, 3, 4]
- * @param {number} length 
+ * @param {number} length
  * @returns {Array}
  */
 function Range(length) {

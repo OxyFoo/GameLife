@@ -4,21 +4,7 @@
      * Only used for tests (with GET params).
      */
 
-    require('./src/add.php');
-    require('./src/config.php');
-
-    require('./src/functions/mail.php');
-    require('./src/functions/functions.php');
-
-    require('./src/classes/account.php');
-    require('./src/classes/device.php');
-
-    require('./src/sql/app.php');
-    require('./src/sql/accounts.php');
-    require('./src/sql/devices.php');
-    require('./src/sql/users.php');
-    require('./src/sql/internalData.php');
-    require('./src/sql/sql.php');
+    require('./src/commands.php');
 
     $db = new DataBase();
 

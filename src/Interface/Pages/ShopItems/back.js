@@ -19,22 +19,25 @@ class BackShopItems extends React.Component {
     state = {
         titlesAvailable: null,
         itemsAvailable: null,
-        itemsCharacters: null
+        itemsCharacters: null,
+    
+        buying: false
     }
 
     constructor(props) {
         super(props);
 
-        const titles = dataManager.titles.Get();
-        const titlesIndexes = titles.map(t => t.ID);
-        this.state.titlesAvailable = GetRandomIndexesByDay(user.informations.username.Get(), titlesIndexes, SHOP_NUMBER_TITLES);
+        const titles = dataManager.titles.GetBuyable();
+        let titlesIndexes = {};
+        titles.forEach(t => titlesIndexes[t.ID] = 1);
+        this.state.titlesAvailable = GetRandomIndexesByDay(titlesIndexes, SHOP_NUMBER_TITLES);
 
-        const items = dataManager.items.Get();
+        const items = dataManager.items.GetBuyable();
         const rarities = [ .75, .18, .6, .1 ];
 
         let itemsIndexes = {};
-        items.filter(i => i.Rarity <= 3).map(i => itemsIndexes[i.ID] = rarities[i.Rarity] );
-        this.state.itemsAvailable = GetRandomIndexesByDay(user.informations.username.Get(), itemsIndexes, SHOP_NUMBER_ITEMS);
+        items.forEach(i => itemsIndexes[i.ID] = rarities[i.Rarity] );
+        this.state.itemsAvailable = GetRandomIndexesByDay(itemsIndexes, SHOP_NUMBER_ITEMS);
 
         this.state.itemsCharacters = [];
         this.state.itemsAvailable.forEach(itemID => {
@@ -42,11 +45,6 @@ class BackShopItems extends React.Component {
             character.SetEquipment([ itemID ]);
             this.state.itemsCharacters[itemID] = character;
         });
-    }
-
-    componentDidMount() {
-    }
-    componentWillUnmount() {
     }
 
     openTitlePopup = (title) => {

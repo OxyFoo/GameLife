@@ -19,7 +19,7 @@ const STATUS = {
 };
 
 /**
- * @typedef {'ping'|'login'|'signin'|'disconnect'|'addUserData'|'getUserData'|'setUsername'|'deleteAccount'|'giftCode'|'adWatched'|'report'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'buyTitle'|'buyItem'|'sellStuff'|'adWatched'|'report'|'giftCode'|'disconnect'|'deleteAccount'} RequestTypes
  */
 
 class Server {

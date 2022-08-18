@@ -20,12 +20,13 @@ class ShopItems extends BackShopItems {
 
         const titleName = dataManager.GetText(title.Name);
         const onPress = () => this.openTitlePopup(title);
+        const disabled = user.inventory.buyToday.titles.includes(title.ID);
 
         return (
-            <Button style={styles.titleButton} onPress={onPress}>
+            <Button style={styles.titleButton} onPress={onPress} enabled={!disabled}>
                 <Text numberOfLines={1}>{titleName}</Text>
                 <View style={styles.titlePrice}>
-                    <Text style={styles.titlePriceOx}>{1000}</Text>
+                    <Text style={styles.titlePriceOx}>{title.Value}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
             </Button>
@@ -51,10 +52,11 @@ class ShopItems extends BackShopItems {
         const itemSize = dataManager.items.GetContainerSize(item.Slot);
         const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
         const onPress = () => this.openItemPopup(item);
+        const disabled = user.inventory.buyToday.items.includes(itemID);
 
         return (
             <View style={styles.itemParent}>
-                <Button style={styles.itemButton} onPress={onPress}>
+                <Button style={styles.itemButton} onPress={onPress} enabled={!disabled}>
                     <LinearGradient style={styles.itemBorder} colors={colors}>
                         <View style={[styles.itemContent, backgroundColor]}>
 
@@ -68,7 +70,7 @@ class ShopItems extends BackShopItems {
                             />
 
                             <View style={styles.itemPrice}>
-                                <Text style={styles.itemPriceOx}>{1000}</Text>
+                                <Text style={styles.itemPriceOx}>{item.Value}</Text>
                                 <Icon icon='ox' color='main1' size={20} />
                             </View>
 

@@ -118,6 +118,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                         style={styles.editorStuffSellBtn}
                         onPress={this.buttonSellPress}
                         color='main1'
+                        loading={this.state.selling}
                     >
                         {lang['button-sell'].replace('{}', ox)}
                     </Button>

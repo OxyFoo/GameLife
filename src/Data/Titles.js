@@ -2,6 +2,7 @@ class Title {
     ID = 0;
     Name = { fr: '', en: '' };
     Value = 0;
+    Buyable = 0;
 }
 
 class Titles {
@@ -24,6 +25,11 @@ class Titles {
     /** @returns {Array<Title>} */
     Get = () => {
         return this.titles;
+    }
+
+    /** @returns {Array<Title>} */
+    GetBuyable = () => {
+        return this.titles.filter(t => t.Buyable === 1);
     }
 
     /**

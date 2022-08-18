@@ -118,7 +118,7 @@
         /**
          * @param int $accountID 0 if not connected
          * @param int $deviceID
-         * @param 'mailSent'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition' $type
+         * @param 'mailSent'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition'|'buyTitle'|'buyItem'|'sellStuff' $type
          * @param string $data
          * @return void
          */

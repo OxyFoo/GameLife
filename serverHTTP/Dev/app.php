@@ -14,21 +14,24 @@
     $commands = new Commands($data);
 
     switch ($action) {
-        case 'ping': $commands->Ping(); break;
-        case 'login': $commands->Login(); break;
-        case 'signin': $commands->Signin(); break;
+        case 'ping':            $commands->Ping();            break;
+        case 'login':           $commands->Login();           break;
+        case 'signin':          $commands->Signin();          break;
         case 'getInternalData': $commands->GetInternalData(); break;
-        case 'getUserData': $commands->GetUserData(); break;
-        case 'addUserData': $commands->AddUserData(); break;
-        case 'setUsername': $commands->SetUsername(); break;
-        case 'adWatched': $commands->AdWatched(); break;
-        case 'report': $commands->Report(); break;
-        case 'getDate': $commands->GetDate(); break;
-        case 'giftCode': $commands->GiftCode(); break;
-        case 'disconnect': $commands->Disconnect(); break;
-        case 'deleteAccount': $commands->DeleteAccount(); break;
+        case 'getUserData':     $commands->GetUserData();     break;
+        case 'addUserData':     $commands->AddUserData();     break;
+        case 'setUsername':     $commands->SetUsername();     break;
+        case 'buyTitle':        $commands->BuyTitle();        break;
+        case 'buyItem':         $commands->BuyItem();         break;
+        case 'sellStuff':       $commands->SellStuff();       break;
+        case 'adWatched':       $commands->AdWatched();       break;
+        case 'report':          $commands->Report();          break;
+        case 'getDate':         $commands->GetDate();         break;
+        case 'giftCode':        $commands->GiftCode();        break;
+        case 'disconnect':      $commands->Disconnect();      break;
+        case 'deleteAccount':   $commands->DeleteAccount();   break;
 
-        case 'checkToken': $commands->CheckToken(); break;
+        case 'checkToken':      $commands->CheckToken();      break;
     }
 
     $output = $commands->GetOutput();

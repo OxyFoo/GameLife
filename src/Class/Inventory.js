@@ -1,5 +1,7 @@
 import dataManager from '../Managers/DataManager';
 
+import { DateToFormatString } from '../Utils/Date';
+
 /**
  * @typedef {import('../Data/Items').Slot} Slot
  * @typedef {import('../Data/Titles').Title} Title
@@ -53,6 +55,12 @@ class Inventory {
          * @type {Boolean}
          */
         this.avatarEdited = false;
+
+        this.buyToday = {
+            day: '',
+            titles: [],
+            items: []
+        };
     }
 
     Clear() {
@@ -63,7 +71,13 @@ class Inventory {
         const contains = (key) => inventory.hasOwnProperty(key);
         if (contains('titles')) this.titles = inventory['titles'];
         if (contains('stuffs')) this.stuffs = inventory['stuffs'].map(task => Object.assign(new Stuff(), task));
-        if (contains('avatar') && typeof(inventory['avatar']) === 'object') this.avatar = inventory['avatar'];
+        if (contains('avatar')) this.avatar = inventory['avatar'];
+        if (contains('buyToday')) {
+            const today = DateToFormatString(new Date());
+            this.buyToday = inventory['buyToday'];
+            this.buyToday.day = today;
+            this.user.LocalSave();
+        }
         this.user.interface.console.AddLog('info', `${this.titles.length} titles loaded`);
         this.user.interface.console.AddLog('info', `${this.stuffs.length} stuffs loaded`);
     }
@@ -72,12 +86,22 @@ class Inventory {
         if (contains('titles')) this.titles = data['titles'];
         if (contains('stuffs')) this.stuffs = data['stuffs'];
         if (contains('avatar')) this.avatar = data['avatar'];
+        if (contains('buyToday')) this.buyToday = data['buyToday'];
+
+        const today = DateToFormatString(new Date());
+        if (today !== this.buyToday.day) {
+            this.buyToday.day = today;
+            this.buyToday.titles = [];
+            this.buyToday.items = [];
+            this.user.LocalSave();
+        }
     }
     Save() {
         const data = {
             titles: this.titles,
             stuffs: this.stuffs,
-            avatar: this.avatar
+            avatar: this.avatar,
+            buyToday: this.buyToday
         };
         return data;
     }

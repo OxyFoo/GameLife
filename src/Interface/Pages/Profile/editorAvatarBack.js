@@ -3,10 +3,11 @@ import { Animated } from 'react-native';
 
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
+import dataManager from '../../../Managers/DataManager';
 
 import { Sleep } from '../../../Utils/Functions';
-import { SpringAnimation } from '../../../Utils/Animations';
 import { Character } from '../../Components';
+import { SpringAnimation } from '../../../Utils/Animations';
 
 const AvatarProps = {
     refParent: null,
@@ -48,7 +49,10 @@ class EditorAvatarBack extends React.Component {
         itemSelected: false,
 
         itemAnim: new Animated.Value(0),
-        itemSelectionHeight: 0
+        itemSelectionHeight: 0,
+
+        /** @type {boolean} */
+        selling: false
     }
 
     constructor(props) {
@@ -60,11 +64,6 @@ class EditorAvatarBack extends React.Component {
             this.slotCharacters[slot] = new Character('itemslot-' + slot, 'MALE', 'skin_01', 0)
         });
         this.updateEquippedItems();
-    }
-
-    componentDidMount() {
-        // Default opened slot
-        this.selectSlot('hair');
     }
 
     onCharacterLayout = (event) => {
@@ -86,7 +85,7 @@ class EditorAvatarBack extends React.Component {
 
     OpenEditor = () => {
         this.setState({ editorOpened: true });
-        this.selectSlot(this.state.slotSelected);
+        this.selectSlot(this.state.slotSelected || 'hair');
         this.props.onChangeState(true);
 
         SpringAnimation(this.state.editorAnim, 1).start();
@@ -154,10 +153,10 @@ class EditorAvatarBack extends React.Component {
 
     buttonSellPress = () => {
         const lang = langManager.curr['profile-avatar'];
-        const { stuffSelected } = this.state;
+        const { stuffSelected, selling } = this.state;
 
-        // No item selected (Not supposed to be called)
-        if (stuffSelected === null) {
+        // No item selected (Not supposed to be called) or already selling
+        if (stuffSelected === null || selling) {
             return;
         }
 
@@ -171,14 +170,36 @@ class EditorAvatarBack extends React.Component {
         }
 
         // Confirm sell
-        const title = lang['alert-confirmsell-title'];
-        const text = lang['alert-confirmsell-text'];
-        user.interface.popup.Open('yesno', [ title, text ], (btn) => {
-            if (btn === 'no') {
+        const item = dataManager.items.GetByID(stuffSelected.ItemID);
+        const title = lang['alert-sellconfirm-title'];
+        const text = lang['alert-sellconfirm-text'].replace('{}', item.Value);
+        user.interface.popup.Open('yesno', [ title, text ], async (btn) => {
+            if (btn === 'no') return;
+
+            // Sell item
+            this.setState({ selling: true });
+            const response = await user.server.Request('sellStuff', { stuffID: stuffSelected.ID });
+            this.setState({ selling: false });
+
+            if (response === null) return;
+            if (response['status'] !== 'ok') {
+                const title = lang['alert-sellfailed-title'];
+                const text = lang['alert-sellfailed-text'];
+                user.interface.popup.Open('ok', [ title, text ]);
                 return;
             }
 
-            // TODO - Sell item
+            // Update inventory & Ox amount
+            user.inventory.LoadOnline({ stuffs: response['stuffs'] });
+            user.informations.ox = response['ox'];
+            this.selectSlot(this.state.slotSelected);
+
+            // Show success message
+            const title = lang['alert-sellsuccess-title'];
+            let text = lang['alert-sellsuccess-text'];
+            text = text.replace('{}', dataManager.GetText(item.Name));
+            text = text.replace('{}', item.Value);
+            user.interface.popup.Open('ok', [ title, text ], undefined, false);
         });
     }
 

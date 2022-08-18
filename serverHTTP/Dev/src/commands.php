@@ -3,15 +3,19 @@
     require('./src/add.php');
     require('./src/config.php');
 
-    require('./src/functions/mail.php');
-    require('./src/functions/functions.php');
+    require('./src/utils/mail.php');
+    require('./src/utils/utils.php');
 
     require('./src/classes/account.php');
     require('./src/classes/device.php');
 
+    require('./src/managers/items.php');
+    require('./src/managers/tasks.php');
+    require('./src/managers/skills.php');
+
+    require('./src/sql/app.php');
     require('./src/sql/accounts.php');
     require('./src/sql/achievements.php');
-    require('./src/sql/app.php');
     require('./src/sql/devices.php');
     require('./src/sql/users.php');
     require('./src/sql/internalData.php');
@@ -21,16 +25,49 @@
         /** @var DataBase $db */
         private $db;
 
-        public function __construct($data) {
-            $this->data = $data;
+        /** @var bool $tokenChecked */
+        private $tokenChecked = false;
 
+        /** @var \Account */
+        private $account;
+
+        /** @var \Device */
+        private $device;
+
+        public function __construct($data) {
             $this->db = new DataBase();
             $this->output = array('status' => 'error');
             $this->enableBots = false;
+
+            $this->data = $data;
+            $this->__checkToken();
         }
 
         public function __destruct() {
             unset($this->db);
+        }
+
+        private function __checkToken() {
+            $token = $this->data['token'];
+            if (!isset($token)) return;
+
+            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
+            if ($dataFromToken === null) return;
+
+            if (!$dataFromToken['inTime']) {
+                $this->output['status'] = 'tokenExpired';
+                return;
+            }
+
+            $account = Accounts::GetByID($this->db, $dataFromToken['accountID']);
+            if ($account === null) return;
+
+            $device = Devices::GetByID($this->db, $dataFromToken['deviceID']);
+            if ($device === null) return;
+
+            $this->account = $account;
+            $this->device = $device;
+            $this->tokenChecked = true;
         }
 
         public function GetOutput() {
@@ -213,18 +250,8 @@
          * Retrieves user data (activities, nickname, successes, etc)
          */
         public function GetUserData() {
-            $token = $this->data['token'];
-            if (!isset($token)) return;
-
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-
-            $account = Accounts::GetByID($this->db, $dataFromToken['accountID']);
-            if ($account === null) return;
+            if ($this->tokenChecked === false) return;
+            $account = $this->account;
 
             $dbDataToken = $account->DataToken;
             $appDataToken = $this->data['dataToken'];
@@ -232,27 +259,28 @@
 
             $userData = array();
             if (isset($account->Username, $account->Title)) {
-                $userData['username'] = $account->Username;
-                $userData['usernameTime'] = $account->LastChangeUsername;
-                $userData['title'] = $account->Title;
-                $userData['birthtime'] = $account->Birthtime;
-                $userData['lastbirthtime'] = $account->LastChangeBirth;
-                $userData['ox'] = $account->Ox;
-                $userData['adRemaining'] = Users::GetAdRemaining($this->db, $account->ID);
-                $userData['adTotalWatched'] = Users::GetAdWatched($this->db, $account->ID);
-                $userData['achievements'] = $account->Achievements;
+                $userData['username']         = $account->Username;
+                $userData['usernameTime']     = $account->LastChangeUsername;
+                $userData['title']            = $account->Title;
+                $userData['birthtime']        = $account->Birthtime;
+                $userData['lastbirthtime']    = $account->LastChangeBirth;
+                $userData['ox']               = $account->Ox;
+                $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
+                $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
+                $userData['achievements']     = $account->Achievements;
                 $userData['achievementQueue'] = $account->AchievementQueue;
             }
 
             // Some data, load only if needed
             if ($appDataToken != $dbDataToken) {
-                $userData['activities'] = Users::GetActivities($this->db, $account);
+                $userData['activities'] = Skills::GetActivities($this->db, $account);
                 $userData['inventory'] = array(
                     'avatar' => Users::GetAvatar($this->db, $account),
-                    'stuffs' => Users::GetInventory($this->db, $account),
-                    'titles' => Users::GetInventoryTitles($this->db, $account)
+                    'stuffs' => Items::GetInventory($this->db, $account),
+                    'titles' => Items::GetInventoryTitles($this->db, $account),
+                    'buyToday' => Users::GetBuyToday($this->db, $account)
                 );
-                $userData['tasks'] = Users::GetTasks($this->db, $account);
+                $userData['tasks'] = Tasks::GetTasks($this->db, $account);
                 $userData['dataToken'] = $dbDataToken;
             }
 
@@ -261,22 +289,12 @@
         }
 
         public function AddUserData() {
-            $token = $this->data['token'];
             $userData = $this->data['data'];
-            if (!isset($token, $userData)) return;
+            if (!isset($userData) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
 
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-
-            $deviceID = $dataFromToken['deviceID'];
-            $account = Accounts::GetByID($this->db, $dataFromToken['accountID']);
-            if ($account === null) return;
-
-            Users::ExecQueue($this->db, $account, $deviceID, $userData);
+            Users::ExecQueue($this->db, $account, $device->ID, $userData);
             $newDataToken = Users::RefreshDataToken($this->db, $account->ID);
 
             // Update dataToken if app is already up to date
@@ -288,59 +306,82 @@
         }
 
         public function SetUsername() {
-            $token = $this->data['token'];
             $newUsername = $this->data['username'];
-            if (!isset($token, $newUsername)) return;
-
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-
-            $deviceID = $dataFromToken['deviceID'];
-            $account = Accounts::GetByID($this->db, $dataFromToken['accountID']);
-            if ($account === null) return;
+            if (!isset($newUsername) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
 
             $usernameChangeState = Users::SetUsername($this->db, $account, $newUsername);
+            if ($usernameChangeState !== 'ok') return;
 
-            if ($usernameChangeState === 'ok') {
-                $this->db->AddStatistic($account->ID, $deviceID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername}");
-            }
+            $this->db->AddStatistic($account->ID, $device->ID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername}");
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
         }
 
+        public function BuyTitle() {
+            $titleID = $this->data['titleID'];
+            if (!isset($titleID) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
+
+            $ox = Items::BuyTitle($this->db, $account, $titleID);
+            if ($ox === false) return;
+            $this->db->AddStatistic($account->ID, $device->ID, 'buyTitle', "$titleID");
+
+            $this->output['ox'] = $ox;
+            $this->output['titles'] = Items::GetInventoryTitles($this->db, $account);
+            $this->output['status'] = 'ok';
+        }
+
+        public function BuyItem() {
+            $itemID = $this->data['itemID'];
+            if (!isset($itemID) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
+
+            $ox = Items::BuyItem($this->db, $account, $itemID);
+            if ($ox === false) return;
+            $this->db->AddStatistic($account->ID, $device->ID, 'buyItem', "$itemID");
+
+            $this->output['ox'] = $ox;
+            $this->output['stuffs'] = Items::GetInventory($this->db, $account);
+            $this->output['status'] = 'ok';
+        }
+
+        public function SellStuff() {
+            $stuffID = $this->data['stuffID'];
+            if (!isset($stuffID) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
+
+            $ox = Items::SellStuff($this->db, $account->ID, $stuffID);
+            if ($ox === false) return;
+            $this->db->AddStatistic($account->ID, $device->ID, 'sellStuff', "$stuffID");
+
+            $this->output['ox'] = $ox;
+            $this->output['stuffs'] = Items::GetInventory($this->db, $account);
+            $this->output['status'] = 'ok';
+        }
+
         public function AdWatched() {
-            $token = $this->data['token'];
-            if (!isset($token)) return;
-
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-
-            $oxAmount = 10;
-            $deviceID = $dataFromToken['deviceID'];
-            $accountID = $dataFromToken['accountID'];
-            $account = Accounts::GetByID($this->db, $accountID);
-            if ($account === null) return;
+            if (!$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
 
             if (Users::GetAdRemaining($this->db, $account->ID) <= 0) {
                 // Suspicion of cheating
-                $this->db->AddStatistic($account->ID, $deviceID, 'cheatSuspicion', 'Try to watch another ad');
+                $this->db->AddStatistic($account->ID, $device->ID, 'cheatSuspicion', 'Try to watch another ad');
                 $this->output['ox'] = $account->Ox;
                 $this->output['status'] = 'ok';
                 return;
             }
 
+            $oxAmount = 10;
             Users::AddOx($this->db, $account->ID, $oxAmount);
 
             $newOxAmount = $account->Ox + $oxAmount;
-            $this->db->AddStatistic($account->ID, $deviceID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
+            $this->db->AddStatistic($account->ID, $device->ID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
             $this->output['ox'] = $account->Ox + $oxAmount;
             $this->output['status'] = 'ok';
         }
@@ -349,20 +390,12 @@
          * Add a report to the database
          */
         public function Report() {
-            $token = $this->data['token'];
             $reportType = $this->data['type'];
             $reportData = $this->data['data'];
-            if (!isset($token, $reportType, $reportData)) return;
+            if (!isset($reportType, $reportData) || !$this->tokenChecked) return;
 
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-
-            $deviceID = $dataFromToken['deviceID'];
-            $reportResult = AddReport($this->db, $deviceID, $reportType, $reportData);
+            $device = $this->device;
+            $reportResult = AddReport($this->db, $device->ID, $reportType, $reportData);
             if ($reportResult === false) return;
 
             $this->output['status'] = 'ok';
@@ -380,56 +413,34 @@
          * Check code & return rewards
          */
         public function GiftCode() {
-            $token = $this->data['token'];
             $code = $this->data['code'];
-            if (!isset($token, $code)) return;
+            if (!isset($code) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
 
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-
-            $deviceID = $dataFromToken['deviceID'];
-            $accountID = $dataFromToken['accountID'];
-            $gift = Users::CheckGiftCode($this->db, $accountID, $code);
-
-            if ($gift !== null) {
-                $account = Accounts::GetByID($this->db, $accountID);
+            $gift = Items::CheckGiftCode($this->db, $account->ID, $code);
+            if ($gift !== false) {
                 $rewardAdded = Achievements::ExecReward($this->db, $account, explode(',', $gift));
-                if (!$rewardAdded) {
-                    $this->output['status'] = 'fail';
-                    return;
+                if ($rewardAdded) {
+                    $this->db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [ $code ]);
+                    $this->db->AddStatistic($account->ID, $device->ID, 'giftCode', $code);
+
+                    $this->output['gift'] = $gift;
+                    $this->output['status'] = 'ok';
                 }
-                $this->db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [ $code ]);
-                $this->db->AddStatistic($accountID, $deviceID, 'giftCode', $code);
             }
 
             sleep(1); // To avoid bruteforce
-            $this->output['gift'] = $gift;
-            $this->output['status'] = 'ok';
         }
 
         public function Disconnect() {
-            $token = $this->data['token'];
-            if (!isset($token)) return;
+            if (!$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
 
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
+            Accounts::RemDevice($this->db, $device->ID, $account, 'Devices');
 
-            $deviceID = $dataFromToken['deviceID'];
-            $accountID = $dataFromToken['accountID'];
-            $account = Accounts::GetByID($this->db, $accountID);
-            if ($account === null) return;
-
-            Accounts::RemDevice($this->db, $deviceID, $account, 'Devices');
-
-            $this->db->AddStatistic($account->ID, $deviceID, 'appState', 'Disconnect');
+            $this->db->AddStatistic($account->ID, $device->ID, 'appState', 'Disconnect');
             $this->output['status'] = 'ok';
         }
 
@@ -437,21 +448,11 @@
          * Delete account
          */
         public function DeleteAccount() {
-            $token = $this->data['token'];
             $email = $this->data['email'];
             $langKey = $this->data['lang'];
-            if (!isset($token, $email, $langKey)) return;
-
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-
-            $device = Devices::GetByID($this->db, $dataFromToken['deviceID']);
-            $account = Accounts::GetByID($this->db, $dataFromToken['accountID']);
-            if ($device === null || $account === null) return;
+            if (!isset($email, $langKey) || !$this->tokenChecked) return;
+            $account = $this->Account;
+            $device = $this->Device;
 
             if (strpos($email, 'bot-') === 0) {
                 if (!$this->enableBots) return;
@@ -475,23 +476,13 @@
          * Check if the token is valid and return the user IDs and friends
          */
         public function CheckToken() {
-            $token = $this->data['token'];
-            if (!isset($token)) return;
-
-            $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-            if ($dataFromToken === null) return;
-            if (!$dataFromToken['inTime']) {
-                $this->output['status'] = 'tokenExpired';
-                return;
-            }
-            $deviceID = $dataFromToken['deviceID'];
-            $accountID = $dataFromToken['accountID'];
-            $account = Accounts::GetByID($this->db, $accountID);
-            if ($account === null) return;
+            if (!$this->tokenChecked) return;
+            $account = $this->Account;
+            $device = $this->Device;
 
             $data = array(
-                'deviceID' => $deviceID,
-                'accountID' => $accountID
+                'deviceID' => $device->ID,
+                'accountID' => $account->ID
                 // TODO - return friends (servTCP ?)
                 //'friends' => $account->Friends
             );

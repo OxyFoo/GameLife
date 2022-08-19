@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Animated, BackHandler } from 'react-native';
+import { Animated, BackHandler, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import * as Pages from '../Interface/Pages';
 import langManager from './LangManager';
+import themeManager from './ThemeManager';
 
 import { TimingAnimation } from '../Utils/Animations';
 import { IsUndefined, Range } from '../Utils/Functions';
-import { BottomBar, Console, Popup, ScreenInput, ScreenList } from '../Interface/Widgets';
+import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '../Interface/Widgets';
 
 /**
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
@@ -48,7 +49,10 @@ class PageManager extends React.Component{
 
         ignorePage: false,
         bottomBarShow: false,
-        bottomBarIndex: -1
+        bottomBarIndex: -1,
+
+        /** @type {boolean} */
+        userLoaded: false
     }
 
     constructor(props) {
@@ -132,6 +136,7 @@ class PageManager extends React.Component{
     }
 
     setStateSync = (state) => new Promise((resolve) => this.setState(state, resolve));
+    setUserLoaded = (value = false) => this.setStateSync({ userLoaded: value });
 
     /**
      * Try to get last page content
@@ -295,20 +300,18 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const { pageIndex, pagesContent, pagesAnimations, animTransition, animTheme } = this.state;
+        const { pageIndex, pagesContent, pagesAnimations, animTransition, animTheme, userLoaded } = this.state;
 
         const interOpacity = { inputRange: [0, 1], outputRange: [0, 0.2] };
-        const fullscreen = { width: '100%', height: '100%' };
-        const absolute = { position: 'absolute', top: 0, left: 0 };
-        const overlayStyle = [fullscreen, absolute, { backgroundColor: '#000000', opacity: animTransition.interpolate(interOpacity) }];
+        const overlayStyle = [styles.fullscreen, styles.absolute, { backgroundColor: '#000000', opacity: animTransition.interpolate(interOpacity) }];
 
-        const darkBackground = ['#03052E', '#353657'];
-        const lightBackground = ['#FFFFFF', '#FFFFFF'];
+        const darkBackground = [ themeManager.THEMES.Dark.ground1, themeManager.THEMES.Dark.ground2 ];
+        const lightBackground = [ themeManager.THEMES.Light.ground1, themeManager.THEMES.Light.ground2 ];
         const lightOpacity = { opacity: animTheme };
 
         const newPage = (index) => {
             const content = pagesContent[index];
-            const style = [ fullscreen, absolute, { opacity: pagesAnimations[index] } ];
+            const style = [ styles.fullscreen, styles.absolute, { opacity: pagesAnimations[index] } ];
             const event = pageIndex === index ? 'auto' : 'none';
             return <Animated.View key={'page-'+index} style={style} pointerEvents={event}>{content}</Animated.View>;
         }
@@ -316,15 +319,16 @@ class PageManager extends React.Component{
         if (DEBUG_MODE) console.log(this.state.pages);
 
         return (
-            <LinearGradient style={fullscreen} colors={darkBackground}>
+            <LinearGradient style={styles.fullscreen} colors={darkBackground}>
                 {/* Light background */}
-                <Animated.View style={[absolute, fullscreen, lightOpacity]} pointerEvents='none'>
-                    <LinearGradient style={fullscreen} colors={lightBackground} />
+                <Animated.View style={[styles.absolute, styles.fullscreen, lightOpacity]} pointerEvents='none'>
+                    <LinearGradient style={styles.fullscreen} colors={lightBackground} />
                 </Animated.View>
 
                 {Range(PAGE_NUMBER).map(newPage)}
                 <Animated.View style={overlayStyle} pointerEvents='none' />
 
+                {userLoaded && <UserHeader show={this.state.bottomBarShow} editorMode={false} />}
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref }} />
 
@@ -336,5 +340,17 @@ class PageManager extends React.Component{
         )
     }
 }
+
+const styles = StyleSheet.create({
+    fullscreen: {
+        width: '100%',
+        height: '100%'
+    },
+    absolute: {
+        position: 'absolute',
+        top: 0,
+        left: 0
+    }
+});
 
 export default PageManager;

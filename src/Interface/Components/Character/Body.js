@@ -163,31 +163,51 @@ class Body {
         this.animations.start();
     }
 
-    /** @returns {JSX.Element} */
-    renderItems() {
-        /** @param {Part} part @returns {Array<Part>} */
-        const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
-        const allParts = getAllChilds(this.firstPart).sort((a, b) => a.zIndex - b.zIndex);
-        const characName = this.character.name;
-        return [
-            ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
-            ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
+    /**
+     * @param {Part} part
+     * @param {'full'|'topHalf'} size
+     * @returns {Array<Part>}
+     */
+    getChilds = (part, size = 'full') => {
+        const partToRemove = [
+            'left_thigh',
+            'right_thigh',
+            'left_forearm',
+            'right_forearm'
         ];
+        if (size === 'topHalf' && partToRemove.includes(part.name)) {
+            return [];
+        }
+        return [ part, ...part.childs.map(part => this.getChilds(part, size)).flat() ];
     }
 
-    /** @returns {JSX.Element} */
-    renderAll() {
-        /** @param {Part} part @returns {Array<Part>} */
-        const getAllChilds = (part) => [part, ...part.childs.map(getAllChilds).flat()];
-        const allParts = getAllChilds(this.firstPart).sort((a, b) => a.zIndex - b.zIndex);
+    /**
+     * @param {'all'|'onlyItems'} type
+     * @param {'full'|'topHalf'} size
+     * @returns {JSX.Element}
+     */
+    render = (type = 'all', size = 'full') => {
+        if (this.character.parentFrame === null) return null;
+        if (this.character.outOfBounds || this.character.hide) return null;
+
         const characName = this.character.name;
-        return [
-            ...allParts.map((p, i)    => <RenderPart key={`${characName}-bodyShadow-${i}`} part={p} partType={'bodyShadow'} />),
-            ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
-            ...allParts.map((part, i) => <RenderPart key={`${characName}-body-${i}`} part={part} partType={'body'} />),
-            ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
-        ];
+        const allParts = this.getChilds(this.firstPart, size).sort((a, b) => a.zIndex - b.zIndex);
+
+        if (type === 'all') {
+            return [
+                ...allParts.map((p, i)    => <RenderPart key={`${characName}-bodyShadow-${i}`} part={p} partType={'bodyShadow'} />),
+                ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
+                ...allParts.map((part, i) => <RenderPart key={`${characName}-body-${i}`} part={part} partType={'body'} />),
+                ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
+            ];
+        } else if (type === 'onlyItems') {
+            return [
+                ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
+                ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
+            ];
+        }
     }
+
 }
 
 export default Body;

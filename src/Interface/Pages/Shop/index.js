@@ -5,7 +5,6 @@ import BackShop from './back';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
-import { UserHeader } from '../../Widgets';
 import { Page, Icon, Text, Button } from '../../Components';
 
 class Shop extends BackShop {
@@ -14,8 +13,7 @@ class Shop extends BackShop {
         const adRemaining = user.informations.adRemaining;
 
         return (
-            <Page canScrollOver={true} bottomOffset={156}>
-                <UserHeader />
+            <Page canScrollOver={true} topOffset={106} bottomOffset={156}>
                 <View style={styles.wallet}>
                     <Text style={styles.ox} color='main1'>{user.informations.ox}</Text>
                     <Icon icon='ox' color='main1' size={24} />

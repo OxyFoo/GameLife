@@ -4,7 +4,6 @@ import { StyleSheet } from 'react-native';
 import BackMultiplayer from './back';
 import langManager from '../../../Managers/LangManager';
 
-import { UserHeader } from '../../Widgets';
 import { Button, Container, Page, Text } from '../../Components';
 
 class Multiplayer extends BackMultiplayer {
@@ -21,8 +20,7 @@ class Multiplayer extends BackMultiplayer {
         console.log(server);
 
         return (
-            <Page canScrollOver={true} bottomOffset={156}>
-                <UserHeader />
+            <Page canScrollOver={true} topOffset={106} bottomOffset={156}>
                 {pages[server]()}
             </Page>
         );

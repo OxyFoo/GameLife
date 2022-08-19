@@ -6,7 +6,7 @@ import user from '../../../Managers/UserManager';
 import themeManager from '../../../Managers/ThemeManager';
 
 import { Icon, Page, Text } from '../../Components';
-import { ActivityCard, BlockMonth, UserHeader } from '../../Widgets';
+import { ActivityCard, BlockMonth } from '../../Widgets';
 import { GetFullDate, GetMonthAndYear } from '../../../Utils/Date';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -45,9 +45,7 @@ class Calendar extends BackCalendar {
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
 
         return (
-            <Page style={{ padding: 0 }} scrollable={false} bottomOffset={156}>
-                <UserHeader style={{ padding: '5%', paddingBottom: 0 }} />
-
+            <Page style={{ padding: 0 }} scrollable={false} topOffset={106} bottomOffset={156}>
                 <Animated.View style={styleContent}>
                     {/* Month + arrows to show calendar */}
                     <View style={styles.row}>

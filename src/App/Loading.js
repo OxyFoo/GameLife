@@ -92,6 +92,16 @@ async function LoadData(nextStep) {
         return;
     }
 
+    // Load user character
+    user.character = new Character(
+        'player',
+        user.inventory.avatar.sexe,
+        user.inventory.avatar.skin,
+        user.inventory.avatar.skinColor
+    );
+    user.character.SetEquipment(user.inventory.GetEquippedItemsID());
+    user.interface.setUserLoaded(true);
+
     // Loading : Notifications
     await Notifications.DisableAll();
     if (user.settings.morningNotifications) {
@@ -107,18 +117,10 @@ async function LoadData(nextStep) {
     }
     await user.admob.ShowPopup();
     user.admob.LoadAds();
+    user.StartTimers();
 
     nextStep();
     await Sleep(200);
-
-    user.character = new Character(
-        'player',
-        user.inventory.avatar.sexe,
-        user.inventory.avatar.skin,
-        user.inventory.avatar.skinColor
-    );
-    user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.StartTimers();
 
     if (user.activities.currentActivity === null) {
         while (!user.interface.ChangePage('home')) await Sleep(100);

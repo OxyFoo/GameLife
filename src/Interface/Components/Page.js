@@ -12,11 +12,14 @@ const PageProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Boolean} If true, user can vertical scroll the page */
+    /** @type {boolean} If true, user can vertical scroll the page */
     scrollable: true,
 
-    /** @type {Boolean} If true, user can scroll a little over the page for add a smooth effect */
+    /** @type {boolean} If true, user can scroll a little over the page for add a smooth effect */
     canScrollOver: true,
+
+    /** @type {number} */
+    topOffset: 0,
 
     /** @type {number} */
     bottomOffset: 0,
@@ -188,11 +191,12 @@ class Page extends React.Component {
 
     render() {
         const position = { transform: [{ translateY: this.state.positionY }] };
+        const topOffset = { paddingTop: 32 + this.props.topOffset };
 
         return (
             <>
                 <AnimatedKeyboardAvoidingView
-                    style={[styles.parent, this.props.style, position]}
+                    style={[styles.parent, this.props.style, position, topOffset]}
                     behavior={'padding'}
                     onLayout={this.onLayout}
                     onTouchStart={this.onTouchStart}

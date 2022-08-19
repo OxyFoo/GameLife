@@ -25,8 +25,11 @@ const FrameProps = {
     /** @type {Array<Character>} */
     characters: [],
 
-    /** @type {Boolean} */
+    /** @type {boolean} Show only items (not character) */
     onlyItems: false,
+
+    /** @type {boolean} Show only head and bust of character */
+    onlyTop: false,
 
     /** @type {number} Time to wait before loading in ms */
     delayTime: 0,
@@ -77,14 +80,17 @@ class Frame extends React.Component {
     }
 
     render() {
-        const { style, size, characters, onlyItems } = this.props;
+        const { style, size, characters, onlyItems, onlyTop } = this.props;
         const viewBox = [ size.x, size.y, size.width, size.height ].join(' ');
         const loadingColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
+
+        const renderType = onlyItems ? 'onlyItems' : 'all';
+        const renderSize = onlyTop ? 'topHalf' : 'full';
 
         return (
             <View style={[styles.canvas, style]}>
                 <Svg viewBox={viewBox}>
-                    {characters.map(charac => charac.render(onlyItems))}
+                    {characters.map(charac => charac.render(renderType, renderSize))}
                 </Svg>
                 {!this.state.loaded && (
                     <View style={[styles.loading, loadingColor]}>

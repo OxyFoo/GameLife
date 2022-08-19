@@ -32,6 +32,7 @@ class Character {
         this.body = new Body(this);
         this.body.position.addListener(this.__setPosition.bind(this));
         this.SetPositionAbsolute(this.pos.x, this.pos.y, 0);
+        this.render = this.body.render;
 
         // Comment "return" to tests (position, animations, etc)
         return;
@@ -118,16 +119,6 @@ class Character {
         if (this.parentFrame !== null) {
             this.parentFrame.forceUpdate();
         }
-    }
-
-    /**
-     * @param {boolean} [onlyItems=false]
-     * @returns {JSX.Element}
-     */
-    render(onlyItems = false) {
-        if (this.parentFrame === null) return null;
-        if (this.outOfBounds || this.hide) return null;
-        return onlyItems ? this.body.renderItems() : this.body.renderAll();
     }
 }
 

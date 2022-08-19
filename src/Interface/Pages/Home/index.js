@@ -5,7 +5,7 @@ import BackHome from './back';
 import langManager from '../../../Managers/LangManager';
 
 import { Round } from '../../../Utils/Functions';
-import { UserHeader, StatsBars, SkillsGroup } from '../../Widgets';
+import { StatsBars, SkillsGroup } from '../../Widgets';
 import { Button, Container, Swiper, Text, XPBar, Page, News } from '../../Components';
 
 class Home extends BackHome {
@@ -17,9 +17,7 @@ class Home extends BackHome {
         const lvl = langManager.curr['level']['level'];
 
         return (
-            <Page canScrollOver={true} bottomOffset={156}>
-                <UserHeader />
-
+            <Page canScrollOver={true} topOffset={106} bottomOffset={156}>
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
                         <Text style={{ marginRight: 8 }}>{lvl}</Text>

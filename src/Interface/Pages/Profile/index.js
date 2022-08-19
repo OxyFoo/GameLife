@@ -12,21 +12,36 @@ import { Page, Text, XPBar, Container } from '../../Components';
 import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from '../../Widgets';
 
 class Profile extends BackProfile {
+    renderRow(title, value) {
+        const lang = langManager.curr['profile'];
+        const rowStyle = [ styles.tableRow, { borderColor: themeManager.GetColor('main1') } ];
+        const cellStyle = [ styles.cell, { borderColor: themeManager.GetColor('main1') } ];
+        return (
+            <View style={rowStyle}>
+                <Text
+                    style={styles.rowText}
+                    containerStyle={cellStyle}
+                >
+                    {lang[title]}
+                </Text>
+
+                <Text
+                    style={styles.rowText}
+                    containerStyle={[cellStyle, { borderRightWidth: 0 }]}
+                >
+                    {value}
+                </Text>
+            </View>
+        );
+    }
+
     render() {
         const lang = langManager.curr['profile'];
         const langDates = langManager.curr['dates']['names'];
         const interReverse = { inputRange: [0, 1], outputRange: [1, 0] };
-        const headerOpacity = this.refAvatar === null ? 1 : this.refAvatar.state.editorAnim.interpolate(interReverse);
+        const animAvatar = this.refAvatar?.state.editorAnim.interpolate(interReverse) || 1;
+        const headerOpacity = { opacity: animAvatar };
         const headerPointer = this.refAvatar === null ? 'auto' : (this.state.editorOpened ? 'none' : 'auto');
-
-        const rowStyle = [styles.tableRow, { borderColor: themeManager.GetColor('main1') }];
-        const cellStyle = [styles.cell, { borderColor: themeManager.GetColor('main1') }];
-        const row = (title, value) => (
-            <View style={rowStyle}>
-                <Text fontSize={14} containerStyle={cellStyle} style={{ textAlign: 'left' }}>{lang[title]}</Text>
-                <Text fontSize={14} containerStyle={[cellStyle, { borderRightWidth: 0 }]} style={{ textAlign: 'left' }}>{value}</Text>
-            </View>
-        );
 
         return (
             <Page
@@ -39,19 +54,19 @@ class Profile extends BackProfile {
                     onBackPress={this.onBack}
                 />
 
-                <Animated.View style={{ opacity: headerOpacity }} pointerEvents={headerPointer}>
+                <Animated.View style={headerOpacity} pointerEvents={headerPointer}>
                     <UserHeader
-                        showAge={true}
+                        editorMode={true}
                         onPress={this.openProfileEditor}
                     />
+                </Animated.View>
 
-                    <Animated.View style={styles.botSpace}>
-                        <View style={styles.xpRow}>
-                            <Text>{langManager.curr['level']['level'] + ' ' + this.userXP.xpInfo.lvl}</Text>
-                            <Text>{this.userXP.xpInfo.xp + '/' + this.userXP.xpInfo.next}</Text>
-                        </View>
-                        <XPBar value={this.userXP.xpInfo.xp} maxValue={this.userXP.xpInfo.next} />
-                    </Animated.View>
+                <Animated.View style={[styles.botSpace, headerOpacity]}>
+                    <View style={styles.xpRow}>
+                        <Text>{langManager.curr['level']['level'] + ' ' + this.userXP.xpInfo.lvl}</Text>
+                        <Text>{this.userXP.xpInfo.xp + '/' + this.userXP.xpInfo.next}</Text>
+                    </View>
+                    <XPBar value={this.userXP.xpInfo.xp} maxValue={this.userXP.xpInfo.next} />
                 </Animated.View>
 
                 <EditorAvatar
@@ -69,9 +84,9 @@ class Profile extends BackProfile {
                     color='main1'
                     backgroundColor='backgroundCard'
                 >
-                    {row('row-since', this.playTime + ' ' + (this.playTime <= 1 ? langDates['day'] : langDates['days']))}
-                    {row('row-activities', this.totalActivityLength)}
-                    {row('row-time', this.totalActivityTime)}
+                    {this.renderRow('row-since', this.playTime + ' ' + (this.playTime <= 1 ? langDates['day'] : langDates['days']))}
+                    {this.renderRow('row-activities', this.totalActivityLength)}
+                    {this.renderRow('row-time', this.totalActivityTime)}
                 </Container>
 
                 <View style={{ paddingHorizontal: 12 }}>
@@ -121,6 +136,10 @@ const styles = StyleSheet.create({
     topSpace: { marginTop: 24 },
     botSpace: { marginBottom: 24 },
     xpRow: { flexDirection: 'row', justifyContent: 'space-between' },
+    rowText: {
+        fontSize: 14,
+        textAlign: 'left'
+    },
     tableRow: {
         width: '100%',
         height: 48,

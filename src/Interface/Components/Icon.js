@@ -24,6 +24,7 @@ import svgFilter from '../../../res/icons/filter';
 import svgFlagEnglish from '../../../res/icons/flag-english';
 import svgFlagFrench from '../../../res/icons/flag-french';
 import svgHome from '../../../res/icons/home';
+import svgHuman from '../../../res/icons/human';
 import svgInfo from '../../../res/icons/info';
 import svgInstagram from '../../../res/icons/instagram';
 import svgItem from '../../../res/icons/item';
@@ -46,7 +47,7 @@ import svgLoadingDots from '../../../res/icons/loading-dots';
 
 /**
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'check'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'info'|'instagram'|'item'|'moveVertical'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
+ * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'check'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'human'|'info'|'instagram'|'item'|'moveVertical'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
  */
 /**
  * @callback GestureEvent
@@ -70,6 +71,7 @@ const SVGIcons = {
     flagEnglish: svgFlagEnglish,
     flagFrench: svgFlagFrench,
     home: svgHome,
+    human: svgHuman,
     info: svgInfo,
     instagram: svgInstagram,
     item: svgItem,

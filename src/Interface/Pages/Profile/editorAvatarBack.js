@@ -6,7 +6,7 @@ import langManager from '../../../Managers/LangManager';
 import dataManager from '../../../Managers/DataManager';
 
 import { Sleep } from '../../../Utils/Functions';
-import { Character } from '../../Components';
+import { Character, Frame } from '../../Components';
 import { SpringAnimation } from '../../../Utils/Animations';
 
 const AvatarProps = {
@@ -51,6 +51,9 @@ class EditorAvatarBack extends React.Component {
         itemAnim: new Animated.Value(0),
         itemSelectionHeight: 0,
 
+        /** @type {number} */
+        sexeSelected: 0,
+
         /** @type {boolean} */
         selling: false
     }
@@ -64,6 +67,9 @@ class EditorAvatarBack extends React.Component {
             this.slotCharacters[slot] = new Character('itemslot-' + slot, 'MALE', 'skin_01', 0)
         });
         this.updateEquippedItems();
+
+        /** @type {Frame} */
+        this.refFrame = null;
     }
 
     onCharacterLayout = (event) => {
@@ -210,6 +216,7 @@ class EditorAvatarBack extends React.Component {
         }
 
         user.inventory.Equip(slotSelected, stuffSelected.ID);
+        user.character.SetEquipment(user.inventory.GetEquippedItemsID());
         this.forceUpdate();
     }
 }

@@ -30,7 +30,8 @@ class UserHeader extends React.Component {
     state = {
         username: '',
         titleText: '',
-        animPosY: null
+        animPosY: null,
+        showAvatar: false
     }
 
     constructor(props) {
@@ -41,6 +42,9 @@ class UserHeader extends React.Component {
             titleText: user.informations.GetTitleText(),
             animPosY: new Animated.Value(props.editorMode ? -6 : -128)
         }
+
+        /** @type {Frame} */
+        this.refFrame = React.createRef();
     }
 
     componentDidMount() {
@@ -67,8 +71,11 @@ class UserHeader extends React.Component {
         });
     }
 
+    ShowAvatar = (value = false) => this.setState({ showAvatar: value });
+
     renderInteraction = () => {
         const { editorMode } = this.props;
+        const { showAvatar } = this.state;
 
         if (editorMode) {
             const icon = user.server.IsConnected() ? 'edit' : 'nowifi';
@@ -86,13 +93,16 @@ class UserHeader extends React.Component {
                 onPress={openProfile}
                 rippleColor='white'
             >
-                <Frame
-                    characters={[ user.character ]}
-                    size={frameSize}
-                    delayTime={100}
-                    loadingTime={300}
-                    onlyTop={true}
-                />
+                {showAvatar && (
+                    <Frame
+                        ref={ref => this.refFrame = ref}
+                        characters={[ user.character ]}
+                        size={frameSize}
+                        delayTime={0}
+                        loadingTime={0}
+                        onlyTop={true}
+                    />
+                )}
             </Button>
         );
     }

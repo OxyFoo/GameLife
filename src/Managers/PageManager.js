@@ -49,10 +49,7 @@ class PageManager extends React.Component{
 
         ignorePage: false,
         bottomBarShow: false,
-        bottomBarIndex: -1,
-
-        /** @type {boolean} */
-        userLoaded: false
+        bottomBarIndex: -1
     }
 
     constructor(props) {
@@ -99,6 +96,11 @@ class PageManager extends React.Component{
          * @type {Console}
          */
         this.console = new React.createRef();
+
+        /**
+         * @type {UserHeader}
+         */
+        this.header = new React.createRef();
     }
 
     componentDidMount() {
@@ -136,7 +138,6 @@ class PageManager extends React.Component{
     }
 
     setStateSync = (state) => new Promise((resolve) => this.setState(state, resolve));
-    setUserLoaded = (value = false) => this.setStateSync({ userLoaded: value });
 
     /**
      * Try to get last page content
@@ -300,7 +301,7 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const { pageIndex, pagesContent, pagesAnimations, animTransition, animTheme, userLoaded } = this.state;
+        const { pageIndex, pagesContent, pagesAnimations, animTransition, animTheme } = this.state;
 
         const interOpacity = { inputRange: [0, 1], outputRange: [0, 0.2] };
         const overlayStyle = [styles.fullscreen, styles.absolute, { backgroundColor: '#000000', opacity: animTransition.interpolate(interOpacity) }];
@@ -328,7 +329,7 @@ class PageManager extends React.Component{
                 {Range(PAGE_NUMBER).map(newPage)}
                 <Animated.View style={overlayStyle} pointerEvents='none' />
 
-                {userLoaded && <UserHeader show={this.state.bottomBarShow} editorMode={false} />}
+                <UserHeader ref={ref => { if (ref !== null) this.header = ref }} show={this.state.bottomBarShow} editorMode={false} />
                 <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref }} />
 

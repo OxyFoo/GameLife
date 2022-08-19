@@ -546,6 +546,8 @@
         },
         "widget-button-editTime": "Modifier",
         "widget-achievements-all": "Tous les succès",
-        "widget-skills-all": "Autre comp."
+        "widget-skills-all": "Autre comp.",
+        "sexe-male": "Homme",
+        "sexe-female": "Femme"
     }
 }

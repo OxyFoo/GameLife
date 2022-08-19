@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
-import dataManager from '../../Managers/DataManager';
-import themeManager from '../../Managers/ThemeManager';
+import dataManager from '../../../../Managers/DataManager';
+import themeManager from '../../../../Managers/ThemeManager';
 
-import { Character, Frame } from '../Components';
+import { Rarity } from '../../../../Data/Items';
+import { Character, Frame } from '../../../Components';
 
 /**
  * @typedef {import('../../Class/Inventory').Stuff} Stuff
  */
 
-const AvatarCardProps = {
+const ItemCardProps = {
     /** @type {Stuff} */
     stuff: {},
 
@@ -58,6 +60,16 @@ class ItemCard extends React.PureComponent {
             borderColor.borderColor = themeManager.GetColor('main1');
         }
 
+        let colors = [];
+        const absoluteColors = themeManager.GetAbsoluteColors();
+        switch (item.Rarity) {
+            case Rarity.common:     colors = absoluteColors.rarity_common;    break;
+            case Rarity.rare:       colors = absoluteColors.rarity_rare;      break;
+            case Rarity.epic:       colors = absoluteColors.rarity_epic;      break;
+            case Rarity.legendary:  colors = absoluteColors.rarity_legendary; break;
+            case Rarity.event:      colors = absoluteColors.rarity_event;     break;
+        }
+
         return (
             <View style={[styles.card, borderColor]}>
                 <TouchableHighlight
@@ -66,15 +78,28 @@ class ItemCard extends React.PureComponent {
                     underlayColor={themeManager.GetColor('main1', .5)}
                     touchSoundDisabled={true}
                 >
-                    <Frame characters={[ this.character ]} onlyItems={true} loadingTime={400} size={containerSize} />
+                    <View>
+                        <Frame
+                            characters={[ this.character ]}
+                            onlyItems={true}
+                            loadingTime={400}
+                            size={containerSize}
+                        />
+                        <LinearGradient
+                            style={styles.border}
+                            colors={colors}
+                            start={{ x: 1, y: 0 }}
+                            end={{ x: 0, y: 1 }}
+                        />
+                    </View>
                 </TouchableHighlight>
             </View>
         );
     }
 }
 
-ItemCard.prototype.props = AvatarCardProps;
-ItemCard.defaultProps = AvatarCardProps;
+ItemCard.prototype.props = ItemCardProps;
+ItemCard.defaultProps = ItemCardProps;
 
 const styles = StyleSheet.create({
     card: {
@@ -91,6 +116,13 @@ const styles = StyleSheet.create({
         height: '100%',
         borderRadius: 4,
         overflow: 'hidden'
+    },
+    border: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: 4
     }
 });
 

@@ -100,7 +100,7 @@ async function LoadData(nextStep) {
         user.inventory.avatar.skinColor
     );
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.interface.setUserLoaded(true);
+    user.interface.header.ShowAvatar(true);
 
     // Loading : Notifications
     await Notifications.DisableAll();

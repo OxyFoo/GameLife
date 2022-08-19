@@ -7,9 +7,12 @@ import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
 import EditorAvatarBack from './editorAvatarBack';
-import ItemCard from '../../Widgets/ItemCard';
+import ItemCard from './cards/ItemCard';
+import ColorCard from './cards/ColorCard';
+import CharacterCard from './cards/CharacterCard';
 import styles from './editorAvatarStyle';
-import { Text, Button, Separator, Icon, Frame } from '../../Components';
+import { Text, Button, Separator, Icon, Frame, TextSwitch } from '../../Components';
+import { CHARACTERS, COLORS } from '../../../../res/items/humans/Characters';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -24,6 +27,10 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 class EditorAvatarRender extends EditorAvatarBack {
     /** @param {SkinSlot} slot */
     renderButtonSkin = (slot) => {
+        const icon = {
+            'skin': 'human',
+            'skinColor': 'item'
+        };
         return (
             <Button
                 style={[styles.box, styles.smallBox]}
@@ -32,7 +39,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                 iconSize={24}
                 rippleColor='white'
 
-                icon='item'
+                icon={icon[slot]}
                 iconColor='main1'
             />
         );
@@ -78,6 +85,52 @@ class EditorAvatarRender extends EditorAvatarBack {
                 isSelected={isSelected}
                 isEquipped={isEquipped}
                 onPress={this.selectItem}
+            />
+        );
+    }
+
+    renderCharacter = ({ item: characterName }) => {
+        const { sexeSelected } = this.state;
+        const sexe = [ 'MALE', 'FEMALE' ];
+
+        const sameSexe = sexe[sexeSelected] === user.character.sexe;
+        const sameSkin = characterName === user.character.skin;
+        const isSelected = sameSexe && sameSkin;
+        const selectCharacter = (sexe, skin) => {
+            user.character.sexe = sexe;
+            user.character.skin = skin;
+            user.inventory.Equip('sexe', sexe);
+            user.inventory.Equip('skin', skin);
+            this.refFrame?.forceUpdate();
+            user.interface.header.refFrame?.forceUpdate();
+        }
+        const onPress = isSelected ? () => {} : selectCharacter;
+
+        return (
+            <CharacterCard
+                characterSexe={sexe[sexeSelected]}
+                characterName={characterName}
+                characterSkinColor={user.character.skinColor}
+                isSelected={isSelected}
+                onPress={onPress}
+            />
+        );
+    }
+
+    renderColor = ({ index, item: skinColor }) => {
+        const selectColor = (color) => {
+            if (user.character.skinColor !== index) {
+                user.character.skinColor = index;
+                user.inventory.Equip('skinColor', index);
+                this.refFrame?.forceUpdate();
+                user.interface.header.refFrame?.forceUpdate();
+            }
+        }
+
+        return (
+            <ColorCard
+                characterSkinColor={skinColor}
+                onPress={selectColor}
             />
         );
     }
@@ -137,13 +190,55 @@ class EditorAvatarRender extends EditorAvatarBack {
         );
     }
 
+    renderItemsList() {
+        const { slotSelected, stuffsSelected, sexeSelected } = this.state;
+
+        if (slotSelected === 'skin') {
+            const males = Object.keys(CHARACTERS.MALE);
+            const females = Object.keys(CHARACTERS.FEMALE);
+            const characters = [ males, females ];
+            const selectSexe = (state) => this.setState({ sexeSelected: state });
+            return (
+                <>
+                    <TextSwitch
+                        texts={['Homme', 'Femme']}
+                        onChange={selectSexe}
+                    />
+                    <FlatList
+                        data={characters[sexeSelected]}
+                        numColumns={3}
+                        renderItem={this.renderCharacter}
+                        keyExtractor={(item) => item.toString()}
+                    />
+                </>
+            );
+        } else if (slotSelected === 'skinColor') {
+            return (
+                <FlatList
+                    data={COLORS}
+                    numColumns={3}
+                    renderItem={this.renderColor}
+                    keyExtractor={(item) => item.toString()}
+                />
+            );
+        }
+
+        return (
+            <FlatList
+                data={stuffsSelected}
+                numColumns={3}
+                renderItem={this.renderCardItem}
+                keyExtractor={(item, index) => 'item-card-' + item.ID + '-' + index.toString()}
+            />
+        );
+    }
+
     render() {
         const {
             characterPosY,
             editorOpened,
             editorAnim,
             characterBottomPosY,
-            stuffsSelected
         } = this.state;
 
         const maxPosY = - characterPosY + 96;
@@ -202,7 +297,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                             {this.renderButtonSkin('skinColor')}
                         </View>
                         <Animated.View style={avatarStyle}>
-                            <Frame characters={[ user.character ]} />
+                            <Frame ref={ref => this.refFrame = ref} characters={[ user.character ]} />
                             {!editorOpened && <Button style={styles.avatarOverlay} onPress={this.OpenEditor} />}
                         </Animated.View>
                     </View>
@@ -213,20 +308,15 @@ class EditorAvatarRender extends EditorAvatarBack {
                 </Animated.View>
 
                 {/* Editor panel */}
-                {<Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
+                <Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
                     <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%', marginBottom: 12 }} />
                     {this.renderSelectedStuff()}
 
                     {/* Other stuffs */}
                     <Animated.View style={[selectionStyle]}>
-                        <FlatList
-                            data={stuffsSelected}
-                            numColumns={3}
-                            renderItem={this.renderCardItem}
-                            keyExtractor={(item, index) => 'item-card-' + item.ID + '-' + index.toString()}
-                        />
+                        {this.renderItemsList()}
                     </Animated.View>
-                </Animated.View>}
+                </Animated.View>
             </>
         );
     }

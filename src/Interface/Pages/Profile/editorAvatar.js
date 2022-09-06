@@ -208,7 +208,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                         data={characters[sexeSelected]}
                         numColumns={3}
                         renderItem={this.renderCharacter}
-                        keyExtractor={(item) => item.toString()}
+                        keyExtractor={(item) => item.toString() + sexeSelected.toString()}
                     />
                 </>
             );

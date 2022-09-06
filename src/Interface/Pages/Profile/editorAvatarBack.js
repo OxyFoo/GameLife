@@ -187,8 +187,7 @@ class EditorAvatarBack extends React.Component {
             const response = await user.server.Request('sellStuff', { stuffID: stuffSelected.ID });
             this.setState({ selling: false });
 
-            if (response === null) return;
-            if (response['status'] !== 'ok') {
+            if (response === null || response['status'] !== 'ok') {
                 const title = lang['alert-sellfailed-title'];
                 const text = lang['alert-sellfailed-text'];
                 user.interface.popup.Open('ok', [ title, text ]);

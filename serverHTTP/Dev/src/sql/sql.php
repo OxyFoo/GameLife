@@ -122,7 +122,7 @@
          * @param string $data
          * @return void
          */
-        public function AddStatistic($accountID, $deviceID, $type, $data = null) {
+        public function AddLog($accountID, $deviceID, $type, $data = null) {
             $IP = GetClientIP();
             $command = 'INSERT INTO TABLE (`AccountID`, `DeviceID`, `IP`, `Type`, `Data`) VALUES (?, ?, ?, ?, ?)';
             $args = [ $accountID, $deviceID, $IP, $type, $data ];

@@ -71,7 +71,7 @@
                             Accounts::RemDevice($db, $deviceID, $account, 'DevicesWait');
                             Devices::RemoveToken($db, $deviceID);
                             Accounts::AddDevice($db, $deviceID, $account, 'Devices');
-                            $db->AddStatistic($accountID, $deviceID, 'accountState', 'Account link device');
+                            $db->AddLog($accountID, $deviceID, 'accountState', 'Account link device');
                             $state = 'auth-accept';
                         }
                     }
@@ -85,7 +85,7 @@
                     Devices::RemoveToken($db, $deviceID);
                     $account = Accounts::GetByID($db, $accountID);
                     if (Accounts::Delete($db, $accountID)) {
-                        $db->AddStatistic($accountID, $deviceID, 'accountState', 'Account deleted');
+                        $db->AddLog($accountID, $deviceID, 'accountState', 'Account deleted');
                         $state = 'auth-remove-account';
                     }
                 } else {

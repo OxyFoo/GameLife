@@ -91,7 +91,7 @@
             $delta = ($nowTime - $lastBirthTime) / (60 * 60 * 24);
             if ($delta < 360) {
                 // Suspicion of cheating
-                $db->AddStatistic($account->ID, $deviceID, 'cheatSuspicion', "Try to change birthtime too often ({$account->Email})");
+                $db->AddLog($account->ID, $deviceID, 'cheatSuspicion', "Try to change birthtime too often ({$account->Email})");
                 ExitWithStatus('Error: you tried to change birthtime too often');
             }
 

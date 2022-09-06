@@ -148,7 +148,7 @@
             switch ($perm) {
                 case 0: // OK
                     Accounts::RefreshLastDate($this->db, $account->ID);
-                    $this->db->AddStatistic($account->ID, $device->ID, 'appState', 'Login');
+                    $this->db->AddLog($account->ID, $device->ID, 'appState', 'Login');
                     $this->output['token'] = Devices::GeneratePrivateToken($this->db, $account->ID, $device->ID);
                     $this->output['status'] = 'ok';
 
@@ -177,7 +177,7 @@
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                     if ($sended) {
-                        $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', 'Link account');
+                        $this->db->AddLog($account->ID, $device->ID, 'mailSent', 'Link account');
                         $this->output['status'] = 'newDevice';
                     }
                     break;
@@ -220,7 +220,7 @@
             }
 
             if (!$byPass) {
-                $this->db->AddStatistic($account->ID, $device->ID, 'appState', "Signin: {$account->Email}");
+                $this->db->AddLog($account->ID, $device->ID, 'appState', "Signin: {$account->Email}");
             }
 
             $this->output['status'] = 'ok';
@@ -314,7 +314,7 @@
             $usernameChangeState = Users::SetUsername($this->db, $account, $newUsername);
             if ($usernameChangeState !== 'ok') return;
 
-            $this->db->AddStatistic($account->ID, $device->ID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername}");
+            $this->db->AddLog($account->ID, $device->ID, 'accountEdition', "Username changed: {$account->Username} -> {$newUsername}");
             $this->output['usernameChangeState'] = $usernameChangeState;
             $this->output['status'] = 'ok';
         }
@@ -327,7 +327,7 @@
 
             $ox = Items::BuyTitle($this->db, $account, $titleID);
             if ($ox === false) return;
-            $this->db->AddStatistic($account->ID, $device->ID, 'buyTitle', "$titleID");
+            $this->db->AddLog($account->ID, $device->ID, 'buyTitle', "$titleID");
 
             $this->output['ox'] = $ox;
             $this->output['titles'] = Items::GetInventoryTitles($this->db, $account);
@@ -342,7 +342,7 @@
 
             $ox = Items::BuyItem($this->db, $account, $itemID);
             if ($ox === false) return;
-            $this->db->AddStatistic($account->ID, $device->ID, 'buyItem', "$itemID");
+            $this->db->AddLog($account->ID, $device->ID, 'buyItem', "$itemID");
 
             $this->output['ox'] = $ox;
             $this->output['stuffs'] = Items::GetInventory($this->db, $account);
@@ -355,9 +355,9 @@
             $account = $this->account;
             $device = $this->device;
 
-            $ox = Items::SellStuff($this->db, $account->ID, $stuffID);
+            $ox = Items::SellStuff($this->db, $account->ID, $device->ID, $stuffID);
             if ($ox === false) return;
-            $this->db->AddStatistic($account->ID, $device->ID, 'sellStuff', "$stuffID");
+            $this->db->AddLog($account->ID, $device->ID, 'sellStuff', "$stuffID");
 
             $this->output['ox'] = $ox;
             $this->output['stuffs'] = Items::GetInventory($this->db, $account);
@@ -371,7 +371,7 @@
 
             if (Users::GetAdRemaining($this->db, $account->ID) <= 0) {
                 // Suspicion of cheating
-                $this->db->AddStatistic($account->ID, $device->ID, 'cheatSuspicion', 'Try to watch another ad');
+                $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', 'Try to watch another ad');
                 $this->output['ox'] = $account->Ox;
                 $this->output['status'] = 'ok';
                 return;
@@ -381,7 +381,7 @@
             Users::AddOx($this->db, $account->ID, $oxAmount);
 
             $newOxAmount = $account->Ox + $oxAmount;
-            $this->db->AddStatistic($account->ID, $device->ID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
+            $this->db->AddLog($account->ID, $device->ID, 'adWatched', "Account: {$account->Email}, New Ox amount: {$newOxAmount}");
             $this->output['ox'] = $account->Ox + $oxAmount;
             $this->output['status'] = 'ok';
         }
@@ -423,7 +423,7 @@
                 $rewardAdded = Achievements::ExecReward($this->db, $account, explode(',', $gift));
                 if ($rewardAdded) {
                     $this->db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [ $code ]);
-                    $this->db->AddStatistic($account->ID, $device->ID, 'giftCode', $code);
+                    $this->db->AddLog($account->ID, $device->ID, 'giftCode', $code);
 
                     $this->output['gift'] = $gift;
                     $this->output['status'] = 'ok';
@@ -440,7 +440,7 @@
 
             Accounts::RemDevice($this->db, $device->ID, $account, 'Devices');
 
-            $this->db->AddStatistic($account->ID, $device->ID, 'appState', 'Disconnect');
+            $this->db->AddLog($account->ID, $device->ID, 'appState', 'Disconnect');
             $this->output['status'] = 'ok';
         }
 
@@ -467,7 +467,7 @@
             $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'rem');
 
             if ($sended) {
-                $this->db->AddStatistic($account->ID, $device->ID, 'mailSent', 'Delete account');
+                $this->db->AddLog($account->ID, $device->ID, 'mailSent', 'Delete account');
                 $this->output['status'] = 'ok';
             }
         }

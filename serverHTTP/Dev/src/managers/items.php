@@ -129,7 +129,20 @@
          * @param int $stuffID
          * @return int|false Return new Ox value if success, false otherwise
          */
-        public static function SellStuff($db, $accountID, $stuffID) {
+        public static function SellStuff($db, $accountID, $deviceID, $stuffID) {
+            // Check if item is equipped
+            $checkCommand = 'SELECT `Hair`, `Top`, `Bottom`, `Shoes` FROM TABLE WHERE `ID` = ?';
+            $checkResult = $db->QueryPrepare('Avatars', $checkCommand, 'i', [ $accountID ]);
+            if ($checkResult === false || count($checkResult) === 0) return false;
+            $avatar = $checkResult[0];
+            $avatarItems = array($avatar['Hair'], $avatar['Top'], $avatar['Bottom'], $avatar['Shoes']);
+            $alreadyEquipped = in_array($stuffID, $avatarItems);
+            if ($alreadyEquipped) {
+                // Suspicion of cheating
+                $db->AddLog($accountID, $deviceID, 'cheatSuspicion', "Try to sell an equipped stuff ($stuffID)");
+                return false;
+            }
+
             // Get itemID from stuff
             $command = 'SELECT `ItemID` FROM TABLE WHERE `ID` = ? AND `AccountID` = ?';
             $result = $db->QueryPrepare('Inventories', $command, 'ii', [ $stuffID, $accountID ]);

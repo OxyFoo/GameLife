@@ -1,4 +1,5 @@
 import Male_01 from './male/skin_01';
+import Female_01 from './female/skin_01';
 
 import animIdle from '../animations/idle.json';
 import animMuscles from '../animations/muscles.json';
@@ -18,7 +19,9 @@ const CHARACTERS = {
     MALE: {
         skin_01: Male_01
     },
-    FEMALE: {}
+    FEMALE: {
+        skin_01: Female_01
+    }
 };
 
 const ANIMATIONS = {

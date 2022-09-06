@@ -57,9 +57,11 @@ class Part {
      */
     render(partType) {
         const SEXE = this.body.character.sexe;
-        const character = this.body.character.skin;
-        if (!CHARACTERS[SEXE].hasOwnProperty(character)) return null;
-        if (!CHARACTERS[SEXE][character]['svg'].hasOwnProperty(this.name)) return null;
+        const SKIN = this.body.character.skin;
+
+        if (!CHARACTERS.hasOwnProperty(SEXE)) return null;
+        if (!CHARACTERS[SEXE].hasOwnProperty(SKIN)) return null;
+        if (!CHARACTERS[SEXE][SKIN]['svg'].hasOwnProperty(this.name)) return null;
 
         const fill = COLORS[this.body.character.skinColor];
         if (!this.valuesTest) {
@@ -76,8 +78,9 @@ class Part {
             { rotateZ: animRotation }
         ]};
 
-        const svgCharacter = CHARACTERS[SEXE][character]['svg'][this.name];
-        const svgCharacterShadow = CHARACTERS[SEXE][character]['shadow'][this.name];
+        const character = CHARACTERS[SEXE][SKIN];
+        const svgCharacter = character['svg'][this.name];
+        const svgCharacterShadow = character['shadow'][this.name];
 
         let svgItems = [];
         let svgItemsShadows = [];

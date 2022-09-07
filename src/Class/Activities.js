@@ -188,11 +188,11 @@ class Activities {
 
     /**
      * Add activity
-     * @param {number} skillID - Skill ID
-     * @param {number} startTime - Unix timestamp in seconds
-     * @param {number} duration - in minutes
-     * @param {string} comment - Optional comment
-     * @param {Boolean} [alreadySaved=false] - If false, save activity in UNSAVED_activities
+     * @param {number} skillID Skill ID
+     * @param {number} startTime Unix timestamp in seconds
+     * @param {number} duration in minutes
+     * @param {string} comment Optional comment
+     * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'}
      */
     Add(skillID, startTime, duration, comment, alreadySaved = false) {
@@ -279,7 +279,7 @@ class Activities {
     /**
      * @param {Array<Activity>} arr
      * @param {Activity} activity
-     * @returns {number?} - Index of activity or null if not found
+     * @returns {number?} Index of activity or null if not found
      */
     getIndex(arr, activity) {
         for (let i in arr) {
@@ -293,7 +293,7 @@ class Activities {
      * Compare two activities
      * @param {Activity} activity1
      * @param {Activity} activity2
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     areEquals(activity1, activity2) {
         const sameSkillID = activity1.skillID === activity2.skillID;
@@ -315,8 +315,8 @@ class Activities {
 
     /**
      * @param {Date} date Date to define day (auto define of midnights)
-     * @param {Boolean} [ignoreRelax=true] If true, return true if there is activity wich gives XP or not
-     * @returns {Boolean} True if date contain activities
+     * @param {boolean} [ignoreRelax=true] If true, return true if there is activity wich gives XP or not
+     * @returns {boolean} True if date contain activities
      */
     ContainActivity(date = new Date(), ignoreRelax = true) {
         date.setUTCHours(1, 0, 0, 0);
@@ -338,7 +338,7 @@ class Activities {
      * 
      * @param {number} time Time in seconds
      * @param {number} duration Duration in minutes
-     * @returns {Boolean} True if time is free
+     * @returns {boolean} True if time is free
      */
     TimeIsFree(time, duration) {
         let output = true;

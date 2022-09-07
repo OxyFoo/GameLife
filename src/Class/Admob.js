@@ -219,7 +219,7 @@ class Admob {
 
     /**
      * Show non personalized ad consent popup (both iOS and Android)
-     * @param {Boolean} force Show popup even if user has already accepted
+     * @param {boolean} force Show popup even if user has already accepted
      */
     async __adConsentPopup(force = false) {
         if (!force && (!this.ios_tracking.enabled || this.ad_consent.version === VERSION)) {
@@ -254,7 +254,7 @@ class Admob {
 
     /**
      * Show consent tracking popup for iOS 14+ (android or old iOS are skipped)
-     * @param {Boolean} force Show popup even if user has already accepted
+     * @param {boolean} force Show popup even if user has already accepted
      */
     async __trackingTransparencyPopup(force = false) {
         if (this.ios_tracking.version === VERSION && !force) {

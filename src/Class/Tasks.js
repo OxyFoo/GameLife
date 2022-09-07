@@ -9,7 +9,7 @@ import { MonthDayBetween, WeekDayBetween } from '../Utils/Date';
 
 /**
  * @typedef {object} Subtask
- * @property {Boolean} Checked
+ * @property {boolean} Checked
  * @property {string} Title
  */
 
@@ -256,7 +256,7 @@ class Tasks {
      * Change sort order of tasks titles
      * @param {Task} task
      * @param {number} newIndex
-     * @returns {Boolean} Success of the operation
+     * @returns {boolean} Success of the operation
      */
     Move(task, newIndex) {
         if (!this.sortTitles.includes(task.Title)) {
@@ -281,7 +281,7 @@ class Tasks {
      * Change sort order of tasks titles
      * @param {Task} task
      * @param {number?} checked Time in seconds or null if unchecked
-     * @returns {Boolean} Success of the operation
+     * @returns {boolean} Success of the operation
      */
     Check(task, checked) {
         let selectedTask = null;
@@ -302,7 +302,7 @@ class Tasks {
 
     /**
      * Restore last deleted task
-     * @returns {Boolean} Success of the operation
+     * @returns {boolean} Success of the operation
      */
     Undo() {
         if (this.lastDeletedTask === null) return false;

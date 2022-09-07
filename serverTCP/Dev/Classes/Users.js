@@ -74,7 +74,7 @@ class Users {
     /**
      * @description Send a message to all friends to notify them that the user is connected or disconnected
      * @param {number} accountID
-     * @param {Boolean} mode - true: connect, false: disconnect
+     * @param {boolean} mode - true: connect, false: disconnect
      */
     checkEvents = (accountID, mode) => {
         for (let i = 0; i < this.AllUsers.length; i++) {

@@ -16,9 +16,9 @@ const STORAGE_KEYS = {
 
 class DataStorage {
     /**
-     * @param {DataStorage_Data} storageKey - Storage key
-     * @param {object} data - Data to save (JSON object)
-     * @returns {Promise<Boolean>} - True if data was saved
+     * @param {DataStorage_Data} storageKey Storage key
+     * @param {object} data Data to save (JSON object)
+     * @returns {Promise<boolean>} True if data was saved
      */
     static async Save(storageKey, data) {
         let success = true;
@@ -33,8 +33,8 @@ class DataStorage {
     }
 
     /**
-     * @param {DataStorage_Data} storageKey - Storage key
-     * @returns {Promise<?object>} - Data (JSON object) or null if an error occurred
+     * @param {DataStorage_Data} storageKey Storage key
+     * @returns {Promise<object?>} Data (JSON object) or null if an error occurred
      */
     static async Load(storageKey) {
         let json = null;

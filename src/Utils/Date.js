@@ -51,9 +51,9 @@ function GetBlockMonth(month, year, start = DAYS.monday) {
 }
 
 /**
- * @param {number} month - Month number (0-11)
- * @param {number} year - Year
- * @param {Boolean} forceYear - Force year in title
+ * @param {number} month Month number (0-11)
+ * @param {number} year Year
+ * @param {boolean} forceYear Force year in title
  * @returns {string} Return month title with year if needed (forceYear or different year than current one)
  */
 function GetMonthAndYear(month, year, forceYear = false) {
@@ -103,10 +103,10 @@ function DateToFormatTimeString(date) {
 }
 
 /**
- * @param {Array<number>} days - Array of week days (0-6)
+ * @param {Array<number>} days Array of week days (0-6)
  * @param {number} start Time in seconds
  * @param {number} end Time in seconds
- * @returns {Boolean} Days contained between start and end
+ * @returns {boolean} Days contained between start and end
  */
 function WeekDayBetween(days, start, end) {
     if (end < start) return false;
@@ -120,10 +120,10 @@ function WeekDayBetween(days, start, end) {
 }
 
 /**
- * @param {Array<number>} days - Array of month days (0-30)
+ * @param {Array<number>} days Array of month days (0-30)
  * @param {number} start Time in seconds
  * @param {number} end Time in seconds
- * @returns {Boolean} Days contained between start and end
+ * @returns {boolean} Days contained between start and end
  */
 function MonthDayBetween(days, start, end) {
     if (end < start) return false;

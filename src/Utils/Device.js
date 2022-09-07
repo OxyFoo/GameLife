@@ -2,8 +2,8 @@ import DeviceInfo from 'react-native-device-info';
 
 /**
  * Get device informations
- * @param {Boolean} OS - true to get the name and the version of the OS
- * @param {Boolean} version - true to get the version of the app
+ * @param {boolean} OS True to get the name and the version of the OS
+ * @param {boolean} version True to get the version of the app
  * @returns Dictionary of currect device
  */
 function GetDeviceInformations(OS = false, version = false) {

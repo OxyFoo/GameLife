@@ -34,12 +34,12 @@ const TaskProps = {
 
     /**
      * @param {Task} task
-     * @returns {Promise<Boolean>}
+     * @returns {Promise<boolean>}
      */
     onTaskCheck: async (task) => true,
 
     /**
-     * @param {Boolean} checked
+     * @param {boolean} checked
      * @param {string} title
      */
     onSubtaskEdit: (checked, title) => {},

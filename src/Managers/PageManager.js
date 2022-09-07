@@ -142,8 +142,8 @@ class PageManager extends React.Component{
 
     /**
      * Try to get last page content
-     * @param {Boolean} [force=false] If true, try to get back until page is changing
-     * @returns {Boolean} True if page changed
+     * @param {boolean} [force=false] If true, try to get back until page is changing
+     * @returns {boolean} True if page changed
      */
     BackPage = (force = false) => {
         if (force && this.changing) {
@@ -170,9 +170,9 @@ class PageManager extends React.Component{
      * Open page
      * @param {PageName} newpage
      * @param {object} pageArguments
-     * @param {Boolean} ignorePage
-     * @param {Boolean} forceUpdate
-     * @returns {Boolean} True if changing page started
+     * @param {boolean} ignorePage
+     * @param {boolean} forceUpdate
+     * @returns {boolean} True if changing page started
      */
     ChangePage = (newpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;

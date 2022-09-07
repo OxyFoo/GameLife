@@ -19,7 +19,7 @@ const CheckboxProps = {
     /** @type {ColorTheme} */
     color: 'main1',
 
-    /** @type {Boolean} */
+    /** @type {boolean} */
     checked: false,
 
     /** @type {Function?} Event called when checkbox state change */

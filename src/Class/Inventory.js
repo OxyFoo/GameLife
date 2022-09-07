@@ -52,7 +52,7 @@ class Inventory {
         /**
          * Set to true if avatar is edited
          * Used to know if we need to save it
-         * @type {Boolean}
+         * @type {boolean}
          */
         this.avatarEdited = false;
 

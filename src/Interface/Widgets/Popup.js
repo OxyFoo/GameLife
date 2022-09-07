@@ -61,11 +61,11 @@ class Popup extends React.PureComponent {
     /**
      * @template {keyof PopupTypes} T
      * @param {T} type
-     * @param {ContentArgs[T]} args - [title, message]
-     * @param {(button: PopupTypes[T]) => void} callback - Callback when popup button is pressed
-     * @param {Boolean} cancelable - if true, popup can be closed by clicking outside
-     * @param {Boolean} cross - if true, popup can be closed by clicking on X
-     * @returns {Promise<void>} - Promise resolved when popup is opened
+     * @param {ContentArgs[T]} args [title, message]
+     * @param {(button: PopupTypes[T]) => void} callback Callback when popup button is pressed
+     * @param {boolean} cancelable if true, popup can be closed by clicking outside
+     * @param {boolean} cross if true, popup can be closed by clicking on X
+     * @returns {Promise<void>} Promise resolved when popup is opened
      */
     async Open(type, args, callback = () => {}, cancelable = true, cross = cancelable) {
         while (this.state.opened) await Sleep(200);
@@ -85,8 +85,8 @@ class Popup extends React.PureComponent {
 
     /**
      * Close popup
-     * @param {Boolean} forceClose 
-     * @returns {Boolean} - True if popup was closed
+     * @param {boolean} forceClose
+     * @returns {boolean} True if popup was closed
      */
     Close = (forceClose = true) => {
         const { opened, cancelable } = this.state;

@@ -91,7 +91,7 @@ class ThemeManager {
     /**
      * @description Define the theme
      * @param {Theme} theme
-     * @returns {Boolean} - True if theme is valid
+     * @returns {boolean} True if theme is valid
      */
     SetTheme(theme) {
         if (this.isTheme(theme)) {
@@ -104,8 +104,8 @@ class ThemeManager {
 
     /**
      * @description Check if theme is valid
-     * @param {string} theme - Theme name
-     * @returns {Boolean} - True if theme is valid
+     * @param {string} theme Theme name
+     * @returns {boolean} True if theme is valid
      */
     isTheme(theme) {
         return Object.keys(this.THEMES).includes(theme);
@@ -113,9 +113,9 @@ class ThemeManager {
 
     /**
      * @description Get the theme color by name (or return the color if already hex color)
-     * @param {ColorTheme|ColorThemeText} color - Name of theme color or hex color
-     * @param {number} [opacity=1] - Opacity of color, between 0 and 1
-     * @returns {string} - Hex color (or same color than input if not found and not hex)
+     * @param {ColorTheme|ColorThemeText} color Name of theme color or hex color
+     * @param {number} [opacity=1] Opacity of color, between 0 and 1
+     * @returns {string} Hex color (or same color than input if not found and not hex)
      */
     GetColor(color, opacity = 1) {
         if (color.startsWith('#')) return this.ApplyOpacity(color, opacity);
@@ -126,8 +126,8 @@ class ThemeManager {
 
     /**
      * @description Get absolute color (independant of theme)
-     * @param {ABSOLUTE} color - Name of absolute color
-     * @param {number} [opacity=1] - Opacity of color, between 0 and 1
+     * @param {ABSOLUTE} color Name of absolute color
+     * @param {number} [opacity=1] Opacity of color, between 0 and 1
      */
     GetAbsoluteColors() {
         return this.ABSOLUTE;
@@ -135,9 +135,9 @@ class ThemeManager {
 
     /**
      * @description Apply opacity to a color (hex to hex)
-     * @param {string} hexColor - Hex color
-     * @param {number} [opacity=1] - Opacity of color, between 0 and 1
-     * @returns {string?} - Hex color (or null if not hex color)
+     * @param {string} hexColor Hex color
+     * @param {number} [opacity=1] Opacity of color, between 0 and 1
+     * @returns {string?} Hex color (or null if not hex color)
      */
     ApplyOpacity(hexColor, opacity = 1) {
         if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 4) return null;

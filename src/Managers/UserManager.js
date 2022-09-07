@@ -130,7 +130,7 @@ class UserManager {
 
     /**
      * Load local user data
-     * @returns {Promise<Boolean>}
+     * @returns {Promise<boolean>}
      */
     LocalSave = async () => {
         const data = {
@@ -179,7 +179,7 @@ class UserManager {
         return data !== null;
     }
 
-    /** @returns {Promise<Boolean>} True if data is saved */
+    /** @returns {Promise<boolean>} True if data is saved */
     OnlineSave = async () => {
         if (!this.server.online) return false;
 

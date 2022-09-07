@@ -12,7 +12,7 @@ var errors = [];
 
 /**
  * @description If false, skip all requests
- * @type {Boolean}
+ * @type {boolean}
  */
 var alive = true;
 

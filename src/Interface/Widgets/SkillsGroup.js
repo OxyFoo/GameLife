@@ -11,7 +11,7 @@ const SkillsGroupProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Boolean} Show button to open "skills" page */
+    /** @type {boolean} Show button to open "skills" page */
     showAllButton: false
 }
 

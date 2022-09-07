@@ -1,6 +1,6 @@
 /**
- * @param {string} str - String to check if it's a valid json
- * @returns {Boolean} - Return true if string is a valid json
+ * @param {string} str String to check if it's a valid json
+ * @returns {boolean} Return true if string is a valid json
  */
  function StrIsJSON(str) {
     let isJSON = true;
@@ -11,7 +11,7 @@
 
 /**
  * @param {string} email
- * @returns {Boolean} - True if str "email" is a valid email
+ * @returns {bolean} True if str "email" is a valid email
  */
  function IsEmail(email) {
     let isEmail = false;
@@ -29,7 +29,7 @@
  * preceding them by the same number as the number of "-"
  * @example Text : "The following sentence[s] is[--are] singular[--------plural]"
  * @param {string} text
- * @param {Boolean} plural
+ * @param {boolean} plural
  * @returns {string}
  */
  function ParsePlural(text, plural = false) {

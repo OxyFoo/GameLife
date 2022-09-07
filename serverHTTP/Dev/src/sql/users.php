@@ -114,7 +114,7 @@
             $args = [ $newDataToken, $accountID ];
             $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
             if ($result === false) {
-                ExitWithStatus('Error: saving achievements failed');
+                ExitWithStatus('Error: refresh data token');
             }
             return $newDataToken;
         }
@@ -282,6 +282,7 @@
          * @param DataBase $db
          * @param int $accountID
          * @param int $value Value to add or negative to remove
+         * @return bool Success
          */
         public static function AddOx($db, $accountID, $value) {
             $command = 'UPDATE TABLE SET `Ox` = `Ox` + ? WHERE `ID` = ?';

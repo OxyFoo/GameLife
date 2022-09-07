@@ -19,18 +19,18 @@ const ActivityScheduleProps = {
     /** @type {ColorTheme} */
     mainColor: 'main1',
 
-    /** @type {Boolean} If false, disable user edition */
+    /** @type {boolean} If false, disable user edition */
     editable: true,
 
     /**
-     * @param {Date} startTime - The starting time of the activity
-     * @param {number} durationTime - Duration of the activity in minutes
+     * @param {Date} startTime The starting time of the activity
+     * @param {number} durationTime Duration of the activity in minutes
      */
     onChange: (startTime, durationTime) => {},
 
     /**
      * Called when component is opened or closed
-     * @param {Boolean} opened 
+     * @param {boolean} opened 
      */
     onChangeState: (opened) => {},
 

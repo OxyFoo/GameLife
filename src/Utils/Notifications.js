@@ -127,7 +127,7 @@ function GetAllNotifications() {
 
 /**
  * @param {Notification} notif
- * @param {Boolean} removeChannel Used to remove channel (android only)
+ * @param {boolean} removeChannel Used to remove channel (android only)
  * @returns {Promise<void>}
  */
 async function Remove(notif, removeChannel = true) {
@@ -151,7 +151,7 @@ async function Remove(notif, removeChannel = true) {
  * @property {number} [minutes=0] Minutes of the hour [0, 59]
  * @property {(index: number, date: Date) => { Title: string, Body: string } | null} __generate Function to generate notification content
  *
- * @property {() => Promise<Boolean>} Enable
+ * @property {() => Promise<boolean>} Enable
  * @property {() => Promise<void>} Disable
  * @property {() => Promise<void>} RemoveToday (only for Evening notifications)
  */

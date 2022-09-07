@@ -3,7 +3,7 @@ import { TwoDigit } from './Functions';
 /**
  * Get absolute UTC time in seconds
  * @param {Date} [date] (now default)
- * @param {Boolean} [localUTC=false] (global default)
+ * @param {boolean} [localUTC=false] (global default)
  * @returns {number} time in seconds
  */
 function GetTime(date = new Date(), localUTC = false) {

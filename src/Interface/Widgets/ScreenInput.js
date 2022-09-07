@@ -42,10 +42,10 @@ class ScreenInput extends React.Component {
 
     /**
      * Open the screen input
-     * @param {string} label - Title of the input
-     * @param {string} initialText - Initial text of the input
-     * @param {(text: string) => void} callback - Callback called when the input is validated
-     * @param {Boolean} multiline - If true, the input is multiline
+     * @param {string} label Title of the input
+     * @param {string} initialText Initial text of the input
+     * @param {(text: string) => void} callback Callback called when the input is validated
+     * @param {boolean} multiline If true, the input is multiline
      */
     Open = (label = 'Input', initialText = '', callback = (text) => {}, multiline = false) => {
         TimingAnimation(this.state.anim, 1, 200).start();
@@ -60,7 +60,7 @@ class ScreenInput extends React.Component {
 
     /**
      * Close the screen input
-     * @param {Boolean} valid - If true, the callback is called
+     * @param {boolean} valid If true, the callback is called
      */
     Close = (valid = false) => {
         if (valid) {

@@ -24,7 +24,7 @@ const SwiperProps = {
     /** @type {number} */
     borderRadius: 16,
 
-    /** @type {Boolean} If true, automatically swipe to the next page */
+    /** @type {boolean} If true, automatically swipe to the next page */
     enableAutoNext: true,
 
     /** @type {number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */

@@ -20,7 +20,7 @@ const StatsBarsProps = {
     /** @type {Stats} */
     data: undefined,
 
-    /** @type {Array<number>} - Optionnal, add secondary value, same length of user stats */
+    /** @type {Array<number>} Optionnal, add secondary value, same length of user stats */
     supData: user.statsKey.map(() => 0)
 }
 
@@ -63,11 +63,11 @@ function popupContent(initStatKey) {
 }
 
 /**
- * @param {string} statKey - Stat key
- * @param {XPInfo} stat - Stat info
+ * @param {string} statKey Stat key
+ * @param {XPInfo} stat Stat info
  * @param {number} sup
  * @param {number} index
- * @param {Boolean} clickable
+ * @param {boolean} clickable
  * @returns {React.ReactElement}
  */
 function statComponent(statKey, stat, sup, index, clickable = true) {

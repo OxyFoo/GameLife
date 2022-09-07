@@ -23,7 +23,7 @@ class DataManager {
     }
 
     /**
-     * @returns {Boolean} False if at least one data is empty
+     * @returns {boolean} False if at least one data is empty
      */
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;
@@ -51,7 +51,7 @@ class DataManager {
 
     /**
      * Local save Internal data
-     * @returns {Promise<Boolean>} True if the data was successfully saved
+     * @returns {Promise<boolean>} True if the data was successfully saved
      */
     async LocalSave(user) {
         const debugIndex = user.interface.console.AddLog('info', 'Internal data: local saving...');
@@ -71,7 +71,7 @@ class DataManager {
 
     /**
      * Local load Internal data
-     * @returns {Promise<Boolean>} True if the data was successfully loaded
+     * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async LocalLoad(user) {
         const debugIndex = user.interface.console.AddLog('info', 'Internal data: local loading...');
@@ -92,7 +92,7 @@ class DataManager {
 
     /**
      * Load Internal data from the server
-     * @returns {Promise<Boolean>} True if the data was successfully loaded
+     * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async OnlineLoad(user) {
         await this.LocalLoad(user);

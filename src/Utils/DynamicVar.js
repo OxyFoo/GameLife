@@ -31,7 +31,7 @@ class DynamicVar {
     /**
      * Remove function to be called when the variable is updated
      * @param {number} id ID of the listener to remove
-     * @returns {Boolean} True if the function was found and removed
+     * @returns {boolean} True if the function was found and removed
      */
     RemoveListener(id) {
         if (this.listeners.hasOwnProperty(id)) {

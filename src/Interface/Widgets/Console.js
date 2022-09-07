@@ -12,9 +12,9 @@ import { SpringAnimation } from '../../Utils/Animations';
  */
 
 /**
- * 0: Show all logs\
- * 1: Show only warnings and errors\
- * 2: Show only errors
+ * - 0: Show all logs
+ * - 1: Show only warnings and errors
+ * - 2: Show only errors
  */
 const LEVEL_CONSOLE = 1;
 
@@ -72,7 +72,7 @@ class Console extends React.Component {
      * @param {number} index
      * @param {string} text
      * @param {Array<any>} params
-     * @returns {Boolean} Success of edition
+     * @returns {boolean} Success of edition
      */
     EditLog = (index, text, ...params) => {
         let messages = [...this.state.debug];

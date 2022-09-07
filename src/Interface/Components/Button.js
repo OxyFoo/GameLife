@@ -41,7 +41,7 @@ const ButtonProps = {
     /** @type {number} Angle in degrees */
     iconAngle: 0,
 
-    /** @type {Boolean} If true, content will be replaced by loading icon & press event disabled */
+    /** @type {boolean} If true, content will be replaced by loading icon & press event disabled */
     loading: false,
 
     /** @type {ColorTheme|ColorThemeText} */
@@ -56,7 +56,7 @@ const ButtonProps = {
     /** @type {number} */
     borderRadius: 12,
 
-    /** @type {Boolean} If false, background is gray & press event disabled */
+    /** @type {boolean} If false, background is gray & press event disabled */
     enabled: true,
 
     /** @type {Function} */

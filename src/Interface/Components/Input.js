@@ -22,7 +22,7 @@ const InputProps = {
     /** @type {string} */
     label: 'Default',
 
-    /** @type {Boolean} If true, label still always at the top of input */
+    /** @type {boolean} If true, label still always at the top of input */
     staticLabel: false,
 
     /** @type {ColorTheme} */
@@ -34,7 +34,7 @@ const InputProps = {
     /** @type {number?} Set max length of input content */
     maxLength: null,
 
-    /** @type {'default'|'email'|'username'|'name'} - The type of the input. */
+    /** @type {'default'|'email'|'username'|'name'} The type of the input. */
     textContentType: 'default',
 
     /** @param {string} newText */
@@ -43,13 +43,13 @@ const InputProps = {
     /** @type {Function} */
     onSubmit: () => {},
 
-    /** @type {Boolean} If false, user can't select or edit the input content */
+    /** @type {boolean} If false, user can't select or edit the input content */
     enabled: true,
 
-    /** @type {Boolean} If true, force focus (set active color) */
+    /** @type {boolean} If true, force focus (set active color) */
     active: false,
 
-    /** @type {Boolean} */
+    /** @type {boolean} */
     multiline: false,
 
     /** @type {'auto'|'box-only'|'box-none'|'none'} */

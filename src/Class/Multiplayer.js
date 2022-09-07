@@ -72,7 +72,7 @@ class Multiplayer {
 
     /**
      * @param {string|object} message
-     * @returns {Boolean} Whether the message was sent successfully
+     * @returns {boolean} Whether the message was sent successfully
      */
     Send = (message) => {
         if (typeof(message) === 'object') message = JSON.stringify(message);

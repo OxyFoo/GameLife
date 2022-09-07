@@ -32,16 +32,16 @@ const IconCheckableProps = {
     /** @type {number} Used as ID parameter in "onPress" event */
     id: 0,
 
-    /** @type {Boolean} If true, icon is checked */
+    /** @type {boolean} If true, icon is checked */
     checked: undefined,
 
     /**
      * @param {number} id
-     * @param {Boolean} checked
+     * @param {boolean} checked
      */
     onPress: (id, checked) => {},
 
-    /** @type {Boolean} If true, icon is pressable */
+    /** @type {boolean} If true, icon is pressable */
     pressable: true
 }
 

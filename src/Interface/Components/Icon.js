@@ -118,7 +118,7 @@ const IconProps = {
     /** @type {GestureEvent?} */
     onPress: null,
 
-    /** @type {Boolean} */
+    /** @type {boolean} */
     show: true
 }
 

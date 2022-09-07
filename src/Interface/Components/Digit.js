@@ -17,7 +17,7 @@ const DigitProps = {
     /** @type {ColorTheme} */
     color: 'primary',
 
-    /** @type {Boolean} If true, value can't be changed */
+    /** @type {boolean} If true, value can't be changed */
     lock: false,
 
     /** @type {number} */

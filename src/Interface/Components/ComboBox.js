@@ -49,7 +49,7 @@ const ComboBoxProps = {
     /** @param {Item} item */
     onSelect: (item) => {},
 
-    /** @type {Boolean} If false press event disabled */
+    /** @type {boolean} If false press event disabled */
     enabled: true,
 
     /**
@@ -58,7 +58,7 @@ const ComboBoxProps = {
      */
     pageRef: null,
 
-    /** @type {Boolean} If false, warning will be shown if pageRef is not defined */
+    /** @type {boolean} If false, warning will be shown if pageRef is not defined */
     ignoreWarning: false
 }
 

@@ -7,7 +7,7 @@ import Button from './Button';
 import { SpringAnimation } from '../../Utils/Animations';
 
 const SwitchProps = {
-    /** @type {Boolean} State of switch component */
+    /** @type {boolean} State of switch component */
     value: false,
 
     /** @type {Function} Is called when state change */

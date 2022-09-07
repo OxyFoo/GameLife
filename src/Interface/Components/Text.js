@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
+import { StyleProp, ViewStyle, TextStyle, LayoutChangeEvent } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
@@ -14,7 +14,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  */
 
 const TextProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp<ViewStyle|TextStyle>} */
     style: {},
     
     /** @type {StyleProp<ViewStyle>} */

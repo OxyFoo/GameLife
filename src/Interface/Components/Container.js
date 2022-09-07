@@ -51,7 +51,7 @@ const ContainerProps = {
     /** @type {'static'|'rollable'} */
     type: 'static',
 
-    /** @type {Boolean} */
+    /** @type {boolean} */
     opened: true,
 
     /** @type {Function} */

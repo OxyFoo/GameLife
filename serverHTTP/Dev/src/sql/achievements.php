@@ -69,22 +69,20 @@
          * @return bool True if reward was executed
          */
         public static function ExecReward($db, $account, $rewards) {
-            $output = false;
+            $output = true;
             foreach ($rewards as $reward) {
                 $elements = explode(' ', $reward);
                 if (count($elements) !== 2) continue;
                 $type = $elements[0];
                 $value = $elements[1];
                 if ($type === 'OX') {
-                    $output |= Users::AddOx($db, $account->ID, $value);
+                    $output &= Users::AddOx($db, $account->ID, $value);
                 } else if ($type === 'Title') {
-                    $output |= Items::AddInventoryTitle($db, $account, intval($value));
+                    $output &= Items::AddInventoryTitle($db, $account, intval($value));
                 } else if ($type === 'Item') {
-                    $output |= Items::AddInventoryItem($db, $account, $value);
+                    $output &= Items::AddInventoryItem($db, $account, $value);
                 }
             }
-
-            if ($output) Users::RefreshDataToken($db, $account->ID);
             return $output;
         }
     }

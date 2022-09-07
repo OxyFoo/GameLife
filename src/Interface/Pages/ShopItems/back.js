@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from '../../../Managers/UserManager';
 import dataManager from '../../../Managers/DataManager';
+import langManager from '../../../Managers/LangManager';
 
 import { Character } from '../../Components';
 import { GetRandomIndexesByDay } from '../../../Utils/Items';
@@ -48,6 +49,15 @@ class BackShopItems extends React.Component {
     }
 
     openTitlePopup = (title) => {
+        // Check if title already owned
+        if (user.inventory.titles.includes(title.ID)) {
+            const lang = langManager.curr['shopItems'];
+            const title = lang['alert-owned-title'];
+            const text = lang['alert-owned-text'];
+            user.interface.popup.ForceOpen('ok', [ title, text ]);
+            return;
+        }
+
         const render = () => renderTitlePopup.bind(this)(title);
         user.interface.popup.Open('custom', render);
     }

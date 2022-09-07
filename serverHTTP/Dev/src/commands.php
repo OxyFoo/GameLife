@@ -334,9 +334,8 @@
             $account = $this->account;
             $device = $this->device;
 
-            $ox = Items::BuyTitle($this->db, $account, $titleID);
+            $ox = Items::BuyTitle($this->db, $account, $device, $titleID);
             if ($ox === false) return;
-            $this->db->AddLog($account->ID, $device->ID, 'buyTitle', "$titleID");
 
             $this->output['ox'] = $ox;
             $this->output['titles'] = Items::GetInventoryTitles($this->db, $account);
@@ -349,9 +348,8 @@
             $account = $this->account;
             $device = $this->device;
 
-            $ox = Items::BuyItem($this->db, $account, $itemID);
+            $ox = Items::BuyItem($this->db, $account, $device, $itemID);
             if ($ox === false) return;
-            $this->db->AddLog($account->ID, $device->ID, 'buyItem', "$itemID");
 
             $this->output['ox'] = $ox;
             $this->output['stuffs'] = Items::GetInventory($this->db, $account);
@@ -366,7 +364,6 @@
 
             $ox = Items::SellStuff($this->db, $account->ID, $device->ID, $stuffID);
             if ($ox === false) return;
-            $this->db->AddLog($account->ID, $device->ID, 'sellStuff', "$stuffID");
 
             $this->output['ox'] = $ox;
             $this->output['stuffs'] = Items::GetInventory($this->db, $account);

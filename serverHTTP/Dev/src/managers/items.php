@@ -29,7 +29,11 @@
             $command = 'INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = array($account->ID, $itemID, $account->ID);
             $result = $db->QueryPrepare('Inventories', $command, 'isi', $args);
-            return $result !== false;
+            if ($result !== false) {
+                Users::RefreshDataToken($db, $account->ID);
+                return true;
+            }
+            return false;
         }
 
         /**
@@ -59,17 +63,32 @@
             $command = 'INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = array($account->ID, $itemID, $account->ID);
             $result = $db->QueryPrepare('InventoriesTitles', $command, 'iii', $args);
-            return $result !== false;
+            if ($result !== false) {
+                Users::RefreshDataToken($db, $account->ID);
+                return true;
+            }
+            return false;
         }
 
         /**
          * Buy a title
          * @param DataBase $db
          * @param Account $account
+         * @param Device $device
          * @param int $titleID
          * @return int|false Return new Ox value if success, false otherwise
          */
-        public static function BuyTitle($db, $account, $titleID) {
+        public static function BuyTitle($db, $account, $device, $titleID) {
+            // Check if user have already this title
+            $command = 'SELECT `ItemID` FROM TABLE WHERE `AccountID` = ?';
+            $result = $db->QueryPrepare('InventoriesTitles', $command, 'i', [ $account->ID ]);
+            if ($result === false || count($result) === 0) return false;
+            $accountTitles = array_map(fn($row) => intval($row['ItemID']), $result);
+            if (in_array($titleID, $accountTitles, true)) {
+                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a title ($titleID) already owns");
+                return false;
+            }
+
             // Get title value from titleID
             $command = 'SELECT `Value` FROM TABLE WHERE `ID` = ? AND Buyable = 1';
             $result = $db->QueryPrepare('Titles', $command, 'i', [ $titleID ]);
@@ -77,7 +96,10 @@
             $oxAmount = intval($result[0]['Value']);
 
             // Check if account has enough ox
-            if ($account->Ox < $oxAmount) return false;
+            if ($account->Ox < $oxAmount) {
+                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a title with not enough Ox ($account->Ox/$oxAmount)");
+                return false;
+            }
 
             // Update account ox
             $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
@@ -88,7 +110,8 @@
             $result = self::AddInventoryTitle($db, $account, $titleID);
             if ($result === false) return false;
 
-            // Return new ox value
+            // Add result in logs and return new ox value
+            $db->AddLog($account->ID, $device->ID, 'buyTitle', "$titleID");
             return $account->Ox - $oxAmount;
         }
 
@@ -96,10 +119,11 @@
          * Buy an item
          * @param DataBase $db
          * @param Account $account
+         * @param Device $device
          * @param string $itemID
          * @return int|false Return new Ox value if success, false otherwise
          */
-        public static function BuyItem($db, $account, $itemID) {
+        public static function BuyItem($db, $account, $device, $itemID) {
             // Get item value from itemID
             $command = 'SELECT `Value` FROM TABLE WHERE `ID` = ?';
             $result = $db->QueryPrepare('Items', $command, 's', [ $itemID ]);
@@ -107,7 +131,10 @@
             $oxAmount = intval($result[0]['Value']);
 
             // Check if account has enough ox
-            if ($account->Ox < $oxAmount) return false;
+            if ($account->Ox < $oxAmount) {
+                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy an item with not enough Ox ($account->Ox/$oxAmount)");
+                return false;
+            }
 
             // Update account ox
             $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
@@ -118,7 +145,8 @@
             $result = self::AddInventoryItem($db, $account, $itemID);
             if ($result === false) return false;
 
-            // Return new ox value
+            // Add result in logs and return new ox value
+            $db->AddLog($account->ID, $device->ID, 'buyItem', "$itemID");
             return $account->Ox - $oxAmount;
         }
 
@@ -170,6 +198,9 @@
             $result5 = $db->QueryPrepare('Accounts', $command5, 'i', [ $accountID ]);
             if ($result5 === false || count($result5) === 0) return false;
 
+            // Add result in logs, refresh data token and return new Ox amount
+            Users::RefreshDataToken($db, $accountID);
+            $db->AddLog($accountID, $deviceID, 'sellStuff', "$stuffID");
             $ox = intval($result5[0]['Ox']);
             return $ox;
         }

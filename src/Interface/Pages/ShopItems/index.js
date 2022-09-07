@@ -22,11 +22,14 @@ class ShopItems extends BackShopItems {
         const onPress = () => this.openTitlePopup(title);
         const disabled = user.inventory.buyToday.titles.includes(title.ID);
 
+        const owned = user.inventory.titles.includes(title.ID);
+        const styleLine = owned ? { textDecorationLine: 'line-through' } : undefined;
+
         return (
             <Button style={styles.titleButton} onPress={onPress} enabled={!disabled}>
-                <Text numberOfLines={1}>{titleName}</Text>
+                <Text style={styleLine} numberOfLines={1}>{titleName}</Text>
                 <View style={styles.titlePrice}>
-                    <Text style={styles.titlePriceOx}>{title.Value}</Text>
+                    <Text style={[styles.titlePriceOx, styleLine]}>{title.Value}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
             </Button>

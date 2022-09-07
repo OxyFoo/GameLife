@@ -3,18 +3,15 @@
   "version": "1.0.0",
   "versionName": "1.0.0",
   "private": true,
-
   "scripts": {
     "start": "npx react-native start --reset-cache",
     "android": "npx react-native run-android",
     "ios": "react-native run-ios",
-
     "build-ios": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./ios/gamelife.jsbundle --assets-dest ./ios",
     "build-android": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "test": "jest",
     "lint": "eslint ."
   },
-
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.3",
     "@react-native-community/datetimepicker": "^6.1.3",
@@ -25,6 +22,7 @@
     "react-native": "^0.68.0",
     "react-native-codegen": "^0.0.16",
     "react-native-device-info": "^8.7.1",
+    "react-native-exit-app": "^1.1.0",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-modal-datetime-picker": "^13.1.2",
     "react-native-push-notification": "^8.1.1",

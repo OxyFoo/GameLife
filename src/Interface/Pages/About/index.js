@@ -27,8 +27,8 @@ class About extends BackAbout {
 
                 <View style={styles.page}>
                     <View>
-                        <Text fontSize={34}>{lang['block-devs']}</Text>
                         <Text style={{ marginBottom: 12 }} color='secondary' fontSize={22}>{versionText}</Text>
+                        <Text style={{ marginBottom: 12 }} fontSize={34}>{lang['block-devs']}</Text>
 
                         <View style={[styles.row, { marginBottom: 6, justifyContent: 'space-between' }]}>
                             <Text fontSize={22}>Pierre Marsaa</Text>

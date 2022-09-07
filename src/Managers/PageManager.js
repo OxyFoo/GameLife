@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Animated, BackHandler, StyleSheet } from 'react-native';
+import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
 import * as Pages from '../Interface/Pages';
@@ -153,7 +154,7 @@ class PageManager extends React.Component{
         if (this.path.length < 1) {
             const title = langManager.curr['home']['alert-exit-title'];
             const text = langManager.curr['home']['alert-exit-text'];
-            const callback = (btn) => btn === 'yes' && BackHandler.exitApp();
+            const callback = (btn) => btn === 'yes' && RNExitApp.exitApp();
             this.popup.Open('yesno', [ title, text ], callback);
             return false;
         }

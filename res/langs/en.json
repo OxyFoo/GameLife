@@ -137,7 +137,7 @@
         "rewards": {
             "title": "New title: {}",
             "item": "New item: {}",
-            "ox": "{} OX"
+            "ox": "{} Ox"
         },
 
         "alert-achievement-title": "Unlocked achievement",
@@ -232,6 +232,8 @@
         "btn-achievements": "Achievements",
         "btn-settings": "Paramètres",
 
+        "alert-maintenance-title": "Maintenance",
+        "alert-maintenance-text": "The application servers are under maintenance, you can access them but the online features are temporarily disabled. Thanks for your patience, everything will be back to normal in a few minutes!",
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
         "alert-newversion-title": "Warning",
@@ -336,17 +338,17 @@
     },
 
     "profile-avatar": {
-        "button-sell": "Sell +{} OX",
+        "button-sell": "Sell +{} Ox",
         "button-equip": "Equip",
 
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "You must equip another item in order to sell this one.",
         "alert-sellconfirm-title": "Sell",
-        "alert-sellconfirm-text": "Are you sure you want to sell this item for {} OX?",
+        "alert-sellconfirm-text": "Are you sure you want to sell this item for {} Ox?",
         "alert-sellfailed-title": "Failed sale",
         "alert-sellfailed-text": "Unable to sell the item, an error has occurred, please try again later.",
         "alert-sellsuccess-title": "Sold!",
-        "alert-sellsuccess-text": "Congrats! The item \"{}\" was sold for {} OX"
+        "alert-sellsuccess-text": "Congrats! The item \"{}\" was sold for {} Ox"
     },
 
     "report": {
@@ -432,12 +434,12 @@
         "container-dyer": "Dyer",
         "select-dyer": "Select an item",
 
-        "popup-button-buy": "Buy for {} OX",
+        "popup-button-buy": "Buy for {} Ox",
 
         "alert-buysuccess-title": "Successful purchase",
-        "alert-buysuccess-text": "You have purchased the item \"{}\" for {} OX",
+        "alert-buysuccess-text": "You have purchased the item \"{}\" for {} Ox",
         "alert-buytitlesuccess-title": "Successful purchase",
-        "alert-buytitlesuccess-text": "You have purchased the title \"{}\" for {} OX",
+        "alert-buytitlesuccess-text": "You have purchased the title \"{}\" for {} Ox",
         "alert-buyfailed-title": "Purchase failed",
         "alert-buyfailed-text": "Unable to purchase the item, an error has occurred, please try again later.",
         "alert-notenoughox-title": "Insufficient",

@@ -81,33 +81,42 @@
          */
         public function Ping() {
             $appData = GetAppData($this->db);
-            $version = $this->data['version'];
-            $serverVersion = $appData['Version'];
-            if (isset($version) && $version == $serverVersion) {
-                $deviceIdentifier = $this->data['deviceID'];
-                $deviceName = $this->data['deviceName'];
-                $osName = $this->data['deviceOSName'];
-                $osVersion = $this->data['deviceOSVersion'];
+            $versionApp    = $this->data['version'];
+            $versionServer = $appData['Version'];
+            $maintenance   = $appData['Maintenance'];
 
-                if (isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
-                    $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
-                    if ($device === null) {
-                        $device = Devices::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
-                    }
-                    if ($device === null) {
-                        $this->output['status'] = 'error';
-                    } else {
-                        Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
-                        $this->output['devMode'] = $device->DevMode;
-                        $this->output['status'] = 'ok';
-                    }
-                }
-            } else if ($serverVersion < $appData) {
+            if (!isset($versionApp)) {
+                return;
+            } else if ($versionServer < $versionApp) {
                 $this->output['status'] = 'downdate';
-            } else if ($serverVersion > $appData) {
+                return;
+            } else if ($versionServer > $versionApp) {
                 $this->output['status'] = 'update';
-            } else if ($appData['Maintenance']) {
+                return;
+            } else if ($maintenance) {
                 $this->output['status'] = 'maintenance';
+                return;
+            } else if (!isset($versionApp) || $versionApp != $versionServer) {
+                return;
+            }
+
+            $deviceIdentifier = $this->data['deviceID'];
+            $deviceName = $this->data['deviceName'];
+            $osName = $this->data['deviceOSName'];
+            $osVersion = $this->data['deviceOSVersion'];
+
+            if (isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
+                $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+                if ($device === null) {
+                    $device = Devices::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
+                }
+                if ($device === null) {
+                    return;
+                }
+
+                Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
+                $this->output['devMode'] = $device->DevMode;
+                $this->output['status'] = 'ok';
             }
         }
 

@@ -5,7 +5,7 @@
      * @param DataBase $db
      */
     function GetAppData($db) {
-        $appData = array('Version' => 0, 'Hashes' => '', 'Maintenance' => false, 'News' => array());
+        $appData = array('Version' => '0.0.0', 'Hashes' => '', 'Maintenance' => false, 'News' => array());
         $app = $db->QueryPrepare('App', 'SELECT * FROM TABLE');
         $lastHashRefresh = 0;
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Animated, FlatList, StyleSheet, BackHandler } from 'react-native';
+import { View, Animated, FlatList, StyleSheet } from 'react-native';
+import RNExitApp from 'react-native-exit-app';
 
 import user from '../../Managers/UserManager';
 
@@ -112,7 +113,7 @@ class Console extends React.Component {
 
     deleteAll = async () => {
         user.Clear(false);
-        BackHandler.exitApp();
+        RNExitApp.exitApp();
     }
 
     renderText = ({ item }) => {

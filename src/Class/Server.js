@@ -1,4 +1,4 @@
-import { BackHandler } from 'react-native';
+import RNExitApp from 'react-native-exit-app';
 
 import langManager from '../Managers/LangManager';
 
@@ -64,7 +64,7 @@ class Server {
         if (status === 'update') {
             const title = langManager.curr['home']['alert-update-title'];
             const text = langManager.curr['home']['alert-update-text'];
-            this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);
+            this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);
         } else if (status === 'downdate') {
             this.online = false;
             const title = langManager.curr['home']['alert-newversion-title'];
@@ -72,7 +72,9 @@ class Server {
             this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
         } else if (status === STATUS.MAINTENANCE) {
             this.online = false;
-            // TODO - Gérer la maintenance
+            const title = langManager.curr['home']['alert-maintenance-title'];
+            const text = langManager.curr['home']['alert-maintenance-text'];
+            this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
         } else if (status === 'ok') {
             this.online = true;
             if (devMode) this.user.interface.console.Enable();
@@ -225,7 +227,7 @@ class Server {
         this.user.interface.console.AddLog('warn', 'Request: token expired');
         const title = langManager.curr['server']['alert-tokenexpired-title'];
         const text = langManager.curr['server']['alert-tokenexpired-text'];
-        this.user.interface.popup.ForceOpen('ok', [ title, text ], BackHandler.exitApp, false);
+        this.user.interface.popup.ForceOpen('ok', [ title, text ], RNExitApp.exitApp, false);
     }
 
     /**

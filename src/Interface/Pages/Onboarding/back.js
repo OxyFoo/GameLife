@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BackHandler } from 'react-native';
+import RNExitApp from 'react-native-exit-app';
 
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
@@ -30,7 +30,7 @@ class BackOnboarding extends React.Component {
         if (this.refSwiper.posX === 3) {
             user.settings.onboardingWatched = true;
             const saved = await user.settings.Save();
-            if (!saved) BackHandler.exitApp();
+            if (!saved) RNExitApp.exitApp();
             else user.interface.ChangePage('loading', undefined, true);
             return;
         }

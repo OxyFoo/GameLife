@@ -137,7 +137,7 @@
         "rewards": {
             "title": "Nouveau titre : {}",
             "item": "Nouvel item : {}",
-            "ox": "{} OX"
+            "ox": "{} Ox"
         },
 
         "alert-achievement-title": "Succès déverouillé",
@@ -232,6 +232,8 @@
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
 
+        "alert-maintenance-title": "Maintenance",
+        "alert-maintenance-text": "Les serveurs de l'application sont en maintenance, vous pouvez y accéder mais les fonctionnalités en ligne sont temporairement désactivées. Merci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
@@ -336,17 +338,17 @@
     },
 
     "profile-avatar": {
-        "button-sell": "Vendre +{} OX",
+        "button-sell": "Vendre +{} Ox",
         "button-equip": "Équiper",
 
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "Vous devez équiper un autre item pour pouvoir vendre celui-ci.",
         "alert-sellconfirm-title": "Vendre",
-        "alert-sellconfirm-text": "Êtes-vous sûr(e) de vouloir vendre cet item pour {} OX ?",
+        "alert-sellconfirm-text": "Êtes-vous sûr(e) de vouloir vendre cet item pour {} Ox ?",
         "alert-sellfailed-title": "Vente échouée",
         "alert-sellfailed-text": "Impossible de vendre l'item, une erreur est survenue, veuillez réessayer plus tard.",
         "alert-sellsuccess-title": "Vendu !",
-        "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} OX"
+        "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
     "report": {
@@ -432,12 +434,12 @@
         "container-dyer": "Teinturier",
         "select-dyer": "Sélectionner un item",
 
-        "popup-button-buy": "Acheter pour {} OX",
+        "popup-button-buy": "Acheter pour {} Ox",
 
         "alert-buysuccess-title": "Achat réussi",
-        "alert-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} OX",
+        "alert-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} Ox",
         "alert-buytitlesuccess-title": "Achat réussi",
-        "alert-buytitlesuccess-text": "Vous avez bien acheté le titre \"{}\" pour {} OX",
+        "alert-buytitlesuccess-text": "Vous avez bien acheté le titre \"{}\" pour {} Ox",
         "alert-buyfailed-title": "Achat échoué",
         "alert-buyfailed-text": "Impossible d'acheter l'item, une erreur est survenue, veuillez réessayer plus tard.",
         "alert-notenoughox-title": "Insuffisant",

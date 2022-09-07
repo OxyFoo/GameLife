@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { AppState, LogBox, SafeAreaView } from 'react-native';
 import { AppStateStatus } from 'react-native';
+import RNExitApp from 'react-native-exit-app';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
@@ -26,7 +27,7 @@ class App extends React.Component {
             if (!CheckDate()) {
                 /*const title = langManager.curr['home']['alert-dateerror-title'];
                 const text = langManager.curr['home']['alert-dateerror-text'];
-                this.user.interface.popup.Open('ok', [ title, text ], BackHandler.exitApp, false);*/
+                this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);*/
                 console.error("TODO - Message d'erreur");
             }
         } else if (state === 'background' || state === 'inactive') {

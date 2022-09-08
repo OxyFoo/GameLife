@@ -424,19 +424,22 @@
             $account = $this->account;
             $device = $this->device;
 
-            $gift = Items::CheckGiftCode($this->db, $account->ID, $code);
-            if ($gift !== false) {
-                $rewardAdded = Achievements::ExecReward($this->db, $account, explode(',', $gift));
-                if ($rewardAdded) {
-                    $this->db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [ $code ]);
-                    $this->db->AddLog($account->ID, $device->ID, 'giftCode', $code);
-
-                    $this->output['gift'] = $gift;
-                    $this->output['status'] = 'ok';
-                }
+            $gift = Items::CheckGiftCode($this->db, $account, $device, $code);
+            if ($gift === null) return;
+            if ($gift === false) {
+                $this->output['gift'] = null;
+                $this->output['status'] = 'ok';
+                return;
             }
 
-            sleep(1); // To avoid bruteforce
+            $consume = Items::ConsumeGiftCode($this->db, $account->ID, $device->ID, $code);
+            if (!$consume) return;
+
+            $rewardAdded = Achievements::ExecReward($this->db, $account, explode(',', $gift));
+            if (!$rewardAdded) return;
+
+            $this->output['gift'] = $gift;
+            $this->output['status'] = 'ok';
         }
 
         public function Disconnect() {

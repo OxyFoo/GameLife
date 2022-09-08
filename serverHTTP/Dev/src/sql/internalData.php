@@ -66,7 +66,7 @@
      * @param DataBase $db
      */
     function GetContributors($db) {
-        $helpers = $db->QueryPrepare('Contributors', 'SELECT * FROM TABLE');
+        $helpers = $db->QueryPrepare('Contributors', 'SELECT `ID`, `Name` FROM TABLE');
         if ($helpers === null) return array();
 
         for ($i = 0; $i < count($helpers); $i++) {

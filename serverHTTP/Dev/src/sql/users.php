@@ -208,6 +208,22 @@
 
         /**
          * @param DataBase $db
+         * @param Account $account
+         * @return int|false Number of gift codes the user has tried
+         */
+        public static function GetGiftCodeAttemptsToday($db, $account) {
+            $nextDay = date('d') + 1;
+            $dateNow = date('Y-m-d 00:00:00');
+            $tomorrow = date("Y-m-$nextDay 00:00:00");
+
+            $command = "SELECT `Data` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'giftCodeTry' AND `Date` BETWEEN ? AND ?";
+            $result = $db->QueryPrepare('Logs', $command, 'iss', [ $account->ID, $dateNow, $tomorrow ]);
+            if ($result === false) return false;
+            return count($result);
+        }
+
+        /**
+         * @param DataBase $db
          * @param string $username
          * @return bool True if username is free, false otherwise
          */

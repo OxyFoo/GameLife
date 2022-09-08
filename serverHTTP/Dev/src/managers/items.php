@@ -60,6 +60,21 @@
          * @return bool Success
          */
         public static function AddInventoryTitle($db, $account, $itemID) {
+            // If user have already this title. convert into Ox
+            $command = 'SELECT `ItemID` FROM TABLE WHERE `AccountID` = ?';
+            $result = $db->QueryPrepare('InventoriesTitles', $command, 'i', [ $account->ID ]);
+            if ($result === false || count($result) === 0) return false;
+            $accountTitles = array_map(fn($row) => intval($row['ItemID']), $result);
+            if (in_array($itemID, $accountTitles, true)) {
+                // Get and return Title Ox price
+                $command = 'SELECT `Value` FROM TABLE WHERE `ID` = ?';
+                $result = $db->QueryPrepare('Titles', $command, 'i', [ $itemID ]);
+                if ($result === false || count($result) === 0) return false;
+                $oxAmount = intval($result[0]['Value']);
+                return Users::AddOx($db, $account->ID, $oxAmount);
+            }
+
+            // Add title in inventory
             $command = 'INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = array($account->ID, $itemID, $account->ID);
             $result = $db->QueryPrepare('InventoriesTitles', $command, 'iii', $args);
@@ -208,24 +223,83 @@
         /**
          * Get number of all ads watched
          * @param DataBase $db
-         * @param int $accountID
+         * @param Account $account
+         * @param Device $device
          * @param string $code
-         * @return string|false Return reward if any, null otherwise
+         * @return string|false|null Return reward if any, false otherwise and null if user exceed 100 tries
          */
-        public static function CheckGiftCode($db, $accountID, $code) {
+        public static function CheckGiftCode($db, $account, $device, $code) {
+            // Get Reward and available number
             $command = 'SELECT `Rewards`, `Available` FROM TABLE WHERE `ID` = ?';
             $gift = $db->QueryPrepare('GiftCodes', $command, 's', [ $code ]);
-            if ($gift === false || count($gift) === 0) return false;
+            if ($gift === false) return false;
 
+            // Check if user spam and add try to logs
+            $attempts = Users::GetGiftCodeAttemptsToday($db, $account);
+            if ($attempts === false || $attempts > 100) {
+                return null;
+            }
+            if ($attempts === 100) {
+                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', 'User has tried more than 100 gift codes');
+            }
+            $db->AddLog($account->ID, $device->ID, 'giftCodeTry', "$code");
+
+            if (count($gift) === 0) return false;
             $rewards = $gift[0]['Rewards'];
-            $available = $gift[0]['Available'];
-            if (!$available) return false;
+            $available = intval($gift[0]['Available']);
 
+            // Check BETA code
+            if (strtolower($code) === 'beta') {
+                $command = 'SELECT `MaxTiper`, `Beta` FROM TABLE WHERE `Email` = ?';
+                $betaTesters = $db->QueryPrepare('Contributors', $command, 's', [ $account->Email ]);
+                if ($betaTesters === false || count($betaTesters) === 0) return false;
+                $maxTiper = $betaTesters[0]['MaxTiper'] != 0;
+                $beta = $betaTesters[0]['beta'] != 0;
+
+                // Simple tiper (None of both)
+                $rewardOx = 60;
+                $rewardItems = array('Title 18');
+
+                // Beta tester
+                if ($beta) {
+                    $rewardOx = 120;
+                    array_push($rewardItems, 'Title 16');
+                }
+
+                // Max tiper (tiper was gave more than 100e)
+                if ($maxTiper) {
+                    $rewardOx = 200;
+                    array_push($rewardItems, 'Title 17');
+                }
+
+                array_push($rewardItems, "OX $rewardOx");
+                return implode(',', $rewardItems);
+            } else if (!$available) {
+                return false;
+            }
+
+            // Check if user hasn't already use the code
             $command2 = "SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'giftCode' AND `Data` = ?";
-            $usedGifts = $db->QueryPrepare('Logs', $command2, 'is', [ $accountID, $code ]);
+            $usedGifts = $db->QueryPrepare('Logs', $command2, 'is', [ $account->ID, $code ]);
             if ($usedGifts === false || count($usedGifts) > 0) return false;
 
             return $rewards;
+        }
+
+        /**
+         * Decrement number of available codes & add to logs
+         * @param DataBase $db
+         * @param int $accountID
+         * @param int $deviceID
+         * @param string $code
+         * @return bool Return success
+         */
+        public static function ConsumeGiftCode($db, $accountID, $deviceID, $code) {
+            $result = $db->QueryPrepare('GiftCodes', 'UPDATE TABLE SET `Available` = `Available` - 1 WHERE `ID` = ?', 's', [ $code ]);
+            if ($result === false) return false;
+
+            $db->AddLog($accountID, $deviceID, 'giftCode', $code);
+            return true;
         }
     }
 

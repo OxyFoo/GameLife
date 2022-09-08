@@ -38,13 +38,14 @@ function renderGiftCodePopup() {
         }
 
         // Success
-        await user.OnlineLoad(true);
-
         const rewards = dataManager.achievements.parseReward(gift);
         const title = lang['reward-success-title'];
         let text = lang['reward-success-text'] + '\n\n';
             text += user.achievements.getRewardsText(rewards);
         user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+
+        await user.OnlineLoad(true);
+        this.forceUpdate();
     }
 
     return (

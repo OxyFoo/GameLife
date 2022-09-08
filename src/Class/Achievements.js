@@ -196,7 +196,9 @@ class Achievements {
      * @returns {string}
      */
     getRewardsText = (rewards) => {
+        const lang = langManager.curr['achievements']['rewards'];
         let output = '';
+
         for (let i = 0; i < rewards.length; i++) {
             const reward = rewards[i];
             const value = reward.Value;
@@ -204,21 +206,29 @@ class Achievements {
                 case 'Title':
                     const title = dataManager.titles.GetByID(value);
                     const titleName = dataManager.GetText(title.Name);
-                    const titleLine = langManager.curr['achievements']['rewards']['title'].replace('{}', titleName);
-                    output += '\n' + titleLine + '\n';
+                    const titleLine = lang['title'].replace('{}', titleName);
+                    output += '\n' + titleLine;
+
+                    // If already have this title
+                    if (this.user.inventory.titles.includes(title.ID)) {
+                        output += lang['title-conversion'].replace('{}', title.Value);
+                    }
+
+                    output += '\n';
                     break;
                 case 'Item':
                     const item = dataManager.items.GetByID(value);
                     const itemName = dataManager.GetText(item.Name);
-                    const itemLine = langManager.curr['achievements']['rewards']['item'].replace('{}', itemName);
+                    const itemLine = lang['item'].replace('{}', itemName);
                     output += '\n' + itemLine + '\n';
                     break;
                 case 'OX':
-                    const oxLine = langManager.curr['achievements']['rewards']['ox'].replace('{}', value);
+                    const oxLine = lang['ox'].replace('{}', value);
                     output += '\n' + oxLine + '\n';
                     break;
             }
         }
+
         return output;
     }
 

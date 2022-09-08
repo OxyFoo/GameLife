@@ -136,6 +136,7 @@
         },
         "rewards": {
             "title": "New title: {}",
+            "title-conversion": " (convert into {} Ox)",
             "item": "New item: {}",
             "ox": "{} Ox"
         },

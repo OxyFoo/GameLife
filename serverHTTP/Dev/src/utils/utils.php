@@ -102,10 +102,25 @@
         return round($date_delta, 2);
     }
 
-    function UsernameIsCorrect($username) {
+    /**
+     * @param DataBase $db
+     * @param string $username
+     * @return bool True if password is correct
+     */
+    function UsernameIsCorrect($db, $username) {
         $isOkLength = iconv_strlen($username) >= 4 && iconv_strlen($username) <= 24;
-        // TODO - Check username validity (blacklist words, ...)
-        return $isOkLength;
+        if (!$isOkLength) return false;
+
+        $result = $db->QueryPrepare('Blacklist', 'SELECT `Pseudo` FROM TABLE');
+        if ($result === false) return false;
+
+        $blacklist = array_map(fn($raw) => $raw['Pseudo'], $result);
+        foreach ($blacklist as $blackUsername) {
+            $delta = levenshtein(strtolower($username), strtolower($blackUsername));
+            if ($delta <= 3) return false;
+        }
+
+        return true;
     }
 
 ?>

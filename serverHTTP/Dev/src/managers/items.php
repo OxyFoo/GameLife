@@ -196,7 +196,7 @@
             $command2 = 'SELECT `Value` FROM TABLE WHERE `ID` = ?';
             $result2 = $db->QueryPrepare('Items', $command2, 's', [ $itemID ]);
             if ($result2 === false || count($result2) === 0) return false;
-            $value = intval($result2[0]['Value']);
+            $value = ceil(floatval($result2[0]['Value']) * .75);
 
             // Remove item from inventory
             $command3 = 'DELETE FROM TABLE WHERE `ID` = ?';

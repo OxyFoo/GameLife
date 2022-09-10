@@ -230,7 +230,7 @@
                 $this->output['status'] = 'pseudoUsed';
                 return;
             }
-            if (!UsernameIsCorrect($username)) {
+            if (!UsernameIsCorrect($this->db, $username)) {
                 $this->output['status'] = 'pseudoIncorrect';
                 return;
             }

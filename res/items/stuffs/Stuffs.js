@@ -58,6 +58,9 @@ import m_shoes_10 from './male/shoes_10';
 import m_shoes_11 from './male/shoes_11';
 import m_shoes_12 from './male/shoes_12';
 import m_shoes_13 from './male/shoes_13';
+import m_shoes_14 from './male/shoes_14';
+import m_shoes_15 from './male/shoes_15';
+import m_shoes_16 from './male/shoes_16';
 
 import f_hair_01 from './female/hair_01';
 import f_hair_02 from './female/hair_02';
@@ -119,6 +122,9 @@ import f_shoes_10 from './female/shoes_10';
 import f_shoes_11 from './female/shoes_11';
 import f_shoes_12 from './female/shoes_12';
 import f_shoes_13 from './female/shoes_13';
+import f_shoes_14 from './female/shoes_14';
+import f_shoes_15 from './female/shoes_15';
+import f_shoes_16 from './female/shoes_16';
 
 const STUFFS = {
     MALE: {
@@ -181,7 +187,10 @@ const STUFFS = {
         shoes_10: m_shoes_10,
         shoes_11: m_shoes_11,
         shoes_12: m_shoes_12,
-        shoes_13: m_shoes_13
+        shoes_13: m_shoes_13,
+        shoes_13: m_shoes_14,
+        shoes_13: m_shoes_15,
+        shoes_13: m_shoes_16
     },
     FEMALE: {
         hair_01: f_hair_01,
@@ -243,7 +252,10 @@ const STUFFS = {
         shoes_10: f_shoes_10,
         shoes_11: f_shoes_11,
         shoes_12: f_shoes_12,
-        shoes_13: f_shoes_13
+        shoes_13: f_shoes_13,
+        shoes_13: f_shoes_14,
+        shoes_13: f_shoes_15,
+        shoes_13: f_shoes_16
     }
 };
 

@@ -80,8 +80,14 @@ const styles = StyleSheet.create({
         marginHorizontal: 24
     },
     editorText: {
+        minHeight: 48,
         marginBottom: 12
     },
+
+    editorStuffContainer: {
+        paddingBottom: 36
+    },
+
     editorStuffParent: {
         flexDirection: 'row',
         justifyContent: 'space-between',

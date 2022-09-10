@@ -111,6 +111,11 @@ class EditorAvatarRender extends EditorAvatarBack {
             user.inventory.Equip('skin', skin);
             this.refFrame?.forceUpdate();
             user.interface.header.refFrame?.forceUpdate();
+            for (const slot in this.slotCharacters) {
+                this.slotCharacters[slot].sexe = sexe;
+                this.slotCharacters[slot].skin = skin;
+                this.slotCharacters[slot].__refresh();
+            }
         }
         const onPress = isSelected ? () => {} : selectCharacter;
 
@@ -132,6 +137,10 @@ class EditorAvatarRender extends EditorAvatarBack {
                 user.inventory.Equip('skinColor', index);
                 this.refFrame?.forceUpdate();
                 user.interface.header.refFrame?.forceUpdate();
+                for (const slot in this.slotCharacters) {
+                    this.slotCharacters[slot].skinColor = index;
+                    this.slotCharacters[slot].__refresh();
+                }
             }
         }
 
@@ -160,7 +169,7 @@ class EditorAvatarRender extends EditorAvatarBack {
 
             name = dataManager.GetText(item.Name);
             description = dataManager.GetText(item.Description);
-            ox = item.Value;
+            ox = Math.ceil(item.Value * .75);
             isEquipped = equippedStuffsID.includes(stuffSelected.ID);
         }
 
@@ -233,6 +242,7 @@ class EditorAvatarRender extends EditorAvatarBack {
 
         return (
             <FlatList
+                contentContainerStyle={styles.editorStuffContainer}
                 data={stuffsSelected}
                 numColumns={3}
                 renderItem={this.renderCardItem}

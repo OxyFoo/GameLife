@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import user from '../../../../Managers/UserManager';
 import dataManager from '../../../../Managers/DataManager';
 import themeManager from '../../../../Managers/ThemeManager';
 
@@ -34,7 +35,12 @@ class ItemCard extends React.PureComponent {
         const { stuff } = this.props;
         const item = dataManager.items.GetByID(stuff.ItemID);
         if (item !== null) {
-            this.character = new Character('itemcard-' + item.ID, 'MALE', 'skin_01', 0);
+            this.character = new Character(
+                'itemcard-' + item.ID,
+                user.character.sexe,
+                user.character.skin,
+                user.character.skinColor
+            );
             this.character.SetEquipment([ item.ID ]);
         }
     }

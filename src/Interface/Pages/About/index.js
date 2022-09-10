@@ -45,12 +45,13 @@ class About extends BackAbout {
                         <Text fontSize={34}>{lang['block-contributors']}</Text>
                         <Text style={{ marginBottom: 12 }} color='secondary' fontSize={22}>{lang['text-contributors']}</Text>
 
-                        <FlatList
-                            style={styles.contributors}
-                            data={this.contributors}
-                            keyExtractor={(item, i) => 'contributors_' + i}
-                            renderItem={this.renderContributor}
-                        />
+                        <View style={styles.contributors}>
+                            <FlatList
+                                data={this.contributors}
+                                keyExtractor={(item, i) => 'contributors_' + i}
+                                renderItem={this.renderContributor}
+                            />
+                        </View>
                     </View>
 
                     <View>
@@ -75,11 +76,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     contributors: {
+        height: '80%',
         borderWidth: 3,
         borderColor: '#FFFFFF'
     },
     row: {
-        paddingHorizontal: '2%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

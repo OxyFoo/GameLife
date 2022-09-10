@@ -16,7 +16,7 @@ class Onboarding extends BackOnboarding {
         const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
-            <View style={[styles.parent, backgroundCard]}>
+            <View style={[styles.parent, styles.onboarding, backgroundCard]}>
                 <Text fontSize={32}>{lang['select-language']}</Text>
                 <TouchableOpacity style={styles.flagRow} onPress={this.selectEnglish} activeOpacity={.6}>
                     <Icon icon='flagEnglish' size={64} />
@@ -71,7 +71,7 @@ class Onboarding extends BackOnboarding {
         ];
 
         return (
-            <Page style={{ height: '100%' }} canScrollOver={false}>
+            <Page style={{ height: '100%', paddingHorizontal: 0 }} canScrollOver={false}>
                 <Swiper
                     ref={ref => { if (ref !== null) this.refSwiper = ref; }}
                     height={'90%'}
@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     parent: {
         height: '100%',
         padding: 24,
-        alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 16
     },
@@ -104,6 +103,7 @@ const styles = StyleSheet.create({
         marginLeft: 16
     },
     onboarding: {
+        marginHorizontal: 24,
         alignItems: 'center'
     },
     onboardingImage: {

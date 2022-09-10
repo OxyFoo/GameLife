@@ -64,7 +64,12 @@ class EditorAvatarBack extends React.Component {
         /** @type {{[key: string]: Character}} */
         this.slotCharacters = {};
         Slots.forEach(slot => {
-            this.slotCharacters[slot] = new Character('itemslot-' + slot, 'MALE', 'skin_01', 0)
+            this.slotCharacters[slot] = new Character(
+                'itemslot-' + slot,
+                user.character.sexe,
+                user.character.skin,
+                user.character.skinColor
+            );
         });
         this.updateEquippedItems();
 
@@ -178,7 +183,7 @@ class EditorAvatarBack extends React.Component {
         // Confirm sell
         const item = dataManager.items.GetByID(stuffSelected.ItemID);
         const title = lang['alert-sellconfirm-title'];
-        const text = lang['alert-sellconfirm-text'].replace('{}', item.Value);
+        const text = lang['alert-sellconfirm-text'].replace('{}', Math.ceil(item.Value * .75));
         user.interface.popup.Open('yesno', [ title, text ], async (btn) => {
             if (btn === 'no') return;
 
@@ -203,7 +208,7 @@ class EditorAvatarBack extends React.Component {
             const title = lang['alert-sellsuccess-title'];
             let text = lang['alert-sellsuccess-text'];
             text = text.replace('{}', dataManager.GetText(item.Name));
-            text = text.replace('{}', item.Value);
+            text = text.replace('{}', Math.ceil(item.Value * .75));
             user.interface.popup.Open('ok', [ title, text ], undefined, false);
         });
     }

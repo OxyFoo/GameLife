@@ -64,7 +64,7 @@ class Body {
 
         const left_thigh = new Part(this, 'left_thigh', -1);
         const left_leg = new Part(this, 'left_leg');
-        const left_foot = new Part(this, 'left_foot');
+        const left_foot = new Part(this, 'left_foot', 2);
 
         const right_thigh = new Part(this, 'right_thigh');
         const right_leg = new Part(this, 'right_leg');

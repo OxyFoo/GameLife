@@ -67,7 +67,7 @@
 
             if ($oldUsername === $newUsername) return 'error';
             if ($delta < $DAYS_USERNAME_CHANGE) return 'alreadyChanged';
-            if (!UsernameIsCorrect($newUsername)) return 'incorrect';
+            if (!UsernameIsCorrect($db, $newUsername)) return 'incorrect';
             if (!self::PseudoIsFree($db, $newUsername)) return 'alreadyUsed';
 
             $command = 'UPDATE TABLE SET `Username` = ?, `LastChangeUsername` = ? WHERE `ID` = ?';

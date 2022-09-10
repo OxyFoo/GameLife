@@ -70,6 +70,15 @@ class ItemCard extends React.PureComponent {
             case Rarity.event:      colors = absoluteColors.rarity_event;     break;
         }
 
+        let onlyItems = true;
+        let bodyView = 'full';
+
+        // Only for bald representation...
+        if (item.ID === 'hair_01') {
+            onlyItems = false;
+            bodyView = 'head';
+        }
+
         return (
             <View style={[styles.card, borderColor]}>
                 <TouchableHighlight
@@ -81,7 +90,8 @@ class ItemCard extends React.PureComponent {
                     <View>
                         <Frame
                             characters={[ this.character ]}
-                            onlyItems={true}
+                            onlyItems={onlyItems}
+                            bodyView={bodyView}
                             loadingTime={400}
                             size={containerSize}
                         />

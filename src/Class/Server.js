@@ -47,9 +47,12 @@ class Server {
         return this.status === STATUS.CONNECTED || this.status === STATUS.BANNED;
     }
 
-    Ping = async () => {
+    Ping = async (resetConnections = false) => {
         const debugIndex = this.user.interface.console.AddLog('info', 'Request: ping...');
-        const response = await this.Request('ping', GetDeviceInformations(true, true));
+
+        let data = { ...GetDeviceInformations(true, true) };
+        if (resetConnections) data['reset'] = 1;
+        const response = await this.Request('ping', data);
 
         if (response === null) {
             this.user.interface.console.AddLog('error', 'Request: ping error');
@@ -245,10 +248,12 @@ class Server {
         const response = await Request_Async(reqData);
         if (response.status !== 200) {
             // Request failed
-            this.user.interface.console.AddLog('warn', 'Request: error - ', response);
-            const title = langManager.curr['server']['alert-error-title'];
-            const text = langManager.curr['server']['alert-errorr-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
+            if (this.online) { // Don't show popup if not connected to server
+                this.user.interface.console.AddLog('warn', 'Request: error - ', response);
+                const title = langManager.curr['server']['alert-error-title'];
+                const text = langManager.curr['server']['alert-errorr-text'];
+                this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
+            }
             return null;
         }
 

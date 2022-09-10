@@ -1,114 +1,13 @@
 import * as React from 'react';
-import Svg, { G, LinearGradient, Stop, Path, Ellipse } from 'react-native-svg';
+import { G, LinearGradient, Stop, Path, Ellipse } from 'react-native-svg';
 
 const component = {
     svg: {
-        right_thigh: <G id="couleurs">
-        <LinearGradient id="path36033_0" gradientUnits="userSpaceOnUse" x1={-1.4722} y1={92.2495} x2={2.1365} y2={-11.8876} gradientTransform="matrix(2.8346 0 0 2.8346 0 4.553604e-02)" >
-          <Stop offset={0} style={{ stopColor: "#5B83B1", }} />
-          <Stop offset={1} style={{ stopColor: "#CFD1D2", }} />
-        </LinearGradient>
-        <Path
-          id="path36033"
-          style={{
-            fill: "url(#path36033_0)",
-            stroke: "#000000",
-            strokeWidth: 0.75,
-            strokeMiterlimit: 11.3386,
-          }}
-          d="M-50.1,5.9l-3.4,12.8L-58,35.8l-2.1,10.4l-3.8,17l-1.8,8.6l-1.5,15l-2.7,29.2l-0.7,18.3l-0.4,19.3l-4.5,11.1l-3.7,9.3l-3.8,13l-3.4,13.4l-0.7,9.5l-0.7,10.7l0.2,12.7l0.8,10l9.4,3.6l11.2,2.2l12.2,1.2l9-0.7l2.5-4l7.7-16.9l5.1-15.1l5.4-16.6l1.5-11.4l1-16.4l14.6-16.3l12.7-20.2l8.8-16.6l4.5-12.7l3.1,18.8l3.2,18.8l2.2,11.4l2.5,11.4l-2.8,13l-4.7,17l0.8,12.5c0,0,3.2,11,3.7,12.2s4,15.2,4,15.2l2.5,3.9l14.4,2.6l11.9,0.2l14.4-1.9l4.7-2.8L78,216.4l-1.1-33l7.3-21.3l-1.6-17.8l3.3-30.2l1-26.5l-3.4-38.5l-4.6-28.3L76.4,9.6l0.2-13.3l-7.8,2.5L58.7,1.2L38,3.6L21.3,5.2L3.5,5L-15,6.2l-12.4-0.5l-9.1,0.6L-50.1,5.9z"
-        />
-        <Path className="st1" d="M29.1,15.8l-1.7,1.6l0.6,2.5l1,2.1l3.7,0.6l2.1-1.6c0,0,0.2-2.3,0.1-2.5c-0.1-0.2-1.6-2.4-1.6-2.4l-1.9-0.8l-0.7,0.1L29.1,15.8z" />
-        <Path className="st2" d="M-58,35.8l19.6,1.5l-4,20.4l-21.4,5.5L-58,35.8z" />
-        <Path className="st2" d="M78.7,20.8l-5,1.1l1.8,11.9l6.3,5.5l-0.7-7.8L78.7,20.8L78.7,20.8L78.7,20.8" />
-        <Path className="st3" d="M-37.5,34.7l-5,23l-21.4,5.5l-1.8,8.6l28.7-8.4l8.9-28.6L-37.5,34.7z" />
-        <Path className="st4" d="M65.7,20.1l5,18.1L83.4,49l-1.5-9.7l-6.3-5.5L73,19.5L65.7,20.1z" />
-        <LinearGradient
-          id="path48282_00000093855977782178037040000006341305500617829023_"
-          gradientUnits="userSpaceOnUse"
-          x1={-36.1394}
-          y1={88.7599}
-          x2={-8.6015}
-          y2={93.3138}
-          gradientTransform="matrix(2.8346 0 0 2.8346 0 4.553604e-02)"
-        >
-          <Stop offset={0} style={{ stopColor: "#2F5F7F", }} />
-          <Stop offset={1} style={{ stopColor: "#9CD2E3", }} />
-        </LinearGradient>
-        <Path
-          id="path48282"
-          style={{
-            fill: "url(#path48282_00000093855977782178037040000006341305500617829023_)",
-            stroke: "#000000",
-            strokeWidth: 0.75,
-            strokeMiterlimit: 11.3386,
-          }}
-          d="M-93.8,240.3l16.4,6.5l18,3.5l20.6-1.2l-2.9,20.6l-14.6,1.7l-18.4-2.1l-22.1-8L-93.8,240.3z"
-        />
-        <LinearGradient
-          id="path49247_00000123424662423726086220000008106154894038460801_"
-          gradientUnits="userSpaceOnUse"
-          x1={8.1976}
-          y1={87.7984}
-          x2={31.5683}
-          y2={86.8533}
-          gradientTransform="matrix(2.8346 0 0 2.8346 0 4.553604e-02)"
-        >
-          <Stop offset={0} style={{ stopColor: "#41728F", }} />
-          <Stop offset={1} style={{ stopColor: "#7FB3C8", }} />
-        </LinearGradient>
-        <Path
-          id="path49247"
-          style={{
-            fill: "url(#path49247_00000123424662423726086220000008106154894038460801_)",
-            stroke: "#000000",
-            strokeWidth: 0.75,
-            strokeMiterlimit: 11.3386,
-          }}
-          d="M28.2,237l19.4,3l26.3-1.7l9.6-4l2.7,20.7L71,258.8l-15.6,1l-11.2-0.5l-16-2.1C28.2,257.2,28.2,237,28.2,237z"
-        />
-        <Path className="st7" d="M-88.5,239.1l-5.3,1.2l7,2.9L-88.5,239.1z" />
-        <Path className="st7" d="M-42.5,245.6l-2.5,4l6.2-0.4L-42.5,245.6z" />
-        <Path className="st8" d="M30.6,233.5l-2.4,3.5l4.9,0.4L30.6,233.5z" />
-        <Path className="st8" d="M78.8,231.3l-0.3,4.2l5-1.2L78.8,231.3z" />
-      </G>
+        right_thigh: <G id="right_thigh"><LinearGradient id="path36033_00000096032699948783083620000017138017107987596467_" gradientUnits="userSpaceOnUse" x1={-1.3951} y1={907.7505} x2={2.2136} y2={1011.8876} gradientTransform="matrix(2.8346 0 0 -2.8346 0 2834.6455)"><Stop offset={0} style={{        stopColor: "#5B83B1"      }} /><Stop offset={1} style={{        stopColor: "#CFD1D2"      }} /></LinearGradient><Path id="path36033_00000072964836948305407960000014415578300090288560_" style={{      fill: "url(#path36033_00000096032699948783083620000017138017107987596467_)",      stroke: "#000000",      strokeWidth: 0.75,      strokeMiterlimit: 11.3386    }} d="M-49.9,5.9l-3.4,12.8l-4.5,17.1l-2.1,10.4l-3.8,17l-1.8,8.6l-1.5,15l-2.7,29.2l-0.7,18.3l-0.4,19.3l-4.5,11.1L-79,174l-3.8,13l-3.4,13.4l-0.7,9.5l-0.7,10.7l0.2,12.7l0.8,10l9.4,3.6l11.2,2.2l12.2,1.2l9-0.7l2.5-4l7.7-16.9l5.1-15.1l5.4-16.6l1.5-11.4l1-16.4L-7,152.9l12.7-20.2l8.8-16.6l4.5-12.7l3.1,18.8l3.2,18.8l2.2,11.4l2.5,11.4l-2.8,13l-4.7,17l0.8,12.5c0,0,3.2,11,3.7,12.2s4,15.2,4,15.2l2.5,3.9l14.4,2.6l11.9,0.2l14.4-1.9l4.7-2.8l-0.7-19.3l-1.1-33l7.3-21.3l-1.6-17.8l3.3-30.2l1-26.5l-3.4-38.5l-4.6-28.3L76.6,9.6l0.2-13.3L69-1.2L58.9,1.2L38.2,3.6L21.5,5.2L3.7,5l-18.5,1.2l-12.4-0.5l-9.1,0.6L-49.9,5.9z" /><Path d="M29.3,15.8l-1.7,1.6l0.6,2.5l1,2.1l3.7,0.6L35,21c0,0,0.2-2.3,0.1-2.5c-0.1-0.2-1.6-2.4-1.6-2.4l-1.9-0.8l-0.7,0.1L29.3,15.8z" fill="#7A5D0C" /><Path d="M-57.8,35.8l19.6,1.5l-4,20.4l-21.4,5.5L-57.8,35.8z" fill="#B5DBF4" /><Path d="M78.9,20.8l-5,1.1l1.8,11.9l6.3,5.5l-0.7-7.8L78.9,20.8L78.9,20.8L78.9,20.8" fill="#B5DBF4" /><Path d="M-37.3,34.7l-5,23l-21.4,5.5l-1.8,8.6l28.7-8.4l8.9-28.6L-37.3,34.7z" fill="#FFFFFF" /><Path d="M65.9,20.1l5,18.1L83.6,49l-1.5-9.7l-6.3-5.5l-2.6-14.3L65.9,20.1z" fill="#FFFFFF" stroke="#000000" strokeWidth={0.75} strokeMiterlimit={11.3386} /><LinearGradient id="path48282_00000075160020531138437500000014289710137910964654_" gradientUnits="userSpaceOnUse" x1={-36.0623} y1={911.2402} x2={-8.5244} y2={906.6863} gradientTransform="matrix(2.8346 0 0 -2.8346 0 2834.6455)"><Stop offset={0} style={{        stopColor: "#2F5F7F"      }} /><Stop offset={1} style={{        stopColor: "#9CD2E3"      }} /></LinearGradient><Path id="path48282_00000145054904104579236250000012020159589772690593_" style={{      fill: "url(#path48282_00000075160020531138437500000014289710137910964654_)",      stroke: "#000000",      strokeWidth: 0.75,      strokeMiterlimit: 11.3386    }} d="M-93.6,240.3l16.4,6.5l18,3.5l20.6-1.2l-2.9,20.6l-14.6,1.7l-18.4-2.1l-22.1-8L-93.6,240.3z" /><LinearGradient id="path49247_00000000204397371519772340000009425699034073852581_" gradientUnits="userSpaceOnUse" x1={8.2747} y1={912.2016} x2={31.6454} y2={913.1467} gradientTransform="matrix(2.8346 0 0 -2.8346 0 2834.6455)"><Stop offset={0} style={{        stopColor: "#41728F"      }} /><Stop offset={1} style={{        stopColor: "#7FB3C8"      }} /></LinearGradient><Path id="path49247_00000011029831775566918740000009855590112733222533_" style={{      fill: "url(#path49247_00000000204397371519772340000009425699034073852581_)",      stroke: "#000000",      strokeWidth: 0.75,      strokeMiterlimit: 11.3386    }} d="M28.4,237l19.4,3l26.3-1.7l9.6-4l2.7,20.7l-15.2,3.8l-15.6,1l-11.2-0.5l-16-2.1C28.4,257.2,28.4,237,28.4,237z" /><Path d="M-88.3,239.1l-5.3,1.2l7,2.9L-88.3,239.1z" fill="#06374A" /><Path d="M-42.3,245.6l-2.5,4l6.2-0.4L-42.3,245.6z" fill="#06374A" /><Path d="M30.8,233.5l-2.4,3.5l4.9,0.4L30.8,233.5z" fill="#06374A" stroke="#000000" strokeWidth={0.75} strokeMiterlimit={11.3386} /><Path d="M79,231.3l-0.3,4.2l5-1.2L79,231.3z" fill="#06374A" stroke="#000000" strokeWidth={0.75} strokeMiterlimit={11.3386} /><Path d="M82.3,144.3c-0.5,2.7-1,5.3-1.5,8" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M78.5,230.9l0.1,4.7" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M31.3,233c0.6,1.4,1.3,2.9,2,4.3" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-93.2,240.6c3.2,1.6,26.8,13,54.3,8.7" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M83.5,234.4c-22.8,11.4-52.2,3.4-54.9,2.6" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M50.4,151.4l9,18.3" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-36.4,6.4v9.5" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-20.3,6.7v8.5" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-3.2,6.4v8.8" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M12.3,5.9v8.6" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M47.7,2.7v8.4" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M58.9,1.2v8.4" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M69.1-1.2v8.5" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-57.8,35.8l19.6,1.5" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-37.3,34.7l-5,23l-21.4,5.5l-1.8,8.6l28.7-8.4l8.9-28.6L-37.3,34.7z" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M82.1,39.4l-6.3-5.5l-2.6-14.4l-7.3,0.6l5,18.1L83.6,49" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M73.9,21.9l5-1.1" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M21.5,5.2c0,0,5.2,37.2,0.3,69.7" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M38.2,3.6c0,0,3.3,40.8-2.1,70.6" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M21.8,74.9c0,0,6.4,5.2,14.3-0.7" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Ellipse cx={31.3} cy={18.9} rx={3.8} ry={3.7} fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M24.9,81.2c0,0-1.5,9-6.3,22.5" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-21.9,162.8c0,0,0.2,2,0.2,5.7" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-28.9,165.9l-8.7,14" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-42.6,245.4c-0.7,1.4-1.4,2.8-2.1,4.2" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-87.1,238.3c0.1,1.7,0.3,3.3,0.5,5" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /><Path d="M-70.4,153.7c0.3,7.1,0.8,14.3,1.6,21.5" fill="none" stroke="#000000" strokeWidth={1.7008} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={11.3386} /></G>
     },
     shadow: {
-        right_thigh: <G id="contours" className="st9">
-          <Path d="M-50.1,5.9c0,0,87.5,3,126.8-9.6" />
-          <Path d="M-50.1,5.9c0,0-28.3,83.3-18.9,169.3" />
-          <Path d="M-70.9,153.7c0,0-22.2,37.7-15.9,89.6" />
-          <Path d="M-29.1,165.9l-8.7,14" />
-          <Path d="M-22.1,162.8c0,0,4.2,35.3-22.9,86.8" />
-          <Path d="M24.7,81.2c0,0-8,48.6-46.5,87.9" />
-          <Path d="M76.6-3.7L76.4,9.6c0,0,18.9,72,4.2,142.7" />
-          <Path d="M82.5,144.3l1.6,17.8l-7.3,21.3l1.6,52.2" />
-          <Path d="M18.6,103.4c0,0,4.7,40.9,11,60.3l-7.5,29.9c0,0,1.6,25,11,43.7" />
-          <Path d="M-87.3,238.9c-3.1,0.3-6.5,1.5-6.5,1.5s25.3,13.7,55.1,8.8c0,0-1-1.7-3.7-3.6" />
-          <Path d="M-96.7,261.4l2.9-21.1" />
-          <Path d="M-41.6,269.8l2.9-20.6" />
-          <Path d="M-96.7,261.4c0,0,31.9,15,55.1,8.4" />
-          <Path d="M83.5,234.3c-24,12.1-55.3,2.7-55.3,2.7v20.2c0,0,36.2,7.4,58-2.2L83.5,234.3z" />
-          <Path d="M28.2,237c0,0,0.2-1.5,2.4-3.5" />
-          <Path d="M83.5,234.3c0,0-1.3-1.5-4.6-3" />
-          <Path d="M50.2,151.4l9,18.3" />
-          <Path d="M-36.6,6.4v9.5" />
-          <Path d="M-20.5,6.7v8.5" />
-          <Path d="M-3.4,6.4v8.8" />
-          <Path d="M12.1,5.9v8.6" />
-          <Path d="M47.5,2.7v8.4" />
-          <Path d="M58.7,1.2v8.4" />
-          <Path d="M68.9-1.2v8.5" />
-          <Path d="M-58,35.8l19.6,1.5" />
-          <Path d="M-37.5,34.7l-5,23l-21.4,5.5l-1.8,8.6l28.7-8.4l8.9-28.6L-37.5,34.7z" />
-          <Path d="M81.9,39.4l-6.3-5.5L73,19.5l-7.3,0.6l5,18.1L83.4,49" />
-          <Path d="M73.7,21.9l5-1.1" />
-          <Path d="M21.3,5.2c0,0,5.2,37.2,0.3,69.7" />
-          <Path d="M38,3.6c0,0,3.3,40.8-2.1,70.6" />
-          <Path d="M21.6,74.9c0,0,6.4,5.2,14.3-0.7" />
-          <Ellipse cx={31.1} cy={18.9} rx={3.8} ry={3.7} />
-        </G>
+        right_thigh: <G id="right_thigh_shadow"><Path d="M83.5,234.3l2.7,20.7L71,258.8l-15.6,1l-11.2-0.5l-16-2.1V237l5.1,0.6l-2.5-3.9c0,0-3.5-14-4-15.2s-3.7-12.2-3.7-12.2l-0.8-12.5l4.7-17l2.8-13l-2.5-11.4L25.1,141l-3.2-18.8l-3.1-18.8l-4.5,12.7l-8.8,16.6l-12.7,20.2l-14.6,16.3l-1,16.4l-1.5,11.4l-5.4,16.6l-5.1,15.1l-7.7,16.9l-2.4,3.9l6.1-0.4l-2.9,20.6l-14.6,1.7l-18.4-2.1l-22.1-8l3-21l7,2.8l-0.8-9.8l-0.2-12.7l0.7-10.7l0.7-9.5L-83,187l3.8-13l3.7-9.3l4.5-11.1l0.4-19.3l0.7-18.3l2.7-29.2l1.5-15l1.8-8.6l3.8-17l2.1-10.4l4.5-17.1l3.4-12.8l13.6,0.4l9.1-0.6L-15,6.2L3.5,5l17.8,0.2L38,3.6l20.7-2.4l10.1-2.4l7.8-2.5L76.4,9.6l2.5,11.2l4.6,28.3l3.4,38.5l-1,26.5l-3.3,30.2l1.6,17.8l-7.3,21.3l1.1,33l0.7,19.3L83.5,234.3z" stroke="#000000" strokeWidth={0.75} strokeMiterlimit={11.3386} /></G>
     }
-};
+}
 
 export default component;

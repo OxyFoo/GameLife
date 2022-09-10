@@ -84,6 +84,7 @@
             $versionApp    = $this->data['version'];
             $versionServer = $appData['Version'];
             $maintenance   = $appData['Maintenance'];
+            $reset         = array_key_exists('reset', $this->data);
 
             if (!isset($versionApp)) {
                 return;
@@ -105,19 +106,34 @@
             $osName = $this->data['deviceOSName'];
             $osVersion = $this->data['deviceOSVersion'];
 
-            if (isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
-                $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
-                if ($device === null) {
-                    $device = Devices::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
-                }
-                if ($device === null) {
-                    return;
-                }
-
-                Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
-                $this->output['devMode'] = $device->DevMode;
-                $this->output['status'] = 'ok';
+            if (!isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
+                return;
             }
+
+            $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+            if ($device === null) {
+                $device = Devices::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
+            }
+            if ($device === null) {
+                return;
+            }
+
+            if ($reset) {
+                $command = "SELECT `ID` FROM TABLE WHERE `Devices` REGEXP '^.*(\\\\[|,)$device->ID(\\\\]|,).*$'";
+                $focusAccounts = $this->db->QueryPrepare('Accounts', $command);
+                if ($focusAccounts === false) return;
+
+                foreach ($focusAccounts as $row) {
+                    $ID = intval($row['ID']);
+                    $account = Accounts::GetByID($this->db, $ID);
+                    $this->output["$ID"] = $account;
+                    Accounts::RemDevice($this->db, $device->ID, $account, 'Devices');
+                }
+            }
+
+            Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
+            $this->output['devMode'] = $device->DevMode;
+            $this->output['status'] = 'ok';
         }
 
         /**

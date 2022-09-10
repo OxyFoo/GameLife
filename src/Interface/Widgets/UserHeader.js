@@ -100,7 +100,7 @@ class UserHeader extends React.Component {
                         size={frameSize}
                         delayTime={0}
                         loadingTime={0}
-                        onlyTop={true}
+                        bodyView={'topHalf'}
                     />
                 )}
             </Button>

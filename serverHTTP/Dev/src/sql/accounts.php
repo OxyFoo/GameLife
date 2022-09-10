@@ -118,6 +118,9 @@
             }
 
             unset($cell[array_search($deviceID, $cell)]);
+            $isIndexed = array_values($cell) === $cell;
+            if (!$isIndexed) $cell = array_values($cell);
+
             $newCell = json_encode($cell);
             if ($newCell === false) {
                 ExitWithStatus('Error: JSON encode failed');

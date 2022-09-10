@@ -29,7 +29,6 @@ const itemContainerSize = {
 
 class Item {
     ID = '';
-    Variant = null;
     /** @type {Slot} */
     Slot = '';
     Name = { fr: '', en: '' };

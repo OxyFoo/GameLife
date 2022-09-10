@@ -37,7 +37,7 @@ class BackLogin extends React.Component {
     }
 
     checkConnection = async () => {
-        await user.server.Ping();
+        await user.server.Ping(true);
         if (!user.server.online) {
             user.interface.ChangePage('waitinternet');
         }

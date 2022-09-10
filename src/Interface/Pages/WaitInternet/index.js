@@ -35,9 +35,8 @@ const styles = StyleSheet.create({
         right: 0
     },
     text: {
-        width: '90%',
         fontSize: 16,
-        paddingHorizontal: '5%'
+        paddingHorizontal: 24
     }
 });
 

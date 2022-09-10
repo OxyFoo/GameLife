@@ -50,6 +50,13 @@ class EditorAvatarRender extends EditorAvatarBack {
         const character = this.slotCharacters[slot];
         const containerSize = dataManager.items.GetContainerSize(slot);
 
+        let onlyItems = true;
+        let bodyView = 'full';
+        if (character.items.includes('hair_01')) {
+            onlyItems = false;
+            bodyView = 'head';
+        }
+
         return (
             <Button
                 style={styles.box}
@@ -63,7 +70,8 @@ class EditorAvatarRender extends EditorAvatarBack {
             >
                 <Frame
                     characters={[ character ]}
-                    onlyItems={true}
+                    onlyItems={onlyItems}
+                    bodyView={bodyView}
                     delayTime={2000}
                     size={containerSize}
                 />

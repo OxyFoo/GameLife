@@ -11,6 +11,8 @@ import { ANIMATIONS } from '../../../../res/items/humans/Characters';
 /**
  * @typedef {import('./Character').default} Character
  * @typedef {import('../../../../res/items/humans/Characters').PartsName} PartsName
+ * 
+ * @typedef {'full'|'topHalf'|'head'} BodyView
  */
 
 class Body {
@@ -165,25 +167,31 @@ class Body {
 
     /**
      * @param {Part} part
-     * @param {'full'|'topHalf'} size
+     * @param {BodyView} size
      * @returns {Array<Part>}
      */
     getChilds = (part, size = 'full') => {
-        const partToRemove = [
+        const head_partToRemove = 'bust';
+        const topHalf_partToRemove = [
             'left_thigh',
             'right_thigh',
             'left_forearm',
             'right_forearm'
         ];
-        if (size === 'topHalf' && partToRemove.includes(part.name)) {
+
+        if (size === 'head' && part.name === head_partToRemove) {
+            return [ part.childs[0], ...part.childs[0].childs.map(part => this.getChilds(part, 'full')).flat() ];
+        }
+        else if (size === 'topHalf' && topHalf_partToRemove.includes(part.name)) {
             return [];
         }
+
         return [ part, ...part.childs.map(part => this.getChilds(part, size)).flat() ];
     }
 
     /**
      * @param {'all'|'onlyItems'} type
-     * @param {'full'|'topHalf'} size
+     * @param {BodyView} size
      * @returns {JSX.Element}
      */
     render = (type = 'all', size = 'full') => {

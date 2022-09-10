@@ -112,7 +112,7 @@ class Console extends React.Component {
     }
 
     deleteAll = async () => {
-        user.Clear(false);
+        await user.Clear(false);
         RNExitApp.exitApp();
     }
 

@@ -58,6 +58,7 @@ class UserManager {
         /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
 
+        // TODO - Useful ?
         this.tempSelectedTime = null;
         this.tempMailSent = null;
     }

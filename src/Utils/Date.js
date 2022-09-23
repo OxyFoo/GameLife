@@ -1,7 +1,7 @@
 import langManager from '../Managers/LangManager';
 
 import { GetDate } from './Time';
-import { IsUndefined, TwoDigit } from './Functions';
+import { TwoDigit } from './Functions';
 
 const DAYS = {
     sunday: 0,
@@ -16,7 +16,7 @@ const DAYS = {
 /**
  * Return day number (0-6)
  * @param {Date} date Date object
- * @param {number} firstDay
+ * @param {number} [firstDay] First day of week, default: 1 (monday)
  * @returns {number} 0-6
  */
 function GetDay(date, firstDay = DAYS.monday) {
@@ -26,13 +26,17 @@ function GetDay(date, firstDay = DAYS.monday) {
 
 /**
  * Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
- * @param {number} month
- * @param {number} year
+ * @param {number?} [month] Current month if null
+ * @param {number?} [year] Current year if null
+ * @param {number} [start=1] First day of week, default: 1 (monday)
  * @returns {number[][]}
  */
 function GetBlockMonth(month, year, start = DAYS.monday) {
-    if (IsUndefined(month)) month = new Date().getMonth();
-    if (IsUndefined(year)) year = new Date().getFullYear();
+    if (month === null || year === null) {
+        const now = new Date();
+        if (month === null) month = now.getMonth();
+        if (year === null) year = now.getFullYear();
+    }
 
     const date = new Date(year, month, 1);
     let output = [];

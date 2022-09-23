@@ -54,7 +54,8 @@ class BackCalendar extends React.Component {
         };
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            const date = new Date(this.state.selectedYear, this.state.selectedMonth, this.state.selectedDate);
+            const { selectedYear, selectedMonth, selectedDate } = this.state;
+            const date = new Date(selectedYear, selectedMonth, selectedDate);
             const currActivities = user.activities.GetByTime(GetTime(date, true)).reverse();
             this.setState({ currActivities });
         });
@@ -156,6 +157,7 @@ class BackCalendar extends React.Component {
             const block = GetBlockMonth(month, year);
             const week = block.find(w => w.includes(day));
             const date = new Date(year, month, day);
+            const now = new Date();
             const activities = user.activities.GetByTime(GetTime(date, true)).reverse();
 
             this.setState({
@@ -166,7 +168,7 @@ class BackCalendar extends React.Component {
                 currWeek: week
             });
             if (!this.state.opened) await this.showPanel();
-            date.setHours(new Date().getHours(), new Date().getMinutes(), 0, 0);
+            date.setHours(now.getHours(), now.getMinutes(), 0, 0);
             user.tempSelectedTime = RoundToQuarter(GetTime(date));
         } else {
             // Unselect day (calendar mode)
@@ -180,7 +182,7 @@ class BackCalendar extends React.Component {
                 selectedDate: null,
                 selectedMonth: null,
                 selectedYear: null,
-                currWeek: [],
+                currWeek: []
             });
         }
     }

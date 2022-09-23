@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Animated, Dimensions } from 'react-native';
+import { View, FlatList, Animated, Dimensions } from 'react-native';
 
 import BackCalendar from './back';
+import styles from './style';
 import user from '../../../Managers/UserManager';
 import themeManager from '../../../Managers/ThemeManager';
 
@@ -45,7 +46,7 @@ class Calendar extends BackCalendar {
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
 
         return (
-            <Page style={{ padding: 0 }} scrollable={false} topOffset={106} bottomOffset={156}>
+            <Page style={styles.page} scrollable={false} topOffset={106} bottomOffset={156}>
                 <Animated.View style={styleContent}>
                     {/* Month + arrows to show calendar */}
                     <View style={styles.row}>
@@ -73,7 +74,6 @@ class Calendar extends BackCalendar {
                     <View style={[styles.pannel, { backgroundColor: themeManager.GetColor('backgroundGrey') }]}>
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         <FlatList
-                            //contentContainerStyle={{ padding: '2%' }}
                             style={{ marginHorizontal: '5%' }}
                             columnWrapperStyle={{ marginBottom: '5%', justifyContent: 'space-between' }}
                             data={this.state.currActivities}
@@ -110,50 +110,5 @@ class Calendar extends BackCalendar {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    row: {
-        width: '100%',
-        marginTop: 12,
-        paddingHorizontal: '5%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    weekRow: {
-        flex: 1,
-        marginBottom: 0
-    },
-    title: {
-        fontWeight: 'bold'
-    },
-    months: {
-        height: '80%'
-    },
-
-    mainContent: {
-        position: 'absolute',
-        top: 130,
-        width: '100%',
-        height: SCREEN_HEIGHT - 130,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-
-        zIndex: 100,
-        elevation: 100
-    },
-    pannel: {
-        width: '100%',
-        height: '90%',
-        marginTop: 12,
-        paddingBottom: 100,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16
-    },
-    date: {
-        marginVertical: 24,
-        fontWeight: 'bold'
-    }
-});
 
 export default Calendar;

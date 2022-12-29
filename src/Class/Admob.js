@@ -17,7 +17,7 @@ const VERSION = require('../../package.json').version;
  * 
  * @typedef {object} AdTypes
  * @property {FirebaseAdMobTypes.AdEventListener} custom
- * @property {(state: AdStates) => void} add10Ox
+ * @property {(state: AdStates) => void} add30Ox
  */
 
 class Ad {
@@ -117,10 +117,10 @@ class Admob {
         if (rewarded === null) return null;
 
         let _event = event;
-        if (type === 'add10Ox') _event = (type, error, data) => this.Event10Ox(type, error, data, rewarded, event);
+        if (type === 'add30Ox') _event = (type, error, data) => this.Event30Ox(type, error, data, rewarded, event);
         const unsubscriber = rewarded.ad.onAdEvent(_event);
         rewarded.unsubscriber = unsubscriber;
-        if (type === 'add10Ox' && rewarded.ad?.loaded) {
+        if (type === 'add30Ox' && rewarded.ad?.loaded) {
             event('ready');
         } else if (!rewarded.ad.loaded) {
             rewarded.ad.load();
@@ -140,10 +140,10 @@ class Admob {
         if (interstitial === null) return null;
 
         let _event = event;
-        if (type === 'add10Ox') _event = (type, error, data) => this.Event10Ox(type, error, data, interstitial, event);
+        if (type === 'add30Ox') _event = (type, error, data) => this.Event30Ox(type, error, data, interstitial, event);
         const unsubscriber = interstitial.ad.onAdEvent(_event);
         interstitial.unsubscriber = unsubscriber;
-        if (type === 'add10Ox' && interstitial.ad?.loaded) {
+        if (type === 'add30Ox' && interstitial.ad?.loaded) {
             event('ready');
         } else if (!interstitial.ad.loaded) {
             interstitial.ad.load();
@@ -154,9 +154,9 @@ class Admob {
     /**
      * @type {FirebaseAdMobTypes.AdEventListener}
      * @param {Ad} ad
-     * @param {AdTypes['add10Ox']} callback
+     * @param {AdTypes['add30Ox']} callback
      */
-    Event10Ox = async (type, error, data, ad, callback = () => {}) => {
+    Event30Ox = async (type, error, data, ad, callback = () => {}) => {
         if (!!error) {
             this.user.interface.console.AddLog('error', 'Ad error:', error.message);
             callback('error');

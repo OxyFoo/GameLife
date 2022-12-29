@@ -5,7 +5,7 @@ import renderGiftCodePopup from './giftCodePopup';
 
 /**
  * @typedef {import('../../../Class/Admob').AdStates} AdStates
- * @typedef {import('../../../Class/Admob').AdTypes['add10Ox']} AdEvent
+ * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
  */
 
 class BackShop extends React.Component {
@@ -15,7 +15,7 @@ class BackShop extends React.Component {
     }
 
     componentDidMount() {
-        this.rewardedShop = user.admob.GetRewardedAd('shop', 'add10Ox', this.onAdStateChange);
+        this.rewardedShop = user.admob.GetRewardedAd('shop', 'add30Ox', this.onAdStateChange);
     }
     componentWillUnmount() {
         user.admob.ClearEvents('shop');

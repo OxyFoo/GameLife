@@ -12,7 +12,7 @@ import { GetTime } from '../../../Utils/Time';
 /**
  * @typedef {import('../../../Class/Tasks').Task} Task
  * @typedef {import('../../../Class/Admob').AdStates} AdStates
- * @typedef {import('../../../Class/Admob').AdTypes['add10Ox']} AdEvent
+ * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
  */
 
 class BackTasks extends React.Component {
@@ -46,7 +46,7 @@ class BackTasks extends React.Component {
         this.state.tasks = user.tasks.Get();
     }
     componentDidMount() {
-        this.rewardedShop = user.admob.GetRewardedAd('todo', 'add10Ox', this.adStateChange);
+        this.rewardedShop = user.admob.GetRewardedAd('todo', 'add30Ox', this.onAdStateChange);
     }
     componentWillUnmount() {
         user.admob.ClearEvents('todo');

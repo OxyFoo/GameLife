@@ -141,7 +141,7 @@ class Popup extends React.PureComponent {
                 <Text style={styles.message}>{message}</Text>
                 <View style={styles.row}>{buttons}</View>
             </>
-        )
+        );
     }
 
     content() {

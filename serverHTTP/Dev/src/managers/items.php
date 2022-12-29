@@ -257,18 +257,18 @@
                 $beta = $betaTesters[0]['beta'] != 0;
 
                 // Simple tiper (None of both)
-                $rewardOx = 60;
+                $rewardOx = 1000;
                 $rewardItems = array('Title 18');
 
                 // Beta tester
                 if ($beta) {
-                    $rewardOx = 120;
+                    $rewardOx = 2000;
                     array_push($rewardItems, 'Title 16');
                 }
 
                 // Max tiper (tiper was gave more than 100e)
                 if ($maxTiper) {
-                    $rewardOx = 200;
+                    $rewardOx = 3000;
                     array_push($rewardItems, 'Title 17');
                 }
 

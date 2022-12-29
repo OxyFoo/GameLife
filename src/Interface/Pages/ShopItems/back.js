@@ -10,7 +10,7 @@ import { renderTitlePopup, renderItemPopup, renderItemEditorPopup } from './item
 
 /**
  * @typedef {import('../../../Class/Admob').AdStates} AdStates
- * @typedef {import('../../../Class/Admob').AdTypes['add10Ox']} AdEvent
+ * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
  */
 
 const SHOP_NUMBER_TITLES = 3;

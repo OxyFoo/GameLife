@@ -13,7 +13,7 @@ import Icon from './Icon';
 
 const ButtonAdProps = {
     button: null,
-    oxAmount: 10,
+    oxAmount: 30,
 
     /** @type {AdStates} */
     state: 'wait'

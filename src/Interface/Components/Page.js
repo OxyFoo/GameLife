@@ -2,11 +2,10 @@ import * as React from 'react';
 import { Animated, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
 import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
+import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
-
-const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
 
 const PageProps = {
     /** @type {StyleProp<ViewStyle>} */
@@ -17,6 +16,9 @@ const PageProps = {
 
     /** @type {boolean} If true, user can scroll a little over the page for add a smooth effect */
     canScrollOver: true,
+
+    /** @type {boolean} Define page as "home page" (Set offsets to top & bottom) */
+    isHomePage: false,
 
     /** @type {number} */
     topOffset: 0,
@@ -47,6 +49,7 @@ class Page extends React.Component {
         this.posY = 0;
         this.scrollEnabled = true;
     }
+
     state = {
         height: 0,
         positionY: new Animated.Value(0),
@@ -64,12 +67,14 @@ class Page extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
-        const  { x, y, width, height } = event.nativeEvent.layout;
+        const nativeEvent = event?.nativeEvent || null;
+        if (nativeEvent === null) return;
+
+        const height = nativeEvent.layout.height;
         if (height !== this.state.height) {
-            this.setState({ height: height }, () => {
-                this.posY = this.limitValues(this.posY);
-                TimingAnimation(this.state.positionY, this.posY, 100).start();
-            });
+            this.setState({ height: height });
+            this.posY = this.limitValues(this.posY);
+            TimingAnimation(this.state.positionY, this.posY, 300).start();
         }
         this.props.onLayout(event);
     }
@@ -98,18 +103,24 @@ class Page extends React.Component {
         // No scroll over bottom
         const { height } = this.state;
         const bottom = value + height;
-        const maxHeight = SCREEN_HEIGHT - this.props.bottomOffset;
+        const bottomOffset = this.props.isHomePage ? user.interface.bottomBar.state.height : this.props.bottomOffset;
+        const maxHeight = SCREEN_HEIGHT - bottomOffset;
+
+        // No scroll over bottom
         if (!canScrollOver) {
             if (bottom < maxHeight)
                 value = maxHeight - height;
         }
-        else if (height > maxHeight) {
-            if (bottom < maxHeight)
-                value = (maxHeight - height) + ((value - (maxHeight - height)) / reduceScroll);
-        } else
 
         // Reduce over scroll bottom
-        if (value < 0) {
+        else if (height > maxHeight) {
+            if (bottom < maxHeight) {
+                value = (maxHeight - height) + ((value - (maxHeight - height)) / reduceScroll);
+            }
+        }
+
+        // Reduce over scroll bottom (if height < maxHeight)
+        else if (value < 0) {
             value /= reduceScroll;
         }
 
@@ -117,8 +128,12 @@ class Page extends React.Component {
         if (!canScrollOver)
             if (value > 0)
                 value = 0;
+
         // Reduce over scroll top
-        if (value > 0) value /= reduceScroll;
+        if (value > 0) {
+            value /= reduceScroll;
+        }
+
         return value;
     }
 
@@ -190,13 +205,17 @@ class Page extends React.Component {
     }
 
     render() {
+        const valueOffset = this.props.isHomePage ? user.interface.header.state.height : this.props.topOffset;
         const position = { transform: [{ translateY: this.state.positionY }] };
-        const topOffset = { paddingTop: 32 + this.props.topOffset };
+        const style = {
+            paddingTop: valueOffset,
+            minHeight: SCREEN_HEIGHT - this.props.topOffset - this.props.bottomOffset - 128
+        };
 
         return (
             <>
-                <AnimatedKeyboardAvoidingView
-                    style={[styles.parent, this.props.style, position, topOffset]}
+                <Animated.View
+                    style={[styles.parent, this.props.style, position, style]}
                     behavior={'padding'}
                     onLayout={this.onLayout}
                     onTouchStart={this.onTouchStart}
@@ -205,7 +224,7 @@ class Page extends React.Component {
                     onStartShouldSetResponder={this.props.onStartShouldSetResponder}
                 >
                     {this.props.children}
-                </AnimatedKeyboardAvoidingView>
+                </Animated.View>
                 {this.renderOverlay()}
             </>
         );

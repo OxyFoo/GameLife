@@ -10,20 +10,18 @@ import { Page, Icon, Text, Button } from '../../Components';
 class Shop extends BackShop {
     render() {
         const lang = langManager.curr['shop'];
-        const adRemaining = user.informations.adRemaining;
 
         return (
-            <Page canScrollOver={true} topOffset={106} bottomOffset={156}>
+            <Page isHomePage canScrollOver>
                 <View style={styles.wallet}>
                     <Text style={styles.ox} color='main1'>{user.informations.ox}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
 
                 <Button.Ad
-                    style={[styles.button, styles.adButton]}
-                    state={adRemaining <= 0 ? 'notAvailable' : this.state.adState}
+                    id='shop'
                     color='main2'
-                    onPress={this.watchAd}
+                    style={[styles.button, styles.adButton]}
                 />
 
                 <Button

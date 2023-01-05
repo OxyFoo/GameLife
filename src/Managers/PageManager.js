@@ -94,14 +94,19 @@ class PageManager extends React.Component{
         this.screenList = new React.createRef();
 
         /**
-         * @type {Console}
-         */
-        this.console = new React.createRef();
-
-        /**
          * @type {UserHeader}
          */
         this.header = new React.createRef();
+
+        /**
+         * @type {BottomBar}
+         */
+        this.bottomBar = new React.createRef();
+
+        /**
+         * @type {Console}
+         */
+        this.console = new React.createRef();
     }
 
     componentDidMount() {
@@ -330,14 +335,14 @@ class PageManager extends React.Component{
                 {Range(PAGE_NUMBER).map(newPage)}
                 <Animated.View style={overlayStyle} pointerEvents='none' />
 
-                <UserHeader ref={ref => { if (ref !== null) this.header = ref }} show={this.state.bottomBarShow} editorMode={false} />
-                <BottomBar show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
-                <Popup ref={ref => { if (ref !== null) this.popup = ref }} />
+                <UserHeader ref={ref => this.header = ref } show={this.state.bottomBarShow} editorMode={false} />
+                <BottomBar ref={ref => this.bottomBar = ref } show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
+                <Popup ref={ref => this.popup = ref } />
 
-                <ScreenList ref={ref => { if (ref !== null) this.screenList = ref }} />
-                <ScreenInput ref={ref => { if (ref !== null) this.screenInput = ref }} />
+                <ScreenList ref={ref => this.screenList = ref } />
+                <ScreenInput ref={ref => this.screenInput = ref } />
 
-                <Console ref={ref => { if (ref !== null) this.console = ref }} />
+                <Console ref={ref => this.console = ref } />
             </LinearGradient>
         )
     }

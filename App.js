@@ -10,9 +10,6 @@ import { CheckDate } from './src/Utils/DateCheck';
 
 class App extends React.Component {
     componentDidMount() {
-        // Ignore the warning (NativeEventEmitter & No connection promise rejection)
-        LogBox.ignoreLogs(['new NativeEventEmitter', 'Possible Unhandled Promise Rejection (id: 0)']);
-
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
 

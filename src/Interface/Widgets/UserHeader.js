@@ -28,6 +28,7 @@ const UserHeaderProps = {
 
 class UserHeader extends React.Component {
     state = {
+        height: 0,
         username: '',
         titleText: '',
         animPosY: null,
@@ -72,6 +73,11 @@ class UserHeader extends React.Component {
     }
 
     ShowAvatar = (value = false) => this.setState({ showAvatar: value });
+
+    onLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ height });
+    }
 
     renderInteraction = () => {
         const { editorMode } = this.props;
@@ -163,7 +169,10 @@ class UserHeader extends React.Component {
         const animStyle = { transform: [{ translateY: animPosY }] };
 
         return (
-            <Animated.View style={[animStyle, styles.absolute]}>
+            <Animated.View
+                style={[animStyle, styles.absolute]}
+                onLayout={this.onLayout}
+            >
                 <LinearGradient
                     style={[styles.absolute, styles.linear]}
                     colors={background}

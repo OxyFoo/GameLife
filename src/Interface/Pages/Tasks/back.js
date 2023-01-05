@@ -11,14 +11,10 @@ import { GetTime } from '../../../Utils/Time';
 
 /**
  * @typedef {import('../../../Class/Tasks').Task} Task
- * @typedef {import('../../../Class/Admob').AdStates} AdStates
- * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
  */
 
 class BackTasks extends React.Component {
     state = {
-        /** @type {AdStates} */
-        adState: 'wait',
         tasks: [],
 
         scrollable: true,
@@ -44,12 +40,6 @@ class BackTasks extends React.Component {
 
         user.tasks.RefreshScheduleTasks();
         this.state.tasks = user.tasks.Get();
-    }
-    componentDidMount() {
-        this.rewardedShop = user.admob.GetRewardedAd('todo', 'add30Ox', this.onAdStateChange);
-    }
-    componentWillUnmount() {
-        user.admob.ClearEvents('todo');
     }
 
     addTask = () => {
@@ -147,11 +137,6 @@ class BackTasks extends React.Component {
     onScroll = (event) => {
         this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
     }
-
-    watchAd = () => this.rewardedShop.show();
-
-    /** @type {AdEvent} */
-    adStateChange = (state) => this.setState({ adState: state });
 }
 
 export default BackTasks;

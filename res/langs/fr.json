@@ -92,6 +92,8 @@
     "server": {
         "alert-tokenexpired-title": "Le token de connexion a expiré",
         "alert-tokenexpired-text": "L'application va se fermer, veuillez la relancer.",
+        "alert-adsuccess-title": "Bravo",
+        "alert-adsuccess-text": "Vous avez gagné {} Ox !",
         "alert-adempty-title": "Plus de pubs",
         "alert-adempty-text": "Vous n'avez plus de pubs disponibles pour aujourd'hui.",
         "alert-error-title": "Erreur",

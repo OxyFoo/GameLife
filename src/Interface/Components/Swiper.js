@@ -89,6 +89,9 @@ class Swiper extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
+        // Prevent vertical scroll when horizontal swipe
+        event.stopPropagation();
+
         this.nextIn = this.props.delayNext;
         this.firstPosX = this.posX;
         this.firstTouchX = event.nativeEvent.pageX;
@@ -98,6 +101,9 @@ class Swiper extends React.Component {
     }
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        // Prevent vertical scroll when horizontal swipe
+        event.stopPropagation();
+
         // Position
         const currPosX = event.nativeEvent.pageX;
         const deltaPosX = this.firstTouchX - currPosX;
@@ -112,11 +118,15 @@ class Swiper extends React.Component {
         // Update
         this.nextIn = this.props.delayNext;
         this.posX = newPosX;
+        const newDotPos = MinMax(0, newPosX, this.props.pages.length - 1);
         TimingAnimation(this.state.positionX, newPosX, 0.1, false).start();
-        TimingAnimation(this.state.positionDots, MinMax(0, newPosX, this.props.pages.length - 1), 0.1, false).start();
+        TimingAnimation(this.state.positionDots, newDotPos, 0.1, false).start();
     }
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
+        // Prevent vertical scroll when horizontal swipe
+        event.stopPropagation();
+
         let newIndex = 0;
         const dec = (this.posX % 1) + this.acc;
         if (dec > 0.5) newIndex = Math.ceil(this.posX);

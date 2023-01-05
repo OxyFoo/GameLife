@@ -10,10 +10,10 @@ const VERSION = require('../../package.json').version;
 
 /**
  * @typedef {'shop'|'todo'} RewardedAds
- * @typedef {string} InterstitialAds
+ * @typedef {'none'} InterstitialAds
  * @typedef {RewardedAds|InterstitialAds} AdNames
  * 
- * @typedef {'ready'|'notAvailable'|'wait'|'error'} AdStates
+ * @typedef {'watched'|'ready'|'notAvailable'|'wait'|'closed'|'error'} AdStates
  * 
  * @typedef {object} AdTypes
  * @property {FirebaseAdMobTypes.AdEventListener} custom
@@ -139,10 +139,13 @@ class Admob {
         let interstitial = this.ads.find(ad => ad.name === adName && ad.type === 'interstitial') || null;
         if (interstitial === null) return null;
 
+        // Add event listener
         let _event = event;
         if (type === 'add30Ox') _event = (type, error, data) => this.Event30Ox(type, error, data, interstitial, event);
         const unsubscriber = interstitial.ad.onAdEvent(_event);
         interstitial.unsubscriber = unsubscriber;
+
+        // Check if ad is ready or load it
         if (type === 'add30Ox' && interstitial.ad?.loaded) {
             event('ready');
         } else if (!interstitial.ad.loaded) {
@@ -180,7 +183,7 @@ class Admob {
                 if (response['status'] === 'ok') {
                     this.user.informations.ox = response['ox'];
                     this.user.informations.DecrementAdRemaining();
-                    callback('wait');
+                    callback('watched');
                 }
                 break;
             case 'opened':
@@ -188,6 +191,7 @@ class Admob {
                 break;
             case 'closed':
                 ad.ad.load();
+                callback('closed');
                 break;
             default:
                 callback('error');

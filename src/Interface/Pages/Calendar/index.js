@@ -46,7 +46,7 @@ class Calendar extends BackCalendar {
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
 
         return (
-            <Page style={styles.page} scrollable={false} topOffset={106} bottomOffset={156}>
+            <Page style={styles.page} isHomePage scrollable={false}>
                 <Animated.View style={styleContent}>
                     {/* Month + arrows to show calendar */}
                     <View style={styles.row}>

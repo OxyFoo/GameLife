@@ -17,7 +17,7 @@ class Home extends BackHome {
         const lvl = langManager.curr['level']['level'];
 
         return (
-            <Page canScrollOver={true} topOffset={106} bottomOffset={156}>
+            <Page isHomePage canScrollOver>
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
                         <Text style={{ marginRight: 8 }}>{lvl}</Text>
@@ -92,8 +92,9 @@ class Home extends BackHome {
 
 const styles = StyleSheet.create({
     XPHeader: {
+        marginTop: 16,
         marginBottom: 12,
-        paddingHorizontal: '5%',
+        paddingHorizontal: 16,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },

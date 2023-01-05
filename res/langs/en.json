@@ -92,6 +92,8 @@
     "server": {
         "alert-tokenexpired-title": "The connection token has expired",
         "alert-tokenexpired-text": "The application will close, please restart it.",
+        "alert-adsuccess-title": "Congrats",
+        "alert-adsuccess-text": "You have won {} Ox!",
         "alert-adempty-title": "No ads available",
         "alert-adempty-text": "You have no more ads available for today.",
         "alert-error-title": "Error",

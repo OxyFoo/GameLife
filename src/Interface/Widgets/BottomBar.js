@@ -15,6 +15,7 @@ const BottomBarProps = {
 class BottomBar extends React.Component {
     state = {
         show: false,
+        height: 0,
         animPosY: new Animated.Value(128),
 
         selectedIndex: 0,
@@ -41,6 +42,12 @@ class BottomBar extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ height: height + 24 }); // 24 = height of the half middle button
+    }
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutBody = (event) => {
         const { width } = event.nativeEvent.layout;
         this.setState({ barWidth: width });
     }
@@ -56,8 +63,12 @@ class BottomBar extends React.Component {
         const stylePos = { transform: [{ translateY: this.state.animPosY }] };
 
         return (
-            <Animated.View style={[styles.parent, stylePos]} pointerEvents={'box-none'}>
-                <View style={styles.body} onLayout={this.onLayout}>
+            <Animated.View
+                style={[styles.parent, stylePos]}
+                onLayout={this.onLayout}
+                pointerEvents={'box-none'}
+            >
+                <View style={styles.body} onLayout={this.onLayoutBody}>
                     {/* Selection bar */}
                     <Animated.View style={[styles.bar, { transform: [{ translateX: this.state.animBarX }] }]} />
 

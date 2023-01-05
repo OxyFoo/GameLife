@@ -16,7 +16,7 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '
  */
 
 const DEBUG_MODE = false;
-const PAGE_NUMBER = 4;
+const PAGE_NUMBER = 6;
 
 /** @type {Array<PageName>} */
 const CACHE_IGNORE = [
@@ -115,6 +115,13 @@ class PageManager extends React.Component{
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.backHandle);
+    }
+
+    LoadDefaultPages = () => {
+        this.setState({
+            pages: [ 'loading', 'home', 'skills', 'shop', 'profile', 'settings' ],
+            pagesContent: [ <Pages.Loading />, <Pages.Home />, <Pages.Skills />, <Pages.Shop />, <Pages.Profile />, <Pages.Settings /> ],
+        });
     }
 
     /**

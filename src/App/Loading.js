@@ -119,8 +119,9 @@ async function LoadData(nextStep) {
     user.admob.LoadAds();
     user.StartTimers();
 
+    user.interface.LoadDefaultPages();
     nextStep();
-    await Sleep(200);
+    await Sleep(500);
 
     if (user.activities.currentActivity === null) {
         while (!user.interface.ChangePage('home')) await Sleep(100);

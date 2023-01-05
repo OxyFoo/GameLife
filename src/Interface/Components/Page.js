@@ -205,7 +205,8 @@ class Page extends React.Component {
     }
 
     render() {
-        const valueOffset = this.props.isHomePage ? user.interface.header.state.height : this.props.topOffset;
+        const headerHeight = user.interface.header.state.height;
+        const valueOffset = this.props.isHomePage ? headerHeight : this.props.topOffset;
         const position = { transform: [{ translateY: this.state.positionY }] };
         const style = {
             paddingTop: valueOffset,

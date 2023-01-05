@@ -16,7 +16,7 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '
  */
 
 const DEBUG_MODE = false;
-const PAGE_NUMBER = 6;
+const PAGE_NUMBER = 8;
 
 /** @type {Array<PageName>} */
 const CACHE_IGNORE = [
@@ -29,7 +29,6 @@ const CACHE_IGNORE = [
     'waitinternet',
     'waitmail',
     'display',
-    'skill',
     'shop',
     'shopitems',
     'task',
@@ -119,8 +118,8 @@ class PageManager extends React.Component{
 
     LoadDefaultPages = () => {
         this.setState({
-            pages: [ 'loading', 'home', 'skills', 'shop', 'profile', 'settings' ],
-            pagesContent: [ <Pages.Loading />, <Pages.Home />, <Pages.Skills />, <Pages.Shop />, <Pages.Profile />, <Pages.Settings /> ],
+            pages: [ 'loading', 'home', '', '', 'skills', 'shop', 'profile', 'settings' ],
+            pagesContent: [ <Pages.Loading />, <Pages.Home />, null, null, <Pages.Skills />, <Pages.Shop />, <Pages.Profile />, <Pages.Settings /> ],
         });
     }
 

@@ -56,7 +56,7 @@ class Activity extends BackActivity {
                 />
 
                 {/* Commentary */}
-                {this.state.comment === null ? (
+                {this.state.comment === '' ? (
                     <Button
                         style={styles.comButton}
                         onPress={this.onAddComment}

@@ -11,6 +11,8 @@ import { DateToFormatString } from '../../../Utils/Date';
 import { PageHeader, StatsBars } from '../../Widgets';
 import { Page, Container, Text, Icon, XPBar, Button } from '../../Components';
 
+// TODO: Refresh history when activity is deleted
+
 class Skill extends BackSkill {
     renderHistoryItem = ({item, i}) => {
         const date = DateToFormatString(GetDate(item.startTime));

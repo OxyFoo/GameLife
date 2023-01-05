@@ -72,7 +72,7 @@ class BackActivity extends React.Component {
             posY: 0,
             animPosY: new Animated.Value(visualisationMode ? 0 : 1),
 
-            comment: visualisationMode ? activity.comment : null,
+            comment: visualisationMode ? activity.comment || '' : '',
             activityStart: visualisationMode ? activity.startTime : null,
             activityDuration: visualisationMode ? activity.duration : 15,
             ActivitySchedule: activitySchedule
@@ -135,10 +135,10 @@ class BackActivity extends React.Component {
     }
 
     onAddComment = () => {
-        if (this.state.comment !== null) return;
+        if (this.state.comment !== '') return;
         const save = () => this.state.visualisationMode && this.AddActivity();
         const callback = (text) => {
-            this.setState({ comment: text.length ? text : null }, save);
+            this.setState({ comment: text }, save);
         };
         const titleCommentary = langManager.curr['activity']['title-commentary'];
         user.interface.screenInput.Open(titleCommentary, '', callback, true);
@@ -146,8 +146,9 @@ class BackActivity extends React.Component {
     onEditComment = () => {
         const titleCommentary = langManager.curr['activity']['title-commentary']
         const save = () => this.state.visualisationMode && this.AddActivity();
+        /** @param {string} text */
         const callback = (text) => {
-            this.setState({ comment: text.length ? text : null }, save);
+            this.setState({ comment: text }, save);
         };
         user.interface.screenInput.Open(titleCommentary, this.state.comment, callback, true);
     }
@@ -155,7 +156,7 @@ class BackActivity extends React.Component {
         const title = langManager.curr['activity']['alert-remcomment-title'];
         const text = langManager.curr['activity']['alert-remcomment-text'];
         const save = () => this.state.visualisationMode && this.AddActivity();
-        const callback = (btn) => btn === 'yes' && this.setState({ comment: null }, save);
+        const callback = (btn) => btn === 'yes' && this.setState({ comment: '' }, save);
         user.interface.popup.Open('yesno', [ title, text ], callback);
     }
 
@@ -171,7 +172,7 @@ class BackActivity extends React.Component {
             user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
             user.RefreshStats();
         } else if (addState === 'edited') {
-            user.interface.BackPage();
+            //user.interface.BackPage();
         } else if (addState === 'notFree') {
             const title = langManager.curr['activity']['alert-wrongtiming-title'];
             const text = langManager.curr['activity']['alert-wrongtiming-text'];

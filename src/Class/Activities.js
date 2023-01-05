@@ -10,7 +10,7 @@ class Activity {
     skillID = 0;
     startTime = 0;
     duration = 0;
-    comment = null;
+    comment = '';
 }
 
 class Activities {

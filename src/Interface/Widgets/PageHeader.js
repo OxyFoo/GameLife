@@ -41,7 +41,7 @@ PageHeader.defaultProps = PageHeaderProps;
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        marginTop: 24,
+        marginTop: 36,
         marginBottom: 48,
 
         display: 'flex',

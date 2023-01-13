@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
@@ -11,7 +10,7 @@ const MAX_TIME = 4 * 60; // Minutes
 
 // TODO - Vérifier lors du tick et de l'ajout que le temps max fonctionne (> 4h ou ne pas mordre sur les actis suivantes)
 
-class BackActivityTimer extends React.Component {
+class BackActivityTimer extends PageBack {
     constructor (props) {
         super(props);
 

@@ -22,7 +22,7 @@ class About extends BackAbout {
         const versionText = lang['text-version'].replace('{}', this.version);
 
         return (
-            <Page style={{ height: '95%' }} canScrollOver={false}>
+            <Page style={{ height: '95%' }} ref={ref => this.refPage = ref} canScrollOver={false}>
                 <PageHeader onBackPress={user.interface.BackPage} hideHelp />
 
                 <View style={styles.page}>

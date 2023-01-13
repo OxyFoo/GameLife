@@ -89,7 +89,7 @@ class Skills extends BackSkills {
 
         return (
             <>
-                <Page canScrollOver={false} onLayout={setheight}>
+                <Page ref={ref => this.refPage = ref} canScrollOver={false} onLayout={setheight}>
                     <PageHeader onBackPress={user.interface.BackPage} />
 
                     <View style={styles.row}>
@@ -120,6 +120,8 @@ class Skills extends BackSkills {
 
                 </Page>
 
+                {/*
+                TODO: Put in Page
                 <View style={[styles.skillsParent, { top: this.state.height }]}>
                     <FlatList
                         style={{ flex: 1 }}
@@ -137,6 +139,7 @@ class Skills extends BackSkills {
                     iconAngle={this.state.ascending ? 90 : -90}
                     onPress={this.switchOrder}
                 />
+                */}
             </>
         )
     }

@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Keyboard } from 'react-native';
 
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
@@ -10,7 +10,7 @@ import langManager from '../../../Managers/LangManager';
  * @typedef {import('../../Widgets/TaskSchedule').OnChangeScheduleEvent} OnChangeScheduleEvent
  */
 
-class BackTask extends React.Component {
+class BackTask extends PageBack {
     constructor(props) {
         super(props);
 

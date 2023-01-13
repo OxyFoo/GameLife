@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { Animated } from 'react-native';
 import { FlatList } from 'react-native';
 
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
@@ -14,7 +14,7 @@ import { GetTime, RoundToQuarter } from '../../../Utils/Time';
  * @typedef {import('../../../Class/Activities').Activity} Activity
  */
 
-class BackCalendar extends React.Component {
+class BackCalendar extends PageBack {
     constructor(props) {
         super(props);
 

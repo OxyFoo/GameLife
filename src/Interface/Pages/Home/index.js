@@ -17,7 +17,7 @@ class Home extends BackHome {
         const lvl = langManager.curr['level']['level'];
 
         return (
-            <Page isHomePage canScrollOver>
+            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
                         <Text style={{ marginRight: 8 }}>{lvl}</Text>

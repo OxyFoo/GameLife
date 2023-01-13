@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 
 import { GetDate, GetTime } from '../../../Utils/Time';
@@ -8,7 +7,7 @@ import { GetDate, GetTime } from '../../../Utils/Time';
  * @typedef {import('./editorProfile').default} ProfileEditor
  */
 
-class BackProfile extends React.Component {
+class BackProfile extends PageBack {
     state = {
         editorOpened: false
     }
@@ -23,7 +22,6 @@ class BackProfile extends React.Component {
         this.totalActivityTime = this.getTotalDuration(activities);
         this.playTime = this.getTimeFromFirst(activities);
 
-        this.refPage = null;
         this.refAvatar = null;
 
         /** @type {ProfileEditor} */

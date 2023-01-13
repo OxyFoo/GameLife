@@ -20,7 +20,7 @@ class Multiplayer extends BackMultiplayer {
         console.log(server);
 
         return (
-            <Page isHomePage canScrollOver>
+            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
                 {pages[server]()}
             </Page>
         );

@@ -1,11 +1,10 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
 const REFRESH_DELAY = 10; // seconds
 
-class BackWaitmail extends React.Component {
+class BackWaitmail extends PageBack {
     constructor(props) {
         super(props);
         this.state = {

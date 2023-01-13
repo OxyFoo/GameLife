@@ -10,7 +10,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 class Display extends BackDisplay {
     render() {
         return (
-            <Page style={styles.page} canScrollOver={true}>
+            <Page ref={ref => this.refPage = ref} style={styles.page} canScrollOver>
                 <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                     <Icon icon={this.icon} size={SCREEN_WIDTH * .8} />
                 </Animated.View>

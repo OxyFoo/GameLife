@@ -1,8 +1,7 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 
-class BackMultiplayer extends React.Component {
+class BackMultiplayer extends PageBack {
     state = {
         server: ''
     }

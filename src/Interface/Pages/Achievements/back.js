@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import dataManager from '../../../Managers/DataManager';
 
@@ -7,7 +6,7 @@ import dataManager from '../../../Managers/DataManager';
  * @typedef {import('../../../Data/Achievements').Achievement} Achievement
  */
 
-class BackAchievements extends React.Component {
+class BackAchievements extends PageBack {
     constructor(props) {
         super(props);
         const completeAchievements = user.achievements.Get();

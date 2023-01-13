@@ -15,13 +15,13 @@ class Settings extends BackSettings {
         const lang = langManager.curr['settings'];
 
         return (
-            <Page ref={ref => !this.state.pageRef && this.setState({ pageRef: ref })}>
+            <Page ref={ref => this.refPage = ref}>
                 <PageHeader onBackPress={user.interface.BackPage} />
 
                 <Button style={styles.margin} color='main2' borderRadius={16} onPress={this.openAbout}>{lang['input-about']}</Button>
 
                 <ComboBox
-                    pageRef={this.state.pageRef}
+                    pageRef={this.refPage}
                     style={styles.margin}
                     title={lang['input-langage']}
                     data={this.state.dataLangs}

@@ -1,11 +1,10 @@
-import * as React from 'react';
 import { Animated } from 'react-native';
 
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import dataManager from '../../../Managers/DataManager';
 
-import { Page } from '../../Components';
+import { Page, PageBack } from '../../Components';
 import { GetTime } from '../../../Utils/Time';
 import { IsUndefined } from '../../../Utils/Functions';
 import { SpringAnimation } from '../../../Utils/Animations';
@@ -15,17 +14,12 @@ import Notifications from '../../../Utils/Notifications';
  * @typedef {import('../../../Class/Activities').Activity} Activity
  */
 
-class BackActivity extends React.Component {
+class BackActivity extends PageBack {
     constructor(props) {
         super(props);
 
         const visualisationMode = this.props.args.hasOwnProperty('activity');
         const isSetSkillID = this.props.args.hasOwnProperty('skillID');
-
-        /**
-         * @type {Page}
-         */
-        this.pageRef = null;
 
         /**
          * @type {Activity}
@@ -98,7 +92,7 @@ class BackActivity extends React.Component {
         if (skill === null) {
             skill = { id: 0, value: '' };
             callback = () => {
-                this.pageRef.GotoY(0);
+                this.refPage.GotoY(0);
                 SpringAnimation(this.state.animPosY, 1).start();
             }
         }
@@ -108,7 +102,7 @@ class BackActivity extends React.Component {
 
     onChangeMode = (index) => {
         this.setState({ startnowMode: index === 1 }, () => {
-            if (index === 1) this.pageRef.GotoY(0);
+            if (index === 1) this.refPage.GotoY(0);
         });
     }
 
@@ -127,10 +121,10 @@ class BackActivity extends React.Component {
 
     onChangeStateSchedule = (opened) => {
         if (opened) {
-            this.pageRef.GotoY(-300);
-            this.pageRef.DisableScroll();
+            this.refPage.GotoY(-300);
+            this.refPage.DisableScroll();
         } else {
-            this.pageRef.EnableScroll();
+            this.refPage.EnableScroll();
         }
     }
 

@@ -22,7 +22,7 @@ class Login extends BackLogin {
         const cguColor = themeManager.GetColor('main1');
 
         return (
-            <Page style={styles.body} canScrollOver={false}>
+            <Page ref={ref => this.refPage = ref} style={styles.body} canScrollOver={false}>
                 <Image style={styles.backgroundCircles} source={this.imageBackground} />
                 <Image style={styles.backgroundImage} source={this.imageMain} />
 

@@ -12,7 +12,7 @@ class Shop extends BackShop {
         const lang = langManager.curr['shop'];
 
         return (
-            <Page isHomePage canScrollOver>
+            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
                 <View style={styles.wallet}>
                     <Text style={styles.ox} color='main1'>{user.informations.ox}</Text>
                     <Icon icon='ox' color='main1' size={24} />

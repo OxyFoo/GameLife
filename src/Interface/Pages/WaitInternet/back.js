@@ -1,10 +1,9 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 
-const REFRESH_DELAY = 2; // seconds
+const REFRESH_DELAY_SECONDS = 2;
 
-class BackWaitinternet extends React.Component {
+class BackWaitinternet extends PageBack {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,7 +12,7 @@ class BackWaitinternet extends React.Component {
     }
 
     componentDidMount() {
-        this.interval = setInterval(this.Loop, REFRESH_DELAY * 1000);
+        this.interval = setInterval(this.Loop, REFRESH_DELAY_SECONDS * 1000);
     }
     componentWillUnmount() {
         clearInterval(this.interval);

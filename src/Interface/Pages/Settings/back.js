@@ -1,14 +1,12 @@
-import * as React from 'react';
-
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
-import { Page } from '../../Components';
+import { Page, PageBack } from '../../Components';
 import { GetTime } from '../../../Utils/Time';
 import Notifications from '../../../Utils/Notifications';
 
-class BackSettings extends React.Component {
+class BackSettings extends PageBack {
     constructor(props) {
         super(props);
         this.initLang = langManager.currentLangageKey;
@@ -18,8 +16,6 @@ class BackSettings extends React.Component {
         const current = dataLangs.find(lang => lang.key === langManager.currentLangageKey);
 
         this.state = {
-            /** @type {Page} */
-            pageRef: null,
             selectedLang: current,
             dataLangs: dataLangs,
             switchMorningNotifs: user.settings.morningNotifications,

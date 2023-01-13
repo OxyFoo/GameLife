@@ -42,7 +42,7 @@ class Tasks extends BackTasks {
 
         return (
             <>
-                <Page scrollable={false}>
+                <Page ref={ref => this.refPage = ref} scrollable={false}>
                     <PageHeader
                         onBackPress={() => user.interface.BackPage()}
                     />
@@ -81,6 +81,9 @@ class Tasks extends BackTasks {
                         />
                     </Container>
                 </Page>
+
+                {/*
+                TODO: Put in Page
                 <Button
                     style={styles.undo}
                     styleAnimation={{ transform: [{ translateY: this.state.animUndoY }] }}
@@ -90,6 +93,7 @@ class Tasks extends BackTasks {
                 >
                     {lang['tasks-undo-button']}
                 </Button>
+                */}
             </>
         );
     }

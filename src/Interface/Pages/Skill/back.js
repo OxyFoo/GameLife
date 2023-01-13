@@ -1,10 +1,9 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import dataManager from '../../../Managers/DataManager';
 
-class BackSkill extends React.Component {
+class BackSkill extends PageBack {
     constructor(props) {
         super(props);
 

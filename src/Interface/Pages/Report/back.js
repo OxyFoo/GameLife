@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { PageBack } from '../../Components';
 import { Dimensions, Keyboard } from 'react-native';
 
 import user from '../../../Managers/UserManager';
@@ -8,7 +8,7 @@ import { Sum } from '../../../Utils/Functions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-class BackReport extends React.Component {
+class BackReport extends PageBack {
     constructor(props) {
         super(props);
 

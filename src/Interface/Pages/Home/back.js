@@ -1,8 +1,7 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 
-class BackHome extends React.Component {
+class BackHome extends PageBack {
     state = {
         experience: user.experience.GetExperience()
     };

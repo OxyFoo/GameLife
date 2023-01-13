@@ -4,20 +4,25 @@ import { View, Image, StyleSheet } from 'react-native';
 import BackWaitinternet from './back';
 import langManager from '../../../Managers/LangManager';
 
-import { Text } from '../../Components';
+import { Page, Text } from '../../Components';
 
 class Waitinternet extends BackWaitinternet {
     render() {
         const textWait = langManager.curr['wait']['wait-internet-text'];
 
         return (
-            <View style={styles.body}>
+            <Page
+                ref={ref => this.refPage = ref}
+                style={styles.body}
+                scrollable={false}
+                canScrollOver={false}
+            >
                 <View style={styles.backgroundCircles}>
                     <Image source={require('../../../../res/logo/login_circles.png')} />
                 </View>
 
                 <Text style={styles.text} color='primary'>{textWait}</Text>
-            </View>
+            </Page>
         )
     }
 }

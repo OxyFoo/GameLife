@@ -1,10 +1,9 @@
-import * as React from 'react';
-
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 
 import { Initialisation } from '../../../App/Loading';
 
-class BackLoading extends React.Component {
+class BackLoading extends PageBack {
     state = {
         icon: 0
     }

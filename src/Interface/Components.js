@@ -11,6 +11,7 @@ import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
 import News from './Components/News';
 import Page from './Components/Page';
+import PageBack from './Components/PageBack';
 import ProgressBar from './Components/ProgressBar';
 import Separator from './Components/Separator';
 import Swiper from './Components/Swiper';
@@ -33,6 +34,7 @@ export {
     Input,
     News,
     Page,
+    PageBack,
     ProgressBar,
     Separator,
     Swiper,

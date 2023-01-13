@@ -1,12 +1,11 @@
-import * as React from 'react';
 import RNExitApp from 'react-native-exit-app';
 
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
-import { Swiper } from '../../Components';
+import { PageBack, Swiper } from '../../Components';
 
-class BackOnboarding extends React.Component {
+class BackOnboarding extends PageBack {
     constructor(props) {
         super(props);
 

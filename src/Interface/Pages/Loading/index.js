@@ -3,14 +3,16 @@ import { View, StyleSheet } from 'react-native';
 
 import BackLoading from './back';
 
-import { GLLoading } from '../../Components';
+import { GLLoading, Page } from '../../Components';
 
 class Loading extends BackLoading {
     render() {
         return (
-            <View style={styles.content} onTouchStart={this.onToucheStart} onTouchEnd={this.onToucheEnd}>
-                <GLLoading state={this.state.icon} />
-            </View>
+            <Page ref={ref => this.refPage = ref} scrollable={false}>
+                <View style={styles.content} onTouchStart={this.onToucheStart} onTouchEnd={this.onToucheEnd}>
+                    <GLLoading state={this.state.icon} />
+                </View>
+            </Page>
         )
     }
 }

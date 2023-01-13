@@ -106,7 +106,12 @@ class ShopItems extends BackShopItems {
         const nullItems = <Text>{lang['error-no-items']}</Text>;
 
         return (
-            <Page canScrollOver={true} bottomOffset={24} topOverlay={<this.topOverlay/>}>
+            <Page
+                ref={ref => this.refPage = ref}
+                bottomOffset={24}
+                topOverlay={<this.topOverlay/>}
+                canScrollOver
+            >
                 <PageHeader style={styles.header} onBackPress={user.interface.BackPage} hideHelp />
 
                 <View style={styles.wallet}>

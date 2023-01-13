@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Animated, Linking } from 'react-native';
 
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
@@ -10,7 +10,7 @@ import { TimingAnimation } from '../../../Utils/Animations';
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
 
-class BackLogin extends React.Component {
+class BackLogin extends PageBack {
     constructor(props) {
         super(props);
 

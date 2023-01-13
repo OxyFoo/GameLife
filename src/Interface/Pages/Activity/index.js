@@ -106,7 +106,7 @@ class Activity extends BackActivity {
 
         return (
             <Page
-                ref={ref => this.pageRef = ref}
+                ref={ref => this.refPage = ref}
                 style={{ paddingHorizontal: 0, paddingBottom: 0 }}
                 scrollable={this.state.selectedSkill.id !== 0}
                 canScrollOver={false}
@@ -132,7 +132,7 @@ class Activity extends BackActivity {
                     {/* Activities */}
                     <Text style={styles.title} bold>{lang['title-activity']}</Text>
                     <ComboBox
-                        pageRef={this.pageRef}
+                        pageRef={this.refPage}
                         style={{ marginBottom: 48 }}
                         data={this.state.skills}
                         title={this.getCategoryName()}

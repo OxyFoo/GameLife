@@ -71,7 +71,11 @@ class Onboarding extends BackOnboarding {
         ];
 
         return (
-            <Page style={{ height: '100%', paddingHorizontal: 0 }} canScrollOver={false}>
+            <Page
+                ref={ref => this.refPage = ref}
+                style={{ height: '100%', paddingHorizontal: 0 }}
+                canScrollOver={false}
+            >
                 <Swiper
                     ref={ref => { if (ref !== null) this.refSwiper = ref; }}
                     height={'90%'}

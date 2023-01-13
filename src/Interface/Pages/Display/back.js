@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { Animated } from 'react-native';
 
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 
 import { SpringAnimation } from '../../../Utils/Animations';
 
-class BackDisplay extends React.Component {
+class BackDisplay extends PageBack {
     constructor(props) {
         super(props);
 

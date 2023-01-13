@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageBack } from '../../Components';
 import { Linking } from 'react-native';
 
 import dataManager from '../../../Managers/DataManager';
 
-class BackAbout extends React.Component {
+class BackAbout extends PageBack {
     constructor(props) {
         super(props);
         const GetContributors = (contrib) => ({ id: contrib.ID, value: contrib.Name });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, BackHandler, StyleSheet } from 'react-native';
+import { Animated, BackHandler, StyleSheet, View } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -10,39 +10,44 @@ import themeManager from './ThemeManager';
 import { TimingAnimation } from '../Utils/Animations';
 import { IsUndefined, Range } from '../Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '../Interface/Widgets';
+import { PageBack } from '../Interface/Components';
 
 /**
+ * @typedef {import('../Interface/Components').PageBack} PageBack
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
+ * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.ShopItems | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Tasks | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
+ * @typedef {{ content: PageType, ref: PageBack, args: object }} PageState
  */
 
 const DEBUG_MODE = false;
-const PAGE_NUMBER = 8;
 
 /** @type {Array<PageName>} */
-const CACHE_IGNORE = [
-    'about',
-    'activity',
-    'activityTimer',
-    'onboarding',
-    'loading',
-    'login',
-    'waitinternet',
-    'waitmail',
-    'display',
+const PAGES_PERSISTENT = [
+    'calendar',
+    'home',
+    //'multiplayer',
+    'profile',
+    'settings',
     'shop',
     'shopitems',
-    'task',
+    'skills',
     'tasks'
 ];
 
 class PageManager extends React.Component{
     state = {
-        pageIndex: 0,
-        pageIndexNext: Math.min(1, PAGE_NUMBER - 1),
         pageArguments: {},
-        pages: Array(PAGE_NUMBER).fill(''),
-        pagesContent: Array(PAGE_NUMBER).fill(null),
-        pagesAnimations: Array(PAGE_NUMBER).fill(0).map(() => new Animated.Value(0)),
+
+        pages: {
+            /** @type {PageName} */
+            selected: '',
+
+            /** @type {{[key: PageName|string]: PageState}} */
+            persistent: {},
+
+            /** @type {PageState|null} */
+            temp: null
+        },
 
         animTransition: new Animated.Value(1),
         animTheme: new Animated.Value(0),
@@ -55,14 +60,10 @@ class PageManager extends React.Component{
     constructor(props) {
         super(props);
 
-        /**
-         * @description Disable changing page while loading
-         */
+        /** @description Disable changing page while loading */
         this.changing = false;
 
-        /**
-         * @description Disable back button
-         */
+        /** @description Disable back button */
         this.backable = true;
 
         /**
@@ -77,35 +78,12 @@ class PageManager extends React.Component{
          */
         this.path = [];
 
-        /**
-         * @type {Popup}
-         */
-        this.popup = new React.createRef();
-
-        /**
-         * @type {ScreenInput}
-         */
-        this.screenInput = new React.createRef();
-
-        /**
-         * @type {ScreenList}
-         */
-        this.screenList = new React.createRef();
-
-        /**
-         * @type {UserHeader}
-         */
-        this.header = new React.createRef();
-
-        /**
-         * @type {BottomBar}
-         */
-        this.bottomBar = new React.createRef();
-
-        /**
-         * @type {Console}
-         */
-        this.console = new React.createRef();
+        /** @type {Popup} */        this.popup = new React.createRef();
+        /** @type {ScreenInput} */  this.screenInput = new React.createRef();
+        /** @type {ScreenList} */   this.screenList = new React.createRef();
+        /** @type {UserHeader} */   this.header = new React.createRef();
+        /** @type {BottomBar} */    this.bottomBar = new React.createRef();
+        /** @type {Console} */      this.console = new React.createRef();
     }
 
     componentDidMount() {
@@ -117,10 +95,9 @@ class PageManager extends React.Component{
     }
 
     LoadDefaultPages = () => {
-        this.setState({
-            pages: [ 'loading', 'home', '', '', 'skills', 'shop', 'profile', 'settings' ],
-            pagesContent: [ <Pages.Loading />, <Pages.Home />, null, null, <Pages.Skills />, <Pages.Shop />, <Pages.Profile />, <Pages.Settings /> ],
-        });
+        const addPage = (page) => ({ [page]: { content: this.getPageContent(page), ref: null, args: {} } });
+        const persistentPages = Object.assign({}, ...PAGES_PERSISTENT.map(addPage));
+        this.setState({ pages: { ...this.state.pages, persistent: persistentPages } });
     }
 
     /**
@@ -128,9 +105,8 @@ class PageManager extends React.Component{
      * @returns {boolean} True if handle is set
      */
     SetCustomBackHandle(handle) {
-        if (typeof(handle) !== 'function') {
-            return false;
-        }
+        if (typeof(handle) !== 'function') return false;
+
         this.customBackHandle = handle;
     }
     ResetCustomBackHandle() {
@@ -157,11 +133,13 @@ class PageManager extends React.Component{
      * @returns {boolean} True if page changed
      */
     BackPage = (force = false) => {
-        if (force && this.changing) {
-            setTimeout(() => this.BackPage(true), 100);
+        if (this.changing) {
+            if (force) {
+                setTimeout(() => this.BackPage(true), 100);
+            }
             return false;
         }
-        if (this.changing) return false;
+
         if (this.path.length < 1) {
             const title = langManager.curr['home']['alert-exit-title'];
             const text = langManager.curr['home']['alert-exit-text'];
@@ -169,7 +147,7 @@ class PageManager extends React.Component{
             this.popup.Open('yesno', [ title, text ], callback);
             return false;
         }
-        this.changing = true;
+
         const [ prevPage, prevArgs ] = this.path[this.path.length - 1];
         this.path.length = this.path.length - 1;
         this.setState({ pageArguments: prevArgs, ignorePage: false });
@@ -179,39 +157,52 @@ class PageManager extends React.Component{
 
     /**
      * Open page
-     * @param {PageName} newpage
+     * @param {PageName} nextpage
      * @param {object} pageArguments
      * @param {boolean} ignorePage
      * @param {boolean} forceUpdate
-     * @returns {boolean} True if changing page started
+     * @returns {Promise|false} True if changing page started
      */
-    ChangePage = (newpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
+    ChangePage = (nextpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
 
-        const prevPage = this.state.pages[this.state.pageIndex];
+        const currentPage = this.state.pages.selected;
 
-        if (IsUndefined(newpage) || newpage === '') {
-            this.forceUpdate(); return false;
-        }
-
-        if (!forceUpdate && newpage == prevPage) {
+        // Undefined page: update & return false
+        if (IsUndefined(nextpage) || nextpage === '') {
+            this.forceUpdate();
             return false;
         }
 
-        if (!this.getPageContent(newpage)) {
+        // Same page & not force update: return false
+        if (!forceUpdate && nextpage === currentPage) {
+            return false;
+        }
+
+        // Page not exist: return false
+        if (this.getPageContent(nextpage) === null) {
             console.warn('error', 'Calling an incorrect page');
             return false;
         };
 
         // If current (prev) page is not ignored, add it to path, except first loading (no first pages)
-        if (!this.state.ignorePage && prevPage != '') {
-            this.path.push([prevPage, this.state.pageArguments]);
+        if (!this.state.ignorePage && currentPage !== '') {
+            this.path.push([currentPage, this.state.pageArguments]);
         }
 
-        this.changing = true;
-        this.setState({ pageArguments, ignorePage }, () => this.pageAnimation(newpage));
+        // Set page arguments
+        const { pages } = this.state;
+        if (Object.keys(pages).includes(nextpage)) {
+            this.setState({ pages: { ...pages, persistent: { ...pages.persistent, [nextpage]: { ...pages.persistent[nextpage], args: pageArguments } } } });
+        } else {
+            this.setState({ pages: { ...pages, temp: { ...pages.temp, args: pageArguments } } });
+        }
 
-        return true;
+        this.setState({ ignorePage });
+        return new Promise(async (resolve) => {
+            await this.pageAnimation(nextpage);
+            resolve();
+        });
     }
 
     /**
@@ -222,9 +213,15 @@ class PageManager extends React.Component{
         TimingAnimation(this.state.animTheme, index, 100).start();
     }
 
+    /**
+     * @param {PageName} newPage
+     * @returns {Promise}
+     */
     pageAnimation = async (newPage) => {
-        const animDuration = 120;
-        this.T = new Date().getTime();
+        console.log('start anim');
+        this.changing = true;
+
+        const T = new Date().getTime();
         if (DEBUG_MODE) console.log('PageManager path:', this.path);
 
         // Bottom bar selected index animation
@@ -234,102 +231,128 @@ class PageManager extends React.Component{
         const newBarState = { bottomBarShow: bottomBarShow, bottomBarIndex: index !== -1 ? index : 2 };
         if (!bottomBarShow) this.setState(newBarState); // Hide bar before animation if needed
 
-        const { pages, pageIndex, pageIndexNext, pagesContent, pagesAnimations, pageArguments, animTransition } = this.state;
+        const { pages } = this.state;
 
-        // Start loading animation
-        TimingAnimation(animTransition, 1, animDuration).start();
-        TimingAnimation(pagesAnimations[pageIndex], 0, animDuration).start();
-
-        let nextIndex = pageIndex;
-
-        // Not keep cache for some pages
-        if (pages.some(p => CACHE_IGNORE.indexOf(p) !== -1)) {
-            const notInCachePage = pages.find(p => CACHE_IGNORE.indexOf(p) !== -1);
-            nextIndex = pages.indexOf(notInCachePage);
-            pages.splice(nextIndex, 1, '');
-            pagesContent.splice(nextIndex, 1, null);
-            await this.setStateSync({ pages, pagesContent });
-        }
-
-        if (pages.includes(newPage)) {
-            nextIndex = pages.indexOf(newPage);
-        } else {
-            if (pages[pageIndex]) {
-                nextIndex = pageIndexNext;
-                if (!CACHE_IGNORE.includes(newPage)) {
-                    this.setState({ pageIndexNext: (pageIndexNext + 1) % PAGE_NUMBER });
+        // Hide current page
+        const selectedPage = pages.selected;
+        if (selectedPage !== '') {
+            if (Object.keys(pages.persistent).includes(selectedPage)) {
+                if (typeof(pages.persistent[selectedPage]?.ref?.refPage?.Hide) === 'function') {
+                    console.log('Hide a', selectedPage);//, pages.persistent[selectedPage]);
+                    pages.persistent[selectedPage].ref.refPage.Hide();
+                }
+            } else {
+                if (typeof(pages.temp?.ref?.refPage?.Hide) === 'function') {
+                    console.log('Hide b', selectedPage);//, pages.temp.ref.refPage);
+                    pages.temp.ref.refPage.Hide();
                 }
             }
-            pages.splice(nextIndex, 1, newPage);
-            pagesContent.splice(nextIndex, 1, this.getPageContent(newPage, pageArguments));
-            await this.setStateSync({ pages, pagesContent });
         }
 
-        await this.setStateSync({ ...newBarState, pageIndex: nextIndex });
+        // Show new page
+        if (Object.keys(pages.persistent).includes(newPage)) {
+            if (typeof(pages.persistent[newPage]?.ref?.refPage?.Show) === 'function') {
+                console.log('Show a', newPage);
+                pages.persistent[newPage].ref.refPage.Show();
+                this.onPageChange();
+                pages.persistent[newPage].ref.componentDidFocused();
+                this.setState({ pages: { ...pages, selected: newPage } });
+            }
+        } else {
+            const tempContent = { content: this.getPageContent(newPage, {}, true), ref: null };
+            this.setState({ pages: { ...pages, selected: newPage, temp: { ...this.state.pages.temp, ...tempContent } } }, () => {
+                if (typeof(this.state.pages.temp?.ref?.refPage?.Show) === 'function') {
+                    this.state.pages.temp.ref.refPage.Show();
+                    this.onPageChange();
+                    this.state.pages.temp.ref.componentDidFocused();
+                } else {
+                    console.log('Ref undefined');
+                }
+            });
+        }
+
+        if (bottomBarShow) this.setState(newBarState); // Show bar after animation if needed
 
         this.changing = false;
-        const elapsedTime = (new Date().getTime()) - this.T;
+        const elapsedTime = (new Date().getTime()) - T;
         if (DEBUG_MODE) console.log('Page changed in ' + elapsedTime + 'ms');
-
-        Animated.parallel([
-            TimingAnimation(animTransition, 0, animDuration),
-            TimingAnimation(pagesAnimations[nextIndex], 1, animDuration)
-        ]).start();
     }
 
     /**
      * @param {PageName} page
-     * @param {object} [args]
+     * @param {object} args
+     * @param {boolean} tempRef
+     * @returns {JSX.Element|null}
      */
-    getPageContent(page, args) {
-        let p;
-        switch (page) {
-            case 'about':           p = <Pages.About />;                    break;
-            case 'achievements':    p = <Pages.Achievements />;             break;
-            case 'activity':        p = <Pages.Activity args={args} />;     break;
-            case 'activitytimer':   p = <Pages.ActivityTimer />;            break;
-            case 'calendar':        p = <Pages.Calendar />;                 break;
-            case 'display':         p = <Pages.Display args={args} />;      break;
-            case 'experience':      p = <Pages.Experience />;               break;
-            case 'home':            p = <Pages.Home />;                     break;
-            case 'loading':         p = <Pages.Loading args={args} />;      break;
-            case 'login':           p = <Pages.Login />;                    break;
-            case 'multiplayer':     p = <Pages.Multiplayer />;              break;
-            case 'onboarding':      p = <Pages.Onboarding />;               break;
-            case 'profile':         p = <Pages.Profile />;                  break;
-            case 'report':          p = <Pages.Report />;                   break;
-            case 'settings':        p = <Pages.Settings />;                 break;
-            case 'shop':            p = <Pages.Shop />;                     break;
-            case 'shopitems':       p = <Pages.ShopItems />;                break;
-            case 'skill':           p = <Pages.Skill args={args} />;        break;
-            case 'skills':          p = <Pages.Skills />;                   break;
-            case 'task':            p = <Pages.Task args={args} />;         break;
-            case 'tasks':           p = <Pages.Tasks />;                    break;
-            case 'waitinternet':    p = <Pages.Waitinternet />;             break;
-            case 'waitmail':        p = <Pages.Waitmail args={args} />;     break;
-            case 'test':            p = <Pages.Test />;                     break;
+    getPageContent(page, args = {}, tempRef = false) {
+        const setRef = () => null;
+        const key = 'page-' + page;
+        if (tempRef && pages.temp !== null) {
+            setRef = (ref) => pages.temp.ref = ref;
+        } else if (pages.persistent[page] !== null) {
+            setRef = (ref) => pages.persistent[page].ref = ref;
         }
-        return p;
+        const pages = {
+            'about':            <Pages.About            key={key} args={args} ref={setRef} />,
+            'achievements':     <Pages.Achievements     key={key} args={args} ref={setRef} />,
+            'activity':         <Pages.Activity         key={key} args={args} ref={setRef} />,
+            'activitytimer':    <Pages.ActivityTimer    key={key} args={args} ref={setRef} />,
+            'calendar':         <Pages.Calendar         key={key} args={args} ref={setRef} />,
+            'display':          <Pages.Display          key={key} args={args} ref={setRef} />,
+            'home':             <Pages.Home             key={key} args={args} ref={setRef} />,
+            'loading':          <Pages.Loading          key={key} args={args} ref={setRef} />,
+            'login':            <Pages.Login            key={key} args={args} ref={setRef} />,
+            'multiplayer':      <Pages.Multiplayer      key={key} args={args} ref={setRef} />,
+            'onboarding':       <Pages.Onboarding       key={key} args={args} ref={setRef} />,
+            'profile':          <Pages.Profile          key={key} args={args} ref={setRef} />,
+            'report':           <Pages.Report           key={key} args={args} ref={setRef} />,
+            'settings':         <Pages.Settings         key={key} args={args} ref={setRef} />,
+            'shop':             <Pages.Shop             key={key} args={args} ref={setRef} />,
+            'shopitems':        <Pages.ShopItems        key={key} args={args} ref={setRef} />,
+            'skill':            <Pages.Skill            key={key} args={args} ref={setRef} />,
+            'skills':           <Pages.Skills           key={key} args={args} ref={setRef} />,
+            'task':             <Pages.Task             key={key} args={args} ref={setRef} />,
+            'tasks':            <Pages.Tasks            key={key} args={args} ref={setRef} />,
+            'waitinternet':     <Pages.Waitinternet     key={key} args={args} ref={setRef} />,
+            'waitmail':         <Pages.Waitmail         key={key} args={args} ref={setRef} />,
+            'test':             <Pages.Test             key={key} args={args} ref={setRef} />
+        };
+        if (pages[page])
+            return pages[page];
+        return null;
+    }
+
+    onPageChange = () => {
+    }
+
+    renderPage = () => {
     }
 
     render() {
-        const { pageIndex, pagesContent, pagesAnimations, animTransition, animTheme } = this.state;
-
-        const interOpacity = { inputRange: [0, 1], outputRange: [0, 0.2] };
-        const overlayStyle = [styles.fullscreen, styles.absolute, { backgroundColor: '#000000', opacity: animTransition.interpolate(interOpacity) }];
+        const { pages, animTheme } = this.state;
 
         const darkBackground = [ themeManager.THEMES.Dark.ground1, themeManager.THEMES.Dark.ground2 ];
         const lightBackground = [ themeManager.THEMES.Light.ground1, themeManager.THEMES.Light.ground2 ];
         const lightOpacity = { opacity: animTheme };
 
-        const newPage = (index) => {
-            const content = pagesContent[index];
-            const style = [ styles.fullscreen, styles.absolute, { opacity: pagesAnimations[index] } ];
-            const event = pageIndex === index ? 'auto' : 'none';
-            return <Animated.View key={'page-'+index} style={style} pointerEvents={event}>{content}</Animated.View>;
-        }
+        const newPage = (pageName = 'temp') => {
+            // Not temp page and not persistent page
+            if (pageName !== 'temp' && !Object.keys(pages.persistent).includes(pageName)) {
+                return null;
+            }
 
-        if (DEBUG_MODE) console.log(this.state.pages);
+            const key = 'page-' + pageName;
+            const Content = pageName === 'temp' ? pages.temp?.content || null : pages.persistent[pageName]?.content || null;
+            return Content;
+            if (Content === null) return null;
+
+            if (pageName === 'temp' && pages.temp?.content) {
+                return <Content key={key} ref={ref => pages.temp.ref = ref} />;
+            } else if (pages.persistent[pageName]?.content) {
+                return <Content key={key} ref={ref => pages.persistent[pageName].ref = ref} />;
+            }
+            return null;
+        }
 
         return (
             <LinearGradient style={styles.fullscreen} colors={darkBackground}>
@@ -338,17 +361,17 @@ class PageManager extends React.Component{
                     <LinearGradient style={styles.fullscreen} colors={lightBackground} />
                 </Animated.View>
 
-                {Range(PAGE_NUMBER).map(newPage)}
-                <Animated.View style={overlayStyle} pointerEvents='none' />
+                {['temp', ...PAGES_PERSISTENT].map(newPage)}
+                {this.renderPage()}
 
-                <UserHeader ref={ref => this.header = ref } show={this.state.bottomBarShow} editorMode={false} />
-                <BottomBar ref={ref => this.bottomBar = ref } show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
-                <Popup ref={ref => this.popup = ref } />
+                <UserHeader ref={ref => { if (ref !== null) this.header = ref } } show={this.state.bottomBarShow} editorMode={false} />
+                <BottomBar ref={ref => { if (ref !== null) this.bottomBar = ref } } show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
+                <Popup ref={ref => { if (ref !== null) this.popup = ref } } />
 
-                <ScreenList ref={ref => this.screenList = ref } />
-                <ScreenInput ref={ref => this.screenInput = ref } />
+                <ScreenList ref={ref => { if (ref !== null) this.screenList = ref } } />
+                <ScreenInput ref={ref => { if (ref !== null) this.screenInput = ref } } />
 
-                <Console ref={ref => this.console = ref } />
+                <Console ref={ref => { if (ref !== null) this.console = ref } } />
             </LinearGradient>
         )
     }

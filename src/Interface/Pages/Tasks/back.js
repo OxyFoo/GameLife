@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Animated, FlatList } from 'react-native';
 import { GestureResponderEvent, LayoutChangeEvent, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 
+import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
@@ -13,7 +14,7 @@ import { GetTime } from '../../../Utils/Time';
  * @typedef {import('../../../Class/Tasks').Task} Task
  */
 
-class BackTasks extends React.Component {
+class BackTasks extends PageBack {
     state = {
         tasks: [],
 

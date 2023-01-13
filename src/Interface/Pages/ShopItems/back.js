@@ -1,10 +1,8 @@
-import * as React from 'react';
-
 import user from '../../../Managers/UserManager';
 import dataManager from '../../../Managers/DataManager';
 import langManager from '../../../Managers/LangManager';
 
-import { Character } from '../../Components';
+import { Character, PageBack } from '../../Components';
 import { GetRandomIndexesByDay } from '../../../Utils/Items';
 import { renderTitlePopup, renderItemPopup, renderItemEditorPopup } from './itemPopup';
 
@@ -16,7 +14,7 @@ import { renderTitlePopup, renderItemPopup, renderItemEditorPopup } from './item
 const SHOP_NUMBER_TITLES = 3;
 const SHOP_NUMBER_ITEMS = 8;
 
-class BackShopItems extends React.Component {
+class BackShopItems extends PageBack {
     state = {
         titlesAvailable: null,
         itemsAvailable: null,

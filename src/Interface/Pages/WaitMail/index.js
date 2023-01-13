@@ -5,7 +5,7 @@ import BackWaitmail from './back';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
-import { Text, Button, ProgressBar } from '../../Components';
+import { Page, Text, Button, ProgressBar } from '../../Components';
 
 class Waitmail extends BackWaitmail {
     render() {
@@ -24,7 +24,12 @@ class Waitmail extends BackWaitmail {
         }
 
         return (
-            <View style={styles.body}>
+            <Page
+                style={styles.body}
+                ref={ref => this.refPage = ref}
+                scrollable={false}
+                canScrollOver={false}
+            >
                 <View style={styles.backgroundCircles}>
                     <Image source={require('../../../../res/logo/login_circles.png')} />
                 </View>
@@ -44,7 +49,7 @@ class Waitmail extends BackWaitmail {
                     onPress={this.onBack}
                     borderRadius={20}
                 />
-            </View>
+            </Page>
         )
     }
 }

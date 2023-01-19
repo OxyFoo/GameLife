@@ -231,7 +231,7 @@
         "btn-todo": "A faire",
         "con-stats": "Statistiques",
         "con-skill-experience": "Compétences",
-        "btn-other-skills": "Autre comp.",
+        "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
 
@@ -261,7 +261,7 @@
 
     "login": {
         "page-title": "Yo",
-        "page-text": "Bonjours à toi, joueur de ta propre vie, viens rejoindre la communoté des LVL-UP",
+        "page-text": "Bonjours à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
@@ -549,11 +549,13 @@
             "ready": "Regarder une pub",
             "notAvailable": "Il n'y a plus de pub disponible",
             "wait": "Chargement en cours",
-            "error": "Impossible de charger les pubs"
+            "error": "Impossible de charger les pubs",
+            "closed": "Pub fermée",
+            "watched": "Pub visionnée"
         },
         "widget-button-editTime": "Modifier",
         "widget-achievements-all": "Tous les succès",
-        "widget-skills-all": "Autre comp.",
+        "widget-skills-all": "Toutes les comp.",
         "sexe-male": "Homme",
         "sexe-female": "Femme"
     }

@@ -81,15 +81,15 @@ class Skills extends BackSkills {
 
     render() {
         const lang = langManager.curr['skills'];
-        const setheight = (event) => this.setState({ height: event.nativeEvent.layout.height });
         const sortType = this.sortList[this.state.sortSelectedIndex];
 
         let categories = dataManager.skills.categories;
         if (categories.length % 6 !== 0) categories.push(...Array(6 - (categories.length % 6)).fill(0));
 
         return (
-            <>
-                <Page ref={ref => this.refPage = ref} canScrollOver={false} onLayout={setheight}>
+            <Page ref={ref => this.refPage = ref} scrollable={false} canScrollOver={false}>
+
+                <View onLayout={this.setheight}>
                     <PageHeader onBackPress={user.interface.BackPage} />
 
                     <View style={styles.row}>
@@ -117,11 +117,8 @@ class Skills extends BackSkills {
                         numColumns={6}
                         keyExtractor={(item, index) => 'category-' + index}
                     />
+                </View>
 
-                </Page>
-
-                {/*
-                TODO: Put in Page
                 <View style={[styles.skillsParent, { top: this.state.height }]}>
                     <FlatList
                         style={{ flex: 1 }}
@@ -139,9 +136,8 @@ class Skills extends BackSkills {
                     iconAngle={this.state.ascending ? 90 : -90}
                     onPress={this.switchOrder}
                 />
-                */}
-            </>
-        )
+            </Page>
+        );
     }
 }
 
@@ -153,10 +149,9 @@ const styles = StyleSheet.create({
     },
     skillsParent: {
         position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        paddingHorizontal: '5%'
+        left: 24,
+        right: 24,
+        bottom: 24
     },
     skillCard: {
         marginBottom: 24,

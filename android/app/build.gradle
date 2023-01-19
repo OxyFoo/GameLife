@@ -138,6 +138,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6
         versionName "0.2.2"
+        packagingOptions {
+            pickFirst '**/libc++_shared.so'
+            pickFirst '**/libfbjni.so'
+        }
     }
     splits {
         abi {

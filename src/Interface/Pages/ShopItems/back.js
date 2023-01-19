@@ -46,6 +46,13 @@ class BackShopItems extends PageBack {
         });
     }
 
+    componentDidMount() {
+        this.oxListener = user.informations.ox.AddListener(this.forceUpdate.bind(this));
+    }
+    componentWillUnmount() {
+        user.informations.ox.RemoveListener(this.oxListener);
+    }
+
     openTitlePopup = (title) => {
         // Check if title already owned
         if (user.inventory.titles.includes(title.ID)) {

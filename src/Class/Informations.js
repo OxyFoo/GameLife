@@ -21,7 +21,7 @@ class Informations {
         this.birthTime = null;
         this.lastBirthTime = null;
         this.xp = 0;
-        this.ox = 0;
+        this.ox = new DynamicVar(0);
         this.adRemaining = 0;
         this.adTotalWatched = 0;
 
@@ -36,7 +36,7 @@ class Informations {
         this.birthTime = null;
         this.lastBirthTime = null;
         this.xp = 0;
-        this.ox = 0;
+        this.ox = new DynamicVar(0);
         this.adRemaining = 0;
         this.UNSAVED_title = null;
         this.UNSAVED_birthTime = null;
@@ -49,7 +49,7 @@ class Informations {
         if (contains('birthTime')) this.birthTime = informations['birthTime'];
         if (contains('lastBirthTime')) this.lastBirthTime = informations['lastBirthTime'];
         if (contains('xp')) this.xp = informations['xp'];
-        if (contains('ox')) this.ox = informations['ox'];
+        if (contains('ox')) this.ox.Set(parseInt(informations['ox']));
         if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
         if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
         if (contains('UNSAVED_title')) this.UNSAVED_title = informations['UNSAVED_title'];
@@ -63,7 +63,7 @@ class Informations {
             birthTime: this.birthTime,
             lastBirthTime: this.lastBirthTime,
             xp: this.xp,
-            ox: this.ox,
+            ox: this.ox.Get(),
             adRemaining: this.adRemaining,
             adTotalWatched: this.adTotalWatched,
             UNSAVED_title: this.UNSAVED_title,

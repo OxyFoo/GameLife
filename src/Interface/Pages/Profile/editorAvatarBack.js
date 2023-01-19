@@ -201,7 +201,7 @@ class EditorAvatarBack extends React.Component {
 
             // Update inventory & Ox amount
             user.inventory.LoadOnline({ stuffs: response['stuffs'] });
-            user.informations.ox = response['ox'];
+            user.informations.ox.Set(parseInt(response['ox']));
             this.selectSlot(this.state.slotSelected);
 
             // Show success message

@@ -231,7 +231,7 @@
         "btn-todo": "Todo",
         "con-stats": "Statistics",
         "con-skill-experience": "Skills",
-        "btn-other-skills": "Other comp.",
+        "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
         "btn-settings": "Paramètres",
 
@@ -549,7 +549,9 @@
             "ready": "Watch the ad",
             "notAvailable": "There are no more ads available",
             "wait": "Loading the next ad",
-            "error": "Unable to load ads"
+            "error": "Unable to load ads",
+            "closed": "Pub closed",
+            "watched": "Pub watched"
         },
         "widget-button-editTime": "Change",
         "widget-achievements-all": "All achievements",

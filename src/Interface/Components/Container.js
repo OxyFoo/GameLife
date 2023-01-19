@@ -163,7 +163,7 @@ class Container extends React.Component {
         const contentStyle = {
             backgroundColor: themeManager.GetColor(this.props.backgroundColor),
             opacity: this.state.maxHeight === 0 && this.props.type === 'rollable' ? 0 : 1,
-            height: this.state.maxHeight === 0 ? 'auto' : contentHeight
+            maxHeight: this.state.maxHeight === 0 ? 'auto' : contentHeight
         };
 
         return (

@@ -41,49 +41,45 @@ class Tasks extends BackTasks {
         );
 
         return (
-            <>
-                <Page ref={ref => this.refPage = ref} scrollable={false}>
-                    <PageHeader
-                        onBackPress={() => user.interface.BackPage()}
+            <Page ref={ref => this.refPage = ref} scrollable={false}>
+
+                <PageHeader
+                    onBackPress={() => user.interface.BackPage()}
+                />
+
+                <Button.Ad
+                    id='todo'
+                    style={styles.spaceBottom}
+                />
+
+                <Container
+                    styleContainer={styles.tasksContainer}
+                    type='static'
+                    icon='add'
+                    text={lang['container-title']}
+                    onLayout={this.onLayout}
+                    onIconPress={this.addTask}
+                >
+                    {this.renderSelection()}
+                    <FlatList
+                        ref={ref => this.refFlatlist = ref}
+
+                        onScroll={this.onScroll}
+                        //onContentSizeChange={(w, h) => this.flatlist.contentSizeHeight = h}
+                        //onLayout={(event) => this.flatlist.layoutMeasurementHeight = event.nativeEvent.layout.height}
+                        onTouchStart={this.onTouchStart}
+                        onTouchMove={this.onTouchMove}
+                        onTouchEnd={this.onTouchEnd}
+
+                        data={tasks}
+                        extraData={tasks}
+                        scrollEnabled={scrollable}
+                        keyExtractor={(item) => 'task-' + item.Title}
+                        renderItem={renderItem}
+                        ListEmptyComponent={renderEmpty}
                     />
+                </Container>
 
-                    <Button.Ad
-                        id='todo'
-                        style={styles.spaceBottom}
-                    />
-
-                    <Container
-                        styleContainer={styles.tasksContainer}
-                        type='static'
-                        icon='add'
-                        text={lang['container-title']}
-                        onLayout={this.onLayout}
-                        onIconPress={this.addTask}
-                    >
-                        {this.renderSelection()}
-                        <FlatList
-                            ref={ref => this.refFlatlist = ref}
-                            style={{ height: 'auto' }}
-
-                            onScroll={this.onScroll}
-                            onContentSizeChange={(w, h) => this.flatlist.contentSizeHeight = h}
-                            onLayout={(event) => this.flatlist.layoutMeasurementHeight = event.nativeEvent.layout.height}
-                            onTouchStart={this.onTouchStart}
-                            onTouchMove={this.onTouchMove}
-                            onTouchEnd={this.onTouchEnd}
-
-                            data={tasks}
-                            extraData={tasks}
-                            scrollEnabled={scrollable}
-                            keyExtractor={(item) => 'task-' + item.Title}
-                            renderItem={renderItem}
-                            ListEmptyComponent={renderEmpty}
-                        />
-                    </Container>
-                </Page>
-
-                {/*
-                TODO: Put in Page
                 <Button
                     style={styles.undo}
                     styleAnimation={{ transform: [{ translateY: this.state.animUndoY }] }}
@@ -93,8 +89,7 @@ class Tasks extends BackTasks {
                 >
                     {lang['tasks-undo-button']}
                 </Button>
-                */}
-            </>
+            </Page>
         );
     }
 }

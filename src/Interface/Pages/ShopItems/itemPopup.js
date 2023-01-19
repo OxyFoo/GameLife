@@ -22,7 +22,7 @@ function renderTitlePopup(title) {
         if (this.state.buying) return;
 
         // Check Ox Amount
-        if (user.informations.ox < title.Value) {
+        if (user.informations.ox.Get() < title.Value) {
             const title = lang['alert-notenoughox-title'];
             const text = lang['alert-notenoughox-text'];
             user.interface.popup.ForceOpen('ok', [ title, text ]);
@@ -44,7 +44,7 @@ function renderTitlePopup(title) {
 
         // Update inventory & Ox amount
         user.inventory.LoadOnline({ titles: response['titles'] });
-        user.informations.ox = response['ox'];
+        user.informations.ox.Set(parseInt(response['ox']));
         user.inventory.buyToday.titles.push(title.ID);
         user.LocalSave();
         this.forceUpdate();
@@ -88,7 +88,7 @@ function renderItemPopup(item) {
         if (this.state.buying) return;
 
         // Check Ox Amount
-        if (user.informations.ox < item.Value) {
+        if (user.informations.ox.Get() < item.Value) {
             const title = lang['alert-notenoughox-title'];
             const text = lang['alert-notenoughox-text'];
             user.interface.popup.ForceOpen('ok', [ title, text ]);
@@ -110,7 +110,7 @@ function renderItemPopup(item) {
 
         // Update inventory & Ox amount
         user.inventory.LoadOnline({ stuffs: response['stuffs'] });
-        user.informations.ox = response['ox'];
+        user.informations.ox.Set(parseInt(response['ox']));
         user.inventory.buyToday.items.push(item.ID);
         user.LocalSave();
         this.forceUpdate();

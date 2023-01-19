@@ -90,7 +90,7 @@ class ShopItems extends BackShopItems {
                 <PageHeader style={styles.header} onBackPress={user.interface.BackPage} hideHelp />
 
                 <View style={styles.overlayWallet}>
-                    <Text style={styles.overlayOx} color='main1'>{user.informations.ox}</Text>
+                    <Text style={styles.overlayOx} color='main1'>{user.informations.ox.Get()}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
             </>
@@ -115,7 +115,7 @@ class ShopItems extends BackShopItems {
                 <PageHeader style={styles.header} onBackPress={user.interface.BackPage} hideHelp />
 
                 <View style={styles.wallet}>
-                    <Text style={styles.ox} color='main1'>{user.informations.ox}</Text>
+                    <Text style={styles.ox} color='main1'>{user.informations.ox.Get()}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
 

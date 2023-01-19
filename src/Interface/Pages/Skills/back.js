@@ -32,6 +32,8 @@ class BackSkills extends PageBack {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
+    setheight = (event) => this.setState({ height: event.nativeEvent.layout.height + 24 });
+
     getAllSkills() {
         const now = GetTime();
         const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);

@@ -8,7 +8,7 @@ import langManager from './LangManager';
 import themeManager from './ThemeManager';
 
 import { TimingAnimation } from '../Utils/Animations';
-import { IsUndefined, Range } from '../Utils/Functions';
+import { IsUndefined, Sleep } from '../Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '../Interface/Widgets';
 import { PageBack } from '../Interface/Components';
 
@@ -21,35 +21,34 @@ import { PageBack } from '../Interface/Components';
 
 const DEBUG_MODE = false;
 
-/** @type {Array<PageName>} */
+/**
+ * @description Pages that will be cached
+ * /!\ Do not forget "super.componentDidMount()" in BackPages
+ * /!\ Do not put "tasks" or "skills" pages in this list
+ * @type {Array<PageName>}
+ */
 const PAGES_PERSISTENT = [
     'calendar',
     'home',
-    //'multiplayer',
+    'multiplayer',
     'profile',
-    'settings',
     'shop',
     'shopitems',
-    'skills',
-    'tasks'
 ];
+
+const CACHE_PAGES = {
+    /** @type {{[key: PageName|string]: PageState}} */
+    persistent: {},
+
+    /** @type {PageState|null} */
+    temp: null
+};
 
 class PageManager extends React.Component{
     state = {
-        pageArguments: {},
+        /** @type {PageName} */
+        selectedPage: '',
 
-        pages: {
-            /** @type {PageName} */
-            selected: '',
-
-            /** @type {{[key: PageName|string]: PageState}} */
-            persistent: {},
-
-            /** @type {PageState|null} */
-            temp: null
-        },
-
-        animTransition: new Animated.Value(1),
         animTheme: new Animated.Value(0),
 
         ignorePage: false,
@@ -94,10 +93,17 @@ class PageManager extends React.Component{
         BackHandler.removeEventListener('hardwareBackPress', this.backHandle);
     }
 
-    LoadDefaultPages = () => {
-        const addPage = (page) => ({ [page]: { content: this.getPageContent(page), ref: null, args: {} } });
-        const persistentPages = Object.assign({}, ...PAGES_PERSISTENT.map(addPage));
-        this.setState({ pages: { ...this.state.pages, persistent: persistentPages } });
+    LoadDefaultPages = async () => {
+        PAGES_PERSISTENT.forEach(page => {
+            CACHE_PAGES.persistent[page] = { content: null, ref: null, args: {} };
+            CACHE_PAGES.persistent[page].content = this.getPageContent(page);
+        });
+        this.forceUpdate();
+
+        // Wait for all pages to be loaded
+        while (Object.values(CACHE_PAGES.persistent).some(page => page.ref === null || page.ref.loaded === false)) {
+            await Sleep(1000);
+        }
     }
 
     /**
@@ -150,7 +156,7 @@ class PageManager extends React.Component{
 
         const [ prevPage, prevArgs ] = this.path[this.path.length - 1];
         this.path.length = this.path.length - 1;
-        this.setState({ pageArguments: prevArgs, ignorePage: false });
+        this.setState({ ignorePage: false });
         this.pageAnimation(prevPage);
         return true;
     }
@@ -166,8 +172,6 @@ class PageManager extends React.Component{
     ChangePage = (nextpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
 
-        const currentPage = this.state.pages.selected;
-
         // Undefined page: update & return false
         if (IsUndefined(nextpage) || nextpage === '') {
             this.forceUpdate();
@@ -175,7 +179,8 @@ class PageManager extends React.Component{
         }
 
         // Same page & not force update: return false
-        if (!forceUpdate && nextpage === currentPage) {
+        const { selectedPage } = this.state;
+        if (!forceUpdate && nextpage === selectedPage) {
             return false;
         }
 
@@ -186,16 +191,18 @@ class PageManager extends React.Component{
         };
 
         // If current (prev) page is not ignored, add it to path, except first loading (no first pages)
-        if (!this.state.ignorePage && currentPage !== '') {
-            this.path.push([currentPage, this.state.pageArguments]);
+        if (!this.state.ignorePage && selectedPage !== '') {
+            this.path.push([selectedPage, pageArguments]);
         }
 
         // Set page arguments
-        const { pages } = this.state;
-        if (Object.keys(pages).includes(nextpage)) {
-            this.setState({ pages: { ...pages, persistent: { ...pages.persistent, [nextpage]: { ...pages.persistent[nextpage], args: pageArguments } } } });
-        } else {
-            this.setState({ pages: { ...pages, temp: { ...pages.temp, args: pageArguments } } });
+        if (Object.keys(CACHE_PAGES.persistent).includes(nextpage)) {
+            CACHE_PAGES.persistent[nextpage].args = pageArguments;
+        }
+
+        // Set temp page arguments
+        else if (CACHE_PAGES.temp !== null) {
+            CACHE_PAGES.temp.args = pageArguments;
         }
 
         this.setState({ ignorePage });
@@ -218,7 +225,6 @@ class PageManager extends React.Component{
      * @returns {Promise}
      */
     pageAnimation = async (newPage) => {
-        console.log('start anim');
         this.changing = true;
 
         const T = new Date().getTime();
@@ -231,42 +237,40 @@ class PageManager extends React.Component{
         const newBarState = { bottomBarShow: bottomBarShow, bottomBarIndex: index !== -1 ? index : 2 };
         if (!bottomBarShow) this.setState(newBarState); // Hide bar before animation if needed
 
-        const { pages } = this.state;
-
         // Hide current page
-        const selectedPage = pages.selected;
+        const { selectedPage } = this.state;
         if (selectedPage !== '') {
-            if (Object.keys(pages.persistent).includes(selectedPage)) {
-                if (typeof(pages.persistent[selectedPage]?.ref?.refPage?.Hide) === 'function') {
-                    console.log('Hide a', selectedPage);//, pages.persistent[selectedPage]);
-                    pages.persistent[selectedPage].ref.refPage.Hide();
+            if (Object.keys(CACHE_PAGES.persistent).includes(selectedPage)) {
+                if (typeof(CACHE_PAGES.persistent[selectedPage]?.ref?.refPage?.Hide) === 'function') {
+                    CACHE_PAGES.persistent[selectedPage].ref.refPage.Hide();
                 }
             } else {
-                if (typeof(pages.temp?.ref?.refPage?.Hide) === 'function') {
-                    console.log('Hide b', selectedPage);//, pages.temp.ref.refPage);
-                    pages.temp.ref.refPage.Hide();
+                if (typeof(CACHE_PAGES.temp?.ref?.refPage?.Hide) === 'function') {
+                    CACHE_PAGES.temp.ref.refPage.Hide();
                 }
             }
         }
 
         // Show new page
-        if (Object.keys(pages.persistent).includes(newPage)) {
-            if (typeof(pages.persistent[newPage]?.ref?.refPage?.Show) === 'function') {
-                console.log('Show a', newPage);
-                pages.persistent[newPage].ref.refPage.Show();
+        if (Object.keys(CACHE_PAGES.persistent).includes(newPage)) {
+            if (typeof(CACHE_PAGES.persistent[newPage]?.ref?.refPage?.Show) === 'function') {
+                CACHE_PAGES.persistent[newPage].ref.refPage.Show();
                 this.onPageChange();
-                pages.persistent[newPage].ref.componentDidFocused();
-                this.setState({ pages: { ...pages, selected: newPage } });
+                CACHE_PAGES.persistent[newPage].ref.componentDidFocused();
+                this.setState({ selectedPage: newPage });
+            } else {
+                console.log('Ref undefined (' + newPage + ')');
             }
         } else {
-            const tempContent = { content: this.getPageContent(newPage, {}, true), ref: null };
-            this.setState({ pages: { ...pages, selected: newPage, temp: { ...this.state.pages.temp, ...tempContent } } }, () => {
-                if (typeof(this.state.pages.temp?.ref?.refPage?.Show) === 'function') {
-                    this.state.pages.temp.ref.refPage.Show();
+            if (CACHE_PAGES.temp === null) CACHE_PAGES.temp = { content: null, ref: null, args: {} };
+            CACHE_PAGES.temp.content = this.getPageContent(newPage, CACHE_PAGES.temp.args, true);
+            this.setState({ selectedPage: newPage }, () => {
+                if (typeof(CACHE_PAGES.temp?.ref?.refPage?.Show) === 'function') {
+                    CACHE_PAGES.temp.ref.refPage.Show();
                     this.onPageChange();
-                    this.state.pages.temp.ref.componentDidFocused();
+                    CACHE_PAGES.temp.ref.componentDidFocused();
                 } else {
-                    console.log('Ref undefined');
+                    console.log('Ref undefined (temp)');
                 }
             });
         }
@@ -285,41 +289,46 @@ class PageManager extends React.Component{
      * @returns {JSX.Element|null}
      */
     getPageContent(page, args = {}, tempRef = false) {
-        const setRef = () => null;
-        const key = 'page-' + page;
-        if (tempRef && pages.temp !== null) {
-            setRef = (ref) => pages.temp.ref = ref;
-        } else if (pages.persistent[page] !== null) {
-            setRef = (ref) => pages.persistent[page].ref = ref;
+        let setRef = () => null;
+        if (tempRef && CACHE_PAGES.temp !== null) {
+            setRef = (ref) => { if (CACHE_PAGES.temp !== null) CACHE_PAGES.temp.ref = ref };
+        } else if (Object.keys(CACHE_PAGES.persistent).includes(page)) {
+            setRef = (ref) => CACHE_PAGES.persistent[page].ref = ref;
         }
+
+        const key = 'page-' + page + '-' + Math.random();
         const pages = {
-            'about':            <Pages.About            key={key} args={args} ref={setRef} />,
-            'achievements':     <Pages.Achievements     key={key} args={args} ref={setRef} />,
-            'activity':         <Pages.Activity         key={key} args={args} ref={setRef} />,
-            'activitytimer':    <Pages.ActivityTimer    key={key} args={args} ref={setRef} />,
-            'calendar':         <Pages.Calendar         key={key} args={args} ref={setRef} />,
-            'display':          <Pages.Display          key={key} args={args} ref={setRef} />,
-            'home':             <Pages.Home             key={key} args={args} ref={setRef} />,
-            'loading':          <Pages.Loading          key={key} args={args} ref={setRef} />,
-            'login':            <Pages.Login            key={key} args={args} ref={setRef} />,
-            'multiplayer':      <Pages.Multiplayer      key={key} args={args} ref={setRef} />,
-            'onboarding':       <Pages.Onboarding       key={key} args={args} ref={setRef} />,
-            'profile':          <Pages.Profile          key={key} args={args} ref={setRef} />,
-            'report':           <Pages.Report           key={key} args={args} ref={setRef} />,
-            'settings':         <Pages.Settings         key={key} args={args} ref={setRef} />,
-            'shop':             <Pages.Shop             key={key} args={args} ref={setRef} />,
-            'shopitems':        <Pages.ShopItems        key={key} args={args} ref={setRef} />,
-            'skill':            <Pages.Skill            key={key} args={args} ref={setRef} />,
-            'skills':           <Pages.Skills           key={key} args={args} ref={setRef} />,
-            'task':             <Pages.Task             key={key} args={args} ref={setRef} />,
-            'tasks':            <Pages.Tasks            key={key} args={args} ref={setRef} />,
-            'waitinternet':     <Pages.Waitinternet     key={key} args={args} ref={setRef} />,
-            'waitmail':         <Pages.Waitmail         key={key} args={args} ref={setRef} />,
-            'test':             <Pages.Test             key={key} args={args} ref={setRef} />
+            'about':            Pages.About,
+            'achievements':     Pages.Achievements,
+            'activity':         Pages.Activity,
+            'activitytimer':    Pages.ActivityTimer,
+            'calendar':         Pages.Calendar,
+            'display':          Pages.Display,
+            'home':             Pages.Home,
+            'loading':          Pages.Loading,
+            'login':            Pages.Login,
+            'multiplayer':      Pages.Multiplayer,
+            'onboarding':       Pages.Onboarding,
+            'profile':          Pages.Profile,
+            'report':           Pages.Report,
+            'settings':         Pages.Settings,
+            'shop':             Pages.Shop,
+            'shopitems':        Pages.ShopItems,
+            'skill':            Pages.Skill,
+            'skills':           Pages.Skills,
+            'task':             Pages.Task,
+            'tasks':            Pages.Tasks,
+            'waitinternet':     Pages.Waitinternet,
+            'waitmail':         Pages.Waitmail,
+            'test':             Pages.Test
         };
-        if (pages[page])
-            return pages[page];
-        return null;
+
+        if (!pages.hasOwnProperty(page)) {
+            return null;
+        }
+
+        const Page = pages[page];
+        return <Page key={key} args={args} ref={setRef} />;
     }
 
     onPageChange = () => {
@@ -329,7 +338,7 @@ class PageManager extends React.Component{
     }
 
     render() {
-        const { pages, animTheme } = this.state;
+        const { animTheme } = this.state;
 
         const darkBackground = [ themeManager.THEMES.Dark.ground1, themeManager.THEMES.Dark.ground2 ];
         const lightBackground = [ themeManager.THEMES.Light.ground1, themeManager.THEMES.Light.ground2 ];
@@ -337,21 +346,13 @@ class PageManager extends React.Component{
 
         const newPage = (pageName = 'temp') => {
             // Not temp page and not persistent page
-            if (pageName !== 'temp' && !Object.keys(pages.persistent).includes(pageName)) {
+            if (pageName !== 'temp' && !Object.keys(CACHE_PAGES.persistent).includes(pageName)) {
                 return null;
             }
 
-            const key = 'page-' + pageName;
-            const Content = pageName === 'temp' ? pages.temp?.content || null : pages.persistent[pageName]?.content || null;
-            return Content;
-            if (Content === null) return null;
-
-            if (pageName === 'temp' && pages.temp?.content) {
-                return <Content key={key} ref={ref => pages.temp.ref = ref} />;
-            } else if (pages.persistent[pageName]?.content) {
-                return <Content key={key} ref={ref => pages.persistent[pageName].ref = ref} />;
-            }
-            return null;
+            if (pageName === 'temp')
+                return CACHE_PAGES.temp?.content || null;
+            return CACHE_PAGES.persistent[pageName]?.content || null;
         }
 
         return (

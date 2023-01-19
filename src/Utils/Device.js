@@ -9,7 +9,7 @@ import DeviceInfo from 'react-native-device-info';
 function GetDeviceInformations(OS = false, version = false) {
     let device = {};
 
-    device.deviceID = DeviceInfo.getUniqueId();
+    device.deviceID = DeviceInfo.getUniqueIdSync();
     device.deviceName = DeviceInfo.getDeviceNameSync();
 
     if (OS) {

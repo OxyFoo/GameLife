@@ -10,6 +10,14 @@ class PageBack extends React.Component {
     /** @type {Page} */
     refPage = React.createRef();
 
+    /** @type {boolean} */
+    loaded = false;
+
+    /** @description Do not forgot super.componentDidMount */
+    componentDidMount() {
+        this.loaded = true;
+    }
+
     /** @description Called when page is focused */
     componentDidFocused = () => {};
 }

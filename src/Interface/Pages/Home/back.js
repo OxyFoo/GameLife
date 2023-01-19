@@ -7,6 +7,8 @@ class BackHome extends PageBack {
     };
 
     componentDidMount() {
+        super.componentDidMount();
+
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
                 experience: user.experience.GetExperience()

@@ -7,6 +7,8 @@ class BackMultiplayer extends PageBack {
     }
 
     componentDidMount() {
+        super.componentDidMount();
+
         this.setState({ server: 'connected' });
         return;
         if (!user.server.online) {

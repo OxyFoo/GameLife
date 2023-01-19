@@ -62,8 +62,8 @@ class Page extends React.Component {
         topOverlayPosition: new Animated.Value(1)
     }
 
-    Show = () => { this.setState({ pointerEvents: 'auto' }); TimingAnimation(this.state.opacity, 1, 250).start() };
-    Hide = () => { this.setState({ pointerEvents: 'none' }); TimingAnimation(this.state.opacity, 0, 250).start() };
+    Show = () => { this.setState({ pointerEvents: 'auto' }); TimingAnimation(this.state.opacity, 1, 50).start() };
+    Hide = () => { this.setState({ pointerEvents: 'none' }); TimingAnimation(this.state.opacity, 0, 50).start() };
     GotoY = (y) => {
         this.posY = this.limitValues(y, this.props.canScrollOver);
         SpringAnimation(this.state.positionY, this.posY).start();

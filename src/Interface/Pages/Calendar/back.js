@@ -62,6 +62,8 @@ class BackCalendar extends PageBack {
     }
 
     componentDidMount() {
+        super.componentDidMount();
+
         const today = new Date();
         const Day = today.getDate();
         const Month = today.getMonth();

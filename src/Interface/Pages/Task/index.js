@@ -68,7 +68,7 @@ class Task extends BackTask {
 
     render() {
         const lang = langManager.curr['task'];
-        const { action, deadline, repeatMode, repeatDays, error } = this.state;
+        const { action, error } = this.state;
 
         let btnText = lang['button-add'];
         let btnColor = 'main2';
@@ -80,8 +80,6 @@ class Task extends BackTask {
             btnText = lang['button-remove'];
             btnColor = 'danger';
         }
-
-        const initValues = action === 'new' ? null : [deadline, repeatMode, repeatDays];
 
         return (
             <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss}>
@@ -99,7 +97,7 @@ class Task extends BackTask {
                 <Text fontSize={16} color='error'>{error}</Text>
 
                 <TaskSchedule
-                    initValues={initValues}
+                    initValues={this.initValues}
                     onChange={this.onChangeSchedule}
                 />
 

@@ -47,6 +47,7 @@ class BackShopItems extends PageBack {
     }
 
     componentDidMount() {
+        super.componentDidMount();
         this.oxListener = user.informations.ox.AddListener(this.forceUpdate.bind(this));
     }
     componentWillUnmount() {

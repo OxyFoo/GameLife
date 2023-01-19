@@ -53,9 +53,9 @@ class Console extends React.Component {
         if (type === 'warn') printLog = console.warn;
         else if (type === 'error') printLog = console.error;
 
-        if (LEVEL_CONSOLE === 0 ||
-           (LEVEL_CONSOLE >= 1  && type === 'warn') ||
-           (LEVEL_CONSOLE >= 2  && type === 'error')) {
+        if (LEVEL_CONSOLE === 0
+            || (LEVEL_CONSOLE === 1  && type === 'warn')
+            || (LEVEL_CONSOLE >= 1  && type === 'error')) {
             printLog(text, ...params);
         }
 

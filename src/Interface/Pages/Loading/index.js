@@ -13,7 +13,7 @@ class Loading extends BackLoading {
                     <GLLoading state={this.state.icon} />
                 </View>
             </Page>
-        )
+        );
     }
 }
 

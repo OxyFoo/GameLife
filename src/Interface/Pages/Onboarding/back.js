@@ -6,15 +6,17 @@ import langManager from '../../../Managers/LangManager';
 import { PageBack, Swiper } from '../../Components';
 
 class BackOnboarding extends PageBack {
-    constructor(props) {
-        super(props);
-
-        /** @type {Swiper} */
-        this.refSwiper = null;
-    }
-
     state = {
-        last: false
+        last: false,
+        swiperHeight: 0
+    };
+
+    /** @type {Swiper} */
+    refSwiper = null;
+
+    onLayoutSwiper = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ swiperHeight: height });
     }
 
     selectEnglish = () => {

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import BackReport from './back';
+import styles from './style';
 import langManager from '../../../Managers/LangManager';
 
 import { PageHeader } from '../../Widgets';
@@ -42,15 +43,21 @@ class Report extends BackReport {
                             renderItem={({item, i}) => (
                                 <View style={styles.rowDigit}>
                                     <Text>{item}</Text>
-                                    <Digit name={item} initValue={this.stats[item]} maxValue={this.state.statsRemain[item]} callback={this.changeDigit} />
+                                    <Digit
+                                        name={item}
+                                        initValue={this.stats[item]}
+                                        maxValue={this.state.statsRemain[item]}
+                                        callback={this.changeDigit}
+                                    />
                                 </View>
                             )}
                         />
                     </View>
                 </View>
             </View>
-        )
+        );
     }
+
     renderSuggest = () => {
         const lang = langManager.curr['report'];
         const text = lang['type-suggest-text'];
@@ -67,8 +74,9 @@ class Report extends BackReport {
                     multiline
                 />
             </View>
-        )
+        );
     }
+
     renderBug = () => {
         const lang = langManager.curr['report'];
         const text = lang['type-bug-text'];
@@ -93,8 +101,9 @@ class Report extends BackReport {
                     multiline
                 />
             </View>
-        )
+        );
     }
+
     renderMessage = () => {
         const lang = langManager.curr['report'];
         const text = lang['type-message-text'];
@@ -110,7 +119,7 @@ class Report extends BackReport {
                     multiline
                 />
             </View>
-        )
+        );
     }
 
     render() {
@@ -134,8 +143,8 @@ class Report extends BackReport {
 
                 <ComboBox
                     title={lang['types-text']}
-                    data={this.types}
-                    selectedValue={this.types[this.state.selectedType].value}
+                    data={this.reportTypes}
+                    selectedValue={this.reportTypes[this.state.selectedType].value}
                     onSelect={this.selectType}
                     ignoreWarning
                 />
@@ -156,44 +165,8 @@ class Report extends BackReport {
                     </Button>
                 </View>
             </Page>
-        )
+        );
     }
 }
-
-const styles = StyleSheet.create({
-    text: { fontSize: 22 },
-    input: { height: 52, marginBottom: 24 },
-
-    column: { width: '50%' },
-    row: {
-        marginVertical: 24,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    rowDigit: {
-        marginVertical: 2,
-        paddingHorizontal: '20%',
-
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    center: {
-        marginVertical: "10%",
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        
-    },
-    button: {
-        height: 48,
-        marginHorizontal: '20%',
-        borderRadius: 8
-    }
-});
 
 export default Report;

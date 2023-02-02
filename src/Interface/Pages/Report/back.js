@@ -9,41 +9,38 @@ import { Sum } from '../../../Utils/Functions';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class BackReport extends PageBack {
-    constructor(props) {
-        super(props);
+    stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
+    state = {
+        sending: false,
+        selectedType: 0,
+        reportHeight: 0,
 
-        this.maxPoints = 6;
+        input_activity: {},
+        input_skillname: '',
+        input_skillcategory: '',
+        input_suggest: '',
+        input_bug1: '',
+        input_bug2: '',
+        input_message: '',
+        remain: 0,
+        statsRemain: this.stats
+    };
 
-        this.types = [
-            { key: 0, value: langManager.curr['report']['types']['activity'] },
-            { key: 1, value: langManager.curr['report']['types']['suggest'] },
-            { key: 2, value: langManager.curr['report']['types']['bug'] },
-            { key: 3, value: langManager.curr['report']['types']['message'] }
-        ];
-        this.stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
+    maxPoints = 6;
 
-        this.state = {
-            sending: false,
-            selectedType: 0,
-            reportHeight: 0,
-
-            input_activity: {},
-            input_skillname: '',
-            input_skillcategory: '',
-            input_suggest: '',
-            input_bug1: '',
-            input_bug2: '',
-            input_message: '',
-            remain: 0,
-            statsRemain: this.stats
-        }
-    }
+    reportTypes = [
+        { key: 0, value: langManager.curr['report']['types']['activity'] },
+        { key: 1, value: langManager.curr['report']['types']['suggest'] },
+        { key: 2, value: langManager.curr['report']['types']['bug'] },
+        { key: 3, value: langManager.curr['report']['types']['message'] }
+    ];
 
     componentDidMount() {
+        super.componentDidMount();
         this.refreshRemainPoints();
     }
 
-    back = () => { user.interface.BackPage(); }
+    back = user.interface.BackPage;
     info = () => {
         const title = langManager.curr['report']['alert-buginfo-title'];
         const text = langManager.curr['report']['alert-buginfo-text'];

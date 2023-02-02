@@ -3,38 +3,59 @@ import { Animated, Linking } from 'react-native';
 import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
+import themeManager from '../../../Managers/ThemeManager';
 
+import { Login, Signin } from './login';
 import { IsEmail } from '../../../Utils/String';
-import { TimingAnimation } from '../../../Utils/Animations';
+import { SpringAnimation } from '../../../Utils/Animations';
 
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
 
 class BackLogin extends PageBack {
+    state = {
+        loading: false,
+        signinMode: false,
+
+        email: '',
+        username: '',
+        cguAccepted: false,
+        errorEmail: '',
+        errorUsername: '',
+        errorCgu: '',
+
+        animImage: new Animated.Value(1),
+        animSignin: new Animated.Value(0)
+    };
+
     constructor(props) {
         super(props);
 
+        // Load texts
+        const lang = langManager.curr['login'];
+        this.langs = {
+            pageTitle: lang['page-title'],
+            pageText: lang['page-text'],
+            titleEmail: lang['input-email-title'],
+            titleUsername: lang['input-username-title'],
+            btnLogin: lang['button-login-text'],
+            btnSignin: lang['button-signin-text'],
+            cguTexts: lang['input-cgu-text'].split('%'),
+            cguColor: themeManager.GetColor('main1')
+        };
+
+        // Load images
         this.imageBackground = require('../../../../res/logo/login_circles.png');
         this.imageMain = require('../../../../res/logo/login_hand.png');
-
-        this.state = {
-            loading: false,
-            signinMode: false,
-
-            email: '',
-            username: '',
-            cguAccepted: false,
-            errorEmail: '',
-            errorUsername: '',
-            errorCgu: '',
-
-            animSignin: new Animated.Value(0)
-        };
     }
 
     componentDidMount() {
+        super.componentDidMount();
         this.checkConnection();
     }
+
+    onPressImageIn = () => SpringAnimation(this.state.animImage, .9, true).start();
+    onPressImageOut = () => SpringAnimation(this.state.animImage, 1, true).start();
 
     checkConnection = async () => {
         await user.server.Ping(true);
@@ -43,137 +64,23 @@ class BackLogin extends PageBack {
         }
     }
 
-    onChangeEmail = (newText) => {
-        newText = newText.trim();
-        if (newText.length > MAX_EMAIL_LENGTH) {
-            newText = newText.substring(0, MAX_EMAIL_LENGTH);
-        }
-        this.setState({ email: newText });
-    }
-
-    onChangeUsername = (newText) => {
-        newText = newText.trim();
-        if (newText.length > MAX_PSEUDO_LENGTH) {
-            newText = newText.substring(0, MAX_PSEUDO_LENGTH);
-        }
-        this.setState({ username: newText });
-    }
-
-    onChangeCGU = () => {
-        const { cguAccepted } = this.state;
-        this.setState({ cguAccepted: !cguAccepted });
-    }
-
-    CGURedirect() {
-        const link = 'https://google.com';
-        Linking.openURL(link);
-    }
-
-    onLogin = async () => {
-        if (this.state.loading) {
-            return;
-        }
-        this.setState({ loading: true });
-
-        const { email } = this.state;
-        if (!IsEmail(email)) {
-            this.setState({
-                loading: false,
-                errorEmail: langManager.curr['login']['error-login-nonmail']
-            });
-            return;
-        }
-
-        if (this.state.errorEmail.length) {
-            this.setState({ errorEmail: '' });
-        }
-
-        if (this.state.signinMode) {
-            const success = await this.Signin();
-            if (!success) this.setState({ loading: false });
-        } else {
-            // Login
-            const { status } = await user.server.Connect(email);
-            if (status === 'limitDevice') {
-                // Too many devices
-                const title = langManager.curr['login']['alert-limitDevice-title'];
-                const text = langManager.curr['login']['alert-limitDevice-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ]);
-                this.setState({ loading: false });
-            } else if (status === 'free') {
-                this.setState({ loading: false, signinMode: true });
-                TimingAnimation(this.state.animSignin, 1, 400, false).start();
-            } else if (status === 'ok' || status === 'ban') {
-                user.settings.email = email;
-                user.settings.connected = true;
-                await user.settings.Save();
-                user.interface.ChangePage('loading', undefined, true);
-            } else if (status === 'waitMailConfirmation' || status === 'newDevice') {
-                user.settings.email = email;
-                await user.settings.Save();
-                user.interface.ChangePage('waitmail', { email: email }, true);
-            } else if (status === 'error') {
-                this.checkConnection();
-                this.setState({ loading: false });
-            }
-        }
-    }
-
     /**
-     * Signin, return true if success (& next page loading) or false if error
-     * @returns {Promise<boolean>}
+     * Set signin mode
+     * @param {boolean} mode
      */
-    async Signin() {
-        if (!this.state.username.length) {
-            this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoWrong'] });
+    setSigninMode = (mode = false) => {
+        const { signinMode, animSignin } = this.state;
+        if (mode === signinMode) {
             return;
-        } else if (this.state.errorUsername.length) {
-            this.setState({ errorUsername: '' });
         }
 
-        if (!this.state.cguAccepted) {
-            this.setState({ errorCgu: langManager.curr['login']['error-signin-disagree'] });
-            return;
-        } else if (this.state.errorCgu.length) {
-            this.setState({ errorCgu: '' });
-        }
-
-        const { email, username } = this.state;
-        const signinStatus = await user.server.Signin(email, username);
-
-        if (signinStatus === 'limitAccount') {
-            const title = langManager.curr['login']['alert-limitAccount-title'];
-            const text = langManager.curr['login']['alert-limitAccount-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
-        } else if (signinStatus === 'pseudoUsed') {
-            this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoUsed'] });
-        }
-        else if (signinStatus === 'pseudoIncorrect') {
-            this.setState({ errorUsername: langManager.curr['login']['error-signin-pseudoIncorrect'] });
-        }
-        else if (signinStatus === null) {
-            this.setState({
-                username: '',
-                errorUsername: '',
-                errorEmail: langManager.curr['login']['error-signin-server']
-            });
-            this.onBack();
-        }
-        else if (signinStatus === 'ok') {
-            if (this.state.errorUsername.length) {
-                await new Promise(resolve => this.setState({ errorUsername: '' }, resolve));
-            }
-            user.settings.email = email;
-            await user.settings.Save();
-            user.interface.ChangePage('waitmail', { email: email }, true);
-            return true;
-        }
-        return false;
-    }
-
-    onBack = () => {
-        if (this.state.signinMode) {
-            TimingAnimation(this.state.animSignin, 0, 400, false).start();
+        // Do animation, change state, set custom back handle
+        if (mode) {
+            SpringAnimation(animSignin, 1, false).start();
+            this.setState({ signinMode: true });
+            user.interface.SetCustomBackHandle(() => this.setSigninMode(false));
+        } else {
+            SpringAnimation(animSignin, 0, false).start();
             this.setState({
                 signinMode: false,
                 username: '',
@@ -181,7 +88,94 @@ class BackLogin extends PageBack {
                 errorUsername: '',
                 errorCgu: '',
             });
+            user.interface.ResetCustomBackHandle();
         }
+    }
+
+    onChangeEmail = (newEmail) => {
+        const email = newEmail.trim().substring(0, MAX_EMAIL_LENGTH);
+        this.setState({ email });
+    }
+
+    onChangeUsername = (newUsername) => {
+        const username = newUsername.trim().substring(0, MAX_PSEUDO_LENGTH);
+        this.setState({ username });
+    }
+
+    onCGUToggle = () => {
+        const { cguAccepted } = this.state;
+        this.setState({ cguAccepted: !cguAccepted });
+    }
+
+    onCGURedirect() {
+        const link = 'https://google.com'; // TODO: Change link
+        Linking.openURL(link);
+    }
+
+    /**
+     * Login or Signin
+     * Do verification before call Login or Signin
+     */
+    onLoginOrSignin = async () => {
+        const lang = langManager.curr['login'];
+        const { loading, signinMode } = this.state;
+
+        if (loading) {
+            return;
+        }
+
+        if (!signinMode) {
+            const { email, errorEmail } = this.state;
+
+            // Check email
+            if (!IsEmail(email)) {
+                this.setState({ errorEmail: lang['error-login-nonmail'] });
+                return;
+            }
+            if (errorEmail.length) {
+                this.setState({ errorEmail: '' });
+            }
+
+            // Login
+            this.setState({ loading: true });
+            const logged = await Login.bind(this)(email);
+            if (logged) {
+                user.interface.ChangePage('loading', undefined, true);
+                return;
+            }
+        }
+
+        else {
+            const { email, username, errorUsername, cguAccepted, errorCgu } = this.state;
+
+            // Check username
+            if (!username.length) {
+                this.setState({ errorUsername: lang['error-signin-pseudoWrong'] });
+                return;
+            }
+            if (errorUsername.length) {
+                this.setState({ errorUsername: '' });
+            }
+
+            // Check CGU
+            if (!cguAccepted) {
+                this.setState({ errorCgu: lang['error-signin-disagree'] });
+                return;
+            }
+            if (errorCgu.length) {
+                this.setState({ errorCgu: '' });
+            }
+
+            // Signin
+            this.setState({ loading: true });
+            const signed = await Signin.bind(this)(email, username);
+            if (signed) {
+                user.interface.ChangePage('waitmail', { email: email }, true);
+                return;
+            }
+        }
+
+        this.setState({ loading: false });
     }
 }
 

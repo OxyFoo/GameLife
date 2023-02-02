@@ -35,23 +35,37 @@ class Achievements extends BackAchievements {
     }
 
     render() {
+        const styleFlatlist = {
+            ...styles.flatlist,
+            top: this.state.headerHeight
+        };
+
         return (
             <Page ref={ref => this.refPage = ref} scrollable={false}>
-                <PageHeader onBackPress={user.interface.BackPage} />
+                <View onLayout={this.onLayout}>
+                    <PageHeader onBackPress={user.interface.BackPage} />
+                </View>
 
                 <FlatList
-                    style={{ height: '85%' }}
+                    style={styleFlatlist}
                     numColumns={2}
                     data={this.achievement}
                     keyExtractor={(item, i) => 'achievement-' + i}
                     renderItem={this.renderAchievement}
                 />
             </Page>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
+    flatlist: {
+        position: 'absolute',
+        left: 12,
+        right: 12,
+        bottom: 0
+    },
+
     achievementsContainer: {
         width: '50%',
         padding: 6

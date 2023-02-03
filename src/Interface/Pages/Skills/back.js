@@ -6,22 +6,21 @@ import { SortByKey } from '../../../Utils/Functions';
 import { GetTime } from '../../../Utils/Time';
 
 class BackSkills extends PageBack {
-    constructor(props) {
-        super(props);
+    sortList = langManager.curr['skills']['top-sort-list'];
+    allSkills = this.getAllSkills();
 
-        this.sortList = langManager.curr['skills']['top-sort-list'];
-        this.allSkills = this.getAllSkills();
-
-        this.state = {
-            height: '40%', // Start approximately at 40% of the screen height
-            search: '',
-            ascending: true,
-            sortSelectedIndex: 0,
-            selectedCategories: [],
-            skills: this.allSkills
-        }
+    state = {
+        height: '40%', // Start approximately at 40% of the screen height
+        search: '',
+        ascending: true,
+        sortSelectedIndex: 0,
+        selectedCategories: [],
+        skills: this.allSkills
     }
+
     componentDidMount() {
+        super.componentDidMount();
+
         this.refreshSkills();
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.allSkills = this.getAllSkills();
@@ -34,6 +33,7 @@ class BackSkills extends PageBack {
 
     setheight = (event) => this.setState({ height: event.nativeEvent.layout.height + 24 });
 
+    /** @returns {Skill[]} All skills with their Name, Logo & experience */
     getAllSkills() {
         const now = GetTime();
         const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
@@ -93,15 +93,21 @@ class BackSkills extends PageBack {
             newSkills = newSkills.filter(filter);
         }
 
-        // Sort
         const sort = this.state.sortSelectedIndex;
-        if (sort === 0) { // Sort by xp
+        // Sort by xp
+        if (sort === 0) {
             const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
             const compare = (a, b) => format(a['experience']['totalXP']) < format(b['experience']['totalXP']) ? -1 : 1;
             newSkills = newSkills.sort(compare);
-        } else if (sort === 1) { // Sort by name
+        }
+
+        // Sort by name
+        else if (sort === 1) {
             newSkills = SortByKey(newSkills, 'Name').reverse();
-        } else if (sort === 2) { // Sort by date
+        }
+
+        // Sort by date
+        else if (sort === 2) {
             const compare = (a, b) => a['experience']['lastTime'] < b['experience']['lastTime'] ? -1 : 1;
             newSkills = newSkills.sort(compare);
         }

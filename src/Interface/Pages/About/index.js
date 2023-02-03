@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, FlatList } from 'react-native';
 
 import BackAbout from './back';
+import styles from './style';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
@@ -19,33 +20,39 @@ class About extends BackAbout {
 
     render() {
         const lang = langManager.curr['about'];
-        const versionText = lang['text-version'].replace('{}', this.version);
 
         return (
-            <Page style={{ height: '95%' }} ref={ref => this.refPage = ref} canScrollOver={false}>
-                <PageHeader onBackPress={user.interface.BackPage} hideHelp />
+            <Page ref={ref => this.refPage = ref} scrollable={false}>
+                <PageHeader
+                    style={styles.pageHeader}
+                    onBackPress={user.interface.BackPage}
+                    hideHelp
+                />
 
-                <View style={styles.page}>
+                <View style={styles.content}>
+
+                    {/** Header - Version & Team */}
                     <View>
-                        <Text style={{ marginBottom: 12 }} color='secondary' fontSize={22}>{versionText}</Text>
-                        <Text style={{ marginBottom: 12 }} fontSize={34}>{lang['block-devs']}</Text>
+                        <Text style={styles.headerVersion} color='secondary' fontSize={22}>{this.versionText}</Text>
+                        <Text style={styles.headerTitle} fontSize={34}>{lang['block-devs']}</Text>
 
-                        <View style={[styles.row, { marginBottom: 6, justifyContent: 'space-between' }]}>
+                        <View style={styles.headerRow}>
                             <Text fontSize={22}>Pierre Marsaa</Text>
                             <Text fontSize={22} color='secondary'>{lang['text-manager']}</Text>
                         </View>
 
-                        <View style={[styles.row, { justifyContent: 'space-between' }]}>
+                        <View style={styles.headerRow}>
                             <Text fontSize={22}>Gérémy Lecaplain</Text>
                             <Text fontSize={22} color='secondary'>{lang['text-developer']}</Text>
                         </View>
                     </View>
 
-                    <View style={{ maxHeight: '40%' }}>
+                    {/** Contributors */}
+                    <View style={styles.contributorsView}>
                         <Text fontSize={34}>{lang['block-contributors']}</Text>
-                        <Text style={{ marginBottom: 12 }} color='secondary' fontSize={22}>{lang['text-contributors']}</Text>
+                        <Text style={styles.contributorsText} color='secondary' fontSize={22}>{lang['text-contributors']}</Text>
 
-                        <View style={styles.contributors}>
+                        <View style={styles.contributorsFlatlist}>
                             <FlatList
                                 data={this.contributors}
                                 keyExtractor={(item, i) => 'contributors_' + i}
@@ -54,38 +61,21 @@ class About extends BackAbout {
                         </View>
                     </View>
 
+                    {/** Footer - Links */}
                     <View>
-                        <Text style={{ marginBottom: 12 }} fontSize={34}>{lang['block-links']}</Text>
-                        <View style={styles.row}>
+                        <Text style={styles.footerText} fontSize={34}>{lang['block-links']}</Text>
+                        <View style={styles.footerRow}>
                             <Icon onPress={this.TiktokPress} icon='tiktok' />
                             <Icon onPress={this.InstaPress} icon='instagram' />
                             <Icon onPress={this.DiscordPress} icon='discord' />
                             <Icon onPress={this.GamelifePress} icon='loading' />
                         </View>
                     </View>
-                </View>
 
+                </View>
             </Page>
-        )
+        );
     }
 }
-
-const styles = StyleSheet.create({
-    page: {
-        flex: 1,
-        justifyContent: 'space-between'
-    },
-    contributors: {
-        height: '80%',
-        borderWidth: 3,
-        borderColor: '#FFFFFF'
-    },
-    row: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
-    }
-});
 
 export default About;

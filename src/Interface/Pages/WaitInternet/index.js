@@ -15,15 +15,14 @@ class Waitinternet extends BackWaitinternet {
                 ref={ref => this.refPage = ref}
                 style={styles.body}
                 scrollable={false}
-                canScrollOver={false}
             >
                 <View style={styles.backgroundCircles}>
-                    <Image source={require('../../../../res/logo/login_circles.png')} />
+                    <Image source={this.image} />
                 </View>
 
                 <Text style={styles.text} color='primary'>{textWait}</Text>
             </Page>
-        )
+        );
     }
 }
 

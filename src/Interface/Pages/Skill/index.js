@@ -1,135 +1,101 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 
 import BackSkill from './back';
+import styles from './style';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
-import { GetDate } from '../../../Utils/Time';
-import { DateToFormatString } from '../../../Utils/Date';
 import { PageHeader, StatsBars } from '../../Widgets';
 import { Page, Container, Text, Icon, XPBar, Button } from '../../Components';
 
-// TODO: Refresh history when activity is deleted
+/** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
 class Skill extends BackSkill {
+    /**
+     * @param {{ item: HistoryActivity }} item
+     * @returns {JSX.Element}
+     */
     renderHistoryItem = ({item, i}) => {
-        const date = DateToFormatString(GetDate(item.startTime));
-        const text = langManager.curr['skill']['text-history'];
-        const duration = item.duration;
-        const title = text.replace('{}', date).replace('{}', duration);
-        const onPress = () => { user.interface.ChangePage('activity', { 'activity': item }); }
         return (
-            <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-                <Text style={styles.textHistory}>{title}</Text>
+            <TouchableOpacity activeOpacity={0.6} onPress={item.onPress}>
+                <Text style={styles.textHistory}>{item.title}</Text>
             </TouchableOpacity>
-        )
+        );
+    }
+
+    renderFooter() {
+        const lang = langManager.curr['skill'];
+
+        // Add activity button
+        return (
+            <Button
+                style={styles.addActivity}
+                color='main2'
+                onPress={this.addActivity}
+            >
+                {lang['text-add']}
+            </Button>
+        );
     }
 
     render() {
         const lang = langManager.curr['skill'];
-        const userStats = user.experience.GetExperience().xpInfo;
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
-        if (!this.enabled) return null;
         return (
-            <>
-                <Page ref={ref => this.refPage = ref} canScrollOver={false} bottomOffset={104}>
-                    <PageHeader onBackPress={user.interface.BackPage} hideHelp />
+            <Page
+                ref={ref => this.refPage = ref}
+                bottomOffset={104}
+                footer={this.renderFooter()}
+            >
+                <PageHeader onBackPress={user.interface.BackPage} hideHelp />
 
-                    {/* Content */}
-                    <View style={styles.skillContainer}>
-                        <View style={[styles.pictureContainer, backgroundMain]}>
-                            <Icon size={84} xml={this.xml} />
-                        </View>
-                        <View style={styles.detailContainer}>
-                            <Text style={styles.bigText}>{this.name}</Text>
-                            <Text style={styles.smallText}>{this.category}</Text>
-                        </View>
+                {/* Skill name and icon */}
+                <View style={styles.skillContainer}>
+                    <View style={[styles.pictureContainer, backgroundMain]}>
+                        <Icon size={84} xml={this.skill.xml} />
                     </View>
-
-                    <View style={{ paddingHorizontal: '2%', marginBottom: 24 }}>
-                        <Text style={styles.levelText}>{this.level}</Text>
-                        <XPBar value={userStats.xp} maxValue={userStats.next} />
-
-                        {this.creator !== '' && (
-                            <Text style={styles.creator} color='secondary'>{this.creator}</Text>
-                        )}
+                    <View style={styles.detailContainer}>
+                        <Text style={styles.skillTitle}>{this.skill.name}</Text>
+                        <Text style={styles.skillCategory}>{this.skill.category}</Text>
                     </View>
+                </View>
 
-                    <Container text={lang['stats-title']} style={{ marginBottom: 24 }} type='rollable' opened={true}>
-                        <StatsBars data={user.stats} supData={this.stats} />
-                    </Container>
+                {/* Level and XP bar */}
+                <View style={styles.levelContainer}>
+                    <Text style={styles.levelText}>{this.skill.level}</Text>
+                    <XPBar value={this.skill.xp} maxValue={this.skill.next} />
 
-                    {this.history.length > 0 && (
-                        <Container text={lang['history-title']} type='rollable' opened={false}>
-                            <FlatList
-                                data={this.history}
-                                keyExtractor={(item, i) => 'history_' + i}
-                                renderItem={this.renderHistoryItem}
-                            />
-                        </Container>
+                    {this.skill.creator !== '' && (
+                        <Text style={styles.creator} color='secondary'>{this.skill.creator}</Text>
                     )}
-                </Page>
+                </View>
 
-                <Button
-                    style={styles.addActivity}
-                    color='main2'
-                    onPress={this.addActivity}
+                {/* Stats */}
+                <Container
+                    text={lang['stats-title']}
+                    style={styles.statsContainer}
+                    type='rollable'
+                    opened={true}
                 >
-                    {lang['text-add']}
-                </Button>
-            </>
-        )
+                    <StatsBars data={user.stats} supData={this.skill.stats} />
+                </Container>
+
+                {/* History */}
+                {this.history.length > 0 && (
+                    <Container text={lang['history-title']} type='rollable' opened={false}>
+                        <FlatList
+                            data={this.history}
+                            keyExtractor={(item, i) => 'history_' + i}
+                            renderItem={this.renderHistoryItem}
+                        />
+                    </Container>
+                )}
+            </Page>
+        );
     }
 }
-
-const styles = StyleSheet.create({
-    skillContainer: {
-        flexDirection: 'row',
-        marginBottom: 24
-    },
-    pictureContainer: {
-        marginLeft: 6,
-        marginRight: 24,
-        padding: 16,
-        borderWidth: 2,
-        borderColor: '#FFFFFF',
-        borderRadius: 12
-    },
-    detailContainer: {
-        flex: 1,
-        paddingVertical: '5%',
-        justifyContent: 'space-evenly'
-    },
-    bigText: {
-        fontSize: 32,
-        textAlign: 'left'
-    },
-    smallText: {
-        fontSize: 22,
-        textAlign: 'left'
-    },
-    levelText: {
-        marginBottom: 6,
-        textAlign: 'left'
-    },
-    creator: {
-        marginTop: 12,
-        fontSize: 18,
-        textAlign: 'left'
-    },
-    textHistory: {
-        padding: '5%'
-    },
-
-    addActivity: {
-        position: 'absolute',
-        left: 36,
-        right: 36,
-        bottom: 36
-    }
-});
 
 export default Skill;

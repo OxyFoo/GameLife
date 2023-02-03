@@ -4,14 +4,14 @@ import user from '../../../Managers/UserManager';
 const REFRESH_DELAY_SECONDS = 2;
 
 class BackWaitinternet extends PageBack {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: false
-        };
-    }
+    state = {
+        loading: false
+    };
+
+    image = require('../../../../res/logo/login_circles.png');
 
     componentDidMount() {
+        super.componentDidMount();
         this.interval = setInterval(this.Loop, REFRESH_DELAY_SECONDS * 1000);
     }
     componentWillUnmount() {

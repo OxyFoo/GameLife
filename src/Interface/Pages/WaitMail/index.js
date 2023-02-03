@@ -12,26 +12,16 @@ class Waitmail extends BackWaitmail {
         const email = user.settings.email;
         const langWait = langManager.curr['wait'];
         const textWait = langWait['wait-email-text'];
-
-        const { time } = this.state;
-        let timeText = '';
-        if (time === true) {
-            timeText = langWait['wait-email-send'];
-        } else if (typeof(time) === 'number') {
-            const SS = time % 60;
-            const MM = (time - SS) / 60;
-            timeText = langWait['wait-email-remain'].replace('{}', MM).replace('{}', SS);
-        }
+        const timeText = this.getTimeText();
 
         return (
             <Page
-                style={styles.body}
                 ref={ref => this.refPage = ref}
+                style={styles.body}
                 scrollable={false}
-                canScrollOver={false}
             >
                 <View style={styles.backgroundCircles}>
-                    <Image source={require('../../../../res/logo/login_circles.png')} />
+                    <Image source={this.image} />
                 </View>
 
                 <Text style={styles.title} color='primary' fontSize={22}>{email}</Text>
@@ -44,20 +34,19 @@ class Waitmail extends BackWaitmail {
                 </View>
                 <Button
                     style={styles.backButton}
-                    color="main1"
+                    color='main1'
                     icon='arrowLeft'
-                    onPress={this.onBack}
+                    onPress={user.interface.BackPage}
                     borderRadius={20}
                 />
             </Page>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        padding: '5%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'

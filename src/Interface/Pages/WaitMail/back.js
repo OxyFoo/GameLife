@@ -5,14 +5,16 @@ import langManager from '../../../Managers/LangManager';
 const REFRESH_DELAY = 10; // seconds
 
 class BackWaitmail extends PageBack {
-    constructor(props) {
-        super(props);
-        this.state = {
-            time: null
-        }
-    }
+    state = {
+        /** @type {number|'sent'|null} */
+        time: null
+    };
+
+    image = require('../../../../res/logo/login_circles.png');
 
     componentDidMount() {
+        super.componentDidMount();
+
         this.tick = setInterval(this.onTick, 1000);
         this.login = setInterval(this.Login, REFRESH_DELAY * 1000);
         this.Login();
@@ -24,41 +26,65 @@ class BackWaitmail extends PageBack {
     }
 
     onTick = () => {
-        if (typeof(this.state.time) === 'number' && this.state.time > 0) {
-            this.setState({ time: Math.max(0, this.state.time - 1) });
+        const { time } = this.state;
+        if (typeof(time) === 'number' && time > 0) {
+            this.setState({ time: Math.max(0, time - 1) });
         }
     }
 
-    onBack = () => {
-        user.settings.email = '';
-        user.settings.Save();
-        user.interface.ChangePage('login', undefined, true);
+    getTimeText = () => {
+        const { time } = this.state;
+        const langWait = langManager.curr['wait'];
+
+        let timeText = '';
+        if (time === 'sent') {
+            timeText = langWait['wait-email-send'];
+        } else if (typeof(time) === 'number') {
+            const SS = time % 60;
+            const MM = (time - SS) / 60;
+            timeText = langWait['wait-email-remain'].replace('{}', MM).replace('{}', SS);
+        }
+        return timeText;
     }
 
     Login = async () => {
         const email = user.settings.email;
-
-        // Login
         const { status, remainMailTime } = await user.server.Connect(email);
 
-        if (status === 'limitDevice') {
-            // Too many devices
-            const title = langManager.curr['login']['alert-limitDevice-title'];
-            const text = langManager.curr['login']['alert-limitDevice-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], this.onBack);
-        } else if (status === 'ok' || status === 'ban') {
+        // Connected or banned (banned is connected too but in offline mode)
+        if (status === 'ok' || status === 'ban') {
             user.settings.connected = true;
             await user.settings.Save();
             user.interface.ChangePage('loading', undefined, true);
+            return;
         }
+
+        // Too many devices
+        if (status === 'limitDevice') {
+            const title = langManager.curr['login']['alert-limitDevice-title'];
+            const text = langManager.curr['login']['alert-limitDevice-text'];
+            user.interface.popup.ForceOpen('ok', [ title, text ], user.interface.BackPage);
+
+            user.settings.email = '';
+            user.settings.Save();
+        }
+
+        // Error, account not exists
         else if (status === 'free') {
-            // Error, account not exists
-            this.onBack();
-        } else if (status === 'newDevice') {
-            this.setState({ time: true });
-        } else if (status === 'waitMailConfirmation') {
+            user.settings.email = '';
+            user.settings.Save();
+            user.interface.BackPage();
+        }
+
+        else if (status === 'newDevice') {
+            this.setState({ time: 'sent' });
+        }
+
+        else if (status === 'waitMailConfirmation') {
             this.setState({ time: remainMailTime });
-        } else if (status === 'remDevice') {
+        }
+
+        else if (status === 'remDevice') {
             await this.Login();
         }
     }

@@ -7,10 +7,19 @@ class DynamicVar {
     Get() {
         return this.var;
     }
-    Set(value) {
-        this.var = value;
-        for (const id in this.listeners) {
-            this.listeners[id](value);
+
+    /**
+     * @param {any} value Left undefined to update without changing the value
+     * @param {boolean} update If true, all listeners will be called
+     */
+    Set(value, update = true) {
+        if (typeof(value) !== 'undefined') {
+            this.var = value;
+        }
+        if (update) {
+            for (const id in this.listeners) {
+                this.listeners[id](value);
+            }
         }
     }
 
@@ -28,6 +37,7 @@ class DynamicVar {
         }
         return id;
     }
+
     /**
      * Remove function to be called when the variable is updated
      * @param {number} id ID of the listener to remove

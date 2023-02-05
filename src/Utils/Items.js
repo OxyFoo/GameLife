@@ -4,7 +4,7 @@ import { GetDeviceInformations } from './Device';
  * Return indexes of available items [en fonction] du jour
  * @param {object} items Available items, keys are indexes and values is probability (0-1) (all to 1 = same probability)
  * @param {number} length Number of item indexes to return
- * @returns {Array<string|number>}
+ * @returns {Array<string|number>} Array of indexes of available items (keys of items)
  */
 function GetRandomIndexesByDay(items, length) {
     const today = new Date();

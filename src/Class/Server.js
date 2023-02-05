@@ -134,7 +134,7 @@ class Server {
      * Send a request to the server to create a new user account
      * @param {string} email Email of the user
      * @param {string} username Pseudo of the user
-     * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'?>} Status of the user signin
+     * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|null>} Status of the user signin
      */
     Signin = async (email, username) => {
         const device = GetDeviceInformations();
@@ -217,7 +217,7 @@ class Server {
             'type': type,
             'data': JSON.stringify(data)
         };
-        const response = this.Request('report', _data);
+        const response = await this.Request('report', _data);
         if (response === null) return false;
 
         const status = response['status'];
@@ -255,6 +255,11 @@ class Server {
                 this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
             }
             return null;
+        }
+
+        // Print error in console
+        if (response.content['status'] === 'error' && response.content.hasOwnProperty('error')) {
+            this.user.interface.console.AddLog('warn', 'Request: error - ', response.content['error']);
         }
 
         if (response.content['status'] === 'tokenExpired') {

@@ -181,7 +181,7 @@ class Admob {
 
                 this.user.interface.console.AddLog('info', 'Ad watched', response);
                 if (response['status'] === 'ok') {
-                    this.user.informations.ox.Set(parseInt(response['ox']));
+                    this.user.informations.ox.Set(parseInt(response['ox']), false);
                     this.user.informations.DecrementAdRemaining();
                     callback('watched');
                 }
@@ -190,8 +190,9 @@ class Admob {
                 callback('wait');
                 break;
             case 'closed':
-                ad.ad.load();
+                this.user.informations.ox.Set();
                 callback('closed');
+                ad.ad.load();
                 break;
             default:
                 callback('error');

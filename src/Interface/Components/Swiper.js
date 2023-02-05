@@ -27,6 +27,9 @@ const SwiperProps = {
     /** @type {boolean} If true, automatically swipe to the next page */
     enableAutoNext: true,
 
+    /** @type {boolean} */
+    disableCircular: false,
+
     /** @type {number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
     delayNext: 10,
 
@@ -40,7 +43,10 @@ const SwiperProps = {
     backgroundColor: 'backgroundTransparent',
 
     /** @type {(index: number) => void} Callback is called when page index change */
-    onSwipe: (index) => {}
+    onSwipe: (index) => {},
+
+    /** @type {(event: LayoutChangeEvent) => void} Callback is called when page layout change */
+    onLayout: (event) => {}
 }
 
 class Swiper extends React.Component {
@@ -127,12 +133,20 @@ class Swiper extends React.Component {
         // Prevent vertical scroll when horizontal swipe
         event.stopPropagation();
 
+        // Define the next page index
         let newIndex = 0;
         const dec = (this.posX % 1) + this.acc;
         if (dec > 0.5) newIndex = Math.ceil(this.posX);
         else           newIndex = Math.floor(this.posX);
+
+        // Go to the first page if swipe to the last page & vice versa
+        if (!this.props.disableCircular) {
+            if (newIndex < 0) newIndex = this.props.pages.length - 1;
+            else if (newIndex >= this.props.pages.length) newIndex = 0;
+        }
         newIndex = MinMax(0, newIndex, this.props.pages.length - 1);
 
+        // Update
         this.nextIn = this.props.delayNext;
         this.posX = newIndex;
         SpringAnimation(this.state.positionX, newIndex, false).start();
@@ -153,9 +167,19 @@ class Swiper extends React.Component {
     render() {
         if (this.props.pages.length === 0) return null;
 
-        const pageWidth = { width: 100 / this.props.pages.length + '%' };
+        const pageWidth = {
+            width: 100 / this.props.pages.length + '%',
+            height: '100%',
+            justifyContent: 'center'
+        };
         const newPage = (p, index) => (
-            <View key={'page-' + index} style={pageWidth} onLayout={this.onLayoutPage}>{p}</View>
+            <View
+                key={'page-' + index}
+                style={pageWidth}
+                onLayout={this.onLayoutPage}
+            >
+                {p}
+            </View>
         );
         const pages = this.props.pages.map(newPage);
 
@@ -176,6 +200,7 @@ class Swiper extends React.Component {
                     },
                     this.props.style
                 ]}
+                onLayout={this.props.onLayout}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}

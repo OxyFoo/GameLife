@@ -1,6 +1,7 @@
 /**
  * @typedef {'hair'|'face'|'accessory'|'weapon'|'top'|'gloves'|'bottom'|'shoes'} _OldSlot
  * @typedef {'hair'|'top'|'bottom'|'shoes'} Slot
+ * @typedef {{ x: number, y: number, width: number, height: number }} CharacterContainerSize
  * 
  * @typedef {object} Buff
  * @property {number} int
@@ -75,7 +76,7 @@ class Items {
 
     /**
      * @param {'default'|Slot} slot
-     * @returns {{ x: number, y: number, width: number, height: number }}
+     * @returns {CharacterContainerSize}
      */
     GetContainerSize = (slot) => itemContainerSize[slot];
 }

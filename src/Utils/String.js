@@ -11,15 +11,11 @@
 
 /**
  * @param {string} email
- * @returns {bolean} True if str "email" is a valid email
+ * @returns {boolean} True if str "email" is a valid email
  */
  function IsEmail(email) {
-    let isEmail = false;
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (typeof(email) === 'string' && email.length && reg.test(email)) {
-        isEmail = true;
-    }
-    return isEmail;
+    return typeof(email) === 'string' && email.length && reg.test(email);
 }
 
 /**

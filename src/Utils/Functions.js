@@ -54,6 +54,13 @@ function GetByKey(array, key, value) {
 }
 
 /**
+ * Convert array of object to object
+ * @param {Array} arr
+ * @returns {object} 
+ */
+const ArrayToDict = (arr) => arr.reduce((acc, curr) => Object.assign(acc, curr), {});
+
+/**
  * Range function
  * @example Range(5) => [0, 1, 2, 3, 4]
  * @param {number} length
@@ -80,5 +87,5 @@ function Random(min = 0, max = 1, decimal = 0) {
     return Round(r, decimal);
 }
 
-export { TwoDigit, Round, Sum, Range, SortByKey, GetByKey,
+export { TwoDigit, Round, Sum, Range, SortByKey, GetByKey, ArrayToDict,
     IsUndefined, MinMax, Sleep, Random };

@@ -62,7 +62,11 @@ class XPBar extends React.Component {
         const leftOffset = Animated.multiply(this.state.animation, this.state.width);
         const suppOffset = Animated.multiply(this.state.animCover, this.state.width);
         const black = [styles.black, { transform: [{ translateX: leftOffset } ]}];
-        const cover = [styles.border, { transform: [{ translateX: suppOffset } ]}];
+
+        // Cover is used to show the progress of the next level
+        // And preCover is used to avoid empty space at left with spring animation
+        const preCover = [styles.preCover, { transform: [{ translateX: suppOffset } ]}];
+        const cover = [styles.cover, { transform: [{ translateX: suppOffset } ]}];
 
         return (
             <View style={style} onLayout={this.onLayout}>
@@ -73,6 +77,7 @@ class XPBar extends React.Component {
                     colors={['#DBA1FF', '#9095FF', '#8CF7FF']}
                 />
                 <Animated.View style={black}>
+                    <Animated.View style={[cover, preCover]} />
                     <Animated.View style={cover} />
                 </Animated.View>
             </View>
@@ -105,7 +110,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000',
         overflow: 'hidden'
     },
-    border: {
+    preCover: {
+        left: '-200%'
+    },
+    cover: {
         position: 'absolute',
         top: 0,
         left: '-100%',

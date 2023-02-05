@@ -32,6 +32,9 @@ const PageProps = {
     /** @type {number} */
     topOverlayHeight: 64,
 
+    /** @type {React.Component} */
+    footer: null,
+
     /** @type {LayoutChangeEvent} */
     onLayout: (event) => {},
 
@@ -44,15 +47,13 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 // TODO - Auto scroll if height change
 
 class Page extends React.Component {
-    constructor(props) {
-        super(props);
-        this.posY = 0;
-        this.scrollEnabled = true;
-    }
+    posY = 0;
+    scrollEnabled = true;
 
     state = {
         /** @type {'box-none'|'none'|'box-only'|'auto'} */
         pointerEvents: 'none',
+        visible: false,
         opacity: new Animated.Value(0),
 
         height: 0,
@@ -62,8 +63,15 @@ class Page extends React.Component {
         topOverlayPosition: new Animated.Value(1)
     }
 
-    Show = () => { this.setState({ pointerEvents: 'auto' }); TimingAnimation(this.state.opacity, 1, 50).start() };
-    Hide = () => { this.setState({ pointerEvents: 'none' }); TimingAnimation(this.state.opacity, 0, 50).start() };
+    Show = () => {
+        this.setState({ visible: true, pointerEvents: 'auto' });
+        TimingAnimation(this.state.opacity, 1, 50).start();
+    };
+    Hide = () => {
+        this.setState({ visible: false, pointerEvents: 'none' });
+        TimingAnimation(this.state.opacity, 0, 50).start();
+    };
+
     GotoY = (y) => {
         this.posY = this.limitValues(y, this.props.canScrollOver);
         SpringAnimation(this.state.positionY, this.posY).start();
@@ -214,18 +222,21 @@ class Page extends React.Component {
         const { isHomePage, topOffset, bottomOffset, scrollable } = this.props;
         const headerHeight = user.interface.header.state.height;
         const valueOffset = isHomePage ? headerHeight : topOffset;
-        const position = { transform: [{ translateY: this.state.positionY }] };
-        const style = {
-            opacity: this.state.opacity,
+
+        const stylePage = { opacity: this.state.opacity };
+        const styleParent = {
+            ...styles.parent,
+            transform: [{ translateY: this.state.positionY }],
             paddingTop: valueOffset,
             height: scrollable ? 'auto' : '100%',
-            minHeight: SCREEN_HEIGHT - topOffset - bottomOffset - 128
+            minHeight: SCREEN_HEIGHT - topOffset - bottomOffset - 128,
+            ...this.props.style
         };
 
         return (
             <>
                 <Animated.View
-                    style={[styles.parent, position, style, this.props.style]}
+                    style={[stylePage, styleParent]}
                     behavior={'padding'}
                     onLayout={this.onLayout}
                     onTouchStart={this.onTouchStart}
@@ -235,6 +246,13 @@ class Page extends React.Component {
                     pointerEvents={this.state.pointerEvents}
                 >
                     {this.props.children}
+                </Animated.View>
+                <Animated.View
+                    style={[stylePage, styles.footer]}
+                    behavior={'padding'}
+                    pointerEvents={this.state.pointerEvents}
+                >
+                    {this.props.footer}
                 </Animated.View>
                 {this.renderOverlay()}
             </>
@@ -263,6 +281,12 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 32,
         borderBottomWidth: 1
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
     }
 });
 

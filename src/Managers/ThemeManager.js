@@ -1,3 +1,5 @@
+import { Rarity } from '../Data/Items';
+
 /**
  * @typedef {'Dark'|'Light'} Theme
  * @typedef {'primary'|'secondary'|'light'|'warning'|'error'} ColorThemeText Color name or hexadecimal color
@@ -146,6 +148,23 @@ class ThemeManager {
         let hexOpacityColor = Math.round(opacity * 255).toString(16);
         if (hexOpacityColor.length === 1) hexOpacityColor = '0' + hexOpacityColor;
         return hexColor.substring(0, 7) + hexOpacityColor;
+    }
+
+    /**
+     * @param {Rarity} rarity
+     * @returns 
+     */
+    GetRariryColors = (rarity) => {
+        let colors = [];
+        const absoluteColors = this.GetAbsoluteColors();
+        switch (rarity) {
+            case Rarity.common:     colors = absoluteColors.rarity_common;    break;
+            case Rarity.rare:       colors = absoluteColors.rarity_rare;      break;
+            case Rarity.epic:       colors = absoluteColors.rarity_epic;      break;
+            case Rarity.legendary:  colors = absoluteColors.rarity_legendary; break;
+            case Rarity.event:      colors = absoluteColors.rarity_event;     break;
+        }
+        return colors;
     }
 }
 

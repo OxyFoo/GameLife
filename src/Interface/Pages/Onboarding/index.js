@@ -30,10 +30,11 @@ class Onboarding extends BackOnboarding {
                     height={'100%'}
                     style={styles.swiper}
                     onLayout={this.onLayoutSwiper}
-                    backgroundColor='transparent'
                     enableAutoNext={false}
                     pages={pages}
                     onSwipe={this.onSwipe}
+                    backgroundColor='transparent'
+                    disableCircular
                 />
                 <Button
                     style={buttonStyle}

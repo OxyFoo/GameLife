@@ -16,7 +16,12 @@ import { PageBack } from '../Interface/Components';
  * @typedef {import('../Interface/Components').PageBack} PageBack
  * @typedef {'about'|'achievements'|'activity'|'activityTimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
  * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.ShopItems | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Tasks | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
- * @typedef {{ content: PageType, ref: PageBack, args: object }} PageState
+ * 
+ * @typedef PageState
+ * @type {Object}
+ * @property {PageType} content
+ * @property {PageBack} ref
+ * @property {object} args Unused
  */
 
 const DEBUG_MODE = false;
@@ -101,7 +106,8 @@ class PageManager extends React.Component{
         this.forceUpdate();
 
         // Wait for all pages to be loaded
-        while (Object.values(CACHE_PAGES.persistent).some(page => page.ref === null || page.ref.loaded === false)) {
+        const pageIsLoading = page => page.ref === null || page.ref.loaded === false;
+        while (Object.values(CACHE_PAGES.persistent).some(pageIsLoading)) {
             await Sleep(1000);
         }
     }
@@ -111,8 +117,9 @@ class PageManager extends React.Component{
      * @returns {boolean} True if handle is set
      */
     SetCustomBackHandle(handle) {
-        if (typeof(handle) !== 'function') return false;
-
+        if (typeof(handle) !== 'function') {
+            return false;
+        }
         this.customBackHandle = handle;
     }
     ResetCustomBackHandle() {
@@ -195,6 +202,11 @@ class PageManager extends React.Component{
             this.path.push([selectedPage, pageArguments]);
         }
 
+        // Exception: if page is login, clear path
+        if (nextpage === 'login') {
+            this.path = [];
+        }
+
         // Set page arguments
         if (Object.keys(CACHE_PAGES.persistent).includes(nextpage)) {
             CACHE_PAGES.persistent[nextpage].args = pageArguments;
@@ -262,15 +274,15 @@ class PageManager extends React.Component{
                 console.log('Ref undefined (' + newPage + ')');
             }
         } else {
-            if (CACHE_PAGES.temp === null) CACHE_PAGES.temp = { content: null, ref: null, args: {} };
-            CACHE_PAGES.temp.content = this.getPageContent(newPage, CACHE_PAGES.temp.args, true);
+            CACHE_PAGES.temp = { content: null, ref: null, args: {} };
+            CACHE_PAGES.temp.content = this.getPageContent(newPage, true);
             this.setState({ selectedPage: newPage }, () => {
                 if (typeof(CACHE_PAGES.temp?.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();
                     this.onPageChange();
                     CACHE_PAGES.temp.ref.componentDidFocused();
                 } else {
-                    console.log('Ref undefined (temp)');
+                    console.log('Ref undefined (temp)', CACHE_PAGES.temp);
                 }
             });
         }
@@ -284,11 +296,10 @@ class PageManager extends React.Component{
 
     /**
      * @param {PageName} page
-     * @param {object} args
      * @param {boolean} tempRef
      * @returns {JSX.Element|null}
      */
-    getPageContent(page, args = {}, tempRef = false) {
+    getPageContent(page, tempRef = false) {
         let setRef = () => null;
         if (tempRef && CACHE_PAGES.temp !== null) {
             setRef = (ref) => { if (CACHE_PAGES.temp !== null) CACHE_PAGES.temp.ref = ref };
@@ -328,6 +339,7 @@ class PageManager extends React.Component{
         }
 
         const Page = pages[page];
+        const args = this.path.length ? this.path[this.path.length - 1][1] : {};
         return <Page key={key} args={args} ref={setRef} />;
     }
 

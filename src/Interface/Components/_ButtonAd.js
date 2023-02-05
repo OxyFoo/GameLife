@@ -53,11 +53,10 @@ class ButtonAd extends React.PureComponent {
 
     /** @type {AdEvent} */
     onAdStateChange = (state) => {
-        console.log(state);
         const { oxAmount } = this.props;
         this.setState({ adState: state });
 
-        if (state === 'watched') {
+        if (state === 'closed') {
             const title = langManager.curr['server']['alert-adsuccess-title'];
             const text = langManager.curr['server']['alert-adsuccess-text'].replace('{}', oxAmount);
             user.interface.popup.Open('ok', [ title, text ], undefined, true);

@@ -131,4 +131,4 @@ async function LoadData(nextStep) {
     }
 }
 
-export { Initialisation, LoadData };
+export { Initialisation };

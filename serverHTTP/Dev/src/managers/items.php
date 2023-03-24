@@ -23,17 +23,17 @@
          * @param DataBase $db
          * @param Account $account
          * @param string $itemID
-         * @return bool Success
+         * @return int|false ID of new item in inventory or false on error
          */
         public static function AddInventoryItem($db, $account, $itemID) {
             $command = 'INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = array($account->ID, $itemID, $account->ID);
             $result = $db->QueryPrepare('Inventories', $command, 'isi', $args);
-            if ($result !== false) {
-                Users::RefreshDataToken($db, $account->ID);
-                return true;
-            }
-            return false;
+            if ($result === false) return false;
+
+            $id = $db->GetLastInsertID();
+            Users::RefreshDataToken($db, $account->ID);
+            return $id;
         }
 
         /**

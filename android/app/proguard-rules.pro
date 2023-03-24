@@ -64,3 +64,7 @@
 -dontwarn org.joda.time.**
 -dontwarn org.shaded.apache.**
 -dontwarn org.ietf.jgss.**
+
+# React Native Svg
+
+-keep public class com.horcrux.svg.** {*;}

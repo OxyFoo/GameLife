@@ -38,7 +38,12 @@ class BackOnboarding extends PageBack {
         this.refSwiper.Next();
     }
     onSwipe = (index) => {
-        this.setState({ last: index === 3 });
+        // Define if the last page is reached
+        if (this.state.last === true && index !== 3) {
+            this.setState({ last: false });
+        } else if (this.state.last === false && index === 3) {
+            this.setState({ last: true });
+        }
     }
 }
 

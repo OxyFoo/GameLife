@@ -106,5 +106,5 @@ class Skills {
     }
 }
 
-export { Skill };
+export { Skill, Category };
 export default Skills;

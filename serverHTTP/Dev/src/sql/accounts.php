@@ -22,16 +22,18 @@
             $items = [ 'hair_01', 'top_01', 'bottom_01', 'shoes_01' ];
             $IDs = [];
             foreach ($items as $item) {
-                $itemAdded = Items::AddInventoryItem($db, $account, $item);
-                if (!$itemAdded) ExitWithStatus('Error: Adding default item failed');
-                array_push($IDs, $db->GetLastInsertID());
+                $itemID = Items::AddInventoryItem($db, $account, $item);
+                if ($itemID === false) {
+                    ExitWithStatus('Error: Adding default item failed');
+                }
+                array_push($IDs, $itemID);
             }
 
             // Add avatar with default items
             $command = 'INSERT INTO TABLE (`ID`, `Hair`, `Top`, `Bottom`, `Shoes`) VALUES (?, ?, ?, ?, ?)';
             $args = [ $account->ID, ...$IDs ];
             $result = $db->QueryPrepare('Avatars', $command, 'iiiii', $args);
-            if ($result === false) ExitWithStatus('Error: adding avatar failed');
+            if ($result === false) ExitWithStatus('Error: adding avatar failed' . implode(', ', $args));
 
             return $account;
         }

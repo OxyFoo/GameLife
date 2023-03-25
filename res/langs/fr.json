@@ -547,7 +547,7 @@
     "other": {
         "ad-button-states": {
             "ready": "Regarder une pub",
-            "notAvailable": "Il n'y a plus de pub disponible",
+            "notAvailable": "Il n'y a plus de pubs disponibles",
             "wait": "Chargement en cours",
             "error": "Impossible de charger les pubs",
             "closed": "Pub fermée",

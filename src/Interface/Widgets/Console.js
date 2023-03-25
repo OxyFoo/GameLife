@@ -25,14 +25,14 @@ class Console extends React.Component {
     state = {
         enabled: false,
         opened: false,
-        animation: new Animated.Value(0),
+        animation: new Animated.Value(-1),
         animationButton: new Animated.Value(0),
 
         debug: []
     }
 
-    Enable = () => this.setState({ enabled: true });
-    Disable = () => this.setState({ enabled: false });
+    Enable = () => this.setState({ enabled: true }) || SpringAnimation(this.state.animation, 0).start();
+    Disable = () => SpringAnimation(this.state.animation, -1).start(() => this.setState({ enabled: false }));
 
     /**
      * Show message in app console

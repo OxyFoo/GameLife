@@ -10,11 +10,12 @@ import { Page, Icon, Text, Button } from '../../Components';
 class Shop extends BackShop {
     render() {
         const lang = langManager.curr['shop'];
+        const { oxAmount } = this.state;
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
                 <View style={styles.wallet}>
-                    <Text style={styles.ox} color='main1'>{user.informations.ox.Get()}</Text>
+                    <Text style={styles.ox} color='main1'>{oxAmount}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
 
@@ -40,9 +41,11 @@ class Shop extends BackShop {
                     icon='add'
                     enabled={user.server.online}
                     onPress={this.openPopupCode}
-                >{lang['button-code']}</Button>
+                >
+                    {lang['button-code']}
+                </Button>
             </Page>
-        )
+        );
     }
 }
 
@@ -55,8 +58,13 @@ const styles = StyleSheet.create({
         marginRight: 6
     },
 
-    button: { marginTop: 24 },
-    adButton: { justifyContent: 'space-between', borderRadius: 14 }
+    button: {
+        marginTop: 24
+    },
+    adButton: {
+        borderRadius: 14,
+        justifyContent: 'space-between'
+    }
 });
 
 export default Shop;

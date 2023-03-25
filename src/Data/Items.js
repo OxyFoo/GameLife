@@ -29,14 +29,31 @@ const itemContainerSize = {
 };
 
 class Item {
+    /** @type {string} */
     ID = '';
+
     /** @type {Slot} */
     Slot = '';
+
     Name = { fr: '', en: '' };
     Description = { fr: '', en: '' };
+
+    /** @type {number} */
     Rarity = Rarity.common;
-    /** @type {Array<Buff>} */
+
+    /** @type {number} 0 = Not buyable, 1 = Buyable */
+    Buyable = 0;
+
+    /**
+     * @type {Array<Buff>}
+     * @deprecated
+     */
     Buffs = [];
+
+    /**
+     * @type {Array<{ ID: string, Value: number }>}
+     * @deprecated
+     */
     Value = 0;
 
     //Color = ''; // TODO - Faire un système de couleur fixe
@@ -63,9 +80,14 @@ class Items {
         return this.items;
     }
 
-    /** @returns {Array<Item>} */
-    GetBuyable() {
-        return this.items.filter(i => i.Rarity <= 3);
+    /**
+     * @param {Slot|false} slot
+     * @returns {Array<Item>}
+     */
+    GetBuyable(slot = false) {
+        const checkSlot = s => slot === false || s === slot;
+        console.log(this.items);
+        return this.items.filter(i => i.Buyable && i.Rarity <= 3 && checkSlot(i.Slot));
     }
 
     /**

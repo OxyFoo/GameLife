@@ -3,9 +3,12 @@ import * as React from 'react';
 import user from '../../../Managers/UserManager';
 import dataManager from '../../../Managers/DataManager';
 
-class BackTest extends React.Component {
+import { PageBack } from '../../Components';
+
+class BackTest extends PageBack {
     state = {
         test: '',
+        testInt: 0,
         testChecked: false,
         selectedSkill: {ID: -1, value: ''},
         switch: true
@@ -42,6 +45,24 @@ class BackTest extends React.Component {
     openSkill = (skillID) => { user.interface.ChangePage('skill', { skillID: skillID }); }
     openSkills = () => { user.interface.ChangePage('skills'); }
     openExperience = () => { user.interface.ChangePage('experience'); }
+
+    /** @param {{item: Stuff}} element */
+    renderCardItem = ({ item: stuff }) => {
+        const stuffSelected = null;
+        const equippedStuff = user.inventory.GetEquipments();
+
+        const isSelected = stuffSelected?.ID === stuff.ID;
+        const isEquipped = equippedStuff.includes(stuff.ID);
+
+        return (
+            <ItemCard
+                stuff={stuff}
+                isSelected={isSelected}
+                isEquipped={isEquipped}
+                onPress={this.selectItem}
+            />
+        );
+    }
 }
 
 export default BackTest;

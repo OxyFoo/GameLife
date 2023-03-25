@@ -3,9 +3,14 @@ import user from '../../../Managers/UserManager';
 import renderGiftCodePopup from './giftCodePopup';
 
 class BackShop extends PageBack {
+    state = {
+        oxAmount: user.informations.ox.Get()
+    };
+
     componentDidMount() {
         super.componentDidMount();
-        this.oxListener = user.informations.ox.AddListener(this.forceUpdate.bind(this));
+        const updateOx = () => this.setState({ oxAmount: user.informations.ox.Get() });
+        this.oxListener = user.informations.ox.AddListener(updateOx);
     }
     componentWillUnmount() {
         user.informations.ox.RemoveListener(this.oxListener);

@@ -34,10 +34,18 @@
         /** @var \Device */
         private $device;
 
+        /** @var array $output */
+        private $output;
+
+        /** @var array $enableBots */
+        private $enableBots = false;
+
+        /** @var array $data */
+        private $data;
+
         public function __construct($data) {
             $this->db = new DataBase();
             $this->output = array('status' => 'error');
-            $this->enableBots = false;
 
             $this->data = $data;
             $this->__checkToken();
@@ -290,6 +298,7 @@
                 $userData['birthtime']        = $account->Birthtime;
                 $userData['lastbirthtime']    = $account->LastChangeBirth;
                 $userData['ox']               = $account->Ox;
+                $userData['tasksSort']        = $account->TasksSort;
                 $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
                 $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
                 $userData['achievements']     = $account->Achievements;
@@ -476,8 +485,8 @@
             $email = $this->data['email'];
             $langKey = $this->data['lang'];
             if (!isset($email, $langKey) || !$this->tokenChecked) return;
-            $account = $this->Account;
-            $device = $this->Device;
+            $account = $this->account;
+            $device = $this->device;
 
             if (strpos($email, 'bot-') === 0) {
                 if (!$this->enableBots) return;
@@ -502,8 +511,8 @@
          */
         public function CheckToken() {
             if (!$this->tokenChecked) return;
-            $account = $this->Account;
-            $device = $this->Device;
+            $account = $this->account;
+            $device = $this->device;
 
             $data = array(
                 'deviceID' => $device->ID,

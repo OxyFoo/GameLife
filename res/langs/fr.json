@@ -265,8 +265,7 @@
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
-        "input-cgu-text": "J'ai lu et j'accepte les %.",
-        "input-cgu-click": "conditions générales",
+        "input-cgu-text": "J'ai lu et j'accepte les %conditions générales%.",
         "button-login-text": "Se connecter",
         "button-signin-text": "S'inscrire",
 
@@ -505,6 +504,7 @@
         "input-repeat-title": "Répétition",
         "input-description": "Description",
         "input-subtask-placeholder": "Sous-tâche",
+        "text-hint-select": "Restez appuyé pour sélectionner la colone",
 
         "button-commentary": "Ajouter un commentaire",
         "button-add": "Ajouter",

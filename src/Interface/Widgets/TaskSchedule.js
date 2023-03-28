@@ -11,62 +11,79 @@ import { GetDate, GetTime } from '../../Utils/Time';
 import { Text, Button, TextSwitch } from '../Components';
 
 /**
+ * @typedef {import('../../Class/Tasks').RepeatModes} RepeatModes
+ * 
  * @callback OnChangeScheduleEvent
- * @param {number?} deadline - Unix timestamp in seconds
- * @param {'week'|'month'} repeatMode - Repeat mode
- * @param {Array<number>?} repeatDays - Array of days of week
+ * @param {number} deadline Unix timestamp in seconds
+ * @param {RepeatModes} repeatMode Repeat mode
+ * @param {Array<number>} repeatDays Array of days of week
  */
 
 const TaskScheduleProps = {
     /** @type {OnChangeScheduleEvent} */
-    onChange: (deadline, repeatMode, repeatDays) => {},
-
-    initValues: null
+    onChange: (deadline, repeatMode, repeatDays) => {}
 }
 
 class TaskSchedule extends React.Component {
     state = {
-        // Deadline
+        /** @type {''|'date'|'time'} */
         DTPMode: '',
-        deadline: null,
+        /** @type {number} */
+        deadline: 0,
+        /** @type {string} */
         deadlineText: '',
 
-        // Repeat
-        repeatMode: 0,
+        /** @type {RepeatModes} */
+        repeatMode: 'none',
+        /** @type {Array<number>} */
         selectedDays: []
     }
 
-    constructor(props) {
-        super(props);
+    /** @type {TextSwitch} */
+    refTextSwitch = React.createRef();
 
-        const { initValues } = this.props;
-        if (initValues !== null && initValues.length === 3) {
-            this.state.deadline = initValues[0];
-            this.state.deadlineText = DateToFormatString(GetDate(initValues[0]));
-            if (initValues[1] === 'week') this.state.repeatMode = 1;
-            if (initValues[1] === 'month') this.state.repeatMode = 2;
-            this.state.selectedDays = initValues[2];
-        }
+    /** @param {number} index */
+    switchMode = (index) => {
+        if (index < 0 || index > 2) return;
+        const repeatMode = ['none', 'week', 'month'][index];
+        this.setState({ repeatMode, selectedDays: [] }, this.onChange);
     }
-
-    switchMode = (index) => this.setState({ repeatMode: index, selectedDays: [] }, this.onChange);
     showDTP = () => this.setState({ DTPMode: 'date' });
     hideDTP = () => this.setState({ DTPMode: '' });
 
-    onChange = () => {
+    /**
+     * 
+     * @param {number} deadline
+     * @param {RepeatModes} repeatMode
+     * @param {Array<number>} selectedDays
+     */
+    SetValues = (deadline, repeatMode, selectedDays) => {
+        this.setState({
+            deadline,
+            repeatMode,
+            selectedDays,
+            deadlineText: DateToFormatString(GetDate(deadline))
+        });
+
+        const repeatModeIndex = ['none', 'week', 'month'].indexOf(repeatMode);
+        this.refTextSwitch?.SetSelectedIndex(repeatModeIndex);
+    }
+
+    GetValues = () => {
         let { deadline, repeatMode, selectedDays } = this.state;
-        if (repeatMode === 0) {
-            repeatMode = null;
-            selectedDays = [];
-        } else if (repeatMode === 1) {
-            repeatMode = 'week';
-        } else if (repeatMode === 2) {
-            repeatMode = 'month';
-        }
         selectedDays = selectedDays.filter(day => day <= 30);
+        return { deadline, repeatMode, selectedDays };
+    }
+
+    onChange = () => {
+        const { deadline, repeatMode, selectedDays } = this.state;
         this.props.onChange(deadline, repeatMode, selectedDays);
     }
 
+    /**
+     * Select or unselect a day
+     * @param {number} index
+     */
     onDaySelect = (index) => {
         const { selectedDays } = this.state;
         const include = selectedDays.includes(index);
@@ -74,17 +91,39 @@ class TaskSchedule extends React.Component {
         else         selectedDays.push(index);
         this.setState({ selectedDays }, this.onChange);
     }
+
+    /**
+     * Select or unselect a column of days for month
+     *  repeat mode or all days for week repeat mode
+     * @param {number} index
+     */
     onDaysSelect = (index) => {
-        const { selectedDays } = this.state;
-        const week = Math.floor(index/7);
-        const days = Range(7).map(i => i + week*7);
+        const { repeatMode, selectedDays } = this.state;
+
+        if (repeatMode === 'none') {
+            return;
+        }
+
+        if (repeatMode === 'week') {
+            let days = Range(7);
+            if (selectedDays.length === 7) days = [];
+            this.setState({ selectedDays: days }, this.onChange);
+            return;
+        }
+
+        const modulo = index % 7;
+        const days = Range(31).filter(i => i % 7 === modulo);
+
+        // Remove all column
         if (days.every(day => selectedDays.includes(day))) {
-            // Remove all line
             days.forEach(day => selectedDays.splice(selectedDays.indexOf(day), 1));
-        } else {
-            // Select all line
+        }
+
+        // Select all column
+        else {
             days.forEach(day => !selectedDays.includes(day) && selectedDays.push(day));
         }
+
         this.setState({ selectedDays }, this.onChange);
     }
 
@@ -104,63 +143,71 @@ class TaskSchedule extends React.Component {
     }
     onResetDeadline = () => {
         this.setState({
-            deadline: null,
+            deadline: 0,
             deadlineText: ''
         }, this.onChange);
     }
 
     renderDaySelector = () => {
         const { repeatMode, selectedDays } = this.state;
-        if (!repeatMode) return null;
+        if (repeatMode === 'none') return null;
 
+        const langDates = langManager.curr['dates'];
         let elements = [];
-        if (repeatMode === 1) {
-            elements = langManager.curr['dates']['days'].map(day => day.charAt(0));
+
+        // Add first letter of each day
+        if (repeatMode === 'week') {
+            elements = langDates['days'].map(day => day.charAt(0));
             elements.push(elements.splice(0, 1)[0]);
-        } else if (repeatMode === 2) {
+        }
+
+        // Add numbers from 1 to 31
+        else if (repeatMode === 'month') {
             elements = Range(35).map(i => (i + 1).toString());
         }
 
-        const border = { borderColor: themeManager.GetColor('main1') };
-        const emptyComponent = <View style={styles.selectorButton} />;
+        const styleBorder = { borderColor: themeManager.GetColor('main1') };
+        const emptyButton = <View style={styles.selectorButton} />;
 
         return (
-            <>
-                {repeatMode === 2 && <Text style={{ marginTop: 12 }}>{'[Appui long pour sélectionner une ligne]'}</Text>}
-                <FlatList
-                    style={{ marginTop: 12 }}
-                    columnWrapperStyle={{ flex: 1 }}
-                    contentContainerStyle={{ justifyContent: 'space-between' }}
-                    data={elements}
-                    numColumns={7}
-                    renderItem={({ item, index }) => index > 30 ? emptyComponent : (
-                        <Button
-                            style={[styles.selectorButton, border]}
-                            color={selectedDays.includes(index) ? 'main1' : 'transparent'}
-                            colorText={selectedDays.includes(index) ? 'white' : 'main1'}
-                            rippleColor='white'
-                            onPress={() => this.onDaySelect(index)}
-                            onLongPress={() => this.onDaysSelect(index)}
-                        >
-                            {item}
-                        </Button>
-                    )}
-                    keyExtractor={(item, index) => 'pickday-' + index.toString()}
-                />
-            </>
+            <FlatList
+                style={{ marginTop: 12 }}
+                columnWrapperStyle={{ flex: 1 }}
+                contentContainerStyle={{ justifyContent: 'space-between' }}
+                data={elements}
+                numColumns={7}
+                renderItem={({ item, index }) => index > 30 ? emptyButton : (
+                    <Button
+                        style={[styles.selectorButton, styleBorder]}
+                        color={selectedDays.includes(index) ? 'main1' : 'transparent'}
+                        colorText={selectedDays.includes(index) ? 'white' : 'main1'}
+                        rippleColor='white'
+                        onPress={() => this.onDaySelect(index)}
+                        onLongPress={() => this.onDaysSelect(index)}
+                    >
+                        {item}
+                    </Button>
+                )}
+                keyExtractor={(item, index) => 'pickday-' + index.toString()}
+            />
         );
     }
 
     render() {
         const lang = langManager.curr['task'];
+        const { repeatMode } = this.state;
+
         const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
-        const textDeadline = this.state.deadline === null ? lang['input-deadline-empty'] : this.state.deadlineText;
+        const textDeadline = this.state.deadline === 0 ? lang['input-deadline-empty'] : this.state.deadlineText;
         const defaultDate = new Date();
         defaultDate.setUTCHours(0, 0, 0, 0);
         defaultDate.setUTCDate(defaultDate.getUTCDate() + 1);
 
         const dateNames = langManager.curr['dates']['names'];
         const timeIntervals = [ dateNames['never'], dateNames['weekly'], dateNames['monthly'] ];
+        const repeatMessage = repeatMode === 'month' && (
+            <Text style={{ marginTop: 12 }}>{lang['text-hint-select']}</Text>
+        );
 
         return (
             <>
@@ -181,11 +228,12 @@ class TaskSchedule extends React.Component {
 
                     <Text>{lang['input-repeat-title']}</Text>
                     <TextSwitch
+                        ref={ref => this.refTextSwitch = ref}
                         style={{ height: 48, marginTop: 12 }}
                         texts={timeIntervals}
                         onChange={this.switchMode}
-                        startAt={this.state.repeatMode}
                     />
+                    {repeatMessage}
                     {this.renderDaySelector()}
                 </View>
 

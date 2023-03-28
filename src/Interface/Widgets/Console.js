@@ -64,6 +64,11 @@ class Console extends React.Component {
             user.server.SendReport('error', messages.slice(-4));
         }
 
+        // Scroll to end
+        if (this.state.opened) {
+            this.refDebug.scrollToEnd();
+        }
+
         return messages.length - 1;
     }
 

@@ -36,7 +36,7 @@ class Task extends BackTask {
         const lang = langManager.curr['task'];
         const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
-        if (this.state.description === null) {
+        if (this.state.description === '') {
             return (
                 <Button
                     style={styles.comButton}
@@ -97,7 +97,7 @@ class Task extends BackTask {
                 <Text fontSize={16} color='error'>{error}</Text>
 
                 <TaskSchedule
-                    initValues={this.initValues}
+                    ref={ref => this.refTaskSchedule = ref}
                     onChange={this.onChangeSchedule}
                 />
 

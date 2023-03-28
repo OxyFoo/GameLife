@@ -25,9 +25,10 @@ class Tasks extends BackTasks {
         const lang = langManager.curr['tasks'];
         const { scrollable, draggedItem, tasks } = this.state;
 
+        const getOpacity = (i) => draggedItem !== null && i.Title === draggedItem.Title ? .25 : 1;
         const renderItem = ({ item }) => (
             <TaskElement
-                style={{ opacity: draggedItem !== null && item.Title === draggedItem.Title ? .25 : 1 }}
+                style={{ opacity: getOpacity(item) }}
                 task={item}
                 onTaskCheck={this.onTaskCheck}
                 onDrag={() => this.onDrag(item)}
@@ -72,7 +73,7 @@ class Tasks extends BackTasks {
                         onTouchEnd={this.onTouchEnd}
 
                         data={tasks}
-                        extraData={tasks}
+                        //extraData={tasks}
                         scrollEnabled={scrollable}
                         keyExtractor={(item) => 'task-' + item.Title}
                         renderItem={renderItem}

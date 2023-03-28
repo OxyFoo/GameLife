@@ -15,9 +15,6 @@ const TextSwitchProps = {
     /** @type {Array<string>} */
     texts: [],
 
-    /** @type {number} Initial selection */
-    startAt: 0,
-
     /** @param {number} index Called when seleted part change */
     onChange: (index) => {}
 }
@@ -29,20 +26,27 @@ class TextSwitch extends React.Component {
         selectedIndex: 0
     }
 
-    componentDidMount() {
-        if (this.props.startAt >= this.props.texts.length) {
-            user.interface.console.AddLog('warn', 'TextSwitch startAt is out of bounds');
-        } else if (this.props.startAt > 0) {
-            this.onChange(this.props.startAt, false);
-        }
-    }
-
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { x, y, width, height } = event.nativeEvent.layout;
         if (width !== this.state.parentWidth) {
             this.setState({ parentWidth: width });
         }
+    }
+
+    /**
+     * Set selected index
+     * @param {number} index
+     * @returns {boolean} True if index is valid
+     */
+    SetSelectedIndex(index) {
+        if (index < 0 && index >= this.props.texts.length) {
+            user.interface.console.AddLog('warn', 'TextSwitch index is out of bounds');
+            return false;
+        }
+
+        this.onChange(index, false);
+        return true;
     }
 
     onChange = (index, callback = true) => {

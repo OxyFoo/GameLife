@@ -85,7 +85,7 @@ class Container extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { x, y, width, height } = event.nativeEvent.layout;
-        if (height > this.state.maxHeight) {
+        if (height > this.state.maxHeight && this.props.type === 'rollable') {
             this.setState({ maxHeight: height });
         }
     }

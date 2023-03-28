@@ -20,7 +20,7 @@ class BackTasks extends PageBack {
 
         scrollable: true,
 
-        /** @type {Task?} */
+        /** @type {Task|null} */
         draggedItem: null,
         mouseY: new Animated.Value(0),
         top: 0,
@@ -31,8 +31,10 @@ class BackTasks extends PageBack {
 
     constructor(props) {
         super(props);
-        /** @type {FlatList<Task>} */
+
+        /** @type {FlatList<Task>} Used to manage task sorting */
         this.refFlatlist = React.createRef();
+
         this.flatlist = {
             contentSizeHeight: 0,
             layoutMeasurementHeight: 0,
@@ -54,25 +56,32 @@ class BackTasks extends PageBack {
     }
     /** @param {Task} task */
     onTaskCheck = async (task) => {
-        if (task.Schedule !== null) {
-            const checked = task.Checked === null ? GetTime() : null;
+        // If task is scheduled, check/uncheck it
+        if (task.Schedule.Type !== 'none') {
+            const checked = task.Checked !== 0 ? 0 : GetTime();
             user.tasks.Check(task, checked);
             this.forceUpdate();
-            return;
         }
 
-        // Open undo button
-        SpringAnimation(this.state.animUndoY, 0).start();
-        this.undoTimeout = setTimeout(() => {
-            // Close undo button after 10 seconds
-            SpringAnimation(this.state.animUndoY, 56 + 48 + 12).start();
-        }, 10 * 1000);
+        // If task is not scheduled, remove it
+        else {
+            // Open undo button
+            SpringAnimation(this.state.animUndoY, 0).start();
+            this.undoTimeout = setTimeout(() => {
+                // Close undo button after 10 seconds
+                SpringAnimation(this.state.animUndoY, 56 + 48 + 12).start();
+            }, 10 * 1000);
 
-        await new Promise((resolve, reject) => {
-            const success = user.tasks.Remove(task) === 'removed';
-            if (success) this.setState({ tasks: [...user.tasks.Get()] }, resolve);
-            else resolve();
-        });
+            // Remove task
+            await new Promise((resolve, reject) => {
+                const success = user.tasks.Remove(task) === 'removed';
+                if (success) this.setState({ tasks: [...user.tasks.Get()] }, resolve);
+                else resolve();
+            });
+        }
+
+        user.LocalSave();
+        user.OnlineSave();
     }
 
     undo = () => {
@@ -81,6 +90,8 @@ class BackTasks extends PageBack {
         clearTimeout(this.undoTimeout);
 
         user.tasks.Undo();
+        user.LocalSave();
+        user.OnlineSave();
         this.setState({ tasks: [...user.tasks.Get()] });
     }
 
@@ -99,6 +110,7 @@ class BackTasks extends PageBack {
     onTouchStart = (event) => {
         const { top, height } = this.state;
         const { pageY } = event.nativeEvent;
+
         const newY = MinMax(0, pageY - top, height);
         TimingAnimation(this.state.mouseY, newY, 0).start();
     }
@@ -114,7 +126,7 @@ class BackTasks extends PageBack {
 
         if (draggedItem === null) return;
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.tasks.sortTitles.indexOf(draggedItem.Title);
+        const currIndex = user.tasks.tasksSort.indexOf(draggedItem.Title);
         if (index !== currIndex && user.tasks.Move(draggedItem, index)) {
             this.setState({ tasks: user.tasks.Get() });
         }
@@ -133,6 +145,7 @@ class BackTasks extends PageBack {
             scrollable: true,
             draggedItem: null
         });
+        user.LocalSave().then(user.OnlineSave);
     }
     /** @param {NativeSyntheticEvent<NativeScrollEvent>} event */
     onScroll = (event) => {

@@ -164,6 +164,7 @@
         }
 
         public function Encrypt($str, $key = null) {
+            if (strlen($str) === 0) return '';
             $output = '';
             $k = $key === null ? $this->keyA : $key;
             if ($str) $output = openssl_encrypt($str, $this->algorithm, $k);
@@ -171,6 +172,7 @@
         }
 
         public function Decrypt($str, $key = null) {
+            if (strlen($str) === 0) return '';
             $output = '';
             $k = $key === null ? $this->keyA : $key;
             if ($str) $output = openssl_decrypt($str, $this->algorithm, $k);

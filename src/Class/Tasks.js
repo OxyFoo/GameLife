@@ -2,31 +2,38 @@ import { GetTime } from '../Utils/Time';
 import { MonthDayBetween, WeekDayBetween } from '../Utils/Date';
 
 /**
+ * @typedef {'none'|'week'|'month'} RepeatModes
+ * 
  * @typedef {object} Schedule
- * @property {'week'|'month'} Type
+ * @property {RepeatModes} Type
  * @property {Array<number>} Repeat
- */
-
-/**
+ * 
  * @typedef {object} Subtask
  * @property {boolean} Checked
  * @property {string} Title
  */
 
 class Task {
-    /** @type {number?} Time in seconds or null if unchecked */
-    Checked = null;
+    /** @type {number} Time in seconds or 0 if unchecked */
+    Checked = 0;
+
+    /** @type {string} Task title with max 128 characters */
     Title = '';
+
+    /** @type {string} Task description with max 2048 characters */
     Description = '';
 
-    /** @type {number?} Timestamp in seconds */
+    /** @type {number} Timestamp in seconds */
     Starttime = 0;
 
-    /** @type {number?} Timestamp in seconds */
-    Deadline = null;
+    /** @type {number} Timestamp in seconds, 0 if disabled */
+    Deadline = 0;
 
-    /** @type {Schedule?} Null to don't repeat */
-    Schedule = null;
+    /** @type {Schedule} Null to don't repeat */
+    Schedule = {
+        Type: 'none',
+        Repeat: []
+    };
 
     /** @type {Array<Subtask>} Subtasks informations */
     Subtasks = [];
@@ -56,14 +63,19 @@ class Tasks {
         this.UNSAVED_deletions = [];
 
         /**
+         * Sorted tasks using titles
          * @type {Array<string>}
          */
-        this.sortTitles = [];
+        this.tasksSort = [];
 
         /**
-         * TODO
+         * @type {boolean} True if tasks sort is saved
+         */
+        this.SAVED_sort = true;
+
+        /**
          * @description Not saved, only to undo last deletion
-         * @type {Task?}
+         * @type {Task|null}
          */
         this.lastDeletedTask = null;
     }
@@ -72,14 +84,16 @@ class Tasks {
         this.SAVED_tasks = [];
         this.UNSAVED_additions = [];
         this.UNSAVED_deletions = [];
-        this.sortTitles = [];
+        this.tasksSort = [];
+        this.SAVED_sort = true;
     }
     Load(tasks) {
         const contains = (key) => tasks.hasOwnProperty(key);
         if (contains('tasks'))      this.SAVED_tasks = tasks['tasks'];
         if (contains('additions'))  this.UNSAVED_additions = tasks['additions'];
         if (contains('deletions'))  this.UNSAVED_deletions = tasks['deletions'];
-        if (contains('sortTitles')) this.sortTitles = tasks['sortTitles'];
+        if (contains('tasksSort'))  this.tasksSort = tasks['tasksSort'];
+        if (contains('sortSaved'))  this.SAVED_sort = tasks['sortSaved'];
     }
     LoadOnline(tasks) {
         if (typeof(tasks) !== 'object') return;
@@ -91,7 +105,8 @@ class Tasks {
             tasks: this.SAVED_tasks,
             additions: this.UNSAVED_additions,
             deletions: this.UNSAVED_deletions,
-            sortTitles: this.sortTitles
+            tasksSort: this.tasksSort,
+            sortSaved: this.SAVED_sort
         };
         return tasks;
     }
@@ -102,9 +117,9 @@ class Tasks {
     Get() {
         let tasks = [ ...this.SAVED_tasks, ...this.UNSAVED_additions ];
         // Add new tasks title at the top & remove deleted tasks title
-        tasks.forEach(task => this.sortTitles.findIndex(title => task.Title === title) === -1 && this.sortTitles.splice(0, 0, task.Title));
-        this.sortTitles = this.sortTitles.filter(title => tasks.findIndex(task => task.Title === title) !== -1);
-        return this.sortTitles.map(title => tasks.find(task => task.Title === title));
+        tasks.forEach(task => this.tasksSort.findIndex(title => task.Title === title) === -1 && this.tasksSort.splice(0, 0, task.Title));
+        this.tasksSort = this.tasksSort.filter(title => tasks.findIndex(task => task.Title === title) !== -1);
+        return this.tasksSort.map(title => tasks.find(task => task.Title === title));
     }
 
     IsUnsaved = () => {
@@ -133,55 +148,59 @@ class Tasks {
             }
         }
         this.UNSAVED_deletions = [];
+        this.SAVED_sort = true;
     }
 
+    /**
+     * Reset tasks which are scheduled to be reset (checked & repeat)
+     */
     RefreshScheduleTasks() {
         const tasks = this.Get();
         for (let i = 0; i < tasks.length; i++) {
             let task = tasks[i];
-            if (task.Checked === null || task.Schedule === null) continue;
+            if (task.Checked === 0 || task.Schedule.Type === 'none') continue;
+
+            let reset = false;
             const now = GetTime();
             if (task.Schedule.Type === 'week') {
-                const reset = WeekDayBetween(task.Schedule.Repeat, task.Checked, now);
-                if (reset) {
-                    this.Remove(task);
-                    this.Undo();
-                }
+                reset |= WeekDayBetween(task.Schedule.Repeat, task.Checked, now);
             } else if (task.Schedule.Type === 'month') {
-                const reset = MonthDayBetween(task.Schedule.Repeat, task.Checked, now);
-                if (reset) {
-                    this.Remove(task);
-                    this.Undo();
-                }
+                reset |= MonthDayBetween(task.Schedule.Repeat, task.Checked, now);
+            }
+            if (reset) {
+                this.Remove(task);
+                this.Undo();
             }
         }
     }
 
     /**
      * Add task
-     * @param {string} title - Title of the task
-     * @param {number} description - Description of the task
-     * @param {number?} deadline - Unix timestamp in seconds
-     * @param {'week'|'month'|null} repeatMode - Repeat mode
-     * @param {Array<number>} repeatDays - Repeat days
-     * @param {Array<Subtask>} subtasks - Subtasks informations
+     * @param {string} title Title of the task
+     * @param {string} description Description of the task
+     * @param {number} deadline Unix timestamp in seconds
+     * @param {RepeatModes} repeatMode Repeat mode
+     * @param {Array<number>} repeatDays Repeat days
+     * @param {Array<Subtask>} subtasks Subtasks informations
      * @returns {'added'|'alreadyExist'}
      */
     Add(title, description, deadline, repeatMode, repeatDays, subtasks) {
         const newTask = new Task();
-        newTask.Checked = null;
+        newTask.Checked = 0;
         newTask.Title = title;
         newTask.Description = description;
         newTask.Starttime = GetTime();
         newTask.Deadline = deadline;
-        newTask.Schedule = null;
-        if (repeatMode !== null && !!repeatDays.length) {
-            newTask.Schedule = {
-                Type: repeatMode,
-                Repeat: repeatDays
-            };
-        }
+        newTask.Schedule = {
+            Type: repeatMode,
+            Repeat: repeatDays
+        };
         newTask.Subtasks = subtasks.filter(st => !!st.Title);
+
+        // Check if repeat mode is valid
+        if (repeatMode !== 'none' && repeatDays.length <= 0) {
+            repeatMode = 'none';
+        }
 
         // Check if not exist
         const indexTask = this.GetIndex(this.SAVED_tasks, newTask);
@@ -192,29 +211,35 @@ class Tasks {
             this.UNSAVED_deletions.splice(indexDeletion, 1);
         }
 
-        // Task not exist, add it
-        if (indexTask === null && indexUnsaved === null) {
-            this.UNSAVED_additions.push(newTask);
-            return 'added';
+        // Task already exist
+        if (indexTask !== null || indexUnsaved !== null) {
+            return 'alreadyExist';
         }
 
-        return 'alreadyExist';
+        // Task not exist, add it
+        this.UNSAVED_additions.push(newTask);
+        return 'added';
     }
 
     /**
      * Edit task
-     * @param {Task} oldTask - Task to edit
-     * @param {string} title - Title of the task
-     * @param {number} description - Description of the task
-     * @param {number?} deadline - Unix timestamp in seconds
-     * @param {'week'|'month'|null} repeatMode - Repeat mode
-     * @param {Array<number>} repeatDays - Repeat days
-     * @param {Array<Subtask>} subtasks - Subtasks informations
+     * @param {Task} oldTask Task to edit
+     * @param {string} title Title of the task
+     * @param {string} description Description of the task
+     * @param {number} deadline Unix timestamp in seconds (0 = no deadline)
+     * @param {RepeatModes} repeatMode Repeat mode
+     * @param {Array<number>} repeatDays Repeat days
+     * @param {Array<Subtask>} subtasks Subtasks informations
      * @returns {'edited'|'notExist'}
      */
     Edit(oldTask, title, description, deadline, repeatMode, repeatDays, subtasks) {
         const rem = this.Remove(oldTask);
         if (rem === 'notExist') return 'notExist';
+
+        // Check if repeat mode is valid
+        if (repeatMode !== 'none' && repeatDays.length <= 0) {
+            repeatMode = 'none';
+        }
 
         const add = this.Add(title, description, deadline, repeatMode, repeatDays, subtasks);
         return add === 'added' ? 'edited' : 'notExist';
@@ -259,28 +284,29 @@ class Tasks {
      * @returns {boolean} Success of the operation
      */
     Move(task, newIndex) {
-        if (!this.sortTitles.includes(task.Title)) {
+        if (!this.tasksSort.includes(task.Title)) {
             this.user.interface.console.AddLog('warn', `Tasks - move failed: task not found (${task.Title} ${newIndex})`);
             return false;
         }
-        if (newIndex < 0 || newIndex > this.sortTitles.length) {
+        if (newIndex < 0 || newIndex > this.tasksSort.length) {
             this.user.interface.console.AddLog('warn', `Tasks - move failed: index out of range (${task.Title} ${newIndex})`);
             return false;
         }
-        const oldIndex = this.sortTitles.indexOf(task.Title);
+        const oldIndex = this.tasksSort.indexOf(task.Title);
         if (oldIndex === newIndex) {
             this.user.interface.console.AddLog('warn', `Tasks - move failed: same index (${task.Title} ${newIndex})`);
             return false;
         }
-        this.sortTitles.splice(oldIndex, 1);
-        this.sortTitles.splice(newIndex, 0, task.Title);
+        this.tasksSort.splice(oldIndex, 1);
+        this.tasksSort.splice(newIndex, 0, task.Title);
+        this.SAVED_sort = false;
         return true;
     }
 
     /**
      * Change sort order of tasks titles
      * @param {Task} task
-     * @param {number?} checked Time in seconds or null if unchecked
+     * @param {number} checked Time in seconds or 0 if unchecked
      * @returns {boolean} Success of the operation
      */
     Check(task, checked) {
@@ -312,7 +338,7 @@ class Tasks {
         if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
 
         // Save unchecked task in UNSAVED_additions
-        this.lastDeletedTask.Checked = null;
+        this.lastDeletedTask.Checked = 0;
         this.UNSAVED_additions.push(this.lastDeletedTask);
         this.lastDeletedTask = null;
 
@@ -322,7 +348,7 @@ class Tasks {
     /**
      * @param {Array<Task>} arr
      * @param {Task} task
-     * @returns {number?} - Index of task or null if not found
+     * @returns {number|null} Index of task or null if not found
      */
     GetIndex(arr, task) {
         const index = arr.findIndex(a => a.Title === task.Title);

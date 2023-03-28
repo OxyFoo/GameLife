@@ -23,10 +23,10 @@ const TaskProps = {
     /** @type {StyleProp<ViewStyle>} */
     style: {},
 
-    /** @type {Task} */
+    /** @type {Task|null} */
     task: null,
 
-    /** @type {Subtask} */
+    /** @type {Subtask|null} */
     subtask: null,
 
     /** Icon to drag => onTouchStart event (task only) */
@@ -54,12 +54,15 @@ class TaskElement extends React.Component {
     constructor(props) {
         super(props);
 
-        const { task, subtask } = this.props;
-        if (task !== null) this.mountTask();
+        this.mountTask();
     }
 
     mountTask() {
         const { task } = this.props;
+        if (task === null) {
+            return;
+        }
+
         const { Deadline, Schedule } = task;
 
         const d = new Date();
@@ -69,23 +72,29 @@ class TaskElement extends React.Component {
         /** @type {'schedule'|'deadline'|null} */
         let deadlineType = null;
 
-        /** @type {number?} Minimum number of days */
+        /** @type {number|null} Minimum number of days */
         let minDeltaDays = null;
 
         // Search next schedule
         let i = 0;
-        if (Schedule !== null && Schedule.Repeat.length) {
-            deadlineType = 'schedule';
+        let days = Schedule.Repeat;
+        if (Schedule.Type === 'month') days = days.map(day => day + 1);
+
+        if (days.length > 0) {
             while (minDeltaDays === null) {
-                const weekMatch = Schedule.Type === 'week' && Schedule.Repeat.includes(GetDay(d));
-                const monthMatch = Schedule.Type === 'month' && Schedule.Repeat.includes(d.getUTCDate());
-                if (weekMatch || monthMatch) minDeltaDays = i;
-                d.setUTCDate(d.getUTCDate() + 1); i++;
+                const weekMatch = Schedule.Type === 'week' && days.includes(GetDay(d));
+                const monthMatch = Schedule.Type === 'month' && days.includes(d.getUTCDate());
+                if (weekMatch || monthMatch) {
+                    minDeltaDays = i + 1;
+                    deadlineType = 'schedule';
+                }
+                i++;
+                d.setUTCDate(d.getUTCDate() + 1);
             }
         }
 
         // Search next deadline (if earlier than schedule or no schedule)
-        if (Deadline !== null) {
+        if (Deadline > 0) {
             const delta = (Deadline - now) / (60 * 60 * 24);
             if (minDeltaDays === null || delta < minDeltaDays) {
                 deadlineType = 'deadline';
@@ -113,8 +122,10 @@ class TaskElement extends React.Component {
     renderTask() {
         const { animOpacity } = this.state;
         const { style, task, onDrag } = this.props;
+        if (task === null) return null;
+
         const { Title, Schedule, Checked } = task;
-        const isTodo = Schedule === null;
+        const isTodo = Schedule.Type === 'none';
 
         const openTask = () => user.interface.ChangePage('task', { task });
         const onCheck = () => {
@@ -135,13 +146,13 @@ class TaskElement extends React.Component {
         ];
 
         return (
-            <Animated.View style={[styles.parentTask, style, { opacity: animOpacity }]} pointerEvents={!Checked || !isTodo ? 'auto' : 'none'}>
+            <Animated.View style={[styles.parentTask, style, { opacity: animOpacity }]} pointerEvents={Checked === 0 || !isTodo ? 'auto' : 'none'}>
                 <Button
                     style={buttonStyle}
-                    color={!!Checked ? '#fff' : 'transparent'}
+                    color={Checked !== 0 ? '#fff' : 'transparent'}
                     onPress={onCheck}
                 >
-                    {!!Checked && <Icon icon='check' color='main1' size={16} />}
+                    {Checked !== 0 && <Icon icon='check' color='main1' size={16} />}
                 </Button>
                 <TouchableOpacity
                     style={styles.title}
@@ -160,6 +171,8 @@ class TaskElement extends React.Component {
 
     renderSubtask() {
         const { style, subtask } = this.props;
+        if (subtask === null) return null;
+
         const { Checked, Title } = subtask;
         const textColor = { color: themeManager.GetColor('primary') };
         const hexActiveColor = themeManager.GetColor('main1');

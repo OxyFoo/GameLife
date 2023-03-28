@@ -16,6 +16,7 @@
             $tasks = $data['tasks'];
             $avatar = $data['avatar'];
             $xp = $data['xp'];
+            $tasksSort = $data['tasksSort'];
             $achievements = $data['achievements'];
             $titleID = $data['titleID'];
             $birthTime = $data['birthTime'];
@@ -31,6 +32,9 @@
             }
             if (isset($xp)) {
                 self::setXP($db, $account->ID, $xp);
+            }
+            if (isset($tasksSort)) {
+                self::SetTasksSort($db, $account, $tasksSort);
             }
             if (isset($achievements)) {
                 Achievements::AddAchievement($db, $account, $achievements);
@@ -274,6 +278,20 @@
             $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $xp, $accountID ]);
             if ($result === false) {
                 ExitWithStatus('Error: Saving XP failed');
+            }
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param string[] $tasksSort
+         */
+        private static function SetTasksSort($db, $account, $tasksSort) {
+            $command = 'UPDATE TABLE SET `TasksSort` = ? WHERE `ID` = ?';
+            $args = [ json_encode($tasksSort), $account->ID ];
+            $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
+            if ($result === false) {
+                ExitWithStatus('Error: Saving tasks sort failed');
             }
         }
 

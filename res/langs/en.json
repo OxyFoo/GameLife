@@ -265,8 +265,7 @@
 
         "input-email-title": "Email address",
         "input-username-title": "Pseudo",
-        "input-cgu-text": "I have read and agree to the %.",
-        "input-cgu-click": "terms and conditions",
+        "input-cgu-text": "I have read and agree to the %terms and conditions%.",
         "button-login-text": "Login",
         "button-signin-text": "Signin",
 
@@ -505,6 +504,7 @@
         "input-repeat-title": "Repeat",
         "input-description": "Description",
         "input-subtask-placeholder": "Subtask",
+        "text-hint-select": "Press and hold to select the column",
 
         "button-commentary": "Add a commentary",
         "button-add": "Add",

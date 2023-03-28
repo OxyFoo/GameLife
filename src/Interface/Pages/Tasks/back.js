@@ -18,14 +18,17 @@ class BackTasks extends PageBack {
     state = {
         tasks: [],
 
+        /** @type {boolean} Used to disable scroll when dragging a task */
         scrollable: true,
 
-        /** @type {Task|null} */
+        /** @type {Task|null} Used to manage selected task */
         draggedItem: null,
+
         mouseY: new Animated.Value(0),
         top: 0,
         height: 0,
 
+        /** @type {Animated.Value} Used to manage undo button */
         animUndoY: new Animated.Value(56 + 48 + 12)
     }
 
@@ -45,6 +48,10 @@ class BackTasks extends PageBack {
         this.state.tasks = user.tasks.Get();
     }
 
+    /**
+     * Add a new task to the list and open the task page\
+     * Max 8 tasks
+     */
     addTask = () => {
         if (this.state.tasks.length >= 8) {
             const title = langManager.curr['tasks']['alert-taskslimit-title'];
@@ -54,6 +61,7 @@ class BackTasks extends PageBack {
         }
         user.interface.ChangePage('task', undefined, true);
     }
+  
     /** @param {Task} task */
     onTaskCheck = async (task) => {
         // If task is scheduled, check/uncheck it
@@ -80,6 +88,7 @@ class BackTasks extends PageBack {
             });
         }
 
+        // Save changes
         user.LocalSave();
         user.OnlineSave();
     }
@@ -95,10 +104,19 @@ class BackTasks extends PageBack {
         this.setState({ tasks: [...user.tasks.Get()] });
     }
 
-    /** @param {import('../../../Class/Tasks').Task} item */
+    /** @param {Task} item */
     onDrag = (item) => {
-        this.setState({ scrollable: false, draggedItem: item });
+        this.setState({
+            scrollable: false,
+            draggedItem: item
+        });
     }
+
+    /** @param {NativeSyntheticEvent<NativeScrollEvent>} event */
+    onScroll = (event) => {
+        this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
+    }
+
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { height, y } = event.nativeEvent.layout;
@@ -106,6 +124,7 @@ class BackTasks extends PageBack {
         const offset = 56 + 14 + 32/2;
         this.setState({ top: y + offset, height: height - offset });
     }
+
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { top, height } = this.state;
@@ -130,6 +149,7 @@ class BackTasks extends PageBack {
         if (index !== currIndex && user.tasks.Move(draggedItem, index)) {
             this.setState({ tasks: user.tasks.Get() });
         }
+
         const scrollOffset = 48;
         if (newY < scrollOffset && scrollY > 0) {
             const newOffset = Math.max(0, scrollY - scrollOffset);
@@ -141,15 +161,12 @@ class BackTasks extends PageBack {
     }
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
+        // Dragging ended & save new tasks order
         this.setState({
             scrollable: true,
             draggedItem: null
         });
         user.LocalSave().then(user.OnlineSave);
-    }
-    /** @param {NativeSyntheticEvent<NativeScrollEvent>} event */
-    onScroll = (event) => {
-        this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
     }
 }
 

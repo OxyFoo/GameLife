@@ -6,12 +6,13 @@ import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
 /**
- * @typedef {import('../../../Class/Tasks').RepeatModes} RepeatModes
+ * @typedef {'new'|'edit'|'remove'} States
+ *
  * @typedef {import('../../../Class/Tasks').Task} Task
  * @typedef {import('../../../Class/Tasks').Subtask} Subtask
+ * @typedef {import('../../../Class/Tasks').RepeatModes} RepeatModes
  * @typedef {import('../../Widgets').TaskSchedule} TaskSchedule
  * @typedef {import('../../Widgets/TaskSchedule').OnChangeScheduleEvent} OnChangeScheduleEvent
- * @typedef {'new'|'edit'|'remove'} States
  */
 
 class BackTask extends PageBack {

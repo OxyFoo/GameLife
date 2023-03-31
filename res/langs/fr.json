@@ -89,6 +89,15 @@
         "btn-continue": "Continuer"
     },
 
+    "rarity-text": "Rareté",
+    "rarities": [
+        "Commun",
+        "Rare",
+        "Épique",
+        "Légendaire",
+        "Événement"
+    ],
+
     "server": {
         "alert-tokenexpired-title": "Le token de connexion a expiré",
         "alert-tokenexpired-text": "L'application va se fermer, veuillez la relancer.",
@@ -434,12 +443,16 @@
         "container-titles": "Titres",
         "container-items": "Items",
         "container-dyer": "Teinturier",
-        "select-dyer": "Sélectionner un item",
 
-        "popup-button-buy": "Acheter pour {} Ox",
+        "popup-title-button": "Acheter pour {} Ox",
+        "popup-item-button": "Acheter pour {} Ox",
+        "popup-dyer-text": "Changer l'apparence de cet item ?",
+        "popup-dyer-button": "Teindre pour {} Ox",
 
         "alert-buysuccess-title": "Achat réussi",
         "alert-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} Ox",
+        "alert-dyesuccess-title": "Teinture réussie",
+        "alert-dyesuccess-text": "Vous avez bien teint l'item \"{}\" pour {} Ox",
         "alert-buytitlesuccess-title": "Achat réussi",
         "alert-buytitlesuccess-text": "Vous avez bien acheté le titre \"{}\" pour {} Ox",
         "alert-buyfailed-title": "Achat échoué",
@@ -451,6 +464,7 @@
 
         "error-no-titles": "Une erreur est survenue lors du chargement des titres à vendre, veuillez réessayer plus tard.",
         "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard.",
+        "error-no-dye": "Il n'y a aucune teinture de disponible, veuillez acheter des items ou réessayez plus tard.",
         "error-inventory-empty": "Vous ne possédez aucun item"
     },
 

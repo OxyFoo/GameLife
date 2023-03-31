@@ -23,6 +23,7 @@
         case 'setUsername':     $commands->SetUsername();     break;
         case 'buyTitle':        $commands->BuyTitle();        break;
         case 'buyItem':         $commands->BuyItem();         break;
+        case 'buyDye':          $commands->BuyDye();          break;
         case 'sellStuff':       $commands->SellStuff();       break;
         case 'adWatched':       $commands->AdWatched();       break;
         case 'report':          $commands->Report();          break;

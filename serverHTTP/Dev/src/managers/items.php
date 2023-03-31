@@ -39,6 +39,23 @@
         /**
          * @param DataBase $db
          * @param Account $account
+         * @param int $id
+         * @param string $newItemID
+         * @return bool Success
+         */
+        public static function EditInventoryItemID($db, $account, $id, $newItemID) {
+            $command = 'UPDATE TABLE SET `ItemID` = ? WHERE `ID` = ?';
+            $args = array($newItemID, $id);
+            $result = $db->QueryPrepare('Inventories', $command, 'si', $args);
+            if ($result === false) return false;
+
+            Users::RefreshDataToken($db, $account->ID);
+            return true;
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
          * @return array
          */
         public static function GetInventoryTitles($db, $account) {
@@ -162,6 +179,57 @@
 
             // Add result in logs and return new ox value
             $db->AddLog($account->ID, $device->ID, 'buyItem', "$itemID");
+            return $account->Ox - $oxAmount;
+        }
+
+        /**
+         * Buy a dye
+         * @param DataBase $db
+         * @param Account $account
+         * @param Device $device
+         * @param int $ID
+         * @param string $newItemID
+         * @return int|false Return new Ox value if success, false otherwise
+         */
+        public static function BuyDye($db, $account, $device, $ID, $newItemID) {
+            // Check if user have already this item
+            $command = 'SELECT `ItemID` FROM TABLE WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Inventories', $command, 'i', [ $ID ]);
+            if ($result === false || count($result) === 0) return false;
+            $itemID = $result[0]['ItemID'];
+
+            // Try to cheat changing raw item ID
+            $rawItemID = strpos($itemID, '-') !== false ? explode('-', $itemID)[0] : $itemID;
+            $rawNewID = strpos($newItemID, '-') !== false ? explode('-', $newItemID)[0] : $newItemID;
+            if ($ID === $newItemID || $rawItemID !== $rawNewID) {
+                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to change item ID ($ID/$newItemID)");
+                return false;
+            }
+
+            // Get item value from item with new ID
+            $command = 'SELECT `Value` FROM TABLE WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Items', $command, 's', [ $newItemID ]);
+            if ($result === false || count($result) === 0) return false;
+            $oxAmount = intval($result[0]['Value']);
+            $oxAmount = intval($oxAmount * 3 / 4);
+
+            // Check if account has enough ox
+            if ($account->Ox < $oxAmount) {
+                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a dye with not enough Ox ($account->Ox/$oxAmount)");
+                return false;
+            }
+
+            // Update account ox
+            $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $oxAmount, $account->ID ]);
+            if ($result === false) return false;
+
+            // Add item to inventory
+            $result = self::EditInventoryItemID($db, $account, $ID, $newItemID);
+            if ($result === false) return false;
+
+            // Add result in logs and return new ox value
+            $db->AddLog($account->ID, $device->ID, 'buyDye', "$ID/$itemID/$newItemID");
             return $account->Ox - $oxAmount;
         }
 

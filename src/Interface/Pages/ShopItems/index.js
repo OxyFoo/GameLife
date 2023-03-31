@@ -6,74 +6,63 @@ import BackShopItems from './back';
 import styles from './styles';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
-import themeManager from '../../../Managers/ThemeManager';
 
-import { Rarity } from '../../../Data/Items';
 import { PageHeader } from '../../Widgets';
 import { Page, Icon, Text, Button, Container, Frame } from '../../Components';
 
-class ShopItems extends BackShopItems {
-    renderTitle = ({ item: titleID }) => {
-        const title = dataManager.titles.GetByID(titleID);
-        if (title === null) return null;
+/**
+ * @typedef {import('./back').BuyableTitle} BuyableTitle
+ * @typedef {import('./back').BuyableItem} BuyableItem
+ * @typedef {import('./back').BuyableDye} BuyableDye
+ */
 
-        const titleName = dataManager.GetText(title.Name);
-        const onPress = () => this.openTitlePopup(title);
+class ShopItems extends BackShopItems {
+    /**
+     * @param {{ item: BuyableTitle }} item
+     * @returns {JSX.Element}
+     */
+    renderTitle = ({ item: title }) => {
+        // Disable button if already bought today
         const disabled = user.inventory.buyToday.titles.includes(title.ID);
 
+        // Line through if already owned
         const owned = user.inventory.titles.includes(title.ID);
-        const styleLine = owned ? { textDecorationLine: 'line-through' } : undefined;
+        const styleLine = { textDecorationLine: owned ? 'line-through' : 'none' };
 
         return (
-            <Button style={styles.titleButton} onPress={onPress} enabled={!disabled}>
-                <Text style={styleLine} numberOfLines={1}>{titleName}</Text>
+            <Button style={styles.titleButton} onPress={title.OnPress} enabled={!disabled}>
+                <Text style={styleLine} numberOfLines={1}>{title.Name}</Text>
                 <View style={styles.titlePrice}>
-                    <Text style={[styles.titlePriceOx, styleLine]}>{title.Value}</Text>
+                    <Text style={[styles.titlePriceOx, styleLine]}>{title.Price}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
             </Button>
-        )
+        );
     }
 
-    renderItem = ({ item: itemID }) => {
-        const { itemsCharacters } = this.state;
-
-        const item = dataManager.items.GetByID(itemID);
-        if (item === null) return null;
-
-        let colors = [];
-        const absoluteColors = themeManager.GetAbsoluteColors();
-        switch (item.Rarity) {
-            case Rarity.common:     colors = absoluteColors.rarity_common;    break;
-            case Rarity.rare:       colors = absoluteColors.rarity_rare;      break;
-            case Rarity.epic:       colors = absoluteColors.rarity_epic;      break;
-            case Rarity.legendary:  colors = absoluteColors.rarity_legendary; break;
-            case Rarity.event:      colors = absoluteColors.rarity_event;     break;
-        }
-
-        const itemSize = dataManager.items.GetContainerSize(item.Slot);
-        const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
-        const onPress = () => this.openItemPopup(item);
-        const disabled = user.inventory.buyToday.items.includes(itemID);
+    /**
+     * @param {{ item: BuyableItem }} item
+     * @returns {JSX.Element}
+     */
+    renderItem = ({ item }) => {
+        const disabled = user.inventory.buyToday.items.includes(item.ID);
+        const backgroundStyle = { backgroundColor: item.BackgroundColor };
 
         return (
             <View style={styles.itemParent}>
-                <Button style={styles.itemButton} onPress={onPress} enabled={!disabled}>
-                    <LinearGradient style={styles.itemBorder} colors={colors}>
-                        <View style={[styles.itemContent, backgroundColor]}>
+                <Button style={styles.itemButton} onPress={item.OnPress} enabled={!disabled}>
+                    <LinearGradient style={styles.itemBorder} colors={item.Colors}>
+                        <View style={[styles.itemContent, backgroundStyle]}>
 
                             <Frame
                                 style={styles.itemFrame}
-                                characters={[ itemsCharacters[itemID] ]}
-                                delayTime={200}
-                                loadingTime={200}
+                                characters={[ item.Character ]}
                                 onlyItems={true}
-                                size={itemSize}
+                                size={item.Size}
                             />
 
                             <View style={styles.itemPrice}>
-                                <Text style={styles.itemPriceOx}>{item.Value}</Text>
+                                <Text style={styles.itemPriceOx}>{item.Price}</Text>
                                 <Icon icon='ox' color='main1' size={20} />
                             </View>
 
@@ -81,16 +70,62 @@ class ShopItems extends BackShopItems {
                     </LinearGradient>
                 </Button>
             </View>
-        )
+        );
+    }
+
+    /**
+     * @param {{ item: BuyableDye }} item
+     * @returns {JSX.Element}
+     */
+    renderDye = ({ item: dyer }) => {
+        const { ItemBefore, ItemAfter } = dyer;
+        const backgroundStyle = { backgroundColor: dyer.BackgroundColor };
+
+        return (
+            <LinearGradient style={styles.dyeBorder} colors={dyer.Colors}>
+                <Button style={[styles.dyeView, backgroundStyle]} onPress={dyer.OnPress} enabled={true}>
+                    {/** Item before */}
+                    <Frame
+                        style={styles.dyerFrame}
+                        characters={[ ItemBefore.Character ]}
+                        onlyItems={true}
+                        size={ItemBefore.Size}
+                    />
+
+                    {/** Arrow + Ox amount */}
+                    <View style={styles.dyeAmount}>
+                        <View style={styles.dyeAmountPrice}>
+                            <Text style={styles.dyeAmountText}>{dyer.Price}</Text>
+                            <Icon icon='ox' color='main1' size={24} />
+                        </View>
+                        <Icon icon='arrowLeft' angle={180} color='white' size={48} />
+                    </View>
+
+                    {/** Item after */}
+                    <Frame
+                        style={styles.dyerFrame}
+                        characters={[ ItemAfter.Character ]}
+                        onlyItems={true}
+                        size={ItemAfter.Size}
+                    />
+                </Button>
+            </LinearGradient>
+        );
     }
 
     topOverlay() {
+        const { oxAmount } = this.state;
+
         return (
             <>
-                <PageHeader style={styles.header} onBackPress={user.interface.BackPage} hideHelp />
+                <PageHeader
+                    style={styles.overlayHeader}
+                    onBackPress={user.interface.BackPage}
+                    hideHelp
+                />
 
                 <View style={styles.overlayWallet}>
-                    <Text style={styles.overlayOx} color='main1'>{user.informations.ox.Get()}</Text>
+                    <Text style={styles.overlayOx} color='main1'>{oxAmount}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
             </>
@@ -98,70 +133,77 @@ class ShopItems extends BackShopItems {
     }
 
     render() {
-        const { titlesAvailable, itemsAvailable } = this.state;
         const lang = langManager.curr['shopItems'];
+        const { oxAmount, buyableTitles, buyableItems, buyableDye } = this.state;
 
-        // TODO - Texts
-        const nullTitles = <Text>{lang['error-no-titles']}</Text>;
-        const nullItems = <Text>{lang['error-no-items']}</Text>;
+        const nullTitles = <Text style={styles.errorText}>{lang['error-no-titles']}</Text>;
+        const nullItems = <Text style={styles.errorText}>{lang['error-no-items']}</Text>;
+        const nullDye = <Text style={styles.errorText}>{lang['error-no-dye']}</Text>;
+        const TopOverlay = this.topOverlay.bind(this);
 
         return (
             <Page
                 ref={ref => this.refPage = ref}
-                bottomOffset={24}
-                topOverlay={<this.topOverlay/>}
+                topOverlay={<TopOverlay />}
                 canScrollOver
             >
-                <PageHeader style={styles.header} onBackPress={user.interface.BackPage} hideHelp />
+                <PageHeader
+                    style={styles.header}
+                    onBackPress={user.interface.BackPage}
+                    hideHelp
+                />
 
                 <View style={styles.wallet}>
-                    <Text style={styles.ox} color='main1'>{user.informations.ox.Get()}</Text>
+                    <Text style={styles.ox} color='main1'>{oxAmount}</Text>
                     <Icon icon='ox' color='main1' size={24} />
                 </View>
 
+                {/** Buy title */}
                 <Container
                     style={styles.container}
+                    styleHeader={styles.containerHeader}
                     styleContainer={styles.titlesContainer}
                     text={lang['container-titles']}
-                    styleHeader={{ justifyContent: 'center' }}
                 >
-                    {titlesAvailable === null ? nullTitles : (
-                        <FlatList
-                            data={titlesAvailable}
-                            renderItem={this.renderTitle}
-                            keyExtractor={item => item.toString()}
-                        />
-                    )}
+                    <FlatList
+                        data={buyableTitles}
+                        ListEmptyComponent={nullTitles}
+                        renderItem={this.renderTitle}
+                        keyExtractor={(item, index) => `buyable-title-${item.ID}-${index}}`}
+                    />
                 </Container>
 
+                {/** Buy item */}
                 <Container
-                    text={lang['container-items']}
                     style={styles.container}
-                    styleHeader={{ justifyContent: 'center' }}
+                    styleHeader={styles.containerHeader}
                     styleContainer={styles.itemsContainer}
+                    text={lang['container-items']}
                 >
-                    {itemsAvailable === null ? nullItems : (
-                        <FlatList
-                            data={itemsAvailable}
-                            numColumns={4}
-                            renderItem={this.renderItem}
-                            keyExtractor={item => item.toString()}
-                        />
-                    )}
+                    <FlatList
+                        data={buyableItems}
+                        ListEmptyComponent={nullItems}
+                        numColumns={4}
+                        renderItem={this.renderItem}
+                        keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
+                    />
                 </Container>
 
+                {/** Buy item dye */}
                 <Container
                     text={lang['container-dyer']}
-                    styleHeader={{ justifyContent: 'center' }}
+                    styleHeader={styles.containerHeader}
+                    styleContainer={styles.dyerContainer}
                 >
-                    <Button
-                        onPress={this.openItemEditorPopup}
-                    >
-                        {lang['select-dyer']}
-                    </Button>
+                    <FlatList
+                        data={buyableDye}
+                        ListEmptyComponent={nullDye}
+                        renderItem={this.renderDye}
+                        keyExtractor={(item, index) => `buyable-dye-${item.ItemBefore.ID}-${index}`}
+                    />
                 </Container>
             </Page>
-        )
+        );
     }
 }
 

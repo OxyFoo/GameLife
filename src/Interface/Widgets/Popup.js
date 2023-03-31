@@ -117,7 +117,9 @@ class Popup extends React.PureComponent {
         const refuse = langManager.curr['modal']['btn-refuse'];
 
         const callback = (type) => {
-            this.state.callback(type);
+            if (this.state.callback !== null) {
+                this.state.callback(type);
+            }
             this.Close();
         }
 

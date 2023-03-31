@@ -27,7 +27,7 @@
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-native-push-notification": "^8.1.1",
     "react-native-shadow-2": "^7.0.6",
-    "react-native-svg": "^12.1.0",
+    "react-native-svg": "^13.8.0",
     "react-native-tracking-transparency": "^0.1.2"
   },
   "devDependencies": {

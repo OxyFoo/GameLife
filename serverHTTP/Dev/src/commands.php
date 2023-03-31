@@ -381,6 +381,21 @@
             $this->output['status'] = 'ok';
         }
 
+        public function BuyDye() {
+            $ID = $this->data['ID'];
+            $newID = $this->data['newID'];
+            if (!isset($ID, $newID) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
+
+            $ox = Items::BuyDye($this->db, $account, $device, $ID, $newID);
+            if ($ox === false) return;
+
+            $this->output['ox'] = $ox;
+            $this->output['stuffs'] = Items::GetInventory($this->db, $account);
+            $this->output['status'] = 'ok';
+        }
+
         public function SellStuff() {
             $stuffID = $this->data['stuffID'];
             if (!isset($stuffID) || !$this->tokenChecked) return;

@@ -44,17 +44,14 @@ class Item {
     /** @type {number} 0 = Not buyable, 1 = Buyable */
     Buyable = 0;
 
+    /** @type {number} */
+    Value = 0;
+
     /**
      * @type {Array<Buff>}
      * @deprecated
      */
     Buffs = [];
-
-    /**
-     * @type {Array<{ ID: string, Value: number }>}
-     * @deprecated
-     */
-    Value = 0;
 
     //Color = ''; // TODO - Faire un système de couleur fixe
     //XML = ''; // TODO - Gérer les XML avec les ID
@@ -86,8 +83,17 @@ class Items {
      */
     GetBuyable(slot = false) {
         const checkSlot = s => slot === false || s === slot;
-        console.log(this.items);
         return this.items.filter(i => i.Buyable && i.Rarity <= 3 && checkSlot(i.Slot));
+    }
+
+    /**
+     * @param {string} itemID Item ID
+     * @param {Array<Item>} items List of items to get dyables items
+     * @returns {Array<Item>} List of dyables items for the given item
+     */
+    GetDyables(itemID, items = this.items) {
+        const itemMainID = itemID.split('-')[0];
+        return items.filter(i => i.ID.startsWith(itemMainID + '-') && i.ID !== itemID);
     }
 
     /**

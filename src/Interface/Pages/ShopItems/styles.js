@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    header: {
-        marginBottom: 24
+    // Overlay
+    overlayHeader: {
+        marginTop: 18,
+        marginBottom: 18
     },
-
     overlayWallet: {
         position: 'absolute',
         top: 0,
@@ -19,6 +20,18 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
 
+    // Containers
+    container: {
+        marginBottom: 24
+    },
+    containerHeader: {
+        justifyContent: 'center'
+    },
+
+    // Page
+    header: {
+        marginBottom: 24
+    },
     wallet: {
         marginBottom: 24,
         flexDirection: 'row',
@@ -29,10 +42,8 @@ const styles = StyleSheet.create({
         marginRight: 6,
         fontSize: 24
     },
-    container: {
-        marginBottom: 24
-    },
 
+    // Titles
     titlesContainer: {
         padding: 0
     },
@@ -48,6 +59,7 @@ const styles = StyleSheet.create({
         marginRight: 12
     },
 
+    // Items
     itemsContainer: {
         padding: 0
     },
@@ -90,6 +102,7 @@ const styles = StyleSheet.create({
         marginRight: 4
     },
 
+    // Popup - Item
     itemPopup: {
         padding: 24
     },
@@ -105,6 +118,7 @@ const styles = StyleSheet.create({
         marginTop: 24
     },
 
+    // Popup - Title
     titlePopup: {
         padding: 24
     },
@@ -113,6 +127,71 @@ const styles = StyleSheet.create({
     },
     titlePopupButton: {
         marginTop: 24
+    },
+
+    // Page - Dyer
+    dyerContainer: {
+        padding: 0
+    },
+    dyeView: {
+        height: 'auto',
+        borderRadius: 4,
+        paddingHorizontal: 0,
+
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    dyeBorder: {
+        margin: 2,
+        padding: 3,
+        borderRadius: 4
+    },
+    dyerFrame: {
+        width: '30%',
+        aspectRatio: 1
+    },
+    dyeAmount: {
+        alignItems: 'center'
+    },
+    dyeAmountText: {
+        marginRight: 6
+    },
+    dyeAmountPrice: {
+        flexDirection: 'row'
+    },
+
+    // Popup - Dyer
+    dyerPopup: {
+        padding: 24,
+        paddingBottom: 48 * 2 * 2
+    },
+    dyerPopupTitle: {
+        fontSize: 22
+    },
+    dyerPopupText: {
+        fontSize: 16,
+        textAlign: 'center'
+    },
+    dyerPopupSwitch: {
+        marginTop: 12,
+        marginBottom: 24
+    },
+    dyerPopupSeparator: {
+        marginLeft: '20%',
+        width: '60%',
+        opacity: .25
+        //paddingBottom: 36
+    },
+    dyerPopupContainer: {
+        //paddingBottom: 36
+    },
+    dyerPopupButton: {
+        marginTop: 24
+    },
+
+    errorText: {
+        padding: 12
     }
 });
 

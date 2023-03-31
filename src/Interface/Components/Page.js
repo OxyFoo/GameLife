@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Animated, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
 import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import user from '../../Managers/UserManager';
@@ -99,10 +99,10 @@ class Page extends React.Component {
         if (topOverlay !== null) {
             if (-scrollY > topOverlayHeight && !this.state.topOverlayShow) {
                 this.setState({ topOverlayShow: true });
-                TimingAnimation(this.state.topOverlayPosition, 0, 200).start();
+                SpringAnimation(this.state.topOverlayPosition, 0).start();
             } else if (-scrollY < topOverlayHeight && this.state.topOverlayShow) {
                 this.setState({ topOverlayShow: false });
-                TimingAnimation(this.state.topOverlayPosition, 1, 200).start();
+                SpringAnimation(this.state.topOverlayPosition, 1).start();
             }
         }
     }
@@ -213,6 +213,7 @@ class Page extends React.Component {
 
         return (
             <Animated.View style={[styles.topOverlay, position, borderColor, backgroundColor]}>
+                <View style={[styles.topOverlayLine, backgroundColor]} />
                 {topOverlay}
             </Animated.View>
         );
@@ -281,6 +282,13 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 32,
         borderBottomWidth: 1
+    },
+    topOverlayLine: {
+        position: 'absolute',
+        top: -12,
+        left: 0,
+        right: 0,
+        height: 12
     },
     footer: {
         position: 'absolute',

@@ -89,6 +89,15 @@
         "btn-continue": "Continue"
     },
 
+    "rarity-text": "Rarity",
+    "rarities": [
+        "Common",
+        "Rare",
+        "Epic",
+        "Legendary",
+        "Event"
+    ],
+
     "server": {
         "alert-tokenexpired-title": "The connection token has expired",
         "alert-tokenexpired-text": "The application will close, please restart it.",
@@ -434,12 +443,16 @@
         "container-titles": "Titles",
         "container-items": "Items",
         "container-dyer": "Dyer",
-        "select-dyer": "Select an item",
 
-        "popup-button-buy": "Buy for {} Ox",
+        "popup-title-button": "Buy for {} Ox",
+        "popup-item-button": "Buy for {} Ox",
+        "popup-dyer-text": "Change the appearance of this item?",
+        "popup-dyer-button": "Tint for {} Ox",
 
         "alert-buysuccess-title": "Successful purchase",
         "alert-buysuccess-text": "You have purchased the item \"{}\" for {} Ox",
+        "alert-dyesuccess-title": "Successful dyeing",
+        "alert-dyesuccess-text": "You have dyed the item \"{}\" for {} Ox",
         "alert-buytitlesuccess-title": "Successful purchase",
         "alert-buytitlesuccess-text": "You have purchased the title \"{}\" for {} Ox",
         "alert-buyfailed-title": "Purchase failed",
@@ -451,6 +464,7 @@
 
         "error-no-titles": "An error occurred while loading the securities for sale, please try again later.",
         "error-no-items": "An error occurred while loading the items for sale, please try again later.",
+        "error-no-dye": "There are no dyes available, please purchase items or try again later.",
         "error-inventory-empty": "You do not have any items"
     },
 

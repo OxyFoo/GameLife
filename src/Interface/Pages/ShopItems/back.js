@@ -5,7 +5,7 @@ import themeManager from '../../../Managers/ThemeManager';
 
 import { ArrayToDict, Random } from '../../../Utils/Functions';
 import { Character, PageBack } from '../../Components';
-import { GetRandomIndexesByDay } from '../../../Utils/Items';
+import { GetRandomIntByDay, GetRandomIndexesByDay } from '../../../Utils/Items';
 import { renderTitlePopup } from './popupTitle';
 import { renderItemPopup } from './popupItem';
 import { renderDyePopup } from './popupDye';
@@ -183,7 +183,7 @@ class BackShopItems extends PageBack {
             const inventoryID = user.inventory.stuffs.find(i => i.ItemID == itemBefore.ID).ID;
 
             const itemsAlternative = dataManager.items.GetDyables(itemBefore.ID, buyableItems);
-            const itemAfter = itemsAlternative[Random(0, itemsAlternative.length)] || null;
+            const itemAfter = itemsAlternative[GetRandomIntByDay(0, itemsAlternative.length - 1)] || null;
             if (itemAfter === null) return;
 
             const characterBeforeKey = `shop-dye-character-before-${itemAfter.ID}`;

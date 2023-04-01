@@ -207,7 +207,16 @@
             $result = $db->QueryPrepare('Logs', $command, 'iss', [ $account->ID, $dateNow, $tomorrow ]);
             foreach ($result as $row) array_push($titles, intval($row['Data']));
 
-            return array('titles' => $titles, 'items' => $items);
+            $dyes = array();
+            $command = "SELECT `Data` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'buyDye' AND `Date` BETWEEN ? AND ?";
+            $result = $db->QueryPrepare('Logs', $command, 'iss', [ $account->ID, $dateNow, $tomorrow ]);
+            foreach ($result as $row) array_push($dyes, intval(explode('/', $row['Data'])[0]));
+
+            return array(
+                'titles' => $titles,
+                'items' => $items, 
+                'dyes' => $dyes
+            );
         }
 
         /**

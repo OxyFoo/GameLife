@@ -84,7 +84,7 @@ const buyDye = async(item) => {
     // Update inventory & Ox amount
     user.inventory.LoadOnline({ stuffs: response['stuffs'] });
     user.informations.ox.Set(parseInt(response['ox']));
-    user.inventory.buyToday.items.push(item.ID);
+    user.inventory.buyToday.dyes.push(item.ItemBefore.InventoryID);
     user.LocalSave();
 
     // Show success message

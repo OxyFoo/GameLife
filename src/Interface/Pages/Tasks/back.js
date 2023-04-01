@@ -130,6 +130,7 @@ class BackTasks extends PageBack {
         const { top, height } = this.state;
         const { pageY } = event.nativeEvent;
 
+        this.initialSort = [ ...user.tasks.tasksSort ];
         const newY = MinMax(0, pageY - top, height);
         TimingAnimation(this.state.mouseY, newY, 0).start();
     }
@@ -166,7 +167,9 @@ class BackTasks extends PageBack {
             scrollable: true,
             draggedItem: null
         });
-        user.LocalSave().then(user.OnlineSave);
+        if (this.initialSort.join() !== user.tasks.tasksSort.join()) {
+            user.LocalSave().then(user.OnlineSave);
+        }
     }
 }
 

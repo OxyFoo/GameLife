@@ -79,11 +79,12 @@ class ShopItems extends BackShopItems {
      */
     renderDye = ({ item: dyer }) => {
         const { ItemBefore, ItemAfter } = dyer;
+        const disabled = user.inventory.buyToday.dyes.includes(dyer.ItemBefore.InventoryID);
         const backgroundStyle = { backgroundColor: dyer.BackgroundColor };
 
         return (
             <LinearGradient style={styles.dyeBorder} colors={dyer.Colors}>
-                <Button style={[styles.dyeView, backgroundStyle]} onPress={dyer.OnPress} enabled={true}>
+                <Button style={[styles.dyeView, backgroundStyle]} onPress={dyer.OnPress} enabled={!disabled}>
                     {/** Item before */}
                     <Frame
                         style={styles.dyerFrame}

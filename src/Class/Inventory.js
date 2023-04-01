@@ -57,9 +57,17 @@ class Inventory {
         this.avatarEdited = false;
 
         this.buyToday = {
+            /** @type {string} Today date */
             day: '',
+
+            /** @type {Array<number>} List of titles ID */
             titles: [],
-            items: []
+
+            /** @type {Array<string>} List of items ID */
+            items: [],
+
+            /** @type {Array<number>} List of inventory items ID */
+            dyes: []
         };
     }
 
@@ -93,6 +101,7 @@ class Inventory {
             this.buyToday.day = today;
             this.buyToday.titles = [];
             this.buyToday.items = [];
+            this.buyToday.dyes = [];
             this.user.LocalSave();
         }
     }

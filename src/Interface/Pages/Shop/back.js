@@ -1,6 +1,6 @@
 import { PageBack } from '../../Components';
 import user from '../../../Managers/UserManager';
-import renderGiftCodePopup from './giftCodePopup';
+import renderGiftCodePopup from './popupGiftCode';
 
 class BackShop extends PageBack {
     state = {

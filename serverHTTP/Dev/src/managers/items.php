@@ -304,17 +304,23 @@
 
             // Check if user spam and add try to logs
             $attempts = Users::GetGiftCodeAttemptsToday($db, $account);
-            if ($attempts === false || $attempts > 100) {
-                return null;
-            }
+            if ($attempts === false) return null;
             if ($attempts === 100) {
                 $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', 'User has tried more than 100 gift codes');
+            }
+            if ($attempts > 100) {
+                return null;
             }
             $db->AddLog($account->ID, $device->ID, 'giftCodeTry', "$code");
 
             if (count($gift) === 0) return false;
             $rewards = $gift[0]['Rewards'];
             $available = intval($gift[0]['Available']);
+
+            // Check if user has already used the code
+            $command2 = "SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'giftCode' AND `Data` = ?";
+            $usedGifts = $db->QueryPrepare('Logs', $command2, 'is', [ $account->ID, $code ]);
+            if ($usedGifts === false || count($usedGifts) > 0) return false;
 
             // Check BETA code
             if (strtolower($code) === 'beta') {
@@ -345,11 +351,6 @@
             } else if (!$available) {
                 return false;
             }
-
-            // Check if user hasn't already use the code
-            $command2 = "SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'giftCode' AND `Data` = ?";
-            $usedGifts = $db->QueryPrepare('Logs', $command2, 'is', [ $account->ID, $code ]);
-            if ($usedGifts === false || count($usedGifts) > 0) return false;
 
             return $rewards;
         }

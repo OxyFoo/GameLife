@@ -57,7 +57,6 @@ function renderGiftCodePopup() {
         setLoading(true);
         await checkCode(code);
         setLoading(false);
-        //this.forceUpdate(); TODO: Useful ?
     };
 
     return (

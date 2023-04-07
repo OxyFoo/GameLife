@@ -209,6 +209,7 @@ class EditorAvatarRender extends EditorAvatarBack {
 
     renderItemsList() {
         const { slotSelected, stuffsSelected, sexeSelected } = this.state;
+        const lang = langManager.curr['other'];
 
         if (slotSelected === 'skin') {
             const males = Object.keys(CHARACTERS.MALE);
@@ -218,7 +219,8 @@ class EditorAvatarRender extends EditorAvatarBack {
             return (
                 <>
                     <TextSwitch
-                        texts={['Homme', 'Femme']}
+                        texts={[lang['sexe-male'], lang['sexe-female']]}
+                        fontSize={28}
                         onChange={selectSexe}
                     />
                     <FlatList

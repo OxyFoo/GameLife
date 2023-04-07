@@ -15,6 +15,9 @@ const TextSwitchProps = {
     /** @type {Array<string>} */
     texts: [],
 
+    /** @type {number} */
+    fontSize: 12,
+
     /** @param {number} index Called when seleted part change */
     onChange: (index) => {}
 }
@@ -84,7 +87,7 @@ class TextSwitch extends React.Component {
                 style={[styles.button, width]}
                 onPress={() => this.onChange(index)}
                 rippleColor={rippleColor}
-                fontSize={12}
+                fontSize={this.props.fontSize}
             >
                 {text}
             </Button>

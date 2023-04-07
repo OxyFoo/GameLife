@@ -29,6 +29,7 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
         await buyDye.call(this, dye);
         setLoading(false); this.setState({ buying: false });
         refreshCallback();
+        user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     };
 
     return (
@@ -82,9 +83,8 @@ const buyDye = async(item) => {
     }
 
     // Update inventory & Ox amount
-    user.inventory.LoadOnline({ stuffs: response['stuffs'] });
+    user.inventory.LoadOnline(response['inventory']);
     user.informations.ox.Set(parseInt(response['ox']));
-    user.inventory.buyToday.dyes.push(item.ItemBefore.InventoryID);
     user.LocalSave();
 
     // Show success message

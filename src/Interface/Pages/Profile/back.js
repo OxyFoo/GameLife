@@ -4,6 +4,7 @@ import user from '../../../Managers/UserManager';
 import { GetDate, GetTime } from '../../../Utils/Time';
 
 /**
+ * @typedef {import('./editorAvatar').default} EditorAvatar
  * @typedef {import('./editorProfile').default} ProfileEditor
  */
 
@@ -22,10 +23,18 @@ class BackProfile extends PageBack {
         this.totalActivityTime = this.getTotalDuration(activities);
         this.playTime = this.getTimeFromFirst(activities);
 
+        /** @type {EditorAvatar} */
         this.refAvatar = null;
 
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
+    }
+
+    componentDidFocused = () => {
+        // Update the avatar
+        this.refAvatar.updateEquippedItems();
+        this.refAvatar.forceUpdate();
+        this.refAvatar.refFrame.forceUpdate();
     }
 
     openProfileEditor = () => this.refProfileEditor?.Open();

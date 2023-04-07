@@ -64,7 +64,6 @@ import m_shoes_15 from './male/shoes_15';
 import m_shoes_16 from './male/shoes_16';
 
 // Male alternative items
-import m_bottom_01_1 from './male/bottom_01-1';
 import m_bottom_02_1 from './male/bottom_02-1';
 import m_bottom_04_1 from './male/bottom_04-1';
 import m_bottom_05_1 from './male/bottom_05-1';
@@ -250,7 +249,6 @@ import f_shoes_15 from './female/shoes_15';
 import f_shoes_16 from './female/shoes_16';
 
 // Female alternative items
-import f_bottom_01_1 from './female/bottom_01-1';
 import f_bottom_02_1 from './female/bottom_02-1';
 import f_bottom_04_1 from './female/bottom_04-1';
 import f_bottom_05_1 from './female/bottom_05-1';
@@ -436,7 +434,6 @@ const STUFFS = {
         'shoes_13': m_shoes_15,
         'shoes_13': m_shoes_16,
 
-        'bottom_01-1': m_bottom_01_1,
         'bottom_02-1': m_bottom_02_1,
         'bottom_04-1': m_bottom_04_1,
         'bottom_05-1': m_bottom_05_1,
@@ -621,7 +618,6 @@ const STUFFS = {
         'shoes_13': f_shoes_15,
         'shoes_13': f_shoes_16,
 
-        'bottom_01-1': f_bottom_01_1,
         'bottom_02-1': f_bottom_02_1,
         'bottom_04-1': f_bottom_04_1,
         'bottom_05-1': f_bottom_05_1,

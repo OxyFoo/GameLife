@@ -570,7 +570,7 @@
         "widget-button-editTime": "Modifier",
         "widget-achievements-all": "Tous les succès",
         "widget-skills-all": "Toutes les comp.",
-        "sexe-male": "Homme",
-        "sexe-female": "Femme"
+        "sexe-male": "♂",
+        "sexe-female": "♀"
     }
 }

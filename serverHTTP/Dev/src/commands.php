@@ -392,7 +392,11 @@
             if ($ox === false) return;
 
             $this->output['ox'] = $ox;
-            $this->output['stuffs'] = Items::GetInventory($this->db, $account);
+            $this->output['inventory'] = array(
+                'avatar' => Users::GetAvatar($this->db, $account),
+                'stuffs' => Items::GetInventory($this->db, $account),
+                'buyToday' => Users::GetBuyToday($this->db, $account)
+            );
             $this->output['status'] = 'ok';
         }
 

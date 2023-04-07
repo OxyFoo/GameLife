@@ -267,7 +267,6 @@ class PageManager extends React.Component{
         if (Object.keys(CACHE_PAGES.persistent).includes(newPage)) {
             if (typeof(CACHE_PAGES.persistent[newPage]?.ref?.refPage?.Show) === 'function') {
                 CACHE_PAGES.persistent[newPage].ref.refPage.Show();
-                this.onPageChange();
                 CACHE_PAGES.persistent[newPage].ref.componentDidFocused();
                 this.setState({ selectedPage: newPage });
             } else {
@@ -279,7 +278,6 @@ class PageManager extends React.Component{
             this.setState({ selectedPage: newPage }, () => {
                 if (typeof(CACHE_PAGES.temp?.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();
-                    this.onPageChange();
                     CACHE_PAGES.temp.ref.componentDidFocused();
                 } else {
                     console.log('Ref undefined (temp)', CACHE_PAGES.temp);
@@ -341,9 +339,6 @@ class PageManager extends React.Component{
         const Page = pages[page];
         const args = this.path.length ? this.path[this.path.length - 1][1] : {};
         return <Page key={key} args={args} ref={setRef} />;
-    }
-
-    onPageChange = () => {
     }
 
     renderPage = () => {

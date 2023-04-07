@@ -4,29 +4,32 @@ import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import dataManager from '../../../Managers/DataManager';
 
-import { Page, PageBack } from '../../Components';
+import { PageBack } from '../../Components';
 import { GetTime } from '../../../Utils/Time';
-import { IsUndefined } from '../../../Utils/Functions';
 import { SpringAnimation } from '../../../Utils/Animations';
 import Notifications from '../../../Utils/Notifications';
 
 /**
  * @typedef {import('../../../Class/Activities').Activity} Activity
+ * 
+ * @typedef {{ ID: number, name: string, icon: string }} Category
  */
 
 class BackActivity extends PageBack {
     constructor(props) {
         super(props);
 
+        /** @type {boolean} If true, the page is in visualisation mode */
         const visualisationMode = this.props.args.hasOwnProperty('activity');
+
+        /** @type {boolean} If true, skill ID is set by default */
         const isSetSkillID = this.props.args.hasOwnProperty('skillID');
 
-        /**
-         * @type {Activity}
-         */
+        /** @type {Activity} */
         const activity = visualisationMode ? this.props.args.activity : null;
         const skill = visualisationMode ? dataManager.skills.GetByID(activity.skillID) : null;
 
+        /** @type {Array<Category>} */
         let categories = [];
         for (let i = 0; i < dataManager.skills.categories.length; i++) {
             const category = dataManager.skills.categories[i];
@@ -80,6 +83,10 @@ class BackActivity extends PageBack {
         }
     }
 
+    onLayoutPanel = (event) => {
+        this.setState({ posY: event.nativeEvent.layout.y });
+    }
+
     selectCategory = (ID, checked) => {
         const filter = skill => !checked || skill.CategoryID === ID;
         const maper = skill => ({ id: skill.ID, value: dataManager.GetText(skill.Name) });
@@ -107,12 +114,13 @@ class BackActivity extends PageBack {
     }
 
     getCategoryName = () => {
-        let output = langManager.curr['activity']['input-activity'];
-        const selectedCategory = this.state.categories.find(category => category.ID === this.state.selectedCategory);
-        if (!IsUndefined(selectedCategory)) {
-            output = selectedCategory.name;
-        }
-        return output;
+        const { categories, selectedCategory} = this.state;
+        const checkCategory = cat => cat.ID === selectedCategory;
+        const category = categories.find(checkCategory) || null;
+
+        if (category !== null)
+            return category.name;
+        return langManager.curr['activity']['input-activity'];
     }
 
     onChangeSchedule = (startTime, duration) => {

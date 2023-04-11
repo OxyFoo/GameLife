@@ -1,26 +1,18 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    page: {
-        paddingHorizontal: 0,
-        paddingBottom: 0
-    },
     header: {
-        paddingHorizontal: 32
-    },
-
-    parent: {
-        alignItems: 'center',
-        paddingHorizontal: 32
+        marginBottom: 24
     },
 
     categoriesTitle: {
-        marginBottom: 24,
+        marginBottom: 16,
         fontSize: 22
     },
     categoriesFlatlist: {
         width: '100%',
-        marginBottom: 48
+        minHeight: 44 * 2 + 8 * 2,
+        marginBottom: 24
     },
     categoriesWrapper: {
         justifyContent: 'space-between'
@@ -32,45 +24,20 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44
     },
-
-    activitiesTitle: {
-        marginBottom: 24,
-        fontSize: 22
+    activitiesSearchBar: {
+        width: '100%',
+        paddingHorizontal: 24,
+        marginBottom: 12
     },
-    activitiesCombobox: {
-        marginBottom: 48
+    activitiesFlatlist: {
+        width: '100%',
+        height: '100%'
     },
-
-    panel: {
-        padding: 32,
-        borderRadius: 24,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0
-    },
-    panelChild: {
-        position: 'absolute',
-        left: 0,
-        right: 0
-    },
-    panelTextSwitch: {
-        marginBottom: 24
-    },
-
-    commentView: {
-        marginBottom: 48
-    },
-    commentButtonAdd: {
-        height: 48,
-        marginBottom: 48,
-        marginHorizontal: 20
-    },
-    commentPanel: {
-        padding: '5%',
-        borderRadius: 24
-    },
-    commentText: {
-        fontSize: 16,
-        textAlign: 'left'
+    activityElement: {
+        marginHorizontal: 24,
+        marginBottom: 6,
+        padding: 16,
+        borderRadius: 8
     }
 });
 

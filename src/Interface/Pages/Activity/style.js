@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44
     },
+
+    activitiesTitle: {
+        marginBottom: 16,
+        fontSize: 22
+    },
     activitiesSearchBar: {
         width: '100%',
         paddingHorizontal: 24,

@@ -1,29 +1,14 @@
 import React from 'react';
-import { Animated, FlatList } from 'react-native';
 
-import user from '../../../../Managers/UserManager';
 import langManager from '../../../../Managers/LangManager';
 import dataManager from '../../../../Managers/DataManager';
-import themeManager from '../../../../Managers/ThemeManager';
 
-import { PageBack } from '../../../Components';
 import { SkillToItem } from './types';
-import { GetTime } from '../../../../Utils/Time';
-import { SpringAnimation } from '../../../../Utils/Animations';
-import Notifications from '../../../../Utils/Notifications';
-
-/**
- * @typedef {import('../../../../Data/Skills').Category} Category
- * @typedef {import('./activityPanel').default} ActivityPanel
- * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
- * @typedef {{ id: number, name: string, icon: string }} ItemCategory
-*/
 
 /**
  * @typedef {import('../back').ItemSkill} ItemSkill
  * @typedef {import('../../../../Data/Skills').Skill} Skill
  * @typedef {import('../../../../Class/Activities').Activity} Activity
- * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  */
 
@@ -32,18 +17,10 @@ const ActivityPanelProps = {
     topOffset: 0
 }
 
-// TODO: selectedSkill, animPosY, refPage
-
 class ActivityPanelBack extends React.Component {
     state = {
-        /** @type {number} */
-        posY: 0,
-
-        /** @type {Animated.Value} */
-        animPosY: new Animated.Value(0),
-
         /** @type {ItemSkill} */
-        selectedSkill: { id: 0, value: '', onPress: () => {} },
+        selectedSkill: SkillToItem(),
 
         /** @type {string} */
         activityText: langManager.curr['activity']['title-activity'],
@@ -54,48 +31,54 @@ class ActivityPanelBack extends React.Component {
         /** @type {string} */
         comment: '',
 
-        /** @type {number|null} */
-        activityStart: null,
+        /** @type {number} Unix timestamp or null */
+        activityStart: 0,
 
-        /** @type {number} */
+        /** @type {number} Duration in minutes */
         activityDuration: 15
     };
 
-    /** @param {LayoutChangeEvent} event */
-    onLayout = (event) => {
-        const valueY = event.nativeEvent.layout?.y || 0;
-        if (this.state.posY !== valueY) {
-            this.setState({ posY: valueY });
-        }
-    }
+    /** @type {import('../../../Widgets').PanelScreen} */
+    refPanelScreen = null;
 
-    /** @param {Skill} skill */
+    /**
+     * @param {Skill} skill
+     * @returns {boolean} True if the skill is valid
+     */
     SelectSkill = (skill) => {
         // Skill is already selected
         if (this.state.selectedSkill.id === skill.ID) {
-            return;
+            return false;
         }
 
         this.setState({
             selectedSkill: SkillToItem(skill, this.SelectSkill),
             activityText: dataManager.GetText(skill.Name)
         });
-        SpringAnimation(this.state.animPosY, 1).start();
+        this.refPanelScreen.Open();
+        return true;
     }
 
-    /** @param {Activity} activity */
+    /**
+     * @param {Activity} activity
+     * @returns {boolean} True if the activity is valid
+     */
     SelectActivity = (activity) => {
         const skill = dataManager.skills.GetByID(activity.SkillID);
-        if (skill === null) {
+        if (activity === null || skill === null) {
             this.Close();
-            return;
+            return false;
         }
 
         this.setState({
             selectedSkill: SkillToItem(skill, this.SelectSkill),
-            activityText: dataManager.GetText(skill.Name)
+            activityText: dataManager.GetText(skill.Name),
+            comment: activity.comment || '',
+            activityStart: activity.startTime,
+            activityDuration: activity.duration
         });
-        SpringAnimation(this.state.animPosY, 1).start();
+        this.refPanelScreen.Open();
+        return true;
     }
 
     Close = () => {
@@ -104,11 +87,13 @@ class ActivityPanelBack extends React.Component {
             return;
         }
 
-        this.setState({
-            selectedSkill: SkillToItem(null),
-            activityText: langManager.curr['activity']['title-activity']
-        });
-        SpringAnimation(this.state.animPosY, 0).start();
+        this.refPanelScreen.Close();
+        setTimeout(() => {
+            this.setState({
+                selectedSkill: SkillToItem(null),
+                activityText: langManager.curr['activity']['title-activity']
+            });
+        }, 200);
     }
 
     onChangeMode = (index) => {
@@ -126,89 +111,19 @@ class ActivityPanelBack extends React.Component {
     }
 
     onChangeSchedule = (startTime, duration) => {
-        this.setState({ activityStart: startTime, activityDuration: duration });
+        this.setState({
+            activityStart: startTime,
+            activityDuration: duration
+        });
     }
 
     onChangeStateSchedule = (opened) => {
-        // TODO: Remove ?
-        /*if (opened) {
-            this.refPage.GotoY(-300);
-            this.refPage.DisableScroll();
+        if (opened) {
+            this.refPanelScreen.GotoY(this.props.topOffset - 100);
+            this.refPanelScreen.DisableScroll();
         } else {
-            this.refPage.EnableScroll();
-        }*/
-    }
-
-    onAddComment = () => {
-        if (this.state.comment !== '') return;
-        const save = () => this.editMode && this.AddActivity();
-        const callback = (text) => {
-            this.setState({ comment: text }, save);
-        };
-        const titleCommentary = langManager.curr['activity']['title-commentary'];
-        user.interface.screenInput.Open(titleCommentary, '', callback, true);
-    }
-    onEditComment = () => {
-        const titleCommentary = langManager.curr['activity']['title-commentary']
-        const save = () => this.editMode && this.AddActivity();
-        /** @param {string} text */
-        const callback = (text) => {
-            this.setState({ comment: text }, save);
-        };
-        user.interface.screenInput.Open(titleCommentary, this.state.comment, callback, true);
-    }
-    onRemComment = () => {
-        const title = langManager.curr['activity']['alert-remcomment-title'];
-        const text = langManager.curr['activity']['alert-remcomment-text'];
-        const save = () => this.editMode && this.AddActivity();
-        const callback = (btn) => btn === 'yes' && this.setState({ comment: '' }, save);
-        user.interface.popup.Open('yesno', [ title, text ], callback);
-    }
-
-    AddActivity = () => {
-        const skillID = this.state.selectedSkill.id;
-        const { activityStart, activityDuration, comment } = this.state;
-
-        const addState = user.activities.Add(skillID, activityStart, activityDuration, comment);
-        if (addState === 'added') {
-            Notifications.Evening.RemoveToday();
-            const text = langManager.curr['activity']['display-activity-text'];
-            const button = langManager.curr['activity']['display-activity-button'];
-            user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
-            user.RefreshStats();
-        } else if (addState === 'edited') {
-            //user.interface.BackPage();
-        } else if (addState === 'notFree') {
-            const title = langManager.curr['activity']['alert-wrongtiming-title'];
-            const text = langManager.curr['activity']['alert-wrongtiming-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
+            this.refPanelScreen.EnableScroll();
         }
-    }
-    RemActivity = () => {
-        const remove = (button) => {
-            if (button === 'yes') {
-                user.activities.Remove(this.props.args.activity);
-                user.interface.BackPage();
-            }
-        }
-        const title = langManager.curr['activity']['alert-remove-title'];
-        const text = langManager.curr['activity']['alert-remove-text'];
-        user.interface.popup.Open('yesno', [ title, text ], remove);
-    }
-    StartActivity = () => {
-        const skillID = this.state.selectedSkill.id;
-        const startTime = GetTime();
-
-        if (!user.activities.TimeIsFree(startTime, 15)) {
-            const title = langManager.curr['activity']['alert-wrongtiming-title'];
-            const text = langManager.curr['activity']['alert-wrongtiming-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
-            return;
-        }
-
-        user.activities.currentActivity = [ skillID, startTime ];
-        user.LocalSave();
-        user.interface.ChangePage('activitytimer', undefined, true);
     }
 }
 

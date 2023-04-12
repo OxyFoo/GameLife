@@ -6,32 +6,22 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
 
-    activitiesTitleView: {
-        width: '100%',
-        marginBottom: 24
-    },
-    activitiesTitle: {
-        fontSize: 22
-    },
-    activitiesTitleIcon: {
-        position: 'absolute',
-        top: -8,
-        right: 0,
-        paddingHorizontal: 12,
-        paddingBottom: 20
-    },
     panel: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-
-        padding: 32,
-        borderRadius: 24,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0
+        padding: 32
+    },
+    panelTitleView: {
+        width: '100%',
+        marginBottom: 48
     },
     panelTitle: {
+        fontSize: 26
+    },
+    panelTitleIcon: {
+        position: 'absolute',
+        top: -4,
+        right: 4,
+        paddingHorizontal: 12,
+        paddingBottom: 20
     },
     panelTextSwitch: {
         marginBottom: 24

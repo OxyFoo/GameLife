@@ -1,32 +1,24 @@
 import React from 'react';
-import { Animated, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
 import dataManager from '../../../Managers/DataManager';
 import themeManager from '../../../Managers/ThemeManager';
 
 import { PageBack } from '../../Components';
 import { CategoryToItem, SkillToItem } from './Components/types';
-import { GetTime } from '../../../Utils/Time';
-import { SpringAnimation } from '../../../Utils/Animations';
-import Notifications from '../../../Utils/Notifications';
 
 /**
+ * @typedef {import('./Components/types').ItemSkill} ItemSkill
+ * @typedef {import('./Components/types').ItemCategory} ItemCategory
  * @typedef {import('../../../Class/Activities').Activity} Activity
- * @typedef {import('../../../Data/Skills').Category} Category
- * @typedef {import('../../../Data/Skills').Skill} Skill
  * @typedef {import('./Components/activityPanel').default} ActivityPanel
- * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
- * 
- * @typedef {{ id: number, value: string, onPress: () => {} }} ItemSkill
- * @typedef {{ id: number, name: string, icon: string }} ItemCategory
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  */
 
 class BackActivity extends PageBack {
     state = {
-        /** @type {LayoutRectangle|null} */
-        layoutActivities: null,
+        /** @type {number} */
+        topPanelOffset: 0,
 
         /** @type {Array<ItemSkill>} */
         skills: [],
@@ -42,7 +34,7 @@ class BackActivity extends PageBack {
     allSkillItems = [];
 
     /** @type {ActivityPanel} */
-    refPanel = React.createRef();
+    refActivityPanel = React.createRef();
 
     /** @type {React.RefObject<FlatList>} */
     refActivities = React.createRef();
@@ -52,9 +44,6 @@ class BackActivity extends PageBack {
 
     /** @type {boolean} If true, the page is in edition mode */
     editMode = false;
-
-    /** @type {Array<number>} [StartTime, Duration] */
-    initialSchedule = [ null, null ];
 
     backgroundCard = {
         backgroundColor: themeManager.GetColor('backgroundCard')
@@ -66,17 +55,8 @@ class BackActivity extends PageBack {
         // Check if the page is in edition mode
         this.editMode = this.props.args.hasOwnProperty('activity');
 
-        // TODO: Enable this feature ?
-        //if (user.tempSelectedTime !== null) {
-        //    this.initialSchedule = [ user.tempSelectedTime, 15 ];
-        //}
-
         // Get categories and skills
-        const { categories, skills } = dataManager.skills;
-
-        const convert = (skill) => SkillToItem(skill, this.refPanel.SelectSkill);
-        this.state.skills = skills.map(convert);
-        this.allSkillItems = this.state.skills;
+        const { categories } = dataManager.skills;
 
         this.categories = categories.map(CategoryToItem);
         if (categories.length % 6 !== 0) {
@@ -84,43 +64,43 @@ class BackActivity extends PageBack {
             this.categories.push(...Array(emptyCount).fill(0));
         }
 
+        // Set default values to edit an activity
+        else if (this.editMode) {
+            /** @type {Activity} */
+            const activity = this.props.args.activity;
+
+            const skill = dataManager.skills.GetByID(activity.skillID);
+            this.state.selectedCategory = skill?.CategoryID || null;
+        }
+    }
+
+    componentDidMount() {
+        const { skills } = dataManager.skills;
+
+        // Define all skills
+        const convert = (skill) => SkillToItem(skill, this.refActivityPanel.SelectSkill);
+        this.allSkillItems = skills.map(convert);
+        this.setState({ skills: this.allSkillItems });
+
         // Set default values to open the page with a skill selected
         if (this.props.args.hasOwnProperty('skillID')) {
             const { skillID } = this.props.args;
             const skill = dataManager.skills.GetByID(skillID);
-            this.state.selectedSkill = { id: skillID, value: dataManager.GetText(skill.Name) };
+            this.refActivityPanel.SelectSkill(skill);
         }
 
         // Set default values to edit an activity
         else if (this.editMode) {
             /** @type {Activity} */
             const activity = this.props.args.activity;
-
-            this.initialSchedule = [ activity.startTime, activity.duration ];
-
-            const skill = dataManager.skills.GetByID(activity.skillID);
-            this.state.selectedCategory = skill?.CategoryID || null;
-            this.state.selectedSkill = { id: activity.skillID, value: dataManager.GetText(skill.Name) };
-
-            // TODO: Load comment, activityStart, activityDuration
-            //this.state.comment = activity.comment || '';
-            //this.state.activityStart = activity.startTime;
-            //this.state.activityDuration = activity.duration;
+            this.refActivityPanel.SelectActivity(activity);
         }
     }
 
-    componentDidMount() {
-        // TODO: Open at start => Props ? Ref function ?
-        // Add function: SetSkill & SetActivity
-        //const isSetSkillID = this.props.args.hasOwnProperty('skillID');
-        //if (isSetSkillID) {
-        //    SpringAnimation(this.state.animPosY, 1).start();
-        //}
-    }
-
-    /** @param {LayoutRectangle} event */
-    onLayoutActivities = (event) => {
-        this.setState({ layoutActivities: event.nativeEvent.layout });
+    /** @param {LayoutChangeEvent} event */
+    onLayoutCategories = (event) => {
+        const { y, height } = event.nativeEvent.layout;
+        this.setState({ topPanelOffset: y + height });
     }
 
     /** @param {string} text */
@@ -137,13 +117,13 @@ class BackActivity extends PageBack {
 
     selectCategory = (ID, checked) => {
         const filter = skill => !checked || skill.CategoryID === ID;
-        const convert = (skill) => SkillToItem(skill, this.refPanel?.SelectSkill);
+        const convert = (skill) => SkillToItem(skill, this.refActivityPanel?.SelectSkill);
         const skills = dataManager.skills.skills.filter(filter).map(convert);
 
         this.allSkillItems = skills;
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
         this.setState({ selectedCategory: checked ? ID : null, skills });
-        this.refPanel.Close();
+        this.refActivityPanel.Close();
     }
 }
 

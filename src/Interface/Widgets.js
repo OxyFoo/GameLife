@@ -6,6 +6,7 @@ import Console from './Widgets/Console';
 import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
 import PageHeader from './Widgets/PageHeader';
+import PanelScreen from './Widgets/PanelScreen';
 import Popup from './Widgets/Popup';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
@@ -24,6 +25,7 @@ export {
     BlockMonth,
     BottomBar,
     PageHeader,
+    PanelScreen,
     Popup,
     ScreenInput,
     ScreenList,

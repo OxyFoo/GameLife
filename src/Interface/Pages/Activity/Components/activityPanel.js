@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Animated, Dimensions } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 import styles from './style';
 import ActivityPanelBack from './activityPanelBack';
@@ -7,21 +7,20 @@ import langManager from '../../../../Managers/LangManager';
 import dataManager from '../../../../Managers/DataManager';
 import themeManager from '../../../../Managers/ThemeManager';
 
+import {
+    onAddComment, onEditComment, onRemComment,
+    StartActivity, AddActivity, RemActivity
+} from './activityUtils';
 import { Text, Button, TextSwitch, Icon } from '../../../Components';
-import { ActivitySchedule, ActivityExperience } from '../../../Widgets';
-
-/**
- * @typedef {import('../index').default} Activity
- */
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { ActivitySchedule, ActivityExperience, PanelScreen } from '../../../Widgets';
 
 class ActivityPanel extends ActivityPanelBack {
     RenderPanelDetails() {
         const lang = langManager.curr['activity'];
-        const { selectedSkill, activityDuration, comment } = this.state;
+        const { activityStart, activityDuration, comment } = this.state;
 
-        const skill = dataManager.skills.GetByID(selectedSkill.id);
+        const skillID = this.state.selectedSkill.id;
+        const skill = dataManager.skills.GetByID(skillID);
 
         let experienceText = lang['title-no-experience'];
         if (skill !== null && skill.XP > 0) {
@@ -40,9 +39,10 @@ class ActivityPanel extends ActivityPanelBack {
                 </Text>
                 <ActivitySchedule
                     editable={!this.editMode}
+                    selectedDate={activityStart}
+                    selectedDuration={activityDuration}
                     onChange={this.onChangeSchedule}
                     onChangeState={this.onChangeStateSchedule}
-                    initialValue={this.initialSchedule}
                 />
     
                 {/* Experience */}
@@ -50,7 +50,7 @@ class ActivityPanel extends ActivityPanelBack {
                     {experienceText}
                 </Text>
                 <ActivityExperience
-                    skillID={selectedSkill.id}
+                    skillID={skillID}
                     duration={activityDuration}
                 />
     
@@ -58,7 +58,7 @@ class ActivityPanel extends ActivityPanelBack {
                 {comment === '' ? (
                     <Button
                         style={styles.commentButtonAdd}
-                        onPress={this.onAddComment}
+                        onPress={onAddComment.bind(this)}
                         color='main1'
                         fontSize={14}
                     >
@@ -75,8 +75,8 @@ class ActivityPanel extends ActivityPanelBack {
                         <TouchableOpacity
                             style={[styles.commentPanel, backgroundCard]}
                             activeOpacity={.6}
-                            onPress={this.onEditComment}
-                            onLongPress={this.onRemComment}
+                            onPress={onEditComment.bind(this)}
+                            onLongPress={onRemComment.bind(this)}
                         >
                             <Text style={styles.commentText}>
                                 {comment}
@@ -87,11 +87,11 @@ class ActivityPanel extends ActivityPanelBack {
     
                 {/* Add / Remove button */}
                 {this.editMode ? (
-                    <Button onPress={this.RemActivity} color='main2'>
+                    <Button onPress={RemActivity.bind(this)} color='main2'>
                         {lang['btn-remove']}
                     </Button>
                 ) : (
-                    <Button onPress={this.AddActivity} color='main2'>
+                    <Button onPress={AddActivity.bind(this)} color='main2'>
                         {lang['btn-add']}
                     </Button>
                 )}
@@ -103,7 +103,7 @@ class ActivityPanel extends ActivityPanelBack {
         const lang = langManager.curr['activity'];
     
         return (
-            <Button onPress={this.StartActivity} color='main2'>
+            <Button onPress={StartActivity.bind(this)} color='main2'>
                 {lang['btn-start']}
             </Button>
         );
@@ -112,42 +112,27 @@ class ActivityPanel extends ActivityPanelBack {
     render() {
         const lang = langManager.curr['activity'];
         const { topOffset } = this.props;
-        const { animPosY, posY, activityText, startMode } = this.state;
-    
-        const interpolation = {
-            inputRange: [ 0, 1 ],
-            outputRange: [ SCREEN_HEIGHT, topOffset - 6 ]
-        };
-        const panelPosY = animPosY.interpolate(interpolation);
+        const { activityText, startMode } = this.state;
+
         const stylePanel = {
-            minHeight: SCREEN_HEIGHT - posY - 12,
-            transform: [{ translateY: panelPosY }],
             backgroundColor: themeManager.GetColor('backgroundGrey')
         };
 
-        const { selectedSkill } = this.state;
-        const styleCloseButton = {
-            opacity: selectedSkill.id === 0 ? 0 : 1
-        };
-
         return (
-            <Animated.View
-                style={[ styles.panel, stylePanel ]}
-                onLayout={this.onLayout}
-                pointerEvents={this.state.selectedSkill.id === 0 ? 'none' : 'auto'}
+            <PanelScreen
+                ref={ref => this.refPanelScreen = ref}
+                containerStyle={[styles.panel, stylePanel]}
+                topOffset={topOffset}
+                onClose={this.Close}
+                disableBackground
             >
                 {/* Title */}
-                <Text style={styles.panelTitle} bold>
-                    {activityText}
-                </Text>
-
-                {/* TODO: NEW TITLE */}
-                <View style={styles.activitiesTitleView}>
-                    <Text style={styles.activitiesTitle} bold>
-                        {lang['title-activity']}
+                <View style={styles.panelTitleView}>
+                    <Text style={styles.panelTitle} bold>
+                        {activityText}
                     </Text>
                     <Icon
-                        containerStyle={[styles.activitiesTitleIcon, styleCloseButton]}
+                        containerStyle={[styles.panelTitleIcon]}
                         size={42}
                         icon='arrowLeft'
                         angle={-90}
@@ -155,6 +140,7 @@ class ActivityPanel extends ActivityPanelBack {
                     />
                 </View>
 
+                {/* Start mode - Already / Now */}
                 {!this.editMode &&
                     <TextSwitch
                         style={styles.panelTextSwitch}
@@ -162,13 +148,13 @@ class ActivityPanel extends ActivityPanelBack {
                         onChange={this.onChangeMode}
                     />
                 }
-    
+
                 {
                     startMode === 'schedule' ?
                     this.RenderPanelDetails.call(this) :
                     this.renderStartActivity.call(this)
                 }
-            </Animated.View>
+            </PanelScreen>
         );
     }
 }

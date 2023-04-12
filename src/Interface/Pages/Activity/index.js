@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { View, FlatList, Dimensions } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import BackActivity from './back';
 import ActivityPanel from './Components/activityPanel';
 import styles from './style';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
 
 import { Page, Text, IconCheckable, Input } from '../../Components';
 import { PageHeader } from '../../Widgets';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 /**
  * @typedef {import('./back').ItemCategory} ItemCategory
@@ -45,7 +42,7 @@ class Activity extends BackActivity {
     }
 
     /**
-     * @param {{item: ItemSkill}} param0
+     * @param {{ item: ItemSkill }} param0
      * @returns {JSX.Element}
      */
     renderSkill = ({ item }) => {
@@ -64,6 +61,7 @@ class Activity extends BackActivity {
 
     render() {
         const lang = langManager.curr['activity'];
+        const { skillSearch, skills, topPanelOffset } = this.state;
 
         return (
             <>
@@ -78,49 +76,54 @@ class Activity extends BackActivity {
                 />
 
                 {/* Categories */}
-                <Text style={styles.categoriesTitle} bold>
-                    {lang['title-category']}
-                </Text>
-                <FlatList
-                    style={styles.categoriesFlatlist}
-                    columnWrapperStyle={styles.categoriesWrapper}
-                    data={this.categories}
-                    renderItem={this.renderCategory}
-                    numColumns={6}
-                    keyExtractor={item => 'act-cat-' + item.id}
-                    scrollEnabled={false}
-                />
-
-                {/* Activities */}
-                {/* TODO: Hide in edition mode */}
-                <Text fontSize={22} bold>
-                    {lang['title-activity']}
-                </Text>
-                <View
-                    style={styles.activitiesSearchBar}
-                    onLayout={this.onLayoutActivities}
-                >
-                    <Input
-                        label={langManager.curr['modal']['search']}
-                        text={this.state.skillSearch}
-                        onChangeText={this.onSearchChange}
+                <View onLayout={this.onLayoutCategories}>
+                    <Text style={styles.categoriesTitle} bold>
+                        {lang['title-category']}
+                    </Text>
+                    <FlatList
+                        style={styles.categoriesFlatlist}
+                        columnWrapperStyle={styles.categoriesWrapper}
+                        data={this.categories}
+                        renderItem={this.renderCategory}
+                        numColumns={6}
+                        keyExtractor={item => 'act-cat-' + item.id}
+                        scrollEnabled={false}
                     />
                 </View>
-                <FlatList
-                    ref={ref => this.refActivities = ref}
-                    style={styles.activitiesFlatlist}
-                    data={this.state.skills}
-                    
-                    renderItem={this.renderSkill}
-                    keyExtractor={item => 'act-skill-' + item.id}
-                />
+
+                {/* Activities */}
+                {!this.editMode && (<>
+                    {/* Title */}
+                    <Text style={styles.activitiesTitle} bold>
+                        {lang['title-activity']}
+                    </Text>
+
+                    {/* Search bar */}
+                    <View style={styles.activitiesSearchBar}>
+                        <Input
+                            label={langManager.curr['modal']['search']}
+                            text={skillSearch}
+                            onChangeText={this.onSearchChange}
+                        />
+                    </View>
+
+                    {/* List */}
+                    <FlatList
+                        ref={ref => this.refActivities = ref}
+                        style={styles.activitiesFlatlist}
+                        data={skills}
+                        
+                        renderItem={this.renderSkill}
+                        keyExtractor={item => 'act-skill-' + item.id}
+                    />
+                </>)}
 
             </Page>
 
             {/* Panel */}
             <ActivityPanel
-                ref={ref => this.refPanel = ref}
-                topOffset={this.state.layoutActivities?.y || 0}
+                ref={ref => this.refActivityPanel = ref}
+                topOffset={topPanelOffset}
             />
 
             </>

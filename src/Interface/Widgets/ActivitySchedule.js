@@ -15,6 +15,11 @@ import { SpringAnimation } from '../../Utils/Animations';
  * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
  */
 
+const DAY_SECONDS = 86400;
+const DURATION = GetDurations();
+const STARTDATE = new Date();
+STARTDATE.setMinutes(Math.floor(STARTDATE.getMinutes() / 15) * 15, 0, 0);
+
 const ActivityScheduleProps = {
     /** @type {ColorTheme} */
     mainColor: 'main1',
@@ -22,8 +27,14 @@ const ActivityScheduleProps = {
     /** @type {boolean} If false, disable user edition */
     editable: true,
 
+    /** @type {number} Unix timestamp */
+    selectedDate: GetTime(),
+
+    /** @type {number} Duration in minutes */
+    selectedDuration: 60,
+
     /**
-     * @param {Date} startTime The starting time of the activity
+     * @param {number} startTime Unix timestamp of the start of the activity
      * @param {number} durationTime Duration of the activity in minutes
      */
     onChange: (startTime, durationTime) => {},
@@ -32,89 +43,79 @@ const ActivityScheduleProps = {
      * Called when component is opened or closed
      * @param {boolean} opened 
      */
-    onChangeState: (opened) => {},
-
-    initialValue: [ null, null ]
+    onChangeState: (opened) => {}
 }
-
-const DURATION = GetDurations();
-const STARTDATE = new Date();
-STARTDATE.setMinutes(Math.floor(STARTDATE.getMinutes() / 15) * 15, 0, 0);
 
 class ActivitySchedule extends React.Component {
     state = {
+        /** @type {Animated.Value} */
         anim: new Animated.Value(0),
+
+        /** @type {boolean} Open or closed */
         selectionMode: false,
+
+        /** @type {LayoutChangeEvent['nativeEvent']['layout']} */
         parent: { width: 0, height: 0, x: 0, y: 0 },
 
-        selectedDate: this.props.initialValue[0] === null ? STARTDATE : GetDate(this.props.initialValue[0]),
-        selectedDurationKey: this.props.initialValue[1] === null ? 3 : DURATION.find(d => d.duration === this.props.initialValue[1]).key,
-        /**
-         * @type {'date'|'time'|'datetime'}
-         */
+        /** @type {'date'|'time'|'datetime'} */
         DTPMode: ''
     }
 
     componentDidMount() {
-        // TODO - WTF is this ?
-        //const { selectedDate, selectedDurationKey} = this.state;
-        //const time = GetTime(selectedDate);
-        //this.props.onChange(time, DURATION[selectedDurationKey].duration);
+        this.resetSelectionMode();
     }
-
-    // TODO - Remove that ?
-    /*componentDidUpdate(prevProps) {
-        if (this.props.value[0] !== null && this.props.value[0] !== prevProps.value[0]) {
-            const durations = DURATION.filter(d => d.duration === this.props.value[1]);
-            if (durations.length) {
-                const date = GetDate(this.props.value[0]);
-                const key = durations[0].key;
-                this.setState({
-                    selectedDate: date,
-                    selectedDurationKey: key
-                });
-                console.log({ selectedDate: date, selectedDurationKey: key });
-            }
-        }
-    }*/
 
     /** @param {LayoutChangeEvent} ev */
     onLayout = (ev) => this.setState({ parent: ev.nativeEvent.layout });
 
     changeSelectionMode = () => {
-        const newValue = this.state.selectionMode ? 0 : 1;
+        const newMode = !this.state.selectionMode;
+
         // If panel is already open, or it's closed and editable
-        if (newValue === 0 || this.props.editable) {
-            const callback = () => this.props.onChangeState(newValue === 1);
-            SpringAnimation(this.state.anim, newValue).start();
-            this.setState({ selectionMode: !this.state.selectionMode }, callback);
+        if (!newMode || this.props.editable) {
+            const callback = () => this.props.onChangeState(newMode);
+            SpringAnimation(this.state.anim, newMode ? 1 : 0).start();
+            this.setState({ selectionMode: newMode }, callback);
         }
+    }
+
+    resetSelectionMode = () => {
+        const today = GetTime();
+        const startTime = today - (today % (15 * 60));
+        const duration = 60;
+        this.props.onChange(startTime, duration);
     }
 
     /** @param {'date'|'time'} mode */
     showDTP = (mode) => this.setState({ DTPMode: mode });
     hideDTP = () => this.setState({ DTPMode: '' });
     selectDuration = (key) => {
-        const time = GetTime(this.state.selectedDate);
-        this.props.onChange(time, DURATION[key].duration);
-        this.setState({ selectedDurationKey: key });
+        this.props.onChange(this.props.selectedDate, DURATION[key].duration);
     }
 
-    /** @param {Date} date */
+    /** @param {Date} date UTC date */
     onChangeDateTimePicker = (date) => {
-        const { DTPMode, selectedDate, selectedDurationKey } = this.state;
-        const newDate = new Date(date);
+        const { DTPMode } = this.state;
         this.hideDTP();
 
+        const pickedTime = GetTime(date);
+        let newStartTime = this.props.selectedDate;
+
+        // New date, keep time
         if (DTPMode == 'date') {
-            newDate.setHours(selectedDate.getHours(), selectedDate.getMinutes(), 0, 0);
-            this.setState({ selectedDate: newDate });
-        } else if (DTPMode == 'time') {
-            newDate.setFullYear(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-            this.setState({ selectedDate: newDate });
+            const date = pickedTime - (pickedTime % DAY_SECONDS);
+            const time = newStartTime % DAY_SECONDS;
+            newStartTime = date + time;
         }
-        const time = GetTime(newDate);
-        this.props.onChange(time, DURATION[selectedDurationKey].duration);
+        
+        // New time, keep date
+        else if (DTPMode == 'time') {
+            const date = newStartTime - (newStartTime % DAY_SECONDS);
+            const time = pickedTime % DAY_SECONDS;
+            newStartTime = date + time;
+        }
+
+        this.props.onChange(newStartTime, this.props.selectedDuration);
     }
 
     renderPanel() {
@@ -127,6 +128,13 @@ class ActivitySchedule extends React.Component {
             backgroundColor: themeManager.GetColor('backgroundGrey')
         }];
         const lang = langManager.curr['other'];
+        const selectedDate = GetDate(this.props.selectedDate);
+        const textDate = DateToFormatString(selectedDate);
+        const textTime = DateToFormatTimeString(selectedDate);
+
+        const durationFinder = d => d.duration === this.props.selectedDuration;
+        const textDuration = DURATION.find(durationFinder).value;
+
         const mainColor = themeManager.GetColor('main1');
 
         return (
@@ -134,7 +142,7 @@ class ActivitySchedule extends React.Component {
                 <Animated.View style={overlayPos} pointerEvents={this.state.selectionMode ? 'auto': 'none'}>
                     {/* Change date */}
                     <View style={styles.panelRow}>
-                        <Text fontSize={14}>{DateToFormatString(this.state.selectedDate)}</Text>
+                        <Text fontSize={14}>{textDate}</Text>
                         <Button
                             style={styles.panelButton}
                             onPress={() => { this.showDTP('date'); }}
@@ -147,7 +155,7 @@ class ActivitySchedule extends React.Component {
 
                     {/* Change start time */}
                     <View style={styles.panelRow}>
-                        <Text fontSize={14}>{DateToFormatTimeString(this.state.selectedDate)}</Text>
+                        <Text fontSize={14}>{textTime}</Text>
                         <Button
                             style={styles.panelButton}
                             onPress={() => { this.showDTP('time'); }}
@@ -161,7 +169,7 @@ class ActivitySchedule extends React.Component {
                     {/* Change duration */}
                     <View style={styles.panelRow}>
                         <Text style={{ paddingRight: 24 }} fontSize={14}>
-                            {DURATION[this.state.selectedDurationKey].value}
+                            {textDuration}
                         </Text>
                         <FlatList
                             data={DURATION}
@@ -180,11 +188,11 @@ class ActivitySchedule extends React.Component {
 
 
                 <DateTimePickerModal
-                    date={this.state.selectedDate}
+                    date={selectedDate}
                     mode={this.state.DTPMode}
                     onConfirm={this.onChangeDateTimePicker}
                     onCancel={this.hideDTP}
-                    isVisible={this.state.DTPMode != ''}
+                    isVisible={this.state.DTPMode !== ''}
                     minuteInterval={15}
                     is24Hour={true}
                 />
@@ -195,7 +203,13 @@ class ActivitySchedule extends React.Component {
     render() {
         const DATES = langManager.curr['dates']['names'];
         const DAYS = langManager.curr['dates']['days'];
-        const currDay = DAYS[this.state.selectedDate.getDay()];
+        const selectedDate = GetDate(this.props.selectedDate);
+        const currDay = DAYS[selectedDate.getDay()];
+        const text = currDay + ' - ' + DateToFormatString(selectedDate);
+        const textTime = DateToFormatTimeString(selectedDate);
+
+        const durationFinder = d => d.duration === this.props.selectedDuration;
+        const textDuration = DURATION.find(durationFinder).value;
 
         return (
             <>
@@ -205,6 +219,7 @@ class ActivitySchedule extends React.Component {
                     color={this.props.mainColor}
                     onLayout={this.onLayout}
                     onPress={this.changeSelectionMode}
+                    onLongPress={this.resetSelectionMode}
                 >
                     <View style={{ marginRight: 8 }}>
                         <View style={styles.row}>
@@ -212,7 +227,7 @@ class ActivitySchedule extends React.Component {
                                 {DATES['date'] + ': '}
                             </Text>
                             <Text style={styles.text}>
-                                {currDay + ' - ' + DateToFormatString(this.state.selectedDate)}
+                                {text}
                             </Text>
                         </View>
                         <Separator.Horizontal style={{ marginVertical: 4 }} />
@@ -222,7 +237,7 @@ class ActivitySchedule extends React.Component {
                                     {DATES['start-time'] + ': '}
                                 </Text>
                                 <Text style={styles.text}>
-                                    {DateToFormatTimeString(this.state.selectedDate)}
+                                    {textTime}
                                 </Text>
                             </View>
                             <Separator.Vertical style={{ height: '100%', marginHorizontal: 8 }} />
@@ -231,7 +246,7 @@ class ActivitySchedule extends React.Component {
                                     {DATES['duration'] + ': '}
                                 </Text>
                                 <Text style={styles.text}>
-                                    {DURATION[this.state.selectedDurationKey].value}
+                                    {textDuration}
                                 </Text>
                             </View>
                         </View>
@@ -300,10 +315,10 @@ const styles = StyleSheet.create({
     },
     overlayBackground: {
         position: 'absolute',
-        top: '-100%',
-        left: '-100%',
-        right: '-100%',
-        bottom: '-100%',
+        top: '-1000%',
+        left: '-1000%',
+        right: '-1000%',
+        bottom: '-1000%',
         backgroundColor: '#00000055',
         zIndex: 700,
         elevation: 700

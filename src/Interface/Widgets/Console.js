@@ -5,7 +5,7 @@ import RNExitApp from 'react-native-exit-app';
 import user from '../../Managers/UserManager';
 
 import { Text, Button } from '../Components';
-import { SpringAnimation } from '../../Utils/Animations';
+import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
 
 /**
  * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
@@ -31,8 +31,8 @@ class Console extends React.Component {
         debug: []
     }
 
-    Enable = () => this.setState({ enabled: true }) || SpringAnimation(this.state.animation, 0).start();
-    Disable = () => SpringAnimation(this.state.animation, -1).start(() => this.setState({ enabled: false }));
+    Enable = () => this.setState({ enabled: true }) || TimingAnimation(this.state.animation, 0, 400).start();
+    Disable = () => TimingAnimation(this.state.animation, -1, 400).start(() => this.setState({ enabled: false }));
 
     /**
      * Show message in app console

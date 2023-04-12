@@ -25,6 +25,12 @@ class BackWaitmail extends PageBack {
         clearInterval(this.login);
     }
 
+    onBack = () => {
+        user.settings.email = '';
+        user.settings.Save();
+        user.interface.ChangePage('login', undefined, true);
+    }
+
     onTick = () => {
         const { time } = this.state;
         if (typeof(time) === 'number' && time > 0) {

@@ -36,7 +36,7 @@ class Waitmail extends BackWaitmail {
                     style={styles.backButton}
                     color='main1'
                     icon='arrowLeft'
-                    onPress={user.interface.BackPage}
+                    onPress={this.onBack}
                     borderRadius={20}
                 />
             </Page>

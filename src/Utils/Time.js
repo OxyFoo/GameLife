@@ -17,11 +17,14 @@ function GetTime(date = new Date(), localUTC = false) {
 /**
  * Get date from time to Date object
  * @param {number} time in seconds
+ * @param {boolean} [localUTC=false] (global default)
  * @returns {Date} Date object in local UTC
  */
-function GetDate(time) {
+function GetDate(time = GetTime(), localUTC = false) {
     const date = new Date(time * 1000);
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    if (localUTC) {
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    }
     return date;
 }
 

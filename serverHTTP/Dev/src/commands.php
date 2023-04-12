@@ -210,8 +210,10 @@
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                     if ($sended) {
-                        $this->db->AddLog($account->ID, $device->ID, 'mailSent', 'Link account');
+                        $this->db->AddLog($account->ID, $device->ID, 'mail', "[Link account] Mail sent to: $email");
                         $this->output['status'] = 'newDevice';
+                    } else {
+                        $this->db->AddLog($account->ID, $device->ID, 'mail', "[Link account] Mail not sent to: $email");
                     }
                     break;
             }

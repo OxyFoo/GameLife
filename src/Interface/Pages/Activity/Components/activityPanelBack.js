@@ -1,9 +1,11 @@
 import React from 'react';
+import { Animated } from 'react-native';
 
 import langManager from '../../../../Managers/LangManager';
 import dataManager from '../../../../Managers/DataManager';
 
 import { SkillToItem } from './types';
+import { SpringAnimation } from '../../../../Utils/Animations';
 
 /**
  * @typedef {import('../back').ItemSkill} ItemSkill
@@ -27,6 +29,8 @@ class ActivityPanelBack extends React.Component {
 
         /** @type {'schedule'|'now'} */
         startMode: 'schedule',
+
+        animButtonNow: new Animated.Value(0),
 
         /** @type {string} */
         comment: '',
@@ -99,6 +103,7 @@ class ActivityPanelBack extends React.Component {
     onChangeMode = (index) => {
         const modes = [ 'schedule', 'now' ];
         this.setState({ startMode: modes[index] });
+        SpringAnimation(this.state.animButtonNow, index).start();
     }
 
     getCategoryName = () => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, Animated, TouchableOpacity } from 'react-native';
 
 import styles from './style';
 import ActivityPanelBack from './activityPanelBack';
@@ -17,7 +17,7 @@ import { ActivitySchedule, ActivityExperience, PanelScreen } from '../../../Widg
 class ActivityPanel extends ActivityPanelBack {
     RenderPanelDetails() {
         const lang = langManager.curr['activity'];
-        const { activityStart, activityDuration, comment } = this.state;
+        const { activityStart, activityDuration, comment, startMode } = this.state;
 
         const skillID = this.state.selectedSkill.id;
         const skill = dataManager.skills.GetByID(skillID);
@@ -26,13 +26,26 @@ class ActivityPanel extends ActivityPanelBack {
         if (skill !== null && skill.XP > 0) {
             experienceText = lang['title-experience'];
         }
-    
+
+        const viewOpacity = {
+            transform: [{
+                translateY: this.state.animButtonNow.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 96]
+                })
+            }],
+            opacity: this.state.animButtonNow.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, .2]
+            })
+        };
         const backgroundCard = {
             backgroundColor: themeManager.GetColor('backgroundCard')
         };
-    
+        const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
+
         return (
-            <View>
+            <Animated.View style={viewOpacity} pointerEvents={pointerEvents}>
                 {/* Schedule */}
                 <Text style={styles.tempTitle} bold>
                     {lang['title-schedule']}
@@ -44,7 +57,7 @@ class ActivityPanel extends ActivityPanelBack {
                     onChange={this.onChangeSchedule}
                     onChangeState={this.onChangeStateSchedule}
                 />
-    
+
                 {/* Experience */}
                 <Text style={styles.tempTitle} bold>
                     {experienceText}
@@ -53,7 +66,7 @@ class ActivityPanel extends ActivityPanelBack {
                     skillID={skillID}
                     duration={activityDuration}
                 />
-    
+
                 {/* Commentary */}
                 {comment === '' ? (
                     <Button
@@ -84,7 +97,7 @@ class ActivityPanel extends ActivityPanelBack {
                         </TouchableOpacity>
                     </View>
                 )}
-    
+
                 {/* Add / Remove button */}
                 {this.editMode ? (
                     <Button onPress={RemActivity.bind(this)} color='main2'>
@@ -95,15 +108,23 @@ class ActivityPanel extends ActivityPanelBack {
                         {lang['btn-add']}
                     </Button>
                 )}
-            </View>
+            </Animated.View>
         );
     }
-    
-    renderStartActivity() {
+
+    RenderStartActivity() {
         const lang = langManager.curr['activity'];
-    
+        const btnOpacity = {
+            opacity: this.state.animButtonNow
+        };
+
         return (
-            <Button onPress={StartActivity.bind(this)} color='main2'>
+            <Button
+                style={styles.buttonNow}
+                styleAnimation={btnOpacity}
+                onPress={StartActivity.bind(this)}
+                color='main2'
+            >
                 {lang['btn-start']}
             </Button>
         );
@@ -149,11 +170,10 @@ class ActivityPanel extends ActivityPanelBack {
                     />
                 }
 
-                {
-                    startMode === 'schedule' ?
-                    this.RenderPanelDetails.call(this) :
-                    this.renderStartActivity.call(this)
-                }
+                <View>
+                    {this.RenderStartActivity.call(this)}
+                    {this.RenderPanelDetails.call(this)}
+                </View>
             </PanelScreen>
         );
     }

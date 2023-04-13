@@ -17,7 +17,7 @@ class Display extends BackDisplay {
                 <Text>{this.text}</Text>
                 <Button style={styles.button} color='main1' onPress={this.Back}>{this.button}</Button>
             </Page>
-        )
+        );
     }
 }
 

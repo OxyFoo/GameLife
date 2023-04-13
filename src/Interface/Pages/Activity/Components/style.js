@@ -6,6 +6,14 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
 
+    buttonNow: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        left: 0,
+        marginBottom: 24
+    },
+
     panel: {
         padding: 32
     },

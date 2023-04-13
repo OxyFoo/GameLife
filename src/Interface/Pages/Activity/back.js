@@ -4,6 +4,7 @@ import { FlatList } from 'react-native';
 import dataManager from '../../../Managers/DataManager';
 import themeManager from '../../../Managers/ThemeManager';
 
+import { Sleep } from '../../../Utils/Functions';
 import { PageBack } from '../../Components';
 import { CategoryToItem, SkillToItem } from './Components/types';
 
@@ -74,13 +75,16 @@ class BackActivity extends PageBack {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { skills } = dataManager.skills;
 
         // Define all skills
         const convert = (skill) => SkillToItem(skill, this.refActivityPanel.SelectSkill);
         this.allSkillItems = skills.map(convert);
         this.setState({ skills: this.allSkillItems });
+
+        // Wait for the layout to be calculated
+        while (this.state.topPanelOffset === 0) await Sleep(100);
 
         // Set default values to open the page with a skill selected
         if (this.props.args.hasOwnProperty('skillID')) {

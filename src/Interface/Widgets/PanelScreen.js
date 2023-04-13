@@ -52,13 +52,7 @@ class PanelScreen extends React.Component {
         if (this.state.opened) return;
 
         TimingAnimation(this.state.anim, 1, 200).start();
-        this.setState({
-            opened: true,
-        }, async () => {
-            //await Sleep(100); // Wait layout
-            //this.posY = Math.max(this.height, 300);
-            //SpringAnimation(this.state.positionY, this.posY).start();
-        });
+        this.setState({ opened: true });
 
         this.posY = this.props.topOffset;
         SpringAnimation(this.state.positionY, this.posY).start();
@@ -143,7 +137,7 @@ class PanelScreen extends React.Component {
         this.posY -= this.accY * .25;
         this.posY = Math.max(this.posY, SCREEN_HEIGHT - this.height);
 
-        if (this.accY < -500 || this.posY > topOffset + backOffset) {
+        if (this.accY < -2000 || this.posY > topOffset + backOffset) {
             this.Close();
             setTimeout(this.props.onClose, 200);
         } else if (this.posY > topOffset) {
@@ -159,8 +153,11 @@ class PanelScreen extends React.Component {
 
         const opacity = { opacity: anim };
         const event = opened ? 'box-none' : 'none';
-        const stylePosition = { transform: [{ translateY: this.state.positionY }] };
-        const styleBackground = { backgroundColor: themeManager.GetColor('backgroundCard') };
+        const stylePanel = {
+            minHeight: this.height,
+            transform: [{ translateY: this.state.positionY }],
+            backgroundColor: themeManager.GetColor('backgroundCard')
+        };
 
         return (
             <Animated.View
@@ -178,8 +175,7 @@ class PanelScreen extends React.Component {
                 <Animated.View
                     style={[
                         styles.panel,
-                        styleBackground,
-                        stylePosition,
+                        stylePanel,
                         containerStyle
                     ]}
                     onTouchStart={this.onTouchStart}

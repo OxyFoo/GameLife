@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, BackHandler, StyleSheet, View } from 'react-native';
+import { Animated, BackHandler, StyleSheet } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -9,8 +9,8 @@ import themeManager from './ThemeManager';
 
 import { TimingAnimation } from '../Utils/Animations';
 import { IsUndefined, Sleep } from '../Utils/Functions';
-import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '../Interface/Widgets';
 import { PageBack } from '../Interface/Components';
+import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '../Interface/Widgets';
 
 /**
  * @typedef {import('../Interface/Components').PageBack} PageBack
@@ -19,17 +19,17 @@ import { PageBack } from '../Interface/Components';
  * 
  * @typedef PageState
  * @type {Object}
- * @property {PageType} content
- * @property {PageBack} ref
- * @property {object} args Unused
+ * @property {PageType|null} content
+ * @property {PageBack|null} ref
+ * @property {object} args
  */
 
 const DEBUG_MODE = false;
 
 /**
  * @description Pages that will be cached
- * /!\ Do not forget "super.componentDidMount()" in BackPages
- * /!\ Do not put "tasks" or "skills" pages in this list
+ * - /!\ Do not forget "super.componentDidMount()" in BackPages
+ * - /!\ Do not put "tasks" or "skills" pages in this list
  * @type {Array<PageName>}
  */
 const PAGES_PERSISTENT = [
@@ -45,8 +45,8 @@ const CACHE_PAGES = {
     /** @type {{[key: PageName|string]: PageState}} */
     persistent: {},
 
-    /** @type {PageState|null} */
-    temp: null
+    /** @type {PageState} */
+    temp: { content: null, ref: null, args: null }
 };
 
 class PageManager extends React.Component{
@@ -59,36 +59,32 @@ class PageManager extends React.Component{
         ignorePage: false,
         bottomBarShow: false,
         bottomBarIndex: -1
-    }
+    };
 
-    constructor(props) {
-        super(props);
+    /** @description Disable changing page while loading */
+    changing = false;
 
-        /** @description Disable changing page while loading */
-        this.changing = false;
+    /** @description Disable back button */
+    backable = true;
 
-        /** @description Disable back button */
-        this.backable = true;
+    /**
+     * @description Custom back button handler
+     * @type {function?}
+     */
+    customBackHandle = null;
 
-        /**
-         * @description Custom back button handler
-         * @type {function?}
-         */
-        this.customBackHandle = null;
+    /**
+     * @description Represent all pages before current page
+     * Increment when changing page
+     */
+    path = [];
 
-        /**
-         * @description Represent all pages before current page
-         * Increment when changing page
-         */
-        this.path = [];
-
-        /** @type {Popup} */        this.popup = new React.createRef();
-        /** @type {ScreenInput} */  this.screenInput = new React.createRef();
-        /** @type {ScreenList} */   this.screenList = new React.createRef();
-        /** @type {UserHeader} */   this.header = new React.createRef();
-        /** @type {BottomBar} */    this.bottomBar = new React.createRef();
-        /** @type {Console} */      this.console = new React.createRef();
-    }
+    /** @type {Popup} */        popup = new React.createRef();
+    /** @type {ScreenInput} */  screenInput = new React.createRef();
+    /** @type {ScreenList} */   screenList = new React.createRef();
+    /** @type {UserHeader} */   header = new React.createRef();
+    /** @type {BottomBar} */    bottomBar = new React.createRef();
+    /** @type {Console} */      console = new React.createRef();
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.backHandle);
@@ -101,7 +97,9 @@ class PageManager extends React.Component{
     LoadDefaultPages = async () => {
         PAGES_PERSISTENT.forEach(page => {
             CACHE_PAGES.persistent[page] = { content: null, ref: null, args: {} };
-            CACHE_PAGES.persistent[page].content = this.getPageContent(page);
+
+            const content = this.getPageContent(page, CACHE_PAGES.persistent[page].args);
+            CACHE_PAGES.persistent[page].content = content;
         });
         this.forceUpdate();
 
@@ -213,7 +211,7 @@ class PageManager extends React.Component{
         }
 
         // Set temp page arguments
-        else if (CACHE_PAGES.temp !== null) {
+        else {
             CACHE_PAGES.temp.args = pageArguments;
         }
 
@@ -233,6 +231,7 @@ class PageManager extends React.Component{
     }
 
     /**
+     * Hide current page and show new page
      * @param {PageName} newPage
      * @returns {Promise}
      */
@@ -257,7 +256,7 @@ class PageManager extends React.Component{
                     CACHE_PAGES.persistent[selectedPage].ref.refPage.Hide();
                 }
             } else {
-                if (typeof(CACHE_PAGES.temp?.ref?.refPage?.Hide) === 'function') {
+                if (typeof(CACHE_PAGES.temp.ref?.refPage?.Hide) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Hide();
                 }
             }
@@ -273,10 +272,9 @@ class PageManager extends React.Component{
                 console.log('Ref undefined (' + newPage + ')');
             }
         } else {
-            CACHE_PAGES.temp = { content: null, ref: null, args: {} };
-            CACHE_PAGES.temp.content = this.getPageContent(newPage, true);
+            CACHE_PAGES.temp.content = this.getPageContent(newPage, CACHE_PAGES.temp.args, true);
             this.setState({ selectedPage: newPage }, () => {
-                if (typeof(CACHE_PAGES.temp?.ref?.refPage?.Show) === 'function') {
+                if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();
                     CACHE_PAGES.temp.ref.componentDidFocused();
                 } else {
@@ -294,13 +292,14 @@ class PageManager extends React.Component{
 
     /**
      * @param {PageName} page
-     * @param {boolean} tempRef
+     * @param {object} args
+     * @param {boolean} tempPage
      * @returns {JSX.Element|null}
      */
-    getPageContent(page, tempRef = false) {
+    getPageContent(page, args = {}, tempPage = false) {
         let setRef = () => null;
-        if (tempRef && CACHE_PAGES.temp !== null) {
-            setRef = (ref) => { if (CACHE_PAGES.temp !== null) CACHE_PAGES.temp.ref = ref };
+        if (tempPage) {
+            setRef = (ref) => CACHE_PAGES.temp.ref = ref;
         } else if (Object.keys(CACHE_PAGES.persistent).includes(page)) {
             setRef = (ref) => CACHE_PAGES.persistent[page].ref = ref;
         }
@@ -337,7 +336,6 @@ class PageManager extends React.Component{
         }
 
         const Page = pages[page];
-        const args = this.path.length ? this.path[this.path.length - 1][1] : {};
         return <Page key={key} args={args} ref={setRef} />;
     }
 
@@ -358,7 +356,7 @@ class PageManager extends React.Component{
             }
 
             if (pageName === 'temp')
-                return CACHE_PAGES.temp?.content || null;
+                return CACHE_PAGES.temp.content || null;
             return CACHE_PAGES.persistent[pageName]?.content || null;
         }
 
@@ -381,7 +379,7 @@ class PageManager extends React.Component{
 
                 <Console ref={ref => { if (ref !== null) this.console = ref } } />
             </LinearGradient>
-        )
+        );
     }
 }
 

@@ -182,7 +182,13 @@
                 case 0: // OK
                     Accounts::RefreshLastDate($this->db, $account->ID);
                     $this->db->AddLog($account->ID, $device->ID, 'appState', 'Login');
-                    $this->output['token'] = Devices::GeneratePrivateToken($this->db, $account->ID, $device->ID);
+                    $token = Devices::GeneratePrivateToken($this->db, $account->ID, $device->ID);
+                    if ($token === null) {
+                        $this->output['error'] = 'Token was not created';
+                        return;
+                    }
+
+                    $this->output['token'] = $token;
                     $this->output['status'] = 'ok';
 
                     $isBanned = $account->Banned || $device->Banned;
@@ -210,10 +216,10 @@
 
                     $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                     if ($sended) {
-                        $this->db->AddLog($account->ID, $device->ID, 'mail', "[Link account] Mail sent to: $email");
+                        $this->db->AddLog($account->ID, $device->ID, 'mail', $email);
                         $this->output['status'] = 'newDevice';
                     } else {
-                        $this->db->AddLog($account->ID, $device->ID, 'mail', "[Link account] Mail not sent to: $email");
+                        $this->db->AddLog($account->ID, $device->ID, 'error', "[Link account] Mail not sent to: $email");
                     }
                     break;
             }

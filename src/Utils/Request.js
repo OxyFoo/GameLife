@@ -9,14 +9,23 @@ const defaultHeaders = {
 
 class ReqResponse {
     /**
+     * @param {number} status The status of the request.
+     * @param {object} content The data of the request or error information if failed.
+     */
+    constructor(status, content) {
+        this.status = status;
+        this.content = content;
+    }
+
+    /**
      * @readonly
-     * @property {number} status - The status of the request.
+     * @type {number} The status of the request.
      */
     status = null;
 
     /**
      * @readonly
-     * @property {object} data - The data of the request or error information if failed.
+     * @type {object} The data of the request or error information if failed.
      */
     content = null;
 }
@@ -30,7 +39,8 @@ class ReqResponse {
  * @returns {Promise<ReqResponse>}
  */
 async function Request_Async(data = {}, url = URL, method = 'POST', headers = defaultHeaders) {
-    let reqResponse = new ReqResponse();
+    let status = null;
+    let content = null;
 
     const header = {
         method: method,
@@ -40,19 +50,18 @@ async function Request_Async(data = {}, url = URL, method = 'POST', headers = de
 
     try {
         const request = await fetch(url, header);
-        reqResponse.status = request.status;
+        status = request.status;
         if (request.status === 200) {
-            const response = await request.json();
-            reqResponse.content = response;
+            content = await request.json();
         } else {
-            reqResponse.content = { error: request.statusText };
+            content = { error: request.statusText };
         }
     } catch (err) {
-        reqResponse.status = 1;
-        reqResponse.content = { error: err };
+        status = 1;
+        content = { error: err };
     }
 
-    return reqResponse;
+    return new ReqResponse(status, content);
 }
 
 export { Request_Async };

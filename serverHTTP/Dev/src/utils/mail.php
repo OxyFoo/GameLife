@@ -13,17 +13,13 @@
         return $lang_json->$selected_lang;
     }
 
-    /**
-     * @param string $subject Subject of the email
-     * @return array Headers of the email
-     */
-    function GetMailHeader($subject) {
+    /** @return array Headers of the email */
+    function GetMailHeader() {
         $headers = array(
             'MIME-Version' => '1.0',
             'Content-type' => 'text/html; charset=UTF-8',
             'From' => 'GameLife',
-            'Subject' => $subject,
-            'Reply-To' => 'contact@oxyfoo.com',
+            'Reply-To' => 'signin@oxyfoo.com',
             'X-Mailer' => 'PHP/'.phpversion()
         );
         return $headers;
@@ -55,7 +51,7 @@
         $textLink = $lang->link;
 
         $content = GetMailContent($title, $text, $textButton, $textLink, $deviceName, $actionButton, $actionView);
-        $headers = GetMailHeader($subject);
+        $headers = GetMailHeader();
         return mail($email, $subject, $content, $headers);
     }
 
@@ -68,7 +64,7 @@
         $textLink = $lang->link;
 
         $content = GetMailContent($title, $text, $textButton, $textLink, $deviceName, $actionButton, $actionView);
-        $headers = GetMailHeader($subject);
+        $headers = GetMailHeader();
         return mail($email, $subject, $content, $headers);
     }
 

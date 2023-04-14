@@ -118,7 +118,7 @@
         /**
          * @param int $accountID 0 if not connected
          * @param int $deviceID
-         * @param 'mail'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition'|'giftCodeTry'|'giftCode'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff' $type
+         * @param 'mail'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition'|'giftCodeTry'|'giftCode'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'error' $type
          * @param string $data
          * @return void
          */
@@ -165,17 +165,31 @@
 
         public function Encrypt($str, $key = null) {
             if (strlen($str) === 0) return '';
-            $output = '';
+
             $k = $key === null ? $this->keyA : $key;
-            if ($str) $output = openssl_encrypt($str, $this->algorithm, $k);
-            return $output;
+            $ivlen = openssl_cipher_iv_length($this->algorithm);
+            if ($ivlen === false) return '';
+
+            $rnd = openssl_random_pseudo_bytes($ivlen / 2);
+            if ($rnd === false) return '';
+
+            $iv = bin2hex($rnd);
+            $output = openssl_encrypt($str, $this->algorithm, $k, 0, $iv);
+
+            return $output === false ? '' : $iv . $output;
         }
 
         public function Decrypt($str, $key = null) {
             if (strlen($str) === 0) return '';
-            $output = '';
+
             $k = $key === null ? $this->keyA : $key;
-            if ($str) $output = openssl_decrypt($str, $this->algorithm, $k);
+            $ivlen = openssl_cipher_iv_length($this->algorithm);
+            if ($ivlen === false) return '';
+
+            $iv = substr($str, 0, $ivlen);
+            $output = openssl_decrypt(substr($str, $ivlen), $this->algorithm, $k, 0, $iv);
+            if ($output === false) return '';
+
             return $output;
         }
     }

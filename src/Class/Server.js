@@ -5,46 +5,42 @@ import langManager from '../Managers/LangManager';
 import { Request_Async } from '../Utils/Request';
 import { GetDeviceInformations } from '../Utils/Device';
 
-const STATUS = {
-    OFFLINE     : 'offline',
-    CONNECTED   : 'ok',
-    FREE        : 'free',
-    WAITMAIL    : 'waitMailConfirmation',
-    BANNED      : 'ban',
-    NEWDEVICE   : 'newDevice',
-    REMDEVICE   : 'remDevice',
-    MAINTENANCE : 'maintenance',
-    ERROR       : 'error',
-    LIMITDEVICE : 'limitDevice'
-};
-
 /**
+ * @typedef {import('../Managers/UserManager').default} UserManager
+ * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
+ * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
+ * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
  * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'disconnect'|'deleteAccount'} RequestTypes
- */
+*/
+
+/** @type {ServerStatus[]} */
+const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'ban', 'newDevice', 'remDevice', 'maintenance', 'update', 'downdate', 'limitDevice', 'error' ];
 
 class Server {
+    /** @param {UserManager} user */
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         this.token = '';
         this.dataToken = '';
+
+        /** @type {boolean} True if the server is online */
         this.online = false;
-        this.status = STATUS.OFFLINE;
+
+        /** @type {ServerStatus} */
+        this.status = 'offline';
     }
 
     Clear = () => {
         this.token = '';
         this.dataToken = '';
         this.online = false;
-        this.status = STATUS.OFFLINE;
+        this.status = 'offline';
     }
 
     IsConnected = () => {
-        return this.status === STATUS.CONNECTED || this.status === STATUS.BANNED;
+        return this.status === 'ok' || this.status === 'ban';
     }
 
     Ping = async (resetConnections = false) => {
@@ -60,6 +56,8 @@ class Server {
             return;
         }
 
+        /** @type {ServerStatus} */
+        // @ts-ignore
         const status = response['status'];
         const devMode = response['devMode'];
 
@@ -73,7 +71,7 @@ class Server {
             const title = langManager.curr['home']['alert-newversion-title'];
             const text = langManager.curr['home']['alert-newversion-text'];
             this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
-        } else if (status === STATUS.MAINTENANCE) {
+        } else if (status === 'error') {
             this.online = false;
             const title = langManager.curr['home']['alert-maintenance-title'];
             const text = langManager.curr['home']['alert-maintenance-text'];
@@ -88,9 +86,10 @@ class Server {
     /**
      * Try to connect to the server, with email (and device informations)
      * @param {string} email Email of the user
-     * @returns {Promise<{status: 'free'|'ban'|'ok'|'newDevice'|'remDevice'|'waitMailConfirmation'|'limitDevice', remainMailTime: number?}>} Status of the user connection
+     * @returns {Promise<{status: LoginStatus, remainMailTime: number|null}>} Status of the user connection
      */
     Connect = async (email) => {
+        /** @type {LoginStatus|null} */
         let status = null;
         let remainMailTime = null;
 
@@ -100,32 +99,35 @@ class Server {
 
         if (result_connect === null) {
             this.user.interface.console.AddLog('error', 'Request - connect failed:', result_connect);
-            return STATUS.ERROR;
+            return { status: 'error', remainMailTime: null };
         }
 
-        if (Object.values(STATUS).includes(result_connect['status'])) {
-            status = result_connect['status'];
+        /** @type {LoginStatus} */
+        // @ts-ignore
+        const s = result_connect['status'];
+        if (STATUS.includes(s)) {
+            status = s;
             this.status = status;
             if (result_connect.hasOwnProperty('remainMailTime')) {
                 remainMailTime = result_connect['remainMailTime'];
             }
         }
 
-        if (status === STATUS.BANNED) {
+        if (status === 'ban') {
             this.user.interface.console.AddLog('warn', 'Request: connect - BANNED');
         }
-        if (status === STATUS.CONNECTED || status === STATUS.BANNED) {
+        if (status === 'ok' || status === 'ban') {
             const token = result_connect['token'];
             if (typeof(token) !== 'undefined' && token.length) {
                 this.token = token;
             } else {
-                status = STATUS.ERROR;
+                status = 'error';
             }
         }
 
         const output = {
             status: status,
-            remainMailTime: remainMailTime
+            remainMailTime: parseInt(remainMailTime)
         };
         return output;
     }
@@ -134,16 +136,18 @@ class Server {
      * Send a request to the server to create a new user account
      * @param {string} email Email of the user
      * @param {string} username Pseudo of the user
-     * @returns {Promise<'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|null>} Status of the user signin
+     * @returns {Promise<SigninStatus>} Status of the user signin
      */
     Signin = async (email, username) => {
         const device = GetDeviceInformations();
         const response = await this.Request('signin', { email, username, ...device });
-        if (response === null) return null;
+        if (response === null) return 'error';
 
+        /** @type {SigninStatus} */
+        // @ts-ignore
         const status = response['status'];
         const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
-        if (!allStatus.includes(status)) return null;
+        if (!allStatus.includes(status)) return 'error';
 
         return status;
     }
@@ -181,8 +185,8 @@ class Server {
         const response = await this.Request('getUserData', _data);
         if (response === null) return null;
 
-        const { status, data } = response;
-        if (status !== 'ok' || typeof(data) !== 'object') {
+        const data = response['data'];
+        if (response['status'] !== 'ok' || typeof(data) !== 'object') {
             return null;
         }
 
@@ -202,8 +206,7 @@ class Server {
         const response = await this.Request('setUsername', _data);
         if (response === null) return 'error';
 
-        const { status, usernameChangeState } = response;
-        return usernameChangeState;
+        return response['usernameChangeState'];
     }
 
     /**
@@ -237,7 +240,7 @@ class Server {
      * @param {RequestTypes} type Type of request
      * @param {object} [data={}] Data to send
      * @param {boolean} [force=false] Force to send data to server (use empty dataToken)
-     * @returns {Promise<{ status: string, content: string }|null>} Return response from server or null if failed
+     * @returns {Promise<object|null>} Return response from server or null if failed
      */
     async Request(type, data = {}, force = false) {
         let reqData = { 'action': type, ...data };
@@ -249,7 +252,7 @@ class Server {
         if (response.status !== 200) {
             // Request failed
             if (this.online) { // Don't show popup if not connected to server
-                this.user.interface.console.AddLog('warn', 'Request: error - ', response);
+                this.user.interface.console.AddLog('warn', 'Request: error -', response);
                 const title = langManager.curr['server']['alert-error-title'];
                 const text = langManager.curr['server']['alert-errorr-text'];
                 this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
@@ -259,7 +262,7 @@ class Server {
 
         // Print error in console
         if (response.content['status'] === 'error' && response.content.hasOwnProperty('error')) {
-            this.user.interface.console.AddLog('warn', 'Request: error - ', response.content['error']);
+            this.user.interface.console.AddLog('warn', 'Request: error -', response.content['error']);
         }
 
         if (response.content['status'] === 'tokenExpired') {

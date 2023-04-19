@@ -1,14 +1,23 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
 import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
 import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
 
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ */
+
 const PageProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {Array<JSX.Element>|null} */
+    children: null,
+
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {boolean} If true, user can vertical scroll the page */
@@ -26,19 +35,19 @@ const PageProps = {
     /** @type {number} */
     bottomOffset: 0,
 
-    /** @type {React.Component} */
+    /** @type {JSX.Element} */
     topOverlay: null,
 
     /** @type {number} */
     topOverlayHeight: 64,
 
-    /** @type {React.Component} */
+    /** @type {JSX.Element} */
     footer: null,
 
-    /** @type {LayoutChangeEvent} */
+    /** @param {LayoutChangeEvent} event */
     onLayout: (event) => {},
 
-    /** @type {GestureResponderEvent} */
+    /** @param {GestureResponderEvent} event */
     onStartShouldSetResponder: (event) => false
 }
 
@@ -220,7 +229,7 @@ class Page extends React.Component {
     }
 
     render() {
-        const { isHomePage, topOffset, bottomOffset, scrollable } = this.props;
+        const { style, isHomePage, topOffset, bottomOffset, scrollable } = this.props;
         const headerHeight = user.interface.header.state.height;
         const valueOffset = isHomePage ? headerHeight : topOffset;
 
@@ -230,15 +239,13 @@ class Page extends React.Component {
             transform: [{ translateY: this.state.positionY }],
             paddingTop: valueOffset,
             height: scrollable ? 'auto' : '100%',
-            minHeight: SCREEN_HEIGHT - topOffset - bottomOffset - 128,
-            ...this.props.style
+            minHeight: SCREEN_HEIGHT - topOffset - bottomOffset - 128
         };
 
         return (
             <>
                 <Animated.View
-                    style={[stylePage, styleParent]}
-                    behavior={'padding'}
+                    style={[stylePage, styleParent, style]}
                     onLayout={this.onLayout}
                     onTouchStart={this.onTouchStart}
                     onTouchMove={this.onTouchMove}
@@ -250,7 +257,6 @@ class Page extends React.Component {
                 </Animated.View>
                 <Animated.View
                     style={[stylePage, styles.footer]}
-                    behavior={'padding'}
                     pointerEvents={this.state.pointerEvents}
                 >
                     {this.props.footer}

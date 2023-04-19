@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { AppState, LogBox, SafeAreaView } from 'react-native';
-import { AppStateStatus } from 'react-native';
+import { AppState, SafeAreaView } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 
 import user from './src/Managers/UserManager';
@@ -8,11 +7,12 @@ import PageManager from './src/Managers/PageManager';
 
 import { CheckDate } from './src/Utils/DateCheck';
 
+/**
+ * @typedef {import("react-native").AppStateStatus} AppStateStatus
+ */
+
 class App extends React.Component {
     componentDidMount() {
-        // Ignore the warning (NativeEventEmitter & No connection promise rejection)
-        LogBox.ignoreLogs(['new NativeEventEmitter', 'Possible Unhandled Promise Rejection (id: 0)']);
-
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
 

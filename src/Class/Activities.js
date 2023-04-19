@@ -4,6 +4,10 @@ import DynamicVar from '../Utils/DynamicVar';
 import { SortByKey } from '../Utils/Functions';
 import { GetMidnightTime, GetTime } from '../Utils/Time';
 
+/**
+ * @typedef {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'} AddStatus
+ */
+
 const MaxHourPerDay = 12;
 
 class Activity {
@@ -42,7 +46,7 @@ class Activities {
         this.allActivities = new DynamicVar([]);
 
         /**
-         * @type {?Array<number, number>} [skillID, startTime]
+         * @type {Array<number, number>|null} [skillID, startTime]
          */
         this.currentActivity = null;
 
@@ -193,9 +197,9 @@ class Activities {
      * @param {number} duration in minutes
      * @param {string} comment Optional comment
      * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
-     * @returns {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'}
+     * @returns {AddStatus}
      */
-    Add(skillID, startTime, duration, comment, alreadySaved = false) {
+    Add(skillID, startTime, duration, comment = '', alreadySaved = false) {
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;
@@ -228,6 +232,7 @@ class Activities {
             this.allActivities.Set(this.Get());
             return 'added';
         }
+
         // Activity exist, update it
         else {
             let activity = indexActivity !== null ? this.activities[indexActivity] : this.UNSAVED_activities[indexUnsaved];
@@ -279,10 +284,10 @@ class Activities {
     /**
      * @param {Array<Activity>} arr
      * @param {Activity} activity
-     * @returns {number?} Index of activity or null if not found
+     * @returns {number|null} Index of activity or null if not found
      */
     getIndex(arr, activity) {
-        for (let i in arr) {
+        for (let i = 0; i < arr.length; i++) {
             const equals = this.areEquals(arr[i], activity);
             if (equals) return i;
         }

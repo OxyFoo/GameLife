@@ -236,7 +236,7 @@ class Admob {
         const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
 
         // TODO - Debug on ios (tester les 2 codes)
-        console.log('ad_consent_id', ad_consent_id);
+        this.user.interface.console.AddLog('info', 'ad_consent_id', ad_consent_id);
 
         // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
         if (consentInfo && consentInfo.isRequestLocationInEeaOrUnknown) {

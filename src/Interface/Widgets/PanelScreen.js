@@ -9,6 +9,9 @@ import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const PanelScreenProps = {
+    /** @type {Array<JSX.Element>} */
+    children: null,
+
     /** @type {StyleProp<ViewStyle>} */
     containerStyle: {},
 
@@ -26,9 +29,6 @@ const PanelScreenProps = {
 }
 
 class PanelScreen extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     state = {
         opened: false,
         positionY: new Animated.Value(SCREEN_HEIGHT),

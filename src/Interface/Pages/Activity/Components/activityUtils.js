@@ -50,6 +50,7 @@ function onRemComment() {
     user.interface.popup.Open('yesno', [ title, text ], callback);
 }
 
+// TODO: Save (local ET online ?)
 /** @this ActivityPanel */
 function AddActivity() {
     const skillID = this.state.selectedSkill.id;

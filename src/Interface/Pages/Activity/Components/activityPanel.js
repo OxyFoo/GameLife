@@ -17,6 +17,7 @@ import { ActivitySchedule, ActivityExperience, PanelScreen } from '../../../Widg
 class ActivityPanel extends ActivityPanelBack {
     RenderPanelDetails() {
         const lang = langManager.curr['activity'];
+        const { editMode } = this.props;
         const { activityStart, activityDuration, comment, startMode } = this.state;
 
         const skillID = this.state.selectedSkill.id;
@@ -51,7 +52,7 @@ class ActivityPanel extends ActivityPanelBack {
                     {lang['title-schedule']}
                 </Text>
                 <ActivitySchedule
-                    editable={!this.editMode}
+                    editable={!editMode}
                     selectedDate={activityStart}
                     selectedDuration={activityDuration}
                     onChange={this.onChangeSchedule}
@@ -99,7 +100,7 @@ class ActivityPanel extends ActivityPanelBack {
                 )}
 
                 {/* Add / Remove button */}
-                {this.editMode ? (
+                {editMode ? (
                     <Button onPress={RemActivity.bind(this)} color='main2'>
                         {lang['btn-remove']}
                     </Button>
@@ -132,7 +133,7 @@ class ActivityPanel extends ActivityPanelBack {
 
     render() {
         const lang = langManager.curr['activity'];
-        const { topOffset } = this.props;
+        const { topOffset, editMode } = this.props;
         const { activityText, startMode } = this.state;
 
         const stylePanel = {
@@ -162,7 +163,7 @@ class ActivityPanel extends ActivityPanelBack {
                 </View>
 
                 {/* Start mode - Already / Now */}
-                {!this.editMode &&
+                {!editMode &&
                     <TextSwitch
                         style={styles.panelTextSwitch}
                         texts={[ lang['swiper-already'], lang['swiper-now'] ]}

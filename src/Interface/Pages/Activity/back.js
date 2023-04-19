@@ -9,6 +9,7 @@ import { PageBack } from '../../Components';
 import { CategoryToItem, SkillToItem } from './Components/types';
 
 /**
+ * @typedef {import('../../../Data/Skills').Skill} Skill
  * @typedef {import('./Components/types').ItemSkill} ItemSkill
  * @typedef {import('./Components/types').ItemCategory} ItemCategory
  * @typedef {import('../../../Class/Activities').Activity} Activity
@@ -34,13 +35,13 @@ class BackActivity extends PageBack {
     /** @type {Array<ItemSkill>} */
     allSkillItems = [];
 
-    /** @type {ActivityPanel} */
-    refActivityPanel = React.createRef();
+    /** @type {ActivityPanel|null} */
+    refActivityPanel = null;
 
-    /** @type {React.RefObject<FlatList>} */
-    refActivities = React.createRef();
+    /** @type {FlatList|null} */
+    refActivities = null;
 
-    /** @type {Array<ItemCategory>} */
+    /** @type {Array<ItemCategory|null>} */
     categories = [];
 
     /** @type {boolean} If true, the page is in edition mode */
@@ -62,7 +63,7 @@ class BackActivity extends PageBack {
         this.categories = categories.map(CategoryToItem);
         if (categories.length % 6 !== 0) {
             const emptyCount = 6 - (categories.length % 6);
-            this.categories.push(...Array(emptyCount).fill(0));
+            this.categories.push(...Array(emptyCount).fill(null));
         }
 
         // Set default values to edit an activity
@@ -107,26 +108,36 @@ class BackActivity extends PageBack {
         this.setState({ topPanelOffset: y + height });
     }
 
+    /**
+     * @param {string} textSearch
+     * @param {number|null} categoryID
+     */
+    refreshSkills = (textSearch = '', categoryID = null) => {
+        /** @param {ItemSkill} skill */
+        const filter = skill => !categoryID || skill.categoryID === categoryID;
+        /** @param {ItemSkill} skill */
+        const searchMatch = skill => skill.value.toLowerCase().includes(textSearch.toLowerCase());
+
+        const skills = this.allSkillItems
+            .filter(filter)
+            .filter(searchMatch);
+
+        this.setState({ skills, skillSearch: textSearch, selectedCategory: categoryID });
+    }
+
     /** @param {string} text */
     onSearchChange = (text) => {
-        if (text.length > 0) {
-            const searchMatch = (skill) => skill.value.toLowerCase().includes(text.toLowerCase());
-            const skills = this.allSkillItems.filter(searchMatch);
-            this.setState({ skillSearch: text, skills: skills });
-        } else {
-            this.setState({ skillSearch: text, skills: this.allSkillItems });
-        }
+        this.refreshSkills(text, this.state.selectedCategory);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
     }
 
+    /**
+     * @param {number} ID
+     * @param {boolean} checked
+     */
     selectCategory = (ID, checked) => {
-        const filter = skill => !checked || skill.CategoryID === ID;
-        const convert = (skill) => SkillToItem(skill, this.refActivityPanel?.SelectSkill);
-        const skills = dataManager.skills.skills.filter(filter).map(convert);
-
-        this.allSkillItems = skills;
+        this.refreshSkills(this.state.skillSearch, checked ? ID : null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
-        this.setState({ selectedCategory: checked ? ID : null, skills });
         this.refActivityPanel.Close();
     }
 }

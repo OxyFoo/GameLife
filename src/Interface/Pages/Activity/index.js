@@ -17,11 +17,11 @@ import { PageHeader } from '../../Widgets';
 
 class Activity extends BackActivity {
     /**
-     * @param {{ item: ItemCategory }} param0
+     * @param {{ item: ItemCategory|null }} param0
      * @returns {JSX.Element}
      */
     renderCategory = ({ item }) => {
-        if (item === 0) {
+        if (item === null) {
             return <View style={styles.categoryEmpty} />;
         }
 
@@ -86,7 +86,7 @@ class Activity extends BackActivity {
                         data={this.categories}
                         renderItem={this.renderCategory}
                         numColumns={6}
-                        keyExtractor={item => 'act-cat-' + item.id}
+                        keyExtractor={item => 'act-cat-' + item?.id}
                         scrollEnabled={false}
                     />
                 </View>

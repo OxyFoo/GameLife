@@ -9,6 +9,7 @@ import { SpringAnimation } from '../../../../Utils/Animations';
 
 /**
  * @typedef {import('../back').ItemSkill} ItemSkill
+ * @typedef {import('../../../Widgets').PanelScreen} PanelScreen
  * @typedef {import('../../../../Data/Skills').Skill} Skill
  * @typedef {import('../../../../Class/Activities').Activity} Activity
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -16,7 +17,10 @@ import { SpringAnimation } from '../../../../Utils/Animations';
 
 const ActivityPanelProps = {
     /** @type {number} Top distance of the panel when it's opened */
-    topOffset: 0
+    topOffset: 0,
+
+    /** @type {boolean} Edition enabled */
+    editMode: false
 }
 
 class ActivityPanelBack extends React.Component {
@@ -42,7 +46,7 @@ class ActivityPanelBack extends React.Component {
         activityDuration: 15
     };
 
-    /** @type {import('../../../Widgets').PanelScreen} */
+    /** @type {PanelScreen} */
     refPanelScreen = null;
 
     /**
@@ -104,15 +108,6 @@ class ActivityPanelBack extends React.Component {
         const modes = [ 'schedule', 'now' ];
         this.setState({ startMode: modes[index] });
         SpringAnimation(this.state.animButtonNow, index).start();
-    }
-
-    getCategoryName = () => {
-        const checkCategory = cat => cat.id === this.selectedCategory;
-        const category = this.categories.find(checkCategory) || null;
-
-        if (category !== null)
-            return category.name;
-        return langManager.curr['activity']['input-activity'];
     }
 
     onChangeSchedule = (startTime, duration) => {

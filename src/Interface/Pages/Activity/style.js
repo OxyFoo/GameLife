@@ -43,6 +43,14 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         padding: 16,
         borderRadius: 8
+    },
+
+    emptyList: {
+        marginTop: 24
+    },
+    emptyListText: {
+        textAlign: 'center',
+        fontSize: 24
     }
 });
 

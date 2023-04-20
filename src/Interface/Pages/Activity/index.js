@@ -59,9 +59,24 @@ class Activity extends BackActivity {
         );
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
+    renderEmptyList = () => {
+        const lang = langManager.curr['activity'];
+
+        return (
+            <View style={styles.emptyList}>
+                <Text style={styles.emptyListText}>
+                    {lang['empty-activity']}
+                </Text>
+            </View>
+        );
+    }
+
     render() {
         const lang = langManager.curr['activity'];
-        const { skillSearch, skills, topPanelOffset } = this.state;
+        const { skillSearch, skills, topPanelOffset, inputText } = this.state;
 
         return (
             <Page
@@ -100,7 +115,7 @@ class Activity extends BackActivity {
                     {/* Search bar */}
                     <View style={styles.activitiesSearchBar}>
                         <Input
-                            label={langManager.curr['modal']['search']}
+                            label={inputText}
                             text={skillSearch}
                             onChangeText={this.onSearchChange}
                         />
@@ -111,7 +126,7 @@ class Activity extends BackActivity {
                         ref={ref => this.refActivities = ref}
                         style={styles.activitiesFlatlist}
                         data={skills}
-                        
+                        ListEmptyComponent={this.renderEmptyList}
                         renderItem={this.renderSkill}
                         keyExtractor={item => 'act-skill-' + item.id}
                     />

@@ -1,7 +1,7 @@
-import React from 'react';
 import { FlatList } from 'react-native';
 
 import dataManager from '../../../Managers/DataManager';
+import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
 import { Sleep } from '../../../Utils/Functions';
@@ -29,7 +29,10 @@ class BackActivity extends PageBack {
         selectedCategory: null,
 
         /** @type {string} */
-        skillSearch: ''
+        skillSearch: '',
+
+        /** @type {string} */
+        inputText: langManager.curr['activity']['input-activity']
     };
 
     /** @type {Array<ItemSkill>} */
@@ -122,7 +125,17 @@ class BackActivity extends PageBack {
             .filter(filter)
             .filter(searchMatch);
 
-        this.setState({ skills, skillSearch: textSearch, selectedCategory: categoryID });
+        let inputText = langManager.curr['activity']['input-activity'];
+        if (categoryID !== null) {
+            const category = dataManager.skills.GetCategoryByID(categoryID);
+            inputText = dataManager.GetText(category?.Name) || inputText;
+        }
+
+        this.setState({
+            skills, inputText,
+            skillSearch: textSearch,
+            selectedCategory: categoryID,
+        });
     }
 
     /** @param {string} text */

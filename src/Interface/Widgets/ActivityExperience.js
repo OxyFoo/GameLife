@@ -17,7 +17,7 @@ const ActivityExperienceProps = {
     skillID: 0,
 
     /** @type {number} Duration of the activity in minutes */
-    duration: 1
+    duration: 15
 }
 
 class ActivityExperience extends React.Component {
@@ -29,13 +29,24 @@ class ActivityExperience extends React.Component {
         data: []
     };
 
+    componentDidMount() {
+        this.updateSkill();
+    }
+
     componentDidUpdate(prevProps) {
-        const { title, data } = this.state;
         const { skillID, duration } = this.props;
 
-        if (prevProps.skillID === skillID && prevProps.duration === duration) {
-            return;
+        if (prevProps.skillID !== skillID || prevProps.duration !== duration) {
+            this.updateSkill();
+            return true;
         }
+
+        return false;
+    }
+
+    updateSkill = () => {
+        const { title, data } = this.state;
+        const { skillID, duration } = this.props;
 
         const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) {

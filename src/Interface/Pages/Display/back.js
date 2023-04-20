@@ -13,6 +13,12 @@ class BackDisplay extends PageBack {
     constructor(props) {
         super(props);
 
+        /**
+         * 
+         * @param {string} key
+         * @param {any} defaultVal
+         * @returns 
+         */
         const getFromProp = (key, defaultVal = '') => {
             if (this.props.args.hasOwnProperty(key))
                 return this.props.args[key];
@@ -22,14 +28,11 @@ class BackDisplay extends PageBack {
         this.icon = getFromProp('icon');
         this.text = getFromProp('text');
         this.button = getFromProp('button');
+        this.callback = getFromProp('action', user.interface.BackPage);
     }
 
     componentDidMount() {
         SpringAnimation(this.state.anim, 1).start();
-    }
-
-    Back = () => {
-        user.interface.BackPage();
     }
 }
 

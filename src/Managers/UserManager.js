@@ -130,6 +130,20 @@ class UserManager {
     }
 
     /**
+     * Save online data or local data if online save failed
+     * @returns {Promise<boolean>} True if saved online or locally
+     */
+    GlobalSave = async () => {
+        const onlineSaved = await this.OnlineSave();
+        if (onlineSaved) return true;
+
+        const localSaved = await this.LocalSave();
+        if (localSaved) return true;
+
+        return false;
+    }
+
+    /**
      * Load local user data
      * @returns {Promise<boolean>}
      */

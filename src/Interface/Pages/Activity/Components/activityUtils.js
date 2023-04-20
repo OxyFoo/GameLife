@@ -50,7 +50,6 @@ function onRemComment() {
     user.interface.popup.Open('yesno', [ title, text ], callback);
 }
 
-// TODO: Save (local ET online ?)
 /** @this ActivityPanel */
 function AddActivity() {
     const skillID = this.state.selectedSkill.id;
@@ -62,6 +61,7 @@ function AddActivity() {
         const text = langManager.curr['activity']['display-activity-text'];
         const button = langManager.curr['activity']['display-activity-button'];
         user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
+        user.GlobalSave();
         user.RefreshStats();
     } else if (addState === 'edited') {
         //user.interface.BackPage();
@@ -77,6 +77,7 @@ function RemActivity() {
         if (button === 'yes') {
             user.activities.Remove(this.props.args.activity);
             user.interface.BackPage();
+            user.GlobalSave();
         }
     }
     const title = langManager.curr['activity']['alert-remove-title'];
@@ -95,7 +96,7 @@ function StartActivity() {
         return;
     }
 
-    user.activities.currentActivity = [ skillID, startTime ];
+    user.activities.currentActivity = { skillID, startTime };
     user.LocalSave();
     user.interface.ChangePage('activitytimer', undefined, true);
 }

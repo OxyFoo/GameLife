@@ -3,13 +3,13 @@ import dataManager from '../../../../Managers/DataManager';
 /**
  * @typedef {import('../../../../Data/Skills').Category} Category
  * @typedef {import('../../../../Data/Skills').Skill} Skill
- * @typedef {{ id: number, value: string, categoryID: number, onPress: () => {} }} ItemSkill
+ * @typedef {{ id: number, value: string, categoryID: number, onPress: () => void }} ItemSkill
  * @typedef {{ id: number, name: string, icon: string }} ItemCategory
  */
 
 /**
  * @param {Skill|null} skill Null if no skill is selected
- * @param {(param: Skill) => {}} callback
+ * @param {(param: Skill) => void} callback
  * @returns {ItemSkill}
  */
 const SkillToItem = (skill = null, callback = (param) => {}) => ({

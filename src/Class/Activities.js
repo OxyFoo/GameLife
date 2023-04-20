@@ -6,6 +6,10 @@ import { GetMidnightTime, GetTime } from '../Utils/Time';
 
 /**
  * @typedef {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'} AddStatus
+ * 
+ * @typedef {object} CurrentActivity
+ * @property {number} skillID Skill ID
+ * @property {number} startTime Unix timestamp
  */
 
 const MaxHourPerDay = 12;
@@ -46,7 +50,7 @@ class Activities {
         this.allActivities = new DynamicVar([]);
 
         /**
-         * @type {Array<number, number>|null} [skillID, startTime]
+         * @type {CurrentActivity|null} [skillID, startTime]
          */
         this.currentActivity = null;
 

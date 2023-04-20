@@ -28,11 +28,11 @@ class BackActivity extends PageBack {
         /** @type {number|null} */
         selectedCategory: null,
 
-        /** @type {string} */
+        /** @type {string} Search input */
         skillSearch: '',
 
-        /** @type {string} */
-        inputText: langManager.curr['activity']['input-activity']
+        /** @type {string} Header of input - Name of category */
+        inputText: ''
     };
 
     /** @type {Array<ItemSkill>} */
@@ -69,8 +69,18 @@ class BackActivity extends PageBack {
             this.categories.push(...Array(emptyCount).fill(null));
         }
 
+        // Define all skills
+        if (!this.editMode) {
+            const { skills } = dataManager.skills;
+            const convert = (skill) => SkillToItem(skill, this.selectSkill);
+
+            this.allSkillItems = skills.map(convert);
+            this.state.skills = this.allSkillItems;
+            this.state.inputText = langManager.curr['activity']['input-activity'];
+        }
+
         // Set default values to edit an activity
-        else if (this.editMode) {
+        if (this.editMode) {
             /** @type {Activity} */
             const activity = this.props.args.activity;
 
@@ -80,21 +90,17 @@ class BackActivity extends PageBack {
     }
 
     async componentDidMount() {
-        const { skills } = dataManager.skills;
-
-        // Define all skills
-        const convert = (skill) => SkillToItem(skill, this.refActivityPanel.SelectSkill);
-        this.allSkillItems = skills.map(convert);
-        this.setState({ skills: this.allSkillItems });
-
         // Wait for the layout to be calculated
-        while (this.state.topPanelOffset === 0) await Sleep(100);
+        while (this.state.topPanelOffset === 0 || !this.refActivityPanel.state.loaded) {
+            await Sleep(100);
+        }
 
         // Set default values to open the page with a skill selected
         if (this.props.args.hasOwnProperty('skillID')) {
             const { skillID } = this.props.args;
             const skill = dataManager.skills.GetByID(skillID);
             this.refActivityPanel.SelectSkill(skill);
+            this.refreshSkills(this.state.skillSearch, skill.CategoryID);
         }
 
         // Set default values to edit an activity
@@ -152,6 +158,14 @@ class BackActivity extends PageBack {
         this.refreshSkills(this.state.skillSearch, checked ? ID : null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
         this.refActivityPanel.Close();
+    }
+
+    /**
+     * @param {Skill} skill
+     */
+    selectSkill = (skill) => {
+        this.refreshSkills(this.state.skillSearch, skill.CategoryID);
+        this.refActivityPanel.SelectSkill(skill);
     }
 }
 

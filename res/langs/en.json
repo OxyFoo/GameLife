@@ -187,6 +187,8 @@
         "timer-cancel": "Cancel",
         "timeralert-cancel-title": "Cancel activity",
         "timeralert-cancel-text": "Are you sure you want to cancel this activity?",
+        "timeralert-tooshort-title": "Too early",
+        "timeralert-tooshort-text": "You cannot add an activity of less than 15 minutes",
 
         "display-activity-text": "Your activity has been created!",
         "display-activity-button": "Back home"

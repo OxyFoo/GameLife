@@ -139,7 +139,7 @@ class PanelScreen extends React.Component {
 
         if (this.accY < -2000 || this.posY > topOffset + backOffset) {
             this.Close();
-            setTimeout(this.props.onClose, 200);
+            setTimeout(this.props.onClose, 100);
         } else if (this.posY > topOffset) {
             this.posY = topOffset;
         }

@@ -62,7 +62,7 @@ class ActivitySchedule extends React.Component {
     }
 
     componentDidMount() {
-        this.resetSelectionMode();
+        this.resetSelectionMode(true); // TODO: Need ?
     }
 
     /** @param {LayoutChangeEvent} ev */
@@ -79,11 +79,13 @@ class ActivitySchedule extends React.Component {
         }
     }
 
-    resetSelectionMode = () => {
-        const today = GetTime();
-        const startTime = today - (today % (15 * 60));
-        const duration = 60;
-        this.props.onChange(startTime, duration);
+    resetSelectionMode = (init = false) => {
+        if (this.props.editable || init === true) {
+            const today = GetTime();
+            const startTime = today - (today % (15 * 60));
+            const duration = 60;
+            this.props.onChange(startTime, duration);
+        }
     }
 
     /** @param {'date'|'time'} mode */

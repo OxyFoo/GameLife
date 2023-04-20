@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated } from 'react-native';
 
+import user from '../../../../Managers/UserManager';
 import langManager from '../../../../Managers/LangManager';
 import dataManager from '../../../../Managers/DataManager';
 
@@ -16,6 +17,9 @@ import { SpringAnimation } from '../../../../Utils/Animations';
  */
 
 const ActivityPanelProps = {
+    /** @type {number} Render after delay in ms */
+    delay: 0,
+
     /** @type {number} Top distance of the panel when it's opened */
     topOffset: 0,
 
@@ -52,9 +56,24 @@ class ActivityPanelBack extends React.Component {
     /** @type {PanelScreen} */
     refPanelScreen = null;
 
+    /**
+     * @param {ActivityPanelProps} props
+     */
+    constructor(props) {
+        super(props);
+
+        if (props.editMode || props.delay <= 0) {
+            this.state.loaded = true;
+        }
+    }
+
     componentDidMount() {
-        const enableRender = () => this.setState({ loaded: true });
-        setTimeout(enableRender, 300);
+        const { editMode, delay } = this.props;
+
+        if (!editMode && delay > 0) {
+            const enableRender = () => this.setState({ loaded: true });
+            setTimeout(enableRender, delay);
+        }
     }
 
     /**
@@ -71,17 +90,19 @@ class ActivityPanelBack extends React.Component {
             selectedSkill: SkillToItem(skill, this.SelectSkill),
             activityText: dataManager.GetText(skill.Name)
         });
+
         this.refPanelScreen.Open();
         return true;
     }
 
     /**
-     * @param {Activity} activity
+     * @param {Activity|null} activity
      * @returns {boolean} True if the activity is valid
      */
     SelectActivity = (activity) => {
-        const skill = dataManager.skills.GetByID(activity.SkillID);
+        const skill = dataManager.skills.GetByID(activity.skillID);
         if (activity === null || skill === null) {
+            console.error('SelectActivity: Invalid activity or skill', activity, skill);
             this.Close();
             return false;
         }
@@ -93,11 +114,18 @@ class ActivityPanelBack extends React.Component {
             activityStart: activity.startTime,
             activityDuration: activity.duration
         });
+
         this.refPanelScreen.Open();
         return true;
     }
 
     Close = () => {
+        // Page is render only for activity edition, so we can go back
+        if (this.props.editMode) {
+            user.interface.BackPage();
+            return;
+        }
+
         // Skill is already deselected
         if (this.state.selectedSkill.id === 0) {
             return;

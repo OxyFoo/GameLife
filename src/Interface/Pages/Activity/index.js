@@ -135,6 +135,8 @@ class Activity extends BackActivity {
                 {/* Panel */}
                 <ActivityPanel
                     ref={ref => this.refActivityPanel = ref}
+                    editMode={this.editMode}
+                    delay={this.editMode ? 0 : 300}
                     topOffset={topPanelOffset}
                 />
             </Page>

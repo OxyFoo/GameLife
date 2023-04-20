@@ -25,6 +25,9 @@ const ActivityPanelProps = {
 
 class ActivityPanelBack extends React.Component {
     state = {
+        /** @type {boolean} Enable render after the first layout */
+        loaded: false,
+
         /** @type {ItemSkill} */
         selectedSkill: SkillToItem(),
 
@@ -48,6 +51,11 @@ class ActivityPanelBack extends React.Component {
 
     /** @type {PanelScreen} */
     refPanelScreen = null;
+
+    componentDidMount() {
+        const enableRender = () => this.setState({ loaded: true });
+        setTimeout(enableRender, 300);
+    }
 
     /**
      * @param {Skill} skill

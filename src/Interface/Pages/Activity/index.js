@@ -64,7 +64,6 @@ class Activity extends BackActivity {
         const { skillSearch, skills, topPanelOffset } = this.state;
 
         return (
-            <>
             <Page
                 ref={ref => this.refPage = ref}
                 scrollable={false}
@@ -118,15 +117,12 @@ class Activity extends BackActivity {
                     />
                 </>)}
 
+                {/* Panel */}
+                <ActivityPanel
+                    ref={ref => this.refActivityPanel = ref}
+                    topOffset={topPanelOffset}
+                />
             </Page>
-
-            {/* Panel */}
-            <ActivityPanel
-                ref={ref => this.refActivityPanel = ref}
-                topOffset={topPanelOffset}
-            />
-
-            </>
         );
     }
 }

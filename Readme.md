@@ -23,12 +23,3 @@ En 3 mots : Gestion RPG IRL
 * [React Native Tracking Transparency](https://www.npmjs.com/package/react-native-tracking-transparency)
 * [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin)
 * [React Native Exit App](https://www.npmjs.com/package/react-native-exit-app)
-
-## Erreurs
-
-<details>
-<summary>Fonts</summary>
-<p>
-Si beug avec les font, aller les supprimer dans info.plist et dans resources
-</p>
-</details>

@@ -12,17 +12,20 @@ jobs:
         steps:
             - name: 'Checkout'
               uses: actions/checkout@v2
-            - uses: actions/setup-node@master
-            - uses: c-hive/gha-yarn-cache@v1
-    
-            - name: Install node modules
-              run: |
-                    yarn install
-    
-            - name: Run CI with Lefthook
-              run: |
-                    yarn lefthook run ci-hook
-    
-            - name: Run test
-              run: |
-                    yarn test-ci
+
+            - name: 'Setup Node.js'
+              uses: actions/setup-node@v2
+              with:
+                node-version: '14.x'
+
+            - name: 'Cache Yarn packages'
+              uses: c-hive/gha-yarn-cache@v1
+
+            - name: 'Install Dependencies'
+              run: yarn install
+
+            - name: 'Run CI with Lefthook'
+              run: yarn lefthook run ci-hook
+
+            - name: 'Run Tests'
+              run: yarn test-ci

@@ -13,5 +13,8 @@ module.exports = {
       'react-native-web/dist/exports/Image/ImageResizeMode': 'react-native/Libraries/Image/ImageResizeMode',
       'react-native/Libraries/Components/View/ViewStylePropTypes': 'react-native-web/dist/exports/View/ViewStylePropTypes',
       'react-native/Libraries/Renderer/shims/ReactNativePropRegistry': 'react-native-web/dist/modules/ReactNativePropRegistry'
+    },
+    globals: {
+      __DEV__: true
     }
 };

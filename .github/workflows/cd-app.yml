@@ -1,0 +1,60 @@
+name: 'GameLife - Continuous Deployment'
+
+on:
+  pull_request:
+    branches:
+      - prod
+      - test
+
+jobs:
+  test:
+    name: 'Application tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+
+      - name: 'Cache NPM packages'
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: 'Install Dependencies'
+        run: npm install
+
+      - name: 'Run tests'
+        run: npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: FTP Upload
+        run: |
+          # FTP installation
+          sudo apt-get update
+          sudo apt-get install ftp
+
+          # Distant FTP connection
+          if [[ "${{ github.ref }}" == "refs/heads/test" ]]; then
+            ftp -n ${{ secrets.FTP_TEST_HOST }}
+            quote USER ${{ secrets.FTP_TEST_USER }}
+            quote PASS ${{ secrets.FTP_TEST_PASS }}
+          elif [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
+            ftp -n ${{ secrets.FTP_PROD_HOST }}
+            quote USER ${{ secrets.FTP_PROD_USER }}
+            quote PASS ${{ secrets.FTP_PROD_PASS }}
+          fi
+
+          # Upload files
+          put ./src/Server/HTTP/* ./

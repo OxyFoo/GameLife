@@ -3,7 +3,7 @@ import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
-import Button from './Button';
+import Button from './Button/Button';
 import { SpringAnimation } from '../../Utils/Animations';
 
 const SwitchProps = {

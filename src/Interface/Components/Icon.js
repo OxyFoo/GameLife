@@ -103,8 +103,8 @@ const IconProps = {
     /** @type {string} Display an icon from XML base64 encoded ('icon' skip if define) */
     xml: undefined,
 
-    /** @type {Icons} */
-    icon: '',
+    /** @type {Icons|null} */
+    icon: null,
 
     /** @type {number} Size of icon in pixels */
     size: 24,
@@ -138,7 +138,7 @@ class Icon extends React.Component {
                             <SvgXml xml={XML} width={size} height={size} />
                         </View>;
             }
-        } else if (show && icon !== '' && SVGIcons.hasOwnProperty(icon)) {
+        } else if (show && icon !== null && SVGIcons.hasOwnProperty(icon)) {
             const _Icon = SVGIcons[icon];
             output = <View style={[containerSize, style]}>
                         <_Icon width={size} height={size} color={color} rotation={angle} />

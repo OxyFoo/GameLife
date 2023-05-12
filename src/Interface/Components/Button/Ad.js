@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
+import user from '../../../Managers/UserManager';
+import langManager from '../../../Managers/LangManager';
 
-import Text from './Text';
-import Icon from './Icon';
+import Text from '../Text';
+import Icon from '../Icon';
 
 /**
  * @typedef {import('./Button').default} Button
- * @typedef {import('../../Class/Admob').AdStates} AdStates
- * @typedef {import('../../Class/Admob').AdTypes['add30Ox']} AdEvent
- * @typedef {import('../../Class/Admob').RewardedAds} RewardedAds
- * @typedef {import('../../Class/Admob').InterstitialAds} InterstitialAds
- * @typedef {import('../../Class/Admob').AdNames} AdNames
+ * @typedef {import('../../../Class/Admob').AdStates} AdStates
+ * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
+ * @typedef {import('../../../Class/Admob').RewardedAds} RewardedAds
+ * @typedef {import('../../../Class/Admob').InterstitialAds} InterstitialAds
+ * @typedef {import('../../../Class/Admob').AdNames} AdNames
  */
 
 const ButtonAdProps = {

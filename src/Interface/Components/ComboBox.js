@@ -7,7 +7,7 @@ import themeManager from '../../Managers/ThemeManager';
 import langManager from '../../Managers/LangManager';
 
 import Text from './Text';
-import Button from './Button';
+import Button from './Button/Button';
 import Icon from './Icon';
 import Input from './Input';
 import { SpringAnimation } from '../../Utils/Animations';

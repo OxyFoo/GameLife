@@ -6,7 +6,7 @@ import themeManager from '../../Managers/ThemeManager';
 
 import Text from './Text';
 import Icon from './Icon';
-import Button from './Button';
+import Button from './Button/Button';
 import { TimingAnimation } from '../../Utils/Animations';
 
 /**

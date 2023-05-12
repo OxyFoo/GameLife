@@ -6,7 +6,7 @@ import dataManager from '../../Managers/DataManager';
 
 import Text from './Text';
 import Icon from './Icon';
-import Button from './Button';
+import Button from './Button/Button';
 
 const renderQuote = (currentQuote) => quote = currentQuote === null ? null : (
     <View style={{ padding: '5%' }}>

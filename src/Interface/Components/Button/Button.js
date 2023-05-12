@@ -1,33 +1,40 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from '../../../Managers/ThemeManager';
 
-import Text from './Text';
-import Icon from './Icon';
-import Ripple from './Ripple';
-import ButtonAd, { ButtonAdProps } from './_ButtonAd';
-import { IsUndefined } from '../../Utils/Functions';
+import Text from '../Text';
+import Icon from '../Icon';
+import Ripple from '../Ripple';
+import ButtonAd, { ButtonAdProps } from './Ad';
+import { IsUndefined } from '../../../Utils/Functions';
 
 /**
- * @typedef {import('./Icon').Icons} Icons
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * 
+ * @typedef {import('../Icon').Icons} Icons
+ * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('../../../Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const ButtonProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {string|JSX.Element|undefined} */
+    children: undefined,
+
+    /** @type {StyleProp} */
     style: {},
 
-    /** @type {StyleProp<ViewStyle>?} */
+    /** @type {StyleProp|undefined} */
     styleAnimation: undefined,
 
     /** @type {number} */
     fontSize: 16,
 
-    /** @type {Icons} */
-    icon: '',
+    /** @type {Icons|null} */
+    icon: null,
 
     /** @type {string?} */
     iconXml: undefined,
@@ -121,7 +128,7 @@ class Button extends React.Component {
         const { children, enabled, loading, icon, iconXml } = this.props;
         const hasChildren = !IsUndefined(children);
         const hasChildrenString = !IsUndefined(children) && typeof(children) === 'string';
-        const hasIcon = icon !== '' || !IsUndefined(iconXml);
+        const hasIcon = icon !== null || !IsUndefined(iconXml);
         const onlyOneChild = !hasChildren || !hasIcon || loading;
 
         const color = enabled ? themeManager.GetColor(this.props.color) : '#535C68';

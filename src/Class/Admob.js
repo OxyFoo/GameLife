@@ -4,8 +4,14 @@ import { getTrackingStatus, requestTrackingPermission } from 'react-native-track
 
 import langManager from '../Managers/LangManager';
 
+const FIREBASE_DEFAULT = {"react-native": {
+    "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
+    "ios": {"rewarded": {"shop": "","todo": ""}},
+    "android": {"rewarded": {"shop": "","todo": ""}}
+}};
+
 const CGU_LINK = 'https://oxyfoo.com/cgu/';
-const FIREBASE = require('../../firebase.json');
+const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../firebase.json');
 const VERSION = require('../../package.json').version;
 
 /**

@@ -42,37 +42,10 @@ jobs:
       - name: Install FTP client
         run: sudo apt-get update && sudo apt-get install lftp -y
 
-      - name: Set FTP variables
-        env:
-          FTP_HOST: ''
-          FTP_USERNAME: ''
-          FTP_PASSWORD: ''
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/test" ]]; then
-            echo "Setting FTP variables for the test branch"
-            echo "::set-env name=FTP_HOST::${{ secrets.FTP_TEST_HOST }}"
-            echo "::set-env name=FTP_USERNAME::${{ secrets.FTP_TEST_USER }}"
-            echo "::set-env name=FTP_PASSWORD::${{ secrets.FTP_TEST_PASS }}"
-          elif [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
-            echo "Setting FTP variables for the prod branch"
-            echo "::set-env name=FTP_HOST::${{ secrets.FTP_PROD_HOST }}"
-            echo "::set-env name=FTP_USERNAME::${{ secrets.FTP_PROD_USER }}"
-            echo "::set-env name=FTP_PASSWORD::${{ secrets.FTP_PROD_PASS }}"
-          fi
+      - name: Upload files to FTP test server
+        if: ${{ github.ref == 'refs/heads/test' }}
+        run: lftp -c "open ftp://${{ secrets.FTP_TEST_USER }}:${{ secrets.FTP_TEST_PASS }}@${{ secrets.FTP_TEST_HOST }} && mirror --reverse ./src/Server/HTTP/"
 
-      - name: Upload files to FTP
-        env:
-          FTP_HOST: ${{ env.FTP_HOST }}
-          FTP_USERNAME: ${{ env.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ env.FTP_PASSWORD }}
-        run: |
-          lftp -c "open ftp://${{ env.FTP_USERNAME }}:${{ env.FTP_PASSWORD }}@${{ env.FTP_HOST }} && mirror --reverse ./src/Server/HTTP/"
-
-      - name: FTP Upload
-        run: |
-          # FTP installation
-          sudo apt-get update
-          sudo apt-get install ftp
-
-          # Upload files
-          put ./src/Server/HTTP/* ./
+      - name: Upload files to FTP prod server
+        if: ${{ github.ref == 'refs/heads/prod' }}
+        run: lftp -c "open ftp://${{ secrets.FTP_PROD_USER }}:${{ secrets.FTP_PROD_PASS }}@${{ secrets.FTP_PROD_HOST }} && mirror --reverse ./src/Server/HTTP/"

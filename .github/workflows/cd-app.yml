@@ -39,6 +39,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install FTP client
+        run: sudo apt-get update && sudo apt-get install lftp -y
+
       - name: Set FTP variables
         env:
           FTP_HOST: ''

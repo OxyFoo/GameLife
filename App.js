@@ -1,51 +1,71 @@
 import * as React from 'react';
-import { AppState, SafeAreaView } from 'react-native';
-import RNExitApp from 'react-native-exit-app';
+import { AppState, BackHandler, Platform, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
-
-import { CheckDate } from './src/Utils/DateCheck';
-
-/**
- * @typedef {import("react-native").AppStateStatus} AppStateStatus
- */
+import { currentDateIsSafe } from './src/Functions/System';
+import langManager from './src/Managers/LangManager';
+import { enableMorningNotifications } from './src/Functions/Notifications';
 
 class App extends React.Component {
     componentDidMount() {
-        // Get the app state (active or background) to check the date
+        user.changePage('loading');
         this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
-
-        // Open the test page
-        //user.interface.ChangePage('test', undefined, true); return;
-        user.interface.ChangePage('loading', undefined, true);
+        this.loadData();
     }
 
-    /** @param {AppStateStatus} state */
-    async componentChangeState(state) {
-        if (state === 'active') {
-            if (!CheckDate()) {
-                /*const title = langManager.curr['home']['alert-dateerror-title'];
-                const text = langManager.curr['home']['alert-dateerror-text'];
-                this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);*/
-                console.error("TODO - Message d'erreur");
+    async loadData() {
+        // Load local user data
+        await user.loadData(false);
+        await user.sleep(user.random(200, 400));
+        user.changePage('loading', { state: 1 }, true);
+
+        // Load internet data (if online)
+        await user.conn.AsyncRefreshAccount();
+        await user.sleep(user.random(600, 800));
+        user.changePage('loading', { state: 2 }, true);
+
+        // Load internet user data (if connected)
+        await user.loadInternalData();
+        await user.refreshStats();
+        await user.sleep(user.random(200, 400));
+        user.changePage('loading', { state: 3 }, true);
+
+        // Wait
+        await user.sleep(user.random(200, 400));
+        user.changePage('loading', { state: 4 }, true);
+
+        // TODO : iOS notifications
+        if (Platform.OS === "android") {
+            if (user.morningNotifications) {
+                enableMorningNotifications();
             }
-        } else if (state === 'background' || state === 'inactive') {
-            await user.OnlineSave() || await user.LocalSave();
+        }
+    }
+
+    async componentChangeState(newState) {
+        if (newState === 'active') {
+            // Check date errors
+            const isSafe = await currentDateIsSafe();
+            if (!isSafe) {
+                const title = langManager.curr['home']['alert-dateerror-title'];
+                const text = langManager.curr['home']['alert-dateerror-text'];
+                user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
+                return;
+            }
         }
     }
 
     componentWillUnmount() {
-        this.appStateSubscription.remove();
-        user.Unmount();
+        user.unmount();
     }
 
     render() {
         return (
             <SafeAreaView style={{ backgroundColor: "#000000" }}>
-                <PageManager ref={ref => { if (ref !== null) user.interface = ref }} />
+                <PageManager />
             </SafeAreaView>
-        );
+        )
     }
 }
 

@@ -1,0 +1,19 @@
+[
+    {"ID":"1","Title":"Intrépide","AchievementsCondition":"4"},
+    {"ID":"2","Title":"L'alpha et l'omega","AchievementsCondition":"5"},
+    {"ID":"3","Title":"Hercules","AchievementsCondition":"6"},
+    {"ID":"4","Title":"Joueur","AchievementsCondition":"0"},
+    {"ID":"5","Title":"Soldat de l'ombre","AchievementsCondition":"0"},
+    {"ID":"6","Title":"Chasseur de rang E ","AchievementsCondition":"0"},
+    {"ID":"7","Title":"Chasseur de rang D ","AchievementsCondition":"7"},
+    {"ID":"8","Title":"Chasseur de rang C","AchievementsCondition":"8"},
+    {"ID":"9","Title":"Chasseur de rang B","AchievementsCondition":"9"},
+    {"ID":"10","Title":"Chasseur de rang A","AchievementsCondition":"10"},
+    {"ID":"11","Title":"Chasseur de rang S ","AchievementsCondition":"11"},
+    {"ID":"12","Title":"Chasseur de rang Nation","AchievementsCondition":"12"},
+    {"ID":"13","Title":"Monarque","AchievementsCondition":"13"},
+    {"ID":"14","Title":"Dirigeant","AchievementsCondition":"13"},
+    {"ID":"15","Title":"Beta Player","AchievementsCondition":"14"},
+    {"ID":"16","Title":"Beater","AchievementsCondition":"15"},
+    {"ID":"17","Title":"Master Mind","AchievementsCondition":"2"}
+]

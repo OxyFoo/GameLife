@@ -2,7 +2,6 @@
   package="com.gamelife">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
       android:name=".MainApplication"
@@ -31,8 +30,7 @@
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
         android:screenOrientation="portrait"
         android:launchMode="singleTask"
-        android:exported="true"
-        android:windowSoftInputMode="adjustPan">
+        android:windowSoftInputMode="adjustResize">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -1,9 +1,0 @@
-{
-    "dev": true,
-    "type": "module",
-    "dependencies": {
-      "mysql": "^2.18.1",
-      "node-fetch": "^3.2.1",
-      "websocket": "^1.0.34"
-    }
-}

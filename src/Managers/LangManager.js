@@ -1,30 +1,53 @@
-import fr from '../../res/langs/fr.json';
-import en from '../../res/langs/en.json';
+import fr from '../../ressources/langs/fr.json';
+import en from '../../ressources/langs/en.json';
 
 DEFAULT_LANG = 'fr';
-/**
- * @typedef {import('../../res/langs/fr.json')} Lang
- */
 
 class LangManager {
     constructor() {
-        /** @type {Lang?} */
-        this.curr = null;
-
         this.langages = {
             'fr': fr,
             'en': en
         };
-        this.SetLangage();
+        this.setLangage();
     }
 
-    SetLangage(lang) {
+    setLangage(lang) {
         let newLang = DEFAULT_LANG;
         if (Object.keys(this.langages).includes(lang)) {
             newLang = lang;
         }
         this.currentLangageKey = newLang;
         this.curr = this.langages[newLang];
+    }
+
+    switchLangage() {
+        let select = false;
+        let newlang = null;
+        for (let lang in this.langages) {
+            if (select) { newlang = lang; break; }
+            if (this.langages[lang] == this.curr) select = true;
+        }
+        if (!select || newlang == null)
+            newlang = Object.keys(this.langages)[0];
+        if (newlang != null)
+            this.curr = this.langages[newlang];
+        return newlang;
+    }
+
+    getOtherLangs() {
+        let langs = [];
+        for (let l in this.langages) {
+            if (this.langages[l] === this.curr) {
+                continue;
+            }
+            const item = {
+                key: l,
+                value: this.langages[l]['name']
+            };
+            langs.push(item);
+        }
+        return langs;
     }
 }
 

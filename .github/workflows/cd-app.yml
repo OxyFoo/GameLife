@@ -44,7 +44,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install lftp -y
 
       - name: Print branch name
-        run: echo ${{ github.ref_name }}
+        run: echo ${{ github.ref }} && echo ${{ github.ref_name }} && echo ${{ github.head_ref }} && echo ${{ github.base_ref }}
 
       - name: Upload files to FTP test server
         if: ${{ github.ref_name == 'test' }}

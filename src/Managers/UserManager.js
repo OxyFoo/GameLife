@@ -46,12 +46,12 @@ class UserManager {
 
         /**
          * @description Ref loaded here from render of App.js to skip cyclic dependency
-         * @type {PageManager}
+         * @type {PageManager|null}
          */
-        this.interface;
+        this.interface = null;
 
-        /** @type {Character} */
-        this.character;
+        /** @type {Character|null} */
+        this.character = null;
 
         this.xp = 0;
 

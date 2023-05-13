@@ -43,13 +43,10 @@ jobs:
       - name: Install FTP client
         run: sudo apt-get update && sudo apt-get install lftp -y
 
-      - name: Print branch name
-        run: echo ${{ github.ref }} && echo ${{ github.ref_name }} && echo ${{ github.head_ref }} && echo ${{ github.base_ref }}
-
       - name: Upload files to FTP test server
-        if: ${{ github.ref_name == 'test' }}
+        if: ${{ github.base_ref == 'test' }}
         run: lftp -c "open ftp://${{ secrets.FTP_TEST_USER }}:${{ secrets.FTP_TEST_PASS }}@${{ secrets.FTP_TEST_HOST }} && mirror --reverse ./src/Server/HTTP/"
 
       - name: Upload files to FTP prod server
-        if: ${{ github.ref_name == 'prod' }}
+        if: ${{ github.base_ref == 'prod' }}
         run: lftp -c "open ftp://${{ secrets.FTP_PROD_USER }}:${{ secrets.FTP_PROD_PASS }}@${{ secrets.FTP_PROD_HOST }} && mirror --reverse ./src/Server/HTTP/"

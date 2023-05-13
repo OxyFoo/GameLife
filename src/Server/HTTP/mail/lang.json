@@ -1,0 +1,42 @@
+{
+    "fr": {
+        "signin-subject": "GameLife : Nouvel appareil",
+        "signin-title": "Êtes-vous sûr(e) de vouloir devenir un joueur ?",
+        "signin-text": "Cette action est irreversible et peut vous faire devenir meilleur, ou bien pire...",
+        "signin-button": "Accepter",
+
+        "delete-subject": "GameLife : Suppression de votre compte",
+        "delete-title": "Êtes-vous sûr(e) de vouloir supprimer votre compte ?",
+        "delete-text": "Cette action est irreversible et supprimera toutes vos données.",
+        "delete-button": "Supprimer",
+
+        "link": "<p style=\"padding: 6px; color: black; background-color: #ecf0f1\">Si le mail ne s'affiche pas correctement cliquez <a href='%link%'>ICI</a></p>",
+
+        "auth-title": "GAMELIFE",
+        "auth-accept": "Votre appareil a été accepté avec succès",
+        "auth-invalid-token": "Token invalide<br>Cet appareil a peut-être déjà été validé",
+        "auth-invalid-state": "Une erreur est survenue.",
+        "auth-remove-account": "Le compte ainsi que ses données ont bien été supprimés",
+        "auth-device-limit-reached": "Vous avez atteint le nombre maximum d'appareils autorisés sur un seul compte."
+    },
+    "en": {
+        "signin-subject": "GameLife: New device",
+        "signin-title": "Are you sure you want to become a player?",
+        "signin-text": "This action is there is no way to undo it and can make you better, or worse...",
+        "signin-button": "Accept",
+
+        "delete-subject": "GameLife: Deleting your account",
+        "delete-title": "Are you sure you want to delete your account?",
+        "delete-text": "This action is irreversible and will delete all your data.",
+        "delete-button": "Delete",
+
+        "link": "<p style=\"padding: 6px; color: black; background-color: #ecf0f1\">If the email does not display correctly click <a href='%link%'>HERE</a></p>",
+
+        "auth-title": "GAMELIFE",
+        "auth-accept": "Your device has been successfully accepted",
+        "auth-invalid-token": "Invalid token<br>This device has maybe already been validated",
+        "auth-invalid-state": "An error has occurred.",
+        "auth-remove-account": "The account and its data have been deleted",
+        "auth-device-limit-reached": "You have reached the maximum number of authorized devices on one account."
+    }
+}

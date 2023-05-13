@@ -1,159 +1,280 @@
-import { BackHandler } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import RNExitApp from 'react-native-exit-app';
 
-import { Request_Async } from '../Functions/Request';
 import langManager from '../Managers/LangManager';
 
-//import { NativeModules } from 'react-native';
-//const AES = NativeModules.Aes;
+import { Request_Async } from '../Utils/Request';
+import { GetDeviceInformations } from '../Utils/Device';
 
-const TIMER_LONG = 60 * 1000;
-const TIMER_SHORT = 10 * 1000;
+/**
+ * @typedef {import('../Managers/UserManager').default} UserManager
+ * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
+ * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
+ * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'disconnect'|'deleteAccount'} RequestTypes
+*/
 
-const STATUS = {
-    OFFLINE  : 'offline',
-    CONNECTED: 'ok',
-    BLACKLIST: 'blacklist',
-    WAITMAIL : 'waitMailConfirmation',
-    BANNED   : 'ban',
-    SIGNIN   : 'signin'
-};
+/** @type {ServerStatus[]} */
+const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'ban', 'newDevice', 'remDevice', 'maintenance', 'update', 'downdate', 'limitDevice', 'error' ];
 
-class ServManager {
+class Server {
+    /** @param {UserManager} user */
     constructor(user) {
+        /** @type {UserManager} */
         this.user = user;
-        this.online = false;    // Server ping
-        this.status = STATUS.OFFLINE;
 
-        this.iv = '20c3f6cb9dc45ee7524d2b252bac7d5e';
         this.token = '';
+        this.dataToken = '';
 
-        // Device informations
-        this.deviceID = DeviceInfo.getUniqueId();
-        this.deviceName = DeviceInfo.getDeviceNameSync();
-        this.osName = DeviceInfo.getSystemName();
-        this.osVersion = DeviceInfo.getSystemVersion();
-
-        this.timeout;
-    }
-
-    destructor() {
+        /** @type {boolean} True if the server is online */
         this.online = false;
-        this.status = STATUS.OFFLINE;
+
+        /** @type {ServerStatus} */
+        this.status = 'offline';
+    }
+
+    Clear = () => {
         this.token = '';
-        clearTimeout(this.timeout);
+        this.dataToken = '';
+        this.online = false;
+        this.status = 'offline';
     }
 
-    isConnected = () => {
-        return this.status === STATUS.CONNECTED;
+    IsConnected = () => {
+        return this.status === 'ok' || this.status === 'ban';
     }
 
-    async AsyncRefreshAccount() {
-        clearTimeout(this.timeout);
+    Ping = async (resetConnections = false) => {
+        const debugIndex = this.user.interface.console.AddLog('info', 'Request: ping...');
 
-        // Ping
-        const result_ping = await this.reqPing();
-        if (result_ping.hasOwnProperty('status')) {
-            const status = result_ping['status'];
-            if (status == 'ok') {
-                this.online = true;
-            } else if (status == 'update') {
-                const title = langManager.curr['home']['alert-update-title'];
-                const text = langManager.curr['home']['alert-update-text'];
-                this.user.openPopup('ok', [ title, text ], BackHandler.exitApp, false);
-            } else if (status == 'nextUpdate') {
-                this.online = false;
-                const title = langManager.curr['home']['alert-newversion-title'];
-                const text = langManager.curr['home']['alert-newversion-text'];
-                this.user.openPopup('ok', [ title, text ], undefined, false);
-            } else if (result_ping.hasOwnProperty('details')) {
-                const error = result_ping['details'].toString();
-                if (error !== "TypeError: Network request failed") {
-                    this.user.openPopup('ok', [ status, error ]);
-                }
-            }
-        }
-        
-        // Connection
-        if (this.online) {
-            if (!this.isConnected() && this.user.email !== '') {
-                const result_connect = await this.reqConnect();
-                const status = result_connect['status'];
+        let data = { ...GetDeviceInformations(true, true) };
+        if (resetConnections) data['reset'] = 1;
+        const response = await this.Request('ping', data);
 
-                if (typeof(status) === 'undefined') {
-                    console.error('Invalid response');
-                    return;
-                }
-                
-                const index_status = Object.values(STATUS).indexOf(status);
-                if (index_status !== -1) this.status = STATUS[Object.keys(STATUS)[index_status]];
-    
-                if (this.status === STATUS.CONNECTED) {
-                    const token = result_connect['token'];
-                    if (typeof(token) === 'undefined' || token.length === 0) {
-                        console.error('Invalid key length');
-                        return;
-                    } else {
-                        this.token = token;
-                        await this.user.loadData(true);
-                    }
-                } else if (this.status === STATUS.BLACKLIST) {
-                    const title = langManager.curr['identity']['alert-blacklist-title'];
-                    const text = langManager.curr['identity']['alert-blacklist-text'];
-                    this.user.openPopup('ok', [ title, text ], this.user.disconnect, false);
-                } else {
-                    this.token = '';
-                    const time = [ STATUS.SIGNIN, STATUS.WAITMAIL ].includes(this.status) ? TIMER_SHORT : TIMER_LONG;
-                    this.timeout = setTimeout(this.AsyncRefreshAccount.bind(this), time);
-
-                    if (this.status === STATUS.SIGNIN) {
-                        const title = langManager.curr['identity']['alert-sendemail-title'];
-                        const text = langManager.curr['identity']['alert-sendemail-text'];
-                        this.user.openPopup('ok', [ title, text ], undefined, false);
-                    }
-                }
-                this.user.changePage();
-            }
-        }
-    }
-
-    reqPing() {
-        const version = require('../../package.json').version;
-        const data = {
-            'action': 'ping',
-            'deviceID': this.deviceID,
-            'deviceName': this.deviceName,
-            'deviceOSName': this.osName,
-            'deviceOSVersion': this.osVersion,
-            'version': version
-        };
-        return Request_Async(data);
-    }
-
-    reqConnect() {
-        const data = {
-            'action': 'getToken',
-            'deviceID': this.deviceID,
-            'deviceName': this.deviceName,
-            'email': this.user.email,
-            'lang': langManager.currentLangageKey
-        };
-        return Request_Async(data);
-    }
-
-    reqGetInternalData(hash) {
-        if (!this.online) {
+        if (response === null) {
+            this.user.interface.console.AddLog('error', 'Request: ping error');
+            this.online = false;
             return;
         }
-        const data = {
-            'action': 'getInternalData',
-            'hash': hash || '',
-            'lang': langManager.currentLangageKey
-        };
-        return Request_Async(data);
+
+        /** @type {ServerStatus} */
+        // @ts-ignore
+        const status = response['status'];
+        const devMode = response['devMode'];
+
+        // Return status & popup out of this class
+        if (status === 'update') {
+            const title = langManager.curr['home']['alert-update-title'];
+            const text = langManager.curr['home']['alert-update-text'];
+            this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);
+        } else if (status === 'downdate') {
+            this.online = false;
+            const title = langManager.curr['home']['alert-newversion-title'];
+            const text = langManager.curr['home']['alert-newversion-text'];
+            this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        } else if (status === 'error') {
+            this.online = false;
+            const title = langManager.curr['home']['alert-maintenance-title'];
+            const text = langManager.curr['home']['alert-maintenance-text'];
+            this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        } else if (status === 'ok') {
+            this.online = true;
+            if (devMode) this.user.interface.console.Enable();
+            this.user.interface.console.EditLog(debugIndex, 'Request: ping - OK');
+        }
     }
 
-    getLeaderboard(week = false) {
+    /**
+     * Try to connect to the server, with email (and device informations)
+     * @param {string} email Email of the user
+     * @returns {Promise<{status: LoginStatus, remainMailTime: number|null}>} Status of the user connection
+     */
+    Connect = async (email) => {
+        /** @type {LoginStatus|null} */
+        let status = null;
+        let remainMailTime = null;
+
+        const lang = langManager.currentLangageKey;
+        const device = GetDeviceInformations();
+        const result_connect = await this.Request('login', { email, lang, ...device });
+
+        if (result_connect === null) {
+            this.user.interface.console.AddLog('error', 'Request - connect failed:', result_connect);
+            return { status: 'error', remainMailTime: null };
+        }
+
+        /** @type {LoginStatus} */
+        // @ts-ignore
+        const s = result_connect['status'];
+        if (STATUS.includes(s)) {
+            status = s;
+            this.status = status;
+            if (result_connect.hasOwnProperty('remainMailTime')) {
+                remainMailTime = result_connect['remainMailTime'];
+            }
+        }
+
+        if (status === 'ban') {
+            this.user.interface.console.AddLog('warn', 'Request: connect - BANNED');
+        }
+        if (status === 'ok' || status === 'ban') {
+            const token = result_connect['token'];
+            if (typeof(token) !== 'undefined' && token.length) {
+                this.token = token;
+            } else {
+                status = 'error';
+            }
+        }
+
+        const output = {
+            status: status,
+            remainMailTime: parseInt(remainMailTime)
+        };
+        return output;
+    }
+
+    /**
+     * Send a request to the server to create a new user account
+     * @param {string} email Email of the user
+     * @param {string} username Pseudo of the user
+     * @returns {Promise<SigninStatus>} Status of the user signin
+     */
+    Signin = async (email, username) => {
+        const device = GetDeviceInformations();
+        const response = await this.Request('signin', { email, username, ...device });
+        if (response === null) return 'error';
+
+        /** @type {SigninStatus} */
+        // @ts-ignore
+        const status = response['status'];
+        const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
+        if (!allStatus.includes(status)) return 'error';
+
+        return status;
+    }
+
+    /**
+     * Send data unsaved on server
+     * @param {Array} data Data to add to server
+     * @returns {Promise<boolean>} Return success of online save
+     */
+    async SaveUserData(data) {
+        const _data = {
+            'data': data,
+            'dataToken': this.dataToken
+        };
+        const response = await this.Request('addUserData', _data);
+        if (response === null) return false;
+
+        const status = response['status'];
+        if (status !== 'ok') return false;
+
+        if (response.hasOwnProperty('dataToken')) {
+            this.dataToken = response['dataToken'];
+        }
+
+        return true;
+    }
+
+    /**
+     * Load all user data
+     * @param {boolean} [force=false] Force to load data from server (use empty dataToken)
+     * @returns {Promise<object?>} Return all online data or null if failed
+     */
+    async LoadUserData(force = false) {
+        const _data = { 'dataToken': force ? '' : this.dataToken };
+        const response = await this.Request('getUserData', _data);
+        if (response === null) return null;
+
+        const data = response['data'];
+        if (response['status'] !== 'ok' || typeof(data) !== 'object') {
+            return null;
+        }
+
+        return data;
+    }
+
+    /**
+     * Save username on server
+     * @param {string} username
+     * @returns {Promise<'ok'|'alreadyUsed'|'alreadyChanged'|'incorrect'|'error'>}
+     */
+    async SaveUsername(username) {
+        const _data = {
+            'username': username,
+            'dataToken': this.dataToken
+        };
+        const response = await this.Request('setUsername', _data);
+        if (response === null) return 'error';
+
+        return response['usernameChangeState'];
+    }
+
+    /**
+     * Send report
+     * @param {'activity'|'suggest'|'bug'|'message'|'error'} type Type of report to send
+     * @param {object} data Data to send
+     * @returns {Promise<boolean>} Return success of report
+     */
+    async SendReport(type, data) {
+        const _data = {
+            'type': type,
+            'data': JSON.stringify(data)
+        };
+        const response = await this.Request('report', _data);
+        if (response === null) return false;
+
+        const status = response['status'];
+        if (status !== 'ok') return false
+
+        return true;
+    }
+
+    TokenExpired() {
+        this.user.interface.console.AddLog('warn', 'Request: token expired');
+        const title = langManager.curr['server']['alert-tokenexpired-title'];
+        const text = langManager.curr['server']['alert-tokenexpired-text'];
+        this.user.interface.popup.ForceOpen('ok', [ title, text ], RNExitApp.exitApp, false);
+    }
+
+    /**
+     * @param {RequestTypes} type Type of request
+     * @param {object} [data={}] Data to send
+     * @param {boolean} [force=false] Force to send data to server (use empty dataToken)
+     * @returns {Promise<object|null>} Return response from server or null if failed
+     */
+    async Request(type, data = {}, force = false) {
+        let reqData = { 'action': type, ...data };
+        if (this.token || force) {
+            reqData['token'] = this.token;
+        }
+
+        const response = await Request_Async(reqData);
+        if (response.status !== 200) {
+            // Request failed
+            if (this.online) { // Don't show popup if not connected to server
+                this.user.interface.console.AddLog('warn', 'Request: error -', response);
+                const title = langManager.curr['server']['alert-error-title'];
+                const text = langManager.curr['server']['alert-errorr-text'];
+                this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
+            }
+            return null;
+        }
+
+        // Print error in console
+        if (response.content['status'] === 'error' && response.content.hasOwnProperty('error')) {
+            this.user.interface.console.AddLog('warn', 'Request: error -', response.content['error']);
+        }
+
+        if (response.content['status'] === 'tokenExpired') {
+            // Token expired
+            this.TokenExpired();
+            return null;
+        }
+
+        return response.content;
+    }
+
+    GetLeaderboard(week = false) {
         let data = {
             'action': 'getLeaderboard',
             'token': this.token
@@ -161,20 +282,6 @@ class ServManager {
         if (week) data['time'] = 'week';
         return Request_Async(data);
     }
-
-    disconnect = () => {
-        this.token = '';
-        this.status = STATUS.OFFLINE;
-    }
-
-    /*encryptData = (text, key) => AES.encrypt(text, key, this.iv).then(cipher => cipher);
-    decryptData = (text, key) => AES.decrypt(text, key, this.iv).then(cipher => cipher);
-    stringToHex = (text) => {
-        return Array.from(text).map(c =>
-            c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) :
-            encodeURIComponent(c).replace(/\%/g,'').toLowerCase()
-        ).join('');
-    }*/
 }
 
-export default ServManager;
+export default Server;

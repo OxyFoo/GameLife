@@ -1,4 +1,4 @@
-# Game Life
+# GameLife
 
 ## Idée
 En 3 mots : Gestion RPG IRL

@@ -10,12 +10,12 @@ import { Rarity } from '../../../../Data/Items';
 import { Character, Frame } from '../../../Components';
 
 /**
- * @typedef {import('../../Class/Inventory').Stuff} Stuff
+ * @typedef {import('../../../../Class/Inventory').Stuff} Stuff
  */
 
 const ItemCardProps = {
-    /** @type {Stuff} */
-    stuff: {},
+    /** @type {Stuff|null} */
+    stuff: null,
 
     /** @type {boolean} */
     isSelected: false,
@@ -23,7 +23,7 @@ const ItemCardProps = {
     /** @type {boolean} Show border if item is equipped */
     isEquipped: false,
 
-    /** @param {Stuff?} stuff */
+    /** @param {Stuff|null} stuff */
     onPress: (stuff) => {}
 }
 

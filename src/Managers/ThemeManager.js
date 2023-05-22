@@ -120,7 +120,6 @@ class ThemeManager {
      * @returns {string} Hex color (or same color than input if not found and not hex)
      */
     GetColor(color, opacity = 1) {
-        if (color.startsWith('#')) return this.ApplyOpacity(color, opacity);
         if (this.colors.hasOwnProperty(color)) return this.ApplyOpacity(this.colors[color], opacity);
         if (this.colors.text.hasOwnProperty(color)) return this.ApplyOpacity(this.colors.text[color], opacity);
         return color;
@@ -128,8 +127,6 @@ class ThemeManager {
 
     /**
      * @description Get absolute color (independant of theme)
-     * @param {ABSOLUTE} color Name of absolute color
-     * @param {number} [opacity=1] Opacity of color, between 0 and 1
      */
     GetAbsoluteColors() {
         return this.ABSOLUTE;
@@ -151,7 +148,7 @@ class ThemeManager {
     }
 
     /**
-     * @param {Rarity} rarity
+     * @param {number} rarity 0 to 4 (common, rare, epic, legendary, event)
      * @returns 
      */
     GetRariryColors = (rarity) => {

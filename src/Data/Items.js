@@ -33,7 +33,7 @@ class Item {
     ID = '';
 
     /** @type {Slot} */
-    Slot = '';
+    Slot = 'hair';
 
     Name = { fr: '', en: '' };
     Description = { fr: '', en: '' };

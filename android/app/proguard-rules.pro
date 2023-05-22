@@ -68,3 +68,7 @@
 # React Native Svg
 
 -keep public class com.horcrux.svg.** {*;}
+
+# React Native Config
+
+-keep class com.mypackage.BuildConfig { *; }

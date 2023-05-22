@@ -1,6 +1,4 @@
-const URL = __DEV__ ?
-    'https://oxyfoo.com/App/GameLife/Dev/app.php' :
-    'https://oxyfoo.com/App/GameLife/Prod/app.php';
+import Config from 'react-native-config';
 
 const defaultHeaders = {
     'Accept': 'application/json',
@@ -38,7 +36,7 @@ class ReqResponse {
  * {'Accept': 'application/json', 'Content-Type': 'application/json'}
  * @returns {Promise<ReqResponse>}
  */
-async function Request_Async(data = {}, url = URL, method = 'POST', headers = defaultHeaders) {
+async function Request_Async(data = {}, url = Config.SERVER_URL, method = 'POST', headers = defaultHeaders) {
     let status = null;
     let content = null;
 

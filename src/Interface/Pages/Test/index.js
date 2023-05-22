@@ -101,7 +101,6 @@ class Test extends BackTest {
                 <Input style={{ marginBottom: 12 }} label='Test input multiline' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} multiline />
 
                 <ComboBox
-                    pageRef={this.pageRef}
                     style={{ marginBottom: 12 }}
                     data={TEST_VALUES}
                     setSearchBar={true}

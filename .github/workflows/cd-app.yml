@@ -35,8 +35,9 @@ jobs:
         run: npm test
 
   build:
-    name: Build
-    runs-on: reactnativecommunity/react-native-android
+    name: Build application
+    runs-on: ubuntu-latest
+    container: reactnativecommunity/react-native-android
     needs: [ test ]
     steps:
       - name: Checkout

@@ -2,6 +2,10 @@ import { Animated } from 'react-native';
 
 import { WithFunction, TimingAnimation } from '../../../Utils/Animations';
 
+/**
+ * @typedef {import('./Part').default} Part
+ */
+
 class Animated3D {
     constructor(rX = 0, rY = 0, rZ = 0) {
         this.rX = new Animated.Value(rX);
@@ -42,6 +46,10 @@ function __getParents() {
     return parents;
 }
 
+/**
+ * @this {Part}
+ * @returns {{ x: Animated.Value, y: Animated.Value, rZ: Animated.Value }}
+ */
 function CalculateParentPos() {
     let posX = this.position.x;
     let posY = this.position.y;

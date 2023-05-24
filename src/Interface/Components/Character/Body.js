@@ -11,6 +11,7 @@ import { ANIMATIONS } from '../../../../res/items/humans/Characters';
 /**
  * @typedef {import('./Character').default} Character
  * @typedef {import('../../../../res/items/humans/Characters').PartsName} PartsName
+ * @typedef {import('../../../../res/items/humans/Characters').AnimationsName} AnimationsName
  * 
  * @typedef {'full'|'topHalf'|'head'} BodyView
  */
@@ -22,6 +23,7 @@ class Body {
     constructor(character) {
         this.character = character;
 
+        /** @type {AnimationsName|false} */
         this.animating = false;
         this.animations = null;
         this.position = new Animated.ValueXY({ x: 0, y: 0 });
@@ -192,7 +194,7 @@ class Body {
     /**
      * @param {'all'|'onlyItems'} type
      * @param {BodyView} size
-     * @returns {JSX.Element}
+     * @returns {JSX.Element[]}
      */
     render = (type = 'all', size = 'full') => {
         if (this.character.parentFrame === null) return null;

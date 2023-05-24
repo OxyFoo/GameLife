@@ -18,12 +18,30 @@
             if ($result === false) ExitWithStatus('Error: Adding device in DB failed');
             $account = Accounts::GetByID($db, $db->GetLastInsertID());
 
+            /**
+             * @param DataBase $db
+             * @param Account $account
+             * @param string[] $itemsIDs
+             */
+            function Rollback($db, $account, $itemsIDs) {
+                // Rollback account
+                $command = 'DELETE FROM TABLE WHERE `ID` = ?';
+                $db->QueryPrepare('Accounts', $command, 'i', [$account->ID]);
+
+                // Rollback items
+                foreach ($itemsIDs as $itemID) {
+                    $command = 'DELETE FROM TABLE WHERE `ID` = ?';
+                    $db->QueryPrepare('Inventory', $command, 'i', [$itemID]);
+                }
+            }
+
             // Add default items
             $items = [ 'hair_01', 'top_01', 'bottom_01', 'shoes_01' ];
             $IDs = [];
             foreach ($items as $item) {
                 $itemID = Items::AddInventoryItem($db, $account, $item);
                 if ($itemID === false) {
+                    Rollback($db, $account, $IDs);
                     ExitWithStatus('Error: Adding default item failed');
                 }
                 array_push($IDs, $itemID);
@@ -33,7 +51,10 @@
             $command = 'INSERT INTO TABLE (`ID`, `Hair`, `Top`, `Bottom`, `Shoes`) VALUES (?, ?, ?, ?, ?)';
             $args = [ $account->ID, ...$IDs ];
             $result = $db->QueryPrepare('Avatars', $command, 'iiiii', $args);
-            if ($result === false) ExitWithStatus('Error: adding avatar failed' . implode(', ', $args));
+            if ($result === false) {
+                Rollback($db, $account, $IDs);
+                ExitWithStatus('Error: adding avatar failed' . implode(', ', $args));
+            }
 
             return $account;
         }

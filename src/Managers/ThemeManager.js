@@ -3,7 +3,7 @@ import { Rarity } from '../Data/Items';
 /**
  * @typedef {'Dark'|'Light'} Theme
  * @typedef {'primary'|'secondary'|'light'|'warning'|'error'} ColorThemeText Color name or hexadecimal color
- * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'danger'|'ground1'|'ground2'} ColorTheme Color name or hexadecimal color
+ * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'danger'|'ground1'|'ground2'|'transparent'} ColorTheme Color name or hexadecimal color
  */
 
 class ThemeManager {
@@ -21,6 +21,7 @@ class ThemeManager {
             backgroundTransparent: '#FFFFFF33', // Transparent white
             success: '#27AE60', // Green
             danger: '#C0392B', // Red
+            transparent: '#00000000', // Transparent
 
             ground1: '#03052E',
             ground2: '#353657',
@@ -46,6 +47,7 @@ class ThemeManager {
             backgroundTransparent: '#FFFFFF33', // Transparent white
             success: '#27AE60', // Green
             danger: '#CC0029',
+            transparent: '#00000000',
 
             ground1: '#FFFFFF',
             ground2: '#FFFFFF',

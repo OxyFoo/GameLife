@@ -5,10 +5,8 @@
   "private": true,
   "scripts": {
     "start": "npx react-native start --reset-cache",
-    "android": "npx react-native run-android",
-    "ios": "react-native run-ios",
-    "build-ios": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./ios/gamelife.jsbundle --assets-dest ./ios",
-    "build-android": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "build": "cd android && ./gradlew bundleRelease",
+    "clean": "cd android && ./gradlew clean",
     "test": "jest",
     "lint": "eslint ."
   },
@@ -23,13 +21,14 @@
     "react": "^18.2.0",
     "react-native": "^0.71.4",
     "react-native-codegen": "^0.71.3",
+    "react-native-config": "^1.5.1",
     "react-native-device-info": "^10.3.0",
     "react-native-exit-app": "^1.1.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-native-push-notification": "^8.1.1",
     "react-native-shadow-2": "^7.0.6",
-    "react-native-svg": "^13.8.0",
+    "react-native-svg": "^12.1.0",
     "react-native-tracking-transparency": "^0.1.2"
   },
   "devDependencies": {

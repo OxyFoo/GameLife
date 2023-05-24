@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 import { G } from 'react-native-svg';
 
+import { Animated3D, CalculateParentPos } from './Utils';
 import { STUFFS } from '../../../../res/items/stuffs/Stuffs';
 import { CHARACTERS, COLORS } from '../../../../res/items/humans/Characters';
-import { CalculateParentPos } from './Utils';
 
 /**
  * @typedef {import('./Body').default} Body
@@ -32,8 +32,13 @@ class Part {
         this.a = offsets[1];
 
         // Current absolute position
-        this.position = this.name === 'bust' ? this.body.position : { x: 0, y: 0 };
-        this.rotation = this.body.rotations.hasOwnProperty(this.name) ? this.body.rotations[this.name] : { rX: 0, rY: 0, rZ: 0 };
+        this.position = this.name === 'bust' ? this.body.position : new Animated.ValueXY({ x: 0, y: 0 });
+
+        /** @type {Animated3D} */
+        this.rotation = new Animated3D();
+        if (this.body.rotations.hasOwnProperty(this.name)) {
+            this.rotation = this.body.rotations[this.name];
+        }
         this.animPosition = new Animated.ValueXY({ x: 0, y: 0 });
 
         /** @type {Part} */
@@ -102,6 +107,7 @@ class Part {
             return (
                 <AnimatedG
                     key={`part-${this.name}`}
+                    // @ts-ignore
                     style={[transforms, styleZIndex]}
                     fill={fill || 'white'}
                 >
@@ -112,6 +118,7 @@ class Part {
             return (
                 <AnimatedG
                     key={`part-shadow-${this.name}`}
+                    // @ts-ignore
                     style={[transforms, styleZIndexShadow]}
                     stroke='#000000'
                     strokeWidth={4 * 2}
@@ -125,6 +132,7 @@ class Part {
             return (
                 <AnimatedG
                     key={`stuff-${this.name}`}
+                    // @ts-ignore
                     style={[transforms, styleZIndex]}
                 >
                     {svgItems.map((SVG, i) => <G key={`stuff-${this.name}-${i}`}>{SVG}</G>)}
@@ -136,6 +144,7 @@ class Part {
             return (
                 <AnimatedG
                     key={`stuff-shadow-${this.name}`}
+                    // @ts-ignore
                     style={[transforms, styleZIndexShadow]}
                     stroke='#000000'
                     strokeWidth={4 * 2}

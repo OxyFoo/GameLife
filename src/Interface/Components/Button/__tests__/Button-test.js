@@ -6,7 +6,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 import renderer, { create } from 'react-test-renderer';
 
 // Graphical components
-import Button from '../Button';
+import Button from '../index';
 
 describe('[Component] Button', () => {
     it('renders correctly', () => {
@@ -24,5 +24,16 @@ describe('[Component] Button', () => {
 
         expect(root).toBeTruthy();
         expect(onPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('event onPress disabled', () => {
+        const onPress = jest.fn();
+        const { getByTestId } = render(<Button onPress={onPress} enabled={false}>Test</Button>);
+
+        const button = getByTestId('button');
+        fireEvent.press(button);
+
+        expect(button).toBeTruthy();
+        expect(onPress).toHaveBeenCalledTimes(0);
     });
 });

@@ -3,7 +3,7 @@ import { Rarity } from '../Data/Items';
 /**
  * @typedef {'Dark'|'Light'} Theme
  * @typedef {'primary'|'secondary'|'light'|'warning'|'error'} ColorThemeText Color name or hexadecimal color
- * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'danger'|'ground1'|'ground2'} ColorTheme Color name or hexadecimal color
+ * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'danger'|'ground1'|'ground2'|'transparent'} ColorTheme Color name or hexadecimal color
  */
 
 class ThemeManager {
@@ -21,6 +21,7 @@ class ThemeManager {
             backgroundTransparent: '#FFFFFF33', // Transparent white
             success: '#27AE60', // Green
             danger: '#C0392B', // Red
+            transparent: '#00000000', // Transparent
 
             ground1: '#03052E',
             ground2: '#353657',
@@ -46,6 +47,7 @@ class ThemeManager {
             backgroundTransparent: '#FFFFFF33', // Transparent white
             success: '#27AE60', // Green
             danger: '#CC0029',
+            transparent: '#00000000',
 
             ground1: '#FFFFFF',
             ground2: '#FFFFFF',
@@ -120,7 +122,6 @@ class ThemeManager {
      * @returns {string} Hex color (or same color than input if not found and not hex)
      */
     GetColor(color, opacity = 1) {
-        if (color.startsWith('#')) return this.ApplyOpacity(color, opacity);
         if (this.colors.hasOwnProperty(color)) return this.ApplyOpacity(this.colors[color], opacity);
         if (this.colors.text.hasOwnProperty(color)) return this.ApplyOpacity(this.colors.text[color], opacity);
         return color;
@@ -128,8 +129,6 @@ class ThemeManager {
 
     /**
      * @description Get absolute color (independant of theme)
-     * @param {ABSOLUTE} color Name of absolute color
-     * @param {number} [opacity=1] Opacity of color, between 0 and 1
      */
     GetAbsoluteColors() {
         return this.ABSOLUTE;
@@ -151,7 +150,7 @@ class ThemeManager {
     }
 
     /**
-     * @param {Rarity} rarity
+     * @param {number} rarity 0 to 4 (common, rare, epic, legendary, event)
      * @returns 
      */
     GetRariryColors = (rarity) => {

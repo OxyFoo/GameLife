@@ -40,7 +40,7 @@ class Report extends BackReport {
                         <FlatList
                             keyExtractor={(item, i) => 'report-stat-' + i}
                             data={Object.keys(this.stats)}
-                            renderItem={({item, i}) => (
+                            renderItem={({ item }) => (
                                 <View style={styles.rowDigit}>
                                     <Text>{item}</Text>
                                     <Digit
@@ -146,7 +146,6 @@ class Report extends BackReport {
                     data={this.reportTypes}
                     selectedValue={this.reportTypes[this.state.selectedType].value}
                     onSelect={this.selectType}
-                    ignoreWarning
                 />
 
                 <View style={{ minHeight: reportHeight, marginTop: 24 }} onLayout={this.onLayout}>

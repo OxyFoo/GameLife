@@ -23,6 +23,7 @@ class Shop extends BackShop {
                     id='shop'
                     color='main2'
                     style={[styles.button, styles.adButton]}
+                    oxAmount={30}
                 />
 
                 <Button

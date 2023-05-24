@@ -1,4 +1,4 @@
-import Button from './Components/Button/Button';
+import Button from './Components/Button';
 import Character from './Components/Character/Character';
 import Checkbox from './Components/Checkbox';
 import ComboBox from './Components/ComboBox';

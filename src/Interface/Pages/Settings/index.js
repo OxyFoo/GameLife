@@ -21,11 +21,10 @@ class Settings extends BackSettings {
                 <Button style={styles.margin} color='main2' borderRadius={16} onPress={this.openAbout}>{lang['input-about']}</Button>
 
                 <ComboBox
-                    pageRef={this.refPage}
                     style={styles.margin}
                     title={lang['input-langage']}
-                    data={this.state.dataLangs}
-                    selectedValue={this.state.selectedLang.value}
+                    data={this.availableLangs}
+                    selectedValue={this.state.cbSelectedLang.value}
                     onSelect={this.onChangeLang}
                 />
 

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
-
-import { IsUndefined } from '../../Utils/Functions';
+import themeManager from '../../../Managers/ThemeManager';
 
 const MAIN_FONT_NAME = 'Hind Vadodara';
 
@@ -13,13 +11,15 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle|TextStyle>} TextStyleProp
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('../../../Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const TextProps = {
-    children: {},
+    /** @type {string|JSX.Element|null} */
+    children: null,
 
     /** @type {TextStyleProp} */
     style: {},
@@ -33,14 +33,16 @@ const TextProps = {
     /** @type {ColorTheme|ColorThemeText} */
     color: 'primary',
 
-    /** @type {Function?} */
-    onPress: undefined,
+    /** @type {(event: GestureResponderEvent) => void|null} */
+    onPress: null,
 
-    /** @type {LayoutChangeEvent?} */
-    onLayout: undefined,
+    /** @type {(event: LayoutChangeEvent) => void} */
+    onLayout: (event) => {},
 
-    bold: undefined,
+    /** @type {boolean} */
+    bold: false,
 
+    /** @type {number?} */
     numberOfLines: undefined
 }
 
@@ -54,7 +56,7 @@ class Text extends React.Component {
                 style={this.props.containerStyle}
                 onPress={onPress}
                 activeOpacity={.5}
-                disabled={IsUndefined(onPress)}
+                disabled={onPress === null}
             >
                 <RNText
                     numberOfLines={this.props.numberOfLines}
@@ -63,7 +65,7 @@ class Text extends React.Component {
                         {
                             color: color,
                             fontSize: this.props.fontSize,
-                            fontWeight: IsUndefined(this.props.bold) ? 'normal' : 'bold'
+                            fontWeight: this.props.bold ? 'bold' : 'normal'
                         },
                         this.props.style
                     ]}

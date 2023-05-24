@@ -1,41 +1,107 @@
-name: 'GameLife - Continuous Deployment'
+name: GameLife - Continuous Deployment
 
 on:
   pull_request:
     branches:
-      - prod
       - test
+      - prod
 
 jobs:
   test:
-    name: 'Application tests'
+    name: Application tests
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: 'Setup Node.js'
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18.x'
 
-      - name: 'Cache NPM packages'
+      - name: Cache NPM packages
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
 
-      - name: 'Install Dependencies'
+      - name: Install Dependencies
         run: npm install
 
-      - name: 'Run tests'
+      - name: Run tests
+        env:
+          ENVFILE: .env.test
         run: npm test
 
-  deploy:
-    name: 'Deploy'
+  build:
+    name: Build application
     runs-on: ubuntu-latest
+    container: reactnativecommunity/react-native-android
     needs: [ test ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+
+      - name: Cache NPM packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Get config files
+        run: |
+          curl -o ./keystore https://oxyfoo.com/App/GameLife/CD/3r6+ger_Xb5-PU3Jn8-apKNq/keystore
+          curl -o ./firebase.json https://oxyfoo.com/App/GameLife/CD/3r6+ger_Xb5-PU3Jn8-apKNq/firebase.json
+          curl -o ./android/app/gamelife.keystore https://oxyfoo.com/App/GameLife/CD/3r6+ger_Xb5-PU3Jn8-apKNq/gamelife.keystore
+
+      - name: Build app
+        env:
+          ENVFILE: .env.${{ github.base_ref }}
+        run: npm run build
+
+      - name: Upload aab artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release.aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Download buildtool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
+
+      - name: Generate universal APK
+        run: |
+          java -jar ./bundletool.jar build-apks \
+            --bundle=./android/app/build/outputs/bundle/release/app-release.aab \
+            --output=my_app.apks \
+            --mode=universal \
+            --ks=./android/app/gamelife.keystore \
+            --ks-key-alias=gameLifeAlias \
+            --ks-pass=file:./keystore
+          unzip -p my_app.apks universal.apk > GameLife-${{ github.base_ref }}.apk
+
+      - name: Upload apk artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: GameLife-${{ github.base_ref }}.apk
+          path: GameLife-${{ github.base_ref }}.apk
+
+  deploy:
+    name: Deploy Server side
+    runs-on: ubuntu-latest
+    needs: [ build ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -49,4 +115,4 @@ jobs:
 
       - name: Upload files to FTP prod server
         if: ${{ github.base_ref == 'prod' }}
-        run: lftp -c "open ftp://${{ secrets.FTP_PROD_USER }}:${{ secrets.FTP_PROD_PASS }}@${{ secrets.FTP_PROD_HOST }} && mirror --reverse ./src/Server/HTTP/"
+        run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }} && mirror --reverse ./src/Server/HTTP/ /"

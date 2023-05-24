@@ -5,7 +5,7 @@ import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 import user from '../../Managers/UserManager';
 import themeManager from '../../Managers/ThemeManager';
 
-import Button from './Button/Button';
+import { Button } from '../Components';
 import { SpringAnimation } from '../../Utils/Animations';
 
 const TextSwitchProps = {

@@ -15,7 +15,9 @@ class Achievements extends BackAchievements {
         const style = [
             styles.achievementsBox,
             {
-                borderColor: themeManager.GetColor(isSolved ? 'main1' : '#888888'),
+                borderColor: isSolved ?
+                    themeManager.GetColor('main1') :
+                    themeManager.ApplyOpacity('#888888'),
                 backgroundColor: themeManager.GetColor('backgroundGrey')
             }
         ];

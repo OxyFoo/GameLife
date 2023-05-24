@@ -2,38 +2,51 @@ import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 import themeManager from '../../../Managers/ThemeManager';
 
-import { Page, PageBack } from '../../Components';
+import { PageBack } from '../../Components';
 import { GetTime } from '../../../Utils/Time';
 import Notifications from '../../../Utils/Notifications';
 
+/**
+ * @typedef {import('../../../Managers/ThemeManager').Theme} Theme
+ * @typedef {import('../../Components/ComboBox').ComboBoxItem} ComboBoxItem
+ */
+
 class BackSettings extends PageBack {
-    constructor(props) {
-        super(props);
-        this.initLang = langManager.currentLangageKey;
+    /** @type {ComboBoxItem[]} */
+    availableLangs = Object.keys(langManager.langages).map(lang => ({
+        key: lang,
+        value: langManager.langages[lang]['name']
+    }));
 
-        const langs = Object.keys(langManager.langages);
-        const dataLangs = langs.map(lang => new Object({ key: lang, value: langManager.langages[lang]['name'] }));
-        const current = dataLangs.find(lang => lang.key === langManager.currentLangageKey);
+    state = {
+        /** @type {ComboBoxItem} */
+        cbSelectedLang: {
+            key: langManager.currentLangageKey,
+            value: langManager.langages[langManager.currentLangageKey]['name']
+        },
 
-        this.state = {
-            selectedLang: current,
-            dataLangs: dataLangs,
-            switchMorningNotifs: user.settings.morningNotifications,
-            switchEveningNotifs: user.settings.eveningNotifications,
-            sendingMail: false
-        }
+        switchMorningNotifs: user.settings.morningNotifications,
+        switchEveningNotifs: user.settings.eveningNotifications,
+        sendingMail: false
     }
 
     openAbout = () => user.interface.ChangePage('about', undefined, true);
     openReport = () => user.interface.ChangePage('report', undefined, true);
 
+    /** @param {ComboBoxItem} lang */
     onChangeLang = (lang) => {
-        this.setState({ selectedLang: lang });
+        this.setState({ cbSelectedLang: lang });
         langManager.SetLangage(lang.key);
         user.settings.Save();
     }
+
+    /**
+     * @param {number} themeIndex
+     */
     onChangeTheme = (themeIndex) => {
-        const newTheme = [ 'Dark', 'Light' ][themeIndex];
+        /** @type {Theme[]} */
+        const themes = [ 'Dark', 'Light' ];
+        const newTheme = themes[themeIndex];
         if (themeManager.SetTheme(newTheme)) {
             user.interface.SetTheme(themeIndex);
             user.interface.forceUpdate();

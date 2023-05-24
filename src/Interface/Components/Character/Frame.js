@@ -8,12 +8,15 @@ import { Sleep } from '../../../Utils/Functions';
 import Icon from '../Icon';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
  * @typedef {import('./Character').default} Character
  * @typedef {import('./Body').BodyView} BodyView
  */
 
 const FrameProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     size: {

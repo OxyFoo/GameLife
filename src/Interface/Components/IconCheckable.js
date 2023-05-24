@@ -5,7 +5,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 import themeManager from '../../Managers/ThemeManager';
 
 import Icon from './Icon';
-import Button from './Button/Button';
+import { Button } from '../Components';
 import { IsUndefined } from '../../Utils/Functions';
 
 /**

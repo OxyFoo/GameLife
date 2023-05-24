@@ -4,9 +4,7 @@ import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
 import themeManager from '../../Managers/ThemeManager';
 
-import Text from './Text';
-import Icon from './Icon';
-import Button from './Button/Button';
+import { Text, Icon, Button } from '../Components';
 import { TimingAnimation } from '../../Utils/Animations';
 
 /**

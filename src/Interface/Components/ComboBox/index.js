@@ -67,9 +67,22 @@ class ComboBox extends ComboBoxBack {
             <>
                 {/* Component (Input for selection, chevron and button for ripple + events) */}
                 <View style={[styles.parent, this.props.style]} onLayout={this.onLayout}>
-                    <Input label={this.props.title} text={this.state.selectedValue} active={this.state.selectionMode} pointerEvents='none' />
+                    <Input
+                        label={this.props.title}
+                        text={this.state.selectedValue}
+                        active={this.state.selectionMode}
+                        pointerEvents='none'
+                    />
+
                     <this.renderChevron />
-                    <Button style={styles.hoverButton} onPress={this.openSelection} onLongPress={this.resetSelection} rippleColor='white' />
+
+                    <Button
+                        testID='combobox-button'
+                        style={styles.hoverButton}
+                        onPress={this.openSelection}
+                        onLongPress={this.resetSelection}
+                        rippleColor='white'
+                    />
                 </View>
 
                 {/* Overlay (black opacity + back event) */}

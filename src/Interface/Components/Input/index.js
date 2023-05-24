@@ -94,6 +94,7 @@ class Input extends InputBack {
                 </Animated.View>
 
                 <TextInput
+                    testID={'textInput'}
                     ref={(input) => { this.refInput = input; }}
                     style={[styles.input, height]}
                     selectionColor={hexActiveColor}

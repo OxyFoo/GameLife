@@ -4,27 +4,20 @@ import { View, StyleSheet } from 'react-native';
 import user from '../../../Managers/UserManager';
 import langManager from '../../../Managers/LangManager';
 
-import Text from '../Text';
-import Icon from '../Icon';
+import { Text, Icon, Button } from '../../Components';
 
 /**
- * @typedef {import('./Button').default} Button
  * @typedef {import('../../../Class/Admob').AdStates} AdStates
  * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
  * @typedef {import('../../../Class/Admob').RewardedAds} RewardedAds
- * @typedef {import('../../../Class/Admob').InterstitialAds} InterstitialAds
- * @typedef {import('../../../Class/Admob').AdNames} AdNames
  */
 
 const ButtonAdProps = {
-    /** @type {AdNames} [Required] id */
+    /** @type {RewardedAds} [Required] id */
     id: null,
 
     /** @type {number} Amount of Ox reward */
-    oxAmount: 30,
-
-    /** @type {Button|null} */
-    button: null
+    oxAmount: 30
 }
 
 class ButtonAd extends React.PureComponent {
@@ -64,12 +57,6 @@ class ButtonAd extends React.PureComponent {
     }
 
     render() {
-        const Button = this.props.button;
-        if (Button === null) {
-            user.interface.console.AddLog('warn', 'ButtonAd: button prop is null');
-            return null;
-        }
-
         const { oxAmount } = this.props;
         const { adState } = this.state;
         const { adRemaining } = user.informations;
@@ -92,7 +79,7 @@ class ButtonAd extends React.PureComponent {
                 <Text>{text}</Text>
                 {enabled && (
                     <View style={styles.adIcon}>
-                        <Text style={styles.adText}>+{oxAmount}</Text>
+                        <Text style={styles.adText}>{`+${oxAmount}`}</Text>
                         <Icon icon='ox' color='white' size={24} />
                     </View>
                 )}

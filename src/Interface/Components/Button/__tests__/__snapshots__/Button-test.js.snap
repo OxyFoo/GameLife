@@ -18,15 +18,16 @@ exports[`[Component] Button renders correctly 1`] = `
         "paddingHorizontal": 24,
       },
       {
-        "backgroundColor": "transparent",
+        "backgroundColor": "#00000000",
         "borderRadius": 12,
         "justifyContent": "center",
         "opacity": 1,
       },
       {},
-      undefined,
+      null,
     ]
   }
+  testID="button"
 >
   <View
     accessibilityState={
@@ -48,7 +49,7 @@ exports[`[Component] Button renders correctly 1`] = `
     }
     accessible={true}
     collapsable={false}
-    focusable={false}
+    focusable={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -63,6 +64,7 @@ exports[`[Component] Button renders correctly 1`] = `
     }
   >
     <Text
+      onLayout={[Function]}
       style={
         [
           {

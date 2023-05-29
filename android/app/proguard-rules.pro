@@ -71,4 +71,4 @@
 
 # React Native Config
 
--keep class com.mypackage.BuildConfig { *; }
+-keep class com.gamelife.BuildConfig { *; }

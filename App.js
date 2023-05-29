@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { AppState, SafeAreaView } from 'react-native';
+import Config from 'react-native-config';
 import RNExitApp from 'react-native-exit-app';
 
 import user from './src/Managers/UserManager';
@@ -19,6 +20,8 @@ class App extends React.Component {
         // Open the test page
         //user.interface.ChangePage('test', undefined, true); return;
         user.interface.ChangePage('loading', undefined, true);
+
+        user.interface.console.AddLog('info', Config.SERVER_URL);
     }
 
     /** @param {AppStateStatus} state */

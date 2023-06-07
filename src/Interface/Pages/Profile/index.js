@@ -2,14 +2,14 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import BackProfile from './back';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import EditorAvatar from './editorAvatar';
 import EditorProfile from './editorProfile';
-import { Page, Text, XPBar, Container } from '../../Components';
-import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from '../../Widgets';
+import { Page, Text, XPBar, Container } from 'Interface/Components';
+import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from 'Interface/Widgets';
 
 class Profile extends BackProfile {
     renderRow(title, value) {

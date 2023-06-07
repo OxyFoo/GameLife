@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { View, Animated, FlatList, StyleSheet } from 'react-native';
-import { LayoutChangeEvent } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { GetDate, GetDurations, GetTime } from '../../Utils/Time';
-import { DateToFormatString, DateToFormatTimeString } from '../../Utils/Date';
-import { Text, Button, Separator } from '../Components';
-import { SpringAnimation } from '../../Utils/Animations';
+import { GetDate, GetDurations, GetTime } from 'Utils/Time';
+import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
+import { Text, Button, Separator } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  */
 
 const DAY_SECONDS = 86400;

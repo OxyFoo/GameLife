@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
 
-import themeManager from '../../../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Character, Frame } from '../../../Components';
+import { Character, Frame } from 'Interface/Components';
 
 /**
- * @typedef {import('../../../../Class/Inventory').Sexes} Sexes
- * @typedef {import('../../../../Class/Inventory').Stuff} Stuff
+ * @typedef {import('Class/Inventory').Sexes} Sexes
+ * @typedef {import('Class/Inventory').Stuff} Stuff
  */
 
 const CharacterCardProps = {
     /** @type {Sexes} */
-    characterSexe: '',
+    characterSexe: 'MALE',
 
     /** @type {string} */
     characterName: '',

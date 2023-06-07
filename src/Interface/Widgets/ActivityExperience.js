@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import dataManager from '../../Managers/DataManager';
-import langManager from '../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
-import { Round } from '../../Utils/Functions';
-import { Container, Text } from '../Components';
+import { Round } from 'Utils/Functions';
+import { Container, Text } from 'Interface/Components';
 
 /**
  * @typedef {{ key: string, name: string, value: number }} Stat

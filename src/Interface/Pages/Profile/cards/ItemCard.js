@@ -2,15 +2,15 @@ import * as React from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import user from '../../../../Managers/UserManager';
-import dataManager from '../../../../Managers/DataManager';
-import themeManager from '../../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Rarity } from '../../../../Data/Items';
-import { Character, Frame } from '../../../Components';
+import { Rarity } from 'Data/Items';
+import { Character, Frame } from 'Interface/Components';
 
 /**
- * @typedef {import('../../../../Class/Inventory').Stuff} Stuff
+ * @typedef {import('Class/Inventory').Stuff} Stuff
  */
 
 const ItemCardProps = {

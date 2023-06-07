@@ -2,15 +2,15 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { Text, Button } from '../../Components';
-import { GetAge, GetTime } from '../../../Utils/Time';
+import { Text, Button } from 'Interface/Components';
+import { GetAge, GetTime } from 'Utils/Time';
 
 /**
- * @typedef {import('../../../Data/Titles').Title} Title
+ * @typedef {import('Data/Titles').Title} Title
  */
 
 class EditorProfile extends React.PureComponent {

@@ -1,21 +1,25 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet, Dimensions } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 import Dots from './Dots';
-import { MinMax } from '../../Utils/Functions';
-import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
+import { MinMax } from 'Utils/Functions';
+import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  */
 
 const SwiperProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {number?} If undefined, height equals to max height of pages content */

@@ -1,26 +1,28 @@
 import * as React from 'react';
 import { View, Animated, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { GetDate, GetTime } from '../../Utils/Time';
-import { DateToFormatString, GetDay } from '../../Utils/Date';
-import { Text, Icon, Button } from '../Components';
-import { TimingAnimation } from '../../Utils/Animations';
+import { GetDate, GetTime } from 'Utils/Time';
+import { DateToFormatString, GetDay } from 'Utils/Date';
+import { Text, Icon, Button } from 'Interface/Components';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../../Class/Tasks').Task} Task
- * @typedef {import('../../Class/Tasks').Subtask} Subtask
- * @typedef {import('../Components/Icon').Icons} Icons
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ *
+ * @typedef {import('Class/Tasks').Task} Task
+ * @typedef {import('Class/Tasks').Subtask} Subtask
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const TaskProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {Task|null} */

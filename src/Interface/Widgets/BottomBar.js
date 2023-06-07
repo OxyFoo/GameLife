@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { LayoutChangeEvent } from 'react-native';
 
-import user from '../../Managers/UserManager';
+import user from 'Managers/UserManager';
 
-import { Button, Icon } from '../Components';
-import { SpringAnimation } from '../../Utils/Animations';
+import { Button, Icon } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
+
+/**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ */
 
 const BottomBarProps = {
     show: false,

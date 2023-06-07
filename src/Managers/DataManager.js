@@ -1,15 +1,15 @@
-import langManager from './LangManager';
+import langManager from 'Managers/LangManager';
 
-import { Request_Async } from '../Utils/Request';
-import DataStorage, { STORAGE } from '../Utils/DataStorage';
+import { Request_Async } from 'Utils/Request';
+import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
-import Achievements from '../Data/Achievements';
-import Contributors from '../Data/Contributors';
-import Items from '../Data/Items';
-import Quotes from '../Data/Quotes';
-import Skills from '../Data/Skills';
-import Titles from '../Data/Titles';
-import News from '../Data/News';
+import Achievements from 'Data/Achievements';
+import Contributors from 'Data/Contributors';
+import Items from 'Data/Items';
+import Quotes from 'Data/Quotes';
+import Skills from 'Data/Skills';
+import Titles from 'Data/Titles';
+import News from 'Data/News';
 
 class DataManager {
     constructor() {

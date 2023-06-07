@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Text, Icon, Button } from '../../Components';
+import { Text, Icon, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('../../../Class/Admob').AdStates} AdStates
- * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
- * @typedef {import('../../../Class/Admob').RewardedAds} RewardedAds
+ * @typedef {import('Class/Admob').AdStates} AdStates
+ * @typedef {import('Class/Admob').AdTypes['add30Ox']} AdEvent
+ * @typedef {import('Class/Admob').RewardedAds} RewardedAds
  */
 
 const ButtonAdProps = {

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Button } from '../Components';
-import { SpringAnimation } from '../../Utils/Animations';
+import { Button } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 const SwitchProps = {
     /** @type {boolean} State of switch component */

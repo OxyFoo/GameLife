@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Animated, StyleSheet, Dimensions, Platform } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import themeManager from '../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

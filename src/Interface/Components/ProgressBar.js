@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Random, Sleep } from '../../Utils/Functions';
-import { TimingAnimation } from '../../Utils/Animations';
+import { Random, Sleep } from 'Utils/Functions';
+import { TimingAnimation } from 'Utils/Animations';
 
 const ProgressBarProps = {
 }

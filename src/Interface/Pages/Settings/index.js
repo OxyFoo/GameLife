@@ -2,12 +2,12 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackSettings from './back';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { PageHeader } from '../../Widgets';
-import { Page, Text, Button, Switch, TextSwitch, ComboBox } from '../../Components';
-import themeManager from '../../../Managers/ThemeManager';
+import { PageHeader } from 'Interface/Widgets';
+import { Page, Text, Button, Switch, TextSwitch, ComboBox } from 'Interface/Components';
 
 class Settings extends BackSettings {
     render = () => {

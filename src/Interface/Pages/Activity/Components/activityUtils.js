@@ -1,8 +1,8 @@
-import user from '../../../../Managers/UserManager';
-import langManager from '../../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { GetTime } from '../../../../Utils/Time';
-import Notifications from '../../../../Utils/Notifications';
+import { GetTime } from 'Utils/Time';
+import Notifications from 'Utils/Notifications';
 
 /**
  * @typedef {import('./activityPanel').default} ActivityPanel

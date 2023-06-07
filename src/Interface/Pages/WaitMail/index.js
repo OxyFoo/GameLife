@@ -2,10 +2,10 @@ import * as React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
 import BackWaitmail from './back';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Page, Text, Button, ProgressBar } from '../../Components';
+import { Page, Text, Button, ProgressBar } from 'Interface/Components';
 
 class Waitmail extends BackWaitmail {
     render() {

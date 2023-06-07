@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import dataManager from '../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 
-import { Text, Icon, Button } from '../Components';
+import { Text, Icon, Button } from 'Interface/Components';
 
 const renderQuote = (currentQuote) => quote = currentQuote === null ? null : (
     <View style={{ padding: '5%' }}>
@@ -14,7 +14,7 @@ const renderQuote = (currentQuote) => quote = currentQuote === null ? null : (
 );
 
 /**
- * @typedef {import('../../Data/News').New} New
+ * @typedef {import('Data/News').New} New
  * @param {New} Nw
  */
 const renderNew = (Nw) => {

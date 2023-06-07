@@ -2,16 +2,16 @@ import * as React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Range } from '../../Utils/Functions';
-import { DateToFormatString } from '../../Utils/Date';
-import { GetDate, GetTime } from '../../Utils/Time';
-import { Text, Button, TextSwitch } from '../Components';
+import { Range } from 'Utils/Functions';
+import { DateToFormatString } from 'Utils/Date';
+import { GetDate, GetTime } from 'Utils/Time';
+import { Text, Button, TextSwitch } from 'Interface/Components';
 
 /**
- * @typedef {import('../../Class/Tasks').RepeatModes} RepeatModes
+ * @typedef {import('Class/Tasks').RepeatModes} RepeatModes
  * 
  * @callback OnChangeScheduleEvent
  * @param {number} deadline Unix timestamp in seconds

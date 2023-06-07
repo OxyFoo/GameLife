@@ -1,4 +1,4 @@
-import { Random } from "../Utils/Functions";
+import { Random } from 'Utils/Functions';
 
 class Quote {
     ID = 0;
@@ -9,14 +9,10 @@ class Quote {
 
 class Quotes {
     constructor() {
-        /**
-         * @type {Quote[]}
-         */
+        /** @type {Quote[]} */
         this.quotes = [];
 
-        /**
-         * @type {?Quote}
-         */
+        /** @type {?Quote} */
         this.currentQuote = null;
     }
 

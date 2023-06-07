@@ -7,9 +7,7 @@ class Title {
 
 class Titles {
     constructor() {
-        /**
-         * @type {Array<Title>}
-         */
+        /** @type {Array<Title>} */
         this.titles = [];
     }
 

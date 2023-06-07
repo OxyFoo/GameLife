@@ -2,9 +2,9 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import BackMultiplayer from './back';
-import langManager from '../../../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
-import { Button, Container, Page, Text } from '../../Components';
+import { Button, Container, Page, Text } from 'Interface/Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {

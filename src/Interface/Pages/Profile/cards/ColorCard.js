@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
 
-import themeManager from '../../../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 const ColorCardProps = {
     /** @type {string} */

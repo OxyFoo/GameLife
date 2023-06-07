@@ -1,9 +1,9 @@
 import RNExitApp from 'react-native-exit-app';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { PageBack, Swiper } from '../../Components';
+import { PageBack, Swiper } from 'Interface/Components';
 
 class BackOnboarding extends PageBack {
     state = {

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { View, Keyboard, StyleSheet } from 'react-native';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { Text, Button, Input } from '../../Components';
+import { Text, Button, Input } from 'Interface/Components';
 
 /**
  * Check code
  * @param {string} code
- * @returns {Promise<void>|void}
+ * @returns {Promise<void>}
  */
 const checkCode = async (code) => {
     const lang = langManager.curr['shop'];

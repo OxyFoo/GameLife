@@ -1,19 +1,24 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle, GestureResponderEvent } from 'react-native';
 
-import langManager from '../../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
-import { Text, Icon } from '../Components';
+import { Text, Icon } from 'Interface/Components';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ */
 
 const PageHeaderProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
-    /** @param {GestureResponderEvent?} */
+    /** @type {(event: GestureResponderEvent) => void} */
     onBackPress: (event) => {},
 
-    /** @param {GestureResponderEvent?} */
+    /** @type {(event: GestureResponderEvent) => void} */
     onHelpPress: (event) => {},
     hideHelp: undefined
 }

@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { View, Animated, FlatList, Dimensions } from 'react-native';
 
-import user from '../../../Managers/UserManager';
-import dataManager from '../../../Managers/DataManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import EditorAvatarBack from './editorAvatarBack';
 import ItemCard from './cards/ItemCard';
 import ColorCard from './cards/ColorCard';
 import CharacterCard from './cards/CharacterCard';
 import styles from './editorAvatarStyle';
-import { Text, Button, Separator, Icon, Frame, TextSwitch } from '../../Components';
-import { CHARACTERS, COLORS } from '../../../../res/items/humans/Characters';
+import { Text, Button, Separator, Icon, Frame, TextSwitch } from 'Interface/Components';
+import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 /**
- * @typedef {import('../../../Class/Inventory').Stuff} Stuff
- * @typedef {import('../../../Data/Items').Item} Item
- * @typedef {import('../../../Data/Items').Slot} Slot
+ * @typedef {import('Class/Inventory').Stuff} Stuff
+ * @typedef {import('Data/Items').Item} Item
+ * @typedef {import('Data/Items').Slot} Slot
  * @typedef {'skin'|'skinColor'} SkinSlot
  * @typedef {Slot|SkinSlot} AvatarSlot
  */

@@ -4,14 +4,14 @@ import { Animated } from 'react-native';
 import Part from './Part';
 import { RenderPart } from './Part';
 import { Animated3D } from './Utils';
-import { Sleep } from '../../../Utils/Functions';
-import { TimingAnimation } from '../../../Utils/Animations';
-import { ANIMATIONS } from '../../../../res/items/humans/Characters';
+import { Sleep } from 'Utils/Functions';
+import { TimingAnimation } from 'Utils/Animations';
+import { ANIMATIONS } from 'Ressources/items/humans/Characters';
 
 /**
  * @typedef {import('./Character').default} Character
- * @typedef {import('../../../../res/items/humans/Characters').PartsName} PartsName
- * @typedef {import('../../../../res/items/humans/Characters').AnimationsName} AnimationsName
+ * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
+ * @typedef {import('Ressources/items/humans/Characters').AnimationsName} AnimationsName
  * 
  * @typedef {'full'|'topHalf'|'head'} BodyView
  */

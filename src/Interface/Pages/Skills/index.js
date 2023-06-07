@@ -3,13 +3,13 @@ import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 import BackSkills from './back';
 import { renderCategory, renderSkill, renderEmpty } from './renders';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { PageHeader } from '../../Widgets';
-import { Page, Input, Button } from '../../Components';
+import { PageHeader } from 'Interface/Widgets';
+import { Page, Input, Button } from 'Interface/Components';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 

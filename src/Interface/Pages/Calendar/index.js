@@ -3,12 +3,12 @@ import { View, FlatList, Animated, Dimensions } from 'react-native';
 
 import BackCalendar from './back';
 import styles from './style';
-import user from '../../../Managers/UserManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Icon, Page, Text } from '../../Components';
-import { ActivityCard, BlockMonth } from '../../Widgets';
-import { GetFullDate, GetMonthAndYear } from '../../../Utils/Date';
+import { Icon, Page, Text } from 'Interface/Components';
+import { ActivityCard, BlockMonth } from 'Interface/Widgets';
+import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 

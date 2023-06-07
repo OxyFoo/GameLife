@@ -2,10 +2,10 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackShop from './back';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Page, Icon, Text, Button } from '../../Components';
+import { Page, Icon, Text, Button } from 'Interface/Components';
 
 class Shop extends BackShop {
     render() {

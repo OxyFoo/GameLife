@@ -1,11 +1,11 @@
-import user from '../Managers/UserManager'
-import dataManager from '../Managers/DataManager';
-import langManager from '../Managers/LangManager';
-import themeManager from '../Managers/ThemeManager';
+import user from 'Managers/UserManager'
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Character } from '../Interface/Components';
-import { Sleep } from '../Utils/Functions';
-import Notifications from '../Utils/Notifications';
+import { Character } from 'Interface/Components';
+import { Sleep } from 'Utils/Functions';
+import Notifications from 'Utils/Notifications';
 
 /**
  * Intialisation of all data

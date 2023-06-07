@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Animated, FlatList, StyleSheet } from 'react-native';
 
 import BackTasks from './back';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Button, Container, Page, Text } from '../../Components';
-import { PageHeader, TaskElement } from '../../Widgets';
+import { Button, Container, Page, Text } from 'Interface/Components';
+import { PageHeader, TaskElement } from 'Interface/Widgets';
 
 class Tasks extends BackTasks {
     renderSelection = () => {

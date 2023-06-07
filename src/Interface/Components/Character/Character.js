@@ -1,11 +1,11 @@
 import Body from './Body';
-import { TimingAnimation } from '../../../Utils/Animations';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('./Frame').default} Frame
- * @typedef {import('../../../../res/items/humans/Characters').CharactersName} CharactersName
- * @typedef {import('../../../../res/items/humans/Characters').AnimationsName} AnimationsName
- * @typedef {import('../../../../res/items/humans/Characters').Sexes} Sexes
+ * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
+ * @typedef {import('Ressources/items/humans/Characters').AnimationsName} AnimationsName
+ * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
  */
 
 class Character {

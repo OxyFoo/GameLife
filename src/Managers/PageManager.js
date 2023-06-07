@@ -3,17 +3,16 @@ import { Animated, BackHandler, StyleSheet } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
-import * as Pages from '../Interface/Pages';
-import langManager from './LangManager';
-import themeManager from './ThemeManager';
+import * as Pages from 'Interface/Pages';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { TimingAnimation } from '../Utils/Animations';
-import { IsUndefined, Sleep } from '../Utils/Functions';
-import { PageBack } from '../Interface/Components';
-import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '../Interface/Widgets';
+import { TimingAnimation } from 'Utils/Animations';
+import { IsUndefined, Sleep } from 'Utils/Functions';
+import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from 'Interface/Widgets';
 
 /**
- * @typedef {import('../Interface/Components').PageBack} PageBack
+ * @typedef {import('Interface/Components').PageBack} PageBack
  * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
  * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.ShopItems | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Tasks | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
  * 

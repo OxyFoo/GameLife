@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import { AdsConsent, AdsConsentStatus, FirebaseAdMobTypes, InterstitialAd, RewardedAd, TestIds } from '@react-native-firebase/admob';
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency';
 
-import langManager from '../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
 const FIREBASE_DEFAULT = {"react-native": {
     "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
@@ -15,6 +15,8 @@ const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../firebase.json');
 const VERSION = require('../../package.json').version;
 
 /**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ * 
  * @typedef {'shop'|'todo'} RewardedAds
  * @typedef {'none'} InterstitialAds
  * @typedef {RewardedAds|InterstitialAds} AdNames
@@ -44,7 +46,7 @@ class Ad {
 
 class Admob {
     constructor(user) {
-        /** @type {import('../Managers/UserManager').UserManager} */
+        /** @type {UserManager} */
         this.user = user;
 
         /** @type {Array<Ad>} */

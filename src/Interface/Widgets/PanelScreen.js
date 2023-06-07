@@ -1,18 +1,24 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet, Dimensions } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ */
 
 const PanelScreenProps = {
     /** @type {Array<JSX.Element>} */
     children: null,
 
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     containerStyle: {},
 
     /** @type {number} Top distance of the panel when it's opened */

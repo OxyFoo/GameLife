@@ -1,12 +1,14 @@
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { GetDate } from '../../../Utils/Time';
-import { DateToFormatString } from '../../../Utils/Date';
+import { GetDate } from 'Utils/Time';
+import { DateToFormatString } from 'Utils/Date';
 
 /**
+ * @typedef {import('Class/Activities').Activity} Activity
+ * 
  * @typedef HistoryActivity
  * @property {Activity} activity
  * @property {string} title

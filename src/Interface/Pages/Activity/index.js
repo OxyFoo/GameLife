@@ -4,11 +4,11 @@ import { View, FlatList } from 'react-native';
 import BackActivity from './back';
 import ActivityPanel from './Components/activityPanel';
 import styles from './style';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Page, Text, IconCheckable, Input } from '../../Components';
-import { PageHeader } from '../../Widgets';
+import { Page, Text, IconCheckable, Input } from 'Interface/Components';
+import { PageHeader } from 'Interface/Widgets';
 
 /**
  * @typedef {import('./back').ItemCategory} ItemCategory

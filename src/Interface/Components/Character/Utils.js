@@ -1,6 +1,6 @@
 import { Animated } from 'react-native';
 
-import { WithFunction, TimingAnimation } from '../../../Utils/Animations';
+import { WithFunction, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('./Part').default} Part

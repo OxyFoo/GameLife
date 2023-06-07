@@ -3,10 +3,10 @@ import { View, Animated, TouchableHighlight, FlatList } from 'react-native';
 
 import styles from './style';
 import ComboBoxBack from './back';
-import themeManager from '../../../Managers/ThemeManager';
-import langManager from '../../../Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
+import langManager from 'Managers/LangManager';
 
-import { Text, Button, Icon, Input } from '../../Components';
+import { Text, Button, Icon, Input } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').ComboBoxItem} ComboBoxItem

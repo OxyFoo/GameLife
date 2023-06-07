@@ -1,18 +1,18 @@
 import { FlatList } from 'react-native';
 
-import dataManager from '../../../Managers/DataManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Sleep } from '../../../Utils/Functions';
-import { PageBack } from '../../Components';
+import { Sleep } from 'Utils/Functions';
+import { PageBack } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './Components/types';
 
 /**
- * @typedef {import('../../../Data/Skills').Skill} Skill
+ * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('./Components/types').ItemSkill} ItemSkill
  * @typedef {import('./Components/types').ItemCategory} ItemCategory
- * @typedef {import('../../../Class/Activities').Activity} Activity
+ * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('./Components/activityPanel').default} ActivityPanel
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  */

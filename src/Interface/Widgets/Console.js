@@ -2,13 +2,13 @@ import * as React from 'react';
 import { View, Animated, FlatList, StyleSheet } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 
-import user from '../../Managers/UserManager';
+import user from 'Managers/UserManager';
 
-import { Text, Button } from '../Components';
-import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
+import { Text, Button } from 'Interface/Components';
+import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 /**

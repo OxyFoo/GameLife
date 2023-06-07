@@ -11,8 +11,8 @@ import ButtonAd, { ButtonAdProps } from './Ad';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
  * @typedef {import('../Icon').Icons} Icons
- * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const ButtonProps = {
@@ -22,7 +22,7 @@ const ButtonProps = {
     /** @type {StyleProp|Object} */
     style: {},
 
-    /** @type {StyleProp|null} */
+    /** @type {AnimatedProps|null} */
     styleAnimation: null,
 
     /** @type {string} */

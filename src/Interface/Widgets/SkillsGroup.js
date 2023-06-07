@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { View, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Button, Text, Icon } from '../Components';
+import { Button, Text, Icon } from 'Interface/Components';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ */
 
 const SkillsGroupProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {boolean} Show button to open "skills" page */

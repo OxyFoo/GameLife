@@ -2,9 +2,9 @@ import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
-import user from '../Managers/UserManager';
-import langManager from '../Managers/LangManager';
-import dataManager from '../Managers/DataManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
 import { ParsePlural } from './String';
 import { GetTime } from './Time';

@@ -1,6 +1,6 @@
-import dataManager from '../Managers/DataManager';
+import dataManager from 'Managers/DataManager';
 
-import { GetTime } from '../Utils/Time';
+import { GetTime } from 'Utils/Time';
 
 const UserXPperLevel = 20;
 const StatXPperLevel = 2;
@@ -8,8 +8,8 @@ const SkillXPperLevel = 20;
 
 
 /**
- * @typedef {import('../Managers/UserManager').default} UserManager
- * @typedef {import('../Managers/UserManager').Stats} Stats
+ * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Managers/UserManager').Stats} Stats
  * 
  * @typedef {object} XPInfo
  * @property {number} xp - Current XP
@@ -20,9 +20,7 @@ const SkillXPperLevel = 20;
 
 class Experience {
     constructor(user) {
-        /**
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
         this.getUsefulActivities = this.user.activities.GetUseful;
     }

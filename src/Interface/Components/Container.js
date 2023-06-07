@@ -1,25 +1,29 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Text, Icon, Button } from '../Components';
-import { TimingAnimation } from '../../Utils/Animations';
+import { Text, Icon, Button } from 'Interface/Components';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * 
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const ContainerProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     styleHeader: {},
 
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     styleContainer: {},
 
     /** @type {string} */
@@ -37,8 +41,8 @@ const ContainerProps = {
     /** @type {ColorTheme} */
     backgroundColor: 'backgroundTransparent',
 
-    /** @type {import('./Icon').Icons} Show the icon on the right side of the text, for static container */
-    icon: '',
+    /** @type {Icons} Show the icon on the right side of the text, for static container */
+    icon: 'default',
 
     /** @type {number} Size of the icon in pixels */
     iconSize: 24,
@@ -116,7 +120,7 @@ class Container extends React.Component {
                 style={this.props.styleHeader}
                 styleAnimation={borderStyle}
                 color={color}
-                icon={''}
+                icon={''} // TODO: ???
                 iconAngle={iconAngle}
                 rippleColor={rippleColor}
                 borderRadius={8}

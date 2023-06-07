@@ -5,9 +5,7 @@
 class New {
     ID = 0;
 
-    /**
-     * @type {LangText}
-     */
+    /** @type {LangText} */
     Content = { fr: '', en: '' };
 
     /**
@@ -37,9 +35,7 @@ class New {
 
 class News {
     constructor() {
-        /**
-         * @type {Array<New>}
-         */
+        /** @type {Array<New>} */
         this.news = [];
     }
 

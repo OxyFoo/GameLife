@@ -3,12 +3,12 @@ import { Animated } from 'react-native';
 import { G } from 'react-native-svg';
 
 import { Animated3D, CalculateParentPos } from './Utils';
-import { STUFFS } from '../../../../res/items/stuffs/Stuffs';
-import { CHARACTERS, COLORS } from '../../../../res/items/humans/Characters';
+import { STUFFS } from 'Ressources/items/stuffs/Stuffs';
+import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
 
 /**
  * @typedef {import('./Body').default} Body
- * @typedef {import('../../../../res/items/humans/Characters').PartsName} PartsName
+ * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
  */
 
 const AnimatedG = Animated.createAnimatedComponent(G);

@@ -3,10 +3,10 @@ import { View, FlatList } from 'react-native';
 
 import BackReport from './back';
 import styles from './style';
-import langManager from '../../../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
-import { PageHeader } from '../../Widgets';
-import { Page, Text, ComboBox, Input, Button, Digit } from '../../Components';
+import { PageHeader } from 'Interface/Widgets';
+import { Page, Text, ComboBox, Input, Button, Digit } from 'Interface/Components';
 
 class Report extends BackReport {
     renderActivity = () => {

@@ -1,9 +1,9 @@
 import { Animated } from 'react-native';
 
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
 
-import { SpringAnimation } from '../../../Utils/Animations';
+import { SpringAnimation } from 'Utils/Animations';
 
 class BackDisplay extends PageBack {
     state = {

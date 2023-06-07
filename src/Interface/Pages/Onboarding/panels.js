@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 
-import langManager from '../../../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
-import { Icon, Text } from '../../Components';
-import themeManager from '../../../Managers/ThemeManager';
+import { Icon, Text } from 'Interface/Components';
+import themeManager from 'Managers/ThemeManager';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const IMAGE_WIDTH = SCREEN_WIDTH - 64;

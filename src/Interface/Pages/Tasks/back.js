@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { Animated, FlatList } from 'react-native';
-import { GestureResponderEvent, LayoutChangeEvent, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { TimingAnimation, SpringAnimation } from '../../../Utils/Animations';
-import { MinMax } from '../../../Utils/Functions';
-import { GetTime } from '../../../Utils/Time';
+import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
+import { MinMax } from 'Utils/Functions';
+import { GetTime } from 'Utils/Time';
 
 /**
- * @typedef {import('../../../Class/Tasks').Task} Task
+ * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
+ * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * 
+ * @typedef {import('Class/Tasks').Task} Task
  */
 
 class BackTasks extends PageBack {
@@ -35,8 +39,8 @@ class BackTasks extends PageBack {
     constructor(props) {
         super(props);
 
-        /** @type {FlatList<Task>} Used to manage task sorting */
-        this.refFlatlist = React.createRef();
+        /** @type {FlatList<Task>|null} Used to manage task sorting */
+        this.refFlatlist = null;
 
         this.flatlist = {
             contentSizeHeight: 0,
@@ -112,7 +116,7 @@ class BackTasks extends PageBack {
         });
     }
 
-    /** @param {NativeSyntheticEvent<NativeScrollEvent>} event */
+    /** @param {NativeSyntheticEvent} event */
     onScroll = (event) => {
         this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
     }

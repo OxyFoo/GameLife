@@ -2,22 +2,22 @@ import * as React from 'react';
 import { View, Switch as RNSwitch, FlatList, StyleSheet } from 'react-native';
 
 import BackTest from './back';
-import themeManager from '../../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import STUFFS from '../../../../res/items/stuffs/Stuffs';
+import { STUFFS } from 'Ressources/items/stuffs/Stuffs';
 
-import { Button, Checkbox, Container, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch, Switch, Icon, Digit, Character, Frame } from '../../Components';
+import { Button, Checkbox, Container, Input, ComboBox, Swiper, Text, XPBar, Page, TextSwitch, Switch, Icon, Digit, Character, Frame } from 'Interface/Components';
 
-import { GetRandomIndexesByDay } from '../../../Utils/Items';
+import { GetRandomIndexesByDay } from 'Utils/Items';
 
-import { Rarity } from '../../../Data/Items';
-import user from '../../../Managers/UserManager';
-import dataManager from '../../../Managers/DataManager';
+import { Rarity } from 'Data/Items';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import LinearGradient from 'react-native-linear-gradient';
 //import SvgUri from 'react-native-fast-svg';
 //import { SvgUri } from 'react-native-svg-uri';
 import { SvgUri, SvgXml } from 'react-native-svg';
-import { Sleep } from '../../../Utils/Functions';
+import { Sleep } from 'Utils/Functions';
 
 const TEST_VALUES = [
     {ID: 0, value: 'Abc 0'},

@@ -3,18 +3,18 @@ import { View, FlatList, TouchableOpacity } from 'react-native';
 
 import BackSkill from './back';
 import styles from './style';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { PageHeader, StatsBars } from '../../Widgets';
-import { Page, Container, Text, Icon, XPBar, Button } from '../../Components';
+import { PageHeader, StatsBars } from 'Interface/Widgets';
+import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
 class Skill extends BackSkill {
     /**
-     * @param {{ item: HistoryActivity }} item
+     * @param {{ item: HistoryActivity, i: number }} item
      * @returns {JSX.Element}
      */
     renderHistoryItem = ({item, i}) => {

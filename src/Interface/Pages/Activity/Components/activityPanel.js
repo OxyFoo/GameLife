@@ -3,16 +3,21 @@ import { View, Animated, TouchableOpacity } from 'react-native';
 
 import styles from './style';
 import ActivityPanelBack from './activityPanelBack';
-import langManager from '../../../../Managers/LangManager';
-import dataManager from '../../../../Managers/DataManager';
-import themeManager from '../../../../Managers/ThemeManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
+import themeManager from 'Managers/ThemeManager';
 
 import {
     onAddComment, onEditComment, onRemComment,
     StartActivity, AddActivity, RemActivity
 } from './activityUtils';
-import { Text, Button, TextSwitch, Icon } from '../../../Components';
-import { ActivitySchedule, ActivityExperience, PanelScreen } from '../../../Widgets';
+import { Text, Button, TextSwitch, Icon } from 'Interface/Components';
+import { ActivitySchedule, ActivityExperience, PanelScreen } from 'Interface/Widgets';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedViewProp
+ */
 
 class ActivityPanel extends ActivityPanelBack {
     RenderPanelDetails() {
@@ -115,6 +120,7 @@ class ActivityPanel extends ActivityPanelBack {
 
     RenderStartActivity() {
         const lang = langManager.curr['activity'];
+        /** @type {AnimatedViewProp} */
         const btnOpacity = {
             opacity: this.state.animButtonNow
         };

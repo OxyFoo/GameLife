@@ -1,4 +1,4 @@
-import langManager from '../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
 import { GetDate } from './Time';
 import { TwoDigit } from './Functions';

@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { View, Animated, Keyboard, StyleSheet, Dimensions } from 'react-native';
-import { GestureResponderEvent } from 'react-native';
 
-import { TimingAnimation } from '../../Utils/Animations';
+import { TimingAnimation } from 'Utils/Animations';
 
-import { Button, Input } from '../Components'
+import { Button, Input } from 'Interface/Components'
+
+/**
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ */
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 

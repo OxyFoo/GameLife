@@ -1,18 +1,19 @@
-import dataManager from '../Managers/DataManager';
-import langManager from '../Managers/LangManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
-import DynamicVar from '../Utils/DynamicVar';
-import { GetAge, GetDaysUntil, GetTime } from '../Utils/Time';
+import DynamicVar from 'Utils/DynamicVar';
+import { GetAge, GetDaysUntil, GetTime } from 'Utils/Time';
+
+/**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ */
 
 const DAYS_USERNAME_CHANGE = 30;
 const DAYS_BIRTHTIME_CHANGE = 365;
 
 class Informations {
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         this.username = new DynamicVar('');

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackActivityTimer from './back';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Page, Text, Button } from '../../Components';
-import { ActivityExperience } from '../../Widgets';
+import { Page, Text, Button } from 'Interface/Components';
+import { ActivityExperience } from 'Interface/Widgets';
 
 class ActivityTimer extends BackActivityTimer {
     render() {

@@ -1,14 +1,18 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const DotsProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {number} Number of pages (dots displayed in component) */
@@ -17,10 +21,10 @@ const DotsProps = {
     /** @type {number} Current page (dot displayed as active) */
     position: 0,
 
-    /** @type {ColorTheme} */
-    colorDots: '#FFFFFF',
+    /** @type {ColorTheme|ColorThemeText} */
+    colorDots: 'white',
 
-    /** @type {ColorTheme} */
+    /** @type {ColorTheme|ColorThemeText} */
     colorActiveDot: 'main1'
 }
 

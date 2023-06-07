@@ -2,12 +2,12 @@ import * as React from 'react';
 import { View, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
 import BackTask from './back';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Button, Icon, Input, Page, Text } from '../../Components';
-import { PageHeader, TaskElement, TaskSchedule } from '../../Widgets';
+import { Button, Icon, Input, Page, Text } from 'Interface/Components';
+import { PageHeader, TaskElement, TaskSchedule } from 'Interface/Widgets';
 
 class Task extends BackTask {
     renderSubtasks = () => {

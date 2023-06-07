@@ -1,14 +1,15 @@
-import langManager from "../Managers/LangManager";
-import themeManager from "../Managers/ThemeManager";
+import langManager from "Managers/LangManager";
+import themeManager from "Managers/ThemeManager";
 
-import DataStorage, { STORAGE } from "../Utils/DataStorage";
+import DataStorage, { STORAGE } from "Utils/DataStorage";
+
+/**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ */
 
 class Settings {
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         this.email = '';

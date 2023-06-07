@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackHome from './back';
-import langManager from '../../../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
-import { Round } from '../../../Utils/Functions';
-import { StatsBars, SkillsGroup } from '../../Widgets';
-import { Button, Container, Swiper, Text, XPBar, Page, News } from '../../Components';
+import { Round } from 'Utils/Functions';
+import { StatsBars, SkillsGroup } from 'Interface/Widgets';
+import { Button, Container, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
 
 class Home extends BackHome {
     render() {

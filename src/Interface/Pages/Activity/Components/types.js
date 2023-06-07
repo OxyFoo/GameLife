@@ -1,8 +1,8 @@
-import dataManager from '../../../../Managers/DataManager';
+import dataManager from 'Managers/DataManager';
 
 /**
- * @typedef {import('../../../../Data/Skills').Category} Category
- * @typedef {import('../../../../Data/Skills').Skill} Skill
+ * @typedef {import('Data/Skills').Category} Category
+ * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {{ id: number, value: string, categoryID: number, onPress: () => void }} ItemSkill
  * @typedef {{ id: number, name: string, icon: string }} ItemCategory
  */

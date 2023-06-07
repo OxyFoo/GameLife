@@ -1,23 +1,23 @@
-import Achievements from '../Class/Achievements';
-import Activities from '../Class/Activities';
-import Admob from '../Class/Admob';
-import Experience from '../Class/Experience';
-import Informations from '../Class/Informations';
-import Inventory from '../Class/Inventory';
-import Multiplayer from '../Class/Multiplayer';
-import Quests from '../Class/Quests';
-import Server from '../Class/Server';
-import Settings from '../Class/Settings';
-import Tasks from '../Class/Tasks';
+import Achievements from 'Class/Achievements';
+import Activities from 'Class/Activities';
+import Admob from 'Class/Admob';
+import Experience from 'Class/Experience';
+import Informations from 'Class/Informations';
+import Inventory from 'Class/Inventory';
+import Multiplayer from 'Class/Multiplayer';
+import Quests from 'Class/Quests';
+import Server from 'Class/Server';
+import Settings from 'Class/Settings';
+import Tasks from 'Class/Tasks';
 
-import DataStorage, { STORAGE } from '../Utils/DataStorage';
+import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
 const DEBUG_DATA = false;
 
 /**
- * @typedef {import('../Interface/Components').Character} Character
- * @typedef {import('./PageManager').default} PageManager
- * @typedef {import('../Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Interface/Components').Character} Character
+ * @typedef {import('Managers/PageManager').default} PageManager
+ * @typedef {import('Class/Experience').XPInfo} XPInfo
  * 
  * @typedef {object} Stats
  * @property {XPInfo} int

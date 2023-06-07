@@ -1,13 +1,14 @@
-import dataManager from '../Managers/DataManager';
+import dataManager from 'Managers/DataManager';
 
-import { IsUndefined } from '../Utils/Functions';
+import { IsUndefined } from 'Utils/Functions';
+
+/**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ */
 
 class Quests {
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         this.daily = [];
@@ -98,7 +99,7 @@ class Quests {
         const today = IsUndefined(date) ? new Date() : new Date(date);
         const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
         const skill = dataManager.skills.skills[index];
-        const category = skill.Category;
+        const category = skill.CategoryID;
         return category;
     }
 

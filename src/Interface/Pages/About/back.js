@@ -1,8 +1,8 @@
-import { PageBack } from '../../Components';
+import { PageBack } from 'Interface/Components';
 import { Linking } from 'react-native';
 
-import dataManager from '../../../Managers/DataManager';
-import langManager from '../../../Managers/LangManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 const { versionName } = require('../../../../package.json');
 

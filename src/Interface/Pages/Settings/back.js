@@ -1,14 +1,14 @@
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { PageBack } from '../../Components';
-import { GetTime } from '../../../Utils/Time';
-import Notifications from '../../../Utils/Notifications';
+import { PageBack } from 'Interface/Components';
+import { GetTime } from 'Utils/Time';
+import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('../../../Managers/ThemeManager').Theme} Theme
- * @typedef {import('../../Components/ComboBox').ComboBoxItem} ComboBoxItem
+ * @typedef {import('Managers/ThemeManager').Theme} Theme
+ * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
 class BackSettings extends PageBack {

@@ -140,13 +140,19 @@ class PanelScreen extends React.Component {
         const { positionY } = this.state;
         const { topOffset, backOffset } = this.props;
 
+        const posY = this.posY;
         this.posY -= this.accY * .25;
         this.posY = Math.max(this.posY, SCREEN_HEIGHT - this.height);
 
-        if (this.accY < -2000 || this.posY > topOffset + backOffset) {
+        if (posY > topOffset && this.accY < -2000 ||
+            posY > topOffset + backOffset)
+        {
             this.Close();
             setTimeout(this.props.onClose, 100);
-        } else if (this.posY > topOffset) {
+            return;
+        }
+
+        if (this.posY > topOffset) {
             this.posY = topOffset;
         }
 

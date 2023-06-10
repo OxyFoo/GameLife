@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Animated, TouchableOpacity } from 'react-native';
 
 import styles from './style';
-import ActivityPanelBack from './activityPanelBack';
+import ActivityPanelBack from './back';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
@@ -10,7 +10,7 @@ import themeManager from 'Managers/ThemeManager';
 import {
     onAddComment, onEditComment, onRemComment,
     StartActivity, AddActivity, RemActivity
-} from './activityUtils';
+} from '../utils';
 import { Text, Button, TextSwitch, Icon } from 'Interface/Components';
 import { ActivitySchedule, ActivityExperience, PanelScreen } from 'Interface/Widgets';
 

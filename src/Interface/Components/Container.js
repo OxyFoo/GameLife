@@ -7,9 +7,11 @@ import { Text, Icon, Button } from 'Interface/Components';
 import { TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react').ReactNode} ReactNode
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
@@ -17,6 +19,9 @@ import { TimingAnimation } from 'Utils/Animations';
  */
 
 const ContainerProps = {
+    /** @type {ReactNode} */
+    children: null,
+
     /** @type {StyleProp} */
     style: {},
 
@@ -41,8 +46,8 @@ const ContainerProps = {
     /** @type {ColorTheme} */
     backgroundColor: 'backgroundTransparent',
 
-    /** @type {Icons} Show the icon on the right side of the text, for static container */
-    icon: 'default',
+    /** @type {Icons|null} Show the icon on the right side of the text, for static container */
+    icon: null,
 
     /** @type {number} Size of the icon in pixels */
     iconSize: 24,
@@ -56,14 +61,14 @@ const ContainerProps = {
     /** @type {boolean} */
     opened: true,
 
-    /** @type {Function} */
+    /** @type {(opened: boolean) => void} */
     onChangeState: (opened) => {},
 
-    /** @type {Function?} For static container with an icon, event of icon press */
-    onIconPress: undefined,
+    /** @type {(event: GestureResponderEvent) => void} For static container with an icon, event of icon press */
+    onIconPress: (event) => {},
 
     /** @type {(event: LayoutChangeEvent) => void} event */
-    onLayout: undefined
+    onLayout: (event) => {}
 }
 
 class Container extends React.Component {
@@ -120,7 +125,6 @@ class Container extends React.Component {
                 style={this.props.styleHeader}
                 styleAnimation={borderStyle}
                 color={color}
-                icon={''} // TODO: ???
                 iconAngle={iconAngle}
                 rippleColor={rippleColor}
                 borderRadius={8}
@@ -146,13 +150,15 @@ class Container extends React.Component {
                 <Text color={textcolor}>
                     {text}
                 </Text>
-                <Icon
-                    containerStyle={styles.iconStaticHeader}
-                    icon={icon}
-                    size={iconSize}
-                    angle={iconAngle}
-                    onPress={onIconPress}
-                />
+                {icon === null ? null : (
+                    <Icon
+                        containerStyle={styles.iconStaticHeader}
+                        icon={icon}
+                        size={iconSize}
+                        angle={iconAngle}
+                        onPress={onIconPress}
+                    />
+                )}
             </Button>
         );
 

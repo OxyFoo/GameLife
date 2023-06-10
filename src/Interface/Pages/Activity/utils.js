@@ -5,7 +5,7 @@ import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('./activityPanel').default} ActivityPanel
+ * @typedef {import('./Panel').default} ActivityPanel
  */
 
 /** @this ActivityPanel */

@@ -6,6 +6,11 @@ import themeManager from 'Managers/ThemeManager';
 import { Button } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedViewStyle
+ */
+
 const SwitchProps = {
     /** @type {boolean} State of switch component */
     value: false,
@@ -43,9 +48,12 @@ class Switch extends React.Component {
             borderColor: color,
             backgroundColor: themeManager.GetColor('background')
         } ];
-        const btnStyle = [ styles.circle, {
+
+        /** @type {AnimatedViewStyle} */
+        const btnStyle = {
+            ...styles.circle,
             backgroundColor: color, transform: [{ translateX: this.state.anim }]
-        } ];
+        };
 
         return (
             <View>

@@ -37,9 +37,13 @@ class Experience {
     GetExperience() {
         const activities = this.getUsefulActivities();
         let XP = 0;
+        const { statsKey } = this.user;
 
-        let stats = Object.assign({}, ...this.user.statsKey.map(i => ({[i]: 0})));
-        const statsKeys = Object.keys(stats);
+        /** @type {Stats} */
+        const stats = Object.assign({}, ...statsKey.map(i => ({[i]: null})));
+
+        /** @type {{ [key: string]: number }} */
+        const statValues = Object.assign({}, ...statsKey.map(i => ({[i]: 0})));
 
         for (let a in activities) {
             const activity = activities[a];
@@ -50,14 +54,15 @@ class Experience {
             XP += skill.XP * durationHour;
 
             // Stats
-            for (let s in statsKeys) {
-                const stat = statsKeys[s];
-                stats[stat] += skill.Stats[stat];
+            for (let s in statsKey) {
+                const stat = statsKey[s];
+                statValues[stat] += skill.Stats[stat];
             }
         }
 
-        for (let key in stats) {
-            stats[key] = this.getXPDict(stats[key], StatXPperLevel);
+        for (let k in statsKey) {
+            const key = statsKey[k];
+            stats[key] = this.getXPDict(statValues[key], StatXPperLevel);
         }
 
         const output = {
@@ -130,7 +135,7 @@ class Experience {
      * @returns {XPInfo}
      */
     getXPDict(totalXP = 0, xpPerLevel = 1) {
-        let xp = parseInt(totalXP);
+        let xp = totalXP;
         let lvl = 0;
         while (xp >= lvl * xpPerLevel) {
             xp -= lvl * xpPerLevel;
@@ -141,7 +146,7 @@ class Experience {
             'xp': xp,
             'lvl': lvl,
             'next': lvl * xpPerLevel,
-            'totalXP': parseInt(totalXP)
+            'totalXP': totalXP
         }
         return experience;
     }

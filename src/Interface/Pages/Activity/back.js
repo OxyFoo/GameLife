@@ -6,15 +6,17 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Sleep } from 'Utils/Functions';
 import { PageBack } from 'Interface/Components';
-import { CategoryToItem, SkillToItem } from './Components/types';
+import { CategoryToItem, SkillToItem } from './types';
 
 /**
- * @typedef {import('Data/Skills').Skill} Skill
- * @typedef {import('./Components/types').ItemSkill} ItemSkill
- * @typedef {import('./Components/types').ItemCategory} ItemCategory
- * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('./Components/activityPanel').default} ActivityPanel
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * 
+ * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('./types').ItemSkill} ItemSkill
+ * @typedef {import('./types').ItemCategory} ItemCategory
+ * 
+ * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('./Panel').default} ActivityPanel
  */
 
 class BackActivity extends PageBack {
@@ -91,7 +93,7 @@ class BackActivity extends PageBack {
 
     async componentDidMount() {
         // Wait for the layout to be calculated
-        while (this.state.topPanelOffset === 0 || !this.refActivityPanel.state.loaded) {
+        while (this.state.topPanelOffset === 0 || !this.refActivityPanel?.state.loaded) {
             await Sleep(100);
         }
 

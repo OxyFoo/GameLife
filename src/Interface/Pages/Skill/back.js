@@ -7,12 +7,13 @@ import { GetDate } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 
 /**
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('Class/Activities').Activity} Activity
  * 
  * @typedef HistoryActivity
  * @property {Activity} activity
  * @property {string} title
- * @property {function} onPress
+ * @property {(event: GestureResponderEvent) => void} onPress
  */
 
 class BackSkill extends PageBack {
@@ -52,7 +53,7 @@ class BackSkill extends PageBack {
             const date = DateToFormatString(GetDate(activity.startTime));
             const text = langManager.curr['skill']['text-history'];
             const duration = activity.duration;
-            const title = text.replace('{}', date).replace('{}', duration);
+            const title = text.replace('{}', date).replace('{}', duration.toString());
 
             // On press function
             const onPress = () => { user.interface.ChangePage('activity', { 'activity': activity }); }
@@ -60,6 +61,8 @@ class BackSkill extends PageBack {
             return { activity, title, onPress };
         });
     }
+
+    onBackPress = () => user.interface.BackPage();
 
     addActivity = () => {
         const args = { skillID: this.skillID };

@@ -30,9 +30,9 @@ const VERSION = require('../../package.json').version;
 
 class Ad {
     /** @type {AdNames} */
-    name = '';
+    name = 'none';
     /** @type {'rewarded'|'interstitial'} */
-    type = '';
+    type = 'interstitial';
     /** @type {FirebaseAdMobTypes.RewardedAd?|FirebaseAdMobTypes.InterstitialAd?} */
     ad = null;
     /** @type {Function?} */
@@ -120,7 +120,7 @@ class Admob {
      * @param {AdTypes[T]?} event
      * @returns {FirebaseAdMobTypes.RewardedAd?}
      */
-    GetRewardedAd(adName, type = 'custom', event = () => {}) {
+    GetRewardedAd(adName, type, event = () => {}) {
         let rewarded = this.ads.find(ad => ad.name === adName && ad.type === 'rewarded') || null;
         if (rewarded === null) return null;
 
@@ -143,7 +143,7 @@ class Admob {
      * @param {AdTypes[T]?} event
      * @returns {FirebaseAdMobTypes.InterstitialAd?}
      */
-    GetInterstitialAd(adName, type = 'custom', event = () => {}) {
+    GetInterstitialAd(adName, type, event = () => {}) {
         let interstitial = this.ads.find(ad => ad.name === adName && ad.type === 'interstitial') || null;
         if (interstitial === null) return null;
 

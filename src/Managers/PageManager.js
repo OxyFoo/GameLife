@@ -18,7 +18,7 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '
  * 
  * @typedef PageState
  * @type {Object}
- * @property {PageType|null} content
+ * @property {JSX.Element|null} content
  * @property {PageBack|null} ref
  * @property {object} args
  */
@@ -50,7 +50,7 @@ const CACHE_PAGES = {
 
 class PageManager extends React.Component{
     state = {
-        /** @type {PageName} */
+        /** @type {PageName|''} */
         selectedPage: '',
 
         animTheme: new Animated.Value(0),
@@ -135,7 +135,7 @@ class PageManager extends React.Component{
         return true;
     }
 
-    setStateSync = (state) => new Promise((resolve) => this.setState(state, resolve));
+    setStateSync = (state) => new Promise((resolve) => this.setState(state, () => resolve()));
 
     /**
      * Try to get last page content
@@ -167,7 +167,7 @@ class PageManager extends React.Component{
 
     /**
      * Open page
-     * @param {PageName} nextpage
+     * @param {PageName|''} nextpage
      * @param {object} pageArguments
      * @param {boolean} ignorePage
      * @param {boolean} forceUpdate
@@ -271,7 +271,8 @@ class PageManager extends React.Component{
                 console.log('Ref undefined (' + newPage + ')');
             }
         } else {
-            CACHE_PAGES.temp.content = this.getPageContent(newPage, CACHE_PAGES.temp.args, true);
+            const tempArgs = this.path.length > 0 ? this.path[this.path.length - 1][1] : CACHE_PAGES.temp.args;
+            CACHE_PAGES.temp.content = this.getPageContent(newPage, tempArgs, true);
             this.setState({ selectedPage: newPage }, () => {
                 if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();
@@ -334,6 +335,7 @@ class PageManager extends React.Component{
             return null;
         }
 
+        /** @type {PageType} */
         const Page = pages[page];
         return <Page key={key} args={args} ref={setRef} />;
     }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
 import BackActivity from './back';
-import ActivityPanel from './Components/activityPanel';
+import ActivityPanel from './Panel';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -11,8 +11,8 @@ import { Page, Text, IconCheckable, Input } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 /**
- * @typedef {import('./back').ItemCategory} ItemCategory
- * @typedef {import('./back').ItemSkill} ItemSkill
+ * @typedef {import('./types').ItemSkill} ItemSkill
+ * @typedef {import('./types').ItemCategory} ItemCategory
  */
 
 class Activity extends BackActivity {
@@ -86,7 +86,7 @@ class Activity extends BackActivity {
             >
                 <PageHeader
                     style={styles.header}
-                    onBackPress={user.interface.BackPage}
+                    onBackPress={(e) => user.interface.BackPage()}
                 />
 
                 {/* Categories */}

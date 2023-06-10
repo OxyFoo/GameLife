@@ -14,10 +14,10 @@ import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components
 
 class Skill extends BackSkill {
     /**
-     * @param {{ item: HistoryActivity, i: number }} item
+     * @param {{ item: HistoryActivity }} item
      * @returns {JSX.Element}
      */
-    renderHistoryItem = ({item, i}) => {
+    renderHistoryItem = ({ item }) => {
         return (
             <TouchableOpacity activeOpacity={0.6} onPress={item.onPress}>
                 <Text style={styles.textHistory}>{item.title}</Text>
@@ -50,7 +50,7 @@ class Skill extends BackSkill {
                 bottomOffset={104}
                 footer={this.renderFooter()}
             >
-                <PageHeader onBackPress={user.interface.BackPage} hideHelp />
+                <PageHeader onBackPress={this.onBackPress} hideHelp />
 
                 {/* Skill name and icon */}
                 <View style={styles.skillContainer}>

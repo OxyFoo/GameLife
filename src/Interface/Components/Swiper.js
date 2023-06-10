@@ -171,6 +171,7 @@ class Swiper extends React.Component {
     render() {
         if (this.props.pages.length === 0) return null;
 
+        /** @type {StyleProp} */
         const pageWidth = {
             width: 100 / this.props.pages.length + '%',
             height: '100%',

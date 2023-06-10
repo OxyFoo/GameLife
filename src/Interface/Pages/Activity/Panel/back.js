@@ -5,11 +5,11 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { SkillToItem } from './types';
+import { SkillToItem } from '../types';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../back').ItemSkill} ItemSkill
+ * @typedef {import('../types').ItemSkill} ItemSkill
  * @typedef {import('Interface/Widgets').PanelScreen} PanelScreen
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Class/Activities').Activity} Activity

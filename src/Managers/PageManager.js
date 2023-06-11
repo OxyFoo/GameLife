@@ -161,7 +161,7 @@ class PageManager extends React.Component{
         const [ prevPage, prevArgs ] = this.path[this.path.length - 1];
         this.path.length = this.path.length - 1;
         this.setState({ ignorePage: false });
-        this.pageAnimation(prevPage);
+        this.pageAnimation(prevPage, prevArgs);
         return true;
     }
 
@@ -216,7 +216,7 @@ class PageManager extends React.Component{
 
         this.setState({ ignorePage });
         return new Promise(async (resolve) => {
-            await this.pageAnimation(nextpage);
+            await this.pageAnimation(nextpage, pageArguments);
             resolve();
         });
     }
@@ -232,9 +232,10 @@ class PageManager extends React.Component{
     /**
      * Hide current page and show new page
      * @param {PageName} newPage
+     * @param {object} args
      * @returns {Promise}
      */
-    pageAnimation = async (newPage) => {
+    pageAnimation = async (newPage, args) => {
         this.changing = true;
 
         const T = new Date().getTime();
@@ -271,8 +272,7 @@ class PageManager extends React.Component{
                 console.log('Ref undefined (' + newPage + ')');
             }
         } else {
-            const tempArgs = this.path.length > 0 ? this.path[this.path.length - 1][1] : CACHE_PAGES.temp.args;
-            CACHE_PAGES.temp.content = this.getPageContent(newPage, tempArgs, true);
+            CACHE_PAGES.temp.content = this.getPageContent(newPage, args, true);
             this.setState({ selectedPage: newPage }, () => {
                 if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();

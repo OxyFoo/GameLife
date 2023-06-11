@@ -97,6 +97,7 @@ class PanelScreen extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
+        event.stopPropagation();
         if (!this.scrollEnabled) return;
 
         const { pageY } = event.nativeEvent;
@@ -108,6 +109,7 @@ class PanelScreen extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        event.stopPropagation();
         if (!this.scrollEnabled) return;
 
         // Position

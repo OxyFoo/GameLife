@@ -36,6 +36,9 @@ const PageProps = {
     bottomOffset: 0,
 
     /** @type {JSX.Element} */
+    overlay: null,
+
+    /** @type {JSX.Element} */
     topOverlay: null,
 
     /** @type {number} */
@@ -209,7 +212,7 @@ class Page extends React.Component {
         this.onScroll(this.posY);
     }
 
-    renderOverlay() {
+    renderTopOverlay() {
         if (this.props.topOverlay === null) return null;
 
         const { topOverlayPosition } = this.state;
@@ -229,7 +232,7 @@ class Page extends React.Component {
     }
 
     render() {
-        const { style, isHomePage, topOffset, bottomOffset, scrollable } = this.props;
+        const { style, isHomePage, overlay, topOffset, bottomOffset, scrollable } = this.props;
         const headerHeight = user.interface.header.state.height;
         const valueOffset = isHomePage ? headerHeight : topOffset;
 
@@ -261,7 +264,8 @@ class Page extends React.Component {
                 >
                     {this.props.footer}
                 </Animated.View>
-                {this.renderOverlay()}
+                {overlay}
+                {this.renderTopOverlay()}
             </>
         );
     }
@@ -279,6 +283,16 @@ const styles = StyleSheet.create({
         padding: 32,
         paddingBottom: Platform.OS === 'ios' ? 48 : 32,
         backgroundColor: '#00000001'
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        paddingVertical: 0,
+        paddingHorizontal: 32,
+        borderBottomWidth: 1
     },
     topOverlay: {
         position: 'absolute',

@@ -39,8 +39,8 @@ class TaskSchedule extends React.Component {
         selectedDays: []
     }
 
-    /** @type {TextSwitch} */
-    refTextSwitch = React.createRef();
+    /** @type {TextSwitch|null} */
+    refTextSwitch = null;
 
     /** @param {number} index */
     switchMode = (index) => {
@@ -208,6 +208,7 @@ class TaskSchedule extends React.Component {
         const repeatMessage = repeatMode === 'month' && (
             <Text style={{ marginTop: 12 }}>{lang['text-hint-select']}</Text>
         );
+        const isVisibleDTP = this.state.DTPMode === 'time' || this.state.DTPMode === 'date';
 
         return (
             <>
@@ -240,10 +241,10 @@ class TaskSchedule extends React.Component {
                 <DateTimePickerModal
                     date={defaultDate}
                     minimumDate={defaultDate}
-                    mode={this.state.DTPMode}
+                    mode={this.state.DTPMode || 'date'}
                     onConfirm={this.onChangeDateTimePicker}
                     onCancel={this.hideDTP}
-                    isVisible={this.state.DTPMode != ''}
+                    isVisible={isVisibleDTP}
                     minuteInterval={15}
                     is24Hour={true}
                 />

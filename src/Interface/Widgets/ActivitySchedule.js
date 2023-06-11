@@ -58,7 +58,7 @@ class ActivitySchedule extends React.Component {
         /** @type {LayoutChangeEvent['nativeEvent']['layout']} */
         parent: { width: 0, height: 0, x: 0, y: 0 },
 
-        /** @type {'date'|'time'|'datetime'} */
+        /** @type {''|'date'|'time'|'datetime'} */
         DTPMode: ''
     }
 
@@ -192,7 +192,7 @@ class ActivitySchedule extends React.Component {
 
                 <DateTimePickerModal
                     date={selectedDate}
-                    mode={this.state.DTPMode}
+                    mode={this.state.DTPMode || 'date'}
                     onConfirm={this.onChangeDateTimePicker}
                     onCancel={this.hideDTP}
                     isVisible={this.state.DTPMode !== ''}

@@ -2,13 +2,12 @@ import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
 import BackActivity from './back';
-import ActivityPanel from './Panel';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Page, Text, IconCheckable, Input } from 'Interface/Components';
-import { PageHeader } from 'Interface/Widgets';
+import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
 /**
  * @typedef {import('./types').ItemSkill} ItemSkill
@@ -135,7 +134,6 @@ class Activity extends BackActivity {
                 {/* Panel */}
                 <ActivityPanel
                     ref={ref => this.refActivityPanel = ref}
-                    editMode={this.editMode}
                     delay={this.editMode ? 0 : 300}
                     topOffset={topPanelOffset}
                 />

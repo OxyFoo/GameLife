@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { PageHeader, StatsBars } from 'Interface/Widgets';
+import { PageHeader, StatsBars, ActivityPanel } from 'Interface/Widgets';
 import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
@@ -22,6 +22,15 @@ class Skill extends BackSkill {
             <TouchableOpacity activeOpacity={0.6} onPress={item.onPress}>
                 <Text style={styles.textHistory}>{item.title}</Text>
             </TouchableOpacity>
+        );
+    }
+
+    renderActivity = () => {
+        return (
+            <ActivityPanel
+                ref={ref => this.refActivityPanel = ref}
+                topOffset={200}
+            />
         );
     }
 
@@ -44,10 +53,15 @@ class Skill extends BackSkill {
         const lang = langManager.curr['skill'];
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
+        if (!this.skill) {
+            return null;
+        }
+
         return (
             <Page
                 ref={ref => this.refPage = ref}
                 bottomOffset={104}
+                overlay={this.renderActivity()}
                 footer={this.renderFooter()}
             >
                 <PageHeader onBackPress={this.onBackPress} hideHelp />

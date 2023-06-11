@@ -22,7 +22,8 @@ class ScreenInput extends React.Component {
         multiline: false,
         anim: new Animated.Value(0),
         keyboardHeight: 0,
-        callback: () => {}
+        callback: (text) => {},
+        callbackClose: () => {}
     }
 
     componentDidMount() {
@@ -49,15 +50,17 @@ class ScreenInput extends React.Component {
      * @param {string} initialText Initial text of the input
      * @param {(text: string) => void} callback Callback called when the input is validated
      * @param {boolean} multiline If true, the input is multiline
+     * @param {() => void} callbackClose Callback called when the input is closed
      */
-    Open = (label = 'Input', initialText = '', callback = (text) => {}, multiline = false) => {
+    Open = (label = 'Input', initialText = '', callback = (text) => {}, multiline = false, callbackClose = () => {}) => {
         TimingAnimation(this.state.anim, 1, 200).start();
         this.setState({
             opened: true,
             label: label,
             text: initialText,
             multiline: multiline,
-            callback: callback
+            callback: callback,
+            callbackClose: callbackClose
         }, this.refInput.focus);
     }
 
@@ -69,6 +72,7 @@ class ScreenInput extends React.Component {
         if (valid) {
             this.state.callback(this.state.text);
         }
+        this.state.callbackClose();
         TimingAnimation(this.state.anim, 0, 200).start();
         this.setState({
             opened: false,

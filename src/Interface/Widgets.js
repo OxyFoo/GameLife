@@ -1,3 +1,4 @@
+import ActivityPanel from './Widgets/ActivityPanel';
 import AchievementsGroup from './Widgets/AchievementsGroup';
 import ActivityCard from './Widgets/ActivityCard';
 import ActivityExperience from './Widgets/ActivityExperience';
@@ -17,6 +18,7 @@ import TaskSchedule from './Widgets/TaskSchedule';
 import UserHeader from './Widgets/UserHeader';
 
 export {
+    ActivityPanel,
     AchievementsGroup,
     ActivityCard,
     ActivityExperience,
@@ -34,4 +36,4 @@ export {
     TaskElement,
     TaskSchedule,
     UserHeader
-}
+};

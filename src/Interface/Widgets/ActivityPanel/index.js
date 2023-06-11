@@ -7,10 +7,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import {
-    onAddComment, onEditComment, onRemComment,
-    StartActivity, AddActivity, RemActivity
-} from '../utils';
+import { StartActivity } from './utils';
 import { Text, Button, TextSwitch, Icon } from 'Interface/Components';
 import { ActivitySchedule, ActivityExperience, PanelScreen } from 'Interface/Widgets';
 
@@ -22,11 +19,9 @@ import { ActivitySchedule, ActivityExperience, PanelScreen } from 'Interface/Wid
 class ActivityPanel extends ActivityPanelBack {
     RenderPanelDetails() {
         const lang = langManager.curr['activity'];
-        const { editMode } = this.props;
-        const { activityStart, activityDuration, comment, startMode } = this.state;
+        const { activity, startMode, selectedSkillID, mode } = this.state;
 
-        const skillID = this.state.selectedSkill.id;
-        const skill = dataManager.skills.GetByID(skillID);
+        const skill = dataManager.skills.GetByID(selectedSkillID);
 
         let experienceText = lang['title-no-experience'];
         if (skill !== null && skill.XP > 0) {
@@ -57,9 +52,9 @@ class ActivityPanel extends ActivityPanelBack {
                     {lang['title-schedule']}
                 </Text>
                 <ActivitySchedule
-                    editable={!editMode}
-                    selectedDate={activityStart}
-                    selectedDuration={activityDuration}
+                    editable={mode === 'skill'}
+                    selectedDate={activity?.startTime ?? 0}
+                    selectedDuration={activity?.duration ?? 60}
                     onChange={this.onChangeSchedule}
                     onChangeState={this.onChangeStateSchedule}
                 />
@@ -69,15 +64,15 @@ class ActivityPanel extends ActivityPanelBack {
                     {experienceText}
                 </Text>
                 <ActivityExperience
-                    skillID={skillID}
-                    duration={activityDuration}
+                    skillID={selectedSkillID}
+                    duration={activity?.duration ?? 0}
                 />
 
                 {/* Commentary */}
-                {comment === '' ? (
+                {!activity?.comment ? (
                     <Button
                         style={styles.commentButtonAdd}
-                        onPress={onAddComment.bind(this)}
+                        onPress={this.onEditComment}
                         color='main1'
                         fontSize={14}
                     >
@@ -94,23 +89,23 @@ class ActivityPanel extends ActivityPanelBack {
                         <TouchableOpacity
                             style={[styles.commentPanel, backgroundCard]}
                             activeOpacity={.6}
-                            onPress={onEditComment.bind(this)}
-                            onLongPress={onRemComment.bind(this)}
+                            onPress={this.onEditComment}
+                            onLongPress={this.onRemComment}
                         >
                             <Text style={styles.commentText}>
-                                {comment}
+                                {activity.comment}
                             </Text>
                         </TouchableOpacity>
                     </View>
                 )}
 
                 {/* Add / Remove button */}
-                {editMode ? (
-                    <Button onPress={RemActivity.bind(this)} color='main2'>
+                {mode === 'activity' ? (
+                    <Button onPress={this.onRemoveActivity} color='main2'>
                         {lang['btn-remove']}
                     </Button>
                 ) : (
-                    <Button onPress={AddActivity.bind(this)} color='main2'>
+                    <Button onPress={this.onAddActivity} color='main2'>
                         {lang['btn-add']}
                     </Button>
                 )}
@@ -139,8 +134,8 @@ class ActivityPanel extends ActivityPanelBack {
 
     render() {
         const lang = langManager.curr['activity'];
-        const { topOffset, editMode } = this.props;
-        const { loaded, activityText, startMode } = this.state;
+        const { topOffset } = this.props;
+        const { loaded, activityText, mode } = this.state;
 
         if (!loaded) {
             return null;
@@ -173,13 +168,13 @@ class ActivityPanel extends ActivityPanelBack {
                 </View>
 
                 {/* Start mode - Already / Now */}
-                {!editMode &&
+                {mode === 'activity' ? null : (
                     <TextSwitch
                         style={styles.panelTextSwitch}
                         texts={[ lang['swiper-already'], lang['swiper-now'] ]}
                         onChange={this.onChangeMode}
                     />
-                }
+                )}
 
                 <View>
                     {this.RenderStartActivity.call(this)}

@@ -9,6 +9,7 @@ import { DateToFormatString } from 'Utils/Date';
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  * 
  * @typedef HistoryActivity
  * @property {Activity} activity
@@ -17,6 +18,9 @@ import { DateToFormatString } from 'Utils/Date';
  */
 
 class BackSkill extends PageBack {
+    /** @type {ActivityPanel|null} */
+    refActivityPanel = null;
+
     constructor(props) {
         super(props);
 
@@ -46,6 +50,14 @@ class BackSkill extends PageBack {
         };
 
         // History
+        this.history = [];
+        this.__updateHIstory();
+
+        // Back handler
+        user.interface.SetCustomBackHandle(this.onBackPress);
+    }
+
+    __updateHIstory = () => {
         const userActivities = user.activities.Get();
         const history = userActivities.filter((a) => a.skillID === this.skillID).reverse();
         this.history = history.map((activity) => {
@@ -56,13 +68,24 @@ class BackSkill extends PageBack {
             const title = text.replace('{}', date).replace('{}', duration.toString());
 
             // On press function
-            const onPress = () => { user.interface.ChangePage('activity', { 'activity': activity }); }
+            const onPress = () => {
+                this.refActivityPanel?.SelectActivity(activity, () => {
+                    this.__updateHIstory();
+                    const empty = this.history.length === 0;
+                    if (empty) this.onBackPress();
+                    else       this.forceUpdate();
+                });
+            }
 
             return { activity, title, onPress };
         });
     }
 
-    onBackPress = () => user.interface.BackPage();
+    onBackPress = () => {
+        this.refActivityPanel?.Close();
+        user.interface.BackPage();
+        user.interface.ResetCustomBackHandle();
+    }
 
     addActivity = () => {
         const args = { skillID: this.skillID };

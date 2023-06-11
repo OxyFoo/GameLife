@@ -16,7 +16,7 @@ import { CategoryToItem, SkillToItem } from './types';
  * @typedef {import('./types').ItemCategory} ItemCategory
  * 
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('./Panel').default} ActivityPanel
+ * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  */
 
 class BackActivity extends PageBack {

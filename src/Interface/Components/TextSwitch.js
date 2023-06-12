@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import themeManager from '../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Button } from '../Components';
-import { SpringAnimation } from '../../Utils/Animations';
+import { Button } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ */
 
 const TextSwitchProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {Array<string>} */

@@ -1,10 +1,10 @@
-import { PageBack } from '../../Components';
+import { PageBack } from 'Interface/Components';
 import { Dimensions, Keyboard } from 'react-native';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Sum } from '../../../Utils/Functions';
+import { Sum } from 'Utils/Functions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 

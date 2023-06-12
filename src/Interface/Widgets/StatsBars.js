@@ -1,24 +1,25 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Icon, Swiper, Text, XPBar } from '../Components';
-import { IsUndefined } from '../../Utils/Functions';
+import { Icon, Swiper, Text, XPBar } from 'Interface/Components';
 
 /**
- * @typedef {import('../../Managers/UserManager').Stats} Stats
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ *
+ * @typedef {import('Managers/UserManager').Stats} Stats
  * @typedef {import('../../Class/Experience').XPInfo} XPInfo
  */
 
 const StatsBarsProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
-    /** @type {Stats} */
-    data: undefined,
+    /** @type {Stats|null} */
+    data: null,
 
     /** @type {Array<number>} Optionnal, add secondary value, same length of user stats */
     supData: user.statsKey.map(() => 0)
@@ -75,12 +76,12 @@ function statComponent(statKey, stat, sup, index, clickable = true) {
     const langLevel = langManager.curr['level'];
 
     const popupRender = () => popupContent(statKey);
-    const pressEvent = !clickable ? undefined : () => {
+    const pressEvent = !clickable ? null : () => {
         user.interface.popup.Open('custom', popupRender, undefined, true);
     };
 
     return (
-        <TouchableOpacity style={styles.fullW} key={'skill_' + index} activeOpacity={IsUndefined(pressEvent) ? 1 : .5} onPress={pressEvent}>
+        <TouchableOpacity style={styles.fullW} key={'skill_' + index} activeOpacity={pressEvent === null ? 1 : .5} onPress={pressEvent}>
             <View style={styles.XPHeader}>
                 <Text>{statName}</Text>
                 <View style={styles.headerText}>
@@ -100,12 +101,12 @@ function statComponent(statKey, stat, sup, index, clickable = true) {
 
 class StatsBars extends React.PureComponent {
     render() {
-        let output = <></>;
         const { data, supData, style } = this.props;
-        if (IsUndefined(data)) return output;
+        if (data === null) return null;
 
-        const addStatBar = (item, i) => statComponent(item, data[item], supData[i], i);
-        output = Object.keys(data).map(addStatBar);
+        const output = Object.keys(data).map((item, i) =>
+            statComponent(item, data[item], supData[i], i)
+        );
 
         return (
             <View style={[ styles.fullW, style ]}>

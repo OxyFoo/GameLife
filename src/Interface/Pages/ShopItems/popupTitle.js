@@ -2,14 +2,14 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './styles';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { Text, Button } from '../../Components';
+import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('../../../Data/Titles').Title} Title
+ * @typedef {import('Data/Titles').Title} Title
  */
 
 /**

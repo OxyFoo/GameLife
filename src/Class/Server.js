@@ -1,12 +1,12 @@
 import RNExitApp from 'react-native-exit-app';
 
-import langManager from '../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
-import { Request_Async } from '../Utils/Request';
-import { GetDeviceInformations } from '../Utils/Device';
+import { Request_Async } from 'Utils/Request';
+import { GetDeviceInformations } from 'Utils/Device';
 
 /**
- * @typedef {import('../Managers/UserManager').default} UserManager
+ * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus

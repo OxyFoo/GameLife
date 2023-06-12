@@ -1,16 +1,16 @@
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import Notifications from '../../../Utils/Notifications';
-import { MinMax, TwoDigit } from '../../../Utils/Functions';
-import { DateToFormatTimeString } from '../../../Utils/Date';
-import { GetDate, GetTime, RoundToQuarter } from '../../../Utils/Time';
+import Notifications from 'Utils/Notifications';
+import { MinMax, TwoDigit } from 'Utils/Functions';
+import { DateToFormatTimeString } from 'Utils/Date';
+import { GetDate, GetTime, RoundToQuarter } from 'Utils/Time';
 
 const MAX_TIME_MINUTES = 4 * 60; // Multiple of 15
 
 /**
- * @typedef {import('../../../Class/Activities').AddStatus} AddStatus
+ * @typedef {import('Class/Activities').AddStatus} AddStatus
  */
 
 class BackActivityTimer extends PageBack {

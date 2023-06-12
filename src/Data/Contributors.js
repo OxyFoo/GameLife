@@ -5,9 +5,7 @@ class Contributor {
 
 class Contributors {
     constructor() {
-        /**
-         * @type {Contributor[]}
-         */
+        /** @type {Contributor[]} */
         this.contributors = [];
     }
 

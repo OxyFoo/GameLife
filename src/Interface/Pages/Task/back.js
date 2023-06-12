@@ -1,18 +1,18 @@
 import React from 'react';
 import { Keyboard } from 'react-native';
 
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {'new'|'edit'|'remove'} States
  *
- * @typedef {import('../../../Class/Tasks').Task} Task
- * @typedef {import('../../../Class/Tasks').Subtask} Subtask
- * @typedef {import('../../../Class/Tasks').RepeatModes} RepeatModes
- * @typedef {import('../../Widgets').TaskSchedule} TaskSchedule
- * @typedef {import('../../Widgets/TaskSchedule').OnChangeScheduleEvent} OnChangeScheduleEvent
+ * @typedef {import('Class/Tasks').Task} Task
+ * @typedef {import('Class/Tasks').Subtask} Subtask
+ * @typedef {import('Class/Tasks').RepeatModes} RepeatModes
+ * @typedef {import('Interface/Widgets').TaskSchedule} TaskSchedule
+ * @typedef {import('Interface/Widgets/TaskSchedule').OnChangeScheduleEvent} OnChangeScheduleEvent
  */
 
 class BackTask extends PageBack {
@@ -33,8 +33,8 @@ class BackTask extends PageBack {
         error: ''
     };
 
-    /** @type {TaskSchedule} */
-    refTaskSchedule = React.createRef();
+    /** @type {TaskSchedule|null} */
+    refTaskSchedule = null;
 
     /** @type {Task|null} */
     selectedTask = null;

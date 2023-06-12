@@ -4,7 +4,7 @@ import Config from 'react-native-config';
 
 import BackLoading from './back';
 
-import { GLLoading, Page, Text } from '../../Components';
+import { GLLoading, Page, Text } from 'Interface/Components';
 
 class Loading extends BackLoading {
     renderVersions() {

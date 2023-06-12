@@ -1,13 +1,13 @@
 import { Animated, Linking } from 'react-native';
 
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Login, Signin } from './login';
-import { IsEmail } from '../../../Utils/String';
-import { SpringAnimation } from '../../../Utils/Animations';
+import { IsEmail } from 'Utils/String';
+import { SpringAnimation } from 'Utils/Animations';
 
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;

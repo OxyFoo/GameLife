@@ -1,11 +1,11 @@
-import user from '../../../Managers/UserManager';
-import dataManager from '../../../Managers/DataManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { ArrayToDict, Random } from '../../../Utils/Functions';
-import { Character, PageBack } from '../../Components';
-import { GetRandomIntByDay, GetRandomIndexesByDay } from '../../../Utils/Items';
+import { ArrayToDict, Random } from 'Utils/Functions';
+import { Character, PageBack } from 'Interface/Components';
+import { GetRandomIntByDay, GetRandomIndexesByDay } from 'Utils/Items';
 import { renderTitlePopup } from './popupTitle';
 import { renderItemPopup } from './popupItem';
 import { renderDyePopup } from './popupDye';
@@ -15,9 +15,9 @@ const SHOP_NUMBER_ITEMS = 8;
 const SHOP_NUMBER_DYE = 2;
 
 /**
- * @typedef {import('../../../Class/Admob').AdStates} AdStates
- * @typedef {import('../../../Class/Admob').AdTypes['add30Ox']} AdEvent
- * @typedef {import('../../../Data/Items').CharacterContainerSize} CharacterContainerSize
+ * @typedef {import('Class/Admob').AdStates} AdStates
+ * @typedef {import('Class/Admob').AdTypes['add30Ox']} AdEvent
+ * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
  * 
  * @typedef BuyableTitle
  * @property {number} ID

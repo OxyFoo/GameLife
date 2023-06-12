@@ -1,19 +1,26 @@
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { GetDate } from '../../../Utils/Time';
-import { DateToFormatString } from '../../../Utils/Date';
+import { GetDate } from 'Utils/Time';
+import { DateToFormatString } from 'Utils/Date';
 
 /**
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
+ * 
  * @typedef HistoryActivity
  * @property {Activity} activity
  * @property {string} title
- * @property {function} onPress
+ * @property {(event: GestureResponderEvent) => void} onPress
  */
 
 class BackSkill extends PageBack {
+    /** @type {ActivityPanel|null} */
+    refActivityPanel = null;
+
     constructor(props) {
         super(props);
 
@@ -43,6 +50,14 @@ class BackSkill extends PageBack {
         };
 
         // History
+        this.history = [];
+        this.__updateHIstory();
+
+        // Back handler
+        user.interface.SetCustomBackHandle(this.onBackPress);
+    }
+
+    __updateHIstory = () => {
         const userActivities = user.activities.Get();
         const history = userActivities.filter((a) => a.skillID === this.skillID).reverse();
         this.history = history.map((activity) => {
@@ -50,13 +65,26 @@ class BackSkill extends PageBack {
             const date = DateToFormatString(GetDate(activity.startTime));
             const text = langManager.curr['skill']['text-history'];
             const duration = activity.duration;
-            const title = text.replace('{}', date).replace('{}', duration);
+            const title = text.replace('{}', date).replace('{}', duration.toString());
 
             // On press function
-            const onPress = () => { user.interface.ChangePage('activity', { 'activity': activity }); }
+            const onPress = () => {
+                this.refActivityPanel?.SelectActivity(activity, () => {
+                    this.__updateHIstory();
+                    const empty = this.history.length === 0;
+                    if (empty) this.onBackPress();
+                    else       this.forceUpdate();
+                });
+            }
 
             return { activity, title, onPress };
         });
+    }
+
+    onBackPress = () => {
+        this.refActivityPanel?.Close();
+        user.interface.BackPage();
+        user.interface.ResetCustomBackHandle();
     }
 
     addActivity = () => {

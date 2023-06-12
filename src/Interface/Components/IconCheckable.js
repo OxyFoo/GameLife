@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 import Icon from './Icon';
-import { Button } from '../Components';
-import { IsUndefined } from '../../Utils/Functions';
+import { Button } from 'Interface/Components';
+import { IsUndefined } from 'Utils/Functions';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const IconCheckableProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {string} Display an icon from XML base64 encoded */

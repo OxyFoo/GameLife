@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 
 /**
- * @typedef {import('./Icon').Icons} Icons
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
+ * 
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const NewComponentProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleViewProp} */
     style: {}
 }
 

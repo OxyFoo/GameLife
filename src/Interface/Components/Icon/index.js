@@ -3,17 +3,17 @@ import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import SVGIcons from './icons';
-import themeManager from '../../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import Base64 from '../../../Utils/Base64';
+import Base64 from 'Utils/Base64';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  * @typedef {'default'|'add'|'arrowLeft'|'calendar'|'check'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'filter'|'flagEnglish'|'flagFrench'|'home'|'human'|'info'|'instagram'|'item'|'moveVertical'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'social'|'success'|'tiktok'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
  *
  * @callback GestureEvent

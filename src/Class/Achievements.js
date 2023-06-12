@@ -1,22 +1,20 @@
-import dataManager from '../Managers/DataManager';
-import langManager from '../Managers/LangManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
-import DynamicVar from '../Utils/DynamicVar';
-import { GetTime } from '../Utils/Time';
-import { GetBattery } from '../Utils/Device';
+import DynamicVar from 'Utils/DynamicVar';
+import { GetTime } from 'Utils/Time';
+import { GetBattery } from 'Utils/Device';
 
 /**
- * @typedef {import('../Managers/UserManager').default} UserManager
- * @typedef {import('../Data/Achievements').Condition} Condition
- * @typedef {import('../Data/Achievements').Reward} Reward
- * @typedef {import('../Data/Achievements').Achievement} Achievement
+ * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Data/Achievements').Condition} Condition
+ * @typedef {import('Data/Achievements').Reward} Reward
+ * @typedef {import('Data/Achievements').Achievement} Achievement
  */
 
 class Achievements {
     constructor(user) {
-        /**
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         /**

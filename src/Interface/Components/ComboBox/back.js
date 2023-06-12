@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-import { SpringAnimation } from '../../../Utils/Animations';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {import('../../Components').Page} Page
- * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Interface/Components').Page} Page
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  * 
  * @typedef {object} ComboBoxItem
  * @property {number|string} key

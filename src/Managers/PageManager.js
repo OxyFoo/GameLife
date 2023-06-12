@@ -3,23 +3,22 @@ import { Animated, BackHandler, StyleSheet } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
-import * as Pages from '../Interface/Pages';
-import langManager from './LangManager';
-import themeManager from './ThemeManager';
+import * as Pages from 'Interface/Pages';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { TimingAnimation } from '../Utils/Animations';
-import { IsUndefined, Sleep } from '../Utils/Functions';
-import { PageBack } from '../Interface/Components';
-import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from '../Interface/Widgets';
+import { TimingAnimation } from 'Utils/Animations';
+import { IsUndefined, Sleep } from 'Utils/Functions';
+import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from 'Interface/Widgets';
 
 /**
- * @typedef {import('../Interface/Components').PageBack} PageBack
+ * @typedef {import('Interface/Components').PageBack} PageBack
  * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
  * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.ShopItems | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Tasks | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
  * 
  * @typedef PageState
  * @type {Object}
- * @property {PageType|null} content
+ * @property {JSX.Element|null} content
  * @property {PageBack|null} ref
  * @property {object} args
  */
@@ -51,7 +50,7 @@ const CACHE_PAGES = {
 
 class PageManager extends React.Component{
     state = {
-        /** @type {PageName} */
+        /** @type {PageName|''} */
         selectedPage: '',
 
         animTheme: new Animated.Value(0),
@@ -136,7 +135,7 @@ class PageManager extends React.Component{
         return true;
     }
 
-    setStateSync = (state) => new Promise((resolve) => this.setState(state, resolve));
+    setStateSync = (state) => new Promise((resolve) => this.setState(state, () => resolve()));
 
     /**
      * Try to get last page content
@@ -162,13 +161,13 @@ class PageManager extends React.Component{
         const [ prevPage, prevArgs ] = this.path[this.path.length - 1];
         this.path.length = this.path.length - 1;
         this.setState({ ignorePage: false });
-        this.pageAnimation(prevPage);
+        this.pageAnimation(prevPage, prevArgs);
         return true;
     }
 
     /**
      * Open page
-     * @param {PageName} nextpage
+     * @param {PageName|''} nextpage
      * @param {object} pageArguments
      * @param {boolean} ignorePage
      * @param {boolean} forceUpdate
@@ -217,7 +216,7 @@ class PageManager extends React.Component{
 
         this.setState({ ignorePage });
         return new Promise(async (resolve) => {
-            await this.pageAnimation(nextpage);
+            await this.pageAnimation(nextpage, pageArguments);
             resolve();
         });
     }
@@ -233,9 +232,10 @@ class PageManager extends React.Component{
     /**
      * Hide current page and show new page
      * @param {PageName} newPage
+     * @param {object} args
      * @returns {Promise}
      */
-    pageAnimation = async (newPage) => {
+    pageAnimation = async (newPage, args) => {
         this.changing = true;
 
         const T = new Date().getTime();
@@ -272,7 +272,7 @@ class PageManager extends React.Component{
                 console.log('Ref undefined (' + newPage + ')');
             }
         } else {
-            CACHE_PAGES.temp.content = this.getPageContent(newPage, CACHE_PAGES.temp.args, true);
+            CACHE_PAGES.temp.content = this.getPageContent(newPage, args, true);
             this.setState({ selectedPage: newPage }, () => {
                 if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();
@@ -335,6 +335,7 @@ class PageManager extends React.Component{
             return null;
         }
 
+        /** @type {PageType} */
         const Page = pages[page];
         return <Page key={key} args={args} ref={setRef} />;
     }

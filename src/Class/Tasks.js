@@ -1,7 +1,8 @@
-import { GetTime } from '../Utils/Time';
-import { MonthDayBetween, WeekDayBetween } from '../Utils/Date';
+import { GetTime } from 'Utils/Time';
+import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
 
 /**
+ * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'none'|'week'|'month'} RepeatModes
  * 
  * @typedef {object} Schedule
@@ -41,10 +42,7 @@ class Task {
 
 class Tasks {
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         /**
@@ -163,9 +161,9 @@ class Tasks {
             let reset = false;
             const now = GetTime();
             if (task.Schedule.Type === 'week') {
-                reset |= WeekDayBetween(task.Schedule.Repeat, task.Checked, now);
+                reset ||= WeekDayBetween(task.Schedule.Repeat, task.Checked, now);
             } else if (task.Schedule.Type === 'month') {
-                reset |= MonthDayBetween(task.Schedule.Repeat, task.Checked, now);
+                reset ||= MonthDayBetween(task.Schedule.Repeat, task.Checked, now);
             }
             if (reset) {
                 this.Remove(task);

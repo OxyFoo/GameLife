@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
-import { LayoutChangeEvent } from 'react-native';
 
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button } from '../Components';
-import { Sleep } from '../../Utils/Functions';
-import { TimingAnimation } from '../../Utils/Animations';
+import { Text, Button } from 'Interface/Components';
+import { Sleep } from 'Utils/Functions';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ *
  * @typedef {object} ContentArgs
  * @property {[string, string]} ok
  * @property {[string, string]} yesno

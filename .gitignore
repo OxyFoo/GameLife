@@ -39,12 +39,12 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
 
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
-!debug.keystore
+.buckconfig
 
 # fastlane
 #
@@ -63,19 +63,22 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-# Other
+# Credentials
+config.php
+firebase.json
+
+# VSCode
+.vscode/
 *.code-workspace
-package-lock.json
-.buckconfig
+
+# Useless config
+.gitattributes
 .editorconfig
 .eslintrc.js
 .flowconfig
 .prettierrc.js
 .watchmanconfig
 
-.gitattributes
-.vscode/
-config.php
+# Other
 Backups
-Readmeme.md
-firebase.json
+FORME.md

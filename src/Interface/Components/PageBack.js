@@ -1,14 +1,12 @@
 import * as React from 'react';
 
-import Page from './Page';
-
 /**
- * @typedef {import('../Components').Page} Page
+ * @typedef {import('Interface/Components').Page} Page
  */
 
 class PageBack extends React.Component {
-    /** @type {Page} */
-    refPage = React.createRef();
+    /** @type {Page|null} */
+    refPage = null;
 
     /** @type {boolean} */
     loaded = false;

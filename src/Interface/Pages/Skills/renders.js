@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { GetDate } from '../../../Utils/Time';
-import { DateToFormatString } from '../../../Utils/Date';
-import { Text, Button, IconCheckable, Icon } from '../../Components';
+import { GetDate } from 'Utils/Time';
+import { DateToFormatString } from 'Utils/Date';
+import { Text, Button, IconCheckable, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('./index').default} SkillsPage
- * @typedef {import('../../../Data/Skills').Skill} Skill
- * @typedef {import('../../../Data/Skills').Category} Category
+ * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Data/Skills').Category} Category
  */
 
 /**
@@ -21,11 +21,12 @@ import { Text, Button, IconCheckable, Icon } from '../../Components';
  * @returns {JSX.Element}
  */
 function renderCategory({ item }) {
-    if (item === 0) {
+    const { ID, LogoID } = item;
+
+    if (ID === 0) {
         return <View style={{ width: 44, height: 44 }} />;
     }
 
-    const { ID, LogoID } = item;
     const checked = this.state.selectedCategories.includes(ID);
     const icon = dataManager.skills.GetXmlByLogoID(LogoID);
 

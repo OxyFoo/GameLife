@@ -1,20 +1,22 @@
 import { FlatList } from 'react-native';
 
-import dataManager from '../../../Managers/DataManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Sleep } from '../../../Utils/Functions';
-import { PageBack } from '../../Components';
-import { CategoryToItem, SkillToItem } from './Components/types';
+import { Sleep } from 'Utils/Functions';
+import { PageBack } from 'Interface/Components';
+import { CategoryToItem, SkillToItem } from './types';
 
 /**
- * @typedef {import('../../../Data/Skills').Skill} Skill
- * @typedef {import('./Components/types').ItemSkill} ItemSkill
- * @typedef {import('./Components/types').ItemCategory} ItemCategory
- * @typedef {import('../../../Class/Activities').Activity} Activity
- * @typedef {import('./Components/activityPanel').default} ActivityPanel
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * 
+ * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('./types').ItemSkill} ItemSkill
+ * @typedef {import('./types').ItemCategory} ItemCategory
+ * 
+ * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  */
 
 class BackActivity extends PageBack {
@@ -91,7 +93,7 @@ class BackActivity extends PageBack {
 
     async componentDidMount() {
         // Wait for the layout to be calculated
-        while (this.state.topPanelOffset === 0 || !this.refActivityPanel.state.loaded) {
+        while (this.state.topPanelOffset === 0 || !this.refActivityPanel?.state.loaded) {
             await Sleep(100);
         }
 

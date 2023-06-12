@@ -1,4 +1,4 @@
-import { Rarity } from '../Data/Items';
+import { Rarity } from 'Data/Items';
 
 /**
  * @typedef {'Dark'|'Light'} Theme

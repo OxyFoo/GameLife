@@ -4,11 +4,11 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import BackShopItems from './back';
 import styles from './styles';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { PageHeader } from '../../Widgets';
-import { Page, Icon, Text, Button, Container, Frame } from '../../Components';
+import { PageHeader } from 'Interface/Widgets';
+import { Page, Icon, Text, Button, Container, Frame } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').BuyableTitle} BuyableTitle

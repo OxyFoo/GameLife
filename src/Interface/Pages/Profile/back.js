@@ -1,7 +1,7 @@
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
 
-import { GetDate, GetTime } from '../../../Utils/Time';
+import { GetDate, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('./editorAvatar').default} EditorAvatar

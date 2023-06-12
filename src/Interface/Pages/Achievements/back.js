@@ -1,6 +1,6 @@
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
-import dataManager from '../../../Managers/DataManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 
 class BackAchievements extends PageBack {
     state = {
@@ -17,7 +17,7 @@ class BackAchievements extends PageBack {
             ID: achievement.ID,
             Name: dataManager.GetText(achievement.Name),
             Description: dataManager.GetText(achievement.Description),
-            isSolved: completeAchievements.includes(parseInt(achievement.ID))
+            isSolved: completeAchievements.includes(achievement.ID)
         }));
     }
 

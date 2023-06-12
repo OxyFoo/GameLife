@@ -2,15 +2,14 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './styles';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Text, Button } from '../../Components';
+import { Text, Button } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').BuyableDye} BuyableDye
- * @typedef {import('../../../Data/Items').Item} Item
+ * @typedef {import('Data/Items').Item} Item
  */
 
 /**

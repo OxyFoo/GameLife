@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import dataManager from '../../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { Sleep } from '../../../Utils/Functions';
-import { Character, Frame } from '../../Components';
-import { SpringAnimation } from '../../../Utils/Animations';
+import { Sleep } from 'Utils/Functions';
+import { Character, Frame } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 const AvatarProps = {
     refParent: null,
@@ -15,8 +15,8 @@ const AvatarProps = {
 }
 
 /**
- * @typedef {import('../../../Class/Inventory').Stuff} Stuff
- * @typedef {import('../../../Data/Items').Slot} Slot
+ * @typedef {import('Class/Inventory').Stuff} Stuff
+ * @typedef {import('Data/Items').Slot} Slot
  * @typedef {'skin'|'skinColor'} SkinSlot
  * @typedef {Slot|SkinSlot} AvatarSlot
  */

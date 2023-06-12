@@ -2,10 +2,10 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import BackOnboarding from './back';
-import langManager from '../../../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
 import { renderPage0, renderPage1, renderPage2, renderPage3 } from './panels';
-import { Button, Page, Swiper } from '../../Components';
+import { Button, Page, Swiper } from 'Interface/Components';
 
 class Onboarding extends BackOnboarding {
     render() {

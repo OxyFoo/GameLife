@@ -4,7 +4,7 @@ import { View, Image, Animated } from 'react-native';
 import BackLogin from './back';
 import styles from './style';
 
-import { Page, Text, Button, Input, Checkbox } from '../../Components';
+import { Page, Text, Button, Input, Checkbox } from 'Interface/Components';
 
 class Login extends BackLogin {
     render() {

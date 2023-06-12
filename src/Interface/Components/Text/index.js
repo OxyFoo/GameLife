@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
 
-import themeManager from '../../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 const MAIN_FONT_NAME = 'Hind Vadodara';
 
@@ -13,8 +13,8 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const TextProps = {

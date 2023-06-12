@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 import BackAchievements from './back';
-import user from '../../../Managers/UserManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Page, Text } from '../../Components';
-import { PageHeader } from '../../Widgets';
+import { Page, Text } from 'Interface/Components';
+import { PageHeader } from 'Interface/Widgets';
 
 class Achievements extends BackAchievements {
     renderAchievement = ({ item: achievement }) => {

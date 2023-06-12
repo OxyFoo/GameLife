@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import ButtonBack from './back';
-import themeManager from '../../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 import Ripple from '../Ripple';
-import { Text, Icon } from '../../Components';
-import { IsUndefined } from '../../../Utils/Functions';
+import { Text, Icon } from 'Interface/Components';
+import { IsUndefined } from 'Utils/Functions';
 
 class Button extends ButtonBack {
     render() {

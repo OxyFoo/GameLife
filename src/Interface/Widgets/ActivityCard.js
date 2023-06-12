@@ -1,27 +1,30 @@
 import * as React from 'react';
 import { Animated, TouchableOpacity, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle, GestureResponderEvent } from 'react-native';
 
-import dataManager from '../../Managers/DataManager';
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Icon, Text } from '../Components';
-import { TimingAnimation } from '../../Utils/Animations';
-import { TimeToFormatString } from '../../Utils/Time';
+import { Icon, Text } from 'Interface/Components';
+import { TimingAnimation } from 'Utils/Animations';
+import { TimeToFormatString } from 'Utils/Time';
 
 /**
- * @typedef {import('../../Class/Activities').Activity} Activity
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ *
+ * @typedef {import('Class/Activities').Activity} Activity
  */
 
 const ActivityCardProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {Activity} */
-    activity: {},
+    activity: undefined,
 
-    /** @type {number=0} Used to delay before displaying the activity card */
+    /** @type {number} Used to delay before displaying the activity card */
     index: 0,
 
     /** @param {GestureResponderEvent} event */

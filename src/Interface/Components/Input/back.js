@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-import { TimingAnimation } from '../../../Utils/Animations';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -12,8 +12,8 @@ import { TimingAnimation } from '../../../Utils/Animations';
  * @typedef {import('react-native').TextInputSubmitEditingEventData} TextInputSubmitEditingEventData
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputSubmitEditingEventData>} NativeSyntheticEvent
  * 
- * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  * 
  * @typedef {'default'|'email'|'username'|'name'} TextContentType
  */

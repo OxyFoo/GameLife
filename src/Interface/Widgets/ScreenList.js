@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { View, Animated, TouchableHighlight, FlatList, StyleSheet } from 'react-native';
-import { LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Separator, Text } from '../Components';
-import { SpringAnimation, TimingAnimation } from '../../Utils/Animations';
-import { Sleep } from '../../Utils/Functions';
+import { Separator, Text } from 'Interface/Components';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import { Sleep } from 'Utils/Functions';
+
+/**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ */
 
 const ScreenListProps = {
 }

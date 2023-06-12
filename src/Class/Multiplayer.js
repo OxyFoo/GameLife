@@ -1,6 +1,10 @@
 const settings = { host: '45.82.73.154', port: 7121 };
 
 /**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ */
+
+/**
  * TCP server state change event
  * @callback onChangeCallback
  * @param {'connected'|'disconnected'|'error'} state
@@ -8,10 +12,7 @@ const settings = { host: '45.82.73.154', port: 7121 };
 
 class Multiplayer {
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
         
         /** @type {WebSocket?} */

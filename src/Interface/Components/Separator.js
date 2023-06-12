@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  */
 
 const SeparatorProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {ColorTheme} */

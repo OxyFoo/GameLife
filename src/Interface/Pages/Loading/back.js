@@ -1,5 +1,5 @@
-import { PageBack } from '../../Components';
-import user from '../../../Managers/UserManager';
+import { PageBack } from 'Interface/Components';
+import user from 'Managers/UserManager';
 
 import { Initialisation } from '../../../App/Loading';
 

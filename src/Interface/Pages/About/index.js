@@ -3,11 +3,11 @@ import { View, TouchableOpacity, FlatList } from 'react-native';
 
 import BackAbout from './back';
 import styles from './style';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { PageHeader } from '../../Widgets';
-import { Page, Text, Icon } from '../../Components';
+import { PageHeader } from 'Interface/Widgets';
+import { Page, Text, Icon } from 'Interface/Components';
 
 class About extends BackAbout {
     renderContributor({ item: contributor }) {

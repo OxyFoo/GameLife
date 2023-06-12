@@ -1,19 +1,23 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import user from '../../Managers/UserManager';
-import langManager from '../../Managers/LangManager';
-import themeManager from '../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Text, Icon, Button, Frame } from '../Components';
-import { SpringAnimation } from '../../Utils/Animations';
+import { Text, Icon, Button, Frame } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ */
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const UserHeaderProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {boolean} */

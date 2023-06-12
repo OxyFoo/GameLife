@@ -3,17 +3,17 @@ import { TextInput, Animated } from 'react-native';
 
 import styles from './style';
 import InputBack from './back';
-import themeManager from '../../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Text } from '../../Components';
+import { Text } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {import('../../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 /**
@@ -32,8 +32,8 @@ class Input extends InputBack {
         const interH = {
             inputRange: [ 0, 1 ],
             outputRange: [
-                -this.state.textHeight / 2
-                , this.state.boxHeight / 2 - this.state.textHeight / 2 - 2
+                -this.state.textHeight / 2,
+                this.state.boxHeight / 2 - this.state.textHeight / 2 - 2
             ]
         }
 

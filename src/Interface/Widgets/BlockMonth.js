@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 
-import user from '../../Managers/UserManager';
-import themeManager from '../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Text } from '../Components';
-import { GetMonthAndYear } from '../../Utils/Date';
+import { Text } from 'Interface/Components';
+import { GetMonthAndYear } from 'Utils/Date';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ */
 
 const BlockMonthProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     data: [],

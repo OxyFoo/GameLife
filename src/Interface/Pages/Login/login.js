@@ -1,5 +1,5 @@
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {import('./back').default} LoginPage

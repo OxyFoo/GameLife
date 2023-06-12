@@ -1,4 +1,8 @@
-import { GetByKey } from '../Utils/Functions';
+import { GetByKey } from 'Utils/Functions';
+
+/**
+ * @typedef {import('Managers/DataManager').DataManager} DataManager
+ */
 
 class Skill {
     ID = 0;
@@ -31,24 +35,16 @@ class Category {
 
 class Skills {
     constructor(dataManager) {
-        /**
-         * @type {Skill[]}
-         */
+        /** @type {Skill[]} */
         this.skills = [];
 
-        /**
-         * @type {Icon[]}
-         */
+        /** @type {Icon[]} */
         this.icons = [];
 
-        /**
-         * @type {Category[]}
-         */
+        /** @type {Category[]} */
         this.categories = [];
 
-        /**
-         * @type {import('../Managers/DataManager').DataManager}
-         */
+        /** @type {DataManager} */
         this._dataManager = dataManager;
     }
 
@@ -72,7 +68,7 @@ class Skills {
         let skills = [];
         for (let i = 0; i < this.skills.length; i++) {
             let skill = this.skills[i];
-            if (typeof(category) === 'undefined' || category === skill.Category) {
+            if (typeof(category) === 'undefined' || category === skill.CategoryID) {
                 skills.push({ key: parseInt(skill.ID), value: skill.Name });
             }
         }

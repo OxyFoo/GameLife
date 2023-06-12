@@ -1,12 +1,14 @@
-import dataManager from '../Managers/DataManager';
+import dataManager from 'Managers/DataManager';
 
-import { DateToFormatString } from '../Utils/Date';
+import { DateToFormatString } from 'Utils/Date';
 
 /**
- * @typedef {import('../Data/Items').Slot} Slot
- * @typedef {import('../Data/Titles').Title} Title
- * @typedef {import('../../res/items/humans/Characters').CharactersName} CharactersName
- * @typedef {import('../../res/items/humans/Characters').Sexes} Sexes
+ * @typedef {import('Managers/UserManager').default} UserManager
+ * 
+ * @typedef {import('Data/Items').Slot} Slot
+ * @typedef {import('Data/Titles').Title} Title
+ * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
+ * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
  */
 
 class Stuff {
@@ -18,10 +20,7 @@ class Stuff {
 
 class Inventory {
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         /** @type {Array<number>} */

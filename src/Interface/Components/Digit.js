@@ -1,20 +1,23 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { LayoutChangeEvent, GestureResponderEvent } from 'react-native';
 
-import Text from './Text';
-import { Range } from '../../Utils/Functions';
-import { TimingAnimation, SpringAnimation } from '../../Utils/Animations';
+import { Text } from 'Interface/Components';
+import { Range } from 'Utils/Functions';
+import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const DigitProps = {
     /** @type {string} - The text to get in callback */
     name: 'index',
 
-    /** @type {ColorTheme} */
+    /** @type {ColorTheme|ColorThemeText} */
     color: 'primary',
 
     /** @type {boolean} If true, value can't be changed */

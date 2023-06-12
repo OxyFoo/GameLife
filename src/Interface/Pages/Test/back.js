@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import user from '../../../Managers/UserManager';
-import dataManager from '../../../Managers/DataManager';
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 
-import { PageBack } from '../../Components';
+import { PageBack } from 'Interface/Components';
 
 class BackTest extends PageBack {
     state = {

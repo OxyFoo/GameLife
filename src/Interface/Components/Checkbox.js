@@ -1,19 +1,21 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
 import Icon from './Icon';
-import { SpringAnimation } from '../../Utils/Animations';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../../Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('../../Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const CheckboxProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {ColorTheme} */

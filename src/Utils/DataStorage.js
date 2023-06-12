@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { StrIsJSON } from "./String";
+import { StrIsJSON } from './String';
 
 /**
  * @typedef {object} DataStorage_Data

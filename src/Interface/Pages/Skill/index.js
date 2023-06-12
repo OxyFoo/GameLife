@@ -3,12 +3,12 @@ import { View, FlatList, TouchableOpacity } from 'react-native';
 
 import BackSkill from './back';
 import styles from './style';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
-import themeManager from '../../../Managers/ThemeManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { PageHeader, StatsBars } from '../../Widgets';
-import { Page, Container, Text, Icon, XPBar, Button } from '../../Components';
+import { PageHeader, StatsBars, ActivityPanel } from 'Interface/Widgets';
+import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
@@ -17,11 +17,20 @@ class Skill extends BackSkill {
      * @param {{ item: HistoryActivity }} item
      * @returns {JSX.Element}
      */
-    renderHistoryItem = ({item, i}) => {
+    renderHistoryItem = ({ item }) => {
         return (
             <TouchableOpacity activeOpacity={0.6} onPress={item.onPress}>
                 <Text style={styles.textHistory}>{item.title}</Text>
             </TouchableOpacity>
+        );
+    }
+
+    renderActivity = () => {
+        return (
+            <ActivityPanel
+                ref={ref => this.refActivityPanel = ref}
+                topOffset={200}
+            />
         );
     }
 
@@ -44,13 +53,18 @@ class Skill extends BackSkill {
         const lang = langManager.curr['skill'];
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
+        if (!this.skill) {
+            return null;
+        }
+
         return (
             <Page
                 ref={ref => this.refPage = ref}
                 bottomOffset={104}
+                overlay={this.renderActivity()}
                 footer={this.renderFooter()}
             >
-                <PageHeader onBackPress={user.interface.BackPage} hideHelp />
+                <PageHeader onBackPress={this.onBackPress} hideHelp />
 
                 {/* Skill name and icon */}
                 <View style={styles.skillContainer}>

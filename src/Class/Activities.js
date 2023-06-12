@@ -1,10 +1,12 @@
-import dataManager from '../Managers/DataManager';
+import dataManager from 'Managers/DataManager';
 
-import DynamicVar from '../Utils/DynamicVar';
-import { SortByKey } from '../Utils/Functions';
-import { GetMidnightTime, GetTime } from '../Utils/Time';
+import DynamicVar from 'Utils/DynamicVar';
+import { SortByKey } from 'Utils/Functions';
+import { GetMidnightTime, GetTime } from 'Utils/Time';
 
 /**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ * 
  * @typedef {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'} AddStatus
  * 
  * @typedef {object} CurrentActivity
@@ -23,10 +25,7 @@ class Activity {
 
 class Activities {
     constructor(user) {
-        /**
-         * @typedef {import('../Managers/UserManager').default} UserManager
-         * @type {UserManager}
-         */
+        /** @type {UserManager} */
         this.user = user;
 
         /**

@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { StyleProp, ViewStyle, LayoutChangeEvent } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { MinMax, Sleep } from '../../Utils/Functions';
-import { SpringAnimation } from '../../Utils/Animations';
+import { MinMax, Sleep } from 'Utils/Functions';
+import { SpringAnimation } from 'Utils/Animations';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ */
 
 const XPBarProps = {
-    /** @type {StyleProp<ViewStyle>} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {number} */

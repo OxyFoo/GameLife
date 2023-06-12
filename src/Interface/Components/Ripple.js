@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
-import themeManager from '../../Managers/ThemeManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { TimingAnimation } from '../../Utils/Animations';
+import { TimingAnimation } from 'Utils/Animations';
 
 class Ripple extends React.PureComponent {
     constructor(props) {

@@ -2,17 +2,16 @@ import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
 import BackActivity from './back';
-import ActivityPanel from './Components/activityPanel';
 import styles from './style';
-import user from '../../../Managers/UserManager';
-import langManager from '../../../Managers/LangManager';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Page, Text, IconCheckable, Input } from '../../Components';
-import { PageHeader } from '../../Widgets';
+import { Page, Text, IconCheckable, Input } from 'Interface/Components';
+import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
 /**
- * @typedef {import('./back').ItemCategory} ItemCategory
- * @typedef {import('./back').ItemSkill} ItemSkill
+ * @typedef {import('./types').ItemSkill} ItemSkill
+ * @typedef {import('./types').ItemCategory} ItemCategory
  */
 
 class Activity extends BackActivity {
@@ -86,7 +85,7 @@ class Activity extends BackActivity {
             >
                 <PageHeader
                     style={styles.header}
-                    onBackPress={user.interface.BackPage}
+                    onBackPress={(e) => user.interface.BackPage()}
                 />
 
                 {/* Categories */}
@@ -135,7 +134,6 @@ class Activity extends BackActivity {
                 {/* Panel */}
                 <ActivityPanel
                     ref={ref => this.refActivityPanel = ref}
-                    editMode={this.editMode}
                     delay={this.editMode ? 0 : 300}
                     topOffset={topPanelOffset}
                 />

@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import { AdsConsent, AdsConsentStatus, FirebaseAdMobTypes, InterstitialAd, RewardedAd, TestIds } from '@react-native-firebase/admob';
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency';
 
-import langManager from '../Managers/LangManager';
+import langManager from 'Managers/LangManager';
 
 const FIREBASE_DEFAULT = {"react-native": {
     "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
@@ -15,6 +15,8 @@ const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../firebase.json');
 const VERSION = require('../../package.json').version;
 
 /**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ * 
  * @typedef {'shop'|'todo'} RewardedAds
  * @typedef {'none'} InterstitialAds
  * @typedef {RewardedAds|InterstitialAds} AdNames
@@ -28,9 +30,9 @@ const VERSION = require('../../package.json').version;
 
 class Ad {
     /** @type {AdNames} */
-    name = '';
+    name = 'none';
     /** @type {'rewarded'|'interstitial'} */
-    type = '';
+    type = 'interstitial';
     /** @type {FirebaseAdMobTypes.RewardedAd?|FirebaseAdMobTypes.InterstitialAd?} */
     ad = null;
     /** @type {Function?} */
@@ -44,7 +46,7 @@ class Ad {
 
 class Admob {
     constructor(user) {
-        /** @type {import('../Managers/UserManager').UserManager} */
+        /** @type {UserManager} */
         this.user = user;
 
         /** @type {Array<Ad>} */
@@ -118,7 +120,7 @@ class Admob {
      * @param {AdTypes[T]?} event
      * @returns {FirebaseAdMobTypes.RewardedAd?}
      */
-    GetRewardedAd(adName, type = 'custom', event = () => {}) {
+    GetRewardedAd(adName, type, event = () => {}) {
         let rewarded = this.ads.find(ad => ad.name === adName && ad.type === 'rewarded') || null;
         if (rewarded === null) return null;
 
@@ -141,7 +143,7 @@ class Admob {
      * @param {AdTypes[T]?} event
      * @returns {FirebaseAdMobTypes.InterstitialAd?}
      */
-    GetInterstitialAd(adName, type = 'custom', event = () => {}) {
+    GetInterstitialAd(adName, type, event = () => {}) {
         let interstitial = this.ads.find(ad => ad.name === adName && ad.type === 'interstitial') || null;
         if (interstitial === null) return null;
 

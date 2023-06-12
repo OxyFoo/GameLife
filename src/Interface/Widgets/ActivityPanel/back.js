@@ -11,6 +11,8 @@ import { SpringAnimation } from 'Utils/Animations';
 import { AskActivityComment, AddActivity, onRemComment, RemActivity } from './utils';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {{ id: number, name: string, icon: string }} ItemCategory
  * @typedef {{ id: number, value: string, categoryID: number, onPress: () => void }} ItemSkill
  * 
@@ -20,6 +22,9 @@ import { AskActivityComment, AddActivity, onRemComment, RemActivity } from './ut
  */
 
 const ActivityPanelProps = {
+    /** @type {StyleProp} */
+    style: {},
+
     /** @type {number} Render after delay in ms */
     delay: 0,
 
@@ -59,7 +64,8 @@ class ActivityPanelBack extends React.Component {
     /** @type {Activity|null} */
     __selectedActivity = null;
 
-    __callback = () => { };
+    __callback_removed = () => { };
+    __callback_closed = () => { };
 
     /** @type {PanelScreen} */
     refPanelScreen = null;
@@ -112,9 +118,10 @@ class ActivityPanelBack extends React.Component {
     /**
      * @param {Activity|null} activity
      * @param {() => void} callbackRemoved Callback called when the activity is removed
+     * @param {() => void} callbackClosed Callback called when the panel is closed
      * @returns {boolean} True if the activity is valid
      */
-    SelectActivity = (activity, callbackRemoved = () => {}) => {
+    SelectActivity = (activity, callbackRemoved = () => {}, callbackClosed = () => {}) => {
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (activity === null || skill === null) {
             console.error('SelectActivity: Invalid activity or skill', activity, skill);
@@ -126,10 +133,11 @@ class ActivityPanelBack extends React.Component {
             mode: 'activity',
             selectedSkillID: skill.ID,
             activityText: dataManager.GetText(skill.Name),
-            activity: activity
+            activity: { ...activity }
         });
 
-        this.__callback = callbackRemoved;
+        this.__callback_removed = callbackRemoved;
+        this.__callback_closed = callbackClosed;
         this.refPanelScreen.Open();
         return true;
     }
@@ -146,6 +154,9 @@ class ActivityPanelBack extends React.Component {
         if (this.state.selectedSkillID === 0) {
             return;
         }
+
+        this.__callback_closed();
+        this.__callback_closed = () => { };
 
         this.refPanelScreen.Close();
         setTimeout(() => {
@@ -226,7 +237,7 @@ class ActivityPanelBack extends React.Component {
             this.Close();
             user.activities.Remove(this.state.activity);
             user.GlobalSave();
-            this.__callback();
+            this.__callback_removed();
         });
     }
 }

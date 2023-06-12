@@ -134,7 +134,7 @@ class ActivityPanel extends ActivityPanelBack {
 
     render() {
         const lang = langManager.curr['activity'];
-        const { topOffset } = this.props;
+        const { style, topOffset } = this.props;
         const { loaded, activityText, mode } = this.state;
 
         if (!loaded) {
@@ -148,7 +148,7 @@ class ActivityPanel extends ActivityPanelBack {
         return (
             <PanelScreen
                 ref={ref => this.refPanelScreen = ref}
-                containerStyle={[styles.panel, stylePanel]}
+                containerStyle={[styles.panel, stylePanel, style]}
                 topOffset={topOffset}
                 onClose={this.Close}
                 disableBackground

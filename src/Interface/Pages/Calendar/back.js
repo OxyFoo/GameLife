@@ -12,9 +12,13 @@ import { GetTime, RoundToQuarter } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  */
 
 class BackCalendar extends PageBack {
+    /** @type {ActivityPanel|null} */
+    refActivityPanel = null;
+
     constructor(props) {
         super(props);
 
@@ -101,7 +105,7 @@ class BackCalendar extends PageBack {
                     if (this.ratioY <= offsetLimit) newMonths = this.addMonthToTop(this.state.months, 2);
                     if (this.ratioY >= 1 - offsetLimit) newMonths = this.addMonthToBottom(this.state.months, 2);
                     delta = Math.abs(newMonths.length - this.state.months.length);
-                    this.setState({ months: newMonths }, resolve);
+                    this.setState({ months: newMonths }, () => resolve());
                 });
                 const newOffsetY = this.offsetY + delta * (this.ratioY <= offsetLimit ? 284 : -284);
                 this.flatlist.scrollToOffset({ offset: newOffsetY, animated: false });
@@ -228,16 +232,19 @@ class BackCalendar extends PageBack {
         this.daySelect(newDay, newMonth, newYear);
     }
 
-    /* OLD */
-    skill_remove = (activity) => {
-        const remove = (button) => {
-            if (button === 'yes') {
-                user.activities.Remove(activity);
-            }
-        }
-        const title = langManager.curr['calendar']['alert-remove-title'];
-        const text = langManager.curr['calendar']['alert-remove-text'];
-        user.interface.popup.Open('yesno', [ title, text ], remove);
+    /**
+     * @param {Activity} activity 
+     */
+    onActivityPress = (activity) => {
+        this.refActivityPanel?.SelectActivity(activity, undefined, () => {
+            // Show bottom bar
+            const newBarState = { bottomBarShow: true, bottomBarIndex: 1 };
+            user.interface.setState(newBarState);
+        });
+
+        // Hide bottom bar
+        const newBarState = { bottomBarShow: false, bottomBarIndex: 2 };
+        user.interface.setState(newBarState);
     }
 }
 

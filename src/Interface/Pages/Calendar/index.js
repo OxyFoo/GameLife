@@ -3,11 +3,10 @@ import { View, FlatList, Animated, Dimensions } from 'react-native';
 
 import BackCalendar from './back';
 import styles from './style';
-import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Icon, Page, Text } from 'Interface/Components';
-import { ActivityCard, BlockMonth } from 'Interface/Widgets';
+import { ActivityCard, ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -19,7 +18,7 @@ class Calendar extends BackCalendar {
             style={{ maxWidth: '48%' }}
             activity={item}
             index={index}
-            onPress={() => { user.interface.ChangePage('activity', { activity: item }) }}
+            onPress={() => this.onActivityPress(item)}
         />
     );
 
@@ -30,6 +29,14 @@ class Calendar extends BackCalendar {
             year={item.year}
             data={item.data}
             onPressDay={this.daySelect}
+        />
+    );
+
+    renderActivity = () => (
+        <ActivityPanel
+            ref={ref => this.refActivityPanel = ref}
+            topOffset={300}
+            style={{ backgroundColor: themeManager.GetColor('backgroundCard') }}
         />
     );
 
@@ -46,7 +53,13 @@ class Calendar extends BackCalendar {
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
 
         return (
-            <Page ref={ref => this.refPage = ref} style={styles.page} isHomePage scrollable={false}>
+            <Page
+                ref={ref => this.refPage = ref}
+                style={styles.page}
+                overlay={this.renderActivity()}
+                isHomePage
+                scrollable={false}
+            >
                 <Animated.View style={styleContent}>
                     {/* Month + arrows to show calendar */}
                     <View style={styles.row}>

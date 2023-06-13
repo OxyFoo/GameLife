@@ -82,3 +82,5 @@ firebase.json
 # Other
 Backups
 FORME.md
+vendor/bundle/ruby/2.7.0/bin/fuzzy_match
+vendor/bundle/*

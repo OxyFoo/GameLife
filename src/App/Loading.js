@@ -115,7 +115,7 @@ async function LoadData(nextStep) {
     if (user.informations.adRemaining === 0) {
         user.interface.console.AddLog('info', 'No more ads available');
     }
-    await user.admob.ShowPopup();
+    await user.admob.ShowTrackingPopup();
     user.admob.LoadAds();
     user.StartTimers();
 

@@ -223,10 +223,17 @@ class Admob {
      * @description Show tracking popup (for iOS only),
      * consent popup (for both iOS and Android) and save choices
      */
-    async ShowPopup() {
+    async ShowTrackingPopup() {
         const ConsoleError = (err) => this.user.interface.console.AddLog('error', 'Ad consent popup:', err);
-        await this.__trackingTransparencyPopup().catch(ConsoleError);
-        await this.__adConsentPopup().catch(ConsoleError);
+
+        if (Platform.OS === 'android') {
+            await this.__trackingTransparencyPopup().catch(ConsoleError);
+        }
+
+        else if (Platform.OS === 'ios') {
+            await this.__adConsentPopup().catch(ConsoleError);
+        }
+
         await this.user.LocalSave();
     }
 
@@ -276,9 +283,9 @@ class Admob {
 
         let enabled = true;
         const trackingStatus = await getTrackingStatus();
-        if (trackingStatus !== 'unavailable') {
+        if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
             const trackingStatus = await requestTrackingPermission();
-            if (trackingStatus === 'denied') {
+            if (trackingStatus !== 'authorized') {
                 enabled = false;
             }
         }

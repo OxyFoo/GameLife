@@ -28,6 +28,7 @@ class Settings extends BackSettings {
                     onSelect={this.onChangeLang}
                 />
 
+                {/*
                 <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
                 <TextSwitch
                     // TODO - Finish themes
@@ -36,6 +37,7 @@ class Settings extends BackSettings {
                     onChange={this.onChangeTheme}
                     start={themeManager.selectedTheme === 'Dark' ? 0 : 1}
                 />
+                */}
 
                 <View style={styles.inline}>
                     <Text style={styles.inlineText}>{lang['input-notif-morning']}</Text>

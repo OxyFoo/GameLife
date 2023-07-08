@@ -8,6 +8,7 @@ class BackMultiplayer extends PageBack {
 
     componentDidMount() {
         super.componentDidMount();
+        return;
 
         this.setState({ server: 'connected' });
         return;
@@ -21,6 +22,7 @@ class BackMultiplayer extends PageBack {
         user.multiplayer.Connect();
     }
     componentWillUnmount() {
+        return;
         user.multiplayer.onChangeState = () => {};
         user.multiplayer.Disconnect();
     }

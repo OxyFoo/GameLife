@@ -8,6 +8,13 @@ import { Button, Container, Page, Text } from 'Interface/Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {
+        // Show "Coming soon" message in center of screen with emoji
+        return (
+            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
+                <Text style={styles.firstText}>🚧 Coming soon 🚧</Text>
+            </Page>
+        );
+
         const { server } = this.state;
         const pages = {
             '': this.renderLoading,

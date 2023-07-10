@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0087DCDD2A428728001F08EF /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 0087DCDC2A428728001F08EF /* ios */; };
 		0087DCDF2A4287DF001F08EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0087DCDE2A4287DF001F08EF /* GoogleService-Info.plist */; };
 		00E356F31AD99517003FC87E /* GameLifeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* GameLifeTests.m */; };
 		0C80B921A6F3F58F76C31292 /* libPods-GameLife.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-GameLife.a */; };
@@ -30,7 +29,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0087DCDC2A428728001F08EF /* ios */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ios; sourceTree = SOURCE_ROOT; };
 		0087DCDE2A4287DF001F08EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		00E356EE1AD99517003FC87E /* GameLifeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameLifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -159,7 +157,6 @@
 			isa = PBXGroup;
 			children = (
 				0087DCDE2A4287DF001F08EF /* GoogleService-Info.plist */,
-				0087DCDC2A428728001F08EF /* ios */,
 				DF928C512A38DEEB00912F83 /* Hind Vadodara.ttf */,
 			);
 			path = Resources;
@@ -263,7 +260,6 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0087DCDF2A4287DF001F08EF /* GoogleService-Info.plist in Resources */,
-				0087DCDD2A428728001F08EF /* ios in Resources */,
 				DF928C522A38DEEB00912F83 /* Hind Vadodara.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

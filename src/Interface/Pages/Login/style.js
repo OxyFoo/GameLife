@@ -24,8 +24,7 @@ const styles = StyleSheet.create({
         right: 0
     },
     title: {
-        fontSize: 58,
-        textDecorationLine: 'underline'
+        fontSize: 58
     },
     text: {
         margin: 12,

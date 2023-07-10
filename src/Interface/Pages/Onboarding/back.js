@@ -22,10 +22,12 @@ class BackOnboarding extends PageBack {
     selectEnglish = () => {
         langManager.SetLangage('en');
         this.forceUpdate();
+        this.next();
     }
     selectFrench = () => {
         langManager.SetLangage('fr');
         this.forceUpdate();
+        this.next();
     }
     next = async () => {
         if (this.refSwiper.posX === 3) {

@@ -9,14 +9,13 @@ import { Button, Text, Icon } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  */
 
 const SkillsGroupProps = {
     /** @type {StyleProp} */
-    style: {},
-
-    /** @type {boolean} Show button to open "skills" page */
-    showAllButton: false
+    style: {}
 }
 
 class SkillsGroup extends React.Component {
@@ -37,7 +36,11 @@ class SkillsGroup extends React.Component {
     openSkills = () => user.interface.ChangePage('skills');
     openSkill = (ID) => user.interface.ChangePage('skill', { skillID: ID });
 
-    renderSkill = ({ item: { ID, Name, Logo } }) => {
+    /**
+     * @param {{ item: EnrichedSkill }} param0
+     * @returns {JSX.Element} L'élément JSX représentant une compétence dans la liste.
+     */
+    renderSkill = ({ item: { ID, FullName, LogoXML } }) => {
         return (
             <TouchableOpacity
                 style={styles.skill}
@@ -45,16 +48,17 @@ class SkillsGroup extends React.Component {
                 activeOpacity={.6}
             >
                 <View style={styles.skillImage}>
-                    <Icon xml={Logo} size={52} color='main1' />
+                    <Icon xml={LogoXML} size={52} color='main1' />
                 </View>
-                <Text fontSize={12}>{Name}</Text>
+                <Text fontSize={12}>{FullName}</Text>
             </TouchableOpacity>
         );
     }
 
     render() {
-        const { style, showAllButton } = this.props;
+        const { style } = this.props;
         const lang = langManager.curr['other'];
+        const styleButton = { marginTop: this.state.skills.length === 0 ? 0 : 24 };
 
         return (
             <>
@@ -64,16 +68,15 @@ class SkillsGroup extends React.Component {
                     renderItem={this.renderSkill}
                     keyExtractor={(item, index) => 'skill-' + index}
                     numColumns={3}
+                    ItemSeparatorComponent={() => <View style={styles.skillSpace} />}
                 />
 
-                {showAllButton && (
-                    <Button
-                        style={styles.btnSmall}
-                        onPress={this.openSkills}
-                    >
-                        {lang['widget-skills-all']}
-                    </Button>
-                )}
+                <Button
+                    style={[styles.btnAllSkill, styleButton]}
+                    onPress={this.openSkills}
+                >
+                    {lang['widget-skills-all']}
+                </Button>
             </>
         );
     }
@@ -96,9 +99,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 4
     },
-    btnSmall: {
+    skillSpace: {
+        height: 12
+    },
+    btnAllSkill: {
         height: 46,
-        marginTop: 24,
         marginHorizontal: 24,
         borderRadius: 8
     }

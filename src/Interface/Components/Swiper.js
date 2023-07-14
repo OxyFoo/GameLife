@@ -37,7 +37,7 @@ const SwiperProps = {
     /** @type {number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
     delayNext: 10,
 
-    /** @type {Array<React.Component>} */
+    /** @type {Array<React.Component|React.ReactElement>} */
     pages: [],
 
     /** @type {number} */

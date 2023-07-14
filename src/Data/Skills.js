@@ -2,6 +2,7 @@ import { GetByKey } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/DataManager').DataManager} DataManager
+ * @typedef {import('Class/Experience').XPInfo} XPInfo
  */
 
 class Skill {
@@ -19,6 +20,17 @@ class Skill {
     LogoID = 0;
     Creator = '';
     XP = 0;
+}
+
+class EnrichedSkill extends Skill {
+    /** @type {string} */
+    FullName = '';
+
+    /** @type {string} */
+    LogoXML = '';
+
+    /** @type {XPInfo|null} */
+    Experience = null;
 }
 
 class Icon {
@@ -102,5 +114,5 @@ class Skills {
     }
 }
 
-export { Skill, Category };
+export { Skill, EnrichedSkill, Category };
 export default Skills;

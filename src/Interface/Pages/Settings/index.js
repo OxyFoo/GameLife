@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackSettings from './back';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -16,7 +15,7 @@ class Settings extends BackSettings {
 
         return (
             <Page ref={ref => this.refPage = ref}>
-                <PageHeader onBackPress={user.interface.BackPage} />
+                <PageHeader onBackPress={this.onBack} />
 
                 <Button style={styles.margin} color='main2' borderRadius={16} onPress={this.openAbout}>{lang['input-about']}</Button>
 
@@ -57,7 +56,7 @@ class Settings extends BackSettings {
 
                 <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
-                <Button style={styles.margin} onPress={() => {}} color='main1' borderRadius={16}>{'[' + lang['input-tuto-again'] + ']'}</Button>
+                <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{'🚧 ' + lang['input-tuto-again'] + ' 🚧'}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={this.state.sendingMail}>{lang['input-delete-account']}</Button>
             </Page>
         )

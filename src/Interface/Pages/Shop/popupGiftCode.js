@@ -8,11 +8,16 @@ import dataManager from 'Managers/DataManager';
 import { Text, Button, Input } from 'Interface/Components';
 
 /**
+ * @typedef {import('./back').default} BackShop
+ */
+
+/**
  * Check code
+ * @this BackShop
  * @param {string} code
  * @returns {Promise<void>}
  */
-const checkCode = async (code) => {
+async function checkCode(code) {
     const lang = langManager.curr['shop'];
 
     if (!code.length) return;
@@ -48,6 +53,9 @@ const checkCode = async (code) => {
     await user.OnlineLoad(true);
 }
 
+/**
+ * @this BackShop
+ */
 function renderGiftCodePopup() {
     const lang = langManager.curr['shop'];
     let [ code, setCode ] = React.useState('');
@@ -55,7 +63,7 @@ function renderGiftCodePopup() {
 
     const onCheckButton = async () => {
         setLoading(true);
-        await checkCode(code);
+        await checkCode.call(this, code);
         setLoading(false);
     };
 

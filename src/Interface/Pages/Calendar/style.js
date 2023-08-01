@@ -40,12 +40,20 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '90%',
         marginTop: 12,
-        paddingBottom: 160,
+        paddingBottom: 100,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
     },
     panelCard: {
         marginHorizontal: 32
+    },
+    fadeBottom: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 100,
+        height: 64,
+        zIndex: 1
     },
     date: {
         marginVertical: 24,

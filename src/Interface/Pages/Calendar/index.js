@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, FlatList, Animated, Dimensions } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import BackCalendar from './back';
 import styles from './style';
@@ -13,7 +14,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Calendar extends BackCalendar {
 
-    card = ({ item, index }) => (
+    cardItem = ({ item, index }) => (
         <ActivityCard
             activity={item}
             index={index}
@@ -100,10 +101,15 @@ class Calendar extends BackCalendar {
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         <FlatList
                             style={styles.panelCard}
+                            contentContainerStyle={{ paddingBottom: 64 }}
                             data={this.state.currActivities}
                             ItemSeparatorComponent={this.cardSeparator}
-                            renderItem={this.card}
+                            renderItem={this.cardItem}
                             keyExtractor={(item, index) => `activity-card-s-${index}-${item.startTime}`}
+                        />
+                        <LinearGradient
+                            colors={['transparent', themeManager.GetColor('backgroundGrey')]}
+                            style={styles.fadeBottom}
                         />
                     </View>
                 </Animated.View>

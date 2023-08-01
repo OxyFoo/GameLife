@@ -51,6 +51,7 @@ function AddActivity(skillID, activity) {
         const text = langManager.curr['activity']['alert-wrongtiming-text'];
         user.interface.popup.Open('ok', [ title, text ]);
     }
+    // TODO: Manage other states
 }
 /**
  * @param {() => void} callback

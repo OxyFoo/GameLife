@@ -36,13 +36,16 @@ const styles = StyleSheet.create({
         zIndex: 100,
         elevation: 100
     },
-    pannel: {
+    panel: {
         width: '100%',
         height: '90%',
         marginTop: 12,
-        paddingBottom: 100,
+        paddingBottom: 160,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
+    },
+    panelCard: {
+        marginHorizontal: 32
     },
     date: {
         marginVertical: 24,

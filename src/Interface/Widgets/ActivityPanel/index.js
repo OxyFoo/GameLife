@@ -19,6 +19,7 @@ import { ActivitySchedule, ActivityExperience, PanelScreen } from 'Interface/Wid
 class ActivityPanel extends ActivityPanelBack {
     RenderPanelDetails() {
         const lang = langManager.curr['activity'];
+        const { variantTheme } = this.props;
         const { activity, startMode, selectedSkillID, mode } = this.state;
 
         const skill = dataManager.skills.GetByID(selectedSkillID);
@@ -41,7 +42,9 @@ class ActivityPanel extends ActivityPanelBack {
             })
         };
         const backgroundCard = {
-            backgroundColor: themeManager.GetColor('backgroundCard')
+            backgroundColor: themeManager.GetColor(
+                !variantTheme ? 'backgroundCard' : 'backgroundGrey'
+            )
         };
         const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
@@ -134,7 +137,7 @@ class ActivityPanel extends ActivityPanelBack {
 
     render() {
         const lang = langManager.curr['activity'];
-        const { style, topOffset } = this.props;
+        const { style, topOffset, variantTheme } = this.props;
         const { loaded, activityText, mode } = this.state;
 
         if (!loaded) {
@@ -142,7 +145,9 @@ class ActivityPanel extends ActivityPanelBack {
         }
 
         const stylePanel = {
-            backgroundColor: themeManager.GetColor('backgroundGrey')
+            backgroundColor: themeManager.GetColor(
+                !variantTheme ? 'backgroundGrey' : 'backgroundCard'
+            )
         };
 
         return (

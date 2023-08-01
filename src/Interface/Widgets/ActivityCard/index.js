@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Animated, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Animated, TouchableOpacity } from 'react-native';
 
+import styles from './style';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
@@ -49,18 +50,13 @@ class ActivityCard extends React.Component {
         this.textCategory = GetName(dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name);
         this.textActivity = GetName(skill.Name);
         this.textStart_value = TimeToFormatString(activity.startTime - offsetUTC);
+        this.textEnd_value = TimeToFormatString(activity.startTime + activity.duration * 60 - offsetUTC);
         this.textDuration_value = TimeToFormatString(activity.duration * 60);
 
-        const inter = { inputRange: [0, 1], outputRange: [30, 0] };
-        this.parentStyle = [
-            styles.parent,
-            {
-                opacity: this.state.anim,
-                transform: [ { translateY: this.state.anim.interpolate(inter) } ],
-                backgroundColor: themeManager.GetColor('backgroundCard', skill.XP === 0 ? 0.5 : 1)
-            },
-            this.props.style
-        ];
+        this.text = `${this.textStart_value} - ${this.textEnd_value} (${this.textDuration_value}h)`;
+
+        this.themeBorder = { borderColor: themeManager.GetColor('main1') };
+        this.themeBackground = { backgroundColor: themeManager.GetColor('main1') };
     }
 
     componentDidMount() {
@@ -71,41 +67,46 @@ class ActivityCard extends React.Component {
         TimingAnimation(this.state.anim, 1, 400).start();
     }
 
-    render() {
-        const { onPress } = this.props;
-        const T_start = langManager.curr['calendar']['activity-start'];
-        const T_duration = langManager.curr['calendar']['activity-duration'];
+    static Separator({ onPress }) {
+        const lang = langManager.curr['calendar'];
+        const borderColor = { borderColor: themeManager.GetColor('main1') };
+        const fontColor = { color: themeManager.GetColor('main1') };
 
         return (
-            <Animated.View style={this.parentStyle}>
-                <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={.5}>
-                    <Icon xml={this.XML} color='main1' size={38} />
-                    <Text style={styles.text} fontSize={16}>{this.textCategory + ' - ' + this.textActivity}</Text>
-                    <Text style={styles.text} fontSize={14} color='light'>{T_start + ': ' + this.textStart_value}</Text>
-                    <Text style={styles.text} fontSize={14} color='light'>{T_duration + ': ' + this.textDuration_value}</Text>
+            <View style={[borderColor, styles.separator]}>
+                <TouchableOpacity
+                    style={[borderColor, styles.button]}
+                    onPress={onPress}
+                >
+                    <Text style={fontColor}>{lang['add-activity']}</Text>
                 </TouchableOpacity>
-            </Animated.View>
+            </View>
+        );
+    }
+
+    render() {
+        const { onPress, style: propsStyle } = this.props;
+
+        return (
+            <TouchableOpacity style={[styles.card, propsStyle]} onPress={onPress} activeOpacity={.5}>
+                <View style={[styles.iconContainer, this.themeBackground]}>
+                    <Icon xml={this.XML} color='white' size={30} />
+                </View>
+
+                <View style={styles.text}>
+                    <Text fontSize={12} color='light'>{this.text}</Text>
+                    <Text fontSize={24/*16*/}>{this.textCategory + ' - ' + this.textActivity}</Text>
+                </View>
+
+                <View style={styles.dotContainer}>
+                    <View style={[styles.dot, this.themeBorder]} />
+                </View>
+            </TouchableOpacity>
         );
     }
 }
 
 ActivityCard.prototype.props = ActivityCardProps;
 ActivityCard.defaultProps = ActivityCardProps;
-
-const styles = StyleSheet.create({
-    parent: {
-        flex: 1,
-        borderRadius: 16,
-        backgroundColor: '#384065'
-    },
-    card: {
-        alignItems: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 6
-    },
-    text: {
-        marginTop: 12
-    }
-});
 
 export default ActivityCard;

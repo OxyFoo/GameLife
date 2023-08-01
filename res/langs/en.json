@@ -195,8 +195,7 @@
     },
 
     "calendar": {
-        "activity-start": "Start",
-        "activity-duration": "Duration"
+        "add-activity": "Add activity"
     },
 
     "dailyquest": {

@@ -30,6 +30,7 @@ class BackSettings extends PageBack {
         sendingMail: false
     }
 
+    onBack = () => user.interface.BackPage();
     openAbout = () => user.interface.ChangePage('about', undefined, true);
     openReport = () => user.interface.ChangePage('report', undefined, true);
 
@@ -40,9 +41,7 @@ class BackSettings extends PageBack {
         user.settings.Save();
     }
 
-    /**
-     * @param {number} themeIndex
-     */
+    /** @param {number} themeIndex */
     onChangeTheme = (themeIndex) => {
         /** @type {Theme[]} */
         const themes = [ 'Dark', 'Light' ];
@@ -53,6 +52,8 @@ class BackSettings extends PageBack {
             user.settings.Save();
         }
     }
+
+    /** @param {boolean} enabled */
     onChangeMorningNotifications = (enabled) => {
         if (enabled) Notifications.Morning.Enable();
         else Notifications.Morning.Disable();
@@ -60,12 +61,17 @@ class BackSettings extends PageBack {
         user.settings.morningNotifications = enabled;
         user.settings.Save();
     }
+
+    /** @param {boolean} enabled */
     onChangeEveningNotifications = (enabled) => {
         if (enabled) Notifications.Evening.Enable();
         else Notifications.Evening.Disable();
         this.setState({ switchEveningNotifs: enabled });
         user.settings.eveningNotifications = enabled;
         user.settings.Save();
+    }
+
+    restartTuto = () => {
     }
 
     disconnect = () => {
@@ -82,32 +88,37 @@ class BackSettings extends PageBack {
     }
 
     deleteAccount = () => {
+        /** @param {"yes"|"no"} button */
         const event = async (button) => {
-            if (button === 'yes') {
-                const end = () => this.setState({ sendingMail: false });
-                this.setState({ sendingMail: true });
+            if (button !== 'yes')
+                return;
 
-                const data = {
-                    email: user.settings.email,
-                    lang: langManager.currentLangageKey
-                }
-                const result = await user.server.Request('deleteAccount', data);
-                if (result === null) return;
+            const end = () => this.setState({ sendingMail: false });
+            this.setState({ sendingMail: true });
 
-                if (result['status'] === 'ok') {
-                    // Mail sent
-                    const title = langManager.curr['settings']['alert-deletedmailsent-title'];
-                    const text = langManager.curr['settings']['alert-deletedmailsent-text'];
-                    user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
-                    user.tempMailSent = now;
-                } else {
-                    // Mail sent failed
-                    const title = langManager.curr['settings']['alert-deletedfailed-title'];
-                    const text = langManager.curr['settings']['alert-deletedfailed-text'];
-                    user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
-                }
+            const data = {
+                email: user.settings.email,
+                lang: langManager.currentLangageKey
+            }
+
+            // Send mail
+            const result = await user.server.Request('deleteAccount', data);
+            if (result === null) return;
+
+            if (result['status'] === 'ok') {
+                // Mail sent
+                const title = langManager.curr['settings']['alert-deletedmailsent-title'];
+                const text = langManager.curr['settings']['alert-deletedmailsent-text'];
+                user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
+                user.tempMailSent = now;
+            } else {
+                // Mail sent failed
+                const title = langManager.curr['settings']['alert-deletedfailed-title'];
+                const text = langManager.curr['settings']['alert-deletedfailed-text'];
+                user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
             }
         };
+
         const now = GetTime();
         if (user.tempMailSent === null || now - user.tempMailSent > 1 * 60) {
             // Confirmation popup

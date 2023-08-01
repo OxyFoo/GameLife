@@ -4,30 +4,38 @@ import { View, StyleSheet } from 'react-native';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { Round } from 'Utils/Functions';
 import { StatsBars, SkillsGroup } from 'Interface/Widgets';
 import { Button, Container, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
 
 class Home extends BackHome {
     render() {
-        const { experience: { stats, xpInfo } } = this.state;
-        const lang = langManager.curr['home'];
+        const {
+            experience: { stats, xpInfo },
+            values: { current_level, next_level }
+        } = this.state;
 
-        const nextLvlPc = Round(100 * xpInfo.xp / xpInfo.next, 0);
-        const lvl = langManager.curr['level']['level'];
+        const lang = langManager.curr['home'];
+        const txt_level = langManager.curr['level']['level'];
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
-                        <Text style={{ marginRight: 8 }}>{lvl}</Text>
-                        <Text color='main2'>{xpInfo.lvl}</Text>
+                        <Text style={styles.level}>{txt_level}</Text>
+                        <Text color='main2'>{current_level}</Text>
                     </View>
-                    <Text>{nextLvlPc}%</Text>
+                    <Text>{next_level + '%'}</Text>
                 </View>
-                <XPBar value={xpInfo.xp} maxValue={xpInfo.next} />
 
-                <Swiper style={styles.topSpace} pages={News()} />
+                <XPBar
+                    value={xpInfo.xp}
+                    maxValue={xpInfo.next}
+                />
+
+                <Swiper
+                    style={styles.topSpace}
+                    pages={News()}
+                />
 
                 <Button
                     style={styles.topSpace}
@@ -81,9 +89,7 @@ class Home extends BackHome {
                     color='main3'
                     rippleColor='white'
                 >
-                    <SkillsGroup
-                        showAllButton={true}
-                    />
+                    <SkillsGroup />
                 </Container>
             </Page>
         );
@@ -100,6 +106,9 @@ const styles = StyleSheet.create({
     },
     XPHeaderLvl: {
         flexDirection: 'row'
+    },
+    level: {
+        marginRight: 8
     },
 
     topSpace: {

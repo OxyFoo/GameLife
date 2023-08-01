@@ -15,10 +15,15 @@ class Calendar extends BackCalendar {
 
     card = ({ item, index }) => (
         <ActivityCard
-            style={{ maxWidth: '48%' }}
             activity={item}
             index={index}
             onPress={() => this.onActivityPress(item)}
+        />
+    );
+
+    cardSeparator = () => (
+        <ActivityCard.Separator
+            onPress={this.onAddActivity}
         />
     );
 
@@ -35,8 +40,8 @@ class Calendar extends BackCalendar {
     renderActivity = () => (
         <ActivityPanel
             ref={ref => this.refActivityPanel = ref}
-            topOffset={300}
-            style={{ backgroundColor: themeManager.GetColor('backgroundCard') }}
+            topOffset={200}
+            variantTheme
         />
     );
 
@@ -46,8 +51,15 @@ class Calendar extends BackCalendar {
         const interPanel = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
         const interDateP = { inputRange: [0, 1], outputRange: [SCREEN_HEIGHT/4, 0] };
 
-        const styleContent = [styles.mainContent, { transform: [{ translateY: animation.interpolate(interPanel) }] } ];
-        const styleCalendar = { transform: [{ translateY: animation.interpolate(interDateP) }] };
+        const styleContent = [
+            styles.mainContent,
+            {
+                transform: [{ translateY: animation.interpolate(interPanel) }]
+            }
+        ];
+        const styleCalendar = {
+            transform: [{ translateY: animation.interpolate(interDateP) }]
+        };
 
         const title = selectedDate === null ? '' : GetMonthAndYear(selectedMonth, selectedYear);
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
@@ -84,13 +96,12 @@ class Calendar extends BackCalendar {
                     </View>
 
                     {/* CurrDate + Activities panel */}
-                    <View style={[styles.pannel, { backgroundColor: themeManager.GetColor('backgroundGrey') }]}>
+                    <View style={[styles.panel, { backgroundColor: themeManager.GetColor('backgroundGrey') }]}>
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         <FlatList
-                            style={{ marginHorizontal: '5%' }}
-                            columnWrapperStyle={{ marginBottom: '5%', justifyContent: 'space-between' }}
+                            style={styles.panelCard}
                             data={this.state.currActivities}
-                            numColumns={2}
+                            ItemSeparatorComponent={this.cardSeparator}
                             renderItem={this.card}
                             keyExtractor={(item, index) => `activity-card-s-${index}-${item.startTime}`}
                         />

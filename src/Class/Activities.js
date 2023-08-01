@@ -6,6 +6,8 @@ import { GetMidnightTime, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * 
  * @typedef {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'} AddStatus
  * 
@@ -167,19 +169,29 @@ class Activities {
         const now = GetTime();
         const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
-    
+
+        /** @param {Skill} skill */
         const filter = skill => usersActivitiesID.includes(skill.ID);
-        const compare = (a, b) => a['experience']['lastTime'] < b['experience']['lastTime'] ? -1 : 1;
+
+        /** @param {EnrichedSkill} a @param {EnrichedSkill} b */
+        const compare = (a, b) => a.Experience['lastTime'] < b.Experience['lastTime'] ? -1 : 1;
+
+        /** @param {Skill} skill @returns {EnrichedSkill} */
         const getInfos = skill => ({
             ...skill,
-            Name: dataManager.GetText(skill.Name),
-            Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-            experience: this.user.experience.GetSkillExperience(skill.ID)
+            FullName: dataManager.GetText(skill.Name),
+            LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+            Experience: this.user.experience.GetSkillExperience(skill.ID)
         });
-    
-        let skills = dataManager.skills.skills.filter(filter);
-        skills = skills.map(getInfos).sort(compare);
-        return skills.slice(0, number);
+
+        /** @type {EnrichedSkill[]} */
+        let enrichedSkills = dataManager.skills.skills
+            .filter(filter)
+            .map(getInfos)
+            .sort(compare)
+            .slice(0, number);
+
+        return enrichedSkills;
     }
 
     RemoveDeletedSkillsActivities() {

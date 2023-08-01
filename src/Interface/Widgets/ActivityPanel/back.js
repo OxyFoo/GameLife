@@ -29,7 +29,10 @@ const ActivityPanelProps = {
     delay: 0,
 
     /** @type {number} Top distance of the panel when it's opened */
-    topOffset: 0
+    topOffset: 0,
+
+    /** @type {boolean} */
+    variantTheme: false
 }
 
 class ActivityPanelBack extends React.Component {

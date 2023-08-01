@@ -107,9 +107,7 @@ class Profile extends BackProfile {
                         opened={false}
                         color='backgroundCard'
                     >
-                        <SkillsGroup
-                            showAllButton={true}
-                        />
+                        <SkillsGroup />
                     </Container>
                 </View>
 

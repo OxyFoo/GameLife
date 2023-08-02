@@ -1,31 +1,18 @@
 import * as React from 'react';
-import { View, FlatList, Animated, Dimensions } from 'react-native';
+import { View, FlatList, Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import BackCalendar from './back';
 import styles from './style';
+import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
 import { Icon, Page, Text } from 'Interface/Components';
-import { ActivityCard, ActivityPanel, BlockMonth } from 'Interface/Widgets';
+import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-
 class Calendar extends BackCalendar {
-
-    card = ({ item, index }) => (
-        <ActivityCard
-            activity={item}
-            index={index}
-            onPress={() => this.onActivityPress(item)}
-        />
-    );
-
-    cardSeparator = () => (
-        <ActivityCard.Separator
-            onPress={this.onAddActivity}
-        />
-    );
 
     month = ({ item }) => (
         <BlockMonth
@@ -48,12 +35,13 @@ class Calendar extends BackCalendar {
     render() {
         const { selectedDate, selectedMonth, selectedYear, animation } = this.state;
 
-        const interPanel = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
-        const interDateP = { inputRange: [0, 1], outputRange: [SCREEN_HEIGHT/4, 0] };
+        const interPanel = { inputRange: [0, 1], outputRange: [0, user.interface.screenHeight] };
+        const interDateP = { inputRange: [0, 1], outputRange: [user.interface.screenHeight/4, 0] };
 
         const styleContent = [
             styles.mainContent,
             {
+                height: user.interface.screenHeight - 130,
                 transform: [{ translateY: animation.interpolate(interPanel) }]
             }
         ];
@@ -100,10 +88,19 @@ class Calendar extends BackCalendar {
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         <FlatList
                             style={styles.panelCard}
+                            contentContainerStyle={{ paddingBottom: 64 }}
                             data={this.state.currActivities}
-                            ItemSeparatorComponent={this.cardSeparator}
-                            renderItem={this.card}
-                            keyExtractor={(item, index) => `activity-card-s-${index}-${item.startTime}`}
+                            ListHeaderComponent={cardHeader.bind(this)}
+                            ListFooterComponent={cardFooter.bind(this)}
+                            ItemSeparatorComponent={cardSeparator.bind(this)}
+                            renderItem={cardItem.bind(this)}
+                            keyExtractor={(item, index) =>
+                                `activity-card-s-${index}-${item.startTime}`
+                            }
+                        />
+                        <LinearGradient
+                            colors={['transparent', themeManager.GetColor('backgroundGrey')]}
+                            style={styles.fadeBottom}
                         />
                     </View>
                 </Animated.View>

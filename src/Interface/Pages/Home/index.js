@@ -47,6 +47,7 @@ class Home extends BackHome {
                     {lang['btn-add-task']}
                 </Button>
 
+                {/*
                 <Button
                     style={styles.topSpace}
                     color='main1'
@@ -56,6 +57,7 @@ class Home extends BackHome {
                 >
                     {lang['btn-todo']}
                 </Button>
+                */}
 
                 <Button
                     style={styles.topSpace}

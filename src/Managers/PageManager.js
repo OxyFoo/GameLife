@@ -12,6 +12,7 @@ import { IsUndefined, Sleep } from 'Utils/Functions';
 import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from 'Interface/Widgets';
 
 /**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Interface/Components').PageBack} PageBack
  * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'tasks'|'test'} PageName
  * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.ShopItems | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Tasks | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
@@ -59,6 +60,9 @@ class PageManager extends React.Component{
         bottomBarShow: false,
         bottomBarIndex: -1
     };
+
+    /** @description Current page */
+    screenHeight = 0;
 
     /** @description Disable changing page while loading */
     changing = false;
@@ -136,6 +140,13 @@ class PageManager extends React.Component{
     }
 
     setStateSync = (state) => new Promise((resolve) => this.setState(state, () => resolve()));
+
+    /**
+     * @param {LayoutChangeEvent} event
+     */
+    onLayout = (event) => {
+        this.screenHeight = event.nativeEvent.layout.height;
+    }
 
     /**
      * Try to get last page content
@@ -362,7 +373,7 @@ class PageManager extends React.Component{
         }
 
         return (
-            <LinearGradient style={styles.fullscreen} colors={darkBackground}>
+            <LinearGradient style={styles.fullscreen} colors={darkBackground} onLayout={this.onLayout}>
                 {/* Light background */}
                 <Animated.View style={[styles.absolute, styles.fullscreen, lightOpacity]} pointerEvents='none'>
                     <LinearGradient style={styles.fullscreen} colors={lightBackground} />

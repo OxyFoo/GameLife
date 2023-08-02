@@ -41,26 +41,27 @@ class BackCalendar extends PageBack {
         months = this.addMonthToTop(months, 4, false);
         months = this.addMonthToBottom(months, 4, false);
 
+        // Internal state
+        this.animating = false;
+        this.opened = false;
+
         this.state = {
             months: months,
             monthsMounted: false,
 
-            opened: false,
-            animating: false,
             animation: new Animated.Value(0),
-            selectedDate: date,
-            selectedMonth: month,
-            selectedYear: year,
+            selectedDate: 0,
+            selectedMonth: 0,
+            selectedYear: 0,
             currWeek: [],
 
             /** @type {Array<Activity>} */
-            currActivities: [],
+            currActivities: []
         };
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            const { selectedYear, selectedMonth, selectedDate } = this.state;
-            const date = new Date(selectedYear, selectedMonth, selectedDate);
-            const currActivities = user.activities.GetByTime(GetTime(date, true));
+            const _date = new Date(year, month, date);
+            const currActivities = user.activities.GetByTime(GetTime(_date, true));
             this.setState({ currActivities });
         });
     }
@@ -74,8 +75,10 @@ class BackCalendar extends PageBack {
         const FullYear = today.getFullYear();
         this.daySelect(Day, Month, FullYear);
 
-        // TODO - Doesn't works on iOS
-        this.flatlist.scrollToIndex({ index: 4, animated: false });
+        // Timeout to fix iOS compatibility
+        setTimeout(() => {
+            this.flatlist.scrollToIndex({ index: 4, animated: false });
+        }, 100);
     }
 
     componentWillUnmount() {
@@ -158,6 +161,13 @@ class BackCalendar extends PageBack {
     }
 
     daySelect = async (day = null, month = null, year = null) => {
+        if (this.state.selectedDate === day &&
+            this.state.selectedMonth === month &&
+            this.state.selectedYear === year) {
+                // Already selected
+                return;
+        }
+
         if (day !== null) {
             // Select day
             const block = GetBlockMonth(month, year);
@@ -173,7 +183,8 @@ class BackCalendar extends PageBack {
                 selectedYear: year,
                 currWeek: week
             });
-            if (!this.state.opened) await this.showPanel();
+
+            if (!this.opened) await this.showPanel();
             date.setHours(now.getHours(), now.getMinutes(), 0, 0);
             user.tempSelectedTime = RoundToQuarter(GetTime(date));
         } else {
@@ -181,7 +192,7 @@ class BackCalendar extends PageBack {
             if (!this.state.monthsMounted) {
                 this.setState({ monthsMounted: true });
             }
-            if (this.state.opened) {
+            if (this.opened) {
                 await this.hidePanel();
             }
             this.setState({
@@ -196,17 +207,18 @@ class BackCalendar extends PageBack {
     showPanel = () => this.animPanel(0);
     hidePanel = () => this.animPanel(1);
     animPanel = (value) => {
-        const { animating, animation } = this.state;
+        const { animation } = this.state;
 
         const animFunc = (resolve, reject) => {
-            this.setState({ animating: true });
+            this.animating = true;
             SpringAnimation(animation, value).start(() => {
-                this.setState({ animating: false, opened: value === 0 });
+                this.animating = false;
+                this.opened = value === 0;
                 resolve();
             });
         }
 
-        return !animating ? new Promise(animFunc) : null;
+        return !this.animating ? new Promise(animFunc) : null;
     }
 
     /**

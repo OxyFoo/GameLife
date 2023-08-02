@@ -1,12 +1,10 @@
 import { PageBack } from 'Interface/Components';
-import { Dimensions, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Sum } from 'Utils/Functions';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class BackReport extends PageBack {
     stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
@@ -49,7 +47,7 @@ class BackReport extends PageBack {
 
     onLayout = (event) => {
         const { y } = event.nativeEvent.layout;
-        const reportHeight = SCREEN_HEIGHT - y - 48;
+        const reportHeight = user.interface.screenHeight - y - 48;
         this.setState({ reportHeight: reportHeight });
     }
 

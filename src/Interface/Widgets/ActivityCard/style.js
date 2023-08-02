@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     card: {
@@ -40,14 +40,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
 
-        height: 64,
         width: '100%',
-        marginLeft: 25,
-        marginRight: 25,
+        minHeight: 48,
+        marginLeft: 23.5, // imageWidth / 2 - borderWidth / 2
+        marginRight: 23.5,
         borderLeftWidth: 3,
-        borderStyle: 'dashed'
+        borderStyle: Platform.OS === 'android' ? 'dashed' : 'solid'
     },
     button: {
+        marginVertical: 16,
         paddingVertical: 4,
         paddingHorizontal: 8,
         borderWidth: 1,

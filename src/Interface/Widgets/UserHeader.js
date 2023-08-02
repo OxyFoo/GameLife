@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Animated  } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import user from 'Managers/UserManager';
@@ -13,8 +13,6 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  */
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const UserHeaderProps = {
     /** @type {StyleProp} */
@@ -171,6 +169,7 @@ class UserHeader extends React.Component {
 
         const background = [ themeManager.GetColor('ground1'), themeManager.GetColor('ground2') ];
         const animStyle = { transform: [{ translateY: animPosY }] };
+        const screenHeight = { height: user.interface?.screenHeight || 0};
 
         return (
             <Animated.View
@@ -178,7 +177,7 @@ class UserHeader extends React.Component {
                 onLayout={this.onLayout}
             >
                 <LinearGradient
-                    style={[styles.absolute, styles.linear]}
+                    style={[styles.absolute, styles.linear, screenHeight]}
                     colors={background}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 0, y: 1 }}
@@ -203,8 +202,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     linear: {
-        width: '100%',
-        height: SCREEN_HEIGHT,
+        width: '100%'
     },
     container: {
         padding: 32,

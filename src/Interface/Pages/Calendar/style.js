@@ -1,6 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     page: {
@@ -29,7 +27,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 130,
         width: '100%',
-        height: SCREEN_HEIGHT - 130,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
 
@@ -37,15 +34,22 @@ const styles = StyleSheet.create({
         elevation: 100
     },
     panel: {
-        width: '100%',
-        height: '90%',
+        flex: 1,
         marginTop: 12,
-        paddingBottom: 160,
+        paddingBottom: 60,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
     },
     panelCard: {
         marginHorizontal: 32
+    },
+    fadeBottom: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 60,
+        height: 64,
+        zIndex: 1
     },
     date: {
         marginVertical: 24,

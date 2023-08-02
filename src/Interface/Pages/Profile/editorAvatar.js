@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, FlatList, Dimensions } from 'react-native';
+import { View, Animated, FlatList } from 'react-native';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
@@ -13,8 +13,6 @@ import CharacterCard from './cards/CharacterCard';
 import styles from './editorAvatarStyle';
 import { Text, Button, Separator, Icon, Frame, TextSwitch } from 'Interface/Components';
 import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 /**
  * @typedef {import('Class/Inventory').Stuff} Stuff
@@ -277,7 +275,7 @@ class EditorAvatarRender extends EditorAvatarBack {
             styles.editor,
             {
                 top: characterBottomPosY + 12,
-                height: SCREEN_HEIGHT - characterBottomPosY + 148,
+                height: user.interface.screenHeight - characterBottomPosY + 148,
                 opacity: editorAnim,
                 backgroundColor: themeManager.GetColor('background'),
                 transform: [{ translateY: editorTranslateY }]

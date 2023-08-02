@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { View, FlatList, Animated, Dimensions } from 'react-native';
+import { View, FlatList, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import BackCalendar from './back';
 import styles from './style';
+import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
 import { Icon, Page, Text } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Calendar extends BackCalendar {
 
@@ -36,12 +35,13 @@ class Calendar extends BackCalendar {
     render() {
         const { selectedDate, selectedMonth, selectedYear, animation } = this.state;
 
-        const interPanel = { inputRange: [0, 1], outputRange: [0, SCREEN_HEIGHT] };
-        const interDateP = { inputRange: [0, 1], outputRange: [SCREEN_HEIGHT/4, 0] };
+        const interPanel = { inputRange: [0, 1], outputRange: [0, user.interface.screenHeight] };
+        const interDateP = { inputRange: [0, 1], outputRange: [user.interface.screenHeight/4, 0] };
 
         const styleContent = [
             styles.mainContent,
             {
+                height: user.interface.screenHeight - 130,
                 transform: [{ translateY: animation.interpolate(interPanel) }]
             }
         ];

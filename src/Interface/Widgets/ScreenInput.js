@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { View, Animated, Keyboard, StyleSheet, Dimensions } from 'react-native';
+import { View, Animated, Keyboard, StyleSheet } from 'react-native';
+
+import user from 'Managers/UserManager';
 
 import { TimingAnimation } from 'Utils/Animations';
-
 import { Button, Input } from 'Interface/Components'
 
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  */
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const ScreenInputProps = {
 }
@@ -36,7 +35,7 @@ class ScreenInput extends React.Component {
     }
     onKeyboardShow = (event) => {
         const { height, screenY } = event.endCoordinates;
-        this.setState({ keyboardHeight: Math.ceil(SCREEN_HEIGHT - screenY) });
+        this.setState({ keyboardHeight: Math.ceil(user.interface.screenHeight - screenY) });
     }
     onKeyboardHide = () => {
         this.setState({ keyboardHeight: 0 });

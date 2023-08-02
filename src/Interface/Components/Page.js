@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, Animated, StyleSheet, Platform } from 'react-native';
 
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
@@ -53,8 +53,6 @@ const PageProps = {
     /** @param {GestureResponderEvent} event */
     onStartShouldSetResponder: (event) => false
 }
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 // TODO - Auto scroll if height change
 
@@ -130,7 +128,7 @@ class Page extends React.Component {
         const { height } = this.state;
         const bottom = value + height;
         const bottomOffset = this.props.isHomePage ? user.interface.bottomBar.state.height : this.props.bottomOffset;
-        const maxHeight = SCREEN_HEIGHT - bottomOffset;
+        const maxHeight = user.interface.screenHeight - bottomOffset;
 
         // No scroll over bottom
         if (!canScrollOver) {
@@ -242,7 +240,7 @@ class Page extends React.Component {
             transform: [{ translateY: this.state.positionY }],
             paddingTop: valueOffset,
             height: scrollable ? 'auto' : '100%',
-            minHeight: SCREEN_HEIGHT - topOffset - bottomOffset - 128
+            minHeight: user.interface.screenHeight - topOffset - bottomOffset - 128
         };
 
         return (

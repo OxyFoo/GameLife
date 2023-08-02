@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, Dimensions } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
 
+import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -37,13 +36,13 @@ const PanelScreenProps = {
 class PanelScreen extends React.Component {
     state = {
         opened: false,
-        positionY: new Animated.Value(SCREEN_HEIGHT),
+        positionY: new Animated.Value(user.interface.screenHeight),
 
         anim: new Animated.Value(0)
     };
 
     /** @type {number} Top distance of the panel when it's opened */
-    posY = SCREEN_HEIGHT;
+    posY = user.interface.screenHeight;
 
     /** @type {number} Max height of panel */
     height = 0;
@@ -73,7 +72,7 @@ class PanelScreen extends React.Component {
         TimingAnimation(this.state.anim, 0, 200).start();
         this.setState({ opened: false });
 
-        this.posY = SCREEN_HEIGHT;
+        this.posY = user.interface.screenHeight;
         SpringAnimation(this.state.positionY, this.posY).start();
     }
 
@@ -85,7 +84,7 @@ class PanelScreen extends React.Component {
     }
     RefreshPosition = () => {
         this.posY = Math.min(this.posY, this.props.topOffset);
-        this.posY = Math.max(this.posY, SCREEN_HEIGHT - this.height);
+        this.posY = Math.max(this.posY, user.interface.screenHeight - this.height);
         this.GotoY(this.posY);
     }
 
@@ -126,7 +125,7 @@ class PanelScreen extends React.Component {
         this.posY -= deltaY;
 
         // Overscroll, smooth animation
-        const maxTop = SCREEN_HEIGHT - this.height;
+        const maxTop = user.interface.screenHeight - this.height;
         if (this.posY < maxTop) {
             this.posY = maxTop - (maxTop - this.posY) / 8;
         }
@@ -144,7 +143,7 @@ class PanelScreen extends React.Component {
 
         const posY = this.posY;
         this.posY -= this.accY * .25;
-        this.posY = Math.max(this.posY, SCREEN_HEIGHT - this.height);
+        this.posY = Math.max(this.posY, user.interface.screenHeight - this.height);
 
         if (posY > topOffset && this.accY < -2000 ||
             posY > topOffset + backOffset)

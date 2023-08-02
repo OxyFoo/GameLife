@@ -76,7 +76,12 @@ class Icon extends React.Component {
         else if (show && icon !== null && SVGIcons.hasOwnProperty(icon)) {
             const _Icon = SVGIcons[icon];
             output = <View style={[containerSize, style]}>
-                        <_Icon width={size} height={size} color={color} rotation={angle} />
+                        <_Icon
+                            width={size}
+                            height={size}
+                            color={color}
+                            transform={[{ rotate: angle * Math.PI / 180 }]}
+                        />
                     </View>;
         }
 

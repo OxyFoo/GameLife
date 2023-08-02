@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     card: {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         marginLeft: 23.5, // imageWidth / 2 - borderWidth / 2
         marginRight: 23.5,
         borderLeftWidth: 3,
-        borderStyle: 'dashed'
+        borderStyle: Platform.OS === 'android' ? 'dashed' : 'solid'
     },
     button: {
         marginVertical: 16,

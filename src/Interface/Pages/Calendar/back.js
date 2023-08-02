@@ -75,8 +75,10 @@ class BackCalendar extends PageBack {
         const FullYear = today.getFullYear();
         this.daySelect(Day, Month, FullYear);
 
-        // TODO - Doesn't works on iOS
-        this.flatlist.scrollToIndex({ index: 4, animated: false });
+        // Timeout to fix iOS compatibility
+        setTimeout(() => {
+            this.flatlist.scrollToIndex({ index: 4, animated: false });
+        }, 100);
     }
 
     componentWillUnmount() {

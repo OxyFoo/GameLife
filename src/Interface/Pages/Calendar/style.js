@@ -1,6 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     page: {
@@ -29,7 +27,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 130,
         width: '100%',
-        height: SCREEN_HEIGHT - 130,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
 

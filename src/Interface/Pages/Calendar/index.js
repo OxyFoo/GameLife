@@ -6,27 +6,14 @@ import BackCalendar from './back';
 import styles from './style';
 import themeManager from 'Managers/ThemeManager';
 
+import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
 import { Icon, Page, Text } from 'Interface/Components';
-import { ActivityCard, ActivityPanel, BlockMonth } from 'Interface/Widgets';
+import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class Calendar extends BackCalendar {
-
-    cardItem = ({ item, index }) => (
-        <ActivityCard
-            activity={item}
-            index={index}
-            onPress={() => this.onActivityPress(item)}
-        />
-    );
-
-    cardSeparator = () => (
-        <ActivityCard.Separator
-            onPress={this.onAddActivity}
-        />
-    );
 
     month = ({ item }) => (
         <BlockMonth
@@ -103,9 +90,13 @@ class Calendar extends BackCalendar {
                             style={styles.panelCard}
                             contentContainerStyle={{ paddingBottom: 64 }}
                             data={this.state.currActivities}
-                            ItemSeparatorComponent={this.cardSeparator}
-                            renderItem={this.cardItem}
-                            keyExtractor={(item, index) => `activity-card-s-${index}-${item.startTime}`}
+                            ListHeaderComponent={cardHeader.bind(this)}
+                            ListFooterComponent={cardFooter.bind(this)}
+                            ItemSeparatorComponent={cardSeparator.bind(this)}
+                            renderItem={cardItem.bind(this)}
+                            keyExtractor={(item, index) =>
+                                `activity-card-s-${index}-${item.startTime}`
+                            }
                         />
                         <LinearGradient
                             colors={['transparent', themeManager.GetColor('backgroundGrey')]}

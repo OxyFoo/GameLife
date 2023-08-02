@@ -195,7 +195,10 @@
     },
 
     "calendar": {
-        "add-activity": "Ajouter une activité"
+        "add-activity": "Ajouter une activité",
+        "hour-min": "h",
+        "start": "Début de journée",
+        "end": "Fin de journée"
     },
 
     "dailyquest": {

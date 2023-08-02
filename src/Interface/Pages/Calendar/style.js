@@ -37,10 +37,9 @@ const styles = StyleSheet.create({
         elevation: 100
     },
     panel: {
-        width: '100%',
-        height: '90%',
+        flex: 1,
         marginTop: 12,
-        paddingBottom: 100,
+        paddingBottom: 60,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
     },
@@ -51,7 +50,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 100,
+        bottom: 60,
         height: 64,
         zIndex: 1
     },

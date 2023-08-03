@@ -15,6 +15,7 @@ import { TimeToFormatString } from 'Utils/Time';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
+ * @typedef {import('Interface/Components/Icon/index').Icons} Icons
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
@@ -56,6 +57,9 @@ class ActivityCard extends React.Component {
         */
         let color = 'main1';
 
+        /** @type {Icons|undefined} */
+        this.icon = undefined;
+
         if (type === 'activity') {
             const skill = dataManager.skills.GetByID(activity.skillID);
             const LogoID = skill.LogoID;
@@ -80,14 +84,14 @@ class ActivityCard extends React.Component {
 
         else if (type === 'start') {
             color = 'main2';
-            this.XML = dataManager.skills.icons.find(x => x.ID === 1).Content;
+            this.icon = 'alarmClock';
             this.line1 = '00:00';
             this.line2 = lang['start'];
         }
 
         else if (type === 'end') {
             color = 'main2';
-            this.XML = dataManager.skills.icons.find(x => x.ID === 1).Content;
+            this.icon = 'sleepZzz';
             this.line1 = '00:00';
             this.line2 = lang['end'];
         }
@@ -156,7 +160,7 @@ class ActivityCard extends React.Component {
                     activeOpacity={type === 'activity' ? .5 : 1}
                 >
                     <View style={[styles.iconContainer, this.themeBackground]}>
-                        <Icon xml={this.XML} color='white' size={30} />
+                        <Icon icon={this.icon} xml={this.XML} color='white' size={30} />
                     </View>
 
                     <View style={styles.text}>

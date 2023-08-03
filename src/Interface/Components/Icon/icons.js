@@ -1,5 +1,6 @@
 import svgDefault from 'Ressources/icons/default';
 import svgAdd from 'Ressources/icons/add';
+import svgAlarmClock from 'Ressources/icons/alarm-clock';
 import svgArrowLeft from 'Ressources/icons/arrow-left';
 import svgCalendar from 'Ressources/icons/calendar';
 import svgCheck from 'Ressources/icons/check';
@@ -26,6 +27,7 @@ import svgOnboarding3 from 'Ressources/icons/onboarding3';
 import svgOx from 'Ressources/icons/ox';
 import svgSetting from 'Ressources/icons/setting';
 import svgShop from 'Ressources/icons/shop';
+import svgSleepZzz from 'Ressources/icons/sleep-zzz';
 import svgSocial from 'Ressources/icons/social';
 import svgSuccess from 'Ressources/icons/success';
 import svgTiktok from 'Ressources/icons/tiktok';
@@ -38,6 +40,7 @@ import svgLoadingDots from 'Ressources/icons/loading-dots';
 const SVGIcons = {
     default: svgDefault,
     add: svgAdd,
+    alarmClock: svgAlarmClock,
     arrowLeft: svgArrowLeft,
     calendar: svgCalendar,
     check: svgCheck,
@@ -64,6 +67,7 @@ const SVGIcons = {
     ox: svgOx,
     setting: svgSetting,
     shop: svgShop,
+    sleepZzz: svgSleepZzz,
     social: svgSocial,
     success: svgSuccess,
     tiktok: svgTiktok,

@@ -101,7 +101,10 @@ class Calendar extends BackCalendar {
                             />
                         )}
                         <LinearGradient
-                            colors={['transparent', themeManager.GetColor('backgroundGrey')]}
+                            colors={[
+                                themeManager.GetColor('backgroundGrey', 0),
+                                themeManager.GetColor('backgroundGrey', 1)
+                            ]}
                             style={styles.fadeBottom}
                         />
                     </View>

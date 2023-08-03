@@ -16,6 +16,8 @@ import { TimeToFormatString } from 'Utils/Time';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const ActivityCardProps = {
@@ -48,10 +50,20 @@ class ActivityCard extends React.Component {
         const offsetUTC = new Date().getTimezoneOffset() * 60;
         const lang = langManager.curr['calendar'];
 
+        /**
+         * Color for normal activity
+         * @type {ColorTheme | ColorThemeText}
+        */
+        let color = 'main1';
+
         if (type === 'activity') {
             const skill = dataManager.skills.GetByID(activity.skillID);
             const LogoID = skill.LogoID;
             this.XML = dataManager.skills.icons.find(x => x.ID === LogoID).Content;
+
+            if (skill.XP === 0) {
+                color = 'main2';
+            }
 
             // Line 1: Start - End (Duration)
             const textStart_value = TimeToFormatString(activity.startTime - offsetUTC);
@@ -67,20 +79,21 @@ class ActivityCard extends React.Component {
         }
 
         else if (type === 'start') {
+            color = 'main2';
             this.XML = dataManager.skills.icons.find(x => x.ID === 1).Content;
             this.line1 = '00:00';
             this.line2 = lang['start'];
         }
 
         else if (type === 'end') {
+            color = 'main2';
             this.XML = dataManager.skills.icons.find(x => x.ID === 1).Content;
             this.line1 = '00:00';
             this.line2 = lang['end'];
         }
 
         // Theme
-        this.themeBorder = { borderColor: themeManager.GetColor('main1') };
-        this.themeBackground = { backgroundColor: themeManager.GetColor('main1') };
+        this.themeBackground = { backgroundColor: themeManager.GetColor(color) };
         this.themeAnimation = {
             opacity: this.state.anim,
             transform: [{
@@ -151,9 +164,11 @@ class ActivityCard extends React.Component {
                         <Text fontSize={18}>{this.line2}</Text>
                     </View>
 
+                    {/*
                     <View style={styles.dotContainer}>
-                        <View style={[styles.dot, this.themeBorder]} />
+                        <View style={[styles.dot, { borderColor: themeManager.GetColor(color) }]} />
                     </View>
+                    */}
                 </TouchableOpacity>
             </Animated.View>
         );

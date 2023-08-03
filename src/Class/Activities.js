@@ -165,7 +165,7 @@ class Activities {
         return usefulActivities;
     }
 
-    GetLasts(number = 6) {
+    GetLastSkills(number = 6) {
         const now = GetTime();
         const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);

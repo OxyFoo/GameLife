@@ -86,18 +86,20 @@ class Calendar extends BackCalendar {
                     {/* CurrDate + Activities panel */}
                     <View style={[styles.panel, { backgroundColor: themeManager.GetColor('backgroundGrey') }]}>
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
-                        <FlatList
-                            style={styles.panelCard}
-                            contentContainerStyle={{ paddingBottom: 64 }}
-                            data={this.state.currActivities}
-                            ListHeaderComponent={cardHeader.bind(this)}
-                            ListFooterComponent={cardFooter.bind(this)}
-                            ItemSeparatorComponent={cardSeparator.bind(this)}
-                            renderItem={cardItem.bind(this)}
-                            keyExtractor={(item, index) =>
-                                `activity-card-s-${index}-${item.startTime}`
-                            }
-                        />
+                        {this.state.selectedDate !== null && ( // Force re-render after date selection
+                            <FlatList
+                                style={styles.panelCard}
+                                contentContainerStyle={{ paddingBottom: 64 }}
+                                data={this.state.currActivities}
+                                ListHeaderComponent={cardHeader.bind(this)}
+                                ListFooterComponent={cardFooter.bind(this)}
+                                ItemSeparatorComponent={cardSeparator.bind(this)}
+                                renderItem={cardItem.bind(this)}
+                                keyExtractor={(item, index) =>
+                                    `activity-card-s-${index}-${item.startTime}`
+                                }
+                            />
+                        )}
                         <LinearGradient
                             colors={['transparent', themeManager.GetColor('backgroundGrey')]}
                             style={styles.fadeBottom}

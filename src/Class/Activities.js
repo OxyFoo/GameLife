@@ -334,27 +334,6 @@ class Activities {
     }
 
     /**
-     * @param {Date} date Date to define day (auto define of midnights)
-     * @param {boolean} [ignoreRelax=true] If true, return true if there is activity wich gives XP or not
-     * @returns {boolean} True if date contain activities
-     */
-    ContainActivity(date = new Date(), ignoreRelax = true) {
-        date.setUTCHours(1, 0, 0, 0);
-        const startTime = GetTime(date);
-        date.setUTCHours(23, 59, 59, 999);
-        const endTime = GetTime(date);
-
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
-            if (activity.startTime >= startTime && activity.startTime <= endTime) {
-                if (ignoreRelax) return true;
-                if (dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * 
      * @param {number} time Time in seconds
      * @param {number} duration Duration in minutes

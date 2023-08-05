@@ -3,16 +3,16 @@ import { FlatList } from 'react-native';
 
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
 
 import { Sleep } from 'Utils/Functions';
-import { GetBlockMonth } from 'Utils/Date';
 import { SpringAnimation } from 'Utils/Animations';
 import { GetTime, RoundToQuarter } from 'Utils/Time';
+import { GetBlockMonth, MonthType } from 'Interface/Widgets/BlockMonth/script';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
+ * @typedef {import('Interface/Widgets/BlockMonth/script').DayType} DayType
  */
 
 class BackCalendar extends PageBack {
@@ -37,7 +37,8 @@ class BackCalendar extends PageBack {
         this.before = [ month, year ];
         this.after = [ month, year ];
 
-        let months = [{ month: month, year: year, data: GetBlockMonth(month, year) }];
+        /** @type {Array<MonthType>} */
+        let months = [ GetBlockMonth(month, year) ];
         months = this.addMonthToTop(months, 4, false);
         months = this.addMonthToBottom(months, 4, false);
 
@@ -53,6 +54,8 @@ class BackCalendar extends PageBack {
             selectedDate: 0,
             selectedMonth: 0,
             selectedYear: 0,
+
+            /** @type {Array<DayType|null>} */
             currWeek: [],
 
             /** @type {Array<Activity>} */
@@ -60,9 +63,9 @@ class BackCalendar extends PageBack {
         };
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            const _date = new Date(year, month, date);
-            const currActivities = user.activities.GetByTime(GetTime(_date, true));
-            this.setState({ currActivities });
+            /** @type {Array<Activity>} */
+            const activities = user.activities.allActivities.Get();
+            this.daySelect(date, month, year, true);
         });
     }
 
@@ -136,8 +139,7 @@ class BackCalendar extends PageBack {
         for (let i = 0; i < number; i++) {
             this.before = this.editMonth(this.before, -1);
             const [ month, year ] = this.before;
-            const addMonths = { month: month, year: year, data: GetBlockMonth(month, year) };
-            newMonths.splice(0, 0, addMonths);
+            newMonths.splice(0, 0, GetBlockMonth(month, year));
         }
 
         return newMonths;
@@ -153,15 +155,27 @@ class BackCalendar extends PageBack {
         for (let i = 0; i < number; i++) {
             this.after = this.editMonth(this.after, 1);
             const [ month, year ] = this.after;
-            const addMonths = { month: month, year: year, data: GetBlockMonth(month, year) };
-            newMonths.push(addMonths);
+            newMonths.push(GetBlockMonth(month, year));
         }
 
         return newMonths;
     }
 
-    daySelect = async (day = null, month = null, year = null) => {
-        if (this.state.selectedDate === day &&
+    /**
+     * @param {number} day
+     * @param {number} month
+     * @param {number} year
+     * @param {boolean} [force=false]
+     * @returns {Promise<void>}
+     */
+    daySelect = async (
+        day = null,
+        month = this.state.selectedMonth,
+        year = this.state.selectedYear,
+        force = false
+    ) => {
+        if (!force &&
+            this.state.selectedDate === day &&
             this.state.selectedMonth === month &&
             this.state.selectedYear === year) {
                 // Already selected
@@ -170,8 +184,8 @@ class BackCalendar extends PageBack {
 
         if (day !== null) {
             // Select day
-            const block = GetBlockMonth(month, year);
-            const week = block.find(w => w.includes(day));
+            const weeks = GetBlockMonth(month, year, undefined, day).data;
+            const week = weeks.find(w => w.filter(d => d?.day === day).length > 0);
             const date = new Date(year, month, day);
             const now = new Date();
             const activities = user.activities.GetByTime(GetTime(date, true));
@@ -184,7 +198,9 @@ class BackCalendar extends PageBack {
                 currWeek: week
             });
 
-            if (!this.opened) await this.showPanel();
+            if (!this.opened) {
+                await this.showPanel();
+            }
             date.setHours(now.getHours(), now.getMinutes(), 0, 0);
             user.tempSelectedTime = RoundToQuarter(GetTime(date));
         } else {
@@ -207,18 +223,21 @@ class BackCalendar extends PageBack {
     showPanel = () => this.animPanel(0);
     hidePanel = () => this.animPanel(1);
     animPanel = (value) => {
+        if (this.animating) return null;
+
         const { animation } = this.state;
 
         const animFunc = (resolve, reject) => {
             this.animating = true;
-            SpringAnimation(animation, value).start(() => {
+            SpringAnimation(animation, value).start();
+            setTimeout(() => {
                 this.animating = false;
                 this.opened = value === 0;
                 resolve();
-            });
+            }, 300);
         }
 
-        return !this.animating ? new Promise(animFunc) : null;
+        return new Promise(animFunc);
     }
 
     /**
@@ -229,13 +248,13 @@ class BackCalendar extends PageBack {
         const { selectedDate, selectedMonth, selectedYear } = this.state;
 
         const date = new Date(selectedYear, selectedMonth, selectedDate);
-        const block = GetBlockMonth(selectedMonth, selectedYear);
-        const currWeek = block.find(w => w.includes(selectedDate));
+        const weeks = GetBlockMonth(selectedMonth, selectedYear).data;
+        const currWeek = weeks.find(w => w.find(d => d?.day === selectedDate));
         let nextWeek = currWeek;
 
         do {
             date.setDate(date.getDate() + move);
-            nextWeek = block.find(w => w.includes(date.getDate()))
+            nextWeek = weeks.find(w => w.find(d => d?.day === date.getDate()))
         } while (currWeek === nextWeek);
 
         const newDay = date.getDate();

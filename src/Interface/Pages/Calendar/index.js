@@ -17,9 +17,7 @@ class Calendar extends BackCalendar {
     month = ({ item }) => (
         <BlockMonth
             style={{ maxHeight: 260, minHeight: 260 }}
-            month={item.month}
-            year={item.year}
-            data={item.data}
+            monthData={item}
             onPressDay={this.daySelect}
         />
     );
@@ -33,7 +31,15 @@ class Calendar extends BackCalendar {
     );
 
     render() {
-        const { selectedDate, selectedMonth, selectedYear, animation } = this.state;
+        const {
+            months,
+            selectedDate,
+            selectedMonth,
+            selectedYear,
+            animation,
+            currWeek,
+            currActivities
+        } = this.state;
 
         const interPanel = { inputRange: [0, 1], outputRange: [0, user.interface.screenHeight] };
         const interDateP = { inputRange: [0, 1], outputRange: [user.interface.screenHeight/4, 0] };
@@ -61,7 +67,7 @@ class Calendar extends BackCalendar {
                 scrollable={false}
             >
                 <Animated.View style={styleContent}>
-                    {/* Month + arrows to show calendar */}
+                    {/* Month + arrow to show calendar */}
                     <View style={styles.row}>
                         <Icon icon='arrowLeft' onPress={() => this.daySelect()} color='main1' size={32} />
                         <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
@@ -73,11 +79,7 @@ class Calendar extends BackCalendar {
                         <Icon onPress={() => {this.weekSelect(-1)}} icon='chevron' color='main1' size={18} angle={180} />
                         <BlockMonth
                             style={styles.weekRow}
-                            onlyWeek={true}
-                            data={[this.state.currWeek]}
-                            month={selectedMonth}
-                            year={selectedYear}
-                            selectedDay={new Date(selectedYear, selectedMonth, selectedDate)}
+                            weekData={currWeek}
                             onPressDay={this.daySelect}
                         />
                         <Icon onPress={() => {this.weekSelect(1)}} icon='chevron' color='main1' size={18} />
@@ -86,11 +88,11 @@ class Calendar extends BackCalendar {
                     {/* CurrDate + Activities panel */}
                     <View style={[styles.panel, { backgroundColor: themeManager.GetColor('backgroundGrey') }]}>
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
-                        {this.state.selectedDate !== null && ( // Force re-render after date selection
+                        {selectedDate !== null && ( // Force re-render after date selection
                             <FlatList
                                 style={styles.panelCard}
                                 contentContainerStyle={{ paddingBottom: 64 }}
-                                data={this.state.currActivities}
+                                data={currActivities}
                                 ListHeaderComponent={cardHeader.bind(this)}
                                 ListFooterComponent={cardFooter.bind(this)}
                                 ItemSeparatorComponent={cardSeparator.bind(this)}
@@ -114,7 +116,7 @@ class Calendar extends BackCalendar {
                     <FlatList
                         ref={(ref) => { this.flatlist = ref}}
                         style={styles.months}
-                        data={this.state.months}
+                        data={months}
                         renderItem={this.month}
                         keyExtractor={(item, index) => `${item.month}-${item.year}`}
                         //windowSize={12}

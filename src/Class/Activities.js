@@ -339,7 +339,7 @@ class Activities {
     GetByTime(time = GetTime()) {
         const startTime = GetMidnightTime(time);
         const endTime = startTime + 86400;
-        return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
+        return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
     }
 
     /**

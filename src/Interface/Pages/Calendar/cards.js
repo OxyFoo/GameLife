@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { ActivityCard } from 'Interface/Widgets';
-import { GetDate } from 'Utils/Time';
+import { GetDate, GetMidnightTime, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('./back').default} BackCalendar
@@ -12,18 +12,18 @@ import { GetDate } from 'Utils/Time';
  * @this BackCalendar
  */
 function cardHeader() {
-    const { currActivities } = this.state;
+    const {
+        selectedDate, selectedMonth, selectedYear,
+        currActivities
+    } = this.state;
 
     let addButtonAdd = true;
+    let time = GetMidnightTime(GetTime(new Date(selectedYear, selectedMonth, selectedDate)));
 
-    if (currActivities.length > 1) {
+    if (currActivities.length > 0) {
         const prevActivity = currActivities[0];
-        const nextActivity = currActivities[1];
-        if (!!prevActivity && !!nextActivity) {
-            const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
-            const nextStart = nextActivity.startTime;
-            addButtonAdd = nextStart !== prevEnd;
-        }
+        const prevActivityMidnight = GetMidnightTime(prevActivity.startTime);
+        addButtonAdd = prevActivity.startTime !== prevActivityMidnight;
     }
 
     return (
@@ -34,7 +34,7 @@ function cardHeader() {
             />
             <ActivityCard.Separator
                 addButton={addButtonAdd}
-                onPress={this.onAddActivity}
+                onPress={() => this.onAddActivityFromTime(time)}
             />
         </>
     );
@@ -60,20 +60,29 @@ function cardItem({ item, index }) {
 function cardFooter() {
     const { currActivities } = this.state;
 
-    let addButtonAdd = false;
-    const prevActivity = currActivities[currActivities.length - 1]
-    if (currActivities.length > 0) {
-        const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
-        addButtonAdd = GetDate(prevEnd).getHours() !== 0;
+    // No activity = no separator
+    if (currActivities.length === 0) {
+        return (
+            <ActivityCard
+                type={'end'}
+                index={this.state.currActivities.length + 1}
+            />
+        );
     }
+
+    // Add separator if last activity ends before midnight
+    let addButtonAdd = false;
+    let prevActivity = null;
+    prevActivity = currActivities[currActivities.length - 1];
+    const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
+    addButtonAdd = GetDate(prevActivity.startTime).getDate() === GetDate(prevEnd).getDate();
+
     return (
         <>
-            {currActivities.length > 0 && (
-                <ActivityCard.Separator
-                    addButton={addButtonAdd}
-                    onPress={this.onAddActivity}
-                />
-            )}
+            <ActivityCard.Separator
+                addButton={addButtonAdd}
+                onPress={() => this.onAddActivityFromActivity(prevActivity)}
+            />
             <ActivityCard
                 type={'end'}
                 index={this.state.currActivities.length + 1}
@@ -106,7 +115,7 @@ function cardSeparator(props) {
     return (
         <ActivityCard.Separator
             addButton={addButtonAdd}
-            onPress={this.onAddActivity}
+            onPress={() => this.onAddActivityFromActivity(leadingItem)}
         />
     );
 }

@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     months: {
-        height: '80%'
     },
 
     mainContent: {
@@ -55,7 +54,15 @@ const styles = StyleSheet.create({
     date: {
         marginVertical: 24,
         fontWeight: 'bold'
-    }
+    },
+    fadeBottom2: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: 48,
+        zIndex: 1
+    },
 });
 
 export default styles;

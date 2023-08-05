@@ -63,9 +63,8 @@ class BackCalendar extends PageBack {
         };
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            /** @type {Array<Activity>} */
-            const activities = user.activities.allActivities.Get();
-            this.daySelect(date, month, year, true);
+            const { selectedDate, selectedMonth, selectedYear } = this.state;
+            this.daySelect(selectedDate, selectedMonth, selectedYear, true);
         });
     }
 
@@ -278,8 +277,15 @@ class BackCalendar extends PageBack {
         user.interface.setState(newBarState);
     }
 
-    onAddActivity = () => {
-        user.interface.ChangePage('activity', undefined, true);
+    /** @param {Activity} activity */
+    onAddActivityFromActivity = (activity) => {
+        const time = activity.startTime + activity.duration * 60;
+        user.interface.ChangePage('activity', { time }, true);
+    }
+
+    /** @param {number} time */
+    onAddActivityFromTime = (time) => {
+        user.interface.ChangePage('activity', { time }, true);
     }
 }
 

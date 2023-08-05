@@ -51,12 +51,12 @@ function RoundToQuarter(time) {
 }
 
 /**
- * @param {number} time in seconds 
+ * @param {number} time in seconds of midnight time (local UTC)
  * @returns {number} Time in seconds
  */
 function GetMidnightTime(time) {
     time -= time % (24 * 60 * 60);
-    return time;
+    return time - (GetTimeZone() * 60 * 60);
 }
 
 /**

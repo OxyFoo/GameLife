@@ -52,6 +52,9 @@ class BackActivity extends PageBack {
     /** @type {boolean} If true, the page is in edition mode */
     editMode = false;
 
+    /** @type {number} */
+    initTime = 0;
+
     backgroundCard = {
         backgroundColor: themeManager.GetColor('backgroundCard')
     };
@@ -110,6 +113,12 @@ class BackActivity extends PageBack {
             /** @type {Activity} */
             const activity = this.props.args.activity;
             this.refActivityPanel.SelectActivity(activity);
+        }
+
+        // Set default time to add an activity
+        if (this.props.args.hasOwnProperty('time')) {
+            const { time } = this.props.args;
+            this.refActivityPanel.onChangeSchedule(time, 60);
         }
     }
 

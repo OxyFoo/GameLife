@@ -54,6 +54,9 @@ class Calendar extends BackCalendar {
         const styleCalendar = {
             transform: [{ translateY: animation.interpolate(interDateP) }]
         };
+        const styleMonth = {
+            height: user.interface.screenHeight - 190 // 130 (height of the top bar) + 60 (half of the bottom bar)
+        };
 
         const title = selectedDate === null ? '' : GetMonthAndYear(selectedMonth, selectedYear);
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
@@ -115,7 +118,7 @@ class Calendar extends BackCalendar {
                 <Animated.View style={styleCalendar}>
                     <FlatList
                         ref={(ref) => { this.flatlist = ref}}
-                        style={styles.months}
+                        style={styleMonth}
                         data={months}
                         renderItem={this.month}
                         keyExtractor={(item, index) => `${item.month}-${item.year}`}
@@ -131,6 +134,13 @@ class Calendar extends BackCalendar {
                         onScroll={this.onScroll}
                         //scrollEnabled={!this.state.isReached}
                         //maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: undefined }}
+                    />
+                    <LinearGradient
+                        style={styles.fadeBottom2}
+                        colors={[
+                            themeManager.GetColor('ground1a', 0),
+                            themeManager.GetColor('ground1a', 1)
+                        ]}
                     />
                 </Animated.View>
 

@@ -5,7 +5,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetTime, GetTimeZone } from 'Utils/Time';
 import { Activity } from 'Class/Activities';
 import { SpringAnimation } from 'Utils/Animations';
 import { AskActivityComment, AddActivity, onRemComment, RemActivity } from './utils';
@@ -60,7 +60,8 @@ class ActivityPanelBack extends React.Component {
             skillID: 0,
             comment: '',
             duration: 60,
-            startTime: GetTime()
+            startTime: GetTime(),
+            timezone: GetTimeZone()
         }
     };
 

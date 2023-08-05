@@ -5,7 +5,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { GetDate, GetDurations, GetTime } from 'Utils/Time';
+import { GetDate, GetDurations, GetTime, GetTimeZone } from 'Utils/Time';
 import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
 import { Text, Button, Separator } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
@@ -101,21 +101,22 @@ class ActivitySchedule extends React.Component {
         const { DTPMode } = this.state;
         this.hideDTP();
 
-        const pickedTime = GetTime(date);
+        const pickedTime = GetTime(date, true);
         let newStartTime = this.props.selectedDate;
 
         // New date, keep time
         if (DTPMode == 'date') {
-            const date = pickedTime - (pickedTime % DAY_SECONDS);
+            const pickedTimeLocal = pickedTime - GetTimeZone() * 3600;
+            const date = pickedTimeLocal - (pickedTimeLocal % DAY_SECONDS);
             const time = newStartTime % DAY_SECONDS;
             newStartTime = date + time;
         }
-        
+
         // New time, keep date
         else if (DTPMode == 'time') {
             const date = newStartTime - (newStartTime % DAY_SECONDS);
             const time = pickedTime % DAY_SECONDS;
-            newStartTime = date + time;
+            newStartTime = date + time - GetTimeZone() * 3600;
         }
 
         this.props.onChange(newStartTime, this.props.selectedDuration);

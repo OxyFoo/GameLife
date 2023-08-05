@@ -5,8 +5,8 @@ function SvgComponent(props) {
     return (
         <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" {...props}>
             <Path
-                fill={props.color || 'white'}
-                stroke="#000"
+                fill="none"
+                stroke={props.color || 'white'}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={12}

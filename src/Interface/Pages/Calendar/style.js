@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
     panel: {
         flex: 1,
         marginTop: 12,
-        paddingBottom: 60,
+        marginBottom: -48,          // Hide empty space during animation
+        paddingBottom: 64 + 48,     // Stop before bottomBar
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
     },
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 60,
+        bottom: 64 + 48,
         height: 64,
         zIndex: 1
     },

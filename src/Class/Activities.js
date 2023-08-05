@@ -2,7 +2,7 @@ import dataManager from 'Managers/DataManager';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
-import { GetMidnightTime, GetTime } from 'Utils/Time';
+import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -22,6 +22,7 @@ class Activity {
     skillID = 0;
     startTime = 0;
     duration = 0;
+    timezone = 0;
     comment = '';
 }
 
@@ -80,8 +81,8 @@ class Activities {
         this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
-            if (activity.length !== 4) continue;
-            this.Add(activity[0], activity[1], activity[2], activity[3], true);
+            if (activity.length !== 5) continue;
+            this.Add(activity[0], activity[1], activity[2], activity[3], activity[4], true);
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
@@ -112,7 +113,14 @@ class Activities {
         let unsaved = [];
         for (let a in this.UNSAVED_activities) {
             const activity = this.UNSAVED_activities[a];
-            unsaved.push([ 'add', activity.skillID, activity.startTime, activity.duration, activity.comment ]);
+            unsaved.push([
+                'add',
+                activity.skillID,
+                activity.startTime,
+                activity.duration,
+                activity.comment,
+                activity.timezone
+            ]);
         }
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
@@ -214,12 +222,13 @@ class Activities {
      * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {AddStatus}
      */
-    Add(skillID, startTime, duration, comment = '', alreadySaved = false) {
+    Add(skillID, startTime, duration, comment = '', timezone = null, alreadySaved = false) {
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;
         newActivity.duration = duration;
         newActivity.comment = comment;
+        newActivity.timezone = timezone ?? GetTimeZone();
 
         // Limit date
         const limitDate = new Date();

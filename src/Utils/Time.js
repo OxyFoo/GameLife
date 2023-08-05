@@ -114,6 +114,12 @@ function GetDaysUntil(time) {
     return days;
 }
 
+function GetTimeZone() {
+    return - (new Date()).getTimezoneOffset() / 60;
+}
+
 export { GetTime, GetDate, TimeToFormatString,
     RoundToQuarter, GetMidnightTime, GetAge,
-    GetDurations, GetTimeToTomorrow, GetDaysUntil };
+    GetDurations, GetTimeToTomorrow, GetDaysUntil,
+    GetTimeZone
+};

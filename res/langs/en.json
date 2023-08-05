@@ -198,7 +198,8 @@
         "add-activity": "Add activity",
         "hour-min": "h",
         "start": "Start of the day",
-        "end": "End of the day"
+        "end": "End of the day",
+        "utc": "UTC"
     },
 
     "dailyquest": {

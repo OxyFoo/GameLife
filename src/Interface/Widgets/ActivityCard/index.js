@@ -8,7 +8,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Icon, Text } from 'Interface/Components';
 import { TimingAnimation } from 'Utils/Animations';
-import { TimeToFormatString } from 'Utils/Time';
+import { GetTimeZone, TimeToFormatString } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -74,11 +74,22 @@ class ActivityCard extends React.Component {
             const textEnd_value = TimeToFormatString(activity.startTime + activity.duration * 60 - offsetUTC);
             const textDuration_value = TimeToFormatString(activity.duration * 60);
 
+            // Line 1 (optional): UTC+X
+            let textUTC_value = '';
+            if (activity.timezone !== GetTimeZone()) {
+                textUTC_value = lang['utc'];
+                if (activity.timezone > 0) {
+                    textUTC_value = textUTC_value + '+' + activity.timezone;
+                } else if (activity.timezone < 0) {
+                    textUTC_value = textUTC_value + activity.timezone;
+                }
+            }
+
             // Line 2: Category - Activity
             const textCategory = GetName(dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name);
             const textActivity = GetName(skill.Name);
 
-            this.line1 = `${textStart_value} - ${textEnd_value} (${textDuration_value}${lang['hour-min']})`;
+            this.line1 = `${textStart_value} - ${textEnd_value} (${textDuration_value}${lang['hour-min']}) ${textUTC_value}`;
             this.line2 = textCategory + ' - ' + textActivity;
         }
 

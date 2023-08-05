@@ -185,6 +185,7 @@ class ActivitySchedule extends React.Component {
                                 </Text>
                             )}
                             horizontal={true}
+                            showsHorizontalScrollIndicator={false}
                         />
                     </View>
                 </Animated.View>
@@ -306,7 +307,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginRight: 12,
         marginBottom: 4,
-        borderRadius: 16
+        borderRadius: 16,
+        overflow: 'hidden'
     },
     overlay: {
         position: 'absolute',

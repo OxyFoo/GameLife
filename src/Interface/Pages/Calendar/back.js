@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 import { GetTime, RoundToQuarter } from 'Utils/Time';
-import { GetBlockMonth, MonthType } from 'Interface/Widgets/BlockMonth/script';
+import { GetBlockMonth, MonthType, UpdateBlockMonth } from 'Interface/Widgets/BlockMonth/script';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
@@ -48,7 +48,6 @@ class BackCalendar extends PageBack {
 
         this.state = {
             months: months,
-            monthsMounted: false,
 
             animation: new Animated.Value(0),
             selectedDate: 0,
@@ -63,8 +62,14 @@ class BackCalendar extends PageBack {
         };
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            // Update activities
             const { selectedDate, selectedMonth, selectedYear } = this.state;
             this.daySelect(selectedDate, selectedMonth, selectedYear, true);
+
+            // Update calendar
+            const { months } = this.state;
+            UpdateBlockMonth(months);
+            this.setState({ months });
         });
     }
 
@@ -204,9 +209,6 @@ class BackCalendar extends PageBack {
             user.tempSelectedTime = RoundToQuarter(GetTime(date));
         } else {
             // Unselect day (calendar mode)
-            if (!this.state.monthsMounted) {
-                this.setState({ monthsMounted: true });
-            }
             if (this.opened) {
                 await this.hidePanel();
             }

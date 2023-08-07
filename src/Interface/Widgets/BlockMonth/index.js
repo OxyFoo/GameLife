@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
 import styles from './style';
-import themeManager from 'Managers/ThemeManager';
+import BlockDay from './blockday';
 
 import { Text } from 'Interface/Components';
 import { GetMonthAndYear } from 'Utils/Date';
@@ -15,12 +15,6 @@ import { GetMonthAndYear } from 'Utils/Date';
  * @typedef {import('./script').DayType} DayType
  * @typedef {import('./script').MonthType} MonthType
  */
-
-const dynamicStyles = {
-    bgMain1: { backgroundColor: themeManager.GetColor('main1') },
-    bgMain2: { backgroundColor: themeManager.GetColor('main2') },
-    bgBorder: { backgroundColor: themeManager.GetColor('border') }
-};
 
 const BlockMonthProps = {
     /** @type {StyleProp} */
@@ -50,62 +44,7 @@ const BlockMonthProps = {
     onPressDay: (day, month, year) => {}
 }
 
-/**
- * @param {Object} props
- * @param {DayType} props.item
- * @param {() => Void} props.onPress
- * @returns {React.JSX.Element}
- */
-function Day(props) {
-    const { item, onPress } = props;
-    if (item === null) return <View style={styles.day} />;
-
-    const { day, isToday, isSelected, isActivity, isActivityXP } = item;
-
-    /** @type {Array<StyleProp>} */
-    let style = [styles.day];
-    if (isSelected)   style = [...style, styles.circle, dynamicStyles.bgMain1];
-    else if (isToday) style = [...style, styles.circle, dynamicStyles.bgMain2];
-
-
-    const renderDot = () => {
-        if (!isActivity && !isActivityXP) return null;
-
-        let dotColor = dynamicStyles.bgBorder;
-        if (isActivityXP) dotColor = dynamicStyles.bgMain2;
-
-        return (
-            <View style={styles.dotContainer}>
-                <View style={[styles.dot, dotColor]} />
-            </View>
-        );
-    }
-
-    return (
-        <View style={style}>
-
-            {day !== 0 && (
-                <Text
-                    containerStyle={{ width: '100%' }}
-                    onPress={onPress}
-                >
-                    {day.toString()}
-                </Text>
-            )}
-            {renderDot()}
-
-        </View>
-    );
-}
-
 class BlockMonth extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        const data = nextProps.monthData?.data[0] ?? nextProps.weekData ?? [];
-        const currData = this.props.monthData?.data[0] ?? this.props.weekData ?? [];
-        if (data.length !== data.length) return true;
-        return !data.every((v, i) => v === currData[i]);
-    }
-
     render() {
         const {
             monthData,
@@ -120,7 +59,7 @@ class BlockMonth extends React.Component {
         const renderDay = ({ item }) => {
             const onPess = () => { onPressDay(item.day, monthData?.month, monthData?.year); };
             return (
-                <Day
+                <BlockDay
                     item={item}
                     onPress={onPess}
                 />
@@ -153,6 +92,7 @@ class BlockMonth extends React.Component {
                     columnWrapperStyle={styles.rowContainer}
                     renderItem={renderDay}
                     keyExtractor={(item, index) => 'm-' + index}
+                    scrollEnabled={false}
                 />
             </View>
         );

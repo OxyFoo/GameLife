@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    dayTextContainer: {
+        width: '100%'
+    },
     circle: {
         borderRadius: 50
     },

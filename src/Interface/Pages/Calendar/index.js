@@ -72,9 +72,9 @@ class Calendar extends BackCalendar {
                 <Animated.View style={styleContent}>
                     {/* Month + arrow to show calendar */}
                     <View style={styles.row}>
-                        <Icon icon='arrowLeft' onPress={() => this.daySelect()} color='main1' size={32} />
-                        <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
                         <Icon size={32} />
+                        <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
+                        <Icon icon='calendar' onPress={() => this.daySelect()} color='main1' size={32} />
                     </View>
 
                     {/* Date selection + arrows prev/next */}

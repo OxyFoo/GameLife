@@ -78,4 +78,28 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
     return output;
 }
 
-export { GetBlockMonth, MonthType, DayType };
+/**
+ * @param {Array<MonthType>} blockMonths
+ */
+function UpdateBlockMonth(blockMonths) {
+    for (let m = 0; m < blockMonths.length; m++) {
+        const month = blockMonths[m];
+        for (let w = 0; w < month.data.length; w++) {
+            const week = month.data[w];
+            for (let d = 0; d < week.length; d++) {
+                const day = week[d];
+                if (day !== null) {
+                    const activities = user.activities.GetByTime(GetTime(new Date(month.year, month.month, day.day), true));
+                    blockMonths[m].data[w][d].isToday = new Date(month.year, month.month, day.day).toDateString() === new Date().toDateString();
+                    blockMonths[m].data[w][d].isActivity = activities.length > 0;
+                    blockMonths[m].data[w][d].isActivityXP = !!activities.find(a => dataManager.skills.GetByID(a.skillID).XP > 0);
+                }
+            }
+        }
+    }
+}
+
+export {
+    GetBlockMonth, UpdateBlockMonth,
+    MonthType, DayType
+};

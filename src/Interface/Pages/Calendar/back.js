@@ -192,7 +192,7 @@ class BackCalendar extends PageBack {
             const week = weeks.find(w => w.filter(d => d?.day === day).length > 0);
             const date = new Date(year, month, day);
             const now = new Date();
-            const activities = user.activities.GetByTime(GetTime(date, true));
+            const activities = user.activities.GetByTime(GetTime(date, 'local'));
 
             this.setState({
                 currActivities: activities,

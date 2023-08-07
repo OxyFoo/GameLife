@@ -27,7 +27,7 @@ async function onRemComment(callback) {
     const title = langManager.curr['activity']['alert-remcomment-title'];
     const text = langManager.curr['activity']['alert-remcomment-text'];
     const cb = (button) => button === 'yes' && callback();
-    user.interface.popup.Open('yesno', [ title, text ], callback);
+    user.interface.popup.Open('yesno', [ title, text ], cb);
 }
 
 /**

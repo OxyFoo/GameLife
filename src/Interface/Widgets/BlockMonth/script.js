@@ -60,7 +60,7 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
             day = (tmpDate.getDay() + 5 + start) % 7;
             const isToday = tmpDate.toDateString() === new Date().toDateString();
             const isSelected = selectedDay === tmpDate.getDate();
-            const activities = user.activities.GetByTime(GetTime(tmpDate, true));
+            const activities = user.activities.GetByTime(GetTime(tmpDate, 'local'));
             const isActivity = activities.length > 0;
             const isActivityXP = !!activities.find(a => dataManager.skills.GetByID(a.skillID).XP > 0);
 
@@ -89,7 +89,7 @@ function UpdateBlockMonth(blockMonths) {
             for (let d = 0; d < week.length; d++) {
                 const day = week[d];
                 if (day !== null) {
-                    const activities = user.activities.GetByTime(GetTime(new Date(month.year, month.month, day.day), true));
+                    const activities = user.activities.GetByTime(GetTime(new Date(month.year, month.month, day.day), 'local'));
                     blockMonths[m].data[w][d].isToday = new Date(month.year, month.month, day.day).toDateString() === new Date().toDateString();
                     blockMonths[m].data[w][d].isActivity = activities.length > 0;
                     blockMonths[m].data[w][d].isActivityXP = !!activities.find(a => dataManager.skills.GetByID(a.skillID).XP > 0);

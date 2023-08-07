@@ -101,7 +101,7 @@ class ActivitySchedule extends React.Component {
         const { DTPMode } = this.state;
         this.hideDTP();
 
-        const pickedTime = GetTime(date, true);
+        const pickedTime = GetTime(date, 'global');
         let newStartTime = this.props.selectedDate;
 
         // New date, keep time

@@ -36,8 +36,7 @@ class BlockDay extends React.Component {
         const { item } = nextProps;
         const { item: currItem } = this.props;
 
-        if (item?.isActivity !== currItem?.isActivity ||
-            item?.isActivityXP !== currItem?.isActivityXP ||
+        if (item?.day !== currItem?.day ||
             item?.isSelected !== currItem?.isSelected ||
             item?.isActivity !== this.isActivity ||
             item?.isActivityXP !== this.isActivityXP) {

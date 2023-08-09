@@ -1,5 +1,6 @@
 import { FlatList } from 'react-native';
 
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
@@ -115,10 +116,12 @@ class BackActivity extends PageBack {
             this.refActivityPanel.SelectActivity(activity);
         }
 
-        // Set default time to add an activity
+        // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
             const { time } = this.props.args;
             this.refActivityPanel.onChangeSchedule(time, 60);
+        } else if (user.tempSelectedTime !== null) {
+            this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
         }
     }
 

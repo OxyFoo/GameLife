@@ -22,7 +22,7 @@ class BackActivityTimer extends PageBack {
         duration: 0
     };
 
-    /** @type {number} Unix timestamp */
+    /** @type {number} Unix timestamp (UTC) */
     currentTime = 0;
 
     /** @type {boolean} */
@@ -45,13 +45,12 @@ class BackActivityTimer extends PageBack {
         this.state.duration = this.__getCurrentDuration();
         this.displayInitialTime = DateToFormatTimeString(GetDate(startTime));
 
-        this.finished = false;
         user.interface.backable = false;
-        this.timer = setInterval(this.tick, 1000);
+        this.timer_tick = setInterval(this.tick, 1000);
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer);
+        clearInterval(this.timer_tick);
         user.interface.backable = true;
 
         // Clear if activity is finished

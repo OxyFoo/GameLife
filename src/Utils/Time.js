@@ -41,11 +41,13 @@ function TimeToFormatString(time) {
 
 /**
  * @param {number} time in seconds
+ * @param {'near'|'prev'|'next'} [type] [default: 'near']
  * @returns {number} time rounded to quarters in seconds
  */
-function RoundToQuarter(time) {
+function RoundToQuarter(time, type = 'near') {
     let mod = time % 900;
-    if (mod > 450) mod += 900;
+    if (type === 'near' && mod > 450)   mod -= 900;
+    else if (type === 'next')           mod -= 900;
     return time - mod;
 }
 

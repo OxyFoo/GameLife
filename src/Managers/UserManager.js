@@ -58,8 +58,10 @@ class UserManager {
         /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
 
-        // TODO - Useful ?
+        /** @type {number|null} Calendar: select day => global UTC time */
         this.tempSelectedTime = null;
+
+        /** @type {number|null} To avoid spamming mail (UTC) */
         this.tempMailSent = null;
     }
     
@@ -78,6 +80,7 @@ class UserManager {
         this.xp = 0;
         this.stats = this.experience.GetEmptyExperience();
         this.tempSelectedTime = null;
+        this.tempMailSent = null;
 
         this.achievements.Clear();
         this.activities.Clear();

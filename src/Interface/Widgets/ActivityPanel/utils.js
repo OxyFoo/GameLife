@@ -1,7 +1,7 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetTime, RoundToQuarter } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
@@ -65,7 +65,7 @@ function RemActivity(callback) {
 /** @this ActivityPanel */
 function StartActivity() {
     const skillID = this.state.selectedSkillID;
-    const startTime = GetTime();
+    const startTime = RoundToQuarter(GetTime(), 'prev');
 
     if (!user.activities.TimeIsFree(startTime, 15)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];

@@ -60,7 +60,7 @@ class ActivityPanelBack extends React.Component {
             skillID: 0,
             comment: '',
             duration: 60,
-            startTime: GetTime(),
+            startTime: GetTime(undefined, 'local'),
             timezone: GetTimeZone()
         }
     };

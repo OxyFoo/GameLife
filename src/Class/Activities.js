@@ -13,7 +13,7 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * 
  * @typedef {object} CurrentActivity
  * @property {number} skillID Skill ID
- * @property {number} startTime Unix timestamp
+ * @property {number} startTime Unix timestamp (UTC)
  */
 
 const MaxHourPerDay = 12;
@@ -52,7 +52,7 @@ class Activities {
         this.allActivities = new DynamicVar([]);
 
         /**
-         * @type {CurrentActivity|null} [skillID, startTime]
+         * @type {CurrentActivity|null}
          */
         this.currentActivity = null;
 
@@ -343,8 +343,7 @@ class Activities {
     }
 
     /**
-     * 
-     * @param {number} time Time in seconds
+     * @param {number} time Time in seconds (unix timestamp, UTC)
      * @param {number} duration Duration in minutes
      * @returns {boolean} True if time is free
      */

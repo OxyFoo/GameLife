@@ -31,7 +31,6 @@ class BackCalendar extends PageBack {
         this.flatlist = null;
 
         const today = new Date();
-        const date = today.getDate();
         const month = today.getMonth();
         const year = today.getFullYear();
         this.before = [ month, year ];
@@ -206,7 +205,7 @@ class BackCalendar extends PageBack {
                 await this.showPanel();
             }
             date.setHours(now.getHours(), now.getMinutes(), 0, 0);
-            user.tempSelectedTime = RoundToQuarter(GetTime(date));
+            user.tempSelectedTime = RoundToQuarter(GetTime(date, 'local'));
         } else {
             // Unselect day (calendar mode)
             if (this.opened) {
@@ -218,6 +217,7 @@ class BackCalendar extends PageBack {
                 selectedYear: null,
                 currWeek: []
             });
+            user.tempSelectedTime = null;
         }
     }
 

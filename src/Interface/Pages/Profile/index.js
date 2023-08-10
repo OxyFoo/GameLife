@@ -36,6 +36,7 @@ class Profile extends BackProfile {
     }
 
     render() {
+        const { editorOpened, xpInfo } = this.state;
         const lang = langManager.curr['profile'];
         const langDates = langManager.curr['dates']['names'];
         const interReverse = { inputRange: [0, 1], outputRange: [1, 0] };
@@ -46,7 +47,7 @@ class Profile extends BackProfile {
         return (
             <Page
                 ref={ref => this.refPage = ref}
-                scrollable={!this.state.editorOpened}
+                scrollable={!editorOpened}
                 canScrollOver={false}
             >
                 <PageHeader
@@ -63,10 +64,10 @@ class Profile extends BackProfile {
 
                 <Animated.View style={[styles.botSpace, headerOpacity]}>
                     <View style={styles.xpRow}>
-                        <Text>{langManager.curr['level']['level'] + ' ' + this.userXP.xpInfo.lvl}</Text>
-                        <Text>{this.userXP.xpInfo.xp + '/' + this.userXP.xpInfo.next}</Text>
+                        <Text>{langManager.curr['level']['level'] + ' ' + xpInfo.lvl}</Text>
+                        <Text>{xpInfo.xp + '/' + xpInfo.next}</Text>
                     </View>
-                    <XPBar value={this.userXP.xpInfo.xp} maxValue={this.userXP.xpInfo.next} />
+                    <XPBar value={xpInfo.xp} maxValue={xpInfo.next} />
                 </Animated.View>
 
                 <EditorAvatar

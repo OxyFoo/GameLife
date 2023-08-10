@@ -65,7 +65,8 @@ function RemActivity(callback) {
 /** @this ActivityPanel */
 function StartActivity() {
     const skillID = this.state.selectedSkillID;
-    const startTime = RoundToQuarter(GetTime(), 'prev');
+    const startTime = RoundToQuarter(GetTime(undefined, 'local'), 'prev');
+    const localTime = GetTime(undefined, 'local');
 
     if (!user.activities.TimeIsFree(startTime, 15)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];
@@ -74,7 +75,7 @@ function StartActivity() {
         return;
     }
 
-    user.activities.currentActivity = { skillID, startTime };
+    user.activities.currentActivity = { skillID, startTime, localTime };
     user.LocalSave();
     user.interface.ChangePage('activitytimer', undefined, true);
 }

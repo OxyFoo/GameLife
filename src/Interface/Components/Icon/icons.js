@@ -11,6 +11,7 @@ import svgChrono from 'Ressources/icons/chrono';
 import svgCross from 'Ressources/icons/cross';
 import svgDiscord from 'Ressources/icons/discord';
 import svgEdit from 'Ressources/icons/edit';
+import svgError from 'Ressources/icons/error';
 import svgFilter from 'Ressources/icons/filter';
 import svgFlagEnglish from 'Ressources/icons/flag-english';
 import svgFlagFrench from 'Ressources/icons/flag-french';
@@ -51,6 +52,7 @@ const SVGIcons = {
     cross: svgCross,
     discord: svgDiscord,
     edit: svgEdit,
+    error: svgError,
     filter: svgFilter,
     flagEnglish: svgFlagEnglish,
     flagFrench: svgFlagFrench,

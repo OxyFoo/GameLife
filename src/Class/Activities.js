@@ -13,10 +13,12 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * 
  * @typedef {object} CurrentActivity
  * @property {number} skillID Skill ID
- * @property {number} startTime Unix timestamp (UTC)
+ * @property {number} startTime Start time of activity, unix timestamp (UTC)
+ * @property {number} localTime Precise time when user started the activity
+ *                              unix timestamp (local UTC)
  */
 
-const MaxHourPerDay = 12;
+const MAX_HOUR_PER_DAY = 12;
 
 class Activity {
     skillID = 0;
@@ -150,7 +152,7 @@ class Activities {
         const activities = this.user.activities.Get().filter(a => a.startTime <= now);
 
         let lastMidnight = 0;
-        let hoursRemain = MaxHourPerDay;
+        let hoursRemain = MAX_HOUR_PER_DAY;
         let usefulActivities = [];
         for (let i in activities) {
             const activity = activities[i];
@@ -160,7 +162,7 @@ class Activities {
 
             if (lastMidnight !== midnight) {
                 lastMidnight = midnight;
-                hoursRemain = MaxHourPerDay;
+                hoursRemain = MAX_HOUR_PER_DAY;
             }
 
             // Limit
@@ -230,10 +232,8 @@ class Activities {
         newActivity.comment = comment;
         newActivity.timezone = timezone ?? GetTimeZone();
 
-        // Limit date
-        const limitDate = new Date();
-        limitDate.setFullYear(2020, 1, 1);
-        if (startTime < GetTime(limitDate)) {
+        // Limit date (< 2020-01-01)
+        if (startTime < 1577836800) {
             return 'tooEarly';
         }
 

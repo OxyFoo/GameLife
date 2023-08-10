@@ -12,7 +12,10 @@ class Display extends BackDisplay {
         return (
             <Page ref={ref => this.refPage = ref} style={styles.page} canScrollOver>
                 <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
-                    <Icon icon={this.icon} size={SCREEN_WIDTH * .8} />
+                    <Icon
+                        icon={this.icon}
+                        size={SCREEN_WIDTH * this.iconRatio}
+                    />
                 </Animated.View>
                 <Text>{this.text}</Text>
                 <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
@@ -27,7 +30,7 @@ const styles = StyleSheet.create({
         height: '100%',
         paddingTop: '30%',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-evenly'
     },
     button: {
         width: '80%',

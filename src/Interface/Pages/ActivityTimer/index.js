@@ -15,9 +15,13 @@ class ActivityTimer extends BackActivityTimer {
         }
 
         const lang = langManager.curr['activity'];
-        const { time, duration } = this.state;
+        const {
+            displayInitialTime,
+            displayCurrentTime,
+            duration
+        } = this.state;
 
-        const textLaunch = lang['timer-launch'] + ' ' + this.displayInitialTime;
+        const textLaunch = lang['timer-launch'] + ' ' + displayInitialTime;
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
 
@@ -29,7 +33,7 @@ class ActivityTimer extends BackActivityTimer {
                 {/* Title */}
                 <View>
                     <Text style={styles.headText}>{textLaunch}</Text>
-                    <Text fontSize={48}>{time}</Text>
+                    <Text fontSize={48}>{displayCurrentTime}</Text>
                 </View>
 
                 {/* Buttons - Cancel / Done */}

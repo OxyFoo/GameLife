@@ -10,13 +10,12 @@ import { GetDate, GetTime } from 'Utils/Time';
 
 class BackProfile extends PageBack {
     state = {
-        editorOpened: false
+        editorOpened: false,
+        xpInfo: user.experience.GetExperience().xpInfo
     }
 
     constructor(props) {
         super(props);
-
-        this.userXP = user.experience.GetExperience();
 
         const activities = user.activities.Get();
         this.totalActivityLength = activities.length;
@@ -28,10 +27,17 @@ class BackProfile extends PageBack {
 
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
+
+        this.activitiesListener = user.activities.allActivities.AddListener(
+            () => this.setState({
+                xpInfo: user.experience.GetExperience().xpInfo
+            })
+        );
     }
 
     componentDidFocused = () => {
         // Update the avatar
+        // TODO: Don't update the avatar if the user didn't change anything
         this.refAvatar.updateEquippedItems();
         this.refAvatar.forceUpdate();
         this.refAvatar.refFrame.forceUpdate();

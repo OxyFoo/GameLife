@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
@@ -8,10 +8,14 @@ import { Button, Container, Page, Text } from 'Interface/Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {
-        // Show "Coming soon" message in center of screen with emoji
+        const lang = langManager.curr['multiplayer'];
+
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-                <Text style={styles.firstText}>🚧 Coming soon 🚧</Text>
+                <View style={styles.tempContainer}>
+                    <Text style={styles.tempTitle}>{lang['temp-comingsoon-title']}</Text>
+                    <Text style={styles.tempText}>{lang['temp-comingsoon-text']}</Text>
+                </View>
             </Page>
         );
 
@@ -89,6 +93,21 @@ class Multiplayer extends BackMultiplayer {
 }
 
 const styles = StyleSheet.create({
+    tempContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        marginVertical: '30%'
+    },
+    tempTitle: {
+        paddingHorizontal: 12,
+        fontSize: 32
+    },
+    tempText: {
+        paddingHorizontal: 12,
+        fontSize: 24
+    },
+
     firstText: {
         marginTop: '45%',
         paddingHorizontal: 12,

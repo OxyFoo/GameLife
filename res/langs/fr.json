@@ -307,7 +307,10 @@
         "connection-loading": "Connexion en cours",
         "connection-offline": "Veuillez vous connecter à internet et redémarrer l'application pour accéder à cette page.",
         "connection-failed": "La connexion au serveur a échouée, veuillez réessayer plus tard.",
-        "button-retry": "Réessayer"
+        "button-retry": "Réessayer",
+
+        "temp-comingsoon-title": "Multijoueur",
+        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
     },
 
     "profile": {

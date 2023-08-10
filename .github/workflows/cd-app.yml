@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
       - name: Cache NPM packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -41,15 +41,15 @@ jobs:
     needs: [ test ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
       - name: Cache NPM packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -70,7 +70,7 @@ jobs:
         run: npm run build
 
       - name: Upload aab artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app-release.aab
           path: android/app/build/outputs/bundle/release/app-release.aab
@@ -93,7 +93,7 @@ jobs:
           unzip -p my_app.apks universal.apk > GameLife-${{ github.base_ref }}.apk
 
       - name: Upload apk artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: GameLife-${{ github.base_ref }}.apk
           path: GameLife-${{ github.base_ref }}.apk
@@ -104,7 +104,7 @@ jobs:
     needs: [ build ]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install FTP client
         run: sudo apt-get update && sudo apt-get install lftp -y

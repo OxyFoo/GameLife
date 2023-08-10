@@ -1,5 +1,8 @@
 # GameLife
 
+[![GameLife - Continuous Integration](https://github.com/OxyFoo/GameLife/actions/workflows/ci-app.yml/badge.svg?branch=dev)](https://github.com/OxyFoo/GameLife/actions/workflows/ci-app.yml)
+[![GameLife - Continuous Deployment](https://github.com/OxyFoo/GameLife/actions/workflows/cd-app.yml/badge.svg)](https://github.com/OxyFoo/GameLife/actions/workflows/cd-app.yml)
+
 ## Idée
 En 3 mots : Gestion RPG IRL
 

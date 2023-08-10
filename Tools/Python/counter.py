@@ -32,16 +32,13 @@ def Counter(path, ext):
 ##### Config #####
 
 paths = [
-    '../../serverHTTP',
-    '../../serverTCP',
-    '../../src'
+    './src'
 ]
 exts = [
     'js',
     'php'
 ]
 ignoreDirs = [
-    'Public'
 ]
 ignoreFiles = [
     'test.php'

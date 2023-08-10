@@ -25,11 +25,12 @@ class DynamicVar {
 
     /**
      * Add function to be called when the variable is updated
-     * @param {Function} callback 
-     * @returns {number?} ID of the listener if it was added, null otherwise
+     * @param {() => void} callback 
+     * @returns {number|null} ID of the listener if it was added, null otherwise
      */
     AddListener(callback) {
         if (typeof(callback) !== 'function') return null;
+
         let id = 0;
         while (this.listeners.hasOwnProperty(id)) id++;
         if (!this.listeners.hasOwnProperty(id)) {

@@ -182,7 +182,7 @@
         "alert-remcomment-text": "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
 
         "timer-launch": "Heure de lancement :",
-        "timer-gain": "Gains par heure",
+        "timer-gain": "Gains actuel",
         "timer-complete": "Terminer",
         "timer-cancel": "Annuler",
         "timeralert-cancel-title": "Annuler l'activité ?",
@@ -191,14 +191,17 @@
         "timeralert-tooshort-text": "Vous ne pouvez pas ajouter une activité de moins de 15 minutes",
 
         "display-activity-text": "Votre activité a bien été créé !",
-        "display-activity-button": "Retour vers l'accueil"
+        "display-activity-button": "Retour vers l'accueil",
+        "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
+        "display-fail-button": "Retour vers l'accueil"
     },
 
     "calendar": {
         "add-activity": "Ajouter une activité",
         "hour-min": "h",
         "start": "Début de journée",
-        "end": "Fin de journée"
+        "end": "Fin de journée",
+        "utc": "UTC"
     },
 
     "dailyquest": {

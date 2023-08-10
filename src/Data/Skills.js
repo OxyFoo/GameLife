@@ -76,17 +76,6 @@ class Skills {
         return data;
     }
 
-    GetAsObj(category) {
-        let skills = [];
-        for (let i = 0; i < this.skills.length; i++) {
-            let skill = this.skills[i];
-            if (typeof(category) === 'undefined' || category === skill.CategoryID) {
-                skills.push({ key: parseInt(skill.ID), value: skill.Name });
-            }
-        }
-        return skills;
-    }
-
     /**
      * @param {number} ID
      * @returns {Skill?} - Return skill if exists or null

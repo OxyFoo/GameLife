@@ -5,31 +5,29 @@ import langManager from 'Managers/LangManager';
 import Notifications from 'Utils/Notifications';
 import { MinMax, TwoDigit } from 'Utils/Functions';
 import { DateToFormatTimeString } from 'Utils/Date';
-import { GetDate, GetTime, RoundToQuarter } from 'Utils/Time';
+import { GetDate, GetTime, GetTimeZone, RoundToQuarter } from 'Utils/Time';
 
 const MAX_TIME_MINUTES = 4 * 60; // Multiple of 15
 
 /**
  * @typedef {import('Class/Activities').AddStatus} AddStatus
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
 class BackActivityTimer extends PageBack {
     state = {
-        /** @type {string} Displayed time */
-        time: '00:00:00',
+        /** @type {string} */
+        displayInitialTime: '00:00',
 
-        /** @type {number} Multiple of 15 */
+        /** @type {string} */
+        displayCurrentTime: '00:00:00',
+
+        /** @type {number} Used to show estimated stats */
         duration: 0
     };
 
-    /** @type {number} Unix timestamp */
-    currentTime = 0;
-
     /** @type {boolean} */
     finished = false;
-
-    /** @type {string} */
-    displayInitialTime = '00:00';
 
     constructor (props) {
         super(props);
@@ -40,19 +38,19 @@ class BackActivityTimer extends PageBack {
         }
 
         const { startTime } = user.activities.currentActivity;
-        this.currentTime = GetTime();
-        this.state.time = this.__getCurrentTime();
-        this.state.duration = this.__getCurrentDuration();
-        this.displayInitialTime = DateToFormatTimeString(GetDate(startTime));
+        const localStartTime = startTime - GetTimeZone() * 3600;
 
-        this.finished = false;
-        user.interface.backable = false;
-        this.timer = setInterval(this.tick, 1000);
+        this.state.displayInitialTime = DateToFormatTimeString(GetDate(localStartTime));
+        this.state.displayCurrentTime = this.__getCurrentTime();
+        this.state.duration = this.__getDuration();
+
+        user.interface.SetCustomBackHandle(this.onPressCancel);
+        this.timer_tick = setInterval(this.tick, 1000);
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer);
-        user.interface.backable = true;
+        clearInterval(this.timer_tick);
+        user.interface.ResetCustomBackHandle();
 
         // Clear if activity is finished
         if (this.finished === true) {
@@ -69,28 +67,26 @@ class BackActivityTimer extends PageBack {
     tick = () => {
         const { startTime } = user.activities.currentActivity;
 
-        // Check if the activity does not exceed on any other
-        const _sec_startTime = RoundToQuarter(startTime);
-        const _sec_endTime = RoundToQuarter(this.currentTime);
-        const _min_duration = (_sec_endTime - _sec_startTime) / 60;
-        if (_min_duration >= MAX_TIME_MINUTES ||
-            !user.activities.TimeIsFree(_sec_startTime, _min_duration))
-        {
+        const endTime = RoundToQuarter(GetTime(undefined, 'local'), 'near');
+        let duration = Math.max(15, (endTime - startTime) / 60);
+
+        // Check if time plage is free
+        if (duration > 0 && !user.activities.TimeIsFree(startTime, duration)) {
             this.addActivity();
+            return;
         }
 
         // Update time
-        this.currentTime = GetTime();
         this.setState({
-            time: this.__getCurrentTime(),
-            duration: this.__getCurrentDuration()
+            displayCurrentTime: this.__getCurrentTime(),
+            duration: this.__getDuration()
         });
     }
 
     __getCurrentTime = () => {
-        const { startTime } = user.activities.currentActivity;
+        const { localTime } = user.activities.currentActivity;
 
-        const time = this.currentTime - startTime;
+        const time = GetTime(undefined, 'local') - localTime;
         const HH = Math.floor(time / 3600);
         const MM = Math.floor((time - (HH * 3600)) / 60);
         const SS = time - (HH * 3600) - (MM * 60);
@@ -98,21 +94,18 @@ class BackActivityTimer extends PageBack {
         return [HH, MM, SS].map(TwoDigit).join(':');
     }
 
-    __getCurrentDuration = () => {
+    __getDuration = () => {
         const { startTime } = user.activities.currentActivity;
-
-        const _sec_startTime = RoundToQuarter(startTime);
-        const _sec_endTime = RoundToQuarter(this.currentTime);
-        const _min_duration = (_sec_endTime - _sec_startTime) / 60;
-
-        return MinMax(0, _min_duration, MAX_TIME_MINUTES);
+        const currTime = RoundToQuarter(GetTime());
+        const duration = (currTime - startTime) / 60;
+        return MinMax(0, duration, MAX_TIME_MINUTES);
     }
 
     onPressCancel = () => {
         const remove = (button) => {
             if (button === 'yes') {
                 this.finished = true;
-                user.interface.ChangePage('calendar');
+                this.Back();
             }
         }
         const title = langManager.curr['activity']['timeralert-cancel-title'];
@@ -122,11 +115,8 @@ class BackActivityTimer extends PageBack {
     onPressComplete = () => {
         const { startTime } = user.activities.currentActivity;
 
-        const _sec_startTime = RoundToQuarter(startTime);
-        const _sec_endTime = RoundToQuarter(this.currentTime);
-        const _min_duration = (_sec_endTime - _sec_startTime) / 60;
-
-        if (_min_duration < 10) {
+        // Too short
+        if (startTime >= RoundToQuarter(GetTime(undefined, 'local'), 'near')) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];
             const text = lang['timeralert-tooshort-text'];
@@ -141,37 +131,59 @@ class BackActivityTimer extends PageBack {
     addActivity = () => {
         const { skillID, startTime } = user.activities.currentActivity;
 
-        const _sec_startTime = RoundToQuarter(startTime);
-        const _sec_endTime = RoundToQuarter(this.currentTime);
-        const _min_duration = (_sec_endTime - _sec_startTime) / 60;
-        let _duration = MinMax(15, _min_duration, MAX_TIME_MINUTES);
+        const endTime = RoundToQuarter(GetTime(undefined, 'local'), 'near');
+        let duration = Math.max(15, (endTime - startTime) / 60);
 
-        /** @type {AddStatus|null} */
-        let status = null;
-        while (status !== 'added') {
-            if (_duration === 0) {
-                user.interface.console.AddLog('error', 'Activity: can\'t be added.');
-                user.interface.ChangePage('calendar');
+        // Get the max duration possible
+        while (!user.activities.TimeIsFree(startTime, duration)) {
+            duration -= 15;
+            if (duration <= 0) {
+                this.ShowError('time');
                 return;
             }
-            status = user.activities.Add(skillID, _sec_startTime, _duration);
-            _duration -= 15;
+        }
+
+        const activityStatus = user.activities.Add(skillID, startTime, duration);
+        if (activityStatus !== 'added') {
+            this.ShowError(activityStatus);
+            return;
         }
 
         this.finished = true;
         Notifications.Evening.RemoveToday();
 
-        const text = langManager.curr['activity']['display-activity-text'];
-        const button = langManager.curr['activity']['display-activity-button'];
+        const lang = langManager.curr['activity'];
         user.interface.ChangePage('display', {
+            /** @type {Icons} */
             'icon': 'success',
-            'text': text,
-            'button': button,
-            'callback': () => user.interface.ChangePage('calendar')
+            'text': lang['display-activity-text'],
+            'button': lang['display-activity-button'],
+            'action': this.Back
         }, true);
 
         user.GlobalSave();
         user.RefreshStats();
+    }
+
+    Back = () => {
+        clearInterval(this.timer_tick);
+        if (user.interface.path.length > 1) {
+            user.interface.BackPage();
+        } else {
+            user.interface.ChangePage('calendar');
+        }
+    }
+
+    ShowError = (status = 'none') => {
+        const lang = langManager.curr['activity'];
+        user.interface.ChangePage('display', {
+            /** @type {Icons} */
+            'icon': 'error',
+            'iconRatio': .4,
+            'text': lang['display-fail-text'].replace('{}', status),
+            'button': lang['display-fail-button'],
+            'action': this.Back
+        }, true);
     }
 }
 

@@ -2,7 +2,7 @@ import dataManager from 'Managers/DataManager';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
-import { GetMidnightTime, GetTime } from 'Utils/Time';
+import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -13,15 +13,18 @@ import { GetMidnightTime, GetTime } from 'Utils/Time';
  * 
  * @typedef {object} CurrentActivity
  * @property {number} skillID Skill ID
- * @property {number} startTime Unix timestamp
+ * @property {number} startTime Start time of activity, unix timestamp (UTC)
+ * @property {number} localTime Precise time when user started the activity
+ *                              unix timestamp (local UTC)
  */
 
-const MaxHourPerDay = 12;
+const MAX_HOUR_PER_DAY = 12;
 
 class Activity {
     skillID = 0;
     startTime = 0;
     duration = 0;
+    timezone = 0;
     comment = '';
 }
 
@@ -51,7 +54,7 @@ class Activities {
         this.allActivities = new DynamicVar([]);
 
         /**
-         * @type {CurrentActivity|null} [skillID, startTime]
+         * @type {CurrentActivity|null}
          */
         this.currentActivity = null;
 
@@ -80,8 +83,8 @@ class Activities {
         this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
-            if (activity.length !== 4) continue;
-            this.Add(activity[0], activity[1], activity[2], activity[3], true);
+            if (activity.length !== 5) continue;
+            this.Add(activity[0], activity[1], activity[2], activity[3], activity[4], true);
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
@@ -112,7 +115,14 @@ class Activities {
         let unsaved = [];
         for (let a in this.UNSAVED_activities) {
             const activity = this.UNSAVED_activities[a];
-            unsaved.push([ 'add', activity.skillID, activity.startTime, activity.duration, activity.comment ]);
+            unsaved.push([
+                'add',
+                activity.skillID,
+                activity.startTime,
+                activity.duration,
+                activity.comment,
+                activity.timezone
+            ]);
         }
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
@@ -142,7 +152,7 @@ class Activities {
         const activities = this.user.activities.Get().filter(a => a.startTime <= now);
 
         let lastMidnight = 0;
-        let hoursRemain = MaxHourPerDay;
+        let hoursRemain = MAX_HOUR_PER_DAY;
         let usefulActivities = [];
         for (let i in activities) {
             const activity = activities[i];
@@ -152,7 +162,7 @@ class Activities {
 
             if (lastMidnight !== midnight) {
                 lastMidnight = midnight;
-                hoursRemain = MaxHourPerDay;
+                hoursRemain = MAX_HOUR_PER_DAY;
             }
 
             // Limit
@@ -165,7 +175,7 @@ class Activities {
         return usefulActivities;
     }
 
-    GetLasts(number = 6) {
+    GetLastSkills(number = 6) {
         const now = GetTime();
         const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
@@ -214,17 +224,16 @@ class Activities {
      * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {AddStatus}
      */
-    Add(skillID, startTime, duration, comment = '', alreadySaved = false) {
+    Add(skillID, startTime, duration, comment = '', timezone = null, alreadySaved = false) {
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;
         newActivity.duration = duration;
         newActivity.comment = comment;
+        newActivity.timezone = timezone ?? GetTimeZone();
 
-        // Limit date
-        const limitDate = new Date();
-        limitDate.setFullYear(2020, 1, 1);
-        if (startTime < GetTime(limitDate)) {
+        // Limit date (< 2020-01-01)
+        if (startTime < 1577836800) {
             return 'tooEarly';
         }
 
@@ -330,33 +339,11 @@ class Activities {
     GetByTime(time = GetTime()) {
         const startTime = GetMidnightTime(time);
         const endTime = startTime + 86400;
-        return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime <= endTime);
+        return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
     }
 
     /**
-     * @param {Date} date Date to define day (auto define of midnights)
-     * @param {boolean} [ignoreRelax=true] If true, return true if there is activity wich gives XP or not
-     * @returns {boolean} True if date contain activities
-     */
-    ContainActivity(date = new Date(), ignoreRelax = true) {
-        date.setUTCHours(1, 0, 0, 0);
-        const startTime = GetTime(date);
-        date.setUTCHours(23, 59, 59, 999);
-        const endTime = GetTime(date);
-
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
-            if (activity.startTime >= startTime && activity.startTime <= endTime) {
-                if (ignoreRelax) return true;
-                if (dataManager.skills.GetByID(activity.skillID).XP === 0) return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 
-     * @param {number} time Time in seconds
+     * @param {number} time Time in seconds (unix timestamp, UTC)
      * @param {number} duration Duration in minutes
      * @returns {boolean} True if time is free
      */

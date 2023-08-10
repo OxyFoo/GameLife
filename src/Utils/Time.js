@@ -3,29 +3,28 @@ import { TwoDigit } from './Functions';
 /**
  * Get absolute UTC time in seconds
  * @param {Date} [date] (now default)
- * @param {boolean} [localUTC=false] (global default)
+ * @param {'global'|'local'} [UTC] [default: 'global']
  * @returns {number} time in seconds
  */
-function GetTime(date = new Date(), localUTC = false) {
-    let time = Math.floor(date.getTime() / 1000);
-    if (localUTC) {
-        time -= date.getTimezoneOffset() * 60;
+function GetTime(date = new Date(), UTC = 'global') {
+    if (UTC === 'local') {
+        return Math.floor(date.getTime() / 1000);
     }
-    return time;
+
+    // Global UTC
+    const offset = date.getTimezoneOffset() * 60;
+    return Math.floor(date.getTime() / 1000) - offset;
 }
 
 /**
- * Get date from time to Date object
- * @param {number} time in seconds
- * @param {boolean} [localUTC=false] (global default)
+ * Convert local UTC time in seconds to Date object
+ * @param {number|null} [time] in seconds [default: now]
  * @returns {Date} Date object in local UTC
  */
-function GetDate(time = GetTime(), localUTC = false) {
-    const date = new Date(time * 1000);
-    if (localUTC) {
-        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-    }
-    return date;
+function GetDate(time = null) {
+    if (time === null)
+        time = GetTime(undefined, 'local');
+    return new Date(time * 1000);
 }
 
 /**
@@ -42,32 +41,35 @@ function TimeToFormatString(time) {
 
 /**
  * @param {number} time in seconds
+ * @param {'near'|'prev'|'next'} [type] [default: 'near']
  * @returns {number} time rounded to quarters in seconds
  */
-function RoundToQuarter(time) {
+function RoundToQuarter(time, type = 'near') {
     let mod = time % 900;
-    if (mod > 450) mod += 900;
+    if (type === 'near' && mod > 450)   mod -= 900;
+    else if (type === 'next')           mod -= 900;
     return time - mod;
 }
 
 /**
- * @param {number} time in seconds 
+ * @param {number} time in seconds of midnight time (local UTC)
  * @returns {number} Time in seconds
  */
 function GetMidnightTime(time) {
     time -= time % (24 * 60 * 60);
-    return time;
+    return time - (GetTimeZone() * 60 * 60);
 }
 
 /**
  * Get age in years from date of birth
- * @param {number} time in seconds
+ * @param {number} time in seconds (global UTC)
  * @returns {number}
  */
 function GetAge(time) {
-    const birthDay = GetDate(time);
-    const today = new Date().getTime();
-    return new Date(today - birthDay).getUTCFullYear() - 1970;
+    const today = GetTime();
+    const delta = today - time - (GetTimeZone() * 60 * 60);
+    const age = delta / (60 * 60 * 24 * 365);
+    return Math.floor(age)
 }
 
 /**
@@ -98,7 +100,7 @@ function GetDurations(max_hour = 4, step_minutes = 15) {
  * @returns {string} HH:MM
  */
 function GetTimeToTomorrow() {
-    const today = GetTime(undefined, true);
+    const today = GetTime(undefined, 'local');
     const delta = (24 * 60 * 60) - today % (24 * 60 * 60);
     return TimeToFormatString(delta);
 }
@@ -114,6 +116,12 @@ function GetDaysUntil(time) {
     return days;
 }
 
+function GetTimeZone() {
+    return - (new Date()).getTimezoneOffset() / 60;
+}
+
 export { GetTime, GetDate, TimeToFormatString,
     RoundToQuarter, GetMidnightTime, GetAge,
-    GetDurations, GetTimeToTomorrow, GetDaysUntil };
+    GetDurations, GetTimeToTomorrow, GetDaysUntil,
+    GetTimeZone
+};

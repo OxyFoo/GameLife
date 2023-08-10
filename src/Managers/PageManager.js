@@ -128,12 +128,13 @@ class PageManager extends React.Component{
     }
     backHandle = () => {
         if (!this.backable) return false;
+        if (this.popup.Close()) return true;
 
         if (this.customBackHandle !== null) {
             this.customBackHandle();
             return true;
         }
-        if (this.popup.Close()) return true;
+
         if (this.BackPage()) return true;
 
         return true;
@@ -162,10 +163,7 @@ class PageManager extends React.Component{
         }
 
         if (this.path.length < 1) {
-            const title = langManager.curr['home']['alert-exit-title'];
-            const text = langManager.curr['home']['alert-exit-text'];
-            const callback = (btn) => btn === 'yes' && RNExitApp.exitApp();
-            this.popup.Open('yesno', [ title, text ], callback);
+            this.AskToClose();
             return false;
         }
 
@@ -174,6 +172,13 @@ class PageManager extends React.Component{
         this.setState({ ignorePage: false });
         this.pageAnimation(prevPage, prevArgs);
         return true;
+    }
+
+    AskToClose = () => {
+        const title = langManager.curr['home']['alert-exit-title'];
+        const text = langManager.curr['home']['alert-exit-text'];
+        const callback = (btn) => btn === 'yes' && RNExitApp.exitApp();
+        this.popup.Open('yesno', [ title, text ], callback);
     }
 
     /**
@@ -268,7 +273,7 @@ class PageManager extends React.Component{
                 }
             } else {
                 if (typeof(CACHE_PAGES.temp.ref?.refPage?.Hide) === 'function') {
-                    CACHE_PAGES.temp.ref.refPage.Hide();
+                    CACHE_PAGES.temp.content = null;
                 }
             }
         }

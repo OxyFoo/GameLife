@@ -3,6 +3,10 @@ import langManager from 'Managers/LangManager';
 import { GetDate } from './Time';
 import { TwoDigit } from './Functions';
 
+/**
+ * @typedef {import('Class/Activities').Activity} Activity
+ */
+
 const DAYS = {
     sunday: 0,
     monday: 1,
@@ -22,36 +26,6 @@ const DAYS = {
 function GetDay(date, firstDay = DAYS.monday) {
     const day = date.getUTCDay();
     return (day + 5 + firstDay) % 7;
-}
-
-/**
- * Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
- * @param {number?} [month] Current month if null
- * @param {number?} [year] Current year if null
- * @param {number} [start=1] First day of week, default: 1 (monday)
- * @returns {number[][]}
- */
-function GetBlockMonth(month, year, start = DAYS.monday) {
-    if (month === null || year === null) {
-        const now = new Date();
-        if (month === null) month = now.getMonth();
-        if (year === null) year = now.getFullYear();
-    }
-
-    const date = new Date(year, month, 1);
-    let output = [];
-
-    const lastDay = (start + 5) % 7;
-    while (date.getMonth() === month) {
-        let day, tempOutput = new Array(7).fill(0);
-        do {
-            day = (date.getDay() + 5 + start) % 7;
-            tempOutput[day] = date.getDate();
-            date.setDate(date.getDate() + 1);
-        } while (date.getMonth() === month && day !== lastDay);
-        output.push(tempOutput);
-    }
-    return output;
 }
 
 /**
@@ -141,7 +115,7 @@ function MonthDayBetween(days, start, end) {
 }
 
 export {
-    DAYS, GetDay, GetBlockMonth, GetMonthAndYear, GetFullDate,
+    DAYS, GetDay, GetMonthAndYear, GetFullDate,
     DateToFormatString, DateToFormatTimeString,
     WeekDayBetween, MonthDayBetween
 };

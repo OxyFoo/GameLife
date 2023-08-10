@@ -26,6 +26,7 @@ class BackDisplay extends PageBack {
         }
 
         this.icon = getFromProp('icon');
+        this.iconRatio = getFromProp('iconRatio', 0.8);
         this.text = getFromProp('text');
         this.button = getFromProp('button');
         this.callback = getFromProp('action', user.interface.BackPage);

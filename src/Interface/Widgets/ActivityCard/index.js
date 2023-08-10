@@ -8,14 +8,17 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Icon, Text } from 'Interface/Components';
 import { TimingAnimation } from 'Utils/Animations';
-import { TimeToFormatString } from 'Utils/Time';
+import { GetTimeZone, TimeToFormatString } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
+ * @typedef {import('Interface/Components/Icon/index').Icons} Icons
  * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const ActivityCardProps = {
@@ -48,39 +51,64 @@ class ActivityCard extends React.Component {
         const offsetUTC = new Date().getTimezoneOffset() * 60;
         const lang = langManager.curr['calendar'];
 
+        /**
+         * Color for normal activity
+         * @type {ColorTheme | ColorThemeText}
+        */
+        let color = 'main1';
+
+        /** @type {Icons|undefined} */
+        this.icon = undefined;
+
         if (type === 'activity') {
             const skill = dataManager.skills.GetByID(activity.skillID);
             const LogoID = skill.LogoID;
             this.XML = dataManager.skills.icons.find(x => x.ID === LogoID).Content;
+
+            if (skill.XP === 0) {
+                color = 'main2';
+            }
 
             // Line 1: Start - End (Duration)
             const textStart_value = TimeToFormatString(activity.startTime - offsetUTC);
             const textEnd_value = TimeToFormatString(activity.startTime + activity.duration * 60 - offsetUTC);
             const textDuration_value = TimeToFormatString(activity.duration * 60);
 
+            // Line 1 (optional): UTC+X
+            let textUTC_value = '';
+            if (activity.timezone !== GetTimeZone()) {
+                textUTC_value = lang['utc'];
+                if (activity.timezone > 0) {
+                    textUTC_value = textUTC_value + '+' + activity.timezone;
+                } else if (activity.timezone < 0) {
+                    textUTC_value = textUTC_value + activity.timezone;
+                }
+            }
+
             // Line 2: Category - Activity
             const textCategory = GetName(dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name);
             const textActivity = GetName(skill.Name);
 
-            this.line1 = `${textStart_value} - ${textEnd_value} (${textDuration_value}${lang['hour-min']})`;
+            this.line1 = `${textStart_value} - ${textEnd_value} (${textDuration_value}${lang['hour-min']}) ${textUTC_value}`;
             this.line2 = textCategory + ' - ' + textActivity;
         }
 
         else if (type === 'start') {
-            this.XML = dataManager.skills.icons.find(x => x.ID === 1).Content;
+            color = 'main2';
+            this.icon = 'alarmClock';
             this.line1 = '00:00';
             this.line2 = lang['start'];
         }
 
         else if (type === 'end') {
-            this.XML = dataManager.skills.icons.find(x => x.ID === 1).Content;
+            color = 'main2';
+            this.icon = 'sleepZzz';
             this.line1 = '00:00';
             this.line2 = lang['end'];
         }
 
         // Theme
-        this.themeBorder = { borderColor: themeManager.GetColor('main1') };
-        this.themeBackground = { backgroundColor: themeManager.GetColor('main1') };
+        this.themeBackground = { backgroundColor: themeManager.GetColor(color) };
         this.themeAnimation = {
             opacity: this.state.anim,
             transform: [{
@@ -143,7 +171,7 @@ class ActivityCard extends React.Component {
                     activeOpacity={type === 'activity' ? .5 : 1}
                 >
                     <View style={[styles.iconContainer, this.themeBackground]}>
-                        <Icon xml={this.XML} color='white' size={30} />
+                        <Icon icon={this.icon} xml={this.XML} color='white' size={30} />
                     </View>
 
                     <View style={styles.text}>
@@ -151,9 +179,11 @@ class ActivityCard extends React.Component {
                         <Text fontSize={18}>{this.line2}</Text>
                     </View>
 
+                    {/*
                     <View style={styles.dotContainer}>
-                        <View style={[styles.dot, this.themeBorder]} />
+                        <View style={[styles.dot, { borderColor: themeManager.GetColor(color) }]} />
                     </View>
+                    */}
                 </TouchableOpacity>
             </Animated.View>
         );

@@ -20,12 +20,12 @@ const SkillsGroupProps = {
 
 class SkillsGroup extends React.Component {
     state = {
-        skills: user.activities.GetLasts()
+        skills: user.activities.GetLastSkills()
     }
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.setState({ skills: user.activities.GetLasts() });
+            this.setState({ skills: user.activities.GetLastSkills() });
         });
     }
 

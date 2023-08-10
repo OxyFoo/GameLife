@@ -74,7 +74,7 @@ class ActivityExperience extends React.Component {
     /** @param {{ item: Stat }} param0 */
     renderExperience = ({ item: { key, name, value } }) => (
         <Text containerStyle={styles.itemContainer} style={styles.item}>
-            {'+' + value + ' ' + name}
+            {'+ ' + value + ' ' + name}
         </Text>
     );
 

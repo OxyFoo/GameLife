@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 24,
         marginBottom: 6,
         padding: 16,
-        borderRadius: 8
+        borderRadius: 8,
+        overflow: 'hidden'
     },
 
     emptyList: {

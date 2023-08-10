@@ -19,6 +19,7 @@ class Informations {
         this.username = new DynamicVar('');
         this.usernameTime = null;
         this.title = new DynamicVar(0);
+        /** @type {number} Null if disabled or unix timestamp (global UTC) */
         this.birthTime = null;
         this.lastBirthTime = null;
         this.xp = 0;

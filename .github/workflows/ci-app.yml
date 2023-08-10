@@ -30,15 +30,3 @@ jobs:
 
       - name: 'Run tests'
         run: npm test
-
-  clean:
-    name: Clean up
-    runs-on: ubuntu-latest
-    needs: [ test ]
-    steps:
-      - name: 'Clean old actions'
-        uses: dev-drprasad/delete-older-releases@v0.2.1
-        with:
-          keep_latest: 5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

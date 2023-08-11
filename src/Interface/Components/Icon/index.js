@@ -65,7 +65,9 @@ class Icon extends React.Component {
 
             // XML icon
             else {
-                const XML = Base64.Decode(xml).split('#FFFFFF').join(color);
+                const XML = Base64.Decode(xml)
+                    .split('#ffffff').join(color)
+                    .split('#FFFFFF').join(color);
                 output = <View style={[containerSize, style]}>
                             <SvgXml xml={XML} width={size} height={size} />
                         </View>;

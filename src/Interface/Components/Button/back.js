@@ -99,6 +99,13 @@ class ButtonBack extends React.Component {
     }
 
     /** @param {GestureResponderEvent} event */
+    onTouchCancel = (event) => {
+        if (this.props.enabled) {
+            this.rippleRef.current.onTouchEnd(event);
+        }
+    }
+
+    /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
         if (this.props.enabled) {
             this.rippleRef.current.onTouchEnd(event);

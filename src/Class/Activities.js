@@ -175,6 +175,10 @@ class Activities {
         return usefulActivities;
     }
 
+    /**
+     * @param {number} [number=6]
+     * @returns {Array<EnrichedSkill>}
+     */
     GetLastSkills(number = 6) {
         const now = GetTime();
         const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
@@ -184,7 +188,7 @@ class Activities {
         const filter = skill => usersActivitiesID.includes(skill.ID);
 
         /** @param {EnrichedSkill} a @param {EnrichedSkill} b */
-        const compare = (a, b) => a.Experience['lastTime'] < b.Experience['lastTime'] ? -1 : 1;
+        const sortByXP = (a, b) => a.Experience.totalXP < b.Experience.totalXP ? 1 : -1;
 
         /** @param {Skill} skill @returns {EnrichedSkill} */
         const getInfos = skill => ({
@@ -198,7 +202,7 @@ class Activities {
         let enrichedSkills = dataManager.skills.skills
             .filter(filter)
             .map(getInfos)
-            .sort(compare)
+            .sort(sortByXP)
             .slice(0, number);
 
         return enrichedSkills;

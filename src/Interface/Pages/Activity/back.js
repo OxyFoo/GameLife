@@ -5,6 +5,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { GetTime } from 'Utils/Time';
 import { Sleep } from 'Utils/Functions';
 import { PageBack } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
@@ -14,6 +15,7 @@ import { CategoryToItem, SkillToItem } from './types';
  * 
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('./types').ItemSkill} ItemSkill
+ * @typedef {import('./types').EnrichedSkill} EnrichedSkill
  * @typedef {import('./types').ItemCategory} ItemCategory
  * 
  * @typedef {import('Class/Activities').Activity} Activity
@@ -65,15 +67,7 @@ class BackActivity extends PageBack {
 
         // Check if the page is in edition mode
         this.editMode = this.props.args.hasOwnProperty('activity');
-
-        // Get categories and skills
-        const { categories } = dataManager.skills;
-
-        this.categories = categories.map(CategoryToItem);
-        if (categories.length % 6 !== 0) {
-            const emptyCount = 6 - (categories.length % 6);
-            this.categories.push(...Array(emptyCount).fill(null));
-        }
+        this.categories = dataManager.skills.categories.map(CategoryToItem);
 
         // Define all skills
         if (!this.editMode) {
@@ -136,14 +130,44 @@ class BackActivity extends PageBack {
      * @param {number|null} categoryID
      */
     refreshSkills = (textSearch = '', categoryID = null) => {
+        /**
+         * @param {Skill|EnrichedSkill} skill
+         * @returns {ItemSkill}
+         */
+        const convert = (skill) => SkillToItem(skill, this.selectSkill);
         /** @param {ItemSkill} skill */
         const filter = skill => !categoryID || skill.categoryID === categoryID;
         /** @param {ItemSkill} skill */
         const searchMatch = skill => skill.value.toLowerCase().includes(textSearch.toLowerCase());
 
-        const skills = this.allSkillItems
-            .filter(filter)
-            .filter(searchMatch);
+        /** @type {ItemSkill[]} */
+        let itemSkills = [];
+
+        // Recent skills
+        if (categoryID === 0) {
+            let skills = [];
+            const now = GetTime(undefined, 'local');
+            const usersActivities = user.activities.Get()
+                .filter(activity => activity.startTime <= now)
+                .sort((a, b) => b.startTime - a.startTime);
+            for (const activity of usersActivities) {
+                const skill = dataManager.skills.GetByID(activity.skillID);
+                if (!skills.includes(skill.ID)) {
+                    skills.push(skill.ID);
+                }
+            }
+            itemSkills = skills
+                .slice(0, 10)
+                .map(skillID => dataManager.skills.GetByID(skillID))
+                .map(convert);
+        }
+
+        // Get skills by category
+        else {
+            itemSkills = this.allSkillItems
+                .filter(filter)
+                .filter(searchMatch);
+        }
 
         let inputText = langManager.curr['activity']['input-activity'];
         if (categoryID !== null) {
@@ -152,7 +176,7 @@ class BackActivity extends PageBack {
         }
 
         this.setState({
-            skills, inputText,
+            skills: itemSkills, inputText,
             skillSearch: textSearch,
             selectedCategory: categoryID,
         });

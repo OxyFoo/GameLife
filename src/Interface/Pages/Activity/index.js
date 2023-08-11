@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, ScrollView } from 'react-native';
 
 import BackActivity from './back';
 import styles from './style';
@@ -16,19 +16,16 @@ import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
 class Activity extends BackActivity {
     /**
-     * @param {{ item: ItemCategory|null }} param0
+     * @param {{ item: ItemCategory }} param0
      * @returns {JSX.Element}
      */
     renderCategory = ({ item }) => {
-        if (item === null) {
-            return <View style={styles.categoryEmpty} />;
-        }
-
         const { id, icon } = item;
         const checked = this.state.selectedCategory === id;
 
         return (
             <IconCheckable
+                key={`category-${id}`}
                 style={styles.category}
                 id={id}
                 xml={icon}
@@ -93,15 +90,11 @@ class Activity extends BackActivity {
                     <Text style={styles.categoriesTitle} bold>
                         {lang['title-category']}
                     </Text>
-                    <FlatList
-                        style={styles.categoriesFlatlist}
-                        columnWrapperStyle={styles.categoriesWrapper}
-                        data={this.categories}
-                        renderItem={this.renderCategory}
-                        numColumns={6}
-                        keyExtractor={item => 'act-cat-' + item?.id}
-                        scrollEnabled={false}
-                    />
+                    <View style={styles.categoriesContainer}>
+                        <ScrollView style={styles.categoriesScrollView} horizontal>
+                            {this.categories.map(category => this.renderCategory({ item: category }))}
+                        </ScrollView>
+                    </View>
                 </View>
 
                 {/* Activities */}

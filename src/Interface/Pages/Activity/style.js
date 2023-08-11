@@ -9,16 +9,16 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         fontSize: 22
     },
-    categoriesFlatlist: {
-        width: '100%',
-        minHeight: 44 * 2 + 8 * 2,
+    categoriesContainer: {
+        alignItems: 'center'
+    },
+    categoriesScrollView: {
+        maxWidth: '100%',
         marginBottom: 24
     },
-    categoriesWrapper: {
-        justifyContent: 'space-between'
-    },
     category: {
-        marginBottom: 8
+        marginVertical: 4,
+        marginHorizontal: 4
     },
     categoryEmpty: {
         width: 44,

@@ -64,7 +64,7 @@ async function LoadData(nextStep) {
             // Too many devices
             const title = langManager.curr['login']['alert-deviceRemoved-title'];
             const text = langManager.curr['login']['alert-deviceRemoved-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(false), false);
+            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
             return;
         } else if (status === 'newDevice' || status === 'waitMailConfirmation') {
             // Mail not confirmed
@@ -74,7 +74,7 @@ async function LoadData(nextStep) {
             // Account is deleted
             const title = langManager.curr['login']['alert-deletedaccount-title'];
             const text = langManager.curr['login']['alert-deletedaccount-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(false), false);
+            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
             return;
         }
     }

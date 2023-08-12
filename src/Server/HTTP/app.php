@@ -29,6 +29,7 @@
         case 'report':          $commands->Report();          break;
         case 'getDate':         $commands->GetDate();         break;
         case 'giftCode':        $commands->GiftCode();        break;
+        case 'getDevices':      $commands->GetDevices();      break;
         case 'disconnect':      $commands->Disconnect();      break;
         case 'deleteAccount':   $commands->DeleteAccount();   break;
 

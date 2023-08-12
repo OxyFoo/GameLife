@@ -10,6 +10,13 @@ import { Page, Text, Button, Switch, TextSwitch, ComboBox } from 'Interface/Comp
 
 class Settings extends BackSettings {
     render = () => {
+        const {
+            cbSelectedLang,
+            switchEveningNotifs,
+            switchMorningNotifs,
+            sendingMail,
+            devicesLoading
+        } = this.state;
         const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
 
@@ -23,7 +30,7 @@ class Settings extends BackSettings {
                     style={styles.margin}
                     title={lang['input-langage']}
                     data={this.availableLangs}
-                    selectedValue={this.state.cbSelectedLang.value}
+                    selectedValue={cbSelectedLang.value}
                     onSelect={this.onChangeLang}
                 />
 
@@ -41,7 +48,7 @@ class Settings extends BackSettings {
                 <View style={styles.inline}>
                     <Text style={styles.inlineText}>{lang['input-notif-morning']}</Text>
                     <Switch
-                        value={this.state.switchMorningNotifs}
+                        value={switchMorningNotifs}
                         onValueChanged={this.onChangeMorningNotifications}
                     />
                 </View>
@@ -49,15 +56,16 @@ class Settings extends BackSettings {
                 <View style={styles.inline}>
                     <Text style={styles.inlineText}>{lang['input-notif-evening']}</Text>
                     <Switch
-                        value={this.state.switchEveningNotifs}
+                        value={switchEveningNotifs}
                         onValueChanged={this.onChangeEveningNotifications}
                     />
                 </View>
 
                 <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
+                <Button style={styles.margin} onPress={this.disconnectAll} color='main2' loading={devicesLoading}>{lang['input-disconnect-all']}</Button>
                 <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{'🚧 ' + lang['input-tuto-again'] + ' 🚧'}</Button>
-                <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={this.state.sendingMail}>{lang['input-delete-account']}</Button>
+                <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>
             </Page>
         )
     }

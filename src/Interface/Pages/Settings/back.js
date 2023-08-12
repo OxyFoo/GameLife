@@ -27,7 +27,8 @@ class BackSettings extends PageBack {
 
         switchMorningNotifs: user.settings.morningNotifications,
         switchEveningNotifs: user.settings.eveningNotifications,
-        sendingMail: false
+        sendingMail: false,
+        devicesLoading: false
     }
 
     onBack = () => user.interface.BackPage();
@@ -76,7 +77,7 @@ class BackSettings extends PageBack {
 
     disconnect = () => {
         const event = async (button) => {
-            if (button === 'yes' && !await user.Disconnect()) {
+            if (button === 'yes' && !await user.Disconnect(true)) {
                 const title = langManager.curr['settings']['alert-disconnecterror-title'];
                 const text = langManager.curr['settings']['alert-disconnecterror-text'];
                 user.interface.popup.Open('ok', [ title, text ], undefined, false);
@@ -85,6 +86,24 @@ class BackSettings extends PageBack {
         const title = langManager.curr['settings']['alert-disconnect-title'];
         const text = langManager.curr['settings']['alert-disconnect-text'];
         user.interface.popup.Open('yesno', [ title, text ], event);
+    }
+
+    disconnectAll = async () => {
+        const event = async (button) => {
+            if (button === 'yes' && !await user.Disconnect(true, true)) {
+                const title = langManager.curr['settings']['alert-disconnecterrortitle'];
+                const text = langManager.curr['settings']['alert-disconnecterror-text'];
+                user.interface.popup.Open('ok', [ title, text ], undefined, false);
+            }
+        };
+
+        this.setState({ devicesLoading: true });
+        const title = langManager.curr['settings']['alert-disconnectall-title'];
+        const text = langManager.curr['settings']['alert-disconnectall-text'];
+        const devices = await user.GetDevices();
+        const textDevices = devices === null ? 'Error' : '- ' + devices.join(' - \n- ') + ' -\n';
+        user.interface.popup.Open('yesno', [ title, text.replace('{}', textDevices) ], event);
+        this.setState({ devicesLoading: false });
     }
 
     deleteAccount = () => {

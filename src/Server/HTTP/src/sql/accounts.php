@@ -158,6 +158,18 @@
         }
 
         /**
+         * @param DataBase $db
+         * @param Account $account
+         */
+        public static function ClearDevices($db, $account) {
+            $command = 'UPDATE TABLE SET `Devices` = "[]" WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'i', [ $account->ID ]);
+            if ($result === false) {
+                ExitWithStatus('Error: Clearing devices failed');
+            }
+        }
+
+        /**
          * Check if device is in account's devices or devices wait list
          * @param int $deviceID
          * @param Account $account

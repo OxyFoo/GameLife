@@ -10,7 +10,7 @@ import { GetDeviceInformations } from 'Utils/Device';
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
 */
 
 /** @type {ServerStatus[]} */

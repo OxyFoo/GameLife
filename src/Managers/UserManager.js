@@ -101,18 +101,30 @@ class UserManager {
         }
     }
 
+    /** @returns {Promise<Array<string>|null>} */
+    async GetDevices() {
+        const result = await this.server.Request('getDevices');
+        if (result === null || result['status'] !== 'ok') {
+            return null;
+        }
+        return result['devices'];
+    }
+
     /**
-     * @param {boolean} [request=true]
+     * @param {boolean} [forceClear=false] Clear data even if disconnect failed
+     * @param {boolean} [allDevices=false] Disconnect all devices
      * @returns {Promise<boolean>}
      */
-    async Disconnect(request = true) {
-        const result = await this.server.Request('disconnect');
-        if (result === null) return false;
-        if (request && result['status'] !== 'ok') return false;
+    async Disconnect(forceClear = false, allDevices = false) {
+        const result = await this.server.Request('disconnect', { allDevices });
+        const success = result !== null && result['status'] === 'ok';
 
-        await this.Clear();
-        this.interface.ChangePage('login');
-        return true;
+        if (success || forceClear) {
+            await this.Clear();
+            this.interface.ChangePage('login');
+        }
+
+        return result['status'] === 'ok';
     }
     async Unmount() {
         clearInterval(this.intervalSave);

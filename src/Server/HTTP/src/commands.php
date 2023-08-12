@@ -494,14 +494,41 @@
             $this->output['status'] = 'ok';
         }
 
-        public function Disconnect() {
+        public function GetDevices() {
             if (!$this->tokenChecked) return;
             $account = $this->account;
             $device = $this->device;
 
-            Accounts::RemDevice($this->db, $device->ID, $account, 'Devices');
+            $devicesNames = array($device->Name);
+            foreach ($account->Devices as $deviceID) {
+                $device = Devices::GetByID($this->db, $deviceID);
+                if ($device !== null && $device->ID !== $this->device->ID) {
+                    array_push($devicesNames, $device->Name);
+                }
+            }
 
-            $this->db->AddLog($account->ID, $device->ID, 'appState', 'Disconnect');
+            $this->output['devices'] = $devicesNames;
+            $this->output['status'] = 'ok';
+        }
+
+        public function Disconnect() {
+            if (!$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
+            $allDevices = $this->data['allDevices'];
+
+            // Disconnect all devices
+            if (isset($this->data['allDevices']) && $allDevices) {
+                Accounts::ClearDevices($this->db, $account);
+                $this->db->AddLog($account->ID, $device->ID, 'appState', 'Disconnect all devices');
+            }
+
+            // Disconnect only this device
+            else {
+                Accounts::RemDevice($this->db, $device->ID, $account, 'Devices');
+                $this->db->AddLog($account->ID, $device->ID, 'appState', 'Disconnect');
+            }
+
             $this->output['status'] = 'ok';
         }
 

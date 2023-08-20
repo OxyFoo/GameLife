@@ -9,7 +9,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { TimingAnimation } from 'Utils/Animations';
 import { IsUndefined, Sleep } from 'Utils/Functions';
-import { BottomBar, Console, Popup, ScreenInput, ScreenList, UserHeader } from 'Interface/Widgets';
+import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHeader } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -62,6 +62,9 @@ class PageManager extends React.Component{
     };
 
     /** @description Current page */
+    screenWidth = 0;
+
+    /** @description Current page */
     screenHeight = 0;
 
     /** @description Disable changing page while loading */
@@ -82,12 +85,13 @@ class PageManager extends React.Component{
      */
     path = [];
 
-    /** @type {Popup} */        popup = new React.createRef();
-    /** @type {ScreenInput} */  screenInput = new React.createRef();
-    /** @type {ScreenList} */   screenList = new React.createRef();
-    /** @type {UserHeader} */   header = new React.createRef();
-    /** @type {BottomBar} */    bottomBar = new React.createRef();
-    /** @type {Console} */      console = new React.createRef();
+    /** @type {Popup} */        popup       = null;
+    /** @type {ScreenInput} */  screenInput = null;
+    /** @type {ScreenList} */   screenList  = null;
+    /** @type {ScreenTuto} */   screenTuto  = null;
+    /** @type {UserHeader} */   header      = null;
+    /** @type {BottomBar} */    bottomBar   = null;
+    /** @type {Console} */      console     = null;
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.backHandle);
@@ -146,6 +150,9 @@ class PageManager extends React.Component{
      * @param {LayoutChangeEvent} event
      */
     onLayout = (event) => {
+        if (this.screenWidth === 0) {
+            this.screenWidth = event.nativeEvent.layout.width;
+        }
         if (this.screenHeight === 0) {
             this.screenHeight = event.nativeEvent.layout.height;
         }
@@ -358,9 +365,6 @@ class PageManager extends React.Component{
         return <Page key={key} args={args} ref={setRef} />;
     }
 
-    renderPage = () => {
-    }
-
     render() {
         const { animTheme } = this.state;
 
@@ -368,6 +372,10 @@ class PageManager extends React.Component{
         const lightBackground = [ themeManager.THEMES.Light.ground1, themeManager.THEMES.Light.ground2 ];
         const lightOpacity = { opacity: animTheme };
 
+        /**
+         * @param {PageName|'temp'} pageName
+         * @returns {React.JSX.Element|null}
+         */
         const newPage = (pageName = 'temp') => {
             // Not temp page and not persistent page
             if (pageName !== 'temp' && !Object.keys(CACHE_PAGES.persistent).includes(pageName)) {
@@ -380,14 +388,17 @@ class PageManager extends React.Component{
         }
 
         return (
-            <LinearGradient style={styles.fullscreen} colors={darkBackground} onLayout={this.onLayout}>
+            <LinearGradient
+                style={styles.fullscreen}
+                colors={darkBackground}
+                onLayout={this.onLayout}
+            >
                 {/* Light background */}
                 <Animated.View style={[styles.absolute, styles.fullscreen, lightOpacity]} pointerEvents='none'>
                     <LinearGradient style={styles.fullscreen} colors={lightBackground} />
                 </Animated.View>
 
                 {['temp', ...PAGES_PERSISTENT].map(newPage)}
-                {this.renderPage()}
 
                 <UserHeader ref={ref => { if (ref !== null) this.header = ref } } show={this.state.bottomBarShow} editorMode={false} />
                 <BottomBar ref={ref => { if (ref !== null) this.bottomBar = ref } } show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
@@ -395,6 +406,7 @@ class PageManager extends React.Component{
 
                 <ScreenList ref={ref => { if (ref !== null) this.screenList = ref } } />
                 <ScreenInput ref={ref => { if (ref !== null) this.screenInput = ref } } />
+                <ScreenTuto ref={ref => { if (ref !== null) this.screenTuto = ref } } />
 
                 <Console ref={ref => { if (ref !== null) this.console = ref } } />
             </LinearGradient>

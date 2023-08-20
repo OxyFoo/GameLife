@@ -11,6 +11,7 @@ import PanelScreen from './Widgets/PanelScreen';
 import Popup from './Widgets/Popup';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
+import ScreenTuto from './Widgets/ScreenTuto';
 import StatsBars from './Widgets/StatsBars';
 import SkillsGroup from './Widgets/SkillsGroup';
 import TaskElement from './Widgets/TaskElement';
@@ -31,6 +32,7 @@ export {
     Popup,
     ScreenInput,
     ScreenList,
+    ScreenTuto,
     StatsBars,
     SkillsGroup,
     TaskElement,

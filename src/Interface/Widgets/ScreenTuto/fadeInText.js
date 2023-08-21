@@ -84,7 +84,7 @@ const AnimatedChar = ({ index = 0, char, style }) => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             TimingAnimation(opacity, 1, 350).start();
-        }, 500 + 50 * index);
+        }, 500 + 25 * index);
 
         return () => clearTimeout(timeout);
     }, [ opacity ]);

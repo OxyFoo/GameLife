@@ -2,12 +2,9 @@ import * as React from 'react';
 import { Animated, View } from 'react-native';
 
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
-import dataManager from 'Managers/DataManager';
 
-import { GetTime, GetTimeZone } from 'Utils/Time';
-import { Activity } from 'Class/Activities';
-import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import { GetDate } from 'Utils/Time';
+import { SpringAnimation } from 'Utils/Animations';
 import { GetAbsolutePosition } from './utils';
 import { Sleep } from 'Utils/Functions';
 
@@ -65,16 +62,15 @@ class ScreenTutoBack extends React.Component {
         component: {
             /** @type {React.Component|null} */
             ref: null,
-            position: new Animated.ValueXY({ x: 0, y: 0 }),
-            size: new Animated.ValueXY({ x: 0, y: 0 })
+            position: { x: 0, y: 0 },
+            size: { x: 0, y: 0 }
         },
 
         message: {
             text: '',
-            position: new Animated.ValueXY({ x: 0, y: 0 }),
+            position: { x: 0, y: 0 },
             /** @type {LayoutRectangle} */
-            layout: { x: 0, y: 0, width: 0, height: 0 },
-            layoutLoaded: false
+            layout: { x: 0, y: 0, width: 0, height: 0 }
         },
 
         zap: {
@@ -82,7 +78,6 @@ class ScreenTutoBack extends React.Component {
 
             /** @type {LayoutRectangle} */
             layout: { x: 0, y: 0, width: 0, height: 0 },
-            layoutLoaded: false,
 
             /** @type {ZapColor} */
             color: 'day',
@@ -96,6 +91,18 @@ class ScreenTutoBack extends React.Component {
     }
 
     __callback = null;
+
+    onZapLayout = (event) => {
+        const { zap } = this.state;
+        const { layout } = event.nativeEvent;
+        this.setState({ zap: { ...zap, layout } });
+    }
+
+    onMessageLayout = (event) => {
+        const { message } = this.state;
+        const { layout } = event.nativeEvent;
+        this.setState({ message: { ...message, layout } });
+    }
 
     /**
      * @param {View} ref
@@ -115,28 +122,68 @@ class ScreenTutoBack extends React.Component {
             btnMidY - user.interface.screenHeight / 2
         ) + Math.PI / 2;
 
-        const offset = 100;
+        const offset = 75;
         const offsetX = + Math.cos(theta) * offset;
-        const offsetY = - Math.sin(theta) * offset;
+        const offsetY = - Math.sin(theta) * (offset + position.height / 2);
 
-        SpringAnimation(message.position.x, btnMidX + offsetX, false).start();
-        SpringAnimation(message.position.y, btnMidY + offsetY, false).start();
-        SpringAnimation(zap.position.x, btnMidX + offsetX * 2, false).start();
-        SpringAnimation(zap.position.y, btnMidY + offsetY * 2, false).start();
+        // Get quarter of the screen
+        const quartersZapY = [ 2.5, -1, -1, 2.5 ];
+        const quarterIndex = Math.floor(btnMidY / (user.interface.screenHeight / 4));
 
-        const { component } = this.state;
-        SpringAnimation(component.position, { x: position.x, y: position.y }, false).start();
-        SpringAnimation(component.size, { x: position.width, y: position.height }, false).start();
+        const isTop = quarterIndex === 0 || quarterIndex === 2;
+        const isLeft = position.x < user.interface.screenWidth / 2;
+
+        // Zap position
+        const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
+        SpringAnimation(zap.position, {
+            x: btnMidX + offsetX,// * quartersZapY[quarterIndex],
+            y: btnMidY + offsetY * quartersZapY[quarterIndex]
+        }, false).start(() => {
+            this.setState({
+                zap: {
+                    ...this.state.zap,
+                    face: 'show'
+                }
+            });
+        });
+
+        // Message position
+        const messageX = btnMidX + offsetX;// * quartersTextY[quarterIndex];
+        const messageY = btnMidY + offsetY * 1;
 
         this.setState({
             visible: true,
             component: {
-                ...component,
-                ref: ref
+                ...this.state.component,
+                ref: ref,
+                position: {
+                    x: position.x,
+                    y: position.y
+                },
+                size: {
+                    x: position.width,
+                    y: position.height
+                }
             },
             message: {
                 ...this.state.message,
+                position: {
+                    x: messageX,
+                    y: messageY
+                },
                 text: text
+            },
+            zap: {
+                ...this.state.zap,
+
+                /** @type {ZapColor} */
+                color: isNight ? 'night' : 'day',
+                /** @type {ZapInclinaison} */
+                inclinaison: isTop ? 'onTwoLegs' : 'onFourLegs',
+                /** @type {ZapFace} */
+                face: 'face',
+                /** @type {ZapOrientation} */
+                orientation: isLeft ? 'right' : 'left'
             }
         });
 
@@ -145,15 +192,7 @@ class ScreenTutoBack extends React.Component {
 
     End = () => {
         this.setState({
-            visible: false,
-            message: {
-                ...this.state.message,
-                layoutLoaded: false
-            },
-            zap: {
-                ...this.state.zap,
-                layoutLoaded: false
-            }
+            visible: false
         });
         if (this.__callback) this.__callback();
     }

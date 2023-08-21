@@ -3,6 +3,7 @@ import { Animated, View, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import ScreenTutoBack from './back';
+import themeManager from 'Managers/ThemeManager';
 
 import FadeInText from './fadeInText';
 import { Button } from 'Interface/Components';
@@ -53,7 +54,8 @@ class ScreenTuto extends ScreenTutoBack {
             top: component.position.y,
             left: component.position.x,
             width: component.size.x,
-            height: component.size.y
+            height: component.size.y,
+            borderColor: themeManager.GetColor('main1'),
         };
         return (
             <Animated.View style={[styles.overlay, styleOverlay]}>
@@ -73,29 +75,21 @@ class ScreenTuto extends ScreenTutoBack {
 
         return (
             <Animated.Image
-                source={this.getZapImage()}
                 style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
                     width: 96,
                     height: 96,
-                    overflow: 'visible',
+                    resizeMode: 'contain',
                     transform: [
                         { translateX: posX },
-                        { translateY: posY }
+                        { translateY: posY },
+                        { scaleX: zap.orientation === 'left' ? -1 : 1 },
                     ]
                 }}
-                onLayout={event => {
-                    if (this.state.zap.layoutLoaded) return;
-                    this.setState({
-                        zap: {
-                            ...this.state.zap,
-                            layout: event.nativeEvent.layout,
-                            layoutLoaded: true
-                        }
-                    });
-                }}
+                onLayout={this.onZapLayout}
+                source={this.getZapImage()}
             />
         );
     }
@@ -104,26 +98,16 @@ class ScreenTuto extends ScreenTutoBack {
         const { message } = this.state;
 
         const styleText = {
-            top: Animated.subtract(message.position.y, message.layout.height / 2),
-            left: Animated.subtract(message.position.x, message.layout.width / 2),
+            top: message.position.y - message.layout.height / 2,
+            left: message.position.x - message.layout.width / 2,
             width: '75%',
-            //left: 48,
-            //right: 48
+            borderColor: themeManager.GetColor('main2')
         };
 
         return (
             <Animated.View
-                style={[styleText, { position: 'absolute' }]}
-                onLayout={event => {
-                    if (message.layoutLoaded) return;
-                    this.setState({
-                        message: {
-                            ...this.state.message,
-                            layout: event.nativeEvent.layout,
-                            layoutLoaded: true
-                        }
-                    });
-                }}
+                style={[styles.text, styleText]}
+                onLayout={this.onMessageLayout}
             >
                 <FadeInText styleText={{ fontSize: 24 }}>
                     {message.text}
@@ -163,7 +147,16 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     overlay: {
-        position: 'absolute'
+        position: 'absolute',
+        borderWidth: 2,
+        borderRadius: 4
+    },
+    text: {
+        position: 'absolute',
+        padding: 12,
+        borderRadius: 12,
+        borderWidth: 1,
+        backgroundColor: '#00000080',
     },
     background: {
         position: 'absolute',

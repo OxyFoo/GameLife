@@ -38,6 +38,15 @@ const styles = StyleSheet.create({
     textFade: {
         fontSize: 24
     },
+    defaultButtonContainer: {
+        position: 'absolute',
+        width: '100%',
+        bottom: '10%',
+        alignItems: 'center'
+    },
+    defaultButton: {
+        width: '50%'
+    },
     background: {
         position: 'absolute',
         top: 0,

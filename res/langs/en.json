@@ -585,6 +585,8 @@
         "widget-achievements-all": "All achievements",
         "widget-skills-all": "All skills",
         "sexe-male": "♂",
-        "sexe-female": "♀"
+        "sexe-female": "♀",
+        "tuto-press": "Press",
+        "tuto-button": "Next"
     }
 }

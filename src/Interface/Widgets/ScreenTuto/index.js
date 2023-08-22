@@ -1,19 +1,20 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
+import { Animated, View } from 'react-native';
 
-import user from 'Managers/UserManager';
+import styles from './style';
 import ScreenTutoBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 import FadeInText from './fadeInText';
-import { Button } from 'Interface/Components';
+import { Button, Text, Zap } from 'Interface/Components';
+import langManager from 'Managers/LangManager';
 
 class ScreenTuto extends ScreenTutoBack {
     renderTopPanel() {
         const { component } = this.state;
-        const screenHeight = user?.interface?.screenHeight || 0;
         const styleTopPanel = {
-            bottom: Animated.subtract(screenHeight, component.position.y)
+            width: '100%',
+            height: component.position.y
         };
         return <Animated.View style={[styles.background, styleTopPanel]} />;
     }
@@ -49,7 +50,9 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     renderOverlay() {
-        const { component } = this.state;
+        const { component, message } = this.state;
+        const lang = langManager.curr['other'];
+
         const styleOverlay = {
             top: component.position.y,
             left: component.position.x,
@@ -57,51 +60,40 @@ class ScreenTuto extends ScreenTutoBack {
             height: component.size.y,
             borderColor: themeManager.GetColor('main1'),
         };
+        const styleOverlayHint = {
+            opacity: message.hintOpacity,
+            backgroundColor: themeManager.GetColor('main1', 0.6)
+        };
+
         return (
             <Animated.View style={[styles.overlay, styleOverlay]}>
                 <Button
-                    style={{ flex: 1 }}
+                    style={styles.overlayButton}
                     borderRadius={4}
-                    onPress={this.End}
-                />
+                    onPress={this.onComponentPress}
+                >
+                    <Animated.View style={[styles.overlayButton, styleOverlayHint]}>
+                        <Text containerStyle={styles.hintContainer} style={styles.hint}>
+                            {lang['tuto-press']}
+                        </Text>
+                    </Animated.View>
+                </Button>
             </Animated.View>
         );
     }
 
-    renderZap() {
-        const { zap } = this.state;
-        const posX = Animated.subtract(zap.position.x, zap.layout.width / 2);
-        const posY = Animated.subtract(zap.position.y, zap.layout.height / 2);
-
-        return (
-            <Animated.Image
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: 96,
-                    height: 96,
-                    resizeMode: 'contain',
-                    transform: [
-                        { translateX: posX },
-                        { translateY: posY },
-                        { scaleX: zap.orientation === 'left' ? -1 : 1 },
-                    ]
-                }}
-                onLayout={this.onZapLayout}
-                source={this.getZapImage()}
-            />
-        );
-    }
-
-    renderZapText() {
+    renderZapMessage() {
         const { message } = this.state;
 
         const styleText = {
-            top: message.position.y - message.layout.height / 2,
-            left: message.position.x - message.layout.width / 2,
+            top: 0,
+            left: 0,
             width: '75%',
-            borderColor: themeManager.GetColor('main2')
+            borderColor: themeManager.GetColor('main2'),
+            transform: [
+                { translateX: message.position.x },
+                { translateY: message.position.y }
+            ]
         };
 
         return (
@@ -109,7 +101,7 @@ class ScreenTuto extends ScreenTutoBack {
                 style={[styles.text, styleText]}
                 onLayout={this.onMessageLayout}
             >
-                <FadeInText styleText={{ fontSize: 24 }}>
+                <FadeInText styleText={styles.textFade}>
                     {message.text}
                 </FadeInText>
             </Animated.View>
@@ -117,19 +109,20 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     render() {
-        const { visible } = this.state;
+        const { visible, component } = this.state;
         if (!visible) return null;
 
         return (
             <View style={styles.parent}>
 
+                {/** Background */}
                 {this.renderTopPanel()}
                 {this.renderLeftPanel()}
                 {this.renderRightPanel()}
                 {this.renderBottomPanel()}
 
-                {this.renderZap()}
-                {this.renderZapText()}
+                <Zap ref={ref => this.refZap = ref } />
+                {this.renderZapMessage()}
 
                 {this.renderOverlay()}
 
@@ -137,36 +130,5 @@ class ScreenTuto extends ScreenTutoBack {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    parent: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%'
-    },
-    overlay: {
-        position: 'absolute',
-        borderWidth: 2,
-        borderRadius: 4
-    },
-    text: {
-        position: 'absolute',
-        padding: 12,
-        borderRadius: 12,
-        borderWidth: 1,
-        backgroundColor: '#00000080',
-    },
-    background: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        opacity: .6,
-        backgroundColor: '#000000'
-    }
-});
 
 export default ScreenTuto;

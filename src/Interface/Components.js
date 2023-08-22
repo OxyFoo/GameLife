@@ -19,6 +19,7 @@ import Switch from './Components/Switch';
 import Text from './Components/Text';
 import TextSwitch from './Components/TextSwitch';
 import XPBar from './Components/XPBar';
+import Zap from './Components/Zap';
 
 export {
     Button,
@@ -41,5 +42,6 @@ export {
     Switch,
     Text,
     TextSwitch,
-    XPBar
+    XPBar,
+    Zap
 }

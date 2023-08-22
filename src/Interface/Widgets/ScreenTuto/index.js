@@ -14,13 +14,15 @@ class ScreenTuto extends ScreenTutoBack {
         const { component } = this.state;
         const styleTopPanel = {
             width: '100%',
-            height: component.position.y
+            height: component.ref !== null ? component.position.y : '100%'
         };
         return <Animated.View style={[styles.background, styleTopPanel]} />;
     }
 
     renderBottomPanel() {
         const { component } = this.state;
+        if (component.ref === null) return null;
+
         const styleBottomPanel = {
             transform: [{
                 translateY: Animated.add(component.position.y, component.size.y)
@@ -31,6 +33,8 @@ class ScreenTuto extends ScreenTutoBack {
 
     renderLeftPanel() {
         const { component } = this.state;
+        if (component.ref === null) return null;
+
         const styleLeftPanel = {
             top: component.position.y,
             width: component.position.x,
@@ -41,6 +45,8 @@ class ScreenTuto extends ScreenTutoBack {
 
     renderRightPanel() {
         const { component } = this.state;
+        if (component.ref === null) return null;
+
         const styleRightPanel = {
             top: component.position.y,
             left: Animated.add(component.position.x, component.size.x),
@@ -51,8 +57,9 @@ class ScreenTuto extends ScreenTutoBack {
 
     renderOverlay() {
         const { component, message } = this.state;
-        const lang = langManager.curr['other'];
+        if (component.ref === null) return null;
 
+        const lang = langManager.curr['other'];
         const styleOverlay = {
             top: component.position.y,
             left: component.position.x,
@@ -77,6 +84,26 @@ class ScreenTuto extends ScreenTutoBack {
                             {lang['tuto-press']}
                         </Text>
                     </Animated.View>
+                </Button>
+            </Animated.View>
+        );
+    }
+
+    renderDefaultButton() {
+        const { component } = this.state;
+        if (component.ref !== null) return null;
+
+        const lang = langManager.curr['other'];
+
+        return (
+            <Animated.View style={styles.defaultButtonContainer}>
+                <Button
+                    style={styles.defaultButton}
+                    color='main1'
+                    borderRadius={4}
+                    onPress={this.onComponentPress}
+                >
+                    {lang['tuto-button']}
                 </Button>
             </Animated.View>
         );
@@ -109,7 +136,7 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     render() {
-        const { visible, component } = this.state;
+        const { visible } = this.state;
         if (!visible) return null;
 
         return (
@@ -125,6 +152,7 @@ class ScreenTuto extends ScreenTutoBack {
                 {this.renderZapMessage()}
 
                 {this.renderOverlay()}
+                {this.renderDefaultButton()}
 
             </View>
         );

@@ -71,15 +71,19 @@ class ScreenTutoBack extends React.Component {
     }
 
     /**
-     * @param {View} ref
+     * @param {View|null} ref
      * @param {string} text
      * @param {() => void|null} callback
      */
     Show = async (ref, text, callback = null) => {
-        let position = await GetAbsolutePosition(ref);
-        while (position.width === 0 || position.height === 0) {
+        let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight / 2, width: 0, height: 0 };
+
+        if (ref !== null) {
             position = await GetAbsolutePosition(ref);
-            await Sleep(100);
+            while (position.width === 0 || position.height === 0) {
+                position = await GetAbsolutePosition(ref);
+                await Sleep(100);
+            }
         }
 
         const btnMidY = position.y + position.height / 2;
@@ -128,7 +132,16 @@ class ScreenTutoBack extends React.Component {
     UpdatePositions = async (layout = this.lastMessageLayout) => {
         const { component: { ref } } = this.state;
 
-        const position = await GetAbsolutePosition(ref);
+        let position = {
+            x: user.interface.screenWidth / 2,
+            y: user.interface.screenHeight / 2,
+            width: 0,
+            height: 0
+        };
+
+        if (ref !== null) {
+            position = await GetAbsolutePosition(ref);
+        }
 
         const btnMidX = position.x + position.width / 2;
         const btnMidY = position.y + position.height / 2;
@@ -143,13 +156,15 @@ class ScreenTutoBack extends React.Component {
         const offsetX = + Math.cos(theta) * offset;
         const offsetY = - Math.sin(theta) * offset;
 
-        // Message position
+        // Message position (with delay)
         const messageX = btnMidX + offsetX - layout.width / 2;
         const messageY = btnMidY + offsetY + (isOnTop ? 24 : - layout.height - 24);
-        SpringAnimation(this.state.message.position, {
-            x: messageX,
-            y: messageY
-        }).start();
+        setTimeout(() => {
+            SpringAnimation(this.state.message.position, {
+                x: messageX,
+                y: messageY
+            }).start();
+        }, 100);
 
         // Zap position
         this.refZap.UpdateTarget(position, layout);

@@ -94,7 +94,9 @@ class ZapBack extends React.Component {
             x: btnMidX + offsetX,
             y: btnMidY + offsetY
         }).start(() => {
-            this.setState({ face: 'show' });
+            if (layoutTarget.width > 0 && layoutTarget.height > 0) {
+                this.setState({ face: 'show' });
+            }
         });
 
         this.setState({

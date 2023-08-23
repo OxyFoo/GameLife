@@ -11,8 +11,9 @@ import { Sleep } from 'Utils/Functions';
  * @typedef {import('Interface/Components/Zap').default} Zap
  * 
  * @typedef {object} TutoElement
- * @property {View|null} component Component to display (null to hide all the screen)
+ * @property {React.Component|null} component Component to display (null to hide all the screen)
  * @property {string} text Text to display
+ * @property {boolean} [showButton=true] Show the button to continue
  */
 
 const ScreenTutoProps = {
@@ -21,9 +22,10 @@ const ScreenTutoProps = {
 class ScreenTutoBack extends React.Component {
     state = {
         visible: false,
+        showButton: false,
 
         component: {
-            /** @type {View|null} */
+            /** @type {React.Component|null} */
             ref: null,
             position: { x: 0, y: 0 },
             size: { x: 0, y: 0 }
@@ -61,21 +63,23 @@ class ScreenTutoBack extends React.Component {
      */
     ShowSequence = async (sequence, callback) => {
         for (let i = 0; i < sequence.length; i++) {
-            const { component, text } = sequence[i];
+            const { component, text, showButton } = sequence[i];
+
             await new Promise(resolve => {
                 this.onComponentPress = resolve;
-                this.Show(component, text, null);
+                this.Show(component, text, showButton, null);
             });
         }
         this.End(callback);
     }
 
     /**
-     * @param {View|null} ref
+     * @param {React.Component|null} ref
      * @param {string} text
+     * @param {boolean} showButton
      * @param {() => void|null} callback
      */
-    Show = async (ref, text, callback = null) => {
+    Show = async (ref, text, showButton = true, callback = null) => {
         let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight / 2, width: 0, height: 0 };
 
         if (ref !== null) {
@@ -91,6 +95,7 @@ class ScreenTutoBack extends React.Component {
 
         this.setState({
             visible: true,
+            showButton: showButton,
             component: {
                 ...this.state.component,
                 ref: ref,
@@ -157,8 +162,19 @@ class ScreenTutoBack extends React.Component {
         const offsetY = - Math.sin(theta) * offset;
 
         // Message position (with delay)
-        const messageX = btnMidX + offsetX - layout.width / 2;
-        const messageY = btnMidY + offsetY + (isOnTop ? 24 : - layout.height - 24);
+        let messageX = btnMidX + offsetX - layout.width / 2;
+        let messageY = btnMidY + offsetY + (isOnTop ? 24 : - layout.height - 24);
+
+        // Message position verification
+        if (messageX < 0)
+            messageX = 0;
+        if (messageX + layout.width > user.interface.screenWidth)
+            messageX = user.interface.screenWidth - layout.width;
+        if (messageY < 0)
+            messageY = 0;
+        if (messageY + layout.height > user.interface.screenHeight)
+            messageY = user.interface.screenHeight - layout.height;
+
         setTimeout(() => {
             SpringAnimation(this.state.message.position, {
                 x: messageX,
@@ -167,7 +183,7 @@ class ScreenTutoBack extends React.Component {
         }, 100);
 
         // Zap position
-        this.refZap.UpdateTarget(position, layout);
+        this.refZap?.UpdateTarget(position, layout);
     }
 
     End = (callback) => {

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 12,
         borderWidth: 1,
-        backgroundColor: '#00000080',
+        backgroundColor: '#000000A0',
     },
     textFade: {
         fontSize: 24

@@ -82,17 +82,29 @@ class ZapBack extends React.Component {
         const isLeft = layoutTarget.x < user.interface.screenWidth / 2;
         const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
 
-        let offset = layoutTarget.height / 2 + layout.height / 2 + 24;
+        let offset = layoutTarget.height / 2 + layout.height / 2 + 36;
         if (quarterIndex === 0 || quarterIndex === 3) {
-            offset = - offset - layoutMessage.height - 24;
+            offset = - offset - layoutMessage.height - 36;
         }
-        const offsetX = Math.cos(theta) * offset;
+        const offsetX = - Math.cos(theta) * offset;
         const offsetY = Math.sin(theta) * offset;
+
+        let zapPosX = btnMidX + offsetX;
+        let zapPosY = btnMidY + offsetY;
+
+        if (zapPosX < 0)
+            zapPosX = 0;
+        if (zapPosX + layout.width > user.interface.screenWidth)
+            zapPosX = user.interface.screenWidth - layout.width;
+        if (zapPosY < 0)
+            zapPosY = 0;
+        if (zapPosY + layout.height > user.interface.screenHeight)
+            zapPosY = user.interface.screenHeight - layout.height - 108;
 
         // Zap position
         SpringAnimation(this.state.position, {
-            x: btnMidX + offsetX,
-            y: btnMidY + offsetY
+            x: zapPosX,
+            y: zapPosY
         }).start(() => {
             if (layoutTarget.width > 0 && layoutTarget.height > 0) {
                 this.setState({ face: 'show' });
@@ -107,7 +119,7 @@ class ZapBack extends React.Component {
             /** @type {ZapFace} */
             face: 'face',
             /** @type {ZapOrientation} */
-            orientation: isLeft ? 'right' : 'left'
+            orientation: isLeft ? 'left' : 'right'
         });
     }
 

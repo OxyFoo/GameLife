@@ -33,11 +33,13 @@ class Home extends BackHome {
                 />
 
                 <Swiper
+                    ref={ref => this.refTuto1 = ref}
                     style={styles.topSpace}
                     pages={News()}
                 />
 
                 <Button
+                    ref={ref => this.refTuto2 = ref}
                     style={styles.topSpace}
                     color='main2'
                     borderRadius={8}

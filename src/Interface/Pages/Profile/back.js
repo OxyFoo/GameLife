@@ -35,12 +35,24 @@ class BackProfile extends PageBack {
         );
     }
 
-    componentDidFocused = () => {
+    refTuto1 = null;
+
+    componentDidFocused = (args) => {
         // Update the avatar
         // TODO: Don't update the avatar if the user didn't change anything
         this.refAvatar.updateEquippedItems();
         this.refAvatar.forceUpdate();
         this.refAvatar.refFrame.forceUpdate();
+
+        // Tutorial
+        if (args?.tuto === 2) {
+            user.interface.screenTuto.ShowSequence([
+                { component: this.refTuto1, text: "Ici c'est ton profil, tu peux y modifier tes informations personnelles" },
+                { component: this.refAvatar.refButton, text: "Là c'est ton avatar, tu peux cliquer dessus pour le modifier" }
+            ], () => {
+                user.interface.ChangePage('home', { tuto: 3 }, true);
+            });
+        }
     }
 
     openProfileEditor = () => this.refProfileEditor?.Open();

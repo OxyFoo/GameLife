@@ -15,6 +15,7 @@ class Settings {
         this.email = '';
         this.connected = false;
         this.onboardingWatched = false;
+        this.tutoFinished = false;
 
         this.morningNotifications = true;
         this.eveningNotifications = true;
@@ -35,6 +36,7 @@ class Settings {
             if (contains('email')) this.email = settings['email'];
             if (contains('connected')) this.connected = settings['connected'];
             if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
+            if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
             if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
             if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
         }
@@ -46,6 +48,7 @@ class Settings {
             email: this.email,
             connected: this.connected,
             onboardingWatched: this.onboardingWatched,
+            tutoFinished: this.tutoFinished,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
         };

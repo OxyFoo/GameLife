@@ -57,6 +57,7 @@ class Profile extends BackProfile {
 
                 <Animated.View style={headerOpacity} pointerEvents={headerPointer}>
                     <UserHeader
+                        ref={ref => this.refTuto1 = ref}
                         editorMode={true}
                         onPress={this.openProfileEditor}
                     />

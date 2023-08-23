@@ -26,6 +26,8 @@ class BottomBar extends React.Component {
         animBarX: new Animated.Value(0)
     }
 
+    refButtons = Array(5).fill(null);
+
     componentDidUpdate() {
         // Show / Hide
         const newState = this.props.show;
@@ -77,6 +79,7 @@ class BottomBar extends React.Component {
 
                     {/* Buttons */}
                     <Button
+                        ref={ref => this.refButtons[0] = ref}
                         style={{...styles.button, ...styles.btFirst}}
                         color='transparent'
                         borderRadius={0}
@@ -87,6 +90,7 @@ class BottomBar extends React.Component {
                     </Button>
 
                     <Button
+                        ref={ref => this.refButtons[1] = ref}
                         style={styles.button}
                         color='transparent'
                         borderRadius={0}
@@ -107,6 +111,7 @@ class BottomBar extends React.Component {
 
 
                     <Button
+                        ref={ref => this.refButtons[3] = ref}
                         style={styles.button}
                         color='transparent'
                         borderRadius={0}
@@ -117,6 +122,7 @@ class BottomBar extends React.Component {
                     </Button>
 
                     <Button
+                        ref={ref => this.refButtons[4] = ref}
                         style={{...styles.button, ...styles.btLast}}
                         color='transparent'
                         borderRadius={0}
@@ -130,6 +136,7 @@ class BottomBar extends React.Component {
                 {/* Add button */}
                 <Animated.View style={styles.btMiddleParent} pointerEvents='box-none'>
                     <Button
+                        ref={ref => this.refButtons[2] = ref}
                         style={styles.btMiddle}
                         onPress={this.goToActivity}
                         color='main2'

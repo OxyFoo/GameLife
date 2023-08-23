@@ -17,7 +17,7 @@ class PageBack extends React.Component {
     }
 
     /** @description Called when page is focused */
-    componentDidFocused = () => {};
+    componentDidFocused = (args) => {};
 }
 
 export default PageBack;

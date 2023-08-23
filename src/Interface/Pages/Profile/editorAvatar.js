@@ -316,7 +316,13 @@ class EditorAvatarRender extends EditorAvatarBack {
                         </View>
                         <Animated.View style={avatarStyle}>
                             <Frame ref={ref => this.refFrame = ref} characters={[ user.character ]} />
-                            {!editorOpened && <Button style={styles.avatarOverlay} onPress={this.OpenEditor} />}
+                            {!editorOpened && (
+                                <Button
+                                    ref={ref => this.refButton = ref}
+                                    style={styles.avatarOverlay}
+                                    onPress={this.OpenEditor}
+                                />
+                            )}
                         </Animated.View>
                     </View>
                     <Animated.View style={[styles.columnSide, columnOpacity]}>

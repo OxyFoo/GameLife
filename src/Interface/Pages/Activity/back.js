@@ -40,6 +40,8 @@ class BackActivity extends PageBack {
         inputText: ''
     };
 
+    refTuto1 = null;
+
     /** @type {Array<ItemSkill>} */
     allSkillItems = [];
 
@@ -61,6 +63,8 @@ class BackActivity extends PageBack {
     backgroundCard = {
         backgroundColor: themeManager.GetColor('backgroundCard')
     };
+
+    disableEvents = false;
 
     constructor(props) {
         super(props);
@@ -86,6 +90,11 @@ class BackActivity extends PageBack {
 
             const skill = dataManager.skills.GetByID(activity.skillID);
             this.state.selectedCategory = skill?.CategoryID || null;
+        }
+
+        // Disable touch events for tuto
+        if (this.props.args?.tuto === 4) {
+            this.disableEvents = true;
         }
     }
 
@@ -116,6 +125,16 @@ class BackActivity extends PageBack {
             this.refActivityPanel.onChangeSchedule(time, 60);
         } else if (user.tempSelectedTime !== null) {
             this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
+        }
+
+        // Tutorial
+        if (this.props.args?.tuto === 4) {
+            user.interface.screenTuto.ShowSequence([
+                { component: this.refTuto1, text: "Tu peux filtrer les activités par catégorie" },
+                { component: this.refActivities, text: "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités" }
+            ], async () => {
+                user.interface.ChangePage('home', { tuto: 5 }, true);
+            });
         }
     }
 

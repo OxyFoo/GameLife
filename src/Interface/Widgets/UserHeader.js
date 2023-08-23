@@ -31,23 +31,22 @@ const UserHeaderProps = {
 class UserHeader extends React.Component {
     state = {
         height: 0,
-        username: '',
-        titleText: '',
+        username: user.informations.username.Get(),
+        titleText: user.informations.GetTitleText(),
         animPosY: null,
         showAvatar: false
     }
 
+    /** @type {Button|null} */
+    refContainer = null;
+
+    /** @type {Frame|null} */
+    refFrame = null;
+
     constructor(props) {
         super(props);
 
-        this.state = {
-            username: user.informations.username.Get(),
-            titleText: user.informations.GetTitleText(),
-            animPosY: new Animated.Value(props.editorMode ? -6 : -128)
-        }
-
-        /** @type {Frame} */
-        this.refFrame = React.createRef();
+        this.state.animPosY = new Animated.Value(props.editorMode ? -6 : -128);
     }
 
     componentDidMount() {
@@ -97,6 +96,7 @@ class UserHeader extends React.Component {
 
         return (
             <Button
+                ref={ref => this.refContainer = ref}
                 style={styles.avatar}
                 onPress={openProfile}
                 rippleColor='white'

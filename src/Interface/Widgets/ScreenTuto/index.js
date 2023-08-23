@@ -14,7 +14,8 @@ class ScreenTuto extends ScreenTutoBack {
         const { component } = this.state;
         const styleTopPanel = {
             width: '100%',
-            height: component.ref !== null ? component.position.y : '100%'
+            height: component.ref !== null ? component.position.y : '100%',
+            opacity: component.ref !== null ? .6 : .3
         };
         return <Animated.View style={[styles.background, styleTopPanel]} />;
     }
@@ -90,8 +91,8 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     renderDefaultButton() {
-        const { component } = this.state;
-        if (component.ref !== null) return null;
+        const { component, showButton } = this.state;
+        if (component.ref !== null && !showButton) return null;
 
         const lang = langManager.curr['other'];
 

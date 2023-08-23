@@ -6,14 +6,14 @@ import { NativeModules, findNodeHandle } from 'react-native';
  */
 
 /**
- * @param {View} ref
+ * @param {React.Component} ref
  * @returns {Promise<LayoutRectangle>}
  */
 function GetAbsolutePosition(ref) {
     const UIManager = NativeModules.UIManager;
     const handle = findNodeHandle(ref);
     return new Promise((resolve, reject) => {
-        UIManager.measureLayoutRelativeToParent(handle, reject, (x, y, width, height) => {
+        UIManager.measureInWindow(handle, (x, y, width, height) => {
             resolve({ x, y, width, height });
         });
     });

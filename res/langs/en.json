@@ -245,9 +245,6 @@
 
     "home": {
         "btn-add-task": "Add activities",
-        "btn-todo": "Todo",
-        "con-stats": "Statistics",
-        "con-skill-experience": "Skills",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
         "btn-settings": "Settings",

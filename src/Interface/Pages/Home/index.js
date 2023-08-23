@@ -49,18 +49,6 @@ class Home extends BackHome {
                     {lang['btn-add-task']}
                 </Button>
 
-                {/*
-                <Button
-                    style={styles.topSpace}
-                    color='main1'
-                    borderRadius={8}
-                    icon='chrono'
-                    onPress={this.openTasks}
-                >
-                    {lang['btn-todo']}
-                </Button>
-                */}
-
                 <Button
                     style={styles.topSpace}
                     color='backgroundCard'
@@ -74,27 +62,6 @@ class Home extends BackHome {
 
                 {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
 
-                <Container
-                    style={styles.topSpace}
-                    text={lang['con-stats']}
-                    type='rollable'
-                    opened={false}
-                    color='main3'
-                    rippleColor='white'
-                >
-                    <StatsBars data={stats} />
-                </Container>
-
-                <Container
-                    style={styles.topSpace}
-                    text={lang['con-skill-experience']}
-                    type='rollable'
-                    opened={false}
-                    color='main3'
-                    rippleColor='white'
-                >
-                    <SkillsGroup />
-                </Container>
             </Page>
         );
     }

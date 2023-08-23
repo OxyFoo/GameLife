@@ -24,11 +24,6 @@ class ActivityPanel extends ActivityPanelBack {
 
         const skill = dataManager.skills.GetByID(selectedSkillID);
 
-        let experienceText = lang['title-no-experience'];
-        if (skill !== null && skill.XP > 0) {
-            experienceText = lang['title-experience'];
-        }
-
         const viewOpacity = {
             transform: [{
                 translateY: this.state.animButtonNow.interpolate({
@@ -46,6 +41,8 @@ class ActivityPanel extends ActivityPanelBack {
                 !variantTheme ? 'backgroundCard' : 'backgroundGrey'
             )
         };
+
+        const positiveXP = skill !== null && skill.XP > 0;
         const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
         return (
@@ -63,13 +60,21 @@ class ActivityPanel extends ActivityPanelBack {
                 />
 
                 {/* Experience */}
-                <Text style={styles.tempTitle} bold>
-                    {experienceText}
-                </Text>
-                <ActivityExperience
-                    skillID={selectedSkillID}
-                    duration={activity?.duration ?? 0}
-                />
+                {positiveXP ? (
+                    <>
+                        <Text style={styles.tempTitle} bold>
+                            {lang['title-experience']}
+                        </Text>
+                        <ActivityExperience
+                            skillID={selectedSkillID}
+                            duration={activity?.duration ?? 0}
+                        />
+                    </>
+                ) : (
+                    <Text style={styles.tempTitleNoXP} bold>
+                        {lang['title-no-experience']}
+                    </Text>
+                )}
 
                 {/* Commentary */}
                 {!activity?.comment ? (

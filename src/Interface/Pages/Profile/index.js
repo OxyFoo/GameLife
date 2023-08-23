@@ -97,7 +97,8 @@ class Profile extends BackProfile {
                         text={lang['container-stats-title']}
                         type='rollable'
                         opened={false}
-                        color='backgroundCard'
+                        color='main3'
+                        rippleColor='white'
                     >
                         <StatsBars data={user.stats} />
                     </Container>
@@ -107,7 +108,8 @@ class Profile extends BackProfile {
                         text={lang['container-skills-title']}
                         type='rollable'
                         opened={false}
-                        color='backgroundCard'
+                        color='main3'
+                        rippleColor='white'
                     >
                         <SkillsGroup />
                     </Container>

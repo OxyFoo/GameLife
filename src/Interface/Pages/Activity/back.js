@@ -178,7 +178,8 @@ class BackActivity extends PageBack {
             itemSkills = skills
                 .slice(0, 10)
                 .map(skillID => dataManager.skills.GetByID(skillID))
-                .map(convert);
+                .map(convert)
+                .filter(searchMatch);
         }
 
         // Get skills by category

@@ -5,6 +5,10 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         fontSize: 22
     },
+    tempTitleNoXP: {
+        marginBottom: 48,
+        fontSize: 22
+    },
 
     buttonNow: {
         position: 'absolute',

@@ -47,6 +47,9 @@ const PageProps = {
     /** @type {JSX.Element} */
     footer: null,
 
+    /** @type {boolean} */
+    disableEvents: false,
+
     /** @param {LayoutChangeEvent} event */
     onLayout: (event) => {},
 
@@ -214,7 +217,7 @@ class Page extends React.Component {
         if (this.props.topOverlay === null) return null;
 
         const { topOverlayPosition } = this.state;
-        const { topOverlay, topOverlayHeight } = this.props;
+        const { topOverlay, topOverlayHeight, disableEvents } = this.props;
 
         const animation = Animated.multiply(topOverlayPosition, -(topOverlayHeight + 32));
         const position = { transform: [{ translateY: animation }] };
@@ -222,7 +225,10 @@ class Page extends React.Component {
         const borderColor = { borderColor: themeManager.GetColor('main1') };
 
         return (
-            <Animated.View style={[styles.topOverlay, position, borderColor, backgroundColor]}>
+            <Animated.View
+                style={[styles.topOverlay, position, borderColor, backgroundColor]}
+                pointerEvents={disableEvents ? 'none' : 'auto'}
+            >
                 <View style={[styles.topOverlayLine, backgroundColor]} />
                 {topOverlay}
             </Animated.View>
@@ -230,7 +236,7 @@ class Page extends React.Component {
     }
 
     render() {
-        const { style, isHomePage, overlay, topOffset, bottomOffset, scrollable } = this.props;
+        const { style, isHomePage, overlay, topOffset, bottomOffset, scrollable, disableEvents } = this.props;
         const headerHeight = user.interface.header.state.height;
         const valueOffset = isHomePage ? headerHeight : topOffset;
 
@@ -252,7 +258,7 @@ class Page extends React.Component {
                     onTouchMove={this.onTouchMove}
                     onTouchEnd={this.onTouchEnd}
                     onStartShouldSetResponder={this.props.onStartShouldSetResponder}
-                    pointerEvents={this.state.pointerEvents}
+                    pointerEvents={disableEvents ? 'none' : this.state.pointerEvents}
                 >
                     {this.props.children}
                 </Animated.View>

@@ -79,6 +79,7 @@ class Activity extends BackActivity {
                 ref={ref => this.refPage = ref}
                 scrollable={false}
                 canScrollOver={false}
+                disableEvents={this.disableEvents}
             >
                 <PageHeader
                     style={styles.header}
@@ -86,7 +87,7 @@ class Activity extends BackActivity {
                 />
 
                 {/* Categories */}
-                <View onLayout={this.onLayoutCategories}>
+                <View ref={ref => this.refTuto1 = ref} onLayout={this.onLayoutCategories}>
                     <Text style={styles.categoriesTitle} bold>
                         {lang['title-category']}
                     </Text>

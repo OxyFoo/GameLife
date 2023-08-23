@@ -38,7 +38,7 @@ const PAGES_PERSISTENT = [
     'multiplayer',
     'profile',
     'shop',
-    'shopitems',
+    'shopitems'
 ];
 
 const CACHE_PAGES = {
@@ -291,7 +291,7 @@ class PageManager extends React.Component{
         if (Object.keys(CACHE_PAGES.persistent).includes(newPage)) {
             if (typeof(CACHE_PAGES.persistent[newPage]?.ref?.refPage?.Show) === 'function') {
                 CACHE_PAGES.persistent[newPage].ref.refPage.Show();
-                CACHE_PAGES.persistent[newPage].ref.componentDidFocused();
+                CACHE_PAGES.persistent[newPage].ref.componentDidFocused(args);
                 this.setState({ selectedPage: newPage });
             } else {
                 console.log('Ref undefined (' + newPage + ')');

@@ -125,7 +125,8 @@ async function LoadData(nextStep) {
     await Sleep(1500);
 
     if (user.activities.currentActivity === null) {
-        while (!user.interface.ChangePage('home')) await Sleep(100);
+        const args = !user.settings.tutoFinished ? { tuto: 1 } : {};
+        while (!user.interface.ChangePage('home', args)) await Sleep(100);
     } else {
         while (!user.interface.ChangePage('activitytimer', undefined, true)) await Sleep(100);
     }

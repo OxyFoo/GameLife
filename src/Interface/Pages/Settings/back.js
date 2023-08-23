@@ -73,6 +73,7 @@ class BackSettings extends PageBack {
     }
 
     restartTuto = () => {
+        user.interface.ChangePage('home', { tuto: 1 }, true);
     }
 
     disconnect = () => {

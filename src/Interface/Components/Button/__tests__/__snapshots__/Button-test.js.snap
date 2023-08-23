@@ -3,6 +3,7 @@
 exports[`[Component] Button renders correctly 1`] = `
 <View
   onLayout={[Function]}
+  onTouchCancel={[Function]}
   onTouchEnd={[Function]}
   onTouchStart={[Function]}
   pointerEvents="box-only"

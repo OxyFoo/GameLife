@@ -269,6 +269,7 @@ exports[`[Component] Input should render correctly 1`] = `
     </View>
     <View
       onLayout={[Function]}
+      onTouchCancel={[Function]}
       onTouchEnd={[Function]}
       onTouchStart={[Function]}
       pointerEvents="box-only"

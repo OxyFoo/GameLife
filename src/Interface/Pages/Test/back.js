@@ -1,14 +1,17 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
-import dataManager from 'Managers/DataManager';
 
 import { PageBack } from 'Interface/Components';
+import ItemCard from '../Profile/cards/ItemCard';
+
+/**
+ * @typedef {import('Class/Inventory').Stuff} Stuff
+ */
 
 class BackTest extends PageBack {
     state = {
         test: '',
-        testInt: 0,
         testChecked: false,
         selectedSkill: {ID: -1, value: ''},
         switch: true
@@ -33,19 +36,6 @@ class BackTest extends PageBack {
         user.interface.screenList.Open('test', test, console.log);
     }
 
-    addSkill = () => {
-        if (dataManager.skills.skills.length <= 1) {
-            console.warn("Aucun skill !");
-            return;
-        }
-        user.interface.ChangePage('activity');
-    }
-    openProfile = () => { user.interface.ChangePage('profile'); }
-    openCalendar = () => { user.interface.ChangePage('calendar'); }
-    openSkill = (skillID) => { user.interface.ChangePage('skill', { skillID: skillID }); }
-    openSkills = () => { user.interface.ChangePage('skills'); }
-    openExperience = () => { user.interface.ChangePage('experience'); }
-
     /** @param {{item: Stuff}} element */
     renderCardItem = ({ item: stuff }) => {
         const stuffSelected = null;
@@ -54,12 +44,16 @@ class BackTest extends PageBack {
         const isSelected = stuffSelected?.ID === stuff.ID;
         const isEquipped = equippedStuff.includes(stuff.ID);
 
+        const onPress = () => {
+            console.log('onPress');
+        };
+
         return (
             <ItemCard
                 stuff={stuff}
                 isSelected={isSelected}
                 isEquipped={isEquipped}
-                onPress={this.selectItem}
+                onPress={onPress}
             />
         );
     }

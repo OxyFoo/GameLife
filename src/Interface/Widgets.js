@@ -14,7 +14,7 @@ import ScreenList from './Widgets/ScreenList';
 import ScreenTuto from './Widgets/ScreenTuto';
 import StatsBars from './Widgets/StatsBars';
 import SkillsGroup from './Widgets/SkillsGroup';
-import TaskElement from './Widgets/TaskElement';
+import Tasks from './Widgets/Tasks';
 import TaskSchedule from './Widgets/TaskSchedule';
 import UserHeader from './Widgets/UserHeader';
 
@@ -35,7 +35,7 @@ export {
     ScreenTuto,
     StatsBars,
     SkillsGroup,
-    TaskElement,
+    Tasks,
     TaskSchedule,
     UserHeader
 };

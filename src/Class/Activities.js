@@ -69,6 +69,7 @@ class Activities {
         this.UNSAVED_activities = [];
         this.UNSAVED_deletions = [];
         this.currentActivity = null;
+        this.allActivities.Set([]);
     }
     Load(activities) {
         const contains = (key) => activities.hasOwnProperty(key);

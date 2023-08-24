@@ -553,7 +553,6 @@
         "container-title": "Todo list",
         "tasks-empty-title": "No task",
         "tasks-empty-button": "Add a task",
-        "tasks-undo-button": "Undo the deletion",
 
         "task-type-deadline": "Ends on:",
         "task-type-repeat": "Next repetition:",

@@ -4,8 +4,8 @@ import { View, StyleSheet } from 'react-native';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { StatsBars, SkillsGroup } from 'Interface/Widgets';
-import { Button, Container, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
+import { Tasks } from 'Interface/Widgets';
+import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
 
 class Home extends BackHome {
     render() {
@@ -59,6 +59,8 @@ class Home extends BackHome {
                 >
                     {lang['btn-settings']}
                 </Button>
+
+                <Tasks style={styles.topSpace} />
 
                 {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
 

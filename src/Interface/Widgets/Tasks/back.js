@@ -1,7 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { Animated, FlatList } from 'react-native';
 
-import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -18,7 +17,7 @@ import { GetTime } from 'Utils/Time';
  * @typedef {import('Class/Tasks').Task} Task
  */
 
-class BackTasks extends PageBack {
+class BackTasks extends React.Component {
     state = {
         tasks: [],
 
@@ -30,10 +29,7 @@ class BackTasks extends PageBack {
 
         mouseY: new Animated.Value(0),
         top: 0,
-        height: 0,
-
-        /** @type {Animated.Value} Used to manage undo button */
-        animUndoY: new Animated.Value(56 + 48 + 12)
+        height: 0
     }
 
     constructor(props) {
@@ -50,7 +46,21 @@ class BackTasks extends PageBack {
 
         user.tasks.RefreshScheduleTasks();
         this.state.tasks = user.tasks.Get();
+        this.listenerTask = user.tasks.allTasks.AddListener(this.refreshTasks);
     }
+
+    refreshTasks = () => {
+        this.setState({ tasks: user.tasks.Get() });
+    }
+
+    componentWillUnmount() {
+        user.tasks.allTasks.RemoveListener(this.listenerTask);
+    }
+
+    /** @param {Task} item */
+    keyExtractor = (item) => (
+        'task-' + [ item.Title, ...item.Schedule.Repeat ].join('-')
+    )
 
     /**
      * Add a new task to the list and open the task page\
@@ -66,7 +76,10 @@ class BackTasks extends PageBack {
         user.interface.ChangePage('task', undefined, true);
     }
   
-    /** @param {Task} task */
+    /**
+     * @param {Task} task
+     * @returns {Promise<void>}
+     */
     onTaskCheck = async (task) => {
         // If task is scheduled, check/uncheck it
         if (task.Schedule.Type !== 'none') {
@@ -87,7 +100,11 @@ class BackTasks extends PageBack {
             // Remove task
             await new Promise((resolve, reject) => {
                 const success = user.tasks.Remove(task) === 'removed';
-                if (success) this.setState({ tasks: [...user.tasks.Get()] }, resolve);
+                if (success) {
+                    this.setState({
+                        tasks: [...user.tasks.Get()]
+                    }, () => resolve);
+                }
                 else resolve();
             });
         }
@@ -97,7 +114,12 @@ class BackTasks extends PageBack {
         user.OnlineSave();
     }
 
+    // TODO: Current unused
     undo = () => {
+        if (user.tasks.lastDeletedTask === null) {
+            return;
+        }
+
         // Close undo button
         SpringAnimation(this.state.animUndoY, 56 + 48 + 12).start();
         clearTimeout(this.undoTimeout);
@@ -140,10 +162,14 @@ class BackTasks extends PageBack {
     }
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
-        const { top, height, draggedItem } = this.state;
+        const { top, height, draggedItem, scrollable } = this.state;
         const { pageY } = event.nativeEvent;
         const { contentOffsetY: scrollY, contentSizeHeight, layoutMeasurementHeight } = this.flatlist;
         const scrollYMax = contentSizeHeight - layoutMeasurementHeight;
+
+        if (!scrollable) {
+            event.stopPropagation();
+        }
 
         const newY = MinMax(0, pageY - top, height);
         TimingAnimation(this.state.mouseY, newY, 0).start();

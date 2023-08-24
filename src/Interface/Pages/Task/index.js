@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, Icon, Input, Page, Text } from 'Interface/Components';
-import { PageHeader, TaskElement, TaskSchedule } from 'Interface/Widgets';
+import { PageHeader, Tasks, TaskSchedule } from 'Interface/Widgets';
 
 class Task extends BackTask {
     renderSubtasks = () => {
@@ -22,7 +22,7 @@ class Task extends BackTask {
                     data={this.state.subtasks}
                     keyExtractor={(item, index) => 'task-' + index.toString()}
                     renderItem={({ item, index }) => (
-                        <TaskElement
+                        <Tasks.SubtaskElement
                             subtask={item}
                             onSubtaskEdit={(checked, title) => this.onEditSubtask(index, checked, title)}
                             onSubtaskDelete={() => this.onDeleteSubtask(index)}

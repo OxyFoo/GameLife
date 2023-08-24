@@ -1,3 +1,4 @@
+import DynamicVar from 'Utils/DynamicVar';
 import { GetTime } from 'Utils/Time';
 import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
 
@@ -72,6 +73,11 @@ class Tasks {
         this.SAVED_sort = true;
 
         /**
+         * @description All tasks (saved and unsaved)
+         */
+        this.allTasks = new DynamicVar([]);
+
+        /**
          * @description Not saved, only to undo last deletion
          * @type {Task|null}
          */
@@ -84,6 +90,7 @@ class Tasks {
         this.UNSAVED_deletions = [];
         this.tasksSort = [];
         this.SAVED_sort = true;
+        this.allTasks.Set([]);
     }
     Load(tasks) {
         const contains = (key) => tasks.hasOwnProperty(key);
@@ -92,11 +99,13 @@ class Tasks {
         if (contains('deletions'))  this.UNSAVED_deletions = tasks['deletions'];
         if (contains('tasksSort'))  this.tasksSort = tasks['tasksSort'];
         if (contains('sortSaved'))  this.SAVED_sort = tasks['sortSaved'];
+        this.allTasks.Set(this.Get());
     }
     LoadOnline(tasks) {
         if (typeof(tasks) !== 'object') return;
         this.SAVED_tasks = tasks.map(task => Object.assign(new Task(), task));
         this.user.interface.console.AddLog('info', `${this.SAVED_tasks.length} tasks loaded`);
+        this.allTasks.Set(this.Get());
     }
     Save() {
         const tasks = {
@@ -216,6 +225,7 @@ class Tasks {
 
         // Task not exist, add it
         this.UNSAVED_additions.push(newTask);
+        this.allTasks.Set(this.Get());
         return 'added';
     }
 
@@ -240,6 +250,7 @@ class Tasks {
         }
 
         const add = this.Add(title, description, deadline, repeatMode, repeatDays, subtasks);
+        this.allTasks.Set(this.Get());
         return add === 'added' ? 'edited' : 'notExist';
     }
 
@@ -269,6 +280,7 @@ class Tasks {
 
         if (deleted !== null) {
             this.lastDeletedTask = deleted;
+            this.allTasks.Set(this.Get());
             return 'removed';
         }
 
@@ -298,16 +310,17 @@ class Tasks {
         this.tasksSort.splice(oldIndex, 1);
         this.tasksSort.splice(newIndex, 0, task.Title);
         this.SAVED_sort = false;
+        this.allTasks.Set(this.Get());
         return true;
     }
 
     /**
      * Change sort order of tasks titles
      * @param {Task} task
-     * @param {number} checked Time in seconds or 0 if unchecked
+     * @param {number} checkedTime UTC Time in seconds or 0 if unchecked
      * @returns {boolean} Success of the operation
      */
-    Check(task, checked) {
+    Check(task, checkedTime) {
         let selectedTask = null;
         const indexTask = this.GetIndex(this.SAVED_tasks, task);
         const indexUnsaved = this.GetIndex(this.UNSAVED_additions, task);
@@ -315,12 +328,13 @@ class Tasks {
         if (indexTask !== null) selectedTask = this.SAVED_tasks.splice(indexTask, 1)[0];
         if (indexUnsaved !== null) selectedTask = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
         if (selectedTask === null) {
-            this.user.interface.console.AddLog('warn', `Tasks - check failed: task not found (${task.Title} ${checked})`);
+            this.user.interface.console.AddLog('warn', `Tasks - check failed: task not found (${task.Title} ${checkedTime})`);
             return false;
         }
 
-        selectedTask.Checked = checked;
+        selectedTask.Checked = checkedTime;
         this.UNSAVED_additions.push(selectedTask);
+        this.allTasks.Set(this.Get());
         return true;
     }
 
@@ -339,6 +353,7 @@ class Tasks {
         this.lastDeletedTask.Checked = 0;
         this.UNSAVED_additions.push(this.lastDeletedTask);
         this.lastDeletedTask = null;
+        this.allTasks.Set(this.Get());
 
         return true;
     }

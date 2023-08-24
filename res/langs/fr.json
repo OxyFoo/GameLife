@@ -553,7 +553,6 @@
         "container-title": "Todo liste",
         "tasks-empty-title": "Vous n'avez pas encore de tâche",
         "tasks-empty-button": "En ajouter une",
-        "tasks-undo-button": "Annuler la suppression",
 
         "task-type-deadline": "Avant le:",
         "task-type-repeat": "Prochain:",

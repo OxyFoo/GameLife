@@ -17,7 +17,6 @@ import ShopItems from './Pages/ShopItems';
 import Skill from './Pages/Skill/index';
 import Skills from './Pages/Skills/index';
 import Task from './Pages/Task/index';
-import Tasks from './Pages/Tasks/index';
 import Waitinternet from './Pages/WaitInternet/index';
 import Waitmail from './Pages/WaitMail/index';
 import Test from './Pages/Test/index';
@@ -42,7 +41,6 @@ export {
     Skill,
     Skills,
     Task,
-    Tasks,
     Waitinternet,
     Waitmail,
     Test

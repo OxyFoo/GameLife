@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import ButtonBadge from './Badge';
 import ButtonAd, { ButtonAdProps } from './Ad';
 
 /**
@@ -87,6 +88,8 @@ class ButtonBack extends React.Component {
 
     /** @param {ButtonProps|ButtonAdProps} props */
     static Ad = (props) => <ButtonAd {...props} />;
+
+    static Badge = ButtonBadge;
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {

@@ -123,9 +123,17 @@ class Tasks {
      */
     Get() {
         let tasks = [ ...this.SAVED_tasks, ...this.UNSAVED_additions ];
-        // Add new tasks title at the top & remove deleted tasks title
-        tasks.forEach(task => this.tasksSort.findIndex(title => task.Title === title) === -1 && this.tasksSort.splice(0, 0, task.Title));
-        this.tasksSort = this.tasksSort.filter(title => tasks.findIndex(task => task.Title === title) !== -1);
+
+        // Add new tasks title at the top
+        tasks.forEach(task =>
+            this.tasksSort.findIndex(title => task.Title === title) === -1 &&
+            this.tasksSort.splice(0, 0, task.Title)
+        );
+
+        // Remove deleted tasks title
+        const filter = title => tasks.findIndex(task => task.Title === title) !== -1;
+        this.tasksSort = this.tasksSort.filter(filter);
+
         return this.tasksSort.map(title => tasks.find(task => task.Title === title));
     }
 
@@ -250,6 +258,7 @@ class Tasks {
         }
 
         const add = this.Add(title, description, deadline, repeatMode, repeatDays, subtasks);
+        this.SAVED_sort = false;
         this.allTasks.Set(this.Get());
         return add === 'added' ? 'edited' : 'notExist';
     }

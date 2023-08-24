@@ -59,7 +59,13 @@ class BackTasks extends React.Component {
 
     /** @param {Task} item */
     keyExtractor = (item) => (
-        'task-' + [ item.Title, ...item.Schedule.Repeat ].join('-')
+        'task-' + [
+            item.Title,
+            ...item.Schedule.Type,
+            ...item.Schedule.Repeat,
+            ...item.Starttime.toString(),
+            ...item.Deadline.toString()
+        ].join('-')
     )
 
     /**

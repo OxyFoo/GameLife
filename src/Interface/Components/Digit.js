@@ -66,6 +66,8 @@ class Digit extends React.Component {
     }
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        event.stopPropagation();
+
         const posX = event.nativeEvent.pageX;
         const delta = (this.firstX - posX) / 2;
         this.newPosX = this.digitX + delta;

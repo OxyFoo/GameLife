@@ -51,7 +51,8 @@ class ButtonAd extends React.PureComponent {
 
         if (state === 'closed') {
             const title = langManager.curr['server']['alert-adsuccess-title'];
-            const text = langManager.curr['server']['alert-adsuccess-text'].replace('{}', oxAmount);
+            const text  = langManager.curr['server']['alert-adsuccess-text']
+                            .replace('{}', oxAmount.toString());
             user.interface.popup.Open('ok', [ title, text ], undefined, true);
         }
     }

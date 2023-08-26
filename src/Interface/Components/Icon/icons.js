@@ -1,5 +1,6 @@
 import svgDefault from 'Ressources/icons/default';
 import svgAdd from 'Ressources/icons/add';
+import svgAddSquare from 'Ressources/icons/add-square';
 import svgAlarmClock from 'Ressources/icons/alarm-clock';
 import svgArrowLeft from 'Ressources/icons/arrow-left';
 import svgCalendar from 'Ressources/icons/calendar';
@@ -15,11 +16,13 @@ import svgError from 'Ressources/icons/error';
 import svgFilter from 'Ressources/icons/filter';
 import svgFlagEnglish from 'Ressources/icons/flag-english';
 import svgFlagFrench from 'Ressources/icons/flag-french';
+import svgGift from 'Ressources/icons/gift';
 import svgHome from 'Ressources/icons/home';
 import svgHuman from 'Ressources/icons/human';
 import svgInfo from 'Ressources/icons/info';
 import svgInstagram from 'Ressources/icons/instagram';
 import svgItem from 'Ressources/icons/item';
+import svgMedia from 'Ressources/icons/media';
 import svgMoveVertical from 'Ressources/icons/move-vertical';
 import svgNowifi from 'Ressources/icons/nowifi';
 import svgOnboarding1 from 'Ressources/icons/onboarding1';
@@ -41,6 +44,7 @@ import svgLoadingDots from 'Ressources/icons/loading-dots';
 const SVGIcons = {
     default: svgDefault,
     add: svgAdd,
+    addSquare: svgAddSquare,
     alarmClock: svgAlarmClock,
     arrowLeft: svgArrowLeft,
     calendar: svgCalendar,
@@ -56,11 +60,13 @@ const SVGIcons = {
     filter: svgFilter,
     flagEnglish: svgFlagEnglish,
     flagFrench: svgFlagFrench,
+    gift: svgGift,
     home: svgHome,
     human: svgHuman,
     info: svgInfo,
     instagram: svgInstagram,
     item: svgItem,
+    media: svgMedia,
     moveVertical: svgMoveVertical,
     nowifi: svgNowifi,
     onboarding1: svgOnboarding1,

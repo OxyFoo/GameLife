@@ -5,66 +5,51 @@ import BackShop from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Icon, Text, Button } from 'Interface/Components';
+import { Page, Text, Icon } from 'Interface/Components';
+import ShopHeader from './header';
 
 class Shop extends BackShop {
+    noInternetRender = () => {
+        const lang = langManager.curr['shop'];
+        const title = lang['internet-offline-title'];
+        const text = lang['internet-offline-text'];
+
+        return (
+            <Page
+                ref={ref => this.refPage = ref}
+                style={styles.noInternetContainer}
+                isHomePage
+                canScrollOver
+            >
+                <Icon icon='nowifi' size={100} />
+                <Text fontSize={22}>{title}</Text>
+                <Text fontSize={16}>{text}</Text>
+            </Page>
+        );
+    }
+
     render() {
         const lang = langManager.curr['shop'];
-        const { oxAmount } = this.state;
+
+        if (!user.server.online) {
+            return this.noInternetRender();
+        }
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-                <View style={styles.wallet}>
-                    <Text style={styles.ox} color='main1'>{oxAmount}</Text>
-                    <Icon icon='ox' color='main1' size={24} />
-                </View>
+                <ShopHeader />
 
-                <Button.Ad
-                    id='shop'
-                    color='main2'
-                    style={[styles.button, styles.adButton]}
-                    oxAmount={30}
-                />
 
-                <Button
-                    style={styles.button}
-                    color='white'
-                    colorText='main1'
-                    icon='chevron'
-                    iconColor='main1'
-                    enabled={user.server.online}
-                    onPress={this.openShopItems}
-                >{lang['button-shop']}</Button>
-
-                <Button
-                    style={styles.button}
-                    color='main1'
-                    icon='add'
-                    enabled={user.server.online}
-                    onPress={this.openPopupCode}
-                >
-                    {lang['button-code']}
-                </Button>
             </Page>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    wallet: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end'
-    },
-    ox: {
-        marginRight: 6
-    },
-
-    button: {
-        marginTop: 24
-    },
-    adButton: {
-        borderRadius: 14,
-        justifyContent: 'space-between'
+    noInternetContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

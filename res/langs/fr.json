@@ -434,20 +434,26 @@
     },
 
     "shop": {
-        "button-shop": "Boutique",
-        "button-code": "Utiliser un code",
+        "button-header-code": "CODE",
+        "button-header-ad": "+ {}",
 
         "alert-code-title": "Utiliser un code",
         "alert-code-text": "Vous pouvez gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant les codes dans nos vidéos Tiktok et Youtube\n\t- En gagnant un concours sur Instagram ou Twitter",
         "alert-code-input": "Code",
         "alert-code-button": "Valider",
 
+        "internet-offline-title": "Pas de connexion",
+        "internet-offline-text": "Vous devez être connecté à internet !",
+
         "reward-failed-title": "Échec",
         "reward-failed-text": "Une erreur est survenue, veuillez réessayer plus tard.",
         "reward-wrong-title": "Code incorrect",
         "reward-wrong-text": "Le code que vous avez entré est incorrect.",
         "reward-success-title": "Code utilisé",
-        "reward-success-text": "Vous avez obtenu les récompenses suivantes :"
+        "reward-success-text": "Vous avez obtenu les récompenses suivantes :",
+
+        "temp-comingsoon-title": "Boutique",
+        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
     },
 
     "shopItems": {

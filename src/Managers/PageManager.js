@@ -14,8 +14,8 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Interface/Components').PageBack} PageBack
- * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'shopitems'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'test'} PageName
- * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.ShopItems | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
+ * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'test'} PageName
+ * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
  * 
  * @typedef PageState
  * @type {Object}
@@ -37,8 +37,7 @@ const PAGES_PERSISTENT = [
     'home',
     'multiplayer',
     'profile',
-    'shop',
-    'shopitems'
+    'shop'
 ];
 
 const CACHE_PAGES = {
@@ -346,7 +345,6 @@ class PageManager extends React.Component{
             'report':           Pages.Report,
             'settings':         Pages.Settings,
             'shop':             Pages.Shop,
-            'shopitems':        Pages.ShopItems,
             'skill':            Pages.Skill,
             'skills':           Pages.Skills,
             'task':             Pages.Task,

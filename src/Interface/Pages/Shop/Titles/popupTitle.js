@@ -9,43 +9,37 @@ import dataManager from 'Managers/DataManager';
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Data/Items').Item} Item
+ * @typedef {import('Data/Titles').Title} Title
  */
 
 /**
- * @param {Item} item
+ * @param {Title} title
  * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
  */
-function renderItemPopup(item, refreshCallback = () => {}) {
+function renderTitlePopup(title, refreshCallback = () => {}) {
     const lang = langManager.curr['shopItems'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const itemName = dataManager.GetText(item.Name);
-    const itemDescription = dataManager.GetText(item.Description);
-    const buttonText = lang['popup-item-button'].replace('{}', item.Value);
+    const titleName = dataManager.GetText(title.Name);
+    const buttonText = lang['popup-title-button']
+                        .replace('{}', title.Value.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
         setLoading(true); this.setState({ buying: true });
-        await buyItem.call(this, item);
+        await buyTitle.call(this, title);
         setLoading(false); this.setState({ buying: false });
         refreshCallback();
     };
 
     return (
-        <View style={styles.itemPopup}>
-            <Text style={styles.itemPopupTitle}>
-                {itemName}
+        <View style={styles.titlePopup}>
+            <Text style={styles.titlePopupTitle}>
+                {titleName}
             </Text>
 
-            {itemDescription !== '' && (
-                <Text style={styles.itemPopupText}>
-                    {itemDescription}
-                </Text>
-            )}
-
             <Button
-                style={styles.itemPopupButton}
+                style={styles.titlePopupButton}
                 color='main1'
                 onPress={buy}
                 loading={loading}
@@ -56,12 +50,12 @@ function renderItemPopup(item, refreshCallback = () => {}) {
     );
 }
 
-/** @param {Item} item */
-const buyItem = async(item) => {
+/** @param {Title} titleItem */
+const buyTitle = async(titleItem) => {
     const lang = langManager.curr['shopItems'];
 
     // Check Ox Amount
-    if (user.informations.ox.Get() < item.Value) {
+    if (user.informations.ox.Get() < titleItem.Value) {
         const title = lang['alert-notenoughox-title'];
         const text = lang['alert-notenoughox-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
@@ -69,10 +63,11 @@ const buyItem = async(item) => {
     }
 
     // Buy item
-    const response = await user.server.Request('buyItem', { itemID: item.ID });
+    const response = await user.server.Request('buyTitle', { titleID: titleItem.ID });
     if (response === null) return;
 
     // Request failed
+    console.log(response);
     if (response['status'] !== 'ok') {
         const title = lang['alert-buyfailed-title'];
         const text = lang['alert-buyfailed-text'];
@@ -81,17 +76,18 @@ const buyItem = async(item) => {
     }
 
     // Update inventory & Ox amount
-    user.inventory.LoadOnline({ stuffs: response['stuffs'] });
+    user.inventory.LoadOnline({ titles: response['titles'] });
     user.informations.ox.Set(parseInt(response['ox']));
-    user.inventory.buyToday.items.push(item.ID);
+    user.inventory.buyToday.titles.push(titleItem.ID);
     user.LocalSave();
 
     // Show success message
-    const title = lang['alert-buysuccess-title'];
-    let text = lang['alert-buysuccess-text'];
-    const itemName = dataManager.GetText(item.Name);
-    text = text.replace('{}', itemName).replace('{}', item.Value);
+    const title = lang['alert-buytitlesuccess-title'];
+    const titleName = dataManager.GetText(titleItem.Name);
+    const text = lang['alert-buytitlesuccess-text']
+                .replace('{}', titleName)
+                .replace('{}', titleItem.Value.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 
-export { renderItemPopup };
+export { renderTitlePopup };

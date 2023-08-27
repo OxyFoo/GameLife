@@ -1,12 +1,16 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import BackShop from './back';
+import ShopHeader from './header';
+import ShopTitles from './Titles';
+import ShopItems from './Items';
+import ShopDyes from './Dyes';
+
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Page, Text, Icon } from 'Interface/Components';
-import ShopHeader from './header';
 
 class Shop extends BackShop {
     noInternetRender = () => {
@@ -29,8 +33,6 @@ class Shop extends BackShop {
     }
 
     render() {
-        const lang = langManager.curr['shop'];
-
         if (!user.server.online) {
             return this.noInternetRender();
         }
@@ -39,7 +41,9 @@ class Shop extends BackShop {
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
                 <ShopHeader />
 
-
+                <ShopTitles />
+                <ShopItems />
+                <ShopDyes />
             </Page>
         );
     }

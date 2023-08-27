@@ -4,42 +4,46 @@ import { View } from 'react-native';
 import styles from './styles';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('./back').BuyableDye} BuyableDye
  * @typedef {import('Data/Items').Item} Item
  */
 
 /**
- * @param {BuyableDye} dye
+ * @param {Item} item
  * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
  */
-function renderDyePopup(dye, refreshCallback = () => {}) {
+function renderItemPopup(item, refreshCallback = () => {}) {
     const lang = langManager.curr['shopItems'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const buttonText = lang['popup-dyer-button'].replace('{}', dye.Price);
+    const itemName = dataManager.GetText(item.Name);
+    const itemDescription = dataManager.GetText(item.Description);
+    const buttonText = lang['popup-item-button']
+                        .replace('{}', item.Value.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
         setLoading(true); this.setState({ buying: true });
-        await buyDye.call(this, dye);
+        await buyItem.call(this, item);
         setLoading(false); this.setState({ buying: false });
         refreshCallback();
-        user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     };
 
     return (
         <View style={styles.itemPopup}>
             <Text style={styles.itemPopupTitle}>
-                {dye.Name}
+                {itemName}
             </Text>
 
-            <Text style={styles.itemPopupText}>
-                {lang['popup-dyer-text']}
-            </Text>
+            {itemDescription !== '' && (
+                <Text style={styles.itemPopupText}>
+                    {itemDescription}
+                </Text>
+            )}
 
             <Button
                 style={styles.itemPopupButton}
@@ -53,24 +57,20 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
     );
 }
 
-/** @param {BuyableDye} item */
-const buyDye = async(item) => {
+/** @param {Item} item */
+const buyItem = async(item) => {
     const lang = langManager.curr['shopItems'];
 
     // Check Ox Amount
-    if (user.informations.ox.Get() < item.Price) {
+    if (user.informations.ox.Get() < item.Value) {
         const title = lang['alert-notenoughox-title'];
         const text = lang['alert-notenoughox-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
         return;
     }
 
-    // Buy dye
-    const data = {
-        ID: item.ItemBefore.InventoryID,
-        newID: item.ItemAfter.ID
-    };
-    const response = await user.server.Request('buyDye', data);
+    // Buy item
+    const response = await user.server.Request('buyItem', { itemID: item.ID });
     if (response === null) return;
 
     // Request failed
@@ -82,16 +82,18 @@ const buyDye = async(item) => {
     }
 
     // Update inventory & Ox amount
-    user.inventory.LoadOnline(response['inventory']);
+    user.inventory.LoadOnline({ stuffs: response['stuffs'] });
     user.informations.ox.Set(parseInt(response['ox']));
+    user.inventory.buyToday.items.push(item.ID);
     user.LocalSave();
 
     // Show success message
-    const title = lang['alert-dyesuccess-title'];
-    let text = lang['alert-dyesuccess-text']
-        .replace('{}', item.Name)
-        .replace('{}', item.Price);
+    const itemName = dataManager.GetText(item.Name);
+    const title = lang['alert-buysuccess-title'];
+    const text = lang['alert-buysuccess-text']
+                .replace('{}', itemName)
+                .replace('{}', item.Value.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 
-export { renderDyePopup };
+export { renderItemPopup };

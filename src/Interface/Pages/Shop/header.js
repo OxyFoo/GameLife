@@ -140,7 +140,9 @@ const styles = StyleSheet.create({
     parent: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+
+        marginBottom: 24
     },
     badge: {
         width: '32%',

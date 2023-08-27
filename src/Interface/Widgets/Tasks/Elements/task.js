@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Animated, TouchableOpacity } from 'react-native';
 
-import styles from './styleElement';
+import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 

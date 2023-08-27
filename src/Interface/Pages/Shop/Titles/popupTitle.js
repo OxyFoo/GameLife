@@ -67,7 +67,6 @@ const buyTitle = async(titleItem) => {
     if (response === null) return;
 
     // Request failed
-    console.log(response);
     if (response['status'] !== 'ok') {
         const title = lang['alert-buyfailed-title'];
         const text = lang['alert-buyfailed-text'];

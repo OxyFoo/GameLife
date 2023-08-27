@@ -182,7 +182,7 @@
         "alert-remove-title": "Delete ?",
         "alert-remove-text": "Are you sure you want to eliminate this activity?",
         "alert-wrongtiming-title": "No way!",
-        "alert-wrongtimindg-text": "The selected activity how or ends during another.",
+        "alert-wrongtiming-text": "The selected activity how or ends during another.",
         "alert-remcomment-title": "Delete comment?",
         "alert-remcomment-text": "Are you sure you want to delete this comment?",
 
@@ -531,12 +531,24 @@
     },
 
     "task": {
-        "title-commentary": "Commentary",
         "title-schedule": "Scheduling",
         "title-subtasks": "Subtasks",
+        "title-activity": "Activity",
+        "title-commentary": "Commentary",
+
         "input-title": "Title",
         "input-deadline-title": "Due date",
         "input-deadline-empty": "None",
+        "input-activity-title": "No category or activity selected",
+        "input-activity-title-activity": "Activity selected:",
+        "input-activity-title-category": "Category selected:",
+        "input-activity-none": "No activity",
+        "input-activity-empty": "Select",
+        "input-activity-only": "All activities of category: {}",
+
+        "input-panel-activity": "Select an activity",
+        "input-panel-category": "Select a category",
+
         "input-repeat-title": "Repeat",
         "input-description": "Description",
         "input-subtask-placeholder": "Subtask",

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Keyboard } from 'react-native';
 
 import { PageBack } from 'Interface/Components';
@@ -6,35 +5,51 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {'new'|'edit'|'remove'} States
- *
  * @typedef {import('Class/Tasks').Task} Task
- * @typedef {import('Class/Tasks').Subtask} Subtask
  * @typedef {import('Class/Tasks').RepeatModes} RepeatModes
- * @typedef {import('Interface/Widgets').TaskSchedule} TaskSchedule
- * @typedef {import('Interface/Widgets/TaskSchedule').OnChangeScheduleEvent} OnChangeScheduleEvent
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * 
+ * @typedef {'new'|'edit'|'remove'} States
+ * 
+ * @typedef {import('./Sections/activity').default} SectionActivity
+ * @typedef {import('./Sections/schedule').default} SectionSchedule
+ * @typedef {import('./Sections/schedule').OnChangeScheduleEvent} OnChangeScheduleEvent
+ * @typedef {import('./Sections/subtasks').default} SectionSubtasks
+ * @typedef {import('./Sections/description').default} SectionDescription
  */
 
 class BackTask extends PageBack {
     state = {
         /** @type {States} */
         action: 'new',
+        button: {
+            /** @type {string} */
+            text: langManager.curr['task']['button-add'],
+
+            /** @type {ColorTheme|ColorThemeText} */
+            color: 'main2'
+        },
 
         /** @type {string} */
         title: '',
-
-        /** @type {string} */
-        description: '',
-
-        /** @type {Array<Subtask>} */
-        subtasks: [],
 
         /** @type {string} Error message to display */
         error: ''
     };
 
-    /** @type {TaskSchedule|null} */
-    refTaskSchedule = null;
+    /** @type {SectionActivity|null} */
+    refSectionActivity = null;
+
+    /** @type {SectionSchedule|null} */
+    refSectionSchedule = null;
+
+    /** @type {SectionSubtasks|null} */
+    refSectionSubtasks = null;
+
+    /** @type {SectionDescription|null} */
+    refSectionDescription = null;
 
     /** @type {Task|null} */
     selectedTask = null;
@@ -59,25 +74,37 @@ class BackTask extends PageBack {
 
             this.state = {
                 action: 'remove',
+                button: {
+                    text: langManager.curr['task']['button-remove'],
+                    color: 'danger'
+                },
 
                 title: task.Title,
-                description: task.Description,
-                subtasks: [ ...task.Subtasks ],
                 error: ''
             };
         }
     }
 
     componentDidMount() {
-        if (this.selectedTask !== null) {
-            const { Deadline, Schedule: { Type, Repeat } } = this.selectedTask;
-            this.refTaskSchedule.SetValues(Deadline, Type, Repeat);
-        }
+        const { selectedTask } = this;
+        if (selectedTask === null) return;
+
+        const { Deadline, Schedule: { Type, Repeat } } = selectedTask;
+        this.refSectionSchedule.SetValues(Deadline, Type, Repeat);
+        this.refSectionSubtasks.SetSubtasks(selectedTask.Subtasks);
+        this.refSectionActivity.SetActivity(selectedTask.Activity);
+        this.refSectionDescription.SetDescription(selectedTask.Description);
     }
 
     onEditTask = () => {
         if (this.selectedTask !== null && this.state.action !== 'edit') {
-            this.setState({ action: 'edit' });
+            this.setState({
+                action: 'edit',
+                button: {
+                    text: langManager.curr['task']['button-save'],
+                    color: 'success'
+                }
+            });
         }
     }
 
@@ -131,72 +158,6 @@ class BackTask extends PageBack {
         this.onEditTask();
     }
 
-    addSubtask = () => {
-        let { subtasks } = this.state;
-
-        if (subtasks.length >= 20) {
-            const title = langManager.curr['task']['alert-subtaskslimit-title'];
-            const text = langManager.curr['task']['alert-subtaskslimit-text'];
-            user.interface.popup.Open('ok', [title, text]);
-            return;
-        }
-
-        subtasks.push({
-            Checked: false,
-            Title: ''
-        });
-        this.setState({ subtasks });
-
-        this.onEditTask();
-    }
-    onEditSubtask = (index, checked, title) => {
-        let { subtasks } = this.state;
-
-        subtasks.splice(index, 1, {
-            Checked: checked,
-            Title: title
-        });
-        this.setState({ subtasks });
-
-        this.onEditTask();
-    }
-    onDeleteSubtask = (index) => {
-        let { subtasks } = this.state;
-
-        subtasks.splice(index, 1);
-        this.setState({ subtasks });
-
-        this.onEditTask();
-    }
-
-    onAddComment = () => {
-        const callback = (text) => {
-            this.onEditTask();
-            this.setState({ description: text });
-        };
-        const titleCommentary = langManager.curr['task']['title-commentary'];
-        user.interface.screenInput.Open(titleCommentary, '', callback, true);
-    }
-    onEditComment = () => {
-        const callback = (text) => {
-            this.onEditTask();
-            this.setState({ description: text });
-        };
-        const titleCommentary = langManager.curr['task']['title-commentary']
-        user.interface.screenInput.Open(titleCommentary, this.state.description, callback, true);
-    }
-    onRemComment = () => {
-        const callback = (btn) => {
-            if (btn === 'yes') {
-                this.onEditTask();
-                this.setState({ description: '' });
-            }
-        }
-        const title = langManager.curr['task']['alert-remcomment-title'];
-        const text = langManager.curr['task']['alert-remcomment-text'];
-        user.interface.popup.Open('yesno', [title, text], callback);
-    }
-
     onButtonPress = () => {
         const { action } = this.state;
         switch (action) {
@@ -208,14 +169,27 @@ class BackTask extends PageBack {
         }
     }
     addTask = () => {
-        const { title, description, subtasks } = this.state;
-        const { deadline, repeatMode, selectedDays } = this.refTaskSchedule.GetValues();
+        const { title } = this.state;
+        const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
+
+        const activity = this.refSectionActivity.GetActivity();
+        const subtasks = this.refSectionSubtasks.GetSubtasks()
+        const description = this.refSectionDescription.GetDescription();
 
         if (this.checkTitleErrors(title)) {
             return;
         }
 
-        const addition = user.tasks.Add(title, description, deadline, repeatMode, selectedDays, subtasks);
+        const addition = user.tasks.Add(
+            title,
+            description,
+            deadline,
+            repeatMode,
+            selectedDays,
+            activity,
+            subtasks
+        );
+
         if (addition === 'added') {
             user.LocalSave();
             user.OnlineSave();
@@ -225,8 +199,12 @@ class BackTask extends PageBack {
         }
     }
     editTask = () => {
-        const { title, description, subtasks } = this.state;
-        const { deadline, repeatMode, selectedDays } = this.refTaskSchedule.GetValues();
+        const { title } = this.state;
+        const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
+
+        const activity = this.refSectionActivity.GetActivity();
+        const subtasks = this.refSectionSubtasks.GetSubtasks();
+        const description = this.refSectionDescription.GetDescription();
 
         if (this.selectedTask === null) {
             user.interface.console.AddLog('error', 'Task: Selected task is null');
@@ -237,7 +215,17 @@ class BackTask extends PageBack {
             return;
         }
 
-        const edition = user.tasks.Edit(this.selectedTask, title, description, deadline, repeatMode, selectedDays, subtasks);
+        const edition = user.tasks.Edit(
+            this.selectedTask,
+            title,
+            description,
+            deadline,
+            repeatMode,
+            selectedDays,
+            activity,
+            subtasks
+        );
+
         if (edition === 'edited') {
             user.LocalSave();
             user.OnlineSave();

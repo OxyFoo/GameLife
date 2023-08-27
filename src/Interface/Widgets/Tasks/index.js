@@ -3,8 +3,8 @@ import { Animated, FlatList } from 'react-native';
 
 import styles from './style';
 import BackTasks from './back';
-import TaskElement from './taskElement';
-import SubtaskElement from './subtaskElement';
+import TaskElement from './Elements/task';
+import SubtaskElement from './Elements/subtask';
 import langManager from 'Managers/LangManager';
 
 import { Container, Button, Text } from 'Interface/Components';

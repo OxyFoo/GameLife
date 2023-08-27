@@ -533,10 +533,22 @@
     "task": {
         "title-schedule": "Planification",
         "title-subtasks": "Sous-tâches",
+        "title-activity": "Activité",
         "title-commentary": "Commentaire",
+
         "input-title": "Titre",
         "input-deadline-title": "Date limite",
         "input-deadline-empty": "Aucune",
+        "input-activity-title": "Aucune catégorie ou activité sélectionnée",
+        "input-activity-title-activity": "Activité sélectionnée:",
+        "input-activity-title-category": "Catégorie sélectionnée:",
+        "input-activity-none": "Aucune",
+        "input-activity-empty": "Sélectionner",
+        "input-activity-only": "Toutes les activités de la catégorie: {}",
+
+        "input-panel-activity": "Sélectionne une activité",
+        "input-panel-category": "Sélectionne une catégorie",
+
         "input-repeat-title": "Répétition",
         "input-description": "Description",
         "input-subtask-placeholder": "Sous-tâche",

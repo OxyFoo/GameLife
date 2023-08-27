@@ -10,6 +10,10 @@ import { Sleep } from 'Utils/Functions';
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * 
+ * @typedef {object} ScreenListItem
+ * @property {number} id
+ * @property {string} value
  */
 
 const ScreenListProps = {
@@ -29,13 +33,13 @@ class ScreenList extends React.Component {
         label: '',
         data: '',
         anim: new Animated.Value(0),
-        callback: () => {}
+        callback: (id) => {}
     }
 
     /**
      * Open the screen list
      * @param {string} label 
-     * @param {Array<object>} data List of data { id: 0, value: '' }
+     * @param {Array<ScreenListItem>} data
      * @param {(id: number) => void} callback (id) => {}
      */
     Open = (label = 'Input', data = [], callback = (id) => {}) => {
@@ -127,7 +131,7 @@ class ScreenList extends React.Component {
                 onPress={onPress}
                 underlayColor={themeManager.GetColor('backgroundTransparent')}
             >
-                <Text style={styles.itemText}>{value}</Text>
+                <Text>{value}</Text>
             </TouchableHighlight>
         );
     }

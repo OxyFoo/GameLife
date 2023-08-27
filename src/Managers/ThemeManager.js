@@ -3,7 +3,7 @@ import { Rarity } from 'Data/Items';
 /**
  * @typedef {'Dark'|'Light'} Theme
  * @typedef {'primary'|'secondary'|'light'|'warning'|'error'} ColorThemeText Color name or hexadecimal color
- * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'danger'|'ground1'|'ground1a'|'ground2'|'transparent'} ColorTheme Color name or hexadecimal color
+ * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'success'|'danger'|'ground1'|'ground1a'|'ground2'|'transparent'} ColorTheme Color name or hexadecimal color
  */
 
 class ThemeManager {
@@ -153,7 +153,7 @@ class ThemeManager {
 
     /**
      * @param {number} rarity 0 to 4 (common, rare, epic, legendary, event)
-     * @returns 
+     * @returns {string[]}
      */
     GetRariryColors = (rarity) => {
         let colors = [];

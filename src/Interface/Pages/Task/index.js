@@ -1,85 +1,21 @@
 import * as React from 'react';
-import { View, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import BackTask from './back';
-import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
+import SectionTitle from './Sections/title';
+import SectionDescription from './Sections/description';
+import SectionActivity from './Sections/activity';
+import SectionSchedule from './Sections/schedule';
+import SectionSubtasks from './Sections/subtasks';
 
-import { Button, Icon, Input, Page, Text } from 'Interface/Components';
-import { PageHeader, Tasks, TaskSchedule } from 'Interface/Widgets';
+import user from 'Managers/UserManager';
+
+import { PageHeader } from 'Interface/Widgets';
+import { Button, Page } from 'Interface/Components';
 
 class Task extends BackTask {
-    renderSubtasks = () => {
-        if (!this.state.subtasks.length) return null;
-
-        const background = { backgroundColor: themeManager.GetColor('main1') };
-
-        return (
-            <View style={[styles.subtasksContainer, background]}>
-                <FlatList
-                    style={{ height: 'auto' }}
-                    data={this.state.subtasks}
-                    keyExtractor={(item, index) => 'task-' + index.toString()}
-                    renderItem={({ item, index }) => (
-                        <Tasks.SubtaskElement
-                            subtask={item}
-                            onSubtaskEdit={(checked, title) => this.onEditSubtask(index, checked, title)}
-                            onSubtaskDelete={() => this.onDeleteSubtask(index)}
-                        />
-                    )}
-                />
-            </View>
-        );
-    }
-    renderCommentary = () => {
-        const lang = langManager.curr['task'];
-        const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
-
-        if (this.state.description === '') {
-            return (
-                <Button
-                    style={styles.comButton}
-                    onPress={this.onAddComment}
-                    color='main1'
-                    fontSize={14}
-                >
-                    {lang['button-commentary']}
-                </Button>
-            );
-        }
-        return (
-            <View>
-                {/* Comment title */}
-                <Text style={styles.sectionTitle} fontSize={22}>{lang['title-commentary']}</Text>
-
-                {/* Comment content */}
-                <TouchableOpacity
-                    style={[styles.commentPanel, backgroundCard]}
-                    activeOpacity={.6}
-                    onPress={this.onEditComment}
-                    onLongPress={this.onRemComment}
-                >
-                    <Text style={styles.description}>{this.state.description}</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
-
     render() {
-        const lang = langManager.curr['task'];
-        const { action, error } = this.state;
-
-        let btnText = lang['button-add'];
-        let btnColor = 'main2';
-        if (action === 'edit') {
-            btnText = lang['button-save'];
-            btnColor = 'success';
-        }
-        if (action === 'remove') {
-            btnText = lang['button-remove'];
-            btnColor = 'danger';
-        }
+        const { button, title, error } = this.state;
 
         return (
             <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss}>
@@ -87,72 +23,45 @@ class Task extends BackTask {
                     onBackPress={() => user.interface.BackPage()}
                 />
 
-                <Input
-                    style={styles.top}
-                    label={lang['input-title']}
-                    text={this.state.title}
-                    maxLength={128}
-                    onChangeText={this.onChangeTitle}
+                <SectionTitle
+                    title={title}
+                    error={error}
+                    onChangeTitle={this.onChangeTitle}
                 />
-                <Text fontSize={16} color='error'>{error}</Text>
 
-                <TaskSchedule
-                    ref={ref => this.refTaskSchedule = ref}
+                <SectionSchedule
+                    ref={ref => this.refSectionSchedule = ref}
                     onChange={this.onChangeSchedule}
                 />
 
-                <View style={[styles.row, styles.sectionTitle]}>
-                    <Text fontSize={22}>{lang['title-subtasks']}</Text>
-                    <Icon icon='add' onPress={this.addSubtask} />
-                </View>
-                <this.renderSubtasks />
-                <this.renderCommentary />
+                <SectionActivity
+                    ref={ref => this.refSectionActivity = ref}
+                />
+
+                <SectionSubtasks
+                    ref={ref => this.refSectionSubtasks = ref}
+                    onChange={this.onEditTask}
+                />
+
+                <SectionDescription
+                    ref={ref => this.refSectionDescription = ref}
+                    onChange={this.onEditTask}
+                />
 
                 <Button
                     style={styles.button}
-                    color={btnColor}
+                    color={button.color}
                     onPress={this.onButtonPress}
                     enabled={error.length === 0}
                 >
-                    {btnText}
+                    {button.text}
                 </Button>
             </Page>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
-    top: {
-        marginTop: 32,
-        marginBottom: 6
-    },
-    sectionTitle: {
-        marginTop: 32,
-        marginBottom: 12
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    subtasksContainer: {
-        padding: 28,
-        paddingTop: 14,
-        borderRadius: 8
-    },
-    comButton: {
-        height: 48,
-        marginTop: 48,
-        marginHorizontal: 20
-    },
-    commentPanel: {
-        padding: '5%',
-        borderRadius: 24
-    },
-    description: {
-        fontSize: 16,
-        textAlign: 'left'
-    },
     button: {
         marginTop: 48
     }

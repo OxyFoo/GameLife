@@ -101,8 +101,13 @@
     "server": {
         "alert-tokenexpired-title": "Le token de connexion a expiré",
         "alert-tokenexpired-text": "L'application va se fermer, veuillez la relancer.",
+
         "alert-adsuccess-title": "Bravo",
-        "alert-adsuccess-text": "Vous avez gagné {} Ox !",
+        "alert-adsuccess-message": "Vous avez gagné {} Ox !",
+        "alert-aderror-title": "Impossible de charger les pubs",
+        "alert-aderror-message-nomore": "Il n'y a plus de pubs disponibles. Réessaye demain !",
+        "alert-aderror-message-error": "Une erreur est survenue, veuillez réessayer plus tard.",
+
         "alert-adempty-title": "Plus de pubs",
         "alert-adempty-text": "Vous n'avez plus de pubs disponibles pour aujourd'hui.",
         "alert-error-title": "Erreur",
@@ -575,14 +580,6 @@
     },
 
     "other": {
-        "ad-button-states": {
-            "ready": "Regarder une pub",
-            "notAvailable": "Il n'y a plus de pubs disponibles",
-            "wait": "Chargement en cours",
-            "error": "Impossible de charger les pubs",
-            "closed": "Pub fermée",
-            "watched": "Pub visionnée"
-        },
         "widget-button-editTime": "Modifier",
         "widget-achievements-all": "Tous les succès",
         "widget-skills-all": "Toutes les comp.",

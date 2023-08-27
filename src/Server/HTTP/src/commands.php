@@ -435,7 +435,7 @@
                 return;
             }
 
-            $oxAmount = 30;
+            $oxAmount = 10;
             Users::AddOx($this->db, $account->ID, $oxAmount);
 
             $newOxAmount = $account->Ox + $oxAmount;

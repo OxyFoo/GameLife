@@ -101,8 +101,13 @@
     "server": {
         "alert-tokenexpired-title": "The connection token has expired",
         "alert-tokenexpired-text": "The application will close, please restart it.",
+
         "alert-adsuccess-title": "Congrats",
-        "alert-adsuccess-text": "You have won {} Ox!",
+        "alert-adsuccess-message": "You have won {} Ox!",
+        "alert-aderror-title": "Unable to load ads",
+        "alert-aderror-message-nomore": "There are no more ads available. Try again tomorrow!",
+        "alert-aderror-message-error": "An error has occurred, please try again later.",
+
         "alert-adempty-title": "No ads available",
         "alert-adempty-text": "You have no more ads available for today.",
         "alert-error-title": "Error",
@@ -575,14 +580,6 @@
     },
 
     "other": {
-        "ad-button-states": {
-            "ready": "Watch the ad",
-            "notAvailable": "There are no more ads available",
-            "wait": "Loading the next ad",
-            "error": "Unable to load ads",
-            "closed": "Pub closed",
-            "watched": "Pub watched"
-        },
         "widget-button-editTime": "Change",
         "widget-achievements-all": "All achievements",
         "widget-skills-all": "All skills",

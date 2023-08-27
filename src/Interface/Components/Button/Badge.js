@@ -23,19 +23,27 @@ const ButtonBadgeProps = {
     badgeJustifyContent: 'center',
 
     /** @type {React.ReactNode} */
-    children: undefined
+    children: undefined,
+
+    /** @type {() => void} */
+    onPress: undefined,
+
+    /** @type {boolean} */
+    disabled: false
 }
 
 class ButtonBadge extends React.PureComponent {
     render() {
-        const { style, icon, badgeJustifyContent, children } = this.props;
+        const { style, icon, badgeJustifyContent, children, onPress, disabled } = this.props;
 
+        const styleOpacity = {
+            opacity: disabled ? 0.5 : 1
+        };
         const styleBadge = {
-            justifyContent: badgeJustifyContent,
-            backgroundColor: themeManager.GetColor('backgroundCard')
+            justifyContent: badgeJustifyContent
         };
         const styleIconBackground = {
-            backgroundColor: themeManager.GetColor('main2')
+            backgroundColor: themeManager.GetColor(disabled ? 'backgroundGrey' : 'main2')
         };
         const styleBadgeBackground = {
             backgroundColor: themeManager.GetColor('backgroundCard')
@@ -46,20 +54,21 @@ class ButtonBadge extends React.PureComponent {
                 style={[styles.button, style]}
                 color='transparent'
                 rippleColor='ground1'
+                onPress={onPress}
             >
                 <View style={styles.content}>
                     <View style={[styles.icon, styleIconBackground]}>
                         <Icon
-                            style={styleIconBackground}
+                            style={[styleIconBackground, styleOpacity]}
                             icon={icon}
-                            size={24}
+                            size={22}
                             color={'white'}
                         />
                     </View>
-                    <View style={[styles.badge, styleBadge, styleBadgeBackground]}>
+                    <View style={[styles.badge, styleBadge, styleOpacity, styleBadgeBackground]}>
                         {children}
                     </View>
-                    <View style={[styles.badgeLink, styleBadgeBackground]} />
+                    <View style={[styles.badgeLink, styleOpacity, styleBadgeBackground]} />
                 </View>
             </Button>
         );
@@ -74,8 +83,8 @@ const styles = StyleSheet.create({
         width: 'auto',
         height: 'auto',
         maxHeight: 48,
-        paddingVertical: 6,
-        paddingHorizontal: 6,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
         borderRadius: 8
     },
     content: {
@@ -83,14 +92,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     icon: {
-        padding: 8,
+        padding: 6,
+        justifyContent: 'center',
         borderRadius: 8
     },
     badge: {
         flex: 1,
         marginVertical: 3,
-        paddingHorizontal: 8,
-        paddingLeft: 8,
+        paddingHorizontal: 6,
 
         flexDirection: 'row',
         alignItems: 'center',
@@ -104,8 +113,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         bottom: 0,
-        left: 24,
-        width: 36,
+        left: 12,
+        width: 22,
         marginVertical: 3,
 
         zIndex: -2,
@@ -113,5 +122,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { ButtonBadgeProps };
 export default ButtonBadge;

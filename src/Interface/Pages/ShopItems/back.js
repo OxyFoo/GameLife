@@ -15,8 +15,6 @@ const SHOP_NUMBER_ITEMS = 8;
 const SHOP_NUMBER_DYE = 2;
 
 /**
- * @typedef {import('Class/Admob').AdStates} AdStates
- * @typedef {import('Class/Admob').AdTypes['add30Ox']} AdEvent
  * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
  * 
  * @typedef BuyableTitle

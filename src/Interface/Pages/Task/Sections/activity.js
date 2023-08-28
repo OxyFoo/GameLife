@@ -16,28 +16,33 @@ import { Button, Text } from 'Interface/Components';
  * @property {boolean} isCategory
  */
 
-class SectionActivity extends React.Component {
+const SectionActivityProps = {
+    onChange: () => {}
+};
+
+class SectionSkill extends React.Component {
     state = {
         /** @type {SelectedActivity|null} */
-        activity: null
+        skill: null
     }
 
-    /** @param {SelectedActivity|null} activity */
-    SetActivity = (activity) => {
-        this.setState({ activity });
+    /** @param {SelectedActivity|null} skill */
+    SetSkill = (skill) => {
+        this.setState({ skill });
     }
-    GetActivity = () => {
-        return this.state.activity;
+    GetSkill = () => {
+        return this.state.skill;
     }
 
     onUnselectActivity = () => {
-        this.setState({ activity: null });
+        this.setState({ skill: null });
+        this.props.onChange();
     }
 
     onSelectCategory = () => {
         const callback = (id) => {
             if (id === 0) {
-                this.setState({ activity: null });
+                this.setState({ skill: null });
                 return;
             }
 
@@ -58,19 +63,21 @@ class SectionActivity extends React.Component {
 
     onSelectActivity = (categoryID) => {
         const callback = (id) => {
+            this.props.onChange();
+
             if (id === 0) {
-                this.setState({ activity: { id: categoryID, isCategory: true } });
+                this.setState({ skill: { id: categoryID, isCategory: true } });
                 return;
             }
 
-            this.setState({ activity: { id: id, isCategory: false } });
+            this.setState({ skill: { id: id, isCategory: false } });
         };
 
         const title = langManager.curr['task']['input-panel-category'];
         /** @type {Array<ScreenListItem>} */
-        const data = dataManager.skills.GetByCategory(categoryID).map(activity => ({
-            id: activity.ID,
-            value: dataManager.GetText(activity.Name)
+        const data = dataManager.skills.GetByCategory(categoryID).map(skill => ({
+            id: skill.ID,
+            value: dataManager.GetText(skill.Name)
         }));
         data.splice(0, 0, {
             id: 0,
@@ -81,18 +88,18 @@ class SectionActivity extends React.Component {
 
     render() {
         const lang = langManager.curr['task'];
-        const { activity } = this.state;
+        const { skill } = this.state;
 
         let activityTitle = lang['input-activity-title'];
         let activityText = lang['input-activity-empty'];
 
-        if (!!activity) {
-            if (activity.isCategory) {
-                const category = dataManager.skills.GetCategoryByID(activity.id);
+        if (!!skill) {
+            if (skill.isCategory) {
+                const category = dataManager.skills.GetCategoryByID(skill.id);
                 activityTitle = lang['input-activity-title-category'];
                 activityText = dataManager.GetText(category.Name);
             } else {
-                const activityData = dataManager.skills.GetByID(activity.id);
+                const activityData = dataManager.skills.GetByID(skill.id);
                 activityTitle = lang['input-activity-title-activity'];
                 activityText = dataManager.GetText(activityData.Name);
             }
@@ -124,6 +131,9 @@ class SectionActivity extends React.Component {
     }
 }
 
+SectionSkill.prototype.props = SectionActivityProps;
+SectionSkill.defaultProps = SectionActivityProps;
+
 const styles = StyleSheet.create({
     sectionTitle: {
         marginTop: 32,
@@ -143,4 +153,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SectionActivity;
+export default SectionSkill;

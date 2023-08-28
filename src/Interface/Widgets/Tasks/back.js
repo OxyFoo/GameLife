@@ -87,11 +87,20 @@ class BackTasks extends React.Component {
      * @returns {Promise<void>}
      */
     onTaskCheck = async (task) => {
-        // If task is scheduled, check/uncheck it
+        // Ignore if task is already checked
+        if (task.Checked !== 0) return;
+
+        // If task is scheduled, go to activity page
         if (task.Schedule.Type !== 'none') {
-            const checked = task.Checked !== 0 ? 0 : GetTime();
-            user.tasks.Check(task, checked);
-            this.forceUpdate();
+            if (task.Skill !== null) {
+                const { id, isCategory } = task.Skill;
+                const args = isCategory ? { categoryID: id } : { skillID: id };
+                user.interface.ChangePage('activity', args, true);
+            } else {
+                const checkedTime = GetTime();
+                user.tasks.Check(task, checkedTime);
+                this.forceUpdate();
+            }
         }
 
         // If task is not scheduled, remove it

@@ -17,8 +17,8 @@
                 $tasks[$i]['Schedule'] = json_decode($tasks[$i]['Schedule'], true);
                 $tasks[$i]['Description'] = $db->Decrypt($tasks[$i]['Description']);
                 $tasks[$i]['Deadline'] = intval($tasks[$i]['Deadline']);
-                if ($tasks[$i]['Activity'] !== null) {
-                    $tasks[$i]['Activity'] = json_decode($tasks[$i]['Activity'], true);
+                if ($tasks[$i]['Skill'] !== null) {
+                    $tasks[$i]['Skill'] = json_decode($tasks[$i]['Skill'], true);
                 }
                 if ($tasks[$i]['Subtasks'] !== '[]') {
                     $tasks[$i]['Subtasks'] = $db->Decrypt($tasks[$i]['Subtasks']);
@@ -36,7 +36,7 @@
         public static function AddTasks($db, $account, $tasks) {
             for ($i = 0; $i < count($tasks); $i++) {
                 $task = $tasks[$i];
-                if (count($task) !== 8) continue;
+                if (count($task) !== 9) continue;
 
                 $Action = $task['Action'];                          // 'add' or 'rem'
                 $Checked = $task['Checked'];                        // int
@@ -45,10 +45,10 @@
                 $Starttime = $task['Starttime'];                    // int
                 $Deadline = $task['Deadline'];                      // int
                 $Schedule = json_encode($task['Schedule']);         // string
-                $Activity = $task['Activity'];                      // null or json
+                $Skill = $task['Skill'];                            // null or json
                 $Subtasks = json_encode($task['Subtasks']);         // string
 
-                if ($Activity !== null) $Activity = json_encode($Activity);
+                if ($Skill !== null) $Skill = json_encode($Skill);
                 if ($Subtasks !== '[]') $Subtasks = $db->Encrypt($Subtasks);
 
                 // Check if task exists
@@ -66,7 +66,7 @@
                         `Starttime` = ?,
                         `Deadline` = ?,
                         `Schedule` = ?,
-                        `Activity` = ?,
+                        `Skill` = ?,
                         `Subtasks` = ?
                         WHERE `ID` = ?';
                     $args = [
@@ -76,14 +76,14 @@
                         $Starttime,
                         $Deadline,
                         $Schedule,
-                        $Activity,
+                        $Skill,
                         $Subtasks,
                         $reqTask[0]['ID']
                     ];
 
-                    if ($Activity === null) {
+                    if ($Skill === null) {
                         array_splice($args, 6, 1);
-                        $command = str_replace('`Activity` = ?,', '`Activity` = NULL,', $command);
+                        $command = str_replace('`Skill` = ?,', '`Skill` = NULL,', $command);
                     }
 
                     $r = $db->QueryPrepare('Tasks', $command, 'issiisssi', $args);
@@ -99,7 +99,7 @@
                         `Description`,
                         `Deadline`,
                         `Schedule`,
-                        `Activity`,
+                        `Skill`,
                         `Subtasks`
                     ) VALUES (?, ?, ?, ?, ?, ?, ?)';
                     $args = [
@@ -109,13 +109,13 @@
                         $Description,
                         $Deadline,
                         $Schedule,
-                        $Activity,
+                        $Skill,
                         $Subtasks
                     ];
 
-                    if ($Activity === null) {
+                    if ($Skill === null) {
                         array_splice($args, 6, 1);
-                        $command = str_replace('`Activity`,', '', $command);
+                        $command = str_replace('`Skill`,', '', $command);
                     }
 
                     $r = $db->QueryPrepare('Tasks', $command, 'iississ', $args);

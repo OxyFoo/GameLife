@@ -49,6 +49,8 @@ class Home extends BackHome {
                     {lang['btn-add-task']}
                 </Button>
 
+                <Tasks style={styles.topSpace} />
+
                 <Button
                     style={styles.topSpace}
                     color='backgroundCard'
@@ -59,8 +61,6 @@ class Home extends BackHome {
                 >
                     {lang['btn-settings']}
                 </Button>
-
-                <Tasks style={styles.topSpace} />
 
                 {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
 

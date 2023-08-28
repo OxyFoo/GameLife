@@ -1,8 +1,9 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import { GetTime, RoundToQuarter } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
+import { GetMidnightTime, GetTime, RoundToQuarter } from 'Utils/Time';
 
 /**
  * @typedef {import('.').default} ActivityPanel
@@ -35,20 +36,43 @@ async function onRemComment(callback) {
  * @param {Activity} activity
  */
 function AddActivity(skillID, activity) {
+    const lang = langManager.curr['activity'];
+    const now = GetTime();
     const addState = user.activities.Add(skillID, activity.startTime, activity.duration, activity.comment);
+
     if (addState === 'added') {
         Notifications.Evening.RemoveToday();
-        const text = langManager.curr['activity']['display-activity-text'];
-        const button = langManager.curr['activity']['display-activity-button'];
-        user.interface.ChangePage('display', { 'icon': 'success', 'text': text, 'button': button }, true);
+        const text = lang['display-activity-text'];
+        const button = lang['display-activity-button'];
+        const args = { 'icon': 'success', 'text': text, 'button': button };
+
+        // If activity starts today
+        const isBeforeMidnight = activity.startTime < GetMidnightTime(now + 86400000);
+        const isAfterMidnight = activity.startTime > GetMidnightTime(now);
+        if (isBeforeMidnight && isAfterMidnight) {
+            const skill = dataManager.skills.GetByID(skillID);
+            const tasks = user.tasks.Get()
+                            .filter(task => task.Skill !== null)
+                            .filter(task => task.Skill.isCategory ? task.Skill.id === skill.CategoryID : task.Skill.id === skillID)
+                            .filter(task => task.Checked === 0);
+
+            if (tasks.length > 0) {
+                tasks.forEach(task => user.tasks.Check(task, now));
+                const text = lang['display-task-complete-text'];
+                const completeArgs = { 'icon': 'success', 'text': text, 'button': button };
+                args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
+            }
+        }
+
+        user.interface.ChangePage('display', args, true);
         user.GlobalSave();
         user.RefreshStats();
     } else if (addState === 'edited') {
         user.GlobalSave();
         user.RefreshStats();
     } else if (addState === 'notFree') {
-        const title = langManager.curr['activity']['alert-wrongtiming-title'];
-        const text = langManager.curr['activity']['alert-wrongtiming-text'];
+        const title = lang['alert-wrongtiming-title'];
+        const text = lang['alert-wrongtiming-text'];
         user.interface.popup.Open('ok', [ title, text ]);
     }
     // TODO: Manage other states

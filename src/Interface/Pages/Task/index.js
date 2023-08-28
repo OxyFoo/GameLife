@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 import BackTask from './back';
 import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
-import SectionActivity from './Sections/activity';
+import SectionSkill from './Sections/activity';
 import SectionSchedule from './Sections/schedule';
 import SectionSubtasks from './Sections/subtasks';
 
@@ -34,8 +34,9 @@ class Task extends BackTask {
                     onChange={this.onChangeSchedule}
                 />
 
-                <SectionActivity
-                    ref={ref => this.refSectionActivity = ref}
+                <SectionSkill
+                    ref={ref => this.refSectionSkill = ref}
+                    onChange={this.onEditTask}
                 />
 
                 <SectionSubtasks

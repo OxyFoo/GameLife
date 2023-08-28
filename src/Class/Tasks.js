@@ -10,7 +10,7 @@ import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
  * @property {RepeatModes} Type
  * @property {Array<number>} Repeat
  * 
- * @typedef {object} Activity
+ * @typedef {object} Skill
  * @property {number} id
  * @property {boolean} isCategory
  * 
@@ -41,8 +41,8 @@ class Task {
         Repeat: []
     };
 
-    /** @type {Activity|null} */
-    Activity = null;
+    /** @type {Skill|null} */
+    Skill = null;
 
     /** @type {Array<Subtask>} Subtasks informations */
     Subtasks = [];
@@ -203,18 +203,18 @@ class Tasks {
      * @param {number} deadline Unix timestamp in seconds
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
-     * @param {Activity|null} activity Activity informations
+     * @param {Skill|null} skill Skill informations
      * @param {Array<Subtask>} subtasks Subtasks informations
      * @returns {'added'|'alreadyExist'}
      */
-    Add(title, description, deadline, repeatMode, repeatDays, activity, subtasks) {
+    Add(title, description, deadline, repeatMode, repeatDays, skill, subtasks) {
         const newTask = new Task();
         newTask.Checked = 0;
         newTask.Title = title;
         newTask.Description = description;
         newTask.Starttime = GetTime();
         newTask.Deadline = deadline;
-        newTask.Activity = activity;
+        newTask.Skill = skill;
         newTask.Schedule = {
             Type: repeatMode,
             Repeat: repeatDays
@@ -254,11 +254,11 @@ class Tasks {
      * @param {number} deadline Unix timestamp in seconds (0 = no deadline)
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
-     * @param {Activity|null} activity Activity informations
+     * @param {Skill|null} skill Skill informations
      * @param {Array<Subtask>} subtasks Subtasks informations
      * @returns {'edited'|'notExist'}
      */
-    Edit(oldTask, title, description, deadline, repeatMode, repeatDays, activity, subtasks) {
+    Edit(oldTask, title, description, deadline, repeatMode, repeatDays, skill, subtasks) {
         const rem = this.Remove(oldTask);
         if (rem === 'notExist') return 'notExist';
 
@@ -267,7 +267,7 @@ class Tasks {
             repeatMode = 'none';
         }
 
-        const add = this.Add(title, description, deadline, repeatMode, repeatDays, activity, subtasks);
+        const add = this.Add(title, description, deadline, repeatMode, repeatDays, skill, subtasks);
         this.SAVED_sort = false;
         this.allTasks.Set(this.Get());
         return add === 'added' ? 'edited' : 'notExist';

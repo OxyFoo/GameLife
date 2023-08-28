@@ -196,6 +196,7 @@
         "timeralert-tooshort-text": "You cannot add an activity of less than 15 minutes",
 
         "display-activity-text": "Your activity has been created!",
+        "display-task-complete-text": "Congratulations! You've completed today's tasks!",
         "display-activity-button": "Back home",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home"

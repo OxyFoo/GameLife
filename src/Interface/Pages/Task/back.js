@@ -40,7 +40,7 @@ class BackTask extends PageBack {
     };
 
     /** @type {SectionActivity|null} */
-    refSectionActivity = null;
+    refSectionSkill = null;
 
     /** @type {SectionSchedule|null} */
     refSectionSchedule = null;
@@ -92,7 +92,7 @@ class BackTask extends PageBack {
         const { Deadline, Schedule: { Type, Repeat } } = selectedTask;
         this.refSectionSchedule.SetValues(Deadline, Type, Repeat);
         this.refSectionSubtasks.SetSubtasks(selectedTask.Subtasks);
-        this.refSectionActivity.SetActivity(selectedTask.Activity);
+        this.refSectionSkill.SetSkill(selectedTask.Skill);
         this.refSectionDescription.SetDescription(selectedTask.Description);
     }
 
@@ -172,7 +172,7 @@ class BackTask extends PageBack {
         const { title } = this.state;
         const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
-        const activity = this.refSectionActivity.GetActivity();
+        const skill = this.refSectionSkill.GetSkill();
         const subtasks = this.refSectionSubtasks.GetSubtasks()
         const description = this.refSectionDescription.GetDescription();
 
@@ -186,7 +186,7 @@ class BackTask extends PageBack {
             deadline,
             repeatMode,
             selectedDays,
-            activity,
+            skill,
             subtasks
         );
 
@@ -202,7 +202,7 @@ class BackTask extends PageBack {
         const { title } = this.state;
         const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
-        const activity = this.refSectionActivity.GetActivity();
+        const skill = this.refSectionSkill.GetSkill();
         const subtasks = this.refSectionSubtasks.GetSubtasks();
         const description = this.refSectionDescription.GetDescription();
 
@@ -222,7 +222,7 @@ class BackTask extends PageBack {
             deadline,
             repeatMode,
             selectedDays,
-            activity,
+            skill,
             subtasks
         );
 

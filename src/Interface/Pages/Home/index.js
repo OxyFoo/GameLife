@@ -4,8 +4,8 @@ import { View, StyleSheet } from 'react-native';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { StatsBars, SkillsGroup } from 'Interface/Widgets';
-import { Button, Container, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
+import { Tasks } from 'Interface/Widgets';
+import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
 
 class Home extends BackHome {
     render() {
@@ -49,17 +49,7 @@ class Home extends BackHome {
                     {lang['btn-add-task']}
                 </Button>
 
-                {/*
-                <Button
-                    style={styles.topSpace}
-                    color='main1'
-                    borderRadius={8}
-                    icon='chrono'
-                    onPress={this.openTasks}
-                >
-                    {lang['btn-todo']}
-                </Button>
-                */}
+                <Tasks style={styles.topSpace} />
 
                 <Button
                     style={styles.topSpace}
@@ -74,27 +64,6 @@ class Home extends BackHome {
 
                 {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
 
-                <Container
-                    style={styles.topSpace}
-                    text={lang['con-stats']}
-                    type='rollable'
-                    opened={false}
-                    color='main3'
-                    rippleColor='white'
-                >
-                    <StatsBars data={stats} />
-                </Container>
-
-                <Container
-                    style={styles.topSpace}
-                    text={lang['con-skill-experience']}
-                    type='rollable'
-                    opened={false}
-                    color='main3'
-                    rippleColor='white'
-                >
-                    <SkillsGroup />
-                </Container>
             </Page>
         );
     }

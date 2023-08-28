@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ButtonAd, { ButtonAdProps } from './Ad';
+import ButtonBadge from './Badge';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -85,8 +85,7 @@ class ButtonBack extends React.Component {
         this.state = { width: 0 };
     }
 
-    /** @param {ButtonProps|ButtonAdProps} props */
-    static Ad = (props) => <ButtonAd {...props} />;
+    static Badge = ButtonBadge;
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {

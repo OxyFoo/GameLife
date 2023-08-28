@@ -17,6 +17,9 @@
                 $tasks[$i]['Schedule'] = json_decode($tasks[$i]['Schedule'], true);
                 $tasks[$i]['Description'] = $db->Decrypt($tasks[$i]['Description']);
                 $tasks[$i]['Deadline'] = intval($tasks[$i]['Deadline']);
+                if ($tasks[$i]['Skill'] !== null) {
+                    $tasks[$i]['Skill'] = json_decode($tasks[$i]['Skill'], true);
+                }
                 if ($tasks[$i]['Subtasks'] !== '[]') {
                     $tasks[$i]['Subtasks'] = $db->Decrypt($tasks[$i]['Subtasks']);
                 }
@@ -33,7 +36,7 @@
         public static function AddTasks($db, $account, $tasks) {
             for ($i = 0; $i < count($tasks); $i++) {
                 $task = $tasks[$i];
-                if (count($task) !== 8) continue;
+                if (count($task) !== 9) continue;
 
                 $Action = $task['Action'];                          // 'add' or 'rem'
                 $Checked = $task['Checked'];                        // int
@@ -42,8 +45,10 @@
                 $Starttime = $task['Starttime'];                    // int
                 $Deadline = $task['Deadline'];                      // int
                 $Schedule = json_encode($task['Schedule']);         // string
+                $Skill = $task['Skill'];                            // null or json
                 $Subtasks = json_encode($task['Subtasks']);         // string
 
+                if ($Skill !== null) $Skill = json_encode($Skill);
                 if ($Subtasks !== '[]') $Subtasks = $db->Encrypt($Subtasks);
 
                 // Check if task exists
@@ -61,6 +66,7 @@
                         `Starttime` = ?,
                         `Deadline` = ?,
                         `Schedule` = ?,
+                        `Skill` = ?,
                         `Subtasks` = ?
                         WHERE `ID` = ?';
                     $args = [
@@ -70,10 +76,17 @@
                         $Starttime,
                         $Deadline,
                         $Schedule,
+                        $Skill,
                         $Subtasks,
                         $reqTask[0]['ID']
                     ];
-                    $r = $db->QueryPrepare('Tasks', $command, 'issiissi', $args);
+
+                    if ($Skill === null) {
+                        array_splice($args, 6, 1);
+                        $command = str_replace('`Skill` = ?,', '`Skill` = NULL,', $command);
+                    }
+
+                    $r = $db->QueryPrepare('Tasks', $command, 'issiisssi', $args);
                     if ($r === false) ExitWithStatus('Error: saving tasks failed (update)');
                 }
 
@@ -86,6 +99,7 @@
                         `Description`,
                         `Deadline`,
                         `Schedule`,
+                        `Skill`,
                         `Subtasks`
                     ) VALUES (?, ?, ?, ?, ?, ?, ?)';
                     $args = [
@@ -95,8 +109,15 @@
                         $Description,
                         $Deadline,
                         $Schedule,
+                        $Skill,
                         $Subtasks
                     ];
+
+                    if ($Skill === null) {
+                        array_splice($args, 6, 1);
+                        $command = str_replace('`Skill`,', '', $command);
+                    }
+
                     $r = $db->QueryPrepare('Tasks', $command, 'iississ', $args);
                     if ($r === false) ExitWithStatus('Error: saving tasks failed (add)');
                 }

@@ -101,8 +101,13 @@
     "server": {
         "alert-tokenexpired-title": "Le token de connexion a expiré",
         "alert-tokenexpired-text": "L'application va se fermer, veuillez la relancer.",
+
         "alert-adsuccess-title": "Bravo",
-        "alert-adsuccess-text": "Vous avez gagné {} Ox !",
+        "alert-adsuccess-message": "Vous avez gagné {} Ox !",
+        "alert-aderror-title": "Impossible de charger les pubs",
+        "alert-aderror-message-nomore": "Il n'y a plus de pubs disponibles. Réessaye demain !",
+        "alert-aderror-message-error": "Une erreur est survenue, veuillez réessayer plus tard.",
+
         "alert-adempty-title": "Plus de pubs",
         "alert-adempty-text": "Vous n'avez plus de pubs disponibles pour aujourd'hui.",
         "alert-error-title": "Erreur",
@@ -190,7 +195,8 @@
         "timeralert-tooshort-title": "Trop tôt",
         "timeralert-tooshort-text": "Vous ne pouvez pas ajouter une activité de moins de 15 minutes",
 
-        "display-activity-text": "Votre activité a bien été créé !",
+        "display-activity-text": "Ton activité a bien été créée !",
+        "display-task-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",
         "display-activity-button": "Retour vers l'accueil",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil"
@@ -245,9 +251,6 @@
 
     "home": {
         "btn-add-task": "Ajouter des activités",
-        "btn-todo": "A faire",
-        "con-stats": "Statistiques",
-        "con-skill-experience": "Compétences",
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
@@ -437,20 +440,26 @@
     },
 
     "shop": {
-        "button-shop": "Boutique",
-        "button-code": "Utiliser un code",
+        "button-header-code": "CODE",
+        "button-header-ad": "+ {}",
 
         "alert-code-title": "Utiliser un code",
         "alert-code-text": "Vous pouvez gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant les codes dans nos vidéos Tiktok et Youtube\n\t- En gagnant un concours sur Instagram ou Twitter",
         "alert-code-input": "Code",
         "alert-code-button": "Valider",
 
+        "internet-offline-title": "Pas de connexion",
+        "internet-offline-text": "Vous devez être connecté à internet !",
+
         "reward-failed-title": "Échec",
         "reward-failed-text": "Une erreur est survenue, veuillez réessayer plus tard.",
         "reward-wrong-title": "Code incorrect",
         "reward-wrong-text": "Le code que vous avez entré est incorrect.",
         "reward-success-title": "Code utilisé",
-        "reward-success-text": "Vous avez obtenu les récompenses suivantes :"
+        "reward-success-text": "Vous avez obtenu les récompenses suivantes :",
+
+        "temp-comingsoon-title": "Boutique",
+        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
     },
 
     "shopItems": {
@@ -525,10 +534,22 @@
     "task": {
         "title-schedule": "Planification",
         "title-subtasks": "Sous-tâches",
+        "title-activity": "Activité",
         "title-commentary": "Commentaire",
+
         "input-title": "Titre",
         "input-deadline-title": "Date limite",
         "input-deadline-empty": "Aucune",
+        "input-activity-title": "Aucune catégorie ou activité sélectionnée",
+        "input-activity-title-activity": "Activité sélectionnée:",
+        "input-activity-title-category": "Catégorie sélectionnée:",
+        "input-activity-none": "Aucune",
+        "input-activity-empty": "Sélectionner",
+        "input-activity-only": "Toutes les activités de la catégorie: {}",
+
+        "input-panel-activity": "Sélectionne une activité",
+        "input-panel-category": "Sélectionne une catégorie",
+
         "input-repeat-title": "Répétition",
         "input-description": "Description",
         "input-subtask-placeholder": "Sous-tâche",
@@ -556,7 +577,6 @@
         "container-title": "Todo liste",
         "tasks-empty-title": "Vous n'avez pas encore de tâche",
         "tasks-empty-button": "En ajouter une",
-        "tasks-undo-button": "Annuler la suppression",
 
         "task-type-deadline": "Avant le:",
         "task-type-repeat": "Prochain:",
@@ -573,14 +593,6 @@
     },
 
     "other": {
-        "ad-button-states": {
-            "ready": "Regarder une pub",
-            "notAvailable": "Il n'y a plus de pubs disponibles",
-            "wait": "Chargement en cours",
-            "error": "Impossible de charger les pubs",
-            "closed": "Pub fermée",
-            "watched": "Pub visionnée"
-        },
         "widget-button-editTime": "Modifier",
         "widget-achievements-all": "Tous les succès",
         "widget-skills-all": "Toutes les comp.",

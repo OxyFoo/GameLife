@@ -15,14 +15,14 @@ import { Text, Button } from 'Interface/Components';
 /**
  * @param {Title} title
  * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
- * @returns {JSX.Element}
  */
 function renderTitlePopup(title, refreshCallback = () => {}) {
     const lang = langManager.curr['shopItems'];
     let [ loading, setLoading ] = React.useState(false);
 
     const titleName = dataManager.GetText(title.Name);
-    const buttonText = lang['popup-title-button'].replace('{}', title.Value);
+    const buttonText = lang['popup-title-button']
+                        .replace('{}', title.Value.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
@@ -82,10 +82,11 @@ const buyTitle = async(titleItem) => {
 
     // Show success message
     const title = lang['alert-buytitlesuccess-title'];
-    let text = lang['alert-buytitlesuccess-text'];
     const titleName = dataManager.GetText(titleItem.Name);
-    text = text.replace('{}', titleName).replace('{}', titleItem.Value);
-    user.interface.popup.ForceOpen('ok', [ titleItem, text ], undefined, false);
+    const text = lang['alert-buytitlesuccess-text']
+                .replace('{}', titleName)
+                .replace('{}', titleItem.Value.toString());
+    user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 
 export { renderTitlePopup };

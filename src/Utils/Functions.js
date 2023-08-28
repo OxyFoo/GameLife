@@ -9,7 +9,8 @@ function TwoDigit(n) {
  */
 function Round(number, decimal = 0) {
     const dec = decimal.toString();
-    return  +(Math.floor(number + ('e+' + dec)) + ('e-' + dec));
+    const n = parseFloat(number + ('e+' + dec));
+    return + (Math.floor(n) + ('e-' + dec));
 }
 
 function Sum(arr) {

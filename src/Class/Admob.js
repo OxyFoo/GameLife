@@ -10,34 +10,38 @@ const FIREBASE_DEFAULT = {"react-native": {
     "android": {"rewarded": {"shop": "","todo": ""}}
 }};
 
-const CGU_LINK = 'https://oxyfoo.com/cgu/';
-const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../firebase.json');
-const VERSION = require('../../package.json').version;
+const OX_AMOUNT = 10;
+const CGU_LINK  = 'https://oxyfoo.com/cgu/';
+const FIREBASE  = __DEV__ ? FIREBASE_DEFAULT : require('../../firebase.json');
+const VERSION   = require('../../package.json').version;
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * 
+ * @typedef {'rewarded'|'interstitial'} AdTypes
  * 
  * @typedef {'shop'|'todo'} RewardedAds
  * @typedef {'none'} InterstitialAds
  * @typedef {RewardedAds|InterstitialAds} AdNames
  * 
  * @typedef {'watched'|'ready'|'notAvailable'|'wait'|'closed'|'error'} AdStates
- * 
- * @typedef {object} AdTypes
- * @property {FirebaseAdMobTypes.AdEventListener} custom
- * @property {(state: AdStates) => void} add30Ox
+ * @typedef {(state: AdStates) => void} AdEvent
  */
 
 class Ad {
     /** @type {AdNames} */
     name = 'none';
-    /** @type {'rewarded'|'interstitial'} */
+    /** @type {AdTypes} */
     type = 'interstitial';
-    /** @type {FirebaseAdMobTypes.RewardedAd?|FirebaseAdMobTypes.InterstitialAd?} */
+    /** @type {FirebaseAdMobTypes.RewardedAd|FirebaseAdMobTypes.InterstitialAd|null} */
     ad = null;
-    /** @type {Function?} */
+    /** @type {Function|null} */
     unsubscriber = null;
 
+    /**
+     * @param {AdNames} name
+     * @param {AdTypes} type
+     */
     constructor(name, type) {
         this.name = name;
         this.type = type;
@@ -45,8 +49,8 @@ class Ad {
 }
 
 class Admob {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
 
         /** @type {Array<Ad>} */
@@ -60,6 +64,16 @@ class Admob {
             enabled: false,
             version: ''
         };
+    }
+
+    isPersonalized() {
+        if (Platform.OS === 'android') {
+            return !this.ad_consent.nonPersonalized;
+        }
+        else if (Platform.OS === 'ios') {
+            return this.ios_tracking.enabled;
+        }
+        return false;
     }
 
     Load(adSettings) {
@@ -79,16 +93,16 @@ class Admob {
     }
 
     LoadAds() {
-        if (Platform.OS !== 'ios' && Platform.OS !== 'android') return false;
-        const nonPersonalized = true;
+        const platform = Platform.OS === 'ios' ? 'ios' : 'android';
+        const adsRaw = FIREBASE['react-native'][platform];
 
-        if (FIREBASE['react-native'][Platform.OS].hasOwnProperty('rewarded')) {
-            const rewarded = FIREBASE['react-native'][Platform.OS]['rewarded'];
-            Object.keys(rewarded).forEach(adName => {
-                const adUnitId = __DEV__ ? TestIds.REWARDED : rewarded[adName];
-                const newAd = new Ad(adName, 'rewarded');
+        if (adsRaw.hasOwnProperty('rewarded')) {
+            const rewarded = adsRaw['rewarded'];
+            Object.keys(rewarded).forEach(/** @param {AdNames} name */ name => {
+                const adUnitId = __DEV__ ? TestIds.REWARDED : rewarded[name];
+                const newAd = new Ad(name, 'rewarded');
                 newAd.ad = RewardedAd.createForAdRequest(adUnitId, {
-                    requestNonPersonalizedAdsOnly: nonPersonalized,
+                    requestNonPersonalizedAdsOnly: !this.isPersonalized(),
                     keywords: ['video-game', 'sports']
                 });
                 newAd.ad.load();
@@ -96,78 +110,57 @@ class Admob {
             });
         }
 
-        if (FIREBASE['react-native'][Platform.OS].hasOwnProperty('interstitial')) {
-            const interstitial = FIREBASE['react-native'][Platform.OS]['interstitial'];
-            Object.keys(interstitial).forEach(adName => {
-                const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : interstitial[adName];
-                const newAd = new Ad(adName, 'interstitial');
+        if (adsRaw.hasOwnProperty('interstitial')) {
+            const interstitial = adsRaw['interstitial'];
+            Object.keys(interstitial).forEach(/** @param {AdNames} name */ name => {
+                const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : interstitial[name];
+                const newAd = new Ad(name, 'interstitial');
                 newAd.ad = InterstitialAd.createForAdRequest(adUnitId, {
-                    requestNonPersonalizedAdsOnly: nonPersonalized,
+                    requestNonPersonalizedAdsOnly: !this.isPersonalized(),
                     keywords: ['video-game', 'sports']
                 });
                 newAd.ad.load();
                 this.ads.push(newAd);
             });
         }
-
-        return true;
     }
 
     /**
-     * @template {keyof AdTypes} T
-     * @param {RewardedAds} adName 
-     * @param {T} type
-     * @param {AdTypes[T]?} event
-     * @returns {FirebaseAdMobTypes.RewardedAd?}
+     * @param {AdTypes} type
+     * @param {AdNames} adName
+     * @param {(state: AdStates) => void} callback
+     * @param {FirebaseAdMobTypes.AdEventListener} callback
+     * @returns {FirebaseAdMobTypes.RewardedAd|null}
      */
-    GetRewardedAd(adName, type, event = () => {}) {
-        let rewarded = this.ads.find(ad => ad.name === adName && ad.type === 'rewarded') || null;
-        if (rewarded === null) return null;
+    Get(type, adName, callback) {
+        let rewardedIndex = this.ads
+            .filter(ad => ad.type === type)
+            .findIndex(ad => ad.name === adName);
+        if (rewardedIndex === -1) return null;
 
-        let _event = event;
-        if (type === 'add30Ox') _event = (type, error, data) => this.Event30Ox(type, error, data, rewarded, event);
-        const unsubscriber = rewarded.ad.onAdEvent(_event);
-        rewarded.unsubscriber = unsubscriber;
-        if (type === 'add30Ox' && rewarded.ad?.loaded) {
-            event('ready');
-        } else if (!rewarded.ad.loaded) {
-            rewarded.ad.load();
+        this.ClearEvents(type, adName);
+
+        const ad = this.ads[rewardedIndex];
+        const unsubscriber = ad.ad.onAdEvent((type, error, data) => {
+            this.EventOx(type, error, data, ad, callback);
+        });
+        ad.unsubscriber = unsubscriber;
+
+        if (!ad.ad.loaded) {
+            ad.ad.load();
         }
-        return rewarded.ad;
+
+        return ad.ad;
     }
 
     /**
-     * @template {keyof AdTypes} T
-     * @param {InterstitialAds} adName 
-     * @param {T} type
-     * @param {AdTypes[T]?} event
-     * @returns {FirebaseAdMobTypes.InterstitialAd?}
-     */
-    GetInterstitialAd(adName, type, event = () => {}) {
-        let interstitial = this.ads.find(ad => ad.name === adName && ad.type === 'interstitial') || null;
-        if (interstitial === null) return null;
-
-        // Add event listener
-        let _event = event;
-        if (type === 'add30Ox') _event = (type, error, data) => this.Event30Ox(type, error, data, interstitial, event);
-        const unsubscriber = interstitial.ad.onAdEvent(_event);
-        interstitial.unsubscriber = unsubscriber;
-
-        // Check if ad is ready or load it
-        if (type === 'add30Ox' && interstitial.ad?.loaded) {
-            event('ready');
-        } else if (!interstitial.ad.loaded) {
-            interstitial.ad.load();
-        }
-        return interstitial.ad;
-    }
-
-    /**
-     * @type {FirebaseAdMobTypes.AdEventListener}
+     * @param {'loaded'|'error'|'opened'|'clicked'|'left_application'|'closed'|'rewarded_loaded'|'rewarded_earned_reward'} type
+     * @param {Error|null} error
+     * @param {any} data
      * @param {Ad} ad
-     * @param {AdTypes['add30Ox']} callback
+     * @param {AdEvent} callback
      */
-    Event30Ox = async (type, error, data, ad, callback = () => {}) => {
+    EventOx = async (type, error, data, ad, callback = () => {}) => {
         if (!!error) {
             this.user.interface.console.AddLog('error', 'Ad error:', error.message);
             callback('error');
@@ -209,14 +202,20 @@ class Admob {
     }
 
     /**
-     * @param {AdNames} adName 
+     * @param {AdTypes} type
+     * @param {AdNames} name 
      */
-    ClearEvents(adName) {
-        let ad = this.ads.find(ad => ad.name === adName) || null;
-        if (ad !== null && ad.unsubscriber !== null) {
-            ad.unsubscriber();
-            ad.unsubscriber = null;
-        }
+    ClearEvents(type, name) {
+        let adIndex = this.ads
+            .filter(ad => ad.type === type)
+            .filter(ad => ad.unsubscriber !== null)
+            .findIndex(ad => ad.name === name);
+
+        if (adIndex === -1) return;
+
+        const ad = this.ads[adIndex];
+        ad.unsubscriber();
+        ad.unsubscriber = null;
     }
 
     /**
@@ -303,4 +302,5 @@ class Admob {
     }
 }
 
+export { OX_AMOUNT };
 export default Admob;

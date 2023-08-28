@@ -20,7 +20,8 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
     const lang = langManager.curr['shopItems'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const buttonText = lang['popup-dyer-button'].replace('{}', dye.Price);
+    const buttonText = lang['popup-dyer-button']
+                        .replace('{}', dye.Price.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
@@ -32,17 +33,17 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
     };
 
     return (
-        <View style={styles.itemPopup}>
-            <Text style={styles.itemPopupTitle}>
+        <View style={styles.popupContainer}>
+            <Text style={styles.popupTitle}>
                 {dye.Name}
             </Text>
 
-            <Text style={styles.itemPopupText}>
+            <Text style={styles.popupText}>
                 {lang['popup-dyer-text']}
             </Text>
 
             <Button
-                style={styles.itemPopupButton}
+                style={styles.popupButton}
                 color='main1'
                 onPress={buy}
                 loading={loading}
@@ -90,7 +91,7 @@ const buyDye = async(item) => {
     const title = lang['alert-dyesuccess-title'];
     let text = lang['alert-dyesuccess-text']
         .replace('{}', item.Name)
-        .replace('{}', item.Price);
+        .replace('{}', item.Price.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 

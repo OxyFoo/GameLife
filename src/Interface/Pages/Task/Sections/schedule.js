@@ -19,12 +19,12 @@ import { Text, Button, TextSwitch } from 'Interface/Components';
  * @param {Array<number>} repeatDays Array of days of week
  */
 
-const TaskScheduleProps = {
+const SectionScheduleProps = {
     /** @type {OnChangeScheduleEvent} */
     onChange: (deadline, repeatMode, repeatDays) => {}
 }
 
-class TaskSchedule extends React.Component {
+class SectionSchedule extends React.Component {
     state = {
         /** @type {''|'date'|'time'} */
         DTPMode: '',
@@ -68,7 +68,6 @@ class TaskSchedule extends React.Component {
         const repeatModeIndex = ['none', 'week', 'month'].indexOf(repeatMode);
         this.refTextSwitch?.SetSelectedIndex(repeatModeIndex);
     }
-
     GetValues = () => {
         let { deadline, repeatMode, selectedDays } = this.state;
         selectedDays = selectedDays.filter(day => day <= 30);
@@ -253,8 +252,8 @@ class TaskSchedule extends React.Component {
     }
 }
 
-TaskSchedule.prototype.props = TaskScheduleProps;
-TaskSchedule.defaultProps = TaskScheduleProps;
+SectionSchedule.prototype.props = SectionScheduleProps;
+SectionSchedule.defaultProps = SectionScheduleProps;
 
 const styles = StyleSheet.create({
     sectionTitle: {
@@ -285,4 +284,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default TaskSchedule;
+export default SectionSchedule;

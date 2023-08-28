@@ -112,6 +112,11 @@ class BackActivity extends PageBack {
             this.refreshSkills(this.state.skillSearch, skill.CategoryID);
         }
 
+        else if (this.props.args.hasOwnProperty('categoryID')) {
+            const { categoryID } = this.props.args;
+            this.refreshSkills(this.state.skillSearch, categoryID);
+        }
+
         // Set default values to edit an activity
         else if (this.editMode) {
             /** @type {Activity} */
@@ -178,7 +183,8 @@ class BackActivity extends PageBack {
             itemSkills = skills
                 .slice(0, 10)
                 .map(skillID => dataManager.skills.GetByID(skillID))
-                .map(convert);
+                .map(convert)
+                .filter(searchMatch);
         }
 
         // Get skills by category

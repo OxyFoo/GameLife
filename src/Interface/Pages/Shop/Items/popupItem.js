@@ -22,7 +22,8 @@ function renderItemPopup(item, refreshCallback = () => {}) {
 
     const itemName = dataManager.GetText(item.Name);
     const itemDescription = dataManager.GetText(item.Description);
-    const buttonText = lang['popup-item-button'].replace('{}', item.Value);
+    const buttonText = lang['popup-item-button']
+                        .replace('{}', item.Value.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
@@ -87,10 +88,11 @@ const buyItem = async(item) => {
     user.LocalSave();
 
     // Show success message
-    const title = lang['alert-buysuccess-title'];
-    let text = lang['alert-buysuccess-text'];
     const itemName = dataManager.GetText(item.Name);
-    text = text.replace('{}', itemName).replace('{}', item.Value);
+    const title = lang['alert-buysuccess-title'];
+    const text = lang['alert-buysuccess-text']
+                .replace('{}', itemName)
+                .replace('{}', item.Value.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 

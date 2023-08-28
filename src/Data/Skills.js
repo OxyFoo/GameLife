@@ -82,7 +82,7 @@ class Skills {
      */
     GetByID = (ID) => GetByKey(this.skills, 'ID', ID);
     GetCategoryByID = (ID) => this.categories.find(category => category.ID === ID);
-    GetByCategory = (ID) => this.skills.find(skill => skill.CategoryID === ID);
+    GetByCategory = (ID) => this.skills.filter(skill => skill.CategoryID === ID);
 
     /**
      * Return XML of logo by ID

@@ -61,7 +61,6 @@ class BackHome extends PageBack {
     }
 
     addActivity = () => user.interface.ChangePage('activity', undefined, true);
-    openTasks = () => user.interface.ChangePage('tasks');
     openSettings = () => user.interface.ChangePage('settings');
 }
 

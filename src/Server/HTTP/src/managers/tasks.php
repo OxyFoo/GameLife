@@ -80,13 +80,15 @@
                         $Subtasks,
                         $reqTask[0]['ID']
                     ];
+                    $types = 'issiisssi';
 
                     if ($Skill === null) {
                         array_splice($args, 6, 1);
                         $command = str_replace('`Skill` = ?,', '`Skill` = NULL,', $command);
+                        $types = 'issiissi';
                     }
 
-                    $r = $db->QueryPrepare('Tasks', $command, 'issiisssi', $args);
+                    $r = $db->QueryPrepare('Tasks', $command, $types, $args);
                     if ($r === false) ExitWithStatus('Error: saving tasks failed (update)');
                 }
 
@@ -112,13 +114,15 @@
                         $Skill,
                         $Subtasks
                     ];
+                    $types = 'iississs';
 
                     if ($Skill === null) {
                         array_splice($args, 6, 1);
                         $command = str_replace('`Skill`,', '', $command);
+                        $types = 'iississ';
                     }
 
-                    $r = $db->QueryPrepare('Tasks', $command, 'iississ', $args);
+                    $r = $db->QueryPrepare('Tasks', $command, $args, $args);
                     if ($r === false) ExitWithStatus('Error: saving tasks failed (add)');
                 }
 

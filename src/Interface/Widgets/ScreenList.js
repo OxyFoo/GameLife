@@ -31,7 +31,8 @@ class ScreenList extends React.Component {
         positionY: new Animated.Value(0),
 
         label: '',
-        data: '',
+        /** @type {Array<ScreenListItem>} */
+        data: [],
         anim: new Animated.Value(0),
         callback: (id) => {}
     }
@@ -165,7 +166,7 @@ class ScreenList extends React.Component {
                     <FlatList
                         data={data}
                         renderItem={this.renderItem}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => 'SL-' + item.id + '-' + item.value}
                         scrollEnabled={false}
                     />
                 </Animated.View>

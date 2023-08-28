@@ -149,12 +149,8 @@ class PageManager extends React.Component{
      * @param {LayoutChangeEvent} event
      */
     onLayout = (event) => {
-        if (this.screenWidth === 0) {
-            this.screenWidth = event.nativeEvent.layout.width;
-        }
-        if (this.screenHeight === 0) {
-            this.screenHeight = event.nativeEvent.layout.height;
-        }
+        this.screenWidth = event.nativeEvent.layout.width;
+        this.screenHeight = event.nativeEvent.layout.height;
     }
 
     /**

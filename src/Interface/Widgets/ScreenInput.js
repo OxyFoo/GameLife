@@ -171,7 +171,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     input: {
-        width: '75%'
+        width: '75%',
+        height: '100%'
     },
     button: {
         width: '20%',

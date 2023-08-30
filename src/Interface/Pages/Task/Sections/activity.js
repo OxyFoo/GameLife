@@ -57,7 +57,10 @@ class SectionSkill extends React.Component {
             id: category.ID,
             value: dataManager.GetText(category.Name)
         }));
-        data[0].value = langManager.curr['task']['input-activity-none'];
+        data.splice(0, 1, {
+            id: 0,
+            value: langManager.curr['task']['input-activity-none']
+        });
         user.interface.screenList.Open(title, data, callback);
     }
 

@@ -178,8 +178,8 @@ class UserManager {
 
         const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
         const saved = await DataStorage.Save(STORAGE.USER, data);
-        if   (saved)  this.interface.console.EditLog(debugIndex, 'User data: local save');
-        else          this.interface.console.AddLog('error', 'User data: local save failed');
+        if   (saved)  this.interface.console.EditLog(debugIndex, 'same', 'User data: local save');
+        else          this.interface.console.EditLog(debugIndex, 'error', 'User data: local save failed');
         return saved;
     }
 
@@ -200,9 +200,9 @@ class UserManager {
             if (contains('quests')) this.quests.Load(data['quests']);
             if (contains('tasks')) this.tasks.Load(data['tasks']);
 
-            this.interface.console.EditLog(debugIndex, 'User data: local load success');
+            this.interface.console.EditLog(debugIndex, 'same', 'User data: local load success');
         } else {
-            this.interface.console.AddLog('warn', 'User data: local load failed');
+            this.interface.console.EditLog(debugIndex, 'warn', 'User data: local load failed');
         }
 
         this.RefreshStats();
@@ -254,10 +254,10 @@ class UserManager {
                 this.achievements.Purge();
                 this.informations.Purge();
                 this.tasks.Purge();
-                this.interface.console.EditLog(debugIndex, 'User data: online save success');
+                this.interface.console.EditLog(debugIndex, 'same', 'User data: online save success');
                 await this.LocalSave();
             } else {
-                this.interface.console.AddLog('error', 'User data: online save failed');
+                this.interface.console.EditLog(debugIndex, 'error', 'User data: online save failed');
             }
             if (DEBUG_DATA) console.log('User data online save:', data);
         }
@@ -292,9 +292,9 @@ class UserManager {
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');
             }
 
-            this.interface.console.EditLog(debugIndex, 'User data: online load success');
+            this.interface.console.EditLog(debugIndex, 'same', 'User data: online load success');
         } else {
-            this.interface.console.AddLog('info', 'User data: online load failed');
+            this.interface.console.EditLog(debugIndex, 'error', 'User data: online load failed');
         }
 
         this.RefreshStats();

@@ -11,6 +11,10 @@ import Skills from 'Data/Skills';
 import Titles from 'Data/Titles';
 import News from 'Data/News';
 
+/**
+ * @typedef {import('Managers/UserManager').default} User
+ */
+
 class DataManager {
     constructor() {
         this.achievements = new Achievements();
@@ -51,6 +55,7 @@ class DataManager {
 
     /**
      * Local save Internal data
+     * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully saved
      */
     async LocalSave(user) {
@@ -63,19 +68,20 @@ class DataManager {
             'skills': this.skills.Save(),
             'titles': this.titles.Save()
         }
-        const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData, false);
-        if (saved) user.interface.console.EditLog(debugIndex, 'Internal data: local save success');
-        else user.interface.console.AddLog('error', 'Internal data: local save failed');
+        const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData);
+        if (saved) user.interface.console.EditLog(debugIndex, 'same', 'Internal data: local save success');
+        else user.interface.console.EditLog(debugIndex, 'error', 'Internal data: local save failed');
         return saved;
     }
 
     /**
      * Local load Internal data
+     * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async LocalLoad(user) {
         const debugIndex = user.interface.console.AddLog('info', 'Internal data: local loading...');
-        const internalData = await DataStorage.Load(STORAGE.INTERNAL, false);
+        const internalData = await DataStorage.Load(STORAGE.INTERNAL);
         if (internalData !== null) {
             this.achievements.Load(internalData['achievements']);
             this.contributors.Load(internalData['contributors']);
@@ -83,22 +89,23 @@ class DataManager {
             this.quotes.Load(internalData['quotes']);
             this.skills.Load(internalData['skills']);
             this.titles.Load(internalData['titles']);
-            user.interface.console.EditLog(debugIndex, 'Internal data: local load success');
+            user.interface.console.EditLog(debugIndex, 'same', 'Internal data: local load success');
         } else {
-            user.interface.console.AddLog('warn', 'Internal data: local load failed');
+            user.interface.console.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
         }
         return internalData !== null;
     }
 
     /**
      * Load Internal data from the server
+     * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async OnlineLoad(user) {
         await this.LocalLoad(user);
 
         const debugIndex = user.interface.console.AddLog('info', 'Internal data: online loading...');
-        const appHashes = await DataStorage.Load(STORAGE.INTERNAL_HASHES, false);
+        const appHashes = await DataStorage.Load(STORAGE.INTERNAL_HASHES);
         const data = {
             'action': 'getInternalData',
             'hashes': appHashes
@@ -122,13 +129,13 @@ class DataManager {
                 if (reqTables.hasOwnProperty('skills')) this.skills.Load(reqTables);
                 if (reqTables.hasOwnProperty('titles')) this.titles.Load(reqTables['titles']);
 
-                await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes, false);
-                user.interface.console.EditLog(debugIndex, 'Internal data: online load success');
+                await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes);
+                user.interface.console.EditLog(debugIndex, 'same', 'Internal data: online load success');
                 await this.LocalSave(user);
                 return true;
             }
         }
-        user.interface.console.AddLog('error', 'Internal data: online load failed');
+        user.interface.console.EditLog(debugIndex, 'error', 'Internal data: online load failed');
         return false;
     }
 }

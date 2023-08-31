@@ -103,7 +103,7 @@
                         `Schedule`,
                         `Skill`,
                         `Subtasks`
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                    ) VALUES ({?})';
                     $args = [
                         $account->ID,
                         $Checked,
@@ -122,7 +122,11 @@
                         $types = 'iississ';
                     }
 
-                    $r = $db->QueryPrepare('Tasks', $command, $args, $args);
+                    // Replace {?} with ?, ?, ?, ... with the correct number of arguments
+                    $commandArgs = implode(', ', array_fill(0, count($args), '?'));
+                    $command = str_replace('{?}', $commandArgs, $command);
+
+                    $r = $db->QueryPrepare('Tasks', $command, $types, $args);
                     if ($r === false) ExitWithStatus('Error: saving tasks failed (add)');
                 }
 

@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { View, Animated, TouchableHighlight, FlatList, StyleSheet } from 'react-native';
+import { Animated, FlatList } from 'react-native';
 
 import user from 'Managers/UserManager';
-import themeManager from 'Managers/ThemeManager';
 
-import { Separator, Text } from 'Interface/Components';
-import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 import { Sleep } from 'Utils/Functions';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -20,7 +18,7 @@ import { Sleep } from 'Utils/Functions';
 const ScreenListProps = {
 }
 
-class ScreenList extends React.Component {
+class ScreenListBack extends React.Component {
     posY = 0;
     isPressed = false;
     inScroll = false;
@@ -98,11 +96,13 @@ class ScreenList extends React.Component {
         this.heightPanel = height;
     }
 
+    /** @param {LayoutChangeEvent} event */
     onLayoutFlatList = (event) => {
         const { height } = event.nativeEvent.layout;
         this.heightFlatlist = height;
     }
 
+    /** @param {number} width @param {number} height */
     onContentSizeChange = (width, height) => {
         this.heightFlatlistContent = height;
     }
@@ -168,110 +168,9 @@ class ScreenList extends React.Component {
         this.isPressed = false;
         this.inScrollTimeout = setTimeout(() => this.inScroll = false, 200);
     }
-
-    renderItem = ({ item }) => {
-        const { id, value } = item;
-        const onPress = () => {
-            if (this.inScroll) return;
-            this.state.callback(id);
-            this.Close();
-        }
-        return (
-            <TouchableHighlight
-                style={styles.item}
-                onPress={onPress}
-                underlayColor={themeManager.GetColor('backgroundTransparent')}
-            >
-                <Text>{value}</Text>
-            </TouchableHighlight>
-        );
-    }
-
-    render() {
-        const { opened, anim, label, data } = this.state;
-        const opacity = { opacity: anim };
-        const event = opened ? 'auto' : 'none';
-        const stylePosition = { transform: [{ translateY: this.state.positionY }] };
-        const styleBackground = { backgroundColor: themeManager.GetColor('backgroundCard') };
-
-        return (
-            <Animated.View
-                style={[styles.parent, opacity]}
-                pointerEvents={event}
-                onTouchStart={this.onTouchStart}
-                onTouchMove={this.onTouchMove}
-                onTouchEnd={this.onTouchEnd}
-            >
-                <View style={styles.background} />
-
-                <Animated.View
-                    style={[styles.panel, styleBackground, stylePosition]}
-                    onLayout={this.onLayoutPanel}
-                >
-                    <View style={[styles.background2, styleBackground]} />
-                    <Text style={styles.label}>{label}</Text>
-
-                    <Separator.Horizontal style={{ marginLeft: '10%', width: '80%' }} />
-
-                    <FlatList
-                        ref={ref => this.refFlatlist = ref}
-                        data={data}
-                        renderItem={this.renderItem}
-                        keyExtractor={(item) => 'SL-' + item.id + '-' + item.value}
-                        onLayout={this.onLayoutFlatList}
-                        onContentSizeChange={this.onContentSizeChange}
-                        initialNumToRender={data.length / 2}
-                        scrollEnabled={false}
-                    />
-                </Animated.View>
-            </Animated.View>
-        );
-    }
 }
 
-ScreenList.prototype.props = ScreenListProps;
-ScreenList.defaultProps = ScreenListProps;
+ScreenListBack.prototype.props = ScreenListProps;
+ScreenListBack.defaultProps = ScreenListProps;
 
-const styles = StyleSheet.create({
-    parent: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-    },
-    background: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        opacity: .8,
-        backgroundColor: '#000000'
-    },
-    background2: {
-        position: 'absolute',
-        top: '100%',
-        left: 0,
-        right: 0,
-        height: 24
-    },
-
-    item: {
-        padding: 12
-    },
-
-    label: {
-        fontSize: 28,
-        paddingVertical: 12
-    },
-    panel: {
-        top: '100%',
-        width: '100%',
-        maxHeight: '80%',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16
-    }
-});
-
-export default ScreenList;
+export default ScreenListBack;

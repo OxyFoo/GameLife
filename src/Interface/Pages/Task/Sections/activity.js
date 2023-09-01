@@ -51,7 +51,7 @@ class SectionSkill extends React.Component {
             }, 100);
         };
 
-        const title = langManager.curr['task']['input-panel-activity'];
+        const title = langManager.curr['task']['input-panel-category'];
         /** @type {Array<ScreenListItem>} */
         const data = dataManager.skills.categories.map(category => ({
             id: category.ID,
@@ -76,7 +76,7 @@ class SectionSkill extends React.Component {
             this.setState({ skill: { id: id, isCategory: false } });
         };
 
-        const title = langManager.curr['task']['input-panel-category'];
+        const title = langManager.curr['task']['input-panel-activity'];
         /** @type {Array<ScreenListItem>} */
         const data = dataManager.skills.GetByCategory(categoryID).map(skill => ({
             id: skill.ID,

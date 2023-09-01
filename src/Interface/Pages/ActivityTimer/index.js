@@ -16,6 +16,7 @@ class ActivityTimer extends BackActivityTimer {
 
         const lang = langManager.curr['activity'];
         const {
+            displayActivity,
             displayInitialTime,
             displayCurrentTime,
             duration
@@ -32,6 +33,7 @@ class ActivityTimer extends BackActivityTimer {
             >
                 {/* Title */}
                 <View>
+                    <Text style={styles.headActivityText}>{displayActivity}</Text>
                     <Text style={styles.headText}>{textLaunch}</Text>
                     <Text fontSize={48}>{displayCurrentTime}</Text>
                 </View>
@@ -77,6 +79,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
+    },
+    headActivityText: {
+        fontSize: 36,
+        marginBottom: 36
     },
     headText: {
         fontSize: 20,

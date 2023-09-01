@@ -2,8 +2,9 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
+import { GetDay } from 'Utils/Date';
+import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
-import { GetMidnightTime, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Tasks').Task} Task
@@ -54,29 +55,67 @@ function AddActivity(activity) {
         const button = lang['display-activity-button'];
         const args = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
 
-        // If activity starts today
-        const isBeforeMidnight = activity.startTime < GetMidnightTime(now + 86400000);
-        const isAfterMidnight = activity.startTime > GetMidnightTime(now);
-        if (isBeforeMidnight && isAfterMidnight) {
-            const skill = dataManager.skills.GetByID(activity.skillID);
+        const skill = dataManager.skills.GetByID(activity.skillID);
 
-            /** @param {Task} task @returns {boolean} */
-            const isMatch = ({ Skill: { id, isCategory } }) => {
-                if (isCategory) return id === skill.CategoryID;
-                else            return id === activity.skillID;
-            };
+        /** @param {Task} task @returns {boolean} */
+        const matchID = ({ Skill: { id, isCategory } }) => {
+            if (isCategory) return id === skill.CategoryID;
+            else            return id === activity.skillID;
+        };
+        /** @param {Task} task @returns {boolean} */
+        const matchTime = ({ Checked, Schedule, Deadline }) => {
+            const d = new Date();
+            d.setUTCHours(1, 0, 0, 0);
+            const now = GetTime();
 
-            const tasks = user.tasks.Get()
-                            .filter(task => task.Skill !== null)
-                            .filter(isMatch)
-                            .filter(task => task.Checked === 0);
+            /** @type {'schedule'|'deadline'|null} */
+            let deadlineType = null;
 
-            if (tasks.length > 0) {
-                tasks.forEach(task => user.tasks.Check(task, now));
-                const text = lang['display-task-complete-text'];
-                const completeArgs = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
-                args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
+            /** @type {number|null} Minimum number of days */
+            let minDeltaDays = null;
+
+            let i = 0;
+            let days = Schedule.Repeat;
+            if (Schedule.Type === 'month') {
+                days = days.map(day => day + 1);
             }
+
+            if (days.length > 0) {
+                while (minDeltaDays === null) {
+                    const weekMatch = Schedule.Type === 'week' && days.includes(GetDay(d));
+                    const monthMatch = Schedule.Type === 'month' && days.includes(d.getUTCDate());
+                    if (weekMatch || monthMatch) {
+                        minDeltaDays = i + 1;
+                        deadlineType = 'schedule';
+                    }
+                    i++;
+                    d.setUTCDate(d.getUTCDate() + 1);
+                }
+            }
+
+            // Search next deadline (if earlier than schedule or no schedule)
+            if (Deadline > 0) {
+                const delta = (Deadline - now) / (60 * 60 * 24);
+                if (minDeltaDays === null || delta < minDeltaDays) {
+                    deadlineType = 'deadline';
+                    minDeltaDays = delta;
+                }
+            }
+
+            return activity.startTime < now + (minDeltaDays * 24 * 60 * 60);
+        };
+
+        const tasks = user.tasks.Get()
+                        .filter(task => task.Checked === 0)
+                        .filter(task => task.Skill !== null)
+                        .filter(matchID)
+                        .filter(matchTime);
+
+        if (tasks.length > 0) {
+            tasks.forEach(task => user.tasks.Check(task, now));
+            const text = lang['display-task-complete-text'];
+            const completeArgs = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
+            args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
         }
 
         user.interface.ChangePage('display', args, true);

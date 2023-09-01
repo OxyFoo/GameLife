@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Animated, TouchableHighlight, FlatList, StyleSheet } from 'react-native';
 
+import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Separator, Text } from 'Interface/Components';
@@ -20,21 +21,40 @@ const ScreenListProps = {
 }
 
 class ScreenList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.posY = 0;
-        this.height = 0;
-        this.inMove = false;
-    }
+    posY = 0;
+    isPressed = false;
+    inScroll = false;
+    inScrollTimeout = null;
+
+    heightPanel = 0;
+    heightFlatlist = 0;
+    heightFlatlistContent = 0;
+
+    flatlistListener = null;
+
+    /** @type {FlatList} */
+    refFlatlist = null;
+
     state = {
         opened: false,
         positionY: new Animated.Value(0),
+        positionFlatlistY: new Animated.Value(0),
 
         label: '',
         /** @type {Array<ScreenListItem>} */
         data: [],
         anim: new Animated.Value(0),
         callback: (id) => {}
+    }
+
+    componentDidMount() {
+        this.flatlistListener = this.state.positionFlatlistY.addListener(({ value }) => {
+            this.refFlatlist.scrollToOffset({ offset: value, animated: false });
+        });
+    }
+
+    componentWillUnmount() {
+        this.state.positionY.removeListener(this.flatlistListener);
     }
 
     /**
@@ -51,8 +71,8 @@ class ScreenList extends React.Component {
             data: data,
             callback: callback
         }, async () => {
-            await Sleep(100); // Wait layout
-            this.posY = Math.max(-this.height, -300);
+            await Sleep(200); // Wait layout
+            this.posY = Math.max(-this.heightPanel, -400);
             SpringAnimation(this.state.positionY, this.posY).start();
         });
     }
@@ -69,60 +89,90 @@ class ScreenList extends React.Component {
 
         this.posY = 0;
         SpringAnimation(this.state.positionY, this.posY).start();
+        SpringAnimation(this.state.positionFlatlistY, this.posY).start();
     }
 
     /** @param {LayoutChangeEvent} event */
     onLayoutPanel = (event) => {
         const { height } = event.nativeEvent.layout;
-        this.height = height;
+        this.heightPanel = height;
+    }
+
+    onLayoutFlatList = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.heightFlatlist = height;
+    }
+
+    onContentSizeChange = (width, height) => {
+        this.heightFlatlistContent = height;
     }
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
-        if (this.inMove) return;
+        if (this.isPressed) return;
 
         const { pageY } = event.nativeEvent;
         this.lastY = pageY;
         this.accY = 0;
 
-        this.inMove = true;
+        this.isPressed = true;
         this.tickTime = Date.now();
     }
 
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         // Position
-        const posY = event.nativeEvent.pageY;
-        const deltaY = this.lastY - posY;
+        const { pageY } = event.nativeEvent;
+        const { heightFlatlistContent, heightPanel, heightFlatlist } = this;
+        const deltaY = this.lastY - pageY;
+        const maxScreenY = user.interface.screenHeight * .8;
 
         // Acceleration
         const deltaTime = (Date.now() - this.tickTime) / 1000;
         this.accY = deltaY / deltaTime;
         this.tickTime = Date.now();
 
+        // Avoid press when scrolling
+        this.inScroll = true;
+        clearTimeout(this.inScrollTimeout);
+
         // Update
-        this.lastY = posY;
+        let maxScrollY = heightPanel;
+        if (heightFlatlistContent > heightFlatlist) {
+            maxScrollY = heightFlatlistContent - (heightPanel - heightFlatlist - 18);
+        }
+        this.lastY = pageY;
         this.posY -= deltaY;
-        this.posY = Math.max(this.posY, -this.height);
-        TimingAnimation(this.state.positionY, this.posY, 0.1).start();
+        this.posY = Math.max(this.posY, -maxScrollY);
+
+        // Animation
+        TimingAnimation(this.state.positionY, Math.min(Math.max(this.posY, -heightPanel), maxScreenY), 0.1).start();
+        TimingAnimation(this.state.positionFlatlistY, -this.posY - user.interface.screenHeight * 2 / 3, 0.1).start();
     }
 
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
-        this.posY -= this.accY * .25;
-        this.posY = Math.max(this.posY, -this.height);
-        SpringAnimation(this.state.positionY, this.posY).start();
+        if (this.posY < -this.heightPanel && this.posY - this.accY * .25 > -this.heightPanel) {
+            this.posY = -this.heightPanel + user.interface.screenHeight * .15;
+        } else {
+            this.posY -= this.accY * .25;
+        }
 
-        if (Math.abs(this.accY) < 2 || this.posY > -100) {
+        SpringAnimation(this.state.positionY, Math.max(this.posY, -this.heightPanel)).start();
+        SpringAnimation(this.state.positionFlatlistY, -this.posY - user.interface.screenHeight * 2 / 3).start();
+
+        if (this.posY > -100) {
             this.Close();
         }
 
-        this.inMove = false;
+        this.isPressed = false;
+        this.inScrollTimeout = setTimeout(() => this.inScroll = false, 200);
     }
 
     renderItem = ({ item }) => {
         const { id, value } = item;
         const onPress = () => {
+            if (this.inScroll) return;
             this.state.callback(id);
             this.Close();
         }
@@ -145,28 +195,32 @@ class ScreenList extends React.Component {
         const styleBackground = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
-            <Animated.View style={[styles.parent, opacity]} pointerEvents={event}>
-                <View
-                    style={styles.background}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
-                    onTouchEnd={this.onTouchEnd}
-                />
+            <Animated.View
+                style={[styles.parent, opacity]}
+                pointerEvents={event}
+                onTouchStart={this.onTouchStart}
+                onTouchMove={this.onTouchMove}
+                onTouchEnd={this.onTouchEnd}
+            >
+                <View style={styles.background} />
+
                 <Animated.View
                     style={[styles.panel, styleBackground, stylePosition]}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
-                    onTouchEnd={this.onTouchEnd}
                     onLayout={this.onLayoutPanel}
                 >
+                    <View style={[styles.background2, styleBackground]} />
                     <Text style={styles.label}>{label}</Text>
 
                     <Separator.Horizontal style={{ marginLeft: '10%', width: '80%' }} />
 
                     <FlatList
+                        ref={ref => this.refFlatlist = ref}
                         data={data}
                         renderItem={this.renderItem}
                         keyExtractor={(item) => 'SL-' + item.id + '-' + item.value}
+                        onLayout={this.onLayoutFlatList}
+                        onContentSizeChange={this.onContentSizeChange}
+                        initialNumToRender={data.length / 2}
                         scrollEnabled={false}
                     />
                 </Animated.View>
@@ -184,8 +238,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0,
-        overflow: 'scroll'
+        bottom: 0
     },
     background: {
         position: 'absolute',
@@ -195,6 +248,13 @@ const styles = StyleSheet.create({
         bottom: 0,
         opacity: .8,
         backgroundColor: '#000000'
+    },
+    background2: {
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        right: 0,
+        height: 24
     },
 
     item: {
@@ -208,6 +268,7 @@ const styles = StyleSheet.create({
     panel: {
         top: '100%',
         width: '100%',
+        maxHeight: '80%',
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
     }

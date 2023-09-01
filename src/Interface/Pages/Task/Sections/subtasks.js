@@ -24,7 +24,7 @@ class SectionSubtasks extends React.Component {
 
     /** @param {Array<Subtask>} subtasks */
     SetSubtasks = (subtasks) => {
-        this.setState({ subtasks });
+        this.setState({ subtasks: [ ...subtasks ] });
     }
     GetSubtasks = () => {
         return this.state.subtasks;

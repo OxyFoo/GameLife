@@ -79,7 +79,7 @@ class Server {
         } else if (status === 'ok') {
             this.online = true;
             if (devMode) this.user.interface.console.Enable();
-            this.user.interface.console.EditLog(debugIndex, 'Request: ping - OK');
+            this.user.interface.console.EditLog(debugIndex, 'same', 'Request: ping - OK');
         }
     }
 
@@ -154,7 +154,7 @@ class Server {
 
     /**
      * Send data unsaved on server
-     * @param {Array} data Data to add to server
+     * @param {object} data Data to add to server
      * @returns {Promise<boolean>} Return success of online save
      */
     async SaveUserData(data) {
@@ -254,7 +254,7 @@ class Server {
             if (this.online) { // Don't show popup if not connected to server
                 this.user.interface.console.AddLog('warn', 'Request: error -', response);
                 const title = langManager.curr['server']['alert-error-title'];
-                const text = langManager.curr['server']['alert-errorr-text'];
+                const text = langManager.curr['server']['alert-error-text'];
                 this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
             }
             return null;

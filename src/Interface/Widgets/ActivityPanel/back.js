@@ -6,19 +6,21 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { GetTime, GetTimeZone } from 'Utils/Time';
-import { Activity } from 'Class/Activities';
 import { SpringAnimation } from 'Utils/Animations';
-import { AskActivityComment, AddActivity, onRemComment, RemActivity } from './utils';
+import { AskActivityComment, onRemComment } from './utils';
+import { AddActivity, RemActivity } from 'Utils/Activities';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * 
  * @typedef {{ id: number, name: string, icon: string }} ItemCategory
  * @typedef {{ id: number, value: string, categoryID: number, onPress: () => void }} ItemSkill
  * 
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Interface/Widgets').PanelScreen} PanelScreen
+ * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Interface/Widgets').PanelScreen} PanelScreen
  */
 
 const ActivityPanelProps = {
@@ -200,7 +202,7 @@ class ActivityPanelBack extends React.Component {
     }
 
     onEditComment = async () => {
-        const { activity, selectedSkillID, mode } = this.state;
+        const { activity, mode } = this.state;
         const comment = await AskActivityComment(activity);
 
         if (comment === null) {
@@ -210,7 +212,7 @@ class ActivityPanelBack extends React.Component {
         activity.comment = comment;
         this.setState({ activity }, () => {
             if (mode === 'activity') {
-                AddActivity(selectedSkillID, activity);
+                AddActivity(activity);
             }
             // TODO: Hide empty space under panel after comment edition
             this.refPanelScreen.RefreshPosition();
@@ -218,12 +220,12 @@ class ActivityPanelBack extends React.Component {
     }
     onRemComment = () => {
         onRemComment(() => {
-            const { activity, mode, selectedSkillID } = this.state;
+            const { activity, mode } = this.state;
             activity.comment = '';
 
             this.setState({ activity }, () => {
                 if (mode === 'activity') {
-                    AddActivity(selectedSkillID, activity);
+                    AddActivity(activity);
                 }
                 // TODO: Hide empty space under panel after comment edition
                 this.refPanelScreen.RefreshPosition();
@@ -232,8 +234,8 @@ class ActivityPanelBack extends React.Component {
     }
 
     onAddActivity = () => {
-        const { selectedSkillID, activity } = this.state;
-        AddActivity(selectedSkillID, activity);
+        const { activity } = this.state;
+        AddActivity(activity);
     }
 
     onRemoveActivity = () => {

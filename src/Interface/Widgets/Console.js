@@ -15,6 +15,7 @@ import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
  * - 0: Show all logs
  * - 1: Show only warnings and errors
  * - 2: Show only errors
+ * @type {0|1|2}
  */
 const LEVEL_CONSOLE = 1;
 
@@ -31,8 +32,15 @@ class Console extends React.Component {
         debug: []
     }
 
-    Enable = () => this.setState({ enabled: true }) || TimingAnimation(this.state.animation, 0, 400).start();
-    Disable = () => TimingAnimation(this.state.animation, -1, 400).start(() => this.setState({ enabled: false }));
+    Enable = () => {
+        this.setState({ enabled: true });
+        TimingAnimation(this.state.animation, 0, 400).start();
+    }
+    Disable = () => {
+        TimingAnimation(this.state.animation, -1, 400).start(() => {
+            this.setState({ enabled: false });
+        });
+    }
 
     /**
      * Show message in app console
@@ -75,22 +83,23 @@ class Console extends React.Component {
     /**
      * Edit text in console, to update state debug
      * @param {number} index
+     * @param {'info'|'warn'|'error'|'same'} type
      * @param {string} text
      * @param {Array<any>} params
      * @returns {boolean} Success of edition
      */
-    EditLog = (index, text, ...params) => {
+    EditLog = (index, type, text, ...params) => {
         let messages = [...this.state.debug];
         if (index < 0 || index >= messages.length) return false;
 
-        const type = messages[index][0];
-        const newMessage = [type, this.formatText(text, ...params)];
+        const _type = type === 'same' ? messages[index][0] : type;
+        const newMessage = [_type, this.formatText(text, ...params)];
         messages.splice(index, 1, newMessage);
         this.setState({ debug: messages });
 
         if (LEVEL_CONSOLE === 0 ||
-           (LEVEL_CONSOLE >= 1  && type === 'warn') ||
-           (LEVEL_CONSOLE >= 2  && type === 'error')) {
+           (LEVEL_CONSOLE >= 1  && _type === 'warn') ||
+           (LEVEL_CONSOLE >= 2  && _type === 'error')) {
             console.log(`Edit (${index}):`, text, ...params);
         }
 

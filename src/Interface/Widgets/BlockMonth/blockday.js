@@ -53,7 +53,7 @@ class BlockDay extends React.Component {
         if (item === null) return <View style={styles.day} />;
 
         const { day, isToday, isSelected, isActivity, isActivityXP } = item;
-        const dotColor = isActivityXP ? dynamicStyles.bgMain2 : dynamicStyles.bgMain1;
+        const dotColor = isActivityXP ? dynamicStyles.bgMain1 : dynamicStyles.bgMain2;
 
         /** @type {Array<StyleProp>} */
         let style = [styles.day];

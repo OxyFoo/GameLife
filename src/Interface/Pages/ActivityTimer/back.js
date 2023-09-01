@@ -2,24 +2,18 @@ import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import Notifications from 'Utils/Notifications';
+import { AddActivityNow } from 'Utils/Activities';
 import { MinMax, TwoDigit } from 'Utils/Functions';
 import { DateToFormatTimeString } from 'Utils/Date';
-import { GetDate, GetTime, GetTimeZone, RoundToQuarter } from 'Utils/Time';
+import { GetDate, GetTime, RoundToQuarter } from 'Utils/Time';
+import dataManager from 'Managers/DataManager';
 
 const MAX_TIME_MINUTES = 4 * 60; // Multiple of 15
 
-/**
- * @typedef {import('Class/Activities').AddStatus} AddStatus
- * @typedef {import('Interface/Components/Icon').Icons} Icons
- */
-
 class BackActivityTimer extends PageBack {
     state = {
-        /** @type {string} */
+        displayActivity: '',
         displayInitialTime: '00:00',
-
-        /** @type {string} */
         displayCurrentTime: '00:00:00',
 
         /** @type {number} Used to show estimated stats */
@@ -37,10 +31,11 @@ class BackActivityTimer extends PageBack {
             return;
         }
 
-        const { startTime } = user.activities.currentActivity;
-        const localStartTime = startTime - GetTimeZone() * 3600;
+        const { localTime } = user.activities.currentActivity;
+        const activityName = dataManager.skills.GetByID(user.activities.currentActivity.skillID).Name;
 
-        this.state.displayInitialTime = DateToFormatTimeString(GetDate(localStartTime));
+        this.state.displayActivity = dataManager.GetText(activityName);
+        this.state.displayInitialTime = DateToFormatTimeString(GetDate(localTime));
         this.state.displayCurrentTime = this.__getCurrentTime();
         this.state.duration = this.__getDuration();
 
@@ -72,7 +67,7 @@ class BackActivityTimer extends PageBack {
 
         // Check if time plage is free
         if (duration > 0 && !user.activities.TimeIsFree(startTime, duration)) {
-            this.addActivity();
+            this.onPressComplete();
             return;
         }
 
@@ -113,7 +108,7 @@ class BackActivityTimer extends PageBack {
         user.interface.popup.Open('yesno', [ title, text ], remove);
     }
     onPressComplete = () => {
-        const { startTime } = user.activities.currentActivity;
+        const { skillID, startTime } = user.activities.currentActivity;
 
         // Too short
         if (startTime >= RoundToQuarter(GetTime(undefined, 'local'), 'near')) {
@@ -125,44 +120,10 @@ class BackActivityTimer extends PageBack {
             return;
         }
 
-        this.addActivity();
-    }
-
-    addActivity = () => {
-        const { skillID, startTime } = user.activities.currentActivity;
-
+        this.finished = true;
         const endTime = RoundToQuarter(GetTime(undefined, 'local'), 'near');
         let duration = Math.max(15, (endTime - startTime) / 60);
-
-        // Get the max duration possible
-        while (!user.activities.TimeIsFree(startTime, duration)) {
-            duration -= 15;
-            if (duration <= 0) {
-                this.ShowError('time');
-                return;
-            }
-        }
-
-        const activityStatus = user.activities.Add(skillID, startTime, duration);
-        if (activityStatus !== 'added') {
-            this.ShowError(activityStatus);
-            return;
-        }
-
-        this.finished = true;
-        Notifications.Evening.RemoveToday();
-
-        const lang = langManager.curr['activity'];
-        user.interface.ChangePage('display', {
-            /** @type {Icons} */
-            'icon': 'success',
-            'text': lang['display-activity-text'],
-            'button': lang['display-activity-button'],
-            'action': this.Back
-        }, true);
-
-        user.GlobalSave();
-        user.RefreshStats();
+        AddActivityNow(skillID, startTime, duration);
     }
 
     Back = () => {
@@ -172,18 +133,6 @@ class BackActivityTimer extends PageBack {
         } else {
             user.interface.ChangePage('calendar');
         }
-    }
-
-    ShowError = (status = 'none') => {
-        const lang = langManager.curr['activity'];
-        user.interface.ChangePage('display', {
-            /** @type {Icons} */
-            'icon': 'error',
-            'iconRatio': .4,
-            'text': lang['display-fail-text'].replace('{}', status),
-            'button': lang['display-fail-button'],
-            'action': this.Back
-        }, true);
     }
 }
 

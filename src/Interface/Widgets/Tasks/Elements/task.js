@@ -8,7 +8,6 @@ import langManager from 'Managers/LangManager';
 import { GetDate, GetTime } from 'Utils/Time';
 import { DateToFormatString, GetDay } from 'Utils/Date';
 import { Text, Icon, Button } from 'Interface/Components';
-import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -37,10 +36,6 @@ const TaskProps = {
 }
 
 class TaskElement extends React.Component {
-    state = {
-        animOpacity: new Animated.Value(1)
-    };
-
     constructor(props) {
         super(props);
 
@@ -108,37 +103,23 @@ class TaskElement extends React.Component {
     }
 
     onCheck = () => {
-        const { task } = this.props;
-        const { animOpacity } = this.state;
-
-        const isTodo = task.Schedule.Type === 'none';
-        if (isTodo) {
-            // Check, hide & callback to remove
-            user.tasks.Check(task, GetTime());
-            const callback = () => this.props.onTaskCheck(task);
-            TimingAnimation(animOpacity, 0, 500).start(callback);
-        } else {
-            // Switch check state & callback to edit
-            this.props.onTaskCheck(task);
-        }
+        const { task, onTaskCheck } = this.props;
+        onTaskCheck(task);
     }
 
     render() {
-        const { animOpacity } = this.state;
         const { style, task, onDrag } = this.props;
         if (task === null) return null;
 
         const { Title, Schedule, Checked } = task;
         const isTodo = Schedule.Type === 'none';
 
-        const styleContainerOpacity = { opacity: animOpacity };
         const styleButtonRadius = { borderRadius: isTodo ? 8 : 200 };
-
         const openTask = () => user.interface.ChangePage('task', { task });
 
         return (
             <Animated.View
-                style={[styles.parentTask, style, styleContainerOpacity]}
+                style={[styles.parentTask, style]}
                 pointerEvents={Checked === 0 || !isTodo ? 'auto' : 'none'}
             >
                 <Button

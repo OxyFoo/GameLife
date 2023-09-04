@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 

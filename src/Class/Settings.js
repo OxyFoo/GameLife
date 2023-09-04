@@ -28,6 +28,9 @@ class Settings {
         this.eveningNotifications = true;
     }
     async Load() {
+        const { AddLog, EditLog } = this.user.interface.console;
+        const debugIndex = AddLog('info', 'Settings data: local loading...');
+
         const settings = await DataStorage.Load(STORAGE.LOGIN);
         const contains = (key) => settings.hasOwnProperty(key);
         if (settings !== null) {
@@ -39,9 +42,14 @@ class Settings {
             if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
             if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
             if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
+
+            EditLog(debugIndex, 'same', 'Settings data: local load success');
+        } else {
+            EditLog(debugIndex, 'warn', 'Settings data: local load failed');
         }
     }
     Save() {
+        const { AddLog, EditLog } = this.user.interface.console;
         const settings = {
             lang: langManager.currentLangageKey,
             theme: themeManager.selectedTheme,
@@ -52,7 +60,16 @@ class Settings {
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
         };
-        return DataStorage.Save(STORAGE.LOGIN, settings);
+
+        const debugIndex = AddLog('info', 'Settings data: local saving...');
+
+        const status = DataStorage.Save(STORAGE.LOGIN, settings);
+
+        const statusText = status ? 'success' : 'failed';
+        const statusType = status ? 'same' : 'error';
+        EditLog(debugIndex, statusType, 'Settings data: local save ' + statusText);
+
+        return status;
     }
 }
 

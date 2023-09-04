@@ -374,6 +374,9 @@ class Tasks {
         this.lastDeletedTask = null;
         this.allTasks.Set(this.Get());
 
+        // Save new sort
+        this.SAVED_sort = false;
+
         return true;
     }
 

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
+
 import { Text } from 'Interface/Components';
 import { TimingAnimation } from 'Utils/Animations';
 

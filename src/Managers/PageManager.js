@@ -120,13 +120,13 @@ class PageManager extends React.Component{
      * @param {function} handle
      * @returns {boolean} True if handle is set
      */
-    SetCustomBackHandle(handle) {
+    SetCustomBackHandler(handle) {
         if (typeof(handle) !== 'function') {
             return false;
         }
         this.customBackHandle = handle;
     }
-    ResetCustomBackHandle() {
+    ResetCustomBackHandler() {
         this.customBackHandle = null;
     }
     backHandle = () => {

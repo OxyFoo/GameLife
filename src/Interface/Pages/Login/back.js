@@ -78,7 +78,7 @@ class BackLogin extends PageBack {
         if (mode) {
             SpringAnimation(animSignin, 1, false).start();
             this.setState({ signinMode: true });
-            user.interface.SetCustomBackHandle(() => this.setSigninMode(false));
+            user.interface.SetCustomBackHandler(() => this.setSigninMode(false));
         } else {
             SpringAnimation(animSignin, 0, false).start();
             this.setState({
@@ -88,7 +88,7 @@ class BackLogin extends PageBack {
                 errorUsername: '',
                 errorCgu: '',
             });
-            user.interface.ResetCustomBackHandle();
+            user.interface.ResetCustomBackHandler();
         }
     }
 

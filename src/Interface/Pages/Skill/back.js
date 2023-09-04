@@ -54,7 +54,7 @@ class BackSkill extends PageBack {
         this.__updateHIstory();
 
         // Back handler
-        user.interface.SetCustomBackHandle(this.onBackPress);
+        user.interface.SetCustomBackHandler(this.onBackPress);
     }
 
     __updateHIstory = () => {
@@ -84,7 +84,7 @@ class BackSkill extends PageBack {
     onBackPress = () => {
         this.refActivityPanel?.Close();
         user.interface.BackPage();
-        user.interface.ResetCustomBackHandle();
+        user.interface.ResetCustomBackHandler();
     }
 
     addActivity = () => {

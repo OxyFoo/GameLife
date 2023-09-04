@@ -570,7 +570,9 @@
         "alert-remsubtask-title": "Delete task?",
         "alert-remsubtask-text": "Are you sure you want to delete this subtask?",
         "alert-subtaskslimit-title": "Limit reached",
-        "alert-subtaskslimit-text": "You can't add more than 20 subtasks to this task"
+        "alert-subtaskslimit-text": "You can't add more than 20 subtasks to this task",
+        "alert-back-title": "Back",
+        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
     },
 
     "tasks": {

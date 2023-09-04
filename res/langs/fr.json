@@ -570,7 +570,9 @@
         "alert-remsubtask-title": "Suppression ?",
         "alert-remsubtask-text": "Êtes-vous sûr de vouloir supprimer cette sous-tâche ?",
         "alert-subtaskslimit-title": "Limite atteinte",
-        "alert-subtaskslimit-text": "Vous ne pouvez pas avoir plus de 20 sous-tâches."
+        "alert-subtaskslimit-text": "Vous ne pouvez pas avoir plus de 20 sous-tâches.",
+        "alert-back-title": "Retour",
+        "alert-back-text": "Voulez-vous revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
     "tasks": {

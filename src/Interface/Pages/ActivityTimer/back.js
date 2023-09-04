@@ -39,13 +39,13 @@ class BackActivityTimer extends PageBack {
         this.state.displayCurrentTime = this.__getCurrentTime();
         this.state.duration = this.__getDuration();
 
-        user.interface.SetCustomBackHandle(this.onPressCancel);
+        user.interface.SetCustomBackHandler(this.onPressCancel);
         this.timer_tick = setInterval(this.tick, 1000);
     }
 
     componentWillUnmount() {
         clearInterval(this.timer_tick);
-        user.interface.ResetCustomBackHandle();
+        user.interface.ResetCustomBackHandler();
 
         // Clear if activity is finished
         if (this.finished === true) {

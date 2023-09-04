@@ -96,6 +96,28 @@ class BackTask extends PageBack {
         this.refSectionDescription.SetDescription(selectedTask.Description);
     }
 
+    componentDidFocused = () => {
+        user.interface.SetCustomBackHandler(this.BackHandler);
+    }
+
+    BackHandler = () => {
+        const { action } = this.state;
+        if (action === 'new' || action === 'edit') {
+            const callback = (btn) => {
+                if (btn === 'yes') {
+                    user.interface.BackPage();
+                }
+            }
+            const title = langManager.curr['task']['alert-back-title'];
+            const text = langManager.curr['task']['alert-back-text'];
+            user.interface.popup.Open('yesno', [ title, text ], callback);
+            return false;
+        }
+
+        user.interface.ResetCustomBackHandler();
+        return true;
+    }
+
     onEditTask = () => {
         if (this.selectedTask !== null && this.state.action !== 'edit') {
             this.setState({

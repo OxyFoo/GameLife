@@ -104,14 +104,14 @@ class EditorAvatarBack extends React.Component {
             this.props.refParent.refPage.GotoY(0);
         }
 
-        user.interface.SetCustomBackHandle(this.CloseEditor);
+        user.interface.SetCustomBackHandler(this.CloseEditor);
     }
     CloseEditor = () => {
         this.setState({ editorOpened: false });
         this.props.onChangeState(false);
 
         SpringAnimation(this.state.editorAnim, 0).start();
-        user.interface.ResetCustomBackHandle();
+        user.interface.ResetCustomBackHandler();
     }
 
     updateEquippedItems = () => {

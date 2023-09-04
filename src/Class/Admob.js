@@ -182,7 +182,7 @@ class Admob {
 
                 this.user.interface.console.AddLog('info', 'Ad watched', response);
                 if (response['status'] === 'ok') {
-                    this.user.informations.ox.Set(parseInt(response['ox']), false);
+                    this.user.informations.ox.Set(parseInt(response['ox']));
                     this.user.informations.DecrementAdRemaining();
                     callback('watched');
                 }

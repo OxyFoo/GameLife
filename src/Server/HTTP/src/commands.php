@@ -307,6 +307,7 @@
                 $userData['lastbirthtime']    = $account->LastChangeBirth;
                 $userData['ox']               = $account->Ox;
                 $userData['tasksSort']        = $account->TasksSort;
+                $userData['tasksTotal']       = $account->TasksTotal;
                 $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
                 $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
                 $userData['achievements']     = $account->Achievements;

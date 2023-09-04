@@ -297,6 +297,7 @@ class UserManager {
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);
             if (contains('tasksSort')) this.tasks.tasksSort = data['tasksSort'];
+            if (contains('tasksTotal')) this.tasks.tasksTotal.Set(data['tasksTotal']);
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

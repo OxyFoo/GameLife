@@ -324,6 +324,7 @@
         "row-title": "Informations",
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
+        "row-tasks": "Nombre de tâches",
         "row-time": "Nombre d'heures",
 
         "container-achievements-title": "Derniers succès",

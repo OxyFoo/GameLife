@@ -128,6 +128,9 @@
 
                     $r = $db->QueryPrepare('Tasks', $command, $types, $args);
                     if ($r === false) ExitWithStatus('Error: saving tasks failed (add)');
+
+                    // Increment tasks total
+                    self::SetTasksTotal($db, $account, $account->TasksTotal + 1);
                 }
 
                 // Remove task
@@ -136,6 +139,20 @@
                     $r = $db->QueryPrepare('Tasks', $command, 'is', [ $account->ID, $Title ]);
                     if ($r === false) ExitWithStatus('Error: saving tasks failed (remove)');
                 }
+            }
+        }
+
+        /**
+         * @param DataBase $db
+         * @param Account $account
+         * @param int $total
+         */
+        private static function SetTasksTotal($db, $account, $total) {
+            $command = 'UPDATE TABLE SET `TasksTotal` = ? WHERE `ID` = ?';
+            $args = [ $total, $account->ID ];
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', $args);
+            if ($result === false) {
+                ExitWithStatus('Error: Saving tasks total failed');
             }
         }
     }

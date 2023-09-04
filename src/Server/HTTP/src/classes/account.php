@@ -38,6 +38,9 @@
         /** @var string[] $TasksSort */
         public $TasksSort;
 
+        /** @var int $TasksTotal */
+        public $TasksTotal;
+
         /** @var int[] $Achievements */
         public $Achievements;
 
@@ -78,6 +81,7 @@
             $this->Ox = intval($account['Ox']);
             $this->XP = intval($account['XP']);
             $this->TasksSort = json_decode($account['TasksSort'], true);
+            $this->TasksTotal = intval($account['TasksTotal']);
             $this->Achievements = json_decode($account['Achievements'], true);
             $this->AchievementQueue = $account['AchievementQueue'] === null ? null : intval($account['AchievementQueue']);
             $this->DataToken = $account['DataToken'];

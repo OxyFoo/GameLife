@@ -25,6 +25,9 @@ class BackTasks extends React.Component {
         /** @type {boolean} Used to disable scroll when dragging a task */
         scrollable: true,
 
+        /** @type {boolean} Used to enable/disable undo button */
+        undoEnabled: false,
+
         /** @type {Task|null} Used to manage selected task */
         draggedItem: null,
 
@@ -42,6 +45,9 @@ class BackTasks extends React.Component {
             layoutMeasurementHeight: 0,
             contentOffsetY: 0,
         }
+
+        /** @type {NodeJS.Timeout|null} */
+        this.undoTimeout = null;
 
         /** @type {LayoutRectangle|null} */
         this.tmpLayoutContainer = null;
@@ -86,64 +92,68 @@ class BackTasks extends React.Component {
 
     /**
      * @param {Task} task
+     * @param {(cancel: () => void) => void} callbackRemove
      * @returns {Promise<void>}
      */
-    onTaskCheck = async (task) => {
+    onTaskCheck = async (task, callbackRemove) => {
         // Ignore if task is already checked
         if (task.Checked !== 0) return;
 
-        // If task is scheduled, go to activity page
-        if (task.Schedule.Type !== 'none') {
-            if (task.Skill !== null) {
-                const { id, isCategory } = task.Skill;
-                const args = isCategory ? { categoryID: id } : { skillID: id };
-                user.interface.ChangePage('activity', args, true);
-            } else {
-                const checkedTime = GetTime();
-                user.tasks.Check(task, checkedTime);
-                this.forceUpdate();
-            }
+        // If task has a skill, go to activity page
+        //     (will be checked when activity is done)
+        if (task.Skill !== null) {
+            const { id, isCategory } = task.Skill;
+            const args = isCategory ? { categoryID: id } : { skillID: id };
+            user.interface.ChangePage('activity', args, true);
+        }
+
+        // If task is scheduled, check it
+        else if (task.Schedule.Type !== 'none') {
+            const checkedTime = GetTime();
+            user.tasks.Check(task, checkedTime);
+            user.GlobalSave();
         }
 
         // If task is not scheduled, remove it
         else {
-            // Open undo button
+            // Close undo button after 10 seconds
             this.undoTimeout = setTimeout(() => {
-                // Close undo button after 10 seconds
-                // TODO
+                this.setState({ undoEnabled: false });
             }, 10 * 1000);
 
             // Remove task
-            await new Promise((resolve, reject) => {
+            callbackRemove((cancel) => {
                 const success = user.tasks.Remove(task) === 'removed';
-                if (success) {
-                    this.setState({
-                        tasks: [...user.tasks.Get()]
-                    }, () => resolve);
+                if (!success) {
+                    cancel();
+                    return;
                 }
-                else resolve();
+
+                this.setState({
+                    tasks: [ ...user.tasks.Get() ],
+                    undoEnabled: true
+                });
+                user.GlobalSave();
             });
         }
 
-        // Save changes
-        user.LocalSave();
-        user.OnlineSave();
     }
 
-    // TODO: Current unused
     undo = () => {
         if (user.tasks.lastDeletedTask === null) {
             return;
         }
 
         // Close undo button
-        // TODO
         clearTimeout(this.undoTimeout);
 
+        this.setState({
+            tasks: [...user.tasks.Get()],
+            undoEnabled: false
+        });
+
         user.tasks.Undo();
-        user.LocalSave();
-        user.OnlineSave();
-        this.setState({ tasks: [...user.tasks.Get()] });
+        user.GlobalSave();
     }
 
     /** @param {Task} item */
@@ -217,9 +227,10 @@ class BackTasks extends React.Component {
             draggedItem: null
         });
 
-        // Save changes
-        if (this.initialSort.join() !== user.tasks.tasksSort.join()) {
-            user.LocalSave().then(user.OnlineSave);
+        // Save changes if tasks order changed (and not just a task check)
+        if (this.initialSort.join() !== user.tasks.tasksSort.join() &&
+            this.initialSort.length === user.tasks.tasksSort.length) {
+                user.GlobalSave();
         }
 
         // Reset tmpLayoutContainer

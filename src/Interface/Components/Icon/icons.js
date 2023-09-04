@@ -35,6 +35,7 @@ import svgSleepZzz from 'Ressources/icons/sleep-zzz';
 import svgSocial from 'Ressources/icons/social';
 import svgSuccess from 'Ressources/icons/success';
 import svgTiktok from 'Ressources/icons/tiktok';
+import svgUndo from 'Ressources/icons/undo';
 import svgUserAdd from 'Ressources/icons/user-add';
 import svgWorld from 'Ressources/icons/world';
 
@@ -79,6 +80,7 @@ const SVGIcons = {
     social: svgSocial,
     success: svgSuccess,
     tiktok: svgTiktok,
+    undo: svgUndo,
     userAdd: svgUserAdd,
     world: svgWorld,
 

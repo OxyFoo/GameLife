@@ -1,9 +1,13 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    parentTask: {
+    parent: {
         height: 32,
         marginTop: 14,
+        overflow: 'hidden'
+    },
+    content: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'

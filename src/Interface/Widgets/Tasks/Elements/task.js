@@ -8,6 +8,7 @@ import langManager from 'Managers/LangManager';
 import { GetDate, GetTime } from 'Utils/Time';
 import { DateToFormatString, GetDay } from 'Utils/Date';
 import { Text, Icon, Button } from 'Interface/Components';
+import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -30,12 +31,17 @@ const TaskProps = {
 
     /**
      * @param {Task} task
-     * @returns {Promise<void>}
+     * @param {(resolve: (cancel: () => void) => void) => void} callbackRemove
+     * @returns {Promise<void>} True to enable remove animation
      */
-    onTaskCheck: async (task) => {}
+    onTaskCheck: async (task, callbackRemove) => {}
 }
 
 class TaskElement extends React.Component {
+    state = {
+        translateY : new Animated.Value(0)
+    }
+
     constructor(props) {
         super(props);
 
@@ -103,23 +109,38 @@ class TaskElement extends React.Component {
     }
 
     onCheck = () => {
+        const { translateY } = this.state;
         const { task, onTaskCheck } = this.props;
-        onTaskCheck(task);
+
+        onTaskCheck(task, (resolve) => {
+            SpringAnimation(translateY, 1).start(() => {
+                resolve(() => {
+                    SpringAnimation(translateY, 0).start();
+                });
+            });
+        });
     }
 
     render() {
+        const { translateY } = this.state;
         const { style, task, onDrag } = this.props;
         if (task === null) return null;
 
         const { Title, Schedule, Checked } = task;
         const isTodo = Schedule.Type === 'none';
 
+        const styleAnimation = {
+            transform: [
+                { translateY: WithInterpolation(translateY, 0, -46) }
+            ]
+        };
         const styleButtonRadius = { borderRadius: isTodo ? 8 : 200 };
         const openTask = () => user.interface.ChangePage('task', { task });
 
         return (
+            <View style={styles.parent}>
             <Animated.View
-                style={[styles.parentTask, style]}
+                style={[styles.content, styleAnimation, style]}
                 pointerEvents={Checked === 0 || !isTodo ? 'auto' : 'none'}
             >
                 <Button
@@ -150,6 +171,7 @@ class TaskElement extends React.Component {
                     <Icon icon='moveVertical' color='main1' />
                 </View>
             </Animated.View>
+            </View>
         );
     }
 }

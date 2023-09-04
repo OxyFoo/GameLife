@@ -14,6 +14,7 @@ import { Container, Button, Text } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
 const TasksProps = {
@@ -56,7 +57,15 @@ class Tasks extends BackTasks {
 
     render() {
         const lang = langManager.curr['tasks'];
-        const { scrollable, tasks, draggedItem, mouseY } = this.state;
+        const {
+            scrollable, tasks,
+            draggedItem, mouseY,
+            undoEnabled
+        } = this.state;
+
+        /** @type {Icons} */
+        const containerIcon = undoEnabled ? 'undo' : 'add';
+        const containerAction = undoEnabled ? this.undo : this.addTask;
 
         return (
             <Container
@@ -64,9 +73,9 @@ class Tasks extends BackTasks {
                 style={this.props.style}
                 styleContainer={styles.tasksContainer}
                 type='static'
-                icon='add'
+                icon={containerIcon}
                 text={lang['container-title']}
-                onIconPress={this.addTask}
+                onIconPress={containerAction}
             >
                 <TaskSelection
                     draggedItem={draggedItem}

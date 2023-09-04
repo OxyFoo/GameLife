@@ -1,4 +1,4 @@
-import { NativeModules, findNodeHandle } from 'react-native';
+import { NativeModules, Platform, findNodeHandle } from 'react-native';
 
 /**
  * @typedef {import('react-native').View} View
@@ -14,6 +14,9 @@ function GetAbsolutePosition(ref) {
     const handle = findNodeHandle(ref);
     return new Promise((resolve, reject) => {
         UIManager.measureInWindow(handle, (x, y, width, height) => {
+            if (Platform.OS === 'ios') {
+                y -= 48;
+            }
             resolve({ x, y, width, height });
         });
     });

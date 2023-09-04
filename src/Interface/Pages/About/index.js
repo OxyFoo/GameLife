@@ -25,7 +25,7 @@ class About extends BackAbout {
             <Page ref={ref => this.refPage = ref} scrollable={false}>
                 <PageHeader
                     style={styles.pageHeader}
-                    onBackPress={user.interface.BackPage}
+                    onBackPress={user.interface.BackHandle}
                     hideHelp
                 />
 

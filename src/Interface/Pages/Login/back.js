@@ -53,6 +53,9 @@ class BackLogin extends PageBack {
         super.componentDidMount();
         this.checkConnection();
     }
+    componentWillUnmount() {
+        user.interface.ResetCustomBackHandler();
+    }
 
     onPressImageIn = () => SpringAnimation(this.state.animImage, .9, true).start();
     onPressImageOut = () => SpringAnimation(this.state.animImage, 1, true).start();
@@ -67,6 +70,7 @@ class BackLogin extends PageBack {
     /**
      * Set signin mode
      * @param {boolean} mode
+     * @returns {false}
      */
     setSigninMode = (mode = false) => {
         const { signinMode, animSignin } = this.state;
@@ -90,6 +94,8 @@ class BackLogin extends PageBack {
             });
             user.interface.ResetCustomBackHandler();
         }
+
+        return false;
     }
 
     onChangeEmail = (newEmail) => {

@@ -27,7 +27,7 @@ class BackActivityTimer extends PageBack {
         super(props);
 
         if (user.activities.currentActivity === null) {
-            user.interface.BackPage();
+            user.interface.BackHandle();
             return;
         }
 
@@ -106,6 +106,7 @@ class BackActivityTimer extends PageBack {
         const title = langManager.curr['activity']['timeralert-cancel-title'];
         const text = langManager.curr['activity']['timeralert-cancel-text'];
         user.interface.popup.Open('yesno', [ title, text ], remove);
+        return false;
     }
     onPressComplete = () => {
         const { skillID, startTime } = user.activities.currentActivity;
@@ -129,7 +130,8 @@ class BackActivityTimer extends PageBack {
     Back = () => {
         clearInterval(this.timer_tick);
         if (user.interface.path.length > 1) {
-            user.interface.BackPage();
+            user.interface.ResetCustomBackHandler();
+            user.interface.BackHandle();
         } else {
             user.interface.ChangePage('calendar');
         }

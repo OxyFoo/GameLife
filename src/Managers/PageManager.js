@@ -69,12 +69,9 @@ class PageManager extends React.Component{
     /** @description Disable changing page while loading */
     changing = false;
 
-    /** @description Disable back button */
-    backable = true;
-
     /**
      * @description Custom back button handler
-     * @type {function?}
+     * @type {() => boolean|null} Return true if back is handled
      */
     customBackHandle = null;
 
@@ -93,11 +90,11 @@ class PageManager extends React.Component{
     /** @type {Console} */      console     = null;
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.backHandle);
+        BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.backHandle);
+        BackHandler.removeEventListener('hardwareBackPress', this.BackHandle);
     }
 
     LoadDefaultPages = async () => {
@@ -117,7 +114,7 @@ class PageManager extends React.Component{
     }
 
     /**
-     * @param {function} handle
+     * @param {() => boolean} handle
      * @returns {boolean} True if handle is set
      */
     SetCustomBackHandler(handle) {
@@ -125,21 +122,26 @@ class PageManager extends React.Component{
             return false;
         }
         this.customBackHandle = handle;
+        return true;
     }
     ResetCustomBackHandler() {
         this.customBackHandle = null;
     }
-    backHandle = () => {
-        if (!this.backable) return false;
+
+    BackHandle = () => {
         if (this.popup.Close()) return true;
+        if (this.screenList.Close()) return true;
+        if (this.screenInput.Close()) return true;
+        if (this.screenTuto.IsOpened()) return true;
 
         if (this.customBackHandle !== null) {
-            this.customBackHandle();
-            return true;
+            if (!this.customBackHandle()) {
+                return true;
+            }
+            this.ResetCustomBackHandler();
         }
 
-        if (this.BackPage()) return true;
-
+        this.BackPage();
         return true;
     }
 
@@ -154,6 +156,7 @@ class PageManager extends React.Component{
     }
 
     /**
+     * @private
      * Try to get last page content
      * @param {boolean} [force=false] If true, try to get back until page is changing
      * @returns {boolean} True if page changed
@@ -210,7 +213,9 @@ class PageManager extends React.Component{
 
         // Page not exist: return false
         if (this.getPageContent(nextpage) === null) {
-            console.warn('error', 'Calling an incorrect page');
+            if (DEBUG_MODE) {
+                console.warn('error', 'Calling an incorrect page');
+            }
             return false;
         };
 
@@ -288,7 +293,7 @@ class PageManager extends React.Component{
                 CACHE_PAGES.persistent[newPage].ref.refPage.Show();
                 CACHE_PAGES.persistent[newPage].ref.componentDidFocused(args);
                 this.setState({ selectedPage: newPage });
-            } else {
+            } else if (DEBUG_MODE) {
                 console.log('Ref undefined (' + newPage + ')');
             }
         } else {
@@ -297,7 +302,7 @@ class PageManager extends React.Component{
                 if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();
                     CACHE_PAGES.temp.ref.componentDidFocused();
-                } else {
+                } else if (DEBUG_MODE) {
                     console.log('Ref undefined (temp)', CACHE_PAGES.temp);
                 }
             });

@@ -66,8 +66,11 @@ class ScreenInput extends React.Component {
     /**
      * Close the screen input
      * @param {boolean} valid If true, the callback is called
+     * @returns {boolean} True if the screen input is closed
      */
     Close = (valid = false) => {
+        if (!this.state.opened) return false;
+
         if (valid) {
             this.state.callback(this.state.text);
         }
@@ -77,6 +80,8 @@ class ScreenInput extends React.Component {
             opened: false,
             callback: () => {}
         });
+
+        return true;
     }
 
     /** @param {GestureResponderEvent} event */

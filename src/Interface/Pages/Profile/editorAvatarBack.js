@@ -112,6 +112,7 @@ class EditorAvatarBack extends React.Component {
 
         SpringAnimation(this.state.editorAnim, 0).start();
         user.interface.ResetCustomBackHandler();
+        return false;
     }
 
     updateEquippedItems = () => {

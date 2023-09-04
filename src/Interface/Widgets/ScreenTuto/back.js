@@ -186,6 +186,10 @@ class ScreenTutoBack extends React.Component {
         this.refZap?.UpdateTarget(position, layout);
     }
 
+    IsOpened = () => {
+        return this.state.visible;
+    }
+
     End = (callback) => {
         clearTimeout(this.hinterval);
         this.setState({ visible: false });

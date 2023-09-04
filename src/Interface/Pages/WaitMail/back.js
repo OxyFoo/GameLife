@@ -69,7 +69,7 @@ class BackWaitmail extends PageBack {
         if (status === 'limitDevice') {
             const title = langManager.curr['login']['alert-limitDevice-title'];
             const text = langManager.curr['login']['alert-limitDevice-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], user.interface.BackPage);
+            user.interface.popup.ForceOpen('ok', [ title, text ], user.interface.BackHandle);
 
             user.settings.email = '';
             user.settings.Save();
@@ -79,7 +79,7 @@ class BackWaitmail extends PageBack {
         else if (status === 'free') {
             user.settings.email = '';
             user.settings.Save();
-            user.interface.BackPage();
+            user.interface.BackHandle();
         }
 
         else if (status === 'newDevice') {

@@ -45,7 +45,7 @@ class Achievements extends BackAchievements {
         return (
             <Page ref={ref => this.refPage = ref} scrollable={false}>
                 <View onLayout={this.onLayout}>
-                    <PageHeader onBackPress={user.interface.BackPage} />
+                    <PageHeader onBackPress={user.interface.BackHandle} />
                 </View>
 
                 <FlatList

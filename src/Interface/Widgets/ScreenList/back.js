@@ -77,8 +77,11 @@ class ScreenListBack extends React.Component {
 
     /**
      * Close the screen list
+     * @returns {boolean} True if closed
      */
     Close = () => {
+        if (!this.state.opened) return false;
+
         TimingAnimation(this.state.anim, 0, 200).start();
         this.setState({
             opened: false,
@@ -88,6 +91,8 @@ class ScreenListBack extends React.Component {
         this.posY = 0;
         SpringAnimation(this.state.positionY, this.posY).start();
         SpringAnimation(this.state.positionFlatlistY, this.posY).start();
+
+        return true;
     }
 
     /** @param {LayoutChangeEvent} event */

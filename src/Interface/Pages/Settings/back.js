@@ -31,7 +31,7 @@ class BackSettings extends PageBack {
         devicesLoading: false
     }
 
-    onBack = () => user.interface.BackPage();
+    onBack = () => user.interface.BackHandle();
     openAbout = () => user.interface.ChangePage('about', undefined, true);
     openReport = () => user.interface.ChangePage('report', undefined, true);
 

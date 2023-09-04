@@ -26,7 +26,7 @@ class BackSkill extends PageBack {
 
         // Property error handling
         if (typeof(props.args) === 'undefined' || !props.args.hasOwnProperty('skillID')) {
-            user.interface.BackPage(true);
+            user.interface.BackHandle();
             return;
         }
 
@@ -52,9 +52,14 @@ class BackSkill extends PageBack {
         // History
         this.history = [];
         this.__updateHIstory();
+    }
 
+    componentDidMount() {
         // Back handler
-        user.interface.SetCustomBackHandler(this.onBackPress);
+        user.interface.SetCustomBackHandler(() => {
+            this.refActivityPanel?.Close();
+            return true;
+        });
     }
 
     __updateHIstory = () => {
@@ -72,19 +77,13 @@ class BackSkill extends PageBack {
                 this.refActivityPanel?.SelectActivity(activity, () => {
                     this.__updateHIstory();
                     const empty = this.history.length === 0;
-                    if (empty) this.onBackPress();
+                    if (empty) user.interface.BackHandle();
                     else       this.forceUpdate();
                 });
             }
 
             return { activity, title, onPress };
         });
-    }
-
-    onBackPress = () => {
-        this.refActivityPanel?.Close();
-        user.interface.BackPage();
-        user.interface.ResetCustomBackHandler();
     }
 
     addActivity = () => {

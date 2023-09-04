@@ -85,7 +85,7 @@ class BackProfile extends PageBack {
         if (this.refAvatar !== null && this.refAvatar.state.editorOpened) {
             this.refAvatar.CloseEditor();
         } else {
-            user.interface.BackPage();
+            user.interface.BackHandle();
         }
     }
 }

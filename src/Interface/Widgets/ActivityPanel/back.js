@@ -62,7 +62,7 @@ class ActivityPanelBack extends React.Component {
             skillID: 0,
             comment: '',
             duration: 60,
-            startTime: GetTime(undefined, 'local'),
+            startTime: GetTime(),
             timezone: GetTimeZone()
         }
     };
@@ -152,7 +152,7 @@ class ActivityPanelBack extends React.Component {
         // Page is render only for activity edition, so we can go back
         // TODO: Useful ?
         //if (this.props.editMode) {
-        //    user.interface.BackPage();
+        //    user.interface.BackHandle();
         //    return;
         //}
 

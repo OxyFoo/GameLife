@@ -67,7 +67,7 @@ class BackTask extends PageBack {
             this.lastRepeatMode = task.Schedule.Type;
 
             if (task === null) {
-                user.interface.BackPage();
+                user.interface.BackHandle();
                 user.interface.console.AddLog('error', 'Task: Task not found');
                 return;
             }
@@ -100,22 +100,29 @@ class BackTask extends PageBack {
         user.interface.SetCustomBackHandler(this.BackHandler);
     }
 
-    BackHandler = () => {
+    /**
+     * @param {boolean} askPopup Show a popup to ask the user if he wants to
+     *                           leave the page when he is editing a task
+     * @returns {boolean}
+     */
+    BackHandler = (askPopup = true) => {
         const { action } = this.state;
-        if (action === 'new' || action === 'edit') {
-            const callback = (btn) => {
-                if (btn === 'yes') {
-                    user.interface.BackPage();
-                }
-            }
-            const title = langManager.curr['task']['alert-back-title'];
-            const text = langManager.curr['task']['alert-back-text'];
-            user.interface.popup.Open('yesno', [ title, text ], callback);
-            return false;
+
+        // Don't show popup or task not edited => leave
+        if (!askPopup || action === 'remove') {
+            return true;
         }
 
-        user.interface.ResetCustomBackHandler();
-        return true;
+        const callback = (btn) => {
+            if (btn === 'yes') {
+                user.interface.ResetCustomBackHandler();
+                user.interface.BackHandle();
+            }
+        }
+        const title = langManager.curr['task']['alert-back-title'];
+        const text = langManager.curr['task']['alert-back-text'];
+        user.interface.popup.Open('yesno', [ title, text ], callback);
+        return false;
     }
 
     onEditTask = () => {
@@ -213,9 +220,9 @@ class BackTask extends PageBack {
         );
 
         if (addition === 'added') {
-            user.LocalSave();
-            user.OnlineSave();
-            user.interface.BackPage();
+            user.GlobalSave();
+            user.interface.ResetCustomBackHandler();
+            user.interface.BackHandle();
         } else if (addition === 'alreadyExist') {
             user.interface.console.AddLog('warn', 'Task: Task already exist');
         }
@@ -249,9 +256,9 @@ class BackTask extends PageBack {
         );
 
         if (edition === 'edited') {
-            user.LocalSave();
-            user.OnlineSave();
-            user.interface.BackPage();
+            user.GlobalSave();
+            user.interface.ResetCustomBackHandler();
+            user.interface.BackHandle();
         } else if (edition === 'notExist') {
             user.interface.console.AddLog('warn', 'Task: Task not exist');
         }
@@ -266,9 +273,9 @@ class BackTask extends PageBack {
             if (btn === 'yes') {
                 const remove = user.tasks.Remove(this.selectedTask);
                 if (remove === 'removed') {
-                    user.LocalSave();
-                    user.OnlineSave();
-                    user.interface.BackPage();
+                    user.GlobalSave();
+                    user.interface.ResetCustomBackHandler();
+                    user.interface.BackHandle();
                 } else if (remove === 'notExist') {
                     user.interface.console.AddLog('warn', 'Task: Task not exist');
                 }

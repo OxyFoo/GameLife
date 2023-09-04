@@ -113,11 +113,12 @@ class TaskElement extends React.Component {
         const { task, onTaskCheck } = this.props;
 
         onTaskCheck(task, (resolve) => {
-            SpringAnimation(translateY, 1).start(() => {
+            SpringAnimation(translateY, 1).start();
+            setTimeout(() => {
                 resolve(() => {
                     SpringAnimation(translateY, 0).start();
                 });
-            });
+            }, 200);
         });
     }
 
@@ -141,7 +142,6 @@ class TaskElement extends React.Component {
             <View style={styles.parent}>
             <Animated.View
                 style={[styles.content, styleAnimation, style]}
-                pointerEvents={Checked === 0 || !isTodo ? 'auto' : 'none'}
             >
                 <Button
                     style={[styles.checkbox, styleButtonRadius]}

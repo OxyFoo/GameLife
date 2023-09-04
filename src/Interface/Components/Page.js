@@ -223,10 +223,11 @@ class Page extends React.Component {
         const position = { transform: [{ translateY: animation }] };
         const backgroundColor = { backgroundColor: themeManager.GetColor('main3') };
         const borderColor = { borderColor: themeManager.GetColor('main1') };
+        const styleOpacity = { opacity: this.state.opacity };
 
         return (
             <Animated.View
-                style={[styles.topOverlay, position, borderColor, backgroundColor]}
+                style={[styles.topOverlay, position, borderColor, backgroundColor, styleOpacity]}
                 pointerEvents={disableEvents ? 'none' : 'auto'}
             >
                 <View style={[styles.topOverlayLine, backgroundColor]} />
@@ -235,8 +236,18 @@ class Page extends React.Component {
         );
     }
 
+    renderOverlay() {
+        const { overlay } = this.props;
+
+        if (this.state.visible === false) {
+            return null;
+        }
+
+        return overlay;
+    }
+
     render() {
-        const { style, isHomePage, overlay, topOffset, bottomOffset, scrollable, disableEvents } = this.props;
+        const { style, isHomePage, topOffset, bottomOffset, scrollable, disableEvents } = this.props;
         const headerHeight = user.interface.header.state.height;
         const valueOffset = isHomePage ? headerHeight : topOffset;
 
@@ -268,7 +279,7 @@ class Page extends React.Component {
                 >
                     {this.props.footer}
                 </Animated.View>
-                {overlay}
+                {this.renderOverlay()}
                 {this.renderTopOverlay()}
             </>
         );

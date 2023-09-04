@@ -11,22 +11,22 @@ import { Button, Text } from 'Interface/Components';
 /**
  * @typedef {import('Interface/Widgets/ScreenList').ScreenListItem} ScreenListItem
  * 
- * @typedef {Object} SelectedActivity
+ * @typedef {Object} SelectedSkill
  * @property {number} id
  * @property {boolean} isCategory
  */
 
-const SectionActivityProps = {
+const SectionSkillProps = {
     onChange: () => {}
 };
 
 class SectionSkill extends React.Component {
     state = {
-        /** @type {SelectedActivity|null} */
+        /** @type {SelectedSkill|null} */
         skill: null
     }
 
-    /** @param {SelectedActivity|null} skill */
+    /** @param {SelectedSkill|null} skill */
     SetSkill = (skill) => {
         this.setState({ skill });
     }
@@ -34,7 +34,7 @@ class SectionSkill extends React.Component {
         return this.state.skill;
     }
 
-    onUnselectActivity = () => {
+    onUnselectSkill = () => {
         this.setState({ skill: null });
         this.props.onChange();
     }
@@ -42,12 +42,12 @@ class SectionSkill extends React.Component {
     onSelectCategory = () => {
         const callback = (id) => {
             if (id === 0) {
-                this.setState({ skill: null });
+                this.onUnselectSkill();
                 return;
             }
 
             setTimeout(() => {
-                this.onSelectActivity(id);
+                this.onSelectSkill(id);
             }, 100);
         };
 
@@ -64,12 +64,12 @@ class SectionSkill extends React.Component {
         user.interface.screenList.Open(title, data, callback);
     }
 
-    onSelectActivity = (categoryID) => {
+    onSelectSkill = (SkillID) => {
         const callback = (id) => {
             this.props.onChange();
 
             if (id === 0) {
-                this.setState({ skill: { id: categoryID, isCategory: true } });
+                this.setState({ skill: { id: SkillID, isCategory: true } });
                 return;
             }
 
@@ -78,13 +78,13 @@ class SectionSkill extends React.Component {
 
         const title = langManager.curr['task']['input-panel-activity'];
         /** @type {Array<ScreenListItem>} */
-        const data = dataManager.skills.GetByCategory(categoryID).map(skill => ({
+        const data = dataManager.skills.GetByCategory(SkillID).map(skill => ({
             id: skill.ID,
             value: dataManager.GetText(skill.Name)
         }));
         data.splice(0, 0, {
             id: 0,
-            value: langManager.curr['task']['input-activity-only'].replace('{}', dataManager.GetText(dataManager.skills.GetCategoryByID(categoryID).Name))
+            value: langManager.curr['task']['input-activity-only'].replace('{}', dataManager.GetText(dataManager.skills.GetCategoryByID(SkillID).Name))
         });
         user.interface.screenList.Open(title, data, callback);
     }
@@ -124,7 +124,7 @@ class SectionSkill extends React.Component {
                         style={styles.smallBtn}
                         fontSize={14}
                         onPress={this.onSelectCategory}
-                        onLongPress={this.onUnselectActivity}
+                        onLongPress={this.onUnselectSkill}
                     >
                         {activityText}
                     </Button>
@@ -134,8 +134,8 @@ class SectionSkill extends React.Component {
     }
 }
 
-SectionSkill.prototype.props = SectionActivityProps;
-SectionSkill.defaultProps = SectionActivityProps;
+SectionSkill.prototype.props = SectionSkillProps;
+SectionSkill.defaultProps = SectionSkillProps;
 
 const styles = StyleSheet.create({
     sectionTitle: {

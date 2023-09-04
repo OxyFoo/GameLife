@@ -28,7 +28,7 @@ const ActivityScheduleProps = {
     /** @type {boolean} If false, disable user edition */
     editable: true,
 
-    /** @type {number} Unix timestamp */
+    /** @type {number} UTC unix timestamp */
     selectedDate: GetTime(),
 
     /** @type {number} Duration in minutes */
@@ -98,27 +98,12 @@ class ActivitySchedule extends React.Component {
 
     /** @param {Date} date UTC date */
     onChangeDateTimePicker = (date) => {
-        const { DTPMode } = this.state;
         this.hideDTP();
 
         const pickedTime = GetTime(date, 'global');
         let newStartTime = this.props.selectedDate;
 
-        // New date, keep time
-        if (DTPMode == 'date') {
-            const pickedTimeLocal = pickedTime - GetTimeZone() * 3600;
-            const date = pickedTimeLocal - (pickedTimeLocal % DAY_SECONDS);
-            const time = newStartTime % DAY_SECONDS;
-            newStartTime = date + time;
-        }
-
-        // New time, keep date
-        else if (DTPMode == 'time') {
-            const date = newStartTime - (newStartTime % DAY_SECONDS);
-            const time = pickedTime % DAY_SECONDS;
-            newStartTime = date + time - GetTimeZone() * 3600;
-        }
-
+        newStartTime = pickedTime - GetTimeZone() * 3600;
         this.props.onChange(newStartTime, this.props.selectedDuration);
     }
 
@@ -131,6 +116,7 @@ class ActivitySchedule extends React.Component {
             transform: [{ translateX: x }, { translateY: animValue }],
             backgroundColor: themeManager.GetColor('backgroundGrey')
         }];
+
         const lang = langManager.curr['other'];
         const selectedDate = GetDate(this.props.selectedDate);
         const textDate = DateToFormatString(selectedDate);
@@ -208,9 +194,10 @@ class ActivitySchedule extends React.Component {
     render() {
         const DATES = langManager.curr['dates']['names'];
         const DAYS = langManager.curr['dates']['days'];
+
         const selectedDate = GetDate(this.props.selectedDate);
         const currDay = DAYS[selectedDate.getDay()];
-        const text = currDay + ' - ' + DateToFormatString(selectedDate);
+        const textDate = DateToFormatString(selectedDate);
         const textTime = DateToFormatTimeString(selectedDate);
 
         const durationFinder = d => d.duration === this.props.selectedDuration;
@@ -232,7 +219,7 @@ class ActivitySchedule extends React.Component {
                                 {DATES['date'] + ': '}
                             </Text>
                             <Text style={styles.text}>
-                                {text}
+                                {currDay + ' - ' + textDate}
                             </Text>
                         </View>
                         <Separator.Horizontal style={{ marginVertical: 4 }} />

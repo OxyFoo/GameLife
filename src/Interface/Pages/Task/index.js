@@ -20,7 +20,7 @@ class Task extends BackTask {
         return (
             <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss}>
                 <PageHeader
-                    onBackPress={() => user.interface.BackPage()}
+                    onBackPress={this.BackHandler}
                 />
 
                 <SectionTitle

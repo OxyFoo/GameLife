@@ -27,8 +27,9 @@ class ShopHeader extends React.Component {
     rewardedShop = null;
 
     componentDidMount() {
-        const updateOx = () => this.setState({ oxAmount: user.informations.ox.Get() });
-        this.oxListener = user.informations.ox.AddListener(updateOx);
+        this.oxListener = user.informations.ox.AddListener((newOx) => {
+            this.setState({ oxAmount: newOx });
+        });
 
         this.rewardedShop = user.admob.Get('rewarded', 'shop', this.onAdStateChange);
     }

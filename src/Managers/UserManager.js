@@ -58,6 +58,9 @@ class UserManager {
         /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
 
+        /** @type {boolean} */
+        this.globalSaving = false;
+
         /** @type {number|null} Calendar: select day => global UTC time */
         this.tempSelectedTime = null;
 
@@ -149,13 +152,19 @@ class UserManager {
      * @returns {Promise<boolean>} True if saved online or locally
      */
     GlobalSave = async () => {
-        const onlineSaved = await this.OnlineSave();
-        if (onlineSaved) return true;
+        if (this.globalSaving) return false;
+        this.globalSaving = true;
+
+        let success = true;
 
         const localSaved = await this.LocalSave();
-        if (localSaved) return true;
+        if (!localSaved) success = false;
 
-        return false;
+        const onlineSaved = localSaved && await this.OnlineSave();
+        if (!onlineSaved) success = false;
+
+        this.globalSaving = false;
+        return success;
     }
 
     /**
@@ -287,6 +296,7 @@ class UserManager {
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);
             if (contains('tasksSort')) this.tasks.tasksSort = data['tasksSort'];
+            if (contains('tasksTotal')) this.tasks.tasksTotal.Set(data['tasksTotal']);
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

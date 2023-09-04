@@ -83,7 +83,7 @@ class Activity extends BackActivity {
             >
                 <PageHeader
                     style={styles.header}
-                    onBackPress={(e) => user.interface.BackPage()}
+                    onBackPress={(e) => user.interface.BackHandle()}
                 />
 
                 {/* Categories */}

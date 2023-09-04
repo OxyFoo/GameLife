@@ -324,6 +324,7 @@
         "row-title": "Informations",
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
+        "row-tasks": "Nombre de tâches",
         "row-time": "Nombre d'heures",
 
         "container-achievements-title": "Derniers succès",
@@ -570,7 +571,9 @@
         "alert-remsubtask-title": "Suppression ?",
         "alert-remsubtask-text": "Êtes-vous sûr de vouloir supprimer cette sous-tâche ?",
         "alert-subtaskslimit-title": "Limite atteinte",
-        "alert-subtaskslimit-text": "Vous ne pouvez pas avoir plus de 20 sous-tâches."
+        "alert-subtaskslimit-text": "Vous ne pouvez pas avoir plus de 20 sous-tâches.",
+        "alert-back-title": "Retour",
+        "alert-back-text": "Voulez-vous revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
     "tasks": {
@@ -579,7 +582,7 @@
         "tasks-empty-button": "En ajouter une",
 
         "task-type-deadline": "Avant le:",
-        "task-type-repeat": "Prochain:",
+        "task-type-repeat-before": "À faire avant le:",
 
         "alert-taskslimit-title": "Limite de tâches atteinte",
         "alert-taskslimit-text": "Vous avez atteint la limite des tâches, veuillez en supprimer certaines pour en ajouter d'autres."

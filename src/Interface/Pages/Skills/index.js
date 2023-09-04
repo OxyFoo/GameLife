@@ -31,7 +31,7 @@ class Skills extends BackSkills {
             <Page ref={ref => this.refPage = ref} scrollable={false}>
 
                 <View onLayout={this.setheight}>
-                    <PageHeader onBackPress={user.interface.BackPage} />
+                    <PageHeader onBackPress={user.interface.BackHandle} />
 
                     <View style={styles.row}>
                         <Input

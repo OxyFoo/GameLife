@@ -28,12 +28,12 @@ const PopupProps = {
 }
 
 class Popup extends React.PureComponent {
-    state = {
-        opened: false,
+    opened = false;
 
+    state = {
         type: null,
         args: null,
-        callback: () => {},
+        callback: (type) => {},
         cancelable: true,
         cross: true,
         x: 0, y: 0,
@@ -52,7 +52,7 @@ class Popup extends React.PureComponent {
      * Open popup after close current one
      */
     ForceOpen = async (type, args, callback, cancelable, cross) => {
-        if (this.state.opened) {
+        if (this.opened) {
             this.Close();
             await Sleep(250);
         }
@@ -69,10 +69,10 @@ class Popup extends React.PureComponent {
      * @returns {Promise<void>} Promise resolved when popup is opened
      */
     async Open(type, args, callback = () => {}, cancelable = true, cross = cancelable) {
-        while (this.state.opened) await Sleep(200);
+        while (this.opened) await Sleep(200);
+        this.opened = true;
 
         this.setState({
-            opened: true,
             type: type,
             args: args,
             callback: callback,
@@ -90,22 +90,20 @@ class Popup extends React.PureComponent {
      * @returns {boolean} True if popup was closed
      */
     Close = (forceClose = true) => {
-        const { opened, cancelable } = this.state;
-        if (opened && (cancelable || forceClose)) {
-            TimingAnimation(this.state.animOpacity, 0, 200).start();
-            TimingAnimation(this.state.animScale, .9, 200).start();
+        const { cancelable } = this.state;
+        if (!this.opened) return false;
+        if (!cancelable && !forceClose) return false;
 
-            setTimeout(() => {
-                this.setState({
-                    opened: false,
-                    type: null,
-                    callback: () => {}
-                });
-            }, 150);
+        TimingAnimation(this.state.animOpacity, 0, 200).start();
+        TimingAnimation(this.state.animScale, .9, 200).start();
 
-            return true;
-        }
-        return false;
+        this.setState({
+            type: null,
+            callback: () => {}
+        });
+
+        this.opened = false;
+        return true;
     }
 
     content_message = () => {
@@ -118,10 +116,10 @@ class Popup extends React.PureComponent {
         const refuse = langManager.curr['modal']['btn-refuse'];
 
         const callback = (type) => {
+            this.Close();
             if (this.state.callback !== null) {
                 this.state.callback(type);
             }
-            this.Close();
         }
 
         let buttons = <Button style={[styles.button, { width: '100%' }]} onPress={() => callback('ok')} color="main1">{ok}</Button>;

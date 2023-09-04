@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { GetDate, GetTime } from 'Utils/Time';
 import { DateToFormatString, GetDay } from 'Utils/Date';
 import { Text, Icon, Button } from 'Interface/Components';
-import { TimingAnimation } from 'Utils/Animations';
+import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -31,15 +31,16 @@ const TaskProps = {
 
     /**
      * @param {Task} task
-     * @returns {Promise<void>}
+     * @param {(resolve: (cancel: () => void) => void) => void} callbackRemove
+     * @returns {Promise<void>} True to enable remove animation
      */
-    onTaskCheck: async (task) => {}
+    onTaskCheck: async (task, callbackRemove) => {}
 }
 
 class TaskElement extends React.Component {
     state = {
-        animOpacity: new Animated.Value(1)
-    };
+        translateY : new Animated.Value(0)
+    }
 
     constructor(props) {
         super(props);
@@ -97,7 +98,7 @@ class TaskElement extends React.Component {
             this.text = lang['task-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
         } else if (deadlineType === 'schedule') {
             const nextDate = GetDate(now + (minDeltaDays * 24 * 60 * 60));
-            this.text = lang['task-type-repeat'] + ' ' + DateToFormatString(nextDate);
+            this.text = lang['task-type-repeat-before'] + ' ' + DateToFormatString(nextDate);
         }
 
         // Define color (red if overdue, orange if today, white otherwise)
@@ -108,38 +109,39 @@ class TaskElement extends React.Component {
     }
 
     onCheck = () => {
-        const { task } = this.props;
-        const { animOpacity } = this.state;
+        const { translateY } = this.state;
+        const { task, onTaskCheck } = this.props;
 
-        const isTodo = task.Schedule.Type === 'none';
-        if (isTodo) {
-            // Check, hide & callback to remove
-            user.tasks.Check(task, GetTime());
-            const callback = () => this.props.onTaskCheck(task);
-            TimingAnimation(animOpacity, 0, 500).start(callback);
-        } else {
-            // Switch check state & callback to edit
-            this.props.onTaskCheck(task);
-        }
+        onTaskCheck(task, (resolve) => {
+            SpringAnimation(translateY, 1).start();
+            setTimeout(() => {
+                resolve(() => {
+                    SpringAnimation(translateY, 0).start();
+                });
+            }, 200);
+        });
     }
 
     render() {
-        const { animOpacity } = this.state;
+        const { translateY } = this.state;
         const { style, task, onDrag } = this.props;
         if (task === null) return null;
 
         const { Title, Schedule, Checked } = task;
         const isTodo = Schedule.Type === 'none';
 
-        const styleContainerOpacity = { opacity: animOpacity };
+        const styleAnimation = {
+            transform: [
+                { translateY: WithInterpolation(translateY, 0, -46) }
+            ]
+        };
         const styleButtonRadius = { borderRadius: isTodo ? 8 : 200 };
-
         const openTask = () => user.interface.ChangePage('task', { task });
 
         return (
+            <View style={styles.parent}>
             <Animated.View
-                style={[styles.parentTask, style, styleContainerOpacity]}
-                pointerEvents={Checked === 0 || !isTodo ? 'auto' : 'none'}
+                style={[styles.content, styleAnimation, style]}
             >
                 <Button
                     style={[styles.checkbox, styleButtonRadius]}
@@ -169,6 +171,7 @@ class TaskElement extends React.Component {
                     <Icon icon='moveVertical' color='main1' />
                 </View>
             </Animated.View>
+            </View>
         );
     }
 }

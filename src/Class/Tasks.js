@@ -75,12 +75,18 @@ class Tasks {
         this.tasksSort = [];
 
         /**
+         * @type {DynamicVar<number>}
+         */
+        this.tasksTotal = new DynamicVar(0);
+
+        /**
          * @type {boolean} True if tasks sort is saved
          */
         this.SAVED_sort = true;
 
         /**
          * @description All tasks (saved and unsaved)
+         * @type {DynamicVar<Array<Task>>}
          */
         this.allTasks = new DynamicVar([]);
 
@@ -96,6 +102,7 @@ class Tasks {
         this.UNSAVED_additions = [];
         this.UNSAVED_deletions = [];
         this.tasksSort = [];
+        this.tasksTotal.Set(0);
         this.SAVED_sort = true;
         this.allTasks.Set([]);
     }
@@ -105,6 +112,7 @@ class Tasks {
         if (contains('additions'))  this.UNSAVED_additions = tasks['additions'];
         if (contains('deletions'))  this.UNSAVED_deletions = tasks['deletions'];
         if (contains('tasksSort'))  this.tasksSort = tasks['tasksSort'];
+        if (contains('tasksTotal')) this.tasksTotal.Set(tasks['tasksTotal']);
         if (contains('sortSaved'))  this.SAVED_sort = tasks['sortSaved'];
         this.allTasks.Set(this.Get());
     }
@@ -120,6 +128,7 @@ class Tasks {
             additions: this.UNSAVED_additions,
             deletions: this.UNSAVED_deletions,
             tasksSort: this.tasksSort,
+            tasksTotal: this.tasksTotal.Get(),
             sortSaved: this.SAVED_sort
         };
         return tasks;
@@ -358,6 +367,14 @@ class Tasks {
     }
 
     /**
+     * @param {Task} task
+     * @returns {boolean} Success of the operation
+     */
+    Uncheck(task) {
+        return this.Check(task, 0);
+    }
+
+    /**
      * Restore last deleted task
      * @returns {boolean} Success of the operation
      */
@@ -373,6 +390,9 @@ class Tasks {
         this.UNSAVED_additions.push(this.lastDeletedTask);
         this.lastDeletedTask = null;
         this.allTasks.Set(this.Get());
+
+        // Save new sort
+        this.SAVED_sort = false;
 
         return true;
     }

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Animated, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 
 import styles from './style';
 import BackTasks from './back';
 import TaskElement from './Elements/task';
 import SubtaskElement from './Elements/subtask';
+import TaskSelection from './Elements/taskSelection';
+
 import langManager from 'Managers/LangManager';
 
 import { Container, Button, Text } from 'Interface/Components';
@@ -12,8 +14,7 @@ import { Container, Button, Text } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {import('Class/Tasks').Task} Task
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
 const TasksProps = {
@@ -24,26 +25,6 @@ const TasksProps = {
 class Tasks extends BackTasks {
     static TaskElement = TaskElement;
     static SubtaskElement = SubtaskElement;
-
-    renderSelection = () => {
-        const { draggedItem, mouseY } = this.state;
-        if (draggedItem === null) return null;
-
-        const translate = {
-            transform: [
-                { translateY: mouseY }
-            ]
-        };
-
-        return (
-            <Animated.View style={[styles.selection, translate]}>
-                <TaskElement
-                    style={{ marginTop: 0 }}
-                    task={draggedItem}
-                />
-            </Animated.View>
-        );
-    }
 
     renderItem = ({ item }) => {
         const { draggedItem } = this.state;
@@ -76,19 +57,31 @@ class Tasks extends BackTasks {
 
     render() {
         const lang = langManager.curr['tasks'];
-        const { scrollable, tasks } = this.state;
+        const {
+            scrollable, tasks,
+            draggedItem, mouseY,
+            undoEnabled
+        } = this.state;
+
+        /** @type {Icons} */
+        const containerIcon = undoEnabled ? 'undo' : 'add';
+        const containerAction = undoEnabled ? this.undo : this.addTask;
 
         return (
             <Container
+                ref={ref => this.refContainer = ref}
                 style={this.props.style}
                 styleContainer={styles.tasksContainer}
                 type='static'
-                icon='add'
+                icon={containerIcon}
                 text={lang['container-title']}
-                onLayout={this.onLayout}
-                onIconPress={this.addTask}
+                onIconPress={containerAction}
             >
-                {this.renderSelection()}
+                <TaskSelection
+                    draggedItem={draggedItem}
+                    mouseY={mouseY}
+                />
+
                 <FlatList
                     ref={ref => this.refFlatlist = ref}
 

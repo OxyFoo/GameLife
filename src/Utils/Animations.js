@@ -34,5 +34,17 @@ function WithFunction(func, steps = 50, max = 1) {
     return { inputRange: inputRange, outputRange: outputRange };
 }
 
-export { TimingAnimation, SpringAnimation, WithFunction };
+/**
+ * @param {Animated.Value} animation Animated value to interpolate (0 to 1)
+ * @param {number} minValue Correspond to inputRange[0]
+ * @param {number} maxValue Correspond to inputRange[1]
+ */
+function WithInterpolation(animation, minValue, maxValue) {
+    return animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [minValue, maxValue]
+    });
+}
+
+export { TimingAnimation, SpringAnimation, WithFunction, WithInterpolation };
 export default () => {};

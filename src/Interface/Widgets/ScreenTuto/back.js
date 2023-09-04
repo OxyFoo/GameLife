@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 
-import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
-import { GetAbsolutePosition } from './utils';
 import { Sleep } from 'Utils/Functions';
+import { GetAbsolutePosition } from 'Utils/UI';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('Interface/Components/Zap').default} Zap
@@ -184,6 +184,10 @@ class ScreenTutoBack extends React.Component {
 
         // Zap position
         this.refZap?.UpdateTarget(position, layout);
+    }
+
+    IsOpened = () => {
+        return this.state.visible;
     }
 
     End = (callback) => {

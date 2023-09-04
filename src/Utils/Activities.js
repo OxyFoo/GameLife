@@ -151,7 +151,7 @@ function RemActivity(callback) {
 
 function Back() {
     if (user.interface.path.length > 1) {
-        user.interface.BackPage();
+        user.interface.BackHandle();
     } else {
         user.interface.ChangePage('calendar');
     }

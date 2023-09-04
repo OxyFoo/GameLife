@@ -38,7 +38,7 @@ class BackReport extends PageBack {
         this.refreshRemainPoints();
     }
 
-    back = user.interface.BackPage;
+    back = user.interface.BackHandle;
     info = () => {
         const title = langManager.curr['report']['alert-buginfo-title'];
         const text = langManager.curr['report']['alert-buginfo-text'];
@@ -133,7 +133,7 @@ class BackReport extends PageBack {
         if (sendSuccessfully) {
             const title = langManager.curr['report']['alert-success-title'];
             const text = langManager.curr['report']['alert-success-text'];
-            user.interface.popup.Open('ok', [ title, text ], user.interface.BackPage, false);
+            user.interface.popup.Open('ok', [ title, text ], user.interface.BackHandle, false);
         } else {
             const title = langManager.curr['report']['alert-error-title'];
             const text = langManager.curr['report']['alert-error-text'];

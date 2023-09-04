@@ -12,7 +12,7 @@ import { Page, Text, XPBar, Container } from 'Interface/Components';
 import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from 'Interface/Widgets';
 
 class Profile extends BackProfile {
-    renderRow(title, value) {
+    DataRow({ title = '', value = ''}) {
         const lang = langManager.curr['profile'];
         const rowStyle = [ styles.tableRow, { borderColor: themeManager.GetColor('main1') } ];
         const cellStyle = [ styles.cell, { borderColor: themeManager.GetColor('main1') } ];
@@ -36,6 +36,7 @@ class Profile extends BackProfile {
     }
 
     render() {
+        const { DataRow } = this;
         const { editorOpened, xpInfo } = this.state;
         const lang = langManager.curr['profile'];
         const langDates = langManager.curr['dates']['names'];
@@ -86,9 +87,22 @@ class Profile extends BackProfile {
                     color='main1'
                     backgroundColor='backgroundCard'
                 >
-                    {this.renderRow('row-since', this.playTime + ' ' + (this.playTime <= 1 ? langDates['day'] : langDates['days']))}
-                    {this.renderRow('row-activities', this.totalActivityLength)}
-                    {this.renderRow('row-time', this.totalActivityTime)}
+                    <DataRow
+                        title='row-since'
+                        value={this.playTime + ' ' + (this.playTime <= 1 ? langDates['day'] : langDates['days'])}
+                    />
+                    <DataRow
+                        title='row-activities'
+                        value={this.totalActivityLength.toString()}
+                    />
+                    <DataRow
+                        title='row-tasks'
+                        value={this.totalTasks.toString()}
+                    />
+                    <DataRow
+                        title='row-time'
+                        value={this.totalActivityTime.toString()}
+                    />
                 </Container>
 
                 <View style={{ paddingHorizontal: 12 }}>

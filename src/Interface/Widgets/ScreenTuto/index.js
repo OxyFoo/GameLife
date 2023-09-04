@@ -3,11 +3,11 @@ import { Animated, View } from 'react-native';
 
 import styles from './style';
 import ScreenTutoBack from './back';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import FadeInText from './fadeInText';
 import { Button, Text, Zap } from 'Interface/Components';
-import langManager from 'Managers/LangManager';
 
 class ScreenTuto extends ScreenTutoBack {
     renderTopPanel() {

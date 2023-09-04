@@ -64,7 +64,7 @@ class Skill extends BackSkill {
                 overlay={this.renderActivity()}
                 footer={this.renderFooter()}
             >
-                <PageHeader onBackPress={this.onBackPress} hideHelp />
+                <PageHeader onBackPress={user.interface.BackHandle} hideHelp />
 
                 {/* Skill name and icon */}
                 <View style={styles.skillContainer}>

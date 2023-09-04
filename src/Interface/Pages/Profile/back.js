@@ -20,6 +20,7 @@ class BackProfile extends PageBack {
         const activities = user.activities.Get();
         this.totalActivityLength = activities.length;
         this.totalActivityTime = this.getTotalDuration(activities);
+        this.totalTasks = user.tasks.tasksTotal.Get();
         this.playTime = this.getTimeFromFirst(activities);
 
         /** @type {EditorAvatar} */
@@ -84,7 +85,7 @@ class BackProfile extends PageBack {
         if (this.refAvatar !== null && this.refAvatar.state.editorOpened) {
             this.refAvatar.CloseEditor();
         } else {
-            user.interface.BackPage();
+            user.interface.BackHandle();
         }
     }
 }

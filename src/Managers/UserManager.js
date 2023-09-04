@@ -10,7 +10,6 @@ import Server from 'Class/Server';
 import Settings from 'Class/Settings';
 import Tasks from 'Class/Tasks';
 
-import { Sleep } from 'Utils/Functions';
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
 const DEBUG_DATA = false;
@@ -153,7 +152,7 @@ class UserManager {
      * @returns {Promise<boolean>} True if saved online or locally
      */
     GlobalSave = async () => {
-        while (this.globalSaving) Sleep(100);
+        if (this.globalSaving) return false;
         this.globalSaving = true;
 
         let success = true;

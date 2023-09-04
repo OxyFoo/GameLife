@@ -582,7 +582,7 @@
         "tasks-empty-button": "Add a task",
 
         "task-type-deadline": "Ends on:",
-        "task-type-repeat": "Next repetition:",
+        "task-type-repeat-before": "To be done before:",
 
         "alert-taskslimit-title": "Limit reached",
         "alert-taskslimit-text": "You have reached the limit of tasks, please delete some of them to add more."

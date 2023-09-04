@@ -98,7 +98,7 @@ class TaskElement extends React.Component {
             this.text = lang['task-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
         } else if (deadlineType === 'schedule') {
             const nextDate = GetDate(now + (minDeltaDays * 24 * 60 * 60));
-            this.text = lang['task-type-repeat'] + ' ' + DateToFormatString(nextDate);
+            this.text = lang['task-type-repeat-before'] + ' ' + DateToFormatString(nextDate);
         }
 
         // Define color (red if overdue, orange if today, white otherwise)

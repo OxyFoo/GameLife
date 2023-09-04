@@ -582,7 +582,7 @@
         "tasks-empty-button": "En ajouter une",
 
         "task-type-deadline": "Avant le:",
-        "task-type-repeat": "Prochain:",
+        "task-type-repeat-before": "À faire avant le:",
 
         "alert-taskslimit-title": "Limite de tâches atteinte",
         "alert-taskslimit-text": "Vous avez atteint la limite des tâches, veuillez en supprimer certaines pour en ajouter d'autres."

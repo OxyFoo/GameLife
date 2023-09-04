@@ -367,6 +367,14 @@ class Tasks {
     }
 
     /**
+     * @param {Task} task
+     * @returns {boolean} Success of the operation
+     */
+    Uncheck(task) {
+        return this.Check(task, 0);
+    }
+
+    /**
      * Restore last deleted task
      * @returns {boolean} Success of the operation
      */

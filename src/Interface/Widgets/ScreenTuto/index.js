@@ -60,7 +60,7 @@ class ScreenTuto extends ScreenTutoBack {
         const { component, message } = this.state;
         if (component.ref === null) return null;
 
-        const lang = langManager.curr['other'];
+        const lang = langManager.curr['tuto']['other'];
         const styleOverlay = {
             top: component.position.y,
             left: component.position.x,
@@ -82,7 +82,7 @@ class ScreenTuto extends ScreenTutoBack {
                 >
                     <Animated.View style={[styles.overlayButton, styleOverlayHint]}>
                         <Text containerStyle={styles.hintContainer} style={styles.hint}>
-                            {lang['tuto-press']}
+                            {lang['press']}
                         </Text>
                     </Animated.View>
                 </Button>
@@ -94,7 +94,7 @@ class ScreenTuto extends ScreenTutoBack {
         const { component, showButton } = this.state;
         if (component.ref !== null && !showButton) return null;
 
-        const lang = langManager.curr['other'];
+        const lang = langManager.curr['tuto']['other'];
 
         return (
             <Animated.View style={styles.defaultButtonContainer}>
@@ -104,7 +104,7 @@ class ScreenTuto extends ScreenTutoBack {
                     borderRadius={4}
                     onPress={this.onComponentPress}
                 >
-                    {lang['tuto-button']}
+                    {lang['button']}
                 </Button>
             </Animated.View>
         );
@@ -136,6 +136,21 @@ class ScreenTuto extends ScreenTutoBack {
         );
     }
 
+    renderSkipButton() {
+        const lang = langManager.curr['tuto']['other'];
+
+        return (
+            <Button
+                style={styles.skipButton}
+                color='transparent'
+                colorText='main1'
+                onPress={this.onSkipPress}
+            >
+                {lang['skip']}
+            </Button>
+        );
+    }
+
     render() {
         const { visible } = this.state;
         if (!visible) return null;
@@ -151,6 +166,8 @@ class ScreenTuto extends ScreenTutoBack {
 
                 <Zap ref={ref => this.refZap = ref } />
                 {this.renderZapMessage()}
+
+                {this.renderSkipButton()}
 
                 {this.renderOverlay()}
                 {this.renderDefaultButton()}

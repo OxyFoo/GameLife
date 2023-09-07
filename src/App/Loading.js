@@ -124,9 +124,16 @@ async function LoadData(nextStep) {
     nextStep();
     await Sleep(1500);
 
+    // Start tutorial
+    let homeProps = {};
+    if (!user.settings.tutoFinished) {
+        homeProps = { tuto: 1 };
+        user.settings.tutoFinished = true;
+        user.settings.Save();
+    }
+
     if (user.activities.currentActivity === null) {
-        const args = !user.settings.tutoFinished ? { tuto: 1 } : {};
-        while (!user.interface.ChangePage('home', args)) await Sleep(100);
+        while (!user.interface.ChangePage('home', homeProps)) await Sleep(100);
     } else {
         while (!user.interface.ChangePage('activitytimer', undefined, true)) await Sleep(100);
     }

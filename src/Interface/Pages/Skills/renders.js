@@ -23,10 +23,6 @@ import { Text, Button, IconCheckable, Icon } from 'Interface/Components';
 function renderCategory({ item }) {
     const { ID, LogoID } = item;
 
-    if (ID === 0) {
-        return <View style={{ width: 44, height: 44 }} />;
-    }
-
     const checked = this.state.selectedCategories.includes(ID);
     const icon = dataManager.skills.GetXmlByLogoID(LogoID);
 
@@ -51,8 +47,8 @@ function renderSkill({ item }) {
     const { ID, Logo, Name, experience } = item;
 
     const xpLang = langManager.curr['level'];
-    const { lvl, xp, lastTime } = experience;
-    const text = `${xpLang['level']} ${lvl}, ${xp} ${xpLang['xp']}`;
+    const { lvl, lastTime } = experience;
+    const text = `${xpLang['level']} ${lvl}`;
     const last = DateToFormatString(GetDate(lastTime));
     const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
 
@@ -68,8 +64,8 @@ function renderSkill({ item }) {
 
             <View style={styles.skillContent}>
                 <Text style={styles.skillTitle} fontSize={24}>{Name}</Text>
-                <Text style={styles.skillText} color='secondary'>{text}</Text>
-                <Text style={styles.skillText} color='secondary'>{last}</Text>
+                <Text style={styles.skillText}>{text}</Text>
+                <Text style={styles.skillText}>{last}</Text>
             </View>
         </TouchableOpacity>
     );

@@ -6,6 +6,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import StartHelp from './help';
 import EditorAvatar from './editorAvatar';
 import EditorProfile from './editorProfile';
 import { Page, Text, XPBar, Container } from 'Interface/Components';
@@ -54,6 +55,7 @@ class Profile extends BackProfile {
                 <PageHeader
                     style={{ marginBottom: 12 }}
                     onBackPress={this.onBack}
+                    onHelpPress={StartHelp.bind(this)}
                 />
 
                 <Animated.View style={headerOpacity} pointerEvents={headerPointer}>

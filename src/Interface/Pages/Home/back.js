@@ -1,6 +1,7 @@
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
+import StartTutorial from './tuto';
 import { Round } from 'Utils/Functions';
 
 class BackHome extends PageBack {
@@ -14,6 +15,7 @@ class BackHome extends PageBack {
 
     refTuto1 = null;
     refTuto2 = null;
+    refTuto3 = null;
 
     componentDidMount() {
         super.componentDidMount();
@@ -24,27 +26,7 @@ class BackHome extends PageBack {
         );
     }
     componentDidFocused = (args) => {
-        if (args?.tuto === 1) {
-            user.interface.screenTuto.ShowSequence([
-                { component: null, text: "Salut ! J'espère que tu vas bien. Je vais te présenter l'applications, suis-moi !" },
-                { component: user.interface.header.refContainer, text: "En haut a droite, tu peux y voir ton avatar sur lequel tu peux cliquer pour aller voir ton profil", showButton: false }
-            ], () => {
-                user.interface.ChangePage('profile', { tuto: 2 }, true);
-            });
-        }
-        else if (args?.tuto === 3) {
-            user.interface.screenTuto.ShowSequence([
-                { component: this.refTuto1, text: "Voici les actualités, on commence par une citation choisie par la communauté et des news concernant l'application" },
-                { component: this.refTuto2, text: "Ce bouton sert à ajouter les activités que tu fais dans la vraie vie" },
-                { component: user.interface.bottomBar.refButtons[2], text: "Ce bouton aussi te permet d'ajouter une activité, appuie dessus pour essayer", showButton: false }
-            ], () => {
-                user.interface.ChangePage('activity', { tuto: 4 }, true);
-            });
-        }
-        else if (args?.tuto === 5) {
-            user.settings.tutoFinished = true;
-            user.settings.Save();
-        }
+        StartTutorial.call(this, args?.tuto);
     }
 
     componentWillUnmount() {

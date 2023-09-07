@@ -8,8 +8,7 @@ import SectionSkill from './Sections/activity';
 import SectionSchedule from './Sections/schedule';
 import SectionSubtasks from './Sections/subtasks';
 
-import user from 'Managers/UserManager';
-
+import StartHelp from './help';
 import { PageHeader } from 'Interface/Widgets';
 import { Button, Page } from 'Interface/Components';
 
@@ -20,7 +19,8 @@ class Task extends BackTask {
         return (
             <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss}>
                 <PageHeader
-                    onBackPress={this.BackHandler}
+                    onBackPress={() => this.BackHandler()}
+                    onHelpPress={StartHelp.bind(this)}
                 />
 
                 <SectionTitle

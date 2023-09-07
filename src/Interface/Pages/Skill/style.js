@@ -33,9 +33,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         marginBottom: 24
     },
-    levelText: {
-        marginBottom: 6,
-        textAlign: 'left'
+    level: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+
+        marginBottom: 6
     },
     creator: {
         marginTop: 12,

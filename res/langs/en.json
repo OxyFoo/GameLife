@@ -595,13 +595,75 @@
         "wait-email-send": "Mail sent !"
     },
 
+    "tuto": {
+        "main": {
+            "home-1": "Hi! I hope you're well. I'm going to introduce you to the applications, follow me!",
+            "home-2": "At the top right you can see your avatar, which you can click on to see your profile",
+
+            "profile-1": "This is your profile, where you can modify your personal information",
+            "profile-2": "This is your avatar, you can click on it to change your appearance",
+
+            "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
+            "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",
+            "home-5": "This button also lets you add an activity, so press it to try it out",
+
+            "activity-1": "You can filter activities by category: {}",
+            "activity-2": "You can select an activity here to open the activity panel",
+
+            "home-6": "You can also add tasks, to add activities more quickly, or follow personal goals",
+            "home-7": "Come here, let's take a look at the calendar",
+
+            "calendar-1": "This is where all your activities will appear, you can select them to view their details and edit them.",
+            "calendar-2": "You can select another day or navigate between weeks with the arrows",
+            "calendar-3": "And you can click here to display the month calendar",
+            "calendar-4": "Finally, let's go and see the store!",
+
+            "shop-1": "At the top you can enter a code to get rewardsWatch an ad to earn Ox for free (Ox are the app's virtual currency)\nAnd buy Ox with money (this page will be available in future updates!)",
+            "shop-2": "You can spend your Ox here to buy titles, which you can select in your profile to display next to your nickname",
+            "shop-3": "And here you can buy items to personalize your avatar, which you can equip in your profile!",
+            "shop-4": "Finally you can modify items you already have, it's cheaper than buying new ones!",
+
+            "home-8": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
+        },
+
+        "achievements": {
+            "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."
+        },
+
+        "activity": {
+            "1": "You can filter activities by category: {}",
+            "2": "You can select an activity here to open the activity panel",
+
+            "3": "You can choose to add an activity you've done or plan to do later, or you can set a timer to start the activity now",
+            "4": "You can click on this component to define the start and duration of the activity",
+            "5": "Here you can see the experience you'll gain by doing this activity",
+            "6": "You can add a comment to your activity, for example, to record your feelings or to note important information"
+        },
+
+        "profile": {
+            "1": "This is your profile, you can change your personal information here",
+            "2": "This is your avatar, you can click on it to change your appearance"
+        },
+
+        "task": {
+            "1": "Here you can set the deadline for your task, or its frequency if it's a recurring one",
+            "2": "You can link your task to an activity, which will allow you to gain experience by completing it.",
+            "3": "You can also add sub-tasks to your main task, to organize yourself better.",
+            "4": "Finally, you can add a comment to your task, for example, to note your feelings or to record important information."
+        },
+
+        "other": {
+            "skip": "Skip",
+            "press": "Press",
+            "button": "Next"
+        }
+    },
+
     "other": {
         "widget-button-editTime": "Change",
         "widget-achievements-all": "All achievements",
         "widget-skills-all": "All skills",
         "sexe-male": "♂",
-        "sexe-female": "♀",
-        "tuto-press": "Press",
-        "tuto-button": "Next"
+        "sexe-female": "♀"
     }
 }

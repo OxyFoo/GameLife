@@ -2,12 +2,13 @@ import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
-import { SortByKey } from 'Utils/Functions';
+
 import { GetTime } from 'Utils/Time';
+import { SortByKey } from 'Utils/Functions';
 
 class BackSkills extends PageBack {
     sortList = langManager.curr['skills']['top-sort-list'];
-    allSkills = this.getAllSkills();
+    refSkills = null;
 
     state = {
         height: '40%', // Start approximately at 40% of the screen height
@@ -21,7 +22,11 @@ class BackSkills extends PageBack {
     componentDidMount() {
         super.componentDidMount();
 
+        // Get all skills
+        this.allSkills = this.getAllSkills();
         this.refreshSkills();
+
+        // Listen to activities changes
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.allSkills = this.getAllSkills();
             this.refreshSkills();
@@ -33,20 +38,21 @@ class BackSkills extends PageBack {
 
     setheight = (event) => this.setState({ height: event.nativeEvent.layout.height + 24 });
 
+    upgradeSkill = (skill) => ({
+        ...skill,
+        Name: dataManager.GetText(skill.Name),
+        Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+        experience: user.experience.GetSkillExperience(skill.ID)
+    });
+
     /** @returns {Skill[]} All skills with their Name, Logo & experience */
-    getAllSkills() {
+    getAllSkills = () => {
         const now = GetTime();
         const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
         const filter = skill => usersActivitiesID.includes(skill.ID);
-        const getInfos = skill => ({
-            ...skill,
-            Name: dataManager.GetText(skill.Name),
-            Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-            experience: user.experience.GetSkillExperience(skill.ID)
-        });
         const allSkills = dataManager.skills.skills.filter(filter);
-        return allSkills.map(getInfos);
+        return allSkills.map(this.upgradeSkill);
     }
 
     addActivity = () => { user.interface.ChangePage('activity', undefined, true); }
@@ -85,6 +91,31 @@ class BackSkills extends PageBack {
             newSkills = newSkills.filter(filter);
         }
 
+        // Get recent skills
+        if (selectedCategories.includes(0)) {
+
+            let recentSkills = [];
+            const now = GetTime(undefined, 'local');
+            const usersActivities = user.activities
+                .Get()
+                .filter(activity => activity.startTime <= now)
+                .sort((a, b) => b.startTime - a.startTime);
+            for (const activity of usersActivities) {
+                const skill = dataManager.skills.GetByID(activity.skillID);
+                if (!recentSkills.includes(skill.ID)) {
+                    recentSkills.push(skill.ID);
+                    if (recentSkills.length >= 10) {
+                        break;
+                    }
+                }
+            }
+            recentSkills = recentSkills
+                .map(skillID => dataManager.skills.GetByID(skillID))
+                .map(this.upgradeSkill);
+
+            newSkills.push(...recentSkills);
+        }
+
         // Search filter
         if (search !== '') {
             const filter = skill => {
@@ -117,6 +148,7 @@ class BackSkills extends PageBack {
             newSkills = newSkills.reverse();
         }
 
+        this.refSkills.scrollToOffset({ offset: 0, animated: true });
         this.setState({ skills: newSkills });
     }
 

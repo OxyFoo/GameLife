@@ -11,10 +11,20 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Components/Zap').default} Zap
  * 
  * @typedef {object} TutoElement
- * @property {React.Component|null} component Component to display (null to hide all the screen)
+ * @property {React.Component|null} component Ref of component to display (null to hide all the screen)
  * @property {string} text Text to display
+ * @property {() => void|Promise<void>|null} [execBefore=null] Function to execute before showing the element
+ * @property {() => boolean|Promise<boolean>|null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
  */
+
+const DEFAULT_TUTO_ELEMENT = {
+    component: null,
+    text: 'Empty',
+    execBefore: null,
+    execAfter: null,
+    showButton: true
+};
 
 const ScreenTutoProps = {
 }
@@ -55,38 +65,82 @@ class ScreenTutoBack extends React.Component {
     }
 
     onComponentPress = (value) => {}
+    onSkipPress = () => {}
+
+    setStateSync = (state) => new Promise(resolve => this.setState(state, () => resolve()));
 
     /**
      * @param {TutoElement[]} sequence
-     * @param {() => void|null} callback
      * @returns {Promise<void>}
      */
-    ShowSequence = async (sequence, callback) => {
+    ShowTutorial = async (sequence) => {
         for (let i = 0; i < sequence.length; i++) {
-            const { component, text, showButton } = sequence[i];
+            /** @type {TutoElement} */
+            const element = { ...DEFAULT_TUTO_ELEMENT, ...sequence[i] };
+            const { execBefore, execAfter } = element;
 
+            // Before
+            if (execBefore !== null) {
+                await this.setStateSync({
+                    component: { ...this.state.component, ref: null }
+                });
+                await execBefore();
+            }
+
+            // Show the tutorial element
+            let skip = false;
             await new Promise(resolve => {
                 this.onComponentPress = resolve;
-                this.Show(component, text, showButton, null);
+                this.onSkipPress = () => { skip = true; resolve(); };
+                this.Show(element);
             });
+
+
+            // After
+            const newState = {
+                component: { ...this.state.component, ref: null }
+            };
+
+            if (skip) {
+                clearTimeout(this.hinterval);
+                newState['visible'] = false;
+            }
+
+            if (execAfter !== null) {
+                // Close the tutorial (& execute execAfter)
+                const close = await execAfter();
+                if (close || skip) {
+                    clearTimeout(this.hinterval);
+                    newState['visible'] = false;
+                }
+            }
+            else if (i === sequence.length - 1) {
+                clearTimeout(this.hinterval);
+                newState['visible'] = false;
+            }
+
+            await this.setStateSync(newState);
+            if (skip) break;
         }
-        this.End(callback);
     }
 
     /**
-     * @param {React.Component|null} ref
-     * @param {string} text
-     * @param {boolean} showButton
-     * @param {() => void|null} callback
+     * @private
+     * @param {TutoElement} element
+     * @returns {Promise<void>}
      */
-    Show = async (ref, text, showButton = true, callback = null) => {
-        let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight / 2, width: 0, height: 0 };
+    Show = async (element) => {
+        let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight * 2 / 3, width: 0, height: 0 };
 
-        if (ref !== null) {
-            position = await GetAbsolutePosition(ref);
-            while (position.width === 0 || position.height === 0) {
-                position = await GetAbsolutePosition(ref);
-                await Sleep(100);
+        const { component, text, showButton } = element;
+
+        let error = false;
+        if (component !== null) {
+            const pos = await GetAbsolutePosition(component);
+            if (!pos.width || !pos.height) {
+                error = true;
+            } else {
+                position = pos;
             }
         }
 
@@ -98,7 +152,7 @@ class ScreenTutoBack extends React.Component {
             showButton: showButton,
             component: {
                 ...this.state.component,
-                ref: ref,
+                ref: error ? null : component,
                 position: {
                     x: position.x,
                     y: position.y
@@ -128,10 +182,6 @@ class ScreenTutoBack extends React.Component {
             hintOpacity = hintOpacity === 0 ? 1 : 0;
             TimingAnimation(message.hintOpacity, hintOpacity, 1000).start();
         }, 5000);
-
-        if (callback !== null) {
-            this.onComponentPress = this.End.bind(this, callback);
-        }
     }
 
     UpdatePositions = async (layout = this.lastMessageLayout) => {
@@ -188,14 +238,6 @@ class ScreenTutoBack extends React.Component {
 
     IsOpened = () => {
         return this.state.visible;
-    }
-
-    End = (callback) => {
-        clearTimeout(this.hinterval);
-        this.setState({ visible: false });
-        if (callback) {
-            callback();
-        }
     }
 }
 

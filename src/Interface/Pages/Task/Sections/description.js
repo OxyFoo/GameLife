@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -16,6 +16,8 @@ class SectionDescription extends React.Component {
         /** @type {string} */
         description: ''
     }
+
+    refHelp1 = null;
 
     /** @param {string} description */
     SetDescription = (description) => {
@@ -61,6 +63,7 @@ class SectionDescription extends React.Component {
         if (description === '') {
             return (
                 <Button
+                    ref={ref => this.refHelp1 = ref}
                     style={styles.comButton}
                     onPress={this.onAddComment}
                     color='main1'
@@ -72,7 +75,7 @@ class SectionDescription extends React.Component {
         }
 
         return (
-            <>
+            <View ref={ref => this.refHelp1 = ref}>
                 {/* Comment title */}
                 <Text style={styles.sectionTitle} fontSize={22}>{lang['title-commentary']}</Text>
 
@@ -85,7 +88,7 @@ class SectionDescription extends React.Component {
                 >
                     <Text style={styles.commentText}>{description}</Text>
                 </TouchableOpacity>
-            </>
+            </View>
         );
     }
 }

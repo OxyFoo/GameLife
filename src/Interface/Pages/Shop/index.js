@@ -39,11 +39,11 @@ class Shop extends BackShop {
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-                <ShopHeader />
+                <ShopHeader refContainer={this.refTuto1} />
 
-                <ShopTitles />
-                <ShopItems />
-                <ShopDyes />
+                <ShopTitles ref={ref => this.refTuto2 = ref} />
+                <ShopItems  ref={ref => this.refTuto3 = ref} />
+                <ShopDyes   ref={ref => this.refTuto4 = ref} />
             </Page>
         );
     }

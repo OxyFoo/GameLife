@@ -5,6 +5,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import StartTutorial from './tuto';
 import { GetTime } from 'Utils/Time';
 import { Sleep } from 'Utils/Functions';
 import { PageBack } from 'Interface/Components';
@@ -64,8 +65,6 @@ class BackActivity extends PageBack {
         backgroundColor: themeManager.GetColor('backgroundCard')
     };
 
-    disableEvents = false;
-
     constructor(props) {
         super(props);
 
@@ -91,14 +90,11 @@ class BackActivity extends PageBack {
             const skill = dataManager.skills.GetByID(activity.skillID);
             this.state.selectedCategory = skill?.CategoryID || null;
         }
-
-        // Disable touch events for tuto
-        if (this.props.args?.tuto === 4) {
-            this.disableEvents = true;
-        }
     }
 
     async componentDidMount() {
+        super.componentDidMount();
+
         // Wait for the layout to be calculated
         while (this.state.topPanelOffset === 0 || !this.refActivityPanel?.state.loaded) {
             await Sleep(100);
@@ -131,16 +127,10 @@ class BackActivity extends PageBack {
         } else if (user.tempSelectedTime !== null) {
             this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
         }
+    }
 
-        // Tutorial
-        if (this.props.args?.tuto === 4) {
-            user.interface.screenTuto.ShowSequence([
-                { component: this.refTuto1, text: "Tu peux filtrer les activités par catégorie" },
-                { component: this.refActivities, text: "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités" }
-            ], async () => {
-                user.interface.ChangePage('home', { tuto: 5 }, true);
-            });
-        }
+    componentDidFocused = (args) => {
+        StartTutorial.call(this, this.props.args?.tuto);
     }
 
     /** @param {LayoutChangeEvent} event */

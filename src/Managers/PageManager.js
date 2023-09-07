@@ -363,6 +363,19 @@ class PageManager extends React.Component{
         return <Page key={key} args={args} ref={setRef} />;
     }
 
+    /**
+     * @returns {PageBack|null}
+     */
+    GetCurrentPage = () => {
+        const { selectedPage } = this.state;
+        if (selectedPage === '') return null;
+
+        if (Object.keys(CACHE_PAGES.persistent).includes(selectedPage)) {
+            return CACHE_PAGES.persistent[selectedPage]?.ref;
+        }
+        return CACHE_PAGES.temp?.ref;
+    }
+
     render() {
         const { animTheme } = this.state;
 

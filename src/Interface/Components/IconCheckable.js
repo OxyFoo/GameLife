@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import themeManager from 'Managers/ThemeManager';
-
 import Icon from './Icon';
 import { Button } from 'Interface/Components';
 import { IsUndefined } from 'Utils/Functions';
@@ -76,10 +74,8 @@ class IconCheckable extends React.Component {
     render() {
         const { style, colorOn, colorOff, xml, size } = this.props;
 
-        const hexOn = themeManager.GetColor(colorOn);
-        const hexOff = themeManager.GetColor(colorOff);
-        const iconColor = this.state.checked ? hexOff : hexOn;
-        const backgroundColor = this.state.checked ? hexOn : hexOff;
+        const iconColor = this.state.checked ? colorOff : colorOn;
+        const backgroundColor = this.state.checked ? colorOn : colorOff;
 
         const padding = 6;
         const btnSize = size + padding*2;

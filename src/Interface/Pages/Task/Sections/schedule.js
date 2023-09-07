@@ -42,6 +42,8 @@ class SectionSchedule extends React.Component {
     /** @type {TextSwitch|null} */
     refTextSwitch = null;
 
+    refHelp1 = null;
+
     /** @param {number} index */
     switchMode = (index) => {
         if (index < 0 || index > 2) return;
@@ -212,7 +214,10 @@ class SectionSchedule extends React.Component {
         return (
             <>
                 <Text style={styles.sectionTitle} fontSize={22}>{lang['title-schedule']}</Text>
-                <View style={[backgroundColor, styles.schedulePanel]}>
+                <View
+                    ref={ref => this.refHelp1 = ref}
+                    style={[backgroundColor, styles.schedulePanel]}
+                >
                     <View style={[styles.row, { marginBottom: 12 }]}>
                         <Text>{lang['input-deadline-title']}</Text>
                         <Button

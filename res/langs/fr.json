@@ -595,13 +595,75 @@
         "wait-email-send": "Mail envoyé !"
     },
 
+    "tuto": {
+        "main": {
+            "home-1": "Salut ! J'espère que tu vas bien. Je vais te présenter l'applications, suis-moi !",
+            "home-2": "En haut a droite tu peux voir ton avatar, sur lequel tu peux cliquer pour aller voir ton profil",
+
+            "profile-1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
+            "profile-2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence",
+
+            "home-3": "Voici les actualités, on commence par une citation choisie par la communauté et des news concernant l'application",
+            "home-4": "Ce bouton sert à ajouter les activités que tu fais dans la vraie vie, tu les verras apparaître dans le calendrier et ça te permettra de gagner de l'expérience !",
+            "home-5": "Ce bouton aussi te permet d'ajouter une activité, appuie dessus pour essayer",
+
+            "activity-1": "Tu peux filtrer les activités par catégorie: {}",
+            "activity-2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
+
+            "home-6": "Tu peux aussi ajouter des tâches, pour ajouter des activités plus rapidement, ou suivre des objectifs personnels",
+            "home-7": "Viens voir par ici, on va faire un tour dans le calendrier",
+
+            "calendar-1": "C'est ici qu'apparaîtront toutes tes activités, tu peux les sélectionner pour afficher leurs détails et les modifier.",
+            "calendar-2": "Tu peux sélectionner un autre jour ou naviguer entre les semaines avec les flèches",
+            "calendar-3": "Et tu peux cliquer ici pour afficher le calendrier des mois",
+            "calendar-4": "Pour finir allons voir la boutique !",
+
+            "shop-1": "En haut tu peux entrer un code pour obtenir des récompenses\nRegarder une pub pour gagner des Ox gratuitement (les Ox étant la monnaie virtuelle de l'application)\nEt acheter des Ox avec de l'argent (cette page sera disponible dans les prochaines mises à jour !)",
+            "shop-2": "Tu peux dépenser tes Ox ici pour acheter des titres, que tu pourras sélectionner dans ton profil pour l'afficher à côté de ton pseudo",
+            "shop-3": "Et ici tu peux acheter des items pour personnaliser ton avatar, tu peux les équiper dans ton profil !",
+            "shop-4": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !",
+
+            "home-8": "Voilà ! Je vais maintenant te laisser découvrir l'application par toi-même, si tu as besoin d'aide tu peux m'appeler en appuyant sur les boutons d'aide !\n\nBonne chance, même si je sais que tu n'en pas besoin ;)"
+        },
+
+        "achievements": {
+            "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
+        },
+
+        "activity": {
+            "1": "Tu peux filtrer les activités par catégorie: {}",
+            "2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
+
+            "3": "Tu peux choisir d'ajouter une activité que tu as faite ou que tu comptes faire plus tard, ou alors tu peux lancer un minuteur pour commencer l'activité maintenant",
+            "4": "Tu peux cliquer sur ce composant pour définir le début et la durée de l'activité",
+            "5": "Ici tu peux voir l'expérience que tu vas gagner en faisant cette activité",
+            "6": "Tu peux ajouter un commentaire à ton activité, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        },
+
+        "profile": {
+            "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
+            "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
+        },
+
+        "task": {
+            "1": "Ici, définis la date limite de ta tâche ou sa fréquence si elle est récurrente.",
+            "2": "Tu as la possibilité de relier ta tâche avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
+            "3": "Tu peux également ajouter des sous-tâches à ta tâche principale, pour mieux t'organiser.",
+            "4": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        },
+
+        "other": {
+            "skip": "Passer",
+            "press": "Appuyez",
+            "button": "Suivant"
+        }
+    },
+
     "other": {
         "widget-button-editTime": "Modifier",
         "widget-achievements-all": "Tous les succès",
         "widget-skills-all": "Toutes les comp.",
         "sexe-male": "♂",
-        "sexe-female": "♀",
-        "tuto-press": "Appuyez",
-        "tuto-button": "Suivant"
+        "sexe-female": "♀"
     }
 }

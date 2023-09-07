@@ -1,6 +1,7 @@
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
+import StartTutorial from './tuto';
 import { GetDate, GetTime } from 'Utils/Time';
 
 /**
@@ -45,15 +46,7 @@ class BackProfile extends PageBack {
         this.refAvatar.forceUpdate();
         this.refAvatar.refFrame.forceUpdate();
 
-        // Tutorial
-        if (args?.tuto === 2) {
-            user.interface.screenTuto.ShowSequence([
-                { component: this.refTuto1, text: "Ici c'est ton profil, tu peux y modifier tes informations personnelles" },
-                { component: this.refAvatar.refButton, text: "Là c'est ton avatar, tu peux cliquer dessus pour le modifier" }
-            ], () => {
-                user.interface.ChangePage('home', { tuto: 3 }, true);
-            });
-        }
+        StartTutorial.call(this, args?.tuto);
     }
 
     openProfileEditor = () => this.refProfileEditor?.Open();

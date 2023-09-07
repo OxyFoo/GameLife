@@ -47,9 +47,6 @@ const PageProps = {
     /** @type {JSX.Element} */
     footer: null,
 
-    /** @type {boolean} */
-    disableEvents: false,
-
     /** @param {LayoutChangeEvent} event */
     onLayout: (event) => {},
 
@@ -85,8 +82,15 @@ class Page extends React.Component {
         TimingAnimation(this.state.opacity, 0, 50).start();
     };
 
+    EnableEvents = () => {
+        this.setState({ pointerEvents: this.state.visible ? 'auto' : 'none' });
+    }
+    DisableEvents = () => {
+        this.setState({ pointerEvents: 'none' });
+    }
+
     GotoY = (y) => {
-        this.posY = this.limitValues(y, this.props.canScrollOver);
+        this.posY = this.limitValues(-y, this.props.canScrollOver);
         SpringAnimation(this.state.positionY, this.posY).start();
     }
     EnableScroll = () => this.scrollEnabled = true;
@@ -217,18 +221,21 @@ class Page extends React.Component {
         if (this.props.topOverlay === null) return null;
 
         const { topOverlayPosition } = this.state;
-        const { topOverlay, topOverlayHeight, disableEvents } = this.props;
+        const { topOverlay, topOverlayHeight } = this.props;
 
         const animation = Animated.multiply(topOverlayPosition, -(topOverlayHeight + 32));
         const position = { transform: [{ translateY: animation }] };
         const backgroundColor = { backgroundColor: themeManager.GetColor('main3') };
         const borderColor = { borderColor: themeManager.GetColor('main1') };
-        const styleOpacity = { opacity: this.state.opacity };
 
         return (
             <Animated.View
-                style={[styles.topOverlay, position, borderColor, backgroundColor, styleOpacity]}
-                pointerEvents={disableEvents ? 'none' : 'auto'}
+                style={[
+                    styles.topOverlay,
+                    position,
+                    borderColor,
+                    backgroundColor
+                ]}
             >
                 <View style={[styles.topOverlayLine, backgroundColor]} />
                 {topOverlay}
@@ -236,52 +243,47 @@ class Page extends React.Component {
         );
     }
 
-    renderOverlay() {
-        const { overlay } = this.props;
-
-        if (this.state.visible === false) {
-            return null;
-        }
-
-        return overlay;
-    }
-
     render() {
-        const { style, isHomePage, topOffset, bottomOffset, scrollable, disableEvents } = this.props;
+        const { positionY, opacity, pointerEvents } = this.state;
+        const {
+            style, isHomePage,
+            topOffset, bottomOffset,
+            scrollable, overlay
+        } = this.props;
+
         const headerHeight = user.interface.header.state.height;
         const valueOffset = isHomePage ? headerHeight : topOffset;
 
-        const stylePage = { opacity: this.state.opacity };
+        const styleOpacity = { opacity: opacity };
         const styleParent = {
             ...styles.parent,
-            transform: [{ translateY: this.state.positionY }],
+            transform: [{ translateY: positionY }],
             paddingTop: valueOffset,
             height: scrollable ? 'auto' : '100%',
             minHeight: user.interface.screenHeight - topOffset - bottomOffset - 128
         };
 
         return (
-            <>
+            <Animated.View
+                style={[styles.container, styleOpacity]}
+                pointerEvents={pointerEvents}
+            >
                 <Animated.View
-                    style={[stylePage, styleParent, style]}
+                    style={[styleParent, style]}
                     onLayout={this.onLayout}
                     onTouchStart={this.onTouchStart}
                     onTouchMove={this.onTouchMove}
                     onTouchEnd={this.onTouchEnd}
                     onStartShouldSetResponder={this.props.onStartShouldSetResponder}
-                    pointerEvents={disableEvents ? 'none' : this.state.pointerEvents}
                 >
                     {this.props.children}
                 </Animated.View>
-                <Animated.View
-                    style={[stylePage, styles.footer]}
-                    pointerEvents={this.state.pointerEvents}
-                >
+                <Animated.View style={styles.footer}>
                     {this.props.footer}
                 </Animated.View>
-                {this.renderOverlay()}
+                {overlay}
                 {this.renderTopOverlay()}
-            </>
+            </Animated.View>
         );
     }
 }
@@ -290,10 +292,17 @@ Page.prototype.props = PageProps;
 Page.defaultProps = PageProps;
 
 const styles = StyleSheet.create({
-    parent: {
+    container: {
         position: 'absolute',
         top: 0,
         left: 0,
+
+        width: '100%',
+        height: '100%',
+        margin: 0,
+        padding: 0
+    },
+    parent: {
         width: '100%',
         padding: 32,
         paddingBottom: Platform.OS === 'ios' ? 48 : 32,

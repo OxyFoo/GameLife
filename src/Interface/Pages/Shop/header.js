@@ -14,6 +14,10 @@ import { Icon, Text, Button } from 'Interface/Components';
  * @typedef {import('Class/Admob').AdStates} AdStates
  */
 
+const ShopHeaderPropTypes = {
+    refContainer: null
+};
+
 class ShopHeader extends React.Component {
     state = {
         /** @type {AdStates} */
@@ -99,7 +103,7 @@ class ShopHeader extends React.Component {
         const oxIconSize = oxAmountStr.length < 3 ? 20 : oxAmountStr.length < 5 ? 18 : 16;
 
         return (
-            <View style={styles.parent}>
+            <View ref={ref => this.props.refContainer = ref} style={styles.parent}>
                 <Button.Badge
                     style={styles.badge}
                     icon='gift'
@@ -136,6 +140,9 @@ class ShopHeader extends React.Component {
         );
     }
 }
+
+ShopHeader.prototype.props = ShopHeaderPropTypes;
+ShopHeader.defaultProps = ShopHeaderPropTypes;
 
 const styles = StyleSheet.create({
     parent: {

@@ -22,6 +22,8 @@ class SectionSubtasks extends React.Component {
         subtasks: []
     }
 
+    refHelp1 = null;
+
     /** @param {Array<Subtask>} subtasks */
     SetSubtasks = (subtasks) => {
         this.setState({ subtasks: [ ...subtasks ] });
@@ -95,14 +97,14 @@ class SectionSubtasks extends React.Component {
         const lang = langManager.curr['task'];
 
         return (
-            <>
+            <View ref={ref => this.refHelp1 = ref}>
                 <View style={[styles.row, styles.sectionTitle]}>
                     <Text fontSize={22}>{lang['title-subtasks']}</Text>
                     <Icon icon='add' onPress={this.addSubtask} />
                 </View>
 
                 <this.renderSubtasks />
-            </>
+            </View>
         );
     }
 }

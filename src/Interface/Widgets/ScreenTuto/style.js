@@ -47,6 +47,13 @@ const styles = StyleSheet.create({
     defaultButton: {
         width: '50%'
     },
+
+    skipButton: {
+        position: 'absolute',
+        top: 12,
+        left: 12
+    },
+
     background: {
         position: 'absolute',
         top: 0,

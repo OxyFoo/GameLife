@@ -4,6 +4,7 @@ import { FlatList } from 'react-native';
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
+import StartTutorial from './tuto';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 import { GetTime, RoundToQuarter } from 'Utils/Time';
@@ -18,6 +19,10 @@ import { GetBlockMonth, MonthType, UpdateBlockMonth } from 'Interface/Widgets/Bl
 class BackCalendar extends PageBack {
     /** @type {ActivityPanel|null} */
     refActivityPanel = null;
+
+    refTuto1 = null;
+    refTuto2 = null;
+    refTuto3 = null;
 
     constructor(props) {
         super(props);
@@ -85,6 +90,10 @@ class BackCalendar extends PageBack {
         setTimeout(() => {
             this.flatlist.scrollToIndex({ index: 4, animated: false });
         }, 100);
+    }
+
+    componentDidFocused = (args) => {
+        StartTutorial.call(this, args?.tuto);
     }
 
     componentWillUnmount() {

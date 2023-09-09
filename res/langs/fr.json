@@ -486,8 +486,6 @@
         "alert-buyfailed-text": "Impossible d'acheter l'item, une erreur est survenue, veuillez réessayer plus tard.",
         "alert-notenoughox-title": "Insuffisant",
         "alert-notenoughox-text": "Vous n'avez pas assez d'Ox pour acheter cet item.",
-        "alert-owned-title": "Déjà possédé",
-        "alert-owned-text": "Vous possédez déjà ce titre, vous ne pouvez donc pas l'acheter.",
 
         "error-no-titles": "Une erreur est survenue lors du chargement des titres à vendre, veuillez réessayer plus tard.",
         "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard.",

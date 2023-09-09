@@ -5,12 +5,12 @@ const styles = StyleSheet.create({
         width: '30%',
         aspectRatio: 1
     },
-
     dyeView: {
         height: 'auto',
         borderRadius: 8,
         paddingHorizontal: 0,
         marginHorizontal: 24,
+        marginBottom: 12,
 
         flexDirection: 'row',
         alignItems: 'center',

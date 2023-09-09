@@ -5,16 +5,27 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Button, Icon, Text } from 'Interface/Components';
 
 const BannerProps = {
+    /** @type {string} Used to call onPress with id */
+    id: '',
+
     /** @type {string} */
-    children: ''
+    title: '',
+
+    /** @type {(id: string) => void} */
+    onPress: (id) => {}
 };
 
 class Banner extends React.Component {
+    onPress = () => {
+        const { id, onPress } = this.props;
+        onPress(id);
+    }
+
     render() {
-        const { children } = this.props;
+        const { title } = this.props;
 
         return (
-            <Button style={styles.banner}>
+            <Button style={styles.banner} onPress={this.onPress}>
                 <LinearGradient
                     style={styles.gradient}
                     colors={['#B839FE50', '#8A3DFE50']}
@@ -22,7 +33,7 @@ class Banner extends React.Component {
                     end={{ x: 1, y: 1 }}
                 >
                     <Text style={styles.title}>
-                        {children}
+                        {title}
                     </Text>
 
                     <View style={styles.help}>

@@ -5,15 +5,16 @@ import BackShop from './back';
 import ShopHeader from './UI/header';
 import Banner from './UI/banner';
 
-import ShopItems from './Items';
+import ShopDailyDeals from './DailyDeals';
 import ShopRandomChests from './RandomChests';
-import ShopTitles from './Titles';
+import ShopTargetedChests from './TargetedChests';
 import ShopDyes from './Dyes';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Page, Text, Icon } from 'Interface/Components';
+import StartHelp from './help';
 
 class Shop extends BackShop {
     noInternetRender = () => {
@@ -41,6 +42,7 @@ class Shop extends BackShop {
         }
 
         const lang = langManager.curr['shop'];
+        const Help = StartHelp.bind(this);
 
         return (
             <Page
@@ -51,16 +53,16 @@ class Shop extends BackShop {
             >
                 <ShopHeader refContainer={this.refTuto1} />
 
-                <Banner>{lang['banner-daily']}</Banner>
-                <ShopItems ref={ref => this.refTuto3 = ref} />
+                <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
+                <ShopDailyDeals ref={ref => this.refTuto3 = ref} />
 
-                <Banner>{lang['banner-random-chest']}</Banner>
+                <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
                 <ShopRandomChests ref={ref => this.refTuto2 = ref} />
 
-                <Banner>{lang['banner-targeted-chest']}</Banner>
-                <ShopRandomChests ref={ref => this.refTuto2 = ref} />
+                <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
+                <ShopTargetedChests ref={ref => this.refTuto2 = ref} />
 
-                <Banner>{lang['banner-dye']}</Banner>
+                <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
                 <ShopDyes ref={ref => this.refTuto4 = ref} />
 
                 {/*<ShopTitles ref={ref => this.refTuto2 = ref} />*/}

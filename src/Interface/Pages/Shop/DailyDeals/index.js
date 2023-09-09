@@ -14,7 +14,7 @@ import { Button, Text, Icon, Frame } from 'Interface/Components';
  * @typedef {import('./back').BuyableItem} BuyableItem
  */
 
-class ShopItems extends BackShopItems {
+class ShopDailyDeals extends BackShopItems {
     /**
      * @param {{ item: BuyableItem }} item
      * @returns {JSX.Element}
@@ -41,12 +41,14 @@ class ShopItems extends BackShopItems {
                         </View>
 
                         {/** Item frame */}
-                        <Frame
-                            style={styles.itemFrame}
-                            characters={[ item.Character ]}
-                            onlyItems={true}
-                            size={item.Size}
-                        />
+                        <View style={styles.itemFrameContainer}>
+                            <Frame
+                                style={styles.itemFrame}
+                                characters={[ item.Character ]}
+                                onlyItems={true}
+                                size={item.Size}
+                            />
+                        </View>
 
                         {/** Item price */}
                         <View style={styles.itemPrice}>
@@ -94,4 +96,4 @@ class ShopItems extends BackShopItems {
     }
 }
 
-export default ShopItems;
+export default ShopDailyDeals;

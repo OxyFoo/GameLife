@@ -486,8 +486,6 @@
         "alert-buyfailed-text": "Unable to purchase the item, an error has occurred, please try again later.",
         "alert-notenoughox-title": "Insufficient",
         "alert-notenoughox-text": "You don't have enough Ox to buy this item.",
-        "alert-owned-title": "Already owned",
-        "alert-owned-text": "You already own this title, so you can't buy it.",
 
         "error-no-titles": "An error occurred while loading the securities for sale, please try again later.",
         "error-no-items": "An error occurred while loading the items for sale, please try again later.",

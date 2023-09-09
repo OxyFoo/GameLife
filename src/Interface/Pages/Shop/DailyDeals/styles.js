@@ -26,16 +26,23 @@ const styles = StyleSheet.create({
     itemContent: {
         width: '100%',
         height: '100%',
+
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
         borderRadius: 2,
         overflow: 'hidden'
     },
+    itemFrameContainer: {
+        width: '90%',
+        aspectRatio: 1/1,
+        zIndex: -10,
+        elevation: -10
+    },
     itemFrame: {
         width: '100%',
-        height: '100%',
-        paddingBottom: 6,
-        transform: [{
-            scale: 1.2
-        }]
+        height: '100%'
     },
     itemInfo: {
         position: 'absolute',

@@ -444,6 +444,11 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
+        "banner-daily": "Daily deals",
+        "banner-random-chest": "Random chests",
+        "banner-targeted-chest": "Targeted chests",
+        "banner-dye": "Dyes",
+
         "alert-code-title": "Use a code",
         "alert-code-text": "You can win codes by:\n\t- Playing on our Discord server\n\t- Finding codes in our Tiktok and Youtube videos\n\t- Winning a contest on Instagram or Twitter",
         "alert-code-input": "Code",
@@ -465,8 +470,6 @@
 
     "shopItems": {
         "container-titles": "Titles",
-        "container-items": "Items",
-        "container-dyer": "Dyer",
 
         "popup-title-button": "Buy for {} Ox",
         "popup-item-button": "Buy for {} Ox",

@@ -1,18 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    // Containers
-    containerHeader: {
-        justifyContent: 'center'
-    },
-    errorText: {
-        padding: 12
-    },
-
-    // Page - Dyer
-    dyerContainer: {
-        padding: 0
-    },
     dyerFrame: {
         width: '30%',
         aspectRatio: 1
@@ -20,17 +8,13 @@ const styles = StyleSheet.create({
 
     dyeView: {
         height: 'auto',
-        borderRadius: 4,
+        borderRadius: 8,
         paddingHorizontal: 0,
+        marginHorizontal: 24,
 
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
-    },
-    dyeBorder: {
-        margin: 2,
-        padding: 3,
-        borderRadius: 4
     },
     dyeAmount: {
         alignItems: 'center'
@@ -40,6 +24,13 @@ const styles = StyleSheet.create({
     },
     dyeAmountPrice: {
         flexDirection: 'row'
+    },
+
+    dyeBorder: {
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+        height: 4
     },
 
     // Popup - Item
@@ -56,6 +47,10 @@ const styles = StyleSheet.create({
     },
     popupButton: {
         marginTop: 24
+    },
+
+    errorText: {
+        padding: 12
     }
 });
 

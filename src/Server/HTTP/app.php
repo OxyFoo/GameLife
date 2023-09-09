@@ -21,6 +21,7 @@
         case 'getUserData':     $commands->GetUserData();     break;
         case 'addUserData':     $commands->AddUserData();     break;
         case 'setUsername':     $commands->SetUsername();     break;
+        case 'getDailyDeals':   $commands->GetDailyDeals();   break;
         case 'buyTitle':        $commands->BuyTitle();        break;
         case 'buyItem':         $commands->BuyItem();         break;
         case 'buyDye':          $commands->BuyDye();          break;

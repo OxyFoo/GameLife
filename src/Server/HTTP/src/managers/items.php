@@ -370,6 +370,48 @@
             $db->AddLog($accountID, $deviceID, 'giftCode', $code);
             return true;
         }
+
+        /**
+         * Get daily deals
+         * @param DataBase $db
+         * @param Account $account
+         * @return array
+         */
+        public static function GetDailyDeals($db, $account) {
+            // Get all items
+            $command = 'SELECT `ID`, `Rarity`, `Value` FROM TABLE WHERE `Buyable` = 1';
+            $items = $db->QueryPrepare('Items', $command);
+            if ($items === false) return false;
+
+            // Get 3 random items from rarity 0
+            $itemsByRarity = array(
+                '0' => array_filter($items, fn($item) => intval($item['Rarity']) === 0),
+                '1' => array_filter($items, fn($item) => intval($item['Rarity']) === 1),
+                '2' => array_filter($items, fn($item) => intval($item['Rarity']) === 2),
+                '3' => array_filter($items, fn($item) => intval($item['Rarity']) === 3)
+            );
+
+            // Select 3 random items: 1 common, 1 rare, 1 epic or legendary
+            $rand0 = Randay("{$account->Email}-0");
+            $count0 = count($itemsByRarity['0']) - 1;
+            $index0 = round($rand0 * $count0);
+            $item0 = array_values($itemsByRarity['0'])[$index0];
+
+            $rand1 = Randay("{$account->Email}-1");
+            $count1 = count($itemsByRarity['1']) - 1;
+            $index1 = round($rand1 * $count1);
+            $item1 = array_values($itemsByRarity['1'])[$index1];
+
+            // Last will be epic or legendary ? (95% epic, 5% legendary)
+            $randRarity = Randay("{$account->ID}-rarity") < 0.95 ? 2 : 3;
+            $rand2 = Randay("{$account->Email}-2");
+            $count2 = count($itemsByRarity[$randRarity]) - 1;
+            $index2 = round($rand2 * $count2);
+            $item2 = array_values($itemsByRarity[$randRarity])[$index2];
+
+            // Return items ID
+            return array($item0['ID'], $item1['ID'], $item2['ID']);
+        }
     }
 
 ?>

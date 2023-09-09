@@ -1,15 +1,11 @@
 import * as React from 'react';
 
-import { renderItemPopup } from './popupItem';
+import { renderItemPopup } from './popup';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Character } from 'Interface/Components';
-import { ArrayToDict } from 'Utils/Functions';
-import { GetRandomIndexesByDay } from 'Utils/Items';
-
-const SHOP_NUMBER_ITEMS = 8;
 
 /**
  * @typedef {import('Data/Items').Item} Item
@@ -19,6 +15,7 @@ const SHOP_NUMBER_ITEMS = 8;
  * @property {string|number} ID
  * @property {string} Name
  * @property {number} Price
+ * @property {number} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
  * @property {Character} Character Character to display item
@@ -36,16 +33,15 @@ class BackShopItems extends React.Component {
         this.refreshItems();
     }
 
-    refreshItems = () => {
-        // Get random buyable items
+    refreshItems = async () => {
         const allBuyableItems = dataManager.items.GetBuyable();
-        const rarities = [ .75, .18, .6, .1 ];
-        const itemsProbas = ArrayToDict(allBuyableItems.map(i => ({ [i.ID]: rarities[i.Rarity] })));
-        const buyableItemsID = GetRandomIndexesByDay(itemsProbas, SHOP_NUMBER_ITEMS);
+        const dailyItemsID = await user.server.GetDailyDeals();
+
+        if (dailyItemsID === null) return;
 
         // Create characters & get data for each item
         const buyableItems = [];
-        buyableItemsID.forEach((itemID, index) => {
+        dailyItemsID.forEach((itemID, index) => {
             const item = allBuyableItems.find(i => i.ID == itemID) || null;
             if (item === null) return;
 
@@ -58,6 +54,7 @@ class BackShopItems extends React.Component {
                 ID: itemID,
                 Name: dataManager.GetText(item.Name),
                 Price: item.Value,
+                Rarity: item.Rarity,
                 Colors: themeManager.GetRariryColors(item.Rarity),
                 BackgroundColor: themeManager.GetColor('backgroundCard'),
                 Character: character,
@@ -72,8 +69,7 @@ class BackShopItems extends React.Component {
 
     /** @param {Item} item */
     openItemPopup = (item) => {
-        const callback = this.refreshItems.bind(this);
-        const render = () => renderItemPopup.bind(this)(item, callback);
+        const render = () => renderItemPopup.call(this, item);
         user.interface.popup.Open('custom', render);
     }
 }

@@ -444,6 +444,11 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
+        "banner-daily": "Deals du jour",
+        "banner-random-chest": "Coffres aléatoires",
+        "banner-targeted-chest": "Coffres ciblés",
+        "banner-dye": "Teintures",
+
         "alert-code-title": "Utiliser un code",
         "alert-code-text": "Vous pouvez gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant les codes dans nos vidéos Tiktok et Youtube\n\t- En gagnant un concours sur Instagram ou Twitter",
         "alert-code-input": "Code",
@@ -465,8 +470,6 @@
 
     "shopItems": {
         "container-titles": "Titres",
-        "container-items": "Items",
-        "container-dyer": "Teinturier",
 
         "popup-title-button": "Acheter pour {} Ox",
         "popup-item-button": "Acheter pour {} Ox",

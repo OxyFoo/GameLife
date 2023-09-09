@@ -2,9 +2,12 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import BackShop from './back';
-import ShopHeader from './header';
-import ShopTitles from './Titles';
+import ShopHeader from './UI/header';
+import Banner from './UI/banner';
+
 import ShopItems from './Items';
+import ShopRandomChests from './RandomChests';
+import ShopTitles from './Titles';
 import ShopDyes from './Dyes';
 
 import user from 'Managers/UserManager';
@@ -37,19 +40,40 @@ class Shop extends BackShop {
             return this.noInternetRender();
         }
 
+        const lang = langManager.curr['shop'];
+
         return (
-            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
+            <Page
+                ref={ref => this.refPage = ref}
+                style={styles.page}
+                isHomePage
+                canScrollOver
+            >
                 <ShopHeader refContainer={this.refTuto1} />
 
-                <ShopTitles ref={ref => this.refTuto2 = ref} />
-                <ShopItems  ref={ref => this.refTuto3 = ref} />
-                <ShopDyes   ref={ref => this.refTuto4 = ref} />
+                <Banner>{lang['banner-daily']}</Banner>
+                <ShopItems ref={ref => this.refTuto3 = ref} />
+
+                <Banner>{lang['banner-random-chest']}</Banner>
+                <ShopRandomChests ref={ref => this.refTuto2 = ref} />
+
+                <Banner>{lang['banner-targeted-chest']}</Banner>
+                <ShopRandomChests ref={ref => this.refTuto2 = ref} />
+
+                <Banner>{lang['banner-dye']}</Banner>
+                <ShopDyes ref={ref => this.refTuto4 = ref} />
+
+                {/*<ShopTitles ref={ref => this.refTuto2 = ref} />*/}
             </Page>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    page: {
+        paddingHorizontal: 0
+    },
+
     noInternetContainer: {
         flex: 1,
         justifyContent: 'center',

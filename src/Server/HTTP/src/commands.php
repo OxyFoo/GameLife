@@ -362,6 +362,14 @@
             $this->output['status'] = 'ok';
         }
 
+        public function GetDailyDeals() {
+            if (!$this->tokenChecked) return;
+            $account = $this->account;
+
+            $this->output['dailyDeals'] = Items::GetDailyDeals($this->db, $account);
+            $this->output['status'] = 'ok';
+        }
+
         public function BuyTitle() {
             $titleID = $this->data['titleID'];
             if (!isset($titleID) || !$this->tokenChecked) return;

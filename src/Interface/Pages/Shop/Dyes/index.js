@@ -8,7 +8,7 @@ import styles from './styles';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Container, Button, Text, Icon, Frame } from 'Interface/Components';
+import { Button, Text, Icon, Frame } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').BuyableDye} BuyableDye
@@ -25,34 +25,34 @@ class ShopDyes extends BackShopDyes {
         const backgroundStyle = { backgroundColor: dyer.BackgroundColor };
 
         return (
-            <LinearGradient style={styles.dyeBorder} colors={dyer.Colors}>
-                <Button style={[styles.dyeView, backgroundStyle]} onPress={dyer.OnPress} enabled={!disabled}>
-                    {/** Item before */}
-                    <Frame
-                        style={styles.dyerFrame}
-                        characters={[ ItemBefore.Character ]}
-                        onlyItems={true}
-                        size={ItemBefore.Size}
-                    />
+            <Button style={[styles.dyeView, backgroundStyle]} onPress={dyer.OnPress} enabled={!disabled}>
+                {/** Item before */}
+                <Frame
+                    style={styles.dyerFrame}
+                    characters={[ ItemBefore.Character ]}
+                    onlyItems={true}
+                    size={ItemBefore.Size}
+                />
 
-                    {/** Arrow + Ox amount */}
-                    <View style={styles.dyeAmount}>
-                        <View style={styles.dyeAmountPrice}>
-                            <Text style={styles.dyeAmountText}>{dyer.Price.toString()}</Text>
-                            <Icon icon='ox' color='main1' size={24} />
-                        </View>
-                        <Icon icon='arrowLeft' angle={180} color='white' size={48} />
+                {/** Arrow + Ox amount */}
+                <View style={styles.dyeAmount}>
+                    <Icon icon='arrowLeft' angle={180} color='white' size={48} />
+                    <View style={styles.dyeAmountPrice}>
+                        <Text style={styles.dyeAmountText}>{dyer.Price.toString()}</Text>
+                        <Icon icon='ox' color='main1' size={24} />
                     </View>
+                </View>
 
-                    {/** Item after */}
-                    <Frame
-                        style={styles.dyerFrame}
-                        characters={[ ItemAfter.Character ]}
-                        onlyItems={true}
-                        size={ItemAfter.Size}
-                    />
-                </Button>
-            </LinearGradient>
+                {/** Item after */}
+                <Frame
+                    style={styles.dyerFrame}
+                    characters={[ ItemAfter.Character ]}
+                    onlyItems={true}
+                    size={ItemAfter.Size}
+                />
+
+                <LinearGradient style={styles.dyeBorder} colors={dyer.Colors} />
+            </Button>
         );
     }
 
@@ -71,18 +71,12 @@ class ShopDyes extends BackShopDyes {
         const { buyableDyes } = this.state;
 
         return (
-            <Container
-                text={lang['container-dyer']}
-                styleHeader={styles.containerHeader}
-                styleContainer={styles.dyerContainer}
-            >
-                <FlatList
-                    data={buyableDyes}
-                    ListEmptyComponent={this.renderEmpty}
-                    renderItem={this.renderDye}
-                    keyExtractor={(item, index) => `buyable-dye-${item.ItemBefore.ID}-${index}`}
-                />
-            </Container>
+            <FlatList
+                data={buyableDyes}
+                ListEmptyComponent={this.renderEmpty}
+                renderItem={this.renderDye}
+                keyExtractor={(item, index) => `buyable-dye-${item.ItemBefore.ID}-${index}`}
+            />
         );
     }
 }

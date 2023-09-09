@@ -8,12 +8,16 @@ import dataManager from 'Managers/DataManager';
 import { Text, Button, Input } from 'Interface/Components';
 
 /**
- * @typedef {import('./back').default} BackShop
+ * @typedef {import('../back').default} BackShop
  */
 
+function openPopupCode() {
+    if (!user.server.online) return;
+    user.interface.popup.Open('custom', renderGiftCodePopup);
+}
+
 /**
- * Check code
- * @this BackShop
+ * Check code and give rewards
  * @param {string} code
  * @returns {Promise<void>}
  */
@@ -39,7 +43,7 @@ async function checkCode(code) {
         // Incorrect code
         const title = lang['reward-wrong-title'];
         const text = lang['reward-wrong-text'];
-        user.interface.popup.ForceOpen('ok', [ title, text ], this.openPopupCode, false);
+        user.interface.popup.ForceOpen('ok', [ title, text ], openPopupCode, false);
         return;
     }
 
@@ -53,9 +57,6 @@ async function checkCode(code) {
     await user.OnlineLoad(true);
 }
 
-/**
- * @this BackShop
- */
 function renderGiftCodePopup() {
     const lang = langManager.curr['shop'];
     let [ code, setCode ] = React.useState('');
@@ -63,7 +64,7 @@ function renderGiftCodePopup() {
 
     const onCheckButton = async () => {
         setLoading(true);
-        await checkCode.call(this, code);
+        await checkCode(code);
         setLoading(false);
     };
 
@@ -111,4 +112,5 @@ const styles = StyleSheet.create({
     }
 });
 
+export { openPopupCode };
 export default renderGiftCodePopup;

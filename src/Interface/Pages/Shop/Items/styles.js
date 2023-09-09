@@ -1,59 +1,79 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container: {
-        marginBottom: 24
-    },
-    containerHeader: {
-        justifyContent: 'center'
-    },
-
-    itemsContainer: {
-        padding: 0
-    },
-
     errorText: {
         padding: 12
     },
 
+    flatlist: {
+        maxHeight: '33%', // Why ?
+        paddingHorizontal: 12,
+        marginBottom: 24
+    },
+
     // Items
     itemParent: {
-        width: '25%',
-        aspectRatio: 1,
-        padding: 2
+        width: '33%',
+        aspectRatio: 1/1.3,
+        paddingHorizontal: 6
     },
     itemButton: {
-        height: '100%',
-        paddingHorizontal: 0,
-        borderRadius: 4,
-        backgroundColor: 'red'
-    },
-    itemBorder: {
         width: '100%',
         height: '100%',
-        padding: 3
+        paddingHorizontal: 0,
+        borderRadius: 8
     },
     itemContent: {
         width: '100%',
         height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         borderRadius: 2,
         overflow: 'hidden'
     },
     itemFrame: {
-        width: '95%',
-        height: '95%'
+        width: '100%',
+        height: '100%',
+        paddingBottom: 6,
+        transform: [{
+            scale: 1.2
+        }]
     },
+    itemInfo: {
+        position: 'absolute',
+        top: 12,
+        left: 0,
+        right: 0,
+
+        alignContent: 'center',
+        justifyContent: 'center'
+    },
+    itemName: {
+        fontSize: 14
+    },
+    itemRarity: {
+        fontSize: 11,
+        fontWeight: 'bold'
+    },
+
     itemPrice: {
+        position: 'absolute',
+        bottom: 12,
+        left: 0,
+        right: 0,
+
         flexDirection: 'row',
         alignItems: 'center',
-        transform: [{ translateY: -12 }]
+        justifyContent: 'center'
     },
     itemPriceOx: {
         fontSize: 16,
         marginRight: 4
+    },
+
+    itemBorder: {
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+        height: 4
     },
 
     // Popup - Item

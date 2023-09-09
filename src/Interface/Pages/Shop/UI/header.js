@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { FirebaseAdMobTypes } from '@react-native-firebase/admob';
 
-import renderGiftCodePopup from './popupGiftCode';
+import { openPopupCode } from './popupGiftCode';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -42,10 +42,6 @@ class ShopHeader extends React.Component {
         user.admob.ClearEvents('rewarded', 'shop');
     }
 
-    openPopupCode = () => {
-        if (!user.server.online) return;
-        user.interface.popup.Open('custom', renderGiftCodePopup.bind(this));
-    }
     openAd = () => {
         const lang = langManager.curr['server'];
 
@@ -107,7 +103,7 @@ class ShopHeader extends React.Component {
                 <Button.Badge
                     style={styles.badge}
                     icon='gift'
-                    onPress={this.openPopupCode}
+                    onPress={openPopupCode}
                     disabled={!user.server.online}
                 >
                     <Text fontSize={16} color='main1'>{lang['button-header-code']}</Text>
@@ -150,6 +146,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
 
+        marginHorizontal: 24,
         marginBottom: 24
     },
     badge: {

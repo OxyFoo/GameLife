@@ -20,6 +20,20 @@
     }
 
     /**
+     * Get a random number will always be the same for the same day & same seed
+     * @param string $seed Seed for the random number
+     * @return int Random number between 0 and 1
+     */
+    function Randay($seed = '') {
+        $currentDate = date('Y-m-d') . $seed;
+        $hash = md5($currentDate);
+        $subHash = substr($hash, 0, 8);
+        $intValue = hexdec($subHash);
+        $random = $intValue / 0xFFFFFFFF;
+        return $random;
+    }
+
+    /**
      * Return IP address of the client or "UNKNOWN" if failed
      * @link https://stackoverflow.com/questions/3003145/how-to-get-the-client-ip-address-in-php
      * @return string

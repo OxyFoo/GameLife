@@ -10,7 +10,7 @@ import { GetDeviceInformations } from 'Utils/Device';
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'getDailyDeals'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
 */
 
 /** @type {ServerStatus[]} */
@@ -57,7 +57,6 @@ class Server {
         }
 
         /** @type {ServerStatus} */
-        // @ts-ignore
         const status = response['status'];
         const devMode = response['devMode'];
 
@@ -103,7 +102,6 @@ class Server {
         }
 
         /** @type {LoginStatus} */
-        // @ts-ignore
         const s = result_connect['status'];
         if (STATUS.includes(s)) {
             status = s;
@@ -144,7 +142,6 @@ class Server {
         if (response === null) return 'error';
 
         /** @type {SigninStatus} */
-        // @ts-ignore
         const status = response['status'];
         const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
         if (!allStatus.includes(status)) return 'error';
@@ -207,6 +204,27 @@ class Server {
         if (response === null) return 'error';
 
         return response['usernameChangeState'];
+    }
+
+    /**
+     * Save username on server
+     * @returns {Promise<Array<string>|null>} Return array of item ID
+     */
+    async GetDailyDeals() {
+        const _data = {
+            'dataToken': this.dataToken
+        };
+
+        const response = await this.Request('getDailyDeals', _data);
+        if (response === null) return null;
+
+        const status = response['status'];
+        if (status !== 'ok') return null;
+
+        const items = response['dailyDeals'];
+        if (!Array.isArray(items)) return null;
+
+        return items;
     }
 
     /**

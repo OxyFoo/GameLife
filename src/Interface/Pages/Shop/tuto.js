@@ -4,7 +4,7 @@ import langManager from 'Managers/LangManager';
 import { Sleep } from 'Utils/Functions';
 
 /**
- * @this import('./back').default
+ * @this {import('./back').default}
  * @param {number} tutoValue 
  */
 function StartTutorial(tutoValue) {

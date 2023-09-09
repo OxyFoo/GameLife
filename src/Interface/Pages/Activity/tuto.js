@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 /**
- * @this import('./back').default
+ * @this {import('./back').default}
  * @param {number} tutoValue 
  */
 function StartTutorial(tutoValue) {

@@ -2,7 +2,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @this import('./back').default
+ * @this {import('./back').default}
  * @param {number} tutoValue
  */
 function StartTutorial(tutoValue) {

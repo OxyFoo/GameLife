@@ -10,8 +10,9 @@
     require('./src/classes/device.php');
 
     require('./src/managers/items.php');
-    require('./src/managers/tasks.php');
+    require('./src/managers/shop.php');
     require('./src/managers/skills.php');
+    require('./src/managers/tasks.php');
 
     require('./src/sql/app.php');
     require('./src/sql/accounts.php');
@@ -320,7 +321,9 @@
                 $userData['inventory'] = array(
                     'avatar' => Users::GetAvatar($this->db, $account),
                     'stuffs' => Items::GetInventory($this->db, $account),
-                    'titles' => Items::GetInventoryTitles($this->db, $account),
+                    'titles' => Items::GetInventoryTitles($this->db, $account)
+                );
+                $userData['shop'] = array(
                     'buyToday' => Users::GetBuyToday($this->db, $account)
                 );
                 $userData['tasks'] = Tasks::GetTasks($this->db, $account);
@@ -366,36 +369,64 @@
             if (!$this->tokenChecked) return;
             $account = $this->account;
 
-            $this->output['dailyDeals'] = Items::GetDailyDeals($this->db, $account);
+            $this->output['dailyDeals'] = Shop::GetDailyDeals($this->db, $account);
             $this->output['status'] = 'ok';
         }
 
-        public function BuyTitle() {
-            $titleID = $this->data['titleID'];
-            if (!isset($titleID) || !$this->tokenChecked) return;
-            $account = $this->account;
-            $device = $this->device;
-
-            $ox = Items::BuyTitle($this->db, $account, $device, $titleID);
-            if ($ox === false) return;
-
-            $this->output['ox'] = $ox;
-            $this->output['titles'] = Items::GetInventoryTitles($this->db, $account);
-            $this->output['status'] = 'ok';
-        }
-
-        public function BuyItem() {
+        public function BuyDailyDeals() {
             $itemID = $this->data['itemID'];
             if (!isset($itemID) || !$this->tokenChecked) return;
             $account = $this->account;
             $device = $this->device;
 
-            $ox = Items::BuyItem($this->db, $account, $device, $itemID);
+            $ox = Shop::BuyDailyDeals($this->db, $account, $device, $itemID);
             if ($ox === false) return;
 
             $this->output['ox'] = $ox;
             $this->output['stuffs'] = Items::GetInventory($this->db, $account);
             $this->output['status'] = 'ok';
+        }
+
+        public function BuyRandomChest() {
+            $rarity = $this->data['rarity'];
+            $rarities = array('common', 'rare', 'epic');
+            if (!$this->tokenChecked) return;
+            if (!isset($rarity) || !in_array($rarity, $rarities)) return;
+            $account = $this->account;
+            $device = $this->device;
+
+            $newItems = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
+            if ($newItems === false) return;
+
+            $this->output['ox'] = $account->Ox;
+            $this->output['newItems'] = $newItems;
+            $this->output['status'] = 'ok';
+        }
+
+        // TODO: Not finished
+        public function BuyTargetChest() {
+            $type = $this->data['type'];
+            $rarity = $this->data['rarity'];
+            if (!isset($type) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
+
+            # Valid types
+            $types = array('random', 'title', 'hair', 'top', 'bottom', 'shoes');
+            $rarities = array('common', 'rare', 'epic');
+
+            $isNotTypeInTypes = !in_array($type, $types);
+            $isTitleAndNotRarity = ($type !== 'title' && (!isset($rarity) || !in_array($rarity, $rarities)));
+            if ($isNotTypeInTypes || $isTitleAndNotRarity) {
+                $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with invalid type ($type)");
+                return false;
+            }
+
+            $newItems = Shop::BuyTargetChest($this->db, $account, $device, $type, $rarity);
+            if ($newItems === false) return;
+
+            $this->output['ox'] = $account->Ox;
+            $this->output['newItems'] = $newItems;
         }
 
         public function BuyDye() {
@@ -405,7 +436,7 @@
             $account = $this->account;
             $device = $this->device;
 
-            $ox = Items::BuyDye($this->db, $account, $device, $ID, $newID);
+            $ox = Shop::BuyDye($this->db, $account, $device, $ID, $newID);
             if ($ox === false) return;
 
             $this->output['ox'] = $ox;
@@ -485,7 +516,7 @@
             $account = $this->account;
             $device = $this->device;
 
-            $gift = Items::CheckGiftCode($this->db, $account, $device, $code);
+            $gift = Shop::CheckGiftCode($this->db, $account, $device, $code);
             if ($gift === null) return;
             if ($gift === false) {
                 $this->output['gift'] = null;
@@ -493,7 +524,7 @@
                 return;
             }
 
-            $consume = Items::ConsumeGiftCode($this->db, $account->ID, $device->ID, $code);
+            $consume = Shop::ConsumeGiftCode($this->db, $account->ID, $device->ID, $code);
             if (!$consume) return;
 
             $rewardAdded = Achievements::ExecReward($this->db, $account, explode(',', $gift));

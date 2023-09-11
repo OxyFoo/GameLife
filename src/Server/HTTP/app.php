@@ -22,8 +22,9 @@
         case 'addUserData':     $commands->AddUserData();     break;
         case 'setUsername':     $commands->SetUsername();     break;
         case 'getDailyDeals':   $commands->GetDailyDeals();   break;
-        case 'buyTitle':        $commands->BuyTitle();        break;
-        case 'buyItem':         $commands->BuyItem();         break;
+        case 'buyDailyDeals':   $commands->BuyDailyDeals();   break;
+        case 'buyRandomChest':  $commands->BuyRandomChest();  break;
+        case 'buyTargetedChest':$commands->BuyTargetChest();  break;
         case 'buyDye':          $commands->BuyDye();          break;
         case 'sellStuff':       $commands->SellStuff();       break;
         case 'adWatched':       $commands->AdWatched();       break;

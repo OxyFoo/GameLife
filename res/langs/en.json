@@ -449,48 +449,57 @@
         "banner-targeted-chest": "Targeted chests",
         "banner-dye": "Dyes",
 
+        "dailyDeals": {
+            "popup-item-button": "Buy for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "You have successfully purshased item \"{}\" for {} Ox",
+
+            "error-no-items": "An error occurred while loading the items for sale, please try again later."
+        },
+
+        "randomChests": {
+            "chest-random-common": "Lost chest",
+            "chest-random-rare": "Old chest",
+            "chest-random-epic": "Secret chest",
+
+            "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
+            "popup-chest-button": "Open for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+        },
+
+        "targetedChests": {
+        },
+
+        "dyes": {
+            "popup-dyer-text": "Change the apparence of this item?",
+            "popup-dyer-button": "Dye for {} Ox",
+            "popup-dyesuccess-title": "Successful dyeing",
+            "popup-dyesuccess-text": "You successfully dyed item \"{}\" for {} Ox",
+
+            "error-no-dye": "There is no dye available, please buy items or try again."
+        },
+
         "alert-code-title": "Use a code",
         "alert-code-text": "You can win codes by:\n\t- Playing on our Discord server\n\t- Finding codes in our Tiktok and Youtube videos\n\t- Winning a contest on Instagram or Twitter",
         "alert-code-input": "Code",
         "alert-code-button": "Validate",
 
+        "popup-notenoughox-title": "Insufficient",
+        "popup-notenoughox-text": "You don't have enough Ox to buy this item.",
+
         "internet-offline-title": "No connection",
         "internet-offline-text": "You must be connected to the internet!",
 
         "reward-failed-title": "Failure",
-        "reward-failed-text": "An error has occurred, please try again later.",
+        "reward-failed-text": "An error has occurred, please retry again later.",
         "reward-wrong-title": "Incorrect code",
         "reward-wrong-text": "The code you entered is incorrect.",
         "reward-success-title": "Code used",
-        "reward-success-text": "You have earned rewards:",
+        "reward-success-text": "You have obtained the following rewards:",
 
         "temp-comingsoon-title": "Shop",
-        "temp-comingsoon-text": "🚧 Coming soon 🚧"
-    },
-
-    "shopItems": {
-        "container-titles": "Titles",
-
-        "popup-title-button": "Buy for {} Ox",
-        "popup-item-button": "Buy for {} Ox",
-        "popup-dyer-text": "Change the appearance of this item?",
-        "popup-dyer-button": "Tint for {} Ox",
-
-        "alert-buysuccess-title": "Successful purchase",
-        "alert-buysuccess-text": "You have purchased the item \"{}\" for {} Ox",
-        "alert-dyesuccess-title": "Successful dyeing",
-        "alert-dyesuccess-text": "You have dyed the item \"{}\" for {} Ox",
-        "alert-buytitlesuccess-title": "Successful purchase",
-        "alert-buytitlesuccess-text": "You have purchased the title \"{}\" for {} Ox",
-        "alert-buyfailed-title": "Purchase failed",
-        "alert-buyfailed-text": "Unable to purchase the item, an error has occurred, please try again later.",
-        "alert-notenoughox-title": "Insufficient",
-        "alert-notenoughox-text": "You don't have enough Ox to buy this item.",
-
-        "error-no-titles": "An error occurred while loading the securities for sale, please try again later.",
-        "error-no-items": "An error occurred while loading the items for sale, please try again later.",
-        "error-no-dye": "There are no dyes available, please purchase items or try again later.",
-        "error-inventory-empty": "You do not have any items"
+        "temp-comingsoon-text": "🚧 Available soon 🚧"
     },
 
     "skill": {

@@ -5,58 +5,48 @@ import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 /**
- * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
- * 
- * @typedef BuyableChest
- * @property {string|number} ID
- * @property {string} Name
- * @property {ImageSourcePropType} Image
- * @property {number} Price
- * @property {number} Rarity
- * @property {string[]} Colors Colors from rarity
- * @property {string} BackgroundColor Background color
- * @property {() => void} OnPress
+ * @typedef {import('Class/Shop').BuyableRandomChest} BuyableRandomChest
  */
 
-
 class BackShopItems extends React.Component {
-    /** @type {BuyableChest[]} */
+    /** @type {BuyableRandomChest[]} */
     CHESTS = [
         {
             ID: 1,
-            Name: 'Coffre perdu',
+            LangName: 'chest-random-common',
             Image: require('Ressources/items/chests/common.png'),
-            Price: 100,
+            Price: 50,
             Rarity: 0,
             Colors: themeManager.GetRariryColors(0),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
-            OnPress: () => {}
+            OnPress: () => this.openItemPopup(1)
         },
         {
             ID: 2,
-            Name: 'Coffre ancien',
+            LangName: 'chest-random-rare',
             Image: require('Ressources/items/chests/rare.png'),
             Price: 200,
             Rarity: 1,
             Colors: themeManager.GetRariryColors(1),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
-            OnPress: () => {}
+            OnPress: () => this.openItemPopup(2)
         },
         {
             ID: 3,
-            Name: 'Coffre secret',
+            LangName: 'chest-random-epic',
             Image: require('Ressources/items/chests/epic.png'),
             Price: 500,
             Rarity: 2,
             Colors: themeManager.GetRariryColors(2),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
-            OnPress: () => {}
+            OnPress: () => this.openItemPopup(3)
         }
     ];
 
-    /** @param {BuyableChest} item */
-    openItemPopup = (item) => {
-        const render = () => renderBuyPopup.call(this, item);
+    /** @param {number} chestID */
+    openItemPopup = (chestID) => {
+        const chest = this.CHESTS.find(chest => chest.ID === chestID);
+        const render = () => renderBuyPopup.call(this, chest);
         user.interface.popup.Open('custom', render);
     }
 }

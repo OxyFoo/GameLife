@@ -20,7 +20,7 @@ class ShopDailyDeals extends BackShopItems {
      * @returns {JSX.Element}
      */
     renderItem = ({ item }) => {
-        const disabled = user.inventory.buyToday.items.includes(item.ID.toString());
+        const disabled = user.shop.buyToday.items.includes(item.ID.toString());
         const rarityText = langManager.curr['rarities'][item.Rarity];
         const rarityStyle = { color: item.Colors[0] };
         const backgroundStyle = { backgroundColor: item.BackgroundColor };
@@ -71,7 +71,7 @@ class ShopDailyDeals extends BackShopItems {
     }
 
     renderEmpty = () => {
-        const lang = langManager.curr['shopItems'];
+        const lang = langManager.curr['shop']['dailyDeals'];
 
         return (
             <Text style={styles.errorText}>

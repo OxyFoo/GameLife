@@ -4,34 +4,29 @@ import { View } from 'react-native';
 import styles from './styles';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Data/Items').Item} Item
+ * @typedef {import('Class/Shop').BuyableRandomChest} BuyableRandomChest
  */
 
-/**
- * @this {import('./back').default}
- * @param {Item} item
- * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
- */
-function renderBuyPopup(item, refreshCallback = () => {}) {
-    const lang = langManager.curr['shopItems'];
+/** @param {BuyableRandomChest} item */
+function renderBuyPopup(item) {
+    const lang = langManager.curr['shop']['randomChests'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const itemName = dataManager.GetText(item.Name);
-    const itemDescription = dataManager.GetText(item.Description);
-    const buttonText = lang['popup-item-button']
-                        .replace('{}', item.Value.toString());
+    const itemName = lang[item.LangName];
+    const itemDescription = lang['popup-chest-text']
+                        .replace('{}', itemName)
+                        .replace('{}', item.Price.toString());
+    const buttonText = lang['popup-chest-button']
+                        .replace('{}', item.Price.toString());
 
     const buy = async () => {
-        if (this.state.buying) return;
-        setLoading(true); this.setState({ buying: true });
-        await buyItem.call(this, item);
-        setLoading(false); this.setState({ buying: false });
-        refreshCallback();
+        setLoading(true);
+        await user.shop.BuyRandomChest(item);
+        setLoading(false);
     };
 
     return (
@@ -40,11 +35,9 @@ function renderBuyPopup(item, refreshCallback = () => {}) {
                 {itemName}
             </Text>
 
-            {itemDescription !== '' && (
-                <Text style={styles.itemPopupText}>
-                    {itemDescription}
-                </Text>
-            )}
+            <Text style={styles.itemPopupText}>
+                {itemDescription}
+            </Text>
 
             <Button
                 style={styles.itemPopupButton}
@@ -56,45 +49,6 @@ function renderBuyPopup(item, refreshCallback = () => {}) {
             </Button>
         </View>
     );
-}
-
-/** @param {Item} item */
-const buyItem = async(item) => {
-    const lang = langManager.curr['shopItems'];
-
-    // Check Ox Amount
-    if (user.informations.ox.Get() < item.Value) {
-        const title = lang['alert-notenoughox-title'];
-        const text = lang['alert-notenoughox-text'];
-        user.interface.popup.ForceOpen('ok', [ title, text ]);
-        return;
-    }
-
-    // Buy item
-    const response = await user.server.Request('buyItem', { itemID: item.ID });
-    if (response === null) return;
-
-    // Request failed
-    if (response['status'] !== 'ok') {
-        const title = lang['alert-buyfailed-title'];
-        const text = lang['alert-buyfailed-text'];
-        user.interface.popup.ForceOpen('ok', [ title, text ]);
-        return;
-    }
-
-    // Update inventory & Ox amount
-    user.inventory.LoadOnline({ stuffs: response['stuffs'] });
-    user.informations.ox.Set(parseInt(response['ox']));
-    user.inventory.buyToday.items.push(item.ID);
-    user.LocalSave();
-
-    // Show success message
-    const itemName = dataManager.GetText(item.Name);
-    const title = lang['alert-buysuccess-title'];
-    const text = lang['alert-buysuccess-text']
-                .replace('{}', itemName)
-                .replace('{}', item.Value.toString());
-    user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 
 export { renderBuyPopup };

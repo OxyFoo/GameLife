@@ -8,6 +8,7 @@ import Multiplayer from 'Class/Multiplayer';
 import Quests from 'Class/Quests';
 import Server from 'Class/Server';
 import Settings from 'Class/Settings';
+import Shop from 'Class/Shop';
 import Tasks from 'Class/Tasks';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
@@ -42,6 +43,7 @@ class UserManager {
         this.quests = new Quests(this);
         this.server = new Server(this);
         this.settings = new Settings(this);
+        this.shop = new Shop(this)
         this.tasks = new Tasks(this);
 
         /**
@@ -92,6 +94,7 @@ class UserManager {
         this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
+        this.shop.Clear();
         this.tasks.Clear();
         await this.settings.Save();
 
@@ -182,6 +185,7 @@ class UserManager {
             'informations': this.informations.Save(),
             'inventory': this.inventory.Save(),
             'quests': this.quests.Save(),
+            'shop': this.shop.Save(),
             'tasks': this.tasks.Save()
         };
 
@@ -207,6 +211,7 @@ class UserManager {
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('inventory')) this.inventory.Load(data['inventory']);
             if (contains('quests')) this.quests.Load(data['quests']);
+            if (contains('shop')) this.shop.Load(data['shop']);
             if (contains('tasks')) this.tasks.Load(data['tasks']);
 
             this.interface.console.EditLog(debugIndex, 'same', 'User data: local load success');
@@ -294,6 +299,7 @@ class UserManager {
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('achievementQueue')) this.achievements.achievementQueue = data['achievementQueue'];
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
+            if (contains('shop')) this.shop.LoadOnline(data['shop']);
             if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);
             if (contains('tasksSort')) this.tasks.tasksSort = data['tasksSort'];
             if (contains('tasksTotal')) this.tasks.tasksTotal.Set(data['tasksTotal']);

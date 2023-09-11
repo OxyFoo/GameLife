@@ -17,7 +17,7 @@ import { Text, Button } from 'Interface/Components';
  * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
  */
 function renderItemPopup(item, refreshCallback = () => {}) {
-    const lang = langManager.curr['shopItems'];
+    const lang = langManager.curr['shop']['dailyDeals'];
     let [ loading, setLoading ] = React.useState(false);
 
     const itemName = dataManager.GetText(item.Name);
@@ -28,7 +28,7 @@ function renderItemPopup(item, refreshCallback = () => {}) {
     const buy = async () => {
         if (this.state.buying) return;
         setLoading(true); this.setState({ buying: true });
-        await buyItem.call(this, item);
+        await buyDailyDeals.call(this, item);
         setLoading(false); this.setState({ buying: false });
         refreshCallback();
     };
@@ -58,25 +58,25 @@ function renderItemPopup(item, refreshCallback = () => {}) {
 }
 
 /** @param {Item} item */
-const buyItem = async(item) => {
-    const lang = langManager.curr['shopItems'];
+const buyDailyDeals = async(item) => {
+    const lang = langManager.curr['shop'];
 
     // Check Ox Amount
     if (user.informations.ox.Get() < item.Value) {
-        const title = lang['alert-notenoughox-title'];
-        const text = lang['alert-notenoughox-text'];
+        const title = lang['popup-notenoughox-title'];
+        const text = lang['popup-notenoughox-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
         return;
     }
 
     // Buy item
-    const response = await user.server.Request('buyItem', { itemID: item.ID });
+    const response = await user.server.Request('buyDailyDeals', { itemID: item.ID });
     if (response === null) return;
 
     // Request failed
     if (response['status'] !== 'ok') {
-        const title = lang['alert-buyfailed-title'];
-        const text = lang['alert-buyfailed-text'];
+        const title = lang['reward-failed-title'];
+        const text = lang['reward-failed-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
         return;
     }
@@ -84,13 +84,13 @@ const buyItem = async(item) => {
     // Update inventory & Ox amount
     user.inventory.LoadOnline({ stuffs: response['stuffs'] });
     user.informations.ox.Set(parseInt(response['ox']));
-    user.inventory.buyToday.items.push(item.ID);
+    user.shop.buyToday.items.push(item.ID);
     user.LocalSave();
 
     // Show success message
     const itemName = dataManager.GetText(item.Name);
-    const title = lang['alert-buysuccess-title'];
-    const text = lang['alert-buysuccess-text']
+    const title = lang['dailyDeals']['popup-buysuccess-title'];
+    const text = lang['dailyDeals']['popup-buysuccess-text']
                 .replace('{}', itemName)
                 .replace('{}', item.Value.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);

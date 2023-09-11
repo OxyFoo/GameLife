@@ -198,14 +198,9 @@
             $tomorrow = date("Y-m-$nextDay 00:00:00");
 
             $items = array();
-            $command = "SELECT `Data` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'buyItem' AND `Date` BETWEEN ? AND ?";
+            $command = "SELECT `Data` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'buyDailyDeals' AND `Date` BETWEEN ? AND ?";
             $result = $db->QueryPrepare('Logs', $command, 'iss', [ $account->ID, $dateNow, $tomorrow ]);
             foreach ($result as $row) array_push($items, $row['Data']);
-
-            $titles = array();
-            $command = "SELECT `Data` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'buyTitle' AND `Date` BETWEEN ? AND ?";
-            $result = $db->QueryPrepare('Logs', $command, 'iss', [ $account->ID, $dateNow, $tomorrow ]);
-            foreach ($result as $row) array_push($titles, intval($row['Data']));
 
             $dyes = array();
             $command = "SELECT `Data` FROM TABLE WHERE `AccountID` = ? AND `Type` = 'buyDye' AND `Date` BETWEEN ? AND ?";
@@ -213,7 +208,6 @@
             foreach ($result as $row) array_push($dyes, intval(explode('/', $row['Data'])[0]));
 
             return array(
-                'titles' => $titles,
                 'items' => $items, 
                 'dyes' => $dyes
             );

@@ -449,10 +449,44 @@
         "banner-targeted-chest": "Coffres ciblés",
         "banner-dye": "Teintures",
 
+        "dailyDeals": {
+            "popup-item-button": "Acheter pour {} Ox",
+            "popup-buysuccess-title": "Achat réussi",
+            "popup-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} Ox",
+
+            "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard."
+        },
+
+        "randomChests": {
+            "chest-random-common": "Coffre perdu",
+            "chest-random-rare": "Coffre ancien",
+            "chest-random-epic": "Coffre secret",
+
+            "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",
+            "popup-chest-button": "Ouvrir pour {} Ox",
+            "popup-buysuccess-title": "Achat réussi",
+            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
+        },
+
+        "targetedChests": {
+        },
+
+        "dyes": {
+            "popup-dyer-text": "Changer l'apparence de cet item ?",
+            "popup-dyer-button": "Teindre pour {} Ox",
+            "popup-dyesuccess-title": "Teinture réussie",
+            "popup-dyesuccess-text": "Vous avez bien teint l'item \"{}\" pour {} Ox",
+
+            "error-no-dye": "Il n'y a aucune teinture de disponible, veuillez acheter des items ou réessayez plus tard."
+        },
+
         "alert-code-title": "Utiliser un code",
         "alert-code-text": "Vous pouvez gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant les codes dans nos vidéos Tiktok et Youtube\n\t- En gagnant un concours sur Instagram ou Twitter",
         "alert-code-input": "Code",
         "alert-code-button": "Valider",
+
+        "popup-notenoughox-title": "Insuffisant",
+        "popup-notenoughox-text": "Tu n'as pas assez d'Ox pour acheter cet item.",
 
         "internet-offline-title": "Pas de connexion",
         "internet-offline-text": "Vous devez être connecté à internet !",
@@ -466,31 +500,6 @@
 
         "temp-comingsoon-title": "Boutique",
         "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
-    },
-
-    "shopItems": {
-        "container-titles": "Titres",
-
-        "popup-title-button": "Acheter pour {} Ox",
-        "popup-item-button": "Acheter pour {} Ox",
-        "popup-dyer-text": "Changer l'apparence de cet item ?",
-        "popup-dyer-button": "Teindre pour {} Ox",
-
-        "alert-buysuccess-title": "Achat réussi",
-        "alert-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} Ox",
-        "alert-dyesuccess-title": "Teinture réussie",
-        "alert-dyesuccess-text": "Vous avez bien teint l'item \"{}\" pour {} Ox",
-        "alert-buytitlesuccess-title": "Achat réussi",
-        "alert-buytitlesuccess-text": "Vous avez bien acheté le titre \"{}\" pour {} Ox",
-        "alert-buyfailed-title": "Achat échoué",
-        "alert-buyfailed-text": "Impossible d'acheter l'item, une erreur est survenue, veuillez réessayer plus tard.",
-        "alert-notenoughox-title": "Insuffisant",
-        "alert-notenoughox-text": "Vous n'avez pas assez d'Ox pour acheter cet item.",
-
-        "error-no-titles": "Une erreur est survenue lors du chargement des titres à vendre, veuillez réessayer plus tard.",
-        "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard.",
-        "error-no-dye": "Il n'y a aucune teinture de disponible, veuillez acheter des items ou réessayez plus tard.",
-        "error-inventory-empty": "Vous ne possédez aucun item"
     },
 
     "skill": {

@@ -11,7 +11,7 @@ import langManager from 'Managers/LangManager';
 import { Button, Text, Icon } from 'Interface/Components';
 
 /**
- * @typedef {import('./back').BuyableChest} BuyableItem
+ * @typedef {import('./back').BuyableRandomChest} BuyableItem
  */
 
 class ShopItems extends BackShopItems {
@@ -20,7 +20,10 @@ class ShopItems extends BackShopItems {
      * @returns {JSX.Element}
      */
     renderItem = ({ item }) => {
-        const disabled = user.inventory.buyToday.items.includes(item.ID.toString());
+        const lang = langManager.curr['shop']['randomChests'];
+        const name = lang[item.LangName];
+
+        const disabled = user.shop.buyToday.items.includes(item.ID.toString());
         const rarityText = langManager.curr['rarities'][item.Rarity];
         const rarityStyle = { color: item.Colors[0] };
         const backgroundStyle = { backgroundColor: item.BackgroundColor };
@@ -32,7 +35,7 @@ class ShopItems extends BackShopItems {
 
                         {/** Chest name & rarity */}
                         <View style={styles.itemInfo}>
-                            <Text style={styles.itemName}>{item.Name}</Text>
+                            <Text style={styles.itemName}>{name}</Text>
                             <Text
                                 style={[styles.itemRarity, rarityStyle]}
                             >
@@ -67,22 +70,11 @@ class ShopItems extends BackShopItems {
         );
     }
 
-    renderEmpty = () => {
-        const lang = langManager.curr['shopItems'];
-
-        return (
-            <Text style={styles.errorText}>
-                {lang['error-no-items']}
-            </Text>
-        );
-    }
-
     render() {
         return (
             <FlatList
                 style={styles.flatlist}
                 data={this.CHESTS}
-                ListEmptyComponent={this.renderEmpty}
                 numColumns={3}
                 renderItem={this.renderItem}
                 keyExtractor={(item) => `buyable-random-chest-${item.ID}`}

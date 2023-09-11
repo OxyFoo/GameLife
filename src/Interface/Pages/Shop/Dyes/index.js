@@ -21,7 +21,7 @@ class ShopDyes extends BackShopDyes {
      */
     renderDye = ({ item: dyer }) => {
         const { ItemBefore, ItemAfter } = dyer;
-        const disabled = user.inventory.buyToday.dyes.includes(dyer.ItemBefore.InventoryID);
+        const disabled = user.shop.buyToday.dyes.includes(dyer.ItemBefore.InventoryID);
         const backgroundStyle = { backgroundColor: dyer.BackgroundColor };
 
         return (
@@ -57,7 +57,7 @@ class ShopDyes extends BackShopDyes {
     }
 
     renderEmpty = () => {
-        const lang = langManager.curr['shopItems'];
+        const lang = langManager.curr['shop']['dyes'];
 
         return (
             <Text style={styles.errorText}>
@@ -67,7 +67,6 @@ class ShopDyes extends BackShopDyes {
     }
 
     render() {
-        const lang = langManager.curr['shopItems'];
         const { buyableDyes } = this.state;
 
         return (

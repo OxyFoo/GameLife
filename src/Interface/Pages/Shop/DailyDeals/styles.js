@@ -1,17 +1,16 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    errorText: {
-        padding: 12
-    },
-
     flatlist: {
         maxHeight: '33%', // Why ?
         paddingHorizontal: 12,
         marginBottom: 24
     },
+    errorText: {
+        padding: 12
+    },
 
-    // Items
+    // Daily deals
     itemParent: {
         width: '33%',
         aspectRatio: 1/1.3,
@@ -34,16 +33,7 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         overflow: 'hidden'
     },
-    itemFrameContainer: {
-        width: '90%',
-        aspectRatio: 1/1,
-        zIndex: -10,
-        elevation: -10
-    },
-    itemFrame: {
-        width: '100%',
-        height: '100%'
-    },
+
     itemInfo: {
         position: 'absolute',
         top: 12,
@@ -61,6 +51,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
+    itemFrameContainer: {
+        width: '90%',
+        aspectRatio: 1/1,
+        zIndex: -10,
+        elevation: -10
+    },
+    itemFrame: {
+        width: '100%',
+        height: '100%'
+    },
+
     itemPrice: {
         position: 'absolute',
         bottom: 12,
@@ -76,14 +77,14 @@ const styles = StyleSheet.create({
         marginRight: 4
     },
 
-    itemBorder: {
+    itemDecoration: {
         position: 'absolute',
         top: 0,
         width: '100%',
         height: 4
     },
 
-    // Popup - Item
+    // Popup
     itemPopup: {
         padding: 24
     },

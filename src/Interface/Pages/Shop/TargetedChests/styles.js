@@ -1,11 +1,25 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    flatlist: {
+    flatlistTargets: {
+        paddingHorizontal: 12,
+        marginBottom: 24
+    },
+    flatlistTargetsContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    flatlistChests: {
         paddingHorizontal: 12,
         marginBottom: 24
     },
 
+    category: {
+        paddingHorizontal: 28,
+        paddingVertical: 28
+    },
+
+    // Item
     itemParent: {
         width: '33%',
         aspectRatio: 1/1.3,
@@ -23,14 +37,7 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         overflow: 'hidden'
     },
-    chest: {
-        width: '100%',
-        height: '100%',
-        transform: [
-            { scale: .7 },
-            { translateY: 12 }
-        ]
-    },
+
     itemInfo: {
         position: 'absolute',
         top: 12,
@@ -48,6 +55,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
+    imageChest: {
+        width: '100%',
+        height: '100%',
+        transform: [
+            { scale: .7 },
+            { translateY: 12 }
+        ]
+    },
+
     itemPrice: {
         position: 'absolute',
         bottom: 12,
@@ -63,14 +79,14 @@ const styles = StyleSheet.create({
         marginRight: 4
     },
 
-    itemBorder: {
+    itemDecoration: {
         position: 'absolute',
         top: 0,
         width: '100%',
         height: 4
     },
 
-    // Popup - Item
+    // Popup
     itemPopup: {
         padding: 24
     },
@@ -84,10 +100,6 @@ const styles = StyleSheet.create({
     },
     itemPopupButton: {
         marginTop: 24
-    },
-
-    errorText: {
-        padding: 12
     }
 });
 

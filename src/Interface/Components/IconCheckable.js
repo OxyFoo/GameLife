@@ -9,6 +9,7 @@ import { IsUndefined } from 'Utils/Functions';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
@@ -17,8 +18,11 @@ const IconCheckableProps = {
     /** @type {StyleProp} */
     style: {},
 
+    /** @type {Icons} */
+    icon: undefined,
+
     /** @type {string} Display an icon from XML base64 encoded */
-    xml: '',
+    xml: undefined,
 
     /** @type {number} Size of the icon */
     size: 24,
@@ -46,11 +50,13 @@ const IconCheckableProps = {
 }
 
 class IconCheckable extends React.Component {
-    constructor(props) {
-        super(props);
+    state = { checked: false };
+    rippleRef = React.createRef();
 
-        this.rippleRef = React.createRef(); 
-        this.state = { checked: false };
+    componentDidMount() {
+        if (!IsUndefined(this.props.checked)) {
+            this.setState({ checked: this.props.checked });
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -72,7 +78,7 @@ class IconCheckable extends React.Component {
     }
 
     render() {
-        const { style, colorOn, colorOff, xml, size } = this.props;
+        const { style, colorOn, colorOff, xml, icon, size } = this.props;
 
         const iconColor = this.state.checked ? colorOff : colorOn;
         const backgroundColor = this.state.checked ? colorOn : colorOff;
@@ -82,20 +88,19 @@ class IconCheckable extends React.Component {
         const buttonStyle = [ styles.box, { height: btnSize, paddingVertical: padding, paddingHorizontal: padding }, style ];
 
         return (
-            <>
-                <Button
-                    style={buttonStyle}
-                    color={backgroundColor}
-                    borderRadius={10}
-                    onPress={this.switch}
-                >
-                    <Icon
-                        xml={xml}
-                        color={iconColor}
-                        size={size} 
-                    />
-                </Button>
-            </>
+            <Button
+                style={buttonStyle}
+                color={backgroundColor}
+                borderRadius={10}
+                onPress={this.switch}
+            >
+                <Icon
+                    xml={xml}
+                    icon={icon}
+                    color={iconColor}
+                    size={size} 
+                />
+            </Button>
         );
     }
 }

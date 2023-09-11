@@ -58,7 +58,7 @@ class ShopDailyDeals extends BackShopItems {
 
                         {/** Decoration */}
                         <LinearGradient
-                            style={styles.itemBorder}
+                            style={styles.itemDecoration}
                             colors={item.Colors}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}

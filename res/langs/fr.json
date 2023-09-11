@@ -458,9 +458,9 @@
         },
 
         "randomChests": {
-            "chest-random-common": "Coffre perdu",
-            "chest-random-rare": "Coffre ancien",
-            "chest-random-epic": "Coffre secret",
+            "chest-random-common": "Coffre simple",
+            "chest-random-rare": "Coffre mystérieux",
+            "chest-random-epic": "Coffre des légendes",
 
             "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",
             "popup-chest-button": "Ouvrir pour {} Ox",
@@ -469,6 +469,17 @@
         },
 
         "targetedChests": {
+            "targets": {
+                "hair": "Tête",
+                "top": "Haut",
+                "bottom": "Bas",
+                "shoes": "Pieds"
+            },
+
+            "popup-chest-text": "Tu veux ouvrir un coffre {} pour obtenir un item de type \"{}\" pour {} Ox ?",
+            "popup-chest-button": "Ouvrir pour {} Ox",
+            "popup-buysuccess-title": "Achat réussi",
+            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
         },
 
         "dyes": {

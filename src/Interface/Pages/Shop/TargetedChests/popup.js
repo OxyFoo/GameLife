@@ -4,36 +4,36 @@ import { View } from 'react-native';
 import styles from './styles';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Shop').BuyableRandomChest} BuyableRandomChest
+ * @typedef {import('./back').Slot} Slot
+ * @typedef {import('Class/Shop').BuyableTargetedChest} BuyableTargetedChest
  */
 
-/** @param {BuyableRandomChest} item */
+/** @param {BuyableTargetedChest} item */
 function renderBuyPopup(item) {
-    const lang = langManager.curr['shop']['randomChests'];
+    const lang = langManager.curr['shop']['targetedChests'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const itemName = lang[item.LangName];
     const itemDescription = lang['popup-chest-text']
-                        .replace('{}', itemName)
+                        .replace('{}', langManager.curr['rarities'][item.Rarity])
+                        .replace('{}', item.Name)
                         .replace('{}', item.Price.toString());
     const buttonText = lang['popup-chest-button']
                         .replace('{}', item.Price.toString());
 
     const buy = async () => {
         setLoading(true);
-        await user.shop.BuyRandomChest(item);
+        await user.shop.BuyTargetedChest(item);
         setLoading(false);
     };
 
     return (
         <View style={styles.itemPopup}>
             <Text style={styles.itemPopupTitle}>
-                {itemName}
+                {item.Name}
             </Text>
 
             <Text style={styles.itemPopupText}>

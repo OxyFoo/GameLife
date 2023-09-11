@@ -26,11 +26,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
 
-    dyeBorder: {
+    dyeDecoration: {
         position: 'absolute',
         top: 0,
         width: '100%',
         height: 4
+    },
+
+    errorText: {
+        padding: 12
     },
 
     // Popup - Item
@@ -47,10 +51,6 @@ const styles = StyleSheet.create({
     },
     popupButton: {
         marginTop: 24
-    },
-
-    errorText: {
-        padding: 12
     }
 });
 

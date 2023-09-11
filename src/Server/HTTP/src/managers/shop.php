@@ -84,19 +84,20 @@
          * @param DataBase $db
          * @param Account $account
          * @param Device $device
-         * @param 'common'|'rare'|'epic' $rarity
+         * @param int $rarity 0 = common, 1 = rare, 2 = epic
          * @return array|false Return items ID if success, false otherwise
          */
         public static function BuyRandomChest($db, $account, $device, $rarity) {
+            if ($rarity < 0 || $rarity > 2) return false;
             $rarities = array('common', 'rare', 'epic', 'legendary');
-            $prices = array('common' => 50, 'rare'   => 200, 'epic'   => 500);
+            $prices = array(50, 200, 500);
             $stats = array(
-                'common' => array('common' => .90, 'rare' => .09, 'epic' => .0099, 'legendary' => 0.0001),
-                'rare'   => array('common' => .20, 'rare' => .75, 'epic' => .045,  'legendary' => .005),
-                'epic'   => array('common' => 0,   'rare' => .29, 'epic' => .70,   'legendary' => .01)
+                /* Common */ array('common' => .90, 'rare' => .09, 'epic' => .0099, 'legendary' => 0.0001),
+                /* Rare */   array('common' => .20, 'rare' => .75, 'epic' => .045,  'legendary' => .005),
+                /* Epic */   array('common' => 0,   'rare' => .29, 'epic' => .70,   'legendary' => .01)
             );
 
-            // Check if account has enough ox (manage chests price)
+            // Check if account has enough ox
             if ($account->Ox < $prices[$rarity]) {
                 $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$prices[$rarity])");
                 return false;
@@ -113,16 +114,16 @@
             $randomRarity = null;
             foreach ($stats[$rarity] as $currentRarity => $chance) {
                 if ($random < $chance) {
-                    $randomRarity = $currentRarity;
+                    $randomRarity = array_search($currentRarity, $rarities);
                     break;
                 }
                 $random -= $chance;
             }
+            if ($randomRarity === null) return false;
 
             // Get random item from rarity
-            $rarityIndex = array_search($randomRarity, $rarities);
             $command = 'SELECT `ID` FROM TABLE WHERE `Rarity` = ? AND `Buyable` = 1';
-            $items = $db->QueryPrepare('Items', $command, 'i', [ $rarityIndex ]);
+            $items = $db->QueryPrepare('Items', $command, 'i', [ $randomRarity ]);
             if ($items === false || count($items) === 0) return false;
 
             // Add item to inventory
@@ -144,47 +145,67 @@
         }
 
         /**
-         * TODO: Finish this function
          * Buy a targeted chest
          * @param DataBase $db
          * @param Account $account
          * @param Device $device
-         * @param 'title'|'hair'|'top'|'bottom'|'shoes' $type
-         * @param int $rarity 0 = common, 1 = rare, 2 = epic (skip if type is title)
+         * @param 'hair'|'top'|'bottom'|'shoes' $slot
+         * @param int $rarity 0 = common, 1 = rare, 2 = epic
          * @return string[]|false Return items ID if success, false otherwise
          */
-        public static function BuyTargetChest($db, $account, $device, $type, $rarity) {
-            $types = array('random', 'title', 'hair', 'top', 'bottom', 'shoes');
-            if (!in_array($type, $types)) {
-                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with invalid type ($type)");
+        public static function BuyTargetChest($db, $account, $device, $slot, $rarity) {
+            $rarities = array('common', 'rare', 'epic', 'legendary');
+            $prices = array(60, 240, 600);
+            $stats = array(
+                /* Common */ array('common' => .99, 'rare' => .009, 'epic' => .001, 'legendary'  => 0),
+                /* Rare */   array('common' => .27, 'rare' => .70,  'epic' => .029,  'legendary' => .001),
+                /* Epic */   array('common' => 0,   'rare' => .3,   'epic' => .65,   'legendary' => .05)
+            );
+
+            // Check if account has enough ox
+            if ($account->Ox < $prices[$rarity]) {
+                $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$prices[$rarity])");
                 return false;
             }
 
-            if ($type === 'random') {
-                $stats = array(
-                    '0' => array('common' => .90, 'rare' => .09, 'epic' => .0099, 'legendary' => 0.0001),
-                    '1' => array('common' => .20, 'rare' => .75, 'epic' => .045,  'legendary' => .005),
-                    '2' => array('common' => 0,   'rare' => .29, 'epic' => .70,   'legendary' => .01)
-                );
-            }
-
-            // Check if account has enough ox (manage chests price)
-
-            //$db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/1000)");
-            //return false;
-
             // Update account ox
+            $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $prices[$rarity], $account->ID ]);
+            if ($result === false) return false;
+            $account->Ox -= $prices[$rarity];
 
-            // Get random item from type
+            // Get random rarity (with stats)
+            $random = (rand()&1000000)/1000001;
+            $randomRarity = null;
+            foreach ($stats[$rarity] as $currentRarity => $chance) {
+                if ($random < $chance) {
+                    $randomRarity = array_search($currentRarity, $rarities);
+                    break;
+                }
+                $random -= $chance;
+            }
+            if ($randomRarity === null) return false;
+
+            // Get random item from slot & rarity
+            $command = 'SELECT `ID` FROM TABLE WHERE `Slot` = ? AND `Rarity` = ? AND `Buyable` = 1';
+            $items = $db->QueryPrepare('Items', $command, 'si', [ $slot, $randomRarity ]);
+            if ($items === false || count($items) === 0) return false;
 
             // Add item to inventory
+            $randomItem = $items[rand(0, count($items) - 1)];
+            $result = Items::AddInventoryItem($db, $account, $randomItem['ID']);
 
-            // Add result in logs
-            //$db->AddLog($account->ID, $device->ID, 'buyTargetedChest', "$rarity/$randomRarity/$randomItem[ID]");
+            // Get new item
+            $command = 'SELECT `ID`, `ItemID`, `CreatedBy`, `CreatedAt` FROM TABLE WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Inventories', $command, 'i', [ $result ]);
+            if ($result === false || count($result) === 0) return false;
+            $addedItem = $result[0];
+
+            // Add result in logs and return new values (item, ox ?)
+            $db->AddLog($account->ID, $device->ID, 'buyRandomChest', "$rarity/$randomRarity/$randomItem[ID]");
 
             return array(
-                'titles' => array(),
-                'items' => array()
+                'items' => [ $addedItem ]
             );
         }
 

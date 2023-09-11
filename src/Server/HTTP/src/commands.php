@@ -389,9 +389,7 @@
 
         public function BuyRandomChest() {
             $rarity = $this->data['rarity'];
-            $rarities = array('common', 'rare', 'epic');
-            if (!$this->tokenChecked) return;
-            if (!isset($rarity) || !in_array($rarity, $rarities)) return;
+            if (!$this->tokenChecked || !isset($rarity)) return;
             $account = $this->account;
             $device = $this->device;
 
@@ -403,30 +401,26 @@
             $this->output['status'] = 'ok';
         }
 
-        // TODO: Not finished
         public function BuyTargetChest() {
-            $type = $this->data['type'];
+            $slot = $this->data['slot'];
             $rarity = $this->data['rarity'];
-            if (!isset($type) || !$this->tokenChecked) return;
+            if (!isset($slot, $rarity) || !$this->tokenChecked) return;
             $account = $this->account;
             $device = $this->device;
 
-            # Valid types
-            $types = array('random', 'title', 'hair', 'top', 'bottom', 'shoes');
-            $rarities = array('common', 'rare', 'epic');
-
-            $isNotTypeInTypes = !in_array($type, $types);
-            $isTitleAndNotRarity = ($type !== 'title' && (!isset($rarity) || !in_array($rarity, $rarities)));
-            if ($isNotTypeInTypes || $isTitleAndNotRarity) {
-                $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with invalid type ($type)");
+            # Valid slots
+            $slots = array('hair', 'top', 'bottom', 'shoes');
+            if (!in_array($slot, $slots) || $rarity < 0 || $rarity > 2) {
+                $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with invalid slot or rarity ($slot/$rarity)");
                 return false;
             }
 
-            $newItems = Shop::BuyTargetChest($this->db, $account, $device, $type, $rarity);
+            $newItems = Shop::BuyTargetChest($this->db, $account, $device, $slot, $rarity);
             if ($newItems === false) return;
 
             $this->output['ox'] = $account->Ox;
             $this->output['newItems'] = $newItems;
+            $this->output['status'] = 'ok';
         }
 
         public function BuyDye() {

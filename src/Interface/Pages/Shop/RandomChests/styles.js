@@ -23,14 +23,6 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         overflow: 'hidden'
     },
-    chest: {
-        width: '100%',
-        height: '100%',
-        transform: [
-            { scale: .7 },
-            { translateY: 12 }
-        ]
-    },
     itemInfo: {
         position: 'absolute',
         top: 12,
@@ -41,11 +33,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     itemName: {
-        fontSize: 14
+        fontSize: 10
     },
     itemRarity: {
         fontSize: 11,
         fontWeight: 'bold'
+    },
+
+    imageChest: {
+        width: '100%',
+        height: '100%',
+        transform: [
+            { scale: .7 },
+            { translateY: 12 }
+        ]
     },
 
     itemPrice: {
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
         marginRight: 4
     },
 
-    itemBorder: {
+    itemDecoration: {
         position: 'absolute',
         top: 0,
         width: '100%',
@@ -84,10 +85,6 @@ const styles = StyleSheet.create({
     },
     itemPopupButton: {
         marginTop: 24
-    },
-
-    errorText: {
-        padding: 12
     }
 });
 

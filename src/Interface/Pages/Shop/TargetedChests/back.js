@@ -2,20 +2,53 @@ import * as React from 'react';
 
 import { renderBuyPopup } from './popup';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 /**
- * @typedef {import('Class/Shop').BuyableRandomChest} BuyableRandomChest
+ * @typedef {import('Class/Shop').Slot} Slot
+ * @typedef {import('Class/Shop').Target} Target
+ * @typedef {import('Class/Shop').BuyableTargetedChest} BuyableTargetedChest
  */
 
 class BackShopItems extends React.Component {
-    /** @type {BuyableRandomChest[]} */
+    state = {
+        /** @type {'hair'|'top'|'bottom'|'shoes'} */
+        selectedCategory: 'hair'
+    };
+
+    /** @type {Target[]} */
+    TARGETS = [
+        {
+            id: 'hair',
+            icon: 'slotHair',
+            onPress: () => this.selectSlot('hair')
+        },
+        {
+            id: 'top',
+            icon: 'slotTop',
+            onPress: () => this.selectSlot('top')
+        },
+        {
+            id: 'bottom',
+            icon: 'slotBottom',
+            onPress: () => this.selectSlot('bottom')
+        },
+        {
+            id: 'shoes',
+            icon: 'slotShoes',
+            onPress: () => this.selectSlot('shoes')
+        }
+    ];
+
+    /** @type {BuyableTargetedChest[]} */
     CHESTS = [
         {
             ID: 1,
-            LangName: 'chest-random-common',
+            Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
+            Slot: 'hair',
             Image: require('Ressources/items/chests/common.png'),
-            Price: 50,
+            Price: 60,
             Rarity: 0,
             Colors: themeManager.GetRariryColors(0),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
@@ -23,9 +56,10 @@ class BackShopItems extends React.Component {
         },
         {
             ID: 2,
-            LangName: 'chest-random-rare',
+            Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
+            Slot: 'hair',
             Image: require('Ressources/items/chests/rare.png'),
-            Price: 200,
+            Price: 240,
             Rarity: 1,
             Colors: themeManager.GetRariryColors(1),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
@@ -33,15 +67,26 @@ class BackShopItems extends React.Component {
         },
         {
             ID: 3,
-            LangName: 'chest-random-epic',
+            Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
+            Slot: 'hair',
             Image: require('Ressources/items/chests/epic.png'),
-            Price: 500,
+            Price: 600,
             Rarity: 2,
             Colors: themeManager.GetRariryColors(2),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
             OnPress: () => this.openItemPopup(3)
         }
     ];
+
+    /** @param {Slot} slot */
+    selectSlot = (slot) => {
+        const lang = langManager.curr['shop']['targetedChests'];
+        this.CHESTS.forEach(chest => {
+            chest.Name = lang['targets'][slot];
+            chest.Slot = slot;
+        });
+        this.setState({ selectedCategory: slot });
+    }
 
     /** @param {number} chestID */
     openItemPopup = (chestID) => {

@@ -22,10 +22,13 @@ class ShopDyes extends BackShopDyes {
     renderDye = ({ item: dyer }) => {
         const { ItemBefore, ItemAfter } = dyer;
         const disabled = user.shop.buyToday.dyes.includes(dyer.ItemBefore.InventoryID);
-        const backgroundStyle = { backgroundColor: dyer.BackgroundColor };
+        const buttonStyle = {
+            flexDirection: !disabled ? 'row' : 'row-reverse',
+            backgroundColor: dyer.BackgroundColor
+        };
 
         return (
-            <Button style={[styles.dyeView, backgroundStyle]} onPress={dyer.OnPress} enabled={!disabled}>
+            <Button style={[styles.dyeView, buttonStyle]} onPress={dyer.OnPress} enabled={!disabled}>
                 {/** Item before */}
                 <Frame
                     style={styles.dyerFrame}
@@ -51,7 +54,7 @@ class ShopDyes extends BackShopDyes {
                     size={ItemAfter.Size}
                 />
 
-                <LinearGradient style={styles.dyeBorder} colors={dyer.Colors} />
+                <LinearGradient style={styles.dyeDecoration} colors={dyer.Colors} />
             </Button>
         );
     }

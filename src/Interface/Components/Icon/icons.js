@@ -32,6 +32,10 @@ import svgOx from 'Ressources/icons/ox';
 import svgSetting from 'Ressources/icons/setting';
 import svgShop from 'Ressources/icons/shop';
 import svgSleepZzz from 'Ressources/icons/sleep-zzz';
+import svgSlotBottom from 'Ressources/icons/slot-bottom';
+import svgSlotHair from 'Ressources/icons/slot-hair';
+import svgSlotShoes from 'Ressources/icons/slot-shoes';
+import svgSlotTop from 'Ressources/icons/slot-top';
 import svgSocial from 'Ressources/icons/social';
 import svgSuccess from 'Ressources/icons/success';
 import svgTiktok from 'Ressources/icons/tiktok';
@@ -77,6 +81,10 @@ const SVGIcons = {
     setting: svgSetting,
     shop: svgShop,
     sleepZzz: svgSleepZzz,
+    slotBottom: svgSlotBottom,
+    slotHair: svgSlotHair,
+    slotShoes: svgSlotShoes,
+    slotTop: svgSlotTop,
     social: svgSocial,
     success: svgSuccess,
     tiktok: svgTiktok,

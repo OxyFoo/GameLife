@@ -8,21 +8,38 @@ import styles from './styles';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Button, Text, Icon } from 'Interface/Components';
+import { Button, Text, Icon, IconCheckable } from 'Interface/Components';
 
 /**
- * @typedef {import('./back').BuyableRandomChest} BuyableItem
+ * @typedef {import('./back').Target} Target
+ * @typedef {import('./back').BuyableTargetedChest} BuyableTargetedChest
  */
 
 class ShopItems extends BackShopItems {
     /**
-     * @param {{ item: BuyableItem }} item
+     * @param {{ item: Target }} param0
+     * @returns {JSX.Element}
+     */
+    renderCategory = ({ item }) => {
+        const { id, icon, onPress } = item;
+        const checked = this.state.selectedCategory === id;
+
+        return (
+            <IconCheckable
+                style={styles.category}
+                icon={icon}
+                size={32}
+                checked={checked}
+                onPress={onPress}
+            />
+        );
+    }
+
+    /**
+     * @param {{ item: BuyableTargetedChest }} item
      * @returns {JSX.Element}
      */
     renderItem = ({ item }) => {
-        const lang = langManager.curr['shop']['randomChests'];
-        const name = lang[item.LangName];
-
         const disabled = user.shop.buyToday.items.includes(item.ID.toString());
         const rarityText = langManager.curr['rarities'][item.Rarity];
         const rarityStyle = { color: item.Colors[0] };
@@ -35,7 +52,7 @@ class ShopItems extends BackShopItems {
 
                         {/** Chest name & rarity */}
                         <View style={styles.itemInfo}>
-                            <Text style={styles.itemName}>{name}</Text>
+                            <Text style={styles.itemName}>{item.Name}</Text>
                             <Text
                                 style={[styles.itemRarity, rarityStyle]}
                             >
@@ -45,7 +62,7 @@ class ShopItems extends BackShopItems {
 
                         {/** Chest frame */}
                         <Image
-                            style={styles.chest}
+                            style={styles.imageChest}
                             source={item.Image}
                             resizeMode='contain'
                         />
@@ -58,7 +75,7 @@ class ShopItems extends BackShopItems {
 
                         {/** Decoration */}
                         <LinearGradient
-                            style={styles.itemBorder}
+                            style={styles.itemDecoration}
                             colors={item.Colors}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
@@ -72,13 +89,22 @@ class ShopItems extends BackShopItems {
 
     render() {
         return (
-            <FlatList
-                style={styles.flatlist}
-                data={this.CHESTS}
-                numColumns={3}
-                renderItem={this.renderItem}
-                keyExtractor={(item) => `buyable-random-chest-${item.ID}`}
-            />
+            <>
+                <FlatList
+                    style={styles.flatlistTargets}
+                    contentContainerStyle={styles.flatlistTargetsContent}
+                    data={this.TARGETS}
+                    renderItem={this.renderCategory}
+                    keyExtractor={(item) => `target-category-${item.id}`}
+                />
+                <FlatList
+                    style={styles.flatlistChests}
+                    data={this.CHESTS}
+                    numColumns={3}
+                    renderItem={this.renderItem}
+                    keyExtractor={(item) => `buyable-random-chest-${item.ID}`}
+                />
+            </>
         );
     }
 }

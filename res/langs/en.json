@@ -458,9 +458,9 @@
         },
 
         "randomChests": {
-            "chest-random-common": "Lost chest",
-            "chest-random-rare": "Old chest",
-            "chest-random-epic": "Secret chest",
+            "chest-random-common": "Simple chest",
+            "chest-random-rare": "Mysterious chest",
+            "chest-random-epic": "Chest of legends",
 
             "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
             "popup-chest-button": "Open for {} Ox",
@@ -469,6 +469,17 @@
         },
 
         "targetedChests": {
+            "targets": {
+                "hair": "Head",
+                "top": "Top",
+                "bottom": "Bottom",
+                "shoes": "Feet"
+            },
+
+            "popup-chest-text": "You want to open a {} chest to get an item of type \"{}\" for {} Ox?",
+            "popup-chest-button": "Open for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
         },
 
         "dyes": {

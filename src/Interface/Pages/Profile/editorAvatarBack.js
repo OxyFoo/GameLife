@@ -184,7 +184,8 @@ class EditorAvatarBack extends React.Component {
         // Confirm sell
         const item = dataManager.items.GetByID(stuffSelected.ItemID);
         const title = lang['alert-sellconfirm-title'];
-        const text = lang['alert-sellconfirm-text'].replace('{}', Math.ceil(item.Value * .75));
+        const text = lang['alert-sellconfirm-text']
+                        .replace('{}', Math.ceil(item.Value * .75).toString());
         user.interface.popup.Open('yesno', [ title, text ], async (btn) => {
             if (btn === 'no') return;
 
@@ -209,7 +210,7 @@ class EditorAvatarBack extends React.Component {
             const title = lang['alert-sellsuccess-title'];
             let text = lang['alert-sellsuccess-text'];
             text = text.replace('{}', dataManager.GetText(item.Name));
-            text = text.replace('{}', Math.ceil(item.Value * .75));
+            text = text.replace('{}', Math.ceil(item.Value * .75).toString());
             user.interface.popup.Open('ok', [ title, text ], undefined, false);
         });
     }

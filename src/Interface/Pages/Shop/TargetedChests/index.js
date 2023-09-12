@@ -98,6 +98,7 @@ class ShopItems extends BackShopItems {
                     keyExtractor={(item) => `target-category-${item.id}`}
                 />
                 <FlatList
+                    ref={ref => this.refTuto1 = ref}
                     style={styles.flatlistChests}
                     data={this.CHESTS}
                     numColumns={3}

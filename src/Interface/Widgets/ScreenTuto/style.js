@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         bottom: '10%',
-        alignItems: 'center'
+        alignItems: 'center',
+        opacity: .8
     },
     defaultButton: {
         width: '50%'

@@ -11,7 +11,10 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                text: lang['main']['home-1']
+                text: lang['main']['home-1'],
+                execBefore: () => {
+                    this.refPage?.GotoY(0);
+                }
             },
             {
                 component: user.interface.header.refContainer,

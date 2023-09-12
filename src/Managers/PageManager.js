@@ -301,7 +301,7 @@ class PageManager extends React.Component{
             this.setState({ selectedPage: newPage }, () => {
                 if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
                     CACHE_PAGES.temp.ref.refPage.Show();
-                    CACHE_PAGES.temp.ref.componentDidFocused();
+                    CACHE_PAGES.temp.ref.componentDidFocused(args);
                 } else if (DEBUG_MODE) {
                     console.log('Ref undefined (temp)', CACHE_PAGES.temp);
                 }

@@ -639,10 +639,11 @@
             "calendar-3": "And you can click here to display the month calendar",
             "calendar-4": "Finally, let's go and see the store!",
 
-            "shop-1": "At the top you can enter a code to get rewardsWatch an ad to earn Ox for free (Ox are the app's virtual currency)\nAnd buy Ox with money (this page will be available in future updates!)",
-            "shop-2": "You can spend your Ox here to buy titles, which you can select in your profile to display next to your nickname",
-            "shop-3": "And here you can buy items to personalize your avatar, which you can equip in your profile!",
-            "shop-4": "Finally you can modify items you already have, it's cheaper than buying new ones!",
+            "shop-1": "At the top you can enter a code to get rewards",
+            "shop-2": "Here you can watch an ad to earn Ox for free (Ox are the app's virtual currency)",
+            "shop-3": "Yan can buy Ox with money (this page will be available in future updates!)",
+            "shop-4": "You can spend your Ox here to buy items, which you can equip in your profile - offers change every day!",
+            "shop-5": "In this category, you can buy chests containing a random item. The rarer the chest, the greater the chance of getting a quality item!",
 
             "home-8": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
         },
@@ -664,6 +665,13 @@
         "profile": {
             "1": "This is your profile, you can change your personal information here",
             "2": "This is your avatar, you can click on it to change your appearance"
+        },
+
+        "shop": {
+            "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
+            "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
+            "targetedChests": "You can buy targeted chests, in which you are sure you have an item in the category you have chosen!",
+            "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
         },
 
         "task": {

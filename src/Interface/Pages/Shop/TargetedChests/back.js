@@ -17,6 +17,8 @@ class BackShopItems extends React.Component {
         selectedCategory: 'hair'
     };
 
+    refTuto1 = null;
+
     /** @type {Target[]} */
     TARGETS = [
         {

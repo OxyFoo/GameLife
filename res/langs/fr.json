@@ -639,10 +639,11 @@
             "calendar-3": "Et tu peux cliquer ici pour afficher le calendrier des mois",
             "calendar-4": "Pour finir allons voir la boutique !",
 
-            "shop-1": "En haut tu peux entrer un code pour obtenir des récompenses\nRegarder une pub pour gagner des Ox gratuitement (les Ox étant la monnaie virtuelle de l'application)\nEt acheter des Ox avec de l'argent (cette page sera disponible dans les prochaines mises à jour !)",
-            "shop-2": "Tu peux dépenser tes Ox ici pour acheter des titres, que tu pourras sélectionner dans ton profil pour l'afficher à côté de ton pseudo",
-            "shop-3": "Et ici tu peux acheter des items pour personnaliser ton avatar, tu peux les équiper dans ton profil !",
-            "shop-4": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !",
+            "shop-1": "En haut tu peux entrer un code pour obtenir des récompenses",
+            "shop-2": "Ici tu peux regarder une pub pour gagner des Ox gratuitement (les Ox étant la monnaie virtuelle de l'application)",
+            "shop-3": "Et ici c'est pour acheter des Ox avec de l'argent (cette page sera disponible dans les prochaines mises à jour !)",
+            "shop-4": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
+            "shop-5": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
 
             "home-8": "Voilà ! Je vais maintenant te laisser découvrir l'application par toi-même, si tu as besoin d'aide tu peux m'appeler en appuyant sur les boutons d'aide !\n\nBonne chance, même si je sais que tu n'en pas besoin ;)"
         },
@@ -664,6 +665,13 @@
         "profile": {
             "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
             "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
+        },
+
+        "shop": {
+            "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
+            "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
+            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr d'avoir un item de la catégorie que tu as choisie !",
+            "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
         },
 
         "task": {

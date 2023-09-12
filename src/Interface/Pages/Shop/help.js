@@ -8,13 +8,13 @@ import { Sleep } from 'Utils/Functions';
  * @param {'dailyDeals'|'randomChests'|'targetChests'|'dyes'} section
  */
 function StartHelp(section) {
-    const lang = langManager.curr['tuto'];
+    const lang = langManager.curr['tuto']['shop'];
 
     if (section === 'dailyDeals') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto1,
-                text: lang['main']['shop-1'],
+                component: this.refTuto2,
+                text: lang['dailyDeals'],
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(0);
                     await Sleep(400);
@@ -24,17 +24,21 @@ function StartHelp(section) {
     } else if (section === 'randomChests') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto2,
-                text: lang['main']['shop-2']
+                component: this.refTuto3,
+                text: lang['randomChests'],
+                execBefore: async () => {
+                    user.interface.GetCurrentPage()?.refPage?.GotoY(200);
+                    await Sleep(400);
+                },
             }
         ]);
     } else if (section === 'targetChests') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto3,
-                text: lang['main']['shop-3'],
+                component: this.refTuto4.refTuto1,
+                text: lang['targetedChests'],
                 execBefore: async () => {
-                    user.interface.GetCurrentPage()?.refPage?.GotoY(200);
+                    user.interface.GetCurrentPage()?.refPage?.GotoY(500);
                     await Sleep(400);
                 }
             }
@@ -42,10 +46,10 @@ function StartHelp(section) {
     } else if (section === 'dyes') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto4,
-                text: lang['main']['shop-4'],
+                component: this.refTuto5,
+                text: lang['dyes'],
                 execBefore: async () => {
-                    user.interface.GetCurrentPage()?.refPage?.GotoY(400);
+                    user.interface.GetCurrentPage()?.refPage?.GotoY(700);
                     await Sleep(600);
                 }
             }

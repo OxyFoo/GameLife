@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 import { FirebaseAdMobTypes } from '@react-native-firebase/admob';
 
 import { openPopupCode } from './popupGiftCode';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { OX_AMOUNT } from 'Class/Admob';
 import { Icon, Text, Button } from 'Interface/Components';
@@ -12,10 +13,12 @@ import { Icon, Text, Button } from 'Interface/Components';
 /**
  * @typedef {import('Class/Admob').AdEvent} AdEvent
  * @typedef {import('Class/Admob').AdStates} AdStates
+ * @typedef {import('Interface/Components').Page} Page
  */
 
 const ShopHeaderPropTypes = {
-    refContainer: null
+    /** @type {Page|null} */
+    refPage: null
 };
 
 class ShopHeader extends React.Component {
@@ -26,6 +29,10 @@ class ShopHeader extends React.Component {
 
         oxAmount: user.informations.ox.Get()
     };
+
+    refTuto1 = null;
+    refTuto2 = null;
+    refTuto3 = null;
 
     /** @type {FirebaseAdMobTypes.RewardedAd|null} */
     rewardedShop = null;
@@ -92,47 +99,59 @@ class ShopHeader extends React.Component {
 
     render() {
         const lang = langManager.curr['shop'];
+        const { refPage } = this.props;
         const { oxAmount, adReady } = this.state;
         const oxAmountStr = oxAmount.toString();
 
+        const parentStyle = {
+            backgroundColor: themeManager.GetColor('ground1a'),
+            transform: [{
+                translateY: Animated.subtract(0, refPage?.state?.positionY || 0)
+            }]
+        };
         const oxTextSize = oxAmountStr.length < 3 ? 16 : 16 + 2 - oxAmountStr.length;
         const oxIconSize = oxAmountStr.length < 3 ? 20 : oxAmountStr.length < 5 ? 18 : 16;
 
         return (
-            <View ref={ref => this.props.refContainer = ref} style={styles.parent}>
-                <Button.Badge
-                    style={styles.badge}
-                    icon='gift'
-                    onPress={openPopupCode}
-                    disabled={!user.server.online}
-                >
-                    <Text fontSize={16} color='main1'>{lang['button-header-code']}</Text>
-                </Button.Badge>
+            <Animated.View style={[styles.parent, parentStyle]}>
+                <View style={styles.content}>
+                    <Button.Badge
+                        ref={ref => this.refTuto1 = ref}
+                        style={styles.badge}
+                        icon='gift'
+                        onPress={openPopupCode}
+                        disabled={!user.server.online}
+                    >
+                        <Text fontSize={16} color='main1'>{lang['button-header-code']}</Text>
+                    </Button.Badge>
 
-                <Button.Badge
-                    style={styles.badge}
-                    icon='media'
-                    badgeJustifyContent='space-around'
-                    onPress={this.openAd}
-                    disabled={!(user.server.online && adReady)}
-                >
-                    <Text fontSize={16} color='main1'>
-                        {lang['button-header-ad'].replace('{}', OX_AMOUNT.toString())}
-                    </Text>
-                    <Icon icon='ox' color='main1' size={20} />
-                </Button.Badge>
+                    <Button.Badge
+                        ref={ref => this.refTuto2 = ref}
+                        style={styles.badge}
+                        icon='media'
+                        badgeJustifyContent='space-around'
+                        onPress={this.openAd}
+                        disabled={!(user.server.online && adReady)}
+                    >
+                        <Text fontSize={16} color='main1'>
+                            {lang['button-header-ad'].replace('{}', OX_AMOUNT.toString())}
+                        </Text>
+                        <Icon icon='ox' color='main1' size={20} />
+                    </Button.Badge>
 
-                <Button.Badge
-                    style={styles.badge}
-                    icon='addSquare'
-                    badgeJustifyContent='space-around'
-                    onPress={this.openOxShop}
-                    disabled={!user.server.online}
-                >
-                    <Text fontSize={oxTextSize} color='main1'>{oxAmountStr}</Text>
-                    <Icon style={styles.ox} icon='ox' color='main1' size={oxIconSize} />
-                </Button.Badge>
-            </View>
+                    <Button.Badge
+                        ref={ref => this.refTuto3 = ref}
+                        style={styles.badge}
+                        icon='addSquare'
+                        badgeJustifyContent='space-around'
+                        onPress={this.openOxShop}
+                        disabled={!user.server.online}
+                    >
+                        <Text fontSize={oxTextSize} color='main1'>{oxAmountStr}</Text>
+                        <Icon style={styles.ox} icon='ox' color='main1' size={oxIconSize} />
+                    </Button.Badge>
+                </View>
+            </Animated.View>
         );
     }
 }
@@ -142,12 +161,18 @@ ShopHeader.defaultProps = ShopHeaderPropTypes;
 
 const styles = StyleSheet.create({
     parent: {
+        paddingVertical: 6,
+        marginBottom: 24,
+
+        zIndex: 100,
+        elevation: 100
+    },
+    content: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
 
-        marginHorizontal: 24,
-        marginBottom: 24
+        marginHorizontal: 24
     },
     badge: {
         width: '32%',

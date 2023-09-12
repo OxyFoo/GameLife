@@ -69,7 +69,6 @@ class Tasks extends BackTasks {
 
         return (
             <Container
-                ref={ref => this.refContainer = ref}
                 style={this.props.style}
                 styleContainer={styles.tasksContainer}
                 type='static'

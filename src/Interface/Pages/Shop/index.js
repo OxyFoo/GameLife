@@ -46,24 +46,27 @@ class Shop extends BackShop {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.setRef}
                 style={styles.page}
                 isHomePage
                 canScrollOver
             >
-                <ShopHeader refContainer={this.refTuto1} />
+                <ShopHeader
+                    ref={ref => this.refTuto1 = ref}
+                    refPage={this.state.refPage}
+                />
 
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
-                <ShopDailyDeals ref={ref => this.refTuto3 = ref} />
+                <ShopDailyDeals ref={ref => this.refTuto2 = ref} />
 
                 <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
-                <ShopRandomChests ref={ref => this.refTuto2 = ref} />
+                <ShopRandomChests ref={ref => this.refTuto3 = ref} />
 
                 <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
-                <ShopTargetedChests ref={ref => this.refTuto2 = ref} />
+                <ShopTargetedChests ref={ref => this.refTuto4 = ref} />
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
-                <ShopDyes ref={ref => this.refTuto4 = ref} />
+                <ShopDyes ref={ref => this.refTuto5 = ref} />
 
                 {/*<ShopTitles ref={ref => this.refTuto2 = ref} />*/}
             </Page>

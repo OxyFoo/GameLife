@@ -120,9 +120,10 @@ class UserHeader extends React.Component {
         const { username, titleText } = this.state;
 
         let age = user.informations.GetAge();
+        let ageText = '';
         if (age !== null) {
-            const ageText = langManager.curr['profile']['value-age'];
-            age = ageText.replace('{}', age);
+            ageText = langManager.curr['profile']['value-age']
+                                .replace('{}', age.toString());
         }
 
         const activeOpacity = editorMode ? 0.6 : 1;
@@ -130,7 +131,7 @@ class UserHeader extends React.Component {
         return (
             <TouchableOpacity
                 style={[styles.header, style]}
-                onPress={onPress}
+                onPress={() => onPress()}
                 activeOpacity={activeOpacity}
             >
                 <View style={styles.content}>
@@ -142,7 +143,7 @@ class UserHeader extends React.Component {
 
                         {editorMode && age !== null && (
                             <Text style={styles.age} color='secondary'>
-                                {age}
+                                {ageText}
                             </Text>
                         )}
                     </View>

@@ -29,15 +29,19 @@ class BackProfile extends PageBack {
 
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
-
-        this.activitiesListener = user.activities.allActivities.AddListener(
-            () => this.setState({
-                xpInfo: user.experience.GetExperience().xpInfo
-            })
-        );
     }
 
     refTuto1 = null;
+
+    componentDidMount() {
+        super.componentDidMount();
+
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            this.setState({
+                xpInfo: user.experience.GetExperience().xpInfo
+            });
+        });
+    }
 
     componentDidFocused = (args) => {
         // Update the avatar
@@ -47,6 +51,10 @@ class BackProfile extends PageBack {
         this.refAvatar.refFrame.forceUpdate();
 
         StartTutorial.call(this, args?.tuto);
+    }
+
+    componentWillUnmount() {
+        user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     openProfileEditor = () => this.refProfileEditor?.Open();

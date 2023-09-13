@@ -16,6 +16,13 @@ const SkillXPperLevel = 20;
  * @property {number} lvl - Current level
  * @property {number} next - XP to next level
  * @property {number} totalXP - Total XP
+ * 
+ * @typedef {object} EnrichedXPInfo
+ * @property {number} xp - Current XP
+ * @property {number} lvl - Current level
+ * @property {number} next - XP to next level
+ * @property {number} totalXP - Total XP
+ * @property {number} lastTime - Last time the user gained XP
  */
 
 class Experience {
@@ -83,6 +90,10 @@ class Experience {
         return _xp;
     }
 
+    /**
+     * @param {number} skillID
+     * @returns {EnrichedXPInfo}
+     */
     GetSkillExperience(skillID) {
         let totalXP = 0;
         let lastTime = 0;
@@ -102,10 +113,11 @@ class Experience {
             }
         }
 
-        let experience = this.getXPDict(totalXP, SkillXPperLevel);
-        experience['lastTime'] = lastTime;
-
-        return experience;
+        const experience = this.getXPDict(totalXP, SkillXPperLevel);
+        return {
+            ...experience,
+            lastTime: lastTime
+        };
     }
 
     /**

@@ -28,12 +28,13 @@ class Achievements {
         this.UNSAVED_solved = [];
 
         /**
-         * @type {number?}
+         * @type {number|null}
          */
         this.achievementQueue = null;
 
         /**
          * @description Contain all activities, updated when adding, editing or removing
+         * @type {DynamicVar<Array<number>>}
          */
         this.allSolved = new DynamicVar([]);
     }
@@ -86,7 +87,7 @@ class Achievements {
         this.UNSAVED_solved.push(achievementID);
         this.allSolved.Set(this.Get());
         await this.user.GlobalSave();
-        await this.user.OnlineLoad(true);
+        this.user.OnlineLoad(true);
     }
 
     /**

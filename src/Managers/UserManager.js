@@ -75,8 +75,7 @@ class UserManager {
         const save = this.server.online ? this.OnlineSave : this.LocalSave;
         this.intervalSave = setInterval(save, saveTime);
 
-        const achievementsTime = 1 * 60 * 1000; // 1 minute
-        this.achievements.CheckAchievements();
+        const achievementsTime = 20 * 1000; // 20 seconds
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, achievementsTime);
     }
 

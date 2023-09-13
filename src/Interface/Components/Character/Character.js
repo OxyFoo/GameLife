@@ -33,7 +33,6 @@ class Character {
         this.body.position.addListener(this.__setPosition.bind(this));
         this.SetPositionAbsolute(this.pos.x, this.pos.y, 0);
         this.render = this.body.render;
-        this.SetAnimation('idle');
 
         // Comment "return" to tests (position, animations, etc)
         return;

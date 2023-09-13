@@ -11,7 +11,7 @@ import { Text, Button, IconCheckable, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('./index').default} SkillsPage
- * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Data/Skills').Category} Category
  */
 
@@ -40,14 +40,14 @@ function renderCategory({ item }) {
 
 /**
  * @this {SkillsPage}
- * @param {{item: Skill}} item Normal skill with Name (with langage), Logo & experience (lvl, xp, lastTime)
+ * @param {{item: EnrichedSkill}} item
  * @returns {JSX.Element}
  */
 function renderSkill({ item }) {
-    const { ID, Logo, Name, experience } = item;
+    const { ID, LogoXML, FullName, Experience } = item;
 
     const xpLang = langManager.curr['level'];
-    const { lvl, lastTime } = experience;
+    const { lvl, lastTime } = Experience;
     const text = `${xpLang['level']} ${lvl}`;
     const last = DateToFormatString(GetDate(lastTime));
     const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
@@ -59,11 +59,11 @@ function renderSkill({ item }) {
             activeOpacity={.6}
         >
             <View style={[styles.skillIcon, this.backgroundActive]}>
-                <Icon xml={Logo} size={64} />
+                <Icon xml={LogoXML} size={64} />
             </View>
 
             <View style={styles.skillContent}>
-                <Text style={styles.skillTitle} fontSize={24}>{Name}</Text>
+                <Text style={styles.skillTitle} fontSize={24}>{FullName}</Text>
                 <Text style={styles.skillText}>{text}</Text>
                 <Text style={styles.skillText}>{last}</Text>
             </View>

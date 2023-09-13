@@ -226,6 +226,7 @@ class Activities {
      * @param {number} startTime Unix timestamp in seconds
      * @param {number} duration in minutes
      * @param {string} comment Optional comment
+     * @param {number} [timezone] Optional timezone, if null, use local timezone
      * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {AddStatus}
      */
@@ -256,9 +257,12 @@ class Activities {
             if (!this.TimeIsFree(startTime, duration)) {
                 return 'notFree';
             }
-            if (alreadySaved) this.activities.push(newActivity);
-            else      this.UNSAVED_activities.push(newActivity);
-            this.allActivities.Set(this.Get());
+            if (alreadySaved) {
+                this.activities.push(newActivity);
+            } else {
+                this.UNSAVED_activities.push(newActivity);
+                this.allActivities.Set(this.Get());
+            }
             return 'added';
         }
 

@@ -117,12 +117,11 @@ async function LoadData(nextStep) {
     }
     await user.admob.ShowTrackingPopup();
     user.admob.LoadAds();
-    user.StartTimers();
 
     await user.interface.LoadDefaultPages();
     await Sleep(500);
     nextStep();
-    await Sleep(1500);
+    await Sleep(500);
 
     // Start tutorial
     let homeProps = {};
@@ -131,6 +130,8 @@ async function LoadData(nextStep) {
         user.settings.tutoFinished = true;
         user.settings.Save();
     }
+
+    user.StartTimers();
 
     if (user.activities.currentActivity === null) {
         while (!user.interface.ChangePage('home', homeProps)) await Sleep(100);

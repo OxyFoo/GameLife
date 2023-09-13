@@ -6,6 +6,11 @@ import dataManager from 'Managers/DataManager';
 import { GetTime } from 'Utils/Time';
 import { SortByKey } from 'Utils/Functions';
 
+/**
+ * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
+ */
+
 class BackSkills extends PageBack {
     sortList = langManager.curr['skills']['top-sort-list'];
     refSkills = null;
@@ -38,14 +43,18 @@ class BackSkills extends PageBack {
 
     setheight = (event) => this.setState({ height: event.nativeEvent.layout.height + 24 });
 
+    /**
+     * @param {Skill} skill
+     * @returns {EnrichedSkill} Skill with Name, Logo & experience
+     */
     upgradeSkill = (skill) => ({
         ...skill,
-        Name: dataManager.GetText(skill.Name),
-        Logo: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-        experience: user.experience.GetSkillExperience(skill.ID)
+        FullName: dataManager.GetText(skill.Name),
+        LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+        Experience: user.experience.GetSkillExperience(skill.ID)
     });
 
-    /** @returns {Skill[]} All skills with their Name, Logo & experience */
+    /** @returns {EnrichedSkill[]} All skills with their Name, Logo & experience */
     getAllSkills = () => {
         const now = GetTime();
         const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
@@ -118,10 +127,9 @@ class BackSkills extends PageBack {
 
         // Search filter
         if (search !== '') {
-            const filter = skill => {
-                return skill.Name.toLowerCase().includes(search.toLowerCase());
-            }
-            newSkills = newSkills.filter(filter);
+            newSkills = newSkills.filter(skill => {
+                return skill.FullName.toLowerCase().includes(search.toLowerCase());
+            });
         }
 
         const sort = this.state.sortSelectedIndex;
@@ -134,7 +142,7 @@ class BackSkills extends PageBack {
 
         // Sort by name
         else if (sort === 1) {
-            newSkills = SortByKey(newSkills, 'Name').reverse();
+            newSkills = SortByKey(newSkills, 'FullName').reverse();
         }
 
         // Sort by date

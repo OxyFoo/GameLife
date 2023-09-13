@@ -2,7 +2,7 @@ import { GetByKey } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/DataManager').DataManager} DataManager
- * @typedef {import('Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Class/Experience').EnrichedXPInfo} EnrichedXPInfo
  */
 
 class Skill {
@@ -29,7 +29,7 @@ class EnrichedSkill extends Skill {
     /** @type {string} */
     LogoXML = '';
 
-    /** @type {XPInfo|null} */
+    /** @type {EnrichedXPInfo|null} */
     Experience = null;
 }
 

@@ -1,5 +1,16 @@
+/**
+ * @typedef {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'} Comparator
+ * @typedef {'LT'|'GT'} Operator
+ * @typedef {'Title'|'Item'|'OX'} RewardType
+ */
+
+/** @type {Array<Comparator>} */
 const COMPARATORS = [ 'B', 'Lvl', 'Sk', 'SkT', 'St', 'HCa', 'Ca', 'It', 'Ad' ];
+
+/** @type {Array<Operator>} */
 const OPERATORS = [ 'LT', 'GT' ];
+
+/** @type {Array<RewardType>} */
 const REWARDS = [ 'Title', 'Item', 'OX' ];
 
 class Achievement {
@@ -24,28 +35,31 @@ class Achievement {
 
 class Condition {
     Comparator = {
-        /** @type {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'} */
-        Type: '',
+        /** @type {Comparator} */
+        Type: 'Ad',
 
+        /** @type {number} */
         Value: 0
     };
-    /** @type {'LT'|'GT'} */
-    Operator = '';
-    /** @type {number} */
-    Value = 0;
+
+    /** @type {Operator} */
+    Operator = 'LT';
+
+    /** @type {string|number} */
+    Value = '0';
 }
 
 class Reward {
-    /** @type {'Title'|'Item'|'OX'} */
-    Type = '';
+    /** @type {RewardType} */
+    Type = 'Title';
+
+    /** @type {string|number} */
     Value = 0;
 }
 
 class Achievements {
     constructor() {
-        /**
-         * @type {Array<Achievement>}
-         */
+        /** @type {Array<Achievement>} */
         this.achievements = [];
     }
 
@@ -70,7 +84,7 @@ class Achievements {
 
     /**
      * @param {string} condition
-     * @returns {Condition?}
+     * @returns {Condition|null}
      */
     parseCondition(condition) {
         if (!condition.length) {
@@ -82,27 +96,27 @@ class Achievements {
             return null;
         }
 
-        const [ comparator, operator, value ] = elements;
+        const [ _comparator, _operator, value ] = elements;
 
         // Get index of first number
         let index = -1;
-        while (index < comparator.length && isNaN(parseInt(comparator.slice(++index))));
+        while (index < _comparator.length && isNaN(parseInt(_comparator.slice(++index))));
 
-        if (!COMPARATORS.includes(comparator.slice(0, index))) {
-            return null;
-        }
-        if (!OPERATORS.includes(operator)) {
-            return null;
-        }
-        if (isNaN(parseInt(value))) {
+        const rawComparatorType = _comparator.slice(0, index);
+        const rawComparatorValue = _comparator.slice(index);
+        const comparatorType = COMPARATORS.find(c => c === rawComparatorType) || null;
+        const comparatorValue = !isNaN(parseInt(rawComparatorValue)) ? parseInt(rawComparatorValue) : 0;
+        const operator = OPERATORS.find(o => o === _operator) || null;
+
+        if (comparatorType === null || operator === null) {
             return null;
         }
 
         let output = new Condition();
-        output.Comparator.Type = comparator.slice(0, index);
-        output.Comparator.Value = parseFloat(comparator.slice(index)) || 0;
+        output.Comparator.Type = comparatorType;
+        output.Comparator.Value = comparatorValue;
         output.Operator = operator;
-        output.Value = parseInt(value) || 0;
+        output.Value = isNaN(parseFloat(value)) ? value : parseFloat(value);
 
         return output;
     }
@@ -120,21 +134,22 @@ class Achievements {
         const rawRewards = reward.split(',');
         for (let r = 0; r < rawRewards.length; r++) {
             const elements = rawRewards[r].split(' ');
-    
-            if (!REWARDS.includes(elements[0])) {
+            if (elements.length !== 2) {
                 return [];
             }
-            if (elements.length !== 2) {
+
+            const [ _type, _value ] = elements;
+
+            const type = REWARDS.find(r => r === _type) || null;
+            const value = isNaN(parseFloat(_value)) ? _value : parseFloat(_value);
+
+            if (type === null || value === null) {
                 return [];
             }
     
             let newReward = new Reward();
-            newReward.Type = elements[0];
-            newReward.Value = elements[1];
-
-            if (!isNaN(parseInt(newReward.Value))) {
-                newReward.Value = parseInt(newReward.Value);
-            }
+            newReward.Type = type;
+            newReward.Value = value;
 
             output.push(newReward);
         }
@@ -143,7 +158,7 @@ class Achievements {
 
     /**
      * @param {number} ID
-     * @returns {Achievement?}
+     * @returns {Achievement|null}
      */
     GetByID = (ID) => this.achievements.find(a => a.ID === ID) || null;
 

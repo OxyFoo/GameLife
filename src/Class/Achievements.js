@@ -78,15 +78,14 @@ class Achievements {
     }
     Purge = () => {
         this.UNSAVED_solved.map(this.ShowRewardPopup);
-        this.solved = [ this.solved, this.UNSAVED_solved ];
+        this.solved = [ ...this.solved, ...this.UNSAVED_solved ];
         this.UNSAVED_solved = [];
     }
 
     AddAchievement = async (achievementID) => {
         this.UNSAVED_solved.push(achievementID);
         this.allSolved.Set(this.Get());
-        await this.user.LocalSave();
-        await this.user.OnlineSave();
+        await this.user.GlobalSave();
         await this.user.OnlineLoad(true);
     }
 
@@ -128,60 +127,62 @@ class Achievements {
         if (condition === null) return '';
         const { Comparator, Operator, Value } = condition;
 
+        const valueNum = typeof(Value) === 'number' ? Value : null;
+        const valueStr = typeof(Value) === 'string' ? Value : Value?.toString();
+
         const operators = langManager.curr['achievements']['operators'];
         const condText = langManager.curr['achievements']['conditions'];
         let output = '\n' + condText['header'];
         switch (Comparator.Type) {
             case 'B':
-                output += condText['B'];
-                output = output.replace('{}', operators[Operator]);
-                output = output.replace('{}', parseInt(Value * 100));
-                output += '\n';
+                output += condText['B']
+                            .replace('{}', operators[Operator])
+                            .replace('{}', (valueNum * 100).toString()) + '\n';
                 break;
+
             case 'Lvl':
-                output += condText['Lvl'];
-                output = output.replace('{}', Value);
-                output += '\n';
+                output += condText['Lvl']
+                            .replace('{}', valueStr) + '\n';
                 break;
+
             case 'Sk':
             case 'SkT':
-                const skill = dataManager.skills.GetByID(Value);
+                const skill = dataManager.skills.GetByID(valueNum);
                 const skillName = dataManager.GetText(skill.Name);
-                output += condText[Comparator.Type];
-                output = output.replace('{}', Value);
-                output = output.replace('{}', skillName);
-                output += '\n';
+                output += condText[Comparator.Type]
+                            .replace('{}', valueStr)
+                            .replace('{}', skillName) + '\n';
                 break;
+
             case 'St':
                 const statName = langManager.curr['statistics']['names'][Value];
-                output += condText['St'];
-                output = output.replace('{}', Value);
-                output = output.replace('{}', statName);
-                output += '\n';
+                output += condText['St']
+                            .replace('{}', valueStr)
+                            .replace('{}', statName) + '\n';
                 break;
+
             case 'Ca':
-                const category = dataManager.skills.GetCategoryByID(Value);
+                const category = dataManager.skills.GetCategoryByID(valueNum);
                 const categoryName = dataManager.GetText(category.Name);
-                output += condText[Comparator.Type];
-                output = output.replace('{}', Value);
-                output = output.replace('{}', categoryName);
-                output += '\n';
+                output += condText[Comparator.Type]
+                            .replace('{}', valueStr)
+                            .replace('{}', categoryName) + '\n';
                 break;
+
             case 'HCa':
-                output += condText[Comparator.Type];
-                output = output.replace('{}', Value);
-                output = output.replace('{}', Comparator.Value);
-                output += '\n';
+                output += condText[Comparator.Type]
+                            .replace('{}', valueStr)
+                            .replace('{}', Comparator.Value.toString()) + '\n';
                 break;
+
             case 'It':
-                output += condText['It'];
-                output = output.replace('{}', Value);
-                output += '\n';
+                output += condText['It']
+                            .replace('{}', valueStr) + '\n';
                 break;
+
             case 'Ad':
-                output += condText['Ad'];
-                output = output.replace('{}', Value);
-                output += '\n';
+                output += condText['Ad']
+                            .replace('{}', valueStr) + '\n';
                 break;
         }
 
@@ -199,29 +200,33 @@ class Achievements {
 
         for (let i = 0; i < rewards.length; i++) {
             const reward = rewards[i];
-            const value = reward.Value;
+            const valueStr = typeof(reward.Value) === 'string' ? reward.Value : reward.Value?.toString();
+            const valueNum = typeof(reward.Value) === 'number' ? reward.Value : null;
+
             switch (reward.Type) {
                 case 'Title':
-                    const title = dataManager.titles.GetByID(value);
+                    const title = dataManager.titles.GetByID(valueNum);
                     const titleName = dataManager.GetText(title.Name);
                     const titleLine = lang['title'].replace('{}', titleName);
                     output += '\n' + titleLine;
 
                     // If already have this title
                     if (this.user.inventory.titles.includes(title.ID)) {
-                        output += lang['title-conversion'].replace('{}', title.Value);
+                        output += lang['title-conversion'].replace('{}', title.Value.toString());
                     }
 
                     output += '\n';
                     break;
+
                 case 'Item':
-                    const item = dataManager.items.GetByID(value);
+                    const item = dataManager.items.GetByID(valueStr);
                     const itemName = dataManager.GetText(item.Name);
                     const itemLine = lang['item'].replace('{}', itemName);
                     output += '\n' + itemLine + '\n';
                     break;
+
                 case 'OX':
-                    const oxLine = lang['ox'].replace('{}', value);
+                    const oxLine = lang['ox'].replace('{}', valueStr);
                     output += '\n' + oxLine + '\n';
                     break;
             }
@@ -231,7 +236,7 @@ class Achievements {
     }
 
     CheckAchievements = () => {
-        const achievements = dataManager.achievements.achievements;
+        const achievements = dataManager.achievements.GetAll(this.Get());
         const stats = this.user.experience.GetExperience().stats;
 
         for (let a = 0; a < achievements.length; a++) {
@@ -243,7 +248,7 @@ class Achievements {
                 continue;
             }
 
-            const { Condition, Rewards } = achievement;
+            const { Condition } = achievement;
 
             let completed = false;
             let value = null;
@@ -254,13 +259,16 @@ class Achievements {
                 case 'B': // Battery level
                     value = GetBattery();
                     break;
+
                 case 'Lvl': // Level
                     value = this.user.experience.GetExperience().xpInfo.lvl;
                     break;
+
                 case 'Sk': // Skill level
                     const skillID = Condition.Comparator.Value;
                     value = this.user.experience.GetSkillExperience(skillID).lvl;
                     break;
+
                 case 'SkT': // Skill time
                     const skillTimeID = Condition.Comparator.Value;
                     value = 0;
@@ -272,11 +280,13 @@ class Achievements {
                         }
                     }
                     break;
+
                 case 'St': // Statistic level
                     const statKey = Object.keys(this.user.stats)[Condition.Comparator.Value];
                     const statLevel = stats[statKey].lvl;
                     value = statLevel;
                     break;
+
                 case 'HCa': // nth highest category
                     const CategoryDepth = Condition.Comparator.Value;
                     if (categories.length < CategoryDepth) continue;
@@ -289,13 +299,18 @@ class Achievements {
                     values.sort();
                     value = values[CategoryDepth - 1];
                     break;
+
                 case 'Ca': // Category level
-                    const categoryXP = this.user.experience.GetSkillCategoryExperience(categories[c].ID);
+                    const categoryID = categories[Condition.Comparator.Value]?.ID;
+                    if (categoryID === undefined) continue;
+                    const categoryXP = this.user.experience.GetSkillCategoryExperience(categoryID);
                     value = categoryXP.lvl;
                     break;
+
                 case 'It': // Number of items
                     value = this.user.inventory.stuffs.length;
                     break;
+
                 case 'Ad': // Number of watched ads
                     value = this.user.informations.adTotalWatched;
                     break;

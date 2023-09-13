@@ -139,9 +139,7 @@ class Profile extends BackProfile {
                     color='main1'
                     backgroundColor='backgroundCard'
                 >
-                    <AchievementsGroup
-                        showAllButton={true}
-                    />
+                    <AchievementsGroup />
                 </Container>
 
                 <EditorProfile ref={ref => this.refProfileEditor = ref } />

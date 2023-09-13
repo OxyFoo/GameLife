@@ -78,10 +78,20 @@ class Skills {
 
     /**
      * @param {number} ID
-     * @returns {Skill?} - Return skill if exists or null
+     * @returns {Skill|null} Return skill if exists or null
      */
     GetByID = (ID) => GetByKey(this.skills, 'ID', ID);
-    GetCategoryByID = (ID) => this.categories.find(category => category.ID === ID);
+
+    /**
+     * @param {number} ID
+     * @returns {Category|null} Return category if exists or null
+     */
+    GetCategoryByID = (ID) => this.categories.find(category => category.ID === ID) || null;
+
+    /**
+     * @param {number} ID
+     * @returns {Skill[]} Return skills by category
+     */
     GetByCategory = (ID) => this.skills.filter(skill => skill.CategoryID === ID);
 
     /**

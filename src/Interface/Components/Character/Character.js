@@ -6,6 +6,9 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('Ressources/items/humans/Characters').AnimationsName} AnimationsName
  * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
+ * 
+ * @typedef {'full'|'topHalf'|'head'} BodyView
+ * @typedef {'bodyShadow'|'stuffShadow'|'body'|'stuff'} CharacterRenderTypes
  */
 
 class Character {
@@ -99,6 +102,7 @@ class Character {
      * @param {AnimationsName} animation
      */
     SetAnimation = (animation) => { this.body.SetAnimation(animation); }
+    StopAnimation = () => { this.body.StopAnimation(); }
 
     __setPosition({ x, y }) {
         this.pos = { x, y };

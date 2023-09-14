@@ -84,6 +84,7 @@ class Frame extends React.Component {
     }
 
     render() {
+        const { loaded } = this.state;
         const { style, size, characters, onlyItems, bodyView } = this.props;
         const viewBox = [ size.x, size.y, size.width, size.height ].join(' ');
         const loadingColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
@@ -94,7 +95,7 @@ class Frame extends React.Component {
                 <Svg viewBox={viewBox}>
                     {characters.map(charac => charac.render(renderType, bodyView))}
                 </Svg>
-                {!this.state.loaded && (
+                {!loaded && (
                     <View style={[styles.loading, loadingColor]}>
                         <Icon icon='loadingDots' />
                     </View>

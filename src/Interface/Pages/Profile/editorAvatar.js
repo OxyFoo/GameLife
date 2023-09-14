@@ -103,17 +103,30 @@ class EditorAvatarRender extends EditorAvatarBack {
         const sameSkin = characterName === user.character.skin;
         const isSelected = sameSexe && sameSkin;
         const selectCharacter = (sexe, skin) => {
+            // Update character
             user.character.sexe = sexe;
             user.character.skin = skin;
+            user.character.SetAnimation(sexe === 'MALE' ? 'defaultMale' : 'defaultFemale');
+
+            // Update inventory
             user.inventory.Equip('sexe', sexe);
             user.inventory.Equip('skin', skin);
-            this.refFrame?.forceUpdate();
-            user.interface.header.refFrame?.forceUpdate();
+
+            // Update characters
             for (const slot in this.slotCharacters) {
                 this.slotCharacters[slot].sexe = sexe;
                 this.slotCharacters[slot].skin = skin;
                 this.slotCharacters[slot].__refresh();
             }
+            user.character.__refresh();
+
+            // Update interface
+            this.forceUpdate();
+            this.refFrame?.forceUpdate();
+            user.interface.header.refFrame?.forceUpdate();
+
+            // Update database
+            user.GlobalSave();
         }
         const onPress = isSelected ? () => {} : selectCharacter;
 

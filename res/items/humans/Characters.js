@@ -1,12 +1,14 @@
 import Male_01 from './male/skin_01';
 import Female_01 from './female/skin_01';
 
+import animDefaultMale from '../animations/default_male.json';
+import animDefaultFemale from '../animations/default_female.json';
 import animIdle from '../animations/idle.json';
 import animMuscles from '../animations/muscles.json';
 
 /**
  * @typedef {'skin_01'} CharactersName
- * @typedef {'idle'|'muscles'} AnimationsName
+ * @typedef {'defaultMale'|'defaultFemale'|'idle'|'muscles'} AnimationsName
  *
  * @typedef {'left_ear'|'left_eye'|'left_eyebrow'|'right_ear'|'right_eye'|'right_eyebrow'|'nose'|'mouth'} PartsFace
  * @typedef {'bust'|'head'|'left_arm'|'left_forearm'|'left_hand'|'right_arm'|'right_forearm'|'right_hand'|'left_thigh'|'left_leg'|'left_foot'|'right_thigh'|'right_leg'|'right_foot'} PartsBody
@@ -25,6 +27,8 @@ const CHARACTERS = {
 };
 
 const ANIMATIONS = {
+    defaultMale: animDefaultMale,
+    defaultFemale: animDefaultFemale,
     idle: animIdle,
     muscles: animMuscles
 };

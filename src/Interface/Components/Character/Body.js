@@ -10,10 +10,9 @@ import { ANIMATIONS } from 'Ressources/items/humans/Characters';
 
 /**
  * @typedef {import('./Character').default} Character
+ * @typedef {import('./Character').BodyView} BodyView
  * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
  * @typedef {import('Ressources/items/humans/Characters').AnimationsName} AnimationsName
- * 
- * @typedef {'full'|'topHalf'|'head'} BodyView
  */
 
 class Body {
@@ -156,8 +155,9 @@ class Body {
         let anims = [];
 
         // Rotations
-        const setRotation = (partName) => anims.push(...this.rotations[partName].Update(partsRotations[partName], duration));
-        Object.keys(partsRotations).map(setRotation);
+        Object.keys(partsRotations).map((partName) =>
+            anims.push(...this.rotations[partName].Update(partsRotations[partName], duration))
+        );
 
         // Translation
         const pos = { x: translation?.x || 0, y: translation?.y || 0 };
@@ -200,20 +200,20 @@ class Body {
         if (this.character.parentFrame === null) return null;
         if (this.character.outOfBounds || this.character.hide) return null;
 
-        const characName = this.character.name;
-        const allParts = this.getChilds(this.firstPart, size).sort((a, b) => a.zIndex - b.zIndex);
+        const allParts = this.getChilds(this.firstPart, size)
+                                .sort((a, b) => a.zIndex - b.zIndex);
 
         if (type === 'all') {
             return [
-                ...allParts.map((p, i)    => <RenderPart key={`${characName}-bodyShadow-${i}`} part={p} partType={'bodyShadow'} />),
-                ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
-                ...allParts.map((part, i) => <RenderPart key={`${characName}-body-${i}`} part={part} partType={'body'} />),
-                ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
+                ...allParts.map(part => part.render('bodyShadow')),
+                ...allParts.map(part => part.render('stuffShadow')),
+                ...allParts.map(part => part.render('body')),
+                ...allParts.map(part => part.render('stuff'))
             ];
         } else if (type === 'onlyItems') {
             return [
-                ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
-                ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
+                ...allParts.map(part => part.render('stuffShadow')),
+                ...allParts.map(part => part.render('stuff'))
             ];
         }
     }

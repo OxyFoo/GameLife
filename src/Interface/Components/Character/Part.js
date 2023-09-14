@@ -8,6 +8,7 @@ import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
 
 /**
  * @typedef {import('./Body').default} Body
+ * @typedef {import('./Character').CharacterRenderTypes} CharacterRenderTypes
  * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
  */
 
@@ -57,7 +58,7 @@ class Part {
     }
 
     /**
-     * @param {'body'|'bodyShadow'|'stuff'|'stuffShadow'} partType
+     * @param {CharacterRenderTypes} partType
      * @returns {JSX.Element}
      */
     render(partType) {
@@ -156,6 +157,10 @@ class Part {
     }
 }
 
+/**
+ * @param {{ part: Part, partType: CharacterRenderTypes }} props
+ * @returns 
+ */
 function RP(props) {
     let [ active, setActive ] = React.useState(false);
     React.useEffect(() => {

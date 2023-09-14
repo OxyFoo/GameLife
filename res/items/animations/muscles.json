@@ -8,6 +8,11 @@
         {
             "sleep": 0,
             "duration": 1000,
+            "translation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
             "rotations": {
                 "bust": { "rZ": 0 },
                 "head": { "rZ": 20 },

@@ -34,11 +34,12 @@ class Animated3D {
 
 /**
  * @description Return an array of all parent parts in order from root to this part (including this part)
+ * @param {Part} el
  * @returns {Array<Part>}
  */
-function __getParents() {
-    let parents = [ this ];
-    let parent = this.parent;
+function __getParents(el) {
+    let parents = [ el ];
+    let parent = el.parent;
     while (parent !== null) {
         parents.splice(0, 0, parent);
         parent = parent.parent;
@@ -58,8 +59,9 @@ function CalculateParentPos() {
     /** @param {Part} el */
     const calculateParentPos = (el) => {
         if (el.parent !== null) {
+            /** @type {Animated.AnimatedAddition<number>} */
             let currentRotation = new Animated.Value(0);
-            const elChilds = __getParents.bind(el)();
+            const elChilds = __getParents(el);
             for (let i = 0; i < elChilds.length-1; i++) {
                 const child = elChilds[i];
                 const childRotation = Animated.add(child.a % 360, child.rotation.rZ);

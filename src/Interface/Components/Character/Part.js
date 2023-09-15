@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
 import { G } from 'react-native-svg';
 
-import { Animated3D, CalculateParentPos } from './Utils';
+import { CalculateParentPos, Point3D } from './Utils';
 import { STUFFS } from 'Ressources/items/stuffs/Stuffs';
 import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
 
 /**
  * @typedef {import('./Body').default} Body
- * @typedef {import('./Character').CharacterRenderTypes} CharacterRenderTypes
  * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
+ * 
+ * @typedef {'bodyShadow'|'stuffShadow'|'body'|'stuff'} CharacterRenderTypes
  */
-
-const AnimatedG = Animated.createAnimatedComponent(G);
 
 class Part {
     /**
@@ -26,27 +24,27 @@ class Part {
         this.zIndex = zIndex;
 
         // Initial position from parent
-        const SEXE = this.body.character.sexe;
-        const character = this.body.character.skin;
-        const offsets = CHARACTERS[SEXE][character]['offsets'][this.name];
-        this.l = offsets[0];
-        this.a = offsets[1];
+        this.laChanged = false;
+        this.updateOffsets();
 
         // Current absolute position
-        this.position = this.name === 'bust' ? this.body.position : new Animated.ValueXY({ x: 0, y: 0 });
-
-        /** @type {Animated3D} */
-        this.rotation = new Animated3D();
-        if (this.body.rotations.hasOwnProperty(this.name)) {
-            this.rotation = this.body.rotations[this.name];
-        }
-        this.animPosition = new Animated.ValueXY({ x: 0, y: 0 });
+        this.position = { x: 0, y: 0 };
+        this.rotation = new Point3D();
 
         /** @type {Part} */
         this.parent = null;
 
         /** @type {Array<Part>} part */
         this.childs = [];
+    }
+
+    updateOffsets() {
+        const SEXE = this.body.character.sexe;
+        const character = this.body.character.skin;
+        const offsets = CHARACTERS[SEXE][character]['offsets'][this.name];
+        this.l = offsets[0];
+        this.a = offsets[1];
+        this.laChanged = true;
     }
 
     /**
@@ -70,19 +68,13 @@ class Part {
         if (!CHARACTERS[SEXE][SKIN]['svg'].hasOwnProperty(this.name)) return null;
 
         const fill = COLORS[this.body.character.skinColor];
-        if (!this.valuesTest) {
-            this.valuesTest = CalculateParentPos.bind(this)();
+        if (!this.valuesTest || this.laChanged) {
+            this.valuesTest = CalculateParentPos(this);
         }
         const { posX, posY, rotZ } = this.valuesTest;
 
         const styleZIndex = { zIndex: this.zIndex, elevation: this.zIndex };
         const styleZIndexShadow = { zIndex: this.zIndex - 1000, elevation: this.zIndex - 1000 };
-        const animRotation = rotZ.interpolate({ inputRange: [-360, 360], outputRange: ['-360deg', '360deg'] });
-        const transforms = { transform: [
-            { translateX: posX },
-            { translateY: posY },
-            { rotateZ: animRotation }
-        ]};
 
         const character = CHARACTERS[SEXE][SKIN];
         const svgCharacter = character['svg'][this.name];
@@ -106,77 +98,67 @@ class Part {
 
         if (partType === 'body') {
             return (
-                <AnimatedG
+                <G
+                    translateX={posX}
+                    translateY={posY}
+                    rotation={rotZ}
                     key={`part-${this.name}`}
                     // @ts-ignore
-                    style={[transforms, styleZIndex]}
+                    style={styleZIndex}
                     fill={fill || 'white'}
                 >
                     {svgCharacter}
-                </AnimatedG>
+                </G>
             );
         } else if (partType === 'bodyShadow') {
             return (
-                <AnimatedG
+                <G
+                    translateX={posX}
+                    translateY={posY}
+                    rotation={rotZ}
                     key={`part-shadow-${this.name}`}
                     // @ts-ignore
-                    style={[transforms, styleZIndexShadow]}
+                    style={styleZIndexShadow}
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >
                     {svgCharacterShadow}
-                </AnimatedG>
+                </G>
             );
         } else if (partType === 'stuff') {
             if (svgItems.length === 0) return null;
 
             return (
-                <AnimatedG
+                <G
+                    translateX={posX}
+                    translateY={posY}
+                    rotation={rotZ}
                     key={`stuff-${this.name}`}
                     // @ts-ignore
-                    style={[transforms, styleZIndex]}
+                    style={styleZIndex}
                 >
                     {svgItems.map((SVG, i) => <G key={`stuff-${this.name}-${i}`}>{SVG}</G>)}
-                </AnimatedG>
+                </G>
             );
         } else if (partType === 'stuffShadow') {
             if (svgItemsShadows.length === 0) return null;
 
             return (
-                <AnimatedG
+                <G
+                    translateX={posX}
+                    translateY={posY}
+                    rotation={rotZ}
                     key={`stuff-shadow-${this.name}`}
                     // @ts-ignore
-                    style={[transforms, styleZIndexShadow]}
+                    style={styleZIndexShadow}
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >
                     {svgItemsShadows.map((shadow, i) => <G key={`stuff-shadow-${this.name}-${i}`}>{shadow}</G>)}
-                </AnimatedG>
+                </G>
             );
         }
     }
 }
 
-/**
- * @param {{ part: Part, partType: CharacterRenderTypes }} props
- * @returns 
- */
-function RP(props) {
-    let [ active, setActive ] = React.useState(false);
-    React.useEffect(() => {
-        let isMounted = true;
-
-        setTimeout(() => {
-            if (isMounted) setActive(true);
-        }, 100 + Math.random() * 1000);
-
-        return () => {
-            isMounted = false;
-        }
-    }, [active]);
-    return !active ? null : props.part?.render(props.partType);
-}
-const RenderPart = React.memo(RP, (prevProps, nextProps) => false);
-
-export { RenderPart };
 export default Part;

@@ -100,7 +100,6 @@ async function LoadData(nextStep) {
         user.inventory.avatar.skinColor
     );
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.character.SetAnimation(user.inventory.avatar.sexe === 'MALE' ? 'defaultMale' : 'defaultFemale');
     user.interface.header.ShowAvatar(true);
 
     // Loading : Notifications

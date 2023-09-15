@@ -110,11 +110,10 @@ class ScreenTutoBack extends React.Component {
                 clearTimeout(this.hinterval);
                 newState['visible'] = false;
             }
-
-            if (execAfter !== null) {
+            else if (execAfter !== null) {
                 // Close the tutorial (& execute execAfter)
                 const close = await execAfter();
-                if (close || skip) {
+                if (close) {
                     clearTimeout(this.hinterval);
                     newState['visible'] = false;
                 }

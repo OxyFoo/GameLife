@@ -1,14 +1,11 @@
 import Body from './Body';
-import { TimingAnimation } from 'Utils/Animations';
+import { ANIMATIONS } from 'Ressources/items/humans/Characters';
 
 /**
  * @typedef {import('./Frame').default} Frame
+ * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
  * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('Ressources/items/humans/Characters').AnimationsName} AnimationsName
- * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
- * 
- * @typedef {'full'|'topHalf'|'head'} BodyView
- * @typedef {'bodyShadow'|'stuffShadow'|'body'|'stuff'} CharacterRenderTypes
  */
 
 class Character {
@@ -24,7 +21,6 @@ class Character {
         this.sexe = sexe;
         this.skin = skin;
         this.skinColor = skinColor;
-        this.pos = pos;
 
         /** @type {Array<string>} */
         this.items = [];
@@ -33,34 +29,22 @@ class Character {
         this.outOfBounds = false;
 
         this.body = new Body(this);
-        this.body.position.addListener(this.__setPosition.bind(this));
-        this.SetPositionAbsolute(this.pos.x, this.pos.y, 0);
-        this.render = this.body.render;
-
-        // Comment "return" to tests (position, animations, etc)
-        return;
-        setTimeout(() => {
-            this.SetAnimation('muscles');
-            this.SetPositionRelative(0, 100);
-        }, 3000);
+        this.SetPose(sexe === 'MALE' ? 'defaultMale' : 'defaultFemale');
+        this.SetPositionAbsolute(pos.x, pos.y);
     }
 
     unmount() {
-        this.body.StopAnimation();
-        if (this.body.position.hasListeners()) {
-            this.body.position.removeAllListeners();
-        }
         this.Hide();
-        this.__refresh();
+        this.Refresh();
         this.SetFrame(null);
     }
 
     /**
-     * @param {Frame?} frame 
+     * @param {Frame|null} frame
      */
     SetFrame(frame) {
         this.parentFrame = frame;
-        this.__refresh();
+        this.Refresh();
     }
 
     Show = () => this.hide = false;
@@ -75,52 +59,63 @@ class Character {
             throw new Error('items must be an array');
         }
         this.items = [...items];
-        this.__refresh();
+        this.Refresh();
     }
 
     /**
-     * @param {number} x Default is current position
-     * @param {number} y Default is current position
-     * @param {number} [duration=1000] Duration in ms
+     * @param {number} x
+     * @param {number} y
      */
-    SetPositionAbsolute(x = this.pos.x, y = this.pos.y, duration = 1000) {
-        TimingAnimation(this.body.position, { x, y }, duration).start();
+    SetPositionAbsolute(x, y) {
+        this.body.position.x = x;
+        this.body.position.y = y;
+        this.__positionUpdated({ x, y });
     }
 
     /**
      * @param {number} [x=0]
      * @param {number} [y=0]
-     * @param {number} [duration=1000] Duration in ms
      */
-    SetPositionRelative(x = 0, y = 0, duration = 1000) {
-        const newX = this.pos.x + x;
-        const newY = this.pos.y + y;
-        TimingAnimation(this.body.position, { x: newX, y: newY }, duration).start();
+    SetPositionRelative(x = 0, y = 0) {
+        this.body.position.x += x;
+        this.body.position.y += y;
+        this.__positionUpdated({
+            x: this.body.position.x,
+            y: this.body.position.y
+        });
     }
 
     /**
      * @param {AnimationsName} animation
      */
-    SetAnimation = (animation) => { this.body.SetAnimation(animation); }
-    StopAnimation = () => { this.body.StopAnimation(); }
+    SetPose = async (animation) => {
+        const { poses } = ANIMATIONS[animation];
+        const { translation, rotations } = poses[0];
+        this.body.__applyAnimation(translation, rotations);
+    }
 
-    __setPosition({ x, y }) {
-        this.pos = { x, y };
-
+    /**
+     * @private
+     * @param {{ x: number, y: number }} param0
+     */
+    __positionUpdated({ x, y }) {
         if (this.parentFrame !== null) {
             const { width, height } = this.parentFrame.props;
             const delta = 200;
             const outOfBounds = x < -delta || y < -delta || x > width+delta || y > height+delta;
             if (this.outOfBounds !== outOfBounds) {
                 this.outOfBounds = outOfBounds;
-                this.__refresh();
             }
+            this.Refresh();
         }
     }
 
-    __refresh() {
+    Refresh() {
         if (this.parentFrame !== null) {
             this.parentFrame.forceUpdate();
+            this.body.getChilds(this.body.firstPart).forEach(part => {
+                part.updateOffsets();
+            });
         }
     }
 }

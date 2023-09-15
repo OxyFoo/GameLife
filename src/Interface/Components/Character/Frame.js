@@ -11,8 +11,8 @@ import Icon from '../Icon';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
+ * @typedef {'full'|'topHalf'|'head'} BodyView
  * @typedef {import('./Character').default} Character
- * @typedef {import('./Body').BodyView} BodyView
  */
 
 const FrameProps = {
@@ -93,7 +93,7 @@ class Frame extends React.Component {
         return (
             <View style={[styles.canvas, style]}>
                 <Svg viewBox={viewBox}>
-                    {characters.map(charac => charac.render(renderType, bodyView))}
+                    {characters.map(charac => charac.body.render(renderType, bodyView))}
                 </Svg>
                 {!loaded && (
                     <View style={[styles.loading, loadingColor]}>
@@ -122,13 +122,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    part: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%'
     }
 });
 

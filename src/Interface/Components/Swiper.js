@@ -67,7 +67,8 @@ class Swiper extends React.Component {
     }
 
     componentDidMount() {
-        this.interval = setInterval(this.loop, 1000);
+        clearInterval(this.interval);
+        this.interval = window.setInterval(this.loop, 1000);
     }
     componentWillUnmount() {
         clearInterval(this.interval);

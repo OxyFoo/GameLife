@@ -106,7 +106,7 @@ class EditorAvatarRender extends EditorAvatarBack {
             // Update character
             user.character.sexe = sexe;
             user.character.skin = skin;
-            user.character.SetAnimation(sexe === 'MALE' ? 'defaultMale' : 'defaultFemale');
+            user.character.SetPose(sexe === 'MALE' ? 'defaultMale' : 'defaultFemale');
 
             // Update inventory
             user.inventory.Equip('sexe', sexe);
@@ -116,9 +116,9 @@ class EditorAvatarRender extends EditorAvatarBack {
             for (const slot in this.slotCharacters) {
                 this.slotCharacters[slot].sexe = sexe;
                 this.slotCharacters[slot].skin = skin;
-                this.slotCharacters[slot].__refresh();
+                this.slotCharacters[slot].Refresh();
             }
-            user.character.__refresh();
+            user.character.Refresh();
 
             // Update interface
             this.forceUpdate();
@@ -150,7 +150,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                 user.interface.header.refFrame?.forceUpdate();
                 for (const slot in this.slotCharacters) {
                     this.slotCharacters[slot].skinColor = index;
-                    this.slotCharacters[slot].__refresh();
+                    this.slotCharacters[slot].Refresh();
                 }
             }
         }

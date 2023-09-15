@@ -95,6 +95,11 @@ class ScreenTutoBack extends React.Component {
                 this.Show(element);
             });
 
+            // Autorize skip during execAfter (if crashed)
+            this.onSkipPress = () => {
+                skip = true;
+                this.setState({ visible: false });
+            }
 
             // After
             const newState = {

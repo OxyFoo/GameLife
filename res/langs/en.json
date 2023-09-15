@@ -643,6 +643,7 @@
             "shop-3": "Yan can buy Ox with money (this page will be available in future updates!)",
             "shop-4": "You can spend your Ox here to buy items, which you can equip in your profile - offers change every day!",
             "shop-5": "In this category, you can buy chests containing a random item. The rarer the chest, the greater the chance of getting a quality item!",
+            "shop-no-internet": "Unfortunately I cannot present the shop to you because you do not have the internet, but you can access it by being connected!",
 
             "home-8": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
         },

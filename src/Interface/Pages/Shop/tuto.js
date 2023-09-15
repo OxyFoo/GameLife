@@ -12,7 +12,16 @@ function StartTutorial(tutoValue) {
     if (tutoValue === 7) {
         // Skip shop tutorial if user is not connected
         if (!user.server.IsConnected()) {
-            user.interface.ChangePage('home', { tuto: 8 }, true);
+            user.interface.screenTuto.ShowTutorial([
+                {
+                    component: null,
+                    text: lang['main']['shop-no-internet'],
+                    execAfter: () => {
+                        user.interface.ChangePage('home', { tuto: 8 }, true);
+                        return false;
+                    }
+                }
+            ]);
             return;
         }
 

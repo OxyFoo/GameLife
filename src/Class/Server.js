@@ -70,10 +70,13 @@ class Server {
             const title = langManager.curr['home']['alert-newversion-title'];
             const text = langManager.curr['home']['alert-newversion-text'];
             this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        } else if (status === 'maintenance' && this.status !== 'maintenance') {
+            this.online = false;
+            this.status = status;
         } else if (status === 'error') {
             this.online = false;
-            const title = langManager.curr['home']['alert-maintenance-title'];
-            const text = langManager.curr['home']['alert-maintenance-text'];
+            const title = langManager.curr['home']['alert-error-title'];
+            const text = langManager.curr['home']['alert-error-text'];
             this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
         } else if (status === 'ok') {
             this.online = true;

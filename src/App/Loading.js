@@ -33,6 +33,9 @@ async function Initialisation(nextStep) {
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
+        if (user.server.status === 'maintenance') {
+            user.interface.ChangePage('waitinternet', { force: 1 }, true);
+        }
         return;
     }
 
@@ -132,6 +135,14 @@ async function LoadData(nextStep) {
     }
 
     user.StartTimers();
+
+    // Maintenance message
+    if (user.server.status === 'maintenance') {
+        const lang = langManager.curr['home'];
+        const title = lang['alert-maintenance-title'];
+        const text = lang['alert-maintenance-text'];
+        user.interface.popup.Open('ok', [ title, text ], undefined, false);
+    }
 
     if (user.activities.currentActivity === null) {
         while (!user.interface.ChangePage('home', homeProps)) await Sleep(100);

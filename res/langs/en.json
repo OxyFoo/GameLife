@@ -254,7 +254,9 @@
         "btn-settings": "Settings",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "The application servers are under maintenance, you can access them but the online features are temporarily disabled. Thanks for your patience, everything will be back to normal in a few minutes!",
+        "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
+        "alert-error-title": "Error",
+        "alert-error-text": "An error has occurred, please try again later.",
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
         "alert-newversion-title": "Warning",
@@ -608,6 +610,7 @@
 
     "wait": {
         "wait-internet-text": "You must be connected to the internet to be able to connect!",
+        "wait-maintenance-text": "The servers are currently in maintenance, come back later!",
         "wait-email-text": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam.",
         "wait-email-remain": "Mail sent again in {}m{}s",
         "wait-email-send": "Mail sent !"

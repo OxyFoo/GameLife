@@ -254,7 +254,9 @@
         "btn-settings": "Paramètres",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "Les serveurs de l'application sont en maintenance, vous pouvez y accéder mais les fonctionnalités en ligne sont temporairement désactivées. Merci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-maintenance-text": "Les serveurs sont en maintenance, vous pouvez accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-error-title": "Erreur",
+        "alert-error-text": "Une erreur est survenue, veuillez réessayer plus tard.",
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
@@ -608,6 +610,7 @@
 
     "wait": {
         "wait-internet-text": "Vous devez être connecté à internet pour pouvoir vous connecter !",
+        "wait-maintenance-text": "Les serveurs sont actuellement en maintenance, reviens plus tard !",
         "wait-email-text": "Un mail vous a été envoyé pour autoriser votre appareil à vous connecter.\n\nLe mail peut s'envoyer après quelque minutes, vérifiez vos spam.",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-send": "Mail envoyé !"

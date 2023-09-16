@@ -2,13 +2,18 @@ import * as React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
 import BackWaitinternet from './back';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Page, Text } from 'Interface/Components';
 
 class Waitinternet extends BackWaitinternet {
     render() {
-        const textWait = langManager.curr['wait']['wait-internet-text'];
+        let textWait = langManager.curr['wait']['wait-internet-text'];
+
+        if (user.server.status === 'maintenance') {
+            textWait = langManager.curr['wait']['wait-maintenance-text'];
+        }
 
         return (
             <Page

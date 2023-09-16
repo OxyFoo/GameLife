@@ -58,6 +58,8 @@ class EditorAvatarBack extends React.Component {
         selling: false
     }
 
+    refButton = null;
+
     constructor(props) {
         super(props);
 

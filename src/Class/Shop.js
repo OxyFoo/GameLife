@@ -11,6 +11,7 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {'hair'|'top'|'bottom'|'shoes'} Slot
  * 
  * @typedef BuyableRandomChest
+ * @property {string} ref
  * @property {string|number} ID
  * @property {string} LangName
  * @property {ImageSourcePropType} Image
@@ -26,6 +27,7 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {() => void} onPress
  * 
  * @typedef BuyableTargetedChest
+ * @property {string} ref
  * @property {string|number} ID
  * @property {string} Name
  * @property {Slot} Slot

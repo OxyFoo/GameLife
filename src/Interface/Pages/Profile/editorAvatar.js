@@ -185,6 +185,8 @@ class EditorAvatarRender extends EditorAvatarBack {
         }
 
         const lang = langManager.curr['profile-avatar'];
+        const btnSell = lang['button-sell'].replace('{}', ox.toString());
+        const btnEquip = lang['button-equip'];
 
         return (
             <Animated.View style={[styles.editorCurrent, translationY]} onLayout={this.onItemSelectionLayout}>
@@ -201,7 +203,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                         color='main1'
                         loading={this.state.selling}
                     >
-                        {lang['button-sell'].replace('{}', ox)}
+                        {btnSell}
                     </Button>
                     <Button
                         style={styles.editorStuffEquipBtn}
@@ -209,7 +211,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                         color='main2'
                         enabled={!isEquipped}
                     >
-                        {lang['button-equip']}
+                        {btnEquip}
                     </Button>
                 </View>
 
@@ -317,7 +319,7 @@ class EditorAvatarRender extends EditorAvatarBack {
         return (
             <>
                 {/* Character */}
-                <Animated.View style={characterStyle} onLayout={this.onCharacterLayout}>
+                <Animated.View ref={ref => this.refButton = ref} style={characterStyle} onLayout={this.onCharacterLayout}>
                     <Animated.View style={[styles.columnSide, columnOpacity]}>
                         {this.renderButtonItem('hair')}
                         {this.renderButtonItem('top')}
@@ -331,7 +333,6 @@ class EditorAvatarRender extends EditorAvatarBack {
                             <Frame ref={ref => this.refFrame = ref} characters={[ user.character ]} />
                             {!editorOpened && (
                                 <Button
-                                    ref={ref => this.refButton = ref}
                                     style={styles.avatarOverlay}
                                     onPress={this.OpenEditor}
                                 />

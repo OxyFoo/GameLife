@@ -541,9 +541,9 @@
             if (!$consume) return;
 
             $rewardAdded = Achievements::ExecReward($this->db, $account, explode(',', $gift));
-            if (!$rewardAdded) return;
+            if ($rewardAdded === false) return;
 
-            $this->output['gift'] = $gift;
+            $this->output['gift'] = $rewardAdded;
             $this->output['status'] = 'ok';
         }
 

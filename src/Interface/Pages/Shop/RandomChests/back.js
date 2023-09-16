@@ -9,9 +9,14 @@ import themeManager from 'Managers/ThemeManager';
  */
 
 class BackShopItems extends React.Component {
+    refChest1 = null;
+    refChest2 = null;
+    refChest3 = null;
+
     /** @type {BuyableRandomChest[]} */
     CHESTS = [
         {
+            ref: 'refChest1',
             ID: 1,
             LangName: 'chest-random-common',
             Image: require('Ressources/items/chests/common.png'),
@@ -22,6 +27,7 @@ class BackShopItems extends React.Component {
             OnPress: () => this.openItemPopup(1)
         },
         {
+            ref: 'refChest2',
             ID: 2,
             LangName: 'chest-random-rare',
             Image: require('Ressources/items/chests/rare.png'),
@@ -32,6 +38,7 @@ class BackShopItems extends React.Component {
             OnPress: () => this.openItemPopup(2)
         },
         {
+            ref: 'refChest3',
             ID: 3,
             LangName: 'chest-random-epic',
             Image: require('Ressources/items/chests/epic.png'),

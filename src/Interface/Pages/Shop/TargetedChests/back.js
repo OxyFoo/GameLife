@@ -18,6 +18,10 @@ class BackShopItems extends React.Component {
     };
 
     refTuto1 = null;
+    refChest1 = null;
+    refChest2 = null;
+    refChest3 = null;
+
 
     /** @type {Target[]} */
     TARGETS = [
@@ -46,6 +50,7 @@ class BackShopItems extends React.Component {
     /** @type {BuyableTargetedChest[]} */
     CHESTS = [
         {
+            ref: 'refChest1',
             ID: 1,
             Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
             Slot: 'hair',
@@ -57,6 +62,7 @@ class BackShopItems extends React.Component {
             OnPress: () => this.openItemPopup(1)
         },
         {
+            ref: 'refChest2',
             ID: 2,
             Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
             Slot: 'hair',
@@ -68,6 +74,7 @@ class BackShopItems extends React.Component {
             OnPress: () => this.openItemPopup(2)
         },
         {
+            ref: 'refChest3',
             ID: 3,
             Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
             Slot: 'hair',

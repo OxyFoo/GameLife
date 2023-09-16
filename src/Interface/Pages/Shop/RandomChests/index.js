@@ -29,7 +29,7 @@ class ShopItems extends BackShopItems {
         const backgroundStyle = { backgroundColor: item.BackgroundColor };
 
         return (
-            <View style={styles.itemParent}>
+            <View style={styles.itemParent} ref={ref => this[item.ref] = ref}>
                 <Button style={styles.itemButton} onPress={item.OnPress} enabled={!disabled}>
                     <View style={[styles.itemContent, backgroundStyle]}>
 

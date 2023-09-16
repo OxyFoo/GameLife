@@ -16,7 +16,7 @@ class SvgComponent extends React.Component {
 
     componentDidMount() {
         this.Loop();
-        this.interval = setInterval(this.Loop, 5000);
+        this.interval = window.setInterval(this.Loop, 5000);
     }
     componentWillUnmount() {
         clearInterval(this.interval);

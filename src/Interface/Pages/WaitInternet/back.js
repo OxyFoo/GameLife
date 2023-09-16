@@ -12,7 +12,7 @@ class BackWaitinternet extends PageBack {
 
     componentDidMount() {
         super.componentDidMount();
-        this.interval = setInterval(this.Loop, REFRESH_DELAY_SECONDS * 1000);
+        this.interval = window.setInterval(this.Loop, REFRESH_DELAY_SECONDS * 1000);
     }
     componentWillUnmount() {
         clearInterval(this.interval);

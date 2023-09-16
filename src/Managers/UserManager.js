@@ -73,10 +73,10 @@ class UserManager {
     StartTimers() {
         const saveTime = 5 * 60 * 1000; // 5 minutes
         const save = this.server.online ? this.OnlineSave : this.LocalSave;
-        this.intervalSave = setInterval(save, saveTime);
+        this.intervalSave = window.setInterval(save, saveTime);
 
         const achievementsTime = 20 * 1000; // 20 seconds
-        this.intervalAchievements = setInterval(this.achievements.CheckAchievements, achievementsTime);
+        this.intervalAchievements = window.setInterval(this.achievements.CheckAchievements, achievementsTime);
     }
 
     async Clear(keepOnboardingState = true) {

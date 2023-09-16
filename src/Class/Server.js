@@ -10,7 +10,7 @@ import { GetDeviceInformations } from 'Utils/Device';
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
 */
 
 /** @type {ServerStatus[]} */
@@ -170,6 +170,27 @@ class Server {
         }
 
         return true;
+    }
+
+    /**
+     * Send achievements unsaved on server (don't reload dataToken or inventory)
+     * @param {Array<number>} achievementsID Data to add to server
+     * @returns {Promise<string|false>} Return rewards string or false if failed
+     */
+    async AddAchievement(achievementsID) {
+        const _data = { achievementsID };
+        const response = await this.Request('addAchievements', _data);
+        console.log(response);
+        if (response === null) return false;
+
+        const status = response['status'];
+        if (status !== 'ok') return false;
+
+        if (!response.hasOwnProperty('rewards')) {
+            return false;
+        }
+
+        return response['rewards'];
     }
 
     /**

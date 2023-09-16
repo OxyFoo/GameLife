@@ -246,10 +246,6 @@ class UserManager {
             data['avatar'] = this.inventory.GetUnsaved();
         }
 
-        if (this.achievements.IsUnsaved()) {
-            data['achievements'] = this.achievements.UNSAVED_solved;
-        }
-
         if (this.informations.IsUnsaved()) {
             if (this.informations.UNSAVED_title !== null) {
                 data['titleID'] = this.informations.UNSAVED_title;
@@ -264,7 +260,6 @@ class UserManager {
             saved = await this.server.SaveUserData(data);
             if (saved) {
                 this.activities.Purge();
-                this.achievements.Purge();
                 this.informations.Purge();
                 this.tasks.Purge();
                 this.interface.console.EditLog(debugIndex, 'same', 'User data: online save success');
@@ -296,7 +291,6 @@ class UserManager {
             if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
             if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
-            if (contains('achievementQueue')) this.achievements.achievementQueue = data['achievementQueue'];
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('shop')) this.shop.LoadOnline(data['shop']);
             if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);

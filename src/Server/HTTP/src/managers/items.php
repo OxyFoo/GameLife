@@ -74,32 +74,37 @@
          * @param DataBase $db
          * @param Account $account
          * @param int $itemID
+         * @param string $reward
          * @return bool Success
          */
-        public static function AddInventoryTitle($db, $account, $itemID) {
-            // If user have already this title. convert into Ox
+        public static function AddInventoryTitle($db, $account, $itemID, &$reward) {
             $command = 'SELECT `ItemID` FROM TABLE WHERE `AccountID` = ?';
             $result = $db->QueryPrepare('InventoriesTitles', $command, 'i', [ $account->ID ]);
-            if ($result === false || count($result) === 0) return false;
+            if ($result === false) return false;
             $accountTitles = array_map(fn($row) => intval($row['ItemID']), $result);
+
+            // If user have already this title, convert into Ox
             if (in_array($itemID, $accountTitles, true)) {
-                // Get and return Title Ox price
                 $command = 'SELECT `Value` FROM TABLE WHERE `ID` = ?';
                 $result = $db->QueryPrepare('Titles', $command, 'i', [ $itemID ]);
                 if ($result === false || count($result) === 0) return false;
                 $oxAmount = intval($result[0]['Value']);
-                return Users::AddOx($db, $account->ID, $oxAmount);
+                $added = Users::AddOx($db, $account->ID, $oxAmount);
+                if ($added) {
+                    $reward = "Title $itemID|$oxAmount"; // TitleID|OxAmount
+                }
+                return $added;
             }
 
             // Add title in inventory
             $command = 'INSERT INTO TABLE (`AccountID`, `ItemID`, `CreatedBy`) VALUES (?, ?, ?)';
             $args = array($account->ID, $itemID, $account->ID);
             $result = $db->QueryPrepare('InventoriesTitles', $command, 'iii', $args);
-            if ($result !== false) {
-                Users::RefreshDataToken($db, $account->ID);
-                return true;
-            }
-            return false;
+            if ($result === false) return false;
+
+            $reward = "Title $itemID";
+            Users::RefreshDataToken($db, $account->ID);
+            return true;
         }
 
         /**

@@ -154,13 +154,11 @@
             "title": "Nouveau titre : {}",
             "title-conversion": " (converti en {} Ox)",
             "item": "Nouvel item : {}",
-            "ox": "{} Ox"
+            "ox": "Bonus : {} Ox"
         },
 
         "alert-achievement-title": "Succès déverouillé",
-        "alert-achievement-text": "Vous avez débloqué le succès : {}",
-        "alert-reward-title": "Récompense obtenues",
-        "alert-reward-text": "Vous avez obtenu les récompenses suivantes :"
+        "alert-achievement-text": "Vous avez débloqué le succès : {}"
     },
 
     "activity": {

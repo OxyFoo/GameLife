@@ -57,7 +57,6 @@ class Swiper extends React.Component {
     constructor(props) {
         super(props);
         this.posX = this.props.initIndex;
-        this.nextIn = this.props.delayNext;
     }
 
     state = {
@@ -67,20 +66,19 @@ class Swiper extends React.Component {
     }
 
     componentDidMount() {
-        clearInterval(this.interval);
-        this.interval = window.setInterval(this.loop, 1000);
+        this.startTimer();
     }
     componentWillUnmount() {
-        clearInterval(this.interval);
+        this.stopTimer();
     }
-    loop = () => {
-        this.nextIn--;
-        if (this.nextIn <= 0) {
-            this.nextIn = this.props.delayNext;
-            if (this.props.enableAutoNext) {
-                this.Next();
-            }
-        }
+
+    startTimer = () => {
+        const { delayNext } = this.props;
+        clearInterval(this.interval);
+        this.interval = window.setInterval(this.Next, delayNext * 1000);
+    }
+    stopTimer = () => {
+        clearInterval(this.interval);
     }
 
     Next = () => {
@@ -103,7 +101,7 @@ class Swiper extends React.Component {
         // Prevent vertical scroll when horizontal swipe
         event.stopPropagation();
 
-        this.nextIn = this.props.delayNext;
+        this.stopTimer();
         this.firstPosX = this.posX;
         this.firstTouchX = event.nativeEvent.pageX;
 
@@ -127,7 +125,6 @@ class Swiper extends React.Component {
         this.tickPos = newPosX;
 
         // Update
-        this.nextIn = this.props.delayNext;
         this.posX = newPosX;
         const newDotPos = MinMax(0, newPosX, this.props.pages.length - 1);
         TimingAnimation(this.state.positionX, newPosX, 0.1, false).start();
@@ -152,11 +149,12 @@ class Swiper extends React.Component {
         newIndex = MinMax(0, newIndex, this.props.pages.length - 1);
 
         // Update
-        this.nextIn = this.props.delayNext;
         this.posX = newIndex;
         SpringAnimation(this.state.positionX, newIndex, false).start();
         SpringAnimation(this.state.positionDots, newIndex, false).start();
         this.props.onSwipe(newIndex);
+
+        this.startTimer();
     }
 
     /** @param {LayoutChangeEvent} event */

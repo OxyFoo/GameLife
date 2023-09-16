@@ -17,7 +17,6 @@
             $avatar = $data['avatar'];
             $xp = $data['xp'];
             $tasksSort = $data['tasksSort'];
-            $achievements = $data['achievements'];
             $titleID = $data['titleID'];
             $birthTime = $data['birthTime'];
 
@@ -35,9 +34,6 @@
             }
             if (isset($tasksSort)) {
                 self::SetTasksSort($db, $account, $tasksSort);
-            }
-            if (isset($achievements)) {
-                Achievements::AddAchievement($db, $account, $achievements);
             }
             if (isset($titleID)) {
                 self::setTitle($db, $account, $titleID);

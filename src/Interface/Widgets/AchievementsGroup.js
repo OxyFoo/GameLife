@@ -23,20 +23,23 @@ class AchievementsGroup extends React.Component {
     }
 
     componentDidMount() {
-        this.achievementsListener = user.achievements.allSolved.AddListener(() => {
+        this.achievementsListener = user.achievements.achievements.AddListener(() => {
             this.setState({
                 lastAchievements: user.achievements.GetLast()
             });
         });
     }
     componentWillUnmount() {
-        user.achievements.allSolved.RemoveListener(this.achievementsListener);
+        user.achievements.achievements.RemoveListener(this.achievementsListener);
     }
 
     openAchievements = () => user.interface.ChangePage('achievements');
     onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);
 
-    renderAchievement = ({ item: { Name, ID } }) => {
+    renderAchievement = ({ item }) => {
+        if (item === null) return null;
+
+        const { Name, ID } = item;
         const Title = dataManager.GetText(Name);
         return (
             <TouchableOpacity

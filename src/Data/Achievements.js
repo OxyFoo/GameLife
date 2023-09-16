@@ -140,10 +140,11 @@ class Achievements {
 
             const [ _type, _value ] = elements;
 
+            const isPureNumber = /^-?\d+(\.\d+)?$/.test(_value);
             const type = REWARDS.find(r => r === _type) || null;
-            const value = isNaN(parseFloat(_value)) ? _value : parseFloat(_value);
+            const value = isPureNumber ? parseFloat(_value) : _value;
 
-            if (type === null || value === null) {
+            if (type === null || !value) {
                 return [];
             }
     

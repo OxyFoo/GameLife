@@ -154,13 +154,11 @@
             "title": "New title: {}",
             "title-conversion": " (convert into {} Ox)",
             "item": "New item: {}",
-            "ox": "{} Ox"
+            "ox": "Bonus: {} Ox"
         },
 
         "alert-achievement-title": "Unlocked achievement",
-        "alert-achievement-text": "You have unlocked the achievement: {}",
-        "alert-reward-title": "You have earned a reward",
-        "alert-reward-text": "You have earned rewards:"
+        "alert-achievement-text": "You have unlocked the achievement: {}"
     },
 
     "activity": {

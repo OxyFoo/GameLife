@@ -20,6 +20,7 @@
         case 'getInternalData': $commands->GetInternalData(); break;
         case 'getUserData':     $commands->GetUserData();     break;
         case 'addUserData':     $commands->AddUserData();     break;
+        case 'addAchievements': $commands->AddAchievements(); break;
         case 'setUsername':     $commands->SetUsername();     break;
         case 'getDailyDeals':   $commands->GetDailyDeals();   break;
         case 'buyDailyDeals':   $commands->BuyDailyDeals();   break;

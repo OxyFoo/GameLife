@@ -311,8 +311,7 @@
                 $userData['tasksTotal']       = $account->TasksTotal;
                 $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
                 $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
-                $userData['achievements']     = $account->Achievements;
-                $userData['achievementQueue'] = $account->AchievementQueue;
+                $userData['achievements']     = Achievements::Get($this->db, $account);
             }
 
             // Some data, load only if needed
@@ -349,6 +348,26 @@
             }
 
             $this->output['status'] = 'ok';
+        }
+
+        public function AddAchievements() {
+            $achievementsID = $this->data['achievementsID'];
+            if (!isset($achievementsID) || !$this->tokenChecked) return;
+            $account = $this->account;
+            $device = $this->device;
+
+            $rewards = array();
+            foreach ($achievementsID as $achievementID) {
+                $newRewards = Achievements::AddByID($this->db, $account, $achievementID, 'OK');
+                if ($newRewards === false) {
+                    $this->db->AddLog($account->ID, $device->ID, 'error', "Try to add achievement $achievementID");
+                    continue;
+                }
+                array_push($rewards, $newRewards);
+            }
+
+            $this->output['status'] = 'ok';
+            $this->output['rewards'] = join(',', $rewards);
         }
 
         public function SetUsername() {

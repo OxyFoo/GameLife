@@ -154,13 +154,11 @@
             "title": "Nouveau titre : {}",
             "title-conversion": " (converti en {} Ox)",
             "item": "Nouvel item : {}",
-            "ox": "{} Ox"
+            "ox": "Bonus : {} Ox"
         },
 
         "alert-achievement-title": "Succès déverouillé",
-        "alert-achievement-text": "Vous avez débloqué le succès : {}",
-        "alert-reward-title": "Récompense obtenues",
-        "alert-reward-text": "Vous avez obtenu les récompenses suivantes :"
+        "alert-achievement-text": "Vous avez débloqué le succès : {}"
     },
 
     "activity": {
@@ -256,7 +254,9 @@
         "btn-settings": "Paramètres",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "Les serveurs de l'application sont en maintenance, vous pouvez y accéder mais les fonctionnalités en ligne sont temporairement désactivées. Merci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-maintenance-text": "Les serveurs sont en maintenance, vous pouvez accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-error-title": "Erreur",
+        "alert-error-text": "Une erreur est survenue, veuillez réessayer plus tard.",
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
@@ -335,7 +335,6 @@
         "input-select-title": "Sélectionnez un titre",
         "input-title-none": "Aucun titre",
         "input-edit": "Modifier",
-        "input-select-age": "Sélectionnez votre jour de naissance",
 
         "edit-title": "Editer le profil",
         "edit-cancel": "Retour",
@@ -444,10 +443,60 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
+        "banner-daily": "Deals du jour",
+        "banner-random-chest": "Coffres aléatoires",
+        "banner-targeted-chest": "Coffres ciblés",
+        "banner-dye": "Teintures",
+
+        "dailyDeals": {
+            "popup-item-button": "Acheter pour {} Ox",
+            "popup-buysuccess-title": "Achat réussi",
+            "popup-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} Ox",
+
+            "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard."
+        },
+
+        "randomChests": {
+            "chest-random-common": "Coffre simple",
+            "chest-random-rare": "Coffre mystérieux",
+            "chest-random-epic": "Coffre des légendes",
+
+            "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",
+            "popup-chest-button": "Ouvrir pour {} Ox",
+            "popup-buysuccess-title": "Achat réussi",
+            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
+        },
+
+        "targetedChests": {
+            "targets": {
+                "hair": "Tête",
+                "top": "Haut",
+                "bottom": "Bas",
+                "shoes": "Pieds"
+            },
+
+            "popup-chest-text": "Tu veux ouvrir un coffre {} pour obtenir un item de type \"{}\" pour {} Ox ?",
+            "popup-chest-button": "Ouvrir pour {} Ox",
+            "popup-buysuccess-title": "Achat réussi",
+            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
+        },
+
+        "dyes": {
+            "popup-dyer-text": "Changer l'apparence de cet item ?",
+            "popup-dyer-button": "Teindre pour {} Ox",
+            "popup-dyesuccess-title": "Teinture réussie",
+            "popup-dyesuccess-text": "Vous avez bien teint l'item \"{}\" pour {} Ox",
+
+            "error-no-dye": "Il n'y a aucune teinture de disponible, veuillez acheter des items ou réessayez plus tard."
+        },
+
         "alert-code-title": "Utiliser un code",
         "alert-code-text": "Vous pouvez gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant les codes dans nos vidéos Tiktok et Youtube\n\t- En gagnant un concours sur Instagram ou Twitter",
         "alert-code-input": "Code",
         "alert-code-button": "Valider",
+
+        "popup-notenoughox-title": "Insuffisant",
+        "popup-notenoughox-text": "Tu n'as pas assez d'Ox pour acheter cet item.",
 
         "internet-offline-title": "Pas de connexion",
         "internet-offline-text": "Vous devez être connecté à internet !",
@@ -461,35 +510,6 @@
 
         "temp-comingsoon-title": "Boutique",
         "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
-    },
-
-    "shopItems": {
-        "container-titles": "Titres",
-        "container-items": "Items",
-        "container-dyer": "Teinturier",
-
-        "popup-title-button": "Acheter pour {} Ox",
-        "popup-item-button": "Acheter pour {} Ox",
-        "popup-dyer-text": "Changer l'apparence de cet item ?",
-        "popup-dyer-button": "Teindre pour {} Ox",
-
-        "alert-buysuccess-title": "Achat réussi",
-        "alert-buysuccess-text": "Vous avez bien acheté l'item \"{}\" pour {} Ox",
-        "alert-dyesuccess-title": "Teinture réussie",
-        "alert-dyesuccess-text": "Vous avez bien teint l'item \"{}\" pour {} Ox",
-        "alert-buytitlesuccess-title": "Achat réussi",
-        "alert-buytitlesuccess-text": "Vous avez bien acheté le titre \"{}\" pour {} Ox",
-        "alert-buyfailed-title": "Achat échoué",
-        "alert-buyfailed-text": "Impossible d'acheter l'item, une erreur est survenue, veuillez réessayer plus tard.",
-        "alert-notenoughox-title": "Insuffisant",
-        "alert-notenoughox-text": "Vous n'avez pas assez d'Ox pour acheter cet item.",
-        "alert-owned-title": "Déjà possédé",
-        "alert-owned-text": "Vous possédez déjà ce titre, vous ne pouvez donc pas l'acheter.",
-
-        "error-no-titles": "Une erreur est survenue lors du chargement des titres à vendre, veuillez réessayer plus tard.",
-        "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, veuillez réessayer plus tard.",
-        "error-no-dye": "Il n'y a aucune teinture de disponible, veuillez acheter des items ou réessayez plus tard.",
-        "error-inventory-empty": "Vous ne possédez aucun item"
     },
 
     "skill": {
@@ -590,9 +610,89 @@
 
     "wait": {
         "wait-internet-text": "Vous devez être connecté à internet pour pouvoir vous connecter !",
+        "wait-maintenance-text": "Les serveurs sont actuellement en maintenance, reviens plus tard !",
         "wait-email-text": "Un mail vous a été envoyé pour autoriser votre appareil à vous connecter.\n\nLe mail peut s'envoyer après quelque minutes, vérifiez vos spam.",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-send": "Mail envoyé !"
+    },
+
+    "tuto": {
+        "main": {
+            "home-1": "Salut ! J'espère que tu vas bien. Je vais te présenter l'applications, suis-moi !",
+            "home-2": "En haut a droite tu peux voir ton avatar, sur lequel tu peux cliquer pour aller voir ton profil",
+
+            "profile-1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
+            "profile-2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence",
+
+            "home-3": "Voici les actualités, on commence par une citation choisie par la communauté et des news concernant l'application",
+            "home-4": "Ce bouton sert à ajouter les activités que tu fais dans la vraie vie, tu les verras apparaître dans le calendrier et ça te permettra de gagner de l'expérience !",
+            "home-5": "Ce bouton aussi te permet d'ajouter une activité, appuie dessus pour essayer",
+
+            "activity-1": "Tu peux filtrer les activités par catégorie: {}",
+            "activity-2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
+
+            "home-6": "Tu peux aussi ajouter des tâches, pour ajouter des activités plus rapidement, ou suivre des objectifs personnels",
+            "home-7": "Viens voir par ici, on va faire un tour dans le calendrier",
+
+            "calendar-1": "C'est ici qu'apparaîtront toutes tes activités, tu peux les sélectionner pour afficher leurs détails et les modifier.",
+            "calendar-2": "Tu peux sélectionner un autre jour ou naviguer entre les semaines avec les flèches",
+            "calendar-3": "Et tu peux cliquer ici pour afficher le calendrier des mois",
+            "calendar-4": "Pour finir allons voir la boutique !",
+
+            "shop-1": "En haut tu peux entrer un code pour obtenir des récompenses",
+            "shop-2": "Ici tu peux regarder une pub pour gagner des Ox gratuitement (les Ox étant la monnaie virtuelle de l'application)",
+            "shop-3": "Et ici c'est pour acheter des Ox avec de l'argent (cette page sera disponible dans les prochaines mises à jour !)",
+            "shop-4": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
+            "shop-5": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
+            "shop-no-internet": "Malheureusement je ne peux pas te présenter la boutique car tu n'as pas internet, mais tu peux y accéder en étant connecté !",
+
+            "home-8": "Voilà ! Je vais maintenant te laisser découvrir l'application par toi-même, si tu as besoin d'aide tu peux m'appeler en appuyant sur les boutons d'aide !\n\nBonne chance, même si je sais que tu n'en pas besoin ;)"
+        },
+
+        "achievements": {
+            "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
+        },
+
+        "activity": {
+            "1": "Tu peux filtrer les activités par catégorie: {}",
+            "2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
+
+            "3": "Tu peux choisir d'ajouter une activité que tu as faite ou que tu comptes faire plus tard, ou alors tu peux lancer un minuteur pour commencer l'activité maintenant",
+            "4": "Tu peux cliquer sur ce composant pour définir le début et la durée de l'activité",
+            "5": "Ici tu peux voir l'expérience que tu vas gagner en faisant cette activité",
+            "6": "Tu peux ajouter un commentaire à ton activité, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        },
+
+        "profile": {
+            "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
+            "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
+        },
+
+        "shop": {
+            "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
+            "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
+            "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
+            "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",
+            "randomChests-epic": "Quant au coffre épique, il offre 29% de chance d'obtenir un objet rare, 70% pour un objet épique et 1% pour un objet légendaire; il n'y a aucune chance d'y trouver un objet commun.",
+            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr d'avoir un item de la catégorie que tu as choisie !",
+            "targetedChests-common": "Dans le coffre commun, les chances d'obtenir un objet de rareté commune sont extrêmement élevées à 99%, suivies de 0,9% pour un objet rare et 0,1% pour un objet épique; il est à noter qu'il n'y a aucune chance d'y trouver un objet légendaire.",
+            "targetedChests-rare": "En ouvrant le coffre rare, vous avez 27% de chances d'obtenir un objet commun, 70% pour un objet rare, 2,9% pour un objet épique et une mince chance de 0,1% pour un objet légendaire.",
+            "targetedChests-epic": "Quant au coffre épique, celui-ci ne contient pas d'objets communs et offre 30% de chances d'obtenir un objet rare, 65% pour un objet épique, et une probabilité non négligeable de 5% pour un objet légendaire.", 
+            "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
+        },
+
+        "task": {
+            "1": "Ici, définis la date limite de ta tâche ou sa fréquence si elle est récurrente.",
+            "2": "Tu as la possibilité de relier ta tâche avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
+            "3": "Tu peux également ajouter des sous-tâches à ta tâche principale, pour mieux t'organiser.",
+            "4": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        },
+
+        "other": {
+            "skip": "Passer",
+            "press": "Appuyez",
+            "button": "Suivant"
+        }
     },
 
     "other": {
@@ -600,8 +700,6 @@
         "widget-achievements-all": "Tous les succès",
         "widget-skills-all": "Toutes les comp.",
         "sexe-male": "♂",
-        "sexe-female": "♀",
-        "tuto-press": "Appuyez",
-        "tuto-button": "Suivant"
+        "sexe-female": "♀"
     }
 }

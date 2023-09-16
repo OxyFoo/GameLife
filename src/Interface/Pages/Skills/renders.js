@@ -11,7 +11,7 @@ import { Text, Button, IconCheckable, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('./index').default} SkillsPage
- * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Data/Skills').Category} Category
  */
 
@@ -22,10 +22,6 @@ import { Text, Button, IconCheckable, Icon } from 'Interface/Components';
  */
 function renderCategory({ item }) {
     const { ID, LogoID } = item;
-
-    if (ID === 0) {
-        return <View style={{ width: 44, height: 44 }} />;
-    }
 
     const checked = this.state.selectedCategories.includes(ID);
     const icon = dataManager.skills.GetXmlByLogoID(LogoID);
@@ -44,15 +40,15 @@ function renderCategory({ item }) {
 
 /**
  * @this {SkillsPage}
- * @param {{item: Skill}} item Normal skill with Name (with langage), Logo & experience (lvl, xp, lastTime)
+ * @param {{item: EnrichedSkill}} item
  * @returns {JSX.Element}
  */
 function renderSkill({ item }) {
-    const { ID, Logo, Name, experience } = item;
+    const { ID, LogoXML, FullName, Experience } = item;
 
     const xpLang = langManager.curr['level'];
-    const { lvl, xp, lastTime } = experience;
-    const text = `${xpLang['level']} ${lvl}, ${xp} ${xpLang['xp']}`;
+    const { lvl, lastTime } = Experience;
+    const text = `${xpLang['level']} ${lvl}`;
     const last = DateToFormatString(GetDate(lastTime));
     const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
 
@@ -63,13 +59,13 @@ function renderSkill({ item }) {
             activeOpacity={.6}
         >
             <View style={[styles.skillIcon, this.backgroundActive]}>
-                <Icon xml={Logo} size={64} />
+                <Icon xml={LogoXML} size={64} />
             </View>
 
             <View style={styles.skillContent}>
-                <Text style={styles.skillTitle} fontSize={24}>{Name}</Text>
-                <Text style={styles.skillText} color='secondary'>{text}</Text>
-                <Text style={styles.skillText} color='secondary'>{last}</Text>
+                <Text style={styles.skillTitle} fontSize={24}>{FullName}</Text>
+                <Text style={styles.skillText}>{text}</Text>
+                <Text style={styles.skillText}>{last}</Text>
             </View>
         </TouchableOpacity>
     );

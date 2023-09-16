@@ -17,9 +17,11 @@ import { Text, Button } from 'Interface/Components';
  * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
  */
 function renderDyePopup(dye, refreshCallback = () => {}) {
-    const lang = langManager.curr['shopItems'];
+    const lang = langManager.curr['shop']['dyes'];
     let [ loading, setLoading ] = React.useState(false);
 
+    const itemName = dye.Name;
+    const itemDescription = lang['popup-dyer-text'];
     const buttonText = lang['popup-dyer-button']
                         .replace('{}', dye.Price.toString());
 
@@ -35,11 +37,11 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
     return (
         <View style={styles.popupContainer}>
             <Text style={styles.popupTitle}>
-                {dye.Name}
+                {itemName}
             </Text>
 
             <Text style={styles.popupText}>
-                {lang['popup-dyer-text']}
+                {itemDescription}
             </Text>
 
             <Button
@@ -56,12 +58,12 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
 
 /** @param {BuyableDye} item */
 const buyDye = async(item) => {
-    const lang = langManager.curr['shopItems'];
+    const lang = langManager.curr['shop'];
 
     // Check Ox Amount
     if (user.informations.ox.Get() < item.Price) {
-        const title = lang['alert-notenoughox-title'];
-        const text = lang['alert-notenoughox-text'];
+        const title = lang['popup-notenoughox-title'];
+        const text = lang['popup-notenoughox-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
         return;
     }
@@ -76,8 +78,8 @@ const buyDye = async(item) => {
 
     // Request failed
     if (response['status'] !== 'ok') {
-        const title = lang['alert-buyfailed-title'];
-        const text = lang['alert-buyfailed-text'];
+        const title = lang['reward-failed-title'];
+        const text = lang['reward-failed-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
         return;
     }
@@ -85,11 +87,12 @@ const buyDye = async(item) => {
     // Update inventory & Ox amount
     user.inventory.LoadOnline(response['inventory']);
     user.informations.ox.Set(parseInt(response['ox']));
+    user.shop.buyToday.dyes.push(item.ItemBefore.InventoryID);
     user.LocalSave();
 
     // Show success message
-    const title = lang['alert-dyesuccess-title'];
-    let text = lang['alert-dyesuccess-text']
+    const title = lang['dyes']['popup-dyesuccess-title'];
+    let text = lang['dyes']['popup-dyesuccess-text']
         .replace('{}', item.Name)
         .replace('{}', item.Price.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);

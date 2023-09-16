@@ -6,6 +6,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import StartHelp from './help';
 import { Page, Text, IconCheckable, Input } from 'Interface/Components';
 import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
@@ -79,11 +80,11 @@ class Activity extends BackActivity {
                 ref={ref => this.refPage = ref}
                 scrollable={false}
                 canScrollOver={false}
-                disableEvents={this.disableEvents}
             >
                 <PageHeader
                     style={styles.header}
                     onBackPress={(e) => user.interface.BackHandle()}
+                    onHelpPress={StartHelp.bind(this)}
                 />
 
                 {/* Categories */}

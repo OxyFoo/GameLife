@@ -62,6 +62,7 @@ class Skills extends BackSkills {
 
                 <View style={[styles.skillsParent, { top: height }]}>
                     <FlatList
+                        ref={ref => this.refSkills = ref}
                         style={styles.skillsFlatlist}
                         ListEmptyComponent={renderEmpty.bind(this)}
                         data={skills}

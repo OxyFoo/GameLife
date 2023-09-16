@@ -42,6 +42,7 @@ class BackSkill extends PageBack {
             name: dataManager.GetText(skill.Name),
             category: dataManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
+            totalXP: skillXP.totalXP + ' ' + langManager.curr['level']['xp'],
             xp: skillXP.xp,
             next: skillXP.next,
             creator: skill.Creator ? authorText : '',
@@ -55,6 +56,8 @@ class BackSkill extends PageBack {
     }
 
     componentDidMount() {
+        super.componentDidMount();
+
         // Back handler
         user.interface.SetCustomBackHandler(() => {
             this.refActivityPanel?.Close();

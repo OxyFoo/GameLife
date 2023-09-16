@@ -79,7 +79,10 @@ class Skill extends BackSkill {
 
                 {/* Level and XP bar */}
                 <View style={styles.levelContainer}>
-                    <Text style={styles.levelText}>{this.skill.level}</Text>
+                    <View style={styles.level}>
+                        <Text>{this.skill.level}</Text>
+                        <Text>{this.skill.totalXP}</Text>
+                    </View>
                     <XPBar value={this.skill.xp} maxValue={this.skill.next} />
 
                     {this.skill.creator !== '' && (

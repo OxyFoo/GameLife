@@ -1,44 +1,36 @@
-import { Animated } from 'react-native';
-
-import { WithFunction, TimingAnimation } from 'Utils/Animations';
-
 /**
  * @typedef {import('./Part').default} Part
  */
 
-class Animated3D {
-    constructor(rX = 0, rY = 0, rZ = 0) {
-        this.rX = new Animated.Value(rX);
-        this.rY = new Animated.Value(rY);
-        this.rZ = new Animated.Value(rZ);
+class Point3D {
+    constructor(x = 0, y = 0, z = 0) {
+        this.rX = x;
+        this.rY = y;
+        this.rZ = z;
     }
 
     /**
      * @param {{ rX: number, rY: number, rZ: number }} angles
-     * @param {number} duration Time in milliseconds
-     * @returns {Array<Animated.CompositeAnimation>}
      */
-    Update(angles, duration) {
+    Update(angles) {
         if (typeof(angles) !== 'object') {
-            throw new Error('Animated3D.Update: angles must be an object');
+            throw new Error('Point3D.Update: angles must be an object');
         }
 
-        let animations = [];
-        const addAnim = (anim, value) => animations.push(TimingAnimation(anim, value, duration));
-        if (angles.hasOwnProperty('rX')) addAnim(this.rX, angles['rX']);
-        if (angles.hasOwnProperty('rY')) addAnim(this.rY, angles['rY']);
-        if (angles.hasOwnProperty('rZ')) addAnim(this.rZ, angles['rZ']);
-        return animations;
+        if (angles.hasOwnProperty('rX')) this.rX = angles['rX'];
+        if (angles.hasOwnProperty('rY')) this.rY = angles['rY'];
+        if (angles.hasOwnProperty('rZ')) this.rZ = angles['rZ'];
     }
 }
 
 /**
  * @description Return an array of all parent parts in order from root to this part (including this part)
+ * @param {Part} el
  * @returns {Array<Part>}
  */
-function __getParents() {
-    let parents = [ this ];
-    let parent = this.parent;
+function __getParents(el) {
+    let parents = [ el ];
+    let parent = el.parent;
     while (parent !== null) {
         parents.splice(0, 0, parent);
         parent = parent.parent;
@@ -47,50 +39,48 @@ function __getParents() {
 }
 
 /**
- * @this {Part}
- * @returns {{ x: Animated.Value, y: Animated.Value, rZ: Animated.Value }}
+ * @param {Part} part
+ * @returns {{ posX: number, posY: number, rotZ: number }}
  */
-function CalculateParentPos() {
-    let posX = this.position.x;
-    let posY = this.position.y;
-    let rotZ = this.rotation.rZ;
+function CalculateParentPos(part) {
+    let posX = part.position.x;
+    let posY = part.position.y;
+    let rotZ = part.rotation.rZ;
 
     /** @param {Part} el */
     const calculateParentPos = (el) => {
         if (el.parent !== null) {
-            let currentRotation = new Animated.Value(0);
-            const elChilds = __getParents.bind(el)();
+            let currentRotation = 0;
+            const elChilds = __getParents(el);
             for (let i = 0; i < elChilds.length-1; i++) {
                 const child = elChilds[i];
-                const childRotation = Animated.add(child.a % 360, child.rotation.rZ);
-                currentRotation = Animated.add(currentRotation, childRotation);
+                const childRotation = (child.a % 360) + child.rotation.rZ;
+                currentRotation += childRotation;
             }
-            currentRotation = Animated.add(currentRotation, el.a);
-            currentRotation = Animated.modulo(currentRotation, 360);
+            currentRotation += el.a;
+            currentRotation %= 360;
 
-            const TETA = Animated.multiply(currentRotation, Math.PI / 180);
-            const COS = TETA.interpolate(WithFunction(Math.cos, 20, 2*Math.PI));
-            const SIN = TETA.interpolate(WithFunction(Math.sin, 20, 2*Math.PI));
-            const radiusX = Animated.multiply(el.l, COS);
-            const radiusY = Animated.multiply(el.l, SIN);
+            const TETA = currentRotation * (Math.PI / 180);
+            const radiusX = el.l * Math.cos(TETA);
+            const radiusY = el.l * Math.sin(TETA);
 
-            const parentX = Animated.add(el.parent.position.x, radiusX);
-            const parentY = Animated.add(el.parent.position.y, radiusY);
-            const parentR = Animated.modulo(el.parent.rotation.rZ, 360);
+            const parentX = el.parent.position.x + radiusX;
+            const parentY = el.parent.position.y + radiusY;
+            const parentR = el.parent.rotation.rZ % 360;
 
-            posX = Animated.add(posX, parentX);
-            posY = Animated.add(posY, parentY);
-            rotZ = Animated.add(rotZ, parentR);
+            posX = posX + parentX;
+            posY = posY + parentY;
+            rotZ = rotZ + parentR;
 
             calculateParentPos(el.parent);
         }
     }
-    calculateParentPos(this);
+    calculateParentPos(part);
 
-    posX = Animated.add(posX, this.body.firstPart.animPosition.x);
-    posY = Animated.add(posY, this.body.firstPart.animPosition.y);
+    posX += part.body.position.x;
+    posY += part.body.position.y;
 
     return { posX, posY, rotZ };
 }
 
-export { Animated3D, CalculateParentPos };
+export { Point3D, CalculateParentPos };

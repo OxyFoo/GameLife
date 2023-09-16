@@ -10,7 +10,7 @@ import { GetDeviceInformations } from 'Utils/Device';
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'setUsername'|'buyTitle'|'buyItem'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'adWatched'|'report'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
 */
 
 /** @type {ServerStatus[]} */
@@ -57,7 +57,6 @@ class Server {
         }
 
         /** @type {ServerStatus} */
-        // @ts-ignore
         const status = response['status'];
         const devMode = response['devMode'];
 
@@ -71,10 +70,13 @@ class Server {
             const title = langManager.curr['home']['alert-newversion-title'];
             const text = langManager.curr['home']['alert-newversion-text'];
             this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        } else if (status === 'maintenance' && this.status !== 'maintenance') {
+            this.online = false;
+            this.status = status;
         } else if (status === 'error') {
             this.online = false;
-            const title = langManager.curr['home']['alert-maintenance-title'];
-            const text = langManager.curr['home']['alert-maintenance-text'];
+            const title = langManager.curr['home']['alert-error-title'];
+            const text = langManager.curr['home']['alert-error-text'];
             this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
         } else if (status === 'ok') {
             this.online = true;
@@ -103,7 +105,6 @@ class Server {
         }
 
         /** @type {LoginStatus} */
-        // @ts-ignore
         const s = result_connect['status'];
         if (STATUS.includes(s)) {
             status = s;
@@ -144,7 +145,6 @@ class Server {
         if (response === null) return 'error';
 
         /** @type {SigninStatus} */
-        // @ts-ignore
         const status = response['status'];
         const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
         if (!allStatus.includes(status)) return 'error';
@@ -173,6 +173,27 @@ class Server {
         }
 
         return true;
+    }
+
+    /**
+     * Send achievements unsaved on server (don't reload dataToken or inventory)
+     * @param {Array<number>} achievementsID Data to add to server
+     * @returns {Promise<string|false>} Return rewards string or false if failed
+     */
+    async AddAchievement(achievementsID) {
+        const _data = { achievementsID };
+        const response = await this.Request('addAchievements', _data);
+        console.log(response);
+        if (response === null) return false;
+
+        const status = response['status'];
+        if (status !== 'ok') return false;
+
+        if (!response.hasOwnProperty('rewards')) {
+            return false;
+        }
+
+        return response['rewards'];
     }
 
     /**
@@ -207,6 +228,27 @@ class Server {
         if (response === null) return 'error';
 
         return response['usernameChangeState'];
+    }
+
+    /**
+     * Save username on server
+     * @returns {Promise<Array<string>|null>} Return array of item ID
+     */
+    async GetDailyDeals() {
+        const _data = {
+            'dataToken': this.dataToken
+        };
+
+        const response = await this.Request('getDailyDeals', _data);
+        if (response === null) return null;
+
+        const status = response['status'];
+        if (status !== 'ok') return null;
+
+        const items = response['dailyDeals'];
+        if (!Array.isArray(items)) return null;
+
+        return items;
     }
 
     /**

@@ -14,10 +14,7 @@ import { Button, Separator, Text } from 'Interface/Components';
 
 const AchievementsGroupProps = {
     /** @type {StyleProp} */
-    style: {},
-
-    /** @type {boolean} Show button to open "skills" page */
-    showAllButton: false
+    style: {}
 }
 
 class AchievementsGroup extends React.Component {
@@ -26,20 +23,23 @@ class AchievementsGroup extends React.Component {
     }
 
     componentDidMount() {
-        this.achievementsListener = user.achievements.allSolved.AddListener(() => {
+        this.achievementsListener = user.achievements.achievements.AddListener(() => {
             this.setState({
                 lastAchievements: user.achievements.GetLast()
             });
         });
     }
     componentWillUnmount() {
-        user.achievements.allSolved.RemoveListener(this.achievementsListener);
+        user.achievements.achievements.RemoveListener(this.achievementsListener);
     }
 
     openAchievements = () => user.interface.ChangePage('achievements');
     onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);
 
-    renderAchievement = ({ item: { Name, ID } }) => {
+    renderAchievement = ({ item }) => {
+        if (item === null) return null;
+
+        const { Name, ID } = item;
         const Title = dataManager.GetText(Name);
         return (
             <TouchableOpacity
@@ -52,29 +52,32 @@ class AchievementsGroup extends React.Component {
     }
 
     render() {
-        const { style, showAllButton } = this.props;
+        const { style } = this.props;
+        const { lastAchievements } = this.state;
         const lang = langManager.curr['other'];
+        const btnMargin = { marginTop: lastAchievements.length ? 24 : 0 };
 
         return (
             <>
                 <FlatList
                     style={style}
-                    data={this.lastAchievements}
+                    data={lastAchievements}
                     renderItem={this.renderAchievement}
                     keyExtractor={(item, index) => 'skill-' + index}
                     ItemSeparatorComponent={() => (
-                        <Separator.Horizontal style={{ height: .4 }} color='main1' />
+                        <Separator.Horizontal
+                            style={styles.separator}
+                            color='main1'
+                        />
                     )}
                 />
 
-                {showAllButton && (
-                    <Button
-                        style={styles.btnSmall}
-                        onPress={this.openAchievements}
-                    >
-                        {lang['widget-achievements-all']}
-                    </Button>
-                )}
+                <Button
+                    style={[styles.btnSmall, btnMargin]}
+                    onPress={this.openAchievements}
+                >
+                    {lang['widget-achievements-all']}
+                </Button>
             </>
         );
     }
@@ -88,9 +91,11 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         fontSize: 16
     },
+    separator: {
+        height: .4
+    },
     btnSmall: {
         height: 46,
-        marginTop: 24,
         marginHorizontal: 24,
         borderRadius: 8
     }

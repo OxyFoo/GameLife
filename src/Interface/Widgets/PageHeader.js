@@ -19,8 +19,7 @@ const PageHeaderProps = {
     onBackPress: (event) => {},
 
     /** @type {(event: GestureResponderEvent) => void} */
-    onHelpPress: (event) => {},
-    hideHelp: undefined
+    onHelpPress: undefined
 }
 
 class PageHeader extends React.Component {
@@ -34,7 +33,7 @@ class PageHeader extends React.Component {
                     <Icon style={styles.headerLeftArrow} icon='arrowLeft' size={30} />
                     <Text fontSize={16}>{T_back}</Text>
                 </TouchableOpacity>
-                {!this.props.hideHelp && <Icon onPress={onHelpPress} icon='info' size={30} />}
+                {!!onHelpPress && <Icon onPress={onHelpPress} icon='info' size={30} />}
             </View>
         );
     }

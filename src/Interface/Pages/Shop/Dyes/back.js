@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderDyePopup } from './popupDye';
+import { renderDyePopup } from './popup';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';

@@ -154,13 +154,11 @@
             "title": "New title: {}",
             "title-conversion": " (convert into {} Ox)",
             "item": "New item: {}",
-            "ox": "{} Ox"
+            "ox": "Bonus: {} Ox"
         },
 
         "alert-achievement-title": "Unlocked achievement",
-        "alert-achievement-text": "You have unlocked the achievement: {}",
-        "alert-reward-title": "You have earned a reward",
-        "alert-reward-text": "You have earned rewards:"
+        "alert-achievement-text": "You have unlocked the achievement: {}"
     },
 
     "activity": {
@@ -256,7 +254,9 @@
         "btn-settings": "Settings",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "The application servers are under maintenance, you can access them but the online features are temporarily disabled. Thanks for your patience, everything will be back to normal in a few minutes!",
+        "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
+        "alert-error-title": "Error",
+        "alert-error-text": "An error has occurred, please try again later.",
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
         "alert-newversion-title": "Warning",
@@ -335,7 +335,6 @@
         "input-select-title": "Select a title",
         "input-title-none": "No title",
         "input-edit": "Edit",
-        "input-select-age": "Select your day of birth",
 
         "edit-title": "Edit your profile",
         "edit-cancel": "Cancel",
@@ -444,52 +443,73 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
+        "banner-daily": "Daily deals",
+        "banner-random-chest": "Random chests",
+        "banner-targeted-chest": "Targeted chests",
+        "banner-dye": "Dyes",
+
+        "dailyDeals": {
+            "popup-item-button": "Buy for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "You have successfully purshased item \"{}\" for {} Ox",
+
+            "error-no-items": "An error occurred while loading the items for sale, please try again later."
+        },
+
+        "randomChests": {
+            "chest-random-common": "Simple chest",
+            "chest-random-rare": "Mysterious chest",
+            "chest-random-epic": "Chest of legends",
+
+            "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
+            "popup-chest-button": "Open for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+        },
+
+        "targetedChests": {
+            "targets": {
+                "hair": "Head",
+                "top": "Top",
+                "bottom": "Bottom",
+                "shoes": "Feet"
+            },
+
+            "popup-chest-text": "You want to open a {} chest to get an item of type \"{}\" for {} Ox?",
+            "popup-chest-button": "Open for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+        },
+
+        "dyes": {
+            "popup-dyer-text": "Change the apparence of this item?",
+            "popup-dyer-button": "Dye for {} Ox",
+            "popup-dyesuccess-title": "Successful dyeing",
+            "popup-dyesuccess-text": "You successfully dyed item \"{}\" for {} Ox",
+
+            "error-no-dye": "There is no dye available, please buy items or try again."
+        },
+
         "alert-code-title": "Use a code",
         "alert-code-text": "You can win codes by:\n\t- Playing on our Discord server\n\t- Finding codes in our Tiktok and Youtube videos\n\t- Winning a contest on Instagram or Twitter",
         "alert-code-input": "Code",
         "alert-code-button": "Validate",
 
+        "popup-notenoughox-title": "Insufficient",
+        "popup-notenoughox-text": "You don't have enough Ox to buy this item.",
+
         "internet-offline-title": "No connection",
         "internet-offline-text": "You must be connected to the internet!",
 
         "reward-failed-title": "Failure",
-        "reward-failed-text": "An error has occurred, please try again later.",
+        "reward-failed-text": "An error has occurred, please retry again later.",
         "reward-wrong-title": "Incorrect code",
         "reward-wrong-text": "The code you entered is incorrect.",
         "reward-success-title": "Code used",
-        "reward-success-text": "You have earned rewards:",
+        "reward-success-text": "You have obtained the following rewards:",
 
         "temp-comingsoon-title": "Shop",
-        "temp-comingsoon-text": "🚧 Coming soon 🚧"
-    },
-
-    "shopItems": {
-        "container-titles": "Titles",
-        "container-items": "Items",
-        "container-dyer": "Dyer",
-
-        "popup-title-button": "Buy for {} Ox",
-        "popup-item-button": "Buy for {} Ox",
-        "popup-dyer-text": "Change the appearance of this item?",
-        "popup-dyer-button": "Tint for {} Ox",
-
-        "alert-buysuccess-title": "Successful purchase",
-        "alert-buysuccess-text": "You have purchased the item \"{}\" for {} Ox",
-        "alert-dyesuccess-title": "Successful dyeing",
-        "alert-dyesuccess-text": "You have dyed the item \"{}\" for {} Ox",
-        "alert-buytitlesuccess-title": "Successful purchase",
-        "alert-buytitlesuccess-text": "You have purchased the title \"{}\" for {} Ox",
-        "alert-buyfailed-title": "Purchase failed",
-        "alert-buyfailed-text": "Unable to purchase the item, an error has occurred, please try again later.",
-        "alert-notenoughox-title": "Insufficient",
-        "alert-notenoughox-text": "You don't have enough Ox to buy this item.",
-        "alert-owned-title": "Already owned",
-        "alert-owned-text": "You already own this title, so you can't buy it.",
-
-        "error-no-titles": "An error occurred while loading the securities for sale, please try again later.",
-        "error-no-items": "An error occurred while loading the items for sale, please try again later.",
-        "error-no-dye": "There are no dyes available, please purchase items or try again later.",
-        "error-inventory-empty": "You do not have any items"
+        "temp-comingsoon-text": "🚧 Available soon 🚧"
     },
 
     "skill": {
@@ -590,9 +610,89 @@
 
     "wait": {
         "wait-internet-text": "You must be connected to the internet to be able to connect!",
+        "wait-maintenance-text": "The servers are currently in maintenance, come back later!",
         "wait-email-text": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam.",
         "wait-email-remain": "Mail sent again in {}m{}s",
         "wait-email-send": "Mail sent !"
+    },
+
+    "tuto": {
+        "main": {
+            "home-1": "Hi! I hope you're well. I'm going to introduce you to the applications, follow me!",
+            "home-2": "At the top right you can see your avatar, which you can click on to see your profile",
+
+            "profile-1": "This is your profile, where you can modify your personal information",
+            "profile-2": "This is your avatar, you can click on it to change your appearance",
+
+            "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
+            "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",
+            "home-5": "This button also lets you add an activity, so press it to try it out",
+
+            "activity-1": "You can filter activities by category: {}",
+            "activity-2": "You can select an activity here to open the activity panel",
+
+            "home-6": "You can also add tasks, to add activities more quickly, or follow personal goals",
+            "home-7": "Come here, let's take a look at the calendar",
+
+            "calendar-1": "This is where all your activities will appear, you can select them to view their details and edit them.",
+            "calendar-2": "You can select another day or navigate between weeks with the arrows",
+            "calendar-3": "And you can click here to display the month calendar",
+            "calendar-4": "Finally, let's go and see the store!",
+
+            "shop-1": "At the top you can enter a code to get rewards",
+            "shop-2": "Here you can watch an ad to earn Ox for free (Ox are the app's virtual currency)",
+            "shop-3": "Yan can buy Ox with money (this page will be available in future updates!)",
+            "shop-4": "You can spend your Ox here to buy items, which you can equip in your profile - offers change every day!",
+            "shop-5": "In this category, you can buy chests containing a random item. The rarer the chest, the greater the chance of getting a quality item!",
+            "shop-no-internet": "Unfortunately I cannot present the shop to you because you do not have the internet, but you can access it by being connected!",
+
+            "home-8": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
+        },
+
+        "achievements": {
+            "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."
+        },
+
+        "activity": {
+            "1": "You can filter activities by category: {}",
+            "2": "You can select an activity here to open the activity panel",
+
+            "3": "You can choose to add an activity you've done or plan to do later, or you can set a timer to start the activity now",
+            "4": "You can click on this component to define the start and duration of the activity",
+            "5": "Here you can see the experience you'll gain by doing this activity",
+            "6": "You can add a comment to your activity, for example, to record your feelings or to note important information"
+        },
+
+        "profile": {
+            "1": "This is your profile, you can change your personal information here",
+            "2": "This is your avatar, you can click on it to change your appearance"
+        },
+
+        "shop": {
+            "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
+            "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
+            "randomChests-common": "For the common trunk, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
+            "randomChests-rare": "With regard to the rare trunk, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
+            "randomChests-epic": "As for the epic trunk, it offers 29% chance of obtaining a rare object, 70% for an epic object and 1% for a legendary object;There is no chance to find a common object there.",
+            "targetedChests": "You can buy targeted chests, in which you are sure you have an item in the category you have chosen!",
+            "targetedChests-common": "In the common trunk, the chances of obtaining an object of common rarity are extremely high at 99%, followed by 0.9% for a rare object and 0.1% for an epic object;It should be noted that there is no chance of finding a legendary object there.",
+            "targetedChests-rare": "By opening the rare trunk, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
+            "targetedChests-epic": "As for the epic trunk, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
+            "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
+        },
+
+        "task": {
+            "1": "Here you can set the deadline for your task, or its frequency if it's a recurring one",
+            "2": "You can link your task to an activity, which will allow you to gain experience by completing it.",
+            "3": "You can also add sub-tasks to your main task, to organize yourself better.",
+            "4": "Finally, you can add a comment to your task, for example, to note your feelings or to record important information."
+        },
+
+        "other": {
+            "skip": "Skip",
+            "press": "Press",
+            "button": "Next"
+        }
     },
 
     "other": {
@@ -600,8 +700,6 @@
         "widget-achievements-all": "All achievements",
         "widget-skills-all": "All skills",
         "sexe-male": "♂",
-        "sexe-female": "♀",
-        "tuto-press": "Press",
-        "tuto-button": "Next"
+        "sexe-female": "♀"
     }
 }

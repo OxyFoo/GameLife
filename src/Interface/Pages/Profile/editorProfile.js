@@ -15,7 +15,8 @@ import { GetAge, GetTime } from 'Utils/Time';
 
 class EditorProfile extends React.PureComponent {
     state = {
-        stateDTP: ''
+        /** @type {'date'|'time'|null} */
+        stateDTP: null
     }
 
     Open = () => {
@@ -39,14 +40,16 @@ class EditorProfile extends React.PureComponent {
         // Try to change too early
         if (info.remain > 0) {
             const title = lang['alert-birthtimewait-title'];
-            const text = lang['alert-birthtimewait-text'].replace('{}', info.remain);
+            const text = lang['alert-birthtimewait-text']
+                            .replace('{}', info.remain.toString());
             user.interface.popup.ForceOpen('ok', [ title, text ], this.Open, false);
             return;
         }
 
         // Confirmation before changing age
         const title = lang['alert-birthtimewarning-title'];
-        const text = lang['alert-birthtimewarning-text'].replace('{}', info.total);
+        const text = lang['alert-birthtimewarning-text']
+                            .replace('{}', info.total.toString());
         const checkedChangeAge = () => {
             this.setState({ stateDTP: 'date' });
             this.Open();
@@ -65,11 +68,12 @@ class EditorProfile extends React.PureComponent {
         const time = GetTime(date);
         const age = GetAge(time);
         const title = lang['alert-birthconfirm-title'];
-        const text = lang['alert-birthconfirm-text'].replace('{}', age);
+        const text = lang['alert-birthconfirm-text']
+                            .replace('{}', age.toString());
         user.interface.popup.ForceOpen('yesno', [ title, text ], (bt) => setBirthTime(bt, time), false);
     }
     dtpClose = () => {
-        this.setState({ stateDTP: '' });
+        this.setState({ stateDTP: null });
     }
 
     openUsername = () => {
@@ -87,9 +91,10 @@ class EditorProfile extends React.PureComponent {
             const text = lang['alert-alreadyUsed-text'];
             user.interface.popup.ForceOpen('ok', [ title, text ], this.openUsername);
         } else if (state === 'alreadyChanged') {
-            const info = this.GetInfoToChangeUsername();
+            const info = user.informations.GetInfoToChangeUsername();
             const title = lang['alert-alreadyChanged-title'];
-            const text = lang['alert-alreadyChanged-text'].replace('{}', info.remain).replace('{}', info.remain);
+            const text = lang['alert-alreadyChanged-text']
+                            .replace('{}', info.remain.toString());
             user.interface.popup.ForceOpen('ok', [ title, text ], this.Open);
         } else if (state === 'incorrect') {
             const title = lang['alert-incorrect-title'];
@@ -112,14 +117,16 @@ class EditorProfile extends React.PureComponent {
                 if (user.informations.usernameTime !== null && info.remain > 0) {
                     // Username already changed
                     const title = lang['alert-alreadyChanged-title'];
-                    const text = lang['alert-alreadyChanged-text'].replace('{}', info.remain);
+                    const text = lang['alert-alreadyChanged-text']
+                                    .replace('{}', info.remain.toString());
                     user.interface.popup.ForceOpen('ok', [ title, text ], this.Open, false);
                     return;
                 }
 
                 // Warning to change username
                 const title = lang['alert-usernamewarning-title'];
-                const text = lang['alert-usernamewarning-text'].replace('{}', info.total).replace('{}', info.total);
+                const text = lang['alert-usernamewarning-text']
+                                    .replace('{}', info.total.toString());
                 user.interface.popup.ForceOpen('ok', [ title, text ], this.openUsername, false);
             } else {
                 this.OpenNowifiPopup();
@@ -152,7 +159,7 @@ class EditorProfile extends React.PureComponent {
 
         // Age
         const age = user.informations.GetAge();
-        const ageText = age === null ? lang['value-age-empty'] : lang['value-age'].replace('{}', age);
+        const ageText = age === null ? lang['value-age-empty'] : lang['value-age'].replace('{}', age.toString());
 
         return (
             <View style={styles.popup}>
@@ -179,7 +186,6 @@ class EditorProfile extends React.PureComponent {
     }
 
     render() {
-        const lang = langManager.curr['profile'];
         const dtpStartDate = new Date(2000, 0, 1, 0, 0, 0, 0);
         const dtpTopDate = new Date(); dtpTopDate.setFullYear(dtpTopDate.getFullYear() - 6);
         const dtpBottomDate = new Date(); dtpBottomDate.setFullYear(dtpBottomDate.getFullYear() - 120);
@@ -190,10 +196,9 @@ class EditorProfile extends React.PureComponent {
                 maximumDate={dtpTopDate}
                 minimumDate={dtpBottomDate}
                 mode={this.state.stateDTP}
-                headerTextIOS={lang['input-select-age']}
                 onConfirm={this.dtpSelect}
                 onCancel={this.dtpClose}
-                isVisible={this.state.stateDTP != ''}
+                isVisible={this.state.stateDTP !== null}
             />
         );
     }

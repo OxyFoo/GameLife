@@ -51,6 +51,8 @@ class ActivityPanel extends ActivityPanelBack {
                 <Text style={styles.tempTitle} bold>
                     {lang['title-schedule']}
                 </Text>
+
+                <View ref={ref => this.refHelp2 = ref}>
                 <ActivitySchedule
                     editable={mode === 'skill'}
                     selectedDate={activity?.startTime ?? 0}
@@ -58,8 +60,10 @@ class ActivityPanel extends ActivityPanelBack {
                     onChange={this.onChangeSchedule}
                     onChangeState={this.onChangeStateSchedule}
                 />
+                </View>
 
                 {/* Experience */}
+                <View ref={ref => this.refHelp3 = ref}>
                 {positiveXP ? (
                     <>
                         <Text style={styles.tempTitle} bold>
@@ -75,10 +79,12 @@ class ActivityPanel extends ActivityPanelBack {
                         {lang['title-no-experience']}
                     </Text>
                 )}
+                </View>
 
                 {/* Commentary */}
                 {!activity?.comment ? (
                     <Button
+                        ref={ref => this.refHelp4 = ref}
                         style={styles.commentButtonAdd}
                         onPress={this.onEditComment}
                         color='main1'
@@ -178,6 +184,7 @@ class ActivityPanel extends ActivityPanelBack {
                 </View>
 
                 {/* Start mode - Already / Now */}
+                <View ref={ref => this.refHelp1 = ref}>
                 {mode === 'activity' ? null : (
                     <TextSwitch
                         style={styles.panelTextSwitch}
@@ -185,6 +192,7 @@ class ActivityPanel extends ActivityPanelBack {
                         onChange={this.onChangeMode}
                     />
                 )}
+                </View>
 
                 <View>
                     {this.RenderStartActivity.call(this)}

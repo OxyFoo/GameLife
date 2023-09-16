@@ -49,7 +49,10 @@ class Home extends BackHome {
                     {lang['btn-add-task']}
                 </Button>
 
-                <Tasks style={styles.topSpace} />
+                <Tasks
+                    ref={ref => this.refTuto3 = ref}
+                    style={styles.topSpace}
+                />
 
                 <Button
                     style={styles.topSpace}

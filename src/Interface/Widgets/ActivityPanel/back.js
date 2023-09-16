@@ -76,6 +76,11 @@ class ActivityPanelBack extends React.Component {
     /** @type {PanelScreen} */
     refPanelScreen = null;
 
+    refHelp1 = null;
+    refHelp2 = null;
+    refHelp3 = null;
+    refHelp4 = null;
+
     /**
      * @param {ActivityPanelProps} props
      */

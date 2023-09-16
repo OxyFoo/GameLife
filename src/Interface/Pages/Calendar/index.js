@@ -57,6 +57,9 @@ class Calendar extends BackCalendar {
         const styleMonth = {
             height: user.interface.screenHeight - 190 // 130 (height of the top bar) + 60 (half of the bottom bar)
         };
+        const styleBackground = {
+            backgroundColor: themeManager.GetColor('backgroundGrey')
+        };
 
         const title = selectedDate === null ? '' : GetMonthAndYear(selectedMonth, selectedYear);
         const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
@@ -70,17 +73,24 @@ class Calendar extends BackCalendar {
                 scrollable={false}
             >
                 <Animated.View style={styleContent}>
-                    {/* Month + arrow to show calendar */}
+                    {/* Month + button to show full calendar */}
                     <View style={styles.row}>
                         <Icon size={32} />
                         <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
-                        <Icon icon='calendar' onPress={() => this.daySelect()} color='main1' size={32} />
+                        <Icon
+                            ref={ref => this.refTuto3 = ref}
+                            icon='calendar'
+                            onPress={() => this.daySelect()}
+                            color='main1'
+                            size={32}
+                        />
                     </View>
 
                     {/* Date selection + arrows prev/next */}
                     <View style={styles.row}>
                         <Icon onPress={() => {this.weekSelect(-1)}} icon='chevron' color='main1' size={18} angle={180} />
                         <BlockMonth
+                            ref={ref => this.refTuto2 = ref}
                             style={styles.weekRow}
                             weekData={currWeek}
                             onPressDay={this.daySelect}
@@ -89,7 +99,10 @@ class Calendar extends BackCalendar {
                     </View>
 
                     {/* CurrDate + Activities panel */}
-                    <View style={[styles.panel, { backgroundColor: themeManager.GetColor('backgroundGrey') }]}>
+                    <View
+                        ref={ref => this.refTuto1 = ref}
+                        style={[styles.panel, styleBackground]}
+                    >
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         {selectedDate !== null && ( // Force re-render after date selection
                             <FlatList
@@ -138,8 +151,8 @@ class Calendar extends BackCalendar {
                     <LinearGradient
                         style={styles.fadeBottom2}
                         colors={[
-                            themeManager.GetColor('ground1a', 0),
-                            themeManager.GetColor('ground1a', 1)
+                            themeManager.GetColor('ground1b', 0),
+                            themeManager.GetColor('ground1b', 1)
                         ]}
                     />
                 </Animated.View>

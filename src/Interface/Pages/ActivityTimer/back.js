@@ -40,7 +40,7 @@ class BackActivityTimer extends PageBack {
         this.state.duration = this.__getDuration();
 
         user.interface.SetCustomBackHandler(this.onPressCancel);
-        this.timer_tick = setInterval(this.tick, 1000);
+        this.timer_tick = window.setInterval(this.tick, 1000);
     }
 
     componentWillUnmount() {

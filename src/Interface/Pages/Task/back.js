@@ -86,6 +86,8 @@ class BackTask extends PageBack {
     }
 
     componentDidMount() {
+        super.componentDidMount();
+
         const { selectedTask } = this;
         if (selectedTask === null) return;
 

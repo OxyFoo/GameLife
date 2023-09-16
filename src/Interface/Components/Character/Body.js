@@ -1,19 +1,8 @@
-import * as React from 'react';
-import { Animated } from 'react-native';
-
 import Part from './Part';
-import { RenderPart } from './Part';
-import { Animated3D } from './Utils';
-import { Sleep } from 'Utils/Functions';
-import { TimingAnimation } from 'Utils/Animations';
-import { ANIMATIONS } from 'Ressources/items/humans/Characters';
 
 /**
+ * @typedef {import('./Frame').BodyView} BodyView
  * @typedef {import('./Character').default} Character
- * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
- * @typedef {import('Ressources/items/humans/Characters').AnimationsName} AnimationsName
- * 
- * @typedef {'full'|'topHalf'|'head'} BodyView
  */
 
 class Body {
@@ -23,26 +12,8 @@ class Body {
     constructor(character) {
         this.character = character;
 
-        /** @type {AnimationsName|false} */
-        this.animating = false;
-        this.animations = null;
-        this.position = new Animated.ValueXY({ x: 0, y: 0 });
-        this.rotations = {
-            bust: new Animated3D(),
-            head: new Animated3D(),
-            left_arm: new Animated3D(),
-            left_forearm: new Animated3D(),
-            left_hand: new Animated3D(),
-            right_arm: new Animated3D(),
-            right_forearm: new Animated3D(),
-            right_hand: new Animated3D(),
-            left_thigh: new Animated3D(),
-            left_leg: new Animated3D(),
-            left_foot: new Animated3D(),
-            right_thigh: new Animated3D(),
-            right_leg: new Animated3D(),
-            right_foot: new Animated3D()
-        }
+        // Global position
+        this.position = { x: 0, y: 0 };
 
         const body = new Part(this, 'bust', 5);
 
@@ -103,68 +74,22 @@ class Body {
     }
 
     /**
-     * @param {AnimationsName} animation
-     */
-    SetAnimation = async (animation) => {
-        if (this.animating === animation) return;
-
-        const { settings, poses } = ANIMATIONS[animation];
-        const { loop, sync } = settings;
-
-        const applyAnim = async (index) => {
-            if (this.animating !== animation) return;
-            const { sleep, duration, translation, rotations } = poses[index];
-            await Sleep(sleep);
-            this.__applyAnimation(translation, rotations, duration);
-            if (sync) await Sleep(duration);
-        }
-
-        this.animating = animation;
-        while (this.animating === animation) {
-            for (let i = 0; i < poses.length; i++) {
-                await applyAnim(i);
-            }
-            if (loop === 'once') {
-                this.animating = false;
-                break;
-            } else if (loop === 'pingpong' && poses.length > 2) {
-                for (let i = poses.length-2; i >= 1; i--) {
-                    await applyAnim(i);
-                }
-            }
-        }
-    }
-
-    /**
-     * Stop current animation
-     */
-    StopAnimation = () => {
-        this.animating = false;
-        if (this.animations !== null) {
-            this.animations.stop();
-            this.animations = null;
-        }
-    }
-
-    /**
      * Apply animation to character 
      * @param {object} translation
      * @param {object} partsRotations { ..., PartsName: Animated3D, ... }
-     * @param {number} [duration=1000]
      */
-    __applyAnimation = (translation, partsRotations, duration = 1000) => {
-        let anims = [];
-
+    __applyAnimation = (translation, partsRotations) => {
         // Rotations
-        const setRotation = (partName) => anims.push(...this.rotations[partName].Update(partsRotations[partName], duration));
-        Object.keys(partsRotations).map(setRotation);
+        Object.keys(partsRotations).forEach((partName) => {
+            const part = this
+                            .getChilds(this.firstPart)
+                            .find(part => part.name === partName) || null;
+            part?.rotation.Update(partsRotations[partName]);
+        });
 
         // Translation
-        const pos = { x: translation?.x || 0, y: translation?.y || 0 };
-        anims.push(TimingAnimation(this.firstPart.animPosition, pos, duration));
-
-        this.animations = Animated.parallel(anims);
-        this.animations.start();
+        this.firstPart.position.x = translation?.x || 0;
+        this.firstPart.position.y = translation?.y || 0;
     }
 
     /**
@@ -200,20 +125,20 @@ class Body {
         if (this.character.parentFrame === null) return null;
         if (this.character.outOfBounds || this.character.hide) return null;
 
-        const characName = this.character.name;
-        const allParts = this.getChilds(this.firstPart, size).sort((a, b) => a.zIndex - b.zIndex);
+        const allParts = this.getChilds(this.firstPart, size)
+                                .sort((a, b) => a.zIndex - b.zIndex);
 
         if (type === 'all') {
             return [
-                ...allParts.map((p, i)    => <RenderPart key={`${characName}-bodyShadow-${i}`} part={p} partType={'bodyShadow'} />),
-                ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
-                ...allParts.map((part, i) => <RenderPart key={`${characName}-body-${i}`} part={part} partType={'body'} />),
-                ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
+                ...allParts.map(part => part.render('bodyShadow')),
+                ...allParts.map(part => part.render('stuffShadow')),
+                ...allParts.map(part => part.render('body')),
+                ...allParts.map(part => part.render('stuff'))
             ];
         } else if (type === 'onlyItems') {
             return [
-                ...allParts.map((p, i)    => <RenderPart key={`${characName}-stuffShadow-${i}`} part={p} partType={'stuffShadow'} />),
-                ...allParts.map((part, i) => <RenderPart key={`${characName}-stuff-${i}`} part={part} partType={'stuff'} />)
+                ...allParts.map(part => part.render('stuffShadow')),
+                ...allParts.map(part => part.render('stuff'))
             ];
         }
     }

@@ -47,7 +47,7 @@ function SortByKey(array, key) {
  * @param {Array} array
  * @param {string} key
  * @param {*} value
- * @returns {object?} Return object or null if didn't exists
+ * @returns {object|null} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
     const result = array.find((element) => element[key] == value);

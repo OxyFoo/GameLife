@@ -33,6 +33,9 @@ async function Initialisation(nextStep) {
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
+        if (user.server.status === 'maintenance') {
+            user.interface.ChangePage('waitinternet', { force: 1 }, true);
+        }
         return;
     }
 
@@ -117,16 +120,32 @@ async function LoadData(nextStep) {
     }
     await user.admob.ShowTrackingPopup();
     user.admob.LoadAds();
-    user.StartTimers();
 
     await user.interface.LoadDefaultPages();
     await Sleep(500);
     nextStep();
-    await Sleep(1500);
+    await Sleep(500);
+
+    // Start tutorial
+    let homeProps = {};
+    if (!user.settings.tutoFinished) {
+        homeProps = { tuto: 1 };
+        user.settings.tutoFinished = true;
+        user.settings.Save();
+    }
+
+    user.StartTimers();
+
+    // Maintenance message
+    if (user.server.status === 'maintenance') {
+        const lang = langManager.curr['home'];
+        const title = lang['alert-maintenance-title'];
+        const text = lang['alert-maintenance-text'];
+        user.interface.popup.Open('ok', [ title, text ], undefined, false);
+    }
 
     if (user.activities.currentActivity === null) {
-        const args = !user.settings.tutoFinished ? { tuto: 1 } : {};
-        while (!user.interface.ChangePage('home', args)) await Sleep(100);
+        while (!user.interface.ChangePage('home', homeProps)) await Sleep(100);
     } else {
         while (!user.interface.ChangePage('activitytimer', undefined, true)) await Sleep(100);
     }

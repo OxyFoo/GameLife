@@ -33,6 +33,8 @@ class BackDisplay extends PageBack {
     }
 
     componentDidMount() {
+        super.componentDidMount();
+
         SpringAnimation(this.state.anim, 1).start();
     }
 }

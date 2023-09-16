@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
+import user from 'Managers/UserManager';
+
 import BackTask from './back';
 import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
@@ -8,8 +10,7 @@ import SectionSkill from './Sections/activity';
 import SectionSchedule from './Sections/schedule';
 import SectionSubtasks from './Sections/subtasks';
 
-import user from 'Managers/UserManager';
-
+import StartHelp from './help';
 import { PageHeader } from 'Interface/Widgets';
 import { Button, Page } from 'Interface/Components';
 
@@ -20,7 +21,8 @@ class Task extends BackTask {
         return (
             <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss}>
                 <PageHeader
-                    onBackPress={this.BackHandler}
+                    onBackPress={() => user.interface.BackHandle()}
+                    onHelpPress={StartHelp.bind(this)}
                 />
 
                 <SectionTitle

@@ -79,7 +79,8 @@ class PanelScreen extends React.Component {
     EnableScroll = () => this.scrollEnabled = true;
     DisableScroll = () => this.scrollEnabled = false;
     GotoY = (y) => {
-        this.posY = y;
+        this.posY = Math.min(y, this.props.topOffset);
+        this.posY = Math.max(this.posY, user.interface.screenHeight - this.height);
         SpringAnimation(this.state.positionY, this.posY).start();
     }
     RefreshPosition = () => {

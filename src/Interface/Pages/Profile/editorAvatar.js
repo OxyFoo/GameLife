@@ -103,17 +103,30 @@ class EditorAvatarRender extends EditorAvatarBack {
         const sameSkin = characterName === user.character.skin;
         const isSelected = sameSexe && sameSkin;
         const selectCharacter = (sexe, skin) => {
+            // Update character
             user.character.sexe = sexe;
             user.character.skin = skin;
+            user.character.SetPose(sexe === 'MALE' ? 'defaultMale' : 'defaultFemale');
+
+            // Update inventory
             user.inventory.Equip('sexe', sexe);
             user.inventory.Equip('skin', skin);
-            this.refFrame?.forceUpdate();
-            user.interface.header.refFrame?.forceUpdate();
+
+            // Update characters
             for (const slot in this.slotCharacters) {
                 this.slotCharacters[slot].sexe = sexe;
                 this.slotCharacters[slot].skin = skin;
-                this.slotCharacters[slot].__refresh();
+                this.slotCharacters[slot].Refresh();
             }
+            user.character.Refresh();
+
+            // Update interface
+            this.forceUpdate();
+            this.refFrame?.forceUpdate();
+            user.interface.header.refFrame?.forceUpdate();
+
+            // Update database
+            user.GlobalSave();
         }
         const onPress = isSelected ? () => {} : selectCharacter;
 
@@ -137,7 +150,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                 user.interface.header.refFrame?.forceUpdate();
                 for (const slot in this.slotCharacters) {
                     this.slotCharacters[slot].skinColor = index;
-                    this.slotCharacters[slot].__refresh();
+                    this.slotCharacters[slot].Refresh();
                 }
             }
         }
@@ -172,6 +185,8 @@ class EditorAvatarRender extends EditorAvatarBack {
         }
 
         const lang = langManager.curr['profile-avatar'];
+        const btnSell = lang['button-sell'].replace('{}', ox.toString());
+        const btnEquip = lang['button-equip'];
 
         return (
             <Animated.View style={[styles.editorCurrent, translationY]} onLayout={this.onItemSelectionLayout}>
@@ -188,7 +203,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                         color='main1'
                         loading={this.state.selling}
                     >
-                        {lang['button-sell'].replace('{}', ox)}
+                        {btnSell}
                     </Button>
                     <Button
                         style={styles.editorStuffEquipBtn}
@@ -196,7 +211,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                         color='main2'
                         enabled={!isEquipped}
                     >
-                        {lang['button-equip']}
+                        {btnEquip}
                     </Button>
                 </View>
 
@@ -304,7 +319,7 @@ class EditorAvatarRender extends EditorAvatarBack {
         return (
             <>
                 {/* Character */}
-                <Animated.View style={characterStyle} onLayout={this.onCharacterLayout}>
+                <Animated.View ref={ref => this.refButton = ref} style={characterStyle} onLayout={this.onCharacterLayout}>
                     <Animated.View style={[styles.columnSide, columnOpacity]}>
                         {this.renderButtonItem('hair')}
                         {this.renderButtonItem('top')}
@@ -318,7 +333,6 @@ class EditorAvatarRender extends EditorAvatarBack {
                             <Frame ref={ref => this.refFrame = ref} characters={[ user.character ]} />
                             {!editorOpened && (
                                 <Button
-                                    ref={ref => this.refButton = ref}
                                     style={styles.avatarOverlay}
                                     onPress={this.OpenEditor}
                                 />

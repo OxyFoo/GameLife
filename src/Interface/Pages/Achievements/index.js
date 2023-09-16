@@ -5,6 +5,7 @@ import BackAchievements from './back';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
+import StartHelp from './help';
 import { Page, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
@@ -45,7 +46,10 @@ class Achievements extends BackAchievements {
         return (
             <Page ref={ref => this.refPage = ref} scrollable={false}>
                 <View onLayout={this.onLayout}>
-                    <PageHeader onBackPress={user.interface.BackHandle} />
+                    <PageHeader
+                        onBackPress={user.interface.BackHandle}
+                        onHelpPress={StartHelp.bind(this)}
+                    />
                 </View>
 
                 <FlatList

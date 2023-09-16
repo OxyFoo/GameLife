@@ -26,6 +26,8 @@ class SectionSkill extends React.Component {
         skill: null
     }
 
+    refHelp1 = null;
+
     /** @param {SelectedSkill|null} skill */
     SetSkill = (skill) => {
         this.setState({ skill });
@@ -117,7 +119,10 @@ class SectionSkill extends React.Component {
                 <Text style={styles.sectionTitle} fontSize={22}>
                     {lang['title-activity']}
                 </Text>
-                <View style={[backgroundColor, styles.schedulePanel]}>
+                <View
+                    ref={ref => this.refHelp1 = ref}
+                    style={[backgroundColor, styles.schedulePanel]}
+                >
                     <Text style={styles.text}>{activityTitle}</Text>
                     <Button
                         colorText='main1'

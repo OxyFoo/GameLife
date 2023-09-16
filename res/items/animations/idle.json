@@ -8,16 +8,21 @@
         {
             "sleep": 0,
             "duration": 1000,
+            "translation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
             "rotations": {
                 "bust": { "rZ": 0 },
                 "head": { "rZ": 0 },
-                "left_arm": { "rZ": -15 },
+                "left_arm": { "rZ": -5 },
                 "left_forearm": { "rZ": -10 },
                 "left_hand": { "rZ": 0 },
                 "right_arm": { "rZ": 0 },
                 "right_forearm": { "rZ": 0 },
                 "right_hand": { "rZ": 0 },
-                "left_thigh": { "rZ": 0 },
+                "left_thigh": { "rZ": -6 },
                 "left_leg": { "rZ": 0 },
                 "left_foot": { "rZ": 0 },
                 "right_thigh": { "rZ": 0 },
@@ -30,7 +35,7 @@
             "duration": 1000,
             "rotations": {
                 "head": { "rZ": -1 },
-                "left_arm": { "rZ": -16 },
+                "left_arm": { "rZ": -6 },
                 "left_forearm": { "rZ": -12 },
                 "right_arm": { "rZ": 2 },
                 "right_forearm": { "rZ": -2 }

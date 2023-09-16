@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         left: 0,
         width: 96,
         height: 96,
-        resizeMode: 'contain',
+        resizeMode: 'contain'
     }
 });
 

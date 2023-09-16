@@ -130,7 +130,7 @@ class Informations {
 
     /**
      * Return age in years
-     * @returns {number?}
+     * @returns {number|null}
      */
     GetAge = () => this.birthTime === null ? null : GetAge(this.birthTime);
 

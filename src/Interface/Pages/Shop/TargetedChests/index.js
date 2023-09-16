@@ -96,6 +96,7 @@ class ShopItems extends BackShopItems {
                     data={this.TARGETS}
                     renderItem={this.renderCategory}
                     keyExtractor={(item) => `target-category-${item.id}`}
+                    scrollEnabled={false}
                 />
                 <FlatList
                     ref={ref => this.refTuto1 = ref}
@@ -104,6 +105,7 @@ class ShopItems extends BackShopItems {
                     numColumns={3}
                     renderItem={this.renderItem}
                     keyExtractor={(item) => `buyable-random-chest-${item.ID}`}
+                    scrollEnabled={false}
                 />
             </>
         );

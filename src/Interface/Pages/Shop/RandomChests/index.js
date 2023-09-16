@@ -78,6 +78,7 @@ class ShopItems extends BackShopItems {
                 numColumns={3}
                 renderItem={this.renderItem}
                 keyExtractor={(item) => `buyable-random-chest-${item.ID}`}
+                scrollEnabled={false}
             />
         );
     }

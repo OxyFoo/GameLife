@@ -40,8 +40,7 @@ class BackLogin extends PageBack {
             titleUsername: lang['input-username-title'],
             btnLogin: lang['button-login-text'],
             btnSignin: lang['button-signin-text'],
-            cguTexts: lang['input-cgu-text'].split('%'),
-            cguColor: themeManager.GetColor('main1')
+            cguTexts: lang['input-cgu-text'].split('%')
         };
 
         // Load images

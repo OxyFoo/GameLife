@@ -91,6 +91,7 @@ class ShopDailyDeals extends BackShopItems {
                 numColumns={3}
                 renderItem={this.renderItem}
                 keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
+                scrollEnabled={false}
             />
         );
     }

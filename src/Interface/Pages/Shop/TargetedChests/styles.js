@@ -2,16 +2,18 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     flatlistTargets: {
+        marginBottom: 24,
         paddingHorizontal: 12,
-        marginBottom: 24
+        paddingBottom: 4
     },
     flatlistTargetsContent: {
         flexDirection: 'row',
         justifyContent: 'space-around'
     },
     flatlistChests: {
+        marginBottom: 24,
         paddingHorizontal: 12,
-        marginBottom: 24
+        paddingBottom: 4
     },
 
     category: {

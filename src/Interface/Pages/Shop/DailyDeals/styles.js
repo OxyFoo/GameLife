@@ -2,9 +2,9 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     flatlist: {
-        maxHeight: '33%', // Why ?
-        paddingHorizontal: 12,
-        marginBottom: 24
+        maxHeight: '35%', // Why ?
+        marginBottom: 24,
+        paddingHorizontal: 12
     },
     errorText: {
         padding: 12
@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     itemParent: {
         width: '33%',
         aspectRatio: 1/1.3,
+        paddingBottom: 4,
         paddingHorizontal: 6
     },
     itemButton: {

@@ -9,6 +9,10 @@ import themeManager from 'Managers/ThemeManager';
 import FadeInText from './fadeInText';
 import { Button, Text, Zap } from 'Interface/Components';
 
+const ScreenTutoProps = {
+    smallScreen: false
+};
+
 class ScreenTuto extends ScreenTutoBack {
     renderTopPanel() {
         const { component } = this.state;
@@ -111,9 +115,10 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     renderZapMessage() {
+        const { smallScreen } = this.props;
         const { message } = this.state;
 
-        const styleText = {
+        const styleTextContainer = {
             top: 0,
             left: 0,
             width: '75%',
@@ -123,13 +128,16 @@ class ScreenTuto extends ScreenTutoBack {
                 { translateY: message.position.y }
             ]
         };
+        const styleText = {
+            fontSize: smallScreen ? 16 : 24
+        };
 
         return (
             <Animated.View
-                style={[styles.text, styleText]}
+                style={[styles.text, styleTextContainer]}
                 onLayout={this.onMessageLayout}
             >
-                <FadeInText styleText={styles.textFade}>
+                <FadeInText styleText={styleText}>
                     {message.text}
                 </FadeInText>
             </Animated.View>
@@ -176,5 +184,8 @@ class ScreenTuto extends ScreenTutoBack {
         );
     }
 }
+
+ScreenTuto.prototype.props = ScreenTutoProps;
+ScreenTuto.defaultProps = ScreenTutoProps;
 
 export default ScreenTuto;

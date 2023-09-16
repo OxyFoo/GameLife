@@ -78,6 +78,7 @@ class ShopDyes extends BackShopDyes {
                 ListEmptyComponent={this.renderEmpty}
                 renderItem={this.renderDye}
                 keyExtractor={(item, index) => `buyable-dye-${item.ItemBefore.ID}-${index}`}
+                scrollEnabled={false}
             />
         );
     }

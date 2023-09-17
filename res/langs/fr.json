@@ -264,7 +264,7 @@
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Voulez-vous quitter l'application ?",
         "alert-dateerror-title": "Attention",
-        "alert-dateerror-text": "Il semblerait que tu aies modifié la date, peut-être dans le but de tricher ? J'espère que cela ne se reproduira plus ^^"
+        "alert-dateerror-text": "Il semblerait que tu aies modifié la date, peut-être dans le but de tricher ?\n\nJe compte sur toi pour remettre la bonne date, j'espère que cela ne se reproduira plus ^^"
     },
 
     "leaderboard": {

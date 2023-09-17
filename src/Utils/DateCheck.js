@@ -1,40 +1,49 @@
-import { Request_Async } from './Request';
+import RNExitApp from 'react-native-exit-app';
+
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+
+import { GetTime } from './Time';
 import DataStorage, { STORAGE } from './DataStorage';
 
 async function CheckDate() {
-    let safe = true;
-
-    // In that order, user can block app, but... its ok ^^
-
-    // Check local date
-    const today = new Date();
-    const data = await DataStorage.Load(STORAGE.DATE);
-
-    if (data !== null && data.hasOwnProperty('date')) {
-        const savedDate = new Date(data['date']);
-        if (savedDate > today) {
-            safe = false;
-        }
+    if (!user.server.online) {
+        return;
     }
 
-    if (safe) {
-        DataStorage.Save(STORAGE.DATE, { date: today }, false);
+    const dateIsSafe = await DateIsSafe();
+    if (!dateIsSafe) {
+        const title = langManager.curr['home']['alert-dateerror-title'];
+        const text = langManager.curr['home']['alert-dateerror-text'];
+        user.interface.popup.ForceOpen('ok', [ title, text ], RNExitApp.exitApp, false);
+    }
+}
+
+async function DateIsSafe() {
+    // Check local date
+    const now = GetTime();
+    const data = await DataStorage.Load(STORAGE.DATE);
+    DataStorage.Save(STORAGE.DATE, { date: now });
+
+    if (data !== null && data.hasOwnProperty('date')) {
+        const savedDate = data['date'];
+        if (savedDate > now) {
+            return false;
+        }
     }
 
     // Check online date
-    if (safe) {
-        const onlineData = { 'action': 'getDate' }
-        const result = await Request_Async(onlineData);
-        if (result.status === 200) {
-            const onlineTime = result.content['time'];
-            const delta = Math.abs(today.getTime()/1000 - onlineTime) / (60 * 60);
-            if (delta > 12) {
-                safe = false;
-            }
+    const onlineData = { date: now };
+    const result = await user.server.Request('getDate', onlineData);
+    if (result.status === 'ok' && result.hasOwnProperty('time')) {
+        const onlineTime = result['time'];
+        const delta = Math.abs(now - onlineTime) / (60 * 60);
+        if (delta > 24) {
+            return false;
         }
     }
 
-    return safe;
+    return true;
 }
 
 export { CheckDate };

@@ -129,7 +129,7 @@ class PageManager extends React.Component{
     }
 
     BackHandle = () => {
-        if (this.popup.Close()) return true;
+        if (this.popup.state.cancelable && this.popup.Close()) return true;
         if (this.screenList.Close()) return true;
         if (this.screenInput.Close()) return true;
         if (this.screenTuto.IsOpened()) return true;

@@ -264,7 +264,7 @@
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?",
         "alert-dateerror-title": "Warning",
-        "alert-dateerror-text": "It seems that you changed the date, maybe in order to cheat? I hope it won't happen again ^^"
+        "alert-dateerror-text": "It seems that you have changed the date, perhaps in order to cheat?\n\nI count on you to put the right date, I hope it will not happen again!"
     },
 
     "leaderboard": {

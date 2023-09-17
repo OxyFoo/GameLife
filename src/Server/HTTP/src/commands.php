@@ -517,7 +517,19 @@ class Commands {
      * To avoid time changes
      */
     public function GetDate() {
+        $date = $this->data['date'];
+        if (!isset($date)) return;
+        $account = $this->account;
+        $device = $this->device;
+
+        $delta = (time() - $date) / (60 * 60);
+        if (abs($delta) > 24) {
+            $deltaText = round($delta, 2);
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Time change: $deltaText");
+        }
+
         $this->output['time'] = time();
+        $this->output['status'] = 'ok';
     }
 
     /**

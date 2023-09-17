@@ -129,7 +129,7 @@ class PageManager extends React.Component{
     }
 
     BackHandle = () => {
-        if (this.popup.Close()) return true;
+        if (this.popup.state.cancelable && this.popup.Close()) return true;
         if (this.screenList.Close()) return true;
         if (this.screenInput.Close()) return true;
         if (this.screenTuto.IsOpened()) return true;
@@ -417,7 +417,7 @@ class PageManager extends React.Component{
 
                 <ScreenList ref={ref => { if (ref !== null) this.screenList = ref } } />
                 <ScreenInput ref={ref => { if (ref !== null) this.screenInput = ref } } />
-                <ScreenTuto ref={ref => { if (ref !== null) this.screenTuto = ref } } />
+                <ScreenTuto ref={ref => { if (ref !== null) this.screenTuto = ref } } smallScreen={this.screenHeight < 600} />
 
                 <Console ref={ref => { if (ref !== null) this.console = ref } } />
             </LinearGradient>

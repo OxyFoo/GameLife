@@ -5,6 +5,7 @@ import BackLogin from './back';
 import styles from './style';
 
 import { Page, Text, Button, Input, Checkbox } from 'Interface/Components';
+import user from 'Managers/UserManager';
 
 class Login extends BackLogin {
     render() {
@@ -12,22 +13,46 @@ class Login extends BackLogin {
         const contentHeight = Animated.add(100, Animated.multiply(160, this.state.animSignin));
         const btnLoginX = Animated.multiply(84, this.state.animSignin);
         const btnBackX = Animated.add(-128, Animated.multiply(128, this.state.animSignin));
+        const imageAnim = { transform: [{ scale: this.state.animImage }] };
+
+        const smallScreen = user.interface.screenHeight < 600;
 
         return (
             <Page ref={ref => this.refPage = ref} style={styles.body} scrollable={false}>
                 {/* Background images */}
-                <Image style={styles.backgroundCircles} source={this.imageBackground} />
-                <Animated.View
-                    style={{ transform: [{ scale: this.state.animImage }] }}
-                    onTouchStart={this.onPressImageIn}
-                    onTouchEnd={this.onPressImageOut}
-                >
-                    <Image style={styles.backgroundImage} source={this.imageMain} />
-                </Animated.View>
+                {smallScreen ? null : (
+                    <Image style={styles.backgroundCircles} source={this.imageBackground} />
+                )}
+
+                {/* Main image */}
+                {smallScreen ? null : (
+                    <Animated.View
+                        style={[styles.mainImageContainer, imageAnim]}
+                        onTouchStart={this.onPressImageIn}
+                        onTouchEnd={this.onPressImageOut}
+                    >
+                        <Image
+                            style={styles.mainImage}
+                            resizeMode='contain'
+                            source={this.imageMain}
+                        />
+                    </Animated.View>
+                )}
 
                 {/* Title */}
-                <Text style={styles.title} color='primary'>{langs.pageTitle}</Text>
-                <Text style={styles.text} color='secondary'>{langs.pageText}</Text>
+                <Text
+                    style={smallScreen ? styles.smallTitle : styles.title}
+                    color='primary'
+                >
+                    {langs.pageTitle}
+                </Text>
+
+                <Text
+                    style={styles.text}
+                    color='secondary'
+                >
+                    {langs.pageText}
+                </Text>
 
                 {/* Content */}
                 <Animated.View style={[ styles.container, { height: contentHeight } ]}>
@@ -62,7 +87,7 @@ class Login extends BackLogin {
                             onChange={this.onCGUToggle}
                         />
                         <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>{langs.cguTexts[0]}</Text>
-                        <Text onPress={this.onCGURedirect} fontSize={12} color={langs.cguColor}>{langs.cguTexts[1]}</Text>
+                        <Text onPress={this.onCGURedirect} fontSize={12} color='main1'>{langs.cguTexts[1]}</Text>
                         <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>{langs.cguTexts[2]}</Text>
                     </View>
                     <Text style={styles.error} color={'error'}>{this.state.errorCgu}</Text>

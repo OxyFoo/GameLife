@@ -99,6 +99,7 @@ class Popup extends React.PureComponent {
 
         this.setState({
             type: null,
+            cancelable: true,
             callback: () => {}
         });
 

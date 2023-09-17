@@ -2,8 +2,9 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     flatlist: {
-        paddingHorizontal: 12,
-        marginBottom: 24
+        marginBottom: 24,
+        paddingBottom: 4,
+        paddingHorizontal: 12
     },
 
     itemParent: {

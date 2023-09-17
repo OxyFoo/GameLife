@@ -136,7 +136,8 @@ class BackSkills extends PageBack {
         // Sort by xp
         if (sort === 0) {
             const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
-            const compare = (a, b) => format(a['experience']['totalXP']) < format(b['experience']['totalXP']) ? -1 : 1;
+            /** @param {EnrichedSkill} a @param {EnrichedSkill} b */
+            const compare = (a, b) => format(a['Experience']['totalXP']) < format(b['Experience']['totalXP']) ? -1 : 1;
             newSkills = newSkills.sort(compare);
         }
 
@@ -147,7 +148,8 @@ class BackSkills extends PageBack {
 
         // Sort by date
         else if (sort === 2) {
-            const compare = (a, b) => a['experience']['lastTime'] < b['experience']['lastTime'] ? -1 : 1;
+            /** @param {EnrichedSkill} a @param {EnrichedSkill} b */
+            const compare = (a, b) => a['Experience']['lastTime'] < b['Experience']['lastTime'] ? -1 : 1;
             newSkills = newSkills.sort(compare);
         }
 

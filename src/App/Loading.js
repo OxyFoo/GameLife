@@ -3,9 +3,10 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Character } from 'Interface/Components';
 import { Sleep } from 'Utils/Functions';
+import { CheckDate } from 'Utils/DateCheck';
 import Notifications from 'Utils/Notifications';
+import { Character } from 'Interface/Components';
 
 /**
  * Intialisation of all data
@@ -134,6 +135,7 @@ async function LoadData(nextStep) {
         user.settings.Save();
     }
 
+    CheckDate();
     user.StartTimers();
 
     // Maintenance message

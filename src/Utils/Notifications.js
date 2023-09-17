@@ -10,6 +10,11 @@ import { ParsePlural } from './String';
 import { GetTime } from './Time';
 import { Random, Range } from './Functions';
 
+/**
+ * @typedef {import('@react-native-community/push-notification-ios').NotificationRequest} NotificationRequest
+ * @typedef {import('react-native-push-notification').PushNotificationScheduledLocalObject} PushNotificationScheduledLocalObject
+ */
+
 const MAX_DAYS = 30;
 
 const Management = {
@@ -171,7 +176,8 @@ class Notifications {
         },
 
         Enable: () => Setup(Notifications.Morning),
-        Disable: () => Remove(Notifications.Morning)
+        Disable: () => Remove(Notifications.Morning),
+        RemoveToday: async () => {} // TODO
     };
 
     /** @type {Notification} */
@@ -189,7 +195,7 @@ class Notifications {
 
         Enable: () => Setup(Notifications.Evening),
         Disable: () => Remove(Notifications.Evening),
-        RemoveToday: () => {} // TODO
+        RemoveToday: async () => {} // TODO
     }
 
     /** @type {Notification} */
@@ -228,7 +234,8 @@ class Notifications {
         },
 
         Enable: () => Setup(Notifications.Tasks),
-        Disable: () => Remove(Notifications.Tasks)
+        Disable: () => Remove(Notifications.Tasks),
+        RemoveToday: async () => {} // TODO
     }
 
     static async DisableAll() {

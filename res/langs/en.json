@@ -264,7 +264,7 @@
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?",
         "alert-dateerror-title": "Warning",
-        "alert-dateerror-text": "It seems that you changed the date, maybe in order to cheat? I hope it won't happen again ^^"
+        "alert-dateerror-text": "It seems that you have changed the date, perhaps in order to cheat?\n\nI count on you to put the right date, I hope it will not happen again!"
     },
 
     "leaderboard": {
@@ -671,13 +671,13 @@
         "shop": {
             "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
             "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
-            "randomChests-common": "For the common trunk, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
-            "randomChests-rare": "With regard to the rare trunk, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
-            "randomChests-epic": "As for the epic trunk, it offers 29% chance of obtaining a rare object, 70% for an epic object and 1% for a legendary object;There is no chance to find a common object there.",
+            "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
+            "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
+            "randomChests-epic": "As for the epic chest, it offers 29% chance of obtaining a rare object, 70% for an epic object and 1% for a legendary object;There is no chance to find a common object there.",
             "targetedChests": "You can buy targeted chests, in which you are sure you have an item in the category you have chosen!",
-            "targetedChests-common": "In the common trunk, the chances of obtaining an object of common rarity are extremely high at 99%, followed by 0.9% for a rare object and 0.1% for an epic object;It should be noted that there is no chance of finding a legendary object there.",
-            "targetedChests-rare": "By opening the rare trunk, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
-            "targetedChests-epic": "As for the epic trunk, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
+            "targetedChests-common": "In the common chest, the chances of obtaining an object of common rarity are extremely high at 99%, followed by 0.9% for a rare object and 0.1% for an epic object;It should be noted that there is no chance of finding a legendary object there.",
+            "targetedChests-rare": "By opening the rare chest, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
+            "targetedChests-epic": "As for the epic chest, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
             "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
         },
 

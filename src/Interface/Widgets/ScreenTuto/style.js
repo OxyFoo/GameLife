@@ -35,9 +35,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         backgroundColor: '#000000A0',
     },
-    textFade: {
-        fontSize: 24
-    },
     defaultButtonContainer: {
         position: 'absolute',
         width: '100%',

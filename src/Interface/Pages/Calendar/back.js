@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import StartTutorial from './tuto';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
-import { GetTime, RoundToQuarter } from 'Utils/Time';
+import { GetTime, GetTimeZone, RoundToQuarter } from 'Utils/Time';
 import { GetBlockMonth, MonthType, UpdateBlockMonth } from 'Interface/Widgets/BlockMonth/script';
 
 /**
@@ -200,7 +200,7 @@ class BackCalendar extends PageBack {
             const week = weeks.find(w => w.filter(d => d?.day === day).length > 0);
             const date = new Date(year, month, day);
             const now = new Date();
-            const activities = user.activities.GetByTime(GetTime(date, 'local'));
+            const activities = user.activities.GetByTime(GetTime(date));
 
             this.setState({
                 currActivities: activities,
@@ -214,7 +214,7 @@ class BackCalendar extends PageBack {
                 await this.showPanel();
             }
             date.setHours(now.getHours(), now.getMinutes(), 0, 0);
-            user.tempSelectedTime = RoundToQuarter(GetTime(date, 'local'));
+            user.tempSelectedTime = RoundToQuarter(GetTime(date, 'local') + GetTimeZone() * 60);
         } else {
             // Unselect day (calendar mode)
             if (this.opened) {

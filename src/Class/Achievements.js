@@ -80,8 +80,10 @@ class Achievements {
         const solvedIndexes = this.GetSolvedIndexes();
         const achievement = dataManager.achievements.GetByID(achievementID);
         const title = dataManager.GetText(achievement.Name);
-        let description = dataManager.GetText(achievement.Description) + '\n';
-        if (achievement.Type === 1 || solvedIndexes.includes(achievementID)) {
+        let description = dataManager.GetText(achievement.Description);
+        if (description.length > 0) description += '\n';
+
+        if (solvedIndexes.includes(achievementID)) {
             description += this.getConditionText(achievement.Condition);
 
             const rewardText = this.getRewardsText(achievement.Rewards);

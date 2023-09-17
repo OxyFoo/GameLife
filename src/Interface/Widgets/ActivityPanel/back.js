@@ -154,13 +154,6 @@ class ActivityPanelBack extends React.Component {
     }
 
     Close = () => {
-        // Page is render only for activity edition, so we can go back
-        // TODO: Useful ?
-        //if (this.props.editMode) {
-        //    user.interface.BackHandle();
-        //    return;
-        //}
-
         // Skill is already deselected
         if (this.state.selectedSkillID === 0) {
             return;

@@ -334,7 +334,6 @@ class Users
         $dateNow = date('Y-m-d 00:00:00');
         $tomorrow = date("Y-m-$nextDay 00:00:00");
         $command = "SELECT * FROM TABLE WHERE `AccountID` = ? AND `Type` = 'adWatched' AND `Date` BETWEEN ? AND ?";
-        // TODO - Check dates (string ?)
         $result = $db->QueryPrepare('Logs', $command, 'iss', [ $accountID, $dateNow, $tomorrow ]);
         if ($result === null) {
             ExitWithStatus('Error: Getting ad remaining failed');

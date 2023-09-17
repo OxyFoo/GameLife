@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { AppState, SafeAreaView } from 'react-native';
-import Config from 'react-native-config';
-import RNExitApp from 'react-native-exit-app';
 
 import user from './src/Managers/UserManager';
 import PageManager from './src/Managers/PageManager';
@@ -20,19 +18,12 @@ class App extends React.Component {
         // Open the test page
         //user.interface.ChangePage('test', undefined, true); return;
         user.interface.ChangePage('loading', undefined, true);
-
-        user.interface.console.AddLog('info', Config.SERVER_URL);
     }
 
     /** @param {AppStateStatus} state */
     async componentChangeState(state) {
         if (state === 'active') {
-            if (!CheckDate()) {
-                /*const title = langManager.curr['home']['alert-dateerror-title'];
-                const text = langManager.curr['home']['alert-dateerror-text'];
-                this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);*/
-                console.error("TODO - Message d'erreur");
-            }
+            CheckDate();
         } else if (state === 'background' || state === 'inactive') {
             await user.OnlineSave() || await user.LocalSave();
         }

@@ -79,17 +79,6 @@ class Experience {
         return output;
     }
 
-    // TODO - Remove if unused
-    GetXPTo(level) {
-        let _lvl = 0;
-        let _xp = 0;
-        while (_lvl <= level) {
-            _xp += _lvl * UserXPperLevel;
-            _lvl += 1;
-        }
-        return _xp;
-    }
-
     /**
      * @param {number} skillID
      * @returns {EnrichedXPInfo}

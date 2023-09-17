@@ -36,7 +36,7 @@
     "level": {
         "xp": "XP",
         "level": "Niveau",
-        "level-small": "Lvl",
+        "level-small": "Niv",
         "total": "XP total",
         "average": "En moyenne {} xp/jour",
         "me": "Moi"

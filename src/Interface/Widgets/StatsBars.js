@@ -72,7 +72,6 @@ function popupContent(initStatKey) {
  * @returns {React.ReactElement}
  */
 function statComponent(statKey, stat, sup, index, clickable = true) {
-    const statName = clickable ? langManager.curr['statistics']['names'][statKey] : '';
     const langLevel = langManager.curr['level'];
 
     const popupRender = () => popupContent(statKey);
@@ -80,14 +79,18 @@ function statComponent(statKey, stat, sup, index, clickable = true) {
         user.interface.popup.Open('custom', popupRender, undefined, true);
     };
 
+    let textXP = langLevel['level'] + ' ' + stat.lvl;
+    let textLevel = langManager.curr['statistics']['names'][statKey];
+    if (!clickable) {
+        textLevel = langLevel['level-small'] + ' ' + stat.lvl;
+        textXP = `${stat.xp}/${stat.next} - ${stat.totalXP}${langLevel['xp']}`;
+    }
+
     return (
         <TouchableOpacity style={styles.fullW} key={'skill_' + index} activeOpacity={pressEvent === null ? 1 : .5} onPress={pressEvent}>
             <View style={styles.XPHeader}>
-                <Text>{statName}</Text>
-                <View style={styles.headerText}>
-                    <Text style={styles.headerLvl}>{langLevel['level-small']} {stat.lvl}</Text>
-                    <Text>{stat.xp}/{stat.next} - {stat.totalXP}{langLevel['xp']}</Text>
-                </View>
+                <Text>{textLevel}</Text>
+                <Text>{textXP}</Text>
             </View>
             <XPBar
                 style={styles.XPBar}
@@ -131,13 +134,6 @@ const styles = StyleSheet.create({
     },
     XPBar: {
         marginBottom: 16
-    },
-    headerText: {
-        flexDirection: 'row'
-    },
-    headerLvl: {
-        fontWeight: 'bold',
-        marginRight: 12
     }
 });
 

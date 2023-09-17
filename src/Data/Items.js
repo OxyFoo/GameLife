@@ -52,9 +52,6 @@ class Item {
      * @deprecated
      */
     Buffs = [];
-
-    //Color = ''; // TODO - Faire un système de couleur fixe
-    //XML = ''; // TODO - Gérer les XML avec les ID
 }
 
 class Items {

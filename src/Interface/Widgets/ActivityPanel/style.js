@@ -10,6 +10,11 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
 
+    activitySchedule: {
+        zIndex: 800,
+        elevation: 800
+    },
+
     buttonNow: {
         position: 'absolute',
         top: 0,

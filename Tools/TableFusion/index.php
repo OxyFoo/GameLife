@@ -30,22 +30,43 @@ $sourceTables = getTableNames($db_source);
 $targetTables = getTableNames($db_target);
 
 $success = true;
-$differences = compareTableStructures($db_source, $db_target, $sourceTables, $targetTables);
 
-if (!empty($differences)) {
+// Handling Structure Differences
+$differencesStructure = compareTableStructures($db_source, $db_target, $sourceTables, $targetTables);
+if (!empty($differencesStructure)) {
     echo "Differences found in table structures:\n";
-    print_r($differences);
+    print_r($differencesStructure);
 
-    $applyChanges = $noConfirm ? 'y' : readline("Apply changes? (y/N): ");
+    $applyChanges = $noConfirm ? 'y' : readline("Apply structure changes? (y/N): ");
 
     if (strtolower($applyChanges) === 'y') {
-        $success = applyTableChanges($differences, $db_source, $db_target);
-        echo "Changes applied.\n";
+        $success &= applyTableChanges($differencesStructure, $db_source, $db_target);
+        echo "Structure changes applied.\n";
     } else {
-        echo "No changes applied.\n";
+        echo "No structure changes applied.\n";
     }
 } else {
     echo "No differences found in table structures.\n";
+}
+
+// Handling Data Differences
+$tablesToSync = [ 'App', 'Achievements', 'Blacklist', 'Items', 'Quotes' ];
+$differencesData = compareTableData($db_source, $db_target, $tablesToSync);
+
+if (!empty($differencesData)) {
+    echo "\nDifferences found in table data:\n";
+    print_r($differencesData);
+
+    $syncData = $noConfirm ? 'y' : readline("Synchronize table data? (y/N): ");
+
+    if (strtolower($syncData) === 'y') {
+        syncTableData($db_target, $differencesData);
+        echo "Data synchronization done.\n";
+    } else {
+        echo "No data synchronization performed.\n";
+    }
+} else {
+    echo "No differences found in table data.\n";
 }
 
 $db_source->close();

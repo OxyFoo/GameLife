@@ -43,6 +43,12 @@ const InputProps = {
     /** @type {TextContentType} The type of the input. */
     textContentType: 'default',
 
+    /** @type {() => void} */
+    onFocus: () => {},
+
+    /** @type {() => void} */
+    onBlur: () => {},
+
     /** @param {string} newText */
     onChangeText: (newText) => {},
 
@@ -133,6 +139,7 @@ class InputBack extends React.Component {
     onFocusIn = (ev, a) => {
         this.setState({ isFocused: true });
         this.movePlaceHolderBorder();
+        this.props.onFocus();
     }
     
     onFocusOut = () => {
@@ -140,6 +147,7 @@ class InputBack extends React.Component {
         if (!this.props.text.length) {
             this.movePlaceHolderIn();
         }
+        this.props.onBlur();
     }
 
     focus() {

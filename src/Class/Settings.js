@@ -8,8 +8,8 @@ import DataStorage, { STORAGE } from "Utils/DataStorage";
  */
 
 class Settings {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
 
         this.email = '';

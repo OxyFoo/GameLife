@@ -151,8 +151,8 @@ class ScreenListBack extends React.Component {
         this.posY = Math.max(this.posY, -maxScrollY);
 
         // Animation
-        TimingAnimation(this.state.positionY, Math.min(Math.max(this.posY, -heightPanel), maxScreenY), 0.1).start();
-        TimingAnimation(this.state.positionFlatlistY, -this.posY - user.interface.screenHeight * 2 / 3, 0.1).start();
+        TimingAnimation(this.state.positionY, Math.min(Math.max(this.posY, -heightPanel), maxScreenY), 0).start();
+        TimingAnimation(this.state.positionFlatlistY, -this.posY - user.interface.screenHeight * 2 / 3, 0).start();
     }
 
     /** @param {GestureResponderEvent} event */

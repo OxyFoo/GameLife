@@ -212,8 +212,6 @@ const styles = StyleSheet.create({
         height: 256,
         marginBottom: 24,
         padding: 24,
-        borderBottomLeftRadius: 16,
-        borderBottomRightRadius: 16,
         backgroundColor: '#000'
     },
     text: {

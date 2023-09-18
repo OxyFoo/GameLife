@@ -6,6 +6,10 @@ import langManager from 'Managers/LangManager';
 
 import { Sum } from 'Utils/Functions';
 
+/**
+ * @typedef {import('Class/Server').ReportTypes} ReportTypes
+ */
+
 class BackReport extends PageBack {
     stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
     state = {
@@ -39,11 +43,6 @@ class BackReport extends PageBack {
     }
 
     back = user.interface.BackHandle;
-    info = () => {
-        const title = langManager.curr['report']['alert-buginfo-title'];
-        const text = langManager.curr['report']['alert-buginfo-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
-    }
 
     onLayout = (event) => {
         const { y } = event.nativeEvent.layout;
@@ -83,6 +82,7 @@ class BackReport extends PageBack {
 
     sendData = async () => {
         const type = this.state.selectedType;
+        /** @type {Array<ReportTypes>} */
         const types = [ 'activity', 'suggest', 'bug', 'message' ];
         if (type < 0 || type >= types.length) {
             user.interface.console.AddLog('info', 'Error report: Invalid selected type (selectedType: "' + type + '")');

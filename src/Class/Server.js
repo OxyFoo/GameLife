@@ -11,6 +11,7 @@ import { GetDeviceInformations } from 'Utils/Device';
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
  * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 
 /** @type {ServerStatus[]} */
@@ -253,7 +254,7 @@ class Server {
 
     /**
      * Send report
-     * @param {'activity'|'suggest'|'bug'|'message'|'error'} type Type of report to send
+     * @param {ReportTypes} type Type of report to send
      * @param {object} data Data to send
      * @returns {Promise<boolean>} Return success of report
      */

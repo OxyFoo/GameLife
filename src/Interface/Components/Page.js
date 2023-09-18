@@ -197,7 +197,7 @@ class Page extends React.Component {
 
         // Update
         this.posY = this.limitValues(newPosY, this.props.canScrollOver);
-        TimingAnimation(this.state.positionY, this.posY, 0.1).start();
+        TimingAnimation(this.state.positionY, this.posY, 1).start();
         this.onScroll(this.posY);
     }
 

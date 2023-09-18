@@ -22,7 +22,7 @@ const SwiperProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {number?} If undefined, height equals to max height of pages content */
+    /** @type {number|string} If undefined, height equals to max height of pages content */
     height: undefined,
 
     /** @type {number} */
@@ -60,6 +60,7 @@ class Swiper extends React.Component {
     }
 
     state = {
+        width: 0,
         maxHeight: 0,
         positionX: new Animated.Value(this.props.initIndex),
         positionDots: new Animated.Value(this.props.initIndex)
@@ -73,6 +74,8 @@ class Swiper extends React.Component {
     }
 
     startTimer = () => {
+        if (!this.props.enableAutoNext) return;
+
         const { delayNext } = this.props;
         clearInterval(this.interval);
         this.interval = window.setInterval(this.Next, delayNext * 1000);
@@ -84,14 +87,14 @@ class Swiper extends React.Component {
     Next = () => {
         const nextIndex = (this.posX + 1) % this.props.pages.length;
         this.posX = nextIndex;
-        SpringAnimation(this.state.positionX, nextIndex, false).start();
+        SpringAnimation(this.state.positionX, nextIndex).start();
         SpringAnimation(this.state.positionDots, nextIndex, false).start();
         this.props.onSwipe(nextIndex);
     }
     Prev = () => {
         const prevIndex = this.posX === 0 ? this.props.pages.length - 1 : this.posX - 1;
         this.posX = prevIndex;
-        SpringAnimation(this.state.positionX, prevIndex, false).start();
+        SpringAnimation(this.state.positionX, prevIndex).start();
         SpringAnimation(this.state.positionDots, prevIndex, false).start();
         this.props.onSwipe(prevIndex);
     }
@@ -127,8 +130,8 @@ class Swiper extends React.Component {
         // Update
         this.posX = newPosX;
         const newDotPos = MinMax(0, newPosX, this.props.pages.length - 1);
-        TimingAnimation(this.state.positionX, newPosX, 0.1, false).start();
-        TimingAnimation(this.state.positionDots, newDotPos, 0.1, false).start();
+        TimingAnimation(this.state.positionX, newPosX, 0).start();
+        TimingAnimation(this.state.positionDots, newDotPos, 0, false).start();
     }
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
@@ -150,7 +153,7 @@ class Swiper extends React.Component {
 
         // Update
         this.posX = newIndex;
-        SpringAnimation(this.state.positionX, newIndex, false).start();
+        SpringAnimation(this.state.positionX, newIndex).start();
         SpringAnimation(this.state.positionDots, newIndex, false).start();
         this.props.onSwipe(newIndex);
 
@@ -159,24 +162,25 @@ class Swiper extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayoutPage = (event) => {
-        const { height } = event.nativeEvent.layout;
+        const { width, height } = event.nativeEvent.layout;
         const { maxHeight } = this.state;
 
         if (height > maxHeight) {
-            this.setState({ maxHeight: height });
+            this.setState({ width: width, maxHeight: height });
         }
     }
 
-    render() {
-        if (this.props.pages.length === 0) return null;
+    renderContent = (p, index) => {
+        const { pages } = this.props;
 
         /** @type {StyleProp} */
         const pageWidth = {
-            width: 100 / this.props.pages.length + '%',
+            width: 100 / pages.length + '%',
             height: '100%',
             justifyContent: 'center'
         };
-        const newPage = (p, index) => (
+
+        return (
             <View
                 key={'page-' + index}
                 style={pageWidth}
@@ -185,12 +189,23 @@ class Swiper extends React.Component {
                 {p}
             </View>
         );
-        const pages = this.props.pages.map(newPage);
+    }
 
-        const inter = { inputRange: [0, 1], outputRange: ['0%', '100%'] };
+    render() {
+        const {
+            pages, height, style, onLayout,
+            backgroundColor, borderRadius
+        } = this.props;
+        const { width, maxHeight, positionX, positionDots } = this.state;
+
+        if (pages.length === 0) return null;
+
+        const pagesContent = pages.map(this.renderContent);
         const contentContainerStyle = [styles.contentContainer, {
-            left: Animated.subtract(0, this.state.positionX).interpolate(inter),
-            width: this.props.pages.length * 100 + '%'
+            transform: [{
+                translateX: Animated.subtract(0, Animated.multiply(positionX, width))
+            }],
+            width: pages.length * 100 + '%'
         }];
 
         return (
@@ -198,24 +213,24 @@ class Swiper extends React.Component {
                 style={[
                     styles.parent,
                     {
-                        height: this.props.height || this.state.maxHeight,
-                        backgroundColor: themeManager.GetColor(this.props.backgroundColor),
-                        borderRadius: this.props.borderRadius
+                        height: height || maxHeight,
+                        backgroundColor: themeManager.GetColor(backgroundColor),
+                        borderRadius: borderRadius
                     },
-                    this.props.style
+                    style
                 ]}
-                onLayout={this.props.onLayout}
+                onLayout={onLayout}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
             >
                 <Animated.View style={contentContainerStyle}>
-                    {pages}
+                    {pagesContent}
                 </Animated.View>
                 <Dots
                     style={styles.dots}
-                    pagesLength={this.props.pages.length}
-                    position={this.state.positionDots}
+                    pagesLength={pages.length}
+                    position={positionDots}
                 />
             </View>
         );

@@ -29,8 +29,8 @@ class Activity {
 }
 
 class Activities {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
 
         /**

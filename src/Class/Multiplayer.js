@@ -11,8 +11,8 @@ const settings = { host: '45.82.73.154', port: 7121 };
  */
 
 class Multiplayer {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
         
         /** @type {WebSocket?} */

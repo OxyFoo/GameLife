@@ -401,8 +401,6 @@
 
         "button-send": "Send",
 
-        "alert-buginfo-title": "Informations",
-        "alert-buginfo-text": "Please provide as many details as possible about the nature of the bug and the conditions in which it occurred (android/ios? Connected to internet or not? Brand of the smartphone or emulator ? etc)",
         "alert-notfill-title": "Not completed",
         "alert-notfill-text": "Please fill in all fields",
         "alert-success-title": "Sent",
@@ -666,6 +664,10 @@
         "profile": {
             "1": "This is your profile, you can change your personal information here",
             "2": "This is your avatar, you can click on it to change your appearance"
+        },
+
+        "report": {
+            "bug": "Please provide as many details on the nature of the bug as well as in the conditions in which it appeared (Android/iOS? Connected to the Internet or not? Smartphone or emulator brand?)"
         },
 
         "shop": {

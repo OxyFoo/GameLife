@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
-import BackReport from './back';
 import styles from './style';
+import StartHelp from './help';
+import BackReport from './back';
 import langManager from 'Managers/LangManager';
 
 import { PageHeader } from 'Interface/Widgets';
@@ -124,7 +125,7 @@ class Report extends BackReport {
 
     render() {
         const lang = langManager.curr['report'];
-        const { selectedType, reportHeight } = this.state;
+        const { selectedType, reportHeight, sending } = this.state;
 
         return (
             <Page
@@ -135,8 +136,7 @@ class Report extends BackReport {
                 <PageHeader
                     style={{ marginBottom: 24 }}
                     onBackPress={this.back}
-                    onHelpPress={this.info}
-                    hideHelp={this.state.selectedType !== 2}
+                    onHelpPress={selectedType === 2 ? StartHelp : undefined}
                 />
 
                 <Text containerStyle={{ marginBottom: 24 }} fontSize={36}>{lang['page-title']}</Text>
@@ -144,7 +144,7 @@ class Report extends BackReport {
                 <ComboBox
                     title={lang['types-text']}
                     data={this.reportTypes}
-                    selectedValue={this.reportTypes[this.state.selectedType].value}
+                    selectedValue={this.reportTypes[selectedType].value}
                     onSelect={this.selectType}
                 />
 
@@ -158,7 +158,7 @@ class Report extends BackReport {
                         style={styles.button}
                         color='main2'
                         onPress={this.sendData}
-                        loading={this.state.sending}
+                        loading={sending}
                     >
                         {lang['button-send']}
                     </Button>

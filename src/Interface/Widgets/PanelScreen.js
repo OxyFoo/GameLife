@@ -132,7 +132,7 @@ class PanelScreen extends React.Component {
         }
 
         // Animation
-        TimingAnimation(this.state.positionY, this.posY, 0.1).start();
+        TimingAnimation(this.state.positionY, this.posY, 0).start();
     }
 
     /** @param {GestureResponderEvent} event */

@@ -16,7 +16,6 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  */
 
-const DAY_SECONDS = 86400;
 const DURATION = GetDurations();
 const STARTDATE = new Date();
 STARTDATE.setMinutes(Math.floor(STARTDATE.getMinutes() / 15) * 15, 0, 0);

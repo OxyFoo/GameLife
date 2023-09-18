@@ -71,7 +71,7 @@ class Digit extends React.Component {
         const posX = event.nativeEvent.pageX;
         const delta = (this.firstX - posX) / 2;
         this.newPosX = this.digitX + delta;
-        TimingAnimation(this.state.animLeft, this.newPosX, 0.1).start();
+        TimingAnimation(this.state.animLeft, this.newPosX, 0).start();
     }
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {

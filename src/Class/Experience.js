@@ -26,8 +26,8 @@ const SkillXPperLevel = 20;
  */
 
 class Experience {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
         this.getUsefulActivities = this.user.activities.GetUseful;
     }

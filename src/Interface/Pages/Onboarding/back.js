@@ -1,23 +1,22 @@
+import { Animated } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { PageBack, Swiper } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 class BackOnboarding extends PageBack {
     state = {
-        last: false,
-        swiperHeight: 0
+        animButtonNext: new Animated.Value(1),
+        animButtonStart: new Animated.Value(0)
     };
+
+    last = false;
 
     /** @type {Swiper} */
     refSwiper = null;
-
-    onLayoutSwiper = (event) => {
-        const { height } = event.nativeEvent.layout;
-        this.setState({ swiperHeight: height });
-    }
 
     selectEnglish = () => {
         langManager.SetLangage('en');
@@ -39,12 +38,18 @@ class BackOnboarding extends PageBack {
         }
         this.refSwiper.Next();
     }
+
+    /** @param {number} index */
     onSwipe = (index) => {
         // Define if the last page is reached
-        if (this.state.last === true && index !== 3) {
-            this.setState({ last: false });
-        } else if (this.state.last === false && index === 3) {
-            this.setState({ last: true });
+        if (this.last === true && index !== 3) {
+            SpringAnimation(this.state.animButtonNext, 1).start();
+            SpringAnimation(this.state.animButtonStart, 0).start();
+            this.last = false;
+        } else if (this.last === false && index === 3) {
+            SpringAnimation(this.state.animButtonNext, 0).start();
+            SpringAnimation(this.state.animButtonStart, 1).start();
+            this.last = true;
         }
     }
 }

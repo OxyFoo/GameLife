@@ -12,8 +12,8 @@ const DAYS_USERNAME_CHANGE = 30;
 const DAYS_BIRTHTIME_CHANGE = 365;
 
 class Informations {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
 
         this.username = new DynamicVar('');

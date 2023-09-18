@@ -8,11 +8,13 @@ import langManager from 'Managers/LangManager';
 import { Text, Button } from 'Interface/Components';
 
 /**
+ * @typedef {import('./back').default} BackShopDyes
  * @typedef {import('./back').BuyableDye} BuyableDye
  * @typedef {import('Data/Items').Item} Item
  */
 
 /**
+ * @this {BackShopDyes}
  * @param {BuyableDye} dye
  * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
  */
@@ -32,6 +34,7 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
         setLoading(false); this.setState({ buying: false });
         refreshCallback();
         user.character.SetEquipment(user.inventory.GetEquippedItemsID());
+        this.forceUpdate();
     };
 
     return (

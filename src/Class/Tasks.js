@@ -49,8 +49,8 @@ class Task {
 }
 
 class Tasks {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
 
         /**

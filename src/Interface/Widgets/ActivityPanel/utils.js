@@ -32,7 +32,7 @@ async function onRemComment(callback) {
 /** @this ActivityPanel */
 function StartActivity() {
     const skillID = this.state.selectedSkillID;
-    const startTime = RoundToQuarter(GetTime(undefined, 'local'), 'prev');
+    const startTime = RoundToQuarter(GetTime(undefined, 'local'), 'next');
     const localTime = GetTime(undefined, 'local');
 
     if (!user.activities.TimeIsFree(startTime, 15)) {

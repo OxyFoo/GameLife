@@ -7,8 +7,8 @@ import { IsUndefined } from 'Utils/Functions';
  */
 
 class Quests {
+    /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
 
         this.daily = [];

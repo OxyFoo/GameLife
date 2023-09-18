@@ -48,6 +48,7 @@ class BackProfile extends PageBack {
         // TODO: Don't update the avatar if the user didn't change anything
         this.refAvatar.updateEquippedItems();
         this.refAvatar.forceUpdate();
+        this.refAvatar.selectSlot(this.refAvatar.state.slotSelected);
         this.refAvatar.refFrame.forceUpdate();
 
         StartTutorial.call(this, args?.tuto);

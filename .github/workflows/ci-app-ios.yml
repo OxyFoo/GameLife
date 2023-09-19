@@ -1,0 +1,47 @@
+name: Build iOS
+
+on:
+    workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macOS-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        yarn install
+        cd ios && pod install
+
+    - name: Decode Apple certificate and provisioning profile
+      run: |
+        echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 -d > /tmp/Certificate.p12
+        echo "${{ secrets.APPLE_PROVISIONING_PROFILE }}" | base64 -d > /tmp/Profile.mobileprovision
+
+    - name: Build React Native for iOS
+      run: |
+        yarn react-native run-ios --configuration Release --device
+
+    - name: Archive and export .ipa
+      run: |
+        xcodebuild -workspace ios/YourAppName.xcworkspace \
+                   -scheme YourAppName \
+                   -sdk iphoneos \
+                   -configuration Release \
+                   -archivePath $PWD/build/YourAppName.xcarchive \
+                   archive
+
+        xcodebuild -exportArchive \
+                   -archivePath $PWD/build/YourAppName.xcarchive \
+                   -exportOptionsPlist ios/exportOptions.plist \
+                   -exportPath $PWD/build/ \
+                   -allowProvisioningUpdates
+
+      env:
+        APPLE_CERTIFICATE_PATH: /tmp/Certificate.p12
+        APPLE_PROVISIONING_PROFILE_PATH: /tmp/Profile.mobileprovision
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}

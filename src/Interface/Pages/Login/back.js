@@ -64,13 +64,11 @@ class BackLogin extends PageBack {
 
     onFocus = () => {
         if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
-            SpringAnimation(this.state.animImage, 0, false).start();
             SpringAnimation(this.state.animFocus, 1, false).start();
         }
     }
     onBlur = () => {
         if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
-            SpringAnimation(this.state.animImage, 1, false).start();
             SpringAnimation(this.state.animFocus, 0, false).start();
         }
     }

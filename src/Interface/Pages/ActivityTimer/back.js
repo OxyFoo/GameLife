@@ -40,7 +40,7 @@ class BackActivityTimer extends PageBack {
         this.state.duration = this.__getDuration();
 
         user.interface.SetCustomBackHandler(this.onPressCancel);
-        this.timer_tick = window.setInterval(this.tick, 1000);
+        this.timer_tick = window.setInterval(this.tick, 100);
     }
 
     componentWillUnmount() {
@@ -62,8 +62,8 @@ class BackActivityTimer extends PageBack {
     tick = () => {
         const { startTime } = user.activities.currentActivity;
 
-        const endTime = RoundToQuarter(GetTime(undefined, 'local'), 'near');
-        let duration = Math.max(15, (endTime - startTime) / 60);
+        const displayCurrentTime = this.__getCurrentTime();
+        const duration = this.__getDuration();
 
         // Check if time plage is free
         if (duration > 0 && !user.activities.TimeIsFree(startTime, duration)) {
@@ -72,10 +72,7 @@ class BackActivityTimer extends PageBack {
         }
 
         // Update time
-        this.setState({
-            displayCurrentTime: this.__getCurrentTime(),
-            duration: this.__getDuration()
-        });
+        this.setState({ duration, displayCurrentTime });
     }
 
     __getCurrentTime = () => {
@@ -90,10 +87,11 @@ class BackActivityTimer extends PageBack {
     }
 
     __getDuration = () => {
-        const { startTime } = user.activities.currentActivity;
-        const currTime = RoundToQuarter(GetTime());
-        const duration = (currTime - startTime) / 60;
-        return MinMax(0, duration, MAX_TIME_MINUTES);
+        const { localTime } = user.activities.currentActivity;
+        const now = GetTime(undefined, 'local');
+        const currentMillis = new Date().getMilliseconds() / 1000;
+        const duration = (now + currentMillis - localTime) / 60;
+        return duration;
     }
 
     onPressCancel = () => {

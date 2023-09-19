@@ -15,6 +15,7 @@ class Login extends BackLogin {
         const btnBackX = Animated.add(-128, Animated.multiply(128, this.state.animSignin));
         const imageAnim = {
             transform: [
+                { scale: this.state.animImage },
                 { translateY: Animated.multiply(this.state.animFocus, -250) }
             ]
         };

@@ -29,15 +29,15 @@ jobs:
 
     - name: Archive and export .ipa
       run: |
-        xcodebuild -workspace ios/YourAppName.xcworkspace \
-                   -scheme YourAppName \
+        xcodebuild -workspace ios/GameLife.xcworkspace \
+                   -scheme GameLife \
                    -sdk iphoneos \
                    -configuration Release \
-                   -archivePath $PWD/build/YourAppName.xcarchive \
+                   -archivePath $PWD/build/GameLife.xcarchive \
                    archive
 
         xcodebuild -exportArchive \
-                   -archivePath $PWD/build/YourAppName.xcarchive \
+                   -archivePath $PWD/build/GameLife.xcarchive \
                    -exportOptionsPlist ios/exportOptions.plist \
                    -exportPath $PWD/build/ \
                    -allowProvisioningUpdates

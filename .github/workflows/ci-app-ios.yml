@@ -1,7 +1,9 @@
 name: Build iOS
 
 on:
-    workflow_dispatch
+    push:
+        branches:
+            - dev-cicd
 
 jobs:
   build:

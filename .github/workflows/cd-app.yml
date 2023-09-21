@@ -128,6 +128,13 @@ jobs:
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           put -O ./backups/ code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz"
 
+      - name: Backup files from FTP test server
+        if: ${{ github.base_ref == 'test' }}
+        run: |
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
+          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
+          tar -czf backups/code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz . --exclude='backups'"
+
       - name: Upload files to FTP test server
         if: ${{ github.base_ref == 'test' }}
         run: |
@@ -153,7 +160,8 @@ jobs:
       - name: Upload files to FTP prod server
         if: ${{ github.base_ref == 'prod' }}
         run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
+          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
           mirror --reverse ./src/Server/HTTP/ /"
 
   database:

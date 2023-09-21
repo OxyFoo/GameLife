@@ -270,11 +270,22 @@ function insertRow($db, $table, $rowData) {
     $placeholders = array_fill(0, count($rowData), '?');
     $bindTypes = str_repeat('s', count($rowData));
 
-    $command = "INSERT INTO $table (" . implode(",", array_keys($rowData)) . ") VALUES (" . implode(",", $placeholders) . ")";
+    // Ajout des backticks autour des noms des colonnes pour éviter les erreurs avec les mots réservés de SQL
+    $escapedColumnNames = array_map(function($columnName) {
+        return "`$columnName`";
+    }, array_keys($rowData));
+
+    $command = "INSERT INTO $table (" . implode(",", $escapedColumnNames) . ") VALUES (" . implode(",", $placeholders) . ")";
     echo "Executing SQL: $command\n";
     $stmt = $db->prepare($command);
-    $stmt->bind_param($bindTypes, ...array_values($rowData));
-    $stmt->execute();
+
+    if ($stmt) {
+        $stmt->bind_param($bindTypes, ...array_values($rowData));
+        $stmt->execute();
+    } else {
+        // Gestion des erreurs pour debug
+        echo "Error preparing SQL statement: " . $db->error . "\n";
+    }
 }
 
 function updateRow($db, $table, $ID, $rowData) {

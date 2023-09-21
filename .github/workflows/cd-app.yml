@@ -109,32 +109,51 @@ jobs:
       - name: Install FTP client
         run: sudo apt-get update && sudo apt-get install lftp tar -y
 
-      - name: Backup files from FTP test server
+      - name: Create temporary directory
+        run: mkdir -p ftp_backup
+
+      - name: Download files from FTP test server
         if: ${{ github.base_ref == 'test' }}
         run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
-          tar -czf backups/code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz . --exclude='backups'"
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
+          mirror --exclude=backups/ / ftp_backup/"
+
+      - name: Archive downloaded files
+        if: ${{ github.base_ref == 'test' }}
+        run: tar -czf backups/code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz -C ftp_backup .
+
+      - name: Upload archive to FTP test server
+        if: ${{ github.base_ref == 'test' }}
+        run: |
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
+          put -O /path/on/server/backups/ backups/code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz"
 
       - name: Upload files to FTP test server
         if: ${{ github.base_ref == 'test' }}
         run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --reverse ./src/Server/HTTP/ /"
 
-      - name: Backup files from FTP prod server
+      - name: Download files from FTP prod server
         if: ${{ github.base_ref == 'prod' }}
         run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
-          tar -czf backups/code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz . --exclude='backups'"
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          mirror --exclude=backups/ / ftp_backup/"
+
+      - name: Archive downloaded files
+        if: ${{ github.base_ref == 'prod' }}
+        run: tar -czf backups/code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz -C ftp_backup .
+
+      - name: Upload archive to FTP prod server
+        if: ${{ github.base_ref == 'prod' }}
+        run: |
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          put -O /path/on/server/backups/ backups/code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz"
 
       - name: Upload files to FTP prod server
         if: ${{ github.base_ref == 'prod' }}
         run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no; open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
           mirror --reverse ./src/Server/HTTP/ /"
 
   database:

@@ -26,6 +26,7 @@ class Activity {
     duration = 0;
     timezone = 0;
     comment = '';
+    startNow = false;
 }
 
 class Activities {
@@ -84,8 +85,8 @@ class Activities {
         this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
-            if (activity.length !== 5) continue;
-            this.Add(activity[0], activity[1], activity[2], activity[3], activity[4], true);
+            if (activity.length !== 6) continue;
+            this.Add(activity[0], activity[1], activity[2], activity[3], activity[4], !!activity[5], true);
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
@@ -122,7 +123,8 @@ class Activities {
                 activity.startTime,
                 activity.duration,
                 activity.comment,
-                activity.timezone
+                activity.timezone,
+                activity.startNow
             ]);
         }
         for (let a in this.UNSAVED_deletions) {
@@ -227,16 +229,18 @@ class Activities {
      * @param {number} duration in minutes
      * @param {string} comment Optional comment
      * @param {number} [timezone] Optional timezone, if null, use local timezone
+     * @param {boolean} [startNow=false] If true, activity is "start now"
      * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {AddStatus}
      */
-    Add(skillID, startTime, duration, comment = '', timezone = null, alreadySaved = false) {
+    Add(skillID, startTime, duration, comment = '', timezone = null, startNow = false, alreadySaved = false) {
         const newActivity = new Activity();
         newActivity.skillID = skillID;
         newActivity.startTime = startTime;
         newActivity.duration = duration;
         newActivity.comment = comment;
         newActivity.timezone = timezone ?? GetTimeZone();
+        newActivity.startNow = startNow;
 
         // Limit date (< 2020-01-01)
         if (startTime < 1577836800) {

@@ -1,9 +1,8 @@
-import { Animated, Linking } from 'react-native';
+import { Animated, Linking, Platform } from 'react-native';
 
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { Login, Signin } from './login';
 import { IsEmail } from 'Utils/String';
@@ -25,6 +24,7 @@ class BackLogin extends PageBack {
         errorCgu: '',
 
         animImage: new Animated.Value(1),
+        animFocus: new Animated.Value(0),
         animSignin: new Animated.Value(0)
     };
 
@@ -48,6 +48,9 @@ class BackLogin extends PageBack {
         this.imageMain = require('../../../../res/logo/login_hand.png');
     }
 
+    refInputEmail = null;
+    refInputUsername = null;
+
     componentDidMount() {
         super.componentDidMount();
         this.checkConnection();
@@ -56,8 +59,19 @@ class BackLogin extends PageBack {
         user.interface.ResetCustomBackHandler();
     }
 
-    onPressImageIn = () => SpringAnimation(this.state.animImage, .9, true).start();
-    onPressImageOut = () => SpringAnimation(this.state.animImage, 1, true).start();
+    onPressImageIn = () => SpringAnimation(this.state.animImage, .9, false).start();
+    onPressImageOut = () => SpringAnimation(this.state.animImage, 1, false).start();
+
+    onFocus = () => {
+        if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
+            SpringAnimation(this.state.animFocus, 1, false).start();
+        }
+    }
+    onBlur = () => {
+        if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
+            SpringAnimation(this.state.animFocus, 0, false).start();
+        }
+    }
 
     checkConnection = async () => {
         await user.server.Ping(true);
@@ -94,6 +108,14 @@ class BackLogin extends PageBack {
             user.interface.ResetCustomBackHandler();
         }
 
+        SpringAnimation(this.state.animFocus, 0, false).start();
+        if (typeof(this.refInputEmail?.blur) === 'function') {
+            this.refInputEmail?.blur();
+        }
+        if (typeof(this.refInputUsername?.blur) === 'function') {
+            this.refInputUsername?.blur();
+        }
+
         return false;
     }
 
@@ -113,7 +135,8 @@ class BackLogin extends PageBack {
     }
 
     onCGURedirect() {
-        const link = 'https://google.com'; // TODO: Change link
+        const langKey = langManager.currentLangageKey;
+        const link = 'https://oxyfoo.com/tos/' + langKey;
         Linking.openURL(link);
     }
 
@@ -143,7 +166,7 @@ class BackLogin extends PageBack {
 
             // Login
             this.setState({ loading: true });
-            const logged = await Login.bind(this)(email);
+            const logged = await Login.call(this, email);
             if (logged) {
                 user.interface.ChangePage('loading', undefined, true);
                 return;

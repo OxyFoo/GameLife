@@ -3,9 +3,9 @@ import { View, Image, Animated } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
+import user from 'Managers/UserManager';
 
 import { Page, Text, Button, Input, Checkbox } from 'Interface/Components';
-import user from 'Managers/UserManager';
 
 class Login extends BackLogin {
     render() {
@@ -13,7 +13,18 @@ class Login extends BackLogin {
         const contentHeight = Animated.add(100, Animated.multiply(160, this.state.animSignin));
         const btnLoginX = Animated.multiply(84, this.state.animSignin);
         const btnBackX = Animated.add(-128, Animated.multiply(128, this.state.animSignin));
-        const imageAnim = { transform: [{ scale: this.state.animImage }] };
+        const imageAnim = {
+            transform: [
+                { scale: this.state.animImage },
+                { translateY: Animated.multiply(this.state.animFocus, -250) }
+            ]
+        };
+        const contentAnim = {
+            transform: [
+                { translateY: Animated.multiply(this.state.animFocus, -250) }
+            ]
+        };
+        const contentNoAnim = { opacity: Animated.subtract(1, this.state.animFocus) };
 
         const smallScreen = user.interface.screenHeight < 600;
 
@@ -40,29 +51,38 @@ class Login extends BackLogin {
                 )}
 
                 {/* Title */}
-                <Text
-                    style={smallScreen ? styles.smallTitle : styles.title}
-                    color='primary'
-                >
-                    {langs.pageTitle}
-                </Text>
+                <Animated.View style={contentNoAnim}>
+                    <Text
+                        style={smallScreen ? styles.smallTitle : styles.title}
+                        color='primary'
+                    >
+                        {langs.pageTitle}
+                    </Text>
 
-                <Text
-                    style={styles.text}
-                    color='secondary'
-                >
-                    {langs.pageText}
-                </Text>
+                    <Text
+                        style={styles.text}
+                        color='secondary'
+                    >
+                        {langs.pageText}
+                    </Text>
+                </Animated.View>
 
                 {/* Content */}
-                <Animated.View style={[ styles.container, { height: contentHeight } ]}>
+                <Animated.View style={[
+                    styles.container,
+                    contentAnim,
+                    { height: contentHeight }
+                ]}>
 
                     {/* Email */}
                     <Input
+                        ref={ref => this.refInputEmail = ref}
                         style={styles.input}
                         label={langs.titleEmail}
                         text={this.state.email}
                         onChangeText={this.onChangeEmail}
+                        onFocus={this.onFocus}
+                        onBlur={this.onBlur}
                         textContentType='email'
                         enabled={!this.state.signinMode}
                     />
@@ -70,10 +90,13 @@ class Login extends BackLogin {
 
                     {/* Username */}
                     <Input
+                        ref={ref => this.refInputUsername = ref}
                         style={styles.input}
                         label={langs.titleUsername}
                         text={this.state.username}
                         onChangeText={this.onChangeUsername}
+                        onFocus={this.onFocus}
+                        onBlur={this.onBlur}
                         textContentType='name'
                         enabled={this.state.signinMode}
                     />

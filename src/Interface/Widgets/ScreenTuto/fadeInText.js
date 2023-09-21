@@ -35,12 +35,12 @@ class FadeInText extends React.Component {
 
         let index = 0;
         return (
-            <View key={`content-${index}`} style={[styles.content, style]}>
+            <View key={`content-${index}-${children}`} style={[styles.content, style]}>
                 {children.split(' ').map((word) => 
                     <View key={`word-${index}`} style={styles.word}>
                         {word.split('').map((char) => (
                             <AnimatedChar
-                                key={++index}
+                                key={'char-' + (++index).toString()}
                                 index={index}
                                 char={char}
                                 style={styleText}

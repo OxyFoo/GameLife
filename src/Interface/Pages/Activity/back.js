@@ -5,7 +5,6 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import StartTutorial from './tuto';
 import { GetTime } from 'Utils/Time';
 import { Sleep } from 'Utils/Functions';
 import { PageBack } from 'Interface/Components';
@@ -127,10 +126,6 @@ class BackActivity extends PageBack {
         } else if (user.tempSelectedTime !== null) {
             this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
         }
-    }
-
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, this.props.args?.tuto);
     }
 
     /** @param {LayoutChangeEvent} event */

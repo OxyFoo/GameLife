@@ -617,20 +617,13 @@
     "tuto": {
         "main": {
             "home-1": "Hi! I hope you're well. I'm going to introduce you to the applications, follow me!",
-            "home-2": "At the top right you can see your avatar, which you can click on to see your profile",
-
-            "profile-1": "This is your profile, where you can modify your personal information",
-            "profile-2": "This is your avatar, you can click on it to change your appearance",
+            "home-2": "At the top right you can see your avatar, on which you can click to change your profile, your avatar or see information on your account",
 
             "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
             "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",
-            "home-5": "This button also lets you add an activity, so press it to try it out",
 
-            "activity-1": "You can filter activities by category: {}",
-            "activity-2": "You can select an activity here to open the activity panel",
-
-            "home-6": "You can also add tasks, to add activities more quickly, or follow personal goals",
-            "home-7": "Come here, let's take a look at the calendar",
+            "home-5": "You can also add tasks, to add activities more quickly, or follow personal goals",
+            "home-6": "Come here, let's take a look at the calendar",
 
             "calendar-1": "This is where all your activities will appear, you can select them to view their details and edit them.",
             "calendar-2": "You can select another day or navigate between weeks with the arrows",
@@ -644,7 +637,7 @@
             "shop-5": "In this category, you can buy chests containing a random item. The rarer the chest, the greater the chance of getting a quality item!",
             "shop-no-internet": "Unfortunately I cannot present the shop to you because you do not have the internet, but you can access it by being connected!",
 
-            "home-8": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
+            "home-7": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
         },
 
         "achievements": {

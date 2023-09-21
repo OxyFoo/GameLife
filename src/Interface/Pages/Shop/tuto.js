@@ -9,7 +9,7 @@ import { Sleep } from 'Utils/Functions';
  */
 function StartTutorial(tutoValue) {
     const lang = langManager.curr['tuto'];
-    if (tutoValue === 7) {
+    if (tutoValue === 3) {
         // Skip shop tutorial if user is not connected
         if (!user.server.IsConnected()) {
             user.interface.screenTuto.ShowTutorial([
@@ -17,7 +17,7 @@ function StartTutorial(tutoValue) {
                     component: null,
                     text: lang['main']['shop-no-internet'],
                     execAfter: () => {
-                        user.interface.ChangePage('home', { tuto: 8 }, true);
+                        user.interface.ChangePage('home', { tuto: 4 }, true);
                         return false;
                     }
                 }
@@ -54,7 +54,7 @@ function StartTutorial(tutoValue) {
                     await Sleep(400);
                 },
                 execAfter: () => {
-                    user.interface.ChangePage('home', { tuto: 8 }, true);
+                    user.interface.ChangePage('home', { tuto: 4 }, true);
                     return false;
                 }
             }

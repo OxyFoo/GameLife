@@ -93,9 +93,16 @@ function applyTableChanges($differences, $db_source, $db_target) {
                 if ($missingColumn['Null'] === 'NO') {
                     $columnDef .= " NOT NULL";
                 }
+
                 if (isset($missingColumn['Default'])) {
-                    $columnDef .= " DEFAULT '{$missingColumn['Default']}'";
+                    $defaultValue = $missingColumn['Default'];
+                    if ($defaultValue === 'CURRENT_TIMESTAMP()') {
+                        $columnDef .= " DEFAULT CURRENT_TIMESTAMP()";
+                    } else {
+                        $columnDef .= " DEFAULT '{$defaultValue}'";
+                    }
                 }
+
                 if (!empty($missingColumn['Extra'])) {
                     $columnDef .= " {$missingColumn['Extra']}";
                 }
@@ -127,9 +134,16 @@ function applyTableChanges($differences, $db_source, $db_target) {
                 if ($sourceColumn['Null'] === 'NO') {
                     $columnDef .= " NOT NULL";
                 }
+
                 if (isset($sourceColumn['Default'])) {
-                    $columnDef .= " DEFAULT '{$sourceColumn['Default']}'";
+                    $defaultValue = $sourceColumn['Default'];
+                    if ($defaultValue === 'CURRENT_TIMESTAMP()') {
+                        $columnDef .= " DEFAULT CURRENT_TIMESTAMP()";
+                    } else {
+                        $columnDef .= " DEFAULT '{$defaultValue}'";
+                    }
                 }
+
                 if (!empty($sourceColumn['Extra'])) {
                     $columnDef .= " {$sourceColumn['Extra']}";
                 }

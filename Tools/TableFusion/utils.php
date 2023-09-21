@@ -93,9 +93,16 @@ function applyTableChanges($differences, $db_source, $db_target) {
                 if ($missingColumn['Null'] === 'NO') {
                     $columnDef .= " NOT NULL";
                 }
+
                 if (isset($missingColumn['Default'])) {
-                    $columnDef .= " DEFAULT '{$missingColumn['Default']}'";
+                    $defaultValue = $missingColumn['Default'];
+                    if (strtoupper($defaultValue) === 'CURRENT_TIMESTAMP()') {
+                        $columnDef .= " DEFAULT CURRENT_TIMESTAMP()";
+                    } else {
+                        $columnDef .= " DEFAULT '{$defaultValue}'";
+                    }
                 }
+
                 if (!empty($missingColumn['Extra'])) {
                     $columnDef .= " {$missingColumn['Extra']}";
                 }
@@ -127,9 +134,16 @@ function applyTableChanges($differences, $db_source, $db_target) {
                 if ($sourceColumn['Null'] === 'NO') {
                     $columnDef .= " NOT NULL";
                 }
+
                 if (isset($sourceColumn['Default'])) {
-                    $columnDef .= " DEFAULT '{$sourceColumn['Default']}'";
+                    $defaultValue = $sourceColumn['Default'];
+                    if (strtoupper($defaultValue) === 'CURRENT_TIMESTAMP()') {
+                        $columnDef .= " DEFAULT CURRENT_TIMESTAMP()";
+                    } else {
+                        $columnDef .= " DEFAULT '{$defaultValue}'";
+                    }
                 }
+
                 if (!empty($sourceColumn['Extra'])) {
                     $columnDef .= " {$sourceColumn['Extra']}";
                 }
@@ -256,11 +270,22 @@ function insertRow($db, $table, $rowData) {
     $placeholders = array_fill(0, count($rowData), '?');
     $bindTypes = str_repeat('s', count($rowData));
 
-    $command = "INSERT INTO $table (" . implode(",", array_keys($rowData)) . ") VALUES (" . implode(",", $placeholders) . ")";
+    // Ajout des backticks autour des noms des colonnes pour éviter les erreurs avec les mots réservés de SQL
+    $escapedColumnNames = array_map(function($columnName) {
+        return "`$columnName`";
+    }, array_keys($rowData));
+
+    $command = "INSERT INTO $table (" . implode(",", $escapedColumnNames) . ") VALUES (" . implode(",", $placeholders) . ")";
     echo "Executing SQL: $command\n";
     $stmt = $db->prepare($command);
-    $stmt->bind_param($bindTypes, ...array_values($rowData));
-    $stmt->execute();
+
+    if ($stmt) {
+        $stmt->bind_param($bindTypes, ...array_values($rowData));
+        $stmt->execute();
+    } else {
+        // Gestion des erreurs pour debug
+        echo "Error preparing SQL statement: " . $db->error . "\n";
+    }
 }
 
 function updateRow($db, $table, $ID, $rowData) {
@@ -268,7 +293,7 @@ function updateRow($db, $table, $ID, $rowData) {
     $params = [];
 
     foreach ($rowData as $columnName => $value) {
-        $setPart[] = "$columnName = ?";
+        $setPart[] = "`$columnName` = ?";
         $params[] = $value;
     }
 

@@ -107,7 +107,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install FTP client
-        run: sudo apt-get update && sudo apt-get install lftp -y
+        run: sudo apt-get update && sudo apt-get install lftp tar -y
 
       - name: Backup files from FTP test server
         if: ${{ github.base_ref == 'test' }}

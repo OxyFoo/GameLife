@@ -96,7 +96,7 @@ function applyTableChanges($differences, $db_source, $db_target) {
 
                 if (isset($missingColumn['Default'])) {
                     $defaultValue = $missingColumn['Default'];
-                    if ($defaultValue === 'CURRENT_TIMESTAMP()') {
+                    if (strtoupper($defaultValue) === 'CURRENT_TIMESTAMP()') {
                         $columnDef .= " DEFAULT CURRENT_TIMESTAMP()";
                     } else {
                         $columnDef .= " DEFAULT '{$defaultValue}'";
@@ -137,7 +137,7 @@ function applyTableChanges($differences, $db_source, $db_target) {
 
                 if (isset($sourceColumn['Default'])) {
                     $defaultValue = $sourceColumn['Default'];
-                    if ($defaultValue === 'CURRENT_TIMESTAMP()') {
+                    if (strtoupper($defaultValue) === 'CURRENT_TIMESTAMP()') {
                         $columnDef .= " DEFAULT CURRENT_TIMESTAMP()";
                     } else {
                         $columnDef .= " DEFAULT '{$defaultValue}'";

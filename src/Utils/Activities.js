@@ -37,7 +37,7 @@ function AddActivityNow(skillID, startTime, duration) {
         }
     }
 
-    return AddActivity({ skillID, startTime, duration, comment: '', timezone: 0 });
+    return AddActivity({ skillID, startTime, duration, comment: '', timezone: 0, startNow: true });
 }
 
 /**
@@ -47,7 +47,14 @@ function AddActivityNow(skillID, startTime, duration) {
 function AddActivity(activity) {
     const lang = langManager.curr['activity'];
     const now = GetTime();
-    const addState = user.activities.Add(activity.skillID, activity.startTime, activity.duration, activity.comment);
+    const addState = user.activities.Add(
+        activity.skillID,
+        activity.startTime,
+        activity.duration,
+        activity.comment,
+        null,
+        activity.startNow
+    );
 
     if (addState === 'added') {
         Notifications.Evening.RemoveToday();

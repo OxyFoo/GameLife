@@ -293,7 +293,7 @@ function updateRow($db, $table, $ID, $rowData) {
     $params = [];
 
     foreach ($rowData as $columnName => $value) {
-        $setPart[] = "$columnName = ?";
+        $setPart[] = "`$columnName` = ?";
         $params[] = $value;
     }
 

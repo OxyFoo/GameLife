@@ -135,7 +135,8 @@ class BackLogin extends PageBack {
     }
 
     onCGURedirect() {
-        const link = 'https://google.com'; // TODO: Change link
+        const langKey = langManager.currentLangageKey;
+        const link = 'https://oxyfoo.com/tos/' + langKey;
         Linking.openURL(link);
     }
 

@@ -1,7 +1,6 @@
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
-import StartTutorial from './tuto';
 import { GetDate, GetTime } from 'Utils/Time';
 
 /**
@@ -43,15 +42,13 @@ class BackProfile extends PageBack {
         });
     }
 
-    componentDidFocused = (args) => {
+    componentDidFocused = () => {
         // Update the avatar
         // TODO: Don't update the avatar if the user didn't change anything
         this.refAvatar.updateEquippedItems();
         this.refAvatar.forceUpdate();
         this.refAvatar.selectSlot(this.refAvatar.state.slotSelected);
         this.refAvatar.refFrame.forceUpdate();
-
-        StartTutorial.call(this, args?.tuto);
     }
 
     componentWillUnmount() {

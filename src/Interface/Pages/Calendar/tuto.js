@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
  */
 function StartTutorial(tutoValue) {
     const lang = langManager.curr['tuto'];
-    if (tutoValue === 6) {
+    if (tutoValue === 2) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: this.refTuto1,
@@ -26,7 +26,7 @@ function StartTutorial(tutoValue) {
                 text: lang['main']['calendar-4'],
                 showButton: false,
                 execAfter: () => {
-                    user.interface.ChangePage('shop', { tuto: 7 }, true);
+                    user.interface.ChangePage('shop', { tuto: 3 }, true);
                     return false;
                 }
             }

@@ -18,17 +18,8 @@ function StartTutorial(tutoValue) {
             },
             {
                 component: user.interface.header.refContainer,
-                text: lang['main']['home-2'],
-                showButton: false,
-                execAfter: () => {
-                    user.interface.ChangePage('profile', { tuto: 2 }, true);
-                    return false;
-                }
-            }
-        ]);
-    }
-    else if (tutoValue === 3) {
-        user.interface.screenTuto.ShowTutorial([
+                text: lang['main']['home-2']
+            },
             {
                 component: this.refTuto1,
                 text: lang['main']['home-3']
@@ -38,38 +29,25 @@ function StartTutorial(tutoValue) {
                 text: lang['main']['home-4']
             },
             {
-                component: user.interface.bottomBar.refButtons[2],
-                text: lang['main']['home-5'],
-                showButton: false,
-                execAfter: () => {
-                    user.interface.ChangePage('activity', { tuto: 4 }, true);
-                    return false;
-                }
-            }
-        ]);
-    }
-    else if (tutoValue === 5) {
-        user.interface.screenTuto.ShowTutorial([
-            {
                 component: this.refTuto3,
-                text: lang['main']['home-6']
+                text: lang['main']['home-5']
             },
             {
                 component: user.interface.bottomBar.refButtons[1],
-                text: lang['main']['home-7'],
+                text: lang['main']['home-6'],
                 showButton: false,
                 execAfter: () => {
-                    user.interface.ChangePage('calendar', { tuto: 6 }, true);
+                    user.interface.ChangePage('calendar', { tuto: 2 }, true);
                     return false;
                 }
             }
         ]);
     }
-    else if (tutoValue === 8) {
+    else if (tutoValue === 4) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                text: lang['main']['home-8']
+                text: lang['main']['home-7']
             }
         ]);
     }

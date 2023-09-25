@@ -9,11 +9,11 @@
     "notifications": {
         "morning": {
             "name": "Morning notifications",
-            "title": "GAME LIFE"
+            "title": "GameLife"
         },
         "evening": {
             "name": "Evening notifications",
-            "title": "GAME LIFE",
+            "title": "GameLife",
             "messages": [
                 "Did you gain levels today? Don't forget to note it in the app!",
                 "Did you do any activities today? Don't forget to note it in the app!",
@@ -24,7 +24,7 @@
         },
         "tasks": {
             "name": "Task notifications",
-            "title": "GAME LIFE - Tasks",
+            "title": "GameLife - Tasks",
             "message": {
                 "half-time": "You have half the time left to complete the task[s]: {}",
                 "last-time": "The following task[s] are due tomorrow: {}, so hurry up and finish them!",
@@ -118,9 +118,9 @@
         "next": "Next",
         "start": "Start",
         "select-language": "Select your language",
-        "page1": "Welcome to Game-Life, the logbook that turns you into a video game character!",
-        "page2": "Note your activities in the application to increase your avatar's experience and level!",
-        "page3": "Deviens meilleur chaque jour, seul ou avec tes amis !"
+        "page1": "Welcome to Game-Life, Turn your routine into a quest. Every day becomes an exciting adventure.",
+        "page2": "Plan and complete your tasks. With each achievement, your avatar gains strength.",
+        "page3": "Earn XP for every mission accomplished. Become the champion of your productivity."
     },
 
     "about": {
@@ -158,7 +158,7 @@
         },
 
         "alert-achievement-title": "Unlocked achievement",
-        "alert-achievement-text": "You have unlocked the achievement: {}"
+        "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}"
     },
 
     "activity": {
@@ -404,7 +404,7 @@
         "alert-notfill-title": "Not completed",
         "alert-notfill-text": "Please fill in all fields",
         "alert-success-title": "Sent",
-        "alert-success-text": "Thank you for your feedback!",
+        "alert-success-text": "Thank you so much for your feedback!",
         "alert-error-title": "Error",
         "alert-error-text": "An error has occurred, please try again later."
     },
@@ -432,7 +432,7 @@
         "alert-deletedmailsent-title": "Mail sent",
         "alert-deletedmailsent-text": "A confirmation email has been sent to you, check your mailbox.",
         "alert-deletedmailtooearly-title": "Mail already sent",
-        "alert-deletedmailtooearly-text": "A confirmation email has already been sent to you, please wait a few minutes before sending one, check your mailbox.",
+        "alert-deletedmailtooearly-text": "A confirmation e-mail has already been sent to you, so please wait a few minutes before sending another, and don't forget to check your spam.",
         "alert-deletedfailed-title": "Failure",
         "alert-deletedfailed-text": "The email was not sent, please check your internet connection or try again later."
     },
@@ -489,7 +489,7 @@
         },
 
         "alert-code-title": "Use a code",
-        "alert-code-text": "You can win codes by:\n\t- Playing on our Discord server\n\t- Finding codes in our Tiktok and Youtube videos\n\t- Winning a contest on Instagram or Twitter",
+        "alert-code-text": "You can win codes by:\n\t- Playing on our Discord server\n\t- Finding codes in our Tiktok and Youtube videos\n\t- Winning a contest on Instagram or X",
         "alert-code-input": "Code",
         "alert-code-button": "Validate",
 

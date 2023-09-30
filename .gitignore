@@ -20,6 +20,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+ios/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -28,18 +29,22 @@ build/
 .gradle
 local.properties
 *.iml
+*.hprof
+.cxx/
+*.keystore
+!debug.keystore
 
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
 
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
-!debug.keystore
+.buckconfig
 
 # fastlane
 #
@@ -58,21 +63,24 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-# Other
+# Credentials
+config.php
+firebase.json
+
+# VSCode
+.vscode/
 *.code-workspace
-package-lock.json
-.buckconfig
+
+# Useless config
+.gitattributes
 .editorconfig
 .eslintrc.js
 .flowconfig
 .prettierrc.js
 .watchmanconfig
-babel.config.js
 
-/__tests__
-.gitattributes
-.vscode/
-metro.config.js
-ressources/templates/*.psd
-config.php
+# Other
 Backups
+FORME
+vendor/bundle/ruby/2.7.0/bin/fuzzy_match
+vendor/bundle/*

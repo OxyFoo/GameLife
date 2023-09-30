@@ -1,13 +1,38 @@
-import { isUndefined } from "../Functions/Functions";
+import dataManager from 'Managers/DataManager';
+
+import { IsUndefined } from 'Utils/Functions';
+
+/**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ */
 
 class Quests {
+    /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
+
         this.daily = [];
         this.todoList = [];
     }
 
-    dailyAlreadyChanged() {
+    Clear() {
+        this.daily = [];
+        this.todoList = [];
+    }
+    Load(quests) {
+        const contains = (key) => quests.hasOwnProperty(key);
+        if (contains('daily')) this.daily = quests['daily'];
+        if (contains('todolist')) this.todoList = quests['todolist'];
+    }
+    Save() {
+        const quests = {
+            daily: this.daily,
+            todolist: this.todoList
+        };
+        return quests;
+    }
+
+    DailyAlreadyChanged() {
         let output = false;
         for (let d = 0; d < this.daily.length; d++) {
             const daily = this.daily[d];
@@ -25,32 +50,34 @@ class Quests {
         return output;
     }
 
-    dailyOnChange(skillID1, skillID2) {
+    DailyOnChange(skillID1, skillID2) {
         const newDaily = {
             'skills': [ skillID1, skillID2 ],
             'date': new Date()
         }
         this.daily.push(newDaily);
-        this.user.saveData();
+        // TODO - Save user data
+        //this.user.saveData();
     }
 
-    dailyGetSkills() {
+    DailyGetSkills() {
         if (this.daily.length) return this.daily[this.daily.length - 1];
         else return null;
     }
 
-    dailyTodayCheck() {
-        let state1 = 0;
+    // TODO - REMOVE or replace GetByTime function
+    DailyTodayCheck() {
+        /*let state1 = 0;
         let state2 = 0;
 
-        const dailyBonusCategory = this.dailyGetBonusCategory();
+        const dailyBonusCategory = this.DailyGetBonusCategory();
         if (this.daily.length) {
-            const IDs = this.dailyGetSkills().skills;
-            const today_activities = this.user.activitiyManager.getByDate();
+            const IDs = this.DailyGetSkills().skills;
+            const today_activities = this.user.activities.GetByTime();
             for (let ta = 0; ta < today_activities.length; ta++) {
                 const activity = today_activities[ta];
                 const skillID = activity.skillID;
-                const skill = this.user.getSkillByID(skillID);
+                const skill = dataManager.skills.GetByID(skillID);
                 const category = skill.Category;
                 if (IDs.includes(skillID)) {
                     state1 += activity.duration;
@@ -64,19 +91,19 @@ class Quests {
         state1 /= 60;
         state2 /= 15;
 
-        return [ state1, state2 ];
+        return [ state1, state2 ];*/
     }
 
-    dailyGetBonusCategory(date) {
-        const skillsLength = this.user.skills.length
-        const today = isUndefined(date) ? new Date() : new Date(date);
+    DailyGetBonusCategory(date) {
+        const skillsLength = dataManager.skills.skills.length;
+        const today = IsUndefined(date) ? new Date() : new Date(date);
         const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
-        const skill = this.user.skills[index];
-        const category = skill.Category;
+        const skill = dataManager.skills.skills[index];
+        const category = skill.CategoryID;
         return category;
     }
 
-    todoAdd(title, description) {
+    TodoAdd(title, description) {
         let newTodo = {
             complete: false,
             title: title,
@@ -85,29 +112,29 @@ class Quests {
         }
         this.todoList.push(newTodo);
     }
-    todoEdit(index, complete, title, description) {
+    TodoEdit(index, complete, title, description) {
         if (index < 0 || index >= this.todoList.length) {
             return;
         }
 
-        if (!isUndefined(complete)) {
+        if (!IsUndefined(complete)) {
             this.todoList[index].complete = complete;
         }
-        if (!isUndefined(title)) {
+        if (!IsUndefined(title)) {
             this.todoList[index].title = title;
         }
-        if (!isUndefined(description)) {
+        if (!IsUndefined(description)) {
             this.todoList[index].description = description;
         }
     }
-    todoToggle(index) {
+    TodoToggle(index) {
         if (index < 0 || index >= this.todoList.length) {
             return null;
         }
         this.todoList[index].complete = !this.todoList[index].complete;
         return this.todoList[index].complete;
     }
-    todoRemove(index) {
+    TodoRemove(index) {
         if (index < 0 || index >= this.todoList.length) {
             return;
         }

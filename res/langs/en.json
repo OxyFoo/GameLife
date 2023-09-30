@@ -1,0 +1,710 @@
+{
+    "name": "English",
+
+    "themes": {
+        "Dark": "Dark",
+        "Light": "Light"
+    },
+
+    "notifications": {
+        "morning": {
+            "name": "Morning notifications",
+            "title": "GameLife"
+        },
+        "evening": {
+            "name": "Evening notifications",
+            "title": "GameLife",
+            "messages": [
+                "Every achievement counts! What milestones did you hit today?",
+                "Power up your progress by logging today's adventures now!",
+                "Your journey matters! Document today's chapters in the app.",
+                "Boost your score! How did you level up in real life today?",
+                "Your life's game is ongoing. Ensure every move is tracked. Log now!",
+                "Remember, every small activity can earn you points. Did you add yours?",
+                "Chase those leaderboards! Make sure to input today's experiences.",
+                "Every quest and challenge today brings growth. Have you updated the app?",
+                "Jot down your journey! What were today's highs and lows?",
+                "Life's a game, and every day is a new turn. Ensure you've played yours by logging in.",
+                "Another day, another quest! Make sure to capture all your adventures.",
+                "Gathered any power-ups or achievements today? Don't let them slip away, note them!",
+                "Your legacy is built one day at a time. Have you logged today's story?",
+                "Epic moments await! What epic tales from today will you share in the app?",
+                "Score big by noting down your daily wins. Have you checked in yet?"
+            ]
+        },
+        "tasks": {
+            "name": "Task notifications",
+            "title": "GameLife - Tasks",
+            "message": {
+                "half-time": "You have half the time left to complete the task[s]: {}",
+                "last-time": "The following task[s] are due tomorrow: {}, so hurry up and finish them!",
+                "today-time": "The following task[s] are finished today: {}, hurry up and finish them!"
+            }
+        }
+    },
+
+    "level": {
+        "xp": "XP",
+        "level": "Level",
+        "level-small": "Lvl",
+        "total": "TOTAL XP",
+        "average": "AVERAGE {} XP/DAY",
+        "me": "Me"
+    },
+
+    "dates": {
+        "names": {
+            "date": "Date",
+            "start-time": "Start",
+            "duration": "Duration",
+            "day": "Day",
+            "days": "Days",
+            "never": "Never",
+            "weekly": "Weekly",
+            "monthly": "Monthly"
+        },
+        "month": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        "days": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ]
+    },
+
+    "modal": {
+        "back": "Back",
+        "search": "Search",
+        "btn-ok": "Ok",
+        "btn-yes": "Yes",
+        "btn-no": "No",
+        "btn-accept": "Accept",
+        "btn-refuse": "Refuse",
+        "btn-continue": "Continue"
+    },
+
+    "rarity-text": "Rarity",
+    "rarities": [
+        "Common",
+        "Rare",
+        "Epic",
+        "Legendary",
+        "Event"
+    ],
+
+    "server": {
+        "alert-tokenexpired-title": "The connection token has expired",
+        "alert-tokenexpired-text": "The application will close, please restart it.",
+
+        "alert-adsuccess-title": "Congrats",
+        "alert-adsuccess-message": "You have won {} Ox!",
+        "alert-aderror-title": "Unable to load ads",
+        "alert-aderror-message-nomore": "There are no more ads available. Try again tomorrow!",
+        "alert-aderror-message-error": "An error has occurred, please try again later.",
+
+        "alert-adempty-title": "No ads available",
+        "alert-adempty-text": "You have no more ads available for today.",
+        "alert-error-title": "Error",
+        "alert-error-text": "An error has occurred, please try again later."
+    },
+
+    "onboarding": {
+        "next": "Next",
+        "start": "Start",
+        "select-language": "Select your language",
+        "page1": "Welcome to Game-Life, Turn your routine into a quest. Every day becomes an exciting adventure.",
+        "page2": "Plan and complete your tasks. With each achievement, your avatar gains strength.",
+        "page3": "Earn XP for every mission accomplished. Become the champion of your productivity."
+    },
+
+    "about": {
+        "block-devs": "App made by",
+        "block-contributors": "Contributors",
+        "block-links": "Links",
+        "text-manager": "Manager",
+        "text-developer": "Développeur",
+        "text-version": "Version: {}",
+        "text-contributors": "Thanks to you!"
+    },
+
+    "achievements": {
+        "operators": {
+            "LT": "Less than",
+            "GT": "Greater than"
+        },
+        "conditions": {
+            "header": "Condition: ",
+            "B": "Having a battery level {} {}%",
+            "Lvl": "Reach level {}",
+            "Sk": "Reach {} level for skill \"{}\"",
+            "SkT": "Practice for {} hours the skill \"{}\"",
+            "St": "Wait for level {} with the statistic \"{}\"",
+            "HCa": "Reach level {} in {} category(ies)",
+            "Ca": "Reach level {} in category {}",
+            "It": "Have {} items",
+            "Ad": "Watch {} ads"
+        },
+        "rewards": {
+            "title": "New title: {}",
+            "title-conversion": " (convert into {} Ox)",
+            "item": "New item: {}",
+            "ox": "Bonus: {} Ox"
+        },
+
+        "alert-achievement-title": "Unlocked achievement",
+        "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}"
+    },
+
+    "activity": {
+        "title-category": "Category",
+        "title-activity": "Activity",
+        "title-schedule": "Schedule",
+        "title-experience": "Experience",
+        "title-no-experience": "This activity has no experience",
+        "title-commentary": "Commentary",
+        "input-activity": "All activities",
+        "empty-activity": "No activity",
+        "swiper-already": "Already done",
+        "swiper-now": "Start now",
+        "btn-start": "Start",
+        "btn-add": "Add",
+        "btn-remove": "Remove",
+        "add-commentary": "Add a commentary",
+
+        "alert-remove-title": "Delete ?",
+        "alert-remove-text": "Are you sure you want to eliminate this activity?",
+        "alert-wrongtiming-title": "No way!",
+        "alert-wrongtiming-text": "The selected activity how or ends during another.",
+        "alert-remcomment-title": "Delete comment?",
+        "alert-remcomment-text": "Are you sure you want to delete this comment?",
+
+        "timer-launch": "Launch time:",
+        "timer-gain": "Current gains",
+        "timer-complete": "Complete",
+        "timer-cancel": "Cancel",
+        "timeralert-cancel-title": "Cancel activity",
+        "timeralert-cancel-text": "Are you sure you want to cancel this activity?",
+        "timeralert-tooshort-title": "Too early",
+        "timeralert-tooshort-text": "You cannot add an activity of less than 15 minutes",
+
+        "display-activity-text": "Your activity has been created!",
+        "display-task-complete-text": "Congratulations! You've completed today's tasks!",
+        "display-activity-button": "Back home",
+        "display-fail-text": "We're sorry but adding the activity failed (status: {})",
+        "display-fail-button": "Back home"
+    },
+
+    "calendar": {
+        "add-activity": "Add activity",
+        "hour-min": "h",
+        "start": "Start of the day",
+        "end": "End of the day",
+        "utc": "UTC"
+    },
+
+    "dailyquest": {
+        "page-title": "Daily quest",
+
+        "info-remain-time": "Time remaining: ",
+        "daily-define-title": "Selection of daily quests",
+        "daily-define-text": "Enter 2 categories in which you want to improve",
+        "daily-define-cat1": "Skill 1",
+        "daily-define-cat2": "Skill 2",
+        "daily-define-button": "Save",
+
+        "daily-title": "Available quests",
+        "daily-edit-button": "Edit categories",
+        "daily-categories-text": " or ",
+        "quest-main-text": "One hour and a half of activity in the following categories:",
+        "quest-bonus-text": "One quarter hour in the following category:",
+
+        "daily-task-title": "Todo list",
+        "task-edit-title": "Title",
+        "task-edit-subtask": "Subtasks",
+        "task-edit-description": "Description",
+        "task-edit-add": "Add",
+        "task-edit-save": "Save",
+
+        "alert-info-title": "Informations",
+        "alert-info-text": "Daily quests are a way for you to get extra experience.\n\nThere are 3 categories in the daily quests:\n\n\n1- The hour and a half of activity: you have 1h30 of \"mandatory\" activity per day.\n1 hour of activity of your choice, you can choose to complete this hour by doing 1 or 2 activities (of different categories).\nIf you complete your hour of activity, you gain +1% of xp for the next day (can be accumulated 21 times)\nIf you fail, you will get -5% of xp for the next day (not cumulative)\n\n\n2- (Finished soon) A list of habits you want to start / continue.\nYou can decide to add up to 5 habits at the same time.\nIf you achieve your quarter of an hour of activity taken at random, you gain +0,5% of xp for the next day (cumulative 10 times)\nIf you fail, nothing happens.\n\n\n3- (Available soon) A button to watch a commercial. Watching one earns you points (and later virtual currency). You can earn titles and other bonuses from a certain number of ads watched!",
+        "alert-notfill-title": "Not completed",
+        "alert-notfill-text": "Please fill in all fields",
+        "alert-same-title": "Not completed",
+        "alert-same-text": "You cannot choose the same skill twice",
+        "alert-warn-title": "Warning",
+        "alert-warn-text": "You can only change the skills for the daily quests once a day",
+        "alert-success-title": "Success",
+        "alert-success-text": "Daily quests have been modified",
+        "alert-tasknotitle-title": "Incorrect",
+        "alert-tasknotitle-text": "Please enter a title for your task",
+        "alert-taskremove-title": "Delete ?",
+        "alert-taskremove-text": "You have already checked this task, press no to uncheck it, or yes to delete it"
+    },
+
+    "home": {
+        "btn-add-task": "Add activities",
+        "btn-other-skills": "All skills",
+        "btn-achievements": "Achievements",
+        "btn-settings": "Settings",
+
+        "alert-maintenance-title": "Maintenance",
+        "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
+        "alert-error-title": "Error",
+        "alert-error-text": "An error has occurred, please try again later.",
+        "alert-update-title": "Update",
+        "alert-update-text": "An update of the application is available",
+        "alert-newversion-title": "Warning",
+        "alert-newversion-text": "You are on a version not available to the public, the online features are disabled until the official release",
+        "alert-exit-title": "Exit",
+        "alert-exit-text": "Do you want to leave the application?",
+        "alert-dateerror-title": "Warning",
+        "alert-dateerror-text": "It seems that you have changed the date, perhaps in order to cheat?\n\nI count on you to put the right date, I hope it will not happen again!"
+    },
+
+    "leaderboard": {
+        "page-title": "Leaderboard",
+
+        "button-global-text": "Global",
+        "button-week-text": "Week",
+
+        "alert-onlineneed-title": "Connection required",
+        "alert-onlineneed-text": "A connection is required to access the ranking!",
+        "alert-connectneed-title": "Log in",
+        "alert-connectneed-text": "To appear in the ranking, log in by entering your email address in the 'Identity' page."
+    },
+
+    "login": {
+        "page-title": "Yo",
+        "page-text": "Hello to you, player of your own life, come and join the LVL-UP community",
+
+        "input-email-title": "Email address",
+        "input-username-title": "Pseudo",
+        "input-cgu-text": "I have read and agree to the %terms and conditions%.",
+        "button-login-text": "Login",
+        "button-signin-text": "Signin",
+
+        "error-login-nonmail": "Please enter a valid email address.",
+        "error-signin-server": "An error has occurred.",
+        "error-signin-pseudoWrong": "Please enter a correct username.",
+        "error-signin-pseudoUsed": "This username is already in use.",
+        "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
+        "error-signin-disagree": "Please accept the terms and conditions.",
+
+        "alert-deletedaccount-title": "Account deleted",
+        "alert-deletedaccount-text": "Your account has been deleted.",
+        "alert-limitAccount-title": "Too many accounts",
+        "alert-limitAccount-text": "You can't create more than 3 accounts with one device.",
+        "alert-limitDevice-title": "Too many devices on this account",
+        "alert-limitDevice-text": "You can't have more than 5 devices connected to a single account.",
+        "alert-deviceRemoved-title": "Device removed",
+        "alert-deviceRemoved-text": "Your device has been removed from your account because you already have the maximum number of devices on this account."
+    },
+
+    "multiplayer": {
+        "connection-loading": "Connection in progress",
+        "connection-offline": "Please connect to the internet and restart the application to access this page.",
+        "connection-failed": "The connection to the server failed, please try again later.",
+        "button-retry": "Retry",
+
+        "temp-comingsoon-title": "Multiplayer",
+        "temp-comingsoon-text": "🚧 Coming soon 🚧"
+    },
+
+    "profile": {
+        "value-age": "{} years old",
+        "value-age-empty": "Date of birth unknown",
+        "value-title-empty": "No title selected",
+
+        "row-title": "Informations",
+        "row-since": "Since",
+        "row-activities": "Number of activities",
+        "row-tasks": "Number of tasks",
+        "row-time": "Time spent",
+
+        "container-achievements-title": "Last achievements",
+        "container-stats-title": "Statistics",
+        "container-skills-title": "Skills",
+
+        "input-username": "Username",
+        "input-select-title": "Select a title",
+        "input-title-none": "No title",
+        "input-edit": "Edit",
+
+        "edit-title": "Edit your profile",
+        "edit-cancel": "Cancel",
+
+        "alert-nowifi-title": "No connection",
+        "alert-nowifi-text": "You must be connected to the internet to be able to modify your profile, if you are already connected to the internet restart the application",
+
+        "alert-usernamewarning-title": "Change username",
+        "alert-usernamewarning-text": "You can only change your username once every {} days, so choose wisely!",
+        "alert-alreadyUsed-title": "Reserved username",
+        "alert-alreadyUsed-text": "This username is already in use, please choose another one.",
+        "alert-alreadyChanged-title": "Username already changed",
+        "alert-alreadyChanged-text": "You must wait {} days before you can change it again.",
+        "alert-incorrect-title": "Incorrect username",
+        "alert-incorrect-text": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
+        "alert-error-title": "Error",
+        "alert-error-text": "Change of username impossible",
+        "alert-emptytitle-title": "No title available",
+        "alert-emptytitle-text": "You have not titles yet",
+        "alert-birthtimewarning-title": "Change of date of birth",
+        "alert-birthtimewarning-text": "You can only set a birth date once every {} days, so choose wisely!",
+        "alert-birthtimewait-title": "Change of date of birth",
+        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
+        "alert-birthconfirm-title": "Confirmation",
+        "alert-birthconfirm-text": "Are you {} years old?"
+    },
+
+    "profile-avatar": {
+        "button-sell": "Sell +{} Ox",
+        "button-equip": "Equip",
+
+        "alert-isequipped-title": "Impossible",
+        "alert-isequipped-text": "You must equip another item in order to sell this one.",
+        "alert-sellconfirm-title": "Sell",
+        "alert-sellconfirm-text": "Are you sure you want to sell this item for {} Ox?",
+        "alert-sellfailed-title": "Failed sale",
+        "alert-sellfailed-text": "Unable to sell the item, an error has occurred, please try again later.",
+        "alert-sellsuccess-title": "Sold!",
+        "alert-sellsuccess-text": "Congrats! The item \"{}\" was sold for {} Ox"
+    },
+
+    "report": {
+        "page-title": "Report",
+
+        "types-text": "Type",
+        "types": {
+            "activity": "Propose an activity",
+            "suggest": "Suggestion",
+            "bug": "Bug",
+            "message": "Message"
+        },
+
+        "type-activity-text": "You can suggest an activity here",
+        "type-activity-remain": "Number of points to place: ",
+        "type-activity-name": "Name of the activity",
+        "type-activity-category": "Category",
+        "type-suggest-text": "Any suggestion about the application? Share your idea here",
+        "type-suggest-input": "Your suggestion",
+        "type-bug-text": "Have you seen a bug? Please bring us as much details about it as possible",
+        "type-bug-input1": "Details of the bug",
+        "type-bug-input2": "How to reproduce it?",
+        "type-message-text": "Do you have a message for us? Please send it here",
+        "type-message-input": "Message",
+
+        "button-send": "Send",
+
+        "alert-notfill-title": "Not completed",
+        "alert-notfill-text": "Please fill in all fields",
+        "alert-success-title": "Sent",
+        "alert-success-text": "Thank you so much for your feedback!",
+        "alert-error-title": "Error",
+        "alert-error-text": "An error has occurred, please try again later."
+    },
+
+    "settings": {
+        "input-about": "About us",
+        "input-langage": "Langages",
+        "input-theme": "Themes",
+        "input-notif-morning": "Morning notifications",
+        "input-notif-evening": "Evening notifications",
+        "input-report": "Report",
+        "input-disconnect": "Disconnect",
+        "input-disconnect-all": "Disconnect from all devices",
+        "input-tuto-again": "Review the tutorial",
+        "input-delete-account": "Delete my account",
+
+        "alert-disconnect-title": "Disconnecting",
+        "alert-disconnect-text": "Do you want to log out? Data will only be saved locally",
+        "alert-disconnectall-title": "Disconnect all devices?",
+        "alert-disconnectall-text": "Do you want to disconnect all devices from your account?\n\nConnected devices\n{}",
+        "alert-disconnecterror-title": "Error",
+        "alert-disconnecterror-text": "An error has occurred, please check your internet connection or please try again later.",
+        "alert-deleteaccount-title": "Delete account",
+        "alert-deleteaccount-text": "Are you sure you want to delete your account? A confirmation email will be sent to you.",
+        "alert-deletedmailsent-title": "Mail sent",
+        "alert-deletedmailsent-text": "A confirmation email has been sent to you, check your mailbox.",
+        "alert-deletedmailtooearly-title": "Mail already sent",
+        "alert-deletedmailtooearly-text": "A confirmation e-mail has already been sent to you, so please wait a few minutes before sending another, and don't forget to check your spam.",
+        "alert-deletedfailed-title": "Failure",
+        "alert-deletedfailed-text": "The email was not sent, please check your internet connection or try again later."
+    },
+
+    "shop": {
+        "button-header-code": "CODE",
+        "button-header-ad": "+ {}",
+
+        "banner-daily": "Daily deals",
+        "banner-random-chest": "Random chests",
+        "banner-targeted-chest": "Targeted chests",
+        "banner-dye": "Dyes",
+
+        "dailyDeals": {
+            "popup-item-button": "Buy for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "You have successfully purshased item \"{}\" for {} Ox",
+
+            "error-no-items": "An error occurred while loading the items for sale, please try again later."
+        },
+
+        "randomChests": {
+            "chest-random-common": "Simple chest",
+            "chest-random-rare": "Mysterious chest",
+            "chest-random-epic": "Chest of legends",
+
+            "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
+            "popup-chest-button": "Open for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+        },
+
+        "targetedChests": {
+            "targets": {
+                "hair": "Head",
+                "top": "Top",
+                "bottom": "Bottom",
+                "shoes": "Feet"
+            },
+
+            "popup-chest-text": "You want to open a {} chest to get an item of type \"{}\" for {} Ox?",
+            "popup-chest-button": "Open for {} Ox",
+            "popup-buysuccess-title": "Successful purchase",
+            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+        },
+
+        "dyes": {
+            "popup-dyer-text": "Change the apparence of this item?",
+            "popup-dyer-button": "Dye for {} Ox",
+            "popup-dyesuccess-title": "Successful dyeing",
+            "popup-dyesuccess-text": "You successfully dyed item \"{}\" for {} Ox",
+
+            "error-no-dye": "There is no dye available, please buy items or try again."
+        },
+
+        "alert-code-title": "Use a code",
+        "alert-code-text": "You can win codes by:\n\t- Playing on our Discord server\n\t- Finding codes in our Tiktok and Youtube videos\n\t- Winning a contest on Instagram or X",
+        "alert-code-input": "Code",
+        "alert-code-button": "Validate",
+
+        "popup-notenoughox-title": "Insufficient",
+        "popup-notenoughox-text": "You don't have enough Ox to buy this item.",
+
+        "internet-offline-title": "No connection",
+        "internet-offline-text": "You must be connected to the internet!",
+
+        "reward-failed-title": "Failure",
+        "reward-failed-text": "An error has occurred, please retry again later.",
+        "reward-wrong-title": "Incorrect code",
+        "reward-wrong-text": "The code you entered is incorrect.",
+        "reward-success-title": "Code used",
+        "reward-success-text": "You have obtained the following rewards:",
+
+        "temp-comingsoon-title": "Shop",
+        "temp-comingsoon-text": "🚧 Available soon 🚧"
+    },
+
+    "skill": {
+        "text-author": "An idea from {}",
+        "stats-title": "Statistiques",
+        "history-title": "History",
+        "text-history": "{} during {} minutes",
+        "text-add": "Add activity"
+    },
+
+    "skills": {
+        "input-search": "Search",
+        "top-sort-list": [
+            "XP", "A-Z", "DATE"
+        ],
+        "text-empty": "Add an activity, the associated skills will appear here",
+        "text-add": "Add an activiy"
+    },
+
+    "statistics": {
+        "xp": {
+            "name": "Expérience",
+            "small": "XP"
+        },
+        "names": {
+            "int": "Intelligence",
+            "soc": "Social",
+            "for": "Strength",
+            "end": "Stamina",
+            "agi": "Agility",
+            "dex": "Dexterity"
+        },
+        "descriptions": {
+            "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
+            "soc": "Social competence is a skill that increases when you do activities with other people. For example, team sports or going out with friends.",
+            "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
+            "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
+            "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
+            "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision tasks, writing tasks on a computer or even with musical instruments."
+        }
+    },
+
+    "task": {
+        "title-schedule": "Scheduling",
+        "title-subtasks": "Subtasks",
+        "title-activity": "Activity",
+        "title-commentary": "Commentary",
+
+        "input-title": "Title",
+        "input-deadline-title": "Due date",
+        "input-deadline-empty": "None",
+        "input-activity-title": "No category or activity selected",
+        "input-activity-title-activity": "Activity selected:",
+        "input-activity-title-category": "Category selected:",
+        "input-activity-none": "No activity",
+        "input-activity-empty": "Select",
+        "input-activity-only": "All activities of category: {}",
+
+        "input-panel-activity": "Select an activity",
+        "input-panel-category": "Select a category",
+
+        "input-repeat-title": "Repeat",
+        "input-description": "Description",
+        "input-subtask-placeholder": "Subtask",
+        "text-hint-select": "Press and hold to select the column",
+
+        "button-commentary": "Add a commentary",
+        "button-add": "Add",
+        "button-save": "Save",
+        "button-remove": "Delete",
+
+        "error-title-empty": "Please enter a title",
+        "error-title-exists": "A task with this title already exists",
+
+        "alert-remcomment-title": "Delete comment?",
+        "alert-remcomment-text": "Are you sure you want to delete this comment?",
+        "alert-remtask-title": "Delete task?",
+        "alert-remtask-text": "Are you sure you want to delete this task?",
+        "alert-remsubtask-title": "Delete task?",
+        "alert-remsubtask-text": "Are you sure you want to delete this subtask?",
+        "alert-subtaskslimit-title": "Limit reached",
+        "alert-subtaskslimit-text": "You can't add more than 20 subtasks to this task",
+        "alert-back-title": "Back",
+        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
+    },
+
+    "tasks": {
+        "container-title": "Todo list",
+        "tasks-empty-title": "No task",
+        "tasks-empty-button": "Add a task",
+
+        "task-type-deadline": "Ends on:",
+        "task-type-repeat-before": "To be done before:",
+
+        "alert-taskslimit-title": "Limit reached",
+        "alert-taskslimit-text": "You have reached the limit of tasks, please delete some of them to add more."
+    },
+
+    "wait": {
+        "wait-internet-text": "You must be connected to the internet to be able to connect!",
+        "wait-maintenance-text": "The servers are currently in maintenance, come back later!",
+        "wait-email-text": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam.",
+        "wait-email-remain": "Mail sent again in {}m{}s",
+        "wait-email-send": "Mail sent !"
+    },
+
+    "tuto": {
+        "main": {
+            "home-1": "Hi! I hope you're well. I'm going to introduce you to the applications, follow me!",
+            "home-2": "At the top right you can see your avatar, you can click on it to change your profile, your avatar or see information on your account",
+
+            "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
+            "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",
+
+            "home-5": "You can also add tasks, to add activities more quickly, or follow personal goals",
+            "home-6": "Come here, let's take a look at the calendar",
+
+            "calendar-1": "This is where all your activities will appear, you can select them to view their details and edit them.",
+            "calendar-2": "You can select another day or navigate between weeks with the arrows",
+            "calendar-3": "And you can click here to display the month calendar",
+            "calendar-4": "Finally, let's go and see the store!",
+
+            "shop-1": "At the top you can enter a code to get rewards",
+            "shop-2": "Here you can watch an ad to earn Ox for free (Ox are the app's virtual currency)",
+            "shop-3": "Yan can buy Ox with money (this page will be available in future updates!)",
+            "shop-4": "You can spend your Ox here to buy items, which you can equip in your profile - offers change every day!",
+            "shop-5": "In this category, you can buy chests containing a random item. The rarer the chest, the greater the chance of getting a quality item!",
+            "shop-no-internet": "Unfortunately I cannot present the shop to you because you do not have the internet, but you can access it by being connected!",
+
+            "home-7": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
+        },
+
+        "achievements": {
+            "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."
+        },
+
+        "activity": {
+            "1": "You can filter activities by category: {}",
+            "2": "You can select an activity here to open the activity panel",
+
+            "3": "You can choose to add an activity you've done or plan to do later, or you can set a timer to start the activity now",
+            "4": "You can click on this component to define the start and duration of the activity",
+            "5": "Here you can see the experience you'll gain by doing this activity",
+            "6": "You can add a comment to your activity, for example, to record your feelings or to note important information"
+        },
+
+        "profile": {
+            "1": "This is your profile, you can change your personal information here",
+            "2": "This is your avatar, you can click on it to change your appearance"
+        },
+
+        "report": {
+            "bug": "Please provide as many details on the nature of the bug as well as in the conditions in which it appeared (Android/iOS? Connected to the Internet or not? Smartphone or emulator brand?)"
+        },
+
+        "shop": {
+            "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
+            "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
+            "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
+            "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
+            "randomChests-epic": "As for the epic chest, it offers 29% chance of obtaining a rare object, 70% for an epic object and 1% for a legendary object;There is no chance to find a common object there.",
+            "targetedChests": "You can buy targeted chests, in which you are sure you have an item in the category you have chosen!",
+            "targetedChests-common": "In the common chest, the chances of obtaining an object of common rarity are extremely high at 99%, followed by 0.9% for a rare object and 0.1% for an epic object;It should be noted that there is no chance of finding a legendary object there.",
+            "targetedChests-rare": "By opening the rare chest, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
+            "targetedChests-epic": "As for the epic chest, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
+            "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
+        },
+
+        "task": {
+            "1": "Here you can set the deadline for your task, or its frequency if it's a recurring one",
+            "2": "You can link your task to an activity, which will allow you to gain experience by completing it.",
+            "3": "You can also add sub-tasks to your main task, to organize yourself better.",
+            "4": "Finally, you can add a comment to your task, for example, to note your feelings or to record important information."
+        },
+
+        "other": {
+            "skip": "Skip",
+            "press": "Press",
+            "button": "Next"
+        }
+    },
+
+    "other": {
+        "widget-button-editTime": "Change",
+        "widget-achievements-all": "All achievements",
+        "widget-skills-all": "All skills",
+        "sexe-male": "♂",
+        "sexe-female": "♀"
+    }
+}

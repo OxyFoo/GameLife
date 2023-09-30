@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "target": "ES6",
+        "checkJs": true,
+        "resolveJsonModule": true,
+        "module": "NodeNext",
+        "baseUrl": "src",
+        "paths": {
+            "Ressources/*": [
+                "../res/*"
+            ]
+        }
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

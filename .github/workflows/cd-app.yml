@@ -102,6 +102,8 @@ jobs:
     name: Deploy Server side
     runs-on: ubuntu-latest
     needs: [ build ]
+    env:
+      ARCHIVE: archive_code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -121,14 +123,14 @@ jobs:
 
       - name: Archive downloaded files
         if: ${{ github.base_ref == 'test' }}
-        run: tar -czf code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz -C ftp_backup .
+        run: tar -czf ${{ env.ARCHIVE }} -C ftp_backup .
 
       - name: Upload archive to FTP test server
         if: ${{ github.base_ref == 'test' }}
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
-          put -O ./backups/ code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz"
+          put -O ./backups/ ${{ env.ARCHIVE }}"
 
       - name: Upload files to FTP test server
         if: ${{ github.base_ref == 'test' }}
@@ -146,14 +148,14 @@ jobs:
 
       - name: Archive downloaded files
         if: ${{ github.base_ref == 'prod' }}
-        run: tar -czf code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz -C ftp_backup .
+        run: tar -czf ${{ env.ARCHIVE }} -C ftp_backup .
 
       - name: Upload archive to FTP prod server
         if: ${{ github.base_ref == 'prod' }}
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
-          put -O ./backups/ code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz"
+          put -O ./backups/ ${{ env.ARCHIVE }}"
 
       - name: Upload files to FTP prod server
         if: ${{ github.base_ref == 'prod' }}

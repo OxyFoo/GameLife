@@ -15,11 +15,21 @@
             "name": "Evening notifications",
             "title": "GameLife",
             "messages": [
-                "Did you gain levels today? Don't forget to note it in the app!",
-                "Did you do any activities today? Don't forget to note it in the app!",
-                "Did you gain experience today? Don't forget to note it in the app!",
-                "Did you learn something new today? Don't forget to write it down in the app!",
-                "Hey, it's almost the end of the day, did you remember to enter your activities?"
+                "Every achievement counts! What milestones did you hit today?",
+                "Power up your progress by logging today's adventures now!",
+                "Your journey matters! Document today's chapters in the app.",
+                "Boost your score! How did you level up in real life today?",
+                "Your life's game is ongoing. Ensure every move is tracked. Log now!",
+                "Remember, every small activity can earn you points. Did you add yours?",
+                "Chase those leaderboards! Make sure to input today's experiences.",
+                "Every quest and challenge today brings growth. Have you updated the app?",
+                "Jot down your journey! What were today's highs and lows?",
+                "Life's a game, and every day is a new turn. Ensure you've played yours by logging in.",
+                "Another day, another quest! Make sure to capture all your adventures.",
+                "Gathered any power-ups or achievements today? Don't let them slip away, note them!",
+                "Your legacy is built one day at a time. Have you logged today's story?",
+                "Epic moments await! What epic tales from today will you share in the app?",
+                "Score big by noting down your daily wins. Have you checked in yet?"
             ]
         },
         "tasks": {
@@ -617,7 +627,7 @@
     "tuto": {
         "main": {
             "home-1": "Hi! I hope you're well. I'm going to introduce you to the applications, follow me!",
-            "home-2": "At the top right you can see your avatar, on which you can click to change your profile, your avatar or see information on your account",
+            "home-2": "At the top right you can see your avatar, you can click on it to change your profile, your avatar or see information on your account",
 
             "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
             "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",

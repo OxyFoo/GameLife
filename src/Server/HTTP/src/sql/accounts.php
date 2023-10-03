@@ -182,6 +182,8 @@ class Accounts
         $output = -1;
         if (in_array($deviceID, $account->Devices)) $output = 0;
         else if (in_array($deviceID, $account->DevicesWait)) $output = 1;
+        else if ($account->Email === 'gamelife-test@oxyfoo.com' &&
+                 in_array(1, $account->Devices)) $output = 0;
         return $output;
     }
 

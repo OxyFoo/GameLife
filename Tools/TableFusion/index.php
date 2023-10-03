@@ -50,7 +50,17 @@ if (!empty($differencesStructure)) {
 }
 
 // Handling Data Differences
-$tablesToSync = [ 'App', 'Achievements', 'Blacklist', 'Items', 'Quotes' ];
+$tablesToSync = [
+    'App',
+    'Achievements',
+    'Blacklist',
+    'Items',
+    'Quotes',
+    'Skills',
+    'SkillsCategory',
+    'SkillsIcon',
+    'Titles'
+];
 $differencesData = compareTableData($db_source, $db_target, $tablesToSync);
 
 if (!empty($differencesData)) {

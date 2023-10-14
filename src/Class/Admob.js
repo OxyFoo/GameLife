@@ -256,6 +256,8 @@ class Admob {
 
         // TODO - Debug on ios (tester les 2 codes)
         this.user.interface.console.AddLog('info', 'ad_consent_id', ad_consent_id);
+        this.user.interface.console.AddLog('info', 'ad_request_info', consentInfo);
+        this.user.interface.console.AddLog('info', 'ad_request_location', consentInfo.isRequestLocationInEeaOrUnknown);
 
         // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
         if (consentInfo && consentInfo.isRequestLocationInEeaOrUnknown) {

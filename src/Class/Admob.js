@@ -256,23 +256,26 @@ class Admob {
 
         // TODO - Debug on ios (tester les 2 codes)
         this.user.interface.console.AddLog('info', 'ad_consent_id', ad_consent_id);
-        this.user.interface.console.AddLog('info', 'ad_request_info', consentInfo);
-        this.user.interface.console.AddLog('info', 'ad_request_location', consentInfo.isRequestLocationInEeaOrUnknown);
 
         // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
         if (consentInfo && consentInfo.isRequestLocationInEeaOrUnknown) {
+            this.user.interface.console.AddLog('info', 'ad_consent: 1');
+            this.user.interface.console.AddLog('info', this.GetLinkCGU());
             const formResult = await AdsConsent.showForm({
                 privacyPolicy: this.GetLinkCGU(),
                 withPersonalizedAds: true,
                 withNonPersonalizedAds: true
             });
+            this.user.interface.console.AddLog('info', 'ad_consent: 2');
 
             // The user requested non-personalized or personalized ads
             const status = formResult.status;
             if (status === AdsConsentStatus.PERSONALIZED) {
+                this.user.interface.console.AddLog('info', 'ad_consent: 2.5');
                 nonPersonalized = false;
             }
 
+            this.user.interface.console.AddLog('info', 'ad_consent: 3');
             this.ad_consent.nonPersonalized = nonPersonalized;
             this.ad_consent.version = VERSION;
         }

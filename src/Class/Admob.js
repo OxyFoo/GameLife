@@ -93,8 +93,12 @@ class Admob {
     }
 
     LoadAds() {
-        const platform = Platform.OS === 'ios' ? 'ios' : 'android';
-        const adsRaw = FIREBASE['react-native'][platform];
+        if (Platform.OS !== 'ios' && Platform.OS !== 'android') {
+            this.user.interface.console.AddLog('error', `Ad error: Device unknown (${Platform.OS})`);
+            return;
+        }
+
+        const adsRaw = FIREBASE['react-native'][Platform.OS];
 
         if (adsRaw.hasOwnProperty('rewarded')) {
             const rewarded = adsRaw['rewarded'];
@@ -226,11 +230,11 @@ class Admob {
         const ConsoleError = (err) => this.user.interface.console.AddLog('error', 'Ad consent popup:', err);
 
         if (Platform.OS === 'android') {
-            await this.__trackingTransparencyPopup().catch(ConsoleError);
+            await this.__adConsentPopup().catch(ConsoleError);
         }
 
         else if (Platform.OS === 'ios') {
-            await this.__adConsentPopup().catch(ConsoleError);
+            await this.__trackingTransparencyPopup().catch(ConsoleError);
         }
 
         await this.user.LocalSave();
@@ -241,12 +245,13 @@ class Admob {
      * @param {boolean} force Show popup even if user has already accepted
      */
     async __adConsentPopup(force = false) {
-        if (!force && (!this.ios_tracking.enabled || this.ad_consent.version === VERSION)) {
+        if (!force && this.ad_consent.version === VERSION) {
             return;
         }
 
         let nonPersonalized = true;
-        const ad_consent_id = FIREBASE['react-native'][Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_app_id'];
+        const keyAppID = Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_app_id';
+        const ad_consent_id = FIREBASE['react-native'][keyAppID];
         const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
 
         // TODO - Debug on ios (tester les 2 codes)
@@ -276,7 +281,7 @@ class Admob {
      * @param {boolean} force Show popup even if user has already accepted
      */
     async __trackingTransparencyPopup(force = false) {
-        if (this.ios_tracking.version === VERSION && !force) {
+        if (!force && this.ios_tracking.version === VERSION) {
             return;
         }
 

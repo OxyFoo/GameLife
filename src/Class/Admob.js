@@ -261,11 +261,15 @@ class Admob {
         if (consentInfo && consentInfo.isRequestLocationInEeaOrUnknown) {
             this.user.interface.console.AddLog('info', 'ad_consent: 1');
             this.user.interface.console.AddLog('info', this.GetLinkCGU());
+            try {
             const formResult = await AdsConsent.showForm({
                 privacyPolicy: this.GetLinkCGU(),
                 withPersonalizedAds: true,
                 withNonPersonalizedAds: true
             });
+            } catch (e) {
+                this.user.interface.console.AddLog('info', 'ad_consent_error:', e);
+            }
             this.user.interface.console.AddLog('info', 'ad_consent: 2');
 
             // The user requested non-personalized or personalized ads

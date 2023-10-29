@@ -75,6 +75,7 @@ class Inventory {
     }
     Save() {
         const data = {
+            titles: this.titles,
             stuffs: this.stuffs,
             avatar: this.avatar
         };

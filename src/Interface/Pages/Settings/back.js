@@ -32,6 +32,25 @@ class BackSettings extends PageBack {
         devicesLoading: false
     };
 
+    intervalConsentChecking = null;
+
+    componentDidMount() {
+        if (user.consent.loading) {
+            this.setState({ waitingConsentPopup: true });
+            this.intervalConsentChecking = setInterval(() => {
+                if (!user.consent.loading) {
+                    this.setState({ waitingConsentPopup: false });
+                    clearInterval(this.intervalConsentChecking);
+                }
+            }, 100);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.intervalConsentChecking !== null)
+            clearInterval(this.intervalConsentChecking);
+    }
+
     onBack = () => user.interface.BackHandle();
     openAbout = () => user.interface.ChangePage('about', undefined, true);
     openReport = () => user.interface.ChangePage('report', undefined, true);

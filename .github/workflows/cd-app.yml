@@ -61,7 +61,7 @@ jobs:
       - name: Get config files
         run: |
           echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
-          echo ${{ secrets.FIREBASE_JSON }} | base64 -d > ./firebase.json
+          echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
 
       - name: Build app

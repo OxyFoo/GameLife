@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
-import { FirebaseAdMobTypes } from '@react-native-firebase/admob';
 
 import { openPopupCode } from './popupGiftCode';
 import user from 'Managers/UserManager';
@@ -13,6 +12,7 @@ import { Icon, Text, Button } from 'Interface/Components';
 /**
  * @typedef {import('Class/Admob').AdEvent} AdEvent
  * @typedef {import('Class/Admob').AdStates} AdStates
+ * @typedef {import('Class/Admob').AdTypes} AdTypes
  * @typedef {import('Interface/Components').Page} Page
  */
 
@@ -34,7 +34,7 @@ class ShopHeader extends React.Component {
     refTuto2 = null;
     refTuto3 = null;
 
-    /** @type {FirebaseAdMobTypes.RewardedAd|null} */
+    /** @type {AdTypes|null} */
     rewardedShop = null;
 
     componentDidMount() {
@@ -46,7 +46,7 @@ class ShopHeader extends React.Component {
     }
     componentWillUnmount() {
         user.informations.ox.RemoveListener(this.oxListener);
-        user.admob.ClearEvents('rewarded', 'shop');
+        user.admob.ClearEvents(this.rewardedShop);
     }
 
     openAd = () => {
@@ -61,7 +61,7 @@ class ShopHeader extends React.Component {
 
         // Check if the user is connected to the server and if the ad is loaded
         else if (!user.server.online ||
-                this.rewardedShop || !this.rewardedShop.loaded) {
+                !this.rewardedShop || !this.rewardedShop.ad.loaded) {
             const title = lang['alert-aderror-title'];
             const message = lang['alert-aderror-message-error'];
             user.interface.popup.Open('ok', [ title, message ]);
@@ -69,7 +69,7 @@ class ShopHeader extends React.Component {
 
         // Show the ad
         else {
-            this.rewardedShop.show();
+            this.rewardedShop.ad.show();
         }
     }
     openOxShop = () => {

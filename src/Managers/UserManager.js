@@ -1,6 +1,7 @@
 import Achievements from 'Class/Achievements';
 import Activities from 'Class/Activities';
 import Admob from 'Class/Admob';
+import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
 import Informations from 'Class/Informations';
 import Inventory from 'Class/Inventory';
@@ -36,6 +37,7 @@ class UserManager {
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
         this.admob = new Admob(this);
+        this.consent = new Consent(this);
         this.experience = new Experience(this);
         this.informations = new Informations(this);
         this.inventory = new Inventory(this);
@@ -180,7 +182,7 @@ class UserManager {
             'dataToken': this.server.dataToken,
             'achievements': this.achievements.Save(),
             'activities': this.activities.Save(),
-            'admob': this.admob.Save(),
+            'consent': this.consent.Save(),
             'informations': this.informations.Save(),
             'inventory': this.inventory.Save(),
             'quests': this.quests.Save(),
@@ -206,7 +208,7 @@ class UserManager {
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) this.achievements.Load(data['achievements']);
             if (contains('activities')) this.activities.Load(data['activities']);
-            if (contains('admob')) this.admob.Load(data['admob']);
+            if (contains('consent')) this.consent.Load(data['consent']);
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('inventory')) this.inventory.Load(data['inventory']);
             if (contains('quests')) this.quests.Load(data['quests']);

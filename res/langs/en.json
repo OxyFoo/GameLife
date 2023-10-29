@@ -426,6 +426,7 @@
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
         "input-report": "Report",
+        "input-consent": "Consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-all": "Disconnect from all devices",
         "input-tuto-again": "Review the tutorial",

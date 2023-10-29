@@ -119,7 +119,7 @@ async function LoadData(nextStep) {
     if (user.informations.adRemaining === 0) {
         user.interface.console.AddLog('info', 'No more ads available');
     }
-    await user.admob.ShowTrackingPopup();
+    await user.consent.ShowTrackingPopup();
     user.admob.LoadAds();
 
     await user.interface.LoadDefaultPages();

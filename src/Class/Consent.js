@@ -9,6 +9,7 @@ import mobileAds, { AdsConsent, AdsConsentStatus } from 'react-native-google-mob
 const VERSION = require('../../package.json').version;
 
 class Consent {
+    loading = false;
     android_consent = {
         nonPersonalized: true,
         version: ''
@@ -53,19 +54,26 @@ class Consent {
     /**
      * @description Show tracking popup (for iOS only),
      * consent popup (for both iOS and Android) and save choices
+     * @param {boolean} [force=false] Show popup even if user has already accepted
      */
-    async ShowTrackingPopup() {
+    async ShowTrackingPopup(force = false) {
+        if (this.loading === true) {
+            return;
+        }
+        this.loading = true;
+
         const ConsoleError = (err) => this.user.interface.console.AddLog('error', 'Ad consent popup:', err);
 
         if (Platform.OS === 'android') {
-            await this.__adConsentPopup().catch(ConsoleError);
+            await this.__adConsentPopup(force).catch(ConsoleError);
         }
 
         else if (Platform.OS === 'ios') {
-            await this.__trackingTransparencyPopup().catch(ConsoleError);
+            await this.__trackingTransparencyPopup(force).catch(ConsoleError);
         }
 
         await this.user.LocalSave();
+        this.loading = false;
     }
 
     /**
@@ -79,7 +87,7 @@ class Consent {
 
         const consentInfo = await AdsConsent.requestInfoUpdate();
 
-        if (consentInfo.isConsentFormAvailable && consentInfo.canRequestAds) {
+        if (consentInfo.isConsentFormAvailable || consentInfo.canRequestAds) {
             const formResult = await AdsConsent.showForm();
 
             // TODO: What is "formResult.privacyOptionsRequirementStatus" ?

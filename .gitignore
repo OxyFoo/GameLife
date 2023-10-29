@@ -65,6 +65,7 @@ buck-out/
 
 # Credentials
 config.php
+app.json
 firebase.json
 
 # VSCode

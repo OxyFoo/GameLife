@@ -9,15 +9,6 @@ jest.mock('react-native-device-info', () => ({
     getSystemVersion: jest.fn(() => '14.4'),
 }));
 
-jest.mock('@react-native-firebase/admob', () => ({
-    AdsConsent: jest.fn(),
-    AdsConsentStatus: jest.fn(),
-    FirebaseAdMobTypes: jest.fn(),
-    InterstitialAd: jest.fn(),
-    RewardedAd: jest.fn(),
-    TestIds: jest.fn(),
-}));
-
 jest.mock('react-native-push-notification', () => ({
     channelExists: jest.fn(),
     createChannel: jest.fn(),

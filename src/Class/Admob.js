@@ -1,24 +1,25 @@
 import { Platform } from 'react-native';
-import { AdsConsent, AdsConsentStatus, FirebaseAdMobTypes, InterstitialAd, RewardedAd, TestIds } from '@react-native-firebase/admob';
-import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency';
+import { TestIds } from 'react-native-google-mobile-ads';
+import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 'react-native-google-mobile-ads';
 
-import langManager from 'Managers/LangManager';
-
-const FIREBASE_DEFAULT = {"react-native": {
+const FIREBASE_DEFAULT = {"react-native-google-mobile-ads": {
     "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
-    "ios": {"rewarded": {"shop": "","todo": ""}},
-    "android": {"rewarded": {"shop": "","todo": ""}}
+    "ios": {"rewarded": {"shop": ""}},
+    "android": {"rewarded": {"shop": ""}}
 }};
+const AD_KEYWORDS = [
+    'video-game',
+    'sports'
+];
 
 const OX_AMOUNT = 10;
-const CGU_LINK  = 'https://oxyfoo.com/cgu/';
-const FIREBASE  = __DEV__ ? FIREBASE_DEFAULT : require('../../firebase.json');
-const VERSION   = require('../../package.json').version;
+const FIREBASE  = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * 
- * @typedef {'rewarded'|'interstitial'} AdTypes
+ * @typedef {'rewarded'|'interstitial'} AdTypesName
+ * @typedef {Ad<RewardedAd>|Ad<InterstitialAd>} AdTypes
  * 
  * @typedef {'shop'|'todo'} RewardedAds
  * @typedef {'none'} InterstitialAds
@@ -28,19 +29,25 @@ const VERSION   = require('../../package.json').version;
  * @typedef {(state: AdStates) => void} AdEvent
  */
 
+/**
+ * @template {RewardedAd|InterstitialAd} T
+ */
 class Ad {
     /** @type {AdNames} */
     name = 'none';
-    /** @type {AdTypes} */
+
+    /** @type {AdTypesName} */
     type = 'interstitial';
-    /** @type {FirebaseAdMobTypes.RewardedAd|FirebaseAdMobTypes.InterstitialAd|null} */
+
+    /** @type {T|null} */
     ad = null;
-    /** @type {Function|null} */
+
+    /** @type {() => void|null} */
     unsubscriber = null;
 
     /**
      * @param {AdNames} name
-     * @param {AdTypes} type
+     * @param {AdTypesName} type
      */
     constructor(name, type) {
         this.name = name;
@@ -53,43 +60,11 @@ class Admob {
     constructor(user) {
         this.user = user;
 
-        /** @type {Array<Ad>} */
-        this.ads = [];
+        /** @type {Array<Ad<RewardedAd>>} */
+        this.rewardedAds = [];
 
-        this.ad_consent = {
-            nonPersonalized: true,
-            version: ''
-        };
-        this.ios_tracking = {
-            enabled: false,
-            version: ''
-        };
-    }
-
-    isPersonalized() {
-        if (Platform.OS === 'android') {
-            return !this.ad_consent.nonPersonalized;
-        }
-        else if (Platform.OS === 'ios') {
-            return this.ios_tracking.enabled;
-        }
-        return false;
-    }
-
-    Load(adSettings) {
-        if (adSettings.hasOwnProperty('ad_consent')) {
-            this.ad_consent = adSettings['ad_consent'];
-        }
-        if (adSettings.hasOwnProperty('ios_tracking')) {
-            this.ios_tracking = adSettings['ios_tracking'];
-        }
-    }
-    Save() {
-        const adSettings = {
-            ad_consent: this.ad_consent,
-            ios_tracking: this.ios_tracking
-        };
-        return adSettings;
+        /** @type {Array<Ad<InterstitialAd>>} */
+        this.interstitialAds = [];
     }
 
     LoadAds() {
@@ -98,19 +73,21 @@ class Admob {
             return;
         }
 
-        const adsRaw = FIREBASE['react-native'][Platform.OS];
+        const adsRaw = FIREBASE['react-native-google-mobile-ads'][Platform.OS];
 
         if (adsRaw.hasOwnProperty('rewarded')) {
             const rewarded = adsRaw['rewarded'];
             Object.keys(rewarded).forEach(/** @param {AdNames} name */ name => {
                 const adUnitId = __DEV__ ? TestIds.REWARDED : rewarded[name];
+
+                /** @type {Ad<RewardedAd>} */
                 const newAd = new Ad(name, 'rewarded');
                 newAd.ad = RewardedAd.createForAdRequest(adUnitId, {
-                    requestNonPersonalizedAdsOnly: !this.isPersonalized(),
-                    keywords: ['video-game', 'sports']
+                    requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
+                    keywords: AD_KEYWORDS
                 });
                 newAd.ad.load();
-                this.ads.push(newAd);
+                this.rewardedAds.push(newAd);
             });
         }
 
@@ -118,69 +95,78 @@ class Admob {
             const interstitial = adsRaw['interstitial'];
             Object.keys(interstitial).forEach(/** @param {AdNames} name */ name => {
                 const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : interstitial[name];
+
+                /** @type {Ad<InterstitialAd>} */
                 const newAd = new Ad(name, 'interstitial');
                 newAd.ad = InterstitialAd.createForAdRequest(adUnitId, {
-                    requestNonPersonalizedAdsOnly: !this.isPersonalized(),
-                    keywords: ['video-game', 'sports']
+                    requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
+                    keywords: AD_KEYWORDS
                 });
                 newAd.ad.load();
-                this.ads.push(newAd);
+                this.interstitialAds.push(newAd);
             });
         }
     }
 
     /**
-     * @param {AdTypes} type
+     * @param {AdTypesName} type
      * @param {AdNames} adName
-     * @param {(state: AdStates) => void} callback
-     * @param {FirebaseAdMobTypes.AdEventListener} callback
-     * @returns {FirebaseAdMobTypes.RewardedAd|null}
+     * @param {AdEvent} callback
+     * @returns {AdTypes|null}
      */
     Get(type, adName, callback) {
-        let rewardedIndex = this.ads
-            .filter(ad => ad.type === type)
-            .findIndex(ad => ad.name === adName);
+        // Get ads by type
+        let ads = [];
+        switch (type) {
+            case 'rewarded':
+                ads = this.rewardedAds;
+                break;
+            case 'interstitial':
+                ads = this.interstitialAds;
+                break;
+            default:
+                return null;
+        }
+
+        // Get ad index
+        let rewardedIndex = ads.findIndex(ad => ad.name === adName);
         if (rewardedIndex === -1) return null;
 
-        this.ClearEvents(type, adName);
+        // Get ad & clear events
+        const ad = ads[rewardedIndex];
+        this.ClearEvents(ad);
 
-        const ad = this.ads[rewardedIndex];
-        const unsubscriber = ad.ad.onAdEvent((type, error, data) => {
-            this.EventOx(type, error, data, ad, callback);
+        // Set events
+        const unsubscriber = ad.ad.addAdEventsListener(({ type, payload }) => {
+            this.EventOx(type, ad, callback);
         });
         ad.unsubscriber = unsubscriber;
 
+        // Load ad if not loaded
         if (!ad.ad.loaded) {
             ad.ad.load();
         }
 
-        return ad.ad;
+        return ad;
     }
 
     /**
-     * @param {'loaded'|'error'|'opened'|'clicked'|'left_application'|'closed'|'rewarded_loaded'|'rewarded_earned_reward'} type
-     * @param {Error|null} error
-     * @param {any} data
-     * @param {Ad} ad
+     * @param {AdEventType|RewardedAdEventType} type
+     * @param {AdTypes} ad
      * @param {AdEvent} callback
      */
-    EventOx = async (type, error, data, ad, callback = () => {}) => {
-        if (!!error) {
-            this.user.interface.console.AddLog('error', 'Ad error:', error.message);
-            callback('error');
-            return;
-        }
-
+    EventOx = async (type, ad, callback = () => {}) => {
         if (this.user.informations.adRemaining <= 0 || !this.user.server.online) {
             callback('notAvailable');
             return;
         }
 
         switch (type) {
-            case 'rewarded_loaded':
+            case AdEventType.LOADED:
+            case RewardedAdEventType.LOADED:
                 callback('ready');
                 break;
-            case 'rewarded_earned_reward':
+            case RewardedAdEventType.EARNED_REWARD:
                 const response = await this.user.server.Request('adWatched');
                 if (response === null) break;
 
@@ -191,10 +177,10 @@ class Admob {
                     callback('watched');
                 }
                 break;
-            case 'opened':
+            case AdEventType.OPENED:
                 callback('wait');
                 break;
-            case 'closed':
+            case AdEventType.CLOSED:
                 this.user.informations.ox.Set();
                 callback('closed');
                 ad.ad.load();
@@ -206,113 +192,15 @@ class Admob {
     }
 
     /**
-     * @param {AdTypes} type
-     * @param {AdNames} name 
+     * @param {AdTypes|null} ad
      */
-    ClearEvents(type, name) {
-        let adIndex = this.ads
-            .filter(ad => ad.type === type)
-            .filter(ad => ad.unsubscriber !== null)
-            .findIndex(ad => ad.name === name);
+    ClearEvents(ad) {
+        if (ad === null) return;
 
-        if (adIndex === -1) return;
-
-        const ad = this.ads[adIndex];
-        ad.unsubscriber();
-        ad.unsubscriber = null;
-    }
-
-    /**
-     * @description Show tracking popup (for iOS only),
-     * consent popup (for both iOS and Android) and save choices
-     */
-    async ShowTrackingPopup() {
-        const ConsoleError = (err) => this.user.interface.console.AddLog('error', 'Ad consent popup:', err);
-
-        if (Platform.OS === 'android') {
-            await this.__adConsentPopup().catch(ConsoleError);
+        if (ad.unsubscriber !== null) {
+            ad.unsubscriber();
+            ad.unsubscriber = null;
         }
-
-        else if (Platform.OS === 'ios') {
-            await this.__trackingTransparencyPopup().catch(ConsoleError);
-        }
-
-        await this.user.LocalSave();
-    }
-
-    /**
-     * Show non personalized ad consent popup (both iOS and Android)
-     * @param {boolean} force Show popup even if user has already accepted
-     */
-    async __adConsentPopup(force = false) {
-        if (!force && this.ad_consent.version === VERSION) {
-            return;
-        }
-
-        let nonPersonalized = true;
-        const keyAppID = Platform.OS === 'ios' ? 'admob_ios_app_id' : 'admob_app_id';
-        const ad_consent_id = FIREBASE['react-native'][keyAppID];
-        const consentInfo = await AdsConsent.requestInfoUpdate([ad_consent_id]);
-
-        // TODO - Debug on ios (tester les 2 codes)
-        this.user.interface.console.AddLog('info', 'ad_consent_id', ad_consent_id);
-
-        // if (consentInfo.status === AdsConsentStatus.UNKNOWN) {
-        if (consentInfo && consentInfo.isRequestLocationInEeaOrUnknown) {
-            this.user.interface.console.AddLog('info', 'ad_consent: 1');
-            this.user.interface.console.AddLog('info', this.GetLinkCGU());
-            try {
-            const formResult = await AdsConsent.showForm({
-                privacyPolicy: this.GetLinkCGU(),
-                withPersonalizedAds: true,
-                withNonPersonalizedAds: true
-            });
-            } catch (e) {
-                this.user.interface.console.AddLog('info', 'ad_consent_error:', e);
-            }
-            this.user.interface.console.AddLog('info', 'ad_consent: 2');
-
-            // The user requested non-personalized or personalized ads
-            const status = formResult.status;
-            if (status === AdsConsentStatus.PERSONALIZED) {
-                this.user.interface.console.AddLog('info', 'ad_consent: 2.5');
-                nonPersonalized = false;
-            }
-
-            this.user.interface.console.AddLog('info', 'ad_consent: 3');
-            this.ad_consent.nonPersonalized = nonPersonalized;
-            this.ad_consent.version = VERSION;
-        }
-    }
-
-    /**
-     * Show consent tracking popup for iOS 14+ (android or old iOS are skipped)
-     * @param {boolean} force Show popup even if user has already accepted
-     */
-    async __trackingTransparencyPopup(force = false) {
-        if (!force && this.ios_tracking.version === VERSION) {
-            return;
-        }
-
-        let enabled = true;
-        const trackingStatus = await getTrackingStatus();
-        if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
-            const trackingStatus = await requestTrackingPermission();
-            if (trackingStatus !== 'authorized') {
-                enabled = false;
-            }
-        }
-
-        this.ios_tracking.enabled = enabled;
-        this.ios_tracking.version = VERSION;
-    }
-
-    GetLinkCGU() {
-        let lang = 'en';
-        if (['fr', 'en'].includes(langManager.currentLangageKey)) {
-            lang = langManager.currentLangageKey;
-        }
-        return CGU_LINK + lang;
     }
 }
 

@@ -179,12 +179,20 @@ class Accounts
      *     1  => Wait mail confirmation
      */
     public static function CheckDevicePermissions($deviceID, $account) {
-        $output = -1;
-        if (in_array($deviceID, $account->Devices)) $output = 0;
-        else if (in_array($deviceID, $account->DevicesWait)) $output = 1;
-        else if ($account->Email === 'gamelife-test@oxyfoo.com' &&
-                 in_array(1, $account->Devices)) $output = 0;
-        return $output;
+        $isMailTest = $account->Email === 'gamelife-test@oxyfoo.com';
+        if ($isMailTest && in_array(1, $account->Devices)) {
+            return 0;
+        }
+
+        if (in_array($deviceID, $account->Devices)) {
+            return 0;
+        }
+
+        if (in_array($deviceID, $account->DevicesWait)) {
+            return 1;
+        }
+
+        return -1;
     }
 
     /**

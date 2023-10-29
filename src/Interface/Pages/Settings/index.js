@@ -14,6 +14,7 @@ class Settings extends BackSettings {
             cbSelectedLang,
             switchEveningNotifs,
             switchMorningNotifs,
+            waitingConsentPopup,
             sendingMail,
             devicesLoading
         } = this.state;
@@ -62,6 +63,7 @@ class Settings extends BackSettings {
                 </View>
 
                 <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
+                <Button style={styles.margin} onPress={this.openConsentPopup} color='main2' loading={waitingConsentPopup}>{lang['input-consent']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
                 <Button style={styles.margin} onPress={this.disconnectAll} color='main2' loading={devicesLoading}>{lang['input-disconnect-all']}</Button>
                 <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{lang['input-tuto-again']}</Button>

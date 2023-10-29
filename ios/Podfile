@@ -1,8 +1,16 @@
+$RNGoogleMobileAdsAsStaticFramework = true
+
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../node_modules/react-native-permissions/scripts/setup'
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
+
+setup_permissions([
+  'AppTrackingTransparency',
+  'Notifications',
+])
 
 # If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
 # because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
@@ -23,6 +31,8 @@ end
 
 target 'GameLife' do
   config = use_native_modules!
+
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
   # Flags change depending on the env values.
   flags = get_default_flags()
@@ -49,6 +59,13 @@ target 'GameLife' do
   end
 
   post_install do |installer|
+
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']
+      end
+    end
+    
     react_native_post_install(
       installer,
       # Set `mac_catalyst_enabled` to `true` in order to apply patches

@@ -110,6 +110,13 @@ class EditorProfile extends React.PureComponent {
     popupRender() {
         const lang = langManager.curr['profile'];
 
+        const title = user.informations.title.Get();
+        const titleDefault = title === 0 ?
+            lang['value-title-empty'] :
+            dataManager.GetText(dataManager.titles.GetByID(title).Name);
+
+        const [ titleTxt, setTitle ] = React.useState(titleDefault);
+
         // Username
         const usernameEdit = async () => {
             if (user.server.IsConnected()) {
@@ -150,12 +157,13 @@ class EditorProfile extends React.PureComponent {
             const callback = (id) => {
                 user.informations.SetTitle(id);
                 this.forceUpdate();
+
+                const newTitle = dataManager.GetText(dataManager.titles.GetByID(id).Name);
+                setTitle(newTitle);
             };
             const listTitle = lang['input-select-title'];
             user.interface.screenList.Open(listTitle, availableTitles, callback);
         }
-        const title = user.informations.title.Get();
-        const titleTxt = title === 0 ? lang['value-title-empty'] : dataManager.GetText(dataManager.titles.GetByID(title).Name);
 
         // Age
         const age = user.informations.GetAge();

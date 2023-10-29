@@ -61,7 +61,7 @@ jobs:
       - name: Get config files
         run: |
           echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
-          echo ${{ secrets.FIREBASE_JSON }} | base64 -d > ./firebase.json
+          echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
 
       - name: Build app
@@ -71,6 +71,7 @@ jobs:
 
       - name: Upload aab artifact
         uses: actions/upload-artifact@v3
+        if: ${{ github.base_ref == 'prod' }}
         with:
           name: app-release.aab
           path: android/app/build/outputs/bundle/release/app-release.aab

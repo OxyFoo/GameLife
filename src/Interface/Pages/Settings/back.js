@@ -27,13 +27,39 @@ class BackSettings extends PageBack {
 
         switchMorningNotifs: user.settings.morningNotifications,
         switchEveningNotifs: user.settings.eveningNotifications,
+        waitingConsentPopup: false,
         sendingMail: false,
         devicesLoading: false
+    };
+
+    intervalConsentChecking = null;
+
+    componentDidMount() {
+        if (user.consent.loading) {
+            this.setState({ waitingConsentPopup: true });
+            this.intervalConsentChecking = setInterval(() => {
+                if (!user.consent.loading) {
+                    this.setState({ waitingConsentPopup: false });
+                    clearInterval(this.intervalConsentChecking);
+                }
+            }, 100);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.intervalConsentChecking !== null)
+            clearInterval(this.intervalConsentChecking);
     }
 
     onBack = () => user.interface.BackHandle();
     openAbout = () => user.interface.ChangePage('about', undefined, true);
     openReport = () => user.interface.ChangePage('report', undefined, true);
+
+    openConsentPopup = async () => {
+        this.setState({ waitingConsentPopup: true });
+        await user.consent.ShowTrackingPopup(true);
+        this.setState({ waitingConsentPopup: false });
+    }
 
     /** @param {ComboBoxItem} lang */
     onChangeLang = (lang) => {

@@ -100,8 +100,8 @@ android {
         applicationId "com.gamelife"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "1.0.0"
+        versionCode 10
+        versionName "1.0.1"
     }
     splits {
         abi {
@@ -163,7 +163,9 @@ dependencies {
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 
-    implementation 'androidx.work:work-runtime:2.7.1'
+    implementation("androidx.work:work-runtime:2.7.1")
+
+    implementation("com.google.android.gms:play-services-ads:22.4.0")
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
@@ -176,6 +178,10 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+}
+
+configurations.all {
+    resolutionStrategy.force 'com.google.android.gms:play-services-ads:22.4.0'
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

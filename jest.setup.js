@@ -1,3 +1,5 @@
+import mockPermissions from 'react-native-permissions/mock';
+
 jest.mock('@react-native-async-storage/async-storage', () =>
     require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
@@ -7,6 +9,23 @@ jest.mock('react-native-device-info', () => ({
     getDeviceNameSync: jest.fn(() => 'iPhone 12'),
     getSystemName: jest.fn(() => 'iOS'),
     getSystemVersion: jest.fn(() => '14.4'),
+}));
+
+jest.mock('react-native-permissions', () => {
+	return mockPermissions;
+});
+
+jest.mock('react-native-google-mobile-ads', () => ({
+    TurboModuleRegistry: {
+      getEnforcing: () => {
+        return {
+          initialize: jest.fn(),
+          setRequestConfiguration: jest.fn(),
+          openAdInspector: jest.fn(),
+          openDebugMenu: jest.fn(),
+        };
+      },
+    }
 }));
 
 jest.mock('react-native-push-notification', () => ({

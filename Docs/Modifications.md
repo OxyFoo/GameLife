@@ -21,17 +21,17 @@ Il est destiné à être utilisé par les utilisateurs finaux.
 ## Fichiers de configuration
 Les fichiers de configurations suivants:
 - `android/app/gamelife.keystore`
-- `firebase.json`
+- `app.json`
 - ``keystore`
 Ne sont pas stockés sur le repo pour des raisons de sécurité, pour que les modifications soient prises en compte dans le pipeline, il faut ajouter manuellement leurs contenus dans les **secrets** du repo, respectivement avec les noms:
 - `ANDROID_KEYSTORE`
-- `FIREBASE_JSON`
+- `APP_JSON`
 - `KEYSTORE`
 Le contenu doit être converti en base 64, on peut les obtenir avec les commandes suivantes:
 ```bash
 mkdir base64
 base64 -w0 android/app/gamelife.keystore > base64/keystore
-base64 -w0 firebase.json > base64/firebase.json
+base64 -w0 app.json > base64/app.json
 base64 -w0 keystore > base64/keystore
 ```
 

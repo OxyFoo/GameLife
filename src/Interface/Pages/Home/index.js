@@ -13,7 +13,7 @@ class Home extends BackHome {
 
         // DONNES AJOUTEES POUR LES TESTS DE LA PIE CHART
         const pieData = [
-            { id: 1, name: "Bien-être", valueMin: 200, color: '#7578D4' },
+            { id: 1, name: "Bien-être", valueMin: 600, color: '#7578D4' },
             { id: 2, name: "Travail", valueMin: 200, color: '#FFB37A' },
             { id: 3, name: "Créativité", valueMin: 200, color: '#2690ff' },
             { id: 4, name: "Quotidien", valueMin: 200, color: '#5bebc5' },
@@ -65,7 +65,7 @@ class Home extends BackHome {
                     style={styles.topSpace}
                 />
 
-                <PieChart data={pieData} />
+                <PieChart data={pieData} style={styles.topSpace}/>
 
                 <Button
                     style={styles.topSpace}

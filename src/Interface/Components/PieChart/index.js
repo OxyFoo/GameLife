@@ -14,6 +14,8 @@ monActi = {
 }
 */
 
+// Je vais peut etre bouger ces functions autre part ? 
+// mais la plupart servent seulement pour ce composant la 
 // Marche pas trop mais y'a de l'idée 
 function shadeColor(color, percent) {
     let R = parseInt(color.substring(1, 3), 16);
@@ -158,49 +160,42 @@ const PieChartHome = (data) => {
     return (
         <View
             style={{
-                paddingVertical: 0,
-                backgroundColor: '#03052E',
-                flex: 1,
+                padding: 16,
+                borderRadius: 20,
+                backgroundColor: '#9196fb',
             }}>
-            <View
-                style={{
-                    margin: 20,
-                    padding: 16,
-                    borderRadius: 20,
-                    backgroundColor: '#9196fb',
-                }}>
-                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                    Performance of the day
-                </Text>
-                <View style={{ padding: 20, alignItems: 'center' }}>
-                    {dataReady ?
-                        <PieChart
-                            data={dataRendered.data}
-                            donut
-                            showGradient
-                            sectionAutoFocus
-                            radius={90}
-                            innerRadius={60}
-                            innerCircleColor={'#232B5D'}
-                            centerLabelComponent={() => {
-                                return (
-                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                        <Text
-                                            style={{ fontSize: 22, color: 'white', fontWeight: 'bold' }}>
-                                            {biggestActivity.value}%
-                                        </Text>
-                                        <Text style={{ fontSize: 14, color: 'white' }}>{biggestActivity.name}</Text>
-                                    </View>
-                                );
-                            }}
-                        />
-                        :
-                        <></>
-                    }
-                </View>
-                {renderLegendComponent(dataRendered.data)}
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                Performance of the day
+            </Text>
+            <View style={{ padding: 20, alignItems: 'center' }}>
+                {dataReady ?
+                    <PieChart
+                        data={dataRendered.data}
+                        donut
+                        showGradient
+                        sectionAutoFocus
+                        radius={90}
+                        innerRadius={60}
+                        innerCircleColor={'#232B5D'}
+                        centerLabelComponent={() => {
+                            return (
+                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text
+                                        style={{ fontSize: 22, color: 'white', fontWeight: 'bold' }}>
+                                        {biggestActivity.value}%
+                                    </Text>
+                                    <Text style={{ fontSize: 14, color: 'white' }}>{biggestActivity.name}</Text>
+                                </View>
+                            );
+                        }}
+                    />
+                    :
+                    <></>
+                }
             </View>
-        </View>);
+            {renderLegendComponent(dataRendered.data)}
+        </View>
+    );
 }
 
-export default PieChartHome ;
+export default PieChartHome;

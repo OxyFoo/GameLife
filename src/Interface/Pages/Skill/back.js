@@ -33,9 +33,13 @@ class BackSkill extends PageBack {
         // Get skill
         this.skillID = props.args['skillID'];
         const skill = dataManager.skills.GetByID(this.skillID);
-        const skillXP = user.experience.GetSkillExperience(this.skillID);
+        if (skill === null) {
+            user.interface.BackHandle();
+            return;
+        }
 
         // Skill data
+        const skillXP = user.experience.GetSkillExperience(this.skillID);
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         const authorText = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
         this.skill = {

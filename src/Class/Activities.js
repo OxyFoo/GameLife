@@ -159,8 +159,11 @@ class Activities {
         let usefulActivities = [];
         for (let i in activities) {
             const activity = activities[i];
-            const midnight = GetMidnightTime(activity.startTime);
+
             const skill = dataManager.skills.GetByID(activity.skillID);
+            if (skill === null) continue;
+
+            const midnight = GetMidnightTime(activity.startTime);
             const durationHour = activity.duration / 60;
 
             if (lastMidnight !== midnight) {

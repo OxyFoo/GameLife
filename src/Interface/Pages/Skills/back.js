@@ -91,6 +91,7 @@ class BackSkills extends PageBack {
     }
 
     refreshSkills = () => {
+        /** @type {EnrichedSkill[]} */
         let newSkills = this.allSkills;
         const { search, selectedCategories } = this.state;
 
@@ -102,7 +103,7 @@ class BackSkills extends PageBack {
 
         // Get recent skills
         if (selectedCategories.includes(0)) {
-
+            /** @type {EnrichedSkill[]} */
             let recentSkills = [];
             const now = GetTime(undefined, 'local');
             const usersActivities = user.activities
@@ -111,16 +112,15 @@ class BackSkills extends PageBack {
                 .sort((a, b) => b.startTime - a.startTime);
             for (const activity of usersActivities) {
                 const skill = dataManager.skills.GetByID(activity.skillID);
-                if (!recentSkills.includes(skill.ID)) {
-                    recentSkills.push(skill.ID);
+                if (skill === null) continue;
+
+                if (!recentSkills.find(s => s.ID === skill.ID)) {
+                    recentSkills.push(this.upgradeSkill(skill));
                     if (recentSkills.length >= 10) {
                         break;
                     }
                 }
             }
-            recentSkills = recentSkills
-                .map(skillID => dataManager.skills.GetByID(skillID))
-                .map(this.upgradeSkill);
 
             newSkills.push(...recentSkills);
         }

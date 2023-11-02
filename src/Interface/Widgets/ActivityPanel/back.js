@@ -134,7 +134,7 @@ class ActivityPanelBack extends React.Component {
      * @returns {boolean} True if the activity is valid
      */
     SelectActivity = (activity, callbackRemoved = () => {}, callbackClosed = () => {}) => {
-        const skill = dataManager.skills.GetByID(activity.skillID);
+        const skill = dataManager.skills.GetByID(activity?.skillID ?? 0);
         if (activity === null || skill === null) {
             console.error('SelectActivity: Invalid activity or skill', activity, skill);
             this.Close();

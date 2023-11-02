@@ -23,6 +23,8 @@ class ActivityPanel extends ActivityPanelBack {
         const { activity, startMode, selectedSkillID, mode } = this.state;
 
         const skill = dataManager.skills.GetByID(selectedSkillID);
+        const positiveXP = skill !== null && skill.XP > 0;
+        const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
         const viewOpacity = {
             transform: [{
@@ -41,9 +43,6 @@ class ActivityPanel extends ActivityPanelBack {
                 !variantTheme ? 'backgroundCard' : 'backgroundGrey'
             )
         };
-
-        const positiveXP = skill !== null && skill.XP > 0;
-        const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
         return (
             <Animated.View style={viewOpacity} pointerEvents={pointerEvents}>

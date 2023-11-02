@@ -32,9 +32,13 @@ class BackActivityTimer extends PageBack {
         }
 
         const { localTime } = user.activities.currentActivity;
-        const activityName = dataManager.skills.GetByID(user.activities.currentActivity.skillID).Name;
+        const skill = dataManager.skills.GetByID(user.activities.currentActivity.skillID);
+        if (skill === null) {
+            user.interface.BackHandle();
+            return;
+        }
 
-        this.state.displayActivity = dataManager.GetText(activityName);
+        this.state.displayActivity = dataManager.GetText(skill.Name);
         this.state.displayInitialTime = DateToFormatTimeString(GetDate(localTime));
         this.state.displayCurrentTime = this.__getCurrentTime();
         this.state.duration = this.__getDuration();

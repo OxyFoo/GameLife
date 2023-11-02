@@ -105,8 +105,10 @@ class SectionSkill extends React.Component {
                 activityText = dataManager.GetText(category.Name);
             } else {
                 const activityData = dataManager.skills.GetByID(skill.id);
-                activityTitle = lang['input-activity-title-activity'];
-                activityText = dataManager.GetText(activityData.Name);
+                if (activityData !== null) {
+                    activityTitle = lang['input-activity-title-activity'];
+                    activityText = dataManager.GetText(activityData.Name);
+                }
             }
         }
 

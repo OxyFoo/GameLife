@@ -122,6 +122,11 @@ class Achievements {
             case 'Sk':
             case 'SkT':
                 const skill = dataManager.skills.GetByID(valueNum);
+                if (skill === null) {
+                    output += condText['Sk']
+                                .replace('{}', 'Error: Skill not found\n');
+                    break;
+                }
                 const skillName = dataManager.GetText(skill.Name);
                 output += condText[Comparator.Type]
                             .replace('{}', valueStr)
@@ -258,7 +263,7 @@ class Achievements {
 
                 case 'Sk': // Skill level
                     const skillID = Condition.Comparator.Value;
-                    value = this.user.experience.GetSkillExperience(skillID).lvl;
+                    value = this.user.experience.GetSkillExperience(skillID)?.lvl || 0;
                     break;
 
                 case 'SkT': // Skill time

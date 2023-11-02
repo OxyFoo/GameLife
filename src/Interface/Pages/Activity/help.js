@@ -30,6 +30,8 @@ function StartHelp() {
             text: lang['3'],
             execBefore: async () => {
                 const helpSkill = dataManager.skills.GetByID(1);
+                if (helpSkill === null) return;
+
                 this.selectSkill(helpSkill);
                 await Sleep(500);
             }

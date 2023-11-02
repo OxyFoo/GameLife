@@ -103,8 +103,10 @@ class BackActivity extends PageBack {
         if (this.props.args.hasOwnProperty('skillID')) {
             const { skillID } = this.props.args;
             const skill = dataManager.skills.GetByID(skillID);
-            this.refActivityPanel.SelectSkill(skill);
-            this.refreshSkills(this.state.skillSearch, skill.CategoryID);
+            if (skill !== null) {
+                this.refActivityPanel.SelectSkill(skill);
+                this.refreshSkills(this.state.skillSearch, skill.CategoryID);
+            }
         }
 
         else if (this.props.args.hasOwnProperty('categoryID')) {
@@ -161,13 +163,12 @@ class BackActivity extends PageBack {
                 .sort((a, b) => b.startTime - a.startTime);
             for (const activity of usersActivities) {
                 const skill = dataManager.skills.GetByID(activity.skillID);
-                if (!skills.includes(skill.ID)) {
-                    skills.push(skill.ID);
+                if (skill !== null && !skills.find(s => s.ID === skill.ID)) {
+                    skills.push(skill);
                 }
             }
             itemSkills = skills
                 .slice(0, 10)
-                .map(skillID => dataManager.skills.GetByID(skillID))
                 .map(convert)
                 .filter(searchMatch);
         }

@@ -5,10 +5,21 @@ import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
 import { Tasks } from 'Interface/Widgets';
-import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
+import { Button, Swiper, Text, XPBar, Page, News, PieChart } from 'Interface/Components';
 
 class Home extends BackHome {
+    
     render() {
+
+        // DONNES AJOUTEES POUR LES TESTS DE LA PIE CHART
+        const pieData = [
+            { id: 1, name: "Bien-être", valueMin: 200, color: '#7578D4' },
+            { id: 2, name: "Travail", valueMin: 200, color: '#FFB37A' },
+            { id: 3, name: "Créativité", valueMin: 200, color: '#2690ff' },
+            { id: 4, name: "Quotidien", valueMin: 200, color: '#5bebc5' },
+            { id: 5, name: "Social", valueMin: 200, color: '#FFD633' },
+          ];
+
         const {
             experience: { stats, xpInfo },
             values: { current_level, next_level }
@@ -53,6 +64,8 @@ class Home extends BackHome {
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
+
+                <PieChart data={pieData} />
 
                 <Button
                     style={styles.topSpace}

@@ -65,7 +65,7 @@ class ActivityCard extends React.Component {
             const LogoID = skill?.LogoID ?? 0;
             this.XML = dataManager.skills.icons.find(x => x.ID === LogoID)?.Content ?? '';
 
-            if ((skill?.XP ?? 0) === 0) {
+            if (skill?.XP ?? 0 === 0) {
                 color = 'main2';
             }
 

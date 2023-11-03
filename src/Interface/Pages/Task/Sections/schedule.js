@@ -9,6 +9,7 @@ import { Range } from 'Utils/Functions';
 import { DateToFormatString } from 'Utils/Date';
 import { GetDate, GetTime } from 'Utils/Time';
 import { Text, Button, TextSwitch } from 'Interface/Components';
+import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('Class/Tasks').RepeatModes} RepeatModes
@@ -249,7 +250,7 @@ class SectionSchedule extends React.Component {
                     onConfirm={this.onChangeDateTimePicker}
                     onCancel={this.hideDTP}
                     isVisible={isVisibleDTP}
-                    minuteInterval={15}
+                    minuteInterval={TIME_STEP_MINUTES}
                     is24Hour={true}
                 />
             </>

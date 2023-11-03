@@ -40,14 +40,16 @@ function TimeToFormatString(time) {
 }
 
 /**
+ * @param {number} step in minutes (e.g. 15 for round to 15 minutes)
  * @param {number} time in seconds
  * @param {'near'|'prev'|'next'} [type] [default: 'near']
  * @returns {number} time rounded to quarters in seconds
  */
-function RoundToQuarter(time, type = 'near') {
-    let mod = time % 900;
-    if (type === 'near' && mod > 450)   mod -= 900;
-    else if (type === 'next')           mod -= 900;
+function RoundTimeTo(step, time, type = 'near') {
+    const stepSeconds = step * 60;
+    let mod = time % stepSeconds;
+    if (type === 'near' && mod > 450)   mod -= stepSeconds;
+    else if (type === 'next')           mod -= stepSeconds;
     return time - mod;
 }
 
@@ -121,7 +123,7 @@ function GetTimeZone() {
 }
 
 export { GetTime, GetDate, TimeToFormatString,
-    RoundToQuarter, GetMidnightTime, GetAge,
+    RoundTimeTo, GetMidnightTime, GetAge,
     GetDurations, GetTimeToTomorrow, GetDaysUntil,
     GetTimeZone
 };

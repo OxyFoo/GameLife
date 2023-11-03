@@ -7,8 +7,9 @@ import user from 'Managers/UserManager';
 import StartTutorial from './tuto';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
-import { GetTime, GetTimeZone, RoundToQuarter } from 'Utils/Time';
+import { GetTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 import { GetBlockMonth, MonthType, UpdateBlockMonth } from 'Interface/Widgets/BlockMonth/script';
+import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
@@ -214,7 +215,8 @@ class BackCalendar extends PageBack {
                 await this.showPanel();
             }
             date.setHours(now.getHours(), now.getMinutes(), 0, 0);
-            user.tempSelectedTime = RoundToQuarter(GetTime(date, 'local') + GetTimeZone() * 60);
+            const nowLocalTime = GetTime(date, 'local') + GetTimeZone() * 60;
+            user.tempSelectedTime = RoundTimeTo(TIME_STEP_MINUTES, nowLocalTime);
         } else {
             // Unselect day (calendar mode)
             if (this.opened) {

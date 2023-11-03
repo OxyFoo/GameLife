@@ -201,7 +201,7 @@
         "timeralert-cancel-title": "Annuler l'activité ?",
         "timeralert-cancel-text": "Veux-tu annuler cette activité ?",
         "timeralert-tooshort-title": "Trop tôt",
-        "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 15 minutes",
+        "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
         "display-task-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",

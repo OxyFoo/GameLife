@@ -42,6 +42,11 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
         }
     }
 
+    // Set max limit
+    if (duration > MAX_TIME_MINUTES) {
+        duration = MAX_TIME_MINUTES;
+    }
+
     /** @type {Activity} */
     const newActivity = {
         skillID:    skillID,

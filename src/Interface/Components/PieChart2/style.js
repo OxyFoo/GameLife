@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 10,
-        paddingHorizontal: "10%",
+        paddingHorizontal: 16,
     },
     pieChartContainer: {
         padding: 20,
@@ -33,12 +33,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    centerLabelText: {
+    labelText: {
         fontSize: 22,
         color: 'white',
         fontWeight: 'bold',
     },
-    centerLabelSubText: {
+    labelSubText: {
         fontSize: 14,
         color: 'white',
     },

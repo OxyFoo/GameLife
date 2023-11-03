@@ -28,6 +28,11 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'left'
     },
+    skillUnallocated: {
+        fontSize: 16,
+        textAlign: 'left',
+        opacity: 0.6
+    },
 
     levelContainer: {
         paddingHorizontal: 12,

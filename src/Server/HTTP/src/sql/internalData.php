@@ -118,6 +118,7 @@ function GetSkills($db) {
         for ($i = 0; $i < count($skills); $i++) {
             $skills[$i]['ID'] = intval($skills[$i]['ID']);
             $skills[$i]['XP'] = intval($skills[$i]['XP']);
+            $skills[$i]['Enabled'] = !!$skills[$i]['Enabled'];
 
             // Get old stats
             $Intelligence = $skills[$i]['Intelligence'];

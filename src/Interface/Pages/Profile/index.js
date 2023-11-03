@@ -9,6 +9,7 @@ import themeManager from 'Managers/ThemeManager';
 import StartHelp from './help';
 import EditorAvatar from './editorAvatar';
 import EditorProfile from './editorProfile';
+import { Round } from 'Utils/Functions';
 import { Page, Text, XPBar, Container } from 'Interface/Components';
 import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from 'Interface/Widgets';
 
@@ -69,7 +70,7 @@ class Profile extends BackProfile {
                 <Animated.View style={[styles.botSpace, headerOpacity]}>
                     <View style={styles.xpRow}>
                         <Text>{langManager.curr['level']['level'] + ' ' + xpInfo.lvl}</Text>
-                        <Text>{xpInfo.xp + '/' + xpInfo.next}</Text>
+                        <Text>{Round(xpInfo.xp) + '/' + xpInfo.next}</Text>
                     </View>
                     <XPBar value={xpInfo.xp} maxValue={xpInfo.next} />
                 </Animated.View>

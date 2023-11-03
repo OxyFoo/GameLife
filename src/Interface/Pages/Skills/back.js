@@ -60,7 +60,7 @@ class BackSkills extends PageBack {
         const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
         const filter = skill => usersActivitiesID.includes(skill.ID);
-        const allSkills = dataManager.skills.skills.filter(filter);
+        const allSkills = dataManager.skills.Get().filter(filter);
         return allSkills.map(this.upgradeSkill);
     }
 

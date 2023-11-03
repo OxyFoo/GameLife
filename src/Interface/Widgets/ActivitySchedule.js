@@ -5,10 +5,11 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { SpringAnimation } from 'Utils/Animations';
+import { TIME_STEP_MINUTES } from 'Utils/Activities';
+import { Text, Button, Separator } from 'Interface/Components';
 import { GetDate, GetDurations, GetTime, GetTimeZone } from 'Utils/Time';
 import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
-import { Text, Button, Separator } from 'Interface/Components';
-import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -17,8 +18,6 @@ import { SpringAnimation } from 'Utils/Animations';
  */
 
 const DURATION = GetDurations();
-const STARTDATE = new Date();
-STARTDATE.setMinutes(Math.floor(STARTDATE.getMinutes() / 15) * 15, 0, 0);
 
 const ActivityScheduleProps = {
     /** @type {ColorTheme} */
@@ -82,7 +81,8 @@ class ActivitySchedule extends React.Component {
     resetSelectionMode = (init = false) => {
         if (this.props.editable || init === true) {
             const today = GetTime();
-            const startTime = today - (today % (15 * 60));
+            // Get start time at last TIME_STEP_MINUTES (e.g. 8h33 -> 8h30)
+            const startTime = today - (today % (TIME_STEP_MINUTES * 60));
             const duration = 60;
             this.props.onChange(startTime, duration);
         }
@@ -183,7 +183,7 @@ class ActivitySchedule extends React.Component {
                     onConfirm={this.onChangeDateTimePicker}
                     onCancel={this.hideDTP}
                     isVisible={this.state.DTPMode !== ''}
-                    minuteInterval={15}
+                    minuteInterval={TIME_STEP_MINUTES}
                     is24Hour={true}
                 />
             </>

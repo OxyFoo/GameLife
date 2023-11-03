@@ -11,6 +11,8 @@ class PieChart2 extends PieChartBack {
 
     render() {
 
+        console.log("Prout")
+
         /**
          * Renders a colored dot used for legends or markers.
          *

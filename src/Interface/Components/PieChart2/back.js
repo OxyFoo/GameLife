@@ -12,30 +12,32 @@ class PieChartBack extends React.Component {
         displayChart: false,
     }
 
+    updatingData = [];
+
     compute() {
         console.log("COMPUTEEEEEEEEE")
-        this.setState({ updatingData: this.initCategoriesArray() }, () => {
-            // This code will run after the state has been updated
-            this.addCategoriesName();
-            this.computeTimeEachCategory();
-            const totalPercent = this.convertTimeToPercent();
-            this.addUndefinedActivity(totalPercent);
-            const biggestActivity = this.findBiggestActivity();
-            this.computeGradientShadow();
 
-            // set the biggest actity as focused 
-            this.state.updatingData.forEach(item => { item.focused = item.id === biggestActivity.id });
+        this.updatingData = this.initCategoriesArray();
 
-            // a little check : 
-            const focused = this.state.updatingData.find(item => item.focused === true);
+        this.addCategoriesName();
+        this.computeTimeEachCategory();
+        const totalPercent = this.convertTimeToPercent();
+        this.addUndefinedActivity(totalPercent);
+        const biggestActivity = this.findBiggestActivity();
+        this.computeGradientShadow();
 
-            if (focused) {
-                this.setState({ readyData: this.state.updatingData, displayChart: true, focusedActivity: biggestActivity })
-            }
-            else {
-                console.log("It seems there is an issue with the creation of the pie chart")
-            }
-        });
+        // find the item in this.updatingData with the same id as biggestActivity.id and create an item.focused to true
+        this.updatingData.find(item => item.id === biggestActivity.id).focused = true;
+
+        // a little check : 
+        const focused = this.updatingData.find(item => item.focused === true);
+
+        if (focused) {
+            this.setState({ readyData: this.updatingData, displayChart: true, focusedActivity: biggestActivity })
+        }
+        else {
+            console.log("It seems there is an issue with the creation of the pie chart")
+        }
 
     }
 
@@ -76,12 +78,11 @@ class PieChartBack extends React.Component {
      * @return {void} BUUUUT update the state
      */
     addCategoriesName = () => {
-        for (let i = 0; i < this.state.updatingData.length; i++) {
-            console.log(this.state.updatingData[i])
-            const prout = this.state.updatingData[i].id;
+        for (let i = 0; i < this.updatingData.length; i++) {
+            const prout = this.updatingData[i].id;
             const caca = dataManager.skills.GetCategoryByID(prout);
             const pipi = caca.Name;
-            this.state.updatingData[i].name = dataManager.GetText(pipi)
+            this.updatingData[i].name = dataManager.GetText(pipi)
         }
     }
 
@@ -92,18 +93,20 @@ class PieChartBack extends React.Component {
      */
     computeTimeEachCategory = () => {
         const allActivitiesOfToday = user.activities.GetByTime(GetTime(undefined, 'local'));
-        allActivitiesOfToday.forEach(acti => {
+        for (let i = 0; i < allActivitiesOfToday.length; i++) {
+            const acti = allActivitiesOfToday[i];
             const categoryID = dataManager.skills.GetByID(acti.skillID).CategoryID;
-            const index = this.state.updatingData.findIndex(item => item.id === categoryID);
+            const index = this.updatingData.findIndex(item => item.id === categoryID);
             if (index !== -1) {
-                this.state.updatingData[index].valueMin += acti.duration;
+                this.updatingData[index].valueMin += acti.duration;
             }
             else {
-                console.log("Error in PieChartHome : categoryID not found in state.updatingData")
-                console.log("Details : acti = ", acti, "categoryID = ", categoryID)
+                console.log("Error in PieChartHome: categoryID not found in state.updatingData");
+                console.log("Details: acti =", acti, "categoryID =", categoryID);
             }
-        });
-    }
+        }
+    };
+    
 
     /**
      * Convert the time in minutes to a percent of the day
@@ -112,15 +115,17 @@ class PieChartBack extends React.Component {
      */
     convertTimeToPercent = () => {
         let totalPercent = 0;
-        this.state.updatingData.forEach(item => {
+        for (let i = 0; i < this.updatingData.length; i++) {
+            let item = this.updatingData[i];
             if (item.id > 0 && item.id < 6) {
                 item.value = Math.round(item.valueMin / 1440 * 100) || 0;
                 totalPercent += item.value;
             }
-        });
-
+        }
+    
         return totalPercent;
     }
+    
 
     /**
      * Either actualize the value of the "undefined" activity or create it
@@ -129,12 +134,12 @@ class PieChartBack extends React.Component {
      */
     addUndefinedActivity = (totalPercent) => {
         if (totalPercent < 100) {
-            const index = this.state.updatingData.findIndex(item => item.id === 6);
+            const index = this.updatingData.findIndex(item => item.id === 6);
             if (index !== -1) {
-                this.state.updatingData[index].value = 100 - totalPercent;
+                this.updatingData[index].value = 100 - totalPercent;
             }
             else {
-                this.state.updatingData.push({
+                this.updatingData.push({
                     valueMin: 0,
                     color: '#B0B0B0',
                     name: "Non défini",
@@ -151,14 +156,15 @@ class PieChartBack extends React.Component {
      * @return {Object} 
      */
     findBiggestActivity = () => {
-        let maxActi = { id: 0, value: 0, };
-        this.state.updatingData.forEach(item => {
+        let maxActi = { id: 0, value: 0 };
+        for (let i = 0; i < this.updatingData.length; i++) {
+            let item = this.updatingData[i];
             if (item.value > maxActi.value) {
                 maxActi.id = item.id;
                 maxActi.value = item.value;
                 maxActi.name = item.name;
             }
-        });
+        }
         return maxActi;
     }
 
@@ -166,10 +172,11 @@ class PieChartBack extends React.Component {
      * Gradient shadow chelou qui marchent pas de ouf sont calculés ici
      */
     computeGradientShadow = () => {
-        this.state.updatingData.forEach(item => {
+        for (let i = 0; i < this.updatingData.length; i++) {
+            let item = this.updatingData[i];
             item.value = !isNaN(item.value) && typeof item.value === 'number' ? item.value : 0;
             item.gradientCenterColor = shadeColor(item.color, -20);
-        });
+        }
     }
 
 

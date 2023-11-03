@@ -205,7 +205,8 @@ class Activities {
         });
 
         /** @type {EnrichedSkill[]} */
-        let enrichedSkills = dataManager.skills.skills
+        let enrichedSkills = dataManager.skills
+            .Get()
             .filter(filter)
             .map(getInfos)
             .sort(sortByXP)

@@ -51,7 +51,8 @@ class BackSkill extends PageBack {
             next: skillXP.next,
             creator: skill.Creator ? authorText : '',
             stats: Object.values(skill.Stats),
-            xml: dataManager.skills.GetXmlByLogoID(skill.LogoID)
+            xml: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+            enabled: skill.Enabled
         };
 
         // History

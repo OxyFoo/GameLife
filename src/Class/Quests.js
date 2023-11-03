@@ -95,10 +95,11 @@ class Quests {
     }
 
     DailyGetBonusCategory(date) {
-        const skillsLength = dataManager.skills.skills.length;
+        const allSkills = dataManager.skills.Get();
+        const skillsLength = allSkills.length;
         const today = IsUndefined(date) ? new Date() : new Date(date);
         const index = (today.getFullYear() * today.getMonth() * today.getDate() * 4) % skillsLength;
-        const skill = dataManager.skills.skills[index];
+        const skill = allSkills[index];
         const category = skill.CategoryID;
         return category;
     }

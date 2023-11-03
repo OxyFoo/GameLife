@@ -523,6 +523,7 @@
 
     "skill": {
         "text-author": "Une idée de {}",
+        "text-unallocated": "Compétence désafectée",
         "stats-title": "Statistiques",
         "history-title": "Historique",
         "text-history": "{} pendant {} minutes",

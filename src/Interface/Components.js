@@ -22,6 +22,7 @@ import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
 import PieChart from './Components/PieChart';
 import LineChart from './Components/LineChart';
+import PieChart2 from './Components/PieChart2';
 
 export {
     Button,
@@ -47,5 +48,6 @@ export {
     XPBar,
     Zap,
     PieChart,
-    LineChart
+    LineChart,
+    PieChart2
 }

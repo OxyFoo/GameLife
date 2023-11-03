@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, Text } from 'react-native';
+
 import { PieChart } from "react-native-gifted-charts";
 
-// POUR GET LES DATA : https://discord.com/channels/902921436191154286/902921436191154289/1169306909602496532
-// "J'ai une fonction qui permet de récupérer les actis d'un jour précis, et une autre pour les filtrer (par cque tu veux)
-// Et récup les temps c'est une simple addition"
-/* Mais du coup tu peux faire des var de test du style
-monActi = {
-    ID: 1,
-    SkillID: 1,
-    duration: 60, // En minutes
-    ...
-}
-*/
+import user from 'Managers/UserManager';
+import { GetTime } from 'Utils/Time';
+import dataManager from 'Managers/DataManager';
+
+import styles from './style';
+
 
 // Je vais peut etre bouger ces functions autre part ? 
 // mais la plupart servent seulement pour ce composant la 
@@ -37,76 +33,143 @@ function shadeColor(color, percent) {
     return `#${RR}${GG}${BB}`;
 }
 
-const renderDot = (color) => {
-    return (
-        <View
-            style={{
-                height: 10,
-                width: 10,
-                borderRadius: 5,
-                backgroundColor: color,
-                marginRight: 10,
-            }}
-        />
-    );
-};
-
-const renderLegendItem = (item, index) => (
+/**
+ * Renders a colored dot used for legends or markers.
+ *
+ * @param {string} color - The color of the dot.
+ * @returns {JSX.Element} A View component styled as a colored dot.
+ */
+const renderDot = (color) => (
     <View
-        key={index}
         style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: 120,
-        }}>
+            height: 10,
+            width: 10,
+            borderRadius: 5,
+            backgroundColor: color,
+            marginRight: 10,
+        }}
+    />
+);
+
+/**
+ * Renders a legend item. (color dot + text)
+ * 
+ * @param {{ color: string, name: string, value: number }} item - The item object with color, name, and value properties.
+ * @param {number} index 
+ * @returns {JSX.Element} A View component styled as a legend item.
+ */
+const renderLegendItem = (item, index) => (
+    <View key={index} style={styles.legendItem}>
         {renderDot(item.color)}
-        <Text style={{ color: 'white' }}>{item.name}: {item.value}%</Text>
+        <Text style={styles.legendItemText}>{item.name}: {item.value}%</Text>
     </View>
 );
 
-const renderLegendComponent = (data) => {
-    const elem_per_row = 2;
+/**
+ * Renders the legend component. (In our case, three rows of two legend items)
+ * 
+ * @param {{ color: string, name: string, value: number }[]} data - The data array of items with color, name, and value properties.
+ * @param {number} elem_per_row - The number of legend items per row.
+ * @returns {JSX.Element} A View component styled as a legend component.
+ */
+const renderLegendComponent = (data, elem_per_row = 2) => (
+    <>
+        {Array.from({ length: Math.ceil(data.length / elem_per_row) }, (_, rowIndex) => (
+            <View key={rowIndex} style={styles.legendRow}>
+                {data.slice(rowIndex * elem_per_row, rowIndex * elem_per_row + elem_per_row).map((item, index) => renderLegendItem(item, rowIndex * elem_per_row + index))}
+            </View>
+        ))}
+    </>
+);
+
+/**
+ * Renders the pie chart with its legend component.
+ * 
+ * @param {{ data: { color: string, name: string, value: number }[] }} dataRendered - The object containing a `data` array of items with color, name, and value properties.
+ * @param {{ id: number, value: number, name: string }} biggestActivity - The biggest activity object with id, value, and name properties.
+ * @returns {JSX.Element} A View component styled as a pie chart with its legend component.
+ */
+const renderPieChartWithLegend = (dataRendered, biggestActivity) => {
     return (
-        <>
-            {Array.from({ length: Math.ceil(data.length / elem_per_row) }).map((_, rowIndex) => (
-                <View key={rowIndex} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, paddingHorizontal: "10%" }}>
-                    {data.slice(rowIndex * elem_per_row, rowIndex * elem_per_row + elem_per_row).map((item, index) => renderLegendItem(item, rowIndex * elem_per_row + index))}
-                </View>
-            ))}
-        </>
+        <View style={styles.pieChartContainer}>
+            <PieChart
+                data={dataRendered}
+                donut
+                showGradient
+                sectionAutoFocus
+                radius={90}
+                innerRadius={60}
+                innerCircleColor={'#232B5D'}
+                centerLabelComponent={() => (
+                    <View style={styles.centerLabel}>
+                        <Text
+                            style={styles.centerLabelText}>
+                            {biggestActivity.value}%
+                        </Text>
+                        <Text style={styles.centerLabelSubText}>
+                            {biggestActivity.name}
+                        </Text>
+                    </View>
+                )}
+            />
+            {renderLegendComponent(dataRendered)}
+        </View>
     );
 };
 
-const minToPercentOfDay = (min) => {
-    return Math.round((min / 1440) * 100);
-};
+const PieChartHome = () => {
 
-const PieChartHome = (data) => {
-
-    const [dataRendered, setDataRendered] = useState(data);
+    const [dataRendered, setDataRendered] = useState([]);
     const [biggestActivity, setBiggestActivity] = useState({ id: 0, value: 0, name: "" });
     const [dataReady, setDataReady] = useState(false);
 
     useEffect(() => {
-        const updatedData = { ...data };
+
+        // List of categories id and colors
+        const updatedData = [
+            { id: 1, valueMin: 0, color: '#7578D4' },
+            { id: 2, valueMin: 0, color: '#FFB37A' },
+            { id: 3, valueMin: 0, color: '#2690ff' },
+            { id: 4, valueMin: 0, color: '#5bebc5' },
+            { id: 5, valueMin: 0, color: '#FFD633' },
+        ];
+
+        // Get all the categories names
+        for (let i = 0; i < updatedData.length; i++) {
+            updatedData[i].name = dataManager.GetText(dataManager.skills.GetCategoryByID(updatedData[i].id).Name)
+        };
+
+        // Getting info on acti of today and computing 
+        const allActivitiesOfToday = user.activities.GetByTime(GetTime(undefined, 'local'));
+        allActivitiesOfToday.forEach(acti => {
+            const categoryID = dataManager.skills.GetByID(acti.skillID).CategoryID;
+            const index = updatedData.findIndex(item => item.id === categoryID);
+            if (index !== -1) {
+                updatedData[index].valueMin += acti.duration;
+            }
+            else {
+                console.log("Error in PieChartHome : categoryID not found in updatedData")
+                console.log("Details : acti = ", acti, "categoryID = ", categoryID)
+            }
+        });
 
         // Convert min to percent of day and compute total percent
         let totalPercent = 0;
-        updatedData.data.forEach(item => {
-            if (item.id > 0 && item.id < 6 && item.valueMin) {
-                item.value = minToPercentOfDay(item.valueMin);
+        updatedData.forEach(item => {
+            if (item.id > 0 && item.id < 6) {
+                item.value = Math.round(item.valueMin / 1440 * 100) || 0;
                 totalPercent += item.value;
             }
         });
 
-        // Handle case where totalPercent is not 100
+        // Either actualize the value of the "undefined" activity or create it
         if (totalPercent < 100) {
-            const index = updatedData.data.findIndex(item => item.id === 6);
+            const index = updatedData.findIndex(item => item.id === 6);
             if (index !== -1) {
-                updatedData.data[index].value = 100 - totalPercent;
+                updatedData[index].value = 100 - totalPercent;
             }
             else {
-                updatedData.data.push({
+                updatedData.push({
                     valueMin: 0,
                     color: '#B0B0B0',
                     name: "Non défini",
@@ -117,14 +180,15 @@ const PieChartHome = (data) => {
         }
 
         // Les gradient shadows chelou qui marchent pas de ouf sont calculés ici 
-        updatedData.data.forEach(item => {
+        // CA EN VRAI on peut le faire à la main non ?
+        updatedData.forEach(item => {
             item.value = !isNaN(item.value) && typeof item.value === 'number' ? item.value : 0;
             item.gradientCenterColor = shadeColor(item.color, -20);
         });
 
         // determine the biggest activity name and value 
         let maxActi = { id: 0, value: 0, name: "" };
-        updatedData.data.forEach(item => {
+        updatedData.forEach(item => {
             if (item.value > maxActi.value) {
                 maxActi.id = item.id;
                 maxActi.value = item.value;
@@ -132,70 +196,47 @@ const PieChartHome = (data) => {
             }
         });
 
+        // set the biggest activity as focused
+        updatedData.forEach(item => item.focused = item.id === maxActi.id)
+
         setBiggestActivity(maxActi);
         setDataRendered(updatedData);
 
-    }, []); // Empty dependency array ensures this effect runs once after initial render
-
-    useEffect(() => {
-
-        const updatedData = { ...dataRendered };
-
-        // set the biggest activity as focused
-        updatedData.data.forEach(item => item.focused = item.id === biggestActivity.id)
-        setDataRendered(updatedData);
-
         // check if we find a focused:true in an item 
-        const focused = updatedData.data.find(item => item.focused === true);
+        const focused = updatedData.find(item => item.focused === true);
         if (focused) {
             setDataReady(true);
         }
         else {
             setDataReady(false);
+            console.log("It seems to be an issue with the focus of the pie chart")
         }
 
-    }, [biggestActivity]);
+        //console.log("Use Effect Called", totalPercent, updatedData)
+
+    }, []); // Empty dependency array ensures this effect runs once after initial render
+
 
 
     return (
-        <View
-            style={{
-                padding: 16,
-                borderRadius: 20,
-                backgroundColor: '#9196fb',
-            }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+        <View style={styles.container}>
+            <Text style={styles.headerText}>
                 Performance of the day
             </Text>
-            <View style={{ padding: 20, alignItems: 'center' }}>
-                {dataReady ?
-                    <PieChart
-                        data={dataRendered.data}
-                        donut
-                        showGradient
-                        sectionAutoFocus
-                        radius={90}
-                        innerRadius={60}
-                        innerCircleColor={'#232B5D'}
-                        centerLabelComponent={() => {
-                            return (
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text
-                                        style={{ fontSize: 22, color: 'white', fontWeight: 'bold' }}>
-                                        {biggestActivity.value}%
-                                    </Text>
-                                    <Text style={{ fontSize: 14, color: 'white' }}>{biggestActivity.name}</Text>
-                                </View>
-                            );
-                        }}
-                    />
-                    :
-                    <></>
-                }
-            </View>
-            {renderLegendComponent(dataRendered.data)}
+            {dataReady && dataRendered ? renderPieChartWithLegend(dataRendered, biggestActivity) : <></>}
         </View>
     );
 }
 
 export default PieChartHome;
+
+// DONNEES TESTS
+/*
+const pieData = [
+    { id: 1, name: "Bien-être", valueMin: 600, color: '#7578D4' },
+    { id: 2, name: "Travail", valueMin: 200, color: '#FFB37A' },
+    { id: 3, name: "Créativité", valueMin: 200, color: '#2690ff' },
+    { id: 4, name: "Quotidien", valueMin: 200, color: '#5bebc5' },
+    { id: 5, name: "Social", valueMin: 200, color: '#FFD633' },
+  ];
+  */

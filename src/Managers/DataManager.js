@@ -26,14 +26,26 @@ class DataManager {
         this.news = new News();
     }
 
+    Clear() {
+        this.achievements.Clear();
+        this.contributors.Clear();
+        this.items.Clear();
+        this.quotes.Clear();
+        this.skills.Clear();
+        this.titles.Clear();
+        this.news.Clear();
+        DataStorage.Save(STORAGE.INTERNAL, null);
+        DataStorage.Save(STORAGE.INTERNAL_HASHES, null);
+    }
+
     /**
      * @returns {boolean} False if at least one data is empty
      */
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;
         const contributors = this.contributors.contributors.length > 0;
-        const items = this.items.items.length > 0;
-        const quotes = this.quotes.quotes.length > 0;
+        const items = this.items.Get().length > 0;
+        const quotes = this.quotes.Get().length > 0;
         const skills = this.skills.Get().length > 0;
         const titles = this.titles.Get().length > 0;
         return achievements && contributors && items && quotes && skills && titles;

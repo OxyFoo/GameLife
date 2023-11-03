@@ -73,7 +73,7 @@ class BackActivity extends PageBack {
 
         // Define all skills
         if (!this.editMode) {
-            const { skills } = dataManager.skills;
+            const skills = dataManager.skills.Get();
             const convert = (skill) => SkillToItem(skill, this.selectSkill);
 
             this.allSkillItems = skills.map(convert);

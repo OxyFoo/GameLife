@@ -61,6 +61,11 @@ class Skills {
         this._dataManager = dataManager;
     }
 
+    Clear() {
+        this.skills = [];
+        this.icons = [];
+        this.categories = [];
+    }
     Load(data) {
         if (typeof(data) === 'object') {
             if (data.hasOwnProperty('skills')) this.skills = data.skills;

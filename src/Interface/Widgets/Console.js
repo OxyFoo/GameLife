@@ -3,6 +3,7 @@ import { View, Animated, FlatList, StyleSheet } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
 import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
@@ -27,10 +28,13 @@ class Console extends React.Component {
         enabled: false,
         opened: false,
         animation: new Animated.Value(-1),
-        animationButton: new Animated.Value(0),
+        animationDeleteButtons: new Animated.Value(0),
 
         debug: []
     }
+
+    /** State of delete buttons */
+    toggle = false;
 
     Enable = () => {
         this.setState({ enabled: true });
@@ -119,10 +123,24 @@ class Console extends React.Component {
     close = () => {
         this.setState({ opened: false });
         SpringAnimation(this.state.animation, 0).start();
-        SpringAnimation(this.state.animationButton, 0).start();
+        TimingAnimation(this.state.animationDeleteButtons, 0).start();
     }
-    showDeleteButton = () => {
-        SpringAnimation(this.state.animationButton, -72).start();
+    toggleDeleteButtons = () => {
+        this.toggle = !this.toggle;
+        if (this.toggle) {
+            SpringAnimation(this.state.animationDeleteButtons, 1).start();
+        } else {
+            TimingAnimation(this.state.animationDeleteButtons, 0).start();
+        }
+    }
+
+    refreshInternalData = async () => {
+        this.toggleDeleteButtons();
+
+        dataManager.Clear();
+        await dataManager.LocalSave(user);
+        await dataManager.OnlineLoad(user);
+        await dataManager.LocalSave(user);
     }
 
     deleteAll = async () => {
@@ -147,7 +165,18 @@ class Console extends React.Component {
 
         const interY = { inputRange: [0, 1], outputRange: [-256, 0] };
         const translateY = { transform: [{ translateY: this.state.animation.interpolate(interY) }] };
-        const buttonDelete = { opacity: this.state.animation, transform: [{ translateY: this.state.animationButton }] };
+        const buttonDelete = {
+            opacity: this.state.animation,
+            transform: [
+                { translateY: Animated.multiply(-72, this.state.animationDeleteButtons) }
+            ]
+        };
+        const buttonRefreshData = {
+            opacity: this.state.animation,
+            transform: [
+                { translateY: Animated.multiply(-116, this.state.animationDeleteButtons) }
+            ]
+        };
 
         return (
             <Animated.View style={[styles.console, translateY]} pointerEvents={'box-none'}>
@@ -172,6 +201,17 @@ class Console extends React.Component {
 
                 <Button
                     style={styles.buttonDelete}
+                    styleAnimation={buttonRefreshData}
+                    fontSize={14}
+                    color='main1'
+                    onPress={this.refreshInternalData}
+                    pointerEvents={this.state.opened ? undefined : 'none'}
+                >
+                    Refresh internal data
+                </Button>
+
+                <Button
+                    style={styles.buttonDelete}
                     styleAnimation={buttonDelete}
                     fontSize={14}
                     color='main1'
@@ -186,7 +226,7 @@ class Console extends React.Component {
                     styleAnimation={{ opacity: this.state.animation }}
                     color='main2'
                     onPress={this.close}
-                    onLongPress={this.showDeleteButton}
+                    onLongPress={this.toggleDeleteButtons}
                     pointerEvents={this.state.opened ? undefined : 'none'}
                 >
                     Close console

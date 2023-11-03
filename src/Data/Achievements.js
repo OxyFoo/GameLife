@@ -63,6 +63,9 @@ class Achievements {
         this.achievements = [];
     }
 
+    Clear() {
+        this.achievements = [];
+    }
     Load(achievements) {
         if (typeof(achievements) === 'object') {
             this.achievements = [];

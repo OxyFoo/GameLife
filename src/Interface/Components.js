@@ -21,7 +21,7 @@ import TextSwitch from './Components/TextSwitch';
 import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
 import PieChart from './Components/PieChart';
-import LineChart from './Components/LineChart';
+import BarChart from './Components/BarChart';
 import PieChart2 from './Components/PieChart2';
 
 export {
@@ -48,6 +48,6 @@ export {
     XPBar,
     Zap,
     PieChart,
-    LineChart,
+    BarChart,
     PieChart2
 }

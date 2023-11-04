@@ -11,8 +11,6 @@ class PieChart2 extends PieChartBack {
 
     render() {
 
-        console.log("Prout")
-
         /**
          * Renders a colored dot used for legends or markers.
          *
@@ -62,6 +60,12 @@ class PieChart2 extends PieChartBack {
             </>
         );
 
+        /**
+         * Renders the center label component. (biggest activity value + name)
+         * 
+         * @param {{ id: number, value: number, name: string }} biggestActivity - The biggest activity object with id, value, and name properties.
+         * @returns {JSX.Element} A View component styled as a center label component.
+         */
         const renderCenterLabelComponent = (biggestActivity) => (
             <View style={styles.centerLabel}>
                 <Text
@@ -98,16 +102,6 @@ class PieChart2 extends PieChartBack {
                 </View>
             );
         };
-
-        const pieData = [
-            { id: 1, name: "Bien-être", valueMin: 600, value: 40, color: '#7578D4' },
-            { id: 2, name: "Travail", valueMin: 200, value: 14, color: '#FFB37A' },
-            { id: 3, name: "Créativité", valueMin: 200, value: 2, color: '#2690ff' },
-            { id: 4, name: "Quotidien", valueMin: 200, value: 5, color: '#5bebc5' },
-            { id: 5, name: "Social", valueMin: 200, value: 20, color: '#FFD633' },
-        ];
-
-        const biggestActivity = { id: 1, value: 600, name: "Bien-être" };
 
         return (
             <View style={styles.container}>

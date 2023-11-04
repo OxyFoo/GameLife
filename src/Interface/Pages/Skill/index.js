@@ -53,27 +53,6 @@ class Skill extends BackSkill {
         const lang = langManager.curr['skill'];
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
-        // FOR THE TESSSTTTT
-        const lineData = {
-            lineData: [
-              { activity: "Running", date: "01/01/2023", value: 0 },
-              { activity: "Running", date: "05/01/2023", value: 5 },
-              { activity: "Running", date: "06/01/2023", value: 10 },
-              // ... (additional data points)
-              { activity: "Running", date: "28/01/2023", value: 135 },
-              { activity: "Running", date: "29/01/2023", value: 140 },
-              { activity: "Running", date: "30/01/2023", value: 145 }
-            ],
-            lineData2: [
-              { activity: "Cycling", date: "01/01/2023", value: 0 },
-              { activity: "Cycling", date: "02/01/2023", value: 7 },
-              { activity: "Cycling", date: "03/01/2023", value: 14 },
-              // ... (additional data points)
-              { activity: "Cycling", date: "28/01/2023", value: 196 },
-              { activity: "Cycling", date: "29/01/2023", value: 203 },
-              { activity: "Cycling", date: "30/01/2023", value: 210 }
-            ]
-          };
 
         if (!this.skill) {
             return null;
@@ -115,6 +94,12 @@ class Skill extends BackSkill {
                     )}
                 </View>
 
+                {/* Line chart */}
+                <LineChart
+                    skillID={this.skillID}
+                    chartWidth={300}
+                />
+
                 {/* Stats */}
                 <Container
                     text={lang['stats-title']}
@@ -124,10 +109,6 @@ class Skill extends BackSkill {
                 >
                     <StatsBars data={user.stats} supData={this.skill.stats} />
                 </Container>
-
-                {/* Line chart */}
-                <LineChart data={lineData} />
-
 
                 {/* History */}
                 {this.history.length > 0 && (

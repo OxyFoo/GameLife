@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 20,
         backgroundColor: '#9196fb',
+        backgroundColor: 'black',
     },
     labelContainer: {
         height: 90,

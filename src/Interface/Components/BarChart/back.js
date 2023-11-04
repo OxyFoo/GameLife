@@ -4,17 +4,6 @@ import user from 'Managers/UserManager';
 import { GetDate } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 import dataManager from 'Managers/DataManager';
-import { Item } from 'Data/Items';
-
-/* TODOOOOOOOOO
-
-- use the good skillID
-- Seeing if we compare those datas with datas from an other activity
-- Set the color depending on the category of the activity  
-- UI BELLE + PADDING LAAAA
-
-*/
-
 
 const InputProps = {
     /** @type {StyleProp} */
@@ -27,7 +16,7 @@ const InputProps = {
     skillID: 0,
 }
 
-class LineChartBack extends React.Component {
+class BarChartBack extends React.Component {
     state = {
         cleanedData: [],
     }
@@ -37,27 +26,6 @@ class LineChartBack extends React.Component {
     maxVal = 0;
     chartSpace = 0;
     barWidth = 0;
-
-    linesData2 = {
-        lineData: [
-            { activity: "Running", date: "01/01/2023", value: 0 },
-            { activity: "Running", date: "05/01/2023", value: 5 },
-            { activity: "Running", date: "06/01/2023", value: 10 },
-            // ... (additional data points)
-            { activity: "Running", date: "28/01/2023", value: 135 },
-            { activity: "Running", date: "29/01/2023", value: 140 },
-            { activity: "Running", date: "30/01/2023", value: 145 }
-        ],
-        lineData2: [
-            { activity: "Cycling", date: "01/01/2023", value: 0 },
-            { activity: "Cycling", date: "02/01/2023", value: 7 },
-            { activity: "Cycling", date: "03/01/2023", value: 14 },
-            // ... (additional data points)
-            { activity: "Cycling", date: "28/01/2023", value: 196 },
-            { activity: "Cycling", date: "29/01/2023", value: 203 },
-            { activity: "Cycling", date: "30/01/2023", value: 210 }
-        ]
-    };
 
 
     getDataFromSkillID(skillID) {
@@ -91,7 +59,6 @@ class LineChartBack extends React.Component {
 
     componentDidMount() {
 
-        console.log("MOUUUUUNT")
         this.linesData = {};
         this.dataReady = false;
         this.maxVal = 0;
@@ -103,46 +70,20 @@ class LineChartBack extends React.Component {
 
         // compute the datas to not have missing dates anymore 
         let cleaningData = (this.fillMissingDates(this.linesData));
-        
-        console.log("CLEANING DATA", cleaningData)
-
-        if (cleaningData.lineData.length > 2) {
-            cleaningData.lineData = [
-                cleaningData.lineData[0],
-                ...cleaningData.lineData.slice(1, -1).map(item => ({ ...item, date: '' })),
-                cleaningData.lineData[cleaningData.lineData.length - 1]
-            ];
-        }
-
-        console.log("CLEANING DATA", cleaningData);
 
         // Getting the length of first array (because all array have the same length thanks to clean data)
         let numberOfDataPoints = cleaningData.lineData.length;
 
-        /* // OLD STUFF FOR THE LINE CHART
-        // compute the max value of the chart
-        this.maxVal = Math.max(
-            ...Object.values(cleaningData).map(dataSet => Math.max(...dataSet.map(dataPoint => dataPoint.value)))
-        );
-
-        // compute the space between each point of the chart
-        //if (numberOfDataPoints > 1) this.chartSpace = this.props.chartWidth / (numberOfDataPoints - 1);
-        */
-
         // compute the bar width 
         this.barWidth = this.props.chartWidth / numberOfDataPoints;
 
-        // set state to render the chart (only if more than 1 data point)
+        // set state to render the chart 
         this.setState({
             cleanedData: cleaningData.lineData,
         });
         this.dataReady = true;
-
     }
 
-    componentDidUpdate() {
-        console.log("DID UPDATE")
-    }
 
     /**
      * return the same array of map with filled dates and 0 values
@@ -205,7 +146,7 @@ class LineChartBack extends React.Component {
 
 }
 
-LineChartBack.prototype.props = InputProps;
-LineChartBack.defaultProps = InputProps;
+BarChartBack.prototype.props = InputProps;
+BarChartBack.defaultProps = InputProps;
 
-export default LineChartBack;
+export default BarChartBack;

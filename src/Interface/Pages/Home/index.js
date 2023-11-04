@@ -5,7 +5,7 @@ import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
 import { Tasks } from 'Interface/Widgets';
-import { Button, Swiper, Text, XPBar, Page, News, PieChart, PieChart2 } from 'Interface/Components';
+import { Button, Swiper, Text, XPBar, Page, News, PieChart2 } from 'Interface/Components';
 
 class Home extends BackHome {
     
@@ -57,7 +57,6 @@ class Home extends BackHome {
                 />
 
                 <PieChart2 style={styles.topSpace}/>
-                <PieChart style={styles.topSpace}/>
 
                 <Button
                     style={styles.topSpace}

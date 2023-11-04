@@ -15,7 +15,7 @@ class PieChartBack extends React.Component {
     updatingData = [];
 
     compute() {
-        console.log("COMPUTEEEEEEEEE")
+        console.log("COMPUTEEEEEEEEE (home pie chart 2)")
 
         this.updatingData = this.initCategoriesArray();
 
@@ -33,7 +33,11 @@ class PieChartBack extends React.Component {
         const focused = this.updatingData.find(item => item.focused === true);
 
         if (focused) {
-            this.setState({ readyData: this.updatingData, displayChart: true, focusedActivity: biggestActivity })
+            this.setState({ 
+                readyData: this.updatingData, 
+                displayChart: true, 
+                focusedActivity: biggestActivity 
+            })
         }
         else {
             console.log("It seems there is an issue with the creation of the pie chart")

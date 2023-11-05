@@ -5,6 +5,10 @@ import { GetDate } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 import dataManager from 'Managers/DataManager';
 
+/**
+ * @typedef {{activity:string, date:string, value:number}} DataPoint
+ */
+
 const InputProps = {
     /** @type {StyleProp} */
     style: {},
@@ -38,17 +42,17 @@ class BarChartBack extends React.Component {
         const skillName = dataManager.GetText(dataManager.skills.GetByID(skillID).Name)
 
         // go through the history and create one {activity: string, date: string, value: number} 
-        for (let i = 0; i < history.length; i++) {
-            const date = DateToFormatString(GetDate(history[i].startTime));
+        for (const element of history) {
+            const date = DateToFormatString(GetDate(element.startTime));
             const index = dataFromBack.findIndex(item => item.date === date);
             if (index !== -1) {
-                dataFromBack[index].value += history[i].duration;
+                dataFromBack[index].value += element.duration;
             }
             else {
                 dataFromBack.push({
                     activity: skillName,
                     date: date,
-                    value: history[i].duration
+                    value: element.duration
                 })
             }
         }
@@ -88,7 +92,7 @@ class BarChartBack extends React.Component {
     /**
      * return the same array of map with filled dates and 0 values
      * 
-     * @param {{activity:string, date:string, value:number}[]} data 
+     * @param {{DataPoint}[]} data 
      * @returns 
      */
     fillMissingDates(data) {

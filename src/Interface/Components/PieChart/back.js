@@ -4,10 +4,16 @@ import user from 'Managers/UserManager';
 import { GetTime } from 'Utils/Time';
 import dataManager from 'Managers/DataManager';
 
+/**
+ * @typedef {import('./index').ItemBase} ItemBase
+ * @typedef {import('./index').Item} Item
+ * @typedef {import('./index').focusedActivity} focusedActivity
+ */
+
 class PieChartBack extends React.Component {
 
     state = {
-        readyData: [],
+        dataToDisplay: [],
         focusedActivity: {},
         displayChart: false,
     }
@@ -18,25 +24,24 @@ class PieChartBack extends React.Component {
         console.log("COMPUTEEEEEEEEE (home pie chart 2)")
 
         this.updatingData = this.initCategoriesArray();
-
         this.addCategoriesName();
         this.computeTimeEachCategory();
         const totalPercent = this.convertTimeToPercent();
         this.addUndefinedActivity(totalPercent);
-        const biggestActivity = this.findBiggestActivity();
+        const focusedActivity = this.findBiggestActivity();
         this.computeGradientShadow();
 
         // find the item in this.updatingData with the same id as biggestActivity.id and create an item.focused to true
-        this.updatingData.find(item => item.id === biggestActivity.id).focused = true;
+        this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
 
         // a little check : 
         const focused = this.updatingData.find(item => item.focused === true);
 
         if (focused) {
             this.setState({ 
-                readyData: this.updatingData, 
+                dataToDisplay: this.updatingData, 
                 displayChart: true, 
-                focusedActivity: biggestActivity 
+                focusedActivity: focusedActivity 
             })
         }
         else {
@@ -62,7 +67,7 @@ class PieChartBack extends React.Component {
     /**
      * Create and return the init object needed because fuckin reference WON'T WORK 
      * 
-     * @returns {Object} 
+     * @returns {ItemBase[]}
      */
     initCategoriesArray = () => {
         const baseData = [
@@ -82,11 +87,11 @@ class PieChartBack extends React.Component {
      * @return {void} BUUUUT update the state
      */
     addCategoriesName = () => {
-        for (let i = 0; i < this.updatingData.length; i++) {
-            const prout = this.updatingData[i].id;
+        for (const element of this.updatingData) {
+            const prout = element.id;
             const caca = dataManager.skills.GetCategoryByID(prout);
             const pipi = caca.Name;
-            this.updatingData[i].name = dataManager.GetText(pipi)
+            element.name = dataManager.GetText(pipi)
         }
     }
 
@@ -97,8 +102,8 @@ class PieChartBack extends React.Component {
      */
     computeTimeEachCategory = () => {
         const allActivitiesOfToday = user.activities.GetByTime(GetTime(undefined, 'local'));
-        for (let i = 0; i < allActivitiesOfToday.length; i++) {
-            const acti = allActivitiesOfToday[i];
+        for (const element of allActivitiesOfToday) {
+            const acti = element;
             const categoryID = dataManager.skills.GetByID(acti.skillID).CategoryID;
             const index = this.updatingData.findIndex(item => item.id === categoryID);
             if (index !== -1) {
@@ -119,8 +124,8 @@ class PieChartBack extends React.Component {
      */
     convertTimeToPercent = () => {
         let totalPercent = 0;
-        for (let i = 0; i < this.updatingData.length; i++) {
-            let item = this.updatingData[i];
+        for (const element of this.updatingData) {
+            let item = element;
             if (item.id > 0 && item.id < 6) {
                 item.value = Math.round(item.valueMin / 1440 * 100) || 0;
                 totalPercent += item.value;
@@ -134,6 +139,7 @@ class PieChartBack extends React.Component {
     /**
      * Either actualize the value of the "undefined" activity or create it
      * 
+     * @param {number} totalPercent
      * @return {void} BUUUUT update the state
      */
     addUndefinedActivity = (totalPercent) => {
@@ -157,12 +163,12 @@ class PieChartBack extends React.Component {
     /**
      * Find the biggest activity and update the state
      * 
-     * @return {Object} 
+     * @return {focusedActivity} 
      */
     findBiggestActivity = () => {
-        let maxActi = { id: 0, value: 0 };
-        for (let i = 0; i < this.updatingData.length; i++) {
-            let item = this.updatingData[i];
+        let maxActi = { id: 0, value: 0, name:"" };
+        for (const element of this.updatingData) {
+            let item = element;
             if (item.value > maxActi.value) {
                 maxActi.id = item.id;
                 maxActi.value = item.value;
@@ -176,8 +182,8 @@ class PieChartBack extends React.Component {
      * Gradient shadow chelou qui marchent pas de ouf sont calculés ici
      */
     computeGradientShadow = () => {
-        for (let i = 0; i < this.updatingData.length; i++) {
-            let item = this.updatingData[i];
+        for (const element of this.updatingData) {
+            let item = element;
             item.value = !isNaN(item.value) && typeof item.value === 'number' ? item.value : 0;
             item.gradientCenterColor = shadeColor(item.color, -20);
         }

@@ -68,7 +68,7 @@ class Digit extends DigitBack {
         };
 
         const fadeColor = themeManager.GetColor(this.props.fadeColor);
-        const gradientColor = [ fadeColor, '#FFFFFF00', fadeColor ];
+        const gradientColor = [ fadeColor, '#FFFFFF00', '#FFFFFF00', fadeColor ];
 
         return (
             <View

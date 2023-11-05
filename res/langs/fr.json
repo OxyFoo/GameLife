@@ -117,6 +117,7 @@
         "alert-adsuccess-title": "Bravo",
         "alert-adsuccess-message": "Tu as gagné {} Ox !",
         "alert-aderror-title": "Impossible de charger les pubs",
+        "alert-aderror-message-wait": "Les pubs sont en cours de chargement",
         "alert-aderror-message-nomore": "Il n'y a plus de pubs disponibles. Réessaye demain !",
         "alert-aderror-message-error": "Une erreur est survenue, réessaye plus tard.",
 

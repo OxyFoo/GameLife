@@ -21,10 +21,18 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
 const MAX_HOUR_PER_DAY = 12;
 
 class Activity {
+    /** @type {number} Skill ID */
     skillID = 0;
+
+    /** @type {number} Start time in seconds, unix timestamp (UTC) */
     startTime = 0;
+
+    /** @type {number} Duration in minutes */
     duration = 0;
+
+    /** @type {number} Timezone offset in hours */
     timezone = 0;
+
     comment = '';
     startNow = false;
 }

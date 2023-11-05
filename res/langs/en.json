@@ -117,6 +117,7 @@
         "alert-adsuccess-title": "Congrats",
         "alert-adsuccess-message": "You have won {} Ox!",
         "alert-aderror-title": "Unable to load ads",
+        "alert-aderror-message-wait": "The ads are loading",
         "alert-aderror-message-nomore": "There are no more ads available. Try again tomorrow!",
         "alert-aderror-message-error": "An error has occurred, please try again later.",
 

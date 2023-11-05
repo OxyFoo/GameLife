@@ -21,9 +21,9 @@ function cardHeader() {
     let time = GetMidnightTime(GetTime(new Date(selectedYear, selectedMonth, selectedDate)));
 
     if (currActivities.length > 0) {
-        const prevActivity = currActivities[0];
-        const prevActivityMidnight = GetMidnightTime(prevActivity.startTime);
-        addButtonAdd = prevActivity.startTime !== prevActivityMidnight;
+        const firstActivity = currActivities[0];
+        const firstActivityMidnight = GetMidnightTime(firstActivity.startTime + firstActivity.timezone * 60 * 60 * 24);
+        addButtonAdd = firstActivity.startTime !== firstActivityMidnight;
     }
 
     return (

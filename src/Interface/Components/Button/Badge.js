@@ -29,12 +29,15 @@ const ButtonBadgeProps = {
     onPress: undefined,
 
     /** @type {boolean} */
+    loading: false,
+
+    /** @type {boolean} */
     disabled: false
 }
 
 class ButtonBadge extends React.PureComponent {
     render() {
-        const { style, icon, badgeJustifyContent, children, onPress, disabled } = this.props;
+        const { style, icon, badgeJustifyContent, children, onPress, loading, disabled } = this.props;
 
         const styleOpacity = {
             opacity: disabled ? 0.5 : 1
@@ -66,7 +69,7 @@ class ButtonBadge extends React.PureComponent {
                         />
                     </View>
                     <View style={[styles.badge, styleBadge, styleOpacity, styleBadgeBackground]}>
-                        {children}
+                        {loading ? <Icon icon='loadingDots' /> : children}
                     </View>
                     <View style={[styles.badgeLink, styleOpacity, styleBadgeBackground]} />
                 </View>

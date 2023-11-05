@@ -65,7 +65,7 @@ class ActivityCard extends React.Component {
             const LogoID = skill?.LogoID ?? 0;
             this.XML = dataManager.skills.icons.find(x => x.ID === LogoID)?.Content ?? '';
 
-            if (skill?.XP ?? 0 === 0) {
+            if ((skill?.XP ?? 0) === 0) {
                 color = 'main2';
             }
 
@@ -115,7 +115,9 @@ class ActivityCard extends React.Component {
         }
 
         // Theme
-        this.themeBackground = { backgroundColor: themeManager.GetColor(color) };
+        this.themeBackground = {
+            backgroundColor: themeManager.GetColor(color)
+        };
         this.themeAnimation = {
             opacity: this.state.anim,
             transform: [{

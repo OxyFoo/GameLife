@@ -137,7 +137,15 @@ class Activities {
         }
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
-            unsaved.push([ 'rem', activity.skillID, activity.startTime, activity.duration ]);
+            unsaved.push([
+                'rem',
+                activity.skillID,
+                activity.startTime,
+                activity.duration,
+                '',
+                activity.timezone,
+                activity.startNow
+            ]);
         }
         return unsaved;
     }
@@ -223,6 +231,7 @@ class Activities {
         return enrichedSkills;
     }
 
+    /** @returns {boolean} True if an activity was removed */
     RemoveDeletedSkillsActivities() {
         let activities = [ ...this.activities, ...this.UNSAVED_activities ];
         let deletions = [];
@@ -231,7 +240,13 @@ class Activities {
             const skill = dataManager.skills.GetByID(activity.skillID);
             if (skill === null) deletions.push(activity);
         }
-        deletions.map(this.Remove);
+
+        let removed = false;
+        deletions.map((activity) => {
+            const state = this.Remove(activity);
+            removed ||= state === 'removed';
+        });
+        return removed;
     }
 
     /**

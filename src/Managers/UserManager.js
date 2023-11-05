@@ -142,7 +142,10 @@ class UserManager {
     }
 
     async RefreshStats() {
-        this.activities.RemoveDeletedSkillsActivities();
+        if (this.server.online) {
+            this.activities.RemoveDeletedSkillsActivities();
+            await this.OnlineSave();
+        }
 
         const { stats, xpInfo } = this.experience.GetExperience();
         this.stats = stats;

@@ -61,7 +61,9 @@
             "days": "Jours",
             "never": "Jamais",
             "weekly": "Semaine",
-            "monthly": "Mois"
+            "monthly": "Mois",
+            "seconds-min": "m",
+            "seconds-hour": "h"
         },
         "month": [
             "Janvier",
@@ -704,6 +706,7 @@
 
     "other": {
         "widget-button-editTime": "Modifier",
+        "widget-duration": "Durée",
         "widget-achievements-all": "Tous les succès",
         "widget-skills-all": "Toutes les comp.",
         "sexe-male": "♂",

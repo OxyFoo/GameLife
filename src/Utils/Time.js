@@ -75,29 +75,6 @@ function GetAge(time) {
 }
 
 /**
- * 
- * @param {number} max_hour
- * @param {number} step_minutes
- * @returns {Array<{key: 0, value: '00:00', duration: 0}>} Array of dict : { key: k, value: HH:MM, duration: minutes } over a period of max_hour each step_minutes
- */
-function GetDurations(max_hour = 4, step_minutes = 15) {
-    let durations = [];
-
-    let date = new Date();
-    date.setHours(0, step_minutes, 0, 0);
-    const count = max_hour * (60 / step_minutes);
-    for (let i = 0; i < count; i++) {
-        const textDuration = TwoDigit(date.getHours()) + ':' + TwoDigit(date.getMinutes());
-        const totalDuration = date.getHours() * 60 + date.getMinutes();
-        const newDuration = { key: durations.length, value: textDuration, duration: totalDuration };
-        durations.push(newDuration);
-        date.setMinutes(date.getMinutes() + step_minutes);
-    }
-
-    return durations;
-}
-
-/**
  * Time until tomorrow midnight
  * @returns {string} HH:MM
  */
@@ -124,6 +101,5 @@ function GetTimeZone() {
 
 export { GetTime, GetDate, TimeToFormatString,
     RoundTimeTo, GetMidnightTime, GetAge,
-    GetDurations, GetTimeToTomorrow, GetDaysUntil,
-    GetTimeZone
+    GetTimeToTomorrow, GetDaysUntil, GetTimeZone
 };

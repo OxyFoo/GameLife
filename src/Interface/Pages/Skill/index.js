@@ -74,9 +74,9 @@ class Skill extends BackSkill {
                     <View style={styles.detailContainer}>
                         <Text style={styles.skillTitle}>{this.skill.name}</Text>
                         <Text style={styles.skillCategory}>{this.skill.category}</Text>
-                        {!this.skill.enabled && (
+                        {/*!this.skill.enabled && (
                             <Text style={styles.skillUnallocated}>{lang['text-unallocated']}</Text>
-                        )}
+                        )*/}
                     </View>
                 </View>
 

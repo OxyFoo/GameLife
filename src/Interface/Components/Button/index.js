@@ -5,11 +5,31 @@ import ButtonBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 import Ripple from '../Ripple';
+import ButtonBadge from './Badge';
 import Text from 'Interface/Components/Text';
 import Icon from 'Interface/Components/Icon';
 import { IsUndefined } from 'Utils/Functions';
 
+/**
+ * @typedef {import('./Badge').ButtonBadgeProps} ButtonBadgeProps
+ */
+
 class Button extends ButtonBack {
+    static Badge = React.forwardRef((/** @type {ButtonBadgeProps} */ props, ref) => {
+        const { style, onPress } = props;
+
+        return (
+            <Button
+                style={[styles.buttonBadgeContainer, style]}
+                color='transparent'
+                rippleColor='ground1'
+                onPress={onPress}
+            >
+                <ButtonBadge {...props} />
+            </Button>
+        );
+    });
+
     render() {
         const {
             children,
@@ -87,6 +107,15 @@ const styles = StyleSheet.create({
     },
     text: {
         textTransform: 'uppercase'
+    },
+
+    buttonBadgeContainer: {
+        width: 'auto',
+        height: 'auto',
+        maxHeight: 48,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        borderRadius: 8
     }
 });
 

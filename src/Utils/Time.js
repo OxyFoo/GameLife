@@ -101,5 +101,6 @@ function GetTimeZone() {
 
 export { GetTime, GetDate, TimeToFormatString,
     RoundTimeTo, GetMidnightTime, GetAge,
-    GetTimeToTomorrow, GetDaysUntil, GetTimeZone
+    GetDurations, GetTimeToTomorrow, GetDaysUntil,
+    GetTimeZone
 };

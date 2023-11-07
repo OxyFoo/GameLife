@@ -112,16 +112,9 @@ class PieChartFront extends PieChartBack {
         return (
             <View style={[this.props.style]}>
                 {
-                    this.state.dataToDisplay && this.state.focusedActivity ?
-                        this.renderPieChartWithLegend(this.state.dataToDisplay, this.state.focusedActivity) : <></>
+                    this.props.data && this.props.focusedActivity ?
+                        this.renderPieChartWithLegend(this.props.data, this.props.focusedActivity) : <></>
                 }
-                <View>
-                    {this.state.dataToDisplay.map((item, index) => (
-                        <Text key={index}>
-                            {`ID: ${item.id}, Name: ${item.name}, Value: ${item.value}, Min Value: ${item.valueMin}, Color: ${item.color}, Center Color: ${item.gradientCenterColor}`}
-                        </Text>
-                    ))}
-                </View>
 
             </View>
         );

@@ -26,17 +26,7 @@ const InputProps = {
 
 class PieChartBack extends React.Component {
 
-    state = {
-        dataToDisplay: [],
-        focusedActivity: {},
-    }
 
-    componentDidMount() {
-        this.setState({ 
-            dataToDisplay: this.props.data, 
-            focusedActivity: this.props.focusedActivity 
-        });
-    }
 }
 
 PieChartBack.prototype.props = InputProps;

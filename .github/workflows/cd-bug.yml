@@ -83,7 +83,7 @@ jobs:
             --ks=./android/app/gamelife.keystore \
             --ks-key-alias=gameLifeAlias \
             --ks-pass=file:./keystore
-          unzip -p my_app.apks universal.apk > GameLife-${{ github.base_ref }}.apk
+          unzip -p my_app.apks universal.apk > GameLife-hotfix-loading.apk
 
       - name: Upload apk artifact
         uses: actions/upload-artifact@v3

@@ -226,6 +226,7 @@ class Achievements {
 
     CheckAchievements = async () => {
         if (!this.user.server.online || this.loading) return;
+        if (!this.user.server.IsConnected()) return;
         this.loading = true;
 
         const solvedIndexes = this.GetSolvedIndexes();

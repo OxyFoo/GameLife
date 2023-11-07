@@ -20,6 +20,8 @@ import Text from './Components/Text';
 import TextSwitch from './Components/TextSwitch';
 import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
+import PieChart from './Components/PieChart';
+import BarChart from './Components/BarChart';
 
 export {
     Button,
@@ -43,5 +45,7 @@ export {
     Text,
     TextSwitch,
     XPBar,
-    Zap
+    Zap,
+    PieChart,
+    BarChart
 }

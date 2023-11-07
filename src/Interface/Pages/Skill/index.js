@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { PageHeader, StatsBars, ActivityPanel } from 'Interface/Widgets';
-import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components';
+import { Page, Container, Text, Icon, XPBar, Button, BarChart } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
@@ -92,6 +92,14 @@ class Skill extends BackSkill {
                         <Text style={styles.creator} color='secondary'>{this.skill.creator}</Text>
                     )}
                 </View>
+
+                {/* Line chart */}
+                {/*
+                <BarChart
+                    skillID={this.skillID}
+                    chartWidth={300}
+                />
+                */}
 
                 {/* Stats */}
                 <Container

@@ -5,7 +5,7 @@ import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
 import { Tasks } from 'Interface/Widgets';
-import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
+import { Button, Swiper, Text, XPBar, Page, News, PieChart } from 'Interface/Components';
 
 class Home extends BackHome {
     render() {
@@ -53,6 +53,9 @@ class Home extends BackHome {
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
+
+                <PieChart style={styles.topSpace} />
+
 
                 <Button
                     style={styles.topSpace}

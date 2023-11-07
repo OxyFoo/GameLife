@@ -300,7 +300,7 @@ class Shop
             $betaTesters = $db->QueryPrepare('Contributors', $command, 's', [ $account->Email ]);
             if ($betaTesters === false || count($betaTesters) === 0) return false;
             $maxTiper = $betaTesters[0]['MaxTiper'] != 0;
-            $beta = $betaTesters[0]['beta'] != 0;
+            $beta = $betaTesters[0]['Beta'] != 0;
 
             // Simple tiper (None of both)
             $rewardOx = 250;

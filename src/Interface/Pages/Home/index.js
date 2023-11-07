@@ -4,8 +4,8 @@ import { View, StyleSheet } from 'react-native';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { Tasks } from 'Interface/Widgets';
-import { Button, Swiper, Text, XPBar, Page, News, PieChart } from 'Interface/Components';
+import { Tasks, TodayPieChart } from 'Interface/Widgets';
+import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
 
 class Home extends BackHome {
     render() {
@@ -54,8 +54,7 @@ class Home extends BackHome {
                     style={styles.topSpace}
                 />
 
-                <PieChart style={styles.topSpace} />
-
+                <TodayPieChart style={styles.topSpace} />
 
                 <Button
                     style={styles.topSpace}

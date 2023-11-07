@@ -10,7 +10,7 @@ class BarChartSkill extends BarChartBack {
 
         return (
             <View
-                style={styles.container}>
+                style={[styles.container, this.props.style]}>
                 {this.dataReady && this.state.cleanedData ?
                     <BarChart
                         data={this.state.cleanedData}

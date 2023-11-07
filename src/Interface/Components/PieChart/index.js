@@ -59,7 +59,7 @@ class PieChartFront extends PieChartBack {
             {Array.from({ length: Math.ceil(dataToDisplay.length / elem_per_row) }, (_, rowIndex) => (
                 <View key={rowIndex} style={styles.legendRow}>
                     {dataToDisplay.slice(rowIndex * elem_per_row, rowIndex * elem_per_row + elem_per_row)
-                    .map((item, index) => this.renderLegendItem(item, rowIndex * elem_per_row + index))}
+                        .map((item, index) => this.renderLegendItem(item, rowIndex * elem_per_row + index))}
                 </View>
             ))}
         </>
@@ -110,12 +110,19 @@ class PieChartFront extends PieChartBack {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.headerText}>
-                    Performance of the day
-                </Text>
-                {this.state.displayChart && this.state.focusedActivity && this.state.dataToDisplay ?
-                    this.renderPieChartWithLegend(this.state.dataToDisplay, this.state.focusedActivity) : <></>}
+            <View style={[this.props.style]}>
+                {
+                    this.state.dataToDisplay && this.state.focusedActivity ?
+                        this.renderPieChartWithLegend(this.state.dataToDisplay, this.state.focusedActivity) : <></>
+                }
+                <View>
+                    {this.state.dataToDisplay.map((item, index) => (
+                        <Text key={index}>
+                            {`ID: ${item.id}, Name: ${item.name}, Value: ${item.value}, Min Value: ${item.valueMin}, Color: ${item.color}, Center Color: ${item.gradientCenterColor}`}
+                        </Text>
+                    ))}
+                </View>
+
             </View>
         );
     }

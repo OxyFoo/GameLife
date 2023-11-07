@@ -16,6 +16,7 @@ import StatsBars from './Widgets/StatsBars';
 import SkillsGroup from './Widgets/SkillsGroup';
 import Tasks from './Widgets/Tasks';
 import UserHeader from './Widgets/UserHeader';
+import TodayPieChart from './Widgets/TodayPieChart';
 
 export {
     ActivityPanel,
@@ -35,5 +36,6 @@ export {
     StatsBars,
     SkillsGroup,
     Tasks,
-    UserHeader
+    UserHeader,
+    TodayPieChart
 };

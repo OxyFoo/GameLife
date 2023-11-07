@@ -5,7 +5,8 @@ import ButtonBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 import Ripple from '../Ripple';
-import { Text, Icon } from 'Interface/Components';
+import Text from 'Interface/Components/Text';
+import Icon from 'Interface/Components/Icon';
 import { IsUndefined } from 'Utils/Functions';
 
 class Button extends ButtonBack {

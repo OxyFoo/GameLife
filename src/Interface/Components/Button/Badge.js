@@ -3,7 +3,8 @@ import { View, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
-import { Icon, Button } from 'Interface/Components';
+import Icon from 'Interface/Components/Icon';
+import Button from 'Interface/Components/Button';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

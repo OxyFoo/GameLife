@@ -6,7 +6,7 @@ import styles from './style';
 import DigitBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text } from 'Interface/Components';
+import Text from 'Interface/Components/Text';
 import { Range } from 'Utils/Functions';
 
 class Digit extends DigitBack {

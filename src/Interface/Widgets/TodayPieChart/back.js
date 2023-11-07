@@ -33,17 +33,7 @@ class TodayPieChartBack extends React.Component {
 
     changeSwitchValue = (value) => {
         this.setState({ switchValue: value });
-
-        //this.compute(value);
-
-        if (value) {
-            console.log("\n\ndisplay 24h à calculer ")
-            this.compute(value);
-        }
-        else {
-            console.log("\n\ndisplay pas 24h à calculer ")
-            this.compute(value);
-        }
+        this.compute(value);
     }
 
     /**

@@ -103,7 +103,9 @@ class PieChartFront extends PieChartBack {
                     innerCircleColor={'#232B5D'}
                     centerLabelComponent={() => this.renderCenterLabelComponent(focusedActivity)}
                 />
-                {this.renderLegendComponent(dataToDisplay)}
+                <View style={styles.legendContainer}>
+                    {this.renderLegendComponent(dataToDisplay)}
+                </View>
             </View>
         );
     };

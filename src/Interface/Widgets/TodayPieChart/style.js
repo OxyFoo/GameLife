@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 16,
         borderRadius: 20,
-        backgroundColor: '#9196fb',
+        backgroundColor: '#232B5D',
     },
     flexBetween: {
         display: 'flex',

@@ -42,7 +42,6 @@ class TodayPieChartBack extends React.Component {
      * @param {boolean} value 
      */
     compute = (value) => {
-        console.log("Compute back widget", value);
 
         // Compute the data depending on the switch value
         this.updatingData = [];
@@ -74,7 +73,7 @@ class TodayPieChartBack extends React.Component {
             console.log("It seems there is an issue with the creation of the pie chart")
         }
 
-        console.log("this.updatingData", this.updatingData);
+        //console.log("this.updatingData", this.updatingData);
     }
 
     /**
@@ -108,7 +107,15 @@ class TodayPieChartBack extends React.Component {
             { id: 4, valueMin: 0, color: '#5bebc5' },
             { id: 5, valueMin: 0, color: '#FFD633' },
         ];
-        return baseData;
+
+        const baseData2 = [
+            { id: 1, valueMin: 0, color: '#006DFF' },
+            { id: 2, valueMin: 0, color: '#93FCF8' },
+            { id: 3, valueMin: 0, color: '#BDB2FA' },
+            { id: 4, valueMin: 0, color: '#FFA5BA' },
+            { id: 5, valueMin: 0, color: '#8C2155' }, //  4A0D67, DE6449, 8C2155
+        ];
+        return baseData2;
     }
 
 

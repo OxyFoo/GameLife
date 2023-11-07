@@ -10,13 +10,14 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     legendRow: {
+        width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10,
-        paddingHorizontal: 16,
+        marginVertical: 5,
     },
     pieChartContainer: {
-        padding: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
         alignItems: 'center',
     },
     centerLabel: {
@@ -31,6 +32,12 @@ const styles = StyleSheet.create({
     labelSubText: {
         fontSize: 14,
         color: 'white',
+    },
+    legendContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop:15,
     },
 });
 

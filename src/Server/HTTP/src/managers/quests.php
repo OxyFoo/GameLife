@@ -8,7 +8,7 @@ class Quests
      * @return array quests => [ Title, startTime, duration, comment ]
      */
     public static function GetQuests($db, $account) {
-        $command = 'SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Subquests` FROM TABLE WHERE `AccountID` = ?';
+        $command = 'SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Tasks` FROM TABLE WHERE `AccountID` = ?';
         $quests = $db->QueryPrepare('Quests', $command, 'i', [ $account->ID ]);
         if ($quests === false) ExitWithStatus('Error: getting quests failed');
 
@@ -20,10 +20,10 @@ class Quests
             if ($quests[$i]['Skill'] !== null) {
                 $quests[$i]['Skill'] = json_decode($quests[$i]['Skill'], true);
             }
-            if ($quests[$i]['Subquests'] !== '[]') {
-                $quests[$i]['Subquests'] = $db->Decrypt($quests[$i]['Subquests']);
+            if ($quests[$i]['Tasks'] !== '[]') {
+                $quests[$i]['Tasks'] = $db->Decrypt($quests[$i]['Tasks']);
             }
-            $quests[$i]['Subquests'] = json_decode($quests[$i]['Subquests'], true);
+            $quests[$i]['Tasks'] = json_decode($quests[$i]['Tasks'], true);
         }
         return $quests;
     }
@@ -46,10 +46,10 @@ class Quests
             $Deadline = $quest['Deadline'];                      // int
             $Schedule = json_encode($quest['Schedule']);         // string
             $Skill = $quest['Skill'];                            // null or json
-            $Subquests = json_encode($quest['Subquests']);         // string
+            $Tasks = json_encode($quest['Tasks']);         // string
 
             if ($Skill !== null) $Skill = json_encode($Skill);
-            if ($Subquests !== '[]') $Subquests = $db->Encrypt($Subquests);
+            if ($Tasks !== '[]') $Tasks = $db->Encrypt($Tasks);
 
             // Check if quest exists
             $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Title` = ?';
@@ -67,7 +67,7 @@ class Quests
                     `Deadline` = ?,
                     `Schedule` = ?,
                     `Skill` = ?,
-                    `Subquests` = ?
+                    `Tasks` = ?
                     WHERE `ID` = ?';
                 $args = [
                     $Checked,
@@ -77,7 +77,7 @@ class Quests
                     $Deadline,
                     $Schedule,
                     $Skill,
-                    $Subquests,
+                    $Tasks,
                     $reqQuest[0]['ID']
                 ];
                 $types = 'issiisssi';
@@ -102,7 +102,7 @@ class Quests
                     `Deadline`,
                     `Schedule`,
                     `Skill`,
-                    `Subquests`
+                    `Tasks`
                 ) VALUES ({?})';
                 $args = [
                     $account->ID,
@@ -112,7 +112,7 @@ class Quests
                     $Deadline,
                     $Schedule,
                     $Skill,
-                    $Subquests
+                    $Tasks
                 ];
                 $types = 'iississs';
 

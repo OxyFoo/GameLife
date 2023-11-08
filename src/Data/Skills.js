@@ -20,7 +20,7 @@ class Skill {
     LogoID = 0;
     Creator = '';
     XP = 0;
-    //Enabled = true;
+    Enabled = true;
 }
 
 class EnrichedSkill extends Skill {
@@ -85,7 +85,7 @@ class Skills {
     /**
      * @returns {Array<Skill>}
      */
-    Get = () => this.skills;//.filter(skill => skill.Enabled);
+    Get = () => this.skills.filter(skill => skill.Enabled);
 
     /**
      * @param {number} ID

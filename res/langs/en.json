@@ -222,7 +222,7 @@
     },
 
     "home": {
-        "btn-add-quest": "Add activities",
+        "btn-add-activity": "Add activities",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
         "btn-settings": "Settings",
@@ -528,7 +528,7 @@
 
     "quest": {
         "title-schedule": "Scheduling",
-        "title-subquests": "Subquests",
+        "title-subquests": "Tasks",
         "title-activity": "Activity",
         "title-commentary": "Commentary",
 
@@ -547,7 +547,7 @@
 
         "input-repeat-title": "Repeat",
         "input-description": "Description",
-        "input-subquest-placeholder": "Subquest",
+        "input-subquest-placeholder": "Task",
         "text-hint-select": "Press and hold to select the column",
 
         "button-commentary": "Add a commentary",
@@ -563,9 +563,9 @@
         "alert-remquest-title": "Delete quest?",
         "alert-remquest-text": "Are you sure you want to delete this quest?",
         "alert-remsubquest-title": "Delete quest?",
-        "alert-remsubquest-text": "Are you sure you want to delete this subquest?",
+        "alert-remsubquest-text": "Are you sure you want to delete this task?",
         "alert-subquestslimit-title": "Limit reached",
-        "alert-subquestslimit-text": "You can't add more than 20 subquests to this quest",
+        "alert-subquestslimit-text": "You can't add more than 20 tasks to this quest",
         "alert-back-title": "Back",
         "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
     },

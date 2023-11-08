@@ -33,12 +33,12 @@
             ]
         },
         "quests": {
-            "name": "Notifications des tâches",
-            "title": "GameLife - Tâches",
+            "name": "Notifications des quêtes",
+            "title": "GameLife - Quêtes",
             "message": {
-                "half-time": "Il te reste la moitié du temps prévu pour terminer la[-es] tâche[s] : {}",
-                "last-time": "La[-es] tâche[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
-                "today-time": "La[-es] tâche[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
+                "half-time": "Il te reste la moitié du temps prévu pour terminer la[-es] quête[s] : {}",
+                "last-time": "La[-es] quête[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
+                "today-time": "La[-es] quête[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
             }
         }
     },
@@ -222,7 +222,7 @@
     },
 
     "home": {
-        "btn-add-quest": "Ajouter des activités",
+        "btn-add-activity": "Ajouter des activités",
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
@@ -298,7 +298,7 @@
         "row-title": "Informations",
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
-        "row-quests": "Nombre de tâches",
+        "row-quests": "Nombre de quêtes",
         "row-time": "Nombre d'heures",
 
         "container-achievements-title": "Derniers succès",
@@ -528,7 +528,7 @@
 
     "quest": {
         "title-schedule": "Planification",
-        "title-subquests": "Sous-tâches",
+        "title-subquests": "Tâches",
         "title-activity": "Activité",
         "title-commentary": "Commentaire",
 
@@ -547,7 +547,7 @@
 
         "input-repeat-title": "Répétition",
         "input-description": "Description",
-        "input-subquest-placeholder": "Sous-tâche",
+        "input-subquest-placeholder": "Tâche",
         "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
         "button-commentary": "Ajouter un commentaire",
@@ -556,30 +556,30 @@
         "button-remove": "Supprimer",
 
         "error-title-empty": "Le titre ne peut pas être vide",
-        "error-title-exists": "Une tâche avec ce titre existe déjà",
+        "error-title-exists": "Une quête avec ce titre existe déjà",
 
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
         "alert-remquest-title": "Suppression ?",
-        "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
+        "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
         "alert-remsubquest-title": "Suppression ?",
-        "alert-remsubquest-text": "Es-tu sûr de vouloir supprimer cette sous-tâche ?",
+        "alert-remsubquest-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
         "alert-subquestslimit-title": "Limite atteinte",
-        "alert-subquestslimit-text": "Tu ne peux pas avoir plus de 20 sous-tâches.",
+        "alert-subquestslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
     "quests": {
         "container-title": "Todo liste",
-        "quests-empty-title": "Tu n'as pas encore de tâche",
+        "quests-empty-title": "Tu n'as pas encore de quête",
         "quests-empty-button": "En ajouter une",
 
         "quest-type-deadline": "Avant le:",
         "quest-type-repeat-before": "À faire avant le:",
 
-        "alert-questslimit-title": "Limite de tâches atteinte",
-        "alert-questslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+        "alert-questslimit-title": "Limite de quêtes atteinte",
+        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "wait": {
@@ -653,10 +653,10 @@
         },
 
         "quest": {
-            "1": "Ici, définis la date limite de ta tâche ou sa fréquence si elle est récurrente.",
-            "2": "Tu as la possibilité de relier ta tâche avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Tu peux également ajouter des sous-tâches à ta tâche principale, pour mieux t'organiser.",
-            "4": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+            "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
+            "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
+            "3": "Tu peux également ajouter des tâches à ta quête principale, pour mieux t'organiser.",
+            "4": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
         },
 
         "other": {

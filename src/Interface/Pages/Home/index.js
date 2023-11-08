@@ -46,7 +46,7 @@ class Home extends BackHome {
                     icon='add'
                     onPress={this.addActivity}
                 >
-                    {lang['btn-add-quest']}
+                    {lang['btn-add-activity']}
                 </Button>
 
                 <Quests

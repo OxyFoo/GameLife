@@ -7,7 +7,7 @@ import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('Class/Tasks').Task} Task
+ * @typedef {import('Class/Quests').Quest} Quest
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
@@ -95,12 +95,12 @@ function AddActivity(activity) {
             }, true);
         }
 
-        /** @param {Task} task @returns {boolean} */
+        /** @param {Quest} quest @returns {boolean} */
         const matchID = ({ Skill: { id, isCategory } }) => {
             if (isCategory) return id === skill.CategoryID;
             else            return id === activity.skillID;
         };
-        /** @param {Task} task @returns {boolean} */
+        /** @param {Quest} quest @returns {boolean} */
         const matchTime = ({ Checked, Schedule, Deadline }) => {
             const d = new Date();
             d.setUTCHours(1, 0, 0, 0);
@@ -143,15 +143,15 @@ function AddActivity(activity) {
             return activity.startTime < now + (minDeltaDays * 24 * 60 * 60);
         };
 
-        const tasks = user.tasks.Get()
-                        .filter(task => task.Checked === 0)
-                        .filter(task => task.Skill !== null)
+        const quests = user.quests.Get()
+                        .filter(quest => quest.Checked === 0)
+                        .filter(quest => quest.Skill !== null)
                         .filter(matchID)
                         .filter(matchTime);
 
-        if (tasks.length > 0) {
-            tasks.forEach(task => user.tasks.Check(task, now));
-            const text = lang['display-task-complete-text'];
+        if (quests.length > 0) {
+            quests.forEach(quest => user.quests.Check(quest, now));
+            const text = lang['display-quest-complete-text'];
             const completeArgs = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
             args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
         }

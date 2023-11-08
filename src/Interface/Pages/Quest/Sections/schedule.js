@@ -12,7 +12,7 @@ import { Text, Button, TextSwitch } from 'Interface/Components';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('Class/Tasks').RepeatModes} RepeatModes
+ * @typedef {import('Class/Quests').RepeatModes} RepeatModes
  * 
  * @callback OnChangeScheduleEvent
  * @param {number} deadline Unix timestamp in seconds
@@ -196,7 +196,7 @@ class SectionSchedule extends React.Component {
     }
 
     render() {
-        const lang = langManager.curr['task'];
+        const lang = langManager.curr['quest'];
         const { repeatMode } = this.state;
 
         const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundCard') };

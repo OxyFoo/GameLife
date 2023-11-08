@@ -32,7 +32,7 @@ class SectionDescription extends React.Component {
             this.props.onChange();
             this.setState({ description: text });
         };
-        const titleCommentary = langManager.curr['task']['title-commentary'];
+        const titleCommentary = langManager.curr['quest']['title-commentary'];
         user.interface.screenInput.Open(titleCommentary, '', callback, true);
     }
     onEditComment = () => {
@@ -40,7 +40,7 @@ class SectionDescription extends React.Component {
             this.props.onChange();
             this.setState({ description: text });
         };
-        const titleCommentary = langManager.curr['task']['title-commentary']
+        const titleCommentary = langManager.curr['quest']['title-commentary']
         user.interface.screenInput.Open(titleCommentary, this.state.description, callback, true);
     }
     onRemComment = () => {
@@ -50,13 +50,13 @@ class SectionDescription extends React.Component {
                 this.setState({ description: '' });
             }
         }
-        const title = langManager.curr['task']['alert-remcomment-title'];
-        const text = langManager.curr['task']['alert-remcomment-text'];
+        const title = langManager.curr['quest']['alert-remcomment-title'];
+        const text = langManager.curr['quest']['alert-remcomment-text'];
         user.interface.popup.Open('yesno', [title, text], callback);
     }
 
     render() {
-        const lang = langManager.curr['task'];
+        const lang = langManager.curr['quest'];
         const { description } = this.state;
         const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
 

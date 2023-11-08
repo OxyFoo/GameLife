@@ -32,13 +32,13 @@
                 "Marquez des points en notant vos victoires quotidiennes. Avez-vous déjà enregistré vos victoires ?"
             ]
         },
-        "tasks": {
-            "name": "Notifications des tâches",
-            "title": "GameLife - Tâches",
+        "quests": {
+            "name": "Notifications des quêtes",
+            "title": "GameLife - Quêtes",
             "message": {
-                "half-time": "Il te reste la moitié du temps prévu pour terminer la[-es] tâche[s] : {}",
-                "last-time": "La[-es] tâche[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
-                "today-time": "La[-es] tâche[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
+                "half-time": "Il te reste la moitié du temps prévu pour terminer la[-es] quête[s] : {}",
+                "last-time": "La[-es] quête[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
+                "today-time": "La[-es] quête[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
             }
         }
     },
@@ -207,7 +207,7 @@
         "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
-        "display-task-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",
+        "display-quest-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",
         "display-activity-button": "Retour vers l'accueil",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil"
@@ -221,47 +221,8 @@
         "utc": "UTC"
     },
 
-    "dailyquest": {
-        "page-title": "Quêtes journalières",
-
-        "info-remain-time": "Temps restant : ",
-        "daily-define-title": "Sélection des quêtes journalières",
-        "daily-define-text": "Entrez 2 catégories dans lesquelles tu veux te perfectionner",
-        "daily-define-cat1": "Compétence 1",
-        "daily-define-cat2": "Compétence 2",
-        "daily-define-button": "Enregistrer",
-
-        "daily-title": "Quêtes disponibles",
-        "daily-edit-button": "Modifier les catégories",
-        "daily-categories-text": " ou ",
-        "quest-main-text": "Une heure et demie d'activité parmis les catégories suivantes :",
-        "quest-bonus-text": "Un quart d'heure dans la catégorie suivante :",
-
-        "daily-task-title": "Tâches jounalières",
-        "task-edit-title": "Titre",
-        "task-edit-subtask": "Sous-tâches",
-        "task-edit-description": "Description",
-        "task-edit-add": "Ajouter",
-        "task-edit-save": "Enregistrer",
-
-        "alert-info-title": "Informations",
-        "alert-info-text": "Les quêtes journalières sont un moyen pour toi d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et demie d’activité : tu as 1h30 d’activité « obligatoire » par jour.\n1h d’activité de ton choix, tu peux choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi tu réalise ton heure d'activité, tu gagnes +1% d'xp pour le lendemain (cumulable 21 fois)\nSi tu échouez, tu auras -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt terminée) Une liste d’habitude que tu veux commencer / continuer.\nTu peux décider de rajouter jusqu’à 5 habitudes en même temps.\nSi tu réalises ton quart d'heure d'activité prise au hasard, tu gagnes +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi tu échoues, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une te fait gagner des points (et plus tard de la monnaie virtuelle). Tu peux gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
-        "alert-notfill-title": "Pas terminé",
-        "alert-notfill-text": "Merci de remplir tous les champs",
-        "alert-same-title": "Pas terminé",
-        "alert-same-text": "Tu ne peux pas choisir deux fois la même compétence",
-        "alert-warn-title": "Attention",
-        "alert-warn-text": "Tu ne peux modifier les compétences pour les quêtes journalières qu'une fois par jour",
-        "alert-success-title": "Succès",
-        "alert-success-text": "Les quêtes journalières ont été modifiées",
-        "alert-tasknotitle-title": "Incorrect",
-        "alert-tasknotitle-text": "Entre un titre à votre tâche",
-        "alert-taskremove-title": "Supprimer ?",
-        "alert-taskremove-text": "Tu as déjà coché cette tâche, appuye sur non pour la décocher, ou sur oui pour la supprimer"
-    },
-
     "home": {
-        "btn-add-task": "Ajouter des activités",
+        "btn-add-activity": "Ajouter des activités",
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
@@ -337,7 +298,7 @@
         "row-title": "Informations",
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
-        "row-tasks": "Nombre de tâches",
+        "row-quests": "Nombre de quêtes",
         "row-time": "Nombre d'heures",
 
         "container-achievements-title": "Derniers succès",
@@ -565,9 +526,9 @@
         }
     },
 
-    "task": {
+    "quest": {
         "title-schedule": "Planification",
-        "title-subtasks": "Sous-tâches",
+        "title-subquests": "Tâches",
         "title-activity": "Activité",
         "title-commentary": "Commentaire",
 
@@ -586,7 +547,7 @@
 
         "input-repeat-title": "Répétition",
         "input-description": "Description",
-        "input-subtask-placeholder": "Sous-tâche",
+        "input-subquest-placeholder": "Tâche",
         "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
         "button-commentary": "Ajouter un commentaire",
@@ -595,30 +556,30 @@
         "button-remove": "Supprimer",
 
         "error-title-empty": "Le titre ne peut pas être vide",
-        "error-title-exists": "Une tâche avec ce titre existe déjà",
+        "error-title-exists": "Une quête avec ce titre existe déjà",
 
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
-        "alert-remtask-title": "Suppression ?",
-        "alert-remtask-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
-        "alert-remsubtask-title": "Suppression ?",
-        "alert-remsubtask-text": "Es-tu sûr de vouloir supprimer cette sous-tâche ?",
-        "alert-subtaskslimit-title": "Limite atteinte",
-        "alert-subtaskslimit-text": "Tu ne peux pas avoir plus de 20 sous-tâches.",
+        "alert-remquest-title": "Suppression ?",
+        "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
+        "alert-remsubquest-title": "Suppression ?",
+        "alert-remsubquest-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
+        "alert-subquestslimit-title": "Limite atteinte",
+        "alert-subquestslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
-    "tasks": {
+    "quests": {
         "container-title": "Todo liste",
-        "tasks-empty-title": "Tu n'as pas encore de tâche",
-        "tasks-empty-button": "En ajouter une",
+        "quests-empty-title": "Tu n'as pas encore de quête",
+        "quests-empty-button": "En ajouter une",
 
-        "task-type-deadline": "Avant le:",
-        "task-type-repeat-before": "À faire avant le:",
+        "quest-type-deadline": "Avant le:",
+        "quest-type-repeat-before": "À faire avant le:",
 
-        "alert-taskslimit-title": "Limite de tâches atteinte",
-        "alert-taskslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+        "alert-questslimit-title": "Limite de quêtes atteinte",
+        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "wait": {
@@ -691,11 +652,11 @@
             "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
         },
 
-        "task": {
-            "1": "Ici, définis la date limite de ta tâche ou sa fréquence si elle est récurrente.",
-            "2": "Tu as la possibilité de relier ta tâche avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Tu peux également ajouter des sous-tâches à ta tâche principale, pour mieux t'organiser.",
-            "4": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        "quest": {
+            "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
+            "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
+            "3": "Tu peux également ajouter des tâches à ta quête principale, pour mieux t'organiser.",
+            "4": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
         },
 
         "other": {

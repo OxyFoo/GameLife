@@ -3,18 +3,18 @@ import { StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 
-import BackTask from './back';
+import BackQuest from './back';
 import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
 import SectionSkill from './Sections/activity';
 import SectionSchedule from './Sections/schedule';
-import SectionSubtasks from './Sections/subtasks';
+import SectionSubquests from './Sections/subquests';
 
 import StartHelp from './help';
 import { PageHeader } from 'Interface/Widgets';
 import { Button, Page } from 'Interface/Components';
 
-class Task extends BackTask {
+class Quest extends BackQuest {
     render() {
         const { button, title, error } = this.state;
 
@@ -38,17 +38,17 @@ class Task extends BackTask {
 
                 <SectionSkill
                     ref={ref => this.refSectionSkill = ref}
-                    onChange={this.onEditTask}
+                    onChange={this.onEditQuest}
                 />
 
-                <SectionSubtasks
-                    ref={ref => this.refSectionSubtasks = ref}
-                    onChange={this.onEditTask}
+                <SectionSubquests
+                    ref={ref => this.refSectionSubquests = ref}
+                    onChange={this.onEditQuest}
                 />
 
                 <SectionDescription
                     ref={ref => this.refSectionDescription = ref}
-                    onChange={this.onEditTask}
+                    onChange={this.onEditQuest}
                 />
 
                 <Button
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Task;
+export default Quest;

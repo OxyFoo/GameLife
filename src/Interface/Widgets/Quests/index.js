@@ -2,10 +2,10 @@ import React from 'react';
 import { FlatList } from 'react-native';
 
 import styles from './style';
-import BackTasks from './back';
-import TaskElement from './Elements/task';
-import SubtaskElement from './Elements/subtask';
-import TaskSelection from './Elements/taskSelection';
+import BackQuests from './back';
+import QuestElement from './Elements/quest';
+import SubquestElement from './Elements/subquest';
+import QuestSelection from './Elements/questSelection';
 
 import langManager from 'Managers/LangManager';
 
@@ -17,14 +17,14 @@ import { Container, Button, Text } from 'Interface/Components';
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
-const TasksProps = {
-    /** @type {StyleProp} Style of tasks container */
+const QuestsProps = {
+    /** @type {StyleProp} Style of quests container */
     style: {}
 }
 
-class Tasks extends BackTasks {
-    static TaskElement = TaskElement;
-    static SubtaskElement = SubtaskElement;
+class Quests extends BackQuests {
+    static QuestElement = QuestElement;
+    static SubquestElement = SubquestElement;
 
     renderItem = ({ item }) => {
         const { draggedItem } = this.state;
@@ -35,48 +35,48 @@ class Tasks extends BackTasks {
         }
 
         return (
-            <TaskElement
+            <QuestElement
                 style={styleOpacity}
-                task={item}
-                onTaskCheck={this.onTaskCheck}
+                quest={item}
+                onQuestCheck={this.onQuestCheck}
                 onDrag={() => this.onDrag(item)}
             />
         );
     }
 
     renderEmpty = () => {
-        const lang = langManager.curr['tasks'];
+        const lang = langManager.curr['quests'];
 
         return (
             <>
-                <Text style={styles.emptyText}>{lang['tasks-empty-title']}</Text>
-                <Button onPress={this.addTask} color='main1'>{lang['tasks-empty-button']}</Button>
+                <Text style={styles.emptyText}>{lang['quests-empty-title']}</Text>
+                <Button onPress={this.addQuest} color='main1'>{lang['quests-empty-button']}</Button>
             </>
         );
     }
 
     render() {
-        const lang = langManager.curr['tasks'];
+        const lang = langManager.curr['quests'];
         const {
-            scrollable, tasks,
+            scrollable, quests,
             draggedItem, mouseY,
             undoEnabled
         } = this.state;
 
         /** @type {Icons} */
         const containerIcon = undoEnabled ? 'undo' : 'add';
-        const containerAction = undoEnabled ? this.undo : this.addTask;
+        const containerAction = undoEnabled ? this.undo : this.addQuest;
 
         return (
             <Container
                 style={this.props.style}
-                styleContainer={styles.tasksContainer}
+                styleContainer={styles.questsContainer}
                 type='static'
                 icon={containerIcon}
                 text={lang['container-title']}
                 onIconPress={containerAction}
             >
-                <TaskSelection
+                <QuestSelection
                     draggedItem={draggedItem}
                     mouseY={mouseY}
                 />
@@ -89,7 +89,7 @@ class Tasks extends BackTasks {
                     onTouchMove={this.onTouchMove}
                     onTouchEnd={this.onTouchEnd}
 
-                    data={tasks}
+                    data={quests}
                     scrollEnabled={scrollable}
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
@@ -100,7 +100,7 @@ class Tasks extends BackTasks {
     }
 }
 
-Tasks.prototype.props = TasksProps;
-Tasks.defaultProps = TasksProps;
+Quests.prototype.props = QuestsProps;
+Quests.defaultProps = QuestsProps;
 
-export default Tasks;
+export default Quests;

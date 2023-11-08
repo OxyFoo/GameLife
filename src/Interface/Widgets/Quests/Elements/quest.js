@@ -14,30 +14,30 @@ import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Class/Tasks').Task} Task
+ * @typedef {import('Class/Quests').Quest} Quest
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
-const TaskProps = {
+const QuestProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {Task|null} */
-    task: null,
+    /** @type {Quest|null} */
+    quest: null,
 
-    /** Icon to drag => onTouchStart event (task only) */
+    /** Icon to drag => onTouchStart event (quest only) */
     onDrag: () => {},
 
     /**
-     * @param {Task} task
+     * @param {Quest} quest
      * @param {(resolve: (cancel: () => void) => void) => void} callbackRemove
      * @returns {Promise<void>} True to enable remove animation
      */
-    onTaskCheck: async (task, callbackRemove) => {}
+    onQuestCheck: async (quest, callbackRemove) => {}
 }
 
-class TaskElement extends React.Component {
+class QuestElement extends React.Component {
     state = {
         translateY : new Animated.Value(0)
     }
@@ -45,14 +45,14 @@ class TaskElement extends React.Component {
     constructor(props) {
         super(props);
 
-        this.mountTask();
+        this.mountQuest();
     }
 
-    mountTask() {
-        const { task } = this.props;
-        if (task === null) return;
+    mountQuest() {
+        const { quest } = this.props;
+        if (quest === null) return;
 
-        const { Deadline, Schedule } = task;
+        const { Deadline, Schedule } = quest;
 
         const d = new Date();
         d.setUTCHours(1, 0, 0, 0);
@@ -93,12 +93,12 @@ class TaskElement extends React.Component {
 
         // Define text (deadline or schedule)
         this.text = '';
-        const lang = langManager.curr['tasks'];
+        const lang = langManager.curr['quests'];
         if (deadlineType === 'deadline') {
-            this.text = lang['task-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
+            this.text = lang['quest-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
         } else if (deadlineType === 'schedule') {
             const nextDate = GetDate(now + (minDeltaDays * 24 * 60 * 60));
-            this.text = lang['task-type-repeat-before'] + ' ' + DateToFormatString(nextDate);
+            this.text = lang['quest-type-repeat-before'] + ' ' + DateToFormatString(nextDate);
         }
 
         // Define color (red if overdue, orange if today, white otherwise)
@@ -110,9 +110,9 @@ class TaskElement extends React.Component {
 
     onCheck = () => {
         const { translateY } = this.state;
-        const { task, onTaskCheck } = this.props;
+        const { quest, onQuestCheck } = this.props;
 
-        onTaskCheck(task, (resolve) => {
+        onQuestCheck(quest, (resolve) => {
             SpringAnimation(translateY, 1).start();
             setTimeout(() => {
                 resolve(() => {
@@ -124,10 +124,10 @@ class TaskElement extends React.Component {
 
     render() {
         const { translateY } = this.state;
-        const { style, task, onDrag } = this.props;
-        if (task === null) return null;
+        const { style, quest, onDrag } = this.props;
+        if (quest === null) return null;
 
-        const { Title, Schedule, Checked } = task;
+        const { Title, Schedule, Checked } = quest;
         const isTodo = Schedule.Type === 'none';
 
         const styleAnimation = {
@@ -136,7 +136,7 @@ class TaskElement extends React.Component {
             ]
         };
         const styleButtonRadius = { borderRadius: isTodo ? 8 : 200 };
-        const openTask = () => user.interface.ChangePage('task', { task });
+        const openQuest = () => user.interface.ChangePage('quest', { quest });
 
         return (
             <View style={styles.parent}>
@@ -154,7 +154,7 @@ class TaskElement extends React.Component {
                 </Button>
                 <TouchableOpacity
                     style={styles.title}
-                    onPress={openTask}
+                    onPress={openQuest}
                     activeOpacity={.6}
                 >
                     <Text style={styles.titleText}>{Title}</Text>
@@ -176,7 +176,7 @@ class TaskElement extends React.Component {
     }
 }
 
-TaskElement.prototype.props = TaskProps;
-TaskElement.defaultProps = TaskProps;
+QuestElement.prototype.props = QuestProps;
+QuestElement.defaultProps = QuestProps;
 
-export default TaskElement;
+export default QuestElement;

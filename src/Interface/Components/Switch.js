@@ -3,7 +3,7 @@ import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
-import { Button } from 'Interface/Components';
+import Button from 'Interface/Components/Button';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**

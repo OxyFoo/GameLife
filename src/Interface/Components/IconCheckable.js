@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import Icon from './Icon';
-import { Button } from 'Interface/Components';
+import Button from 'Interface/Components/Button';
 import { IsUndefined } from 'Utils/Functions';
 
 /**

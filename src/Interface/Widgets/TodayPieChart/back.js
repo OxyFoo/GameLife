@@ -106,11 +106,11 @@ class TodayPieChartBack extends React.Component {
         ];
 
         const baseData2 = [
-            { id: 1, valueMin: 0, color: '#006DFF' },
-            { id: 2, valueMin: 0, color: '#93FCF8' },
-            { id: 3, valueMin: 0, color: '#BDB2FA' },
-            { id: 4, valueMin: 0, color: '#FFA5BA' },
-            { id: 5, valueMin: 0, color: '#8C2155' }, //  4A0D67, DE6449, 8C2155
+            { id: 1, valueMin: 0, colorOld: '#006DFF' },
+            { id: 2, valueMin: 0, colorOld: '#93FCF8' },
+            { id: 3, valueMin: 0, colorOld: '#BDB2FA' },
+            { id: 4, valueMin: 0, colorOld: '#FFA5BA' },
+            { id: 5, valueMin: 0, colorOld: '#8C2155' }, //  4A0D67, DE6449, 8C2155
         ];
         return baseData2;
     }
@@ -127,6 +127,7 @@ class TodayPieChartBack extends React.Component {
             const caca = dataManager.skills.GetCategoryByID(prout);
             const pipi = caca.Name;
             element.name = dataManager.GetText(pipi)
+            element.color = caca.Color;
         }
     }
 

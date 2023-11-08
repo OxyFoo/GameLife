@@ -57,21 +57,18 @@ class TodayPieChartBack extends React.Component {
             this.convertTimeToPercent(totalTime);
         }
         const focusedActivity = this.findBiggestActivity();
+
+        if (focusedActivity.id !== 0) {
+            this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
+        }
         this.computeGradientShadow();
 
         // Focused and display handler
-        this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
-        const focused = this.updatingData.find(item => item.focused === true);
-        if (focused) {
-            this.setState({
-                dataToDisplay: this.updatingData,
-                displayChart: true,
-                focusedActivity: focusedActivity
-            })
-        }
-        else {
-            console.log("It seems there is an issue with the creation of the pie chart")
-        }
+        this.setState({
+            dataToDisplay: this.updatingData,
+            displayChart: true,
+            focusedActivity: focusedActivity
+        }); 
 
         //console.log("this.updatingData", this.updatingData);
     }

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    tasksContainer: {
+    questsContainer: {
         padding: 28,
         paddingTop: 14
     },

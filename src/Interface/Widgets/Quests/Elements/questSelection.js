@@ -2,20 +2,20 @@ import React from 'react';
 import { Animated } from 'react-native';
 
 import styles from './style';
-import TaskElement from './task';
+import QuestElement from './quest';
 
 /** 
- * @typedef {import('Class/Tasks').Task} Task
+ * @typedef {import('Class/Quests').Quest} Quest
  */
 
-const TaskSelectionProps = {
-    /** @type {Task|null} */
+const QuestSelectionProps = {
+    /** @type {Quest|null} */
     draggedItem: null,
 
     mouseY: new Animated.Value(0)
 }
 
-class TaskSelection extends React.Component {
+class QuestSelection extends React.Component {
     shouldComponentUpdate(nextProps) {
         const { draggedItem } = this.props;
         return draggedItem !== nextProps.draggedItem;
@@ -33,16 +33,16 @@ class TaskSelection extends React.Component {
 
         return (
             <Animated.View style={[styles.selection, translate]}>
-                <TaskElement
-                    style={styles.selectionTask}
-                    task={draggedItem}
+                <QuestElement
+                    style={styles.selectionQuest}
+                    quest={draggedItem}
                 />
             </Animated.View>
         );
     }
 }
 
-TaskSelection.prototype.props = TaskSelectionProps;
-TaskSelection.defaultProps = TaskSelectionProps;
+QuestSelection.prototype.props = QuestSelectionProps;
+QuestSelection.defaultProps = QuestSelectionProps;
 
-export default TaskSelection;
+export default QuestSelection;

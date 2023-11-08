@@ -13,18 +13,18 @@ class Users
      */
     public static function ExecQueue($db, $account, $deviceID, $data) {
         $activities = $data['activities'];
-        $tasks = $data['tasks'];
+        $quests = $data['quests'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
-        $tasksSort = $data['tasksSort'];
+        $questsSort = $data['questsSort'];
         $titleID = $data['titleID'];
         $birthTime = $data['birthTime'];
 
         if (isset($activities)) {
             Skills::AddActivities($db, $account, $activities);
         }
-        if (isset($tasks)) {
-            Tasks::AddTasks($db, $account, $tasks);
+        if (isset($quests)) {
+            Quests::AddQuests($db, $account, $quests);
         }
         if (isset($avatar)) {
             self::SetAvatar($db, $account, $avatar);
@@ -32,8 +32,8 @@ class Users
         if (isset($xp)) {
             self::setXP($db, $account->ID, $xp);
         }
-        if (isset($tasksSort)) {
-            self::SetTasksSort($db, $account, $tasksSort);
+        if (isset($questsSort)) {
+            self::SetQuestsSort($db, $account, $questsSort);
         }
         if (isset($titleID)) {
             self::setTitle($db, $account, $titleID);
@@ -283,14 +283,14 @@ class Users
     /**
      * @param DataBase $db
      * @param Account $account
-     * @param string[] $tasksSort
+     * @param string[] $questsSort
      */
-    private static function SetTasksSort($db, $account, $tasksSort) {
-        $command = 'UPDATE TABLE SET `TasksSort` = ? WHERE `ID` = ?';
-        $args = [ json_encode($tasksSort), $account->ID ];
+    private static function SetQuestsSort($db, $account, $questsSort) {
+        $command = 'UPDATE TABLE SET `QuestsSort` = ? WHERE `ID` = ?';
+        $args = [ json_encode($questsSort), $account->ID ];
         $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
         if ($result === false) {
-            ExitWithStatus('Error: Saving tasks sort failed');
+            ExitWithStatus('Error: Saving quests sort failed');
         }
     }
 

@@ -9,7 +9,7 @@ import Multiplayer from 'Class/Multiplayer';
 import Server from 'Class/Server';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
-import Tasks from 'Class/Tasks';
+import Quests from 'Class/Quests';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
@@ -44,7 +44,7 @@ class UserManager {
         this.server = new Server(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this)
-        this.tasks = new Tasks(this);
+        this.quests = new Quests(this);
 
         /**
          * @description Ref loaded here from render of App.js to skip cyclic dependency
@@ -93,7 +93,7 @@ class UserManager {
         this.server.Clear();
         this.settings.Clear();
         this.shop.Clear();
-        this.tasks.Clear();
+        this.quests.Clear();
         await this.settings.Save();
 
         await DataStorage.ClearAll();
@@ -186,7 +186,7 @@ class UserManager {
             'informations': this.informations.Save(),
             'inventory': this.inventory.Save(),
             'shop': this.shop.Save(),
-            'tasks': this.tasks.Save()
+            'quests': this.quests.Save()
         };
 
         const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
@@ -211,7 +211,7 @@ class UserManager {
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('inventory')) this.inventory.Load(data['inventory']);
             if (contains('shop')) this.shop.Load(data['shop']);
-            if (contains('tasks')) this.tasks.Load(data['tasks']);
+            if (contains('quests')) this.quests.Load(data['quests']);
 
             this.interface.console.EditLog(debugIndex, 'same', 'User data: local load success');
         } else {
@@ -234,12 +234,12 @@ class UserManager {
             data['xp'] = this.xp;
         }
 
-        if (this.tasks.IsUnsaved()) {
-            data['tasks'] = this.tasks.GetUnsaved();
+        if (this.quests.IsUnsaved()) {
+            data['quests'] = this.quests.GetUnsaved();
         }
 
-        if (!this.tasks.SAVED_sort) {
-            data['tasksSort'] = this.tasks.tasksSort;
+        if (!this.quests.SAVED_sort) {
+            data['questsSort'] = this.quests.questsSort;
         }
 
         if (this.inventory.IsUnsaved()) {
@@ -261,7 +261,7 @@ class UserManager {
             if (saved) {
                 this.activities.Purge();
                 this.informations.Purge();
-                this.tasks.Purge();
+                this.quests.Purge();
                 this.interface.console.EditLog(debugIndex, 'same', 'User data: online save success');
                 await this.LocalSave();
             } else {
@@ -293,9 +293,8 @@ class UserManager {
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('shop')) this.shop.LoadOnline(data['shop']);
-            if (contains('tasks')) this.tasks.LoadOnline(data['tasks']);
-            if (contains('tasksSort')) this.tasks.tasksSort = data['tasksSort'];
-            if (contains('tasksTotal')) this.tasks.tasksTotal.Set(data['tasksTotal']);
+            if (contains('quests')) this.quests.LoadOnline(data['quests']);
+            if (contains('questsSort')) this.quests.questsSort = data['questsSort'];
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

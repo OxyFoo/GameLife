@@ -21,7 +21,7 @@ const SectionTitleProps = {
 
 class SectionTitle extends React.Component {
     render() {
-        const lang = langManager.curr['task'];
+        const lang = langManager.curr['quest'];
         const { title, error, onChangeTitle } = this.props;
 
         return (

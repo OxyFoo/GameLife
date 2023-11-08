@@ -32,7 +32,7 @@
                 "Marquez des points en notant vos victoires quotidiennes. Avez-vous déjà enregistré vos victoires ?"
             ]
         },
-        "tasks": {
+        "quests": {
             "name": "Notifications des tâches",
             "title": "GameLife - Tâches",
             "message": {
@@ -207,7 +207,7 @@
         "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
-        "display-task-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",
+        "display-quest-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",
         "display-activity-button": "Retour vers l'accueil",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil"
@@ -222,7 +222,7 @@
     },
 
     "home": {
-        "btn-add-task": "Ajouter des activités",
+        "btn-add-quest": "Ajouter des activités",
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
@@ -298,7 +298,7 @@
         "row-title": "Informations",
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
-        "row-tasks": "Nombre de tâches",
+        "row-quests": "Nombre de tâches",
         "row-time": "Nombre d'heures",
 
         "container-achievements-title": "Derniers succès",
@@ -526,9 +526,9 @@
         }
     },
 
-    "task": {
+    "quest": {
         "title-schedule": "Planification",
-        "title-subtasks": "Sous-tâches",
+        "title-subquests": "Sous-tâches",
         "title-activity": "Activité",
         "title-commentary": "Commentaire",
 
@@ -547,7 +547,7 @@
 
         "input-repeat-title": "Répétition",
         "input-description": "Description",
-        "input-subtask-placeholder": "Sous-tâche",
+        "input-subquest-placeholder": "Sous-tâche",
         "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
         "button-commentary": "Ajouter un commentaire",
@@ -560,26 +560,26 @@
 
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
-        "alert-remtask-title": "Suppression ?",
-        "alert-remtask-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
-        "alert-remsubtask-title": "Suppression ?",
-        "alert-remsubtask-text": "Es-tu sûr de vouloir supprimer cette sous-tâche ?",
-        "alert-subtaskslimit-title": "Limite atteinte",
-        "alert-subtaskslimit-text": "Tu ne peux pas avoir plus de 20 sous-tâches.",
+        "alert-remquest-title": "Suppression ?",
+        "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
+        "alert-remsubquest-title": "Suppression ?",
+        "alert-remsubquest-text": "Es-tu sûr de vouloir supprimer cette sous-tâche ?",
+        "alert-subquestslimit-title": "Limite atteinte",
+        "alert-subquestslimit-text": "Tu ne peux pas avoir plus de 20 sous-tâches.",
         "alert-back-title": "Retour",
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
-    "tasks": {
+    "quests": {
         "container-title": "Todo liste",
-        "tasks-empty-title": "Tu n'as pas encore de tâche",
-        "tasks-empty-button": "En ajouter une",
+        "quests-empty-title": "Tu n'as pas encore de tâche",
+        "quests-empty-button": "En ajouter une",
 
-        "task-type-deadline": "Avant le:",
-        "task-type-repeat-before": "À faire avant le:",
+        "quest-type-deadline": "Avant le:",
+        "quest-type-repeat-before": "À faire avant le:",
 
-        "alert-taskslimit-title": "Limite de tâches atteinte",
-        "alert-taskslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+        "alert-questslimit-title": "Limite de tâches atteinte",
+        "alert-questslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "wait": {
@@ -652,7 +652,7 @@
             "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
         },
 
-        "task": {
+        "quest": {
             "1": "Ici, définis la date limite de ta tâche ou sa fréquence si elle est récurrente.",
             "2": "Tu as la possibilité de relier ta tâche avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
             "3": "Tu peux également ajouter des sous-tâches à ta tâche principale, pour mieux t'organiser.",

@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
 
-    // Subtask
+    // Subquest
     parentSubask: {
         marginTop: 14,
         flexDirection: 'row',
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#00000080',
         zIndex: 10
     },
-    selectionTask: {
+    selectionQuest: {
         marginTop: 0
     }
 });

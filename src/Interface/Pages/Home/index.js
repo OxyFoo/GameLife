@@ -65,8 +65,6 @@ class Home extends BackHome {
                     {lang['btn-settings']}
                 </Button>
 
-                {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
-
             </Page>
         );
     }

@@ -6,7 +6,6 @@ import Experience from 'Class/Experience';
 import Informations from 'Class/Informations';
 import Inventory from 'Class/Inventory';
 import Multiplayer from 'Class/Multiplayer';
-import Quests from 'Class/Quests';
 import Server from 'Class/Server';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
@@ -42,7 +41,6 @@ class UserManager {
         this.informations = new Informations(this);
         this.inventory = new Inventory(this);
         this.multiplayer = new Multiplayer(this);
-        this.quests = new Quests(this);
         this.server = new Server(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this)
@@ -92,7 +90,6 @@ class UserManager {
         this.activities.Clear();
         this.informations.Clear();
         this.inventory.Clear();
-        this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
         this.shop.Clear();
@@ -188,7 +185,6 @@ class UserManager {
             'consent': this.consent.Save(),
             'informations': this.informations.Save(),
             'inventory': this.inventory.Save(),
-            'quests': this.quests.Save(),
             'shop': this.shop.Save(),
             'tasks': this.tasks.Save()
         };
@@ -214,7 +210,6 @@ class UserManager {
             if (contains('consent')) this.consent.Load(data['consent']);
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('inventory')) this.inventory.Load(data['inventory']);
-            if (contains('quests')) this.quests.Load(data['quests']);
             if (contains('shop')) this.shop.Load(data['shop']);
             if (contains('tasks')) this.tasks.Load(data['tasks']);
 

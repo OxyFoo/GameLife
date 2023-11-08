@@ -221,45 +221,6 @@
         "utc": "UTC"
     },
 
-    "dailyquest": {
-        "page-title": "Quêtes journalières",
-
-        "info-remain-time": "Temps restant : ",
-        "daily-define-title": "Sélection des quêtes journalières",
-        "daily-define-text": "Entrez 2 catégories dans lesquelles tu veux te perfectionner",
-        "daily-define-cat1": "Compétence 1",
-        "daily-define-cat2": "Compétence 2",
-        "daily-define-button": "Enregistrer",
-
-        "daily-title": "Quêtes disponibles",
-        "daily-edit-button": "Modifier les catégories",
-        "daily-categories-text": " ou ",
-        "quest-main-text": "Une heure et demie d'activité parmis les catégories suivantes :",
-        "quest-bonus-text": "Un quart d'heure dans la catégorie suivante :",
-
-        "daily-task-title": "Tâches jounalières",
-        "task-edit-title": "Titre",
-        "task-edit-subtask": "Sous-tâches",
-        "task-edit-description": "Description",
-        "task-edit-add": "Ajouter",
-        "task-edit-save": "Enregistrer",
-
-        "alert-info-title": "Informations",
-        "alert-info-text": "Les quêtes journalières sont un moyen pour toi d’obtenir un bonus d’expérience supplémentaire.\n\nIl y a 3 catégories dans les quêtes journalières :\n\n\n1- L’heure et demie d’activité : tu as 1h30 d’activité « obligatoire » par jour.\n1h d’activité de ton choix, tu peux choisir de réaliser cette heure en faisant 1 ou 2 activités (de catégories différentes).\nSi tu réalise ton heure d'activité, tu gagnes +1% d'xp pour le lendemain (cumulable 21 fois)\nSi tu échouez, tu auras -5% d'xp pour le lendemain (non cumulable)\n\n\n2- (Bientôt terminée) Une liste d’habitude que tu veux commencer / continuer.\nTu peux décider de rajouter jusqu’à 5 habitudes en même temps.\nSi tu réalises ton quart d'heure d'activité prise au hasard, tu gagnes +0,5% d'xp pour le lendemain (cumulable 10 fois)\nSi tu échoues, rien ne se passe.\n\n\n3- (Bientôt disponible) Un bouton pour regarder une pub. En regarder une te fait gagner des points (et plus tard de la monnaie virtuelle). Tu peux gagner des titres et autres bonus à partir d’un certain nombre de pubs regardées !",
-        "alert-notfill-title": "Pas terminé",
-        "alert-notfill-text": "Merci de remplir tous les champs",
-        "alert-same-title": "Pas terminé",
-        "alert-same-text": "Tu ne peux pas choisir deux fois la même compétence",
-        "alert-warn-title": "Attention",
-        "alert-warn-text": "Tu ne peux modifier les compétences pour les quêtes journalières qu'une fois par jour",
-        "alert-success-title": "Succès",
-        "alert-success-text": "Les quêtes journalières ont été modifiées",
-        "alert-tasknotitle-title": "Incorrect",
-        "alert-tasknotitle-text": "Entre un titre à votre tâche",
-        "alert-taskremove-title": "Supprimer ?",
-        "alert-taskremove-text": "Tu as déjà coché cette tâche, appuye sur non pour la décocher, ou sur oui pour la supprimer"
-    },
-
     "home": {
         "btn-add-task": "Ajouter des activités",
         "btn-other-skills": "Toutes les comp.",

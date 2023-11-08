@@ -226,6 +226,7 @@ class Achievements {
 
     CheckAchievements = async () => {
         if (!this.user.server.online || this.loading) return;
+        if (!this.user.server.IsConnected()) return;
         this.loading = true;
 
         const solvedIndexes = this.GetSolvedIndexes();
@@ -310,6 +311,12 @@ class Achievements {
 
                 case 'Ad': // Number of watched ads
                     value = this.user.informations.adTotalWatched;
+                    break;
+
+                case 'Tt': // Title unlocked
+                    const titles = this.user.inventory.GetTitles();
+                    const title = titles.find(t => t.ID === Condition.Comparator.Value);
+                    value = typeof(title) !== 'undefined' ? 1 : 0;
                     break;
             }
 

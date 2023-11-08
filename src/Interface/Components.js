@@ -1,3 +1,4 @@
+import BarChart from './Components/BarChart';
 import Button from './Components/Button';
 import Character from './Components/Character/Character';
 import Checkbox from './Components/Checkbox';
@@ -12,6 +13,7 @@ import Input from './Components/Input';
 import News from './Components/News';
 import Page from './Components/Page';
 import PageBack from './Components/PageBack';
+import PieChart from './Components/PieChart';
 import ProgressBar from './Components/ProgressBar';
 import Separator from './Components/Separator';
 import Swiper from './Components/Swiper';
@@ -20,9 +22,9 @@ import Text from './Components/Text';
 import TextSwitch from './Components/TextSwitch';
 import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
-import PieChart from './Components/PieChart';
 
 export {
+    BarChart,
     Button,
     Character,
     Checkbox,
@@ -37,6 +39,7 @@ export {
     News,
     Page,
     PageBack,
+    PieChart,
     ProgressBar,
     Separator,
     Swiper,
@@ -44,6 +47,5 @@ export {
     Text,
     TextSwitch,
     XPBar,
-    Zap,
-    PieChart,
+    Zap
 }

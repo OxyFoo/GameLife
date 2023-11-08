@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, Text } from 'react-native';
-import { LineChart, BarChart } from "react-native-gifted-charts"
+import React from 'react';
+import { View } from 'react-native';
+import { BarChart as BarChartLib } from 'react-native-gifted-charts';
 
 import styles from './style';
 import BarChartBack from './back';
 
-class BarChartSkill extends BarChartBack {
+class BarChart extends BarChartBack {
     render() {
-
         return (
             <View
                 style={[styles.container, this.props.style]}>
                 {this.dataReady && this.state.cleanedData ?
-                    <BarChart
+                    <BarChartLib
                         data={this.state.cleanedData}
                         width={this.props.chartWidth}
                         barWidth={this.barWidth}
@@ -33,7 +32,7 @@ class BarChartSkill extends BarChartBack {
                 }
             </View>
         )
-    }
-};
+    };
+}
 
-export default BarChartSkill; 
+export default BarChart; 

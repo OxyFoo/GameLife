@@ -1,16 +1,12 @@
 import * as React from 'react';
 
-import user from 'Managers/UserManager';
-import { GetTime } from 'Utils/Time';
-import dataManager from 'Managers/DataManager';
-
 /**
- * @typedef {import('./index').ItemBase} ItemBase
- * @typedef {import('./index').Item} Item
- * @typedef {import('./index').focusedActivity} focusedActivity
- * 
  * @typedef {import('react-native').ViewStyle} ViewStyle
- *  @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {{ name: string, color:string, value: number }} Item
+ * @typedef {{ id: number, valueMin: number, color: string }} ItemBase
+ * @typedef {{ id: number, value: number, name: string }} FocusedActivity
  */
 
 const InputProps = {
@@ -20,13 +16,11 @@ const InputProps = {
     /** @type {ItemBase[]} */
     data: [],
 
-    /** @type {focusedActivity} */
-    focusedActivity: {},
+    /** @type {FocusedActivity|null} */
+    focusedActivity: null
 }
 
 class PieChartBack extends React.Component {
-
-
 }
 
 PieChartBack.prototype.props = InputProps;

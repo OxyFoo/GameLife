@@ -1,11 +1,14 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
-import { GetDate } from 'Utils/Time';
-import { DateToFormatString } from 'Utils/Date';
 import dataManager from 'Managers/DataManager';
 
+import { GetDate } from 'Utils/Time';
+import { DateToFormatString } from 'Utils/Date';
+
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {{activity:string, date:string, value:number}} DataPoint
  */
 
@@ -17,12 +20,12 @@ const InputProps = {
     chartWidth: 300,
 
     /** @type {number} */
-    skillID: 0,
+    skillID: 0
 }
 
 class BarChartBack extends React.Component {
     state = {
-        cleanedData: [],
+        cleanedData: []
     }
 
     dataReady = false;
@@ -31,9 +34,7 @@ class BarChartBack extends React.Component {
     chartSpace = 0;
     barWidth = 0;
 
-
     getDataFromSkillID(skillID) {
-
         const dataFromBack = [];
 
         // get the datas here 
@@ -62,7 +63,6 @@ class BarChartBack extends React.Component {
 
 
     componentDidMount() {
-
         this.linesData = {};
         this.dataReady = false;
         this.maxVal = 0;

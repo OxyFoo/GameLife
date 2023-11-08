@@ -1,44 +1,50 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    dot: {
+        height: 10,
+        width: 10,
+        borderRadius: 5,
+        marginRight: 10
+    },
     legendItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: 120,
+        width: 120
     },
     legendItemText: {
-        color: 'white',
+        color: 'white'
     },
     legendRow: {
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 5,
+        marginVertical: 5
     },
     pieChartContainer: {
         paddingHorizontal: 16,
         paddingVertical: 8,
-        alignItems: 'center',
+        alignItems: 'center'
     },
     centerLabel: {
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     labelText: {
         fontSize: 22,
         color: 'white',
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     labelSubText: {
         fontSize: 14,
-        color: 'white',
+        color: 'white'
     },
     legendContainer: {
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop:15,
-    },
+        marginTop:15
+    }
 });
 
 export default styles;

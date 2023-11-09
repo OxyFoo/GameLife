@@ -11,6 +11,7 @@ import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
 import LineChart from './Components/LineChart';
+import LineChartSvg from './Components/LineChartSvg';
 import News from './Components/News';
 import Page from './Components/Page';
 import PageBack from './Components/PageBack';
@@ -38,6 +39,7 @@ export {
     IconCheckable,
     Input,
     LineChart,
+    LineChartSvg,
     News,
     Page,
     PageBack,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { PieChart as PieChartLib } from 'react-native-gifted-charts';
 
 import styles from './style';
@@ -43,18 +43,19 @@ class PieChart extends PieChartBack {
      * @returns {JSX.Element} A View component styled as a legend component.
      */
     renderLegendComponent = (dataToDisplay, elem_per_row = 2) => (
-        <>
-            {Array.from({ length: Math.ceil(dataToDisplay.length / elem_per_row) }, (_, rowIndex) => (
-                <View key={rowIndex} style={styles.legendRow}>
-                    {
-                        dataToDisplay
-                        .slice(rowIndex * elem_per_row, rowIndex * elem_per_row + elem_per_row)
-                        .map((item, index) => this.renderLegendItem(item, rowIndex * elem_per_row + index))
-                    }
-                </View>
-            ))}
-        </>
+        <FlatList
+            style={{ width: '100%' }}
+            data={dataToDisplay}
+            renderItem={({ item, index }) => this.renderLegendItem(item, index)}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={elem_per_row}
+            contentContainerStyle={{ paddingHorizontal: 5 }} 
+            columnWrapperStyle={styles.legendRow}
+            scrollEnabled={false}
+        />
     );
+
+
 
     /**
      * Renders the center label component. (biggest activity value + name)
@@ -78,7 +79,6 @@ class PieChart extends PieChartBack {
         if (!data || !focusedActivity) {
             return null;
         }
-
         return (
             <View style={style}>
                 <View style={styles.pieChartContainer}>

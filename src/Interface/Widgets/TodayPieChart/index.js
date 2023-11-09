@@ -16,7 +16,7 @@ class TodayPieChartFront extends TodayPieChartBack {
                 <View style={styles.flexBetween}>
 
                     <Text style={styles.headerText}>
-                        Performance of the day {this.state.switchValue ? "(24h)" : ""}
+                        Performance of the day {this.state.switchValue ? "(24h)" : "(" + this.state.totalTime + "h)"}
                     </Text>
 
                     <Switch

@@ -22,17 +22,20 @@ const InputProps = {
 class TodayPieChartBack extends React.Component {
 
     state = {
-        switchValue: false,
+        switchValue: user.settings.homePieChart,
 
         dataToDisplay: [],
         focusedActivity: {},
         displayChart: false,
+        totalTime:0,
     }
 
     updatingData = [];
 
     changeSwitchValue = (value) => {
         this.setState({ switchValue: value });
+        user.settings.homePieChart = value;
+        user.settings.Save();
         this.compute(value);
     }
 
@@ -54,6 +57,7 @@ class TodayPieChartBack extends React.Component {
         }
         else {
             const totalTime = this.computeTotalTime();
+            this.setState({totalTime: (totalTime/60.0).toFixed(1)});
             this.convertTimeToPercent(totalTime);
         }
         const focusedActivity = this.findBiggestActivity();
@@ -77,6 +81,7 @@ class TodayPieChartBack extends React.Component {
      * Prepare the datas for the pie chart before it's mounted 
      */
     componentDidMount() {
+        this.setState({ switchValue: user.settings.homePieChart });
         this.compute(this.state.switchValue);
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
@@ -98,21 +103,13 @@ class TodayPieChartBack extends React.Component {
      */
     initCategoriesArray = () => {
         const baseData = [
-            { id: 1, valueMin: 0, color: '#7578D4' },
-            { id: 2, valueMin: 0, color: '#FFB37A' },
-            { id: 3, valueMin: 0, color: '#2690ff' },
-            { id: 4, valueMin: 0, color: '#5bebc5' },
-            { id: 5, valueMin: 0, color: '#FFD633' },
+            { id: 1, valueMin: 0}, // color: '#006DFF' 
+            { id: 2, valueMin: 0}, // color: '#93FCF8' 
+            { id: 3, valueMin: 0}, // color: '#BDB2FA'
+            { id: 4, valueMin: 0}, // color: '#FFA5BA'
+            { id: 5, valueMin: 0}, // color: '#8C2155' 
         ];
-
-        const baseData2 = [
-            { id: 1, valueMin: 0, colorOld: '#006DFF' },
-            { id: 2, valueMin: 0, colorOld: '#93FCF8' },
-            { id: 3, valueMin: 0, colorOld: '#BDB2FA' },
-            { id: 4, valueMin: 0, colorOld: '#FFA5BA' },
-            { id: 5, valueMin: 0, colorOld: '#8C2155' }, //  4A0D67, DE6449, 8C2155
-        ];
-        return baseData2;
+        return baseData;
     }
 
 

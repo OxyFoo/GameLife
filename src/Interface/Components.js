@@ -10,6 +10,7 @@ import GLLoading from './Components/GLLoading';
 import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
+import LineChart from './Components/LineChart';
 import News from './Components/News';
 import Page from './Components/Page';
 import PageBack from './Components/PageBack';
@@ -36,6 +37,7 @@ export {
     Icon,
     IconCheckable,
     Input,
+    LineChart,
     News,
     Page,
     PageBack,

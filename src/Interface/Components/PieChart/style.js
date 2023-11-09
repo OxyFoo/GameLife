@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
     },
     legendRow: {
         width: '100%',
-        flexDirection: 'row',
         justifyContent: 'space-between',
         marginVertical: 5
     },

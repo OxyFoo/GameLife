@@ -7,8 +7,8 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { PageHeader, StatsBars, ActivityPanel } from 'Interface/Widgets';
-import { Page, Container, Text, Icon, XPBar, Button, BarChart } from 'Interface/Components';
+import { PageHeader, StatsBars, ActivityPanel, SkillChart } from 'Interface/Widgets';
+import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
@@ -93,13 +93,11 @@ class Skill extends BackSkill {
                     )}
                 </View>
 
-                {/* Line chart */}
-                {/*
-                <BarChart
+                {/* Skill use chart */}
+                <SkillChart
                     skillID={this.skillID}
-                    chartWidth={300}
+                    chartWidth={300} 
                 />
-                */}
 
                 {/* Stats */}
                 <Container

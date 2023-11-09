@@ -20,7 +20,10 @@ const InputProps = {
     chartWidth: 300,
 
     /** @type {number} */
-    skillID: 0
+    skillID: 0,
+
+    /** @type {null}*/
+    data: null
 }
 
 class BarChartBack extends React.Component {

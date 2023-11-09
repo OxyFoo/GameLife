@@ -13,6 +13,7 @@ import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import ScreenTuto from './Widgets/ScreenTuto';
 import StatsBars from './Widgets/StatsBars';
+import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import Tasks from './Widgets/Tasks';
 import UserHeader from './Widgets/UserHeader';
@@ -34,6 +35,7 @@ export {
     ScreenList,
     ScreenTuto,
     StatsBars,
+    SkillChart,
     SkillsGroup,
     Tasks,
     UserHeader,

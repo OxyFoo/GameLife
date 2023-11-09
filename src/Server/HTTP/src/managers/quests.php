@@ -46,7 +46,7 @@ class Quests
             $Deadline = $quest['Deadline'];                      // int
             $Schedule = json_encode($quest['Schedule']);         // string
             $Skill = $quest['Skill'];                            // null or json
-            $Tasks = json_encode($quest['Tasks']);         // string
+            $Tasks = json_encode($quest['Tasks']);               // string
 
             if ($Skill !== null) $Skill = json_encode($Skill);
             if ($Tasks !== '[]') $Tasks = $db->Encrypt($Tasks);

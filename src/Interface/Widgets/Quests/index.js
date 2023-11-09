@@ -4,7 +4,7 @@ import { FlatList } from 'react-native';
 import styles from './style';
 import BackQuests from './back';
 import QuestElement from './Elements/quest';
-import SubquestElement from './Elements/subquest';
+import TaskElement from './Elements/tasks';
 import QuestSelection from './Elements/questSelection';
 
 import langManager from 'Managers/LangManager';
@@ -24,7 +24,7 @@ const QuestsProps = {
 
 class Quests extends BackQuests {
     static QuestElement = QuestElement;
-    static SubquestElement = SubquestElement;
+    static TaskElement = TaskElement;
 
     renderItem = ({ item }) => {
         const { draggedItem } = this.state;

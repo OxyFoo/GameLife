@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
 
-    // Subquest
-    parentSubask: {
+    // Tasks
+    parentTask: {
         marginTop: 14,
         flexDirection: 'row',
         alignItems: 'center'

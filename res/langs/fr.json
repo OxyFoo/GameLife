@@ -528,7 +528,7 @@
 
     "quest": {
         "title-schedule": "Planification",
-        "title-subquests": "Tâches",
+        "title-tasks": "Tâches",
         "title-activity": "Activité",
         "title-commentary": "Commentaire",
 
@@ -547,7 +547,7 @@
 
         "input-repeat-title": "Répétition",
         "input-description": "Description",
-        "input-subquest-placeholder": "Tâche",
+        "input-task-placeholder": "Tâche",
         "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
         "button-commentary": "Ajouter un commentaire",
@@ -562,10 +562,10 @@
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
         "alert-remquest-title": "Suppression ?",
         "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
-        "alert-remsubquest-title": "Suppression ?",
-        "alert-remsubquest-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
-        "alert-subquestslimit-title": "Limite atteinte",
-        "alert-subquestslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
+        "alert-remtask-title": "Suppression ?",
+        "alert-remtask-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
+        "alert-taskslimit-title": "Limite atteinte",
+        "alert-taskslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },

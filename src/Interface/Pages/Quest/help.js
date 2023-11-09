@@ -23,7 +23,7 @@ function StartHelp() {
             }
         },
         {
-            component: this.refSectionSubquests.refHelp1,
+            component: this.refSectionTasks.refHelp1,
             text: lang['3'],
             execBefore: async () => {
                 this.refPage.GotoY(200);

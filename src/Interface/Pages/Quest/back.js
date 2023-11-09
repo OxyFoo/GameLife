@@ -16,7 +16,7 @@ import langManager from 'Managers/LangManager';
  * @typedef {import('./Sections/activity').default} SectionActivity
  * @typedef {import('./Sections/schedule').default} SectionSchedule
  * @typedef {import('./Sections/schedule').OnChangeScheduleEvent} OnChangeScheduleEvent
- * @typedef {import('./Sections/subquests').default} SectionSubquests
+ * @typedef {import('./Sections/tasks').default} SectionTasks
  * @typedef {import('./Sections/description').default} SectionDescription
  */
 
@@ -45,8 +45,8 @@ class BackQuest extends PageBack {
     /** @type {SectionSchedule|null} */
     refSectionSchedule = null;
 
-    /** @type {SectionSubquests|null} */
-    refSectionSubquests = null;
+    /** @type {SectionTasks|null} */
+    refSectionTasks = null;
 
     /** @type {SectionDescription|null} */
     refSectionDescription = null;
@@ -93,7 +93,7 @@ class BackQuest extends PageBack {
 
         const { Deadline, Schedule: { Type, Repeat } } = selectedQuest;
         this.refSectionSchedule.SetValues(Deadline, Type, Repeat);
-        this.refSectionSubquests.SetSubquests(selectedQuest.Subquests);
+        this.refSectionTasks.SetTasks(selectedQuest.Tasks);
         this.refSectionSkill.SetSkill(selectedQuest.Skill);
         this.refSectionDescription.SetDescription(selectedQuest.Description);
     }
@@ -204,7 +204,7 @@ class BackQuest extends PageBack {
         const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         const skill = this.refSectionSkill.GetSkill();
-        const subquests = this.refSectionSubquests.GetSubquests()
+        const tasks = this.refSectionTasks.GetTasks()
         const description = this.refSectionDescription.GetDescription();
 
         if (this.checkTitleErrors(title)) {
@@ -218,7 +218,7 @@ class BackQuest extends PageBack {
             repeatMode,
             selectedDays,
             skill,
-            subquests
+            tasks
         );
 
         if (addition === 'added') {
@@ -234,7 +234,7 @@ class BackQuest extends PageBack {
         const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         const skill = this.refSectionSkill.GetSkill();
-        const subquests = this.refSectionSubquests.GetSubquests();
+        const tasks = this.refSectionTasks.GetTasks();
         const description = this.refSectionDescription.GetDescription();
 
         if (this.selectedQuest === null) {
@@ -254,7 +254,7 @@ class BackQuest extends PageBack {
             repeatMode,
             selectedDays,
             skill,
-            subquests
+            tasks
         );
 
         if (edition === 'edited') {

@@ -118,7 +118,7 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Add / Remove button */}
                 {mode === 'activity' ? (
-                    <Button onPress={this.onRemoveActivity} color='main2'>
+                    <Button onPress={this.onRemoveActivity} color='danger'>
                         {lang['btn-remove']}
                     </Button>
                 ) : (

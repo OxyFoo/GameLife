@@ -14,7 +14,7 @@ import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
  * @property {number} id
  * @property {boolean} isCategory
  * 
- * @typedef {object} Subquest
+ * @typedef {object} Task
  * @property {boolean} Checked
  * @property {string} Title
  */
@@ -44,8 +44,8 @@ class Quest {
     /** @type {Skill|null} */
     Skill = null;
 
-    /** @type {Array<Subquest>} Subquests informations */
-    Subquests = [];
+    /** @type {Array<Task>} Tasks informations */
+    Tasks = [];
 }
 
 class Quests {
@@ -205,10 +205,10 @@ class Quests {
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
      * @param {Skill|null} skill Skill informations
-     * @param {Array<Subquest>} subquests Subquests informations
+     * @param {Array<Task>} tasks Tasks informations
      * @returns {'added'|'alreadyExist'}
      */
-    Add(title, description, deadline, repeatMode, repeatDays, skill, subquests) {
+    Add(title, description, deadline, repeatMode, repeatDays, skill, tasks) {
         const newQuest = new Quest();
         newQuest.Checked = 0;
         newQuest.Title = title;
@@ -220,7 +220,7 @@ class Quests {
             Type: repeatMode,
             Repeat: repeatDays
         };
-        newQuest.Subquests = subquests.filter(st => !!st.Title);
+        newQuest.Tasks = tasks.filter(st => !!st.Title);
 
         // Check if repeat mode is valid
         if (repeatMode !== 'none' && repeatDays.length <= 0) {
@@ -256,10 +256,10 @@ class Quests {
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
      * @param {Skill|null} skill Skill informations
-     * @param {Array<Subquest>} subquests Subquests informations
+     * @param {Array<Task>} tasks Tasks informations
      * @returns {'edited'|'notExist'}
      */
-    Edit(oldQuest, title, description, deadline, repeatMode, repeatDays, skill, subquests) {
+    Edit(oldQuest, title, description, deadline, repeatMode, repeatDays, skill, tasks) {
         const rem = this.Remove(oldQuest);
         if (rem === 'notExist') return 'notExist';
 
@@ -268,7 +268,7 @@ class Quests {
             repeatMode = 'none';
         }
 
-        const add = this.Add(title, description, deadline, repeatMode, repeatDays, skill, subquests);
+        const add = this.Add(title, description, deadline, repeatMode, repeatDays, skill, tasks);
         this.SAVED_sort = false;
         this.allQuests.Set(this.Get());
         return add === 'added' ? 'edited' : 'notExist';

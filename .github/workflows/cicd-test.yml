@@ -4,11 +4,10 @@ on:
   pull_request:
     branches:
       - test
-      - prod
 
 jobs:
   test:
-    name: Application tests
+    name: 🔍 Application tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,7 +34,7 @@ jobs:
         run: npm test
 
   build:
-    name: Build application
+    name: 🏗️ Build application
     runs-on: ubuntu-latest
     container: reactnativecommunity/react-native-android
     needs: [ test ]
@@ -66,15 +65,8 @@ jobs:
 
       - name: Build app
         env:
-          ENVFILE: .env.${{ github.base_ref }}
+          ENVFILE: .env.test
         run: npm run build
-
-      - name: Upload aab artifact
-        uses: actions/upload-artifact@v3
-        if: ${{ github.base_ref == 'prod' }}
-        with:
-          name: app-release.aab
-          path: android/app/build/outputs/bundle/release/app-release.aab
 
       - name: Download buildtool
         run: |
@@ -91,16 +83,16 @@ jobs:
             --ks=./android/app/gamelife.keystore \
             --ks-key-alias=gameLifeAlias \
             --ks-pass=file:./keystore
-          unzip -p my_app.apks universal.apk > GameLife-${{ github.base_ref }}.apk
+          unzip -p my_app.apks universal.apk > GameLife-test.apk
 
       - name: Upload apk artifact
         uses: actions/upload-artifact@v3
         with:
-          name: GameLife-${{ github.base_ref }}.apk
-          path: GameLife-${{ github.base_ref }}.apk
+          name: GameLife-test.apk
+          path: GameLife-test.apk
 
   deploy:
-    name: Deploy Server side
+    name: 🚀 Deploy Server side
     runs-on: ubuntu-latest
     needs: [ build ]
     env:
@@ -116,57 +108,28 @@ jobs:
         run: mkdir -p ftp_backup
 
       - name: Download files from FTP test server
-        if: ${{ github.base_ref == 'test' }}
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --exclude=backups/ / ftp_backup/"
 
       - name: Archive downloaded files
-        if: ${{ github.base_ref == 'test' }}
         run: tar -czf ${{ env.ARCHIVE }} -C ftp_backup .
 
       - name: Upload archive to FTP test server
-        if: ${{ github.base_ref == 'test' }}
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           put -O ./backups/ ${{ env.ARCHIVE }}"
 
       - name: Upload files to FTP test server
-        if: ${{ github.base_ref == 'test' }}
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --reverse ./src/Server/HTTP/ /"
 
-      - name: Download files from FTP prod server
-        if: ${{ github.base_ref == 'prod' }}
-        run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
-          mirror --exclude=backups/ / ftp_backup/"
-
-      - name: Archive downloaded files
-        if: ${{ github.base_ref == 'prod' }}
-        run: tar -czf ${{ env.ARCHIVE }} -C ftp_backup .
-
-      - name: Upload archive to FTP prod server
-        if: ${{ github.base_ref == 'prod' }}
-        run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
-          put -O ./backups/ ${{ env.ARCHIVE }}"
-
-      - name: Upload files to FTP prod server
-        if: ${{ github.base_ref == 'prod' }}
-        run: |
-          lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
-          mirror --reverse ./src/Server/HTTP/ /"
-
   database:
-    name: Database migration
+    name: 🚚 Database migration
     runs-on: ubuntu-latest
     needs: [ deploy ]
     steps:
@@ -176,8 +139,7 @@ jobs:
       - name: Install PHP with mysqli extension
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
-      - name: Run migration - test
-        if: ${{ github.base_ref == 'test' }}
+      - name: Run migration
         run: |
           php ./Tools/TableFusion/index.php \
           '${{ vars.DB_DEV_HOST }}' \
@@ -188,18 +150,4 @@ jobs:
           '${{ vars.DB_TEST_USER }}' \
           '${{ secrets.DB_TEST_PASS }}' \
           '${{ vars.DB_TEST_NAME }}' \
-          --no-confirm
-
-      - name: Run migration - prod
-        if: ${{ github.base_ref == 'prod' }}
-        run: |
-          php ./Tools/TableFusion/index.php \
-          '${{ vars.DB_TEST_HOST }}' \
-          '${{ vars.DB_TEST_USER }}' \
-          '${{ secrets.DB_TEST_PASS }}' \
-          '${{ vars.DB_TEST_NAME }}' \
-          '${{ vars.DB_PROD_HOST }}' \
-          '${{ vars.DB_PROD_USER }}' \
-          '${{ secrets.DB_PROD_PASS }}' \
-          '${{ vars.DB_PROD_NAME }}' \
           --no-confirm

@@ -15,6 +15,7 @@ class SkillChart extends SkillChartBack {
             <View>
                 <LineChartSvg
                     data={data34}
+                    graph_height={200}
                     />
                 {/*
                 <BarChart

@@ -169,9 +169,17 @@ class ActivityPanel extends ActivityPanelBack {
             >
                 {/* Title */}
                 <View style={styles.panelTitleView}>
-                    <Text style={styles.panelTitle} bold>
-                        {activityText}
-                    </Text>
+
+                {/*TODO : CENTRER, RENDRE CLIQUABLE ET OPTIMISER @GEREM*/}
+                    <View style={{ borderWidth: 3, borderStyle: 'solid', borderRadius: 15, padding: 8, width: 200, borderColor: themeManager.GetColor('main1'), alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0.15)" }}>
+                        <Text style={styles.panelTitle} bold>
+                            {activityText}
+                        </Text>
+                        <Text style={{ fontSize: 14 }}>
+                            (you can click me)
+                        </Text>
+                    </View>
+
                     <Icon
                         containerStyle={[styles.panelTitleIcon]}
                         size={42}

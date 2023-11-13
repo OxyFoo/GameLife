@@ -115,7 +115,7 @@ function cardSeparator(props) {
     return (
         <ActivityCard.Separator
             addButton={addButtonAdd}
-            onPress={() => this.onAddActivityFromActivity(leadingItem)}
+            onPress = {() => this.onAddActivityBetweenActivities(prevActivity, nextActivity)}
         />
     );
 }

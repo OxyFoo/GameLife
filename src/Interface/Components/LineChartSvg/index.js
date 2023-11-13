@@ -14,8 +14,7 @@ class LineChartSvg extends LineChartSvgBack {
     render() {
 
         return (
-
-            <View style={[this.props.style, { backgroundColor: "#232B5D", paddingTop: 10, paddingLeft: 15, paddingRight: 20, borderRadius: 20 }]}>
+            <View>
                 <Svg
                     height={this.props.graph_height + 40}
                     width={"100%"}
@@ -54,7 +53,7 @@ class LineChartSvg extends LineChartSvgBack {
                         <Polyline
                             points={this.state.points}
                             fill="none"
-                            stroke="#006DFF"
+                            stroke={this.props.lineColor}
                             strokeWidth="2"
                         />
                         : <></>}

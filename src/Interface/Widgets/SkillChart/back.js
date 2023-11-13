@@ -27,50 +27,45 @@ class SkillChartBack extends React.Component {
 
     state = {
         /** @type {{"date":string, "value":number}[]} */
-        cleanedData: []
+        cleanedData: [],
+
+        lineColor: "#000000",
     }
 
     linesData = null;
     dataReady = false;
     maxVal = 0;
     spacing = 0;
-    startFillColor = "#000000"; 
-    endFillColor = "#000000"; 
-
+    lineColor = "#000000";
 
     componentDidMount() {
+
         this.linesData = null;
         this.dataReady = false;
         this.maxVal = 0;
         this.spacing = 0;
-        this.startFillColor = "#000000"; 
-        this.endFillColor = "#000000"; 
+        this.lineColor = "#000000";
 
-        // get the datas from the skillID and get rid of the activity
+        const lineColor = this.getLineColor(this.props.skillID);
+
         this.linesData = this.getDataFromSkillID(this.props.skillID);
         const dataWithoutActivity = this.linesData.map(({ activity, ...rest }) => rest);
 
-        // compute the datas to not have missing dates anymore 
         let cleaningData = (this.fillMissingDates(dataWithoutActivity));
 
-        // Get the biggest value 
         this.maxVal = Math.max(...cleaningData.map(element => element.value));
 
-        // Getting the length of first array (because all array have the same length thanks to clean data)
         let numberOfDataPoints = cleaningData.length;
-        
-        // compute the bar width 
         this.spacing = this.props.chartWidth / numberOfDataPoints;
 
-        // set state to render the chart 
         this.setState({
             cleanedData: cleaningData,
+            lineColor: lineColor
         });
 
         this.dataReady = true;
-        
-    }
 
+    }
 
     /** 
      * Get all the data from the skillID
@@ -106,11 +101,11 @@ class SkillChartBack extends React.Component {
     }
 
     /**
- * return the same array of map with filled dates and 0 values
- * 
- * @param {{date:string, value:number}[]} data 
- * @returns 
- */
+     * return the same array of map with filled dates and 0 values
+     * 
+     * @param {{date:string, value:number}[]} data 
+     * @returns 
+     */
     fillMissingDates = (data) => {
         const parseDate = dateString => {
             const [day, month, year] = dateString.split('/').map(Number);
@@ -165,6 +160,18 @@ class SkillChartBack extends React.Component {
         return result;
     };
 
+    /**
+     * Returns the color of the category of the skill 
+     * 
+     * @param {number} skillID
+     * @returns {string}
+     */
+    getLineColor = (skillID) => {
+        const skill = dataManager.skills.GetByID(skillID);
+        const category = skill.CategoryID;
+        const categoryColor = dataManager.skills.GetCategoryByID(category).Color;
+        return categoryColor;
+    }
 
 }
 

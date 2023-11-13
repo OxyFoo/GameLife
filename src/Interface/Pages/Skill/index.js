@@ -105,7 +105,7 @@ class Skill extends BackSkill {
                     text={lang['stats-title']}
                     style={styles.statsContainer}
                     type='rollable'
-                    opened={true}
+                    opened={false}
                 >
                     <StatsBars data={user.stats} supData={this.skill.stats} />
                 </Container>

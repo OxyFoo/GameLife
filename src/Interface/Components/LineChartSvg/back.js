@@ -12,6 +12,9 @@ const InputProps = {
     /** @type {{date:string, value:number}[]} */
     data: [],
 
+    /** @type {string} */
+    lineColor: "#000000",
+
     /** @type {number} */
     graph_height: 200,
 }
@@ -48,21 +51,19 @@ class LineChartSvgBack extends React.Component {
     compute() {
 
         const maxValue = Math.max(...this.props.data.map(d => d.value)) * 1.05; // Increase max value for padding
+        const yAxisValues = this.getYAxisValues(maxValue);
 
-        // Construct the points for polyline
         const points = this.props.data.map((item, index) => {
             const x = this.getXCoordinate(index, this.props.data.length); // Get the x-coordinate in pixels
             const y = this.props.graph_height - this.scaleY(item.value, maxValue);  // Calculate the y-coordinate
             return `${x},${y}`; // Return the coordinate pair
         }).join(' ');
 
-        const yAxisValues = this.getYAxisValues(maxValue);
-
         this.setState({maxValue: maxValue, points: points, yAxisValues: yAxisValues});
     }
 
+    // Only re-compute if layoutWidth has changed
     componentDidUpdate(prevProps, prevState) {
-        // Only re-compute if layoutWidth has changed
         if (prevState.layoutWidth !== this.state.layoutWidth) {
             this.compute();
             this.setState({dataReady: true});

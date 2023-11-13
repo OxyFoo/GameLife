@@ -124,13 +124,7 @@ class BackActivity extends PageBack {
         // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
             const { time } = this.props.args;
-            if (this.props.args.hasOwnProperty('duration')) {
-                const { duration } = this.props.args;
-                this.refActivityPanel.onChangeSchedule(time, duration);
-            }
-            else {
-                this.refActivityPanel.onChangeSchedule(time, 60);
-            }
+            this.refActivityPanel.onChangeSchedule(time, 60);
         } else if (user.tempSelectedTime !== null) {
             this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
         }

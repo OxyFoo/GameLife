@@ -296,15 +296,6 @@ class BackCalendar extends PageBack {
         user.interface.ChangePage('activity', { time }, true);
     }
 
-    /** @param {Activity} prevActivity */
-    /** @param {Activity} currActivity */
-    onAddActivityBetweenActivities = (prevActivity, currActivity) => {
-        const time = prevActivity.startTime + prevActivity.duration * 60;
-        let duration = (currActivity.startTime - time) / 60;
-        if (duration > 4*60) duration = 4*60 
-        user.interface.ChangePage('activity', { time, duration }, true);
-    }
-
     /** @param {number} time */
     onAddActivityFromTime = (time) => {
         user.interface.ChangePage('activity', { time }, true);

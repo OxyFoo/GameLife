@@ -2,65 +2,44 @@ import React, { useState, useRef } from 'react';
 import { View, Text as RNText } from 'react-native';
 import { Svg, Polyline, Line, Text } from 'react-native-svg';
 
+import styles from './style';
+import LineChartSvgBack from './back';
 
-const getYAxisValues = (maxValue) => {
-    // Create 5 values for Y axis (0, max, and 3 intermediaries)
-    const step = maxValue / 4;
-    return [0, step, 2 * step, 3 * step, maxValue];
-};
+/**
+ * @typedef {import('./back').Item} Item
+ */
 
-const Graph = ({ data, graph_height }) => {
-    const [layoutWidth, setLayoutWidth] = useState(0);
-    const svgRef = useRef();
+class LineChartSvg extends LineChartSvgBack {
 
-    const left_margin = 40;
+    render() {
 
-    const maxValue = Math.max(...data.map(d => d.value)) * 1.05; // Increase max value for padding
-    const scaleY = (value) => (value / maxValue) * (graph_height - 20);
+        return (
 
-    // Calculate the x-coordinate in pixels based on layoutWidth
-    const getXCoordinate = (index, arrayLength) => {
-        const spacing = (layoutWidth - left_margin*1.1) / (arrayLength - 1);
-        return left_margin + (index * spacing);
-    };
-
-    // Construct the points for polyline
-    const points = data.map((item, index) => {
-        const x = getXCoordinate(index, data.length); // Get the x-coordinate in pixels
-        const y = graph_height - scaleY(item.value);  // Calculate the y-coordinate
-        return `${x},${y}`; // Return the coordinate pair
-    }).join(' ');
-
-    const yAxisValues = getYAxisValues(maxValue);
-
-    return (
-        <View style={{ width: "100%", backgroundColor: "purple", padding: 25 }}>
-
-            <View style={{ backgroundColor: "#232B5D", paddingTop: 10, paddingLeft: 15, paddingRight: 20, borderRadius: 20 }}>
+            <View style={[this.props.style, { backgroundColor: "#232B5D", paddingTop: 10, paddingLeft: 15, paddingRight: 20, borderRadius: 20 }]}>
                 <Svg
-                    height={graph_height + 40}
+                    height={this.props.graph_height + 40}
                     width={"100%"}
-                    ref={svgRef}
+                    ref={this.svgRef}
                     onLayout={() => {
                         // Measure the width of the SVG after layout
-                        svgRef.current.measure((x, y, width, height) => {
-                            setLayoutWidth(width);
+                        this.svgRef.current.measure((x, y, width, height) => {
+                            this.setState({ layoutWidth: width });
                         });
                     }}>
 
                     {/* Y-axis lines and labels */}
-                    {yAxisValues.map((value, index) => (
+                    {this.state.dataReady && this.state.yAxisValues.map((value, index) => (
                         <React.Fragment key={`yaxis_line_${index}`}>
                             <Line
-                                x1={left_margin}
-                                y1={graph_height - scaleY(value)}
-                                x2={layoutWidth}
-                                y2={graph_height - scaleY(value)}
+                                x1={this.left_margin}
+                                y1={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
+                                x2={this.state.layoutWidth}
+                                y2={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
                                 stroke="rgba(100,100,100,0.4)"
                             />
                             <Text
                                 x={0}
-                                y={graph_height - scaleY(value)}
+                                y={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
                                 fontSize="14"
                                 fill='rgba(150,150,150,1)'
                                 alignmentBaseline="middle"
@@ -71,9 +50,9 @@ const Graph = ({ data, graph_height }) => {
                     ))}
 
                     {/* Line chart */}
-                    {layoutWidth ?
+                    {this.state.dataReady && this.state.layoutWidth ?
                         <Polyline
-                            points={points}
+                            points={this.state.points}
                             fill="none"
                             stroke="#006DFF"
                             strokeWidth="2"
@@ -84,28 +63,28 @@ const Graph = ({ data, graph_height }) => {
                     <Text
                         key={`text_first`}
                         x={60}
-                        y={graph_height + 15}
+                        y={this.props.graph_height + 15}
                         fontSize="12"
                         textAnchor="middle"
                         fill="rgba(150,150,150,1)"
                     >
-                        {data[0].date}
+                        {this.props.data[0].date}
                     </Text>
                     <Text
                         key={`text_last`}
-                        x={layoutWidth - 35}
-                        y={graph_height + 15}
+                        x={this.state.layoutWidth - 35}
+                        y={this.props.graph_height + 15}
                         fontSize="12"
                         textAnchor="middle"
                         fill="rgba(150,150,150,1)"
                     >
-                        {data[data.length - 1].date}
+                        {this.props.data[this.props.data.length - 1].date}
                     </Text>
                 </Svg>
             </View>
+        );
+    }
+}
 
-        </View>
-    );
-};
 
-export default Graph;
+export default LineChartSvg;

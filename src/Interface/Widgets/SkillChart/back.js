@@ -26,11 +26,12 @@ const InputProps = {
 class SkillChartBack extends React.Component {
 
     state = {
+        /** @type {{"date":string, "value":number}[]} */
         cleanedData: []
     }
 
-    dataReady = false;
     linesData = null;
+    dataReady = false;
     maxVal = 0;
     spacing = 0;
     startFillColor = "#000000"; 
@@ -65,6 +66,7 @@ class SkillChartBack extends React.Component {
         this.setState({
             cleanedData: cleaningData,
         });
+
         this.dataReady = true;
         
     }

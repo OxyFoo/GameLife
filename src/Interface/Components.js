@@ -1,4 +1,3 @@
-import BarChart from './Components/BarChart';
 import Button from './Components/Button';
 import Character from './Components/Character/Character';
 import Checkbox from './Components/Checkbox';
@@ -10,7 +9,6 @@ import GLLoading from './Components/GLLoading';
 import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
-import LineChart from './Components/LineChart';
 import LineChartSvg from './Components/LineChartSvg';
 import News from './Components/News';
 import Page from './Components/Page';
@@ -26,7 +24,6 @@ import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
 
 export {
-    BarChart,
     Button,
     Character,
     Checkbox,
@@ -38,7 +35,6 @@ export {
     Icon,
     IconCheckable,
     Input,
-    LineChart,
     LineChartSvg,
     News,
     Page,

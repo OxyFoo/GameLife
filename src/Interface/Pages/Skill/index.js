@@ -84,7 +84,7 @@ class Skill extends BackSkill {
                 <View style={styles.levelContainer}>
                     <View style={styles.level}>
                         <Text>{this.skill.level}</Text>
-                        <Text>{parseFloat(this.skill.totalXP).toFixed(2)}</Text>
+                        <Text>{this.skill.totalFloatXp}</Text>
                     </View>
                     <XPBar value={this.skill.xp} maxValue={this.skill.next} />
 
@@ -97,6 +97,7 @@ class Skill extends BackSkill {
                 <SkillChart
                     skillID={this.skillID}
                     chartWidth={300} 
+                    style={styles.statsContainer}
                 />
 
                 {/* Stats */}

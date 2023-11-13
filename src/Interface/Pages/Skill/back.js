@@ -47,6 +47,7 @@ class BackSkill extends PageBack {
             category: dataManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
             totalXP: skillXP.totalXP + ' ' + langManager.curr['level']['xp'],
+            totalFloatXp: Math.round(skillXP.totalXP*100)/100 + ' ' + langManager.curr['level']['xp'],
             xp: skillXP.xp,
             next: skillXP.next,
             creator: skill.Creator ? authorText : '',

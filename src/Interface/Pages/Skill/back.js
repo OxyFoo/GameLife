@@ -43,19 +43,24 @@ class BackSkill extends PageBack {
         const skillXP = user.experience.GetSkillExperience(this.skillID);
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         const authorText = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
+        const totalDuration = this.getTotalDurationFromSkillID(this.skillID);
         this.skill = {
             name: dataManager.GetText(skill.Name),
             category: dataManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
             totalXP: skillXP.totalXP + ' ' + langManager.curr['level']['xp'],
-            totalFloatXp: Round(skillXP.totalXP, 2) + ' ' + langManager.curr['level']['xp'],
+            totalFloatXp: Round(skillXP.totalXP, 0),
             xp: skillXP.xp,
             next: skillXP.next,
             creator: skill.Creator ? authorText : '',
             stats: Object.values(skill.Stats),
             xml: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-            enabled: skill.Enabled
+            enabled: skill.Enabled,
+            totalDuration: totalDuration,
+            numberOfActivities: Round(totalDuration/this.getAllActivityFromSkillID(this.skillID).length,1),
         };
+
+        //console.log(this.skill)
 
         // History
         this.history = [];
@@ -94,6 +99,21 @@ class BackSkill extends PageBack {
 
             return { activity, title, onPress };
         });
+    }
+
+    getAllActivityFromSkillID = (skillID) => {
+        const userActivities = user.activities.Get();
+        const history = userActivities.filter((a) => a.skillID === skillID)
+        return history;
+    }
+
+    getTotalDurationFromSkillID = (skillID) => {
+        const history = this.getAllActivityFromSkillID(skillID);
+        let totalDuration = 0;
+        for (const element of history) {
+            totalDuration += element.duration;
+        }
+        return Round(totalDuration/60,1);
     }
 
     addActivity = () => {

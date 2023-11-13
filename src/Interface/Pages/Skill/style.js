@@ -65,7 +65,14 @@ const styles = StyleSheet.create({
         left: 36,
         right: 36,
         bottom: 36
-    }
+    },
+
+    kpiContainer: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        //backgroundColor: '#FFFFFF',
+      },
 });
 
 export default styles;

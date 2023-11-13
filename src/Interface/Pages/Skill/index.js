@@ -7,8 +7,10 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { Round } from 'Utils/Functions';
+
 import { PageHeader, StatsBars, ActivityPanel, SkillChart } from 'Interface/Widgets';
-import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components';
+import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
@@ -62,7 +64,7 @@ class Skill extends BackSkill {
                 ref={ref => this.refPage = ref}
                 bottomOffset={104}
                 overlay={this.renderActivity()}
-                footer={this.renderFooter()}
+                //footer={this.renderFooter()}
             >
                 <PageHeader onBackPress={user.interface.BackHandle} />
 
@@ -84,7 +86,7 @@ class Skill extends BackSkill {
                 <View style={styles.levelContainer}>
                     <View style={styles.level}>
                         <Text>{this.skill.level}</Text>
-                        <Text>{this.skill.totalFloatXp}</Text>
+                        <Text>{Round(this.skill.xp,1)}/{this.skill.next} {langManager.curr['level']['xp']}</Text>
                     </View>
                     <XPBar value={this.skill.xp} maxValue={this.skill.next} />
 
@@ -93,14 +95,23 @@ class Skill extends BackSkill {
                     )}
                 </View>
 
+                {/* KPI place */}
+                <View style={styles.kpiContainer}>
+                    <KPI title={"total hours"} value={this.skill.totalDuration} unit={"h"} style={[styles.statsContainer]}/>
+                    <KPI title={"total xp"} value={this.skill.totalFloatXp} style={[styles.statsContainer]}/>
+                    <KPI title={"temps moyen"} value={this.skill.numberOfActivities} unit={"h"} style={[styles.statsContainer]}/>
+                </View>
+
+
                 {/* Skill use chart */}
                 <SkillChart
                     skillID={this.skillID}
-                    chartWidth={300} 
+                    chartWidth={300}
                     style={styles.statsContainer}
                 />
 
                 {/* Stats */}
+                {/* 
                 <Container
                     text={lang['stats-title']}
                     style={styles.statsContainer}
@@ -109,6 +120,8 @@ class Skill extends BackSkill {
                 >
                     <StatsBars data={user.stats} supData={this.skill.stats} />
                 </Container>
+                */}
+
 
                 {/* History */}
                 {this.history.length > 0 && (

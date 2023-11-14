@@ -8,6 +8,7 @@ import { GetTime, GetTimeZone } from 'Utils/Time';
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Interface/Components/Digit').default} Digit
  * @typedef {import('Interface/Components/Digit/back').DigitCallback} DigitCallback
  */
 
@@ -51,6 +52,12 @@ class ActivityScheduleBack extends React.Component {
         /** @type {''|'date'|'time'|'datetime'} */
         DTPMode: ''
     }
+
+    /** @type {React.RefObject<Digit>} */
+    refDigitHour = React.createRef();
+
+    /** @type {React.RefObject<Digit>} */
+    refDigitMinute = React.createRef();
 
     componentDidMount() {
         this.resetSelectionMode(true); // TODO: Need ?
@@ -96,7 +103,7 @@ class ActivityScheduleBack extends React.Component {
     }
 
     /** @type {DigitCallback} */
-    onChangeDuration = (name, index) => {
+    onChangeDurationDigit = (name, index) => {
         // Get current durations (hour / minute)
         let durationHours = Math.floor(this.props.selectedDuration / 60);
         let durationMinutes = this.props.selectedDuration % 60;

@@ -14,6 +14,7 @@ import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
 
 class ActivitySchedule extends ActivityScheduleBack {
     renderPanel() {
+        const { selectedDuration } = this.props;
         const { x, y, width, height } = this.state.parent;
         const animValue = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: [y+height-20, y+height] });
         const overlayPos = [styles.overlay, {
@@ -70,6 +71,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                             justifyContent: 'center'
                         }}>
                             <Digit
+                                ref={this.refDigitHour}
                                 name='duration_hour'
                                 containerStyle={{
                                     marginRight: 6,
@@ -81,10 +83,11 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 initValue={1}
                                 maxValue={4}
                                 velocity={.75}
-                                callback={this.onChangeDuration}
+                                callback={this.onChangeDurationDigit}
                             />
                             <Text>{langDatesNames['seconds-hour']}</Text>
                             <Digit
+                                ref={this.refDigitMinute}
                                 name='duration_minute'
                                 containerStyle={{
                                     marginHorizontal: 6,
@@ -92,11 +95,11 @@ class ActivitySchedule extends ActivityScheduleBack {
                                     borderColor: themeManager.GetColor('main1', 0.5)
                                 }}
                                 fadeColor='backgroundGrey'
-                                minValue={this.props.selectedDuration < 60 ? 5 : 0}
-                                maxValue={this.props.selectedDuration >= 240 ? 0 : 59}
+                                minValue={selectedDuration < 60 ? 5 : 0}
+                                maxValue={selectedDuration >= 240 ? 0 : 59}
                                 stepValue={5}
                                 velocity={2}
-                                callback={this.onChangeDuration}
+                                callback={this.onChangeDurationDigit}
                             />
                             <Text>{langDatesNames['seconds-min']}</Text>
                         </View>

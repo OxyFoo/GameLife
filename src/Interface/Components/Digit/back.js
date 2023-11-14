@@ -67,7 +67,7 @@ const DigitProps = {
  */
 
 class DigitBack extends React.Component {
-    /** @type {number} Position of X scroll */
+    /** @type {number} Position of X scroll in pixels */
     scrollX = 0;
 
     state = {
@@ -80,9 +80,8 @@ class DigitBack extends React.Component {
         const { initValue, minValue, maxValue, stepValue } = this.props;
         const newValue = MinMax(minValue, initValue, maxValue);
         const interval = setInterval(() => {
-            const { digitWidth } = this.state;
-            if (digitWidth > 0) {
-                this.SetDigitsPosX((newValue / stepValue) * digitWidth);
+            if (this.state.digitWidth > 0) {
+                this.SetDigitsIndex(newValue / stepValue);
                 clearInterval(interval);
             }
         }, 200);
@@ -90,17 +89,17 @@ class DigitBack extends React.Component {
 
     componentDidUpdate(prevProps) {
         const { digitWidth } = this.state;
-        const { name, minValue, maxValue, stepValue, callback, } = this.props;
+        const { name, minValue, maxValue, stepValue, callback } = this.props;
 
         // If maxValue is decreased, we need to update the position of digits
         if (prevProps.maxValue > maxValue && maxValue / stepValue < this.scrollX / digitWidth) {
-            this.SetDigitsPosX((maxValue / stepValue) * digitWidth);
+            this.SetDigitsIndex(maxValue / stepValue);
             callback(name, maxValue / stepValue);
         }
 
         // If minValue is increased, we need to update the position of digits
         if (prevProps.minValue < minValue && minValue / stepValue > this.scrollX / digitWidth) {
-            this.SetDigitsPosX((minValue / stepValue) * digitWidth);
+            this.SetDigitsIndex(minValue / stepValue);
             callback(name, minValue / stepValue);
         }
     }
@@ -120,10 +119,16 @@ class DigitBack extends React.Component {
         }
     }
 
-    /** @param {number} x Scroll position */
-    SetDigitsPosX = (x) => {
-        this.scrollX = x;
-        SpringAnimation(this.state.animLeft, x).start();
+    /** @param {number} index Scroll position index */
+    SetDigitsIndex = (index) => {
+        const { digitWidth } = this.state;
+        this.SetDigitsPosX(index * digitWidth);
+    }
+
+    /** @param {number} posX Scroll position in pixels */
+    SetDigitsPosX = (posX) => {
+        this.scrollX = posX;
+        SpringAnimation(this.state.animLeft, this.scrollX).start();
     }
 
     /** @param {GestureResponderEvent} event */
@@ -160,7 +165,7 @@ class DigitBack extends React.Component {
         }
 
         const newIndex = Math.max(min_index, minValue / stepValue);
-        this.SetDigitsPosX(newIndex * digitWidth);
+        this.SetDigitsIndex(newIndex);
         callback(name, newIndex);
     }
 }

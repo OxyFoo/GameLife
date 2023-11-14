@@ -14,6 +14,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginVertical: 10,
     },
+    noActivityText: {
+        color: 'white',
+        fontSize: 14,
+        marginVertical: 10,
+    }
 });
 
 export default styles;

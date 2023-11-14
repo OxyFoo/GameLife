@@ -11,20 +11,26 @@ class SkillChart extends SkillChartBack {
     render() {
 
         return (
-            <View style={[styles.container, this.props.style]}>
-                <Text style={styles.headerText}>
-                    Activity history (TODO : langmanager)
-                </Text>
-                {this.state.cleanedData.length > 0 ? // jsp pourquoi ici juste "this.state.cleanedData ?" ca crash sur un undefined 
+            <View>
+            {
+                this.state.cleanedData.length > 1 ? // jsp pourquoi ici juste "this.state.cleanedData ?" ca crash sur un undefined 
+
+                <View style={[styles.container, this.props.style]}>
+                    <Text style={styles.headerText}>
+                        Activity history (TODO : langmanager)
+                    </Text>
                     <LineChartSvg
                         data={this.state.cleanedData}
                         style={this.props.style}
                         lineColor={this.state.lineColor}
                     />
-                    : <></>}
+                </View>
+                : null
+            }
             </View>
+
         );
-    }
+}
 
 }
 

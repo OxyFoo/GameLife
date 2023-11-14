@@ -23,10 +23,15 @@ const styles = StyleSheet.create({
     },
     panelTitleView: {
         width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: 48
     },
     panelTitle: {
-        fontSize: 26
+        fontSize: 24,
+    },
+    subPanelTitle: {
+        fontSize: 14,
     },
     panelTitleIcon: {
         position: 'absolute',

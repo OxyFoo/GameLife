@@ -6,6 +6,7 @@ import ActivityPanelBack from './back';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
+import user from 'Managers/UserManager';
 
 import { StartActivity } from './utils';
 import { Text, Button, TextSwitch, Icon } from 'Interface/Components';
@@ -62,21 +63,21 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Experience */}
                 <View ref={ref => this.refHelp3 = ref}>
-                {positiveXP ? (
-                    <>
-                        <Text style={styles.tempTitle} bold>
-                            {lang['title-experience']}
+                    {positiveXP ? (
+                        <>
+                            <Text style={styles.tempTitle} bold>
+                                {lang['title-experience']}
+                            </Text>
+                            <ActivityExperience
+                                skillID={selectedSkillID}
+                                duration={activity?.duration ?? 0}
+                            />
+                        </>
+                    ) : (
+                        <Text style={styles.tempTitleNoXP} bold>
+                            {lang['title-no-experience']}
                         </Text>
-                        <ActivityExperience
-                            skillID={selectedSkillID}
-                            duration={activity?.duration ?? 0}
-                        />
-                    </>
-                ) : (
-                    <Text style={styles.tempTitleNoXP} bold>
-                        {lang['title-no-experience']}
-                    </Text>
-                )}
+                    )}
                 </View>
 
                 {/* Commentary */}
@@ -96,7 +97,7 @@ class ActivityPanel extends ActivityPanelBack {
                         <Text style={styles.tempTitle} bold>
                             {lang['title-commentary']}
                         </Text>
-    
+
                         {/* Comment content */}
                         <TouchableOpacity
                             style={[styles.commentPanel, backgroundCard]}
@@ -170,15 +171,19 @@ class ActivityPanel extends ActivityPanelBack {
                 {/* Title */}
                 <View style={styles.panelTitleView}>
 
-                {/*TODO : CENTRER, RENDRE CLIQUABLE ET OPTIMISER @GEREM*/}
-                    <View style={{ borderWidth: 3, borderStyle: 'solid', borderRadius: 15, padding: 8, width: 200, borderColor: themeManager.GetColor('main1'), alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0.15)" }}>
-                        <Text style={styles.panelTitle} bold>
-                            {activityText}
-                        </Text>
-                        <Text style={{ fontSize: 14 }}>
-                            (you can click me)
-                        </Text>
-                    </View>
+                    <Button
+                        onPress={() => { user.interface.ChangePage('skill', { skillID: this.state.selectedSkillID }) }}
+                        style={{ height:80, padding: 12, borderWidth: 3, borderStyle: 'solid', borderRadius: 15, borderColor: themeManager.GetColor('main1'), backgroundColor: "rgba(0,0,0,0.15)" }}>
+                        <View
+                            style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={styles.panelTitle} bold>
+                                {activityText}
+                            </Text>
+                            <Text style={styles.subPanelTitle}>
+                                (you can click me)
+                            </Text>
+                        </View>
+                    </Button>
 
                     <Icon
                         containerStyle={[styles.panelTitleIcon]}
@@ -191,13 +196,13 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Start mode - Already / Now */}
                 <View ref={ref => this.refHelp1 = ref}>
-                {mode === 'activity' ? null : (
-                    <TextSwitch
-                        style={styles.panelTextSwitch}
-                        texts={[ lang['swiper-already'], lang['swiper-now'] ]}
-                        onChange={this.onChangeMode}
-                    />
-                )}
+                    {mode === 'activity' ? null : (
+                        <TextSwitch
+                            style={styles.panelTextSwitch}
+                            texts={[lang['swiper-already'], lang['swiper-now']]}
+                            onChange={this.onChangeMode}
+                        />
+                    )}
                 </View>
 
                 <View>

@@ -60,8 +60,6 @@ class BackSkill extends PageBack {
             numberOfActivities: Round(totalDuration/this.getAllActivityFromSkillID(this.skillID).length,1),
         };
 
-        //console.log(this.skill)
-
         // History
         this.history = [];
         this.__updateHIstory();

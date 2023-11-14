@@ -79,7 +79,6 @@ class SkillChartBack extends React.Component {
         // get the datas here 
         const userActivities = user.activities.Get();
         const history = userActivities.filter((a) => a.skillID === skillID)
-        const skillName = dataManager.GetText(dataManager.skills.GetByID(skillID).Name)
 
         // go through the history and create one {activity: string, date: string, value: number} 
         for (const element of history) {

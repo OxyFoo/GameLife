@@ -99,7 +99,7 @@ class Skill extends BackSkill {
                 <View style={styles.kpiContainer}>
                     <KPI title={"total hours"} value={this.skill.totalDuration} unit={"h"} style={[styles.statsContainer]}/>
                     <KPI title={"total xp"} value={this.skill.totalFloatXp} style={[styles.statsContainer]}/>
-                    <KPI title={"temps moyen"} value={this.skill.numberOfActivities} unit={"h"} style={[styles.statsContainer]}/>
+                    <KPI title={"temps moyen"} value={this.skill.numberOfActivities || 0} unit={"h"} style={[styles.statsContainer]}/>
                 </View>
 
 

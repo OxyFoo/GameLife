@@ -31,18 +31,21 @@ class CalVisualisationBack extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.activities !== prevProps.activities) {
+        // this activates only if the activities array changes (we don't need to recompute anything if the scroll changes for example)
+        if (this.props.activities !== prevProps.activities) { 
 
             let tempActivities = [];
 
             for (const activity of this.props.activities) {
-                const CategoryID = dataManager.skills.GetByID(activity.skillID).CategoryID;
+                const skill = dataManager.skills.GetByID(activity.skillID);
+                const LogoID = skill.LogoID;
+                const CategoryID = skill.CategoryID;
                 const color = dataManager.skills.GetCategoryByID(CategoryID).Color;
 
                 const startDate = GetDate(activity.startTime + GetTimeZone() * 3600);
                 const startUtcTime = startDate.getUTCHours() * 60 + startDate.getUTCMinutes(); 
 
-                tempActivities.push({ color: color, startTime: startUtcTime, duration: activity.duration })
+                tempActivities.push({ color: color, startTime: startUtcTime, duration: activity.duration, skillLogoID: LogoID })
             }
 
             this.setState({ activities: tempActivities })

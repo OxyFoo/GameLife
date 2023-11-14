@@ -3,8 +3,9 @@ import { View, Dimensions } from 'react-native';
 
 import styles from './style';
 import TimelineBarBack from './back';
-import themeManager from 'Managers/ThemeManager';
+import dataManager from 'Managers/DataManager';
 import { Icon } from 'Interface/Components';
+import { type } from '@testing-library/react-native/build/user-event/type';
 
 
 /**
@@ -12,31 +13,63 @@ import { Icon } from 'Interface/Components';
  */
 class TimelineBar extends TimelineBarBack {
 
-    renderActivities(isScrolled) {
-        // Assuming the timeline covers a 24-hour day and the container width is 100%
-        // startTime and duration should be in hours
+    /**
+     * Returns the complementary color of the given hex color
+     * 
+     * @param {string} hex 
+     * @returns {string} hex color
+     */
+    getComplementaryColor(hex) {
+        // Remove the '#' if it's there
+        hex = hex.replace('#', '');
+      
+        // Convert hex to RGB
+        let r = parseInt(hex.substring(0, 2), 16);
+        let g = parseInt(hex.substring(2, 4), 16);
+        let b = parseInt(hex.substring(4, 6), 16);
+      
+        // Find the complementary colors by subtracting each RGB component from 255
+        r = 255 - r;
+        g = 255 - g;
+        b = 255 - b;
+      
+        // Convert the RGB values back to hex
+        let rHex = r.toString(16).padStart(2, '0');
+        let gHex = g.toString(16).padStart(2, '0');
+        let bHex = b.toString(16).padStart(2, '0');
+      
+        // Return the formatted hex color
+        return `#${rHex}${gHex}${bHex}`;
+      }
+      
+
+    /**
+     * Render the activity in a time line with the height and icon depending on the scroll
+     * 
+     * @param {boolean} isScrolled 
+     */
+    renderActivities(isScrolled, skillLogoID) {
         const totalMinutesInDay = 24 * 60;
         return this.state.activities.map((activity, index) => {
             const width = (activity.duration / totalMinutesInDay) * 100 + '%';
             const offset = (activity.startTime / totalMinutesInDay) * 100 + '%';
+            var complement = this.getComplementaryColor(activity.color);
+            console.log(complement)
             return (
                 <View
                     key={index}
-                    style={{
-                        backgroundColor: activity.color,
-                        width: width,
-                        position: 'absolute',
-                        left: offset,
-                        top: 0,
-                        bottom: 0,
-                        borderRadius: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
+                    style={[
+                        styles.timelineItem,
+                        {
+                            backgroundColor: activity.color,
+                            width: width,
+                            left: offset,
+                        }
+                    ]}
                 >
                     {!isScrolled ?
-                    <Icon icon="social" size={14} color="rgba(0,0,0,0.5)" />
-                    :<></>
+                        <Icon size={14} xml={dataManager.skills.GetXmlByLogoID(activity.skillLogoID)} color={complement} />
+                        : <></>
                     }
                 </View>
             );
@@ -44,19 +77,15 @@ class TimelineBar extends TimelineBarBack {
     }
 
     render() {
-        const borderRadius = 16; // This should match your parent container's borderRadius
 
         return (
-            <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', paddingHorizontal: 16, }}>
-                {this.props.isScrolled ?
-                    <View style={[styles.timelineContainer, { height: 5 }]}>
-                        {this.renderActivities(this.props.isScrolled)}
-                    </View>
-                    :
-                    <View style={[styles.timelineContainer]}>
-                        {this.renderActivities(this.props.isScrolled)}
-                    </View>
-                }
+            <View style={styles.container}>
+                <View style={[
+                    styles.timelineContainer,
+                    this.props.isScrolled ? { height: 5 } : {}
+                ]}>
+                    {this.renderActivities(this.props.isScrolled)}
+                </View>
             </View>
 
 

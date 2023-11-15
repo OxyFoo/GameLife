@@ -8,7 +8,7 @@ import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
-import { Icon, Page, Text, TimelineBar } from 'Interface/Components';
+import { Icon, Page, Text, ActivityTimeline } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
@@ -31,9 +31,11 @@ class Calendar extends BackCalendar {
     );
 
     handleScroll = (event) => {
-        const scrollOffset = event.nativeEvent.contentOffset.y;
-        this.setState({ isScrolled: scrollOffset > 0 });
-    }
+        if (this.refActivityTimeline.current) {
+            this.refActivityTimeline.current.handleScroll(event);
+        }
+    };
+
 
     render() {
         const {
@@ -108,7 +110,10 @@ class Calendar extends BackCalendar {
                         ref={ref => this.refTuto1 = ref}
                         style={[styles.panel, styleBackground]}
                     >
-                        <TimelineBar activities={currActivities} isScrolled={this.state.isScrolled} />
+                        <ActivityTimeline
+                            activities={currActivities}
+                            ref={this.refActivityTimeline}
+                        />
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         {selectedDate !== null && ( // Force re-render after date selection
                             <FlatList

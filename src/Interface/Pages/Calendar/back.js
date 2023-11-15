@@ -1,3 +1,4 @@
+import React from 'react';
 import { Animated } from 'react-native';
 import { FlatList } from 'react-native';
 
@@ -27,6 +28,8 @@ class BackCalendar extends PageBack {
 
     constructor(props) {
         super(props);
+
+        this.refActivityTimeline = React.createRef();
 
         // Infinite scroll vars
         this.ratioY = 0;

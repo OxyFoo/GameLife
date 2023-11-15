@@ -1,3 +1,4 @@
+import ActivityTimeline from './Components/ActivityTimeline';
 import Button from './Components/Button';
 import Character from './Components/Character/Character';
 import Checkbox from './Components/Checkbox';
@@ -18,11 +19,11 @@ import Swiper from './Components/Swiper';
 import Switch from './Components/Switch';
 import Text from './Components/Text';
 import TextSwitch from './Components/TextSwitch';
-import TimelineBar from './Components/TimelineBar';
 import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
 
 export {
+    ActivityTimeline,
     Button,
     Character,
     Checkbox,
@@ -43,7 +44,6 @@ export {
     Switch,
     Text,
     TextSwitch,
-    TimelineBar,
     XPBar,
     Zap
 }

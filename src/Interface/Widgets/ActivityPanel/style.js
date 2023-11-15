@@ -59,7 +59,19 @@ const styles = StyleSheet.create({
     commentText: {
         fontSize: 16,
         textAlign: 'left'
-    }
+    },
+    buttonViewContainer: {
+        height: 80,
+        padding: 12,
+        borderWidth: 3,
+        borderStyle: 'solid',
+        borderRadius: 15,
+        backgroundColor: "rgba(0,0,0,0.15)"
+    },
+    buttonView: {
+        alignItems: "center",
+        justifyContent: "center"
+    },
 });
 
 export default styles;

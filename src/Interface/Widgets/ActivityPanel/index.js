@@ -172,10 +172,10 @@ class ActivityPanel extends ActivityPanelBack {
                 <View style={styles.panelTitleView}>
 
                     <Button
-                        onPress={() => { user.interface.ChangePage('skill', { skillID: this.state.selectedSkillID }) }}
-                        style={{ height:80, padding: 12, borderWidth: 3, borderStyle: 'solid', borderRadius: 15, borderColor: themeManager.GetColor('main1'), backgroundColor: "rgba(0,0,0,0.15)" }}>
+                        onPress={this.onOpenSkill}
+                        style={[{borderColor: themeManager.GetColor('main1')}, styles.buttonViewContainer]}>
                         <View
-                            style={{ alignItems: "center", justifyContent: "center" }}>
+                            style={styles.buttonView}>
                             <Text style={styles.panelTitle} bold>
                                 {activityText}
                             </Text>

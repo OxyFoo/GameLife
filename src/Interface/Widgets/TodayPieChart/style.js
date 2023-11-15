@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
     container: {
         padding: 16,
         borderRadius: 20,
-        backgroundColor: '#232B5D',
     },
     flexBetween: {
         display: 'flex',

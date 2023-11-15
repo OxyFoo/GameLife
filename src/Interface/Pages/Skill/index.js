@@ -45,8 +45,9 @@ class Skill extends BackSkill {
                 style={styles.addActivity}
                 color='main2'
                 onPress={this.addActivity}
+                icon='add'
+                iconSize={30}
             >
-                {lang['text-add']}
             </Button>
         );
     }
@@ -54,6 +55,10 @@ class Skill extends BackSkill {
     render() {
         const lang = langManager.curr['skill'];
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
+
+        const txtCurrXp = Round(this.skill.xp, 1);
+        const txtNextXP = this.skill.next;
+        const txtXP = langManager.curr['level']['xp'];
 
         if (!this.skill) {
             return null;
@@ -64,7 +69,7 @@ class Skill extends BackSkill {
                 ref={ref => this.refPage = ref}
                 bottomOffset={104}
                 overlay={this.renderActivity()}
-                //footer={this.renderFooter()}
+                footer={this.renderFooter()}
             >
                 <PageHeader onBackPress={user.interface.BackHandle} />
 
@@ -86,7 +91,7 @@ class Skill extends BackSkill {
                 <View style={styles.levelContainer}>
                     <View style={styles.level}>
                         <Text>{this.skill.level}</Text>
-                        <Text>{Round(this.skill.xp,1)}/{this.skill.next} {langManager.curr['level']['xp']}</Text>
+                        <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
                     </View>
                     <XPBar value={this.skill.xp} maxValue={this.skill.next} />
 
@@ -97,9 +102,16 @@ class Skill extends BackSkill {
 
                 {/* KPI place */}
                 <View style={styles.kpiContainer}>
-                    <KPI title={"total hours"} value={this.skill.totalDuration} unit={"h"} style={[styles.statsContainer]}/>
-                    <KPI title={"total xp"} value={this.skill.totalFloatXp} style={[styles.statsContainer]}/>
-                    <KPI title={"temps moyen"} value={this.skill.numberOfActivities || 0} unit={"h"} style={[styles.statsContainer]}/>
+                    <KPI
+                        title={"total hours"}
+                        value={this.skill.totalDuration}
+                        unit={"h"}
+                        style={[styles.statsContainer]} />
+                    <KPI
+                        title={"total xp"}
+                        value={this.skill.totalFloatXp}
+                        style={[styles.statsContainer]} />
+                    {/*<KPI title={"temps moyen"} value={this.skill.numberOfActivities || 0} unit={"h"} style={[styles.statsContainer]}/>*/}
                 </View>
 
 

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, Text } from 'react-native';
 
+import themeManager from 'Managers/ThemeManager';
 import TodayPieChartBack from './back';
 import styles from './style';
 
 import { Switch, PieChart } from 'Interface/Components';
 
-class TodayPieChartFront extends TodayPieChartBack {
+class TodayPieChart extends TodayPieChartBack {
 
     render() {
+        const graphBackgroundColor = { backgroundColor: themeManager.GetColor('dataBigKpi') };
+
         return (
-            <View style={[styles.container, this.props.style]}>
+            <View style={[graphBackgroundColor, styles.container, this.props.style]}>
 
                 {/* Top row view */}
                 <View style={styles.flexBetween}>
@@ -26,7 +29,7 @@ class TodayPieChartFront extends TodayPieChartBack {
                 </View>
 
                 {/* Pie chart view */}
-                {this.state.displayChart && this.state.focusedActivity && this.state.dataToDisplay ?
+                {this.state.focusedActivity && this.state.dataToDisplay ?
                     <PieChart
                         data={this.state.dataToDisplay}
                         focusedActivity={this.state.focusedActivity}
@@ -34,10 +37,11 @@ class TodayPieChartFront extends TodayPieChartBack {
                     :
                     <View>
                         <Text>Il n'y a pas assez de données pour afficher le graphique</Text>
-                    </View>}
+                    </View>
+                }
             </View>
         );
     }
 }
 
-export default TodayPieChartFront;
+export default TodayPieChart;

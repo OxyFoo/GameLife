@@ -133,7 +133,7 @@ class ActivityPanelBack extends React.Component {
      * @param {() => void} callbackClosed Callback called when the panel is closed
      * @returns {boolean} True if the activity is valid
      */
-    SelectActivity = (activity, callbackRemoved = () => {}, callbackClosed = () => {}) => {
+    SelectActivity = (activity, callbackRemoved = () => { }, callbackClosed = () => { }) => {
         const skill = dataManager.skills.GetByID(activity?.skillID ?? 0);
         if (activity === null || skill === null) {
             console.error('SelectActivity: Invalid activity or skill', activity, skill);
@@ -173,7 +173,7 @@ class ActivityPanelBack extends React.Component {
     }
 
     onChangeMode = (index) => {
-        const modes = [ 'schedule', 'now' ];
+        const modes = ['schedule', 'now'];
         this.setState({ startMode: modes[index] });
         SpringAnimation(this.state.animButtonNow, index).start();
     }
@@ -244,6 +244,13 @@ class ActivityPanelBack extends React.Component {
             user.GlobalSave();
             this.__callback_removed();
         });
+    }
+
+    onOpenSkill = () => {
+        user.interface.ChangePage(
+            'skill',
+            { skillID: this.state.selectedSkillID }
+        );
     }
 }
 

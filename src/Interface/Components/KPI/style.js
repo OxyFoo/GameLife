@@ -13,14 +13,10 @@ const styles = StyleSheet.create({
         
     },
     value:{
-        color:"white",
-        fontSize:30,
         fontWeight:"bold",
         margin:0,
     },
     title:{
-        color:"#BBBBBB",
-        fontSize:15,
         margin:0,
     }
 });

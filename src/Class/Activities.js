@@ -408,6 +408,16 @@ class Activities {
         }
         return output;
     }
+
+    /**
+     * Return the list of activities for the skill
+     * 
+     * @param {number} skillID Skill ID
+     * @returns {Array<Activity>} List of activities
+     */
+    getBySkillID(skillID) {
+        return this.Get().filter(activity => activity.skillID === skillID);
+    }
 }
 
 export { Activity };

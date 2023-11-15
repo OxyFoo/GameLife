@@ -1,13 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { View, Text as RNText } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { Svg, Polyline, Line, Text } from 'react-native-svg';
 
-import styles from './style';
+import themeManager from 'Managers/ThemeManager';
 import LineChartSvgBack from './back';
-
-/**
- * @typedef {import('./back').Item} Item
- */
 
 class LineChartSvg extends LineChartSvgBack {
 
@@ -18,19 +14,16 @@ class LineChartSvg extends LineChartSvgBack {
                 <Svg
                     height={this.props.graph_height + 40}
                     width={"100%"}
-                    ref={this.svgRef}
-                    onLayout={() => {
-                        // Measure the width of the SVG after layout
-                        this.svgRef.current.measure((x, y, width, height) => {
-                            this.setState({ layoutWidth: width });
-                        });
+                    onLayout={(event) => {
+                        const { width } = event.nativeEvent.layout;
+                        this.onLayout(width);
                     }}>
 
                     {/* Y-axis lines and labels */}
-                    {this.state.dataReady && this.state.yAxisValues.map((value, index) => (
+                    {this.state.maxValue > 0 && this.state.layoutWidth !== 0 && this.state.yAxisValues.map((value, index) => (
                         <React.Fragment key={`yaxis_line_${index}`}>
                             <Line
-                                x1={this.left_margin}
+                                x1={this.leftMargin}
                                 y1={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
                                 x2={this.state.layoutWidth}
                                 y2={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
@@ -40,7 +33,7 @@ class LineChartSvg extends LineChartSvgBack {
                                 x={0}
                                 y={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
                                 fontSize="14"
-                                fill='rgba(150,150,150,1)'
+                                fill='rgb(150,150,150)'
                                 alignmentBaseline="middle"
                             >
                                 {value.toFixed(0)}
@@ -49,11 +42,11 @@ class LineChartSvg extends LineChartSvgBack {
                     ))}
 
                     {/* Line chart */}
-                    {this.state.dataReady && this.state.layoutWidth ?
+                    {this.state.points.length > 1 && this.state.layoutWidth !== 0 ?
                         <Polyline
                             points={this.state.points}
                             fill="none"
-                            stroke={this.props.lineColor}
+                            stroke={themeManager.GetColor(this.props.lineColor)}
                             strokeWidth="2"
                         />
                         : <></>}
@@ -67,7 +60,7 @@ class LineChartSvg extends LineChartSvgBack {
                         textAnchor="middle"
                         fill="rgba(150,150,150,1)"
                     >
-                        {this.props.data[0].date}
+                        {this.firstDate}
                     </Text>
                     <Text
                         key={`text_last`}
@@ -77,7 +70,7 @@ class LineChartSvg extends LineChartSvgBack {
                         textAnchor="middle"
                         fill="rgba(150,150,150,1)"
                     >
-                        {this.props.data[this.props.data.length - 1].date}
+                        {this.lastDate}
                     </Text>
                 </Svg>
             </View>

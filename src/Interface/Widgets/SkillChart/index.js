@@ -1,36 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, Text } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 
+import themeManager from 'Managers/ThemeManager';
 import SkillChartBack from './back';
 import styles from './style';
 
-import { LineChartSvg } from 'Interface/Components';
+import { LineChartSvg, Text } from 'Interface/Components';
 
 class SkillChart extends SkillChartBack {
 
     render() {
 
+        if (this.state.cleanedData.length <= 1) {
+            return null;
+        }
+
         return (
             <View>
-            {
-                this.state.cleanedData.length > 1 ? // jsp pourquoi ici juste "this.state.cleanedData ?" ca crash sur un undefined 
-
-                <View style={[styles.container, this.props.style]}>
-                    <Text style={styles.headerText}>
-                        Activity history (TODO : langmanager)
-                    </Text>
+                <View style={[{ backgroundColor: themeManager.GetColor("dataBigKpi") }, styles.container, this.props.style]}>
+                    <View style={{alignItems: 'flex-start', justifyContent: 'flex-start',}}>
+                        <Text color='primary' fontSize={16} bold={true}>
+                            Activity history TODO {/*(TODO : langmanager && BOLD qui a disparu jsp pq)*/}
+                        </Text>
+                    </View>
                     <LineChartSvg
                         data={this.state.cleanedData}
                         style={this.props.style}
                         lineColor={this.state.lineColor}
                     />
                 </View>
-                : null
-            }
             </View>
 
         );
-}
+    }
 
 }
 

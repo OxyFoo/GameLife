@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
-import { GetTime } from 'Utils/Time';
 import dataManager from 'Managers/DataManager';
 
+import { GetTime } from 'Utils/Time';
 
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -11,7 +11,6 @@ import dataManager from 'Managers/DataManager';
  * 
  * @typedef {import('Interface/Components/PieChart').ItemBase} ItemBase
  * @typedef {import('Interface/Components/PieChart').Item} Item
- * @typedef {import('Interface/Components/PieChart').focusedActivity} focusedActivity
  */
 
 const InputProps = {
@@ -26,8 +25,7 @@ class TodayPieChartBack extends React.Component {
 
         dataToDisplay: [],
         focusedActivity: {},
-        displayChart: false,
-        totalTime:0,
+        totalTime: 0,
     }
 
     updatingData = [];
@@ -47,17 +45,16 @@ class TodayPieChartBack extends React.Component {
     compute = (value) => {
 
         // Compute the data depending on the switch value
-        this.updatingData = [];
         this.updatingData = this.initCategoriesArray();
         this.addCategoriesName();
         this.computeTimeEachCategory();
+        let totalTime = 0;
         if (value) {
             const totalPercent = this.convertTimeToPercent(1440);
             this.addUndefinedActivity(totalPercent);
         }
         else {
-            const totalTime = this.computeTotalTime();
-            this.setState({totalTime: (totalTime/60.0).toFixed(1)});
+            totalTime = this.computeTotalTime();
             this.convertTimeToPercent(totalTime);
         }
         const focusedActivity = this.findBiggestActivity();
@@ -70,9 +67,10 @@ class TodayPieChartBack extends React.Component {
         // Focused and display handler
         this.setState({
             dataToDisplay: this.updatingData,
-            displayChart: true,
-            focusedActivity: focusedActivity
-        }); 
+            focusedActivity: focusedActivity,
+            switchValue: value,
+            totalTime: (totalTime / 60.0).toFixed(1),
+        });
 
         //console.log("this.updatingData", this.updatingData);
     }
@@ -81,11 +79,10 @@ class TodayPieChartBack extends React.Component {
      * Prepare the datas for the pie chart before it's mounted 
      */
     componentDidMount() {
-        this.setState({ switchValue: user.settings.homePieChart });
-        this.compute(this.state.switchValue);
+        this.compute(user.settings.homePieChart);
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.compute(this.state.switchValue);
+            this.compute(user.settings.homePieChart);
         });
     }
 
@@ -99,16 +96,14 @@ class TodayPieChartBack extends React.Component {
     /**
      * Create and return the init object needed because fuckin reference WON'T WORK 
      * 
-     * @returns {ItemBase[]}
+     * @returns {{ id: number; valueMin: number; }[]}
      */
     initCategoriesArray = () => {
-        const baseData = [
-            { id: 1, valueMin: 0}, // color: '#006DFF' 
-            { id: 2, valueMin: 0}, // color: '#93FCF8' 
-            { id: 3, valueMin: 0}, // color: '#BDB2FA'
-            { id: 4, valueMin: 0}, // color: '#FFA5BA'
-            { id: 5, valueMin: 0}, // color: '#8C2155' 
-        ];
+        const allCategories = dataManager.skills.categories
+        let baseData = []
+        for (let i = 1; i < allCategories.length; i++) {
+            baseData.push({ id: allCategories[i].ID, valueMin: 0 })
+        }
         return baseData;
     }
 
@@ -120,11 +115,16 @@ class TodayPieChartBack extends React.Component {
      */
     addCategoriesName = () => {
         for (const element of this.updatingData) {
-            const prout = element.id;
-            const caca = dataManager.skills.GetCategoryByID(prout);
-            const pipi = caca.Name;
-            element.name = dataManager.GetText(pipi)
-            element.color = caca.Color;
+            const categoryID = dataManager.skills.GetCategoryByID(element.id);
+            const categoryName = categoryID.Name;
+            if (categoryName) {
+                element.name = dataManager.GetText(categoryName);
+                element.color = categoryID.Color;
+            }
+            else {
+                element.name = "";
+                element.color = "black";
+            }
         }
     }
 
@@ -210,19 +210,19 @@ class TodayPieChartBack extends React.Component {
     /**
      * Find the biggest activity and update the state
      * 
-     * @return {focusedActivity} 
+     * @return {{id: number, value: number, name: string} | null} 
      */
     findBiggestActivity = () => {
-        let maxActi = { id: 0, value: 0, name: "" };
-        for (const element of this.updatingData) {
-            let item = element;
-            if (item.value > maxActi.value) {
-                maxActi.id = item.id;
-                maxActi.value = item.value;
-                maxActi.name = item.name;
+        let maxValue = -1;
+        let maxIndex = null;
+        for (const i in this.updatingData) {
+            const itemValue = this.updatingData[i].value;
+            if (itemValue > maxValue) {
+                maxValue = itemValue;
+                maxIndex = i;
             }
         }
-        return maxActi;
+        return maxIndex === null ? null : this.updatingData[maxIndex];
     }
 
     /**

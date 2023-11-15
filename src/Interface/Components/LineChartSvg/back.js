@@ -3,6 +3,9 @@ import * as React from 'react';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const InputProps = {
@@ -12,8 +15,8 @@ const InputProps = {
     /** @type {{date:string, value:number}[]} */
     data: [],
 
-    /** @type {string} */
-    lineColor: "#000000",
+    /** @type {ColorTheme|ColorThemeText} */
+    lineColor: 'black',
 
     /** @type {number} */
     graph_height: 200,
@@ -26,11 +29,11 @@ class LineChartSvgBack extends React.Component {
         maxValue: 0,
         points: [],
         yAxisValues: null,
-        dataReady: false
     }
-    svgRef = React.createRef();
-    left_margin = 40;
+    leftMargin = 40;
 
+    firstDate = null;
+    lastDate = null;
 
     // Calculate the y-coordinate in pixels based on graph_height
     scaleY = (value, maxValue) => (value / maxValue) * (this.props.graph_height - 20);
@@ -42,34 +45,33 @@ class LineChartSvgBack extends React.Component {
     };
 
     // Calculate the x-coordinate in pixels based on layoutWidth
-    getXCoordinate = (index, arrayLength) => {
-        const layoutWidth = this.state.layoutWidth;
-        const spacing = (layoutWidth - this.left_margin * 1.1) / (arrayLength - 1);
-        return this.left_margin + (index * spacing);
+    getXCoordinate = (index, arrayLength, layoutWidth) => {
+        const spacing = (layoutWidth - this.leftMargin * 1.1) / (arrayLength - 1);
+        return this.leftMargin + (index * spacing);
     };
 
-    compute() {
+    onLayout(layoutWidth) {
+        this.compute(layoutWidth);
+    }
+
+    compute(layoutWidth) {
 
         const maxValue = Math.max(...this.props.data.map(d => d.value)) * 1.05; // Increase max value for padding
         const yAxisValues = this.getYAxisValues(maxValue);
 
         const points = this.props.data.map((item, index) => {
-            const x = this.getXCoordinate(index, this.props.data.length); // Get the x-coordinate in pixels
+            const x = this.getXCoordinate(index, this.props.data.length, layoutWidth); // Get the x-coordinate in pixels
             const y = this.props.graph_height - this.scaleY(item.value, maxValue);  // Calculate the y-coordinate
             return `${x},${y}`; // Return the coordinate pair
         }).join(' ');
 
-        this.setState({maxValue: maxValue, points: points, yAxisValues: yAxisValues});
-    }
-
-    // Only re-compute if layoutWidth has changed
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.layoutWidth !== this.state.layoutWidth) {
-            this.compute();
-            this.setState({dataReady: true});
+        if (Array.isArray(this.props.data) && this.props.data.length > 1) {
+            this.firstDate = this.props.data[0].date;
+            this.lastDate = this.props.data[this.props.data.length - 1].date;
         }
-    }
 
+        this.setState({ maxValue: maxValue, points: points, yAxisValues: yAxisValues, layoutWidth: layoutWidth });
+    }
 
 }
 

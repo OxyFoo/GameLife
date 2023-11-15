@@ -61,8 +61,9 @@ const styles = StyleSheet.create({
     },
 
     addActivity: {
+        width: 50,
+        height: 50,
         position: 'absolute',
-        left: 36,
         right: 36,
         bottom: 36
     },
@@ -71,7 +72,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        //backgroundColor: '#FFFFFF',
       },
 });
 

@@ -2,26 +2,45 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './style';
-import KPIBack from './back';
+import themeManager from 'Managers/ThemeManager'
 
 import { Text } from 'Interface/Components';
-import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  */
 
-class KPI extends KPIBack {
+const InputProps = {
+    /** @type {StyleProp} */
+    style: {},
+
+    /** @type {string} */
+    title: '',
+
+    /** @type {number} */
+    value: 0,
+
+    /** @type {string} */
+    unit: '',
+}
+
+class KPI extends React.Component {
     render() {
-        const kpi_background = themeManager.GetColor('da_kpi');
+        const kpiBackground = {
+            backgroundColor: themeManager.GetColor('dataSmallKpi')
+        };
 
         return (
-            <View style={[this.props.style, styles.container, {backgroundColor:kpi_background}]}>
-                <Text style={styles.value}>{this.props.value} {this.props.unit}</Text>
-                <Text style={styles.title}>{this.props.title}</Text>
+            <View style={[kpiBackground, this.props.style, styles.container]}>
+                <Text style={styles.value} color='primary' fontSize={30}>{this.props.value} {this.props.unit}</Text>
+                <Text style={styles.title} color='light' fontSize={15}>{this.props.title}</Text>
             </View>
         )
     }
 }
+
+KPI.prototype.props = InputProps;
+KPI.defaultProps = InputProps;
 
 export default KPI;

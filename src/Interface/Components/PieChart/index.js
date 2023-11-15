@@ -2,14 +2,39 @@ import React from 'react';
 import { View, Text, FlatList } from 'react-native';
 import { PieChart as PieChartLib } from 'react-native-gifted-charts';
 
+import themeManager from 'Managers/ThemeManager';
 import styles from './style';
-import PieChartBack from './back';
 
 /**
- * @typedef {import('./back').Item} Item
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {{ name: string, color:string, value: number }} Item
+ * @typedef {{ id: number, valueMin: number, color: string }} ItemBase
+ * @typedef {{ id: number, value: number, name: string }} FocusedActivity
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * 
+ * @typedef {Object} itemType // object from lib gifted-charts
  */
 
-class PieChart extends PieChartBack {
+const InputProps = {
+    /** @type {StyleProp} */
+    style: {},
+
+    /** @type {Array<itemType>} */
+    data: [],
+
+    /** @type {FocusedActivity|null} */
+    focusedActivity: null,
+
+    /** @type {ColorTheme|ColorThemeText} */
+    insideBackgroundColor: 'dataBigKpi',
+}
+
+
+class PieChart extends React.Component {
     /**
      * Renders a colored dot used for legends or markers.
      * @param {string} color The color of the dot.
@@ -55,8 +80,6 @@ class PieChart extends PieChartBack {
         />
     );
 
-
-
     /**
      * Renders the center label component. (biggest activity value + name)
      * @returns {JSX.Element} A View component styled as a center label component.
@@ -89,7 +112,7 @@ class PieChart extends PieChartBack {
                         sectionAutoFocus
                         radius={90}
                         innerRadius={60}
-                        innerCircleColor={'#232B5D'}
+                        innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
                         centerLabelComponent={this.renderCenterLabelComponent}
                     />
                     <View style={styles.legendContainer}>
@@ -100,6 +123,9 @@ class PieChart extends PieChartBack {
         );
     }
 }
+
+PieChart.prototype.props = InputProps;
+PieChart.defaultProps = InputProps;
 
 
 export default PieChart;

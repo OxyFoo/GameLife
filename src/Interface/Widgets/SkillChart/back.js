@@ -9,7 +9,6 @@ import { DateToFormatString } from 'Utils/Date';
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {{activity:string, date:string, value:number}} DataPoint
  */
 
 const InputProps = {
@@ -36,7 +35,6 @@ class SkillChartBack extends React.Component {
     dataReady = false;
     maxVal = 0;
     spacing = 0;
-    lineColor = "#000000";
 
     componentDidMount() {
 
@@ -44,7 +42,6 @@ class SkillChartBack extends React.Component {
         this.dataReady = false;
         this.maxVal = 0;
         this.spacing = 0;
-        this.lineColor = "#000000";
 
         const lineColor = this.getLineColor(this.props.skillID);
 
@@ -139,6 +136,11 @@ class SkillChartBack extends React.Component {
             }
         });
 
+        // Check if there are at least two dates (otherwise there is nothing to fill in)
+        if (allDates.size <= 1 || !earliestDate || !latestDate) {
+            return data;
+        }
+
         // Calculate the range of dates
         const dateRange = Array.from({ length: (latestDate - earliestDate) / (1000 * 60 * 60 * 24) + 1 }, (_, i) => {
             const date = new Date(earliestDate);
@@ -168,7 +170,7 @@ class SkillChartBack extends React.Component {
     getLineColor = (skillID) => {
         const skill = dataManager.skills.GetByID(skillID);
         const category = skill.CategoryID;
-        const categoryColor = dataManager.skills.GetCategoryByID(category).Color;
+        const categoryColor = dataManager.skills.GetCategoryByID(category).Color || "black";
         return categoryColor;
     }
 

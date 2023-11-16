@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './style';
-import themeManager from 'Managers/ThemeManager'
+import themeManager from 'Managers/ThemeManager';
 
 import { Text } from 'Interface/Components';
 
@@ -11,7 +11,7 @@ import { Text } from 'Interface/Components';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  */
 
-const InputProps = {
+const KPIProps = {
     /** @type {StyleProp} */
     style: {},
 
@@ -22,25 +22,27 @@ const InputProps = {
     value: 0,
 
     /** @type {string} */
-    unit: '',
+    unit: ''
 }
 
 class KPI extends React.Component {
     render() {
+        const primaryText = `${this.props.value} ${this.props.unit}`;
+        const secondaryText = this.props.title;
         const kpiBackground = {
             backgroundColor: themeManager.GetColor('dataSmallKpi')
         };
 
         return (
             <View style={[kpiBackground, this.props.style, styles.container]}>
-                <Text style={styles.value} color='primary' fontSize={30}>{this.props.value} {this.props.unit}</Text>
-                <Text style={styles.title} color='light' fontSize={15}>{this.props.title}</Text>
+                <Text style={styles.value} color='primary' fontSize={30}>{primaryText}</Text>
+                <Text style={styles.title} color='light' fontSize={15}>{secondaryText}</Text>
             </View>
         )
     }
 }
 
-KPI.prototype.props = InputProps;
-KPI.defaultProps = InputProps;
+KPI.prototype.props = KPIProps;
+KPI.defaultProps = KPIProps;
 
 export default KPI;

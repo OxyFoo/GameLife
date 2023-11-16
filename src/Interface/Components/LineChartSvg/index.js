@@ -2,22 +2,17 @@ import React from 'react';
 import { View } from 'react-native';
 import { Svg, Polyline, Line, Text } from 'react-native-svg';
 
-import themeManager from 'Managers/ThemeManager';
 import LineChartSvgBack from './back';
+import themeManager from 'Managers/ThemeManager';
 
 class LineChartSvg extends LineChartSvgBack {
-
     render() {
-
         return (
             <View>
                 <Svg
                     height={this.props.graph_height + 40}
-                    width={"100%"}
-                    onLayout={(event) => {
-                        const { width } = event.nativeEvent.layout;
-                        this.onLayout(width);
-                    }}>
+                    width={'100%'}
+                    onLayout={this.onLayout}>
 
                     {/* Y-axis lines and labels */}
                     {this.state.maxValue > 0 && this.state.layoutWidth !== 0 && this.state.yAxisValues.map((value, index) => (
@@ -27,14 +22,14 @@ class LineChartSvg extends LineChartSvgBack {
                                 y1={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
                                 x2={this.state.layoutWidth}
                                 y2={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
-                                stroke="rgba(100,100,100,0.4)"
+                                stroke='rgba(100,100,100,0.4)'
                             />
                             <Text
                                 x={0}
                                 y={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
-                                fontSize="14"
+                                fontSize='14'
                                 fill='rgb(150,150,150)'
-                                alignmentBaseline="middle"
+                                alignmentBaseline='middle'
                             >
                                 {value.toFixed(0)}
                             </Text>
@@ -45,9 +40,9 @@ class LineChartSvg extends LineChartSvgBack {
                     {this.state.points.length > 1 && this.state.layoutWidth !== 0 ?
                         <Polyline
                             points={this.state.points}
-                            fill="none"
+                            fill='none'
                             stroke={themeManager.GetColor(this.props.lineColor)}
-                            strokeWidth="2"
+                            strokeWidth='2'
                         />
                         : <></>}
 
@@ -56,9 +51,9 @@ class LineChartSvg extends LineChartSvgBack {
                         key={`text_first`}
                         x={60}
                         y={this.props.graph_height + 15}
-                        fontSize="12"
-                        textAnchor="middle"
-                        fill="rgba(150,150,150,1)"
+                        fontSize='12'
+                        textAnchor='middle'
+                        fill='rgba(150,150,150,1)'
                     >
                         {this.firstDate}
                     </Text>
@@ -66,9 +61,9 @@ class LineChartSvg extends LineChartSvgBack {
                         key={`text_last`}
                         x={this.state.layoutWidth - 35}
                         y={this.props.graph_height + 15}
-                        fontSize="12"
-                        textAnchor="middle"
-                        fill="rgba(150,150,150,1)"
+                        fontSize='12'
+                        textAnchor='middle'
+                        fill='rgba(150,150,150,1)'
                     >
                         {this.lastDate}
                     </Text>
@@ -77,6 +72,5 @@ class LineChartSvg extends LineChartSvgBack {
         );
     }
 }
-
 
 export default LineChartSvg;

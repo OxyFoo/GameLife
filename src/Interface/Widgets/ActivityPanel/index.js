@@ -6,7 +6,6 @@ import ActivityPanelBack from './back';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
-import user from 'Managers/UserManager';
 
 import { StartActivity } from './utils';
 import { Text, Button, TextSwitch, Icon } from 'Interface/Components';
@@ -159,6 +158,9 @@ class ActivityPanel extends ActivityPanelBack {
                 !variantTheme ? 'backgroundGrey' : 'backgroundCard'
             )
         };
+        const styleTitle = {
+            borderColor: themeManager.GetColor('main1')
+        };
 
         return (
             <PanelScreen
@@ -173,14 +175,14 @@ class ActivityPanel extends ActivityPanelBack {
 
                     <Button
                         onPress={this.onOpenSkill}
-                        style={[{borderColor: themeManager.GetColor('main1')}, styles.buttonViewContainer]}>
+                        style={[styleTitle, styles.buttonViewContainer]}>
                         <View
                             style={styles.buttonView}>
                             <Text style={styles.panelTitle} bold>
                                 {activityText}
                             </Text>
                             <Text style={styles.subPanelTitle}>
-                                (you can click me)
+                                {lang['title-click-me']}
                             </Text>
                         </View>
                     </Button>

@@ -1,26 +1,31 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import themeManager from 'Managers/ThemeManager';
-import SkillChartBack from './back';
 import styles from './style';
+import SkillChartBack from './back';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { LineChartSvg, Text } from 'Interface/Components';
 
 class SkillChart extends SkillChartBack {
-
     render() {
+        const lang = langManager.curr['skill'];
 
         if (this.state.cleanedData.length <= 1) {
             return null;
         }
 
+        const styleContainer = {
+            backgroundColor: themeManager.GetColor('dataBigKpi')
+        };
+
         return (
             <View>
-                <View style={[{ backgroundColor: themeManager.GetColor("dataBigKpi") }, styles.container, this.props.style]}>
+                <View style={[styleContainer, styles.container, this.props.style]}>
                     <View style={{alignItems: 'flex-start', justifyContent: 'flex-start',}}>
-                        <Text color='primary' fontSize={16} bold={true}>
-                            Activity history TODO {/*(TODO : langmanager && BOLD qui a disparu jsp pq)*/}
+                        <Text color='primary' fontSize={16} bold>
+                            {lang['activity-history']}
                         </Text>
                     </View>
                     <LineChartSvg
@@ -30,10 +35,8 @@ class SkillChart extends SkillChartBack {
                     />
                 </View>
             </View>
-
         );
     }
-
 }
 
 export default SkillChart;

@@ -8,8 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-
-import { PageHeader, StatsBars, ActivityPanel, SkillChart } from 'Interface/Widgets';
+import { PageHeader, ActivityPanel, SkillChart } from 'Interface/Widgets';
 import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
@@ -37,8 +36,6 @@ class Skill extends BackSkill {
     }
 
     renderFooter() {
-        const lang = langManager.curr['skill'];
-
         // Add activity button
         return (
             <Button
@@ -47,13 +44,14 @@ class Skill extends BackSkill {
                 onPress={this.addActivity}
                 icon='add'
                 iconSize={30}
-            >
-            </Button>
+            />
         );
     }
 
     render() {
         const lang = langManager.curr['skill'];
+        const langTime = langManager.curr['dates']['names'];
+        const langLevel = langManager.curr['level'];
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
         const txtCurrXp = Round(this.skill.xp, 1);
@@ -103,17 +101,22 @@ class Skill extends BackSkill {
                 {/* KPI place */}
                 <View style={styles.kpiContainer}>
                     <KPI
-                        title={"total hours"}
+                        title={langLevel['total-hour']}
                         value={this.skill.totalDuration}
-                        unit={"h"}
+                        unit={langTime['hours-min']}
                         style={[styles.statsContainer]} />
                     <KPI
-                        title={"total xp"}
+                        title={langLevel['total']}
                         value={this.skill.totalFloatXp}
                         style={[styles.statsContainer]} />
-                    {/*<KPI title={"temps moyen"} value={this.skill.numberOfActivities || 0} unit={"h"} style={[styles.statsContainer]}/>*/}
+                    {/*
+                    <KPI
+                        title={'temps moyen'}
+                        value={this.skill.numberOfActivities || 0}
+                        unit={'h'}
+                        style={[styles.statsContainer]}/>
+                    */}
                 </View>
-
 
                 {/* Skill use chart */}
                 <SkillChart

@@ -7,6 +7,29 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginRight: 10
     },
+
+    pieChartContainer: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        alignItems: 'center'
+    },
+    legendContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop:15
+    },
+    legendFlatList: {
+        width: '100%'
+    },
+    legendFlatListContent: {
+        paddingHorizontal: 5
+    },
+    legendFlatListColumn: {
+        width: '100%',
+        justifyContent: 'space-between',
+        marginVertical: 5
+    },
     legendItem: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -15,16 +38,7 @@ const styles = StyleSheet.create({
     legendItemText: {
         color: 'white'
     },
-    legendRow: {
-        width: '100%',
-        justifyContent: 'space-between',
-        marginVertical: 5
-    },
-    pieChartContainer: {
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        alignItems: 'center'
-    },
+
     centerLabel: {
         justifyContent: 'center',
         alignItems: 'center'
@@ -37,12 +51,6 @@ const styles = StyleSheet.create({
     labelSubText: {
         fontSize: 14,
         color: 'white'
-    },
-    legendContainer: {
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop:15
     }
 });
 

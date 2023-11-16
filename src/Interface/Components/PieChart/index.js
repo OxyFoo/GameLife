@@ -2,29 +2,32 @@ import React from 'react';
 import { View, Text, FlatList } from 'react-native';
 import { PieChart as PieChartLib } from 'react-native-gifted-charts';
 
-import themeManager from 'Managers/ThemeManager';
 import styles from './style';
+import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {{ name: string, color:string, value: number }} Item
- * @typedef {{ id: number, valueMin: number, color: string }} ItemBase
- * @typedef {{ id: number, value: number, name: string }} FocusedActivity
+ * @typedef {import('react-native').ListRenderItem<Item>} ListRenderItem
  * 
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  * 
- * @typedef {Object} itemType // object from lib gifted-charts
+ * @typedef {{ name: string, color: string, value: number }} Item
+ * @typedef {{ id: number, value: number, name: string }} FocusedActivity
+ * 
+ * @typedef {object} itemType // object from lib gifted-charts
  */
 
-const InputProps = {
+const PieChartProps = {
     /** @type {StyleProp} */
     style: {},
 
     /** @type {Array<itemType>} */
     data: [],
+
+    /** @type {number} The number of legend items per row */
+    elementPerRow: 2,
 
     /** @type {FocusedActivity|null} */
     focusedActivity: null,
@@ -32,7 +35,6 @@ const InputProps = {
     /** @type {ColorTheme|ColorThemeText} */
     insideBackgroundColor: 'dataBigKpi',
 }
-
 
 class PieChart extends React.Component {
     /**
@@ -48,36 +50,12 @@ class PieChart extends React.Component {
         />
     );
 
-    /**
-     * Renders a legend item. (color dot + text)
-     * @param {Item} item The item object with color, name, and value properties.
-     * @param {number} index
-     * @returns {JSX.Element} A View component styled as a legend item.
-     */
-    renderLegendItem = (item, index) => (
+    /** @type {ListRenderItem} */
+    renderLegendItem = ({ item, index }) => (
         <View key={index} style={styles.legendItem}>
             {this.renderDot(item.color)}
             <Text style={styles.legendItemText}>{item.name}: {item.value}%</Text>
         </View>
-    );
-
-    /**
-     * Renders the legend component. (In our case, three rows of two legend items)
-     * @param {Item[]} dataToDisplay The data array of items with color, name, and value properties.
-     * @param {number} elem_per_row The number of legend items per row.
-     * @returns {JSX.Element} A View component styled as a legend component.
-     */
-    renderLegendComponent = (dataToDisplay, elem_per_row = 2) => (
-        <FlatList
-            style={{ width: '100%' }}
-            data={dataToDisplay}
-            renderItem={({ item, index }) => this.renderLegendItem(item, index)}
-            keyExtractor={(item, index) => index.toString()}
-            numColumns={elem_per_row}
-            contentContainerStyle={{ paddingHorizontal: 5 }} 
-            columnWrapperStyle={styles.legendRow}
-            scrollEnabled={false}
-        />
     );
 
     /**
@@ -97,11 +75,12 @@ class PieChart extends React.Component {
     );
 
     render() {
-        const { style, data, focusedActivity } = this.props;
+        const { style, data, focusedActivity, elementPerRow } = this.props;
 
         if (!data || !focusedActivity) {
             return null;
         }
+
         return (
             <View style={style}>
                 <View style={styles.pieChartContainer}>
@@ -116,7 +95,16 @@ class PieChart extends React.Component {
                         centerLabelComponent={this.renderCenterLabelComponent}
                     />
                     <View style={styles.legendContainer}>
-                        {this.renderLegendComponent(data)}
+                        <FlatList
+                            style={styles.legendFlatList}
+                            data={data}
+                            renderItem={this.renderLegendItem}
+                            keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
+                            numColumns={elementPerRow}
+                            contentContainerStyle={styles.legendFlatListContent} 
+                            columnWrapperStyle={styles.legendFlatListColumn}
+                            scrollEnabled={false}
+                        />
                     </View>
                 </View>
             </View>
@@ -124,8 +112,7 @@ class PieChart extends React.Component {
     }
 }
 
-PieChart.prototype.props = InputProps;
-PieChart.defaultProps = InputProps;
-
+PieChart.prototype.props = PieChartProps;
+PieChart.defaultProps = PieChartProps;
 
 export default PieChart;

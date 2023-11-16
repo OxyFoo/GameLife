@@ -1,26 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, Text } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 
-import themeManager from 'Managers/ThemeManager';
-import TodayPieChartBack from './back';
 import styles from './style';
+import TodayPieChartBack from './back';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Switch, PieChart } from 'Interface/Components';
 
 class TodayPieChart extends TodayPieChartBack {
-
     render() {
-        const graphBackgroundColor = { backgroundColor: themeManager.GetColor('dataBigKpi') };
+        const lang = langManager.curr['home'];
+        const { switchValue, totalTime } = this.state;
+
+        const styleContainer = {
+            backgroundColor: themeManager.GetColor('dataBigKpi')
+        };
+
+        const dayPerformance = switchValue ? '24' : totalTime.toString();
+        const headerText = lang['chart-today-performance'].replace('{}', dayPerformance);
 
         return (
-            <View style={[graphBackgroundColor, styles.container, this.props.style]}>
-
+            <View style={[styleContainer, styles.container, this.props.style]}>
                 {/* Top row view */}
                 <View style={styles.flexBetween}>
 
-                    <Text style={styles.headerText}>
-                        Performance of the day {this.state.switchValue ? "(24h)" : "(" + this.state.totalTime + "h)"}
-                    </Text>
+                    <Text style={styles.headerText}>{headerText}</Text>
 
                     <Switch
                         value={this.state.switchValue}
@@ -36,7 +41,7 @@ class TodayPieChart extends TodayPieChartBack {
                     />
                     :
                     <View>
-                        <Text>Il n'y a pas assez de données pour afficher le graphique</Text>
+                        <Text>{lang['chart-today-notmuch']}</Text>
                     </View>
                 }
             </View>

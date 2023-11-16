@@ -48,6 +48,7 @@
         "level": "Niveau",
         "level-small": "Niv",
         "total": "XP total",
+        "total-hour": "Heures totales",
         "average": "En moyenne {} xp/jour",
         "me": "Moi"
     },
@@ -63,7 +64,7 @@
             "weekly": "Semaine",
             "monthly": "Mois",
             "seconds-min": "m",
-            "seconds-hour": "h"
+            "hours-min": "h"
         },
         "month": [
             "Janvier",
@@ -177,6 +178,7 @@
     "activity": {
         "title-category": "Catégorie",
         "title-activity": "Activité",
+        "title-click-me": "(tu peux cliquer !)",
         "title-schedule": "Horaire",
         "title-experience": "Expérience",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
@@ -265,6 +267,9 @@
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
         "btn-settings": "Paramètres",
+
+        "chart-today-performance": "Performances du jour ({}h)",
+        "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
@@ -529,6 +534,7 @@
         "text-unallocated": "Compétence désafectée",
         "stats-title": "Statistiques",
         "history-title": "Historique",
+        "activity-history": "Historique d'activité",
         "text-history": "{} pendant {} minutes",
         "text-add": "Ajouter l'activité"
     },

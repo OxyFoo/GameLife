@@ -22,8 +22,8 @@ class ThemeManager {
             success: '#27AE60', // Green
             danger: '#C0392B', // Red
             transparent: '#00000000', // Transparent
-            dataBigKpi : "#232B5D", // dark blue
-            dataSmallKpi : "#384065", // faut prendre une autre couleur là 
+            dataBigKpi : "#232B5D", // Dark blue
+            dataSmallKpi : "#384065", // TODO: Pick another color
 
             ground1: '#03052E',
             ground1a: '#0C0E35',
@@ -52,8 +52,8 @@ class ThemeManager {
             success: '#27AE60', // Green
             danger: '#CC0029',
             transparent: '#00000000',
-            dataBigKpi : "#232B5D", // dark blue // DA = data analysis, fat for big element 
-            dataSmallKpi : "#0E1247", // ?? 
+            dataBigKpi : "#232B5D", // Dark blue
+            dataSmallKpi : "#0E1247", // TODO: Change too ?
 
             ground1: '#FFFFFF',
             ground1a: '#FFFFFF',

@@ -16,7 +16,6 @@ class Settings {
         this.connected = false;
         this.onboardingWatched = false;
         this.tutoFinished = false;
-
         this.homePieChart = false; 
 
         this.morningNotifications = true;
@@ -26,6 +25,7 @@ class Settings {
     Clear() {
         this.email = '';
         this.connected = false;
+        this.homePieChart = false;
         this.morningNotifications = true;
         this.eveningNotifications = true;
     }

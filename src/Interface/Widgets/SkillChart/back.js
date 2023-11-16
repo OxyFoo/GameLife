@@ -9,9 +9,14 @@ import { DateToFormatString } from 'Utils/Date';
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * 
+ * @typedef {{ date: string, value: number }} LineData
  */
 
-const InputProps = {
+const SkillChartProps = {
     /** @type {StyleProp} */
     style: {},
 
@@ -23,52 +28,29 @@ const InputProps = {
 }
 
 class SkillChartBack extends React.Component {
-
     state = {
-        /** @type {{"date":string, "value":number}[]} */
+        /** @type {LineData[]} */
         cleanedData: [],
 
-        lineColor: "#000000",
+        /** @type {ColorTheme|ColorThemeText} */
+        lineColor: 'black'
     }
 
-    linesData = null;
-    dataReady = false;
-    maxVal = 0;
-    spacing = 0;
-
     componentDidMount() {
-
-        this.linesData = null;
-        this.dataReady = false;
-        this.maxVal = 0;
-        this.spacing = 0;
-
         const lineColor = this.getLineColor(this.props.skillID);
-
-        this.linesData = this.getDataFromSkillID(this.props.skillID);
-        const dataWithoutActivity = this.linesData.map(({ activity, ...rest }) => rest);
-
-        let cleaningData = (this.fillMissingDates(dataWithoutActivity));
-
-        this.maxVal = Math.max(...cleaningData.map(element => element.value));
-
-        let numberOfDataPoints = cleaningData.length;
-        this.spacing = this.props.chartWidth / numberOfDataPoints;
+        const linesData = this.getDataFromSkillID(this.props.skillID);
+        const cleaningData = (this.fillMissingDates(linesData));
 
         this.setState({
             cleanedData: cleaningData,
             lineColor: lineColor
         });
-
-        this.dataReady = true;
-
     }
 
     /** 
      * Get all the data from the skillID
-     * 
      * @param {number} skillID
-     * @returns {{date:string, value:number}[]}
+     * @returns {LineData[]}
     */
     getDataFromSkillID(skillID) {
         const dataFromBack = [];
@@ -83,14 +65,12 @@ class SkillChartBack extends React.Component {
             const index = dataFromBack.findIndex(item => item.date === date);
             if (index !== -1) {
                 dataFromBack[index].value += element.duration;
+                continue;
             }
-            else {
-                dataFromBack.push({
-                    //activity: skillName,
-                    date: date,
-                    value: element.duration
-                })
-            }
+            dataFromBack.push({
+                date: date,
+                value: element.duration
+            });
         }
 
         return dataFromBack;
@@ -98,8 +78,7 @@ class SkillChartBack extends React.Component {
 
     /**
      * return the same array of map with filled dates and 0 values
-     * 
-     * @param {{date:string, value:number}[]} data 
+     * @param {LineData[]} data 
      * @returns 
      */
     fillMissingDates = (data) => {
@@ -163,20 +142,21 @@ class SkillChartBack extends React.Component {
 
     /**
      * Returns the color of the category of the skill 
-     * 
      * @param {number} skillID
      * @returns {string}
      */
     getLineColor = (skillID) => {
         const skill = dataManager.skills.GetByID(skillID);
-        const category = skill.CategoryID;
-        const categoryColor = dataManager.skills.GetCategoryByID(category).Color || "black";
-        return categoryColor;
+        const categoryID = skill.CategoryID;
+        const category = dataManager.skills.GetCategoryByID(categoryID);
+        if (category === null) {
+            return 'black';
+        }
+        return category.Color;
     }
-
 }
 
-SkillChartBack.prototype.props = InputProps;
-SkillChartBack.defaultProps = InputProps;
+SkillChartBack.prototype.props = SkillChartProps;
+SkillChartBack.defaultProps = SkillChartProps;
 
 export default SkillChartBack;

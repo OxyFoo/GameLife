@@ -44,12 +44,12 @@ class BackSkill extends PageBack {
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         const authorText = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
         const totalDuration = this.getTotalDurationFromSkillID(this.skillID);
-        const activitiesLength = user.activities.getBySkillID(this.skillID).length;
+        const activitiesLength = user.activities.GetBySkillID(this.skillID).length;
+
         this.skill = {
             name: dataManager.GetText(skill.Name),
             category: dataManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
-            totalXP: skillXP.totalXP + ' ' + langManager.curr['level']['xp'],
             totalFloatXp: Round(skillXP.totalXP, 0),
             xp: skillXP.xp,
             next: skillXP.next,
@@ -58,7 +58,7 @@ class BackSkill extends PageBack {
             xml: dataManager.skills.GetXmlByLogoID(skill.LogoID),
             enabled: skill.Enabled,
             totalDuration: totalDuration,
-            numberOfActivities: Round(activitiesLength,1),
+            numberOfActivities: Round(activitiesLength, 1)
         };
 
         // History
@@ -100,13 +100,14 @@ class BackSkill extends PageBack {
         });
     }
 
+    /** @param {number} skillID */
     getTotalDurationFromSkillID = (skillID) => {
-        const history = user.activities.getBySkillID(skillID);
+        const history = user.activities.GetBySkillID(skillID);
         let totalDuration = 0;
         for (const element of history) {
             totalDuration += element.duration;
         }
-        return Round(totalDuration/60,1);
+        return Round(totalDuration/60, 1);
     }
 
     addActivity = () => {

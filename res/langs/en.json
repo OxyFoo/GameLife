@@ -47,7 +47,8 @@
         "xp": "XP",
         "level": "Level",
         "level-small": "Lvl",
-        "total": "TOTAL XP",
+        "total": "Total XP",
+        "total-hour": "Total hours",
         "average": "AVERAGE {} XP/DAY",
         "me": "Me"
     },
@@ -63,7 +64,7 @@
             "weekly": "Weekly",
             "monthly": "Monthly",
             "seconds-min": "m",
-            "seconds-hour": "h"
+            "hours-min": "h"
         },
         "month": [
             "January",
@@ -177,6 +178,7 @@
     "activity": {
         "title-category": "Category",
         "title-activity": "Activity",
+        "title-click-me": "(you can click me)",
         "title-schedule": "Schedule",
         "title-experience": "Experience",
         "title-no-experience": "This activity has no experience",
@@ -265,6 +267,9 @@
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
         "btn-settings": "Settings",
+
+        "chart-today-performance": "Performance of the day ({}h)",
+        "chart-today-notmuch": "Not enough data to display graph",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
@@ -529,6 +534,7 @@
         "text-unallocated": "Competence unallocated",
         "stats-title": "Statistiques",
         "history-title": "History",
+        "activity-history": "Activity history",
         "text-history": "{} during {} minutes",
         "text-add": "Add activity"
     },

@@ -61,18 +61,18 @@ const styles = StyleSheet.create({
     },
 
     addActivity: {
+        position: 'absolute',
         width: 50,
         height: 50,
-        position: 'absolute',
         right: 36,
         bottom: 36
     },
 
     kpiContainer: {
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-      },
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    }
 });
 
 export default styles;

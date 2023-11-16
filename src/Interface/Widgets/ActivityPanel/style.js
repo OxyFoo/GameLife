@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
         marginBottom: 48
     },
     panelTitle: {
-        fontSize: 24,
+        fontSize: 24
     },
     subPanelTitle: {
-        fontSize: 14,
+        fontSize: 14
     },
     panelTitleIcon: {
         position: 'absolute',
@@ -66,12 +66,12 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderStyle: 'solid',
         borderRadius: 15,
-        backgroundColor: "rgba(0,0,0,0.15)"
+        backgroundColor: 'rgba(0,0,0,0.15)'
     },
     buttonView: {
-        alignItems: "center",
-        justifyContent: "center"
-    },
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 });
 
 export default styles;

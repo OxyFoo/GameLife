@@ -128,7 +128,6 @@ class BackActivity extends PageBack {
         } else if (user.tempSelectedTime !== null) {
             this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
         }
-
     }
 
     /** @param {LayoutChangeEvent} event */

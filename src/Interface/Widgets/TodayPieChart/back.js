@@ -9,27 +9,40 @@ import { GetTime } from 'Utils/Time';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Interface/Components/PieChart').ItemBase} ItemBase
  * @typedef {import('Interface/Components/PieChart').Item} Item
+ * @typedef {import('Interface/Components/PieChart').FocusedActivity} FocusedActivity
+ * 
+ * @typedef {object} UpdatingData
+ * @property {number} id
+ * @property {string} name
+ * @property {number} value
+ * @property {number} valueMin
+ * @property {string} color
  */
 
 const InputProps = {
     /** @type {StyleProp} */
-    style: {},
+    style: {}
 }
 
 class TodayPieChartBack extends React.Component {
-
     state = {
+        /** @type {boolean} */
         switchValue: user.settings.homePieChart,
 
         dataToDisplay: [],
-        focusedActivity: {},
-        totalTime: 0,
+
+        /** @type {FocusedActivity|null} */
+        focusedActivity: null,
+
+        /** @type {number} */
+        totalTime: 0
     }
 
+    /** @type {UpdatingData[]} */
     updatingData = [];
 
+    /** @param {boolean} value */
     changeSwitchValue = (value) => {
         this.setState({ switchValue: value });
         user.settings.homePieChart = value;
@@ -39,11 +52,9 @@ class TodayPieChartBack extends React.Component {
 
     /**
      * Compute and prepare the data for the pie chart
-     * 
      * @param {boolean} value 
      */
     compute = (value) => {
-
         // Compute the data depending on the switch value
         this.updatingData = this.initCategoriesArray();
         this.addCategoriesName();
@@ -59,9 +70,10 @@ class TodayPieChartBack extends React.Component {
         }
         const focusedActivity = this.findBiggestActivity();
 
-        if (focusedActivity.id !== 0) {
-            this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
-        }
+        // TODO: This is correct ? Where is "focused" parameter defined ?
+        //if (focusedActivity.id !== 0) {
+        //    this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
+        //}
         this.computeGradientShadow();
 
         // Focused and display handler
@@ -71,13 +83,8 @@ class TodayPieChartBack extends React.Component {
             switchValue: value,
             totalTime: (totalTime / 60.0).toFixed(1),
         });
-
-        //console.log("this.updatingData", this.updatingData);
     }
 
-    /**
-     * Prepare the datas for the pie chart before it's mounted 
-     */
     componentDidMount() {
         this.compute(user.settings.homePieChart);
 
@@ -86,72 +93,80 @@ class TodayPieChartBack extends React.Component {
         });
     }
 
-    /**
-     * Delete the listener when the component is unmounted
-     */
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     /**
      * Create and return the init object needed because fuckin reference WON'T WORK 
-     * 
-     * @returns {{ id: number; valueMin: number; }[]}
+     * @returns {UpdatingData[]}
      */
     initCategoriesArray = () => {
-        const allCategories = dataManager.skills.categories
+        const allCategories = dataManager.skills.categories;
+        /** @type {UpdatingData[]} */
         let baseData = []
+
         for (let i = 1; i < allCategories.length; i++) {
-            baseData.push({ id: allCategories[i].ID, valueMin: 0 })
+            baseData.push({
+                id: allCategories[i].ID,
+                value: 0,
+                valueMin: 0,
+                name: '',
+                color: '#000000'
+            });
         }
+
         return baseData;
     }
 
-
     /**
      * Add the name of the categories to the updatingData in the good language
-     * 
-     * @return {void} BUUUUT update the state
+     * @return {void}
      */
     addCategoriesName = () => {
         for (const element of this.updatingData) {
-            const categoryID = dataManager.skills.GetCategoryByID(element.id);
-            const categoryName = categoryID.Name;
+            const category = dataManager.skills.GetCategoryByID(element.id);
+            if (category === null) {
+                user.interface.console.AddLog('error', 'Error in PieChartHome: category not found');
+                continue;
+            }
+
+            const categoryName = category.Name;
             if (categoryName) {
                 element.name = dataManager.GetText(categoryName);
-                element.color = categoryID.Color;
-            }
-            else {
-                element.name = "";
-                element.color = "black";
+                element.color = category.Color;
+            } else {
+                element.name = '';
+                element.color = 'black';
             }
         }
     }
 
     /**
      * Compute the time spent in each category and update the state
-     * 
-     * @return {void} BUUUUT update the state
+     * @return {void}
      */
     computeTimeEachCategory = () => {
         const allActivitiesOfToday = user.activities.GetByTime(GetTime(undefined, 'local'));
-        for (const element of allActivitiesOfToday) {
-            const acti = element;
-            const categoryID = dataManager.skills.GetByID(acti.skillID).CategoryID;
-            const index = this.updatingData.findIndex(item => item.id === categoryID);
-            if (index !== -1) {
-                this.updatingData[index].valueMin += acti.duration;
+        for (const activity of allActivitiesOfToday) {
+            const category = dataManager.skills.GetByID(activity.skillID);
+            if (category === null) {
+                user.interface.console.AddLog('error', 'Error in PieChartHome: category not found in dataManager.skills');
+                continue;
             }
-            else {
-                console.log("Error in PieChartHome: categoryID not found in state.updatingData");
-                console.log("Details: acti =", acti, "categoryID =", categoryID);
+
+            const index = this.updatingData.findIndex(item => item.id === category.ID);
+            if (index === -1) {
+                user.interface.console.AddLog('error', 'Error in PieChartHome: categoryID not found in state.updatingData');
+                continue;
             }
+
+            this.updatingData[index].valueMin += activity.duration;
         }
     };
 
     /**
      * Compute the time in minutes spent in total in the day 
-     * 
      * @return {number}
      */
     computeTotalTime = () => {
@@ -165,7 +180,6 @@ class TodayPieChartBack extends React.Component {
 
     /**
      * Convert the time in minutes to a percent of the day
-     * 
      * @param {number} totalMin
      * @return {number}
      */
@@ -178,16 +192,13 @@ class TodayPieChartBack extends React.Component {
                 totalPercent += item.value;
             }
         }
-
         return totalPercent;
     }
 
-
     /**
      * Either actualize the value of the "undefined" activity or create it
-     * 
      * @param {number} totalPercent
-     * @return {void} BUUUUT update the state
+     * @return {void}
      */
     addUndefinedActivity = (totalPercent) => {
         if (totalPercent < 100) {
@@ -201,7 +212,7 @@ class TodayPieChartBack extends React.Component {
                     color: '#B0B0B0',
                     name: "Non défini",
                     id: 6,
-                    value: 100 - totalPercent,
+                    value: 100 - totalPercent
                 });
             }
         }
@@ -209,7 +220,6 @@ class TodayPieChartBack extends React.Component {
 
     /**
      * Find the biggest activity and update the state
-     * 
      * @return {{id: number, value: number, name: string} | null} 
      */
     findBiggestActivity = () => {
@@ -257,8 +267,6 @@ class TodayPieChartBack extends React.Component {
 
         return `#${RR}${GG}${BB}`;
     }
-
-
 }
 
 TodayPieChartBack.prototype.props = InputProps;

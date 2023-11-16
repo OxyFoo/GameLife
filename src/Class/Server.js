@@ -4,6 +4,7 @@ import langManager from 'Managers/LangManager';
 
 import { Request_Async } from 'Utils/Request';
 import { GetDeviceInformations } from 'Utils/Device';
+import { openStore } from 'Utils/Store';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -58,7 +59,7 @@ class Server {
         }
 
         /** @type {ServerStatus} */
-        const status = response['status'];
+        const status = response['status']; //'update' // si tu veux l'essayer tu peux juste forcer à update ici 
         const devMode = response['devMode'];
 
         // Return status & popup out of this class
@@ -66,6 +67,7 @@ class Server {
             const title = langManager.curr['home']['alert-update-title'];
             const text = langManager.curr['home']['alert-update-text'];
             this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);
+            openStore();
         } else if (status === 'downdate') {
             this.online = false;
             const title = langManager.curr['home']['alert-newversion-title'];

@@ -13,9 +13,11 @@ import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import ScreenTuto from './Widgets/ScreenTuto';
 import StatsBars from './Widgets/StatsBars';
+import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import Quests from './Widgets/Quests';
 import UserHeader from './Widgets/UserHeader';
+import TodayPieChart from './Widgets/TodayPieChart';
 
 export {
     ActivityPanel,
@@ -33,7 +35,9 @@ export {
     ScreenList,
     ScreenTuto,
     StatsBars,
+    SkillChart,
     SkillsGroup,
     Quests,
-    UserHeader
+    UserHeader,
+    TodayPieChart
 };

@@ -4,6 +4,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { GetDate } from 'Utils/Time';
+import { Round } from 'Utils/Functions';
 import { DateToFormatString } from 'Utils/Date';
 
 /**
@@ -42,17 +43,22 @@ class BackSkill extends PageBack {
         const skillXP = user.experience.GetSkillExperience(this.skillID);
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         const authorText = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
+        const totalDuration = this.getTotalDurationFromSkillID(this.skillID);
+        const activitiesLength = user.activities.GetBySkillID(this.skillID).length;
+
         this.skill = {
             name: dataManager.GetText(skill.Name),
             category: dataManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
-            totalXP: skillXP.totalXP + ' ' + langManager.curr['level']['xp'],
+            totalFloatXp: Round(skillXP.totalXP, 0),
             xp: skillXP.xp,
             next: skillXP.next,
             creator: skill.Creator ? authorText : '',
             stats: Object.values(skill.Stats),
             xml: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-            enabled: skill.Enabled
+            enabled: skill.Enabled,
+            totalDuration: totalDuration,
+            numberOfActivities: Round(activitiesLength, 1)
         };
 
         // History
@@ -92,6 +98,16 @@ class BackSkill extends PageBack {
 
             return { activity, title, onPress };
         });
+    }
+
+    /** @param {number} skillID */
+    getTotalDurationFromSkillID = (skillID) => {
+        const history = user.activities.GetBySkillID(skillID);
+        let totalDuration = 0;
+        for (const element of history) {
+            totalDuration += element.duration;
+        }
+        return Round(totalDuration/60, 1);
     }
 
     addActivity = () => {

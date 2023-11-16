@@ -67,21 +67,21 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Experience */}
                 <View ref={ref => this.refHelp3 = ref}>
-                {positiveXP ? (
-                    <>
-                        <Text style={styles.tempTitle} bold>
-                            {lang['title-experience']}
+                    {positiveXP ? (
+                        <>
+                            <Text style={styles.tempTitle} bold>
+                                {lang['title-experience']}
+                            </Text>
+                            <ActivityExperience
+                                skillID={selectedSkillID}
+                                duration={activity?.duration ?? 0}
+                            />
+                        </>
+                    ) : (
+                        <Text style={styles.tempTitleNoXP} bold>
+                            {lang['title-no-experience']}
                         </Text>
-                        <ActivityExperience
-                            skillID={selectedSkillID}
-                            duration={activity?.duration ?? 0}
-                        />
-                    </>
-                ) : (
-                    <Text style={styles.tempTitleNoXP} bold>
-                        {lang['title-no-experience']}
-                    </Text>
-                )}
+                    )}
                 </View>
 
                 {/* Commentary */}
@@ -101,7 +101,7 @@ class ActivityPanel extends ActivityPanelBack {
                         <Text style={styles.tempTitle} bold>
                             {lang['title-commentary']}
                         </Text>
-    
+
                         {/* Comment content */}
                         <TouchableOpacity
                             style={[styles.commentPanel, backgroundCard]}
@@ -163,6 +163,9 @@ class ActivityPanel extends ActivityPanelBack {
                 !variantTheme ? 'backgroundGrey' : 'backgroundCard'
             )
         };
+        const styleTitle = {
+            borderColor: themeManager.GetColor('main1')
+        };
 
         return (
             <PanelScreen
@@ -174,9 +177,21 @@ class ActivityPanel extends ActivityPanelBack {
             >
                 {/* Title */}
                 <View style={styles.panelTitleView}>
-                    <Text style={styles.panelTitle} bold>
-                        {activityText}
-                    </Text>
+
+                    <Button
+                        onPress={this.onOpenSkill}
+                        style={[styleTitle, styles.buttonViewContainer]}>
+                        <View
+                            style={styles.buttonView}>
+                            <Text style={styles.panelTitle} bold>
+                                {activityText}
+                            </Text>
+                            <Text style={styles.subPanelTitle}>
+                                {lang['title-click-me']}
+                            </Text>
+                        </View>
+                    </Button>
+
                     <Icon
                         containerStyle={[styles.panelTitleIcon]}
                         size={42}
@@ -188,13 +203,13 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Start mode - Already / Now */}
                 <View ref={ref => this.refHelp1 = ref}>
-                {mode === 'activity' ? null : (
-                    <TextSwitch
-                        style={styles.panelTextSwitch}
-                        texts={[ lang['swiper-already'], lang['swiper-now'] ]}
-                        onChange={this.onChangeMode}
-                    />
-                )}
+                    {mode === 'activity' ? null : (
+                        <TextSwitch
+                            style={styles.panelTextSwitch}
+                            texts={[lang['swiper-already'], lang['swiper-now']]}
+                            onChange={this.onChangeMode}
+                        />
+                    )}
                 </View>
 
                 <View>

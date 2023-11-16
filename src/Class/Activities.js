@@ -109,6 +109,7 @@ class Activities {
         };
         return activities;
     }
+
     /**
      * Return all activities (save and unsaved) sorted by start time (ascending)
      * @returns {Array<Activity>}
@@ -116,6 +117,15 @@ class Activities {
     Get() {
         let activities = [ ...this.activities, ...this.UNSAVED_activities ];
         return SortByKey(activities, 'startTime');
+    }
+
+    /**
+     * Return the list of activities for the skill
+     * @param {number} skillID Skill ID
+     * @returns {Array<Activity>} List of activities
+     */
+    GetBySkillID(skillID) {
+        return this.Get().filter(activity => activity.skillID === skillID);
     }
 
     IsUnsaved = () => {

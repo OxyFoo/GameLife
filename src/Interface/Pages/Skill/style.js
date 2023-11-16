@@ -62,9 +62,16 @@ const styles = StyleSheet.create({
 
     addActivity: {
         position: 'absolute',
-        left: 36,
+        width: 50,
+        height: 50,
         right: 36,
         bottom: 36
+    },
+
+    kpiContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     }
 });
 

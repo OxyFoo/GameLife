@@ -83,7 +83,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 velocity={.75}
                                 callback={this.onChangeDuration}
                             />
-                            <Text>{langDatesNames['seconds-hour']}</Text>
+                            <Text>{langDatesNames['hours-min']}</Text>
                             <Digit
                                 name='duration_minute'
                                 containerStyle={{

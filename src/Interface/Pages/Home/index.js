@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { Quests } from 'Interface/Widgets';
+import { Quests, TodayPieChart } from 'Interface/Widgets';
 import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
 
 class Home extends BackHome {
@@ -53,6 +53,8 @@ class Home extends BackHome {
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
+
+                <TodayPieChart style={styles.topSpace} />
 
                 <Button
                     style={styles.topSpace}

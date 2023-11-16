@@ -7,8 +7,9 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { PageHeader, StatsBars, ActivityPanel } from 'Interface/Widgets';
-import { Page, Container, Text, Icon, XPBar, Button } from 'Interface/Components';
+import { Round } from 'Utils/Functions';
+import { PageHeader, ActivityPanel, SkillChart } from 'Interface/Widgets';
+import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
@@ -35,23 +36,27 @@ class Skill extends BackSkill {
     }
 
     renderFooter() {
-        const lang = langManager.curr['skill'];
-
         // Add activity button
         return (
             <Button
                 style={styles.addActivity}
                 color='main2'
                 onPress={this.addActivity}
-            >
-                {lang['text-add']}
-            </Button>
+                icon='add'
+                iconSize={30}
+            />
         );
     }
 
     render() {
         const lang = langManager.curr['skill'];
+        const langTime = langManager.curr['dates']['names'];
+        const langLevel = langManager.curr['level'];
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
+
+        const txtCurrXp = Round(this.skill.xp, 1);
+        const txtNextXP = this.skill.next;
+        const txtXP = langManager.curr['level']['xp'];
 
         if (!this.skill) {
             return null;
@@ -86,7 +91,7 @@ class Skill extends BackSkill {
                 <View style={styles.levelContainer}>
                     <View style={styles.level}>
                         <Text>{this.skill.level}</Text>
-                        <Text>{this.skill.totalXP}</Text>
+                        <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
                     </View>
                     <XPBar value={this.skill.xp} maxValue={this.skill.next} />
 
@@ -95,15 +100,45 @@ class Skill extends BackSkill {
                     )}
                 </View>
 
+                {/* KPI place */}
+                <View style={styles.kpiContainer}>
+                    <KPI
+                        title={langLevel['total-hour']}
+                        value={this.skill.totalDuration}
+                        unit={langTime['hours-min']}
+                        style={[styles.statsContainer]} />
+                    <KPI
+                        title={langLevel['total']}
+                        value={this.skill.totalFloatXp}
+                        style={[styles.statsContainer]} />
+                    {/*
+                    <KPI
+                        title={'temps moyen'}
+                        value={this.skill.numberOfActivities || 0}
+                        unit={'h'}
+                        style={[styles.statsContainer]}/>
+                    */}
+                </View>
+
+                {/* Skill use chart */}
+                <SkillChart
+                    skillID={this.skillID}
+                    chartWidth={300}
+                    style={styles.statsContainer}
+                />
+
                 {/* Stats */}
+                {/* 
                 <Container
                     text={lang['stats-title']}
                     style={styles.statsContainer}
                     type='rollable'
-                    opened={true}
+                    opened={false}
                 >
                     <StatsBars data={user.stats} supData={this.skill.stats} />
                 </Container>
+                */}
+
 
                 {/* History */}
                 {this.history.length > 0 && (

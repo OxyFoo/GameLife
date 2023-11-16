@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
         height: 16,
         width: '100%',
         borderLeftWidth: 1,
-        borderLeftColor: 'gray',
+        borderLeftColor: 'rgba(0,0,0,0.5)',
         borderRightWidth: 1,
-        borderRightColor: 'gray',
+        borderRightColor: 'rgba(0,0,0,0.5)',
     },
     timelineItem2: {
         position: 'absolute',

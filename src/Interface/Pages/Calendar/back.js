@@ -16,6 +16,7 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  * @typedef {import('Interface/Widgets/BlockMonth/script').DayType} DayType
+ * @typedef {import('react-native').NativeSyntheticEvent<import('react-native').NativeScrollEvent>} event 
  */
 
 class BackCalendar extends PageBack {
@@ -303,6 +304,18 @@ class BackCalendar extends PageBack {
     onAddActivityFromTime = (time) => {
         user.interface.ChangePage('activity', { time }, true);
     }
+
+    /**
+     * Called when the user scroll the page 
+     * 
+     * @param {event} event
+     */
+    handleScroll = (event) => {
+        const isScrolled = event.nativeEvent.contentOffset.y > 20;
+        if (this.refActivityTimeline.current) {
+            this.refActivityTimeline.current.setThinMode(isScrolled);
+        }
+    };
 }
 
 export default BackCalendar;

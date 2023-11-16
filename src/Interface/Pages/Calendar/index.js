@@ -30,12 +30,6 @@ class Calendar extends BackCalendar {
         />
     );
 
-    handleScroll = (event) => {
-        if (this.refActivityTimeline.current) {
-            this.refActivityTimeline.current.handleScroll(event);
-        }
-    };
-
 
     render() {
         const {

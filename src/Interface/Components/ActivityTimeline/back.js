@@ -13,7 +13,8 @@ import { act } from 'react-test-renderer';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('react').RefObject<any>} Ref
+ * @typedef {{ color: string; startTime: number; duration: number; skillLogoID: number; marginLeft: number; skillID:number; width:number; logo:string; logoColor:string }} Activity
  */
 
 const InputProps = {
@@ -23,7 +24,7 @@ const InputProps = {
     /** @type {Activity[]} */
     activities: [],
 
-    /** @type {null} */
+    /** @type {Ref} */
     ref: null
 }
 
@@ -42,25 +43,26 @@ class ActivityTimelineBack extends React.Component {
     timeLineOpened = true;
 
     /**
-     * Handle the scroll of the flatlist in Calendar
-     * 
-     * @param {any} event TODO : le type jsp ce que je dois mettre Gerem, je met any par défaut mdr  
+     * To close or open the timeline
+     *  
+     * @param {boolean} isScrolled 
      */
-    handleScroll = (event) => {
-
-        const isScrolled = event.nativeEvent.contentOffset.y > 0;
-
+    setThinMode(isScrolled) {
         if (isScrolled && this.timeLineOpened) {
-            console.log("on ferme")
+            //console.log("on ferme")
             this.setState({ isScrolled: true });
-        } 
-        else if (!isScrolled && !this.timeLineOpened){
-            console.log("on ouvre")
+        }
+        else if (!isScrolled && !this.timeLineOpened) {
+            //console.log("on ouvre")
             this.setState({ isScrolled: false });
         }
+    }
 
-    };
-
+    /**
+     * Prepare the activities array to be used with non UI data
+     * 
+     * @returns {Activity[]}
+     */
     prepareActivities() {
         let tempActivities = [];
 
@@ -85,6 +87,13 @@ class ActivityTimelineBack extends React.Component {
         return tempActivities;
     }
 
+
+    /**
+     * Prepare the activities array to be used with UI data
+     * 
+     * @param {Activity[]} activities
+     * @returns {Activity[]}
+     */
     prepareUIActivities(activities) {
         const screenWidth = Dimensions.get('window').width - 34; // Assuming full screen width - 32 cause border radius is 16 both side and 2 gray borders are 1 each 
         const totalMinutesInDay = 24 * 60;
@@ -107,7 +116,7 @@ class ActivityTimelineBack extends React.Component {
 
             tempActivities.push(activity);
         }
-        return activities
+        return tempActivities
     }
 
     compute() {
@@ -120,7 +129,7 @@ class ActivityTimelineBack extends React.Component {
 
     componentDidMount() {
         this.compute();
-    } s
+    }
 
     componentDidUpdate(prevProps, prevState) {
         // this activates only if the activities array changes (we don't need to recompute anything if the scroll changes for example)

@@ -99,10 +99,6 @@ class Profile extends BackProfile {
                         value={this.totalActivityLength.toString()}
                     />
                     <DataRow
-                        title='row-tasks'
-                        value={this.totalTasks.toString()}
-                    />
-                    <DataRow
                         title='row-time'
                         value={this.totalActivityTime.toString()}
                     />

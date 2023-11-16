@@ -7,7 +7,7 @@ import { Sleep } from 'Utils/Functions';
  * @this {import('./back').default}
  */
 function StartHelp() {
-    const lang = langManager.curr['tuto']['task'];
+    const lang = langManager.curr['tuto']['quest'];
 
     user.interface.screenTuto.ShowTutorial([
         {
@@ -23,7 +23,7 @@ function StartHelp() {
             }
         },
         {
-            component: this.refSectionSubtasks.refHelp1,
+            component: this.refSectionTasks.refHelp1,
             text: lang['3'],
             execBefore: async () => {
                 this.refPage.GotoY(200);

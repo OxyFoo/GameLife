@@ -27,12 +27,6 @@ class Achievements {
         if (count($result) === 0) ExitWithStatus('Error: Achievement not found');
 
         $rawRewards = $result[0]['Rewards'];
-
-        // Add rewards
-        if (!$rawRewards) {
-            return false;
-        }
-
         $rewards = explode(',', $rawRewards);
         $rewardAdded = Achievements::ExecReward($db, $account, $rewards);
         if ($rewardAdded === false) {

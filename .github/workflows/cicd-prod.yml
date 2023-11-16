@@ -1,0 +1,106 @@
+name: GameLife - Continuous Integration and Continuous Delivery
+
+on:
+  pull_request:
+    branches:
+      - prod
+
+jobs:
+  test:
+    name: 🔍 Application tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Cache NPM packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run tests
+        env:
+          ENVFILE: .env.test
+        run: npm test
+
+  build:
+    name: 🏗️ Build application
+    runs-on: ubuntu-latest
+    container: reactnativecommunity/react-native-android
+    needs: [ test ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Cache NPM packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Get config files
+        run: |
+          echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
+          echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
+          echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
+
+      - name: Build app
+        env:
+          ENVFILE: .env.prod
+        run: npm run build
+
+      - name: Upload aab artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Download buildtool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
+
+      - name: Generate universal APK
+        run: |
+          java -jar ./bundletool.jar build-apks \
+            --bundle=./android/app/build/outputs/bundle/release/app-release.aab \
+            --output=my_app.apks \
+            --mode=universal \
+            --ks=./android/app/gamelife.keystore \
+            --ks-key-alias=gameLifeAlias \
+            --ks-pass=file:./keystore
+          unzip -p my_app.apks universal.apk > GameLife-prod.apk
+
+      - name: Upload apk artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: GameLife-prod.apk
+          path: GameLife-prod.apk
+
+#  delivery:
+#    name: 📦 Continuous Delivery
+#    runs-on: ubuntu-latest
+#    needs: [ build ]
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3

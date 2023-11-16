@@ -5,8 +5,8 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Class/Tasks').Task} Task
- * @typedef {import('Class/Tasks').RepeatModes} RepeatModes
+ * @typedef {import('Class/Quests').Quest} Quest
+ * @typedef {import('Class/Quests').RepeatModes} RepeatModes
  * 
  * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
  * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
@@ -16,17 +16,17 @@ import langManager from 'Managers/LangManager';
  * @typedef {import('./Sections/activity').default} SectionActivity
  * @typedef {import('./Sections/schedule').default} SectionSchedule
  * @typedef {import('./Sections/schedule').OnChangeScheduleEvent} OnChangeScheduleEvent
- * @typedef {import('./Sections/subtasks').default} SectionSubtasks
+ * @typedef {import('./Sections/tasks').default} SectionTasks
  * @typedef {import('./Sections/description').default} SectionDescription
  */
 
-class BackTask extends PageBack {
+class BackQuest extends PageBack {
     state = {
         /** @type {States} */
         action: 'new',
         button: {
             /** @type {string} */
-            text: langManager.curr['task']['button-add'],
+            text: langManager.curr['quest']['button-add'],
 
             /** @type {ColorTheme|ColorThemeText} */
             color: 'main2'
@@ -45,14 +45,14 @@ class BackTask extends PageBack {
     /** @type {SectionSchedule|null} */
     refSectionSchedule = null;
 
-    /** @type {SectionSubtasks|null} */
-    refSectionSubtasks = null;
+    /** @type {SectionTasks|null} */
+    refSectionTasks = null;
 
     /** @type {SectionDescription|null} */
     refSectionDescription = null;
 
-    /** @type {Task|null} */
-    selectedTask = null;
+    /** @type {Quest|null} */
+    selectedQuest = null;
 
     /** @type {RepeatModes} */
     lastRepeatMode = 'none';
@@ -60,26 +60,26 @@ class BackTask extends PageBack {
     constructor(props) {
         super(props);
 
-        if (this.props.args?.task) {
-            /** @type {Task|null} */
-            const task = this.props.args.task || null;
-            this.selectedTask = task;
-            this.lastRepeatMode = task.Schedule.Type;
+        if (this.props.args?.quest) {
+            /** @type {Quest|null} */
+            const quest = this.props.args.quest || null;
+            this.selectedQuest = quest;
+            this.lastRepeatMode = quest.Schedule.Type;
 
-            if (task === null) {
+            if (quest === null) {
                 user.interface.BackHandle();
-                user.interface.console.AddLog('error', 'Task: Task not found');
+                user.interface.console.AddLog('error', 'Quest: Quest not found');
                 return;
             }
 
             this.state = {
                 action: 'remove',
                 button: {
-                    text: langManager.curr['task']['button-remove'],
+                    text: langManager.curr['quest']['button-remove'],
                     color: 'danger'
                 },
 
-                title: task.Title,
+                title: quest.Title,
                 error: ''
             };
         }
@@ -88,14 +88,14 @@ class BackTask extends PageBack {
     componentDidMount() {
         super.componentDidMount();
 
-        const { selectedTask } = this;
-        if (selectedTask === null) return;
+        const { selectedQuest } = this;
+        if (selectedQuest === null) return;
 
-        const { Deadline, Schedule: { Type, Repeat } } = selectedTask;
+        const { Deadline, Schedule: { Type, Repeat } } = selectedQuest;
         this.refSectionSchedule.SetValues(Deadline, Type, Repeat);
-        this.refSectionSubtasks.SetSubtasks(selectedTask.Subtasks);
-        this.refSectionSkill.SetSkill(selectedTask.Skill);
-        this.refSectionDescription.SetDescription(selectedTask.Description);
+        this.refSectionTasks.SetTasks(selectedQuest.Tasks);
+        this.refSectionSkill.SetSkill(selectedQuest.Skill);
+        this.refSectionDescription.SetDescription(selectedQuest.Description);
     }
 
     componentDidFocused = () => {
@@ -104,13 +104,13 @@ class BackTask extends PageBack {
 
     /**
      * @param {boolean} askPopup Show a popup to ask the user if he wants to
-     *                           leave the page when he is editing a task
+     *                           leave the page when he is editing a quest
      * @returns {boolean}
      */
     BackHandler = (askPopup = true) => {
         const { action } = this.state;
 
-        // Don't show popup or task not edited => leave
+        // Don't show popup or quest not edited => leave
         if (!askPopup || action === 'remove') {
             return true;
         }
@@ -121,18 +121,18 @@ class BackTask extends PageBack {
                 user.interface.BackHandle();
             }
         }
-        const title = langManager.curr['task']['alert-back-title'];
-        const text = langManager.curr['task']['alert-back-text'];
+        const title = langManager.curr['quest']['alert-back-title'];
+        const text = langManager.curr['quest']['alert-back-text'];
         user.interface.popup.Open('yesno', [ title, text ], callback);
         return false;
     }
 
-    onEditTask = () => {
-        if (this.selectedTask !== null && this.state.action !== 'edit') {
+    onEditQuest = () => {
+        if (this.selectedQuest !== null && this.state.action !== 'edit') {
             this.setState({
                 action: 'edit',
                 button: {
-                    text: langManager.curr['task']['button-save'],
+                    text: langManager.curr['quest']['button-save'],
                     color: 'success'
                 }
             });
@@ -150,7 +150,7 @@ class BackTask extends PageBack {
      */
     onChangeTitle = (title, init = false) => {
         // Edition mode if title is modified
-        if (!init) this.onEditTask();
+        if (!init) this.onEditQuest();
 
         this.checkTitleErrors(title);
         this.setState({ title });
@@ -163,15 +163,15 @@ class BackTask extends PageBack {
     checkTitleErrors = (title) => {
         let message = '';
 
-        const titleIsCurrent = title === (this.selectedTask?.Title || null);
-        const titleUsed = user.tasks.Get().some(t => t.Title === title);
+        const titleIsCurrent = title === (this.selectedQuest?.Title || null);
+        const titleUsed = user.quests.Get().some(t => t.Title === title);
 
         if (title.trim().length <= 0) {
-            message = langManager.curr['task']['error-title-empty'];
+            message = langManager.curr['quest']['error-title-empty'];
         }
 
         else if (!titleIsCurrent && titleUsed) {
-            message = langManager.curr['task']['error-title-exists'];
+            message = langManager.curr['quest']['error-title-exists'];
         }
 
         this.setState({ error: message });
@@ -186,39 +186,39 @@ class BackTask extends PageBack {
             this.refPage.GotoY(0);
         }
 
-        this.onEditTask();
+        this.onEditQuest();
     }
 
     onButtonPress = () => {
         const { action } = this.state;
         switch (action) {
-            case 'new': this.addTask(); break;
-            case 'edit': this.editTask(); break;
-            case 'remove': this.remTask(); break;
+            case 'new': this.addQuest(); break;
+            case 'edit': this.editQuest(); break;
+            case 'remove': this.remQuest(); break;
             default:
-                user.interface.console.AddLog('error', 'Task: Unknown action');
+                user.interface.console.AddLog('error', 'Quest: Unknown action');
         }
     }
-    addTask = () => {
+    addQuest = () => {
         const { title } = this.state;
         const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         const skill = this.refSectionSkill.GetSkill();
-        const subtasks = this.refSectionSubtasks.GetSubtasks()
+        const tasks = this.refSectionTasks.GetTasks()
         const description = this.refSectionDescription.GetDescription();
 
         if (this.checkTitleErrors(title)) {
             return;
         }
 
-        const addition = user.tasks.Add(
+        const addition = user.quests.Add(
             title,
             description,
             deadline,
             repeatMode,
             selectedDays,
             skill,
-            subtasks
+            tasks
         );
 
         if (addition === 'added') {
@@ -226,19 +226,19 @@ class BackTask extends PageBack {
             user.interface.ResetCustomBackHandler();
             user.interface.BackHandle();
         } else if (addition === 'alreadyExist') {
-            user.interface.console.AddLog('warn', 'Task: Task already exist');
+            user.interface.console.AddLog('warn', 'Quest: Quest already exist');
         }
     }
-    editTask = () => {
+    editQuest = () => {
         const { title } = this.state;
         const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         const skill = this.refSectionSkill.GetSkill();
-        const subtasks = this.refSectionSubtasks.GetSubtasks();
+        const tasks = this.refSectionTasks.GetTasks();
         const description = this.refSectionDescription.GetDescription();
 
-        if (this.selectedTask === null) {
-            user.interface.console.AddLog('error', 'Task: Selected task is null');
+        if (this.selectedQuest === null) {
+            user.interface.console.AddLog('error', 'Quest: Selected quest is null');
             return;
         }
 
@@ -246,15 +246,15 @@ class BackTask extends PageBack {
             return;
         }
 
-        const edition = user.tasks.Edit(
-            this.selectedTask,
+        const edition = user.quests.Edit(
+            this.selectedQuest,
             title,
             description,
             deadline,
             repeatMode,
             selectedDays,
             skill,
-            subtasks
+            tasks
         );
 
         if (edition === 'edited') {
@@ -262,31 +262,31 @@ class BackTask extends PageBack {
             user.interface.ResetCustomBackHandler();
             user.interface.BackHandle();
         } else if (edition === 'notExist') {
-            user.interface.console.AddLog('warn', 'Task: Task not exist');
+            user.interface.console.AddLog('warn', 'Quest: Quest not exist');
         }
     }
-    remTask = () => {
-        if (this.selectedTask === null) {
-            user.interface.console.AddLog('error', 'Task: Selected task is null');
+    remQuest = () => {
+        if (this.selectedQuest === null) {
+            user.interface.console.AddLog('error', 'Quest: Selected quest is null');
             return;
         }
 
         const callback = (btn) => {
             if (btn === 'yes') {
-                const remove = user.tasks.Remove(this.selectedTask);
+                const remove = user.quests.Remove(this.selectedQuest);
                 if (remove === 'removed') {
                     user.GlobalSave();
                     user.interface.ResetCustomBackHandler();
                     user.interface.BackHandle();
                 } else if (remove === 'notExist') {
-                    user.interface.console.AddLog('warn', 'Task: Task not exist');
+                    user.interface.console.AddLog('warn', 'Quest: Quest not exist');
                 }
             }
         }
-        const title = langManager.curr['task']['alert-remtask-title'];
-        const text = langManager.curr['task']['alert-remtask-text'];
+        const title = langManager.curr['quest']['alert-remquest-title'];
+        const text = langManager.curr['quest']['alert-remquest-text'];
         user.interface.popup.Open('yesno', [ title, text ], callback);
     }
 }
 
-export default BackTask;
+export default BackQuest;

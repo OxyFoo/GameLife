@@ -15,7 +15,7 @@ import ScreenTuto from './Widgets/ScreenTuto';
 import StatsBars from './Widgets/StatsBars';
 import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
-import Tasks from './Widgets/Tasks';
+import Quests from './Widgets/Quests';
 import UserHeader from './Widgets/UserHeader';
 import TodayPieChart from './Widgets/TodayPieChart';
 
@@ -37,7 +37,7 @@ export {
     StatsBars,
     SkillChart,
     SkillsGroup,
-    Tasks,
+    Quests,
     UserHeader,
     TodayPieChart
 };

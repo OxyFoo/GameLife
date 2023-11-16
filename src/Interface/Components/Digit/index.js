@@ -6,7 +6,7 @@ import styles from './style';
 import DigitBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text } from 'Interface/Components';
+import Text from 'Interface/Components/Text';
 import { Range } from 'Utils/Functions';
 
 class Digit extends DigitBack {
@@ -68,7 +68,7 @@ class Digit extends DigitBack {
         };
 
         const fadeColor = themeManager.GetColor(this.props.fadeColor);
-        const gradientColor = [ fadeColor, '#FFFFFF00', '#FFFFFF00', fadeColor ];
+        const gradientColor = [ fadeColor, 'transparent', 'transparent', fadeColor ];
 
         return (
             <View

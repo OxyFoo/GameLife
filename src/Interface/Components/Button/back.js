@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import ButtonBadge from './Badge';
-
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
@@ -84,8 +82,6 @@ class ButtonBack extends React.Component {
         this.posX = 0; this.posY = 0; this.time = 0;
         this.state = { width: 0 };
     }
-
-    static Badge = ButtonBadge;
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {

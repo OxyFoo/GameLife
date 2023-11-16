@@ -12,56 +12,56 @@ import { Icon, Button } from 'Interface/Components';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Class/Tasks').Subtask} Subtask
+ * @typedef {import('Class/Quests').Task} Task
  * @typedef {'none'|'underline'|'line-through'|'underline line-through'} TextDecorationLineType
  */
 
-const SubtaskProps = {
+const TaskProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {Subtask|null} */
-    subtask: null,
+    /** @type {Task|null} */
+    task: null,
 
     /**
      * @param {boolean} checked
      * @param {string} title
      */
-    onSubtaskEdit: (checked, title) => {},
-    onSubtaskDelete: () => {}
+    onTaskEdit: (checked, title) => {},
+    onTaskDelete: () => {}
 }
 
-class SubtaskElement extends React.Component {
+class TaskElement extends React.Component {
     textColor = { color: themeManager.GetColor('primary') };
     hexActiveColor = themeManager.GetColor('main1');
 
     remove = () => {
-        const { onSubtaskDelete } = this.props;
-        const lang = langManager.curr['task'];
-        const title = lang['alert-remsubtask-title'];
-        const text = lang['alert-remsubtask-text'];
-        const callback = (btn) => btn === 'yes' && onSubtaskDelete();
+        const { onTaskDelete } = this.props;
+        const lang = langManager.curr['quest'];
+        const title = lang['alert-remtask-title'];
+        const text = lang['alert-remtask-text'];
+        const callback = (btn) => btn === 'yes' && onTaskDelete();
         user.interface.popup.Open('yesno', [title, text], callback);
     }
 
     render() {
-        const { style, subtask, onSubtaskEdit } = this.props;
-        if (subtask === null) return null;
+        const { style, task, onTaskEdit } = this.props;
+        if (task === null) return null;
 
-        const { Checked, Title } = subtask;
+        const { Checked, Title } = task;
         const decoration = {
             /** @type {TextDecorationLineType} */
             textDecorationLine: Checked ? 'line-through' : 'none'
         };
 
-        const lang = langManager.curr['task'];
+        const lang = langManager.curr['quest'];
 
         return (
-            <View style={[styles.parentSubask, style]}>
+            <View style={[styles.parentTask, style]}>
                 <Button
                     style={styles.checkbox}
                     color={Checked ? 'white' : 'transparent'}
-                    onPress={() => onSubtaskEdit(!Checked, Title)}
+                    onPress={() => onTaskEdit(!Checked, Title)}
                     onLongPress={this.remove}
                 >
                     {Checked && <Icon icon='check' color='main1' size={16} />}
@@ -69,18 +69,18 @@ class SubtaskElement extends React.Component {
                 <TextInput
                     style={[styles.input, this.textColor, decoration]}
                     value={Title}
-                    onChangeText={text => onSubtaskEdit(Checked, text)}
+                    onChangeText={text => onTaskEdit(Checked, text)}
                     selectionColor={this.hexActiveColor}
                     multiline={true}
                     maxLength={256}
-                    placeholder={lang['input-subtask-placeholder']}
+                    placeholder={lang['input-task-placeholder']}
                 />
             </View>
         );
     }
 }
 
-SubtaskElement.prototype.props = SubtaskProps;
-SubtaskElement.defaultProps = SubtaskProps;
+TaskElement.prototype.props = TaskProps;
+TaskElement.defaultProps = TaskProps;
 
-export default SubtaskElement;
+export default TaskElement;

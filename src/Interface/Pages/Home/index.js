@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { Tasks, TodayPieChart } from 'Interface/Widgets';
+import { Quests, TodayPieChart } from 'Interface/Widgets';
 import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
 
 class Home extends BackHome {
@@ -46,10 +46,10 @@ class Home extends BackHome {
                     icon='add'
                     onPress={this.addActivity}
                 >
-                    {lang['btn-add-task']}
+                    {lang['btn-add-activity']}
                 </Button>
 
-                <Tasks
+                <Quests
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
@@ -66,8 +66,6 @@ class Home extends BackHome {
                 >
                     {lang['btn-settings']}
                 </Button>
-
-                {/*<Button style={styles.topSpace} color='main1' borderRadius={8} icon='chrono'>{lang['btn-quests']}</Button>*/}
 
             </Page>
         );

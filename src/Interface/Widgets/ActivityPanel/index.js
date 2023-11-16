@@ -8,8 +8,13 @@ import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { StartActivity } from './utils';
-import { Text, Button, TextSwitch, Icon } from 'Interface/Components';
-import { ActivitySchedule, ActivityExperience, PanelScreen } from 'Interface/Widgets';
+import Text from 'Interface/Components/Text';
+import Icon from 'Interface/Components/Icon';
+import Button from 'Interface/Components/Button';
+import TextSwitch from 'Interface/Components/TextSwitch';
+import PanelScreen from 'Interface/Widgets/PanelScreen';
+import ActivitySchedule from 'Interface/Widgets/ActivitySchedule';
+import ActivityExperience from 'Interface/Widgets/ActivityExperience';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -113,7 +118,7 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Add / Remove button */}
                 {mode === 'activity' ? (
-                    <Button onPress={this.onRemoveActivity} color='main2'>
+                    <Button onPress={this.onRemoveActivity} color='danger'>
                         {lang['btn-remove']}
                     </Button>
                 ) : (

@@ -41,7 +41,7 @@ class SectionSkill extends React.Component {
         this.props.onChange();
     }
 
-    onSelectCategory = () => {
+    OpenCategoriesSelection = () => {
         const callback = (id) => {
             if (id === 0) {
                 this.onUnselectSkill();
@@ -49,11 +49,11 @@ class SectionSkill extends React.Component {
             }
 
             setTimeout(() => {
-                this.onSelectSkill(id);
+                this.OpenSkillSelection(id);
             }, 100);
         };
 
-        const title = langManager.curr['task']['input-panel-category'];
+        const title = langManager.curr['quest']['input-panel-category'];
         /** @type {Array<ScreenListItem>} */
         const data = dataManager.skills.categories.map(category => ({
             id: category.ID,
@@ -61,12 +61,12 @@ class SectionSkill extends React.Component {
         }));
         data.splice(0, 1, {
             id: 0,
-            value: langManager.curr['task']['input-activity-none']
+            value: langManager.curr['quest']['input-activity-none']
         });
         user.interface.screenList.Open(title, data, callback);
     }
 
-    onSelectSkill = (SkillID) => {
+    OpenSkillSelection = (SkillID) => {
         const callback = (id) => {
             this.props.onChange();
 
@@ -78,21 +78,24 @@ class SectionSkill extends React.Component {
             this.setState({ skill: { id: id, isCategory: false } });
         };
 
-        const title = langManager.curr['task']['input-panel-activity'];
+        const title = langManager.curr['quest']['input-panel-activity'];
         /** @type {Array<ScreenListItem>} */
         const data = dataManager.skills.GetByCategory(SkillID).map(skill => ({
             id: skill.ID,
             value: dataManager.GetText(skill.Name)
         }));
+
+        const category = dataManager.skills.GetCategoryByID(SkillID);
+        const categoryName = dataManager.GetText(category.Name);
         data.splice(0, 0, {
             id: 0,
-            value: langManager.curr['task']['input-activity-only'].replace('{}', dataManager.GetText(dataManager.skills.GetCategoryByID(SkillID).Name))
+            value: langManager.curr['quest']['input-activity-only'].replace('{}', categoryName)
         });
         user.interface.screenList.Open(title, data, callback);
     }
 
     render() {
-        const lang = langManager.curr['task'];
+        const lang = langManager.curr['quest'];
         const { skill } = this.state;
 
         let activityTitle = lang['input-activity-title'];
@@ -130,7 +133,7 @@ class SectionSkill extends React.Component {
                         colorText='main1'
                         style={styles.smallBtn}
                         fontSize={14}
-                        onPress={this.onSelectCategory}
+                        onPress={this.OpenCategoriesSelection}
                         onLongPress={this.onUnselectSkill}
                     >
                         {activityText}

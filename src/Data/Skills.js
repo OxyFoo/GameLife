@@ -43,6 +43,7 @@ class Icon {
 class Category {
     ID = 0;
     Name = { fr: '', en: '' };
+    Color = '#000000';
     LogoID = 0;
 }
 

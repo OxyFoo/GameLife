@@ -18,7 +18,8 @@ import { GetTime } from 'Utils/Time';
  * @property {number} value
  * @property {number} valueMin
  * @property {string} color
- * @property {boolean|null} focused
+ * @property {string} gradientCenterColor
+ * @property {boolean} focused
  */
 
 const InputProps = {
@@ -113,6 +114,7 @@ class TodayPieChartBack extends React.Component {
                 valueMin: 0,
                 name: '',
                 color: '#000000',
+                gradientCenterColor: '#000000',
                 focused: false
             });
         }
@@ -209,11 +211,13 @@ class TodayPieChartBack extends React.Component {
             }
             else {
                 this.updatingData.push({
+                    id: 6,
+                    name: 'Non défini',
+                    value: 100 - totalPercent,
                     valueMin: 0,
                     color: '#B0B0B0',
-                    name: "Non défini",
-                    id: 6,
-                    value: 100 - totalPercent
+                    gradientCenterColor: '#000000',
+                    focused: false
                 });
             }
         }

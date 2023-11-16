@@ -22,8 +22,8 @@ class ThemeManager {
             success: '#27AE60', // Green
             danger: '#C0392B', // Red
             transparent: '#00000000', // Transparent
-            dataBigKpi : "#232B5D", // Dark blue
-            dataSmallKpi : "#384065", // TODO: Pick another color
+            dataBigKpi: '#232B5D', // Dark blue
+            dataSmallKpi: '#38406550', // trasnparent blue 
 
             ground1: '#03052E',
             ground1a: '#0C0E35',
@@ -52,8 +52,8 @@ class ThemeManager {
             success: '#27AE60', // Green
             danger: '#CC0029',
             transparent: '#00000000',
-            dataBigKpi : "#232B5D", // Dark blue
-            dataSmallKpi : "#0E1247", // TODO: Change too ?
+            dataBigKpi: '#232B5D', // Dark blue
+            dataSmallKpi: '#38406550', // trasnparent blue 
 
             ground1: '#FFFFFF',
             ground1a: '#FFFFFF',
@@ -165,11 +165,11 @@ class ThemeManager {
         let colors = [];
         const absoluteColors = this.GetAbsoluteColors();
         switch (rarity) {
-            case Rarity.common:     colors = absoluteColors.rarity_common;    break;
-            case Rarity.rare:       colors = absoluteColors.rarity_rare;      break;
-            case Rarity.epic:       colors = absoluteColors.rarity_epic;      break;
-            case Rarity.legendary:  colors = absoluteColors.rarity_legendary; break;
-            case Rarity.event:      colors = absoluteColors.rarity_event;     break;
+            case Rarity.common: colors = absoluteColors.rarity_common; break;
+            case Rarity.rare: colors = absoluteColors.rarity_rare; break;
+            case Rarity.epic: colors = absoluteColors.rarity_epic; break;
+            case Rarity.legendary: colors = absoluteColors.rarity_legendary; break;
+            case Rarity.event: colors = absoluteColors.rarity_event; break;
         }
         return colors;
     }

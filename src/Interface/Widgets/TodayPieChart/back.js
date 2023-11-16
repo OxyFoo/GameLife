@@ -18,6 +18,7 @@ import { GetTime } from 'Utils/Time';
  * @property {number} value
  * @property {number} valueMin
  * @property {string} color
+ * @property {boolean|null} focused
  */
 
 const InputProps = {
@@ -70,10 +71,9 @@ class TodayPieChartBack extends React.Component {
         }
         const focusedActivity = this.findBiggestActivity();
 
-        // TODO: This is correct ? Where is "focused" parameter defined ?
-        //if (focusedActivity.id !== 0) {
-        //    this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
-        //}
+        if (focusedActivity.id !== 0) {
+            this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
+        }
         this.computeGradientShadow();
 
         // Focused and display handler
@@ -112,7 +112,8 @@ class TodayPieChartBack extends React.Component {
                 value: 0,
                 valueMin: 0,
                 name: '',
-                color: '#000000'
+                color: '#000000',
+                focused: false
             });
         }
 
@@ -149,13 +150,13 @@ class TodayPieChartBack extends React.Component {
     computeTimeEachCategory = () => {
         const allActivitiesOfToday = user.activities.GetByTime(GetTime(undefined, 'local'));
         for (const activity of allActivitiesOfToday) {
-            const category = dataManager.skills.GetByID(activity.skillID);
-            if (category === null) {
+            const categoryID = dataManager.skills.GetByID(activity.skillID).CategoryID;
+            if (categoryID === null) {
                 user.interface.console.AddLog('error', 'Error in PieChartHome: category not found in dataManager.skills');
                 continue;
             }
 
-            const index = this.updatingData.findIndex(item => item.id === category.ID);
+            const index = this.updatingData.findIndex(item => item.id === categoryID);
             if (index === -1) {
                 user.interface.console.AddLog('error', 'Error in PieChartHome: categoryID not found in state.updatingData');
                 continue;

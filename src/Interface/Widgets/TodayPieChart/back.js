@@ -150,13 +150,13 @@ class TodayPieChartBack extends React.Component {
     computeTimeEachCategory = () => {
         const allActivitiesOfToday = user.activities.GetByTime(GetTime(undefined, 'local'));
         for (const activity of allActivitiesOfToday) {
-            const categoryID = dataManager.skills.GetByID(activity.skillID).CategoryID;
-            if (categoryID === null) {
+            const category = dataManager.skills.GetByID(activity.skillID);
+            if (category === null) {
                 user.interface.console.AddLog('error', 'Error in PieChartHome: category not found in dataManager.skills');
                 continue;
             }
 
-            const index = this.updatingData.findIndex(item => item.id === categoryID);
+            const index = this.updatingData.findIndex(item => item.id === category.CategoryID);
             if (index === -1) {
                 user.interface.console.AddLog('error', 'Error in PieChartHome: categoryID not found in state.updatingData');
                 continue;

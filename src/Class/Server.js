@@ -66,6 +66,8 @@ class Server {
         if (status === 'update') {
             const title = langManager.curr['home']['alert-update-title'];
             const text = langManager.curr['home']['alert-update-text'];
+            // Ici je voudrais ajouter un bouton pour cette issue : https://github.com/OxyFoo/GameLife/issues/96
+            // Dis moi si t'es ok avec l'idée (il apparaitra seulement si on fout le lien qqpart, probablement à un endroit dans la bdd)
             this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);
             openStore();
         } else if (status === 'downdate') {

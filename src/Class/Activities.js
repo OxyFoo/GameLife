@@ -392,8 +392,9 @@ class Activities {
         const startTime = time;
         const endTime = time + duration*60;
 
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
+        const activities = this.Get();
+        for (let a = 0; a < activities.length; a++) {
+            const activity = activities[a];
             const compareStartTime = activity.startTime;
             const compareEndTime = activity.startTime + activity.duration*60;
 

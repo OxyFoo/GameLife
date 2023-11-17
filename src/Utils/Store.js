@@ -1,16 +1,16 @@
 import { Linking, Platform } from 'react-native';
 
-/**
- * Open store page
- */
-const openStore = () => {
+async function OpenStore() {
     const url = Platform.OS === 'ios'
         ? 'https://apps.apple.com/app/game-life/id1587486522'
         : 'https://play.google.com/store/apps/details?id=com.gamelife';
 
-    Linking.canOpenURL(url).then(supported => {
-        supported && Linking.openURL(url);
-    }, (err) => console.log(err));
+    await Linking.canOpenURL(url)
+        .then(supported => {
+            if (supported) {
+                return Linking.openURL(url);
+            }
+        });
 };
 
-export { openStore };
+export { OpenStore };

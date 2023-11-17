@@ -2,9 +2,9 @@ import RNExitApp from 'react-native-exit-app';
 
 import langManager from 'Managers/LangManager';
 
+import { OpenStore } from 'Utils/Store';
 import { Request_Async } from 'Utils/Request';
 import { GetDeviceInformations } from 'Utils/Device';
-import { openStore } from 'Utils/Store';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -59,17 +59,18 @@ class Server {
         }
 
         /** @type {ServerStatus} */
-        const status = response['status']; //'update' // si tu veux l'essayer tu peux juste forcer à update ici 
+        const status = response['status'];
         const devMode = response['devMode'];
 
         // Return status & popup out of this class
         if (status === 'update') {
+            const update = async () => {
+                await OpenStore();
+                RNExitApp.exitApp();
+            };
             const title = langManager.curr['home']['alert-update-title'];
             const text = langManager.curr['home']['alert-update-text'];
-            // Ici je voudrais ajouter un bouton pour cette issue : https://github.com/OxyFoo/GameLife/issues/96
-            // Dis moi si t'es ok avec l'idée (il apparaitra seulement si on fout le lien qqpart, probablement à un endroit dans la bdd)
-            this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);
-            openStore();
+            this.user.interface.popup.Open('ok', [ title, text ], update, false);
         } else if (status === 'downdate') {
             this.online = false;
             const title = langManager.curr['home']['alert-newversion-title'];

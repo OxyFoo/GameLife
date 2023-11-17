@@ -1,5 +1,5 @@
-import { Animated } from 'react-native';
-import { FlatList } from 'react-native';
+import React from 'react';
+import { Animated, FlatList } from 'react-native';
 
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
@@ -12,7 +12,11 @@ import { GetBlockMonth, MonthType, UpdateBlockMonth } from 'Interface/Widgets/Bl
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
+ * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
+ * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} ScrollEvent
+ * 
  * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Interface/Components').ActivityTimeline} ActivityTimeline
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  * @typedef {import('Interface/Widgets/BlockMonth/script').DayType} DayType
  */
@@ -21,12 +25,18 @@ class BackCalendar extends PageBack {
     /** @type {ActivityPanel|null} */
     refActivityPanel = null;
 
+    /** @type {boolean} Used for ActivityTimeline */
+    isScrolling = false;
+
     refTuto1 = null;
     refTuto2 = null;
     refTuto3 = null;
 
     constructor(props) {
         super(props);
+
+        /** @type {React.RefObject<ActivityTimeline>} */
+        this.refActivityTimeline = React.createRef();
 
         // Infinite scroll vars
         this.ratioY = 0;
@@ -299,6 +309,22 @@ class BackCalendar extends PageBack {
     /** @param {number} time */
     onAddActivityFromTime = (time) => {
         user.interface.ChangePage('activity', { time }, true);
+    }
+
+    /**
+     * Called when the user scroll the page 
+     * @param {ScrollEvent} event
+     */
+    handleScroll = (event) => {
+        const scrollY = event.nativeEvent.contentOffset.y;
+
+        if (this.isScrolling && scrollY === 0) {
+            this.isScrolling = false;
+        } else if (!this.isScrolling && scrollY > 20) {
+            this.isScrolling = true;
+        }
+
+        this.refActivityTimeline.current?.SetThinMode(this.isScrolling);
     }
 }
 

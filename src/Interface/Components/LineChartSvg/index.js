@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Svg, Polyline, Line, Text } from 'react-native-svg';
+import { Svg, Polyline, Line, Text, Circle } from 'react-native-svg';
 
 import LineChartSvgBack from './back';
 import themeManager from 'Managers/ThemeManager';
@@ -37,14 +37,32 @@ class LineChartSvg extends LineChartSvgBack {
                     ))}
 
                     {/* Line chart */}
-                    {this.state.points.length > 1 && this.state.layoutWidth !== 0 ?
+                    {this.props.data.length > 1 && this.state.points.length > 1 && this.state.layoutWidth !== 0 &&
                         <Polyline
                             points={this.state.points}
                             fill='none'
                             stroke={themeManager.GetColor(this.props.lineColor)}
                             strokeWidth='2'
                         />
-                        : <></>}
+                    }
+
+                    {/* Points */}
+                    {this.props.data.length === 1 && this.state.points.length > 1 && this.state.layoutWidth !== 0 && 
+                        (() => {
+                            const [x, y] = this.state.points.split(',').map(Number);
+                            return (
+                                <Circle
+                                    key={`point_single`}
+                                    cx={x}
+                                    cy={y}
+                                    r='3' // Adjust if needed
+                                    fill={themeManager.GetColor(this.props.lineColor)} // Ensure this is visible against the background
+                                />
+                            );
+                        })()
+                    }
+
+
 
                     {/* Date labels for first and last data points */}
                     <Text

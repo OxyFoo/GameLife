@@ -72,7 +72,7 @@ class TodayPieChartBack extends React.Component {
         }
         const focusedActivity = this.findBiggestActivity();
 
-        if (focusedActivity.id !== 0) {
+        if (focusedActivity && focusedActivity.id !== 0) {
             this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
         }
         this.computeGradientShadow();
@@ -228,7 +228,7 @@ class TodayPieChartBack extends React.Component {
      * @return {{id: number, value: number, name: string} | null} 
      */
     findBiggestActivity = () => {
-        let maxValue = -1;
+        let maxValue = 0;
         let maxIndex = null;
         for (const i in this.updatingData) {
             const itemValue = this.updatingData[i].value;

@@ -12,10 +12,6 @@ class SkillChart extends SkillChartBack {
     render() {
         const lang = langManager.curr['skill'];
 
-        if (this.state.cleanedData.length <= 1) {
-            return null;
-        }
-
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
         };

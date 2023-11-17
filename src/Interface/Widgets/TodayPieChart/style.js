@@ -15,6 +15,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold'
+    },
+    notEnoughData: {
+        marginTop:8,
+        fontSize: 16
     }
 });
 

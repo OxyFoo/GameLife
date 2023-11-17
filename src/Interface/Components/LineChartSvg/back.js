@@ -45,6 +45,7 @@ class LineChartSvgBack extends React.Component {
 
     /** @description Calculate the x-coordinate in pixels based on layoutWidth */
     getXCoordinate = (index, arrayLength, layoutWidth) => {
+        if (arrayLength === 1) return this.leftMargin*1.5;
         const spacing = (layoutWidth - this.leftMargin * 1.1) / (arrayLength - 1);
         return this.leftMargin + (index * spacing);
     };
@@ -57,7 +58,13 @@ class LineChartSvgBack extends React.Component {
 
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
-        const maxValue = Math.max(...this.props.data.map(d => d.value)) * 1.05; // Increase max value for padding
+        let maxValue = 0;
+        if (this.props.data.length > 0) {
+            maxValue = Math.max(...this.props.data.map(d => d.value)) * 1.05; 
+        }
+        else {
+            maxValue = 100;
+        }
         const yAxisValues = this.getYAxisValues(maxValue);
 
         const points = this.props.data.map((item, index) => {

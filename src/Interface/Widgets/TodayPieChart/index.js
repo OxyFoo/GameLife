@@ -41,7 +41,7 @@ class TodayPieChart extends TodayPieChartBack {
                     />
                     :
                     <View>
-                        <Text>{lang['chart-today-notmuch']}</Text>
+                        <Text style={styles.notEnoughData}>{lang['chart-today-notmuch']}</Text>
                     </View>
                 }
             </View>

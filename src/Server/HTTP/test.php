@@ -29,13 +29,13 @@
         $skills = GetSkills($db);
         $ref = isset($_GET["not"]) ? intval($_GET["not"]) : -1;
         for ($s = 0; $s < count($skills); $s++) {
-            $Name = $skills[$s]["Name"];
+            $name = $skills[$s]['Name']->fr;
             $total = 0;
-            foreach ($skills[$s]["Stats"] as $key => $value) {
+            foreach ($skills[$s]['Stats'] as $key => $value) {
                 $total += intval($value);
             }
             if ($total != $ref)
-            echo("$Name : $total<br />");
+                echo("$name : $total<br />");
         }
     } else if ($action == "compWithoutCreator") {
         $skills = GetSkills($db);

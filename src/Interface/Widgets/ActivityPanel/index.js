@@ -57,7 +57,7 @@ class ActivityPanel extends ActivityPanelBack {
                 </Text>
 
                 <ActivitySchedule
-                    ref={ref => this.refHelp2 = ref}
+                    ref={this.refActivitySchedule}
                     editable={mode === 'skill'}
                     selectedDate={activity?.startTime ?? 0}
                     selectedDuration={activity?.duration ?? 60}

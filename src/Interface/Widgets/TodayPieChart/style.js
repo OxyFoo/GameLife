@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
     },
     notEnoughData: {
         marginTop:8,
-        color: 'white',
         fontSize: 16
     }
 });

@@ -17,6 +17,10 @@ class TodayPieChart extends TodayPieChartBack {
             backgroundColor: themeManager.GetColor('dataBigKpi')
         };
 
+        const whiteText = {
+            color: themeManager.GetColor('primary')
+        }
+
         const dayPerformance = switchValue ? '24' : totalTime.toString();
         const headerText = lang['chart-today-performance'].replace('{}', dayPerformance);
 
@@ -41,7 +45,7 @@ class TodayPieChart extends TodayPieChartBack {
                     />
                     :
                     <View>
-                        <Text style={styles.notEnoughData}>{lang['chart-today-notmuch']}</Text>
+                        <Text style={[whiteText, styles.notEnoughData]}>{lang['chart-today-notmuch']}</Text>
                     </View>
                 }
             </View>

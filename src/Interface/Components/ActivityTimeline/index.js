@@ -3,24 +3,29 @@ import { View, FlatList } from 'react-native';
 
 import styles from './style';
 import ActivityTimelineBack from './back';
-import dataManager from 'Managers/DataManager';
+
 import { Icon } from 'Interface/Components';
 
 /**
- * 
+ * @typedef {import('./back').ActivityTimelineItem} ActivityTimelineItem
  */
-class ActivityTimeline extends ActivityTimelineBack {
 
+class ActivityTimeline extends ActivityTimelineBack {
     /**
      * Render one activity in a time line with the height and icon depending on the scroll
-     * 
+     * @param {{ item: ActivityTimelineItem }} param0
      */
-    renderActivity = ({ item, index }) => {
-        if (this.state.isScrolled) this.timeLineOpened = false;
-        else this.timeLineOpened = true;
+    renderActivity = ({ item }) => {
+        const showIcon = !this.state.isScrolled && item.duration >= 60;
+        const styleTimelineItem = {
+            marginLeft: item.marginLeft,
+            width: item.width,
+            backgroundColor: item.color
+        };
+
         return (
-            <View style={[styles.timelineItem, { marginLeft: item.marginLeft, width: item.width, flexDirection: 'row', alignItems: 'center', backgroundColor: item.color }]}>
-                {!this.state.isScrolled && item.duration >= 60 && (
+            <View style={[styles.timelineItem, styleTimelineItem]}>
+                {showIcon && (
                     <Icon size={14} xml={item.logo} color={item.logoColor} />
                 )}
             </View>
@@ -28,14 +33,15 @@ class ActivityTimeline extends ActivityTimelineBack {
     }
 
     render() {
+        const styleContainer = {
+            height: this.state.isScrolled ? 5 : 16
+        };
+
         return (
             <View style={styles.container}>
 
-                <View style={[
-                    styles.timelineContainer,
-                    this.state.isScrolled ? { height: 5 } : {}
-                ]}>
-                    {this.state.activities.length > 0 ?
+                <View style={[styles.timelineContainer, styleContainer]}>
+                    {this.state.activities.length > 0 && (
                         <FlatList
                             data={this.state.activities}
                             renderItem={this.renderActivity}
@@ -44,13 +50,10 @@ class ActivityTimeline extends ActivityTimelineBack {
                             showsHorizontalScrollIndicator={false}
                             scrollEnabled={false}
                         />
-                        : null
-                    }
+                    )}
                 </View>
 
             </View>
-
-
         );
     }
 }

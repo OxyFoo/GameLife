@@ -30,7 +30,6 @@ class Calendar extends BackCalendar {
         />
     );
 
-
     render() {
         const {
             months,
@@ -152,8 +151,8 @@ class Calendar extends BackCalendar {
                         //onEndReached={(e) => { this.addMonthToBottom() }}
                         //onScroll={(e) => { if (e.nativeEvent.contentOffset.y === 0) this.addMonthToTop() }}
                         onScroll={this.onScroll}
-                    //scrollEnabled={!this.state.isReached}
-                    //maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: undefined }}
+                        //scrollEnabled={!this.state.isReached}
+                        //maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: undefined }}
                     />
                     <LinearGradient
                         style={styles.fadeBottom2}

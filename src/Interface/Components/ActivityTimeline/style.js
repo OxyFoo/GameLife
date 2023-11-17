@@ -6,17 +6,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         paddingHorizontal: 16,
-        backgroundColor: 'rgba(0,0,0,0.1)',
-    },
-    timelineContainer2: {
-        flexDirection: 'row',
-        position: 'relative',
-        height: 16,
-        width: '100%',
-        borderLeftWidth: 1,
-        borderLeftColor: 'gray',
-        borderRightWidth: 1,
-        borderRightColor: 'gray',
+        backgroundColor: 'rgba(0,0,0,0.1)'
     },
     timelineContainer: {
         height: 16,
@@ -24,20 +14,13 @@ const styles = StyleSheet.create({
         borderLeftWidth: 1,
         borderLeftColor: 'rgba(0,0,0,0.5)',
         borderRightWidth: 1,
-        borderRightColor: 'rgba(0,0,0,0.5)',
-    },
-    timelineItem2: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        borderRadius: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
+        borderRightColor: 'rgba(0,0,0,0.5)'
     },
     timelineItem: {
+        flexDirection: 'row',
         borderRadius: 100,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     }
 });
 

@@ -133,6 +133,7 @@ class UserManager {
     async Unmount() {
         clearInterval(this.intervalSave);
         clearInterval(this.intervalAchievements);
+        await this.settings.Save();
         await this.LocalSave();
         await this.OnlineSave();
         this.server.Clear();

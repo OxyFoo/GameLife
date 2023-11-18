@@ -44,12 +44,19 @@ class TodayPieChartBack extends React.Component {
     /** @type {UpdatingData[]} */
     updatingData = [];
 
-    /** @param {boolean} value */
-    changeSwitchValue = (value) => {
-        this.setState({ switchValue: value });
-        user.settings.homePieChart = value;
-        user.settings.Save();
-        this.compute(value);
+    saveTimeout = null;
+
+    componentDidMount() {
+        this.compute(user.settings.homePieChart);
+
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            this.compute(user.settings.homePieChart);
+        });
+    }
+
+    componentWillUnmount() {
+        clearTimeout
+        user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     /**
@@ -77,25 +84,29 @@ class TodayPieChartBack extends React.Component {
         }
         this.computeGradientShadow();
 
+        // Remove the activities with 0% of the pie chart (avoid glitch on android)
+        this.updatingData = this.updatingData.filter(item => item.value > 0);
+
         // Focused and display handler
         this.setState({
             dataToDisplay: this.updatingData,
             focusedActivity: focusedActivity,
             switchValue: value,
-            totalTime: (totalTime / 60.0).toFixed(1),
+            totalTime: (totalTime / 60.0).toFixed(1)
         });
     }
 
-    componentDidMount() {
-        this.compute(user.settings.homePieChart);
+    /** @param {boolean} value */
+    changeSwitchValue = (value) => {
+        // Save the settings (avoid spamming the save)
+        clearTimeout(this.saveTimeout);
+        this.saveTimeout = setTimeout(() => {
+            user.settings.Save();
+        }, 3 * 1000);
 
-        this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.compute(user.settings.homePieChart);
-        });
-    }
-
-    componentWillUnmount() {
-        user.activities.allActivities.RemoveListener(this.activitiesListener);
+        user.settings.homePieChart = this.state.switchValue;
+        this.setState({ switchValue: value });
+        this.compute(value);
     }
 
     /**

@@ -26,6 +26,7 @@ class Loading extends BackLoading {
                     <GLLoading state={this.state.icon} />
                 </View>
                 {this.renderVersions()}
+                <Text>{this.state.displayedSentence}</Text>
             </Page>
         );
     }

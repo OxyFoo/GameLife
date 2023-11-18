@@ -679,5 +679,15 @@
         "widget-skills-all": "All skills",
         "sexe-male": "♂",
         "sexe-female": "♀"
-    }
+    },
+
+    "loading": [
+        "Retrieving data",
+        "Loading resources",
+        "Building the avatar",
+        "Forging equipment",
+        "Creating the shop",
+        "Filling the chests"
+    ]
+    
 }

@@ -679,5 +679,16 @@
         "widget-skills-all": "Toutes les comp.",
         "sexe-male": "♂",
         "sexe-female": "♀"
-    }
+    },
+
+    "loading": [
+        "Récupération des données",
+        "Chargement des ressources",
+        "Construction de l'avatar",
+        "Fabrication de l'équipement",
+        "Création de la boutique",
+        "Remplissage des coffres"
+    ]
+
+
 }

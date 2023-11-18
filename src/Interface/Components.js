@@ -1,3 +1,4 @@
+import ActivityTimeline from './Components/ActivityTimeline';
 import Button from './Components/Button';
 import Character from './Components/Character/Character';
 import Checkbox from './Components/Checkbox';
@@ -25,6 +26,7 @@ import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
 
 export {
+    ActivityTimeline,
     Button,
     Character,
     Checkbox,

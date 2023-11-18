@@ -37,7 +37,7 @@ function StartHelp() {
             }
         },
         {
-            component: this.refActivityPanel.refHelp2,
+            component: this.refActivityPanel.refActivitySchedule,
             text: lang['4'],
             execBefore: async () => {
                 this.refActivityPanel.refPanelScreen.GotoY(-100);

@@ -2,6 +2,7 @@ import RNExitApp from 'react-native-exit-app';
 
 import langManager from 'Managers/LangManager';
 
+import { OpenStore } from 'Utils/Store';
 import { Request_Async } from 'Utils/Request';
 import { GetDeviceInformations } from 'Utils/Device';
 
@@ -63,9 +64,13 @@ class Server {
 
         // Return status & popup out of this class
         if (status === 'update') {
+            const update = async () => {
+                await OpenStore();
+                RNExitApp.exitApp();
+            };
             const title = langManager.curr['home']['alert-update-title'];
             const text = langManager.curr['home']['alert-update-text'];
-            this.user.interface.popup.Open('ok', [ title, text ], RNExitApp.exitApp, false);
+            this.user.interface.popup.Open('ok', [ title, text ], update, false);
         } else if (status === 'downdate') {
             this.online = false;
             const title = langManager.curr['home']['alert-newversion-title'];

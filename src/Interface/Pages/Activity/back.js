@@ -5,10 +5,11 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { GetTime } from 'Utils/Time';
-import { Sleep } from 'Utils/Functions';
+import { GetTime, RoundTimeTo } from 'Utils/Time';
+import { MinMax, Sleep } from 'Utils/Functions';
 import { PageBack } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
+import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -124,9 +125,21 @@ class BackActivity extends PageBack {
         // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
             const { time } = this.props.args;
-            this.refActivityPanel.onChangeSchedule(time, 60);
+            const activities = user.activities
+                .GetByTime(time)
+                .filter(activity => activity.startTime > time);
+
+            let duration = 60;
+            if (activities.length > 0) {
+                const delta = activities[0].startTime - time;
+                if (delta <= MAX_TIME_MINUTES * 60) {
+                    duration = RoundTimeTo(TIME_STEP_MINUTES, delta) / 60;
+                    duration = Math.max(MIN_TIME_MINUTES, duration);
+                }
+            }
+            this.refActivityPanel.SetChangeSchedule(time, duration);
         } else if (user.tempSelectedTime !== null) {
-            this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
+            this.refActivityPanel.SetChangeSchedule(user.tempSelectedTime, 60);
         }
     }
 

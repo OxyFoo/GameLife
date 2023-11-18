@@ -26,7 +26,9 @@ class Loading extends BackLoading {
                     <GLLoading state={this.state.icon} />
                 </View>
                 {this.renderVersions()}
-                <Text>{this.state.displayedSentence}</Text>
+                <Text style={styles.sentence}>
+                    {this.state.displayedSentence}
+                </Text>
             </Page>
         );
     }
@@ -41,11 +43,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    sentence: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: -12,
+        textAlign: 'center'
+    },
     version: {
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 0,
+        bottom: 12,
         textAlign: 'center'
     }
 });

@@ -20,7 +20,6 @@ class BackProfile extends PageBack {
         const activities = user.activities.Get();
         this.totalActivityLength = activities.length;
         this.totalActivityTime = this.getTotalDuration(activities);
-        this.totalTasks = user.tasks.tasksTotal.Get();
         this.playTime = this.getTimeFromFirst(activities);
 
         /** @type {EditorAvatar} */

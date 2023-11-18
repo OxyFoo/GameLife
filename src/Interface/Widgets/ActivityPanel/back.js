@@ -8,7 +8,7 @@ import dataManager from 'Managers/DataManager';
 import { GetTime, GetTimeZone } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
 import { AskActivityComment, onRemComment } from './utils';
-import { AddActivity, RemActivity } from 'Utils/Activities';
+import { AddActivity, RemActivity, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -21,6 +21,7 @@ import { AddActivity, RemActivity } from 'Utils/Activities';
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Interface/Widgets').PanelScreen} PanelScreen
+ * @typedef {import('Interface/Widgets/ActivitySchedule').default} ActivitySchedule
  */
 
 const ActivityPanelProps = {
@@ -77,8 +78,13 @@ class ActivityPanelBack extends React.Component {
     /** @type {PanelScreen} */
     refPanelScreen = null;
 
+    /** @type {React.RefObject<ActivitySchedule>} */
+    refActivitySchedule = React.createRef();
+
+    indexHour = -1;
+    indexMinute = -1;
+
     refHelp1 = null;
-    refHelp2 = null;
     refHelp3 = null;
     refHelp4 = null;
 
@@ -123,6 +129,12 @@ class ActivityPanelBack extends React.Component {
             activityText: dataManager.GetText(skill.Name)
         });
 
+        // Update digits
+        if (this.indexHour !== -1 && this.indexMinute !== -1) {
+            this.refActivitySchedule.current.refDigitHour.current.SetDigitsIndex(this.indexHour);
+            this.refActivitySchedule.current.refDigitMinute.current.SetDigitsIndex(this.indexMinute);
+        }
+
         this.refPanelScreen.Open();
         return true;
     }
@@ -133,8 +145,8 @@ class ActivityPanelBack extends React.Component {
      * @param {() => void} callbackClosed Callback called when the panel is closed
      * @returns {boolean} True if the activity is valid
      */
-    SelectActivity = (activity, callbackRemoved = () => {}, callbackClosed = () => {}) => {
-        const skill = dataManager.skills.GetByID(activity.skillID);
+    SelectActivity = (activity, callbackRemoved = () => { }, callbackClosed = () => { }) => {
+        const skill = dataManager.skills.GetByID(activity?.skillID ?? 0);
         if (activity === null || skill === null) {
             console.error('SelectActivity: Invalid activity or skill', activity, skill);
             this.Close();
@@ -173,9 +185,15 @@ class ActivityPanelBack extends React.Component {
     }
 
     onChangeMode = (index) => {
-        const modes = [ 'schedule', 'now' ];
+        const modes = ['schedule', 'now'];
         this.setState({ startMode: modes[index] });
         SpringAnimation(this.state.animButtonNow, index).start();
+    }
+
+    SetChangeSchedule(startTime, duration) {
+        this.indexHour = Math.floor(duration / 60);
+        this.indexMinute = (duration % 60) / TIME_STEP_MINUTES;
+        this.onChangeSchedule(startTime, duration);
     }
 
     onChangeSchedule = (startTime, duration) => {
@@ -244,6 +262,13 @@ class ActivityPanelBack extends React.Component {
             user.GlobalSave();
             this.__callback_removed();
         });
+    }
+
+    onOpenSkill = () => {
+        user.interface.ChangePage(
+            'skill',
+            { skillID: this.state.selectedSkillID }
+        );
     }
 }
 

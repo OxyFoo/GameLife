@@ -15,7 +15,7 @@ import Settings from './Pages/Settings/index';
 import Shop from './Pages/Shop/index';
 import Skill from './Pages/Skill/index';
 import Skills from './Pages/Skills/index';
-import Task from './Pages/Task/index';
+import Quest from './Pages/Quest/index';
 import Waitinternet from './Pages/WaitInternet/index';
 import Waitmail from './Pages/WaitMail/index';
 import Test from './Pages/Test/index';
@@ -38,7 +38,7 @@ export {
     Shop,
     Skill,
     Skills,
-    Task,
+    Quest,
     Waitinternet,
     Waitmail,
     Test

@@ -40,14 +40,16 @@ function TimeToFormatString(time) {
 }
 
 /**
+ * @param {number} step in minutes (e.g. 15 for round to 15 minutes)
  * @param {number} time in seconds
  * @param {'near'|'prev'|'next'} [type] [default: 'near']
  * @returns {number} time rounded to quarters in seconds
  */
-function RoundToQuarter(time, type = 'near') {
-    let mod = time % 900;
-    if (type === 'near' && mod > 450)   mod -= 900;
-    else if (type === 'next')           mod -= 900;
+function RoundTimeTo(step, time, type = 'near') {
+    const stepSeconds = step * 60;
+    let mod = time % stepSeconds;
+    if (type === 'near' && mod > 450)   mod -= stepSeconds;
+    else if (type === 'next')           mod -= stepSeconds;
     return time - mod;
 }
 
@@ -70,29 +72,6 @@ function GetAge(time) {
     const delta = today - time - (GetTimeZone() * 60 * 60);
     const age = delta / (60 * 60 * 24 * 365);
     return Math.floor(age)
-}
-
-/**
- * 
- * @param {number} max_hour
- * @param {number} step_minutes
- * @returns {Array<{key: 0, value: '00:00', duration: 0}>} Array of dict : { key: k, value: HH:MM, duration: minutes } over a period of max_hour each step_minutes
- */
-function GetDurations(max_hour = 4, step_minutes = 15) {
-    let durations = [];
-
-    let date = new Date();
-    date.setHours(0, step_minutes, 0, 0);
-    const count = max_hour * (60 / step_minutes);
-    for (let i = 0; i < count; i++) {
-        const textDuration = TwoDigit(date.getHours()) + ':' + TwoDigit(date.getMinutes());
-        const totalDuration = date.getHours() * 60 + date.getMinutes();
-        const newDuration = { key: durations.length, value: textDuration, duration: totalDuration };
-        durations.push(newDuration);
-        date.setMinutes(date.getMinutes() + step_minutes);
-    }
-
-    return durations;
 }
 
 /**
@@ -121,7 +100,6 @@ function GetTimeZone() {
 }
 
 export { GetTime, GetDate, TimeToFormatString,
-    RoundToQuarter, GetMidnightTime, GetAge,
-    GetDurations, GetTimeToTomorrow, GetDaysUntil,
-    GetTimeZone
+    RoundTimeTo, GetMidnightTime, GetAge,
+    GetTimeToTomorrow, GetDaysUntil, GetTimeZone
 };

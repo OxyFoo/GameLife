@@ -69,6 +69,7 @@ class ScreenListBack extends React.Component {
             data: data,
             callback: callback
         }, async () => {
+            // TODO: Wait real layout
             await Sleep(200); // Wait layout
             this.posY = Math.max(-this.heightPanel, -400);
             SpringAnimation(this.state.positionY, this.posY).start();

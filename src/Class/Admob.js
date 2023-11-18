@@ -138,6 +138,7 @@ class Admob {
 
         // Set events
         const unsubscriber = ad.ad.addAdEventsListener(({ type, payload }) => {
+            callback(ad.ad.loaded ? 'ready' : 'wait');
             this.EventOx(type, ad, callback);
         });
         ad.unsubscriber = unsubscriber;

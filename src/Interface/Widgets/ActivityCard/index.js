@@ -62,10 +62,10 @@ class ActivityCard extends React.Component {
 
         if (type === 'activity') {
             const skill = dataManager.skills.GetByID(activity.skillID);
-            const LogoID = skill.LogoID;
-            this.XML = dataManager.skills.icons.find(x => x.ID === LogoID).Content;
+            const LogoID = skill?.LogoID ?? 0;
+            this.XML = dataManager.skills.icons.find(x => x.ID === LogoID)?.Content ?? '';
 
-            if (skill.XP === 0) {
+            if ((skill?.XP ?? 0) === 0) {
                 color = 'main2';
             }
 
@@ -86,8 +86,15 @@ class ActivityCard extends React.Component {
             }
 
             // Line 2: Category - Activity
-            const textCategory = GetName(dataManager.skills.categories.find(x => x.ID === skill.CategoryID).Name);
-            const textActivity = GetName(skill.Name);
+            let textCategory = 'Unknown';
+            let textActivity = 'Unknown';
+            if (skill !== null) {
+                const category = dataManager.skills.categories.find(x => x.ID === skill.CategoryID);
+                if (!!category) {
+                    textCategory = GetName(category.Name);
+                }
+                textActivity = GetName(skill.Name);
+            }
 
             this.line1 = `${textStart_value} - ${textEnd_value} (${textDuration_value}${lang['hour-min']}) ${textUTC_value}`;
             this.line2 = textCategory + ' - ' + textActivity;
@@ -108,7 +115,9 @@ class ActivityCard extends React.Component {
         }
 
         // Theme
-        this.themeBackground = { backgroundColor: themeManager.GetColor(color) };
+        this.themeBackground = {
+            backgroundColor: themeManager.GetColor(color)
+        };
         this.themeAnimation = {
             opacity: this.state.anim,
             transform: [{

@@ -54,10 +54,11 @@ class Experience {
 
         for (let a in activities) {
             const activity = activities[a];
-            const durationHour = activity.duration / 60;
             const skill = dataManager.skills.GetByID(activity.skillID);
+            if (skill === null) continue;
 
             // XP
+            const durationHour = activity.duration / 60;
             XP += skill.XP * durationHour;
 
             // Stats
@@ -81,12 +82,15 @@ class Experience {
 
     /**
      * @param {number} skillID
-     * @returns {EnrichedXPInfo}
+     * @returns {EnrichedXPInfo|null} null if the skill doesn't exist
      */
     GetSkillExperience(skillID) {
         let totalXP = 0;
         let lastTime = 0;
         const now = GetTime();
+
+        const skill = dataManager.skills.GetByID(skillID);
+        if (skill === null) return null;
 
         const activities = this.getUsefulActivities();
         for (let a in activities) {
@@ -97,7 +101,6 @@ class Experience {
                     lastTime = startTime;
                 }
                 const durationHour = activity.duration / 60;
-                const skill = dataManager.skills.GetByID(skillID);
                 totalXP += skill.XP * durationHour;
             }
         }
@@ -120,6 +123,7 @@ class Experience {
         for (let a in activities) {
             const activity = activities[a];
             const skill = dataManager.skills.GetByID(activity.skillID);
+            if (skill === null) continue;
 
             if (skill.CategoryID === categoryID) {
                 const durationHour = activity.duration / 60;

@@ -8,8 +8,13 @@ import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { StartActivity } from './utils';
-import { Text, Button, TextSwitch, Icon } from 'Interface/Components';
-import { ActivitySchedule, ActivityExperience, PanelScreen } from 'Interface/Widgets';
+import Text from 'Interface/Components/Text';
+import Icon from 'Interface/Components/Icon';
+import Button from 'Interface/Components/Button';
+import TextSwitch from 'Interface/Components/TextSwitch';
+import PanelScreen from 'Interface/Widgets/PanelScreen';
+import ActivitySchedule from 'Interface/Widgets/ActivitySchedule';
+import ActivityExperience from 'Interface/Widgets/ActivityExperience';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -23,6 +28,8 @@ class ActivityPanel extends ActivityPanelBack {
         const { activity, startMode, selectedSkillID, mode } = this.state;
 
         const skill = dataManager.skills.GetByID(selectedSkillID);
+        const positiveXP = skill !== null && skill.XP > 0;
+        const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
         const viewOpacity = {
             transform: [{
@@ -42,9 +49,6 @@ class ActivityPanel extends ActivityPanelBack {
             )
         };
 
-        const positiveXP = skill !== null && skill.XP > 0;
-        const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
-
         return (
             <Animated.View style={viewOpacity} pointerEvents={pointerEvents}>
                 {/* Schedule */}
@@ -53,7 +57,7 @@ class ActivityPanel extends ActivityPanelBack {
                 </Text>
 
                 <ActivitySchedule
-                    ref={ref => this.refHelp2 = ref}
+                    ref={this.refActivitySchedule}
                     editable={mode === 'skill'}
                     selectedDate={activity?.startTime ?? 0}
                     selectedDuration={activity?.duration ?? 60}
@@ -63,21 +67,21 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Experience */}
                 <View ref={ref => this.refHelp3 = ref}>
-                {positiveXP ? (
-                    <>
-                        <Text style={styles.tempTitle} bold>
-                            {lang['title-experience']}
+                    {positiveXP ? (
+                        <>
+                            <Text style={styles.tempTitle} bold>
+                                {lang['title-experience']}
+                            </Text>
+                            <ActivityExperience
+                                skillID={selectedSkillID}
+                                duration={activity?.duration ?? 0}
+                            />
+                        </>
+                    ) : (
+                        <Text style={styles.tempTitleNoXP} bold>
+                            {lang['title-no-experience']}
                         </Text>
-                        <ActivityExperience
-                            skillID={selectedSkillID}
-                            duration={activity?.duration ?? 0}
-                        />
-                    </>
-                ) : (
-                    <Text style={styles.tempTitleNoXP} bold>
-                        {lang['title-no-experience']}
-                    </Text>
-                )}
+                    )}
                 </View>
 
                 {/* Commentary */}
@@ -97,7 +101,7 @@ class ActivityPanel extends ActivityPanelBack {
                         <Text style={styles.tempTitle} bold>
                             {lang['title-commentary']}
                         </Text>
-    
+
                         {/* Comment content */}
                         <TouchableOpacity
                             style={[styles.commentPanel, backgroundCard]}
@@ -114,7 +118,7 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Add / Remove button */}
                 {mode === 'activity' ? (
-                    <Button onPress={this.onRemoveActivity} color='main2'>
+                    <Button onPress={this.onRemoveActivity} color='danger'>
                         {lang['btn-remove']}
                     </Button>
                 ) : (
@@ -159,6 +163,9 @@ class ActivityPanel extends ActivityPanelBack {
                 !variantTheme ? 'backgroundGrey' : 'backgroundCard'
             )
         };
+        const styleTitle = {
+            borderColor: themeManager.GetColor('main1')
+        };
 
         return (
             <PanelScreen
@@ -170,9 +177,21 @@ class ActivityPanel extends ActivityPanelBack {
             >
                 {/* Title */}
                 <View style={styles.panelTitleView}>
-                    <Text style={styles.panelTitle} bold>
-                        {activityText}
-                    </Text>
+
+                    <Button
+                        onPress={this.onOpenSkill}
+                        style={[styleTitle, styles.buttonViewContainer]}>
+                        <View
+                            style={styles.buttonView}>
+                            <Text style={styles.panelTitle} bold>
+                                {activityText}
+                            </Text>
+                            <Text style={styles.subPanelTitle}>
+                                {lang['title-click-me']}
+                            </Text>
+                        </View>
+                    </Button>
+
                     <Icon
                         containerStyle={[styles.panelTitleIcon]}
                         size={42}
@@ -184,13 +203,13 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Start mode - Already / Now */}
                 <View ref={ref => this.refHelp1 = ref}>
-                {mode === 'activity' ? null : (
-                    <TextSwitch
-                        style={styles.panelTextSwitch}
-                        texts={[ lang['swiper-already'], lang['swiper-now'] ]}
-                        onChange={this.onChangeMode}
-                    />
-                )}
+                    {mode === 'activity' ? null : (
+                        <TextSwitch
+                            style={styles.panelTextSwitch}
+                            texts={[lang['swiper-already'], lang['swiper-now']]}
+                            onChange={this.onChangeMode}
+                        />
+                    )}
                 </View>
 
                 <View>

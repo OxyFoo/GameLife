@@ -39,6 +39,9 @@ class News {
         this.news = [];
     }
 
+    Clear() {
+        this.news = [];
+    }
     Load(news) {
         if (news !== null) {
             this.news = news;

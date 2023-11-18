@@ -35,11 +35,8 @@ class Account
     /** @var int $XP */
     public $XP;
 
-    /** @var string[] $TasksSort */
-    public $TasksSort;
-
-    /** @var int $TasksTotal */
-    public $TasksTotal;
+    /** @var string[] $QuestsSort */
+    public $QuestsSort;
 
     /** @var string $DataToken */
     public $DataToken;
@@ -74,8 +71,7 @@ class Account
         $this->DevicesWait = json_decode($account['DevicesWait'], true);
         $this->Ox = intval($account['Ox']);
         $this->XP = intval($account['XP']);
-        $this->TasksSort = json_decode($account['TasksSort'], true);
-        $this->TasksTotal = intval($account['TasksTotal']);
+        $this->QuestsSort = json_decode($account['QuestsSort'], true);
         $this->DataToken = $account['DataToken'];
         $this->LastSendMail = $account['LastSendMail'] === null ? null : strtotime($account['LastSendMail']);
         $this->LastChangeUsername = $account['LastChangeUsername'] === null ? null : strtotime($account['LastChangeUsername']);

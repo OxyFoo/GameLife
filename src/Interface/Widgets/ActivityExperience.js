@@ -17,7 +17,7 @@ const ActivityExperienceProps = {
     skillID: 0,
 
     /** @type {number} Duration of the activity in minutes */
-    duration: 15
+    duration: 60
 }
 
 class ActivityExperience extends React.Component {

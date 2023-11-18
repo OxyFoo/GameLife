@@ -11,6 +11,9 @@ class Titles {
         this.titles = [];
     }
 
+    Clear() {
+        this.titles = [];
+    }
     Load(titles) {
         if (typeof(titles) === 'object') {
             this.titles = titles;

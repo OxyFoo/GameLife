@@ -122,6 +122,11 @@ class Achievements {
             case 'Sk':
             case 'SkT':
                 const skill = dataManager.skills.GetByID(valueNum);
+                if (skill === null) {
+                    output += condText['Sk']
+                                .replace('{}', 'Error: Skill not found\n');
+                    break;
+                }
                 const skillName = dataManager.GetText(skill.Name);
                 output += condText[Comparator.Type]
                             .replace('{}', valueStr)
@@ -221,6 +226,7 @@ class Achievements {
 
     CheckAchievements = async () => {
         if (!this.user.server.online || this.loading) return;
+        if (!this.user.server.IsConnected()) return;
         this.loading = true;
 
         const solvedIndexes = this.GetSolvedIndexes();
@@ -258,7 +264,7 @@ class Achievements {
 
                 case 'Sk': // Skill level
                     const skillID = Condition.Comparator.Value;
-                    value = this.user.experience.GetSkillExperience(skillID).lvl;
+                    value = this.user.experience.GetSkillExperience(skillID)?.lvl || 0;
                     break;
 
                 case 'SkT': // Skill time
@@ -305,6 +311,12 @@ class Achievements {
 
                 case 'Ad': // Number of watched ads
                     value = this.user.informations.adTotalWatched;
+                    break;
+
+                case 'Tt': // Title unlocked
+                    const titles = this.user.inventory.GetTitles();
+                    const title = titles.find(t => t.ID === Condition.Comparator.Value);
+                    value = typeof(title) !== 'undefined' ? 1 : 0;
                     break;
             }
 

@@ -3,7 +3,9 @@ import { View, Animated, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Icon, Button } from 'Interface/Components';
+import Text from 'Interface/Components/Text';
+import Icon from 'Interface/Components/Icon';
+import Button from 'Interface/Components/Button';
 import { TimingAnimation } from 'Utils/Animations';
 
 /**

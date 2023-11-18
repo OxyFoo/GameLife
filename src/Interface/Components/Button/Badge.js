@@ -3,38 +3,39 @@ import { View, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
-import { Icon, Button } from 'Interface/Components';
+import Icon from 'Interface/Components/Icon';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('Interface/Components/Icon/index').Icons} Icons
  * 
  * @typedef {'flex-start'|'flex-end'|'center'|'space-between'|'space-around'|'space-evenly'} JustifyContentStyle
+ * 
+ * @typedef {object} ButtonBadgeProps Use for import props in Button component as type
+ * @property {ViewStyle} [style={}]
+ * @property {Icons} [icon='default']
+ * @property {JustifyContentStyle} [badgeJustifyContent='center']
+ * @property {React.ReactNode} [children]
+ * @property {() => void} [onPress]
+ * @property {boolean} [loading=false]
+ * @property {boolean} [disabled=false]
  */
 
+/** @type {ButtonBadgeProps} */
 const ButtonBadgeProps = {
-    /** @type {ViewStyle} */
     style: {},
-
-    /** @type {Icons} */
     icon: 'default',
-
-    /** @type {JustifyContentStyle} */
     badgeJustifyContent: 'center',
-
-    /** @type {React.ReactNode} */
     children: undefined,
-
-    /** @type {() => void} */
     onPress: undefined,
-
-    /** @type {boolean} */
+    loading: false,
     disabled: false
 }
 
 class ButtonBadge extends React.PureComponent {
     render() {
-        const { style, icon, badgeJustifyContent, children, onPress, disabled } = this.props;
+        const { icon, loading, disabled,
+            badgeJustifyContent, children } = this.props;
 
         const styleOpacity = {
             opacity: disabled ? 0.5 : 1
@@ -50,27 +51,20 @@ class ButtonBadge extends React.PureComponent {
         };
 
         return (
-            <Button
-                style={[styles.button, style]}
-                color='transparent'
-                rippleColor='ground1'
-                onPress={onPress}
-            >
-                <View style={styles.content}>
-                    <View style={[styles.icon, styleIconBackground]}>
-                        <Icon
-                            style={[styleIconBackground, styleOpacity]}
-                            icon={icon}
-                            size={22}
-                            color={'white'}
-                        />
-                    </View>
-                    <View style={[styles.badge, styleBadge, styleOpacity, styleBadgeBackground]}>
-                        {children}
-                    </View>
-                    <View style={[styles.badgeLink, styleOpacity, styleBadgeBackground]} />
+            <View style={styles.content}>
+                <View style={[styles.icon, styleIconBackground]}>
+                    <Icon
+                        style={[styleIconBackground, styleOpacity]}
+                        icon={icon}
+                        size={22}
+                        color={'white'}
+                    />
                 </View>
-            </Button>
+                <View style={[styles.badge, styleBadge, styleOpacity, styleBadgeBackground]}>
+                    {loading ? <Icon icon='loadingDots' /> : children}
+                </View>
+                <View style={[styles.badgeLink, styleOpacity, styleBadgeBackground]} />
+            </View>
         );
     }
 }
@@ -79,14 +73,6 @@ ButtonBadge.prototype.props = ButtonBadgeProps;
 ButtonBadge.defaultProps = ButtonBadgeProps;
 
 const styles = StyleSheet.create({
-    button: {
-        width: 'auto',
-        height: 'auto',
-        maxHeight: 48,
-        paddingVertical: 0,
-        paddingHorizontal: 0,
-        borderRadius: 8
-    },
     content: {
         flexDirection: 'row',
         justifyContent: 'flex-start'

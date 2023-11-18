@@ -1,17 +1,35 @@
 /**
- * @typedef {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'} Comparator
+ * @typedef {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'|'Tt'} Comparator
  * @typedef {'LT'|'GT'} Operator
  * @typedef {'Title'|'Item'|'OX'} RewardType
  */
 
 /** @type {Array<Comparator>} */
-const COMPARATORS = [ 'B', 'Lvl', 'Sk', 'SkT', 'St', 'HCa', 'Ca', 'It', 'Ad' ];
+const COMPARATORS = [
+    'B',
+    'Lvl',
+    'Sk',
+    'SkT',
+    'St',
+    'HCa',
+    'Ca',
+    'It',
+    'Ad',
+    'Tt'
+];
 
 /** @type {Array<Operator>} */
-const OPERATORS = [ 'LT', 'GT' ];
+const OPERATORS = [
+    'LT',
+    'GT'
+];
 
 /** @type {Array<RewardType>} */
-const REWARDS = [ 'Title', 'Item', 'OX' ];
+const REWARDS = [
+    'Title',
+    'Item',
+    'OX'
+];
 
 class Achievement {
     ID = 0;
@@ -63,6 +81,9 @@ class Achievements {
         this.achievements = [];
     }
 
+    Clear() {
+        this.achievements = [];
+    }
     Load(achievements) {
         if (typeof(achievements) === 'object') {
             this.achievements = [];

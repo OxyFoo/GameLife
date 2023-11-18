@@ -4,7 +4,9 @@ import { View, StyleSheet, Linking } from 'react-native';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 
-import { Text, Icon, Button } from 'Interface/Components';
+import Text from 'Interface/Components/Text';
+import Icon from 'Interface/Components/Icon';
+import Button from 'Interface/Components/Button';
 
 const renderQuote = (currentQuote) => quote = currentQuote === null ? null : (
     <View style={{ padding: '5%' }}>

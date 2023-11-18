@@ -1,14 +1,16 @@
 import { PageBack } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-
-import { AddActivityNow } from 'Utils/Activities';
-import { MinMax, TwoDigit } from 'Utils/Functions';
-import { DateToFormatTimeString } from 'Utils/Date';
-import { GetDate, GetTime, RoundToQuarter } from 'Utils/Time';
 import dataManager from 'Managers/DataManager';
 
-const MAX_TIME_MINUTES = 4 * 60; // Multiple of 15
+import { AddActivityNow, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { TwoDigit } from 'Utils/Functions';
+import { DateToFormatTimeString } from 'Utils/Date';
+import { GetDate, GetTime, RoundTimeTo } from 'Utils/Time';
+
+/**
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
+ */
 
 class BackActivityTimer extends PageBack {
     state = {
@@ -32,9 +34,13 @@ class BackActivityTimer extends PageBack {
         }
 
         const { localTime } = user.activities.currentActivity;
-        const activityName = dataManager.skills.GetByID(user.activities.currentActivity.skillID).Name;
+        const skill = dataManager.skills.GetByID(user.activities.currentActivity.skillID);
+        if (skill === null) {
+            user.interface.BackHandle();
+            return;
+        }
 
-        this.state.displayActivity = dataManager.GetText(activityName);
+        this.state.displayActivity = dataManager.GetText(skill.Name);
         this.state.displayInitialTime = DateToFormatTimeString(GetDate(localTime));
         this.state.displayCurrentTime = this.__getCurrentTime();
         this.state.duration = this.__getDuration();
@@ -110,7 +116,9 @@ class BackActivityTimer extends PageBack {
         const { skillID, startTime } = user.activities.currentActivity;
 
         // Too short
-        if (startTime >= RoundToQuarter(GetTime(undefined, 'local'), 'near')) {
+        const now = GetTime(undefined, 'local');
+        const endTime = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
+        if (startTime >= endTime) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];
             const text = lang['timeralert-tooshort-text'];
@@ -120,9 +128,12 @@ class BackActivityTimer extends PageBack {
         }
 
         this.finished = true;
-        const endTime = RoundToQuarter(GetTime(undefined, 'local'), 'near');
-        let duration = Math.max(15, (endTime - startTime) / 60);
-        AddActivityNow(skillID, startTime, duration);
+
+        // Get categoryID & duration
+        let duration = (endTime - startTime) / 60;
+        duration = Math.max(TIME_STEP_MINUTES, duration);
+
+        AddActivityNow(skillID, startTime, duration, this.Back);
     }
 
     Back = () => {

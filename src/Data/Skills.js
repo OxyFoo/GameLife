@@ -20,6 +20,7 @@ class Skill {
     LogoID = 0;
     Creator = '';
     XP = 0;
+    Enabled = true;
 }
 
 class EnrichedSkill extends Skill {
@@ -42,6 +43,7 @@ class Icon {
 class Category {
     ID = 0;
     Name = { fr: '', en: '' };
+    Color = '#000000';
     LogoID = 0;
 }
 
@@ -60,6 +62,11 @@ class Skills {
         this._dataManager = dataManager;
     }
 
+    Clear() {
+        this.skills = [];
+        this.icons = [];
+        this.categories = [];
+    }
     Load(data) {
         if (typeof(data) === 'object') {
             if (data.hasOwnProperty('skills')) this.skills = data.skills;
@@ -75,6 +82,11 @@ class Skills {
         };
         return data;
     }
+
+    /**
+     * @returns {Array<Skill>}
+     */
+    Get = () => this.skills.filter(skill => skill.Enabled);
 
     /**
      * @param {number} ID

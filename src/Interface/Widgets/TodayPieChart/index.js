@@ -19,7 +19,7 @@ class TodayPieChart extends TodayPieChartBack {
 
         const whiteText = {
             color: themeManager.GetColor('primary')
-        }
+        };
 
         const dayPerformance = switchValue ? '24' : totalTime.toString();
         const headerText = lang['chart-today-performance'].replace('{}', dayPerformance);

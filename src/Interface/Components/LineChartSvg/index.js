@@ -6,27 +6,66 @@ import LineChartSvgBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 class LineChartSvg extends LineChartSvgBack {
+    renderChartContent() {
+        const { data, lineColor } = this.props;
+        const { points, layoutWidth } = this.state;
+
+        if (points.length <= 1 || layoutWidth === 0) {
+            return null;
+        }
+
+        // Ensure this is visible against the background
+        const svgColor = themeManager.GetColor(lineColor);
+
+        // Single point
+        if (data.length === 1) {
+            const [x, y] = points.split(',').map(Number);
+            return (
+                <Circle
+                    key={`point_single`}
+                    cx={x}
+                    cy={y}
+                    r='3' // Adjust if needed
+                    fill={svgColor}
+                />
+            );
+        }
+
+        // Line chart
+        return (
+            <Polyline
+                points={points}
+                fill='none'
+                stroke={svgColor}
+                strokeWidth='2'
+            />
+        );
+    }
+
     render() {
+        const { graphHeight } = this.props;
+        const { layoutWidth, maxValue, yAxisValues } = this.state;
+
         return (
             <View>
                 <Svg
-                    height={this.props.graph_height + 40}
+                    height={graphHeight + 40}
                     width={'100%'}
                     onLayout={this.onLayout}>
 
                     {/* Y-axis lines and labels */}
-                    {this.state.maxValue > 0 && this.state.layoutWidth !== 0 && this.state.yAxisValues.map((value, index) => (
+                    {maxValue > 0 && layoutWidth !== 0 && yAxisValues.map((value, index) => (
                         <React.Fragment key={`yaxis_line_${index}`}>
                             <Line
                                 x1={this.leftMargin}
-                                y1={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
-                                x2={this.state.layoutWidth}
-                                y2={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
+                                y1={graphHeight - this.scaleY(value, maxValue)}
+                                x2={layoutWidth}
+                                y2={graphHeight - this.scaleY(value, maxValue)}
                                 stroke='rgba(100,100,100,0.4)'
                             />
                             <Text
                                 x={0}
-                                y={this.props.graph_height - this.scaleY(value, this.state.maxValue)}
+                                y={graphHeight - this.scaleY(value, maxValue)}
                                 fontSize='14'
                                 fill='rgb(150,150,150)'
                                 alignmentBaseline='middle'
@@ -36,39 +75,14 @@ class LineChartSvg extends LineChartSvgBack {
                         </React.Fragment>
                     ))}
 
-                    {/* Line chart */}
-                    {this.props.data.length > 1 && this.state.points.length > 1 && this.state.layoutWidth !== 0 &&
-                        <Polyline
-                            points={this.state.points}
-                            fill='none'
-                            stroke={themeManager.GetColor(this.props.lineColor)}
-                            strokeWidth='2'
-                        />
-                    }
-
-                    {/* Points */}
-                    {this.props.data.length === 1 && this.state.points.length > 1 && this.state.layoutWidth !== 0 && 
-                        (() => {
-                            const [x, y] = this.state.points.split(',').map(Number);
-                            return (
-                                <Circle
-                                    key={`point_single`}
-                                    cx={x}
-                                    cy={y}
-                                    r='3' // Adjust if needed
-                                    fill={themeManager.GetColor(this.props.lineColor)} // Ensure this is visible against the background
-                                />
-                            );
-                        })()
-                    }
-
-
+                    {/* Chart line or point */}
+                    {this.renderChartContent()}
 
                     {/* Date labels for first and last data points */}
                     <Text
                         key={`text_first`}
                         x={60}
-                        y={this.props.graph_height + 15}
+                        y={graphHeight + 15}
                         fontSize='12'
                         textAnchor='middle'
                         fill='rgba(150,150,150,1)'
@@ -77,8 +91,8 @@ class LineChartSvg extends LineChartSvgBack {
                     </Text>
                     <Text
                         key={`text_last`}
-                        x={this.state.layoutWidth - 35}
-                        y={this.props.graph_height + 15}
+                        x={layoutWidth - 35}
+                        y={graphHeight + 15}
                         fontSize='12'
                         textAnchor='middle'
                         fill='rgba(150,150,150,1)'

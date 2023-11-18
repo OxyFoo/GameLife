@@ -77,9 +77,6 @@ class PieChart extends React.Component {
     render() {
         const { style, data, focusedActivity, elementPerRow } = this.props;
 
-        // filter data with value 0 (this correct the android bug)
-        const dataFiltered = data.filter((item) => item.value > 0);
-
         if (!data || !focusedActivity) {
             return null;
         }
@@ -88,7 +85,7 @@ class PieChart extends React.Component {
             <View style={style}>
                 <View style={styles.pieChartContainer}>
                     <PieChartLib
-                        data={dataFiltered}
+                        data={data}
                         donut
                         showGradient
                         sectionAutoFocus

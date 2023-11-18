@@ -65,10 +65,11 @@ const ArrayToDict = (arr) => arr.reduce((acc, curr) => Object.assign(acc, curr),
  * Range function
  * @example Range(5) => [0, 1, 2, 3, 4]
  * @param {number} length
- * @returns {Array}
+ * @param {number} [step=1] Step between each number
+ * @returns {Array<number>}
  */
-function Range(length) {
-    return Array.from({ length: length }, (_, i) => i);
+function Range(length, step = 1) {
+    return Array.from({ length: length / step }, (_, i) => i * step);
 }
 
 function Sleep(ms) {

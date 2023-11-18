@@ -32,13 +32,13 @@
                 "Score big by noting down your daily wins. Have you checked in yet?"
             ]
         },
-        "tasks": {
-            "name": "Task notifications",
-            "title": "GameLife - Tasks",
+        "quests": {
+            "name": "Quest notifications",
+            "title": "GameLife - Quests",
             "message": {
-                "half-time": "You have half the time left to complete the task[s]: {}",
-                "last-time": "The following task[s] are due tomorrow: {}, so hurry up and finish them!",
-                "today-time": "The following task[s] are finished today: {}, hurry up and finish them!"
+                "half-time": "You have half the time left to complete the quest[s]: {}",
+                "last-time": "The following quest[s] are due tomorrow: {}, so hurry up and finish them!",
+                "today-time": "The following quest[s] are finished today: {}, hurry up and finish them!"
             }
         }
     },
@@ -47,7 +47,8 @@
         "xp": "XP",
         "level": "Level",
         "level-small": "Lvl",
-        "total": "TOTAL XP",
+        "total": "Total XP",
+        "total-hour": "Total hours",
         "average": "AVERAGE {} XP/DAY",
         "me": "Me"
     },
@@ -61,7 +62,9 @@
             "days": "Days",
             "never": "Never",
             "weekly": "Weekly",
-            "monthly": "Monthly"
+            "monthly": "Monthly",
+            "seconds-min": "m",
+            "hours-min": "h"
         },
         "month": [
             "January",
@@ -115,6 +118,7 @@
         "alert-adsuccess-title": "Congrats",
         "alert-adsuccess-message": "You have won {} Ox!",
         "alert-aderror-title": "Unable to load ads",
+        "alert-aderror-message-wait": "The ads are loading",
         "alert-aderror-message-nomore": "There are no more ads available. Try again tomorrow!",
         "alert-aderror-message-error": "An error has occurred, please try again later.",
 
@@ -129,7 +133,7 @@
         "start": "Start",
         "select-language": "Select your language",
         "page1": "Welcome to Game-Life, Turn your routine into a quest. Every day becomes an exciting adventure.",
-        "page2": "Plan and complete your tasks. With each achievement, your avatar gains strength.",
+        "page2": "Plan and complete your quests. With each achievement, your avatar gains strength.",
         "page3": "Earn XP for every mission accomplished. Become the champion of your productivity."
     },
 
@@ -174,6 +178,7 @@
     "activity": {
         "title-category": "Category",
         "title-activity": "Activity",
+        "title-click-me": "(you can click me)",
         "title-schedule": "Schedule",
         "title-experience": "Experience",
         "title-no-experience": "This activity has no experience",
@@ -201,10 +206,10 @@
         "timeralert-cancel-title": "Cancel activity",
         "timeralert-cancel-text": "Are you sure you want to cancel this activity?",
         "timeralert-tooshort-title": "Too early",
-        "timeralert-tooshort-text": "You cannot add an activity of less than 15 minutes",
+        "timeralert-tooshort-text": "You cannot add an activity of less than 5 minutes",
 
         "display-activity-text": "Your activity has been created!",
-        "display-task-complete-text": "Congratulations! You've completed today's tasks!",
+        "display-quest-complete-text": "Congratulations! You've completed today's quests!",
         "display-activity-button": "Back home",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home"
@@ -218,50 +223,14 @@
         "utc": "UTC"
     },
 
-    "dailyquest": {
-        "page-title": "Daily quest",
-
-        "info-remain-time": "Time remaining: ",
-        "daily-define-title": "Selection of daily quests",
-        "daily-define-text": "Enter 2 categories in which you want to improve",
-        "daily-define-cat1": "Skill 1",
-        "daily-define-cat2": "Skill 2",
-        "daily-define-button": "Save",
-
-        "daily-title": "Available quests",
-        "daily-edit-button": "Edit categories",
-        "daily-categories-text": " or ",
-        "quest-main-text": "One hour and a half of activity in the following categories:",
-        "quest-bonus-text": "One quarter hour in the following category:",
-
-        "daily-task-title": "Todo list",
-        "task-edit-title": "Title",
-        "task-edit-subtask": "Subtasks",
-        "task-edit-description": "Description",
-        "task-edit-add": "Add",
-        "task-edit-save": "Save",
-
-        "alert-info-title": "Informations",
-        "alert-info-text": "Daily quests are a way for you to get extra experience.\n\nThere are 3 categories in the daily quests:\n\n\n1- The hour and a half of activity: you have 1h30 of \"mandatory\" activity per day.\n1 hour of activity of your choice, you can choose to complete this hour by doing 1 or 2 activities (of different categories).\nIf you complete your hour of activity, you gain +1% of xp for the next day (can be accumulated 21 times)\nIf you fail, you will get -5% of xp for the next day (not cumulative)\n\n\n2- (Finished soon) A list of habits you want to start / continue.\nYou can decide to add up to 5 habits at the same time.\nIf you achieve your quarter of an hour of activity taken at random, you gain +0,5% of xp for the next day (cumulative 10 times)\nIf you fail, nothing happens.\n\n\n3- (Available soon) A button to watch a commercial. Watching one earns you points (and later virtual currency). You can earn titles and other bonuses from a certain number of ads watched!",
-        "alert-notfill-title": "Not completed",
-        "alert-notfill-text": "Please fill in all fields",
-        "alert-same-title": "Not completed",
-        "alert-same-text": "You cannot choose the same skill twice",
-        "alert-warn-title": "Warning",
-        "alert-warn-text": "You can only change the skills for the daily quests once a day",
-        "alert-success-title": "Success",
-        "alert-success-text": "Daily quests have been modified",
-        "alert-tasknotitle-title": "Incorrect",
-        "alert-tasknotitle-text": "Please enter a title for your task",
-        "alert-taskremove-title": "Delete ?",
-        "alert-taskremove-text": "You have already checked this task, press no to uncheck it, or yes to delete it"
-    },
-
     "home": {
-        "btn-add-task": "Add activities",
+        "btn-add-activity": "Add activities",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
         "btn-settings": "Settings",
+
+        "chart-today-performance": "Performance of the day ({}h)",
+        "chart-today-notmuch": "Not enough data to display graph",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
@@ -334,7 +303,7 @@
         "row-title": "Informations",
         "row-since": "Since",
         "row-activities": "Number of activities",
-        "row-tasks": "Number of tasks",
+        "row-quests": "Number of quests",
         "row-time": "Time spent",
 
         "container-achievements-title": "Last achievements",
@@ -523,8 +492,10 @@
 
     "skill": {
         "text-author": "An idea from {}",
+        "text-unallocated": "Competence unallocated",
         "stats-title": "Statistiques",
         "history-title": "History",
+        "activity-history": "Activity history",
         "text-history": "{} during {} minutes",
         "text-add": "Add activity"
     },
@@ -557,13 +528,13 @@
             "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
             "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
-            "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision tasks, writing tasks on a computer or even with musical instruments."
+            "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision quests, writing quests on a computer or even with musical instruments."
         }
     },
 
-    "task": {
+    "quest": {
         "title-schedule": "Scheduling",
-        "title-subtasks": "Subtasks",
+        "title-tasks": "Tasks",
         "title-activity": "Activity",
         "title-commentary": "Commentary",
 
@@ -582,7 +553,7 @@
 
         "input-repeat-title": "Repeat",
         "input-description": "Description",
-        "input-subtask-placeholder": "Subtask",
+        "input-task-placeholder": "Task",
         "text-hint-select": "Press and hold to select the column",
 
         "button-commentary": "Add a commentary",
@@ -591,30 +562,30 @@
         "button-remove": "Delete",
 
         "error-title-empty": "Please enter a title",
-        "error-title-exists": "A task with this title already exists",
+        "error-title-exists": "A quest with this title already exists",
 
         "alert-remcomment-title": "Delete comment?",
         "alert-remcomment-text": "Are you sure you want to delete this comment?",
-        "alert-remtask-title": "Delete task?",
+        "alert-remquest-title": "Delete quest?",
+        "alert-remquest-text": "Are you sure you want to delete this quest?",
+        "alert-remtask-title": "Delete quest?",
         "alert-remtask-text": "Are you sure you want to delete this task?",
-        "alert-remsubtask-title": "Delete task?",
-        "alert-remsubtask-text": "Are you sure you want to delete this subtask?",
-        "alert-subtaskslimit-title": "Limit reached",
-        "alert-subtaskslimit-text": "You can't add more than 20 subtasks to this task",
+        "alert-taskslimit-title": "Limit reached",
+        "alert-taskslimit-text": "You can't add more than 20 tasks to this quest",
         "alert-back-title": "Back",
         "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
     },
 
-    "tasks": {
+    "quests": {
         "container-title": "Todo list",
-        "tasks-empty-title": "No task",
-        "tasks-empty-button": "Add a task",
+        "quests-empty-title": "No quest",
+        "quests-empty-button": "Add a quest",
 
-        "task-type-deadline": "Ends on:",
-        "task-type-repeat-before": "To be done before:",
+        "quest-type-deadline": "Ends on:",
+        "quest-type-repeat-before": "To be done before:",
 
-        "alert-taskslimit-title": "Limit reached",
-        "alert-taskslimit-text": "You have reached the limit of tasks, please delete some of them to add more."
+        "alert-questslimit-title": "Limit reached",
+        "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more."
     },
 
     "wait": {
@@ -633,7 +604,7 @@
             "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
             "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",
 
-            "home-5": "You can also add tasks, to add activities more quickly, or follow personal goals",
+            "home-5": "You can also add quests, to add activities more quickly, or follow personal goals",
             "home-6": "Come here, let's take a look at the calendar",
 
             "calendar-1": "This is where all your activities will appear, you can select them to view their details and edit them.",
@@ -687,11 +658,11 @@
             "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
         },
 
-        "task": {
-            "1": "Here you can set the deadline for your task, or its frequency if it's a recurring one",
-            "2": "You can link your task to an activity, which will allow you to gain experience by completing it.",
-            "3": "You can also add sub-tasks to your main task, to organize yourself better.",
-            "4": "Finally, you can add a comment to your task, for example, to note your feelings or to record important information."
+        "quest": {
+            "1": "Here you can set the deadline for your quest, or its frequency if it's a recurring one",
+            "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
+            "3": "You can also add sub-quests to your main quest, to organize yourself better.",
+            "4": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
         },
 
         "other": {
@@ -703,9 +674,19 @@
 
     "other": {
         "widget-button-editTime": "Change",
+        "widget-duration": "Duration",
         "widget-achievements-all": "All achievements",
         "widget-skills-all": "All skills",
         "sexe-male": "♂",
         "sexe-female": "♀"
-    }
+    },
+
+    "loading": [
+        "Retrieving data",
+        "Loading resources",
+        "Building the avatar",
+        "Forging equipment",
+        "Creating the shop",
+        "Filling the chests"
+    ]
 }

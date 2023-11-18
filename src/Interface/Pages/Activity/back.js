@@ -5,10 +5,11 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { GetTime } from 'Utils/Time';
-import { Sleep } from 'Utils/Functions';
+import { GetTime, RoundTimeTo } from 'Utils/Time';
+import { MinMax, Sleep } from 'Utils/Functions';
 import { PageBack } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
+import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -73,7 +74,7 @@ class BackActivity extends PageBack {
 
         // Define all skills
         if (!this.editMode) {
-            const { skills } = dataManager.skills;
+            const skills = dataManager.skills.Get();
             const convert = (skill) => SkillToItem(skill, this.selectSkill);
 
             this.allSkillItems = skills.map(convert);
@@ -103,8 +104,10 @@ class BackActivity extends PageBack {
         if (this.props.args.hasOwnProperty('skillID')) {
             const { skillID } = this.props.args;
             const skill = dataManager.skills.GetByID(skillID);
-            this.refActivityPanel.SelectSkill(skill);
-            this.refreshSkills(this.state.skillSearch, skill.CategoryID);
+            if (skill !== null) {
+                this.refActivityPanel.SelectSkill(skill);
+                this.refreshSkills(this.state.skillSearch, skill.CategoryID);
+            }
         }
 
         else if (this.props.args.hasOwnProperty('categoryID')) {
@@ -122,9 +125,21 @@ class BackActivity extends PageBack {
         // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
             const { time } = this.props.args;
-            this.refActivityPanel.onChangeSchedule(time, 60);
+            const activities = user.activities
+                .GetByTime(time)
+                .filter(activity => activity.startTime > time);
+
+            let duration = 60;
+            if (activities.length > 0) {
+                const delta = activities[0].startTime - time;
+                if (delta <= MAX_TIME_MINUTES * 60) {
+                    duration = RoundTimeTo(TIME_STEP_MINUTES, delta) / 60;
+                    duration = Math.max(MIN_TIME_MINUTES, duration);
+                }
+            }
+            this.refActivityPanel.SetChangeSchedule(time, duration);
         } else if (user.tempSelectedTime !== null) {
-            this.refActivityPanel.onChangeSchedule(user.tempSelectedTime, 60);
+            this.refActivityPanel.SetChangeSchedule(user.tempSelectedTime, 60);
         }
     }
 
@@ -161,13 +176,12 @@ class BackActivity extends PageBack {
                 .sort((a, b) => b.startTime - a.startTime);
             for (const activity of usersActivities) {
                 const skill = dataManager.skills.GetByID(activity.skillID);
-                if (!skills.includes(skill.ID)) {
-                    skills.push(skill.ID);
+                if (skill !== null && !skills.find(s => s.ID === skill.ID)) {
+                    skills.push(skill);
                 }
             }
             itemSkills = skills
                 .slice(0, 10)
-                .map(skillID => dataManager.skills.GetByID(skillID))
                 .map(convert)
                 .filter(searchMatch);
         }

@@ -9,6 +9,9 @@ class Contributors {
         this.contributors = [];
     }
 
+    Clear() {
+        this.contributors = [];
+    }
     Load(contributors) {
         if (typeof(contributors) === 'object') {
             this.contributors = contributors;

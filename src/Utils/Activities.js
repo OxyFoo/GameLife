@@ -7,23 +7,28 @@ import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('Class/Tasks').Task} Task
+ * @typedef {import('Class/Quests').Quest} Quest
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
+
+const TIME_STEP_MINUTES = 5;
+const MIN_TIME_MINUTES =  1 * TIME_STEP_MINUTES; // 5m
+const MAX_TIME_MINUTES = 48 * TIME_STEP_MINUTES; // 4h
 
 /**
  * @param {number} skillID
  * @param {number} startTime
  * @param {number} duration
+ * @param {() => void} funcBack
  * @returns {boolean} True if activity was added successfully
  */
-function AddActivityNow(skillID, startTime, duration) {
+function AddActivityNow(skillID, startTime, duration, funcBack) {
     const lang = langManager.curr['activity'];
 
     // Get the max duration possible
     while (!user.activities.TimeIsFree(startTime, duration)) {
-        duration -= 15;
+        duration -= TIME_STEP_MINUTES;
         if (duration <= 0) {
             user.interface.ChangePage('display', {
                 /** @type {Icons} */
@@ -31,13 +36,28 @@ function AddActivityNow(skillID, startTime, duration) {
                 'iconRatio': .4,
                 'text': lang['display-fail-text'].replace('{}', 'time'),
                 'button': lang['display-fail-button'],
-                'action': Back
+                'action': funcBack
             }, true);
             return false;
         }
     }
 
-    return AddActivity({ skillID, startTime, duration, comment: '', timezone: 0, startNow: true });
+    // Set max limit
+    if (duration > MAX_TIME_MINUTES) {
+        duration = MAX_TIME_MINUTES;
+    }
+
+    /** @type {Activity} */
+    const newActivity = {
+        skillID:    skillID,
+        startTime:  startTime,
+        duration:   duration,
+        comment:    '',
+        timezone:   0,
+        startNow:   true
+    };
+
+    return AddActivity(newActivity);
 }
 
 /**
@@ -63,13 +83,24 @@ function AddActivity(activity) {
         const args = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
 
         const skill = dataManager.skills.GetByID(activity.skillID);
+        if (skill === null) {
+            const lang = langManager.curr['activity'];
+            user.interface.ChangePage('display', {
+                /** @type {Icons} */
+                'icon': 'error',
+                'iconRatio': .4,
+                'text': lang['display-fail-text'].replace('{}', 'skill not fount'),
+                'button': lang['display-fail-button'],
+                'action': Back
+            }, true);
+        }
 
-        /** @param {Task} task @returns {boolean} */
+        /** @param {Quest} quest @returns {boolean} */
         const matchID = ({ Skill: { id, isCategory } }) => {
             if (isCategory) return id === skill.CategoryID;
             else            return id === activity.skillID;
         };
-        /** @param {Task} task @returns {boolean} */
+        /** @param {Quest} quest @returns {boolean} */
         const matchTime = ({ Checked, Schedule, Deadline }) => {
             const d = new Date();
             d.setUTCHours(1, 0, 0, 0);
@@ -112,15 +143,15 @@ function AddActivity(activity) {
             return activity.startTime < now + (minDeltaDays * 24 * 60 * 60);
         };
 
-        const tasks = user.tasks.Get()
-                        .filter(task => task.Checked === 0)
-                        .filter(task => task.Skill !== null)
+        const quests = user.quests.Get()
+                        .filter(quest => quest.Checked === 0)
+                        .filter(quest => quest.Skill !== null)
                         .filter(matchID)
                         .filter(matchTime);
 
-        if (tasks.length > 0) {
-            tasks.forEach(task => user.tasks.Check(task, now));
-            const text = lang['display-task-complete-text'];
+        if (quests.length > 0) {
+            quests.forEach(quest => user.quests.Check(quest, now));
+            const text = lang['display-quest-complete-text'];
             const completeArgs = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
             args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
         }
@@ -164,4 +195,7 @@ function Back() {
     }
 }
 
-export { AddActivityNow, AddActivity, RemActivity };
+export {
+    TIME_STEP_MINUTES, MIN_TIME_MINUTES, MAX_TIME_MINUTES,
+    AddActivityNow, AddActivity, RemActivity
+};

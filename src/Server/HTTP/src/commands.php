@@ -12,7 +12,7 @@ require('./src/classes/device.php');
 require('./src/managers/items.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
-require('./src/managers/tasks.php');
+require('./src/managers/quests.php');
 
 require('./src/sql/app.php');
 require('./src/sql/accounts.php');
@@ -307,8 +307,7 @@ class Commands {
             $userData['birthtime']        = $account->Birthtime;
             $userData['lastbirthtime']    = $account->LastChangeBirth;
             $userData['ox']               = $account->Ox;
-            $userData['tasksSort']        = $account->TasksSort;
-            $userData['tasksTotal']       = $account->TasksTotal;
+            $userData['questsSort']        = $account->QuestsSort;
             $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
             $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
             $userData['achievements']     = Achievements::Get($this->db, $account);
@@ -325,7 +324,7 @@ class Commands {
             $userData['shop'] = array(
                 'buyToday' => Users::GetBuyToday($this->db, $account)
             );
-            $userData['tasks'] = Tasks::GetTasks($this->db, $account);
+            $userData['quests'] = Quests::GetQuests($this->db, $account);
             $userData['dataToken'] = $dbDataToken;
         }
 

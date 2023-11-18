@@ -21,10 +21,18 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
 const MAX_HOUR_PER_DAY = 12;
 
 class Activity {
+    /** @type {number} Skill ID */
     skillID = 0;
+
+    /** @type {number} Start time in seconds, unix timestamp (UTC) */
     startTime = 0;
+
+    /** @type {number} Duration in minutes */
     duration = 0;
+
+    /** @type {number} Timezone offset in hours */
     timezone = 0;
+
     comment = '';
     startNow = false;
 }
@@ -101,6 +109,7 @@ class Activities {
         };
         return activities;
     }
+
     /**
      * Return all activities (save and unsaved) sorted by start time (ascending)
      * @returns {Array<Activity>}
@@ -108,6 +117,15 @@ class Activities {
     Get() {
         let activities = [ ...this.activities, ...this.UNSAVED_activities ];
         return SortByKey(activities, 'startTime');
+    }
+
+    /**
+     * Return the list of activities for the skill
+     * @param {number} skillID Skill ID
+     * @returns {Array<Activity>} List of activities
+     */
+    GetBySkillID(skillID) {
+        return this.Get().filter(activity => activity.skillID === skillID);
     }
 
     IsUnsaved = () => {
@@ -129,7 +147,15 @@ class Activities {
         }
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
-            unsaved.push([ 'rem', activity.skillID, activity.startTime, activity.duration ]);
+            unsaved.push([
+                'rem',
+                activity.skillID,
+                activity.startTime,
+                activity.duration,
+                '',
+                activity.timezone,
+                activity.startNow
+            ]);
         }
         return unsaved;
     }
@@ -159,8 +185,11 @@ class Activities {
         let usefulActivities = [];
         for (let i in activities) {
             const activity = activities[i];
-            const midnight = GetMidnightTime(activity.startTime);
+
             const skill = dataManager.skills.GetByID(activity.skillID);
+            if (skill === null) continue;
+
+            const midnight = GetMidnightTime(activity.startTime);
             const durationHour = activity.duration / 60;
 
             if (lastMidnight !== midnight) {
@@ -202,7 +231,8 @@ class Activities {
         });
 
         /** @type {EnrichedSkill[]} */
-        let enrichedSkills = dataManager.skills.skills
+        let enrichedSkills = dataManager.skills
+            .Get()
             .filter(filter)
             .map(getInfos)
             .sort(sortByXP)
@@ -211,6 +241,7 @@ class Activities {
         return enrichedSkills;
     }
 
+    /** @returns {boolean} True if an activity was removed */
     RemoveDeletedSkillsActivities() {
         let activities = [ ...this.activities, ...this.UNSAVED_activities ];
         let deletions = [];
@@ -219,7 +250,13 @@ class Activities {
             const skill = dataManager.skills.GetByID(activity.skillID);
             if (skill === null) deletions.push(activity);
         }
-        deletions.map(this.Remove);
+
+        let removed = false;
+        deletions.map((activity) => {
+            const state = this.Remove(activity);
+            removed ||= state === 'removed';
+        });
+        return removed;
     }
 
     /**
@@ -350,7 +387,7 @@ class Activities {
      * @returns {Activity[]} activities
      */
     GetByTime(time = GetTime()) {
-        const startTime = GetMidnightTime(time);
+        const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
         return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
     }
@@ -365,8 +402,9 @@ class Activities {
         const startTime = time;
         const endTime = time + duration*60;
 
-        for (let a = 0; a < this.activities.length; a++) {
-            const activity = this.activities[a];
+        const activities = this.Get();
+        for (let a = 0; a < activities.length; a++) {
+            const activity = activities[a];
             const compareStartTime = activity.startTime;
             const compareEndTime = activity.startTime + activity.duration*60;
 

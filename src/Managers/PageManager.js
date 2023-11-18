@@ -14,8 +14,8 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Interface/Components').PageBack} PageBack
- * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'task'|'test'} PageName
- * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Task | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
+ * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'quest'|'test'} PageName
+ * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Quest | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
  * 
  * @typedef PageState
  * @type {Object}
@@ -29,7 +29,7 @@ const DEBUG_MODE = false;
 /**
  * @description Pages that will be cached
  * - /!\ Do not forget "super.componentDidMount()" in BackPages
- * - /!\ Do not put "task" or "skills" pages in this list
+ * - /!\ Do not put "quest" or "skills" pages in this list
  * @type {Array<PageName>}
  */
 const PAGES_PERSISTENT = [
@@ -348,7 +348,7 @@ class PageManager extends React.Component{
             'shop':             Pages.Shop,
             'skill':            Pages.Skill,
             'skills':           Pages.Skills,
-            'task':             Pages.Task,
+            'quest':             Pages.Quest,
             'waitinternet':     Pages.Waitinternet,
             'waitmail':         Pages.Waitmail,
             'test':             Pages.Test

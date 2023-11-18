@@ -46,6 +46,7 @@ class Report extends BackReport {
                                     <Text>{item}</Text>
                                     <Digit
                                         name={item}
+                                        minDigitWidth={14}
                                         initValue={this.stats[item]}
                                         maxValue={this.state.statsRemain[item]}
                                         callback={this.changeDigit}

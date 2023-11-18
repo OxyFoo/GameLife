@@ -25,7 +25,6 @@ class ShopHeader extends React.Component {
     state = {
         /** @type {AdStates} */
         adState: 'wait',
-        adReady: false,
 
         oxAmount: user.informations.ox.Get()
     };
@@ -59,6 +58,13 @@ class ShopHeader extends React.Component {
             user.interface.popup.Open('ok', [ title, message ]);
         }
 
+        // Check if ads are loading
+        else if (this.state.adState === 'wait') {
+            const title = lang['alert-aderror-title'];
+            const message = lang['alert-aderror-message-wait'];
+            user.interface.popup.Open('ok', [ title, message ]);
+        }
+
         // Check if the user is connected to the server and if the ad is loaded
         else if (!user.server.online ||
                 !this.rewardedShop || !this.rewardedShop.ad.loaded) {
@@ -83,24 +89,32 @@ class ShopHeader extends React.Component {
     /** @type {AdEvent} */
     onAdStateChange = (state) => {
         const lang = langManager.curr['server'];
-        const adReady = state === 'ready' && user.informations.adRemaining > 0;
 
-        if (this.state.adReady !== adReady) {
-            this.setState({ adReady });
+        if (state === 'ready') {
+            if (user.informations.adRemaining > 0) {
+                this.setState({ adState: 'ready' });
+            } else {
+                this.setState({ adState: 'notAvailable' });
+            }
         }
 
-        if (state === 'closed') {
+        else if (state === 'closed') {
             const title = lang['alert-adsuccess-title'];
             const text  = lang['alert-adsuccess-message']
                             .replace('{}', OX_AMOUNT.toString());
             user.interface.popup.Open('ok', [ title, text ], undefined, true);
+            this.setState({ adState: 'wait' });
+        }
+
+        else {
+            this.setState({ adState: state });
         }
     }
 
     render() {
         const lang = langManager.curr['shop'];
         const { refPage } = this.props;
-        const { oxAmount, adReady } = this.state;
+        const { oxAmount, adState } = this.state;
         const oxAmountStr = oxAmount.toString();
 
         const parentStyle = {
@@ -131,7 +145,8 @@ class ShopHeader extends React.Component {
                         icon='media'
                         badgeJustifyContent='space-around'
                         onPress={this.openAd}
-                        disabled={!(user.server.online && adReady)}
+                        loading={adState === 'wait'}
+                        disabled={!(user.server.online && adState === 'ready')}
                     >
                         <Text fontSize={16} color='main1'>
                             {lang['button-header-ad'].replace('{}', OX_AMOUNT.toString())}

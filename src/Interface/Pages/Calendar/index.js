@@ -8,7 +8,7 @@ import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
-import { Icon, Page, Text } from 'Interface/Components';
+import { Icon, Page, Text, ActivityTimeline } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
@@ -42,7 +42,7 @@ class Calendar extends BackCalendar {
         } = this.state;
 
         const interPanel = { inputRange: [0, 1], outputRange: [0, user.interface.screenHeight] };
-        const interDateP = { inputRange: [0, 1], outputRange: [user.interface.screenHeight/4, 0] };
+        const interDateP = { inputRange: [0, 1], outputRange: [user.interface.screenHeight / 4, 0] };
 
         const styleContent = [
             styles.mainContent,
@@ -88,14 +88,14 @@ class Calendar extends BackCalendar {
 
                     {/* Date selection + arrows prev/next */}
                     <View style={styles.row}>
-                        <Icon onPress={() => {this.weekSelect(-1)}} icon='chevron' color='main1' size={18} angle={180} />
+                        <Icon onPress={() => { this.weekSelect(-1) }} icon='chevron' color='main1' size={18} angle={180} />
                         <BlockMonth
                             ref={ref => this.refTuto2 = ref}
                             style={styles.weekRow}
                             weekData={currWeek}
                             onPressDay={this.daySelect}
                         />
-                        <Icon onPress={() => {this.weekSelect(1)}} icon='chevron' color='main1' size={18} />
+                        <Icon onPress={() => { this.weekSelect(1) }} icon='chevron' color='main1' size={18} />
                     </View>
 
                     {/* CurrDate + Activities panel */}
@@ -103,12 +103,17 @@ class Calendar extends BackCalendar {
                         ref={ref => this.refTuto1 = ref}
                         style={[styles.panel, styleBackground]}
                     >
+                        <ActivityTimeline
+                            activities={currActivities}
+                            ref={this.refActivityTimeline}
+                        />
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         {selectedDate !== null && ( // Force re-render after date selection
                             <FlatList
                                 style={styles.panelCard}
                                 contentContainerStyle={{ paddingBottom: 64 }}
                                 data={currActivities}
+                                onScroll={this.handleScroll}
                                 ListHeaderComponent={cardHeader.bind(this)}
                                 ListFooterComponent={cardFooter.bind(this)}
                                 ItemSeparatorComponent={cardSeparator.bind(this)}
@@ -128,9 +133,10 @@ class Calendar extends BackCalendar {
                     </View>
                 </Animated.View>
 
+                {/* Big Calendar */}
                 <Animated.View style={styleCalendar}>
                     <FlatList
-                        ref={(ref) => { this.flatlist = ref}}
+                        ref={(ref) => { this.flatlist = ref }}
                         style={styleMonth}
                         data={months}
                         renderItem={this.month}
@@ -138,7 +144,7 @@ class Calendar extends BackCalendar {
                         //windowSize={12}
                         //initialNumToRender={2}
                         getItemLayout={(data, index) => (
-                            {length: 260, offset: 260 * index, index}
+                            { length: 260, offset: 260 * index, index }
                         )}
                         //removeClippedSubviews={true}
                         refreshing={false}

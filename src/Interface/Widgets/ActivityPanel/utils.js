@@ -1,7 +1,8 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime, RoundToQuarter } from 'Utils/Time';
+import { GetTime, RoundTimeTo } from 'Utils/Time';
+import { MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('.').default} ActivityPanel
@@ -32,10 +33,11 @@ async function onRemComment(callback) {
 /** @this ActivityPanel */
 function StartActivity() {
     const skillID = this.state.selectedSkillID;
-    const startTime = RoundToQuarter(GetTime(undefined, 'local'), 'near');
+    const now = GetTime(undefined, 'local');
+    const startTime = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
     const localTime = GetTime(undefined, 'local');
 
-    if (!user.activities.TimeIsFree(startTime, 15)) {
+    if (!user.activities.TimeIsFree(startTime, MIN_TIME_MINUTES)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];
         const text = langManager.curr['activity']['alert-wrongtiming-text'];
         user.interface.popup.Open('ok', [ title, text ]);

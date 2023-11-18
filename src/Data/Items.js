@@ -60,6 +60,9 @@ class Items {
         this.items = [];
     }
 
+    Clear() {
+        this.items = [];
+    }
     Load(items) {
         if (typeof(items) === 'object') {
             this.items = items;

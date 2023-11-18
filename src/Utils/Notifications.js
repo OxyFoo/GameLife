@@ -199,8 +199,8 @@ class Notifications {
     }
 
     /** @type {Notification} */
-    static Tasks = {
-        ID: 'tasks',
+    static Quests = {
+        ID: 'quests',
         hour: 10,
         minutes: 0,
         __generate: () => {
@@ -208,11 +208,11 @@ class Notifications {
             return null;
             const now = GetTime();
             const day = 24 * 60 * 60;
-            const tasks = user.tasks.Get();
+            const quests = user.quests.Get();
             let halftime = {}, tomorrow = {}, today = {};
 
-            for (let i = 0; i < tasks.length; i++) {
-                const { Title, Checked, Starttime, Deadline, Schedule } = tasks[i];
+            for (let i = 0; i < quests.length; i++) {
+                const { Title, Checked, Starttime, Deadline, Schedule } = quests[i];
                 if (Checked || Deadline < Starttime) continue;
 
                 const midTime = (Deadline - Starttime) / 2;
@@ -233,8 +233,8 @@ class Notifications {
             return null;
         },
 
-        Enable: () => Setup(Notifications.Tasks),
-        Disable: () => Remove(Notifications.Tasks),
+        Enable: () => Setup(Notifications.Quests),
+        Disable: () => Remove(Notifications.Quests),
         RemoveToday: async () => {} // TODO
     }
 

@@ -16,6 +16,10 @@ class Quotes {
         this.currentQuote = null;
     }
 
+    Clear() {
+        this.quotes = [];
+        this.currentQuote = null;
+    }
     Load(quotes) {
         if (typeof(quotes) === 'object') {
             this.quotes = quotes;
@@ -25,6 +29,10 @@ class Quotes {
         }
     }
     Save() {
+        return this.quotes;
+    }
+
+    Get() {
         return this.quotes;
     }
 

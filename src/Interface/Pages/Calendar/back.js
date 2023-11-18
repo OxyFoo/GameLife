@@ -318,7 +318,7 @@ class BackCalendar extends PageBack {
     handleScroll = (event) => {
         const scrollY = event.nativeEvent.contentOffset.y;
 
-        if (this.isScrolling && scrollY === 0) {
+        if (this.isScrolling && scrollY < 0) {
             this.isScrolling = false;
         } else if (!this.isScrolling && scrollY > 20) {
             this.isScrolling = true;

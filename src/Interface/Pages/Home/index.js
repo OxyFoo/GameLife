@@ -49,12 +49,12 @@ class Home extends BackHome {
                     {lang['btn-add-activity']}
                 </Button>
 
+                <TodayPieChart style={styles.topSpace} />
+
                 <Quests
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
-
-                <TodayPieChart style={styles.topSpace} />
 
                 <Button
                     style={styles.topSpace}

@@ -44,11 +44,12 @@ class TodayPieChartBack extends React.Component {
     /** @type {UpdatingData[]} */
     updatingData = [];
 
+    saveTimeout = null; 
+    hasStateChanged = false ;
+
     /** @param {boolean} value */
     changeSwitchValue = (value) => {
         this.setState({ switchValue: value });
-        user.settings.homePieChart = value;
-        user.settings.Save();
         this.compute(value);
     }
 
@@ -96,7 +97,30 @@ class TodayPieChartBack extends React.Component {
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
+        if (this.saveTimeout) clearTimeout(this.saveTimeout);
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.switchValue !== this.state.switchValue) {
+            if (this.saveTimeout) clearTimeout(this.saveTimeout);
+
+            this.hasStateChanged = true ;
+
+            this.saveTimeout = setTimeout(this.checkForChangesAndSave, 3 * 1000); // X seconds, change 10000 to your desired time in milliseconds
+        }
+    }
+
+    /**
+     * Check if the state has changed and save it if it has
+     */
+    checkForChangesAndSave = () => {
+        if (this.hasStateChanged) {
+            this.hasStateChanged = false ;
+
+            user.settings.homePieChart = this.state.switchValue;
+            user.settings.Save();
+        }
+    };
 
     /**
      * Create and return the init object needed because fuckin reference WON'T WORK 

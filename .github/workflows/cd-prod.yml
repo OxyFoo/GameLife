@@ -63,7 +63,6 @@ jobs:
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: Run migration - prod
-        if: ${{ github.base_ref == 'prod' }}
         run: |
           php ./Tools/TableFusion/index.php \
           '${{ vars.DB_TEST_HOST }}' \

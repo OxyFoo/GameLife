@@ -17,7 +17,7 @@ jobs:
   deploy:
     name: 🚀 Deploy Server side
     runs-on: ubuntu-latest
-    if: $ACTION == 'both' || $ACTION == 'deploy'
+    if: ${{ github.event.inputs.actions == 'both' || github.event.inputs.actions == 'deploy' }}
     env:
       ARCHIVE: archive_code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz
     steps:
@@ -54,7 +54,7 @@ jobs:
   migration:
     name: 🚚 Database migration
     runs-on: ubuntu-latest
-    if: $ACTION == 'both' || $ACTION == 'migration'
+    if: ${{ github.event.inputs.actions == 'both' || github.event.inputs.actions == 'migration' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

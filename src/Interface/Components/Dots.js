@@ -26,7 +26,7 @@ const DotsProps = {
 
     /** @type {ColorTheme|ColorThemeText} */
     colorActiveDot: 'main1'
-}
+};
 
 class Dots extends React.Component {
     MainDot = () => {

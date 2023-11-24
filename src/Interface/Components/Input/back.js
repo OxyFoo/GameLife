@@ -66,7 +66,7 @@ const InputProps = {
 
     /** @type {'auto'|'box-only'|'box-none'|'none'} */
     pointerEvents: 'auto'
-}
+};
 
 const ANIM_DURATION = 200;
 

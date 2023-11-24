@@ -20,7 +20,7 @@ const LineChartSvgProps = {
 
     /** @type {number} */
     graphHeight: 200
-}
+};
 
 class LineChartSvgBack extends React.Component {
     state = {
@@ -34,16 +34,28 @@ class LineChartSvgBack extends React.Component {
     firstDate = null;
     lastDate = null;
 
-    /** @description Calculate the y-coordinate in pixels based on graphHeight */
+    /**
+     * @description Calculate the y-coordinate in pixels based on graphHeight
+     * @param {number} value
+     * @param {number} maxValue
+     */
     scaleY = (value, maxValue) => (value / maxValue) * (this.props.graphHeight - 20);
 
-    /** @description Create 5 values for Y axis (0, max, and 3 intermediaries) */
+    /**
+     * @description Create 5 values for Y axis (0, max, and 3 intermediaries)
+     * @param {number} maxValue
+     */
     getYAxisValues = (maxValue) => {
         const step = maxValue / 4;
         return [0, step, 2 * step, 3 * step, maxValue];
     };
 
-    /** @description Calculate the x-coordinate in pixels based on layoutWidth */
+    /**
+     * @description Calculate the x-coordinate in pixels based on layoutWidth
+     * @param {number} index
+     * @param {number} arrayLength
+     * @param {number} layoutWidth
+     */
     getXCoordinate = (index, arrayLength, layoutWidth) => {
         if (arrayLength === 1) return this.leftMargin * 1.5;
         const spacing = (layoutWidth - this.leftMargin * 1.1) / (arrayLength - 1);
@@ -66,8 +78,8 @@ class LineChartSvgBack extends React.Component {
         const yAxisValues = this.getYAxisValues(maxValue);
 
         const points = this.props.data.map((item, index) => {
-            const x = this.getXCoordinate(index, this.props.data.length, layoutWidth); // Get the x-coordinate in pixels
-            const y = this.props.graphHeight - this.scaleY(item.value, maxValue);  // Calculate the y-coordinate
+            const x = this.getXCoordinate(index, this.props.data.length, layoutWidth);
+            const y = this.props.graphHeight - this.scaleY(item.value, maxValue); // Calculate the y-coordinate
             return `${x},${y}`; // Return the coordinate pair for SVG polyline
         }).join(' ');
 

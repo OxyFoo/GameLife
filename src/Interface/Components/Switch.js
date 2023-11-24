@@ -17,7 +17,7 @@ const SwitchProps = {
 
     /** @type {Function} Is called when state change */
     onValueChanged: (value) => {}
-}
+};
 
 class Switch extends React.Component {
     state = {

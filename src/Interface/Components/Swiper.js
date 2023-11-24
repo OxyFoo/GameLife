@@ -51,13 +51,10 @@ const SwiperProps = {
 
     /** @type {(event: LayoutChangeEvent) => void} Callback is called when page layout change */
     onLayout: (event) => {}
-}
+};
 
 class Swiper extends React.Component {
-    constructor(props) {
-        super(props);
-        this.posX = this.props.initIndex;
-    }
+    posX = this.props.initIndex;
 
     state = {
         width: 0,

@@ -26,7 +26,7 @@ const XPBarProps = {
 
     /** @type {number} To set the delay of the animation (delay * 200ms) */
     delay: 0
-}
+};
 
 class XPBar extends React.Component {
     state = {
@@ -51,10 +51,10 @@ class XPBar extends React.Component {
     }
 
     startAnimations = async () => {
-        const valueMax = parseInt(this.props.maxValue);
-        const value = MinMax(0, this.props.value, valueMax);
-        const valueInt = value / valueMax;
-        const valueCover = this.props.supValue / valueMax;
+        const { maxValue } = this.props;
+        const value = MinMax(0, this.props.value, maxValue);
+        const valueInt = value / maxValue;
+        const valueCover = this.props.supValue / maxValue;
 
         await Sleep(300);
         SpringAnimation(this.state.animation, valueInt).start();
@@ -63,7 +63,7 @@ class XPBar extends React.Component {
     }
 
     render() {
-        const style = { ...styles.body, ...this.props.style };
+        const style = [ styles.body, this.props.style ];
         const leftOffset = Animated.multiply(this.state.animation, this.state.width);
         const suppOffset = Animated.multiply(this.state.animCover, this.state.width);
         const black = [styles.black, { transform: [{ translateX: leftOffset } ]}];

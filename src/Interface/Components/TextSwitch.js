@@ -25,7 +25,7 @@ const TextSwitchProps = {
 
     /** @param {number} index Called when seleted part change */
     onChange: (index) => {}
-}
+};
 
 class TextSwitch extends React.Component {
     state = {
@@ -69,11 +69,20 @@ class TextSwitch extends React.Component {
             return null;
         }
 
-        const childrenCount = this.props.texts.length;
-        const parentStyle = [styles.parent, { borderColor: themeManager.GetColor('main1') }, this.props.style];
-        const rippleColor = themeManager.GetColor('white');
         const selectColor = themeManager.GetColor('main1');
-        const selectionInter = { inputRange: [0, 1], outputRange: [0, this.state.parentWidth/childrenCount] };
+        const childrenCount = this.props.texts.length;
+        const parentStyle = [
+            styles.parent,
+            {
+                borderColor: selectColor
+            },
+            this.props.style
+        ];
+
+        const selectionInter = {
+            inputRange: [0, 1],
+            outputRange: [0, this.state.parentWidth/childrenCount]
+        };
         const selectionStyle = [
             styles.selection,
             {
@@ -91,7 +100,7 @@ class TextSwitch extends React.Component {
                 key={'bt-switch-' + index}
                 style={[styles.button, width]}
                 onPress={() => this.onChange(index)}
-                rippleColor={rippleColor}
+                rippleColor={'white'}
                 fontSize={this.props.fontSize}
             >
                 {text}

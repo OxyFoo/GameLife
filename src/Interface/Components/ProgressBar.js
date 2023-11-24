@@ -6,9 +6,6 @@ import themeManager from 'Managers/ThemeManager';
 import { Random, Sleep } from 'Utils/Functions';
 import { TimingAnimation } from 'Utils/Animations';
 
-const ProgressBarProps = {
-}
-
 class ProgressBar extends React.Component {
     state = {
         animTranslate: new Animated.Value(0),
@@ -49,9 +46,6 @@ class ProgressBar extends React.Component {
         );
     }
 }
-
-ProgressBar.prototype.props = ProgressBarProps;
-ProgressBar.defaultProps = ProgressBarProps;
 
 const styles = StyleSheet.create({
     parent: {

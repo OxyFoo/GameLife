@@ -6,11 +6,8 @@ import themeManager from 'Managers/ThemeManager';
 import { TimingAnimation } from 'Utils/Animations';
 
 class Ripple extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.anim_ended = true;
-        this.pressed = false;
-    }
+    anim_ended = true;
+    pressed = false;
 
     state = {
         ripple_posX: 0,

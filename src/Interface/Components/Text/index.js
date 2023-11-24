@@ -44,7 +44,7 @@ const TextProps = {
 
     /** @type {number?} */
     numberOfLines: undefined
-}
+};
 
 class Text extends React.Component {
     render() {

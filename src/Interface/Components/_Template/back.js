@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -13,21 +12,12 @@ import { View, StyleSheet } from 'react-native';
 const NewComponentProps = {
     /** @type {StyleViewProp} */
     style: {}
+};
+
+class BackNewComponent extends React.Component {
 }
 
-class NewComponent extends React.Component {
-    render() {
-        return (
-            <View>
-            </View>
-        );
-    }
-}
+BackNewComponent.prototype.props = NewComponentProps;
+BackNewComponent.defaultProps = NewComponentProps;
 
-NewComponent.prototype.props = NewComponentProps;
-NewComponent.defaultProps = NewComponentProps;
-
-const styles = StyleSheet.create({
-});
-
-export default NewComponent;
+export default BackNewComponent;

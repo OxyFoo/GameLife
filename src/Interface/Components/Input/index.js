@@ -20,11 +20,11 @@ import Text from 'Interface/Components/Text';
  * @type {Object.<string, { ios: string, android: string }>}
  */
 const textTypes = {
-    default: { ios: 'none', android: 'off' },
-    email: { ios: 'emailAddress', android: 'email' },
-    name: { ios: 'name', android: 'name' },
-    username: { ios: 'username', android: 'username' }
-}
+    default:    { ios: 'none',          android: 'off' },
+    email:      { ios: 'emailAddress',  android: 'email' },
+    name:       { ios: 'name',          android: 'name' },
+    username:   { ios: 'username',      android: 'username' }
+};
 
 class Input extends InputBack {
     render() {
@@ -69,8 +69,6 @@ class Input extends InputBack {
                 {/* Title (in center or move into top border if focused or active) */}
                 <Animated.View
                     style={[styles.placeholderParent, {
-                        //backgroundColor: this.state.animScale.interpolate(interC), // hexBackgroundColor,
-                        //backgroundColor: hexBackgroundColor,
                         transform: [
                             { translateX: -this.state.textWidth/2 },
                             { translateY: -this.state.textHeight/2 },

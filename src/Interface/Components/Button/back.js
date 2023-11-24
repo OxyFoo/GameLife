@@ -62,18 +62,16 @@ const ButtonProps = {
     /** @type {boolean} If false, background is gray & press event disabled */
     enabled: true,
 
-    /** @type {Function} */
     onPress: () => {},
 
-    /** @type {Function} */
     onLongPress: () => {},
 
-    /** @type {Function} */
+    /** @type {(event: LayoutChangeEvent) => void} */
     onLayout: (event) => {},
 
     /** @type {'auto'|'box-only'|'box-none'|'none'} */
     pointerEvents: 'box-only'
-}
+};
 
 class ButtonBack extends React.Component {
     constructor(props) {

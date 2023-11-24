@@ -39,9 +39,8 @@ const ZAP_IMAGES = {
 };
 
 const ZapProps = {
-    /** @type {LayoutRectangle} */
-    componentLayout: { x: 0, y: 0, width: 0, height: 0 },
-}
+    // TODO: Manage the position of the zap
+};
 
 class ZapBack extends React.Component {
     state = {

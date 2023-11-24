@@ -16,7 +16,7 @@ const SeparatorProps = {
 
     /** @type {ColorTheme} */
     color: 'white'
-}
+};
 
 class Separator {
     static Horizontal(props) {

@@ -40,7 +40,7 @@ const FrameProps = {
 
     /** @type {number} Time to wait for loading in ms - TODO - Automatic end after loading */
     loadingTime: 1400
-}
+};
 
 class Frame extends React.Component {
     _mounted = true;

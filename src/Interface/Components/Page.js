@@ -52,7 +52,7 @@ const PageProps = {
 
     /** @param {GestureResponderEvent} event */
     onStartShouldSetResponder: (event) => false
-}
+};
 
 // TODO - Auto scroll if height change
 
@@ -124,6 +124,10 @@ class Page extends React.Component {
         }
     }
 
+    /**
+     * @param {number} value
+     * @param {boolean} canScrollOver
+     */
     limitValues = (value, canScrollOver = false) => {
         if (!this.props.scrollable) {
             return 0;

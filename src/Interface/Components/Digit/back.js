@@ -55,7 +55,7 @@ const DigitProps = {
 
     /** @type {DigitCallback} */
     callback: (name, index) => {}
-}
+};
 
 /**
  * Size of digit (width):

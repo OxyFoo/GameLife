@@ -22,6 +22,7 @@ class ThemeManager {
             success: '#27AE60', // Green
             danger: '#C0392B', // Red
             transparent: '#00000000', // Transparent
+
             dataBigKpi: '#232B5D', // Dark blue
             dataSmallKpi: '#38406550', // Transparent blue
 
@@ -52,6 +53,7 @@ class ThemeManager {
             success: '#27AE60', // Green
             danger: '#CC0029',
             transparent: '#00000000',
+
             dataBigKpi: '#232B5D', // Dark blue
             dataSmallKpi: '#38406550', // Transparent blue
 

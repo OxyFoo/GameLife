@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
-import themeManager from 'Managers/ThemeManager';
-
 import Icon from './Icon';
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -24,18 +22,34 @@ const CheckboxProps = {
     /** @type {boolean} */
     checked: false,
 
-    /** @type {Function?} Event called when checkbox state change */
-    onChange: undefined
-}
+    /** @type {() => void} Event called when checkbox is pressed */
+    onChange: null
+};
 
 class Checkbox extends React.Component {
+    isChecked = false;
+
     state = {
         animScale: new Animated.Value(0)
     }
 
+    componentDidMount() {
+        this.update();
+    }
+
     componentDidUpdate() {
+        return this.update();
+    }
+
+    update = () => {
+        if (this.props.checked === this.isChecked) {
+            return false;
+        }
+
+        this.isChecked = this.props.checked;
         const newValue = this.props.checked ? 1 : 0;
         SpringAnimation(this.state.animScale, newValue).start();
+        return true;
     }
 
     onPress = () => {
@@ -45,14 +59,15 @@ class Checkbox extends React.Component {
     }
 
     render() {
-        const activeColor = themeManager.GetColor(this.props.color);
-        const emptyColor = themeManager.GetColor('border');
+        const styleCheck = {
+            transform: [{ scale: this.state.animScale }]
+        };
 
         return (
             <View style={this.props.style}>
-                <Icon onPress={this.onPress} icon={'checkboxOff'} color={emptyColor} />
-                <Animated.View style={[styles.check, { transform: [{ scale: this.state.animScale }] }]} pointerEvents={'none'}>
-                    <Icon icon={'checkboxOn'} color={activeColor}></Icon>
+                <Icon onPress={this.onPress} icon={'checkboxOff'} color={'border'} />
+                <Animated.View style={[styles.check, styleCheck]} pointerEvents={'none'}>
+                    <Icon icon={'checkboxOn'} color={this.props.color}></Icon>
                 </Animated.View>
             </View>
         );

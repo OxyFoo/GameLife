@@ -47,12 +47,13 @@ const IconProps = {
 
     /** @type {boolean} */
     show: true
-}
+};
 
 class Icon extends React.Component {
     render() {
-        let output;
         const { style, containerStyle, icon, xml, size, angle, onPress, show } = this.props;
+
+        let output = null;
         const containerSize = { width: size, height: size };
         const color = themeManager.GetColor(this.props.color);
 
@@ -68,23 +69,27 @@ class Icon extends React.Component {
                 const XML = Base64.Decode(xml)
                     .split('#ffffff').join(color)
                     .split('#FFFFFF').join(color);
-                output = <View style={[containerSize, style]}>
-                            <SvgXml xml={XML} width={size} height={size} />
-                        </View>;
+                output = (
+                    <View style={[containerSize, style]}>
+                        <SvgXml xml={XML} width={size} height={size} />
+                    </View>
+                );
             }
         }
 
         // Icon
         else if (show && icon !== null && SVGIcons.hasOwnProperty(icon)) {
             const _Icon = SVGIcons[icon];
-            output = <View style={[containerSize, style]}>
-                        <_Icon
-                            width={size}
-                            height={size}
-                            color={color}
-                            transform={[{ rotate: angle * Math.PI / 180 }]}
-                        />
-                    </View>;
+            output = (
+                <View style={[containerSize, style]}>
+                    <_Icon
+                        width={size}
+                        height={size}
+                        color={color}
+                        transform={[{ rotate: angle * Math.PI / 180 }]}
+                    />
+                </View>
+            );
         }
 
         // Empty icon
@@ -93,14 +98,16 @@ class Icon extends React.Component {
         }
 
         if (onPress !== null) {
-            output = <TouchableOpacity
-                        testID='icon'
-                        style={[containerSize, containerStyle]}
-                        onPress={onPress}
-                        activeOpacity={.5}
-                    >
-                        {output}
-                    </TouchableOpacity>;
+            output = (
+                <TouchableOpacity
+                    testID='icon'
+                    style={[containerSize, containerStyle]}
+                    onPress={onPress}
+                    activeOpacity={.5}
+                >
+                    {output}
+                </TouchableOpacity>
+            );
         }
 
         return output;

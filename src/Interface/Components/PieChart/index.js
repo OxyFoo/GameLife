@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, FlatList } from 'react-native';
-import { PieChart as PieChartLib } from 'react-native-gifted-charts';
+import { View, FlatList } from 'react-native';
+import { PieChart as PieGiftedChart } from 'react-native-gifted-charts';
 
 import styles from './style';
 import themeManager from 'Managers/ThemeManager';
+
+import Text from '../Text';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -33,8 +35,8 @@ const PieChartProps = {
     focusedActivity: null,
 
     /** @type {ColorTheme|ColorThemeText} */
-    insideBackgroundColor: 'dataBigKpi',
-}
+    insideBackgroundColor: 'dataBigKpi'
+};
 
 class PieChart extends React.Component {
     /**
@@ -54,7 +56,9 @@ class PieChart extends React.Component {
     renderLegendItem = ({ item, index }) => (
         <View key={index} style={styles.legendItem}>
             {this.renderDot(item.color)}
-            <Text style={styles.legendItemText}>{item.name}: {item.value}%</Text>
+            <Text color='white'>
+                {`${item.name}: ${item.value}%`}
+            </Text>
         </View>
     );
 
@@ -64,11 +68,10 @@ class PieChart extends React.Component {
      */
     renderCenterLabelComponent = () => (
         <View style={styles.centerLabel}>
-            <Text
-                style={styles.labelText}>
-                {this.props.focusedActivity?.value}%
+            <Text fontSize={22} color='white'>
+                {this.props.focusedActivity?.value + '%'}
             </Text>
-            <Text style={styles.labelSubText}>
+            <Text fontSize={14} color='white'>
                 {this.props.focusedActivity?.name}
             </Text>
         </View>
@@ -84,7 +87,7 @@ class PieChart extends React.Component {
         return (
             <View style={style}>
                 <View style={styles.pieChartContainer}>
-                    <PieChartLib
+                    <PieGiftedChart
                         data={data}
                         donut
                         showGradient

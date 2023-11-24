@@ -47,11 +47,12 @@ const IconCheckableProps = {
 
     /** @type {boolean} If true, icon is pressable */
     pressable: true
-}
+};
 
 class IconCheckable extends React.Component {
-    state = { checked: false };
-    rippleRef = React.createRef();
+    state = {
+        checked: false
+    }
 
     componentDidMount() {
         if (!IsUndefined(this.props.checked)) {
@@ -85,7 +86,15 @@ class IconCheckable extends React.Component {
 
         const padding = 6;
         const btnSize = size + padding*2;
-        const buttonStyle = [ styles.box, { height: btnSize, paddingVertical: padding, paddingHorizontal: padding }, style ];
+        const buttonStyle = [
+            styles.box,
+            {
+                height: btnSize,
+                paddingVertical: padding,
+                paddingHorizontal: padding
+            },
+            style
+        ];
 
         return (
             <Button

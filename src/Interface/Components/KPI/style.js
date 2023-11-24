@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
 
         justifyContent: 'center',
-        alignItems: 'center',
-        height: 100 // Example fixed height, adjust as necessary
+        alignItems: 'center'
     },
     value:{
         fontWeight: 'bold',

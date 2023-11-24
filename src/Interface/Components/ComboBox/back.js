@@ -40,7 +40,7 @@ const ComboBoxProps = {
 
     /** @type {boolean} If false press event disabled */
     enabled: true
-}
+};
 
 class ComboBoxBack extends React.Component {
     state = {

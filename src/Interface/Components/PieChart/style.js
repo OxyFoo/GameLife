@@ -35,9 +35,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: 120
     },
-    legendItemText: {
-        color: 'white'
-    },
 
     centerLabel: {
         justifyContent: 'center',
@@ -45,12 +42,7 @@ const styles = StyleSheet.create({
     },
     labelText: {
         fontSize: 22,
-        color: 'white',
         fontWeight: 'bold'
-    },
-    labelSubText: {
-        fontSize: 14,
-        color: 'white'
     }
 });
 

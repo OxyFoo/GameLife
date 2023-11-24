@@ -26,7 +26,11 @@ class ActivityTimeline extends ActivityTimelineBack {
         return (
             <View style={[styles.timelineItem, styleTimelineItem]}>
                 {showIcon && (
-                    <Icon size={14} xml={item.logo} color={item.logoColor} />
+                    <Icon
+                        size={14}
+                        xml={item.logo}
+                        color={item.logoColor}
+                    />
                 )}
             </View>
         );

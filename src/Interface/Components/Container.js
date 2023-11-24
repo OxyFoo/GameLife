@@ -71,15 +71,16 @@ const ContainerProps = {
 
     /** @type {(event: LayoutChangeEvent) => void} event */
     onLayout: (event) => {}
-}
+};
 
 class Container extends React.Component {
     state = {
+        maxHeight: 0,
+        opened: false,
+
         animAngleIcon: new Animated.Value(0),
         animHeightContent: new Animated.Value(0),
-        animBorderRadius: new Animated.Value(8),
-        opened: false,
-        maxHeight: 0
+        animBorderRadius: new Animated.Value(8)
     }
 
     componentDidMount() {
@@ -152,7 +153,7 @@ class Container extends React.Component {
                 <Text color={textcolor}>
                     {text}
                 </Text>
-                {icon === null ? null : (
+                {icon !== null && (
                     <Icon
                         containerStyle={styles.iconStaticHeader}
                         icon={icon}

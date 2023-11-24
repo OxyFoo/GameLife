@@ -30,7 +30,7 @@ const ButtonBadgeProps = {
     onPress: undefined,
     loading: false,
     disabled: false
-}
+};
 
 class ButtonBadge extends React.PureComponent {
     render() {

@@ -3,7 +3,7 @@ import { Animated, BackHandler, StyleSheet } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
-import * as Pages from 'Interface/Pages';
+import PAGES from 'Interface/Pages';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -14,8 +14,8 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Interface/Components').PageBack} PageBack
- * @typedef {'about'|'achievements'|'activity'|'activitytimer'|'calendar'|'display'|'home'|'loading'|'login'|'multiplayer'|'onboarding'|'profile'|'report'|'settings'|'shop'|'skill'|'skills'|'waitinternet'|'waitmail'|'quest'|'test'} PageName
- * @typedef {typeof Pages.About | typeof Pages.Achievements | typeof Pages.Activity | typeof Pages.ActivityTimer | typeof Pages.Calendar | typeof Pages.Display | typeof Pages.Home | typeof Pages.Loading | typeof Pages.Login | typeof Pages.Multiplayer | typeof Pages.Onboarding | typeof Pages.Profile | typeof Pages.Report | typeof Pages.Settings | typeof Pages.Shop | typeof Pages.Skill | typeof Pages.Skills | typeof Pages.Quest | typeof Pages.Waitinternet | typeof Pages.Waitmail | typeof Pages.Test} PageType
+ * @typedef {keyof PAGES} PageName
+ * @typedef {PAGES[keyof PAGES]} PageType
  * 
  * @typedef PageState
  * @type {Object}
@@ -81,6 +81,8 @@ class PageManager extends React.Component{
      */
     path = [];
 
+    intervalFastRefresh = null;
+
     /** @type {Popup} */        popup       = null;
     /** @type {ScreenInput} */  screenInput = null;
     /** @type {ScreenList} */   screenList  = null;
@@ -90,11 +92,35 @@ class PageManager extends React.Component{
     /** @type {Console} */      console     = null;
 
     componentDidMount() {
+        if (__DEV__) {
+            this.intervalFastRefresh = setInterval(this.fixFastRefresh, 1000);
+        }
         BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
     }
 
     componentWillUnmount() {
+        if (__DEV__) {
+            clearInterval(this.intervalFastRefresh);
+        }
         BackHandler.removeEventListener('hardwareBackPress', this.BackHandle);
+    }
+
+    fixFastRefresh = () => {
+        // Page manager or parent was reloaded
+        if (this.state.selectedPage === '') {
+            return;
+        }
+
+        // Page was reloaded
+        if (Object.keys(CACHE_PAGES.persistent).includes(this.state.selectedPage)) {
+            if (CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage?.state?.visible === false) {
+                CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage?.Show();
+            }
+        } else {
+            if (CACHE_PAGES.temp?.ref?.refPage?.state?.visible === false) {
+                CACHE_PAGES.temp?.ref?.refPage?.Show();
+            }
+        }
     }
 
     LoadDefaultPages = async () => {
@@ -109,7 +135,7 @@ class PageManager extends React.Component{
         // Wait for all pages to be loaded
         const pageIsLoading = page => page.ref === null || page.ref.loaded === false;
         while (Object.values(CACHE_PAGES.persistent).some(pageIsLoading)) {
-            await Sleep(1000);
+            await Sleep(100);
         }
     }
 
@@ -330,36 +356,13 @@ class PageManager extends React.Component{
         }
 
         const key = 'page-' + page + '-' + Math.random();
-        const pages = {
-            'about':            Pages.About,
-            'achievements':     Pages.Achievements,
-            'activity':         Pages.Activity,
-            'activitytimer':    Pages.ActivityTimer,
-            'calendar':         Pages.Calendar,
-            'display':          Pages.Display,
-            'home':             Pages.Home,
-            'loading':          Pages.Loading,
-            'login':            Pages.Login,
-            'multiplayer':      Pages.Multiplayer,
-            'onboarding':       Pages.Onboarding,
-            'profile':          Pages.Profile,
-            'report':           Pages.Report,
-            'settings':         Pages.Settings,
-            'shop':             Pages.Shop,
-            'skill':            Pages.Skill,
-            'skills':           Pages.Skills,
-            'quest':             Pages.Quest,
-            'waitinternet':     Pages.Waitinternet,
-            'waitmail':         Pages.Waitmail,
-            'test':             Pages.Test
-        };
 
-        if (!pages.hasOwnProperty(page)) {
+        if (!PAGES.hasOwnProperty(page)) {
             return null;
         }
 
         /** @type {PageType} */
-        const Page = pages[page];
+        const Page = PAGES[page];
         return <Page key={key} args={args} ref={setRef} />;
     }
 
@@ -437,4 +440,5 @@ const styles = StyleSheet.create({
     }
 });
 
+export { PAGES };
 export default PageManager;

@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     months: {
+        minHeight: 260,
+        maxHeight: 260
     },
 
     mainContent: {
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         height: 48,
         zIndex: 1
-    },
+    }
 });
 
 export default styles;

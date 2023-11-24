@@ -12,13 +12,10 @@ import { GetDate, GetMidnightTime, GetTime } from 'Utils/Time';
  * @this BackCalendar
  */
 function cardHeader() {
-    const {
-        selectedDate, selectedMonth, selectedYear,
-        currActivities
-    } = this.state;
+    const { selectedALL, currActivities } = this.state;
 
     let addButtonAdd = true;
-    let time = GetMidnightTime(GetTime(new Date(selectedYear, selectedMonth, selectedDate)));
+    let time = GetMidnightTime(GetTime(new Date(selectedALL?.year, selectedALL?.month, selectedALL?.day)));
 
     if (currActivities.length > 0) {
         const firstActivity = currActivities[0];
@@ -65,7 +62,7 @@ function cardFooter() {
         return (
             <ActivityCard
                 type={'end'}
-                index={this.state.currActivities.length + 1}
+                index={currActivities.length + 1}
             />
         );
     }
@@ -85,7 +82,7 @@ function cardFooter() {
             />
             <ActivityCard
                 type={'end'}
-                index={this.state.currActivities.length + 1}
+                index={currActivities.length + 1}
             />
         </>
     );

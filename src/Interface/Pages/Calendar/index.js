@@ -12,15 +12,20 @@ import { Icon, Page, Text, ActivityTimeline } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
-class Calendar extends BackCalendar {
+/**
+ * @typedef {import('Interface/Widgets/BlockMonth').MonthData} MonthData
+ */
 
+class Calendar extends BackCalendar {
+    /** @param {{ item: MonthData }} param0 */
     month = ({ item }) => (
         <BlockMonth
-            style={{ maxHeight: 260, minHeight: 260 }}
-            monthData={item}
+            style={styles.months}
+            height={260}
+            data={item}
             onPressDay={this.daySelect}
         />
-    );
+    )
 
     renderActivity = () => (
         <ActivityPanel
@@ -28,18 +33,10 @@ class Calendar extends BackCalendar {
             topOffset={200}
             variantTheme
         />
-    );
+    )
 
     render() {
-        const {
-            months,
-            selectedDate,
-            selectedMonth,
-            selectedYear,
-            animation,
-            currWeek,
-            currActivities
-        } = this.state;
+        const { months, selectedALL, animation, currActivities } = this.state;
 
         const interPanel = { inputRange: [0, 1], outputRange: [0, user.interface.screenHeight] };
         const interDateP = { inputRange: [0, 1], outputRange: [user.interface.screenHeight / 4, 0] };
@@ -61,8 +58,13 @@ class Calendar extends BackCalendar {
             backgroundColor: themeManager.GetColor('backgroundGrey')
         };
 
-        const title = selectedDate === null ? '' : GetMonthAndYear(selectedMonth, selectedYear);
-        const titleSelectedDay = GetFullDate(new Date(selectedYear, selectedMonth, selectedDate));
+        let title = '';
+        let titleSelectedDay = '';
+        if (selectedALL !== null) {
+            const { day, month, year } = selectedALL;
+            title = selectedALL === null ? '' : GetMonthAndYear(month, year);
+            titleSelectedDay = GetFullDate(new Date(year, month, day));
+        }
 
         return (
             <Page
@@ -80,7 +82,7 @@ class Calendar extends BackCalendar {
                         <Icon
                             ref={ref => this.refTuto3 = ref}
                             icon='calendar'
-                            onPress={() => this.daySelect()}
+                            onPress={this.dayRefresh}
                             color='main1'
                             size={32}
                         />
@@ -88,14 +90,15 @@ class Calendar extends BackCalendar {
 
                     {/* Date selection + arrows prev/next */}
                     <View style={styles.row}>
-                        <Icon onPress={() => { this.weekSelect(-1) }} icon='chevron' color='main1' size={18} angle={180} />
+                        <Icon onPress={this.selectPrevWeek} icon='chevron' color='main1' size={18} angle={180} />
                         <BlockMonth
                             ref={ref => this.refTuto2 = ref}
                             style={styles.weekRow}
-                            weekData={currWeek}
+                            data={selectedALL}
                             onPressDay={this.daySelect}
+                            hideTitle
                         />
-                        <Icon onPress={() => { this.weekSelect(1) }} icon='chevron' color='main1' size={18} />
+                        <Icon onPress={this.selectNextWeek} icon='chevron' color='main1' size={18} />
                     </View>
 
                     {/* CurrDate + Activities panel */}
@@ -108,7 +111,7 @@ class Calendar extends BackCalendar {
                             ref={this.refActivityTimeline}
                         />
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
-                        {selectedDate !== null && ( // Force re-render after date selection
+                        {selectedALL?.day && ( // Force re-render after date selection
                             <FlatList
                                 style={styles.panelCard}
                                 contentContainerStyle={{ paddingBottom: 64 }}
@@ -141,18 +144,11 @@ class Calendar extends BackCalendar {
                         data={months}
                         renderItem={this.month}
                         keyExtractor={(item, index) => `${item.month}-${item.year}`}
-                        //windowSize={12}
-                        //initialNumToRender={2}
                         getItemLayout={(data, index) => (
                             { length: 260, offset: 260 * index, index }
                         )}
-                        //removeClippedSubviews={true}
                         refreshing={false}
-                        //onEndReached={(e) => { this.addMonthToBottom() }}
-                        //onScroll={(e) => { if (e.nativeEvent.contentOffset.y === 0) this.addMonthToTop() }}
                         onScroll={this.onScroll}
-                        //scrollEnabled={!this.state.isReached}
-                        //maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: undefined }}
                     />
                     <LinearGradient
                         style={styles.fadeBottom2}

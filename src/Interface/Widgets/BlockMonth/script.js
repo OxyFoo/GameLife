@@ -26,7 +26,7 @@ class MonthType {
 }
 
 /**
- * Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
+ * @description Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
  * @param {number?} [month] Current month if null
  * @param {number?} [year] Current year if null
  * @param {number} [start=1] First day of week, default: 1 (monday)
@@ -79,27 +79,20 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
 }
 
 /**
- * @param {Array<MonthType>} blockMonths
+ * @param {MonthType} month
+ * @returns {boolean}
  */
-function UpdateBlockMonth(blockMonths) {
-    for (let m = 0; m < blockMonths.length; m++) {
-        const month = blockMonths[m];
-        for (let w = 0; w < month.data.length; w++) {
-            const week = month.data[w];
-            for (let d = 0; d < week.length; d++) {
-                const day = week[d];
-                if (day !== null) {
-                    const activities = user.activities.GetByTime(GetTime(new Date(month.year, month.month, day.day), 'global'));
-                    blockMonths[m].data[w][d].isToday = new Date(month.year, month.month, day.day).toDateString() === new Date().toDateString();
-                    blockMonths[m].data[w][d].isActivity = activities.length > 0;
-                    blockMonths[m].data[w][d].isActivityXP = !!activities.find(a => dataManager.skills.GetByID(a.skillID)?.XP ?? 0 > 0);
-                }
-            }
-        }
-    }
+function DidUpdateBlockMonth(month) {
+    const currMonth = GetBlockMonth(month.month, month.year);
+    return currMonth.data.some((week, w) => week.some((day, d) => {
+        return day?.isToday !== month.data[w][d]?.isToday ||
+            day?.isSelected !== month.data[w][d]?.isSelected ||
+            day?.isActivity !== month.data[w][d]?.isActivity ||
+            day?.isActivityXP !== month.data[w][d]?.isActivityXP;
+    }));
 }
 
 export {
-    GetBlockMonth, UpdateBlockMonth,
-    MonthType, DayType
+    MonthType, DayType,
+    GetBlockMonth, DidUpdateBlockMonth
 };

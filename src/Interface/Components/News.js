@@ -7,9 +7,26 @@ import dataManager from 'Managers/DataManager';
 import Text from 'Interface/Components/Text';
 import Icon from 'Interface/Components/Icon';
 import Button from 'Interface/Components/Button';
+import { PAGES } from 'Managers/PageManager';
 
-const renderQuote = (currentQuote) => quote = currentQuote === null ? null : (
-    <View style={{ padding: '5%' }}>
+/**
+ * @typedef {import('Managers/PageManager').PageName} PageName
+ */
+
+/**
+ * @param {*} eventText String to parse: if it starts with 'https://', open
+ *                      the link in the browser, else change the page
+ */
+const buttonEvent = (eventText) => {
+    if (eventText.startsWith('https://')) {
+        Linking.openURL(eventText);
+    } else if (PAGES.hasOwnProperty(eventText)) {
+        user.interface.ChangePage(eventText);
+    }
+};
+
+const renderQuote = (currentQuote) => currentQuote !== null && (
+    <View style={styles.quote}>
         <Text style={styles.citation}>{currentQuote.Quote}</Text>
         <Text style={styles.author}>{currentQuote.Author}</Text>
     </View>
@@ -20,31 +37,29 @@ const renderQuote = (currentQuote) => quote = currentQuote === null ? null : (
  * @param {New} Nw
  */
 const renderNew = (Nw) => {
-    const renderInteraction = () => {
+    const RenderInteraction = () => {
         const svgIcon = Nw.Icon;
-        const btText = Nw.ButtonText === null ? null : dataManager.GetText(Nw.ButtonText);
 
-        if (btText !== null) {
+        if (Nw.ButtonText !== null) {
             const eventText = Nw.ButtonEvent;
-            const event = eventText === null ? undefined : () => {
-                if (eventText.startsWith('https://')) {
-                    Linking.openURL(eventText);
-                } else {
-                    user.interface.ChangePage(eventText);
-                }
-            };
+
+            let event = undefined;
+            if (eventText !== null) {
+                event = buttonEvent.bind(null, eventText);
+            }
+
             return (
                 <View style={styles.newInteraction}>
                     <Button
                         style={styles.newButton}
                         color='main2'
                         iconXml={svgIcon === null ? undefined : svgIcon}
-                        iconColor='#ffffff'
+                        iconColor='white'
                         onPress={event}
                         fontSize={12}
                         borderRadius={8}
                     >
-                        {btText}
+                        {dataManager.GetText(Nw.ButtonText)}
                     </Button>
                 </View>
             );
@@ -64,7 +79,7 @@ const renderNew = (Nw) => {
         return null;
     };
 
-    const renderText = () => {
+    const RenderText = () => {
         const text = dataManager.GetText(Nw.Content);
         return (
             <View style={styles.newText}>
@@ -73,19 +88,17 @@ const renderNew = (Nw) => {
         )
     };
 
-    const renderT = renderText();
-    const renderI = renderInteraction();
+    const reverse = Nw.TextAlign === 'right' && RenderInteraction() !== null;
+    const align = reverse ? 'row-reverse' : 'row';
 
-    const align = Nw.TextAlign === 'right' && renderI !== null ? 'row-reverse' : 'row';
-    const styleAlign = { flexDirection: align };
     return (
-        <View style={[styles.new, styleAlign]}>
-            {renderT}
+        <View style={[styles.new, { flexDirection: align }]}>
+            <RenderText />
             {Nw.ButtonText !== null && <View style={styles.separator} />}
-            {renderI}
+            <RenderInteraction />
         </View>
     );
-}
+};
 
 const News = () => {
     let pages = [];
@@ -96,8 +109,11 @@ const News = () => {
 
     // Others tab: News (if online)
     if (dataManager.news.news.length) {
-        try       { pages = [...pages, ...dataManager.news.news.map(renderNew)]; }
-        catch (e) { user.interface.console.AddLog('error', 'News loading failed: ' + e); }
+        try {
+            pages.push(...dataManager.news.news.map(renderNew));
+        } catch (e) {
+            user.interface.console.AddLog('error', 'News loading failed: ' + e);
+        }
     }
 
     return pages;
@@ -142,6 +158,10 @@ const styles = StyleSheet.create({
         flex: .6,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+
+    quote: {
+        padding: '5%'
     }
 });
 

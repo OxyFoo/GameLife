@@ -43,18 +43,18 @@ class Shop {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        this.buyToday = {
-            /** @type {string} Today date */
-            day: '',
-
-            /** @type {Array<string>} List of items ID */
-            items: [],
-
-            /** @type {Array<number>} List of inventory items ID */
-            dyes: []
-        };
     }
+
+    buyToday = {
+        /** @type {string} Today date */
+        day: '',
+
+        /** @type {Array<string>} List of items ID */
+        items: [],
+
+        /** @type {Array<number>} List of inventory items ID */
+        dyes: []
+    };
 
     Clear() {
         this.buyToday = {

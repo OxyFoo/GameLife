@@ -2,19 +2,6 @@ import { Platform } from 'react-native';
 import { TestIds } from 'react-native-google-mobile-ads';
 import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 'react-native-google-mobile-ads';
 
-const FIREBASE_DEFAULT = {"react-native-google-mobile-ads": {
-    "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
-    "ios": {"rewarded": {"shop": ""}},
-    "android": {"rewarded": {"shop": ""}}
-}};
-const AD_KEYWORDS = [
-    'video-game',
-    'sports'
-];
-
-const OX_AMOUNT = 10;
-const FIREBASE  = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
-
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * 
@@ -28,6 +15,19 @@ const FIREBASE  = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
  * @typedef {'watched'|'ready'|'notAvailable'|'wait'|'closed'|'error'} AdStates
  * @typedef {(state: AdStates) => void} AdEvent
  */
+
+const FIREBASE_DEFAULT = {"react-native-google-mobile-ads": {
+    "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
+    "ios": {"rewarded": {"shop": ""}},
+    "android": {"rewarded": {"shop": ""}}
+}};
+const AD_KEYWORDS = [
+    'video-game',
+    'sports'
+];
+
+const OX_AMOUNT = 10;
+const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
 
 /**
  * @template {RewardedAd|InterstitialAd} T
@@ -59,13 +59,13 @@ class Admob {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        /** @type {Array<Ad<RewardedAd>>} */
-        this.rewardedAds = [];
-
-        /** @type {Array<Ad<InterstitialAd>>} */
-        this.interstitialAds = [];
     }
+
+    /** @type {Array<Ad<RewardedAd>>} */
+    rewardedAds = [];
+
+    /** @type {Array<Ad<InterstitialAd>>} */
+    interstitialAds = [];
 
     LoadAds = () => {
         if (Platform.OS !== 'ios' && Platform.OS !== 'android') {
@@ -192,9 +192,7 @@ class Admob {
         }
     }
 
-    /**
-     * @param {AdTypes|null} ad
-     */
+    /** @param {AdTypes|null} ad */
     ClearEvents(ad) {
         if (ad === null) return;
 

@@ -14,13 +14,13 @@ class Multiplayer {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-        
-        /** @type {WebSocket?} */
-        this.socket = null;
-
-        /** @type {onChangeCallback} */
-        this.onChangeState = (state) => {};
     }
+
+    /** @type {WebSocket?} */
+    socket = null;
+
+    /** @type {onChangeCallback} */
+    onChangeState = (state) => {};
 
     Connect = () => {
         if (this.isConnected()) {

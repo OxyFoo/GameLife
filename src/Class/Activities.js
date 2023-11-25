@@ -41,37 +41,25 @@ class Activities {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        /**
-         * @type {Array<Activity>}
-         */
-        this.activities = [];
-
-        /**
-         * @type {Array<Activity>}
-         */
-        this.UNSAVED_activities = [];
-
-        /**
-         * @type {Array<Activity>}
-         */
-        this.UNSAVED_deletions = [];
-
-        /**
-         * @description Contain all activities, updated when adding, editing or removing
-         */
-        this.allActivities = new DynamicVar([]);
-
-        /**
-         * @type {CurrentActivity|null}
-         */
-        this.currentActivity = null;
-
-        /**
-         * @type {{[name: string]: function}}
-         */
-        this.callbacks = {};
     }
+
+    /** @type {Array<Activity>} */
+    activities = [];
+
+    /** @type {Array<Activity>} */
+    UNSAVED_activities = [];
+
+    /** @type {Array<Activity>} */
+    UNSAVED_deletions = [];
+
+    /** @description Contain all activities, updated when adding, editing or removing */
+    allActivities = new DynamicVar([]);
+
+    /** @type {CurrentActivity|null} */
+    currentActivity = null;
+
+    /** @type {{[name: string]: function}} */
+    callbacks = {};
 
     Clear() {
         this.activities = [];

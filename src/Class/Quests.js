@@ -52,45 +52,45 @@ class Quests {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        /**
-         * @type {Array<Quest>}
-         */
-        this.SAVED_quests = [];
-
-        /**
-         * @type {Array<Quest>}
-         */
-        this.UNSAVED_additions = [];
-
-        /**
-         * @type {Array<Quest>}
-         */
-        this.UNSAVED_deletions = [];
-
-        /**
-         * Sorted quests using titles
-         * @type {Array<string>}
-         */
-        this.questsSort = [];
-
-        /**
-         * @type {boolean} True if quests sort is saved
-         */
-        this.SAVED_sort = true;
-
-        /**
-         * @description All quests (saved and unsaved)
-         * @type {DynamicVar<Array<Quest>>}
-         */
-        this.allQuests = new DynamicVar([]);
-
-        /**
-         * @description Not saved, only to undo last deletion
-         * @type {Quest|null}
-         */
-        this.lastDeletedQuest = null;
     }
+
+    /**
+     * @type {Array<Quest>}
+     */
+    SAVED_quests = [];
+
+    /**
+     * @type {Array<Quest>}
+     */
+    UNSAVED_additions = [];
+
+    /**
+     * @type {Array<Quest>}
+     */
+    UNSAVED_deletions = [];
+
+    /**
+     * Sorted quests using titles
+     * @type {Array<string>}
+     */
+    questsSort = [];
+
+    /**
+     * @type {boolean} True if quests sort is saved
+     */
+    SAVED_sort = true;
+
+    /**
+     * @description All quests (saved and unsaved)
+     * @type {DynamicVar<Array<Quest>>}
+     */
+    allQuests = new DynamicVar([]);
+
+    /**
+     * @description Not saved, only to undo last deletion
+     * @type {Quest|null}
+     */
+    lastDeletedQuest = null;
 
     Clear() {
         this.SAVED_quests = [];

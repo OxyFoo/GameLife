@@ -21,18 +21,17 @@ const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'ban', 'newDev
 class Server {
     /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
-
-        this.token = '';
-        this.dataToken = '';
-
-        /** @type {boolean} True if the server is online */
-        this.online = false;
-
-        /** @type {ServerStatus} */
-        this.status = 'offline';
     }
+
+    token = '';
+    dataToken = '';
+
+    /** @type {boolean} True if the server is online */
+    online = false;
+
+    /** @type {ServerStatus} */
+    status = 'offline';
 
     Clear = () => {
         this.token = '';

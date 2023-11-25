@@ -9,6 +9,11 @@ import mobileAds, { AdsConsent, AdsConsentStatus } from 'react-native-google-mob
 const VERSION = require('../../package.json').version;
 
 class Consent {
+    /** @param {UserManager} user */
+    constructor(user) {
+        this.user = user;
+    }
+
     loading = false;
     android_consent = {
         nonPersonalized: true,
@@ -18,11 +23,6 @@ class Consent {
         enabled: false,
         version: ''
     };
-
-    /** @param {UserManager} user */
-    constructor(user) {
-        this.user = user;
-    }
 
     Load(adSettings) {
         if (adSettings.hasOwnProperty('ad_consent')) {

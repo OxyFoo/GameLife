@@ -34,10 +34,8 @@ class New {
 }
 
 class News {
-    constructor() {
-        /** @type {Array<New>} */
-        this.news = [];
-    }
+    /** @type {Array<New>} */
+    news = [];
 
     Clear() {
         this.news = [];

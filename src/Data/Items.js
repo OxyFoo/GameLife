@@ -18,7 +18,7 @@ const Rarity = {
     epic: 2,
     legendary: 3,
     event: 4
-}
+};
 
 const itemContainerSize = {
     default: { x: 0, y: 0, width: 1000, height: 1000 },
@@ -55,10 +55,8 @@ class Item {
 }
 
 class Items {
-    constructor() {
-        /** @type {Array<Item>} */
-        this.items = [];
-    }
+    /** @type {Array<Item>} */
+    items = [];
 
     Clear() {
         this.items = [];

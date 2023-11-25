@@ -1,7 +1,6 @@
 import { GetByKey } from 'Utils/Functions';
 
 /**
- * @typedef {import('Managers/DataManager').DataManager} DataManager
  * @typedef {import('Class/Experience').EnrichedXPInfo} EnrichedXPInfo
  */
 
@@ -48,19 +47,14 @@ class Category {
 }
 
 class Skills {
-    constructor(dataManager) {
-        /** @type {Skill[]} */
-        this.skills = [];
+    /** @type {Skill[]} */
+    skills = [];
 
-        /** @type {Icon[]} */
-        this.icons = [];
+    /** @type {Icon[]} */
+    icons = [];
 
-        /** @type {Category[]} */
-        this.categories = [];
-
-        /** @type {DataManager} */
-        this._dataManager = dataManager;
-    }
+    /** @type {Category[]} */
+    categories = [];
 
     Clear() {
         this.skills = [];

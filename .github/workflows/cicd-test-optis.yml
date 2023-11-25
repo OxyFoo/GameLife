@@ -1,7 +1,7 @@
 name: GameLife - Continuous Deployment
 
 on:
-  pull_request:
+  push:
     branches:
       - dev-global-review
 

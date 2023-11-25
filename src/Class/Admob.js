@@ -67,7 +67,7 @@ class Admob {
         this.interstitialAds = [];
     }
 
-    LoadAds() {
+    LoadAds = () => {
         if (Platform.OS !== 'ios' && Platform.OS !== 'android') {
             this.user.interface.console.AddLog('error', `Ad error: Device unknown (${Platform.OS})`);
             return;

@@ -48,7 +48,7 @@ class SkillsGroup extends React.Component {
                 activeOpacity={.6}
             >
                 <View style={styles.skillImage}>
-                    <Icon xml={LogoXML} size={52} color='main1' />
+                    <Icon xml={LogoXML} size={42} color='main1' />
                 </View>
                 <Text fontSize={12}>{FullName}</Text>
             </TouchableOpacity>

@@ -31,6 +31,7 @@ async function Initialisation(nextStep) {
     if (online) await dataManager.OnlineLoad(user);
     else        await dataManager.LocalLoad(user);
 
+    // Check if internal data are loaded
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
@@ -43,10 +44,14 @@ async function Initialisation(nextStep) {
     const email = user.settings.email;
     const connected = user.settings.connected;
     const showOnboard = !user.settings.onboardingWatched;
+
+    // Show onboarding if not watched
     if (showOnboard) {
         user.interface.ChangePage('onboarding', undefined, true);
         return;
     }
+
+    // Redirect to login page (or wait internet/mail page)
     if (email === '') {
         if (online) user.interface.ChangePage('login', undefined, true);
         else        user.interface.ChangePage('waitinternet', undefined, true);
@@ -60,7 +65,7 @@ async function LoadData(nextStep) {
     const online = user.server.online;
     await user.LocalLoad();
 
-    // Connect
+    // Connect account if online
     if (online && user.server.token === '') {
         const email = user.settings.email;
         const { status } = await user.server.Connect(email);
@@ -91,6 +96,8 @@ async function LoadData(nextStep) {
         await user.OnlineLoad();
         // local save
     }
+
+    // Check if user data are loaded
     if (user.informations.username.Get() === '') {
         user.interface.console.AddLog('error', 'User data not loaded');
         return;
@@ -107,23 +114,38 @@ async function LoadData(nextStep) {
     user.interface.header.ShowAvatar(true);
 
     // Loading : Notifications
-    await Notifications.DisableAll();
-    if (user.settings.morningNotifications) {
-        await Notifications.Morning.Enable();
-    }
-    if (user.settings.eveningNotifications) {
-        await Notifications.Evening.Enable();
-    }
+    const start_time = new Date().getTime();
+    Notifications.DisableAll().then(() => {
+        if (user.settings.morningNotifications) {
+            return Notifications.Morning.Enable();
+        }
+        if (user.settings.eveningNotifications) {
+            return Notifications.Evening.Enable();
+        }
+    }).then(() => {
+        const end_time = new Date().getTime();
+        const time = end_time - start_time;
+        user.interface.console.AddLog('info', `Notifications loaded in ${time}ms`);
+    });
 
-    // Load ads
+    // Check if ads are available
     if (user.informations.adRemaining === 0) {
         user.interface.console.AddLog('info', 'No more ads available');
     }
-    await user.consent.ShowTrackingPopup();
-    user.admob.LoadAds();
 
+    // Load admob
+    const time_start2 = new Date().getTime();
+    user.consent.ShowTrackingPopup()
+    .then(user.admob.LoadAds)
+    .then(() => {
+        const time_end2 = new Date().getTime();
+        const time2 = time_end2 - time_start2;
+        user.interface.console.AddLog('info', `Admob loaded in ${time2}ms`);
+    });
+
+    // Render default pages
     await user.interface.LoadDefaultPages();
-    await Sleep(500);
+
     nextStep();
     await Sleep(500);
 

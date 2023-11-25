@@ -3,7 +3,7 @@ name: GameLife - Continuous Deployment
 on:
   pull_request:
     branches:
-      - test
+      - dev-global-review
 
 jobs:
   test:

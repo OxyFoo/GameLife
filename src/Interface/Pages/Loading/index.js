@@ -12,9 +12,13 @@ class Loading extends BackLoading {
             return null;
         }
 
+        const env = Config.ENV.toUpperCase();
+        const mode = __DEV__ ? 'DEBUG' : 'RELEASE';
+        const bottomText = env + ' MODE - ' + mode;
+
         return (
             <Text style={styles.version}>
-                {Config.ENV.toUpperCase() + ' MODE'}
+                {bottomText}
             </Text>
         );
     }

@@ -22,7 +22,7 @@ import ActivityExperience from 'Interface/Widgets/ActivityExperience';
  */
 
 class ActivityPanel extends ActivityPanelBack {
-    RenderPanelDetails() {
+    renderPanelDetails() {
         const lang = langManager.curr['activity'];
         const { variantTheme } = this.props;
         const { activity, startMode, selectedSkillID, mode } = this.state;
@@ -130,7 +130,7 @@ class ActivityPanel extends ActivityPanelBack {
         );
     }
 
-    RenderStartActivity() {
+    renderStartActivity() {
         const lang = langManager.curr['activity'];
         /** @type {AnimatedViewProp} */
         const btnOpacity = {
@@ -213,8 +213,8 @@ class ActivityPanel extends ActivityPanelBack {
                 </View>
 
                 <View>
-                    {this.RenderStartActivity.call(this)}
-                    {this.RenderPanelDetails.call(this)}
+                    {this.renderStartActivity.call(this)}
+                    {this.renderPanelDetails.call(this)}
                 </View>
             </PanelScreen>
         );

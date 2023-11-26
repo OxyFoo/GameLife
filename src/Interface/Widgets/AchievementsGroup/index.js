@@ -1,41 +1,14 @@
 import * as React from 'react';
-import { TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { TouchableOpacity, FlatList } from 'react-native';
 
-import user from 'Managers/UserManager';
+import styles from './style';
+import AchievementsGroupBack from './back';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Button, Separator, Text } from 'Interface/Components';
 
-/**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- */
-
-const AchievementsGroupProps = {
-    /** @type {StyleProp} */
-    style: {}
-}
-
-class AchievementsGroup extends React.Component {
-    state = {
-        lastAchievements: user.achievements.GetLast()
-    }
-
-    componentDidMount() {
-        this.achievementsListener = user.achievements.achievements.AddListener(() => {
-            this.setState({
-                lastAchievements: user.achievements.GetLast()
-            });
-        });
-    }
-    componentWillUnmount() {
-        user.achievements.achievements.RemoveListener(this.achievementsListener);
-    }
-
-    openAchievements = () => user.interface.ChangePage('achievements');
-    onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);
-
+class AchievementsGroup extends AchievementsGroupBack {
     renderAchievement = ({ item }) => {
         if (item === null) return null;
 
@@ -82,23 +55,5 @@ class AchievementsGroup extends React.Component {
         );
     }
 }
-
-AchievementsGroup.prototype.props = AchievementsGroupProps;
-AchievementsGroup.defaultProps = AchievementsGroupProps;
-
-const styles = StyleSheet.create({
-    text: {
-        marginVertical: 12,
-        fontSize: 16
-    },
-    separator: {
-        height: .4
-    },
-    btnSmall: {
-        height: 46,
-        marginHorizontal: 24,
-        borderRadius: 8
-    }
-});
 
 export default AchievementsGroup;

@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
@@ -31,15 +30,15 @@ const PanelScreenProps = {
 
     /** @type {() => void} */
     onClose: () => {}
-}
+};
 
-class PanelScreen extends React.Component {
+class PanelScreenBack extends React.Component {
     state = {
         opened: false,
         positionY: new Animated.Value(user.interface.screenHeight),
 
         anim: new Animated.Value(0)
-    };
+    }
 
     /** @type {number} Top distance of the panel when it's opened */
     posY = user.interface.screenHeight;
@@ -50,9 +49,7 @@ class PanelScreen extends React.Component {
     /** @type {boolean} Disable panel moving */
     scrollEnabled = true;
 
-    /**
-     * Open the screen list
-     */
+    /** Open the screen list */
     Open = () => {
         if (this.state.opened) return;
 
@@ -63,9 +60,7 @@ class PanelScreen extends React.Component {
         SpringAnimation(this.state.positionY, this.posY).start();
     }
 
-    /**
-     * Close the screen list
-     */
+    /** Close the screen list */
     Close = () => {
         if (!this.state.opened) return;
 
@@ -160,77 +155,9 @@ class PanelScreen extends React.Component {
 
         SpringAnimation(positionY, this.posY).start();
     }
-
-    render() {
-        const { opened, anim } = this.state;
-        const { containerStyle, disableBackground } = this.props;
-
-        const opacity = { opacity: anim };
-        const event = opened ? 'box-none' : 'none';
-        const stylePanel = {
-            minHeight: this.height,
-            transform: [{ translateY: this.state.positionY }],
-            backgroundColor: themeManager.GetColor('backgroundCard')
-        };
-
-        return (
-            <Animated.View
-                style={[styles.parent, opacity]}
-                pointerEvents={event}
-            >
-                {!disableBackground && (
-                    <View
-                        style={styles.background}
-                        onTouchStart={this.onTouchStart}
-                        onTouchMove={this.onTouchMove}
-                        onTouchEnd={this.onTouchEnd}
-                    />
-                )}
-                <Animated.View
-                    style={[
-                        styles.panel,
-                        stylePanel,
-                        containerStyle
-                    ]}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
-                    onTouchEnd={this.onTouchEnd}
-                    onLayout={this.onLayoutPanel}
-                >
-                    {this.props.children}
-                </Animated.View>
-            </Animated.View>
-        );
-    }
 }
 
-PanelScreen.prototype.props = PanelScreenProps;
-PanelScreen.defaultProps = PanelScreenProps;
+PanelScreenBack.prototype.props = PanelScreenProps;
+PanelScreenBack.defaultProps = PanelScreenProps;
 
-const styles = StyleSheet.create({
-    parent: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-    },
-    background: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        opacity: .8,
-        backgroundColor: '#000000'
-    },
-
-    panel: {
-        top: 0,
-        width: '100%',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16
-    }
-});
-
-export default PanelScreen;
+export default PanelScreenBack;

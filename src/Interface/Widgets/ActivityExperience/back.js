@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
-import { Container, Text } from 'Interface/Components';
 
 /**
  * @typedef {{ key: string, name: string, value: number }} Stat
@@ -18,9 +16,9 @@ const ActivityExperienceProps = {
 
     /** @type {number} Duration of the activity in minutes */
     duration: 60
-}
+};
 
-class ActivityExperience extends React.Component {
+class ActivityExperienceBack extends React.Component {
     state = {
         /** @type {string} */
         title: '',
@@ -70,62 +68,9 @@ class ActivityExperience extends React.Component {
 
         this.setState({ title: `+ ${XPamount} ${XPtext}`, data: newData });
     }
-
-    /** @param {{ item: Stat }} param0 */
-    renderExperience = ({ item: { key, name, value } }) => (
-        <Text containerStyle={styles.itemContainer} style={styles.item}>
-            {'+ ' + value + ' ' + name}
-        </Text>
-    );
-
-    render() {
-        const { title, data } = this.state;
-
-        return (
-            <Container
-                text={title}
-                style={styles.fullWidth}
-                styleHeader={styles.container}
-            >
-                <FlatList
-                    style={styles.flatlist}
-                    columnWrapperStyle={styles.flatlistWrapper}
-                    scrollEnabled={false}
-                    data={data}
-                    keyExtractor={(item, i) => 'xp-' + i}
-                    numColumns={2}
-                    renderItem={this.renderExperience}
-                />
-            </Container>
-        );
-    }
 }
 
-ActivityExperience.prototype.props = ActivityExperienceProps;
-ActivityExperience.defaultProps = ActivityExperienceProps;
+ActivityExperienceBack.prototype.props = ActivityExperienceProps;
+ActivityExperienceBack.defaultProps = ActivityExperienceProps;
 
-const styles = StyleSheet.create({
-    fullWidth: {
-        width: '100%',
-        marginBottom: 48
-    },
-    container: {
-        justifyContent: 'center'
-    },
-    flatlist: {
-        flexGrow: 1
-    },
-    flatlistWrapper: {
-        marginBottom: 8
-    },
-    item: {
-        width: '100%',
-        textAlign: 'left',
-        fontSize: 18
-    },
-    itemContainer: {
-        width: '50%'
-    }
-});
-
-export default ActivityExperience;
+export default ActivityExperienceBack;

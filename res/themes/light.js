@@ -11,6 +11,7 @@ const Color = {
     backgroundTransparent: '#FFFFFF33', // Transparent white
     success: '#27AE60', // Green
     danger: '#CC0029', // Red
+    unfocused: '#6e6e6e', // Grey
     disabled: '#535C68', // Grey
     transparent: '#00000000', // Transparent
 

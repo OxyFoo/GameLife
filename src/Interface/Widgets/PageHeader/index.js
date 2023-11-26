@@ -20,7 +20,7 @@ const PageHeaderProps = {
 
     /** @type {(event: GestureResponderEvent) => void} */
     onHelpPress: undefined
-}
+};
 
 class PageHeader extends React.Component {
     render() {

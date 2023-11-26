@@ -1,29 +1,15 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
+import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Icon, Swiper, Text, XPBar } from 'Interface/Components';
 
 /**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- *
- * @typedef {import('Managers/UserManager').Stats} Stats
- * @typedef {import('../../Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Class/Experience').XPInfo} XPInfo
  */
-
-const StatsBarsProps = {
-    /** @type {StyleProp} */
-    style: {},
-
-    /** @type {Stats | null} */
-    data: null,
-
-    /** @type {Array<number>} Optionnal, add secondary value, same length of user stats */
-    supData: user.statsKey.map(() => 0)
-}
 
 function popupContent(initStatKey) {
     const statBox = (statKey) => {
@@ -102,39 +88,4 @@ function statComponent(statKey, stat, sup, index, clickable = true) {
     );
 }
 
-class StatsBars extends React.PureComponent {
-    render() {
-        const { data, supData, style } = this.props;
-        if (data === null) return null;
-
-        const output = Object.keys(data).map((item, i) =>
-            statComponent(item, data[item], supData[i], i)
-        );
-
-        return (
-            <View style={[ styles.fullW, style ]}>
-                {output}
-            </View>
-        );
-    }
-}
-
-StatsBars.prototype.props = StatsBarsProps;
-StatsBars.defaultProps = StatsBarsProps;
-
-const styles = StyleSheet.create({
-    fullW: {
-        width: '100%'
-    },
-    XPHeader: {
-        marginBottom: 8,
-        paddingHorizontal: '5%',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    XPBar: {
-        marginBottom: 16
-    }
-});
-
-export default StatsBars;
+export { statComponent };

@@ -60,8 +60,8 @@ class UserManager {
 
     xp = 0;
 
-    /** @type {Stats} */
-    stats = this.experience.GetEmptyExperience();
+    /** @type {Stats|null} */
+    stats = null;
 
     /** @type {boolean} */
     globalSaving = false;

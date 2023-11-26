@@ -7,13 +7,16 @@ class DynamicVar {
      */
     constructor(initialValue) {
         this.var = initialValue;
-
-        /**
-         * @private
-         * @type {Map<Symbol, (newValue: T, oldValue: T) => void>}
-         */
-        this.listeners = new Map();
     }
+
+    /** @type {T} */
+    var;
+
+    /**
+     * @private
+     * @type {Map<Symbol, (newValue: T, oldValue: T) => void>}
+     */
+    listeners = new Map();
 
     /**
      * @returns {T} Current value of the variable

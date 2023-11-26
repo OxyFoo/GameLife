@@ -15,7 +15,7 @@ const DAYS = {
     thursday: 4,
     friday: 5,
     saturday: 6
-}
+};
 
 /**
  * Return day number (0-6)

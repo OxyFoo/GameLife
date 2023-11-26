@@ -99,7 +99,7 @@ function GetTimeZone() {
     return - (new Date()).getTimezoneOffset() / 60;
 }
 
-export { GetTime, GetDate, TimeToFormatString,
-    RoundTimeTo, GetMidnightTime, GetAge,
-    GetTimeToTomorrow, GetDaysUntil, GetTimeZone
+export {
+    GetTime, GetDate, TimeToFormatString, RoundTimeTo, GetMidnightTime,
+    GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone
 };

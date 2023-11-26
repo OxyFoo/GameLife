@@ -13,6 +13,8 @@ import { Character } from 'Interface/Components';
  * @param {Function} nextStep Used to change the icon
  */
 async function Initialisation(nextStep) {
+    const time_start = new Date().getTime();
+
     // Loading: Settings
     await user.settings.Load();
 
@@ -177,6 +179,12 @@ async function Initialisation(nextStep) {
         const text = lang['alert-maintenance-text'];
         user.interface.popup.Open('ok', [ title, text ], undefined, false);
     }
+
+    const time_end = new Date().getTime();
+    const time_delta = time_end - time_start;
+    const time_text = `Initialisation done in ${time_delta}ms`;
+    console.log(time_text);
+    user.interface.console.AddLog('info', time_text);
 
     if (user.activities.currentActivity === null) {
         while (!user.interface.ChangePage('home', homeProps)) await Sleep(100);

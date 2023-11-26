@@ -40,9 +40,9 @@ class Settings extends BackSettings {
                 <TextSwitch
                     // TODO - Finish themes
                     style={styles.margin}
-                    texts={[ langThemes['Dark'], langThemes['Light'] ]}
+                    texts={[ langThemes['Main'], langThemes['Light'] ]}
                     onChange={this.onChangeTheme}
-                    start={themeManager.selectedTheme === 'Dark' ? 0 : 1}
+                    start={themeManager.selectedTheme === 'Main' ? 0 : 1}
                 />
                 */}
 

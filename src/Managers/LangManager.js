@@ -25,6 +25,14 @@ class LangManager {
     /** @type {Lang} */
     curr = LANGAGES['fr'];
 
+    GetAllLangs() {
+        return LANGAGES;
+    }
+
+    GetLangsKeys() {
+        return Object.keys(LANGAGES);
+    }
+
     /** @param {LangKey|null} lang */
     SetLangage(lang = null) {
         let newLang = DEFAULT_LANG;

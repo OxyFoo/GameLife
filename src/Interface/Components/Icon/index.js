@@ -12,8 +12,8 @@ import Base64 from 'Utils/Base64';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * @typedef {'default'|'add'|'addSquare'|'alarmClock'|'arrowLeft'|'calendar'|'check'|'checkboxOn'|'checkboxOff'|'chevron'|'chrono'|'cross'|'discord'|'edit'|'error'|'filter'|'flagEnglish'|'flagFrench'|'gift'|'home'|'human'|'info'|'instagram'|'item'|'media'|'moveVertical'|'nowifi'|'onboarding1'|'onboarding2'|'onboarding3'|'ox'|'setting'|'shop'|'sleepZzz'|'slotBottom'|'slotHair'|'slotShoes'|'slotTop'|'social'|'success'|'tiktok'|'undo'|'userAdd'|'world'|'loading'|'loadingDots'} Icons
  *
  * @callback GestureEvent
@@ -39,7 +39,7 @@ const IconProps = {
     /** @type {number} Rotation angle in degrees */
     angle: 0,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     color: 'white',
 
     /** @type {(event: GestureResponderEvent) => void|null} */

@@ -12,8 +12,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').TextInputSubmitEditingEventData} TextInputSubmitEditingEventData
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputSubmitEditingEventData>} NativeSyntheticEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @typedef {'default'|'email'|'username'|'name'} TextContentType
  */
@@ -31,7 +30,7 @@ const InputProps = {
     /** @type {boolean} If true, label still always at the top of input */
     staticLabel: false,
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     activeColor: 'main1',
 
     /** @type {string} Content of input */

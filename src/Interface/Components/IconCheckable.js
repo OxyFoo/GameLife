@@ -10,8 +10,8 @@ import { IsUndefined } from 'Utils/Functions';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
  * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const IconCheckableProps = {
@@ -27,10 +27,10 @@ const IconCheckableProps = {
     /** @type {number} Size of the icon */
     size: 24,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     colorOn: 'main1',
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     colorOff: 'backgroundGrey',
 
     /** @type {number} Used as ID parameter in "onPress" event */

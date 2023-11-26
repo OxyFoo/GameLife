@@ -8,8 +8,8 @@ import langManager from 'Managers/LangManager';
  * @typedef {import('Class/Quests').Quest} Quest
  * @typedef {import('Class/Quests').RepeatModes} RepeatModes
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * 
  * @typedef {'new'|'edit'|'remove'} States
  * 
@@ -28,7 +28,7 @@ class BackQuest extends PageBack {
             /** @type {string} */
             text: langManager.curr['quest']['button-add'],
 
-            /** @type {ColorTheme|ColorThemeText} */
+            /** @type {ThemeColor | ThemeText} */
             color: 'main2'
         },
 

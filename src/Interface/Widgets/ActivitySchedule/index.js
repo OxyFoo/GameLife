@@ -76,7 +76,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 containerStyle={{
                                     marginRight: 6,
                                     borderRadius: 4,
-                                    borderColor: themeManager.GetColor('main1', 0.5)
+                                    borderColor: themeManager.GetColor('main1', { opacity: 0.5 })
                                 }}
                                 minDigitWidth={12}
                                 fadeColor='backgroundGrey'
@@ -92,7 +92,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 containerStyle={{
                                     marginHorizontal: 6,
                                     borderRadius: 4,
-                                    borderColor: themeManager.GetColor('main1', 0.5)
+                                    borderColor: themeManager.GetColor('main1', { opacity: 0.5 })
                                 }}
                                 fadeColor='backgroundGrey'
                                 minValue={selectedDuration < 60 ? 5 : 0}

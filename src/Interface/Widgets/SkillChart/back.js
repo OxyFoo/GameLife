@@ -10,8 +10,8 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * 
  * @typedef {{ date: string, value: number }} LineData
  */
@@ -25,14 +25,14 @@ const SkillChartProps = {
 
     /** @type {number} */
     skillID: 0
-}
+};
 
 class SkillChartBack extends React.Component {
     state = {
         /** @type {LineData[]} */
         cleanedData: [],
 
-        /** @type {ColorTheme|ColorThemeText} */
+        /** @type {ThemeColor | ThemeText} */
         lineColor: 'black'
     }
 

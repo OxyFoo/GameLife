@@ -9,8 +9,8 @@ import * as React from 'react';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
  * @typedef {import('../Icon').Icons} Icons
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const ButtonProps = {
@@ -38,7 +38,7 @@ const ButtonProps = {
     /** @type {number} */
     iconSize: 24,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     iconColor: 'white',
 
     /** @type {number} Angle in degrees */
@@ -47,13 +47,13 @@ const ButtonProps = {
     /** @type {boolean} If true, content will be replaced by loading icon & press event disabled */
     loading: false,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     color: 'transparent',
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     colorText: 'primary',
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     rippleColor: 'black',
 
     /** @type {number} */

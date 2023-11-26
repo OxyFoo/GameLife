@@ -1,116 +1,31 @@
+import THEMES from 'Ressources/themes';
 import { Rarity } from 'Data/Items';
 
 /**
- * @typedef {'Dark'|'Light'} Theme
- * @typedef {'primary'|'secondary'|'light'|'warning'|'error'} ColorThemeText Color name or hexadecimal color
- * @typedef {'main1'|'main2'|'main3'|'white'|'black'|'border'|'background'|'backgroundCard'|'backgroundGrey'|'backgroundTransparent'|'success'|'danger'|'ground1'|'ground1a'|'ground1b'|'ground2'|'transparent'|'dataBigKpi'|'dataSmallKpi'} ColorTheme Color name or hexadecimal color
+ * @typedef {keyof typeof THEMES} ThemeName
+ * @typedef {keyof typeof THEMES[ThemeName]} ThemeTypes
+ * @typedef {keyof typeof THEMES[ThemeName]['Color']} ThemeColor
+ * @typedef {keyof typeof THEMES[ThemeName]['Text']} ThemeText
+ * @typedef {keyof typeof THEMES[ThemeName]['Rarity']} ThemeRarity
  */
 
 class ThemeManager {
-    THEMES = {
-        Dark: {
-            main1: '#9095FF', // Purple
-            main2: '#DBA1FF', // Pink
-            main3: '#0B112F', // Dark (background)
-            white: '#FFFFFF', // White
-            black: '#000000', // Black
-            border: '#808080', // Grey
-            background: '#0E1247', // Dark purple
-            backgroundCard: '#384065', // Transparent purple
-            backgroundGrey: '#222740', // Grey
-            backgroundTransparent: '#FFFFFF33', // Transparent white
-            success: '#27AE60', // Green
-            danger: '#C0392B', // Red
-            transparent: '#00000000', // Transparent
-
-            dataBigKpi: '#232B5D', // Dark blue
-            dataSmallKpi: '#38406550', // Transparent blue
-
-            ground1: '#03052E',
-            ground1a: '#0C0E35',
-            ground1b: '#303253',
-            ground2: '#353657',
-
-            text: {
-                primary: '#ECECEC',
-                secondary: '#808080',
-                light: '#A7A4A4',
-                warning: '#F1C40F',
-                error: '#CC0029'
-            }
-        },
-        Light: {
-            main2: '#9095FF', // Purple
-            main1: '#DBA1FF', // Pink
-            main3: '#0B112F', // Dark (background)
-            white: '#FFFFFF', // White
-            black: '#000000', // Black
-            border: '#808080', // Grey
-            background: '#0E1247', // Dark purple
-            backgroundCard: '#384065', // Transparent purple
-            backgroundGrey: '#222740', // Grey
-            backgroundTransparent: '#FFFFFF33', // Transparent white
-            success: '#27AE60', // Green
-            danger: '#CC0029',
-            transparent: '#00000000',
-
-            dataBigKpi: '#232B5D', // Dark blue
-            dataSmallKpi: '#38406550', // Transparent blue
-
-            ground1: '#FFFFFF',
-            ground1a: '#FFFFFF',
-            ground1b: '#FFFFFF',
-            ground2: '#FFFFFF',
-
-            text: {
-                primary: '#ECECEC',
-                secondary: '#808080',
-                light: '#A7A4A4',
-                warning: '#F1C40F',
-                error: '#CC0029'
-            }
-        }
-    };
-
-    ABSOLUTE = {
-        rarity_common: [
-            '#3D8B25',
-            '#0F5904'
-        ],
-        rarity_rare: [
-            '#1B72C1',
-            '#0D4389'
-        ],
-        rarity_epic: [
-            '#B650D8',
-            '#712AA0'
-        ],
-        rarity_legendary: [
-            '#E7743B',
-            '#A74A1E'
-        ],
-        rarity_event: [
-            '#1B72C1',
-            '#B650D8',
-            '#E7743B'
-        ]
-    };
-
-    // Default value
-    selectedTheme = 'Dark';
-
-    // Get the color of the theme
-    colors = this.THEMES[this.selectedTheme];
+    /**
+     * Default value
+     * @type {ThemeName}
+     * @default 'Main'
+     */
+    selectedTheme = 'Main';
 
     /**
      * @description Define the theme
-     * @param {Theme} theme
+     * @param {ThemeName} theme
      * @returns {boolean} True if theme is valid
      */
     SetTheme(theme) {
         if (this.isTheme(theme)) {
             this.selectedTheme = theme;
-            this.colors = this.THEMES[theme];
+            this.colors = THEMES[theme];
             return true;
         }
         return false;
@@ -120,28 +35,41 @@ class ThemeManager {
      * @description Check if theme is valid
      * @param {string} theme Theme name
      * @returns {boolean} True if theme is valid
+     * @private
      */
     isTheme(theme) {
-        return Object.keys(this.THEMES).includes(theme);
+        return Object.keys(THEMES).includes(theme);
     }
 
     /**
      * @description Get the theme color by name (or return the color if already hex color)
-     * @param {ColorTheme|ColorThemeText} color Name of theme color or hex color
-     * @param {number} [opacity=1] Opacity of color, between 0 and 1
+     * @param {ThemeColor | ThemeText | ThemeRarity} color Color name or hexadecimal color
+     * @param {Object} [params] Parameters
+     * @param {number} [params.opacity=1] Opacity of color, between 0 and 1
+     * @param {ThemeName} [params.themeName] Theme name (if not defined, use current theme)
+     * @param {ThemeTypes} [params.type] Type of theme (if not defined, defined automatically)
      * @returns {string} Hex color (or same color than input if not found and not hex)
      */
-    GetColor(color, opacity = 1) {
-        if (this.colors.hasOwnProperty(color)) return this.ApplyOpacity(this.colors[color], opacity);
-        if (this.colors.text.hasOwnProperty(color)) return this.ApplyOpacity(this.colors.text[color], opacity);
-        return color;
-    }
+    GetColor(color, params = {}) {
+        // Define parameters
+        const param = { opacity: 1, themeName: null, type: null, ...params };
+        const themeName = param.themeName || this.selectedTheme;
 
-    /**
-     * @description Get absolute color (independant of theme)
-     */
-    GetAbsoluteColors() {
-        return this.ABSOLUTE;
+        // Wrong theme selected
+        if (!this.isTheme(themeName)) {
+            return color;
+        }
+
+        const theme = THEMES[themeName];
+        for (const type of Object.keys(theme)) {
+            if (param.type === null || param.type === type) {
+                if (theme[type].hasOwnProperty(color)) {
+                    return this.ApplyOpacity(theme[type][color], param.opacity);
+                }
+            }
+        }
+
+        return color;
     }
 
     /**
@@ -165,13 +93,27 @@ class ThemeManager {
      */
     GetRariryColors = (rarity) => {
         let colors = [];
-        const absoluteColors = this.GetAbsoluteColors();
         switch (rarity) {
-            case Rarity.common:     colors = absoluteColors.rarity_common;      break;
-            case Rarity.rare:       colors = absoluteColors.rarity_rare;        break;
-            case Rarity.epic:       colors = absoluteColors.rarity_epic;        break;
-            case Rarity.legendary:  colors = absoluteColors.rarity_legendary;   break;
-            case Rarity.event:      colors = absoluteColors.rarity_event;       break;
+
+            case Rarity.common:
+                colors = [ this.GetColor('common1'), this.GetColor('common2') ];
+                break;
+
+            case Rarity.rare:
+                colors = [ this.GetColor('rare1'), this.GetColor('rare2') ];
+                break;
+
+            case Rarity.epic:
+                colors = [ this.GetColor('epic1'), this.GetColor('epic2') ];
+                break;
+
+            case Rarity.legendary:
+                colors = [ this.GetColor('legendary1'), this.GetColor('legendary2') ];
+                break;
+
+            case Rarity.event:
+                colors = [ this.GetColor('event1'), this.GetColor('event2') ];
+                break;
         }
         return colors;
     }

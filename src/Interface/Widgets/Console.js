@@ -9,7 +9,7 @@ import { Text, Button } from 'Interface/Components';
 import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 /**
@@ -19,9 +19,6 @@ import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
  * @type {0|1|2}
  */
 const LEVEL_CONSOLE = 1;
-
-const ConsoleProps = {
-}
 
 class Console extends React.Component {
     state = {
@@ -33,7 +30,7 @@ class Console extends React.Component {
         debug: []
     }
 
-    /** State of delete buttons */
+    /** @type {boolean} State of delete buttons */
     toggle = false;
 
     Enable = () => {
@@ -151,7 +148,7 @@ class Console extends React.Component {
     renderText = ({ item }) => {
         const [type, text] = item;
 
-        /** @type {ColorThemeText} */
+        /** @type {ThemeText} */
         let color = 'primary';
         if (type === 'warn') color = 'warning';
         else if (type === 'error') color = 'error';
@@ -235,9 +232,6 @@ class Console extends React.Component {
         );
     }
 }
-
-Console.prototype.props = ConsoleProps;
-Console.defaultProps = ConsoleProps;
 
 const styles = StyleSheet.create({
     console: {

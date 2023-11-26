@@ -74,7 +74,7 @@ class ScreenTuto extends ScreenTutoBack {
         };
         const styleOverlayHint = {
             opacity: message.hintOpacity,
-            backgroundColor: themeManager.GetColor('main1', 0.6)
+            backgroundColor: themeManager.GetColor('main1', { opacity: 0.6 })
         };
 
         return (

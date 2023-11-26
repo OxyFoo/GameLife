@@ -15,8 +15,7 @@ import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
  * @typedef {import('Class/Quests').Quest} Quest
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const QuestProps = {
@@ -35,7 +34,7 @@ const QuestProps = {
      * @returns {Promise<void>} True to enable remove animation
      */
     onQuestCheck: async (quest, callbackRemove) => {}
-}
+};
 
 class QuestElement extends React.Component {
     state = {
@@ -102,7 +101,7 @@ class QuestElement extends React.Component {
         }
 
         // Define color (red if overdue, orange if today, white otherwise)
-        /** @type {ColorThemeText} */
+        /** @type {ThemeText} */
         this.colorText = 'primary';
         if (minDeltaDays !== null && minDeltaDays < 0) this.colorText = 'error';
         else if (minDeltaDays !== null && minDeltaDays < 1) this.colorText = 'warning';

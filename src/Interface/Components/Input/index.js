@@ -12,8 +12,8 @@ import Text from 'Interface/Components/Text';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 /**
@@ -41,7 +41,7 @@ class Input extends InputBack {
         const hexActiveColor = themeManager.GetColor(activeColor);
         const hexBackgroundColor = themeManager.GetColor('background');
 
-        /** @type {ColorTheme|ColorThemeText} */
+        /** @type {ThemeColor | ThemeText} */
         const textColor = isActive ? this.props.activeColor : 'primary';
 
         const opacity = this.props.enabled ? 1 : 0.6;

@@ -12,8 +12,8 @@ import Text from '../Text';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').ListRenderItem<Item>} ListRenderItem
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * 
  * @typedef {{ name: string, color: string, value: number }} Item
  * @typedef {{ id: number, value: number, name: string }} FocusedActivity
@@ -34,7 +34,7 @@ const PieChartProps = {
     /** @type {FocusedActivity|null} */
     focusedActivity: null,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     insideBackgroundColor: 'dataBigKpi'
 };
 

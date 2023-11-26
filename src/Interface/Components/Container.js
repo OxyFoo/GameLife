@@ -16,8 +16,8 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
  * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const ContainerProps = {
@@ -36,16 +36,16 @@ const ContainerProps = {
     /** @type {string} */
     text: 'Title',
 
-    /** @type {ColorThemeText} */
+    /** @type {ThemeText} */
     textcolor: 'primary',
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     color: 'main1',
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     rippleColor: undefined,
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     backgroundColor: 'backgroundTransparent',
 
     /** @type {Icons|null} Show the icon on the right side of the text, for static container */

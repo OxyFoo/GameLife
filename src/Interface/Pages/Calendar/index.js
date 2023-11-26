@@ -129,8 +129,8 @@ class Calendar extends BackCalendar {
                         <LinearGradient
                             style={styles.fadeBottom}
                             colors={[
-                                themeManager.GetColor('backgroundGrey', 0),
-                                themeManager.GetColor('backgroundGrey', 1)
+                                themeManager.GetColor('backgroundGrey', { opacity: 0 }),
+                                themeManager.GetColor('backgroundGrey', { opacity: 1 })
                             ]}
                         />
                     </View>
@@ -153,8 +153,8 @@ class Calendar extends BackCalendar {
                     <LinearGradient
                         style={styles.fadeBottom2}
                         colors={[
-                            themeManager.GetColor('ground1b', 0),
-                            themeManager.GetColor('ground1b', 1)
+                            themeManager.GetColor('ground1b', { opacity: 0 }),
+                            themeManager.GetColor('ground1b', { opacity: 1 })
                         ]}
                     />
                 </Animated.View>

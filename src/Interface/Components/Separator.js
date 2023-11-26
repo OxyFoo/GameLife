@@ -7,14 +7,14 @@ import themeManager from 'Managers/ThemeManager';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  */
 
 const SeparatorProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     color: 'white'
 };
 

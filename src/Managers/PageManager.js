@@ -382,8 +382,14 @@ class PageManager extends React.Component{
     render() {
         const { animTheme } = this.state;
 
-        const darkBackground = [ themeManager.THEMES.Dark.ground1, themeManager.THEMES.Dark.ground2 ];
-        const lightBackground = [ themeManager.THEMES.Light.ground1, themeManager.THEMES.Light.ground2 ];
+        const darkBackground = [
+            themeManager.GetColor('ground1', { themeName: 'Main' }),
+            themeManager.GetColor('ground2', { themeName: 'Main' })
+        ];
+        const lightBackground = [
+            themeManager.GetColor('ground1', { themeName: 'Light' }),
+            themeManager.GetColor('ground2', { themeName: 'Light' })
+        ];
         const lightOpacity = { opacity: animTheme };
 
         /**

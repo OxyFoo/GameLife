@@ -5,8 +5,8 @@ import * as React from 'react';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * 
  * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const NewComponentProps = {

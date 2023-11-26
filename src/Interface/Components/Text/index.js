@@ -13,8 +13,8 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const TextProps = {
@@ -30,7 +30,7 @@ const TextProps = {
     /** @type {number} */
     fontSize: 18,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     color: 'primary',
 
     /** @type {(event: GestureResponderEvent) => void|null} */

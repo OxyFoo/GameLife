@@ -9,7 +9,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
  * @typedef {import('Interface/Components').Page} Page
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @typedef {object} ComboBoxItem
  * @property {number|string} key
@@ -23,7 +23,7 @@ const ComboBoxProps = {
     /** @type {number} */
     maxHeight: 256,
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     activeColor: 'main1',
 
     /** @type {string} */

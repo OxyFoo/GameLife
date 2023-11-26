@@ -28,7 +28,7 @@ const CharacterCardProps = {
      * @param {string} skin
      */
     onPress: (sexe, skin) => {}
-}
+};
 
 class CharacterCard extends React.PureComponent {
     constructor(props) {
@@ -63,7 +63,7 @@ class CharacterCard extends React.PureComponent {
                 <TouchableHighlight
                     style={[styles.content, background]}
                     onPress={this.onPress}
-                    underlayColor={themeManager.GetColor('main1', .5)}
+                    underlayColor={themeManager.GetColor('main1', { opacity: .5} )}
                     touchSoundDisabled={true}
                 >
                     <Frame

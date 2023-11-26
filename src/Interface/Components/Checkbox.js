@@ -8,15 +8,15 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const CheckboxProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     color: 'main1',
 
     /** @type {boolean} */

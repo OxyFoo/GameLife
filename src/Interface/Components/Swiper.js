@@ -15,7 +15,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  */
 
 const SwiperProps = {
@@ -43,7 +43,7 @@ const SwiperProps = {
     /** @type {number} */
     initIndex: 0,
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     backgroundColor: 'backgroundTransparent',
 
     /** @type {(index: number) => void} Callback is called when page index change */

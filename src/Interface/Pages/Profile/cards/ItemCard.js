@@ -6,11 +6,11 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Rarity } from 'Data/Items';
 import { Character, Frame } from 'Interface/Components';
 
 /**
  * @typedef {import('Class/Inventory').Stuff} Stuff
+ * @typedef {import('Interface/Components/Character/Frame').BodyView} BodyView
  */
 
 const ItemCardProps = {
@@ -25,13 +25,12 @@ const ItemCardProps = {
 
     /** @param {Stuff|null} stuff */
     onPress: (stuff) => {}
-}
+};
 
 class ItemCard extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        
         const { stuff } = this.props;
         const item = dataManager.items.GetByID(stuff.ItemID);
         if (item !== null) {
@@ -56,30 +55,22 @@ class ItemCard extends React.PureComponent {
         const item = dataManager.items.GetByID(stuff.ItemID);
         if (item === null) return null;
 
+        const colors = themeManager.GetRariryColors(item.Rarity);
+        const containerSize = dataManager.items.GetContainerSize(item.Slot);
+
         const background = {
             backgroundColor: themeManager.GetColor(isSelected ? 'main1' : 'backgroundCard')
         };
-        let containerSize = dataManager.items.GetContainerSize(item.Slot);
 
         let borderColor = { borderColor: 'transparent' };
         if (isEquipped) {
             borderColor.borderColor = themeManager.GetColor('main1');
         }
 
-        let colors = [];
-        const absoluteColors = themeManager.GetAbsoluteColors();
-        switch (item.Rarity) {
-            case Rarity.common:     colors = absoluteColors.rarity_common;    break;
-            case Rarity.rare:       colors = absoluteColors.rarity_rare;      break;
-            case Rarity.epic:       colors = absoluteColors.rarity_epic;      break;
-            case Rarity.legendary:  colors = absoluteColors.rarity_legendary; break;
-            case Rarity.event:      colors = absoluteColors.rarity_event;     break;
-        }
-
-        let onlyItems = true;
-        let bodyView = 'full';
-
         // Only for bald representation...
+        let onlyItems = true;
+        /** @type {BodyView} */
+        let bodyView = 'full';
         if (item.ID === 'hair_01') {
             onlyItems = false;
             bodyView = 'head';
@@ -90,7 +81,7 @@ class ItemCard extends React.PureComponent {
                 <TouchableHighlight
                     style={[styles.content, background]}
                     onPress={this.onPress}
-                    underlayColor={themeManager.GetColor('main1', .5)}
+                    underlayColor={themeManager.GetColor('main1', { opacity: .5 })}
                     touchSoundDisabled={true}
                 >
                     <View>

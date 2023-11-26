@@ -24,7 +24,7 @@ async function Initialisation(nextStep) {
     }
 
     // Set background theme
-    user.interface.SetTheme(themeManager.selectedTheme === 'Dark' ? 0 : 1);
+    user.interface.SetTheme(themeManager.selectedTheme === 'Main' ? 0 : 1);
 
     nextStep();
 

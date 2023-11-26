@@ -26,7 +26,7 @@ class BackLogin extends PageBase {
         animImage: new Animated.Value(1),
         animFocus: new Animated.Value(0),
         animSignin: new Animated.Value(0)
-    };
+    }
 
     constructor(props) {
         super(props);

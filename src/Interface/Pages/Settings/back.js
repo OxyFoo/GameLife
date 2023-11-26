@@ -30,7 +30,7 @@ class BackSettings extends PageBase {
         waitingConsentPopup: false,
         sendingMail: false,
         devicesLoading: false
-    };
+    }
 
     intervalConsentChecking = null;
 

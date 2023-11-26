@@ -11,7 +11,7 @@ class BackHome extends PageBase {
             current_level: '0',
             next_level: '0'
         }
-    };
+    }
 
     refTuto1 = null;
     refTuto2 = null;

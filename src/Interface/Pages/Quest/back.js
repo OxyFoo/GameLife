@@ -37,7 +37,7 @@ class BackQuest extends PageBase {
 
         /** @type {string} Error message to display */
         error: ''
-    };
+    }
 
     /** @type {SectionActivity | null} */
     refSectionSkill = null;

@@ -26,7 +26,7 @@ class BackReport extends PageBase {
         input_message: '',
         remain: 0,
         statsRemain: this.stats
-    };
+    }
 
     maxPoints = 6;
 

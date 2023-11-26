@@ -20,7 +20,7 @@ class BackActivityTimer extends PageBase {
 
         /** @type {number} Used to show estimated stats */
         duration: 0
-    };
+    }
 
     /** @type {boolean} */
     finished = false;

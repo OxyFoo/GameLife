@@ -19,6 +19,7 @@ const IMAGE_WIDTH = SCREEN_WIDTH - 64;
  */
 function renderPage0() {
     const lang = langManager.curr['onboarding'];
+    const langs = langManager.GetAllLangs();
     const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
     return (
@@ -26,11 +27,11 @@ function renderPage0() {
             <Text fontSize={32}>{lang['select-language']}</Text>
             <TouchableOpacity style={styles.flagRow} onPress={this.selectEnglish} activeOpacity={.6}>
                 <Icon icon='flagEnglish' size={64} />
-                <Text style={styles.flagText}>{langManager.langages.en.name}</Text>
+                <Text style={styles.flagText}>{langs.en.name}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.flagRow} onPress={this.selectFrench} activeOpacity={.6}>
                 <Icon icon='flagFrench' size={64} />
-                <Text style={styles.flagText}>{langManager.langages.fr.name}</Text>
+                <Text style={styles.flagText}>{langs.fr.name}</Text>
             </TouchableOpacity>
         </View>
     );

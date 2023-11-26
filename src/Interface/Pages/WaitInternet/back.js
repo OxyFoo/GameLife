@@ -7,7 +7,7 @@ const REFRESH_DELAY_SECONDS = 2;
 class BackWaitinternet extends PageBase {
     state = {
         loading: false
-    };
+    }
 
     image = require('../../../../res/logo/login_circles.png');
 

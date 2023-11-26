@@ -27,7 +27,7 @@ class ShopHeader extends React.Component {
         adState: 'wait',
 
         oxAmount: user.informations.ox.Get()
-    };
+    }
 
     refTuto1 = null;
     refTuto2 = null;

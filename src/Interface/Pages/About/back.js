@@ -19,7 +19,7 @@ class BackAbout extends PageBase {
 
     TiktokPress   = () => Linking.openURL('https://vm.tiktok.com/ZMdcNpCvu/');
     InstaPress    = () => Linking.openURL('https://www.instagram.com/p/CTUlsU2jP51');
-    DiscordPress  = () => Linking.openURL('https://discord.gg/QDfsXCCq');
+    DiscordPress  = () => Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
     GamelifePress = () => Linking.openURL('https://oxyfoo.com');
 }
 

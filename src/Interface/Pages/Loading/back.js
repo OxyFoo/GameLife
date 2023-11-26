@@ -8,7 +8,7 @@ class BackLoading extends PageBase {
     state = {
         icon: 0,
         displayedSentence: ''
-    };
+    }
 
     startY = 0;
     intervalId = null;

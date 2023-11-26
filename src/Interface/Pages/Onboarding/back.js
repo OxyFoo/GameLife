@@ -11,7 +11,7 @@ class BackOnboarding extends PageBase {
     state = {
         animButtonNext: new Animated.Value(1),
         animButtonStart: new Animated.Value(0)
-    };
+    }
 
     last = false;
 

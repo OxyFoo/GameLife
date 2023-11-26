@@ -13,15 +13,14 @@ import themeManager from 'Managers/ThemeManager';
 
 class BackShopItems extends React.Component {
     state = {
-        /** @type {'hair' | 'top' | 'bottom' | 'shoes'} */
+        /** @type {Slot} */
         selectedCategory: 'hair'
-    };
+    }
 
     refTuto1 = null;
     refChest1 = null;
     refChest2 = null;
     refChest3 = null;
-
 
     /** @type {Target[]} */
     TARGETS = [

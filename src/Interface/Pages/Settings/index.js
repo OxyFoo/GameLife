@@ -69,7 +69,7 @@ class Settings extends BackSettings {
                 <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{lang['input-tuto-again']}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>
             </Page>
-        )
+        );
     }
 }
 

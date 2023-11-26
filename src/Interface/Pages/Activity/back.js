@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { GetTime, RoundTimeTo } from 'Utils/Time';
-import { MinMax, Sleep } from 'Utils/Functions';
+import { Sleep } from 'Utils/Functions';
 import { PageBase } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
@@ -39,7 +39,7 @@ class BackActivity extends PageBase {
 
         /** @type {string} Header of input - Name of category */
         inputText: ''
-    };
+    }
 
     refTuto1 = null;
 

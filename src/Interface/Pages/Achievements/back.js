@@ -5,7 +5,7 @@ import dataManager from 'Managers/DataManager';
 class BackAchievements extends PageBase {
     state = {
         headerHeight: 0
-    };
+    }
 
     constructor(props) {
         super(props);

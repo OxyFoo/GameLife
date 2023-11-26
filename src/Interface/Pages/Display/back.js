@@ -8,7 +8,7 @@ import { SpringAnimation } from 'Utils/Animations';
 class BackDisplay extends PageBase {
     state = {
         anim: new Animated.Value(.5)
-    };
+    }
 
     constructor(props) {
         super(props);

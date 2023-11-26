@@ -1,10 +1,10 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Initialisation } from '../../../App/Loading';
 
-class BackLoading extends PageBack {
+class BackLoading extends PageBase {
     state = {
         icon: 0,
         displayedSentence: ''

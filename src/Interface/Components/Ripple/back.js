@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Animated, StyleSheet } from 'react-native';
-
-import themeManager from 'Managers/ThemeManager';
+import { Animated } from 'react-native';
 
 import { TimingAnimation } from 'Utils/Animations';
 
-class Ripple extends React.PureComponent {
+class RippleBack extends React.PureComponent {
     anim_ended = true;
     pressed = false;
 
@@ -45,31 +43,6 @@ class Ripple extends React.PureComponent {
         TimingAnimation(this.state.ripple_opacity, 0, duration).start();
         TimingAnimation(this.state.ripple_anim, 0, duration+100).start();
     }
-
-    render() {
-        const color = themeManager.GetColor(this.props.rippleColor);
-        return (
-            <Animated.View
-                style={[
-                    styles.ripple, {
-                    width: this.props.parentWidth * .02,
-                    backgroundColor: color,
-                    opacity: this.state.ripple_opacity,
-                    top: this.state.ripple_posY,
-                    left: this.state.ripple_posX,
-                    borderRadius: this.state.ripple_anim,
-                    transform: [{ scale: this.state.ripple_anim }]
-                }]}
-            />
-        )
-    }
 }
 
-const styles = StyleSheet.create({
-    ripple: {
-        position: 'absolute',
-        aspectRatio: 1
-    }
-});
-
-export default Ripple;
+export default RippleBack;

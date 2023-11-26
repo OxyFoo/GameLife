@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
 import { GetDate, GetTime } from 'Utils/Time';
@@ -8,7 +8,7 @@ import { GetDate, GetTime } from 'Utils/Time';
  * @typedef {import('./editorProfile').default} ProfileEditor
  */
 
-class BackProfile extends PageBack {
+class BackProfile extends PageBase {
     state = {
         editorOpened: false,
         xpInfo: user.experience.GetExperience().xpInfo

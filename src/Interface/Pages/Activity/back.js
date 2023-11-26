@@ -7,7 +7,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { GetTime, RoundTimeTo } from 'Utils/Time';
 import { MinMax, Sleep } from 'Utils/Functions';
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
@@ -23,7 +23,7 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  */
 
-class BackActivity extends PageBack {
+class BackActivity extends PageBase {
     state = {
         /** @type {number} */
         topPanelOffset: 0,

@@ -4,10 +4,10 @@ import RNExitApp from 'react-native-exit-app';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBack, Swiper } from 'Interface/Components';
+import { PageBase, Swiper } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
-class BackOnboarding extends PageBack {
+class BackOnboarding extends PageBase {
     state = {
         animButtonNext: new Animated.Value(1),
         animButtonStart: new Animated.Value(0)

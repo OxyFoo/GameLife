@@ -1,10 +1,10 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 const REFRESH_DELAY = 10; // seconds
 
-class BackWaitmail extends PageBack {
+class BackWaitmail extends PageBase {
     state = {
         /** @type {number | 'sent' | null} */
         time: null

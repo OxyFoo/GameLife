@@ -1,0 +1,100 @@
+import * as React from 'react';
+import { View, Animated, StyleSheet } from 'react-native';
+
+import SwiperBack from './back';
+import themeManager from 'Managers/ThemeManager';
+
+import Dots from '../Dots';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ */
+
+class Swiper extends SwiperBack {
+    renderContent = (p, index) => {
+        const { pages } = this.props;
+
+        /** @type {StyleProp} */
+        const pageWidth = {
+            width: 100 / pages.length + '%',
+            height: '100%',
+            justifyContent: 'center'
+        };
+
+        return (
+            <View
+                key={'page-' + index}
+                style={pageWidth}
+                onLayout={this.onLayoutPage}
+            >
+                {p}
+            </View>
+        );
+    }
+
+    render() {
+        const {
+            pages, height, style, onLayout,
+            backgroundColor, borderRadius
+        } = this.props;
+        const { width, maxHeight, positionX, positionDots } = this.state;
+
+        if (pages.length === 0) return null;
+
+        const pagesContent = pages.map(this.renderContent);
+        const contentContainerStyle = [styles.contentContainer, {
+            transform: [{
+                translateX: Animated.subtract(0, Animated.multiply(positionX, width))
+            }],
+            width: pages.length * 100 + '%'
+        }];
+
+        return (
+            <View
+                style={[
+                    styles.parent,
+                    {
+                        height: height || maxHeight,
+                        backgroundColor: themeManager.GetColor(backgroundColor),
+                        borderRadius: borderRadius
+                    },
+                    style
+                ]}
+                onLayout={onLayout}
+                onTouchStart={this.onTouchStart}
+                onTouchMove={this.onTouchMove}
+                onTouchEnd={this.onTouchEnd}
+            >
+                <Animated.View style={contentContainerStyle}>
+                    {pagesContent}
+                </Animated.View>
+                <Dots
+                    style={styles.dots}
+                    pagesLength={pages.length}
+                    position={positionDots}
+                />
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    parent: {
+        overflow: 'hidden'
+    },
+    contentContainer: {
+        position: 'absolute',
+        flexDirection: 'row'
+    },
+    dots: {
+        position: 'absolute',
+        left: 0,
+        bottom: 6,
+        right: 0
+    }
+});
+
+export default Swiper;

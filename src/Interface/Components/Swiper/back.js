@@ -1,9 +1,6 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, Dimensions } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
-import themeManager from 'Managers/ThemeManager';
-
-import Dots from './Dots';
 import { MinMax } from 'Utils/Functions';
 import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
 
@@ -53,7 +50,7 @@ const SwiperProps = {
     onLayout: (event) => {}
 };
 
-class Swiper extends React.Component {
+class SwiperBack extends React.Component {
     posX = this.props.initIndex;
 
     state = {
@@ -166,91 +163,9 @@ class Swiper extends React.Component {
             this.setState({ width: width, maxHeight: height });
         }
     }
-
-    renderContent = (p, index) => {
-        const { pages } = this.props;
-
-        /** @type {StyleProp} */
-        const pageWidth = {
-            width: 100 / pages.length + '%',
-            height: '100%',
-            justifyContent: 'center'
-        };
-
-        return (
-            <View
-                key={'page-' + index}
-                style={pageWidth}
-                onLayout={this.onLayoutPage}
-            >
-                {p}
-            </View>
-        );
-    }
-
-    render() {
-        const {
-            pages, height, style, onLayout,
-            backgroundColor, borderRadius
-        } = this.props;
-        const { width, maxHeight, positionX, positionDots } = this.state;
-
-        if (pages.length === 0) return null;
-
-        const pagesContent = pages.map(this.renderContent);
-        const contentContainerStyle = [styles.contentContainer, {
-            transform: [{
-                translateX: Animated.subtract(0, Animated.multiply(positionX, width))
-            }],
-            width: pages.length * 100 + '%'
-        }];
-
-        return (
-            <View
-                style={[
-                    styles.parent,
-                    {
-                        height: height || maxHeight,
-                        backgroundColor: themeManager.GetColor(backgroundColor),
-                        borderRadius: borderRadius
-                    },
-                    style
-                ]}
-                onLayout={onLayout}
-                onTouchStart={this.onTouchStart}
-                onTouchMove={this.onTouchMove}
-                onTouchEnd={this.onTouchEnd}
-            >
-                <Animated.View style={contentContainerStyle}>
-                    {pagesContent}
-                </Animated.View>
-                <Dots
-                    style={styles.dots}
-                    pagesLength={pages.length}
-                    position={positionDots}
-                />
-            </View>
-        );
-    }
 }
 
-Swiper.prototype.props = SwiperProps;
-Swiper.defaultProps = SwiperProps;
+SwiperBack.prototype.props = SwiperProps;
+SwiperBack.defaultProps = SwiperProps;
 
-const styles = StyleSheet.create({
-    parent: {
-        overflow: 'hidden'
-    },
-    contentContainer: {
-        position: 'absolute',
-        flexDirection: 'row'
-    },
-    dots: {
-        position: 'absolute',
-        left: 0,
-        bottom: 6,
-        right: 0
-    }
-});
-
-export default Swiper;
+export default SwiperBack;

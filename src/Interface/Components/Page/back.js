@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet, Platform } from 'react-native';
+import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
@@ -56,7 +55,7 @@ const PageProps = {
 
 // TODO - Auto scroll if height change
 
-class Page extends React.Component {
+class PageBack extends React.Component {
     posY = 0;
     scrollEnabled = true;
 
@@ -220,130 +219,9 @@ class Page extends React.Component {
         }
         this.onScroll(this.posY);
     }
-
-    renderTopOverlay() {
-        if (this.props.topOverlay === null) return null;
-
-        const { topOverlayPosition } = this.state;
-        const { topOverlay, topOverlayHeight } = this.props;
-
-        const animation = Animated.multiply(topOverlayPosition, -(topOverlayHeight + 32));
-        const position = { transform: [{ translateY: animation }] };
-        const backgroundColor = { backgroundColor: themeManager.GetColor('main3') };
-        const borderColor = { borderColor: themeManager.GetColor('main1') };
-
-        return (
-            <Animated.View
-                style={[
-                    styles.topOverlay,
-                    position,
-                    borderColor,
-                    backgroundColor
-                ]}
-            >
-                <View style={[styles.topOverlayLine, backgroundColor]} />
-                {topOverlay}
-            </Animated.View>
-        );
-    }
-
-    render() {
-        const { positionY, opacity, pointerEvents } = this.state;
-        const {
-            style, isHomePage,
-            topOffset, bottomOffset,
-            scrollable, overlay
-        } = this.props;
-
-        const headerHeight = user.interface.header.state.height;
-        const valueOffset = isHomePage ? headerHeight : topOffset;
-
-        const styleOpacity = { opacity: opacity };
-        const styleParent = {
-            ...styles.parent,
-            transform: [{ translateY: positionY }],
-            paddingTop: valueOffset,
-            height: scrollable ? 'auto' : '100%',
-            minHeight: user.interface.screenHeight - topOffset - bottomOffset - 128
-        };
-
-        return (
-            <Animated.View
-                style={[styles.container, styleOpacity]}
-                pointerEvents={pointerEvents}
-            >
-                <Animated.View
-                    style={[styleParent, style]}
-                    onLayout={this.onLayout}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
-                    onTouchEnd={this.onTouchEnd}
-                    onStartShouldSetResponder={this.props.onStartShouldSetResponder}
-                >
-                    {this.props.children}
-                </Animated.View>
-                <Animated.View style={styles.footer}>
-                    {this.props.footer}
-                </Animated.View>
-                {overlay}
-                {this.renderTopOverlay()}
-            </Animated.View>
-        );
-    }
 }
 
-Page.prototype.props = PageProps;
-Page.defaultProps = PageProps;
+PageBack.prototype.props = PageProps;
+PageBack.defaultProps = PageProps;
 
-const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-
-        width: '100%',
-        height: '100%',
-        margin: 0,
-        padding: 0
-    },
-    parent: {
-        width: '100%',
-        padding: 32,
-        paddingBottom: Platform.OS === 'ios' ? 48 : 32,
-        backgroundColor: '#00000001'
-    },
-    overlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        paddingVertical: 0,
-        paddingHorizontal: 32,
-        borderBottomWidth: 1
-    },
-    topOverlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        paddingVertical: 0,
-        paddingHorizontal: 32,
-        borderBottomWidth: 1
-    },
-    topOverlayLine: {
-        position: 'absolute',
-        top: -12,
-        left: 0,
-        right: 0,
-        height: 12
-    },
-    footer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0
-    }
-});
-
-export default Page;
+export default PageBack;

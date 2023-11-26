@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import { Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';
@@ -10,7 +10,7 @@ import { Sum } from 'Utils/Functions';
  * @typedef {import('Class/Server').ReportTypes} ReportTypes
  */
 
-class BackReport extends PageBack {
+class BackReport extends PageBase {
     stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
     state = {
         sending: false,

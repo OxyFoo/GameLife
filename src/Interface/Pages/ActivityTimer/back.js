@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
@@ -12,7 +12,7 @@ import { GetDate, GetTime, RoundTimeTo } from 'Utils/Time';
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
-class BackActivityTimer extends PageBack {
+class BackActivityTimer extends PageBase {
     state = {
         displayActivity: '',
         displayInitialTime: '00:00',

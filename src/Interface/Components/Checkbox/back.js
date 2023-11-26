@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { Animated } from 'react-native';
 
-import Icon from './Icon';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -26,7 +25,7 @@ const CheckboxProps = {
     onChange: null
 };
 
-class Checkbox extends React.Component {
+class CheckboxBack extends React.Component {
     isChecked = false;
 
     state = {
@@ -57,32 +56,9 @@ class Checkbox extends React.Component {
             this.props.onChange();
         }
     }
-
-    render() {
-        const styleCheck = {
-            transform: [{ scale: this.state.animScale }]
-        };
-
-        return (
-            <View style={this.props.style}>
-                <Icon onPress={this.onPress} icon={'checkboxOff'} color={'border'} />
-                <Animated.View style={[styles.check, styleCheck]} pointerEvents={'none'}>
-                    <Icon icon={'checkboxOn'} color={this.props.color}></Icon>
-                </Animated.View>
-            </View>
-        );
-    }
 }
 
-Checkbox.prototype.props = CheckboxProps;
-Checkbox.defaultProps = CheckboxProps;
+CheckboxBack.prototype.props = CheckboxProps;
+CheckboxBack.defaultProps = CheckboxProps;
 
-const styles = StyleSheet.create({
-    check: {
-        position: 'absolute',
-        top: 0,
-        left: 0
-    }
-});
-
-export default Checkbox;
+export default CheckboxBack;

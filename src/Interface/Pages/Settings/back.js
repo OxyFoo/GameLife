@@ -2,7 +2,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
@@ -11,7 +11,7 @@ import Notifications from 'Utils/Notifications';
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
-class BackSettings extends PageBack {
+class BackSettings extends PageBase {
     /** @type {ComboBoxItem[]} */
     availableLangs = langManager.GetLangsKeys().map(lang => ({
         key: lang,

@@ -8,7 +8,6 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {import('Interface/Components').Page} Page
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @typedef {object} ComboBoxItem

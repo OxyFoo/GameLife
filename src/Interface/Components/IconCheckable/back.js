@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
 
-import Icon from './Icon';
-import Button from 'Interface/Components/Button';
 import { IsUndefined } from 'Utils/Functions';
 
 /**
@@ -49,7 +46,7 @@ const IconCheckableProps = {
     pressable: true
 };
 
-class IconCheckable extends React.Component {
+class IconCheckableBack extends React.Component {
     state = {
         checked: false
     }
@@ -77,50 +74,9 @@ class IconCheckable extends React.Component {
             onPress(id, !checked);
         }
     }
-
-    render() {
-        const { style, colorOn, colorOff, xml, icon, size } = this.props;
-
-        const iconColor = this.state.checked ? colorOff : colorOn;
-        const backgroundColor = this.state.checked ? colorOn : colorOff;
-
-        const padding = 6;
-        const btnSize = size + padding*2;
-        const buttonStyle = [
-            styles.box,
-            {
-                height: btnSize,
-                paddingVertical: padding,
-                paddingHorizontal: padding
-            },
-            style
-        ];
-
-        return (
-            <Button
-                style={buttonStyle}
-                color={backgroundColor}
-                borderRadius={10}
-                onPress={this.switch}
-            >
-                <Icon
-                    xml={xml}
-                    icon={icon}
-                    color={iconColor}
-                    size={size} 
-                />
-            </Button>
-        );
-    }
 }
 
-IconCheckable.prototype.props = IconCheckableProps;
-IconCheckable.defaultProps = IconCheckableProps;
+IconCheckableBack.prototype.props = IconCheckableProps;
+IconCheckableBack.defaultProps = IconCheckableProps;
 
-const styles = StyleSheet.create({
-    box: {
-        aspectRatio: 1
-    }
-});
-
-export default IconCheckable;
+export default IconCheckableBack;

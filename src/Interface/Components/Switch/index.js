@@ -1,46 +1,17 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
+import SwitchBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 import Button from 'Interface/Components/Button';
-import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedViewStyle
  */
 
-const SwitchProps = {
-    /** @type {boolean} State of switch component */
-    value: false,
-
-    /** @type {Function} Is called when state change */
-    onValueChanged: (value) => {}
-};
-
-class Switch extends React.Component {
-    state = {
-        anim: new Animated.Value(0)
-    }
-
-    componentDidMount() {
-        if (this.props.value) {
-            SpringAnimation(this.state.anim, 28).start();
-        }
-    }
-    componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value) {
-            SpringAnimation(this.state.anim, this.props.value ? 28 : 0).start();
-        }
-    }
-
-    onPress = () => {
-        const newVal = !this.props.value;
-        this.props.onValueChanged(newVal);
-        SpringAnimation(this.state.anim, newVal ? 28 : 0).start();
-    }
-
+class Switch extends SwitchBack {
     render() {
         const color = this.props.value ? themeManager.GetColor('main1') : themeManager.GetColor('backgroundCard');
 
@@ -63,9 +34,6 @@ class Switch extends React.Component {
         );
     }
 }
-
-Switch.prototype.props = SwitchProps;
-Switch.defaultProps = SwitchProps;
 
 const styles = StyleSheet.create({
     circle: {

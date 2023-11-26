@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
@@ -18,7 +18,7 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {(event: GestureResponderEvent) => void} onPress
  */
 
-class BackSkill extends PageBack {
+class BackSkill extends PageBase {
     /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 

@@ -4,7 +4,7 @@ import * as React from 'react';
  * @typedef {import('Interface/Components').Page} Page
  */
 
-class PageBack extends React.Component {
+class PageBase extends React.Component {
     /** @type {Page | null} */
     refPage = null;
 
@@ -20,4 +20,4 @@ class PageBack extends React.Component {
     componentDidFocused = (args) => {};
 }
 
-export default PageBack;
+export default PageBase;

@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import { Linking } from 'react-native';
 
 import dataManager from 'Managers/DataManager';
@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 
 const { versionName } = require('../../../../package.json');
 
-class BackAbout extends PageBack {
+class BackAbout extends PageBase {
     constructor(props) {
         super(props);
 

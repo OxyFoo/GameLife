@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import user from 'Managers/UserManager';
 
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import ItemCard from '../Profile/cards/ItemCard';
 
 /**
  * @typedef {import('Class/Inventory').Stuff} Stuff
  */
 
-class BackTest extends PageBack {
+class BackTest extends PageBase {
     state = {
         test: '',
         testChecked: false,

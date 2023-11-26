@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, FlatList } from 'react-native';
 
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
 import StartTutorial from './tuto';
@@ -21,7 +21,7 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
  * @typedef {import('Interface/Widgets/BlockMonth/index').MonthData} MonthData
  */
 
-class BackCalendar extends PageBack {
+class BackCalendar extends PageBase {
     /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 

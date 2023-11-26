@@ -39,10 +39,6 @@ const styles = StyleSheet.create({
     centerLabel: {
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    labelText: {
-        fontSize: 22,
-        fontWeight: 'bold'
     }
 });
 

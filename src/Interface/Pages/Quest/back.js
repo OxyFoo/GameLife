@@ -1,6 +1,6 @@
 import { Keyboard } from 'react-native';
 
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -20,7 +20,7 @@ import langManager from 'Managers/LangManager';
  * @typedef {import('./Sections/description').default} SectionDescription
  */
 
-class BackQuest extends PageBack {
+class BackQuest extends PageBase {
     state = {
         /** @type {States} */
         action: 'new',

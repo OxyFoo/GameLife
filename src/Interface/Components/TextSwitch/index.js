@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, Animated } from 'react-native';
 
+import styles from './style';
+import TextSwitchBack from './back';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import Button from 'Interface/Components/Button';
-import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -13,56 +14,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  */
 
-const TextSwitchProps = {
-    /** @type {StyleProp} */
-    style: {},
-
-    /** @type {Array<string>} */
-    texts: [],
-
-    /** @type {number} */
-    fontSize: 12,
-
-    /** @param {number} index Called when seleted part change */
-    onChange: (index) => {}
-};
-
-class TextSwitch extends React.Component {
-    state = {
-        anim: new Animated.Value(0),
-        parentWidth: 0,
-        selectedIndex: 0
-    }
-
-    /** @param {LayoutChangeEvent} event */
-    onLayout = (event) => {
-        const { x, y, width, height } = event.nativeEvent.layout;
-        if (width !== this.state.parentWidth) {
-            this.setState({ parentWidth: width });
-        }
-    }
-
-    /**
-     * Set selected index
-     * @param {number} index
-     * @returns {boolean} True if index is valid
-     */
-    SetSelectedIndex(index) {
-        if (index < 0 && index >= this.props.texts.length) {
-            user.interface.console.AddLog('warn', 'TextSwitch index is out of bounds');
-            return false;
-        }
-
-        this.onChange(index, false);
-        return true;
-    }
-
-    onChange = (index, callback = true) => {
-        if (callback) this.props.onChange(index);
-        SpringAnimation(this.state.anim, index).start();
-        this.setState({ selectedIndex: index });
-    }
-
+class TextSwitch extends TextSwitchBack {
     render() {
         if (this.props.texts.length === 0) {
             user.interface.console.AddLog('warn', 'TextSwitch has no children');
@@ -115,33 +67,5 @@ class TextSwitch extends React.Component {
         );
     }
 }
-
-TextSwitch.prototype.props = TextSwitchProps;
-TextSwitch.defaultProps = TextSwitchProps;
-
-const styles = StyleSheet.create({
-    parent: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        height: 55,
-        padding: 4,
-        borderWidth: 1.6,
-        borderRadius: 16
-    },
-    button: {
-        width: '47.5%',
-        height: '100%',
-        borderRadius: 8,
-        paddingHorizontal: 6
-    },
-    selection: {
-        position: 'absolute',
-        top: 4,
-        bottom: 4,
-        left: 4,
-        borderRadius: 12
-    }
-});
 
 export default TextSwitch;

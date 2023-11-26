@@ -13,14 +13,14 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Interface/Components').PageBack} PageBack
+ * @typedef {import('Interface/Components').PageBase} PageBase
  * @typedef {keyof PAGES} PageName
  * @typedef {PAGES[keyof PAGES]} PageType
  * 
  * @typedef PageState
  * @type {Object}
  * @property {JSX.Element | null} content
- * @property {PageBack | null} ref
+ * @property {PageBase | null} ref
  * @property {object} args
  */
 
@@ -367,7 +367,7 @@ class PageManager extends React.Component{
     }
 
     /**
-     * @returns {PageBack | null}
+     * @returns {PageBase | null}
      */
     GetCurrentPage = () => {
         const { selectedPage } = this.state;

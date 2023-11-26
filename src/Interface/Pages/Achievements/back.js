@@ -1,8 +1,8 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 
-class BackAchievements extends PageBack {
+class BackAchievements extends PageBase {
     state = {
         headerHeight: 0
     };

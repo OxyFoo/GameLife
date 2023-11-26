@@ -15,7 +15,7 @@ import { GetBattery } from 'Utils/Device';
 class AchievementItem {
     AchievementID = 0;
 
-    /** @type {'OK'|'PENDING'|'NONE'} */
+    /** @type {'OK' | 'PENDING' | 'NONE'} */
     State = 'OK';
 
     /** @type {number} Unix UTC timestamp in seconds */

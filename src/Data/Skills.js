@@ -29,7 +29,7 @@ class EnrichedSkill extends Skill {
     /** @type {string} */
     LogoXML = '';
 
-    /** @type {EnrichedXPInfo|null} */
+    /** @type {EnrichedXPInfo | null} */
     Experience = null;
 }
 
@@ -84,13 +84,13 @@ class Skills {
 
     /**
      * @param {number} ID
-     * @returns {Skill|null} Return skill if exists or null
+     * @returns {Skill | null} Return skill if exists or null
      */
     GetByID = (ID) => GetByKey(this.skills, 'ID', ID);
 
     /**
      * @param {number} ID
-     * @returns {Category|null} Return category if exists or null
+     * @returns {Category | null} Return category if exists or null
      */
     GetCategoryByID = (ID) => this.categories.find(category => category.ID === ID) || null;
 

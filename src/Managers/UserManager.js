@@ -51,25 +51,25 @@ class UserManager {
 
     /**
      * @description Ref loaded here from render of App.js to skip cyclic dependency
-     * @type {PageManager|null}
+     * @type {PageManager | null}
      */
     interface = null;
 
-    /** @type {Character|null} */
+    /** @type {Character | null} */
     character = null;
 
     xp = 0;
 
-    /** @type {Stats|null} */
+    /** @type {Stats | null} */
     stats = null;
 
     /** @type {boolean} */
     globalSaving = false;
 
-    /** @type {number|null} Calendar: select day => global UTC time */
+    /** @type {number | null} Calendar: select day => global UTC time */
     tempSelectedTime = null;
 
-    /** @type {number|null} To avoid spamming mail (UTC) */
+    /** @type {number | null} To avoid spamming mail (UTC) */
     tempMailSent = null;
     
     StartTimers() {
@@ -107,7 +107,7 @@ class UserManager {
         }
     }
 
-    /** @returns {Promise<Array<string>|null>} */
+    /** @returns {Promise<Array<string> | null>} */
     async GetDevices() {
         const result = await this.server.Request('getDevices');
         if (result === null || result['status'] !== 'ok') {

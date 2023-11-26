@@ -5,7 +5,7 @@ import * as React from 'react';
  */
 
 class PageBack extends React.Component {
-    /** @type {Page|null} */
+    /** @type {Page | null} */
     refPage = null;
 
     /** @type {boolean} */

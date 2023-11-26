@@ -7,7 +7,7 @@ const settings = { host: '45.82.73.154', port: 7121 };
 /**
  * TCP server state change event
  * @callback onChangeCallback
- * @param {'connected'|'disconnected'|'error'} state
+ * @param {'connected' | 'disconnected' | 'error'} state
  */
 
 class Multiplayer {
@@ -72,7 +72,7 @@ class Multiplayer {
     }
 
     /**
-     * @param {string|object} message
+     * @param {string | object} message
      * @returns {boolean} Whether the message was sent successfully
      */
     Send = (message) => {

@@ -8,11 +8,11 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
  * 
  * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {'hair'|'top'|'bottom'|'shoes'} Slot
+ * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * 
  * @typedef BuyableRandomChest
  * @property {string} ref
- * @property {string|number} ID
+ * @property {string | number} ID
  * @property {string} LangName
  * @property {ImageSourcePropType} Image
  * @property {number} Price
@@ -28,7 +28,7 @@ import { DateToFormatString } from 'Utils/Date';
  * 
  * @typedef BuyableTargetedChest
  * @property {string} ref
- * @property {string|number} ID
+ * @property {string | number} ID
  * @property {string} Name
  * @property {Slot} Slot
  * @property {ImageSourcePropType} Image

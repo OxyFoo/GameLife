@@ -28,7 +28,7 @@ class New {
 
     /**
      * @description Show text to
-     * @type {'auto'|'left'|'right'}
+     * @type {'auto' | 'left' | 'right'}
      */
     TextAlign = 'auto';
 }

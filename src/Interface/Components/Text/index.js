@@ -9,7 +9,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').TextStyle} TextStyle
  * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle|TextStyle>} TextStyleProp
+ * @typedef {import('react-native').StyleProp<ViewStyle | TextStyle>} TextStyleProp
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
@@ -18,7 +18,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  */
 
 const TextProps = {
-    /** @type {string|JSX.Element|null} */
+    /** @type {string | JSX.Element | null} */
     children: null,
 
     /** @type {TextStyleProp} */
@@ -33,7 +33,7 @@ const TextProps = {
     /** @type {ThemeColor | ThemeText} */
     color: 'primary',
 
-    /** @type {(event: GestureResponderEvent) => void|null} */
+    /** @type {(event: GestureResponderEvent) => void | null} */
     onPress: null,
 
     /** @type {(event: LayoutChangeEvent) => void} */

@@ -3,7 +3,7 @@ import { TwoDigit } from './Functions';
 /**
  * Get absolute UTC time in seconds
  * @param {Date} [date] (now default)
- * @param {'global'|'local'} [UTC] [default: 'global']
+ * @param {'global' | 'local'} [UTC] [default: 'global']
  * @returns {number} time in seconds
  */
 function GetTime(date = new Date(), UTC = 'global') {
@@ -18,7 +18,7 @@ function GetTime(date = new Date(), UTC = 'global') {
 
 /**
  * Convert local UTC time in seconds to Date object
- * @param {number|null} [time] in seconds [default: now]
+ * @param {number | null} [time] in seconds [default: now]
  * @returns {Date} Date object in local UTC
  */
 function GetDate(time = null) {
@@ -42,7 +42,7 @@ function TimeToFormatString(time) {
 /**
  * @param {number} step in minutes (e.g. 15 for round to 15 minutes)
  * @param {number} time in seconds
- * @param {'near'|'prev'|'next'} [type] [default: 'near']
+ * @param {'near' | 'prev' | 'next'} [type] [default: 'near']
  * @returns {number} time rounded to quarters in seconds
  */
 function RoundTimeTo(step, time, type = 'near') {

@@ -37,10 +37,10 @@ class UserHeader extends React.Component {
         showAvatar: false
     }
 
-    /** @type {Button|null} */
+    /** @type {Button | null} */
     refContainer = null;
 
-    /** @type {Frame|null} */
+    /** @type {Frame | null} */
     refFrame = null;
 
     constructor(props) {

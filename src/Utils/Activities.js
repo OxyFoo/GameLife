@@ -129,10 +129,10 @@ function AddActivity(activity) {
             d.setUTCHours(1, 0, 0, 0);
             const now = GetTime();
 
-            /** @type {'schedule'|'deadline'|null} */
+            /** @type {'schedule' | 'deadline' | null} */
             let deadlineType = null;
 
-            /** @type {number|null} Minimum number of days */
+            /** @type {number | null} Minimum number of days */
             let minDeltaDays = null;
 
             let i = 0;

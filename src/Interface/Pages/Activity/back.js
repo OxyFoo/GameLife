@@ -31,7 +31,7 @@ class BackActivity extends PageBack {
         /** @type {Array<ItemSkill>} */
         skills: [],
 
-        /** @type {number|null} */
+        /** @type {number | null} */
         selectedCategory: null,
 
         /** @type {string} Search input */
@@ -46,13 +46,13 @@ class BackActivity extends PageBack {
     /** @type {Array<ItemSkill>} */
     allSkillItems = [];
 
-    /** @type {ActivityPanel|null} */
+    /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 
-    /** @type {FlatList|null} */
+    /** @type {FlatList | null} */
     refActivities = null;
 
-    /** @type {Array<ItemCategory|null>} */
+    /** @type {Array<ItemCategory | null>} */
     categories = [];
 
     /** @type {boolean} If true, the page is in edition mode */
@@ -151,11 +151,11 @@ class BackActivity extends PageBack {
 
     /**
      * @param {string} textSearch
-     * @param {number|null} categoryID
+     * @param {number | null} categoryID
      */
     refreshSkills = (textSearch = '', categoryID = null) => {
         /**
-         * @param {Skill|EnrichedSkill} skill
+         * @param {Skill | EnrichedSkill} skill
          * @returns {ItemSkill}
          */
         const convert = (skill) => SkillToItem(skill, this.selectSkill);

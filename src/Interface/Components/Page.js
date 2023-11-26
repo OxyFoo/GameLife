@@ -14,7 +14,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  */
 
 const PageProps = {
-    /** @type {Array<JSX.Element>|JSX.Element|null} */
+    /** @type {Array<JSX.Element> | JSX.Element | null} */
     children: null,
 
     /** @type {StyleProp} */
@@ -61,7 +61,7 @@ class Page extends React.Component {
     scrollEnabled = true;
 
     state = {
-        /** @type {'box-none'|'none'|'box-only'|'auto'} */
+        /** @type {'box-none' | 'none' | 'box-only' | 'auto'} */
         pointerEvents: 'none',
         visible: false,
         opacity: new Animated.Value(0),

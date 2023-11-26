@@ -27,10 +27,10 @@ const IconProps = {
     /** @type {StyleProp} */
     containerStyle: {},
 
-    /** @type {string|null} Display an icon from XML base64 encoded ('icon' skip if define) */
+    /** @type {string | null} Display an icon from XML base64 encoded ('icon' skip if define) */
     xml: null,
 
-    /** @type {Icons|null} */
+    /** @type {Icons | null} */
     icon: null,
 
     /** @type {number} Size of icon in pixels */
@@ -42,7 +42,7 @@ const IconProps = {
     /** @type {ThemeColor | ThemeText} */
     color: 'white',
 
-    /** @type {(event: GestureResponderEvent) => void|null} */
+    /** @type {(event: GestureResponderEvent) => void | null} */
     onPress: null,
 
     /** @type {boolean} */

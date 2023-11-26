@@ -18,7 +18,7 @@ const StatsBarsProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {Stats|null} */
+    /** @type {Stats | null} */
     data: null,
 
     /** @type {Array<number>} Optionnal, add secondary value, same length of user stats */

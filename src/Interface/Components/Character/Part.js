@@ -9,7 +9,7 @@ import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
  * @typedef {import('./Body').default} Body
  * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
  * 
- * @typedef {'bodyShadow'|'stuffShadow'|'body'|'stuff'} CharacterRenderTypes
+ * @typedef {'bodyShadow' | 'stuffShadow' | 'body' | 'stuff'} CharacterRenderTypes
  */
 
 class Part {

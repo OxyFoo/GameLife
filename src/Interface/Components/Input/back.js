@@ -14,7 +14,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * 
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
- * @typedef {'default'|'email'|'username'|'name'} TextContentType
+ * @typedef {'default' | 'email' | 'username' | 'name'} TextContentType
  */
 
 const InputProps = {
@@ -63,14 +63,14 @@ const InputProps = {
     /** @type {boolean} */
     multiline: false,
 
-    /** @type {'auto'|'box-only'|'box-none'|'none'} */
+    /** @type {'auto' | 'box-only' | 'box-none' | 'none'} */
     pointerEvents: 'auto'
 };
 
 const ANIM_DURATION = 200;
 
 class InputBack extends React.Component {
-    /** @type {TextInput|null} props */
+    /** @type {TextInput | null} props */
     refInput = null;
 
     state = {

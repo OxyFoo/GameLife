@@ -14,7 +14,7 @@ import { Character, Frame } from 'Interface/Components';
  */
 
 const ItemCardProps = {
-    /** @type {Stuff|null} */
+    /** @type {Stuff | null} */
     stuff: null,
 
     /** @type {boolean} */
@@ -23,7 +23,7 @@ const ItemCardProps = {
     /** @type {boolean} Show border if item is equipped */
     isEquipped: false,
 
-    /** @param {Stuff|null} stuff */
+    /** @param {Stuff | null} stuff */
     onPress: (stuff) => {}
 };
 

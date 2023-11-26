@@ -16,7 +16,7 @@ import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
  * - 0: Show all logs
  * - 1: Show only warnings and errors
  * - 2: Show only errors
- * @type {0|1|2}
+ * @type {0 | 1 | 2}
  */
 const LEVEL_CONSOLE = 1;
 
@@ -45,7 +45,7 @@ class Console extends React.Component {
 
     /**
      * Show message in app console
-     * @param {'info'|'warn'|'error'} type
+     * @param {'info' | 'warn' | 'error'} type
      * @param {string} text
      * @param {Array<any>} params
      * @returns {number} index of the message
@@ -84,7 +84,7 @@ class Console extends React.Component {
     /**
      * Edit text in console, to update state debug
      * @param {number} index
-     * @param {'info'|'warn'|'error'|'same'} type
+     * @param {'info' | 'warn' | 'error' | 'same'} type
      * @param {string} text
      * @param {Array<any>} params
      * @returns {boolean} Success of edition

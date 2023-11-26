@@ -9,10 +9,10 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * 
- * @typedef {'day'|'night'} ZapColor
- * @typedef {'onTwoLegs'|'onFourLegs'} ZapInclinaison
- * @typedef {'face'|'show'} ZapFace
- * @typedef {'left'|'right'} ZapOrientation
+ * @typedef {'day' | 'night'} ZapColor
+ * @typedef {'onTwoLegs' | 'onFourLegs'} ZapInclinaison
+ * @typedef {'face' | 'show'} ZapFace
+ * @typedef {'left' | 'right'} ZapOrientation
  */
 
 const ZAP_IMAGES = {

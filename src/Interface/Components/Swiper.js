@@ -22,7 +22,7 @@ const SwiperProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {number|string} If undefined, height equals to max height of pages content */
+    /** @type {number | string} If undefined, height equals to max height of pages content */
     height: undefined,
 
     /** @type {number} */
@@ -37,7 +37,7 @@ const SwiperProps = {
     /** @type {number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
     delayNext: 10,
 
-    /** @type {Array<React.Component|React.ReactElement>} */
+    /** @type {Array<React.Component | React.ReactElement>} */
     pages: [],
 
     /** @type {number} */

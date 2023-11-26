@@ -117,7 +117,7 @@ class Body {
     }
 
     /**
-     * @param {'all'|'onlyItems'} type
+     * @param {'all' | 'onlyItems'} type
      * @param {BodyView} size
      * @returns {JSX.Element[]}
      */

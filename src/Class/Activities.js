@@ -9,7 +9,7 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * 
- * @typedef {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'} AddStatus
+ * @typedef {'added' | 'edited' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
  * 
  * @typedef {object} CurrentActivity
  * @property {number} skillID Skill ID
@@ -55,7 +55,7 @@ class Activities {
     /** @description Contain all activities, updated when adding, editing or removing */
     allActivities = new DynamicVar([]);
 
-    /** @type {CurrentActivity|null} */
+    /** @type {CurrentActivity | null} */
     currentActivity = null;
 
     /** @type {{[name: string]: function}} */
@@ -314,7 +314,7 @@ class Activities {
     /**
      * Remove activity
      * @param {Activity} activity
-     * @returns {'removed'|'notExist'}
+     * @returns {'removed' | 'notExist'}
      */
     Remove(activity) {
         const indexActivity = this.getIndex(this.activities, activity);
@@ -346,7 +346,7 @@ class Activities {
     /**
      * @param {Array<Activity>} arr
      * @param {Activity} activity
-     * @returns {number|null} Index of activity or null if not found
+     * @returns {number | null} Index of activity or null if not found
      */
     getIndex(arr, activity) {
         for (let i = 0; i < arr.length; i++) {

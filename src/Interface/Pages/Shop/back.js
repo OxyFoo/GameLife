@@ -8,7 +8,7 @@ import StartTutorial from './tuto';
 
 class BackShop extends PageBack {
     state = {
-        /** @type {Page|null} */
+        /** @type {Page | null} */
         refPage: null
     }
 

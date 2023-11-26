@@ -22,7 +22,7 @@ const QuestProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {Quest|null} */
+    /** @type {Quest | null} */
     quest: null,
 
     /** Icon to drag => onTouchStart event (quest only) */
@@ -57,10 +57,10 @@ class QuestElement extends React.Component {
         d.setUTCHours(1, 0, 0, 0);
         const now = GetTime();
 
-        /** @type {'schedule'|'deadline'|null} */
+        /** @type {'schedule' | 'deadline' | null} */
         let deadlineType = null;
 
-        /** @type {number|null} Minimum number of days */
+        /** @type {number | null} Minimum number of days */
         let minDeltaDays = null;
 
         // Search next schedule

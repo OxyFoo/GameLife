@@ -6,9 +6,9 @@ const REFRESH_DELAY = 10; // seconds
 
 class BackWaitmail extends PageBack {
     state = {
-        /** @type {number|'sent'|null} */
+        /** @type {number | 'sent' | null} */
         time: null
-    };
+    }
 
     image = require('../../../../res/logo/login_circles.png');
 

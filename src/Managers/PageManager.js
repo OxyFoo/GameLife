@@ -19,8 +19,8 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
  * 
  * @typedef PageState
  * @type {Object}
- * @property {JSX.Element|null} content
- * @property {PageBack|null} ref
+ * @property {JSX.Element | null} content
+ * @property {PageBack | null} ref
  * @property {object} args
  */
 
@@ -41,7 +41,7 @@ const PAGES_PERSISTENT = [
 ];
 
 const CACHE_PAGES = {
-    /** @type {{[key: PageName|string]: PageState}} */
+    /** @type {{[key: PageName | string]: PageState}} */
     persistent: {},
 
     /** @type {PageState} */
@@ -71,7 +71,7 @@ class PageManager extends React.Component{
 
     /**
      * @description Custom back button handler
-     * @type {() => boolean|null} Return true if back is handled
+     * @type {() => boolean | null} Return true if back is handled
      */
     customBackHandle = null;
 
@@ -220,7 +220,7 @@ class PageManager extends React.Component{
      * @param {object} pageArguments
      * @param {boolean} ignorePage
      * @param {boolean} forceUpdate
-     * @returns {Promise|false} True if changing page started
+     * @returns {Promise | false} True if changing page started
      */
     ChangePage = (nextpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
         if (this.changing) return false;
@@ -345,7 +345,7 @@ class PageManager extends React.Component{
      * @param {PageName} page
      * @param {object} args
      * @param {boolean} tempPage
-     * @returns {JSX.Element|null}
+     * @returns {JSX.Element | null}
      */
     getPageContent(page, args = {}, tempPage = false) {
         let setRef = () => null;
@@ -367,7 +367,7 @@ class PageManager extends React.Component{
     }
 
     /**
-     * @returns {PageBack|null}
+     * @returns {PageBack | null}
      */
     GetCurrentPage = () => {
         const { selectedPage } = this.state;
@@ -394,7 +394,7 @@ class PageManager extends React.Component{
 
         /**
          * @param {PageName|'temp'} pageName
-         * @returns {React.JSX.Element|null}
+         * @returns {React.JSX.Element | null}
          */
         const newPage = (pageName = 'temp') => {
             // Not temp page and not persistent page

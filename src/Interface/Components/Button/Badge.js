@@ -9,7 +9,7 @@ import Icon from 'Interface/Components/Icon';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('Interface/Components/Icon/index').Icons} Icons
  * 
- * @typedef {'flex-start'|'flex-end'|'center'|'space-between'|'space-around'|'space-evenly'} JustifyContentStyle
+ * @typedef {'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly'} JustifyContentStyle
  * 
  * @typedef {object} ButtonBadgeProps Use for import props in Button component as type
  * @property {ViewStyle} [style={}]

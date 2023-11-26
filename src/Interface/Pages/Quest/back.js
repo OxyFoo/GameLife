@@ -11,7 +11,7 @@ import langManager from 'Managers/LangManager';
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * 
- * @typedef {'new'|'edit'|'remove'} States
+ * @typedef {'new' | 'edit' | 'remove'} States
  * 
  * @typedef {import('./Sections/activity').default} SectionActivity
  * @typedef {import('./Sections/schedule').default} SectionSchedule
@@ -39,19 +39,19 @@ class BackQuest extends PageBack {
         error: ''
     };
 
-    /** @type {SectionActivity|null} */
+    /** @type {SectionActivity | null} */
     refSectionSkill = null;
 
-    /** @type {SectionSchedule|null} */
+    /** @type {SectionSchedule | null} */
     refSectionSchedule = null;
 
-    /** @type {SectionTasks|null} */
+    /** @type {SectionTasks | null} */
     refSectionTasks = null;
 
-    /** @type {SectionDescription|null} */
+    /** @type {SectionDescription | null} */
     refSectionDescription = null;
 
-    /** @type {Quest|null} */
+    /** @type {Quest | null} */
     selectedQuest = null;
 
     /** @type {RepeatModes} */
@@ -61,7 +61,7 @@ class BackQuest extends PageBack {
         super(props);
 
         if (this.props.args?.quest) {
-            /** @type {Quest|null} */
+            /** @type {Quest | null} */
             const quest = this.props.args.quest || null;
             this.selectedQuest = quest;
             this.lastRepeatMode = quest.Schedule.Type;

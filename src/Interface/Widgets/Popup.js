@@ -19,13 +19,10 @@ import { TimingAnimation } from 'Utils/Animations';
  * 
  * @typedef {object} PopupTypes
  * @property {'ok'} ok
- * @property {'yes'|'no'} yesno
- * @property {'accept'|'refuse'} acceptornot
+ * @property {'yes' | 'no'} yesno
+ * @property {'accept' | 'refuse'} acceptornot
  * @property {null} custom
  */
-
-const PopupProps = {
-}
 
 class Popup extends React.PureComponent {
     opened = false;
@@ -190,9 +187,6 @@ class Popup extends React.PureComponent {
         );
     }
 }
-
-Popup.prototype.props = PopupProps;
-Popup.defaultProps = PopupProps;
 
 const styles = StyleSheet.create({
     parent: {

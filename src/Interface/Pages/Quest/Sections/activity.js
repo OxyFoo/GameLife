@@ -22,13 +22,13 @@ const SectionSkillProps = {
 
 class SectionSkill extends React.Component {
     state = {
-        /** @type {SelectedSkill|null} */
+        /** @type {SelectedSkill | null} */
         skill: null
     }
 
     refHelp1 = null;
 
-    /** @param {SelectedSkill|null} skill */
+    /** @param {SelectedSkill | null} skill */
     SetSkill = (skill) => {
         this.setState({ skill });
     }

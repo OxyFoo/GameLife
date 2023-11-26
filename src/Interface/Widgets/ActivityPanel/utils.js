@@ -11,7 +11,7 @@ import { MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @param {Activity} activity
- * @returns {Promise<string|null>}
+ * @returns {Promise<string | null>}
  */
 async function AskActivityComment(activity) {
     return new Promise((resolve) => {   

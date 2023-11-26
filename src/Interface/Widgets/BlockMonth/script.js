@@ -21,7 +21,7 @@ class MonthType {
     month;
     /** @type {number} */
     year;
-    /** @type {Array<Array<DayType|null>>} */
+    /** @type {Array<Array<DayType | null>>} */
     data = []
 }
 

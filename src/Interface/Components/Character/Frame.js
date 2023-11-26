@@ -11,7 +11,7 @@ import Icon from '../Icon';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {'full'|'topHalf'|'head'} BodyView
+ * @typedef {'full' | 'topHalf' | 'head'} BodyView
  * @typedef {import('./Character').default} Character
  */
 

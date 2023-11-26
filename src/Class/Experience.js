@@ -82,7 +82,7 @@ class Experience {
 
     /**
      * @param {number} skillID
-     * @returns {EnrichedXPInfo|null} null if the skill doesn't exist
+     * @returns {EnrichedXPInfo | null} null if the skill doesn't exist
      */
     GetSkillExperience(skillID) {
         let totalXP = 0;

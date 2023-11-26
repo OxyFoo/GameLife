@@ -31,7 +31,7 @@ const PieChartProps = {
     /** @type {number} The number of legend items per row */
     elementPerRow: 2,
 
-    /** @type {FocusedActivity|null} */
+    /** @type {FocusedActivity | null} */
     focusedActivity: null,
 
     /** @type {ThemeColor | ThemeText} */

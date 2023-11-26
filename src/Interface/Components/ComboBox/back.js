@@ -12,7 +12,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @typedef {object} ComboBoxItem
- * @property {number|string} key
+ * @property {number | string} key
  * @property {string} value
  */
 

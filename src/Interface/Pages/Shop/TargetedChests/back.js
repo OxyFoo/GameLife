@@ -13,7 +13,7 @@ import themeManager from 'Managers/ThemeManager';
 
 class BackShopItems extends React.Component {
     state = {
-        /** @type {'hair'|'top'|'bottom'|'shoes'} */
+        /** @type {'hair' | 'top' | 'bottom' | 'shoes'} */
         selectedCategory: 'hair'
     };
 

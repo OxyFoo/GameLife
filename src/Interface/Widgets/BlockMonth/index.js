@@ -26,7 +26,7 @@ const BlockMonthProps = {
     /** @type {'auto'|number} */
     height: 'auto',
 
-    /** @type {MonthData|null} */
+    /** @type {MonthData | null} */
     data: null,
 
     /** @type {boolean} */
@@ -38,8 +38,8 @@ const BlockMonthProps = {
     /**
      * Called when a day is pressed
      * @param {number} day
-     * @param {number|null} month
-     * @param {number|null} year
+     * @param {number | null} month
+     * @param {number | null} year
      */
     onPressDay: (day, month, year) => {}
 };
@@ -49,7 +49,7 @@ class BlockMonth extends React.Component {
         loaded: false
     }
 
-    /** @type {MonthType|null} */
+    /** @type {MonthType | null} */
     lastBlockMonth = null;
 
     componentDidMount() {
@@ -83,13 +83,13 @@ class BlockMonth extends React.Component {
         return false;
     }
 
-    /** @param {DayType|null} item */
+    /** @param {DayType | null} item */
     onPress = (item) => {
         const { data, onPressDay } = this.props;
         onPressDay(item.day, data.month, data.year);
     }
 
-    /** @param {{ item: DayType|null }} param0 */
+    /** @param {{ item: DayType | null }} param0 */
     renderDay = ({ item }) => (
         <Day
             item={item}

@@ -9,11 +9,11 @@ import QuestElement from './quest';
  */
 
 const QuestSelectionProps = {
-    /** @type {Quest|null} */
+    /** @type {Quest | null} */
     draggedItem: null,
 
     mouseY: new Animated.Value(0)
-}
+};
 
 class QuestSelection extends React.Component {
     shouldComponentUpdate(nextProps) {

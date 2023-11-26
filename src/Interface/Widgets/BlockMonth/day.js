@@ -18,10 +18,10 @@ const dynamicStyles = {
 };
 
 const DayProps = {
-    /** @type {DayType|null} */
+    /** @type {DayType | null} */
     item: null,
 
-    /** @param {DayType|null} item */
+    /** @param {DayType | null} item */
     onPress: (item) => {}
 };
 

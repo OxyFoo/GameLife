@@ -22,7 +22,7 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
  */
 
 class BackCalendar extends PageBack {
-    /** @type {ActivityPanel|null} */
+    /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 
     /** @type {boolean} Used for ActivityTimeline */
@@ -261,7 +261,7 @@ class BackCalendar extends PageBack {
 
     /**
      * Move one week before or later
-     * @param {-1|1} move 
+     * @param {-1 | 1} move 
      */
     weekSelect = (move) => {
         const { day, month, year } = this.state.selectedALL;

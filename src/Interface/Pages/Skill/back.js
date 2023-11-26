@@ -19,7 +19,7 @@ import { DateToFormatString } from 'Utils/Date';
  */
 
 class BackSkill extends PageBack {
-    /** @type {ActivityPanel|null} */
+    /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 
     constructor(props) {

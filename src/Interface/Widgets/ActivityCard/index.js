@@ -25,7 +25,7 @@ const ActivityCardProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {'activity'|'start'|'end'} */
+    /** @type {'activity' | 'start' | 'end'} */
     type: 'activity',
 
     /** @type {Activity} */
@@ -57,7 +57,7 @@ class ActivityCard extends React.Component {
         */
         let color = 'main1';
 
-        /** @type {Icons|undefined} */
+        /** @type {Icons | undefined} */
         this.icon = undefined;
 
         if (type === 'activity') {

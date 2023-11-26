@@ -5,14 +5,14 @@ import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 're
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * 
- * @typedef {'rewarded'|'interstitial'} AdTypesName
- * @typedef {Ad<RewardedAd>|Ad<InterstitialAd>} AdTypes
+ * @typedef {'rewarded' | 'interstitial'} AdTypesName
+ * @typedef {Ad<RewardedAd> | Ad<InterstitialAd>} AdTypes
  * 
- * @typedef {'shop'|'todo'} RewardedAds
+ * @typedef {'shop' | 'todo'} RewardedAds
  * @typedef {'none'} InterstitialAds
- * @typedef {RewardedAds|InterstitialAds} AdNames
+ * @typedef {RewardedAds | InterstitialAds} AdNames
  * 
- * @typedef {'watched'|'ready'|'notAvailable'|'wait'|'closed'|'error'} AdStates
+ * @typedef {'watched' | 'ready' | 'notAvailable' | 'wait' | 'closed' | 'error'} AdStates
  * @typedef {(state: AdStates) => void} AdEvent
  */
 
@@ -30,7 +30,7 @@ const OX_AMOUNT = 10;
 const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
 
 /**
- * @template {RewardedAd|InterstitialAd} T
+ * @template {RewardedAd | InterstitialAd} T
  */
 class Ad {
     /** @type {AdNames} */
@@ -39,10 +39,10 @@ class Ad {
     /** @type {AdTypesName} */
     type = 'interstitial';
 
-    /** @type {T|null} */
+    /** @type {T | null} */
     ad = null;
 
-    /** @type {() => void|null} */
+    /** @type {() => void | null} */
     unsubscriber = null;
 
     /**
@@ -112,7 +112,7 @@ class Admob {
      * @param {AdTypesName} type
      * @param {AdNames} adName
      * @param {AdEvent} callback
-     * @returns {AdTypes|null}
+     * @returns {AdTypes | null}
      */
     Get(type, adName, callback) {
         // Get ads by type
@@ -152,7 +152,7 @@ class Admob {
     }
 
     /**
-     * @param {AdEventType|RewardedAdEventType} type
+     * @param {AdEventType | RewardedAdEventType} type
      * @param {AdTypes} ad
      * @param {AdEvent} callback
      */
@@ -192,7 +192,7 @@ class Admob {
         }
     }
 
-    /** @param {AdTypes|null} ad */
+    /** @param {AdTypes | null} ad */
     ClearEvents(ad) {
         if (ad === null) return;
 

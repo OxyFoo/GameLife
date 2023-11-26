@@ -36,7 +36,7 @@ const ActivityPanelProps = {
 
     /** @type {boolean} */
     variantTheme: false
-}
+};
 
 class ActivityPanelBack extends React.Component {
     state = {
@@ -49,16 +49,16 @@ class ActivityPanelBack extends React.Component {
         /** @type {string} */
         activityText: langManager.curr['activity']['title-activity'],
 
-        /** @type {'schedule'|'now'} */
+        /** @type {'schedule' | 'now'} */
         startMode: 'schedule',
 
         /** @type {Animated.Value} */
         animButtonNow: new Animated.Value(0),
 
-        /** @type {'activity'|'skill'} */
+        /** @type {'activity' | 'skill'} */
         mode: 'activity',
 
-        /** @type {Activity|null} Selected activity or null */
+        /** @type {Activity | null} Selected activity or null */
         activity: {
             skillID: 0,
             comment: '',
@@ -69,7 +69,7 @@ class ActivityPanelBack extends React.Component {
         }
     };
 
-    /** @type {Activity|null} */
+    /** @type {Activity | null} */
     __selectedActivity = null;
 
     __callback_removed = () => { };
@@ -140,7 +140,7 @@ class ActivityPanelBack extends React.Component {
     }
 
     /**
-     * @param {Activity|null} activity
+     * @param {Activity | null} activity
      * @param {() => void} callbackRemoved Callback called when the activity is removed
      * @param {() => void} callbackClosed Callback called when the panel is closed
      * @returns {boolean} True if the activity is valid

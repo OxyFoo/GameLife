@@ -4,7 +4,7 @@ import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {'none'|'week'|'month'} RepeatModes
+ * @typedef {'none' | 'week' | 'month'} RepeatModes
  * 
  * @typedef {object} Schedule
  * @property {RepeatModes} Type
@@ -41,7 +41,7 @@ class Quest {
         Repeat: []
     };
 
-    /** @type {Skill|null} */
+    /** @type {Skill | null} */
     Skill = null;
 
     /** @type {Array<Task>} Tasks informations */
@@ -88,7 +88,7 @@ class Quests {
 
     /**
      * @description Not saved, only to undo last deletion
-     * @type {Quest|null}
+     * @type {Quest | null}
      */
     lastDeletedQuest = null;
 
@@ -204,9 +204,9 @@ class Quests {
      * @param {number} deadline Unix timestamp in seconds
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
-     * @param {Skill|null} skill Skill informations
+     * @param {Skill | null} skill Skill informations
      * @param {Array<Task>} tasks Tasks informations
-     * @returns {'added'|'alreadyExist'}
+     * @returns {'added' | 'alreadyExist'}
      */
     Add(title, description, deadline, repeatMode, repeatDays, skill, tasks) {
         const newQuest = new Quest();
@@ -255,9 +255,9 @@ class Quests {
      * @param {number} deadline Unix timestamp in seconds (0 = no deadline)
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
-     * @param {Skill|null} skill Skill informations
+     * @param {Skill | null} skill Skill informations
      * @param {Array<Task>} tasks Tasks informations
-     * @returns {'edited'|'notExist'}
+     * @returns {'edited' | 'notExist'}
      */
     Edit(oldQuest, title, description, deadline, repeatMode, repeatDays, skill, tasks) {
         const rem = this.Remove(oldQuest);
@@ -277,7 +277,7 @@ class Quests {
     /**
      * Remove quest
      * @param {Quest} quest
-     * @returns {'removed'|'notExist'}
+     * @returns {'removed' | 'notExist'}
      */
     Remove(quest) {
         const indexQuest = this.GetIndex(this.SAVED_quests, quest);
@@ -392,7 +392,7 @@ class Quests {
     /**
      * @param {Array<Quest>} arr
      * @param {Quest} quest
-     * @returns {number|null} Index of quest or null if not found
+     * @returns {number | null} Index of quest or null if not found
      */
     GetIndex(arr, quest) {
         const index = arr.findIndex(a => a.Title === quest.Title);

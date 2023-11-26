@@ -36,7 +36,7 @@ const ActivityScheduleProps = {
      * @param {boolean} opened 
      */
     onChangeState: (opened) => {}
-}
+};
 
 class ActivityScheduleBack extends React.Component {
     state = {
@@ -49,7 +49,7 @@ class ActivityScheduleBack extends React.Component {
         /** @type {LayoutChangeEvent['nativeEvent']['layout']} */
         parent: { width: 0, height: 0, x: 0, y: 0 },
 
-        /** @type {''|'date'|'time'|'datetime'} */
+        /** @type {'' | 'date' | 'time' | 'datetime'} */
         DTPMode: ''
     }
 
@@ -87,7 +87,7 @@ class ActivityScheduleBack extends React.Component {
         }
     }
 
-    /** @param {'date'|'time'} mode */
+    /** @param {'date' | 'time'} mode */
     showDTP = (mode) => this.setState({ DTPMode: mode });
     hideDTP = () => this.setState({ DTPMode: '' });
 

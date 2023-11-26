@@ -14,13 +14,13 @@ import * as React from 'react';
  */
 
 const ButtonProps = {
-    /** @type {string|JSX.Element|JSX.Element[]|undefined} */
+    /** @type {string | JSX.Element | JSX.Element[] | undefined} */
     children: undefined,
 
-    /** @type {StyleProp|Object} */
+    /** @type {StyleProp | Object} */
     style: {},
 
-    /** @type {AnimatedProps|null} */
+    /** @type {AnimatedProps | null} */
     styleAnimation: null,
 
     /** @type {string} */
@@ -29,7 +29,7 @@ const ButtonProps = {
     /** @type {number} */
     fontSize: 16,
 
-    /** @type {Icons|null} */
+    /** @type {Icons | null} */
     icon: null,
 
     /** @type {string?} */
@@ -69,7 +69,7 @@ const ButtonProps = {
     /** @type {(event: LayoutChangeEvent) => void} */
     onLayout: (event) => {},
 
-    /** @type {'auto'|'box-only'|'box-none'|'none'} */
+    /** @type {'auto' | 'box-only' | 'box-none' | 'none'} */
     pointerEvents: 'box-only'
 };
 

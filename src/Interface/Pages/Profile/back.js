@@ -27,12 +27,16 @@ class BackProfile extends PageBack {
 
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
+        this.time_start = Date.now();
     }
 
     refTuto1 = null;
 
     componentDidMount() {
         super.componentDidMount();
+        const time_end = Date.now();
+        const time = time_end - this.time_start;
+        user.interface.console.AddLog('info', 'PROFILE loaded in ' + time + 'ms');
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({

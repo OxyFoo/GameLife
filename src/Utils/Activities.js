@@ -60,6 +60,25 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
     return AddActivity(newActivity);
 }
 
+const times = {};
+let texts = [];
+function TEST_measure_time(str) {
+    if (!times.hasOwnProperty(str)) {
+        times[str] = new Date().getTime();
+        return;
+    }
+
+    const now = new Date().getTime();
+    const diff = now - times[str];
+    texts.push('[' + str + '] ' + diff + 'ms');
+    delete times[str];
+}
+function TEST_print_times() {
+    setTimeout(() => {
+        user.interface.console.AddLog('info', texts.join(', '));
+    }, 3000);
+}
+
 /**
  * @param {Activity} activity
  * @returns {boolean} True if activity was added or edited successfully
@@ -67,6 +86,7 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
 function AddActivity(activity) {
     const lang = langManager.curr['activity'];
     const now = GetTime();
+    TEST_measure_time('AddActivity');
     const addState = user.activities.Add(
         activity.skillID,
         activity.startTime,
@@ -75,9 +95,12 @@ function AddActivity(activity) {
         null,
         activity.startNow
     );
+    TEST_measure_time('AddActivity');
 
     if (addState === 'added') {
-        Notifications.Evening.RemoveToday();
+        TEST_measure_time('notif');
+        Notifications.Evening.RemoveToday()
+        .then(() => TEST_measure_time('notif'));
         const text = lang['display-activity-text'];
         const button = lang['display-activity-button'];
         const args = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
@@ -143,18 +166,23 @@ function AddActivity(activity) {
             return activity.startTime < now + (minDeltaDays * 24 * 60 * 60);
         };
 
+        TEST_measure_time('quest');
         const quests = user.quests.Get()
                         .filter(quest => quest.Checked === 0)
                         .filter(quest => quest.Skill !== null)
                         .filter(matchID)
                         .filter(matchTime);
+        TEST_measure_time('quest');
 
+        TEST_measure_time('quest-check');
         if (quests.length > 0) {
             quests.forEach(quest => user.quests.Check(quest, now));
             const text = lang['display-quest-complete-text'];
             const completeArgs = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
             args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
         }
+        TEST_measure_time('quest-check');
+        TEST_print_times();
 
         user.interface.ChangePage('display', args, true);
         user.GlobalSave();

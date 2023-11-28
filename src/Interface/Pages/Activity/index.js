@@ -5,6 +5,7 @@ import BackActivity from './back';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
 import { Page, Text, IconCheckable, Input } from 'Interface/Components';
@@ -73,6 +74,7 @@ class Activity extends BackActivity {
 
     render() {
         const lang = langManager.curr['activity'];
+        const textColor = { color: themeManager.GetColor('light') };
         const { skillSearch, skills, topPanelOffset, inputText } = this.state;
 
         return (
@@ -89,7 +91,7 @@ class Activity extends BackActivity {
 
                 {/* Categories */}
                 <View ref={ref => this.refTuto1 = ref} onLayout={this.onLayoutCategories}>
-                    <Text style={styles.categoriesTitle} bold>
+                    <Text style={[styles.textTitle, textColor]} bold>
                         {lang['title-category']}
                     </Text>
                     <View style={styles.categoriesContainer}>
@@ -100,31 +102,31 @@ class Activity extends BackActivity {
                 </View>
 
                 {/* Activities */}
-                {!this.editMode && (<>
-                    {/* Title */}
-                    <Text style={styles.activitiesTitle} bold>
-                        {lang['title-activity']}
-                    </Text>
+                {!this.editMode && (
+                    <>
+                        {/* Search bar */}
+                        <Text style={[styles.textTitle, textColor]} bold>
+                            {lang['title-activity']}
+                        </Text>
+                        <View style={styles.activitiesSearchBar}>
+                            <Input
+                                label={inputText}
+                                text={skillSearch}
+                                onChangeText={this.onSearchChange}
+                            />
+                        </View>
 
-                    {/* Search bar */}
-                    <View style={styles.activitiesSearchBar}>
-                        <Input
-                            label={inputText}
-                            text={skillSearch}
-                            onChangeText={this.onSearchChange}
+                        {/* Activities List */}
+                        <FlatList
+                            ref={ref => this.refActivities = ref}
+                            style={styles.activitiesFlatlist}
+                            data={skills}
+                            ListEmptyComponent={this.renderEmptyList}
+                            renderItem={this.renderSkill}
+                            keyExtractor={item => 'act-skill-' + item.id}
                         />
-                    </View>
-
-                    {/* List */}
-                    <FlatList
-                        ref={ref => this.refActivities = ref}
-                        style={styles.activitiesFlatlist}
-                        data={skills}
-                        ListEmptyComponent={this.renderEmptyList}
-                        renderItem={this.renderSkill}
-                        keyExtractor={item => 'act-skill-' + item.id}
-                    />
-                </>)}
+                    </>
+                )}
 
                 {/* Panel */}
                 <ActivityPanel

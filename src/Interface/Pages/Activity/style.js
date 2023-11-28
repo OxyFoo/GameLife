@@ -5,16 +5,17 @@ const styles = StyleSheet.create({
         marginBottom: 24
     },
 
-    categoriesTitle: {
-        marginBottom: 16,
-        fontSize: 22
+    textTitle: {
+        marginBottom: 4,
+        fontSize: 20,
+        textAlign: 'left',
     },
     categoriesContainer: {
         alignItems: 'center'
     },
     categoriesScrollView: {
         maxWidth: '100%',
-        marginBottom: 24
+        marginBottom: 18
     },
     category: {
         marginVertical: 4,
@@ -25,25 +26,21 @@ const styles = StyleSheet.create({
         height: 44
     },
 
-    activitiesTitle: {
-        marginBottom: 16,
-        fontSize: 22
-    },
     activitiesSearchBar: {
         width: '100%',
-        paddingHorizontal: 24,
-        marginBottom: 12
+        paddingHorizontal: 0,
+        marginBottom: 6
     },
     activitiesFlatlist: {
         width: '100%',
-        height: '100%'
+        height: '100%',
     },
     activityElement: {
-        marginHorizontal: 24,
+        marginHorizontal: 0,
         marginBottom: 6,
-        padding: 16,
+        padding: 8,
         borderRadius: 8,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
 
     emptyList: {

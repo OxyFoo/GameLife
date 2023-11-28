@@ -19,11 +19,17 @@ function cardHeader() {
 
     let addButtonAdd = true;
     let time = GetMidnightTime(GetTime(new Date(selectedYear, selectedMonth, selectedDate)));
+    let timeDiffFromMidnight = 0;
+    let hourDiff = 0;
+    let minuteDiff = 0;
 
     if (currActivities.length > 0) {
         const firstActivity = currActivities[0];
-        const firstActivityMidnight = GetMidnightTime(firstActivity.startTime + firstActivity.timezone * 60 * 60 * 24);
+        const firstActivityMidnight = GetMidnightTime(firstActivity.startTime + firstActivity.timezone * 60 * 60);
         addButtonAdd = firstActivity.startTime !== firstActivityMidnight;
+        timeDiffFromMidnight = (firstActivity.startTime - firstActivityMidnight) / 60;
+        hourDiff = Math.floor(timeDiffFromMidnight / 60);
+        minuteDiff = timeDiffFromMidnight % 60;
     }
 
     return (
@@ -35,6 +41,8 @@ function cardHeader() {
             <ActivityCard.Separator
                 addButton={addButtonAdd}
                 onPress={() => this.onAddActivityFromTime(time)}
+                hourDiff={hourDiff}
+                minuteDiff={minuteDiff}
             />
         </>
     );
@@ -76,12 +84,21 @@ function cardFooter() {
     prevActivity = currActivities[currActivities.length - 1];
     const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
     addButtonAdd = GetDate(prevActivity.startTime).getDate() === GetDate(prevEnd).getDate();
+    let prevMidnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60); // Tout ca à l'air de marcher avec notre timezone, inch ca marche pour tout le monde 
+    let nextMidnight = prevMidnight + 24 * 60 * 60;
+    let timeDiffUntilMidnight = (nextMidnight - prevEnd) / 60;
+    let hourDiff = Math.floor(timeDiffUntilMidnight / 60);
+    let minuteDiff = timeDiffUntilMidnight % 60;
+    
+    console.log("TODO : soir, need to get the unix timecode for midnight", prevActivity.startTime, prevActivity.duration, prevEnd, GetDate(prevActivity.startTime).getDate(), addButtonAdd);
 
     return (
         <>
             <ActivityCard.Separator
                 addButton={addButtonAdd}
                 onPress={() => this.onAddActivityFromActivity(prevActivity)}
+                hourDiff={hourDiff}
+                minuteDiff={minuteDiff}
             />
             <ActivityCard
                 type={'end'}
@@ -100,6 +117,9 @@ function cardSeparator(props) {
     const { currActivities } = this.state;
 
     let addButtonAdd = false;
+    let timeDiffBetweenActivities = 0;
+    let hourDiff = 0;
+    let minuteDiff = 0;
 
     const finder = x => x !== null && x.startTime === leadingItem.startTime;
     const index = currActivities.findIndex(finder);
@@ -110,12 +130,17 @@ function cardSeparator(props) {
         const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
         const nextStart = nextActivity.startTime;
         addButtonAdd = nextStart !== prevEnd;
+        timeDiffBetweenActivities = (nextStart - prevEnd) / 60;
+        hourDiff = Math.floor(timeDiffBetweenActivities / 60);
+        minuteDiff = timeDiffBetweenActivities % 60;
     }
 
     return (
         <ActivityCard.Separator
             addButton={addButtonAdd}
             onPress={() => this.onAddActivityFromActivity(leadingItem)}
+            hourDiff={hourDiff}
+            minuteDiff={minuteDiff}
         />
     );
 }

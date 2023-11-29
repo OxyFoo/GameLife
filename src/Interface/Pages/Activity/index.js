@@ -5,7 +5,6 @@ import BackActivity from './back';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
 import { Page, Text, IconCheckable, Input } from 'Interface/Components';
@@ -74,7 +73,6 @@ class Activity extends BackActivity {
 
     render() {
         const lang = langManager.curr['activity'];
-        const textColor = { color: themeManager.GetColor('light') };
         const { skillSearch, skills, topPanelOffset, inputText } = this.state;
 
         return (
@@ -91,7 +89,7 @@ class Activity extends BackActivity {
 
                 {/* Categories */}
                 <View ref={ref => this.refTuto1 = ref} onLayout={this.onLayoutCategories}>
-                    <Text style={[styles.textTitle, textColor]} bold>
+                    <Text style={styles.textTitle} color='light' bold>
                         {lang['title-category']}
                     </Text>
                     <View style={styles.categoriesContainer}>
@@ -105,7 +103,7 @@ class Activity extends BackActivity {
                 {!this.editMode && (
                     <>
                         {/* Search bar */}
-                        <Text style={[styles.textTitle, textColor]} bold>
+                        <Text style={styles.textTitle} color='light' bold>
                             {lang['title-activity']}
                         </Text>
                         <View style={styles.activitiesSearchBar}>

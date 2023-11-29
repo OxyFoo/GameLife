@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     textTitle: {
         marginBottom: 4,
         fontSize: 20,
-        textAlign: 'left',
+        textAlign: 'left'
     },
     categoriesContainer: {
         alignItems: 'center'
@@ -33,14 +33,14 @@ const styles = StyleSheet.create({
     },
     activitiesFlatlist: {
         width: '100%',
-        height: '100%',
+        height: '100%'
     },
     activityElement: {
         marginHorizontal: 0,
         marginBottom: 6,
         padding: 8,
         borderRadius: 8,
-        overflow: 'hidden',
+        overflow: 'hidden'
     },
 
     emptyList: {

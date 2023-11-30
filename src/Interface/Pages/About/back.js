@@ -17,9 +17,9 @@ class BackAbout extends PageBase {
         this.versionText = langManager.curr['about']['text-version'].replace('{}', versionName);
     }
 
-    TiktokPress   = () => Linking.openURL('https://vm.tiktok.com/ZMdcNpCvu/');
-    InstaPress    = () => Linking.openURL('https://www.instagram.com/p/CTUlsU2jP51');
-    DiscordPress  = () => Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
+    TiktokPress   = () => Linking.openURL('https://www.tiktok.com/@pierre_mrsaaaaa');
+    InstaPress    = () => Linking.openURL('https://www.instagram.com/pierre_mrsaaaa/');
+    DiscordPress  = () => Linking.openURL('https://discord.gg/eHVTzmCFNh');
     GamelifePress = () => Linking.openURL('https://oxyfoo.com');
 }
 

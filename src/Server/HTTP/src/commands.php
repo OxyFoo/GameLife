@@ -110,21 +110,21 @@ class Commands {
             return;
         }
 
-        $deviceIdentifier = $this->data['deviceID'];
+        $deviceID = $this->data['deviceID'];
         $deviceName = $this->data['deviceName'];
         $osName = $this->data['deviceOSName'];
         $osVersion = $this->data['deviceOSVersion'];
 
-        if (!isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
+        if (!isset($deviceID, $deviceName, $osName, $osVersion)) {
             return;
         }
 
-        $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+        $device = Devices::Get($this->db, $deviceID, $deviceName);
         if ($device === null) {
-            $device = Devices::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
-        }
-        if ($device === null) {
-            return;
+            $device = Devices::Add($this->db, $deviceID, $deviceName, $osName, $osVersion);
+            if ($device === null) {
+                return;
+            }
         }
 
         if ($reset) {
@@ -149,12 +149,12 @@ class Commands {
      * Get the status of the user account (wait mail, ban, etc.)
      */
     public function Login() {
-        $deviceIdentifier = $this->data['deviceID'];
+        $deviceID = $this->data['deviceID'];
         $deviceName = $this->data['deviceName'];
         $email = $this->data['email'];
         $langKey = $this->data['lang'];
 
-        if (!isset($deviceIdentifier, $deviceName, $email, $langKey)) {
+        if (!isset($deviceID, $deviceName, $email, $langKey)) {
             return;
         }
 
@@ -164,7 +164,7 @@ class Commands {
             return;
         }
 
-        $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+        $device = Devices::Get($this->db, $deviceID, $deviceName);
         if ($device === null) {
             $this->output['status'] = 'error';
             $this->output['error'] = 'Device was not created';
@@ -227,16 +227,16 @@ class Commands {
     }
 
     public function Signin() {
-        $deviceIdentifier = $this->data['deviceID'];
+        $deviceID = $this->data['deviceID'];
         $deviceName = $this->data['deviceName'];
         $email = $this->data['email'];
         $username = $this->data['username'];
 
-        if (!isset($deviceIdentifier, $deviceName, $email, $username)) {
+        if (!isset($deviceID, $deviceName, $email, $username)) {
             return;
         }
 
-        $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+        $device = Devices::Get($this->db, $deviceID, $deviceName);
         if ($device === null) return;
 
         if (!Users::CreationIsFree($this->db, $device->ID)) {

@@ -131,7 +131,7 @@ function UsernameIsCorrect($db, $username) {
     $blacklist = array_map(fn($raw) => $raw['Pseudo'], $result);
     foreach ($blacklist as $blackUsername) {
         $delta = levenshtein(strtolower($username), strtolower($blackUsername));
-        if ($delta <= 3) return false;
+        if ($delta <= 2) return false;
     }
 
     return true;

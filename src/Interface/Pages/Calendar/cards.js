@@ -91,8 +91,6 @@ function cardFooter() {
     let timeDiffUntilMidnight = (nextMidnight - prevEnd) / 60;
     let hourDiff = Math.floor(timeDiffUntilMidnight / 60);
     let minuteDiff = timeDiffUntilMidnight % 60;
-    
-    console.log("TODO : soir, need to get the unix timecode for midnight", prevActivity.startTime, prevActivity.duration, prevEnd, GetDate(prevActivity.startTime).getDate(), addButtonAdd);
 
     if (addButtonAdd) {
         const midnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60);

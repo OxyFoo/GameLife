@@ -33,6 +33,8 @@ function cardHeader() {
         }
     }
 
+    const time = GetMidnightTime(GetTime(new Date(selectedALL.year, selectedALL.month, selectedALL.day)));
+
     return (
         <>
             <ActivityCard
@@ -86,11 +88,12 @@ function cardFooter() {
     prevActivity = currActivities[currActivities.length - 1];
     const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
     addButtonAdd = GetDate(prevActivity.startTime).getDate() === GetDate(prevEnd).getDate();
-    let prevMidnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60); // Tout ca à l'air de marcher avec notre timezone, inch ca marche pour tout le monde 
-    let nextMidnight = prevMidnight + 24 * 60 * 60;
-    let timeDiffUntilMidnight = (nextMidnight - prevEnd) / 60;
-    let hourDiff = Math.floor(timeDiffUntilMidnight / 60);
-    let minuteDiff = timeDiffUntilMidnight % 60;
+
+    if (addButtonAdd) {
+        const midnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60);
+        const nextMidnight = midnight + 86400;
+        additonalText = createSeparatorText(nextMidnight - prevEnd);
+    }
 
     if (addButtonAdd) {
         const midnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60);

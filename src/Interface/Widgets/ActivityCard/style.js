@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
         borderStyle: Platform.OS === 'android' ? 'dashed' : 'solid'
     },
     button: {
+        marginVertical: 16,
         paddingVertical: 4,
         paddingHorizontal: 8,
         borderWidth: 1,

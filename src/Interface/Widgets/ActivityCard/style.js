@@ -52,14 +52,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         borderWidth: 1,
         borderRadius: 4,
-        marginBottom:16
+        marginBottom: 16
     },
     separatorText: {
         textAlign: 'center',
         fontSize: 12,
         marginHorizontal: 24,
         marginTop: 8,
-        marginBottom:4
+        marginBottom: 4
     }
 });
 

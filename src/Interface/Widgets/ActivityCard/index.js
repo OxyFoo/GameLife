@@ -137,7 +137,7 @@ class ActivityCard extends React.Component {
     }
 
 
-    static Separator({ onPress = () => { }, addButton = false, hourDiff = 0, minuteDiff = 0 }) {
+    static Separator({ onPress = () => { }, addButton = false, additionalText = "" }) {
         const [anim] = React.useState(new Animated.Value(0));
 
         const lang = langManager.curr['calendar'];
@@ -145,22 +145,7 @@ class ActivityCard extends React.Component {
         const borderColorButton = { borderColor: themeManager.GetColor('main1') };
         const fontColor = { color: themeManager.GetColor('main1') };
         const separatorTextColor = { color: themeManager.GetColor('light') }
-        let separatorText = ""
-        if (hourDiff === 0) {
-            separatorText = lang["between-activity-min"].replace("{}", minuteDiff.toString());
-            if (minuteDiff === 1) {
-                separatorText = separatorText.slice(0, -1);
-            }
-        }
-        else if (minuteDiff === 0) {
-            separatorText = lang["between-activity-hour"].replace("{}", hourDiff.toString());
-            if (hourDiff === 1) {
-                separatorText = separatorText.slice(0, -1);
-            }
-        }
-        else {
-            separatorText = lang["between-activity"].replace("{}", hourDiff.toString()).replace("{}", minuteDiff.toString());
-        }
+
         const styleAnimation = {
             opacity: anim,
             transform: [{ scaleY: anim }]
@@ -175,15 +160,16 @@ class ActivityCard extends React.Component {
         return (
             <Animated.View style={[borderColor, styles.separator, styleAnimation]}>
                 {addButton && (
-                    <Text style={[styles.separatorText, separatorTextColor]}>{separatorText}</Text>
-                )}
-                {addButton && (
-                    <TouchableOpacity
-                        style={[borderColorButton, styles.button]}
-                        onPress={onPress}
-                    >
-                        <Text style={fontColor}>{lang['add-activity']}</Text>
-                    </TouchableOpacity>
+                    <View>
+                        <Text style={[styles.separatorText, separatorTextColor]}>{additionalText}</Text>
+
+                        <TouchableOpacity
+                            style={[borderColorButton, styles.button]}
+                            onPress={onPress}
+                        >
+                            <Text style={fontColor}>{lang['add-activity']}</Text>
+                        </TouchableOpacity>
+                    </View>
                 )}
             </Animated.View>
         );

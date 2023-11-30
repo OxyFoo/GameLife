@@ -1,7 +1,10 @@
 import * as React from 'react';
 
+import langManager from 'Managers/LangManager';
+
 import { ActivityCard } from 'Interface/Widgets';
 import { GetDate, GetMidnightTime, GetTime } from 'Utils/Time';
+import { ParsePlural } from 'Utils/String';
 
 /**
  * @typedef {import('./back').default} BackCalendar
@@ -41,8 +44,7 @@ function cardHeader() {
             <ActivityCard.Separator
                 addButton={addButtonAdd}
                 onPress={() => this.onAddActivityFromTime(time)}
-                hourDiff={hourDiff}
-                minuteDiff={minuteDiff}
+                additionalText={createSeparatorText(hourDiff, minuteDiff)}
             />
         </>
     );
@@ -89,16 +91,13 @@ function cardFooter() {
     let timeDiffUntilMidnight = (nextMidnight - prevEnd) / 60;
     let hourDiff = Math.floor(timeDiffUntilMidnight / 60);
     let minuteDiff = timeDiffUntilMidnight % 60;
-    
-    console.log("TODO : soir, need to get the unix timecode for midnight", prevActivity.startTime, prevActivity.duration, prevEnd, GetDate(prevActivity.startTime).getDate(), addButtonAdd);
 
     return (
         <>
             <ActivityCard.Separator
                 addButton={addButtonAdd}
                 onPress={() => this.onAddActivityFromActivity(prevActivity)}
-                hourDiff={hourDiff}
-                minuteDiff={minuteDiff}
+                additionalText={createSeparatorText(hourDiff, minuteDiff)}
             />
             <ActivityCard
                 type={'end'}
@@ -139,10 +138,35 @@ function cardSeparator(props) {
         <ActivityCard.Separator
             addButton={addButtonAdd}
             onPress={() => this.onAddActivityFromActivity(leadingItem)}
-            hourDiff={hourDiff}
-            minuteDiff={minuteDiff}
+            additionalText={createSeparatorText(hourDiff, minuteDiff)}
         />
     );
+}
+
+/**
+ * Prepare the string to dislpay in the separator from a hour and min number 
+ * 
+ * @param {number} hourDiff 
+ * @param {number} minuteDiff 
+ * @returns {string}
+ */
+function createSeparatorText(hourDiff, minuteDiff) {
+    const lang = langManager.curr['calendar'];
+
+    let separatorText = "";
+    if (hourDiff === 0) {
+        const text = lang["between-activity-min"].replace("{}", minuteDiff.toString()) ; 
+        separatorText = ParsePlural(text, minuteDiff > 1);
+    }
+    else if (minuteDiff === 0) {
+        const text = lang["between-activity-hour"].replace("{}", hourDiff.toString()) ;
+        separatorText = ParsePlural(text, hourDiff > 1);
+    }
+    else {
+        separatorText = lang["between-activity"].replace("{}", hourDiff.toString()).replace("{}", minuteDiff.toString());
+    }
+
+    return separatorText;
 }
 
 export {

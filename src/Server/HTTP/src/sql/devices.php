@@ -102,7 +102,7 @@ class Devices
      * @param int $accountID
      * @return string Return new token
      */
-    public static function RefreshMailToken($db, $deviceID, $accountID) {
+    public static function RefreshLoginToken($db, $deviceID, $accountID) {
         $token = RandomString();
         $result1 = $db->QueryPrepare('Devices', 'UPDATE TABLE SET `Token` = ? WHERE `ID` = ?', 'si', [ $token, $deviceID ]);
         $result2 = $db->QueryPrepare('Accounts', 'UPDATE TABLE SET `LastSendMail` = current_timestamp() WHERE `ID` = ?', 'i', [ $accountID ]);
@@ -117,7 +117,7 @@ class Devices
      * @param int $deviceID
      * @return \mysqli_result|bool
      */
-    public static function RemoveToken($db, $deviceID) {
+    public static function RemoveLoginToken($db, $deviceID) {
         return $db->QueryPrepare('Devices', "UPDATE TABLE SET `Token` = '' WHERE `ID` = ?", 'i', [ $deviceID ]);
     }
 

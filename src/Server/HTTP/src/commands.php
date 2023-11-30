@@ -61,7 +61,10 @@ class Commands {
         if (!isset($token)) return;
 
         $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-        if ($dataFromToken === null) return;
+        if ($dataFromToken === null) {
+            $this->db->AddLog(0, 0, 'cheatSuspicion', "Token not found: $token");
+            return;
+        }
 
         if (!$dataFromToken['inTime']) {
             $this->output['status'] = 'tokenExpired';
@@ -213,7 +216,7 @@ class Commands {
             case -1:
                 Accounts::RefreshLastDate($this->db, $account->ID);
                 Accounts::AddDevice($this->db, $device->ID, $account, 'DevicesWait');
-                $newToken = Devices::RefreshMailToken($this->db, $device->ID, $account->ID);
+                $newToken = Devices::RefreshLoginToken($this->db, $device->ID, $account->ID);
 
                 $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                 if ($sended) {
@@ -307,7 +310,7 @@ class Commands {
             $userData['birthtime']        = $account->Birthtime;
             $userData['lastbirthtime']    = $account->LastChangeBirth;
             $userData['ox']               = $account->Ox;
-            $userData['questsSort']        = $account->QuestsSort;
+            $userData['questsSort']       = $account->QuestsSort;
             $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
             $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
             $userData['achievements']     = Achievements::Get($this->db, $account);
@@ -615,7 +618,7 @@ class Commands {
         }
 
         Accounts::RefreshLastDate($this->db, $account->ID);
-        $newToken = Devices::RefreshMailToken($this->db, $device->ID, $account->ID);
+        $newToken = Devices::RefreshLoginToken($this->db, $device->ID, $account->ID);
         $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'rem');
 
         if ($sended) {

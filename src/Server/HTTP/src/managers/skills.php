@@ -51,12 +51,16 @@ class Skills
             if ($exists === null) ExitWithStatus('Error: adding activity failed');
             $exists = count($exists) > 0;
 
+            // Add activity
             if ($type === 'add') {
+                // Remove activity if exists to replace it
                 if ($exists) {
                     $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
                     $r = $db->QueryPrepare('Activities', $command, 'iiii', [ $account->ID, $skillID, $startTime, $duration ]);
                     if ($r === false) ExitWithStatus('Error: saving activities failed (preadd)');
                 }
+
+                // Add updated activity
                 $comment = null;
                 if (!is_null($activity[4]) && !empty($activity[4])) {
                     $comment = "'".$db->Encrypt($activity[4])."'";
@@ -64,7 +68,10 @@ class Skills
                 $command = 'INSERT INTO TABLE (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `StartNow`) VALUES (?, ?, ?, ?, ?, ?, ?)';
                 $r = $db->QueryPrepare('Activities', $command, 'iiiisii', [ $account->ID, $skillID, $startTime, $duration, $comment, $timezone, $startNow ]);
                 if ($r === false) ExitWithStatus('Error: saving activities failed (add)');
-            } else if ($type === 'rem' && $exists) {
+            }
+
+            // Remove activity
+            else if ($type === 'rem' && $exists) {
                 $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
                 $r = $db->QueryPrepare('Activities', $command, 'iiii', [ $account->ID, $skillID, $startTime, $duration ]);
                 if ($r === false) ExitWithStatus('Error: saving activities failed (remove)');

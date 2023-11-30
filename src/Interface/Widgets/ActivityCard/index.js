@@ -35,7 +35,7 @@ const ActivityCardProps = {
     index: 0,
 
     /** @param {GestureResponderEvent} event */
-    onPress: (event) => { }
+    onPress: (event) => {}
 }
 
 class ActivityCard extends React.Component {
@@ -137,14 +137,19 @@ class ActivityCard extends React.Component {
     }
 
 
-    static Separator({ onPress = () => { }, addButton = false, additionalText = "" }) {
-        const [anim] = React.useState(new Animated.Value(0));
+    static Separator({ onPress = () => {}, addButton = false, additionalText = '' }) {
+        const [ anim ] = React.useState(new Animated.Value(0));
 
         const lang = langManager.curr['calendar'];
+
+        /** @type {StyleProp} */
         const borderColor = { borderColor: themeManager.GetColor('backgroundCard') };
-        const borderColorButton = { borderColor: themeManager.GetColor('main1') };
-        const fontColor = { color: themeManager.GetColor('main1') };
-        const separatorTextColor = { color: themeManager.GetColor('light') }
+
+        /** @type {StyleProp} */
+        const styleButton = [
+            { borderColor: themeManager.GetColor('main1') },
+            !!additionalText && styles.buttonWithText
+        ];
 
         const styleAnimation = {
             opacity: anim,
@@ -152,24 +157,28 @@ class ActivityCard extends React.Component {
         };
 
         React.useEffect(() => {
-            setTimeout(() =>
+            setTimeout(() => {
                 TimingAnimation(anim, 1, 300).start()
-                , 400);
+            }, 400);
         }, []);
 
         return (
             <Animated.View style={[borderColor, styles.separator, styleAnimation]}>
                 {addButton && (
-                    <View>
-                        <Text style={[styles.separatorText, separatorTextColor]}>{additionalText}</Text>
+                    <>
+                        {!!additionalText && (
+                            <Text style={styles.separatorText} color='light'>
+                                {additionalText}
+                            </Text>
+                        )}
 
                         <TouchableOpacity
-                            style={[borderColorButton, styles.button]}
+                            style={[styleButton, styles.button]}
                             onPress={onPress}
                         >
-                            <Text style={fontColor}>{lang['add-activity']}</Text>
+                            <Text color='main1'>{lang['add-activity']}</Text>
                         </TouchableOpacity>
-                    </View>
+                    </>
                 )}
             </Animated.View>
         );

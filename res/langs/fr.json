@@ -222,8 +222,8 @@
         "end": "Fin de journée",
         "utc": "UTC",
         "between-activity": "{}h et {}min disponibles",
-        "between-activity-min": "{}min disponibles",
-        "between-activity-hour": "{}h disponibles"
+        "between-activity-min": "{}min disponible[s]",
+        "between-activity-hour": "{}h disponible[s]"
     },
 
     "home": {

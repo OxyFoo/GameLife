@@ -48,11 +48,14 @@ const styles = StyleSheet.create({
         borderStyle: Platform.OS === 'android' ? 'dashed' : 'solid'
     },
     button: {
+        marginVertical: 16,
         paddingVertical: 4,
         paddingHorizontal: 8,
         borderWidth: 1,
-        borderRadius: 4,
-        marginBottom: 16
+        borderRadius: 4
+    },
+    buttonWithText: {
+        marginTop: 0
     },
     separatorText: {
         textAlign: 'center',

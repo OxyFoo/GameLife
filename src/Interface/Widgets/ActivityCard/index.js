@@ -137,33 +137,48 @@ class ActivityCard extends React.Component {
     }
 
 
-    static Separator({ onPress = () => {}, addButton = false }) {
+    static Separator({ onPress = () => {}, addButton = false, additionalText = '' }) {
         const [ anim ] = React.useState(new Animated.Value(0));
 
         const lang = langManager.curr['calendar'];
+
+        /** @type {StyleProp} */
         const borderColor = { borderColor: themeManager.GetColor('backgroundCard') };
-        const borderColorButton = { borderColor: themeManager.GetColor('main1') };
-        const fontColor = { color: themeManager.GetColor('main1') };
+
+        /** @type {StyleProp} */
+        const styleButton = [
+            { borderColor: themeManager.GetColor('main1') },
+            !!additionalText && styles.buttonWithText
+        ];
+
         const styleAnimation = {
             opacity: anim,
             transform: [{ scaleY: anim }]
         };
 
         React.useEffect(() => {
-            setTimeout(() =>
+            setTimeout(() => {
                 TimingAnimation(anim, 1, 300).start()
-            , 400);
+            }, 400);
         }, []);
 
         return (
             <Animated.View style={[borderColor, styles.separator, styleAnimation]}>
                 {addButton && (
-                    <TouchableOpacity
-                        style={[borderColorButton, styles.button]}
-                        onPress={onPress}
-                    >
-                        <Text style={fontColor}>{lang['add-activity']}</Text>
-                    </TouchableOpacity>
+                    <>
+                        {!!additionalText && (
+                            <Text style={styles.separatorText} color='light'>
+                                {additionalText}
+                            </Text>
+                        )}
+
+                        <TouchableOpacity
+                            style={[styleButton, styles.button]}
+                            onPress={onPress}
+                        >
+                            <Text color='main1'>{lang['add-activity']}</Text>
+                        </TouchableOpacity>
+                    </>
                 )}
             </Animated.View>
         );

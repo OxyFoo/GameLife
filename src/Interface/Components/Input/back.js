@@ -120,7 +120,7 @@ class InputBack extends React.Component {
         }
     }
 
-    movePlaceHolderIn() {
+    movePlaceHolderIn = () => {
         if (this.props.staticLabel) return;
         TimingAnimation(this.state.animTop, 1, ANIM_DURATION).start();
         TimingAnimation(this.state.animLeft, 16, ANIM_DURATION).start();
@@ -128,7 +128,7 @@ class InputBack extends React.Component {
         this.setState({ borderWidth: 1.2 });
     }
 
-    movePlaceHolderBorder() {
+    movePlaceHolderBorder = () => {
         TimingAnimation(this.state.animTop, 0, ANIM_DURATION).start();
         TimingAnimation(this.state.animLeft, 8, ANIM_DURATION).start();
         TimingAnimation(this.state.animScale, 0.75, ANIM_DURATION).start();
@@ -149,10 +149,10 @@ class InputBack extends React.Component {
         this.props.onBlur();
     }
 
-    focus() {
+    focus = () => {
         this.refInput?.focus();
     }
-    unfocus() {
+    unfocus = () => {
         this.refInput?.blur();
     }
 }

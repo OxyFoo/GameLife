@@ -186,12 +186,12 @@ function AddActivity(activity) {
 
         user.interface.ChangePage('display', args, true);
         user.GlobalSave();
-        user.RefreshStats();
+        user.RefreshStats(false);
     }
 
     else if (addState === 'edited') {
         user.GlobalSave();
-        user.RefreshStats();
+        user.RefreshStats(false);
     }
 
     else if (addState === 'notFree') {

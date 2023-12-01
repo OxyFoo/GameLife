@@ -232,7 +232,7 @@ class ActivityPanelBack extends React.Component {
                 AddActivity(activity);
             }
             // TODO: Hide empty space under panel after comment edition
-            this.refPanelScreen.RefreshPosition();
+            this.refPanelScreen?.RefreshPosition();
         });
     }
     onRemComment = () => {

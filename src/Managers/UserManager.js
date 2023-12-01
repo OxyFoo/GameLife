@@ -141,8 +141,8 @@ class UserManager {
         this.server.Clear();
     }
 
-    async RefreshStats() {
-        if (this.server.online) {
+    async RefreshStats(onlineSave = true) {
+        if (this.server.online && onlineSave) {
             this.activities.RemoveDeletedSkillsActivities();
             await this.OnlineSave();
         }
@@ -221,7 +221,7 @@ class UserManager {
             this.interface.console.EditLog(debugIndex, 'warn', 'User data: local load failed');
         }
 
-        this.RefreshStats();
+        this.RefreshStats(true);
         return data !== null;
     }
 
@@ -308,7 +308,7 @@ class UserManager {
             this.interface.console.EditLog(debugIndex, 'error', 'User data: online load failed');
         }
 
-        this.RefreshStats();
+        this.RefreshStats(true);
         return data !== null;
     }
 }

@@ -16,6 +16,8 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * @property {number} startTime Start time of activity, unix timestamp (UTC)
  * @property {number} localTime Precise time when user started the activity
  *                              unix timestamp (local UTC)
+ * 
+ * @typedef {Activity & { type: 'add' | 'rem' }} ActivityUnsaved
  */
 
 const MAX_HOUR_PER_DAY = 12;
@@ -30,10 +32,13 @@ class Activity {
     /** @type {number} Duration in minutes */
     duration = 0;
 
+    /** @type {string} Optional comment */
+    comment = '';
+
     /** @type {number} Timezone offset in hours */
     timezone = 0;
 
-    comment = '';
+    /** @type {boolean} If true, activity is "start now" */
     startNow = false;
 }
 
@@ -81,8 +86,23 @@ class Activities {
         this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
-            if (activity.length !== 6) continue;
-            this.Add(activity[0], activity[1], activity[2], activity[3], activity[4], !!activity[5], true);
+
+            // Check if all keys are present
+            const keys = Object.keys(activity);
+            const keysActivity = Object.keys(new Activity());
+            if (!keys.every(key => keysActivity.includes(key))) {
+                continue;
+            }
+
+            this.Add(
+                activity['skillID'],
+                activity['startTime'],
+                activity['duration'],
+                activity['comment'],
+                activity['timezone'],
+                !!activity['startNow'],
+                true
+            );
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
@@ -119,31 +139,33 @@ class Activities {
     IsUnsaved = () => {
         return this.UNSAVED_activities.length || this.UNSAVED_deletions.length;
     }
+    /** @returns {Array<ActivityUnsaved>} List of unsaved activities */
     GetUnsaved = () => {
+        /** @type {Array<ActivityUnsaved>} */
         let unsaved = [];
         for (let a in this.UNSAVED_activities) {
             const activity = this.UNSAVED_activities[a];
-            unsaved.push([
-                'add',
-                activity.skillID,
-                activity.startTime,
-                activity.duration,
-                activity.comment,
-                activity.timezone,
-                activity.startNow
-            ]);
+            unsaved.push({
+                type: 'add',
+                skillID: activity.skillID,
+                startTime: activity.startTime,
+                duration: activity.duration,
+                comment: activity.comment,
+                timezone: activity.timezone,
+                startNow: activity.startNow
+            });
         }
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
-            unsaved.push([
-                'rem',
-                activity.skillID,
-                activity.startTime,
-                activity.duration,
-                '',
-                activity.timezone,
-                activity.startNow
-            ]);
+            unsaved.push({
+                type: 'rem',
+                skillID: activity.skillID,
+                startTime: activity.startTime,
+                duration: activity.duration,
+                comment: '',
+                timezone: activity.timezone,
+                startNow: activity.startNow
+            });
         }
         return unsaved;
     }

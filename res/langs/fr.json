@@ -196,6 +196,10 @@
         "alert-remove-text": "Es-tu sûr de vouloir supprimer cette activité ?",
         "alert-wrongtiming-title": "Impossible !",
         "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre.",
+        "alert-alreadyexist-title": "Erreur",
+        "alert-alreadyexist-text": "Une erreur est survenue, il semble que cette activité ait déjà été ajoutée.",
+        "alert-tooearly-title": "Erreur",
+        "alert-tooearly-text": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
 

@@ -103,7 +103,12 @@ function AddActivity(activity) {
         .then(() => TEST_measure_time('notif'));
         const text = lang['display-activity-text'];
         const button = lang['display-activity-button'];
-        const args = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
+        const args = {
+            'icon': 'success',
+            'text': text,
+            'button': button,
+            'action': Back
+        };
 
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {
@@ -185,13 +190,13 @@ function AddActivity(activity) {
         TEST_print_times();
 
         user.interface.ChangePage('display', args, true);
-        user.GlobalSave();
-        user.RefreshStats(false);
+        user.GlobalSave()
+        .then(() => user.RefreshStats(false));
     }
 
     else if (addState === 'edited') {
-        user.GlobalSave();
-        user.RefreshStats(false);
+        user.GlobalSave()
+        .then(() => user.RefreshStats(false));
     }
 
     else if (addState === 'notFree') {
@@ -200,7 +205,17 @@ function AddActivity(activity) {
         user.interface.popup.Open('ok', [ title, text ]);
     }
 
-    // TODO: Manage other states
+    else if (addState === 'tooEarly') {
+        const title = lang['alert-alreadyexist-title'];
+        const text = lang['alert-alreadyexist-text'];
+        user.interface.popup.Open('ok', [ title, text ]);
+    }
+
+    else if (addState === 'alreadyExist') {
+        const title = lang['alert-tooearly-title'];
+        const text = lang['alert-tooearly-text'];
+        user.interface.popup.Open('ok', [ title, text ]);
+    }
 
     return addState === 'added' || addState === 'edited';
 }

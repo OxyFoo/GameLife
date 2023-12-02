@@ -92,19 +92,19 @@ class BackReport extends PageBase {
         let dataReport = {};
         switch (type) {
             case 0: // Activity
-                dataReport["name"] = this.state.input_skillname;
-                dataReport["category"] = this.state.input_skillcategory;
-                dataReport["stats"] = this.stats;
+                dataReport['name'] = this.state.input_skillname;
+                dataReport['category'] = this.state.input_skillcategory;
+                dataReport['stats'] = this.stats;
                 break;
             case 1: // Suggest
-                dataReport["suggest"] = this.state.input_suggest;
+                dataReport['suggest'] = this.state.input_suggest;
                 break;
             case 2: // Bug
-                dataReport["bug-description"] = this.state.input_bug1;
-                dataReport["bug-details"] = this.state.input_bug2;
+                dataReport['bug-description'] = this.state.input_bug1;
+                dataReport['bug-details'] = this.state.input_bug2;
                 break;
             case 3: // Message
-                dataReport["message"] = this.state.input_message;
+                dataReport['message'] = this.state.input_message;
                 break;
         }
 

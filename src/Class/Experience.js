@@ -42,9 +42,9 @@ class Experience {
      * @returns {{stats: Stats, xpInfo: XPInfo}}
      */
     GetExperience() {
+        const { statsKey } = this.user;
         const activities = this.getUsefulActivities();
         let XP = 0;
-        const { statsKey } = this.user;
 
         /** @type {Stats} */
         const stats = Object.assign({}, ...statsKey.map(i => ({[i]: null})));
@@ -73,11 +73,10 @@ class Experience {
             stats[key] = this.getXPDict(statValues[key], StatXPperLevel);
         }
 
-        const output = {
+        return {
             'stats': stats,
             'xpInfo': this.getXPDict(XP, UserXPperLevel)
-        }
-        return output;
+        };
     }
 
     /**
@@ -135,25 +134,32 @@ class Experience {
     }
 
     /**
+     * @description Use arithmetic series
+     * * Equation: `Sn = n/2 * (a1 + an)` with `an = (n - 1) * xpPerLevel`
+     * * Variables: `a1 = 0`, `Sn -> Total xp`, `n -> level`
+     * 
+     * - `Sn = n/2 * ((n - 1) * xpPerLevel)`
+     * - `TotalXP = lvl/2 * ((lvl - 1) * xpPerLevel))`
+     * - `lvl = 1/2 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)/2`
      * @param {number} totalXP
      * @param {number} xpPerLevel
      * @returns {XPInfo}
      */
     getXPDict(totalXP = 0, xpPerLevel = 1) {
-        let xp = totalXP;
-        let lvl = 0;
-        while (xp >= lvl * xpPerLevel) {
-            xp -= lvl * xpPerLevel;
-            lvl += 1;
+        if (totalXP < 0 || xpPerLevel < 1) {
+            return { 'xp': 0, 'lvl': 0, 'next': 0, 'totalXP': 0 };
         }
 
-        const experience = {
+        const lvl = Math.floor((1 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)) / 2);
+        const xp = totalXP - (lvl * (lvl - 1) / 2) * xpPerLevel;
+        const next = lvl * xpPerLevel;
+
+        return {
             'xp': xp,
             'lvl': lvl,
-            'next': lvl * xpPerLevel,
+            'next': next,
             'totalXP': totalXP
-        }
-        return experience;
+        };
     }
 }
 

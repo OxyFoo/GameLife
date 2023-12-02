@@ -69,8 +69,10 @@ function SortByKey(array, key) {
  * @returns {object | null} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
-    const result = array.find((element) => element[key] == value);
-    return !IsUndefined(result) ? result : null;
+    for (let i = 0; i < array.length; i++)
+        if (array[i][key] == value)
+            return array[i];
+    return null;
 }
 
 /**

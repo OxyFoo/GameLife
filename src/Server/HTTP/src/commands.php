@@ -92,11 +92,11 @@ class Commands {
      * And to check the application version or if it is in maintenance mode
      */
     public function Ping() {
-        $appData = GetAppData($this->db);
-        $versionApp    = $this->data['version'];
-        $versionServer = $appData['Version'];
-        $maintenance   = $appData['Maintenance'];
-        $reset         = array_key_exists('reset', $this->data);
+        $appData        = GetAppData($this->db);
+        $versionApp     = $this->data['version'];
+        $versionServer  = $appData['Version'];
+        $maintenance    = $appData['Maintenance'];
+        $reset          = array_key_exists('reset', $this->data);
 
         if (!isset($versionApp)) {
             return;

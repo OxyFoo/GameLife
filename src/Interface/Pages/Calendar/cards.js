@@ -17,7 +17,9 @@ import { ParsePlural } from 'Utils/String';
 function cardHeader() {
     const { selectedALL, currActivities } = this.state;
 
-    let time = GetMidnightTime(GetTime(new Date(selectedALL?.year, selectedALL?.month, selectedALL?.day)));
+    const date = new Date(selectedALL?.year, selectedALL?.month, selectedALL?.day);
+    const time = GetMidnightTime(GetTime(date));
+
     let addButtonAdd = true;
     let additonalText = createSeparatorText(0);
 
@@ -30,8 +32,6 @@ function cardHeader() {
             additonalText = createSeparatorText(timeFromMidnight);
         }
     }
-
-    const time = GetMidnightTime(GetTime(new Date(selectedYear, selectedMonth, selectedDate)));
 
     return (
         <>

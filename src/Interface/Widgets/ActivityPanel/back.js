@@ -65,7 +65,8 @@ class ActivityPanelBack extends React.Component {
             duration: 60,
             startTime: GetTime(),
             timezone: GetTimeZone(),
-            startNow: false
+            startNow: false,
+            addedTime: 0
         }
     };
 

@@ -182,6 +182,8 @@
         "title-schedule": "Schedule",
         "title-experience": "Experience",
         "title-no-experience": "This activity has no experience",
+        "title-not-past": "This activity has not yet been completed",
+        "title-before-limit": "This activity does not provide any experience because it was added more than 48 hours after it was completed",
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",

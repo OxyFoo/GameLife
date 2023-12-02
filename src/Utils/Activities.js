@@ -54,7 +54,8 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
         duration:   duration,
         comment:    '',
         timezone:   0,
-        startNow:   true
+        startNow:   true,
+        addedTime:  0
     };
 
     return AddActivity(newActivity);

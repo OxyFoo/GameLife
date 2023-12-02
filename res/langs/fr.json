@@ -182,6 +182,8 @@
         "title-schedule": "Horaire",
         "title-experience": "Expérience",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
+        "title-not-past": "Cette activité n'a pas encore été réalisée",
+        "title-before-limit": "Cette activité n'apporte pas d'expérience car elle a été ajoutée plus de 48h après avoir été réalisée",
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",

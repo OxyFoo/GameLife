@@ -21,6 +21,7 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  */
 
 const MAX_HOUR_PER_DAY = 12;
+const HOURS_BEFORE_LIMIT = 48;
 
 class Activity {
     /** @type {number} Skill ID */
@@ -40,6 +41,9 @@ class Activity {
 
     /** @type {boolean} If true, activity is "start now" */
     startNow = false;
+
+    /** @type {number} Time when activity was added (unix timestamp, UTC) */
+    addedTime = 0;
 }
 
 class Activities {
@@ -152,7 +156,8 @@ class Activities {
                 duration: activity.duration,
                 comment: activity.comment,
                 timezone: activity.timezone,
-                startNow: activity.startNow
+                startNow: activity.startNow,
+                addedTime: activity.addedTime
             });
         }
         for (let a in this.UNSAVED_deletions) {
@@ -164,7 +169,8 @@ class Activities {
                 duration: activity.duration,
                 comment: '',
                 timezone: activity.timezone,
-                startNow: activity.startNow
+                startNow: activity.startNow,
+                addedTime: activity.addedTime
             });
         }
         return unsaved;
@@ -186,9 +192,8 @@ class Activities {
      * @description Get activities that have brought xp
      * @returns {Array<Activity>}
      */
-    GetUseful() {
-        const now = GetTime();
-        const activities = this.user.activities.Get().filter(a => a.startTime <= now);
+    GetUseful = () => {
+        const activities = this.user.activities.Get().filter(this.DoesGrantXP);
 
         let lastMidnight = 0;
         let hoursRemain = MAX_HOUR_PER_DAY;
@@ -288,6 +293,7 @@ class Activities {
         newActivity.comment = comment;
         newActivity.timezone = timezone ?? GetTimeZone();
         newActivity.startNow = startNow;
+        newActivity.addedTime = GetTime(undefined, 'local');
 
         // Limit date (< 2020-01-01)
         if (startTime < 1577836800) {
@@ -400,6 +406,31 @@ class Activities {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
         return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
+    }
+
+    /**
+     * @param {Activity} activity
+     * @returns {boolean} True if activity is in the past (and added before 48h ago)
+     */
+    DoesGrantXP = (activity) => {
+        return this.GetExperienceStatus(activity) === 'grant';
+    }
+
+    /**
+     * @param {Activity} activity
+     * @returns {'grant' | 'isNotPast' | 'beforeLimit'}
+     */
+    GetExperienceStatus(activity) {
+        const { startTime, addedTime } = activity;
+        const deltaHours = (addedTime - startTime) / 3600;
+        const addedBeforeLimit = deltaHours > HOURS_BEFORE_LIMIT;
+        const isPast = startTime <= GetTime(undefined, 'local');
+
+        if (addedBeforeLimit)
+            return 'beforeLimit';
+        if (!isPast)
+            return 'isNotPast';
+        return 'grant';
     }
 
     /**

@@ -69,7 +69,7 @@ if (isset($action, $accountID, $deviceID, $deviceToken)) {
                     $perm = Accounts::CheckDevicePermissions($deviceID, $account);
                     if ($perm === 1) {
                         Accounts::RemDevice($db, $deviceID, $account, 'DevicesWait');
-                        Devices::RemoveToken($db, $deviceID);
+                        Devices::RemoveLoginToken($db, $deviceID);
                         Accounts::AddDevice($db, $deviceID, $account, 'Devices');
                         $db->AddLog($accountID, $deviceID, 'accountState', 'Account link device');
                         $state = 'auth-accept';
@@ -82,7 +82,7 @@ if (isset($action, $accountID, $deviceID, $deviceToken)) {
 
         else if ($action === 'delete') {
             if ($device->Token === $deviceToken) {
-                Devices::RemoveToken($db, $deviceID);
+                Devices::RemoveLoginToken($db, $deviceID);
                 $account = Accounts::GetByID($db, $accountID);
                 if (Accounts::Delete($db, $accountID)) {
                     $db->AddLog($accountID, $deviceID, 'accountState', 'Account deleted');

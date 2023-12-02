@@ -26,7 +26,6 @@ class About extends BackAbout {
                 <PageHeader
                     style={styles.pageHeader}
                     onBackPress={user.interface.BackHandle}
-                    hideHelp
                 />
 
                 <View style={styles.content}>

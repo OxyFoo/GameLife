@@ -27,7 +27,7 @@ function GetRandomIntByDay(min, max) {
  * Return indexes of available items depending on the day and device
  * @param {object} items Available items, keys are indexes and values is probability (0-1) (all to 1 = same probability)
  * @param {number} length Number of item indexes to return
- * @returns {Array<string|number>} Array of indexes of available items (keys of items)
+ * @returns {Array<string | number>} Array of indexes of available items (keys of items)
  */
 function GetRandomIndexesByDay(items, length) {
     const midnight = GetMidnightTime(GetTime(undefined, 'local'));

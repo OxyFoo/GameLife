@@ -6,8 +6,8 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { GetTime, RoundTimeTo } from 'Utils/Time';
-import { MinMax, Sleep } from 'Utils/Functions';
-import { PageBack } from 'Interface/Components';
+import { Sleep } from 'Utils/Functions';
+import { PageBase } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
@@ -23,7 +23,7 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  */
 
-class BackActivity extends PageBack {
+class BackActivity extends PageBase {
     state = {
         /** @type {number} */
         topPanelOffset: 0,
@@ -31,7 +31,7 @@ class BackActivity extends PageBack {
         /** @type {Array<ItemSkill>} */
         skills: [],
 
-        /** @type {number|null} */
+        /** @type {number | null} */
         selectedCategory: null,
 
         /** @type {string} Search input */
@@ -39,20 +39,20 @@ class BackActivity extends PageBack {
 
         /** @type {string} Header of input - Name of category */
         inputText: ''
-    };
+    }
 
     refTuto1 = null;
 
     /** @type {Array<ItemSkill>} */
     allSkillItems = [];
 
-    /** @type {ActivityPanel|null} */
+    /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 
-    /** @type {FlatList|null} */
+    /** @type {FlatList | null} */
     refActivities = null;
 
-    /** @type {Array<ItemCategory|null>} */
+    /** @type {Array<ItemCategory | null>} */
     categories = [];
 
     /** @type {boolean} If true, the page is in edition mode */
@@ -151,11 +151,11 @@ class BackActivity extends PageBack {
 
     /**
      * @param {string} textSearch
-     * @param {number|null} categoryID
+     * @param {number | null} categoryID
      */
     refreshSkills = (textSearch = '', categoryID = null) => {
         /**
-         * @param {Skill|EnrichedSkill} skill
+         * @param {Skill | EnrichedSkill} skill
          * @returns {ItemSkill}
          */
         const convert = (skill) => SkillToItem(skill, this.selectSkill);

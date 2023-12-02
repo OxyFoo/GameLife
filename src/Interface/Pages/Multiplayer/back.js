@@ -1,7 +1,7 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
-class BackMultiplayer extends PageBack {
+class BackMultiplayer extends PageBase {
     state = {
         server: ''
     }

@@ -20,26 +20,28 @@ import Waitinternet from './Pages/WaitInternet/index';
 import Waitmail from './Pages/WaitMail/index';
 import Test from './Pages/Test/index';
 
-export {
-    About,
-    Achievements,
-    Activity,
-    ActivityTimer,
-    Calendar,
-    Display,
-    Home,
-    Loading,
-    Login,
-    Multiplayer,
-    Onboarding,
-    Profile,
-    Report,
-    Settings,
-    Shop,
-    Skill,
-    Skills,
-    Quest,
-    Waitinternet,
-    Waitmail,
-    Test
+const PAGES = {
+    'about':            About,
+    'achievements':     Achievements,
+    'activity':         Activity,
+    'activitytimer':    ActivityTimer,
+    'calendar':         Calendar,
+    'display':          Display,
+    'home':             Home,
+    'loading':          Loading,
+    'login':            Login,
+    'multiplayer':      Multiplayer,
+    'onboarding':       Onboarding,
+    'profile':          Profile,
+    'report':           Report,
+    'settings':         Settings,
+    'shop':             Shop,
+    'skill':            Skill,
+    'skills':           Skills,
+    'quest':            Quest,
+    'waitinternet':     Waitinternet,
+    'waitmail':         Waitmail,
+    'test':             Test
 };
+
+export default PAGES;

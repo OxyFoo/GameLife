@@ -8,13 +8,11 @@ class Quote {
 }
 
 class Quotes {
-    constructor() {
-        /** @type {Quote[]} */
-        this.quotes = [];
+    /** @type {Quote[]} */
+    quotes = [];
 
-        /** @type {?Quote} */
-        this.currentQuote = null;
-    }
+    /** @type {?Quote} */
+    currentQuote = null;
 
     Clear() {
         this.quotes = [];

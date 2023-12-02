@@ -26,8 +26,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: -2,
         left: 6,
-        height: 3,
-        backgroundColor: 'red'
+        height: 3
     }
 });
 

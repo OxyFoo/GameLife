@@ -23,11 +23,11 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
 const SectionScheduleProps = {
     /** @type {OnChangeScheduleEvent} */
     onChange: (deadline, repeatMode, repeatDays) => {}
-}
+};
 
 class SectionSchedule extends React.Component {
     state = {
-        /** @type {''|'date'|'time'} */
+        /** @type {'' | 'date' | 'time'} */
         DTPMode: '',
         /** @type {number} */
         deadline: 0,
@@ -40,7 +40,7 @@ class SectionSchedule extends React.Component {
         selectedDays: []
     }
 
-    /** @type {TextSwitch|null} */
+    /** @type {TextSwitch | null} */
     refTextSwitch = null;
 
     refHelp1 = null;

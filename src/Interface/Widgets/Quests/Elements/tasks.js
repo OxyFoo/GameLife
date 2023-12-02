@@ -13,14 +13,14 @@ import { Icon, Button } from 'Interface/Components';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
  * @typedef {import('Class/Quests').Task} Task
- * @typedef {'none'|'underline'|'line-through'|'underline line-through'} TextDecorationLineType
+ * @typedef {'none' | 'underline' | 'line-through' | 'underline line-through'} TextDecorationLineType
  */
 
 const TaskProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {Task|null} */
+    /** @type {Task | null} */
     task: null,
 
     /**
@@ -29,7 +29,7 @@ const TaskProps = {
      */
     onTaskEdit: (checked, title) => {},
     onTaskDelete: () => {}
-}
+};
 
 class TaskElement extends React.Component {
     textColor = { color: themeManager.GetColor('primary') };

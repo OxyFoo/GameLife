@@ -18,8 +18,8 @@ import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
  * @typedef {import('Class/Inventory').Stuff} Stuff
  * @typedef {import('Data/Items').Item} Item
  * @typedef {import('Data/Items').Slot} Slot
- * @typedef {'skin'|'skinColor'} SkinSlot
- * @typedef {Slot|SkinSlot} AvatarSlot
+ * @typedef {import('Data/Items').SkinSlot} SkinSlot
+ * @typedef {Slot | SkinSlot} AvatarSlot
  */
 
 class EditorAvatarRender extends EditorAvatarBack {

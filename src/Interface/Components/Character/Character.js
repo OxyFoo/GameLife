@@ -40,7 +40,7 @@ class Character {
     }
 
     /**
-     * @param {Frame|null} frame
+     * @param {Frame | null} frame
      */
     SetFrame(frame) {
         this.parentFrame = frame;

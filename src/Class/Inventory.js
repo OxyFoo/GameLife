@@ -20,39 +20,39 @@ class Inventory {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        /** @type {Array<number>} */
-        this.titles = [];
-
-        /**
-         * @description Array of owned stuffs
-         * @type {Array<Stuff>}
-         */
-        this.stuffs = [];
-
-        this.avatar = {
-            /** @type {Sexes} */
-            sexe: 'MALE',
-
-            /** @type {CharactersName} */
-            skin: 'skin_01',
-
-            /** @type {number} */
-            skinColor: 1,
-
-            hair: 0,
-            top: 0,
-            bottom: 0,
-            shoes: 0
-        };
-
-        /**
-         * Set to true if avatar is edited
-         * Used to know if we need to save it
-         * @type {boolean}
-         */
-        this.avatarEdited = false;
     }
+
+    /** @type {Array<number>} */
+    titles = [];
+
+    /**
+     * @description Array of owned stuffs
+     * @type {Array<Stuff>}
+     */
+    stuffs = [];
+
+    avatar = {
+        /** @type {Sexes} */
+        sexe: 'MALE',
+
+        /** @type {CharactersName} */
+        skin: 'skin_01',
+
+        /** @type {number} */
+        skinColor: 1,
+
+        hair: 0,
+        top: 0,
+        bottom: 0,
+        shoes: 0
+    };
+
+    /**
+     * Set to true if avatar is edited
+     * Used to know if we need to save it
+     * @type {boolean}
+     */
+    avatarEdited = false;
 
     Clear() {
         this.stuffs = [];

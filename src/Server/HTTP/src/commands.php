@@ -61,7 +61,10 @@ class Commands {
         if (!isset($token)) return;
 
         $dataFromToken = Devices::GetDataFromToken($this->db, $token);
-        if ($dataFromToken === null) return;
+        if ($dataFromToken === null) {
+            $this->db->AddLog(0, 0, 'cheatSuspicion', "Token not found: $token");
+            return;
+        }
 
         if (!$dataFromToken['inTime']) {
             $this->output['status'] = 'tokenExpired';
@@ -89,11 +92,11 @@ class Commands {
      * And to check the application version or if it is in maintenance mode
      */
     public function Ping() {
-        $appData = GetAppData($this->db);
-        $versionApp    = $this->data['version'];
-        $versionServer = $appData['Version'];
-        $maintenance   = $appData['Maintenance'];
-        $reset         = array_key_exists('reset', $this->data);
+        $appData        = GetAppData($this->db);
+        $versionApp     = $this->data['version'];
+        $versionServer  = $appData['Version'];
+        $maintenance    = $appData['Maintenance'];
+        $reset          = array_key_exists('reset', $this->data);
 
         if (!isset($versionApp)) {
             return;
@@ -110,21 +113,21 @@ class Commands {
             return;
         }
 
-        $deviceIdentifier = $this->data['deviceID'];
+        $deviceID = $this->data['deviceID'];
         $deviceName = $this->data['deviceName'];
         $osName = $this->data['deviceOSName'];
         $osVersion = $this->data['deviceOSVersion'];
 
-        if (!isset($deviceIdentifier, $deviceName, $osName, $osVersion)) {
+        if (!isset($deviceID, $deviceName, $osName, $osVersion)) {
             return;
         }
 
-        $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+        $device = Devices::Get($this->db, $deviceID, $deviceName);
         if ($device === null) {
-            $device = Devices::Add($this->db, $deviceIdentifier, $deviceName, $osName, $osVersion);
-        }
-        if ($device === null) {
-            return;
+            $device = Devices::Add($this->db, $deviceID, $deviceName, $osName, $osVersion);
+            if ($device === null) {
+                return;
+            }
         }
 
         if ($reset) {
@@ -149,12 +152,12 @@ class Commands {
      * Get the status of the user account (wait mail, ban, etc.)
      */
     public function Login() {
-        $deviceIdentifier = $this->data['deviceID'];
+        $deviceID = $this->data['deviceID'];
         $deviceName = $this->data['deviceName'];
         $email = $this->data['email'];
         $langKey = $this->data['lang'];
 
-        if (!isset($deviceIdentifier, $deviceName, $email, $langKey)) {
+        if (!isset($deviceID, $deviceName, $email, $langKey)) {
             return;
         }
 
@@ -164,7 +167,7 @@ class Commands {
             return;
         }
 
-        $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+        $device = Devices::Get($this->db, $deviceID, $deviceName);
         if ($device === null) {
             $this->output['status'] = 'error';
             $this->output['error'] = 'Device was not created';
@@ -213,7 +216,7 @@ class Commands {
             case -1:
                 Accounts::RefreshLastDate($this->db, $account->ID);
                 Accounts::AddDevice($this->db, $device->ID, $account, 'DevicesWait');
-                $newToken = Devices::RefreshMailToken($this->db, $device->ID, $account->ID);
+                $newToken = Devices::RefreshLoginToken($this->db, $device->ID, $account->ID);
 
                 $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'add');
                 if ($sended) {
@@ -227,16 +230,16 @@ class Commands {
     }
 
     public function Signin() {
-        $deviceIdentifier = $this->data['deviceID'];
+        $deviceID = $this->data['deviceID'];
         $deviceName = $this->data['deviceName'];
         $email = $this->data['email'];
         $username = $this->data['username'];
 
-        if (!isset($deviceIdentifier, $deviceName, $email, $username)) {
+        if (!isset($deviceID, $deviceName, $email, $username)) {
             return;
         }
 
-        $device = Devices::Get($this->db, $deviceIdentifier, $deviceName);
+        $device = Devices::Get($this->db, $deviceID, $deviceName);
         if ($device === null) return;
 
         if (!Users::CreationIsFree($this->db, $device->ID)) {
@@ -307,7 +310,7 @@ class Commands {
             $userData['birthtime']        = $account->Birthtime;
             $userData['lastbirthtime']    = $account->LastChangeBirth;
             $userData['ox']               = $account->Ox;
-            $userData['questsSort']        = $account->QuestsSort;
+            $userData['questsSort']       = $account->QuestsSort;
             $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
             $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
             $userData['achievements']     = Achievements::Get($this->db, $account);
@@ -615,7 +618,7 @@ class Commands {
         }
 
         Accounts::RefreshLastDate($this->db, $account->ID);
-        $newToken = Devices::RefreshMailToken($this->db, $device->ID, $account->ID);
+        $newToken = Devices::RefreshLoginToken($this->db, $device->ID, $account->ID);
         $sended = $this->db->SendMail($email, $device, $newToken, $account->ID, $langKey, 'rem');
 
         if ($sended) {

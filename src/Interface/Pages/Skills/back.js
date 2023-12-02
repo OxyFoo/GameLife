@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
@@ -11,7 +11,7 @@ import { SortByKey } from 'Utils/Functions';
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  */
 
-class BackSkills extends PageBack {
+class BackSkills extends PageBase {
     sortList = langManager.curr['skills']['top-sort-list'];
     refSkills = null;
 

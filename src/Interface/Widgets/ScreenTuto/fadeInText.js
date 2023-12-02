@@ -14,7 +14,7 @@ import { TimingAnimation } from 'Utils/Animations';
  */
 
 const FadeInTextProps = {
-    /** @type {string|null} */
+    /** @type {string | null} */
     children: null,
 
     /** @type {StylePropView} */

@@ -2,6 +2,20 @@ import { Platform } from 'react-native';
 import { TestIds } from 'react-native-google-mobile-ads';
 import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 'react-native-google-mobile-ads';
 
+/**
+ * @typedef {import('Managers/UserManager').default} UserManager
+ * 
+ * @typedef {'rewarded' | 'interstitial'} AdTypesName
+ * @typedef {Ad<RewardedAd> | Ad<InterstitialAd>} AdTypes
+ * 
+ * @typedef {'shop' | 'todo'} RewardedAds
+ * @typedef {'none'} InterstitialAds
+ * @typedef {RewardedAds | InterstitialAds} AdNames
+ * 
+ * @typedef {'watched' | 'ready' | 'notAvailable' | 'wait' | 'closed' | 'error'} AdStates
+ * @typedef {(state: AdStates) => void} AdEvent
+ */
+
 const FIREBASE_DEFAULT = {"react-native-google-mobile-ads": {
     "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
     "ios": {"rewarded": {"shop": ""}},
@@ -13,24 +27,10 @@ const AD_KEYWORDS = [
 ];
 
 const OX_AMOUNT = 10;
-const FIREBASE  = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
+const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
 
 /**
- * @typedef {import('Managers/UserManager').default} UserManager
- * 
- * @typedef {'rewarded'|'interstitial'} AdTypesName
- * @typedef {Ad<RewardedAd>|Ad<InterstitialAd>} AdTypes
- * 
- * @typedef {'shop'|'todo'} RewardedAds
- * @typedef {'none'} InterstitialAds
- * @typedef {RewardedAds|InterstitialAds} AdNames
- * 
- * @typedef {'watched'|'ready'|'notAvailable'|'wait'|'closed'|'error'} AdStates
- * @typedef {(state: AdStates) => void} AdEvent
- */
-
-/**
- * @template {RewardedAd|InterstitialAd} T
+ * @template {RewardedAd | InterstitialAd} T
  */
 class Ad {
     /** @type {AdNames} */
@@ -39,10 +39,10 @@ class Ad {
     /** @type {AdTypesName} */
     type = 'interstitial';
 
-    /** @type {T|null} */
+    /** @type {T | null} */
     ad = null;
 
-    /** @type {() => void|null} */
+    /** @type {() => void | null} */
     unsubscriber = null;
 
     /**
@@ -59,15 +59,15 @@ class Admob {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        /** @type {Array<Ad<RewardedAd>>} */
-        this.rewardedAds = [];
-
-        /** @type {Array<Ad<InterstitialAd>>} */
-        this.interstitialAds = [];
     }
 
-    LoadAds() {
+    /** @type {Array<Ad<RewardedAd>>} */
+    rewardedAds = [];
+
+    /** @type {Array<Ad<InterstitialAd>>} */
+    interstitialAds = [];
+
+    LoadAds = () => {
         if (Platform.OS !== 'ios' && Platform.OS !== 'android') {
             this.user.interface.console.AddLog('error', `Ad error: Device unknown (${Platform.OS})`);
             return;
@@ -112,7 +112,7 @@ class Admob {
      * @param {AdTypesName} type
      * @param {AdNames} adName
      * @param {AdEvent} callback
-     * @returns {AdTypes|null}
+     * @returns {AdTypes | null}
      */
     Get(type, adName, callback) {
         // Get ads by type
@@ -152,7 +152,7 @@ class Admob {
     }
 
     /**
-     * @param {AdEventType|RewardedAdEventType} type
+     * @param {AdEventType | RewardedAdEventType} type
      * @param {AdTypes} ad
      * @param {AdEvent} callback
      */
@@ -192,9 +192,7 @@ class Admob {
         }
     }
 
-    /**
-     * @param {AdTypes|null} ad
-     */
+    /** @param {AdTypes | null} ad */
     ClearEvents(ad) {
         if (ad === null) return;
 

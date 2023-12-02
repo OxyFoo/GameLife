@@ -4,8 +4,8 @@ import { View, StyleSheet } from 'react-native';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { Quests, TodayPieChart } from 'Interface/Widgets';
-import { Button, Swiper, Text, XPBar, Page, News } from 'Interface/Components';
+import { Button, Swiper, Text, XPBar, Page } from 'Interface/Components';
+import { Quests, TodayPieChart, News } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {

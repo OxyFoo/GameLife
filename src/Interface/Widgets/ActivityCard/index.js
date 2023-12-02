@@ -17,15 +17,15 @@ import { GetTimeZone, TimeToFormatString } from 'Utils/Time';
  *
  * @typedef {import('Interface/Components/Icon/index').Icons} Icons
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const ActivityCardProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {'activity'|'start'|'end'} */
+    /** @type {'activity' | 'start' | 'end'} */
     type: 'activity',
 
     /** @type {Activity} */
@@ -36,7 +36,7 @@ const ActivityCardProps = {
 
     /** @param {GestureResponderEvent} event */
     onPress: (event) => {}
-}
+};
 
 class ActivityCard extends React.Component {
     state = {
@@ -53,11 +53,11 @@ class ActivityCard extends React.Component {
 
         /**
          * Color for normal activity
-         * @type {ColorTheme | ColorThemeText}
+         * @type {ThemeColor | ThemeText}
         */
         let color = 'main1';
 
-        /** @type {Icons|undefined} */
+        /** @type {Icons | undefined} */
         this.icon = undefined;
 
         if (type === 'activity') {

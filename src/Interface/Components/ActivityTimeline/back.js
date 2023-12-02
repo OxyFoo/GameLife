@@ -28,7 +28,7 @@ const ActivityTimelineProps = {
 
     /** @type {Activity[]} */
     activities: []
-}
+};
 
 class ActivityTimelineBack extends React.Component {
     state = {

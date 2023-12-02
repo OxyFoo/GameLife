@@ -15,10 +15,10 @@ import { ParsePlural } from 'Utils/String';
  * @this BackCalendar
  */
 function cardHeader() {
-    const {
-        selectedDate, selectedMonth, selectedYear,
-        currActivities
-    } = this.state;
+    const { selectedALL, currActivities } = this.state;
+
+    const date = new Date(selectedALL?.year, selectedALL?.month, selectedALL?.day);
+    const time = GetMidnightTime(GetTime(date));
 
     let addButtonAdd = true;
     let additonalText = createSeparatorText(0);
@@ -32,8 +32,6 @@ function cardHeader() {
             additonalText = createSeparatorText(timeFromMidnight);
         }
     }
-
-    const time = GetMidnightTime(GetTime(new Date(selectedYear, selectedMonth, selectedDate)));
 
     return (
         <>
@@ -75,7 +73,7 @@ function cardFooter() {
         return (
             <ActivityCard
                 type={'end'}
-                index={this.state.currActivities.length + 1}
+                index={currActivities.length + 1}
             />
         );
     }
@@ -104,7 +102,7 @@ function cardFooter() {
             />
             <ActivityCard
                 type={'end'}
-                index={this.state.currActivities.length + 1}
+                index={currActivities.length + 1}
             />
         </>
     );

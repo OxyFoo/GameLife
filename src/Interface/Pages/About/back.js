@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import { Linking } from 'react-native';
 
 import dataManager from 'Managers/DataManager';
@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 
 const { versionName } = require('../../../../package.json');
 
-class BackAbout extends PageBack {
+class BackAbout extends PageBase {
     constructor(props) {
         super(props);
 
@@ -17,9 +17,9 @@ class BackAbout extends PageBack {
         this.versionText = langManager.curr['about']['text-version'].replace('{}', versionName);
     }
 
-    TiktokPress   = () => Linking.openURL('https://vm.tiktok.com/ZMdcNpCvu/');
-    InstaPress    = () => Linking.openURL('https://www.instagram.com/p/CTUlsU2jP51');
-    DiscordPress  = () => Linking.openURL('https://discord.gg/QDfsXCCq');
+    TiktokPress   = () => Linking.openURL('https://www.tiktok.com/@pierre_mrsaaaaa');
+    InstaPress    = () => Linking.openURL('https://www.instagram.com/pierre_mrsaaaa/');
+    DiscordPress  = () => Linking.openURL('https://discord.gg/eHVTzmCFNh');
     GamelifePress = () => Linking.openURL('https://oxyfoo.com');
 }
 

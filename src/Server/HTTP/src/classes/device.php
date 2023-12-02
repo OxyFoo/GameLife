@@ -8,6 +8,9 @@ class Device
     /** @var string $Identifier */
     public $Identifier;
 
+    /** @var string $Hash */
+    public $Hash;
+
     /** @var string $Name */
     public $Name;
 
@@ -35,6 +38,7 @@ class Device
     public function __construct($device) {
         $this->ID = intval($device['ID']);
         $this->Identifier = $device['Identifier'];
+        $this->Hash = $device['Hash'];
         $this->Name = $device['Name'];
         $this->OSName = $device['OSName'];
         $this->OSVersion = $device['OSVersion'];

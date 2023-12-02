@@ -9,7 +9,7 @@ import dataManager from 'Managers/DataManager';
  */
 
 /**
- * @param {Skill|EnrichedSkill|null} skill Null if no skill is selected
+ * @param {Skill | EnrichedSkill | null} skill Null if no skill is selected
  * @param {(param: Skill) => void} callback
  * @returns {ItemSkill}
  */

@@ -1,17 +1,17 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
 import StartTutorial from './tuto';
 import { Round } from 'Utils/Functions';
 
-class BackHome extends PageBack {
+class BackHome extends PageBase {
     state = {
         experience: user.experience.GetExperience(),
         values: {
             current_level: '0',
             next_level: '0'
         }
-    };
+    }
 
     refTuto1 = null;
     refTuto2 = null;

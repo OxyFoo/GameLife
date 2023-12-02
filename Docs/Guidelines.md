@@ -11,6 +11,9 @@ Tous les noms de fonctions et de variable sont en anglais et en minuscules avec 
 * Ne pas dépasser les 100~200 lignes par fichier
 * Ne pas imbriquer les if (faire l'inverse et return, les répartir dans plusieurs fonctions, etc)
 * Les fonctions doivent être concises et faire strictement ce pour quoi elles sont faites
+* L'indentation est de 4 espaces
+* Toujours terminer le code par une ligne vide
+* Terminer les lignes par un ";" sauf les fonctions/classes
 
 ## Noms des Fichiers et classes
 La 1ère lettre de chaque mot est en majuscule et le reste en minuscule.

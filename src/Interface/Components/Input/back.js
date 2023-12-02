@@ -12,10 +12,9 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').TextInputSubmitEditingEventData} TextInputSubmitEditingEventData
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputSubmitEditingEventData>} NativeSyntheticEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
- * @typedef {'default'|'email'|'username'|'name'} TextContentType
+ * @typedef {'default' | 'email' | 'username' | 'name'} TextContentType
  */
 
 const InputProps = {
@@ -31,7 +30,7 @@ const InputProps = {
     /** @type {boolean} If true, label still always at the top of input */
     staticLabel: false,
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     activeColor: 'main1',
 
     /** @type {string} Content of input */
@@ -64,14 +63,14 @@ const InputProps = {
     /** @type {boolean} */
     multiline: false,
 
-    /** @type {'auto'|'box-only'|'box-none'|'none'} */
+    /** @type {'auto' | 'box-only' | 'box-none' | 'none'} */
     pointerEvents: 'auto'
-}
+};
 
 const ANIM_DURATION = 200;
 
 class InputBack extends React.Component {
-    /** @type {TextInput|null} props */
+    /** @type {TextInput | null} props */
     refInput = null;
 
     state = {
@@ -121,7 +120,7 @@ class InputBack extends React.Component {
         }
     }
 
-    movePlaceHolderIn() {
+    movePlaceHolderIn = () => {
         if (this.props.staticLabel) return;
         TimingAnimation(this.state.animTop, 1, ANIM_DURATION).start();
         TimingAnimation(this.state.animLeft, 16, ANIM_DURATION).start();
@@ -129,7 +128,7 @@ class InputBack extends React.Component {
         this.setState({ borderWidth: 1.2 });
     }
 
-    movePlaceHolderBorder() {
+    movePlaceHolderBorder = () => {
         TimingAnimation(this.state.animTop, 0, ANIM_DURATION).start();
         TimingAnimation(this.state.animLeft, 8, ANIM_DURATION).start();
         TimingAnimation(this.state.animScale, 0.75, ANIM_DURATION).start();
@@ -150,10 +149,10 @@ class InputBack extends React.Component {
         this.props.onBlur();
     }
 
-    focus() {
+    focus = () => {
         this.refInput?.focus();
     }
-    unfocus() {
+    unfocus = () => {
         this.refInput?.blur();
     }
 }

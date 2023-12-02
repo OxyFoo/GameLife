@@ -15,7 +15,7 @@ import { GetAge, GetTime } from 'Utils/Time';
 
 class EditorProfile extends React.PureComponent {
     state = {
-        /** @type {'date'|'time'|null} */
+        /** @type {'date' | 'time' | null} */
         stateDTP: null
     }
 

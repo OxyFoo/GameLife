@@ -62,7 +62,7 @@ class BackActivity extends PageBase {
     initTime = 0;
 
     backgroundCard = {
-        backgroundColor: themeManager.GetColor('backgroundCard')
+        backgroundColor: themeManager.GetColor('dataSmallKpi')
     };
 
     constructor(props) {

@@ -89,7 +89,7 @@ class Activity extends BackActivity {
 
                 {/* Categories */}
                 <View ref={ref => this.refTuto1 = ref} onLayout={this.onLayoutCategories}>
-                    <Text style={styles.categoriesTitle} bold>
+                    <Text style={styles.textTitle} color='light' bold>
                         {lang['title-category']}
                     </Text>
                     <View style={styles.categoriesContainer}>
@@ -100,31 +100,31 @@ class Activity extends BackActivity {
                 </View>
 
                 {/* Activities */}
-                {!this.editMode && (<>
-                    {/* Title */}
-                    <Text style={styles.activitiesTitle} bold>
-                        {lang['title-activity']}
-                    </Text>
+                {!this.editMode && (
+                    <>
+                        {/* Search bar */}
+                        <Text style={styles.textTitle} color='light' bold>
+                            {lang['title-activity']}
+                        </Text>
+                        <View style={styles.activitiesSearchBar}>
+                            <Input
+                                label={inputText}
+                                text={skillSearch}
+                                onChangeText={this.onSearchChange}
+                            />
+                        </View>
 
-                    {/* Search bar */}
-                    <View style={styles.activitiesSearchBar}>
-                        <Input
-                            label={inputText}
-                            text={skillSearch}
-                            onChangeText={this.onSearchChange}
+                        {/* Activities List */}
+                        <FlatList
+                            ref={ref => this.refActivities = ref}
+                            style={styles.activitiesFlatlist}
+                            data={skills}
+                            ListEmptyComponent={this.renderEmptyList}
+                            renderItem={this.renderSkill}
+                            keyExtractor={item => 'act-skill-' + item.id}
                         />
-                    </View>
-
-                    {/* List */}
-                    <FlatList
-                        ref={ref => this.refActivities = ref}
-                        style={styles.activitiesFlatlist}
-                        data={skills}
-                        ListEmptyComponent={this.renderEmptyList}
-                        renderItem={this.renderSkill}
-                        keyExtractor={item => 'act-skill-' + item.id}
-                    />
-                </>)}
+                    </>
+                )}
 
                 {/* Panel */}
                 <ActivityPanel

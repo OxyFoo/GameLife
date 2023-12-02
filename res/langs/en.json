@@ -226,7 +226,10 @@
         "hour-min": "h",
         "start": "Start of the day",
         "end": "End of the day",
-        "utc": "UTC"
+        "utc": "UTC",
+        "between-activity": "{}h and {}min available",
+        "between-activity-min": "{}min available",
+        "between-activity-hour": "{}h available"
     },
 
     "home": {

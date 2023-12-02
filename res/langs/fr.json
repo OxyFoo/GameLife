@@ -226,7 +226,10 @@
         "hour-min": "h",
         "start": "Début de journée",
         "end": "Fin de journée",
-        "utc": "UTC"
+        "utc": "UTC",
+        "between-activity": "{}h et {}min disponibles",
+        "between-activity-min": "{}min disponible[s]",
+        "between-activity-hour": "{}h disponible[s]"
     },
 
     "home": {
@@ -266,7 +269,7 @@
 
     "login": {
         "page-title": "Yo",
-        "page-text": "Bonjours à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
+        "page-text": "Bonjour à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",

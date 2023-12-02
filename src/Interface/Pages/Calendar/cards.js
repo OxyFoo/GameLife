@@ -33,8 +33,6 @@ function cardHeader() {
         }
     }
 
-    const time = GetMidnightTime(GetTime(new Date(selectedALL.year, selectedALL.month, selectedALL.day)));
-
     return (
         <>
             <ActivityCard

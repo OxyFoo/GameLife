@@ -5,13 +5,13 @@ import { GetTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('.').default} ActivityPanel
+ * @typedef {import('./index').default} ActivityPanel
  * @typedef {import('Class/Activities').Activity} Activity
  */
 
 /**
  * @param {Activity} activity
- * @returns {Promise<string|null>}
+ * @returns {Promise<string | null>}
  */
 async function AskActivityComment(activity) {
     return new Promise((resolve) => {   

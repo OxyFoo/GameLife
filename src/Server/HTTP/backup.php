@@ -41,5 +41,6 @@ function BackupTable($table) {
 
 BackupTable('Accounts');
 BackupTable('Devices');
+BackupTable('Logs');
 
 ?>

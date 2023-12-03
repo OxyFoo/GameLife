@@ -15,61 +15,64 @@ class Informations {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        this.username = new DynamicVar('');
-        this.usernameTime = null;
-        this.title = new DynamicVar(0);
-        /** @type {number} Null if disabled or unix timestamp (global UTC) */
-        this.birthTime = null;
-        this.lastBirthTime = null;
-        this.xp = 0;
-        this.ox = new DynamicVar(0);
-        this.adRemaining = 0;
-        this.adTotalWatched = 0;
-
-        this.UNSAVED_title = null;
-        this.UNSAVED_birthTime = null;
     }
+
+    username = new DynamicVar('');
+    usernameTime = null;
+
+    title = new DynamicVar(0);
+    UNSAVED_title = null;
+
+    /** @type {number} Null if disabled or unix timestamp (global UTC) */
+    birthTime = null;
+    lastBirthTime = null;
+    UNSAVED_birthTime = null;
+
+    xp = 0;
+    ox = new DynamicVar(0);
+    adRemaining = 0;
+    adTotalWatched = 0;
 
     Clear() {
         this.username = new DynamicVar('');
         this.usernameTime = null;
         this.title = new DynamicVar(0);
+        this.UNSAVED_title = null;
         this.birthTime = null;
         this.lastBirthTime = null;
+        this.UNSAVED_birthTime = null;
         this.xp = 0;
         this.ox = new DynamicVar(0);
         this.adRemaining = 0;
-        this.UNSAVED_title = null;
-        this.UNSAVED_birthTime = null;
+        this.adTotalWatched = 0;
     }
     Load(informations) {
         const contains = (key) => informations.hasOwnProperty(key);
         if (contains('username')) this.username.Set(informations['username']);
         if (contains('usernameTime')) this.usernameTime = informations['usernameTime'];
         if (contains('title')) this.title.Set(informations['title']);
+        if (contains('UNSAVED_title')) this.UNSAVED_title = informations['UNSAVED_title'];
         if (contains('birthTime')) this.birthTime = informations['birthTime'];
         if (contains('lastBirthTime')) this.lastBirthTime = informations['lastBirthTime'];
+        if (contains('UNSAVED_birthTime')) this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
         if (contains('xp')) this.xp = informations['xp'];
         if (contains('ox')) this.ox.Set(parseInt(informations['ox']));
         if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
         if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
-        if (contains('UNSAVED_title')) this.UNSAVED_title = informations['UNSAVED_title'];
-        if (contains('UNSAVED_birthTime')) this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
     }
     Save() {
         const informations = {
             username: this.username.Get(),
             usernameTime: this.usernameTime,
             title: this.title.Get(),
+            UNSAVED_title: this.UNSAVED_title,
             birthTime: this.birthTime,
             lastBirthTime: this.lastBirthTime,
+            UNSAVED_birthTime: this.UNSAVED_birthTime,
             xp: this.xp,
             ox: this.ox.Get(),
             adRemaining: this.adRemaining,
-            adTotalWatched: this.adTotalWatched,
-            UNSAVED_title: this.UNSAVED_title,
-            UNSAVED_birthTime: this.UNSAVED_birthTime
+            adTotalWatched: this.adTotalWatched
         };
         return informations;
     }
@@ -130,7 +133,7 @@ class Informations {
 
     /**
      * Return age in years
-     * @returns {number|null}
+     * @returns {number | null}
      */
     GetAge = () => this.birthTime === null ? null : GetAge(this.birthTime);
 

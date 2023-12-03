@@ -17,7 +17,7 @@ import { Icon, Text, Button } from 'Interface/Components';
  */
 
 const ShopHeaderPropTypes = {
-    /** @type {Page|null} */
+    /** @type {Page | null} */
     refPage: null
 };
 
@@ -27,13 +27,13 @@ class ShopHeader extends React.Component {
         adState: 'wait',
 
         oxAmount: user.informations.ox.Get()
-    };
+    }
 
     refTuto1 = null;
     refTuto2 = null;
     refTuto3 = null;
 
-    /** @type {AdTypes|null} */
+    /** @type {AdTypes | null} */
     rewardedShop = null;
 
     componentDidMount() {

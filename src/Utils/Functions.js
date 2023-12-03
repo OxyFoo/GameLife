@@ -1,3 +1,7 @@
+/**
+ * @param {number} n
+ * @returns {string} Return number with two digits
+ */
 function TwoDigit(n) {
     return ('00' + n).slice(-2);
 }
@@ -13,14 +17,29 @@ function Round(number, decimal = 0) {
     return + (Math.floor(n) + ('e-' + dec));
 }
 
+/**
+ * @param {Array} arr
+ * @returns {number} Return sum of array
+ * @example Sum([1, 2, 3]) => 6
+ */
 function Sum(arr) {
     return arr.reduce((partial_sum, a) => partial_sum + parseInt(a), 0);
 }
 
+/**
+ * @param {*} el
+ * @returns {boolean} Return true if element is undefined
+ */
 function IsUndefined(el) {
     return typeof(el) === 'undefined';
 }
 
+/**
+ * @param {number} min
+ * @param {number} value
+ * @param {number} max
+ * @returns {number} Return value between min and max
+ */
 function MinMax(min, value, max) {
     let output = null;
     if (typeof(value) === 'number') {
@@ -47,11 +66,13 @@ function SortByKey(array, key) {
  * @param {Array} array
  * @param {string} key
  * @param {*} value
- * @returns {object|null} Return object or null if didn't exists
+ * @returns {object | null} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
-    const result = array.find((element) => element[key] == value);
-    return !IsUndefined(result) ? result : null;
+    for (let i = 0; i < array.length; i++)
+        if (array[i][key] == value)
+            return array[i];
+    return null;
 }
 
 /**
@@ -89,5 +110,7 @@ function Random(min = 0, max = 1, decimal = 0) {
     return Round(r, decimal);
 }
 
-export { TwoDigit, Round, Sum, Range, SortByKey, GetByKey, ArrayToDict,
-    IsUndefined, MinMax, Sleep, Random };
+export {
+    TwoDigit, Round, Sum, Range, SortByKey, GetByKey, ArrayToDict,
+    IsUndefined, MinMax, Sleep, Random
+};

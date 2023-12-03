@@ -5,7 +5,7 @@ import { Sleep } from 'Utils/Functions';
 
 /**
  * @this {import('./back').default}
- * @param {'dailyDeals'|'randomChests'|'targetChests'|'dyes'} section
+ * @param {'dailyDeals' | 'randomChests' | 'targetChests' | 'dyes'} section
  */
 function StartHelp(section) {
     const lang = langManager.curr['tuto']['shop'];

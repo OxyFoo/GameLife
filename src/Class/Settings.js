@@ -11,20 +11,21 @@ class Settings {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        this.email = '';
-        this.connected = false;
-        this.onboardingWatched = false;
-        this.tutoFinished = false;
-        this.homePieChart = false; 
-
-        this.morningNotifications = true;
-        this.eveningNotifications = true;
     }
+
+    email = '';
+    connected = false;
+    onboardingWatched = false;
+    tutoFinished = false;
+    homePieChart = false; 
+
+    morningNotifications = true;
+    eveningNotifications = true;
 
     Clear() {
         this.email = '';
         this.connected = false;
+        this.homePieChart = false;
         this.homePieChart = false;
         this.morningNotifications = true;
         this.eveningNotifications = true;

@@ -7,9 +7,6 @@ import InputBack from './back';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 class Zap extends InputBack {

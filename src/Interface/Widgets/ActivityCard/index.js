@@ -17,15 +17,15 @@ import { GetTimeZone, TimeToFormatString } from 'Utils/Time';
  *
  * @typedef {import('Interface/Components/Icon/index').Icons} Icons
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const ActivityCardProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {'activity'|'start'|'end'} */
+    /** @type {'activity' | 'start' | 'end'} */
     type: 'activity',
 
     /** @type {Activity} */
@@ -36,7 +36,7 @@ const ActivityCardProps = {
 
     /** @param {GestureResponderEvent} event */
     onPress: (event) => {}
-}
+};
 
 class ActivityCard extends React.Component {
     state = {
@@ -53,11 +53,11 @@ class ActivityCard extends React.Component {
 
         /**
          * Color for normal activity
-         * @type {ColorTheme | ColorThemeText}
+         * @type {ThemeColor | ThemeText}
         */
         let color = 'main1';
 
-        /** @type {Icons|undefined} */
+        /** @type {Icons | undefined} */
         this.icon = undefined;
 
         if (type === 'activity') {
@@ -137,33 +137,48 @@ class ActivityCard extends React.Component {
     }
 
 
-    static Separator({ onPress = () => {}, addButton = false }) {
+    static Separator({ onPress = () => {}, addButton = false, additionalText = '' }) {
         const [ anim ] = React.useState(new Animated.Value(0));
 
         const lang = langManager.curr['calendar'];
+
+        /** @type {StyleProp} */
         const borderColor = { borderColor: themeManager.GetColor('backgroundCard') };
-        const borderColorButton = { borderColor: themeManager.GetColor('main1') };
-        const fontColor = { color: themeManager.GetColor('main1') };
+
+        /** @type {StyleProp} */
+        const styleButton = [
+            { borderColor: themeManager.GetColor('main1') },
+            !!additionalText && styles.buttonWithText
+        ];
+
         const styleAnimation = {
             opacity: anim,
             transform: [{ scaleY: anim }]
         };
 
         React.useEffect(() => {
-            setTimeout(() =>
+            setTimeout(() => {
                 TimingAnimation(anim, 1, 300).start()
-            , 400);
+            }, 400);
         }, []);
 
         return (
             <Animated.View style={[borderColor, styles.separator, styleAnimation]}>
                 {addButton && (
-                    <TouchableOpacity
-                        style={[borderColorButton, styles.button]}
-                        onPress={onPress}
-                    >
-                        <Text style={fontColor}>{lang['add-activity']}</Text>
-                    </TouchableOpacity>
+                    <>
+                        {!!additionalText && (
+                            <Text style={styles.separatorText} color='light'>
+                                {additionalText}
+                            </Text>
+                        )}
+
+                        <TouchableOpacity
+                            style={[styleButton, styles.button]}
+                            onPress={onPress}
+                        >
+                            <Text color='main1'>{lang['add-activity']}</Text>
+                        </TouchableOpacity>
+                    </>
                 )}
             </Animated.View>
         );

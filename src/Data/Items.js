@@ -1,6 +1,6 @@
 /**
- * @typedef {'hair'|'face'|'accessory'|'weapon'|'top'|'gloves'|'bottom'|'shoes'} _OldSlot
- * @typedef {'hair'|'top'|'bottom'|'shoes'} Slot
+ * @typedef {'skin' | 'skinColor'} SkinSlot
+ * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * @typedef {{ x: number, y: number, width: number, height: number }} CharacterContainerSize
  * 
  * @typedef {object} Buff
@@ -18,7 +18,7 @@ const Rarity = {
     epic: 2,
     legendary: 3,
     event: 4
-}
+};
 
 const itemContainerSize = {
     default: { x: 0, y: 0, width: 1000, height: 1000 },
@@ -55,10 +55,8 @@ class Item {
 }
 
 class Items {
-    constructor() {
-        /** @type {Array<Item>} */
-        this.items = [];
-    }
+    /** @type {Array<Item>} */
+    items = [];
 
     Clear() {
         this.items = [];
@@ -78,7 +76,7 @@ class Items {
     }
 
     /**
-     * @param {Slot|false} slot
+     * @param {Slot | false} slot
      * @returns {Array<Item>}
      */
     GetBuyable(slot = false) {

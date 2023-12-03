@@ -54,10 +54,30 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
         duration:   duration,
         comment:    '',
         timezone:   0,
-        startNow:   true
+        startNow:   true,
+        addedTime:  0
     };
 
     return AddActivity(newActivity);
+}
+
+const times = {};
+let texts = [];
+function TEST_measure_time(str) {
+    if (!times.hasOwnProperty(str)) {
+        times[str] = new Date().getTime();
+        return;
+    }
+
+    const now = new Date().getTime();
+    const diff = now - times[str];
+    texts.push('[' + str + '] ' + diff + 'ms');
+    delete times[str];
+}
+function TEST_print_times() {
+    setTimeout(() => {
+        user.interface.console.AddLog('info', texts.join(', '));
+    }, 3000);
 }
 
 /**
@@ -67,6 +87,7 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
 function AddActivity(activity) {
     const lang = langManager.curr['activity'];
     const now = GetTime();
+    TEST_measure_time('AddActivity');
     const addState = user.activities.Add(
         activity.skillID,
         activity.startTime,
@@ -75,12 +96,20 @@ function AddActivity(activity) {
         null,
         activity.startNow
     );
+    TEST_measure_time('AddActivity');
 
     if (addState === 'added') {
-        Notifications.Evening.RemoveToday();
+        TEST_measure_time('notif');
+        Notifications.Evening.RemoveToday()
+        .then(() => TEST_measure_time('notif'));
         const text = lang['display-activity-text'];
         const button = lang['display-activity-button'];
-        const args = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
+        const args = {
+            'icon': 'success',
+            'text': text,
+            'button': button,
+            'action': Back
+        };
 
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {
@@ -106,10 +135,10 @@ function AddActivity(activity) {
             d.setUTCHours(1, 0, 0, 0);
             const now = GetTime();
 
-            /** @type {'schedule'|'deadline'|null} */
+            /** @type {'schedule' | 'deadline' | null} */
             let deadlineType = null;
 
-            /** @type {number|null} Minimum number of days */
+            /** @type {number | null} Minimum number of days */
             let minDeltaDays = null;
 
             let i = 0;
@@ -143,27 +172,32 @@ function AddActivity(activity) {
             return activity.startTime < now + (minDeltaDays * 24 * 60 * 60);
         };
 
+        TEST_measure_time('quest');
         const quests = user.quests.Get()
                         .filter(quest => quest.Checked === 0)
                         .filter(quest => quest.Skill !== null)
                         .filter(matchID)
                         .filter(matchTime);
+        TEST_measure_time('quest');
 
+        TEST_measure_time('quest-check');
         if (quests.length > 0) {
             quests.forEach(quest => user.quests.Check(quest, now));
             const text = lang['display-quest-complete-text'];
             const completeArgs = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
             args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
         }
+        TEST_measure_time('quest-check');
+        TEST_print_times();
 
         user.interface.ChangePage('display', args, true);
-        user.GlobalSave();
-        user.RefreshStats();
+        user.GlobalSave()
+        .then(() => user.RefreshStats(false));
     }
 
     else if (addState === 'edited') {
-        user.GlobalSave();
-        user.RefreshStats();
+        user.GlobalSave()
+        .then(() => user.RefreshStats(false));
     }
 
     else if (addState === 'notFree') {
@@ -172,7 +206,17 @@ function AddActivity(activity) {
         user.interface.popup.Open('ok', [ title, text ]);
     }
 
-    // TODO: Manage other states
+    else if (addState === 'tooEarly') {
+        const title = lang['alert-alreadyexist-title'];
+        const text = lang['alert-alreadyexist-text'];
+        user.interface.popup.Open('ok', [ title, text ]);
+    }
+
+    else if (addState === 'alreadyExist') {
+        const title = lang['alert-tooearly-title'];
+        const text = lang['alert-tooearly-text'];
+        user.interface.popup.Open('ok', [ title, text ]);
+    }
 
     return addState === 'added' || addState === 'edited';
 }

@@ -11,10 +11,10 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Components/Zap').default} Zap
  * 
  * @typedef {object} TutoElement
- * @property {React.Component|null} component Ref of component to display (null to hide all the screen)
+ * @property {React.Component | null} component Ref of component to display (null to hide all the screen)
  * @property {string} text Text to display
- * @property {() => void|Promise<void>|null} [execBefore=null] Function to execute before showing the element
- * @property {() => boolean|Promise<boolean>|null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
+ * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
+ * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
  */
 
@@ -26,16 +26,13 @@ const DEFAULT_TUTO_ELEMENT = {
     showButton: true
 };
 
-const ScreenTutoProps = {
-}
-
 class ScreenTutoBack extends React.Component {
     state = {
         visible: false,
         showButton: false,
 
         component: {
-            /** @type {React.Component|null} */
+            /** @type {React.Component | null} */
             ref: null,
             position: { x: 0, y: 0 },
             size: { x: 0, y: 0 }
@@ -244,8 +241,5 @@ class ScreenTutoBack extends React.Component {
         return this.state.visible;
     }
 }
-
-ScreenTutoBack.prototype.props = ScreenTutoProps;
-ScreenTutoBack.defaultProps = ScreenTutoProps;
 
 export default ScreenTutoBack;

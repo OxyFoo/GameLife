@@ -40,9 +40,9 @@ class Settings extends BackSettings {
                 <TextSwitch
                     // TODO - Finish themes
                     style={styles.margin}
-                    texts={[ langThemes['Dark'], langThemes['Light'] ]}
+                    texts={[ langThemes['Main'], langThemes['Light'] ]}
                     onChange={this.onChangeTheme}
-                    start={themeManager.selectedTheme === 'Dark' ? 0 : 1}
+                    start={themeManager.selectedTheme === 'Main' ? 0 : 1}
                 />
                 */}
 
@@ -69,7 +69,7 @@ class Settings extends BackSettings {
                 <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{lang['input-tuto-again']}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>
             </Page>
-        )
+        );
     }
 }
 

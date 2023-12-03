@@ -9,7 +9,7 @@ const ColorCardProps = {
 
     /** @param {string} color */
     onPress: (color) => {}
-}
+};
 
 class ColorCard extends React.PureComponent {
     onPress = () => {
@@ -26,7 +26,7 @@ class ColorCard extends React.PureComponent {
                 <TouchableHighlight
                     style={[styles.content, background]}
                     onPress={this.onPress}
-                    underlayColor={themeManager.GetColor('main1', .5)}
+                    underlayColor={themeManager.GetColor('main1', { opacity: .5 })}
                     touchSoundDisabled={true}
                 >
                     <></>

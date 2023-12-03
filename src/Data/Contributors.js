@@ -4,10 +4,8 @@ class Contributor {
 }
 
 class Contributors {
-    constructor() {
-        /** @type {Contributor[]} */
-        this.contributors = [];
-    }
+    /** @type {Contributor[]} */
+    contributors = [];
 
     Clear() {
         this.contributors = [];

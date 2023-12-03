@@ -15,9 +15,6 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {string} value
  */
 
-const ScreenListProps = {
-}
-
 class ScreenListBack extends React.Component {
     posY = 0;
     isPressed = false;
@@ -175,8 +172,5 @@ class ScreenListBack extends React.Component {
         this.inScrollTimeout = setTimeout(() => this.inScroll = false, 200);
     }
 }
-
-ScreenListBack.prototype.props = ScreenListProps;
-ScreenListBack.defaultProps = ScreenListProps;
 
 export default ScreenListBack;

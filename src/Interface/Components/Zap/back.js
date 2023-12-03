@@ -9,10 +9,10 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * 
- * @typedef {'day'|'night'} ZapColor
- * @typedef {'onTwoLegs'|'onFourLegs'} ZapInclinaison
- * @typedef {'face'|'show'} ZapFace
- * @typedef {'left'|'right'} ZapOrientation
+ * @typedef {'day' | 'night'} ZapColor
+ * @typedef {'onTwoLegs' | 'onFourLegs'} ZapInclinaison
+ * @typedef {'face' | 'show'} ZapFace
+ * @typedef {'left' | 'right'} ZapOrientation
  */
 
 const ZAP_IMAGES = {
@@ -39,9 +39,8 @@ const ZAP_IMAGES = {
 };
 
 const ZapProps = {
-    /** @type {LayoutRectangle} */
-    componentLayout: { x: 0, y: 0, width: 0, height: 0 },
-}
+    // TODO: Manage the position of the zap
+};
 
 class ZapBack extends React.Component {
     state = {

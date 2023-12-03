@@ -12,7 +12,7 @@ import { Character } from 'Interface/Components';
  * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
  * 
  * @typedef BuyableItem
- * @property {string|number} ID
+ * @property {string | number} ID
  * @property {string} Name
  * @property {number} Price
  * @property {number} Rarity

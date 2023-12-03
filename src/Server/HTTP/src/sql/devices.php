@@ -4,17 +4,18 @@ class Devices
 {
     /**
      * @param DataBase $db
-     * @param string $deviceIdentifier
+     * @param string $deviceID
      * @param string $deviceName
      * @param string $osName
      * @param string $osVersion
      * @return Device|null
      */
-    public static function Add($db, $deviceIdentifier, $deviceName, $osName, $osVersion) {
-        $hashID = password_hash($deviceIdentifier, PASSWORD_BCRYPT);
-        $command = "INSERT INTO TABLE (`Identifier`, `Name`, `OSName`, `OSVersion`) VALUES (?, ?, ?, ?)";
-        $args = [ $hashID, $deviceName, $osName, $osVersion ];
-        $result = $db->QueryPrepare('Devices', $command, 'ssss', $args);
+    public static function Add($db, $deviceID, $deviceName, $osName, $osVersion) {
+        $identifier = hash('xxh64', $deviceID);
+        $hash = password_hash($deviceID, PASSWORD_BCRYPT);
+        $command = "INSERT INTO TABLE (`Identifier`, `Hash`, `Name`, `OSName`, `OSVersion`) VALUES (?, ?, ?, ?, ?)";
+        $args = [ $identifier, $hash, $deviceName, $osName, $osVersion ];
+        $result = $db->QueryPrepare('Devices', $command, 'sssss', $args);
         if ($result === false) {
             ExitWithStatus("Error: Adding device in DB failed");
         }
@@ -23,25 +24,43 @@ class Devices
 
     /**
      * @param DataBase $db
-     * @param string $deviceIdentifier
-     * @param string $deviceName
+     * @param string $deviceID
+     * @param string $deviceName TODO: Remove after 1.0.3
      * @return Device|null
      */
-    public static function Get($db, $deviceIdentifier, $deviceName) {
-        $device = null;
-        $command = "SELECT * FROM TABLE WHERE `Name` = ?";
-
-        $devices = $db->QueryPrepare('Devices', $command, 's', [ $deviceName ]);
+    public static function Get($db, $deviceID, $deviceName) {
+        $deviceIdentifier = hash('xxh64', $deviceID);
+        $command = "SELECT * FROM TABLE WHERE `Identifier` = ?";
+        $devices = $db->QueryPrepare('Devices', $command, 's', [ $deviceIdentifier ]);
         if ($devices !== null) {
             for ($d = 0; $d < count($devices); $d++) {
-                if (password_verify($deviceIdentifier, $devices[$d]['Identifier'])) {
-                    $device = new Device($devices[$d]);
-                    break;
+                if (password_verify($deviceID, $devices[$d]['Hash'])) {
+                    return new Device($devices[$d]);
                 }
             }
         }
 
-        return $device;
+        // Old identifier with slow hash | TODO: Remove after 1.0.3
+        $commandOld = "SELECT * FROM TABLE WHERE `Name` = ?";
+        $devicesOld = $db->QueryPrepare('Devices', $commandOld, 's', [ $deviceName ]);
+        if ($devicesOld !== null) {
+            for ($d = 0; $d < count($devicesOld); $d++) {
+                if (password_verify($deviceID, $devicesOld[$d]['Hash'])) {
+                    $device = new Device($devicesOld[$d]);
+
+                    $commandUpdate = "UPDATE TABLE SET `Identifier` = ? WHERE `ID` = ?";
+                    $args = [ $deviceIdentifier, $device->ID ];
+                    $result = $db->QueryPrepare('Devices', $commandUpdate, 'si', $args);
+                    if ($result === false) {
+                        ExitWithStatus('Error: Updating device in DB failed');
+                    }
+
+                    return self::GetByID($db, $device->ID);
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -83,7 +102,7 @@ class Devices
      * @param int $accountID
      * @return string Return new token
      */
-    public static function RefreshMailToken($db, $deviceID, $accountID) {
+    public static function RefreshLoginToken($db, $deviceID, $accountID) {
         $token = RandomString();
         $result1 = $db->QueryPrepare('Devices', 'UPDATE TABLE SET `Token` = ? WHERE `ID` = ?', 'si', [ $token, $deviceID ]);
         $result2 = $db->QueryPrepare('Accounts', 'UPDATE TABLE SET `LastSendMail` = current_timestamp() WHERE `ID` = ?', 'i', [ $accountID ]);
@@ -98,7 +117,7 @@ class Devices
      * @param int $deviceID
      * @return \mysqli_result|bool
      */
-    public static function RemoveToken($db, $deviceID) {
+    public static function RemoveLoginToken($db, $deviceID) {
         return $db->QueryPrepare('Devices', "UPDATE TABLE SET `Token` = '' WHERE `ID` = ?", 'i', [ $deviceID ]);
     }
 

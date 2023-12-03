@@ -8,11 +8,11 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
  * 
  * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {'hair'|'top'|'bottom'|'shoes'} Slot
+ * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * 
  * @typedef BuyableRandomChest
  * @property {string} ref
- * @property {string|number} ID
+ * @property {string | number} ID
  * @property {string} LangName
  * @property {ImageSourcePropType} Image
  * @property {number} Price
@@ -28,7 +28,7 @@ import { DateToFormatString } from 'Utils/Date';
  * 
  * @typedef BuyableTargetedChest
  * @property {string} ref
- * @property {string|number} ID
+ * @property {string | number} ID
  * @property {string} Name
  * @property {Slot} Slot
  * @property {ImageSourcePropType} Image
@@ -43,18 +43,18 @@ class Shop {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        this.buyToday = {
-            /** @type {string} Today date */
-            day: '',
-
-            /** @type {Array<string>} List of items ID */
-            items: [],
-
-            /** @type {Array<number>} List of inventory items ID */
-            dyes: []
-        };
     }
+
+    buyToday = {
+        /** @type {string} Today date */
+        day: '',
+
+        /** @type {Array<string>} List of items ID */
+        items: [],
+
+        /** @type {Array<number>} List of inventory items ID */
+        dyes: []
+    };
 
     Clear() {
         this.buyToday = {

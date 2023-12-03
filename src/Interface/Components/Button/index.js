@@ -45,7 +45,7 @@ class Button extends ButtonBack {
         const hasIcon = icon !== null || !IsUndefined(iconXml);
         const onlyOneChild = !hasChildren || !hasIcon || loading;
 
-        const color = enabled ? themeManager.GetColor(this.props.color) : '#535C68';
+        const color = themeManager.GetColor(enabled ? this.props.color : 'disabled');
         const style = [
             styles.body,
             {

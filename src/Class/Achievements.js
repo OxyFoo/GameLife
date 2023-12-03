@@ -15,7 +15,7 @@ import { GetBattery } from 'Utils/Device';
 class AchievementItem {
     AchievementID = 0;
 
-    /** @type {'OK'|'PENDING'|'NONE'} */
+    /** @type {'OK' | 'PENDING' | 'NONE'} */
     State = 'OK';
 
     /** @type {number} Unix UTC timestamp in seconds */
@@ -26,12 +26,13 @@ class Achievements {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        this.loading = false;
-
-        /** @type {DynamicVar<Array<AchievementItem>>} */
-        this.achievements = new DynamicVar([]);
     }
+
+    /** @type {boolean} Prevent multiple checks at the same time */
+    loading = false;
+
+    /** @type {DynamicVar<Array<AchievementItem>>} */
+    achievements = new DynamicVar([]);
 
     Clear() {
         this.achievements.Set([]);

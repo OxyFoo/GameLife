@@ -12,9 +12,8 @@ import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
 import KPI from './Components/KPI';
 import LineChartSvg from './Components/LineChartSvg';
-import News from './Components/News';
 import Page from './Components/Page';
-import PageBack from './Components/PageBack';
+import PageBase from './Components/Page/PageBase';
 import PieChart from './Components/PieChart';
 import ProgressBar from './Components/ProgressBar';
 import Separator from './Components/Separator';
@@ -40,9 +39,8 @@ export {
     Input,
     KPI,
     LineChartSvg,
-    News,
     Page,
-    PageBack,
+    PageBase,
     PieChart,
     ProgressBar,
     Separator,
@@ -52,4 +50,4 @@ export {
     TextSwitch,
     XPBar,
     Zap
-}
+};

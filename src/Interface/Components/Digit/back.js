@@ -10,8 +10,8 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * 
  * @typedef {(name: string, index: number) => void} DigitCallback
  */
@@ -29,7 +29,7 @@ const DigitProps = {
     /** @type {string} - The text to get in callback */
     name: 'index',
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     color: 'primary',
 
     /** @type {boolean} If true, value can't be changed */
@@ -50,12 +50,12 @@ const DigitProps = {
     /** @type {number} Multiplier of the animation speed */
     velocity: 1,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     fadeColor: 'background',
 
     /** @type {DigitCallback} */
     callback: (name, index) => {}
-}
+};
 
 /**
  * Size of digit (width):

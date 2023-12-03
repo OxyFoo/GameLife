@@ -13,8 +13,6 @@ import Quests from 'Class/Quests';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
-const DEBUG_DATA = false;
-
 /**
  * @typedef {import('Interface/Components').Character} Character
  * @typedef {import('Managers/PageManager').default} PageManager
@@ -28,6 +26,8 @@ const DEBUG_DATA = false;
  * @property {XPInfo} agi
  * @property {XPInfo} dex
  */
+
+const DEBUG_DATA = false;
 
 class UserManager {
     constructor() {
@@ -46,29 +46,31 @@ class UserManager {
         this.shop = new Shop(this)
         this.quests = new Quests(this);
 
-        /**
-         * @description Ref loaded here from render of App.js to skip cyclic dependency
-         * @type {PageManager|null}
-         */
-        this.interface = null;
-
-        /** @type {Character|null} */
-        this.character = null;
-
-        this.xp = 0;
-
-        /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
-
-        /** @type {boolean} */
-        this.globalSaving = false;
-
-        /** @type {number|null} Calendar: select day => global UTC time */
-        this.tempSelectedTime = null;
-
-        /** @type {number|null} To avoid spamming mail (UTC) */
-        this.tempMailSent = null;
     }
+
+    /**
+     * @description Ref loaded here from render of App.js to skip cyclic dependency
+     * @type {PageManager | null}
+     */
+    interface = null;
+
+    /** @type {Character | null} */
+    character = null;
+
+    xp = 0;
+
+    /** @type {Stats | null} */
+    stats = null;
+
+    /** @type {boolean} */
+    globalSaving = false;
+
+    /** @type {number | null} Calendar: select day => global UTC time */
+    tempSelectedTime = null;
+
+    /** @type {number | null} To avoid spamming mail (UTC) */
+    tempMailSent = null;
     
     StartTimers() {
         const saveTime = 5 * 60 * 1000; // 5 minutes
@@ -105,7 +107,7 @@ class UserManager {
         }
     }
 
-    /** @returns {Promise<Array<string>|null>} */
+    /** @returns {Promise<Array<string> | null>} */
     async GetDevices() {
         const result = await this.server.Request('getDevices');
         if (result === null || result['status'] !== 'ok') {
@@ -139,8 +141,8 @@ class UserManager {
         this.server.Clear();
     }
 
-    async RefreshStats() {
-        if (this.server.online) {
+    async RefreshStats(onlineSave = true) {
+        if (this.server.online && onlineSave) {
             this.activities.RemoveDeletedSkillsActivities();
             await this.OnlineSave();
         }
@@ -219,7 +221,7 @@ class UserManager {
             this.interface.console.EditLog(debugIndex, 'warn', 'User data: local load failed');
         }
 
-        this.RefreshStats();
+        this.RefreshStats(true);
         return data !== null;
     }
 
@@ -306,7 +308,7 @@ class UserManager {
             this.interface.console.EditLog(debugIndex, 'error', 'User data: online load failed');
         }
 
-        this.RefreshStats();
+        this.RefreshStats(true);
         return data !== null;
     }
 }

@@ -13,6 +13,9 @@ import { Character } from 'Interface/Components';
  * @param {Function} nextStep Used to change the icon
  */
 async function Initialisation(nextStep) {
+    const time_start = new Date().getTime();
+
+    // Loading: Settings
     await user.settings.Load();
 
     // Ping request
@@ -23,14 +26,15 @@ async function Initialisation(nextStep) {
     }
 
     // Set background theme
-    user.interface.SetTheme(themeManager.selectedTheme === 'Dark' ? 0 : 1);
+    user.interface.SetTheme(themeManager.selectedTheme === 'Main' ? 0 : 1);
 
     nextStep();
 
-    // Loading : Internal data
+    // Loading: Internal data
     if (online) await dataManager.OnlineLoad(user);
     else        await dataManager.LocalLoad(user);
 
+    // Check if internal data are loaded
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
@@ -40,42 +44,56 @@ async function Initialisation(nextStep) {
         return;
     }
 
-    const email = user.settings.email;
-    const connected = user.settings.connected;
+    // Show onboarding if not watched
     const showOnboard = !user.settings.onboardingWatched;
     if (showOnboard) {
         user.interface.ChangePage('onboarding', undefined, true);
         return;
     }
-    if (email === '') {
-        if (online) user.interface.ChangePage('login', undefined, true);
-        else        user.interface.ChangePage('waitinternet', undefined, true);
-    } else {
-        if (connected) LoadData(nextStep);
-        else           user.interface.ChangePage('waitmail', undefined, true);
-    }
-}
 
-async function LoadData(nextStep) {
-    const online = user.server.online;
+    // Redirection: Login page (or wait internet page)
+    const email = user.settings.email;
+    if (email === '') {
+        if (online) {
+            user.interface.ChangePage('login', undefined, true);
+            return;
+        } else {
+            user.interface.ChangePage('waitinternet', undefined, true);
+            return;
+        }
+    }
+
+    // Redirection: Wait mail page (if needed)
+    const connected = user.settings.connected;
+    if (!connected) {
+        user.interface.ChangePage('waitmail', undefined, true);
+        return;
+    }
+
+    // Loading: User data
     await user.LocalLoad();
 
-    // Connect
+    // Connect account if online
     if (online && user.server.token === '') {
         const email = user.settings.email;
         const { status } = await user.server.Connect(email);
+
+        // Too many devices
         if (status === 'limitDevice') {
-            // Too many devices
             const title = langManager.curr['login']['alert-deviceRemoved-title'];
             const text = langManager.curr['login']['alert-deviceRemoved-text'];
             user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
             return;
-        } else if (status === 'newDevice' || status === 'waitMailConfirmation') {
-            // Mail not confirmed
+        }
+
+        // Mail not confirmed
+        else if (status === 'newDevice' || status === 'waitMailConfirmation') {
             while (!user.interface.ChangePage('waitmail', { email: email }, true)) await Sleep(100);
             return;
-        } else if (status === 'free') {
-            // Account is deleted
+        }
+
+        // Account is deleted
+        else if (status === 'free') {
             const title = langManager.curr['login']['alert-deletedaccount-title'];
             const text = langManager.curr['login']['alert-deletedaccount-text'];
             user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
@@ -85,18 +103,19 @@ async function LoadData(nextStep) {
 
     nextStep();
 
-    // Loading : User data
+    // Loading: User data online
     if (online) {
         await user.OnlineSave();
         await user.OnlineLoad();
-        // local save
     }
+
+    // Check if user data are loaded
     if (user.informations.username.Get() === '') {
         user.interface.console.AddLog('error', 'User data not loaded');
         return;
     }
 
-    // Load user character
+    // Loading: User character
     user.character = new Character(
         'player',
         user.inventory.avatar.sexe,
@@ -106,24 +125,39 @@ async function LoadData(nextStep) {
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     user.interface.header.ShowAvatar(true);
 
-    // Loading : Notifications
-    await Notifications.DisableAll();
-    if (user.settings.morningNotifications) {
-        await Notifications.Morning.Enable();
-    }
-    if (user.settings.eveningNotifications) {
-        await Notifications.Evening.Enable();
-    }
+    // Loading: Notifications
+    const time_start_notification = new Date().getTime();
+    Notifications.DisableAll().then(() => {
+        if (user.settings.morningNotifications) {
+            return Notifications.Morning.Enable();
+        }
+        if (user.settings.eveningNotifications) {
+            return Notifications.Evening.Enable();
+        }
+    }).then(() => {
+        const time_end_notification = new Date().getTime();
+        const time_delta_notification = time_end_notification - time_start_notification;
+        user.interface.console.AddLog('info', `Notifications loaded in ${time_delta_notification}ms`);
+    });
 
-    // Load ads
+    // Check if ads are available
     if (user.informations.adRemaining === 0) {
         user.interface.console.AddLog('info', 'No more ads available');
     }
-    await user.consent.ShowTrackingPopup();
-    user.admob.LoadAds();
 
+    // Load admob
+    const time_start_admob = new Date().getTime();
+    user.consent.ShowTrackingPopup()
+    .then(user.admob.LoadAds)
+    .then(() => {
+        const time_end_admob = new Date().getTime();
+        const time_delta_admob = time_end_admob - time_start_admob;
+        user.interface.console.AddLog('info', `Admob loaded in ${time_delta_admob}ms`);
+    });
+
+    // Render default pages
     await user.interface.LoadDefaultPages();
-    await Sleep(500);
+
     nextStep();
     await Sleep(500);
 
@@ -145,6 +179,12 @@ async function LoadData(nextStep) {
         const text = lang['alert-maintenance-text'];
         user.interface.popup.Open('ok', [ title, text ], undefined, false);
     }
+
+    const time_end = new Date().getTime();
+    const time_delta = time_end - time_start;
+    const time_text = `Initialisation done in ${time_delta}ms`;
+    console.log(time_text);
+    user.interface.console.AddLog('info', time_text);
 
     if (user.activities.currentActivity === null) {
         while (!user.interface.ChangePage('home', homeProps)) await Sleep(100);

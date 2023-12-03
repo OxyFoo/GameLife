@@ -42,6 +42,7 @@ Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
     - HCa~ : Niveau de la ~ème catégorie la plus élevée
     - It~ : Nombre d'items accumulés
     - Ad~ : Nombre de publicités regardées
+    - Tt~ : Avoir le titre avec l'ID ~
 * Opérateur
     - LT : less than
     - GT : grater (or equal) than

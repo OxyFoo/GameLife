@@ -13,6 +13,7 @@ En 3 mots : Gestion RPG IRL
 * [JS benchmarks](https://jsben.ch/WqlIl)
 * [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
 * [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
+* [Préparer l'environnement iOS (Github Actions)](https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development)
 
 ### React native packages
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)

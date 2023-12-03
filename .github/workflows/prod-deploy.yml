@@ -22,7 +22,7 @@ jobs:
       ARCHIVE: archive_code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install FTP client
         run: sudo apt-get update && sudo apt-get install lftp tar -y
@@ -57,7 +57,7 @@ jobs:
     if: $ACTION == 'both' || $ACTION == 'migration'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install PHP with mysqli extension
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y

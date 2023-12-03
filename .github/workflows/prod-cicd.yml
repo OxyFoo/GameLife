@@ -1,4 +1,4 @@
-name: GameLife - Continuous Integration and Continuous Delivery
+name: 'GL Prod - Continuous Integration & Delivery'
 
 on:
   pull_request:
@@ -32,6 +32,9 @@ jobs:
         env:
           ENVFILE: .env.test
         run: npm test
+
+      - name: Run ressource tests
+        run: cd Tools/RessourcesChecker/ && python3 main.py
 
   build:
     name: 🏗️ Build application

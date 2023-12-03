@@ -1,4 +1,4 @@
-name: GameLife - Continuous Deployment
+name: 'GL Prod - Continuous Deployment'
 
 on:
   workflow_dispatch:

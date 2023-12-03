@@ -1,4 +1,4 @@
-name: GameLife - Continuous Deployment
+name: 'GL Test - CICD'
 
 on:
   pull_request:
@@ -32,6 +32,9 @@ jobs:
         env:
           ENVFILE: .env.test
         run: npm test
+
+      - name: Run ressource tests
+        run: cd Tools/RessourcesChecker/ && python3 main.py
 
   build:
     name: 🏗️ Build application

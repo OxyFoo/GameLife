@@ -1,4 +1,4 @@
-name: 'GameLife - Continuous Integration'
+name: 'GL Dev - Continuous Integration'
 
 on:
   push:
@@ -29,4 +29,9 @@ jobs:
         run: npm install
 
       - name: 'Run tests'
+        env:
+          ENVFILE: .env.test
         run: npm test
+
+      - name: 'Run ressource tests'
+        run: cd Tools/RessourcesChecker/ && python3 main.py

@@ -30,7 +30,7 @@ const InputProps = {
 class TodayPieChartBack extends React.Component {
     state = {
         /** @type {boolean} */
-        switchValue: user.settings.homePieChart,
+        switchValue: false,
 
         dataToDisplay: [],
 
@@ -104,7 +104,7 @@ class TodayPieChartBack extends React.Component {
             user.settings.Save();
         }, 3 * 1000);
 
-        user.settings.homePieChart = this.state.switchValue;
+        user.settings.homePieChart = value;
         this.setState({ switchValue: value });
         this.compute(value);
     }

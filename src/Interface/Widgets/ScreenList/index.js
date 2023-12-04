@@ -20,7 +20,7 @@ class ScreenList extends ScreenListBack {
         const { id, value } = item;
         const onPress = () => {
             if (this.inScroll) return;
-            this.state.callback(id);
+            this.callback(id);
             this.Close();
         }
         return (

@@ -40,6 +40,7 @@ class SkillsGroup extends SkillsGroupBack {
                     keyExtractor={(item, index) => 'skill-' + index}
                     numColumns={3}
                     ItemSeparatorComponent={() => <View style={styles.skillSpace} />}
+                    scrollEnabled={false}
                 />
 
                 <Button

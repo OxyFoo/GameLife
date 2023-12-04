@@ -178,6 +178,7 @@ class ActivityPanel extends ActivityPanelBack {
         const lang = langManager.curr['activity'];
         const { style, topOffset, variantTheme } = this.props;
         const { loaded, activityText, mode } = this.state;
+        const { selectedPage } = user.interface.state;
 
         if (!loaded) {
             return null;
@@ -211,9 +212,11 @@ class ActivityPanel extends ActivityPanelBack {
                             <Text style={styles.panelTitle} bold>
                                 {activityText}
                             </Text>
-                            <Text style={styles.subPanelTitle}>
-                                {lang['title-click-me']}
-                            </Text>
+                            {selectedPage !== 'skill' && (
+                                <Text style={styles.subPanelTitle}>
+                                    {lang['title-click-me']}
+                                </Text>
+                            )}
                         </View>
                     </Button>
 

@@ -61,7 +61,7 @@ class BackSkill extends PageBase {
             numberOfActivities: Round(activitiesLength, 1)
         };
 
-        // History
+        /** @type {Array<HistoryActivity>} */
         this.history = [];
         this.__updateHIstory();
     }
@@ -77,9 +77,10 @@ class BackSkill extends PageBase {
     }
 
     __updateHIstory = () => {
-        const userActivities = user.activities.Get();
-        const history = userActivities.filter((a) => a.skillID === this.skillID).reverse();
-        this.history = history.map((activity) => {
+        const userActivities = user.activities.GetBySkillID(this.skillID);
+
+        this.history = [];
+        for (const activity of userActivities.reverse()) {
             // Format title with date and duration
             const date = DateToFormatString(GetDate(activity.startTime));
             const text = langManager.curr['skill']['text-history'];
@@ -96,8 +97,12 @@ class BackSkill extends PageBase {
                 });
             }
 
-            return { activity, title, onPress };
-        });
+            this.history.push({
+                activity: activity,
+                title: title,
+                onPress: onPress
+            });
+        };
     }
 
     /** @param {number} skillID */

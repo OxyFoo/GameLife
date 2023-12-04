@@ -59,10 +59,6 @@ class ActivityScheduleBack extends React.Component {
     /** @type {React.RefObject<Digit>} */
     refDigitMinute = React.createRef();
 
-    componentDidMount() {
-        this.resetSelectionMode(true); // TODO: Need ?
-    }
-
     /** @param {LayoutChangeEvent} ev */
     onLayout = (ev) => this.setState({ parent: ev.nativeEvent.layout });
 
@@ -77,14 +73,16 @@ class ActivityScheduleBack extends React.Component {
         }
     }
 
-    resetSelectionMode = (init = false) => {
-        if (this.props.editable || init === true) {
-            const today = GetTime();
-            // Get start time at last TIME_STEP_MINUTES (e.g. 8h33 -> 8h30)
-            const startTime = today - (today % (TIME_STEP_MINUTES * 60));
-            const duration = 60;
-            this.props.onChange(startTime, duration);
+    resetSelectionMode = () => {
+        if (!this.props.editable) {
+            return;
         }
+
+        const today = GetTime();
+        // Get start time at last TIME_STEP_MINUTES (e.g. 8h33 -> 8h30)
+        const startTime = today - (today % (TIME_STEP_MINUTES * 60));
+        const duration = 60;
+        this.props.onChange(startTime, duration);
     }
 
     /** @param {'date' | 'time'} mode */
@@ -104,6 +102,9 @@ class ActivityScheduleBack extends React.Component {
 
     /** @type {DigitCallback} */
     onChangeDurationDigit = (name, index) => {
+        if (!this.props.editable)
+            return;
+
         // Get current durations (hour / minute)
         let durationHours = Math.floor(this.props.selectedDuration / 60);
         let durationMinutes = this.props.selectedDuration % 60;

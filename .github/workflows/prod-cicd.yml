@@ -187,6 +187,8 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2'
 
       - name: Archive app
+        env:
+          KEYCHAIN_PATH: $RUNNER_TEMP/app-signing.keychain-db
         run: |
           # Specify the keychain for codesign
           security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
@@ -207,6 +209,8 @@ jobs:
             PROVISIONING_PROFILE_SPECIFIER="Game Life Distributed"
 
       - name: Export app to ipa
+        env:
+          KEYCHAIN_PATH: $RUNNER_TEMP/app-signing.keychain-db
         run: |
           # Go to the ios directory
           cd ios

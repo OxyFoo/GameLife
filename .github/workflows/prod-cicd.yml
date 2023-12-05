@@ -237,6 +237,15 @@ jobs:
     runs-on: macos-latest
     needs: [ build-ios ]
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get ipa artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: GameLife-prod.ipa
+          path: ios/build
+
       - name: Upload to App Store
         env:
           APPLE_ID: ${{ secrets.APPLE_TEAM_ID }}

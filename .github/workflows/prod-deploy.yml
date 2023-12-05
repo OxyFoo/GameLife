@@ -14,10 +14,39 @@ on:
         - migration
 
 jobs:
+  maintenance:
+    name: 🚧 Enable Maintenance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install PHP with mysqli extension
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
+      - name: Enable maintenance mode - dev
+        run: |
+          php ./Tools/Maintenance/index.php \
+            '${{ vars.DB_DEV_HOST }}' \
+            '${{ vars.DB_DEV_USER }}' \
+            '${{ secrets.DB_DEV_PASS }}' \
+            '${{ vars.DB_DEV_NAME }}' \
+            1
+
+      - name: Enable maintenance mode - test
+        run: |
+          php ./Tools/Maintenance/index.php \
+            '${{ vars.DB_TEST_HOST }}' \
+            '${{ vars.DB_TEST_USER }}' \
+            '${{ secrets.DB_TEST_PASS }}' \
+            '${{ vars.DB_TEST_NAME }}' \
+            1
+
   deploy:
     name: 🚀 Deploy Server side
     runs-on: ubuntu-latest
-    if: $ACTION == 'both' || $ACTION == 'deploy'
+    if: ${{ github.event.inputs.actions == 'both' || github.event.inputs.actions == 'deploy' }}
+    needs: maintenance
     env:
       ARCHIVE: archive_code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz
     steps:
@@ -33,7 +62,7 @@ jobs:
       - name: Download files from FTP prod server
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --exclude=backups/ / ftp_backup/"
 
       - name: Archive downloaded files
@@ -42,19 +71,20 @@ jobs:
       - name: Upload archive to FTP prod server
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           put -O ./backups/ ${{ env.ARCHIVE }}"
 
       - name: Upload files to FTP prod server
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --reverse ./src/Server/HTTP/ /"
 
   migration:
     name: 🚚 Database migration
     runs-on: ubuntu-latest
-    if: $ACTION == 'both' || $ACTION == 'migration'
+    if: ${{ github.event.inputs.actions == 'both' || github.event.inputs.actions == 'migration' }}
+    needs: maintenance
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -63,15 +93,43 @@ jobs:
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: Run migration - prod
-        if: ${{ github.base_ref == 'prod' }}
         run: |
           php ./Tools/TableFusion/index.php \
+          '${{ vars.DB_DEV_HOST }}' \
+          '${{ vars.DB_DEV_USER }}' \
+          '${{ secrets.DB_DEV_PASS }}' \
+          '${{ vars.DB_DEV_NAME }}' \
           '${{ vars.DB_TEST_HOST }}' \
           '${{ vars.DB_TEST_USER }}' \
           '${{ secrets.DB_TEST_PASS }}' \
           '${{ vars.DB_TEST_NAME }}' \
-          '${{ vars.DB_PROD_HOST }}' \
-          '${{ vars.DB_PROD_USER }}' \
-          '${{ secrets.DB_PROD_PASS }}' \
-          '${{ vars.DB_PROD_NAME }}' \
           --no-confirm
+
+  maintenance_off:
+    name: 🚧 Disable Maintenance
+    runs-on: ubuntu-latest
+    needs: [deploy, migration]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install PHP with mysqli extension
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
+      - name: Disable maintenance mode - dev
+        run: |
+          php ./Tools/Maintenance/index.php \
+            '${{ vars.DB_DEV_HOST }}' \
+            '${{ vars.DB_DEV_USER }}' \
+            '${{ secrets.DB_DEV_PASS }}' \
+            '${{ vars.DB_DEV_NAME }}' \
+            0
+
+      - name: Disable maintenance mode - test
+        run: |
+          php ./Tools/Maintenance/index.php \
+            '${{ vars.DB_TEST_HOST }}' \
+            '${{ vars.DB_TEST_USER }}' \
+            '${{ secrets.DB_TEST_PASS }}' \
+            '${{ vars.DB_TEST_NAME }}' \
+            0

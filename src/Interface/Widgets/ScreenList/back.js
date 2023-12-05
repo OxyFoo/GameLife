@@ -30,6 +30,9 @@ class ScreenListBack extends React.Component {
     /** @type {FlatList} */
     refFlatlist = null;
 
+    /** @param {number} id */
+    callback = (id) => {};
+
     state = {
         opened: false,
         positionY: new Animated.Value(0),
@@ -38,13 +41,12 @@ class ScreenListBack extends React.Component {
         label: '',
         /** @type {Array<ScreenListItem>} */
         data: [],
-        anim: new Animated.Value(0),
-        callback: (id) => {}
+        anim: new Animated.Value(0)
     }
 
     componentDidMount() {
         this.flatlistListener = this.state.positionFlatlistY.addListener(({ value }) => {
-            this.refFlatlist.scrollToOffset({ offset: value, animated: false });
+            this.refFlatlist?.scrollToOffset({ offset: value, animated: false });
         });
     }
 
@@ -63,13 +65,13 @@ class ScreenListBack extends React.Component {
         this.setState({
             opened: true,
             label: label,
-            data: data,
-            callback: callback
+            data: data
         }, async () => {
             // TODO: Wait real layout
             await Sleep(200); // Wait layout
             this.posY = Math.max(-this.heightPanel, -400);
             SpringAnimation(this.state.positionY, this.posY).start();
+            this.callback = callback;
         });
     }
 

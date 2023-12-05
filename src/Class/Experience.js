@@ -1,6 +1,6 @@
 import dataManager from 'Managers/DataManager';
 
-import { GetTime } from 'Utils/Time';
+import { Sum } from 'Utils/Functions';
 
 const UserXPperLevel = 20;
 const StatXPperLevel = 2;
@@ -84,31 +84,20 @@ class Experience {
      * @returns {EnrichedXPInfo | null} null if the skill doesn't exist
      */
     GetSkillExperience(skillID) {
-        let totalXP = 0;
-        let lastTime = 0;
-        const now = GetTime();
-
         const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) return null;
 
-        const activities = this.getUsefulActivities();
-        for (let a in activities) {
-            const activity = activities[a];
-            if (activity.skillID == skillID) {
-                const startTime = activity.startTime;
-                if (startTime <= now && startTime > lastTime) {
-                    lastTime = startTime;
-                }
-                const durationHour = activity.duration / 60;
-                totalXP += skill.XP * durationHour;
-            }
-        }
+        const activities = this.user.activities.GetBySkillID(skillID);
+        const durations = activities
+            .filter(activity => this.user.activities.GetExperienceStatus(activity) !== 'isNotPast')
+            .map(a => a.duration);
+
+        const totalDuration = Sum(durations);
+        const totalXP = skill.XP * (totalDuration / 60);
 
         const experience = this.getXPDict(totalXP, SkillXPperLevel);
-        return {
-            ...experience,
-            lastTime: lastTime
-        };
+        const lastTime = activities.length > 0 ? activities.at(-1).startTime : 0;
+        return { ...experience, lastTime };
     }
 
     /**

@@ -242,7 +242,7 @@
         "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
         "alert-error-title": "Erreur",
         "alert-error-text": "Une erreur est survenue, réessaye plus tard.",
         "alert-update-title": "Mise à jour",
@@ -285,7 +285,7 @@
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
 
         "alert-deletedaccount-title": "Compte supprimé",
-        "alert-deletedaccount-text": "Votre compte a été supprimé.",
+        "alert-deletedaccount-text": "Ton compte a été supprimé.",
         "alert-limitAccount-title": "Trop de compte",
         "alert-limitAccount-text": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil.",
         "alert-limitDevice-title": "Trop d'appareils sur ce compte",

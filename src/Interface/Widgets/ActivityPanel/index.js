@@ -27,27 +27,29 @@ class ActivityPanel extends ActivityPanelBack {
         const lang = langManager.curr['activity'];
         const { activity, selectedSkillID, mode } = this.state;
 
-        if (mode === 'activity') {
-            const skill = dataManager.skills.GetByID(selectedSkillID);
-            if (skill === null) return null;
-            const experienceStatus = user.activities.GetExperienceStatus(activity);
+        let noXpText = '';
+        const skill = dataManager.skills.GetByID(selectedSkillID);
+        if (skill === null) return null;
 
-            let noXpText = '';
-            if (skill.XP <= 0) {
-                noXpText = lang['title-no-experience'];
-            } else if (experienceStatus === 'beforeLimit') {
+        if (mode === 'activity') {
+            const experienceStatus = user.activities.GetExperienceStatus(activity);
+            if (experienceStatus === 'beforeLimit') {
                 noXpText = lang['title-before-limit'];
             } else if (experienceStatus === 'isNotPast') {
                 noXpText = lang['title-not-past'];
             }
+        }
 
-            if (noXpText !== '') {
-                return (
-                    <Text style={styles.tempTitleNoXP} bold>
-                        {noXpText}
-                    </Text>
-                );
-            }
+        if (skill.XP <= 0) {
+            noXpText = lang['title-no-experience'];
+        }
+
+        if (noXpText !== '') {
+            return (
+                <Text style={styles.tempTitleNoXP} bold>
+                    {noXpText}
+                </Text>
+            );
         }
 
         return (
@@ -178,6 +180,7 @@ class ActivityPanel extends ActivityPanelBack {
         const lang = langManager.curr['activity'];
         const { style, topOffset, variantTheme } = this.props;
         const { loaded, activityText, mode } = this.state;
+        const { selectedPage } = user.interface.state;
 
         if (!loaded) {
             return null;
@@ -211,9 +214,11 @@ class ActivityPanel extends ActivityPanelBack {
                             <Text style={styles.panelTitle} bold>
                                 {activityText}
                             </Text>
-                            <Text style={styles.subPanelTitle}>
-                                {lang['title-click-me']}
-                            </Text>
+                            {selectedPage !== 'skill' && (
+                                <Text style={styles.subPanelTitle}>
+                                    {lang['title-click-me']}
+                                </Text>
+                            )}
                         </View>
                     </Button>
 

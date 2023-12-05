@@ -11,7 +11,8 @@ import { GetDate, GetTime } from 'Utils/Time';
 class BackProfile extends PageBase {
     state = {
         editorOpened: false,
-        xpInfo: user.experience.GetExperience().xpInfo
+        xpInfo: user.experience.GetExperience().xpInfo,
+        skillsOpened: false
     }
 
     constructor(props) {
@@ -59,6 +60,8 @@ class BackProfile extends PageBase {
     }
 
     openProfileEditor = () => this.refProfileEditor?.Open();
+
+    onChangeStateSkills = (opened) => this.setState({ skillsOpened: opened });
 
     /**
      * @returns {number} in hours

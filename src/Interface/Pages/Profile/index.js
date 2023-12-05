@@ -117,10 +117,12 @@ class Profile extends BackProfile {
                     </Container>
 
                     <Container
+                        key={'profile-skills-' + this.state.xpInfo.totalXP}
                         style={styles.topSpace}
                         text={lang['container-skills-title']}
                         type='rollable'
-                        opened={false}
+                        opened={this.state.skillsOpened}
+                        onChangeState={this.onChangeStateSkills}
                         color='main3'
                         rippleColor='white'
                     >

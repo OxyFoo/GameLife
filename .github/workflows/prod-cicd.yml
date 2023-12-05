@@ -158,7 +158,6 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -174,32 +173,11 @@ jobs:
           echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
 
-      - name: Build app
-        env:
-          KEYCHAIN_PATH: $RUNNER_TEMP/app-signing.keychain-db
+      - name: Setup & clean build directory
         run: |
-          # Set up environment variables
-          export KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
           # Specify the keychain for codesign
-          security default-keychain -s $KEYCHAIN_PATH
+          security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
 
-          # Go to the ios directory
-          cd ios
-
-          # Build GameLife
-          xcodebuild build \
-            -workspace GameLife.xcworkspace \
-            -scheme GameLife \
-            -sdk iphoneos \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
-            -configuration Release \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
-            PROVISIONING_PROFILE_SPECIFIER="Game Life Distributed"
-
-      - name: Clean build directory
-        run: |
           # Go to the ios directory
           cd ios
 

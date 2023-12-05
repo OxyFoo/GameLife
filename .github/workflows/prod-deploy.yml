@@ -62,7 +62,7 @@ jobs:
       - name: Download files from FTP prod server
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --exclude=backups/ / ftp_backup/"
 
       - name: Archive downloaded files
@@ -71,13 +71,13 @@ jobs:
       - name: Upload archive to FTP prod server
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           put -O ./backups/ ${{ env.ARCHIVE }}"
 
       - name: Upload files to FTP prod server
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-          open -u ${{ secrets.FTP_PROD_USER }},${{ secrets.FTP_PROD_PASS }} ${{ secrets.FTP_PROD_HOST }};
+          open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --reverse ./src/Server/HTTP/ /"
 
   migration:
@@ -95,14 +95,14 @@ jobs:
       - name: Run migration - prod
         run: |
           php ./Tools/TableFusion/index.php \
+          '${{ vars.DB_DEV_HOST }}' \
+          '${{ vars.DB_DEV_USER }}' \
+          '${{ secrets.DB_DEV_PASS }}' \
+          '${{ vars.DB_DEV_NAME }}' \
           '${{ vars.DB_TEST_HOST }}' \
           '${{ vars.DB_TEST_USER }}' \
           '${{ secrets.DB_TEST_PASS }}' \
           '${{ vars.DB_TEST_NAME }}' \
-          '${{ vars.DB_PROD_HOST }}' \
-          '${{ vars.DB_PROD_USER }}' \
-          '${{ secrets.DB_PROD_PASS }}' \
-          '${{ vars.DB_PROD_NAME }}' \
           --no-confirm
 
   maintenance_off:

@@ -175,9 +175,6 @@ jobs:
 
       - name: Setup & clean build directory
         run: |
-          # Specify the keychain for codesign
-          security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
-
           # Go to the ios directory
           cd ios
 
@@ -189,8 +186,11 @@ jobs:
             -configuration Release \
             -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2'
 
-      - name: Archive and export app
+      - name: Archive app
         run: |
+          # Specify the keychain for codesign
+          security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
+
           # Go to the ios directory
           cd ios
 
@@ -205,6 +205,11 @@ jobs:
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
             PROVISIONING_PROFILE_SPECIFIER="Game Life Distributed"
+
+      - name: Export app to ipa
+        run: |
+          # Go to the ios directory
+          cd ios
 
           # Export the archived app to an .ipa file
           xcodebuild \

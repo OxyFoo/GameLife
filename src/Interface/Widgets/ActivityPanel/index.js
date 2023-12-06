@@ -3,6 +3,7 @@ import { View, Animated, TouchableOpacity } from 'react-native';
 
 import styles from './style';
 import ActivityPanelBack from './back';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
@@ -22,13 +23,53 @@ import ActivityExperience from 'Interface/Widgets/ActivityExperience';
  */
 
 class ActivityPanel extends ActivityPanelBack {
-    RenderPanelDetails() {
+    renderExperienceText() {
+        const lang = langManager.curr['activity'];
+        const { activity, selectedSkillID, mode } = this.state;
+
+        let noXpText = '';
+        const skill = dataManager.skills.GetByID(selectedSkillID);
+        if (skill === null) return null;
+
+        if (mode === 'activity') {
+            const experienceStatus = user.activities.GetExperienceStatus(activity);
+            if (experienceStatus === 'beforeLimit') {
+                noXpText = lang['title-before-limit'];
+            } else if (experienceStatus === 'isNotPast') {
+                noXpText = lang['title-not-past'];
+            }
+        }
+
+        if (skill.XP <= 0) {
+            noXpText = lang['title-no-experience'];
+        }
+
+        if (noXpText !== '') {
+            return (
+                <Text style={styles.tempTitleNoXP} bold>
+                    {noXpText}
+                </Text>
+            );
+        }
+
+        return (
+            <>
+                <Text style={styles.tempTitle} bold>
+                    {lang['title-experience']}
+                </Text>
+                <ActivityExperience
+                    skillID={selectedSkillID}
+                    duration={activity?.duration ?? 0}
+                />
+            </>
+        );
+    }
+
+    renderPanelDetails() {
         const lang = langManager.curr['activity'];
         const { variantTheme } = this.props;
-        const { activity, startMode, selectedSkillID, mode } = this.state;
+        const { activity, startMode, mode } = this.state;
 
-        const skill = dataManager.skills.GetByID(selectedSkillID);
-        const positiveXP = skill !== null && skill.XP > 0;
         const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
         const viewOpacity = {
@@ -67,21 +108,7 @@ class ActivityPanel extends ActivityPanelBack {
 
                 {/* Experience */}
                 <View ref={ref => this.refHelp3 = ref}>
-                    {positiveXP ? (
-                        <>
-                            <Text style={styles.tempTitle} bold>
-                                {lang['title-experience']}
-                            </Text>
-                            <ActivityExperience
-                                skillID={selectedSkillID}
-                                duration={activity?.duration ?? 0}
-                            />
-                        </>
-                    ) : (
-                        <Text style={styles.tempTitleNoXP} bold>
-                            {lang['title-no-experience']}
-                        </Text>
-                    )}
+                    {this.renderExperienceText.call(this)}
                 </View>
 
                 {/* Commentary */}
@@ -130,7 +157,7 @@ class ActivityPanel extends ActivityPanelBack {
         );
     }
 
-    RenderStartActivity() {
+    renderStartActivity() {
         const lang = langManager.curr['activity'];
         /** @type {AnimatedViewProp} */
         const btnOpacity = {
@@ -153,6 +180,7 @@ class ActivityPanel extends ActivityPanelBack {
         const lang = langManager.curr['activity'];
         const { style, topOffset, variantTheme } = this.props;
         const { loaded, activityText, mode } = this.state;
+        const { selectedPage } = user.interface.state;
 
         if (!loaded) {
             return null;
@@ -186,9 +214,11 @@ class ActivityPanel extends ActivityPanelBack {
                             <Text style={styles.panelTitle} bold>
                                 {activityText}
                             </Text>
-                            <Text style={styles.subPanelTitle}>
-                                {lang['title-click-me']}
-                            </Text>
+                            {selectedPage !== 'skill' && (
+                                <Text style={styles.subPanelTitle}>
+                                    {lang['title-click-me']}
+                                </Text>
+                            )}
                         </View>
                     </Button>
 
@@ -213,8 +243,8 @@ class ActivityPanel extends ActivityPanelBack {
                 </View>
 
                 <View>
-                    {this.RenderStartActivity.call(this)}
-                    {this.RenderPanelDetails.call(this)}
+                    {this.renderStartActivity.call(this)}
+                    {this.renderPanelDetails.call(this)}
                 </View>
             </PanelScreen>
         );

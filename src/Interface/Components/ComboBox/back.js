@@ -8,11 +8,10 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {import('Interface/Components').Page} Page
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @typedef {object} ComboBoxItem
- * @property {number|string} key
+ * @property {number | string} key
  * @property {string} value
  */
 
@@ -23,7 +22,7 @@ const ComboBoxProps = {
     /** @type {number} */
     maxHeight: 256,
 
-    /** @type {ColorTheme} */
+    /** @type {ThemeColor} */
     activeColor: 'main1',
 
     /** @type {string} */
@@ -40,7 +39,7 @@ const ComboBoxProps = {
 
     /** @type {boolean} If false press event disabled */
     enabled: true
-}
+};
 
 class ComboBoxBack extends React.Component {
     state = {

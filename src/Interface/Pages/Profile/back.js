@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
 import { GetDate, GetTime } from 'Utils/Time';
@@ -8,10 +8,11 @@ import { GetDate, GetTime } from 'Utils/Time';
  * @typedef {import('./editorProfile').default} ProfileEditor
  */
 
-class BackProfile extends PageBack {
+class BackProfile extends PageBase {
     state = {
         editorOpened: false,
-        xpInfo: user.experience.GetExperience().xpInfo
+        xpInfo: user.experience.GetExperience().xpInfo,
+        skillsOpened: false
     }
 
     constructor(props) {
@@ -27,12 +28,16 @@ class BackProfile extends PageBack {
 
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
+        this.time_start = Date.now();
     }
 
     refTuto1 = null;
 
     componentDidMount() {
         super.componentDidMount();
+        const time_end = Date.now();
+        const time = time_end - this.time_start;
+        user.interface.console.AddLog('info', 'PROFILE loaded in ' + time + 'ms');
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
@@ -55,6 +60,8 @@ class BackProfile extends PageBack {
     }
 
     openProfileEditor = () => this.refProfileEditor?.Open();
+
+    onChangeStateSkills = (opened) => this.setState({ skillsOpened: opened });
 
     /**
      * @returns {number} in hours

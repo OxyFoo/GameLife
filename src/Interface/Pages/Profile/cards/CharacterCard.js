@@ -8,14 +8,15 @@ import { Character, Frame } from 'Interface/Components';
 /**
  * @typedef {import('Class/Inventory').Sexes} Sexes
  * @typedef {import('Class/Inventory').Stuff} Stuff
+ * @typedef {import('Class/Inventory').CharactersName} CharactersName
  */
 
 const CharacterCardProps = {
     /** @type {Sexes} */
     characterSexe: 'MALE',
 
-    /** @type {string} */
-    characterName: '',
+    /** @type {CharactersName} */
+    characterName: 'skin_01',
 
     /** @type {number} */
     characterSkinColor: 0,
@@ -28,13 +29,12 @@ const CharacterCardProps = {
      * @param {string} skin
      */
     onPress: (sexe, skin) => {}
-}
+};
 
 class CharacterCard extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        
         const { characterSexe, characterName, characterSkinColor } = this.props;
         if (characterSexe && characterName) {
             this.character = new Character(
@@ -63,7 +63,7 @@ class CharacterCard extends React.PureComponent {
                 <TouchableHighlight
                     style={[styles.content, background]}
                     onPress={this.onPress}
-                    underlayColor={themeManager.GetColor('main1', .5)}
+                    underlayColor={themeManager.GetColor('main1', { opacity: .5} )}
                     touchSoundDisabled={true}
                 >
                     <Frame

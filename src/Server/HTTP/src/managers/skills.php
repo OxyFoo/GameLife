@@ -1,72 +1,112 @@
 <?php
 
+class Activity {
+    public $skillID = 0;
+    public $startTime = 0;
+    public $duration = 0;
+    public $comment = '';
+    public $timezone = 0;
+    public $startNow = false;
+    public $addedTime = 0;
+}
+class ActivityUnsaved extends Activity {
+    /** @var 'add'|'rem' $type */
+    public $type = '';
+}
+
 class Skills
 {
     /**
      * @param DataBase $db
      * @param Account $account
-     * @return array activity => [ skillID, startTime, duration, comment, timezone ]
+     * @return Activity[]
      */
     public static function GetActivities($db, $account) {
-        $command = 'SELECT `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `StartNow` FROM TABLE WHERE `AccountID` = ?';
+        $command = 'SELECT `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `StartNow`, `AddedTime` FROM TABLE WHERE `AccountID` = ?';
         $rows = $db->QueryPrepare('Activities', $command, 'i', [ $account->ID ]);
         if ($rows === null) {
             ExitWithStatus('Error: getting activities failed');
         }
         $activities = array();
         for ($i = 0; $i < count($rows); $i++) {
-            $skillID = intval($rows[$i]['SkillID']);
-            $startTime = intval($rows[$i]['StartTime']);
-            $duration = intval($rows[$i]['Duration']);
-            $comment = $db->Decrypt($rows[$i]['Comment']);
-            $timezone = intval($rows[$i]['TimeZone']);
-            $startNow = intval($rows[$i]['StartNow']);
-            array_push($activities, [ $skillID, $startTime, $duration, $comment, $timezone, $startNow ]);
+            /** @var Activity $newActivity */
+            $newActivity = array(
+                'skillID'   => intval($rows[$i]['SkillID']),
+                'startTime' => intval($rows[$i]['StartTime']),
+                'duration'  => intval($rows[$i]['Duration']),
+                'comment'   => $db->Decrypt($rows[$i]['Comment']),
+                'timezone'  => intval($rows[$i]['TimeZone']),
+                'startNow'  => intval($rows[$i]['StartNow']),
+                'addedTime' => intval($rows[$i]['AddedTime'])
+            );
+            array_push($activities, $newActivity);
         }
         return $activities;
     }
 
-    // Format : [ ['add|rem',SkillID,DATE,DURATION], ... ]
     /**
      * @param DataBase $db
      * @param Account $account
-     * @param array $activities activity => [ skillID, startTime, duration, comment, timezone ]
+     * @param ActivityUnsaved[] $activities
      */
     public static function AddActivities($db, $account, $activities) {
         for ($i = 0; $i < count($activities); $i++) {
             $activity = $activities[$i];
-            if (count($activity) < 6 || count($activity) > 7) continue;
 
-            $type = $activity[0];
-            $skillID = $activity[1];
-            $startTime = $activity[2];
-            $duration = $activity[3];
-            $timezone = $activity[5];
-            $startNow = $activity[6];
+            // Check if activity is valid
+            $keysActivity = array_keys(get_object_vars(new ActivityUnsaved()));
+            $wrongKeys = array_diff($keysActivity, array_keys((array)$activity));
+            if (count($wrongKeys) > 0) {
+                continue;
+            }
+
+            $type       = $activity['type'];
+            $skillID    = $activity['skillID'];
+            $startTime  = $activity['startTime'];
+            $duration   = $activity['duration'];
+            $comment    = $activity['comment'];
+            $timezone   = $activity['timezone'];
+            $startNow   = $activity['startNow'];
+            $addedTime  = $activity['addedTime'];
 
             // Check if activity exists
             $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
             $args = [ $account->ID, $skillID, $startTime, $duration ];
-            $exists = $db->QueryPrepare('Activities', $command, 'iiii', $args);
-            if ($exists === null) ExitWithStatus('Error: adding activity failed');
-            $exists = count($exists) > 0;
+            $selectedActivity = $db->QueryPrepare('Activities', $command, 'iiii', $args);
+            if ($selectedActivity === false) ExitWithStatus('Error: adding activity failed');
 
+            $exists = count($selectedActivity) > 0;
+
+            // Add activity
             if ($type === 'add') {
+                $commentFormat = null;
+                if (strlen($comment) > 0) {
+                    $commentFormat = "'".$db->Encrypt($comment)."'";
+                }
+
+                // Update activity if exists
                 if ($exists) {
-                    $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
-                    $r = $db->QueryPrepare('Activities', $command, 'iiii', [ $account->ID, $skillID, $startTime, $duration ]);
-                    if ($r === false) ExitWithStatus('Error: saving activities failed (preadd)');
+                    $activityID = intval($selectedActivity[0]['ID']);
+                    $command = 'UPDATE TABLE SET `Comment` = ? WHERE `ID` = ?';
+                    $args = [ $commentFormat, $activityID ];
+                    $r = $db->QueryPrepare('Activities', $command, 'si', $args);
+                    if ($r === false) ExitWithStatus('Error: saving activities failed (update)');
                 }
-                $comment = null;
-                if (!is_null($activity[4]) && !empty($activity[4])) {
-                    $comment = "'".$db->Encrypt($activity[4])."'";
+
+                // Add activity if not exists
+                else {
+                    $command = 'INSERT INTO TABLE (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `StartNow`, `AddedTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+                    $args = [ $account->ID, $skillID, $startTime, $duration, $commentFormat, $timezone, $startNow, $addedTime ];
+                    $r = $db->QueryPrepare('Activities', $command, 'iiiisiii', $args);
+                    if ($r === false) ExitWithStatus('Error: saving activities failed (add)');
                 }
-                $command = 'INSERT INTO TABLE (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `StartNow`) VALUES (?, ?, ?, ?, ?, ?, ?)';
-                $r = $db->QueryPrepare('Activities', $command, 'iiiisii', [ $account->ID, $skillID, $startTime, $duration, $comment, $timezone, $startNow ]);
-                if ($r === false) ExitWithStatus('Error: saving activities failed (add)');
-            } else if ($type === 'rem' && $exists) {
-                $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `SkillID` = ? AND `StartTime` = ? AND `Duration` = ?';
-                $r = $db->QueryPrepare('Activities', $command, 'iiii', [ $account->ID, $skillID, $startTime, $duration ]);
+            }
+
+            // Remove activity
+            else if ($type === 'rem' && $exists) {
+                $activityID = intval($selectedActivity[0]['ID']);
+                $command = 'DELETE FROM TABLE WHERE `ID` = ?';
+                $r = $db->QueryPrepare('Activities', $command, 'i', [ $activityID ]);
                 if ($r === false) ExitWithStatus('Error: saving activities failed (remove)');
             }
         }

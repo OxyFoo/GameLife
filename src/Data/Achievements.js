@@ -1,7 +1,7 @@
 /**
  * @typedef {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'|'Tt'} Comparator
- * @typedef {'LT'|'GT'} Operator
- * @typedef {'Title'|'Item'|'OX'} RewardType
+ * @typedef {'LT' | 'GT'} Operator
+ * @typedef {'Title' | 'Item' | 'OX'} RewardType
  */
 
 /** @type {Array<Comparator>} */
@@ -35,7 +35,7 @@ class Achievement {
     ID = 0;
 
     /**
-     * @type {-1|0|1}\
+     * @type {-1 | 0 | 1}\
      * -1: not shown if unsolved, all visible if solved\
      * 0: show condition and reward only when solved\
      * 1: all is visible
@@ -63,7 +63,7 @@ class Condition {
     /** @type {Operator} */
     Operator = 'LT';
 
-    /** @type {string|number} */
+    /** @type {string | number} */
     Value = '0';
 }
 
@@ -71,15 +71,13 @@ class Reward {
     /** @type {RewardType} */
     Type = 'Title';
 
-    /** @type {string|number} */
+    /** @type {string | number} */
     Value = 0;
 }
 
 class Achievements {
-    constructor() {
-        /** @type {Array<Achievement>} */
-        this.achievements = [];
-    }
+    /** @type {Array<Achievement>} */
+    achievements = [];
 
     Clear() {
         this.achievements = [];
@@ -105,7 +103,7 @@ class Achievements {
 
     /**
      * @param {string} condition
-     * @returns {Condition|null}
+     * @returns {Condition | null}
      */
     parseCondition(condition) {
         if (!condition.length) {
@@ -180,7 +178,7 @@ class Achievements {
 
     /**
      * @param {number} ID
-     * @returns {Achievement|null}
+     * @returns {Achievement | null}
      */
     GetByID = (ID) => this.achievements.find(a => a.ID === ID) || null;
 

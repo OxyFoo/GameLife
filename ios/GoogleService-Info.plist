@@ -30,5 +30,20 @@
     <true></true>
     <key>GOOGLE_APP_ID</key>
     <string>1:911058983753:ios:94a736940ff60c834b1898</string>
+
+    <!-- EXPORT -->
+    <key>method</key>
+    <string>app-store</string>
+    <key>teamID</key>
+    <string>54ZUH596XX</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>org.reactjs.native.example.GameLife</key>
+        <string>Game Life Distributed</string>
+    </dict>
+    <key>signingCertificate</key>
+    <string>Apple Distribution</string>
+    <key>signingStyle</key>
+    <string>manual</string>
 </dict>
 </plist>

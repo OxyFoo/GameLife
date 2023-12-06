@@ -2,7 +2,8 @@ import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
 import styles from './style';
-import BlockDay from './blockday';
+import Day from './day';
+import { DidUpdateBlockMonth, GetBlockMonth } from './script';
 
 import { Text } from 'Interface/Components';
 import { GetMonthAndYear } from 'Utils/Date';
@@ -14,20 +15,19 @@ import { GetMonthAndYear } from 'Utils/Date';
  * 
  * @typedef {import('./script').DayType} DayType
  * @typedef {import('./script').MonthType} MonthType
+ * 
+ * @typedef {{ day?: number, week?: number, month: number, year: number }} MonthData
  */
 
 const BlockMonthProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {MonthType|null} */
-    monthData: null,
+    /** @type {'auto'|number} */
+    height: 'auto',
 
-    /**
-     * @type {Array<DayType|null>|null} Show only one week, without title
-     *                                      (priority over monthData)
-     */
-    weekData: null,
+    /** @type {MonthData | null} */
+    data: null,
 
     /** @type {boolean} */
     hideTitle: false,
@@ -38,62 +38,100 @@ const BlockMonthProps = {
     /**
      * Called when a day is pressed
      * @param {number} day
-     * @param {number|null} month Null if weekData is not null
-     * @param {number|null} year Null if weekData is not null
+     * @param {number | null} month
+     * @param {number | null} year
      */
     onPressDay: (day, month, year) => {}
-}
+};
 
 class BlockMonth extends React.Component {
+    state = {
+        loaded: false
+    }
+
+    /** @type {MonthType | null} */
+    lastBlockMonth = null;
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({ loaded: true });
+        }, 100);
+    }
+
+    /** @param {BlockMonthProps} nextProps */
+    shouldComponentUpdate(nextProps, nextState) {
+        const { data: nextData } = nextProps;
+        const { data: currData } = this.props;
+
+        // Month data changed
+        if (nextData?.day !== currData?.day ||
+            nextData?.week !== currData?.week ||
+            nextData?.month !== currData?.month ||
+            nextData?.year !== currData?.year) {
+                return true;
+        }
+
+        // Days data changed
+        if (this.lastBlockMonth !== null && DidUpdateBlockMonth(this.lastBlockMonth)) {
+            return true;
+        }
+
+        if (nextState.loaded !== this.state.loaded) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /** @param {DayType | null} item */
+    onPress = (item) => {
+        const { data, onPressDay } = this.props;
+        onPressDay(item.day, data.month, data.year);
+    }
+
+    /** @param {{ item: DayType | null }} param0 */
+    renderDay = ({ item }) => (
+        <Day
+            item={item}
+            onPress={this.onPress}
+        />
+    )
+
     render() {
-        const {
-            monthData,
-            weekData,
-            style,
-            hideTitle,
-            onLayout,
-            onPressDay
-        } = this.props;
+        const { data, style, height, hideTitle, onLayout } = this.props;
 
-        /** @param {{ item: DayType|null }} param0 */
-        const renderDay = ({ item }) => {
-            const onPess = () => { onPressDay(item.day, monthData?.month, monthData?.year); };
-            return (
-                <BlockDay
-                    item={item}
-                    onPress={onPess}
-                />
-            );
+        if (data === null) {
+            return null;
         }
 
-        let days = [];
-        let title = null;
-        let height = {};
-
-        if (monthData !== null) {
-            days = monthData.data.flat();
-            title = GetMonthAndYear(monthData.month, monthData.year);
-            height = { height: 260 };
-        }
-        else if (weekData !== null) {
-            days = weekData;
-            height = { height: 'auto' };
+        const title = GetMonthAndYear(data.month, data.year);
+        let days;
+        if (this.state.loaded) {
+            const blockMonth = GetBlockMonth(data.month, data.year, undefined, data.day || -1);
+            if (data.week !== undefined) {
+                days = blockMonth.data[data.week];
+            } else {
+                days = blockMonth.data.flat();
+            }
+            this.lastBlockMonth = blockMonth;
         }
 
         return (
-            <View style={[styles.container, height, style]} onLayout={onLayout}>
-                {!hideTitle && title !== null && (
+            <View style={[styles.container, { height }, style]} onLayout={onLayout}>
+                {hideTitle === false && title !== null && (
                     <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
                 )}
 
-                <FlatList
-                    data={days}
-                    numColumns={7}
-                    columnWrapperStyle={styles.rowContainer}
-                    renderItem={renderDay}
-                    keyExtractor={(item, index) => 'm-' + index}
-                    scrollEnabled={false}
-                />
+                {this.state.loaded && (
+                    <FlatList
+                        data={days}
+                        numColumns={7}
+                        columnWrapperStyle={styles.rowContainer}
+                        renderItem={this.renderDay}
+                        keyExtractor={(item, index) => 'm-' + index}
+                        scrollEnabled={false}
+                    />
+                )}
             </View>
         );
     }

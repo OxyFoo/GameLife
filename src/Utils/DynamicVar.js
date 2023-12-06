@@ -7,13 +7,16 @@ class DynamicVar {
      */
     constructor(initialValue) {
         this.var = initialValue;
-
-        /**
-         * @private
-         * @type {Map<Symbol, (newValue: T, oldValue: T) => void>}
-         */
-        this.listeners = new Map();
     }
+
+    /** @type {T} */
+    var;
+
+    /**
+     * @private
+     * @type {Map<Symbol, (newValue: T, oldValue: T) => void>}
+     */
+    listeners = new Map();
 
     /**
      * @returns {T} Current value of the variable
@@ -52,7 +55,7 @@ class DynamicVar {
     /**
      * Add function to be called when the variable is updated
      * @param {(newValue: T, oldValue: T) => void} callback Function to be called
-     * @returns {Symbol|null} ID of the listener or null if the callback is not a function
+     * @returns {Symbol | null} ID of the listener or null if the callback is not a function
      */
     AddListener(callback) {
         if (typeof(callback) !== 'function') {

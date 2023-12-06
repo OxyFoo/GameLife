@@ -15,6 +15,9 @@ const KPIProps = {
     /** @type {StyleProp} */
     style: {},
 
+    /** @type {number} */
+    height: 100,
+
     /** @type {string} */
     title: '',
 
@@ -23,7 +26,7 @@ const KPIProps = {
 
     /** @type {string} */
     unit: ''
-}
+};
 
 class KPI extends React.Component {
     render() {
@@ -32,9 +35,12 @@ class KPI extends React.Component {
         const kpiBackground = {
             backgroundColor: themeManager.GetColor('dataSmallKpi')
         };
+        const kpiSize = {
+            height: this.props.height
+        };
 
         return (
-            <View style={[kpiBackground, this.props.style, styles.container]}>
+            <View style={[kpiBackground, this.props.style, styles.container, kpiSize]}>
                 <Text style={styles.value} color='primary' fontSize={30}>{primaryText}</Text>
                 <Text style={styles.title} color='light' fontSize={15}>{secondaryText}</Text>
             </View>

@@ -21,7 +21,7 @@ class DataManager {
         this.contributors = new Contributors();
         this.items = new Items();
         this.quotes = new Quotes();
-        this.skills = new Skills(this);
+        this.skills = new Skills();
         this.titles = new Titles();
         this.news = new News();
     }

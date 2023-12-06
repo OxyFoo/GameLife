@@ -1,7 +1,7 @@
 {
   "name": "gamelife",
-  "version": "1.0.2",
-  "versionName": "1.0.2",
+  "version": "1.0.3",
+  "versionName": "1.0.3",
   "private": true,
   "scripts": {
     "start": "npx react-native start --reset-cache",
@@ -14,7 +14,6 @@
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-community/datetimepicker": "^6.4.2",
     "@react-native-community/push-notification-ios": "^1.10.1",
-    "@react-native/polyfills": "^2.0.0",
     "jest-raw-loader": "^1.0.1",
     "react": "^18.2.0",
     "react-native": "^0.71.4",

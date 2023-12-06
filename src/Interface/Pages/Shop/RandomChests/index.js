@@ -3,7 +3,7 @@ import { View, Image, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import BackShopItems from './back';
-import styles from './styles';
+import styles from './style';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';

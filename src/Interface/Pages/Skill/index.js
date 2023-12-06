@@ -14,6 +14,24 @@ import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Compo
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
 
 class Skill extends BackSkill {
+    renderHistory = () => {
+        const lang = langManager.curr['skill'];
+
+        if (this.history.length <= 0) {
+            return null;
+        }
+
+        return (
+            <Container text={lang['history-title']} type='rollable' opened={false}>
+                <FlatList
+                    data={this.history}
+                    keyExtractor={(item, i) => 'history_' + i}
+                    renderItem={this.renderHistoryItem}
+                />
+            </Container>
+        );
+    }
+
     /**
      * @param {{ item: HistoryActivity }} item
      * @returns {JSX.Element}
@@ -141,15 +159,7 @@ class Skill extends BackSkill {
 
 
                 {/* History */}
-                {this.history.length > 0 && (
-                    <Container text={lang['history-title']} type='rollable' opened={false}>
-                        <FlatList
-                            data={this.history}
-                            keyExtractor={(item, i) => 'history_' + i}
-                            renderItem={this.renderHistoryItem}
-                        />
-                    </Container>
-                )}
+                {this.renderHistory()}
             </Page>
         );
     }

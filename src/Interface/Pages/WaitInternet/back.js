@@ -1,13 +1,13 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import RNExitApp from 'react-native-exit-app';
 
 const REFRESH_DELAY_SECONDS = 2;
 
-class BackWaitinternet extends PageBack {
+class BackWaitinternet extends PageBase {
     state = {
         loading: false
-    };
+    }
 
     image = require('../../../../res/logo/login_circles.png');
 

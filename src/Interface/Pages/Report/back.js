@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import { Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';
@@ -10,7 +10,7 @@ import { Sum } from 'Utils/Functions';
  * @typedef {import('Class/Server').ReportTypes} ReportTypes
  */
 
-class BackReport extends PageBack {
+class BackReport extends PageBase {
     stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
     state = {
         sending: false,
@@ -26,7 +26,7 @@ class BackReport extends PageBack {
         input_message: '',
         remain: 0,
         statsRemain: this.stats
-    };
+    }
 
     maxPoints = 6;
 
@@ -92,19 +92,19 @@ class BackReport extends PageBack {
         let dataReport = {};
         switch (type) {
             case 0: // Activity
-                dataReport["name"] = this.state.input_skillname;
-                dataReport["category"] = this.state.input_skillcategory;
-                dataReport["stats"] = this.stats;
+                dataReport['name'] = this.state.input_skillname;
+                dataReport['category'] = this.state.input_skillcategory;
+                dataReport['stats'] = this.stats;
                 break;
             case 1: // Suggest
-                dataReport["suggest"] = this.state.input_suggest;
+                dataReport['suggest'] = this.state.input_suggest;
                 break;
             case 2: // Bug
-                dataReport["bug-description"] = this.state.input_bug1;
-                dataReport["bug-details"] = this.state.input_bug2;
+                dataReport['bug-description'] = this.state.input_bug1;
+                dataReport['bug-details'] = this.state.input_bug2;
                 break;
             case 3: // Message
-                dataReport["message"] = this.state.input_message;
+                dataReport['message'] = this.state.input_message;
                 break;
         }
 

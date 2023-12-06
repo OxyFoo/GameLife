@@ -21,18 +21,17 @@ const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'ban', 'newDev
 class Server {
     /** @param {UserManager} user */
     constructor(user) {
-        /** @type {UserManager} */
         this.user = user;
-
-        this.token = '';
-        this.dataToken = '';
-
-        /** @type {boolean} True if the server is online */
-        this.online = false;
-
-        /** @type {ServerStatus} */
-        this.status = 'offline';
     }
+
+    token = '';
+    dataToken = '';
+
+    /** @type {boolean} True if the server is online */
+    online = false;
+
+    /** @type {ServerStatus} */
+    status = 'offline';
 
     Clear = () => {
         this.token = '';
@@ -94,10 +93,10 @@ class Server {
     /**
      * Try to connect to the server, with email (and device informations)
      * @param {string} email Email of the user
-     * @returns {Promise<{status: LoginStatus, remainMailTime: number|null}>} Status of the user connection
+     * @returns {Promise<{status: LoginStatus, remainMailTime: number | null}>} Status of the user connection
      */
     Connect = async (email) => {
-        /** @type {LoginStatus|null} */
+        /** @type {LoginStatus | null} */
         let status = null;
         let remainMailTime = null;
 
@@ -184,7 +183,7 @@ class Server {
     /**
      * Send achievements unsaved on server (don't reload dataToken or inventory)
      * @param {Array<number>} achievementsID Data to add to server
-     * @returns {Promise<string|false>} Return rewards string or false if failed
+     * @returns {Promise<string | false>} Return rewards string or false if failed
      */
     async AddAchievement(achievementsID) {
         const _data = { achievementsID };
@@ -223,7 +222,7 @@ class Server {
     /**
      * Save username on server
      * @param {string} username
-     * @returns {Promise<'ok'|'alreadyUsed'|'alreadyChanged'|'incorrect'|'error'>}
+     * @returns {Promise<'ok' | 'alreadyUsed' | 'alreadyChanged' | 'incorrect' | 'error'>}
      */
     async SaveUsername(username) {
         const _data = {
@@ -238,7 +237,7 @@ class Server {
 
     /**
      * Save username on server
-     * @returns {Promise<Array<string>|null>} Return array of item ID
+     * @returns {Promise<Array<string> | null>} Return array of item ID
      */
     async GetDailyDeals() {
         const _data = {
@@ -288,7 +287,7 @@ class Server {
      * @param {RequestTypes} type Type of request
      * @param {object} [data={}] Data to send
      * @param {boolean} [force=false] Force to send data to server (use empty dataToken)
-     * @returns {Promise<object|null>} Return response from server or null if failed
+     * @returns {Promise<object | null>} Return response from server or null if failed
      */
     async Request(type, data = {}, force = false) {
         let reqData = { 'action': type, ...data };

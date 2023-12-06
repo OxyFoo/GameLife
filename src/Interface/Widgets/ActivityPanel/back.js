@@ -5,6 +5,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
+import { Sleep } from 'Utils/Functions';
 import { GetTime, GetTimeZone } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
 import { AskActivityComment, onRemComment } from './utils';
@@ -36,7 +37,7 @@ const ActivityPanelProps = {
 
     /** @type {boolean} */
     variantTheme: false
-}
+};
 
 class ActivityPanelBack extends React.Component {
     state = {
@@ -49,27 +50,28 @@ class ActivityPanelBack extends React.Component {
         /** @type {string} */
         activityText: langManager.curr['activity']['title-activity'],
 
-        /** @type {'schedule'|'now'} */
+        /** @type {'schedule' | 'now'} */
         startMode: 'schedule',
 
         /** @type {Animated.Value} */
         animButtonNow: new Animated.Value(0),
 
-        /** @type {'activity'|'skill'} */
+        /** @type {'activity' | 'skill'} */
         mode: 'activity',
 
-        /** @type {Activity|null} Selected activity or null */
+        /** @type {Activity | null} Selected activity or null */
         activity: {
             skillID: 0,
             comment: '',
             duration: 60,
             startTime: GetTime(),
             timezone: GetTimeZone(),
-            startNow: false
+            startNow: false,
+            addedTime: 0
         }
     };
 
-    /** @type {Activity|null} */
+    /** @type {Activity | null} */
     __selectedActivity = null;
 
     __callback_removed = () => { };
@@ -140,7 +142,7 @@ class ActivityPanelBack extends React.Component {
     }
 
     /**
-     * @param {Activity|null} activity
+     * @param {Activity | null} activity
      * @param {() => void} callbackRemoved Callback called when the activity is removed
      * @param {() => void} callbackClosed Callback called when the panel is closed
      * @returns {boolean} True if the activity is valid
@@ -175,13 +177,24 @@ class ActivityPanelBack extends React.Component {
         this.__callback_closed();
         this.__callback_closed = () => { };
 
-        this.refPanelScreen.Close();
+        this.refPanelScreen?.Close();
         setTimeout(() => {
             this.setState({
                 selectedSkillID: 0,
                 activityText: langManager.curr['activity']['title-activity']
             });
         }, 200);
+    }
+
+    onOpenSkill = async () => {
+        const { selectedSkillID } = this.state;
+        const { selectedPage } = user.interface.state;
+
+        if (selectedPage !== 'skill') {
+            this.Close();
+            await Sleep(50);
+            user.interface.ChangePage('skill', { skillID: selectedSkillID });
+        }
     }
 
     onChangeMode = (index) => {
@@ -232,7 +245,7 @@ class ActivityPanelBack extends React.Component {
                 AddActivity(activity);
             }
             // TODO: Hide empty space under panel after comment edition
-            this.refPanelScreen.RefreshPosition();
+            this.refPanelScreen?.RefreshPosition();
         });
     }
     onRemComment = () => {
@@ -262,13 +275,6 @@ class ActivityPanelBack extends React.Component {
             user.GlobalSave();
             this.__callback_removed();
         });
-    }
-
-    onOpenSkill = () => {
-        user.interface.ChangePage(
-            'skill',
-            { skillID: this.state.selectedSkillID }
-        );
     }
 }
 

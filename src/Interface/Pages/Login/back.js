@@ -1,6 +1,6 @@
 import { Animated, Linking, Platform } from 'react-native';
 
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -11,7 +11,7 @@ import { SpringAnimation } from 'Utils/Animations';
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
 
-class BackLogin extends PageBack {
+class BackLogin extends PageBase {
     state = {
         loading: false,
         signinMode: false,
@@ -26,7 +26,7 @@ class BackLogin extends PageBack {
         animImage: new Animated.Value(1),
         animFocus: new Animated.Value(0),
         animSignin: new Animated.Value(0)
-    };
+    }
 
     constructor(props) {
         super(props);

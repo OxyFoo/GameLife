@@ -2,27 +2,27 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('Managers/ThemeManager').Theme} Theme
+ * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
-class BackSettings extends PageBack {
+class BackSettings extends PageBase {
     /** @type {ComboBoxItem[]} */
-    availableLangs = Object.keys(langManager.langages).map(lang => ({
+    availableLangs = langManager.GetLangsKeys().map(lang => ({
         key: lang,
-        value: langManager.langages[lang]['name']
+        value: langManager.GetAllLangs()[lang]['name']
     }));
 
     state = {
         /** @type {ComboBoxItem} */
         cbSelectedLang: {
             key: langManager.currentLangageKey,
-            value: langManager.langages[langManager.currentLangageKey]['name']
+            value: langManager.curr['name']
         },
 
         switchMorningNotifs: user.settings.morningNotifications,
@@ -30,7 +30,7 @@ class BackSettings extends PageBack {
         waitingConsentPopup: false,
         sendingMail: false,
         devicesLoading: false
-    };
+    }
 
     intervalConsentChecking = null;
 
@@ -70,8 +70,8 @@ class BackSettings extends PageBack {
 
     /** @param {number} themeIndex */
     onChangeTheme = (themeIndex) => {
-        /** @type {Theme[]} */
-        const themes = [ 'Dark', 'Light' ];
+        /** @type {ThemeName[]} */
+        const themes = [ 'Main', 'Light' ];
         const newTheme = themes[themeIndex];
         if (themeManager.SetTheme(newTheme)) {
             user.interface.SetTheme(themeIndex);

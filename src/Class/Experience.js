@@ -1,6 +1,6 @@
 import dataManager from 'Managers/DataManager';
 
-import { GetTime } from 'Utils/Time';
+import { Sum } from 'Utils/Functions';
 
 const UserXPperLevel = 20;
 const StatXPperLevel = 2;
@@ -42,9 +42,9 @@ class Experience {
      * @returns {{stats: Stats, xpInfo: XPInfo}}
      */
     GetExperience() {
+        const { statsKey } = this.user;
         const activities = this.getUsefulActivities();
         let XP = 0;
-        const { statsKey } = this.user;
 
         /** @type {Stats} */
         const stats = Object.assign({}, ...statsKey.map(i => ({[i]: null})));
@@ -73,43 +73,31 @@ class Experience {
             stats[key] = this.getXPDict(statValues[key], StatXPperLevel);
         }
 
-        const output = {
+        return {
             'stats': stats,
             'xpInfo': this.getXPDict(XP, UserXPperLevel)
-        }
-        return output;
+        };
     }
 
     /**
      * @param {number} skillID
-     * @returns {EnrichedXPInfo|null} null if the skill doesn't exist
+     * @returns {EnrichedXPInfo | null} null if the skill doesn't exist
      */
     GetSkillExperience(skillID) {
-        let totalXP = 0;
-        let lastTime = 0;
-        const now = GetTime();
-
         const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) return null;
 
-        const activities = this.getUsefulActivities();
-        for (let a in activities) {
-            const activity = activities[a];
-            if (activity.skillID == skillID) {
-                const startTime = activity.startTime;
-                if (startTime <= now && startTime > lastTime) {
-                    lastTime = startTime;
-                }
-                const durationHour = activity.duration / 60;
-                totalXP += skill.XP * durationHour;
-            }
-        }
+        const activities = this.user.activities.GetBySkillID(skillID);
+        const durations = activities
+            .filter(activity => this.user.activities.GetExperienceStatus(activity) !== 'isNotPast')
+            .map(a => a.duration);
+
+        const totalDuration = Sum(durations);
+        const totalXP = skill.XP * (totalDuration / 60);
 
         const experience = this.getXPDict(totalXP, SkillXPperLevel);
-        return {
-            ...experience,
-            lastTime: lastTime
-        };
+        const lastTime = activities.length > 0 ? activities.at(-1).startTime : 0;
+        return { ...experience, lastTime };
     }
 
     /**
@@ -135,25 +123,32 @@ class Experience {
     }
 
     /**
+     * @description Use arithmetic series
+     * * Equation: `Sn = n/2 * (a1 + an)` with `an = (n - 1) * xpPerLevel`
+     * * Variables: `a1 = 0`, `Sn -> Total xp`, `n -> level`
+     * 
+     * - `Sn = n/2 * ((n - 1) * xpPerLevel)`
+     * - `TotalXP = lvl/2 * ((lvl - 1) * xpPerLevel))`
+     * - `lvl = 1/2 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)/2`
      * @param {number} totalXP
      * @param {number} xpPerLevel
      * @returns {XPInfo}
      */
     getXPDict(totalXP = 0, xpPerLevel = 1) {
-        let xp = totalXP;
-        let lvl = 0;
-        while (xp >= lvl * xpPerLevel) {
-            xp -= lvl * xpPerLevel;
-            lvl += 1;
+        if (totalXP < 0 || xpPerLevel < 1) {
+            return { 'xp': 0, 'lvl': 0, 'next': 0, 'totalXP': 0 };
         }
 
-        const experience = {
+        const lvl = Math.floor((1 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)) / 2);
+        const xp = totalXP - (lvl * (lvl - 1) / 2) * xpPerLevel;
+        const next = lvl * xpPerLevel;
+
+        return {
             'xp': xp,
             'lvl': lvl,
-            'next': lvl * xpPerLevel,
+            'next': next,
             'totalXP': totalXP
-        }
-        return experience;
+        };
     }
 }
 

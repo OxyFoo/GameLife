@@ -9,16 +9,16 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').TextStyle} TextStyle
  * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle|TextStyle>} TextStyleProp
+ * @typedef {import('react-native').StyleProp<ViewStyle | TextStyle>} TextStyleProp
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const TextProps = {
-    /** @type {string|JSX.Element|null} */
+    /** @type {string | JSX.Element | null} */
     children: null,
 
     /** @type {TextStyleProp} */
@@ -30,10 +30,10 @@ const TextProps = {
     /** @type {number} */
     fontSize: 18,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     color: 'primary',
 
-    /** @type {(event: GestureResponderEvent) => void|null} */
+    /** @type {(event: GestureResponderEvent) => void | null} */
     onPress: null,
 
     /** @type {(event: LayoutChangeEvent) => void} */
@@ -44,7 +44,7 @@ const TextProps = {
 
     /** @type {number?} */
     numberOfLines: undefined
-}
+};
 
 class Text extends React.Component {
     render() {

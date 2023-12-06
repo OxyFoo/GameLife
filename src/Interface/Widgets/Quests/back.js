@@ -28,7 +28,7 @@ class BackQuests extends React.Component {
         /** @type {boolean} Used to enable/disable undo button */
         undoEnabled: false,
 
-        /** @type {Quest|null} Used to manage selected quest */
+        /** @type {Quest | null} Used to manage selected quest */
         draggedItem: null,
 
         mouseY: new Animated.Value(0)
@@ -37,7 +37,7 @@ class BackQuests extends React.Component {
     constructor(props) {
         super(props);
 
-        /** @type {FlatList<Quest>|null} Used to manage quest sorting */
+        /** @type {FlatList<Quest> | null} Used to manage quest sorting */
         this.refFlatlist = null;
 
         this.flatlist = {
@@ -46,10 +46,10 @@ class BackQuests extends React.Component {
             contentOffsetY: 0,
         }
 
-        /** @type {NodeJS.Timeout|null} */
+        /** @type {NodeJS.Timeout | null} */
         this.undoTimeout = null;
 
-        /** @type {LayoutRectangle|null} */
+        /** @type {LayoutRectangle | null} */
         this.tmpLayoutContainer = null;
 
         user.quests.RefreshScheduleQuests();

@@ -28,16 +28,14 @@ class New {
 
     /**
      * @description Show text to
-     * @type {'auto'|'left'|'right'}
+     * @type {'auto' | 'left' | 'right'}
      */
     TextAlign = 'auto';
 }
 
 class News {
-    constructor() {
-        /** @type {Array<New>} */
-        this.news = [];
-    }
+    /** @type {Array<New>} */
+    news = [];
 
     Clear() {
         this.news = [];

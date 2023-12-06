@@ -13,10 +13,10 @@ class Onboarding extends BackOnboarding {
         const lang = langManager.curr['onboarding'];
 
         const pages = [
-            renderPage0.bind(this)(),
-            renderPage1.bind(this)(),
-            renderPage2.bind(this)(),
-            renderPage3.bind(this)()
+            renderPage0.call(this),
+            renderPage1.call(this),
+            renderPage2.call(this),
+            renderPage3.call(this)
         ];
 
         return (

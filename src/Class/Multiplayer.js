@@ -7,20 +7,20 @@ const settings = { host: '45.82.73.154', port: 7121 };
 /**
  * TCP server state change event
  * @callback onChangeCallback
- * @param {'connected'|'disconnected'|'error'} state
+ * @param {'connected' | 'disconnected' | 'error'} state
  */
 
 class Multiplayer {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-        
-        /** @type {WebSocket?} */
-        this.socket = null;
-
-        /** @type {onChangeCallback} */
-        this.onChangeState = (state) => {};
     }
+
+    /** @type {WebSocket?} */
+    socket = null;
+
+    /** @type {onChangeCallback} */
+    onChangeState = (state) => {};
 
     Connect = () => {
         if (this.isConnected()) {
@@ -72,7 +72,7 @@ class Multiplayer {
     }
 
     /**
-     * @param {string|object} message
+     * @param {string | object} message
      * @returns {boolean} Whether the message was sent successfully
      */
     Send = (message) => {

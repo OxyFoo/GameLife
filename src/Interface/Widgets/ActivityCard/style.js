@@ -53,6 +53,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         borderWidth: 1,
         borderRadius: 4
+    },
+    buttonWithText: {
+        marginTop: 0
+    },
+    separatorText: {
+        textAlign: 'center',
+        fontSize: 12,
+        marginHorizontal: 24,
+        marginTop: 8,
+        marginBottom: 4
     }
 });
 

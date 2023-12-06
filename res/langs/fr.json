@@ -182,10 +182,12 @@
         "title-schedule": "Horaire",
         "title-experience": "Expérience",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
+        "title-not-past": "Cette activité n'a pas encore été réalisée",
+        "title-before-limit": "Cette activité n'apporte pas d'expérience car elle a été ajoutée plus de 48h après avoir été réalisée",
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
-        "swiper-already": "Déjà faite",
+        "swiper-already": "Déjà prévue",
         "swiper-now": "Commencer maintenant",
         "btn-start": "Commencer",
         "btn-add": "Ajouter",
@@ -196,6 +198,10 @@
         "alert-remove-text": "Es-tu sûr de vouloir supprimer cette activité ?",
         "alert-wrongtiming-title": "Impossible !",
         "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre.",
+        "alert-alreadyexist-title": "Erreur",
+        "alert-alreadyexist-text": "Une erreur est survenue, il semble que cette activité ait déjà été ajoutée.",
+        "alert-tooearly-title": "Erreur",
+        "alert-tooearly-text": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
 
@@ -220,7 +226,10 @@
         "hour-min": "h",
         "start": "Début de journée",
         "end": "Fin de journée",
-        "utc": "UTC"
+        "utc": "UTC",
+        "between-activity": "{}h et {}min disponibles",
+        "between-activity-min": "{}min disponible[s]",
+        "between-activity-hour": "{}h disponible[s]"
     },
 
     "home": {
@@ -233,7 +242,7 @@
         "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour votre patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
         "alert-error-title": "Erreur",
         "alert-error-text": "Une erreur est survenue, réessaye plus tard.",
         "alert-update-title": "Mise à jour",
@@ -260,7 +269,7 @@
 
     "login": {
         "page-title": "Yo",
-        "page-text": "Bonjours à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
+        "page-text": "Bonjour à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
@@ -276,7 +285,7 @@
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
 
         "alert-deletedaccount-title": "Compte supprimé",
-        "alert-deletedaccount-text": "Votre compte a été supprimé.",
+        "alert-deletedaccount-text": "Ton compte a été supprimé.",
         "alert-limitAccount-title": "Trop de compte",
         "alert-limitAccount-text": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil.",
         "alert-limitDevice-title": "Trop d'appareils sur ce compte",

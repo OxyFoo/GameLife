@@ -24,6 +24,8 @@
  * "[" and "]" are added if the sentence is plural, removing the characters
  * preceding them by the same number as the number of "-"
  * @example Text : "The following sentence[s] is[--are] singular[--------plural]"
+ * @example ParsePlural(Text, false) => "The following sentence is singular"
+ * @example ParsePlural(Text, true) => "The following sentence are plural"
  * @param {string} text
  * @param {boolean} plural
  * @returns {string}

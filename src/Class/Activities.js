@@ -9,16 +9,19 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * 
- * @typedef {'added'|'edited'|'notFree'|'tooEarly'|'alreadyExist'} AddStatus
+ * @typedef {'added' | 'edited' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
  * 
  * @typedef {object} CurrentActivity
  * @property {number} skillID Skill ID
  * @property {number} startTime Start time of activity, unix timestamp (UTC)
  * @property {number} localTime Precise time when user started the activity
  *                              unix timestamp (local UTC)
+ * 
+ * @typedef {Activity & { type: 'add' | 'rem' }} ActivityUnsaved
  */
 
 const MAX_HOUR_PER_DAY = 12;
+const HOURS_BEFORE_LIMIT = 48;
 
 class Activity {
     /** @type {number} Skill ID */
@@ -30,48 +33,42 @@ class Activity {
     /** @type {number} Duration in minutes */
     duration = 0;
 
+    /** @type {string} Optional comment */
+    comment = '';
+
     /** @type {number} Timezone offset in hours */
     timezone = 0;
 
-    comment = '';
+    /** @type {boolean} If true, activity is "start now" */
     startNow = false;
+
+    /** @type {number} Time when activity was added (unix timestamp, UTC) */
+    addedTime = 0;
 }
 
 class Activities {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-
-        /**
-         * @type {Array<Activity>}
-         */
-        this.activities = [];
-
-        /**
-         * @type {Array<Activity>}
-         */
-        this.UNSAVED_activities = [];
-
-        /**
-         * @type {Array<Activity>}
-         */
-        this.UNSAVED_deletions = [];
-
-        /**
-         * @description Contain all activities, updated when adding, editing or removing
-         */
-        this.allActivities = new DynamicVar([]);
-
-        /**
-         * @type {CurrentActivity|null}
-         */
-        this.currentActivity = null;
-
-        /**
-         * @type {{[name: string]: function}}
-         */
-        this.callbacks = {};
     }
+
+    /** @type {Array<Activity>} */
+    activities = [];
+
+    /** @type {Array<Activity>} */
+    UNSAVED_activities = [];
+
+    /** @type {Array<Activity>} */
+    UNSAVED_deletions = [];
+
+    /** @description Contain all activities, updated when adding, editing or removing */
+    allActivities = new DynamicVar([]);
+
+    /** @type {CurrentActivity | null} */
+    currentActivity = null;
+
+    /** @type {{[name: string]: function}} */
+    callbacks = {};
 
     Clear() {
         this.activities = [];
@@ -93,8 +90,23 @@ class Activities {
         this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
-            if (activity.length !== 6) continue;
-            this.Add(activity[0], activity[1], activity[2], activity[3], activity[4], !!activity[5], true);
+
+            // Check if all keys are present
+            const keys = Object.keys(activity);
+            const keysActivity = Object.keys(new Activity());
+            if (!keys.every(key => keysActivity.includes(key))) {
+                continue;
+            }
+
+            this.Add(
+                activity['skillID'],
+                activity['startTime'],
+                activity['duration'],
+                activity['comment'],
+                activity['timezone'],
+                !!activity['startNow'],
+                true
+            );
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
@@ -131,31 +143,35 @@ class Activities {
     IsUnsaved = () => {
         return this.UNSAVED_activities.length || this.UNSAVED_deletions.length;
     }
+    /** @returns {Array<ActivityUnsaved>} List of unsaved activities */
     GetUnsaved = () => {
+        /** @type {Array<ActivityUnsaved>} */
         let unsaved = [];
         for (let a in this.UNSAVED_activities) {
             const activity = this.UNSAVED_activities[a];
-            unsaved.push([
-                'add',
-                activity.skillID,
-                activity.startTime,
-                activity.duration,
-                activity.comment,
-                activity.timezone,
-                activity.startNow
-            ]);
+            unsaved.push({
+                type: 'add',
+                skillID: activity.skillID,
+                startTime: activity.startTime,
+                duration: activity.duration,
+                comment: activity.comment,
+                timezone: activity.timezone,
+                startNow: activity.startNow,
+                addedTime: activity.addedTime
+            });
         }
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
-            unsaved.push([
-                'rem',
-                activity.skillID,
-                activity.startTime,
-                activity.duration,
-                '',
-                activity.timezone,
-                activity.startNow
-            ]);
+            unsaved.push({
+                type: 'rem',
+                skillID: activity.skillID,
+                startTime: activity.startTime,
+                duration: activity.duration,
+                comment: '',
+                timezone: activity.timezone,
+                startNow: activity.startNow,
+                addedTime: activity.addedTime
+            });
         }
         return unsaved;
     }
@@ -176,9 +192,8 @@ class Activities {
      * @description Get activities that have brought xp
      * @returns {Array<Activity>}
      */
-    GetUseful() {
-        const now = GetTime();
-        const activities = this.user.activities.Get().filter(a => a.startTime <= now);
+    GetUseful = () => {
+        const activities = this.user.activities.Get().filter(this.DoesGrantXP);
 
         let lastMidnight = 0;
         let hoursRemain = MAX_HOUR_PER_DAY;
@@ -278,6 +293,7 @@ class Activities {
         newActivity.comment = comment;
         newActivity.timezone = timezone ?? GetTimeZone();
         newActivity.startNow = startNow;
+        newActivity.addedTime = GetTime(undefined, 'local');
 
         // Limit date (< 2020-01-01)
         if (startTime < 1577836800) {
@@ -326,7 +342,7 @@ class Activities {
     /**
      * Remove activity
      * @param {Activity} activity
-     * @returns {'removed'|'notExist'}
+     * @returns {'removed' | 'notExist'}
      */
     Remove(activity) {
         const indexActivity = this.getIndex(this.activities, activity);
@@ -358,7 +374,7 @@ class Activities {
     /**
      * @param {Array<Activity>} arr
      * @param {Activity} activity
-     * @returns {number|null} Index of activity or null if not found
+     * @returns {number | null} Index of activity or null if not found
      */
     getIndex(arr, activity) {
         for (let i = 0; i < arr.length; i++) {
@@ -390,6 +406,31 @@ class Activities {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
         return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
+    }
+
+    /**
+     * @param {Activity} activity
+     * @returns {boolean} True if activity is in the past (and added before 48h ago)
+     */
+    DoesGrantXP = (activity) => {
+        return this.GetExperienceStatus(activity) === 'grant';
+    }
+
+    /**
+     * @param {Activity} activity
+     * @returns {'grant' | 'isNotPast' | 'beforeLimit'}
+     */
+    GetExperienceStatus(activity) {
+        const { startTime, addedTime } = activity;
+        const deltaHours = (addedTime - startTime) / 3600;
+        const addedBeforeLimit = deltaHours > HOURS_BEFORE_LIMIT;
+        const isPast = startTime <= GetTime(undefined, 'local');
+
+        if (addedBeforeLimit)
+            return 'beforeLimit';
+        if (!isPast)
+            return 'isNotPast';
+        return 'grant';
     }
 
     /**

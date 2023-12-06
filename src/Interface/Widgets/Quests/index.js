@@ -20,7 +20,7 @@ import { Container, Button, Text } from 'Interface/Components';
 const QuestsProps = {
     /** @type {StyleProp} Style of quests container */
     style: {}
-}
+};
 
 class Quests extends BackQuests {
     static QuestElement = QuestElement;

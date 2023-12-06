@@ -1,5 +1,13 @@
 import { Animated, Easing } from 'react-native';
 
+/**
+ * @description Used to create a timing animation
+ * @param {Animated.Value | Animated.ValueXY} anim Animated value to animate
+ * @param {number} toValue Value to animate to
+ * @param {number} [duration=300] Duration of animation
+ * @param {boolean} [native=true] Use native driver
+ * @returns {Animated.CompositeAnimation}
+ */
 function TimingAnimation(anim, toValue, duration = 300, native = true) {
     return Animated.timing(anim, {
         toValue: toValue,
@@ -10,6 +18,13 @@ function TimingAnimation(anim, toValue, duration = 300, native = true) {
     });
 }
 
+/**
+ * @description Used to create a spring animation
+ * @param {Animated.Value | Animated.ValueXY} anim Animated value to animate
+ * @param {number} toValue Value to animate to
+ * @param {boolean} [native=true] Use native driver
+ * @returns {Animated.CompositeAnimation}
+ */
 function SpringAnimation(anim, toValue, native = true) {
     return Animated.spring(anim, {
         toValue: toValue,

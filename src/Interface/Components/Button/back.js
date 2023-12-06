@@ -9,18 +9,18 @@ import * as React from 'react';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
  * @typedef {import('../Icon').Icons} Icons
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const ButtonProps = {
-    /** @type {string|JSX.Element|JSX.Element[]|undefined} */
+    /** @type {string | JSX.Element | JSX.Element[] | undefined} */
     children: undefined,
 
-    /** @type {StyleProp|Object} */
+    /** @type {StyleProp | Object} */
     style: {},
 
-    /** @type {AnimatedProps|null} */
+    /** @type {AnimatedProps | null} */
     styleAnimation: null,
 
     /** @type {string} */
@@ -29,7 +29,7 @@ const ButtonProps = {
     /** @type {number} */
     fontSize: 16,
 
-    /** @type {Icons|null} */
+    /** @type {Icons | null} */
     icon: null,
 
     /** @type {string?} */
@@ -38,7 +38,7 @@ const ButtonProps = {
     /** @type {number} */
     iconSize: 24,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     iconColor: 'white',
 
     /** @type {number} Angle in degrees */
@@ -47,13 +47,13 @@ const ButtonProps = {
     /** @type {boolean} If true, content will be replaced by loading icon & press event disabled */
     loading: false,
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     color: 'transparent',
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     colorText: 'primary',
 
-    /** @type {ColorTheme|ColorThemeText} */
+    /** @type {ThemeColor | ThemeText} */
     rippleColor: 'black',
 
     /** @type {number} */
@@ -62,18 +62,16 @@ const ButtonProps = {
     /** @type {boolean} If false, background is gray & press event disabled */
     enabled: true,
 
-    /** @type {Function} */
     onPress: () => {},
 
-    /** @type {Function} */
     onLongPress: () => {},
 
-    /** @type {Function} */
+    /** @type {(event: LayoutChangeEvent) => void} */
     onLayout: (event) => {},
 
-    /** @type {'auto'|'box-only'|'box-none'|'none'} */
+    /** @type {'auto' | 'box-only' | 'box-none' | 'none'} */
     pointerEvents: 'box-only'
-}
+};
 
 class ButtonBack extends React.Component {
     constructor(props) {

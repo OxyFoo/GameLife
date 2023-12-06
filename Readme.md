@@ -1,7 +1,9 @@
 # GameLife
 
-[![GameLife - Continuous Integration](https://github.com/OxyFoo/GameLife/actions/workflows/ci-app.yml/badge.svg?branch=dev)](https://github.com/OxyFoo/GameLife/actions/workflows/ci-app.yml)
-[![GameLife - Continuous Deployment](https://github.com/OxyFoo/GameLife/actions/workflows/cd-app.yml/badge.svg)](https://github.com/OxyFoo/GameLife/actions/workflows/cd-app.yml)
+[![GL Dev - Continuous Integration](https://github.com/OxyFoo/GameLife/actions/workflows/dev-ci.yml/badge.svg?branch=dev)](https://github.com/OxyFoo/GameLife/actions/workflows/dev-ci.yml)
+[![GL Test - CICD](https://github.com/OxyFoo/GameLife/actions/workflows/test-cicd.yml/badge.svg?branch=dev)](https://github.com/OxyFoo/GameLife/actions/workflows/test-cicd.yml)
+[![GL Prod - CICD](https://github.com/OxyFoo/GameLife/actions/workflows/prod-cicd.yml/badge.svg?branch=test)](https://github.com/OxyFoo/GameLife/actions/workflows/prod-cicd.yml)
+[![GL Prod - Deploy](https://github.com/OxyFoo/GameLife/actions/workflows/prod-deploy.yml/badge.svg?branch=test)](https://github.com/OxyFoo/GameLife/actions/workflows/prod-deploy.yml)
 
 ## Idée
 En 3 mots : Gestion RPG IRL
@@ -13,6 +15,7 @@ En 3 mots : Gestion RPG IRL
 * [JS benchmarks](https://jsben.ch/WqlIl)
 * [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
 * [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
+* [Préparer l'environnement iOS (Github Actions)](https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development)
 
 ### React native packages
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)

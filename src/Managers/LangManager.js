@@ -1,31 +1,42 @@
 import fr from '../../res/langs/fr.json';
 import en from '../../res/langs/en.json';
 
-DEFAULT_LANG = 'fr';
+const LANGAGES = {
+    'fr': fr,
+    'en': en
+};
 
 /**
- * @typedef {import('Ressources/langs/fr.json')} Lang
+ * @typedef {keyof LANGAGES} LangKey
+ * @typedef {typeof LANGAGES[LangKey]} Lang
  */
 
-class LangManager {
-    constructor() {
-        /** @type {Lang?} */
-        this.curr = null;
+/** @type {LangKey} */
+const DEFAULT_LANG = 'fr';
 
-        this.langages = {
-            'fr': fr,
-            'en': en
-        };
-        this.SetLangage();
+class LangManager {
+    /** @type {LangKey} */
+    currentLangageKey = 'fr';
+
+    /** @type {Lang} */
+    curr = LANGAGES['fr'];
+
+    GetAllLangs() {
+        return LANGAGES;
     }
 
-    SetLangage(lang) {
+    GetLangsKeys() {
+        return Object.keys(LANGAGES);
+    }
+
+    /** @param {LangKey | null} lang */
+    SetLangage(lang = null) {
         let newLang = DEFAULT_LANG;
-        if (Object.keys(this.langages).includes(lang)) {
+        if (Object.keys(LANGAGES).includes(lang)) {
             newLang = lang;
         }
         this.currentLangageKey = newLang;
-        this.curr = this.langages[newLang];
+        this.curr = LANGAGES[newLang];
     }
 }
 

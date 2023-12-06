@@ -1,4 +1,4 @@
-import { PageBack } from 'Interface/Components';
+import { PageBase } from 'Interface/Components';
 import StartTutorial from './tuto';
 
 /**
@@ -6,9 +6,9 @@ import StartTutorial from './tuto';
  * @typedef {import('./UI/header').default} ShopHeader
  */
 
-class BackShop extends PageBack {
+class BackShop extends PageBase {
     state = {
-        /** @type {Page|null} */
+        /** @type {Page | null} */
         refPage: null
     }
 

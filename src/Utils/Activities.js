@@ -88,14 +88,15 @@ function AddActivity(activity) {
     const lang = langManager.curr['activity'];
     const now = GetTime();
     TEST_measure_time('AddActivity');
-    const addState = user.activities.Add(
-        activity.skillID,
-        activity.startTime,
-        activity.duration,
-        activity.comment,
-        null,
-        activity.startNow
-    );
+    const addState = user.activities.Add({
+        skillID: activity.skillID,
+        startTime: activity.startTime,
+        duration: activity.duration,
+        comment: activity.comment,
+        timezone: null,
+        startNow: activity.startNow,
+        addedTime: null
+    });
     TEST_measure_time('AddActivity');
 
     if (addState === 'added') {

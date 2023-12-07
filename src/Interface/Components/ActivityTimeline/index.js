@@ -4,7 +4,7 @@ import { View, FlatList } from 'react-native';
 import styles from './style';
 import ActivityTimelineBack from './back';
 
-import { Icon } from 'Interface/Components';
+import Icon from '../Icon';
 
 /**
  * @typedef {import('./back').ActivityTimelineItem} ActivityTimelineItem

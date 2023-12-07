@@ -98,15 +98,15 @@ class Activities {
                 continue;
             }
 
-            this.Add(
-                activity['skillID'],
-                activity['startTime'],
-                activity['duration'],
-                activity['comment'],
-                activity['timezone'],
-                !!activity['startNow'],
-                true
-            );
+            this.Add({
+                skillID: activity['skillID'],
+                startTime: activity['startTime'],
+                duration: activity['duration'],
+                comment: activity['comment'],
+                timezone: activity['timezone'],
+                startNow: !!activity['startNow'],
+                addedTime: activity['addedTime']
+            }, true);
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
@@ -276,27 +276,16 @@ class Activities {
 
     /**
      * Add activity
-     * @param {number} skillID Skill ID
-     * @param {number} startTime Unix timestamp in seconds
-     * @param {number} duration in minutes
-     * @param {string} comment Optional comment
-     * @param {number} [timezone] Optional timezone, if null, use local timezone
-     * @param {boolean} [startNow=false] If true, activity is "start now"
+     * @param {Activity} newActivity Auto define timezone & addedTime if null
      * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {AddStatus}
      */
-    Add(skillID, startTime, duration, comment = '', timezone = null, startNow = false, alreadySaved = false) {
-        const newActivity = new Activity();
-        newActivity.skillID = skillID;
-        newActivity.startTime = startTime;
-        newActivity.duration = duration;
-        newActivity.comment = comment;
-        newActivity.timezone = timezone ?? GetTimeZone();
-        newActivity.startNow = startNow;
-        newActivity.addedTime = GetTime(undefined, 'local');
+    Add(newActivity, alreadySaved = false) {
+        newActivity.timezone ??= GetTimeZone();
+        newActivity.addedTime ??= GetTime(undefined, 'local');
 
         // Limit date (< 2020-01-01)
-        if (startTime < 1577836800) {
+        if (newActivity.startTime < 1577836800) {
             return 'tooEarly';
         }
 
@@ -311,7 +300,7 @@ class Activities {
 
         // Activity not exist, add it
         if (indexActivity === null && indexUnsaved === null) {
-            if (!this.TimeIsFree(startTime, duration)) {
+            if (!this.TimeIsFree(newActivity.startTime, newActivity.duration)) {
                 return 'notFree';
             }
             if (alreadySaved) {
@@ -326,7 +315,7 @@ class Activities {
         // Activity exist, update it
         else {
             let activity = indexActivity !== null ? this.activities[indexActivity] : this.UNSAVED_activities[indexUnsaved];
-            if (activity.comment !== comment) {
+            if (activity.comment !== newActivity.comment) {
                 if (indexActivity !== null) this.activities.splice(indexActivity, 1);
                 if (indexUnsaved  !== null) this.UNSAVED_activities.splice(indexUnsaved, 1);
 

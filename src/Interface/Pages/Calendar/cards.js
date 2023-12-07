@@ -150,7 +150,7 @@ function cardSeparator(props) {
 function createSeparatorText(deltaTime) {
     const lang = langManager.curr['calendar'];
 
-    const deltaTimeMinutes = deltaTime / 60;
+    const deltaTimeMinutes = Math.floor(deltaTime / 60);
     const hourDiff = Math.floor(deltaTimeMinutes / 60);
     const minuteDiff = deltaTimeMinutes % 60;
 

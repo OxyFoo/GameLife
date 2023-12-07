@@ -42,10 +42,10 @@ jobs:
       - name: 'Run skills tests'
         run: |
           php ./Tools/RessourcesChecker/skills.php \
-          '${{ vars.DB_TEST_HOST }}' \
-          '${{ vars.DB_TEST_USER }}' \
-          '${{ secrets.DB_TEST_PASS }}' \
-          '${{ vars.DB_TEST_NAME }}'
+          '${{ vars.DB_DEV_HOST }}' \
+          '${{ vars.DB_DEV_USER }}' \
+          '${{ secrets.DB_DEV_PASS }}' \
+          '${{ vars.DB_DEV_NAME }}'
 
   build:
     name: 🏗️ Build application

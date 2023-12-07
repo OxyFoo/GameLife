@@ -103,11 +103,11 @@ class Commands {
         } else if ($versionServer < $versionApp) {
             $this->output['status'] = 'downdate';
             return;
-        } else if ($versionServer > $versionApp) {
-            $this->output['status'] = 'update';
-            return;
         } else if ($maintenance) {
             $this->output['status'] = 'maintenance';
+            return;
+        } else if ($versionServer > $versionApp) {
+            $this->output['status'] = 'update';
             return;
         } else if (!isset($versionApp) || $versionApp != $versionServer) {
             return;

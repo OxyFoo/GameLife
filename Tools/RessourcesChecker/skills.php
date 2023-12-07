@@ -1,6 +1,6 @@
 <?php
 
-if ($argc !== 6) {
+if ($argc !== 5) {
     echo "Usage: php index.php <host> <user> <pass> <database>\n";
     exit(1);
 }

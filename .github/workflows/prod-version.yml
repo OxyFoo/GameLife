@@ -1,0 +1,37 @@
+name: 'GL Prod - Change version'
+
+on:
+  workflow_dispatch:
+    inputs:
+      actions:
+        description: 'Choose update to do'
+        required: true
+
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+jobs:
+  update-version:
+    name: 📝 Update version (on dev)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 'dev'
+
+      - name: Update version
+        run: |
+          ./Tools/Version/version.sh ${{ github.event.inputs.actions }} --force
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "📝 Update version"
+          git push

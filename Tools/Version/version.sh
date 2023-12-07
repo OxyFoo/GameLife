@@ -3,9 +3,13 @@
 # Arrête le script si une commande échoue
 set -e
 
-# Ask for version type
-echo "What type of version do you want to update? (major/minor/patch)"
-read VERSION_TYPE
+# Ask for version type or get parameters
+if [ -z "$1" ]; then
+    echo "What type of version do you want to update? (major/minor/patch)"
+    read VERSION_TYPE
+else
+    VERSION_TYPE=$1
+fi
 if [ "$VERSION_TYPE" != "major" ] && [ "$VERSION_TYPE" != "minor" ] && [ "$VERSION_TYPE" != "patch" ]; then
     echo "Invalid version type. Exiting."
     exit 1
@@ -94,9 +98,14 @@ update_ios_version() {
 
 show_versions
 
-echo "Voulez-vous mettre à jour les versions? (y/N)"
-read ANSWER
-echo ""
+# Ask for confirmation if not --force
+if [ "$2" != "--force" ]; then
+    echo "Voulez-vous mettre à jour les versions? (y/N)"
+    read ANSWER
+    echo ""
+else
+    ANSWER="y"
+fi
 
 if [ "$ANSWER" == "y" ]; then
     update_package_json_version

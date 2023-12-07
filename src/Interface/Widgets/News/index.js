@@ -8,7 +8,6 @@ import dataManager from 'Managers/DataManager';
 import Text from 'Interface/Components/Text';
 import Icon from 'Interface/Components/Icon';
 import Button from 'Interface/Components/Button';
-import { PAGES } from 'Managers/PageManager';
 
 /**
  * @typedef {import('Managers/PageManager').PageName} PageName
@@ -21,7 +20,7 @@ import { PAGES } from 'Managers/PageManager';
 const buttonEvent = (eventText) => {
     if (eventText.startsWith('https://')) {
         Linking.openURL(eventText);
-    } else if (PAGES.hasOwnProperty(eventText)) {
+    } else if (user.interface.IsPage(eventText)) {
         user.interface.ChangePage(eventText);
     }
 };

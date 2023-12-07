@@ -1,9 +1,17 @@
 name: 'GL Prod - Continuous Integration & Delivery'
 
 on:
-  pull_request:
-    branches:
-      - prod
+  workflow_dispatch:
+    inputs:
+      actions:
+        description: 'Choose platform to build'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+        - both
+        - android
+        - ios
 
 jobs:
   test:
@@ -17,6 +25,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
+
+      - name: Install PHP with mysqli extension
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: Cache NPM packages
         uses: actions/cache@v3
@@ -36,8 +47,17 @@ jobs:
       - name: Run ressource tests
         run: cd Tools/RessourcesChecker/ && python3 main.py
 
+      - name: Run skills tests
+        run: |
+          php ./Tools/RessourcesChecker/skills.php \
+          '${{ vars.DB_TEST_HOST }}' \
+          '${{ vars.DB_TEST_USER }}' \
+          '${{ secrets.DB_TEST_PASS }}' \
+          '${{ vars.DB_TEST_NAME }}'
+
   build-android:
     name: 🏗️ Build application 🤖
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     runs-on: ubuntu-latest
     container: reactnativecommunity/react-native-android
     needs: [ test ]
@@ -91,6 +111,7 @@ jobs:
 
   delivery-android:
     name: 📦 Continuous Delivery 🤖
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     runs-on: ubuntu-latest
     needs: [ build-android ]
     steps:
@@ -123,6 +144,7 @@ jobs:
 
   build-ios:
     name: 🏗️ Build application 🍏
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
     runs-on: macos-latest
     needs: [ test ]
     steps:
@@ -234,6 +256,7 @@ jobs:
 
   delivery-ios:
     name: 📦 Continuous Delivery 🍏
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
     runs-on: macos-latest
     needs: [ build-ios ]
     steps:

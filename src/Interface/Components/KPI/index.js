@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import styles from './style';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text } from 'Interface/Components';
+import Text from '../Text';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

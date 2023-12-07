@@ -40,8 +40,10 @@ function GetRandomIndexesByDay(items, length) {
         % 10;
 
     const random = Math.pow(midnight, deviceSeed) % 1000000;
-    let seed = random.toLocaleString('fullwide', { useGrouping: false }).slice(2, 16);
-    while (seed.length < length) seed += seed;
+    let seed = String(random).slice(0, 16);
+    while (seed.length < length) {
+        seed += seed;
+    }
 
     let remainItems = { ...items };
     let output = [];

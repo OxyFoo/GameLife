@@ -1,9 +1,17 @@
 name: 'GL Prod - Continuous Integration & Delivery'
 
 on:
-  pull_request:
-    branches:
-      - prod
+  workflow_dispatch:
+    inputs:
+      actions:
+        description: 'Choose platform to build'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+        - both
+        - android
+        - ios
 
 jobs:
   test:
@@ -49,6 +57,7 @@ jobs:
 
   build-android:
     name: 🏗️ Build application 🤖
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     runs-on: ubuntu-latest
     container: reactnativecommunity/react-native-android
     needs: [ test ]
@@ -102,6 +111,7 @@ jobs:
 
   delivery-android:
     name: 📦 Continuous Delivery 🤖
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     runs-on: ubuntu-latest
     needs: [ build-android ]
     steps:
@@ -134,6 +144,7 @@ jobs:
 
   build-ios:
     name: 🏗️ Build application 🍏
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
     runs-on: macos-latest
     needs: [ test ]
     steps:
@@ -245,6 +256,7 @@ jobs:
 
   delivery-ios:
     name: 📦 Continuous Delivery 🍏
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
     runs-on: macos-latest
     needs: [ build-ios ]
     steps:

@@ -27,7 +27,7 @@ $success = true;
 while ($row = $result->fetch_assoc()) {
     $sum = $row['Intelligence'] + $row['Social'] + $row['Strength'] + $row['Stamina'] + $row['Dexterity'] + $row['Agility'];
     if ($sum !== 0 && $sum !== 7) {
-        echo "Skill " . $row['Name'] . " has a sum of " . $sum . "<br />";
+        echo "Skill " . $row['ID'] . " has a sum of " . $sum . "\n";
         $success = false;
     }
 }
@@ -35,10 +35,10 @@ while ($row = $result->fetch_assoc()) {
 $db_source->close();
 
 if ($success) {
-    echo "All skills are valid<br />";
+    echo "All skills are valid\n";
     exit(0);
 } else {
-    echo "Some skills are invalid<br />";
+    echo "Some skills are invalid\n";
     exit(1);
 }
 

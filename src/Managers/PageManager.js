@@ -181,6 +181,8 @@ class PageManager extends React.Component{
         this.screenHeight = event.nativeEvent.layout.height;
     }
 
+    IsPage = (pageName) => PAGES.hasOwnProperty(pageName);
+
     /**
      * @private
      * Try to get last page content

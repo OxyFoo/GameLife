@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: '18.x'
 
+      - name: Install PHP with mysqli extension
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
       - name: Cache NPM packages
         uses: actions/cache@v3
         with:
@@ -35,6 +38,14 @@ jobs:
 
       - name: Run ressource tests
         run: cd Tools/RessourcesChecker/ && python3 main.py
+
+      - name: 'Run skills tests'
+        run: |
+          php ./Tools/RessourcesChecker/skills.php \
+          '${{ vars.DB_TEST_HOST }}' \
+          '${{ vars.DB_TEST_USER }}' \
+          '${{ secrets.DB_TEST_PASS }}' \
+          '${{ vars.DB_TEST_NAME }}'
 
   build:
     name: 🏗️ Build application

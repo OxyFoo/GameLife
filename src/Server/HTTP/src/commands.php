@@ -566,6 +566,12 @@ class Commands {
         $account = $this->account;
         $device = $this->device;
 
+        if ($account->Email === Accounts::ACCOUNT_TEST) {
+            $this->output['devices'] = array($device->Name);
+            $this->output['status'] = 'ok';
+            return;
+        }
+
         $devicesNames = array($device->Name);
         foreach ($account->Devices as $deviceID) {
             $device = Devices::GetByID($this->db, $deviceID);

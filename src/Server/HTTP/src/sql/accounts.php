@@ -2,6 +2,8 @@
 
 class Accounts
 {
+    const ACCOUNT_TEST = 'gamelife-test@oxyfoo.com';
+
     /**
      * Add new empty account
      * @param DataBase $db
@@ -128,6 +130,10 @@ class Accounts
      * @param string $cellName "Devices" or "DevicesWait"
      */
     public static function RemDevice($db, $deviceID, $account, $cellName) {
+        if ($account->Email === self::ACCOUNT_TEST) {
+            return;
+        }
+
         if ($cellName !== 'Devices' && $cellName !== 'DevicesWait') {
             ExitWithStatus('Error: Invalid cell name');
         }
@@ -162,6 +168,10 @@ class Accounts
      * @param Account $account
      */
     public static function ClearDevices($db, $account) {
+        if ($account->Email === self::ACCOUNT_TEST) {
+            return;
+        }
+
         $command = 'UPDATE TABLE SET `Devices` = "[]" WHERE `ID` = ?';
         $result = $db->QueryPrepare('Accounts', $command, 'i', [ $account->ID ]);
         if ($result === false) {
@@ -179,7 +189,7 @@ class Accounts
      *     1  => Wait mail confirmation
      */
     public static function CheckDevicePermissions($deviceID, $account) {
-        $isMailTest = $account->Email === 'gamelife-test@oxyfoo.com';
+        $isMailTest = $account->Email === self::ACCOUNT_TEST;
         if ($isMailTest && in_array(1, $account->Devices)) {
             return 0;
         }

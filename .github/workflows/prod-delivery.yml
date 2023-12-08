@@ -295,8 +295,8 @@ jobs:
 
       - name: 'Upload to App Store'
         env:
-          APPLE_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_SPECIFIC_PASSWORD }}
+          ISSUER_ID: ${{ secrets.APPLE_API_APP_STORE_CONNECT_ISSUER_ID }}
+          SEND_KEY: ${{ secrets.APPLE_API_APP_STORE_CONNECT_SEND_KEY }}
         run: |
           # Go to the ios directory
           cd ios/build
@@ -305,8 +305,9 @@ jobs:
           xcrun altool --upload-app \
             -f GameLife.ipa \
             -t ios \
-            -u "$APPLE_ID" \
-            -p "$APP_SPECIFIC_PASSWORD"
+            --apiKey "$SEND_KEY" \
+            --apiIssuer "$ISSUER_ID" \
+            --verbose
 
   notify-android:
     name: '📣 Notify Team - App Published 🤖'

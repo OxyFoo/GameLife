@@ -18,7 +18,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Class/Quests').Quest} Quest
  */
 
-class BackQuests extends React.Component {
+class BackQuestsList extends React.Component {
     state = {
         quests: [],
 
@@ -243,4 +243,4 @@ class BackQuests extends React.Component {
     }
 }
 
-export default BackQuests;
+export default BackQuestsList;

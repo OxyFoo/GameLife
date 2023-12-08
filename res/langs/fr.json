@@ -613,8 +613,7 @@
             "home-3": "Voici les actualités, on commence par une citation choisie par la communauté et des news concernant l'application",
             "home-4": "Ce bouton sert à ajouter les activités que tu fais dans la vraie vie, tu les verras apparaître dans le calendrier et ça te permettra de gagner de l'expérience !",
 
-            "home-5": "Tu peux aussi ajouter des tâches, pour ajouter des activités plus rapidement, ou suivre des objectifs personnels",
-            "home-6": "Viens voir par ici, on va faire un tour dans le calendrier",
+            "home-5": "Viens voir par ici, on va faire un tour dans le calendrier",
 
             "calendar-1": "C'est ici qu'apparaîtront toutes tes activités, tu peux les sélectionner pour afficher leurs détails et les modifier.",
             "calendar-2": "Tu peux sélectionner un autre jour ou naviguer entre les semaines avec les flèches",
@@ -628,7 +627,7 @@
             "shop-5": "Dans cette catégorie tu peux acheter des coffres dans lesquels se trouvent un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
             "shop-no-internet": "Malheureusement je ne peux pas te présenter la boutique car tu n'as pas internet, mais tu peux y accéder en étant connecté !",
 
-            "home-7": "Voilà ! Je vais maintenant te laisser découvrir l'application par toi-même, si tu as besoin d'aide tu peux m'appeler en appuyant sur les boutons d'aide !\n\nBonne chance, même si je sais que tu n'en as pas besoin ;)"
+            "home-6": "Voilà ! Je vais maintenant te laisser découvrir l'application par toi-même, si tu as besoin d'aide tu peux m'appeler en appuyant sur les boutons d'aide !\n\nBonne chance, même si je sais que tu n'en as pas besoin ;)"
         },
 
         "achievements": {

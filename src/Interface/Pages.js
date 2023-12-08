@@ -10,12 +10,13 @@ import Login from './Pages/Login/index';
 import Multiplayer from './Pages/Multiplayer/index';
 import Onboarding from './Pages/Onboarding/index';
 import Profile from './Pages/Profile/index';
+import Quest from './Pages/Quest/index';
+import Quests from './Pages/Quests/index';
 import Report from './Pages/Report/index';
 import Settings from './Pages/Settings/index';
 import Shop from './Pages/Shop/index';
 import Skill from './Pages/Skill/index';
 import Skills from './Pages/Skills/index';
-import Quest from './Pages/Quest/index';
 import Waitinternet from './Pages/WaitInternet/index';
 import Waitmail from './Pages/WaitMail/index';
 import Test from './Pages/Test/index';
@@ -33,12 +34,13 @@ const PAGES = {
     'multiplayer':      Multiplayer,
     'onboarding':       Onboarding,
     'profile':          Profile,
+    'quest':            Quest,
+    'quests':           Quests,
     'report':           Report,
     'settings':         Settings,
     'shop':             Shop,
     'skill':            Skill,
     'skills':           Skills,
-    'quest':            Quest,
     'waitinternet':     Waitinternet,
     'waitmail':         Waitmail,
     'test':             Test

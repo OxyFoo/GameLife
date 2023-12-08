@@ -33,11 +33,11 @@ const DEBUG_MODE = false;
  * @type {Array<PageName>}
  */
 const PAGES_PERSISTENT = [
-    'calendar',
     'home',
-    'multiplayer',
-    'profile',
-    'shop'
+    'calendar',
+    'quests',
+    'shop',
+    'profile'
 ];
 
 const CACHE_PAGES = {
@@ -295,7 +295,8 @@ class PageManager extends React.Component{
         if (DEBUG_MODE) console.log('PageManager path:', this.path);
 
         // Bottom bar selected index animation
-        const bottomBarPages = [ 'home', 'calendar', 'x', 'multiplayer', 'shop' ];
+        /** @type {Array<PageName|'x'>} */
+        const bottomBarPages = [ 'home', 'calendar', 'x', 'quests', 'shop' ];
         const bottomBarShow = bottomBarPages.includes(newPage);
         const index = bottomBarPages.indexOf(newPage);
         const newBarState = { bottomBarShow: bottomBarShow, bottomBarIndex: index !== -1 ? index : 2 };

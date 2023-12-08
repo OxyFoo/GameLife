@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList } from 'react-native';
 
 import styles from './style';
-import BackQuests from './back';
+import BackQuestsList from './back';
 import QuestElement from './Elements/quest';
 import TaskElement from './Elements/tasks';
 import QuestSelection from './Elements/questSelection';
@@ -22,7 +22,7 @@ const QuestsProps = {
     style: {}
 };
 
-class Quests extends BackQuests {
+class QuestsList extends BackQuestsList {
     static QuestElement = QuestElement;
     static TaskElement = TaskElement;
 
@@ -64,7 +64,7 @@ class Quests extends BackQuests {
         } = this.state;
 
         /** @type {Icons} */
-        const containerIcon = undoEnabled ? 'undo' : 'add';
+        const containerIcon = undoEnabled ? 'undo' : 'addSquare';
         const containerAction = undoEnabled ? this.undo : this.addQuest;
 
         return (
@@ -100,7 +100,7 @@ class Quests extends BackQuests {
     }
 }
 
-Quests.prototype.props = QuestsProps;
-Quests.defaultProps = QuestsProps;
+QuestsList.prototype.props = QuestsProps;
+QuestsList.defaultProps = QuestsProps;
 
-export default Quests;
+export default QuestsList;

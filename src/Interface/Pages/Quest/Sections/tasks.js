@@ -5,7 +5,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Quests } from 'Interface/Widgets';
+import { QuestsList } from 'Interface/Widgets';
 import { Icon, Text } from 'Interface/Components';
 
 /**
@@ -82,7 +82,7 @@ class SectionTasks extends React.Component {
                     data={this.state.tasks}
                     keyExtractor={(item, index) => 'quest-' + index.toString()}
                     renderItem={({ item, index }) => (
-                        <Quests.TaskElement
+                        <QuestsList.TaskElement
                             task={item}
                             onTaskEdit={(checked, title) => this.onEditTask(index, checked, title)}
                             onTaskDelete={() => this.onDeleteTask(index)}

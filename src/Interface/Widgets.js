@@ -10,7 +10,7 @@ import News from './Widgets/News';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
 import Popup from './Widgets/Popup';
-import Quests from './Widgets/Quests';
+import QuestsList from './Widgets/QuestsList';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import ScreenTuto from './Widgets/ScreenTuto';
@@ -33,7 +33,7 @@ export {
     PageHeader,
     PanelScreen,
     Popup,
-    Quests,
+    QuestsList,
     ScreenInput,
     ScreenList,
     ScreenTuto,

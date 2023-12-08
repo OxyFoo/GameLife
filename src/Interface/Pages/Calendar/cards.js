@@ -93,18 +93,6 @@ function cardFooter() {
         additonalText = createSeparatorText(nextMidnight - prevEnd);
     }
 
-    if (addButtonAdd) {
-        const midnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60);
-        const nextMidnight = midnight + 86400;
-        additonalText = createSeparatorText(nextMidnight - prevEnd);
-    }
-
-    if (addButtonAdd) {
-        const midnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60);
-        const nextMidnight = midnight + 86400;
-        additonalText = createSeparatorText(nextMidnight - prevEnd);
-    }
-
     return (
         <>
             <ActivityCard.Separator

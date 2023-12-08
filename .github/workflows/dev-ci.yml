@@ -6,8 +6,8 @@ on:
       - dev
 
 jobs:
-  test:
-    name: 🔍 Application tests
+  test-client:
+    name: '🔍 Application tests'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -17,9 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
-
-      - name: Install PHP with mysqli extension
-        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: 'Cache NPM packages'
         uses: actions/cache@v3
@@ -38,6 +35,16 @@ jobs:
 
       - name: 'Run ressource tests'
         run: cd Tools/RessourcesChecker/ && python3 main.py
+
+  test-server:
+    name: '🔍 Server tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Install PHP with mysqli extension'
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: 'Run skills tests'
         run: |

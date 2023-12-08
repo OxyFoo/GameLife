@@ -16,19 +16,19 @@ on:
 
 jobs:
   update-version:
-    name: 📝 Update version (on dev)
+    name: '📝 Update version (on dev)'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 'Checkout'
         uses: actions/checkout@v4
         with:
           ref: 'dev'
 
-      - name: Update version
+      - name: 'Update version'
         run: |
           ./Tools/Version/version.sh ${{ github.event.inputs.actions }} --force
 
-      - name: Commit changes
+      - name: 'Commit changes'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"

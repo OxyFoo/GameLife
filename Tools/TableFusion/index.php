@@ -6,7 +6,7 @@ $argv = $_SERVER['argv'];
 $noConfirm = in_array('--no-confirm', $argv);
 
 if ($argc < 9) {
-    echo "Usage: php index.php <source_host> <source_user> <source_pass> <source_db> <target_host> <target_user> <target_pass> <target_db> [--no-confirm]\n";
+    echo "Usage: php {$argv[0]} <source_host> <source_user> <source_pass> <source_db> <target_host> <target_user> <target_pass> <target_db> [--no-confirm]\n";
     exit(1);
 }
 

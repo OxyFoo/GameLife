@@ -1,11 +1,12 @@
 <?php
 
+$argv = $_SERVER['argv'];
+
 if ($argc !== 5) {
-    echo "Usage: php index.php <host> <user> <pass> <database>\n";
+    echo "Usage: php {$argv[0]} <host> <user> <pass> <database>\n";
     exit(1);
 }
 
-$argv = $_SERVER['argv'];
 $host = $argv[1];
 $user = $argv[2];
 $pass = $argv[3];

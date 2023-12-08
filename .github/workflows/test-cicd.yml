@@ -6,38 +6,42 @@ on:
       - test
 
 jobs:
-  test:
-    name: 🔍 Application tests
+  test-client:
+    name: '🔍 Application tests'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 'Checkout'
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 'Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
 
-      - name: Install PHP with mysqli extension
-        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
-
-      - name: Cache NPM packages
+      - name: 'Cache NPM packages'
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
 
-      - name: Install Dependencies
+      - name: 'Install Dependencies'
         run: npm install
 
-      - name: Run tests
+      - name: 'Run tests'
         env:
           ENVFILE: .env.test
         run: npm test
 
-      - name: Run ressource tests
+      - name: 'Run ressource tests'
         run: cd Tools/RessourcesChecker/ && python3 main.py
+
+  test-server:
+    name: '🔍 Server tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Install PHP with mysqli extension'
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: 'Run skills tests'
         run: |
@@ -48,47 +52,47 @@ jobs:
           '${{ vars.DB_DEV_NAME }}'
 
   build:
-    name: 🏗️ Build application
+    name: '🏗️ Build application'
     runs-on: ubuntu-latest
     container: reactnativecommunity/react-native-android
-    needs: [ test ]
+    needs: [ test-client, test-server ]
     steps:
-      - name: Checkout
+      - name: 'Checkout'
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 'Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
 
-      - name: Cache NPM packages
+      - name: 'Cache NPM packages'
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
 
-      - name: Install Dependencies
+      - name: 'Install Dependencies'
         run: npm install
 
-      - name: Get config files
+      - name: 'Get config files'
         run: |
           echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
 
-      - name: Build app
+      - name: 'Build app'
         env:
           ENVFILE: .env.test
         run: npm run build
 
-      - name: Download buildtool
+      - name: 'Download buildtool'
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
           wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
 
-      - name: Generate universal APK
+      - name: 'Generate universal APK'
         run: |
           java -jar ./bundletool.jar build-apks \
             --bundle=./android/app/build/outputs/bundle/release/app-release.aab \
@@ -99,61 +103,61 @@ jobs:
             --ks-pass=file:./keystore
           unzip -p my_app.apks universal.apk > GameLife-test.apk
 
-      - name: Upload apk artifact
+      - name: 'Upload apk artifact'
         uses: actions/upload-artifact@v3
         with:
           name: GameLife-test.apk
           path: GameLife-test.apk
 
   deploy:
-    name: 🚀 Deploy Server side
+    name: '🚀 Deploy Server side'
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: build
     env:
       ARCHIVE: archive_code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz
     steps:
-      - name: Checkout code
+      - name: 'Checkout code'
         uses: actions/checkout@v4
 
-      - name: Install FTP client
+      - name: 'Install FTP client'
         run: sudo apt-get update && sudo apt-get install lftp tar -y
 
-      - name: Create temporary directory
+      - name: 'Create temporary directory'
         run: mkdir -p ftp_backup
 
-      - name: Download files from FTP test server
+      - name: 'Download files from FTP test server'
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --exclude=backups/ / ftp_backup/"
 
-      - name: Archive downloaded files
+      - name: 'Archive downloaded files'
         run: tar -czf ${{ env.ARCHIVE }} -C ftp_backup .
 
-      - name: Upload archive to FTP test server
+      - name: 'Upload archive to FTP test server'
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           put -O ./backups/ ${{ env.ARCHIVE }}"
 
-      - name: Upload files to FTP test server
+      - name: 'Upload files to FTP test server'
         run: |
           lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
           open -u ${{ secrets.FTP_TEST_USER }},${{ secrets.FTP_TEST_PASS }} ${{ secrets.FTP_TEST_HOST }};
           mirror --reverse ./src/Server/HTTP/ /"
 
   database:
-    name: 🚚 Database migration
+    name: '🚚 Database migration'
     runs-on: ubuntu-latest
-    needs: [ deploy ]
+    needs: deploy
     steps:
-      - name: Checkout code
+      - name: 'Checkout code'
         uses: actions/checkout@v4
 
-      - name: Install PHP with mysqli extension
+      - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
-      - name: Run migration
+      - name: 'Run migration'
         run: |
           php ./Tools/TableFusion/index.php \
           '${{ vars.DB_DEV_HOST }}' \

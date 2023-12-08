@@ -293,6 +293,21 @@ jobs:
           name: GameLife-prod.ipa
           path: ios/build
 
+      - name: 'Setup API App Store Connect'
+        env:
+          SEND_KEY: ${{ secrets.APPLE_API_APP_STORE_CONNECT_SEND_KEY }}
+          KEY_PATH: ~/.appstoreconnect/private_keys/
+          KEY_CONTENT: ${{ secrets.APPLE_API_APP_STORE_CONNECT_AUTH_KEY }}
+        run: |
+          # Create directory
+          mkdir -p $KEY_PATH
+
+          # Get key name (AuthKey_$SEND_KEY.p8)
+          KEY_NAME=AuthKey_$SEND_KEY.p8
+
+          # Import key from secrets
+          echo -n "$KEY_CONTENT" | base64 --decode > "$KEY_PATH$KEY_NAME"
+
       - name: 'Upload to App Store'
         env:
           ISSUER_ID: ${{ secrets.APPLE_API_APP_STORE_CONNECT_ISSUER_ID }}

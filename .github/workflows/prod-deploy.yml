@@ -159,6 +159,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: disable-test-account
     steps:
+      - name: 'Install PHP with mysqli extension'
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
       - name: 'Get app version'
         run: |
           GL_VERSION=$( \

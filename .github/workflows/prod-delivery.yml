@@ -308,11 +308,15 @@ jobs:
             -u "$APPLE_ID" \
             -p "$APP_SPECIFIC_PASSWORD"
 
-  notify-team-app-published:
-    name: '📣 Notify Team - App Published'
+  notify-android:
+    name: '📣 Notify Team - App Published 🤖'
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     runs-on: ubuntu-latest
-    needs: [ delivery-android, delivery-ios ]
+    needs: delivery-android
     steps:
+      - name: 'Install PHP with mysqli extension'
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
       - name: 'Get app version'
         run: |
           GL_VERSION=$( \
@@ -332,5 +336,36 @@ jobs:
           curl \
             -H "Content-Type: application/json" \
             -X POST \
-            -d "{\"content\":\"GameLife v$GL_VERSION a été envoyée sur le PlayStore et l'AppStore avec succès 🎉\n\nPour la valider: <$NEXT_WORKFLOW_URL>\"}" \
+            -d "{\"content\":\"GameLife v$GL_VERSION a été envoyée sur le PlayStore 🤖 avec succès 🎉\n\nPour la valider: <$NEXT_WORKFLOW_URL>\"}" \
+            $DISCORD_WEBHOOK_URL
+
+  notify-ios:
+    name: '📣 Notify Team - App Published 🍏'
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
+    runs-on: ubuntu-latest
+    needs: delivery-ios
+    steps:
+      - name: 'Install PHP with mysqli extension'
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
+      - name: 'Get app version'
+        run: |
+          GL_VERSION=$( \
+            php ./Tools/Maintenance/getVersion.php \
+            '${{ vars.DB_TEST_HOST }}' \
+            '${{ vars.DB_TEST_USER }}' \
+            '${{ secrets.DB_TEST_PASS }}' \
+            '${{ vars.DB_TEST_NAME }}' \
+          )
+          echo "Version: $GL_VERSION"
+
+      - name: 'Send notification to Discord'
+        env:
+          NEXT_WORKFLOW_URL: 'https://github.com/OxyFoo/GameLife/actions/workflows/prod-deploy.yml'
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\":\"GameLife v$GL_VERSION a été envoyée sur l'AppStore 🍏 avec succès 🎉\n\nPour la valider: <$NEXT_WORKFLOW_URL>\"}" \
             $DISCORD_WEBHOOK_URL

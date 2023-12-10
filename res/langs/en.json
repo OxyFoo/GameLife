@@ -541,6 +541,62 @@
         }
     },
 
+    "todo": {
+        "title-schedule": "Scheduling",
+        "title-tasks": "Tasks",
+        "title-activity": "Activity",
+        "title-commentary": "Commentary",
+
+        "input-title": "Title",
+        "input-deadline-title": "Due date",
+        "input-deadline-empty": "None",
+        "input-activity-title": "No category or activity selected",
+        "input-activity-title-activity": "Activity selected:",
+        "input-activity-title-category": "Category selected:",
+        "input-activity-none": "No activity",
+        "input-activity-empty": "Select",
+        "input-activity-only": "All activities of category: {}",
+
+        "input-panel-activity": "Select an activity",
+        "input-panel-category": "Select a category",
+
+        "input-repeat-title": "Repeat",
+        "input-description": "Description",
+        "input-task-placeholder": "Task",
+        "text-hint-select": "Press and hold to select the column",
+
+        "button-commentary": "Add a commentary",
+        "button-add": "Add",
+        "button-save": "Save",
+        "button-remove": "Delete",
+
+        "error-title-empty": "Please enter a title",
+        "error-title-exists": "A todo with this title already exists",
+
+        "alert-remcomment-title": "Delete comment?",
+        "alert-remcomment-text": "Are you sure you want to delete this comment?",
+        "alert-remtodo-title": "Delete todo?",
+        "alert-remtodo-text": "Are you sure you want to delete this todo?",
+        "alert-remtask-title": "Delete todo?",
+        "alert-remtask-text": "Are you sure you want to delete this task?",
+        "alert-taskslimit-title": "Limit reached",
+        "alert-taskslimit-text": "You can't add more than 20 tasks to this todo",
+        "alert-back-title": "Back",
+        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
+    },
+
+    "todos": {
+        "container-title": "Todo list",
+        "todos-empty-title": "No quest",
+        "todos-empty-button": "Add a quest",
+
+        "todo-type-deadline": "Ends on:",
+        "todo-type-repeat-before": "To be done before:",
+
+        "alert-todoslimit-title": "Limit reached",
+        "alert-todoslimit-text": "You have reached the limit of todos, please delete some of them to add more."
+    },
+
     "quest": {
         "title-schedule": "Scheduling",
         "title-tasks": "Tasks",
@@ -613,7 +669,8 @@
             "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
             "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",
 
-            "home-5": "Come here, let's take a look at the calendar",
+            "home-5": "You can also add quests, to add activities more quickly, or follow personal goals",
+            "home-6": "Come here, let's take a look at the calendar",
 
             "calendar-1": "This is where all your activities will appear, you can select them to view their details and edit them.",
             "calendar-2": "You can select another day or navigate between weeks with the arrows",
@@ -627,7 +684,7 @@
             "shop-5": "In this category, you can buy chests containing a random item. The rarer the chest, the greater the chance of getting a quality item!",
             "shop-no-internet": "Unfortunately I cannot present the shop to you because you do not have the internet, but you can access it by being connected!",
 
-            "home-6": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
+            "home-7": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
         },
 
         "achievements": {
@@ -664,6 +721,13 @@
             "targetedChests-rare": "By opening the rare chest, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
             "targetedChests-epic": "As for the epic chest, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
             "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
+        },
+
+        "todo": {
+            "1": "Here you can set the deadline for your todo, or its frequency if it's a recurring one",
+            "2": "You can link your todo to an activity, which will allow you to gain experience by completing it.",
+            "3": "You can also add sub-todos to your main todo, to organize yourself better.",
+            "4": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
         },
 
         "quest": {

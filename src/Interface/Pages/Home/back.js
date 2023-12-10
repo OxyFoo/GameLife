@@ -15,6 +15,7 @@ class BackHome extends PageBase {
 
     refTuto1 = null;
     refTuto2 = null;
+    refTuto3 = null;
 
     componentDidMount() {
         super.componentDidMount();

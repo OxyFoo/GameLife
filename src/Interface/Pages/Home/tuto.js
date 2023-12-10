@@ -29,8 +29,12 @@ function StartTutorial(tutoValue) {
                 text: lang['main']['home-4']
             },
             {
+                component: this.refTuto3,
+                text: lang['main']['home-5']
+            },
+            {
                 component: user.interface.bottomBar.refButtons[1],
-                text: lang['main']['home-5'],
+                text: lang['main']['home-6'],
                 showButton: false,
                 execAfter: () => {
                     user.interface.ChangePage('calendar', { tuto: 2 }, true);
@@ -43,7 +47,7 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                text: lang['main']['home-6']
+                text: lang['main']['home-7']
             }
         ]);
     }

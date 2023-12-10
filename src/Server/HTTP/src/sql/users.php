@@ -13,15 +13,20 @@ class Users
      */
     public static function ExecQueue($db, $account, $deviceID, $data) {
         $activities = $data['activities'];
+        $todos = $data['todos'];
         $quests = $data['quests'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
+        $todosSort = $data['todosSort'];
         $questsSort = $data['questsSort'];
         $titleID = $data['titleID'];
         $birthTime = $data['birthTime'];
 
         if (isset($activities)) {
             Skills::AddActivities($db, $account, $activities);
+        }
+        if (isset($todos)) {
+            Todos::AddTodos($db, $account, $todos);
         }
         if (isset($quests)) {
             Quests::AddQuests($db, $account, $quests);
@@ -31,6 +36,9 @@ class Users
         }
         if (isset($xp)) {
             self::setXP($db, $account->ID, $xp);
+        }
+        if (isset($todosSort)) {
+            self::SetTodosSort($db, $account, $todosSort);
         }
         if (isset($questsSort)) {
             self::SetQuestsSort($db, $account, $questsSort);
@@ -277,6 +285,20 @@ class Users
         $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $xp, $accountID ]);
         if ($result === false) {
             ExitWithStatus('Error: Saving XP failed');
+        }
+    }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param string[] $todosSort
+     */
+    private static function SetTodosSort($db, $account, $todosSort) {
+        $command = 'UPDATE TABLE SET `TodosSort` = ? WHERE `ID` = ?';
+        $args = [ json_encode($todosSort), $account->ID ];
+        $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
+        if ($result === false) {
+            ExitWithStatus('Error: Saving todos sort failed');
         }
     }
 

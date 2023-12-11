@@ -7,7 +7,7 @@ import { GetTime } from './Time';
 import DataStorage, { STORAGE } from './DataStorage';
 
 async function CheckDate() {
-    if (!user.server.online) {
+    if (!user.server.IsConnected()) {
         return;
     }
 

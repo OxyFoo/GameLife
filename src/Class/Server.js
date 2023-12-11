@@ -33,6 +33,12 @@ class Server {
     /** @type {ServerStatus} */
     status = 'offline';
 
+    /**
+     * @private
+     * @type {boolean} True if the popup is showed
+     */
+    popupDowndateShowed = false;
+
     Clear = () => {
         this.token = '';
         this.dataToken = '';
@@ -40,8 +46,29 @@ class Server {
         this.status = 'offline';
     }
 
-    IsConnected = () => {
-        return this.status === 'ok' || this.status === 'ban';
+    /**
+     * Return true if the server is connected & user is connected to the server
+     * @param {boolean} [keepBanOrDowndate=true] Consider ban or downdate as connected
+     * @returns {boolean}
+     */
+    IsConnected = (keepBanOrDowndate = true) => {
+        if (this.online === false) {
+            return false;
+        }
+
+        if (this.status === 'ok') {
+            return true;
+        }
+
+        if (keepBanOrDowndate && this.status === 'ban') {
+            return true;
+        }
+
+        if (keepBanOrDowndate && this.status === 'downdate') {
+            return true;
+        }
+
+        return false;
     }
 
     Ping = async (resetConnections = false) => {
@@ -61,6 +88,11 @@ class Server {
         const status = response['status'];
         const devMode = response['devMode'];
 
+        this.status = status;
+        if (devMode) {
+            this.user.interface.console.Enable();
+        }
+
         // Return status & popup out of this class
         if (status === 'update') {
             const update = async () => {
@@ -71,13 +103,15 @@ class Server {
             const text = langManager.curr['home']['alert-update-text'];
             this.user.interface.popup.Open('ok', [ title, text ], update, false);
         } else if (status === 'downdate') {
-            this.online = false;
-            const title = langManager.curr['home']['alert-newversion-title'];
-            const text = langManager.curr['home']['alert-newversion-text'];
-            this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+            this.online = true;
+            if (this.popupDowndateShowed === false) {
+                this.popupDowndateShowed = true;
+                const title = langManager.curr['home']['alert-newversion-title'];
+                const text = langManager.curr['home']['alert-newversion-text'];
+                this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+            }
         } else if (status === 'maintenance' && this.status !== 'maintenance') {
             this.online = false;
-            this.status = status;
         } else if (status === 'error') {
             this.online = false;
             const title = langManager.curr['home']['alert-error-title'];
@@ -85,7 +119,6 @@ class Server {
             this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
         } else if (status === 'ok') {
             this.online = true;
-            if (devMode) this.user.interface.console.Enable();
             this.user.interface.console.EditLog(debugIndex, 'same', 'Request: ping - OK');
         }
     }

@@ -66,7 +66,7 @@ class ShopHeader extends React.Component {
         }
 
         // Check if the user is connected to the server and if the ad is loaded
-        else if (!user.server.online ||
+        else if (!user.server.IsConnected() ||
                 !this.rewardedShop || !this.rewardedShop.ad.loaded) {
             const title = lang['alert-aderror-title'];
             const message = lang['alert-aderror-message-error'];
@@ -79,7 +79,7 @@ class ShopHeader extends React.Component {
         }
     }
     openOxShop = () => {
-        if (!user.server.online) return;
+        if (!user.server.IsConnected()) return;
         const lang = langManager.curr['shop'];
         const title = lang['temp-comingsoon-title'];
         const text = lang['temp-comingsoon-text'];
@@ -134,7 +134,7 @@ class ShopHeader extends React.Component {
                         style={styles.badge}
                         icon='gift'
                         onPress={openPopupCode}
-                        disabled={!user.server.online}
+                        disabled={!user.server.IsConnected()}
                     >
                         <Text fontSize={16} color='main1'>{lang['button-header-code']}</Text>
                     </Button.Badge>
@@ -146,7 +146,7 @@ class ShopHeader extends React.Component {
                         badgeJustifyContent='space-around'
                         onPress={this.openAd}
                         loading={adState === 'wait'}
-                        disabled={!(user.server.online && adState === 'ready')}
+                        disabled={!(user.server.IsConnected() && adState === 'ready')}
                     >
                         <Text fontSize={16} color='main1'>
                             {lang['button-header-ad'].replace('{}', OX_AMOUNT.toString())}
@@ -160,7 +160,7 @@ class ShopHeader extends React.Component {
                         icon='addSquare'
                         badgeJustifyContent='space-around'
                         onPress={this.openOxShop}
-                        disabled={!user.server.online}
+                        disabled={!user.server.IsConnected()}
                     >
                         <Text fontSize={oxTextSize} color='main1'>{oxAmountStr}</Text>
                         <Icon style={styles.ox} icon='ox' color='main1' size={oxIconSize} />

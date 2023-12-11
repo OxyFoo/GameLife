@@ -594,7 +594,9 @@
         "quest-type-repeat-before": "À faire avant le:",
 
         "alert-questslimit-title": "Limite de quêtes atteinte",
-        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres."
+        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
+
+        "current-streak": "Série actuelle"
     },
 
     "wait": {

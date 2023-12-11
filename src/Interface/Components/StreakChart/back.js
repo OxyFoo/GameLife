@@ -9,8 +9,6 @@ import { Svg, Path, Text, Defs, LinearGradient, Stop } from 'react-native-svg';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const StreakChartProps = {
@@ -48,15 +46,20 @@ class StreakChartBack extends React.Component {
     }
 
 
+    /*
+    // Je l'ai commenté parce que ça fonctionne MAIS ça rajoute un délai de 1 valeur 
+    // quand tu cliques sur le bouton.
+    // ce décalage n'est pas normal mais je comprend pas pourquoi il arrive.
     shouldComponentUpdate(nextProps, nextState) {
         console.log("shouldComponentUpdate")
         console.log("nextProps : ", this.props.bestStreak, nextProps.bestStreak)
         console.log("nextState : ", this.state.rotation, nextState.rotation)
-        // Only re-render if currentStreak has changed
         return nextProps.currentStreak !== this.props.currentStreak ||
             nextProps.bestStreak !== this.props.bestStreak ||
             nextState.rotation !== this.state.rotation ; // Comme ca il apparait au début sinon il apparait pas 
     }
+    */
+
 
     componentDidUpdate(prevProps, prevState) {
         // This will be called only if shouldComponentUpdate returned true
@@ -67,8 +70,6 @@ class StreakChartBack extends React.Component {
             // Any other logic that should run after the component updates
         }
     }
-
-
 
 
     compute() {

@@ -3,7 +3,8 @@ import user from 'Managers/UserManager';
 
 class BackMultiplayer extends PageBase {
     state = {
-        server: ''
+        server: '',
+        buttonTestValue: 34,
     }
 
     componentDidMount() {

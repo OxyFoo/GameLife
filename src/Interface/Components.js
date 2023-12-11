@@ -7,6 +7,7 @@ import Container from './Components/Container';
 import Digit from './Components/Digit';
 import Frame from './Components/Character/Frame';
 import GLLoading from './Components/GLLoading';
+import HeatMap from './Components/HeatMap';
 import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
@@ -35,6 +36,7 @@ export {
     Digit,
     Frame,
     GLLoading,
+    HeatMap,
     Icon,
     IconCheckable,
     Input,

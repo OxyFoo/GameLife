@@ -45,12 +45,9 @@ jobs:
         run: cd Tools/RessourcesChecker/ && python3 main.py
 
   test-server:
-    name: '🔍 Server tests'
+    name: '🔍 Application tests'
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v4
-
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
@@ -298,18 +295,22 @@ jobs:
 
       - name: 'Setup API App Store Connect'
         env:
+          KEY_PATH: ~/private_keys
           SEND_KEY: ${{ secrets.APPLE_API_APP_STORE_CONNECT_SEND_KEY }}
-          KEY_PATH: ~/.appstoreconnect/private_keys/
           KEY_CONTENT: ${{ secrets.APPLE_API_APP_STORE_CONNECT_AUTH_KEY }}
         run: |
           # Create directory
           mkdir -p $KEY_PATH
 
           # Get key name (AuthKey_$SEND_KEY.p8)
-          KEY_NAME=AuthKey_$SEND_KEY.p8
+          KEY_NAME="AuthKey_$SEND_KEY.p8"
 
           # Import key from secrets
-          echo -n "$KEY_CONTENT" | base64 --decode > "$KEY_PATH$KEY_NAME"
+          echo -n "$KEY_CONTENT" | base64 --decode > "$KEY_PATH/$KEY_NAME"
+
+          # Check if key is valid
+          ls -l $KEY_PATH
+          ls -l $KEY_PATH/$KEY_NAME
 
       - name: 'Upload to App Store'
         env:

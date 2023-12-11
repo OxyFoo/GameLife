@@ -18,6 +18,7 @@ class Settings {
     onboardingWatched = false;
     tutoFinished = false;
     homePieChart = false; 
+    questHeatMap = false;
 
     morningNotifications = true;
     eveningNotifications = true;

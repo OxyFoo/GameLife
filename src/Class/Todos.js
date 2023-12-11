@@ -1,51 +1,32 @@
 import DynamicVar from 'Utils/DynamicVar';
 import { GetTime } from 'Utils/Time';
-import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {'none' | 'week' | 'month'} RepeatModes
- * 
- * @typedef {object} Schedule
- * @property {RepeatModes} Type
- * @property {Array<number>} Repeat
- * 
- * @typedef {object} Skill
- * @property {number} id
- * @property {boolean} isCategory
  * 
  * @typedef {object} Task
- * @property {boolean} Checked
- * @property {string} Title
+ * @property {boolean} checked
+ * @property {string} title
  */
 
 class Todo {
     /** @type {number} Time in seconds or 0 if unchecked */
-    Checked = 0;
+    checked = 0;
 
     /** @type {string} Todo title with max 128 characters */
-    Title = '';
+    title = '';
 
     /** @type {string} Todo description with max 2048 characters */
-    Description = '';
+    description = '';
 
     /** @type {number} Timestamp in seconds */
-    Starttime = 0;
+    created = 0;
 
     /** @type {number} Timestamp in seconds, 0 if disabled */
-    Deadline = 0;
-
-    /** @type {Schedule} Null to don't repeat */
-    Schedule = {
-        Type: 'none',
-        Repeat: []
-    };
-
-    /** @type {Skill | null} */
-    Skill = null;
+    deadline = 0;
 
     /** @type {Array<Task>} Tasks informations */
-    Tasks = [];
+    tasks = [];
 }
 
 class Todos {
@@ -131,18 +112,30 @@ class Todos {
      */
     Get() {
         let todos = [ ...this.SAVED_todos, ...this.UNSAVED_additions ];
+        console.log('All new todos', todos.length, todos);
+        const a = todos.length;
+        console.log('UUUUUU', this.todosSort);
 
         // Add new todos title at the top
-        todos.forEach(todo =>
-            this.todosSort.findIndex(title => todo.Title === title) === -1 &&
-            this.todosSort.splice(0, 0, todo.Title)
-        );
+        for (const todo of todos) {
+            if (!this.todosSort.includes(todo.title)) {
+                this.todosSort.splice(0, 0, todo.title);
+            }
+        }
+
+        console.log('All new todos', this.todosSort.length);
+        console.log('UUUUUU', this.todosSort);
 
         // Remove deleted todos title
-        const filter = title => todos.findIndex(todo => todo.Title === title) !== -1;
-        this.todosSort = this.todosSort.filter(filter);
+        this.todosSort = this.todosSort.filter(title => {
+            console.log('Search', title, 'in', todos, todos.findIndex(todo => todo.title === title) !== -1);
+            return todos.findIndex(todo => todo.title === title) !== -1;
+        });
 
-        return this.todosSort.map(title => todos.find(todo => todo.Title === title));
+        console.log('All new todos', this.todosSort.length);
+        console.log('UUUUUU', this.todosSort);
+
+        return this.todosSort.map(title => todos.find(todo => todo.title === title));
     }
 
     IsUnsaved = () => {
@@ -152,12 +145,13 @@ class Todos {
         let unsaved = [];
         for (let a in this.UNSAVED_additions) {
             const todo = this.UNSAVED_additions[a];
-            unsaved.push({ Action: 'add', ...todo });
+            unsaved.push({ action: 'add', ...todo });
         }
         for (let a in this.UNSAVED_deletions) {
             const todo = this.UNSAVED_deletions[a];
-            unsaved.push({ Action: 'rem', ...todo });
+            unsaved.push({ action: 'rem', ...todo });
         }
+        console.log('Unsaved todos', this.Get());
         return unsaved;
     }
     Purge = () => {
@@ -172,63 +166,29 @@ class Todos {
         }
         this.UNSAVED_deletions = [];
         this.SAVED_sort = true;
-    }
-
-    /**
-     * Reset todos which are scheduled to be reset (checked & repeat)
-     */
-    RefreshScheduleTodos() {
-        const todos = this.Get();
-        for (let i = 0; i < todos.length; i++) {
-            let todo = todos[i];
-            if (todo.Checked === 0 || todo.Schedule.Type === 'none') continue;
-
-            let reset = false;
-            const now = GetTime();
-            if (todo.Schedule.Type === 'week') {
-                reset ||= WeekDayBetween(todo.Schedule.Repeat, todo.Checked, now);
-            } else if (todo.Schedule.Type === 'month') {
-                reset ||= MonthDayBetween(todo.Schedule.Repeat, todo.Checked, now);
-            }
-            if (reset) {
-                this.Remove(todo);
-                this.Undo();
-            }
-        }
+        console.log('Purged todos', this.Get());
     }
 
     /**
      * Add todo or edit if already exist
      * @param {string} title Title of the todo
      * @param {string} description Description of the todo
+     * @param {number} created Unix timestamp in seconds
      * @param {number} deadline Unix timestamp in seconds
-     * @param {RepeatModes} repeatMode Repeat mode
-     * @param {Array<number>} repeatDays Repeat days
-     * @param {Skill | null} skill Skill informations
      * @param {Array<Task>} tasks Tasks informations
      * @returns {'added' | 'edited'}
      */
-    Add(title, description, deadline, repeatMode, repeatDays, skill, tasks) {
+    Add(title, description, created, deadline, tasks) {
         const newTodo = new Todo();
-        newTodo.Checked = 0;
-        newTodo.Title = title;
-        newTodo.Description = description;
-        newTodo.Starttime = GetTime();
-        newTodo.Deadline = deadline;
-        newTodo.Skill = skill;
-        newTodo.Schedule = {
-            Type: repeatMode,
-            Repeat: repeatDays
-        };
-        newTodo.Tasks = tasks.filter(st => !!st.Title);
-
-        // Check if repeat mode is valid
-        if (repeatMode !== 'none' && repeatDays.length <= 0) {
-            repeatMode = 'none';
-        }
+        newTodo.checked = 0;
+        newTodo.title = title;
+        newTodo.description = description;
+        newTodo.created = created;
+        newTodo.deadline = deadline;
+        newTodo.tasks = tasks.filter(st => !!st.title);
 
         // Check if not exist
-        const indexTodo = this.GetIndex(this.SAVED_todos, newTodo);
+        const indexSaved = this.GetIndex(this.SAVED_todos, newTodo);
         const indexUnsaved = this.GetIndex(this.UNSAVED_additions, newTodo);
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, newTodo);
 
@@ -237,20 +197,25 @@ class Todos {
         }
 
         // Todo already exist
-        if (indexTodo !== null || indexUnsaved !== null) {
-            if (indexTodo !== null) {
-                this.SAVED_todos.splice(indexDeletion, 1);
+        if (indexSaved !== null || indexUnsaved !== null) {
+            if (indexSaved !== null) {
+                this.SAVED_todos.splice(indexSaved, 1);
             }
             if (indexUnsaved !== null) {
                 this.UNSAVED_additions.splice(indexUnsaved, 1);
             }
+            console.log('Edited todo', newTodo);
             this.UNSAVED_additions.push(newTodo);
+            this.allTodos.Set(this.Get());
+            console.log('Edited todo2', newTodo);
             return 'edited';
         }
 
         // Todo not exist, add it
+        console.log('Added todo', newTodo);
         this.UNSAVED_additions.push(newTodo);
         this.allTodos.Set(this.Get());
+        console.log('Added todo2', newTodo);
         return 'added';
     }
 
@@ -294,21 +259,21 @@ class Todos {
      * @returns {boolean} Success of the operation
      */
     Move(todo, newIndex) {
-        if (!this.todosSort.includes(todo.Title)) {
-            this.user.interface.console.AddLog('warn', `Todos - move failed: todo not found (${todo.Title} ${newIndex})`);
+        if (!this.todosSort.includes(todo.title)) {
+            this.user.interface.console.AddLog('warn', `Todos - move failed: todo not found (${todo.title} ${newIndex})`);
             return false;
         }
         if (newIndex < 0 || newIndex > this.todosSort.length) {
-            this.user.interface.console.AddLog('warn', `Todos - move failed: index out of range (${todo.Title} ${newIndex})`);
+            this.user.interface.console.AddLog('warn', `Todos - move failed: index out of range (${todo.title} ${newIndex})`);
             return false;
         }
-        const oldIndex = this.todosSort.indexOf(todo.Title);
+        const oldIndex = this.todosSort.indexOf(todo.title);
         if (oldIndex === newIndex) {
-            this.user.interface.console.AddLog('warn', `Todos - move failed: same index (${todo.Title} ${newIndex})`);
+            this.user.interface.console.AddLog('warn', `Todos - move failed: same index (${todo.title} ${newIndex})`);
             return false;
         }
         this.todosSort.splice(oldIndex, 1);
-        this.todosSort.splice(newIndex, 0, todo.Title);
+        this.todosSort.splice(newIndex, 0, todo.title);
         this.SAVED_sort = false;
         this.allTodos.Set(this.Get());
         return true;
@@ -328,11 +293,11 @@ class Todos {
         if (indexTodo !== null) selectedTodo = this.SAVED_todos.splice(indexTodo, 1)[0];
         if (indexUnsaved !== null) selectedTodo = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
         if (selectedTodo === null) {
-            this.user.interface.console.AddLog('warn', `Todos - check failed: todo not found (${todo.Title} ${checkedTime})`);
+            this.user.interface.console.AddLog('warn', `Todos - check failed: todo not found (${todo.title} ${checkedTime})`);
             return false;
         }
 
-        selectedTodo.Checked = checkedTime;
+        selectedTodo.checked = checkedTime;
         this.UNSAVED_additions.push(selectedTodo);
         this.allTodos.Set(this.Get());
         return true;
@@ -358,7 +323,7 @@ class Todos {
         if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
 
         // Save unchecked todo in UNSAVED_additions
-        this.lastDeletedTodo.Checked = 0;
+        this.lastDeletedTodo.checked = 0;
         this.UNSAVED_additions.push(this.lastDeletedTodo);
         this.lastDeletedTodo = null;
         this.allTodos.Set(this.Get());
@@ -375,7 +340,7 @@ class Todos {
      * @returns {number | null} Index of todo or null if not found
      */
     GetIndex(arr, todo) {
-        const index = arr.findIndex(a => a.Title === todo.Title);
+        const index = arr.findIndex(a => a.title === todo.title);
         if (index === -1) return null;
         return index;
     }

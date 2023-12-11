@@ -39,6 +39,7 @@ import svgSlotTop from 'Ressources/icons/slot-top';
 import svgSocial from 'Ressources/icons/social';
 import svgSuccess from 'Ressources/icons/success';
 import svgTiktok from 'Ressources/icons/tiktok';
+import svgTrash from 'Ressources/icons/trash';
 import svgUndo from 'Ressources/icons/undo';
 import svgUserAdd from 'Ressources/icons/user-add';
 import svgWorld from 'Ressources/icons/world';
@@ -88,6 +89,7 @@ const SVGIcons = {
     social: svgSocial,
     success: svgSuccess,
     tiktok: svgTiktok,
+    trash: svgTrash,
     undo: svgUndo,
     userAdd: svgUserAdd,
     world: svgWorld,

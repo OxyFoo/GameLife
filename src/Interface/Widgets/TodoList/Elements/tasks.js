@@ -48,10 +48,10 @@ class TaskElement extends React.Component {
         const { style, task, onTaskEdit } = this.props;
         if (task === null) return null;
 
-        const { Checked, Title } = task;
+        const { checked, title } = task;
         const decoration = {
             /** @type {TextDecorationLineType} */
-            textDecorationLine: Checked ? 'line-through' : 'none'
+            textDecorationLine: checked ? 'line-through' : 'none'
         };
 
         const lang = langManager.curr['todo'];
@@ -60,16 +60,16 @@ class TaskElement extends React.Component {
             <View style={[styles.parentTask, style]}>
                 <Button
                     style={styles.checkbox}
-                    color={Checked ? 'white' : 'transparent'}
-                    onPress={() => onTaskEdit(!Checked, Title)}
+                    color={checked ? 'white' : 'transparent'}
+                    onPress={() => onTaskEdit(!checked, title)}
                     onLongPress={this.remove}
                 >
-                    {Checked && <Icon icon='check' color='main1' size={16} />}
+                    {checked && <Icon icon='check' color='main1' size={16} />}
                 </Button>
                 <TextInput
                     style={[styles.input, this.textColor, decoration]}
-                    value={Title}
-                    onChangeText={text => onTaskEdit(!!Checked, text)} // TODO: !! added, right?
+                    value={title}
+                    onChangeText={text => onTaskEdit(!!checked, text)} // TODO: !! added, right?
                     selectionColor={this.hexActiveColor}
                     multiline={true}
                     maxLength={256}

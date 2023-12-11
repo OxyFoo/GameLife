@@ -43,8 +43,8 @@ class SectionTasks extends React.Component {
         }
 
         tasks.push({
-            Checked: false,
-            Title: ''
+            checked: false,
+            title: ''
         });
 
         this.setState({ tasks });
@@ -54,8 +54,8 @@ class SectionTasks extends React.Component {
         let { tasks: tasks } = this.state;
 
         tasks.splice(index, 1, {
-            Checked: checked,
-            Title: title
+            checked: checked,
+            title: title
         });
 
         this.setState({ tasks });

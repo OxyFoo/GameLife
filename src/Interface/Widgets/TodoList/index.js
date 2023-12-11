@@ -14,6 +14,8 @@ import { Container, Button, Text } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Class/Todos').Todo} Todo
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
@@ -26,11 +28,12 @@ class TodoList extends BackTodoList {
     static TodoElement = TodoElement;
     static TaskElement = TaskElement;
 
+    /** @param {{ item: Todo }} param0 */
     renderItem = ({ item }) => {
         const { draggedItem } = this.state;
 
         const styleOpacity = { opacity: 1 };
-        if (draggedItem !== null && item.Title === draggedItem.Title) {
+        if (draggedItem !== null && item.title === draggedItem.title) {
             styleOpacity.opacity = .25;
         }
 
@@ -38,7 +41,8 @@ class TodoList extends BackTodoList {
             <TodoElement
                 style={styleOpacity}
                 todo={item}
-                onTodoCheck={this.onTodoCheck}
+                onCheck={this.onTodoCheck}
+                onRemove={this.onTodoRemove}
                 onDrag={() => this.onDrag(item)}
             />
         );

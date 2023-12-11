@@ -544,26 +544,14 @@
     "todo": {
         "title-schedule": "Scheduling",
         "title-tasks": "Tasks",
-        "title-activity": "Activity",
         "title-commentary": "Commentary",
 
         "input-title": "Title",
         "input-deadline-title": "Due date",
         "input-deadline-empty": "None",
-        "input-activity-title": "No category or activity selected",
-        "input-activity-title-activity": "Activity selected:",
-        "input-activity-title-category": "Category selected:",
-        "input-activity-none": "No activity",
-        "input-activity-empty": "Select",
-        "input-activity-only": "All activities of category: {}",
 
-        "input-panel-activity": "Select an activity",
-        "input-panel-category": "Select a category",
-
-        "input-repeat-title": "Repeat",
         "input-description": "Description",
         "input-task-placeholder": "Task",
-        "text-hint-select": "Press and hold to select the column",
 
         "button-commentary": "Add a commentary",
         "button-add": "Add",
@@ -591,7 +579,6 @@
         "todos-empty-button": "Add a quest",
 
         "todo-type-deadline": "Ends on:",
-        "todo-type-repeat-before": "To be done before:",
 
         "alert-todoslimit-title": "Limit reached",
         "alert-todoslimit-text": "You have reached the limit of todos, please delete some of them to add more."
@@ -724,10 +711,9 @@
         },
 
         "todo": {
-            "1": "Here you can set the deadline for your todo, or its frequency if it's a recurring one",
-            "2": "You can link your todo to an activity, which will allow you to gain experience by completing it.",
-            "3": "You can also add sub-todos to your main todo, to organize yourself better.",
-            "4": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
+            "1": "Here you can set the deadline for your todo",
+            "2": "You can also add sub-todos to your main todo, to organize yourself better.",
+            "3": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
         },
 
         "quest": {

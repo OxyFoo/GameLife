@@ -544,26 +544,14 @@
     "todo": {
         "title-schedule": "Planification",
         "title-tasks": "Tâches",
-        "title-activity": "Activité",
         "title-commentary": "Commentaire",
 
         "input-title": "Titre",
         "input-deadline-title": "Date limite",
         "input-deadline-empty": "Aucune",
-        "input-activity-title": "Aucune catégorie ou activité sélectionnée",
-        "input-activity-title-activity": "Activité sélectionnée:",
-        "input-activity-title-category": "Catégorie sélectionnée:",
-        "input-activity-none": "Aucune",
-        "input-activity-empty": "Sélectionner",
-        "input-activity-only": "Toutes les activités de la catégorie: {}",
 
-        "input-panel-activity": "Sélectionne une activité",
-        "input-panel-category": "Sélectionne une catégorie",
-
-        "input-repeat-title": "Répétition",
         "input-description": "Description",
         "input-task-placeholder": "Tâche",
-        "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
         "button-commentary": "Ajouter un commentaire",
         "button-add": "Ajouter",
@@ -591,7 +579,6 @@
         "todos-empty-button": "En ajouter une",
 
         "todo-type-deadline": "Avant le:",
-        "todo-type-repeat-before": "À faire avant le:",
 
         "alert-todoslimit-title": "Limite atteinte",
         "alert-todoslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
@@ -724,10 +711,9 @@
         },
 
         "todo": {
-            "1": "Ici, définis la date limite de ta tâche ou sa fréquence si elle est récurrente.",
-            "2": "Tu as la possibilité de relier ta tâche avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Tu peux également ajouter des tâches à ta tâche principale, pour mieux t'organiser.",
-            "4": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+            "1": "Ici tu peux définir la date limite de ta tâche.",
+            "2": "Tu peux également ajouter des tâches à ta tâche principale, pour mieux t'organiser.",
+            "3": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
         },
 
         "quest": {

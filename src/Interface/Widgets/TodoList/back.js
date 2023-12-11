@@ -20,6 +20,7 @@ import { TimingAnimation } from 'Utils/Animations';
 
 class BackTodoList extends React.Component {
     state = {
+        /** @type {Todo[]} */
         todos: [],
 
         /** @type {boolean} Used to disable scroll when dragging a todo */
@@ -52,7 +53,6 @@ class BackTodoList extends React.Component {
         /** @type {LayoutRectangle | null} */
         this.tmpLayoutContainer = null;
 
-        user.todos.RefreshScheduleTodos();
         this.state.todos = user.todos.Get();
         this.listenerTodo = user.todos.allTodos.AddListener(this.refreshTodos);
     }
@@ -68,11 +68,9 @@ class BackTodoList extends React.Component {
     /** @param {Todo} item */
     keyExtractor = (item) => (
         'todo-' + [
-            item.Title,
-            ...item.Schedule.Type,
-            ...item.Schedule.Repeat,
-            ...item.Starttime.toString(),
-            ...item.Deadline.toString()
+            item.title,
+            ...item.created.toString(),
+            ...item.deadline.toString()
         ].join('-')
     )
 
@@ -91,58 +89,40 @@ class BackTodoList extends React.Component {
         user.interface.ChangePage('todo', undefined, true);
     }
 
+    /** @param {Todo} todo */
+    onTodoCheck = (todo) => {
+        if (todo.checked !== 0) {
+            user.todos.Uncheck(todo);
+        } else {
+            user.todos.Check(todo, GetTime());
+        }
+        user.GlobalSave();
+    }
+
     /**
      * @param {Todo} todo
      * @param {(cancel: () => void) => void} callbackRemove
-     * @returns {Promise<void>}
      */
-    onTodoCheck = async (todo, callbackRemove) => {
-        // If todo has a skill, go to activity page
-        //     (will be checked when activity is done)
-        if (todo.Skill !== null) {
-            if (todo.Checked === 0) {
-                const { id, isCategory } = todo.Skill;
-                const args = isCategory ? { categoryID: id } : { skillID: id };
-                user.interface.ChangePage('activity', args, true);
+    onTodoRemove = (todo, callbackRemove) => {
+        // Close undo button after 10 seconds
+        this.undoTimeout = setTimeout(() => {
+            this.setState({ undoEnabled: false });
+        }, 10 * 1000);
+
+        // Remove todo
+        callbackRemove((cancel) => {
+            const success = user.todos.Remove(todo) === 'removed';
+            if (!success) {
+                cancel();
+                return;
             }
-        }
 
-        // If todo is scheduled, check it
-        else if (todo.Schedule.Type !== 'none') {
-            // Todo already checked
-            if (todo.Checked !== 0) {
-                user.todos.Uncheck(todo);
-                user.GlobalSave();
-            } else {
-                const checkedTime = GetTime();
-                user.todos.Check(todo, checkedTime);
-                user.GlobalSave();
-            }
-        }
-
-        // If todo is not scheduled, remove it
-        else {
-            // Close undo button after 10 seconds
-            this.undoTimeout = setTimeout(() => {
-                this.setState({ undoEnabled: false });
-            }, 10 * 1000);
-
-            // Remove todo
-            callbackRemove((cancel) => {
-                const success = user.todos.Remove(todo) === 'removed';
-                if (!success) {
-                    cancel();
-                    return;
-                }
-
-                this.setState({
-                    todos: [ ...user.todos.Get() ],
-                    undoEnabled: true
-                });
-                user.GlobalSave();
+            this.setState({
+                todos: [ ...user.todos.Get() ],
+                undoEnabled: true
             });
-        }
-
+            user.GlobalSave();
+        });
     }
 
     undo = () => {
@@ -209,7 +189,7 @@ class BackTodoList extends React.Component {
 
         // Change todo order when dragging
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.todos.todosSort.indexOf(draggedItem.Title);
+        const currIndex = user.todos.todosSort.indexOf(draggedItem.title);
         if (index !== currIndex && user.todos.Move(draggedItem, index)) {
             this.setState({ todos: user.todos.Get() });
         }

@@ -6,7 +6,6 @@ import user from 'Managers/UserManager';
 import BackTodo from './back';
 import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
-import SectionSkill from './Sections/activity';
 import SectionSchedule from './Sections/schedule';
 import SectionTasks from './Sections/tasks';
 
@@ -19,7 +18,16 @@ class Todo extends BackTodo {
         const { button, title, error } = this.state;
 
         return (
-            <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss}>
+            <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss} overlay={(
+                <Button
+                    style={styles.button}
+                    color={button.color}
+                    onPress={this.onButtonPress}
+                    enabled={error.length === 0}
+                >
+                    {button.text}
+                </Button>
+            )}>
                 <PageHeader
                     onBackPress={() => user.interface.BackHandle()}
                     onHelpPress={StartHelp.bind(this)}
@@ -33,16 +41,6 @@ class Todo extends BackTodo {
 
                 <SectionSchedule
                     ref={ref => this.refSectionSchedule = ref}
-                    onChange={this.onChangeSchedule}
-                />
-
-                <SectionSkill
-                    ref={ref => this.refSectionSkill = ref}
-                    onChange={this.onEditTodo}
-                />
-
-                <SectionTasks
-                    ref={ref => this.refSectionTasks = ref}
                     onChange={this.onEditTodo}
                 />
 
@@ -51,14 +49,10 @@ class Todo extends BackTodo {
                     onChange={this.onEditTodo}
                 />
 
-                <Button
-                    style={styles.button}
-                    color={button.color}
-                    onPress={this.onButtonPress}
-                    enabled={error.length === 0}
-                >
-                    {button.text}
-                </Button>
+                <SectionTasks
+                    ref={ref => this.refSectionTasks = ref}
+                    onChange={this.onEditTodo}
+                />
             </Page>
         );
     }
@@ -66,7 +60,13 @@ class Todo extends BackTodo {
 
 const styles = StyleSheet.create({
     button: {
-        marginTop: 48
+        position: 'absolute',
+        height: 50,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        marginBottom: 24,
+        marginHorizontal: 24
     }
 });
 

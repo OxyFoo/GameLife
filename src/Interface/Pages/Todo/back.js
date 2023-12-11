@@ -4,18 +4,17 @@ import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { GetTime } from 'Utils/Time';
+
 /**
  * @typedef {import('Class/Todos').Todo} Todo
- * @typedef {import('Class/Todos').RepeatModes} RepeatModes
  * 
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * 
  * @typedef {'new' | 'edit' | 'remove'} States
  * 
- * @typedef {import('./Sections/activity').default} SectionActivity
  * @typedef {import('./Sections/schedule').default} SectionSchedule
- * @typedef {import('./Sections/schedule').OnChangeScheduleEvent} OnChangeScheduleEvent
  * @typedef {import('./Sections/tasks').default} SectionTasks
  * @typedef {import('./Sections/description').default} SectionDescription
  */
@@ -39,23 +38,17 @@ class BackTodo extends PageBase {
         error: ''
     }
 
-    /** @type {SectionActivity | null} */
-    refSectionSkill = null;
-
     /** @type {SectionSchedule | null} */
     refSectionSchedule = null;
-
-    /** @type {SectionTasks | null} */
-    refSectionTasks = null;
 
     /** @type {SectionDescription | null} */
     refSectionDescription = null;
 
+    /** @type {SectionTasks | null} */
+    refSectionTasks = null;
+
     /** @type {Todo | null} */
     selectedTodo = null;
-
-    /** @type {RepeatModes} */
-    lastRepeatMode = 'none';
 
     constructor(props) {
         super(props);
@@ -64,7 +57,6 @@ class BackTodo extends PageBase {
             /** @type {Todo | null} */
             const todo = this.props.args.todo || null;
             this.selectedTodo = todo;
-            this.lastRepeatMode = todo.Schedule.Type;
 
             if (todo === null) {
                 user.interface.BackHandle();
@@ -79,7 +71,7 @@ class BackTodo extends PageBase {
                     color: 'danger'
                 },
 
-                title: todo.Title,
+                title: todo.title,
                 error: ''
             };
         }
@@ -91,11 +83,9 @@ class BackTodo extends PageBase {
         const { selectedTodo } = this;
         if (selectedTodo === null) return;
 
-        const { Deadline, Schedule: { Type, Repeat } } = selectedTodo;
-        this.refSectionSchedule.SetValues(Deadline, Type, Repeat);
-        this.refSectionTasks.SetTasks(selectedTodo.Tasks);
-        this.refSectionSkill.SetSkill(selectedTodo.Skill);
-        this.refSectionDescription.SetDescription(selectedTodo.Description);
+        this.refSectionSchedule.SetDeadline(selectedTodo.deadline);
+        this.refSectionTasks.SetTasks(selectedTodo.tasks);
+        this.refSectionDescription.SetDescription(selectedTodo.description);
     }
 
     componentDidFocused = () => {
@@ -163,8 +153,8 @@ class BackTodo extends PageBase {
     checkTitleErrors = (title) => {
         let message = '';
 
-        const titleIsCurrent = title === (this.selectedTodo?.Title || null);
-        const titleUsed = user.todos.Get().some(t => t.Title === title);
+        const titleIsCurrent = title === (this.selectedTodo?.title || null);
+        const titleUsed = user.todos.Get().some(t => t.title === title);
 
         if (title.trim().length <= 0) {
             message = langManager.curr['todo']['error-title-empty'];
@@ -178,17 +168,6 @@ class BackTodo extends PageBase {
         return message.length > 0;
     }
 
-    /** @type {OnChangeScheduleEvent} */
-    onChangeSchedule = (deadline, repeatMode, repeatDays) => {
-        // Check if repeat mode has changed to reset scroll position
-        if (this.lastRepeatMode !== repeatMode) {
-            this.lastRepeatMode = repeatMode;
-            this.refPage.GotoY(0);
-        }
-
-        this.onEditTodo();
-    }
-
     onButtonPress = () => {
         const { action } = this.state;
         switch (action) {
@@ -199,11 +178,11 @@ class BackTodo extends PageBase {
                 user.interface.console.AddLog('error', 'Todo: Unknown action');
         }
     }
+
     addTodo = () => {
         const { title } = this.state;
-        const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
-        const skill = this.refSectionSkill.GetSkill();
+        const deadline = this.refSectionSchedule.GetDeadline();
         const tasks = this.refSectionTasks.GetTasks()
         const description = this.refSectionDescription.GetDescription();
 
@@ -214,10 +193,8 @@ class BackTodo extends PageBase {
         const addition = user.todos.Add(
             title,
             description,
+            GetTime(),
             deadline,
-            repeatMode,
-            selectedDays,
-            skill,
             tasks
         );
 
@@ -236,9 +213,8 @@ class BackTodo extends PageBase {
         }
 
         const { title } = this.state;
-        const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
-        const skill = this.refSectionSkill.GetSkill();
+        const deadline = this.refSectionSchedule.GetDeadline();
         const tasks = this.refSectionTasks.GetTasks();
         const description = this.refSectionDescription.GetDescription();
 
@@ -249,13 +225,12 @@ class BackTodo extends PageBase {
         const edition = user.todos.Add(
             title,
             description,
+            this.selectedTodo.created || GetTime(),
             deadline,
-            repeatMode,
-            selectedDays,
-            skill,
             tasks
         );
 
+        // Remove old todo (title different => new todo)
         if (edition === 'added') {
             const remove = user.todos.Remove(this.selectedTodo);
             if (remove === 'notExist') {

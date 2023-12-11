@@ -35,6 +35,14 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
         borderRadius: 8
     },
+    trashButton: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        width: 32,
+        height: 'auto'
+    },
 
     // Tasks
     parentTask: {

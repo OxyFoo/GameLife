@@ -27,7 +27,7 @@ class Settings {
         this.email = '';
         this.connected = false;
         this.homePieChart = false;
-        this.homePieChart = false;
+        this.questHeatMap = false;
         this.morningNotifications = true;
         this.eveningNotifications = true;
     }
@@ -45,6 +45,7 @@ class Settings {
             if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
             if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
             if (contains('homePieChart')) this.homePieChart = settings['homePieChart'];
+            if (contains('questHeatMap')) this.questHeatMap = settings['questHeatMap'];
             if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
             if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
 
@@ -63,6 +64,7 @@ class Settings {
             onboardingWatched: this.onboardingWatched,
             tutoFinished: this.tutoFinished,
             homePieChart: this.homePieChart,
+            questHeatMap: this.questHeatMap,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
         };

@@ -73,10 +73,14 @@ class YearHeatMapBack extends React.Component {
         else {
             // Data with 52 * 7 cells, one for each day of the year (assuming 7 days per week)
             dataToDisplay = new Array(this.WEEKS * this.DAYS_PER_WEEK).fill(null).map(() => Math.floor(Math.random() * this.LEVELS));
-            gridSize = 5; 
+            gridSize = 5;
         }
 
-        this.setState({ dataToDisplay, gridSize });
+        this.setState({
+            dataToDisplay,
+            gridSize,
+            switchValue: value,
+        });
     }
 
     /** @param {boolean} value */

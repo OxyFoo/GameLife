@@ -11,14 +11,9 @@ import { Switch, HeatMap } from 'Interface/Components';
 class YearHeatMap extends YearHeatMapBack {
     render() {
         const lang = langManager.curr['quests'];
-        const { switchValue, totalTime } = this.state;
 
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
-        };
-
-        const whiteText = {
-            color: themeManager.GetColor('primary')
         };
 
         const titleWeek = lang['heatmap-title-weeks'];

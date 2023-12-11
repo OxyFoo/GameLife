@@ -74,7 +74,7 @@ class UserManager {
     
     StartTimers() {
         const saveTime = 5 * 60 * 1000; // 5 minutes
-        const save = this.server.online ? this.OnlineSave : this.LocalSave;
+        const save = this.server.IsConnected() ? this.OnlineSave : this.LocalSave;
         this.intervalSave = window.setInterval(save, saveTime);
 
         const achievementsTime = 20 * 1000; // 20 seconds
@@ -142,7 +142,7 @@ class UserManager {
     }
 
     async RefreshStats(onlineSave = true) {
-        if (this.server.online && onlineSave) {
+        if (this.server.IsConnected() && onlineSave) {
             this.activities.RemoveDeletedSkillsActivities();
             await this.OnlineSave();
         }
@@ -227,7 +227,7 @@ class UserManager {
 
     /** @returns {Promise<boolean>} True if data is saved */
     OnlineSave = async () => {
-        if (!this.server.online) return false;
+        if (!this.server.IsConnected()) return false;
 
         let data = {};
         let saved = false;
@@ -277,7 +277,7 @@ class UserManager {
     }
 
     async OnlineLoad(force = false) {
-        if (!this.server.online) return false;
+        if (!this.server.IsConnected()) return false;
         const debugIndex = this.interface.console.AddLog('info', 'User data: online loading...');
         const data = await this.server.LoadUserData(force);
         const contains = (key) => data.hasOwnProperty(key);

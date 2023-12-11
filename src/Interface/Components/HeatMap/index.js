@@ -22,7 +22,7 @@ class HeatMap extends HeatMapBack {
                     <View
                         key={i}
                         style={[
-                            styles.week,
+                            this.state.styleCell,
                             { backgroundColor: getColor(weekLevel) },
                         ]}
                     />

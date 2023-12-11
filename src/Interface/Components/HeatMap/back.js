@@ -21,11 +21,44 @@ const HeatMapProps = {
     yearData: {},
 
     /** @type {number} */
-    numberOfCellsOnColumn: 1,
+    gridSize: 10,
 }
 
 class HeatMapBack extends React.Component {
 
+    state = {
+        styleCell: {
+            height: 5,
+            width: 5,
+            margin: 1,
+        }
+    }
+
+    compute() {
+        console.log("compute")
+        const { yearData, gridSize } = this.props;
+        const styleCell = {
+            height: gridSize,
+            width: gridSize,
+            margin: gridSize / 5,
+        }
+        this.setState({ styleCell });
+    }
+
+    componentDidMount() {
+        console.log("componentDidMount")
+        this.compute();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.yearData !== this.props.yearData || nextState.styleCell !== this.state.styleCell;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.yearData !== this.props.yearData ) {
+            this.compute();
+        }
+    }
 }
 
 HeatMapBack.prototype.props = HeatMapProps;

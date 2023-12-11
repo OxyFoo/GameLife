@@ -11,7 +11,7 @@ function StartTutorial(tutoValue) {
     const lang = langManager.curr['tuto'];
     if (tutoValue === 3) {
         // Skip shop tutorial if user is not connected
-        if (!user.server.IsConnected()) {
+        if (!user.server.IsConnected(false)) {
             user.interface.screenTuto.ShowTutorial([
                 {
                     component: null,

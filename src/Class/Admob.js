@@ -157,7 +157,7 @@ class Admob {
      * @param {AdEvent} callback
      */
     EventOx = async (type, ad, callback = () => {}) => {
-        if (this.user.informations.adRemaining <= 0 || !this.user.server.online) {
+        if (this.user.informations.adRemaining <= 0 || !this.user.server.IsConnected()) {
             callback('notAvailable');
             return;
         }

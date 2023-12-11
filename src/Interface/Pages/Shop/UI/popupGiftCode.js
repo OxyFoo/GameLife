@@ -12,7 +12,7 @@ import { Text, Button, Input } from 'Interface/Components';
  */
 
 function openPopupCode() {
-    if (!user.server.online) return;
+    if (!user.server.IsConnected()) return;
     user.interface.popup.Open('custom', renderGiftCodePopup);
 }
 

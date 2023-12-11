@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { View } from 'react-native';
 
 import langManager from 'Managers/LangManager';
+
+import { Svg, Path, Text, Defs, LinearGradient, Stop } from 'react-native-svg';
+
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -29,43 +31,17 @@ class HeatMapBack extends React.Component {
             height: 5,
             width: 5,
             margin: 1,
-        },
-
-        dataToDisplay: null
+        }
     }
-
-    LEVELS = 7; // Number of different color levels
-    WEEKS = 52; // Number of weeks in a year
-
-    getColor (level) {
-        const colorLevel = Math.floor((255 * level) / (this.LEVELS - 1));
-        return `rgb(0, ${colorLevel}, 0)`; // Green color with varying intensity
-    };
 
     compute() {
         const { yearData, gridSize } = this.props;
-
         const styleCell = {
             height: gridSize,
             width: gridSize,
             margin: gridSize / 5,
         }
-
-        console.log(styleCell)
-
-        let dataToDisplay = 
-            yearData.map((weekLevel, i) => (
-                <View
-                    key={i}
-                    style={[
-                        this.state.styleCell,
-                        { backgroundColor: this.getColor(weekLevel) },
-                    ]}
-                />
-            ))
-        ;
-
-        this.setState({ styleCell, dataToDisplay });
+        this.setState({ styleCell });
     }
 
     componentDidMount() {
@@ -77,7 +53,7 @@ class HeatMapBack extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.yearData !== this.props.yearData) {
+        if (prevProps.yearData !== this.props.yearData ) {
             this.compute();
         }
     }

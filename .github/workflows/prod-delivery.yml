@@ -298,21 +298,29 @@ jobs:
 
       - name: 'Setup API App Store Connect'
         env:
-          KEY_PATH: ~/private_keys
+          KEY_PATH: ios/build/private_keys
           SEND_KEY: ${{ secrets.APPLE_API_APP_STORE_CONNECT_SEND_KEY }}
           KEY_CONTENT: ${{ secrets.APPLE_API_APP_STORE_CONNECT_AUTH_KEY }}
         run: |
           # Create directory
           mkdir -p $KEY_PATH
 
+          # Go to the ios directory
+          cd $KEY_PATH
+
           # Get key name (AuthKey_$SEND_KEY.p8)
           KEY_NAME="AuthKey_$SEND_KEY.p8"
 
           # Import key from secrets
-          echo -n "$KEY_CONTENT" | base64 --decode > "$KEY_PATH/$KEY_NAME"
+          echo -n "$KEY_CONTENT" | base64 --decode > $KEY_NAME
+
+          # Go back
+          cd -
+
+          # Print current directory
+          pwd
 
           # Check if key is valid
-          ls -l $KEY_PATH
           ls -l $KEY_PATH/$KEY_NAME
 
       - name: 'Upload to App Store'

@@ -9,7 +9,7 @@ import QuestSelection from './Elements/questSelection';
 
 import langManager from 'Managers/LangManager';
 
-import { Container, Button, Text } from 'Interface/Components';
+import { Container, Button, Text, Separator } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -72,8 +72,8 @@ class QuestsList extends BackQuestsList {
                 style={this.props.style}
                 styleContainer={styles.questsContainer}
                 type='static'
-                icon={containerIcon}
                 text={lang['container-title']}
+                icon={containerIcon}
                 onIconPress={containerAction}
             >
                 <QuestSelection
@@ -94,6 +94,7 @@ class QuestsList extends BackQuestsList {
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                     ListEmptyComponent={this.renderEmpty}
+                    ItemSeparatorComponent={() => <Separator.Horizontal color='backgroundTransparent' style={{ width: 'auto', height: 1.5, marginHorizontal: 12, opacity: .5 }} />}
                 />
             </Container>
         );

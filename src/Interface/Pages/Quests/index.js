@@ -11,7 +11,12 @@ import { QuestsList } from 'Interface/Widgets';
 class Quests extends BackQuests {
     render() {
         return (
-            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
+            <Page
+                ref={ref => this.refPage = ref}
+                style={styles.page}
+                isHomePage
+                canScrollOver
+            >
                 <QuestsList />
             </Page>
         );

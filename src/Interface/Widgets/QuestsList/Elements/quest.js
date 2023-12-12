@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, TouchableOpacity } from 'react-native';
+import { View, Animated, FlatList } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
@@ -9,6 +9,8 @@ import { GetDate, GetTime } from 'Utils/Time';
 import { DateToFormatString, GetDay } from 'Utils/Date';
 import { Text, Icon, Button } from 'Interface/Components';
 import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
+
+import DayClock from '../../../Components/DayClock';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

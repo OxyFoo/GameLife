@@ -226,6 +226,10 @@ class BackQuestsList extends React.Component {
     }
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
+        if (this.state.draggedItem === null) {
+            return;
+        }
+
         // Dragging ended & save new quests order
         this.setState({
             scrollable: true,

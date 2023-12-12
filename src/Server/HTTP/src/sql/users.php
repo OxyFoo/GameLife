@@ -13,11 +13,11 @@ class Users
      */
     public static function ExecQueue($db, $account, $deviceID, $data) {
         $activities = $data['activities'];
-        $todos = $data['todos'];
+        $todoes = $data['todoes'];
         $quests = $data['quests'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
-        $todosSort = $data['todosSort'];
+        $todoesSort = $data['todoesSort'];
         $questsSort = $data['questsSort'];
         $titleID = $data['titleID'];
         $birthTime = $data['birthTime'];
@@ -25,8 +25,8 @@ class Users
         if (isset($activities)) {
             Skills::AddActivities($db, $account, $activities);
         }
-        if (isset($todos)) {
-            Todos::AddTodos($db, $account, $todos);
+        if (isset($todoes)) {
+            Todoes::AddTodoes($db, $account, $todoes);
         }
         if (isset($quests)) {
             Quests::AddQuests($db, $account, $quests);
@@ -37,8 +37,8 @@ class Users
         if (isset($xp)) {
             self::setXP($db, $account->ID, $xp);
         }
-        if (isset($todosSort)) {
-            self::SetTodosSort($db, $account, $todosSort);
+        if (isset($todoesSort)) {
+            self::SetTodoesSort($db, $account, $todoesSort);
         }
         if (isset($questsSort)) {
             self::SetQuestsSort($db, $account, $questsSort);
@@ -291,14 +291,14 @@ class Users
     /**
      * @param DataBase $db
      * @param Account $account
-     * @param string[] $todosSort
+     * @param string[] $todoesSort
      */
-    private static function SetTodosSort($db, $account, $todosSort) {
-        $command = 'UPDATE TABLE SET `TodosSort` = ? WHERE `ID` = ?';
-        $args = [ json_encode($todosSort), $account->ID ];
+    private static function SetTodoesSort($db, $account, $todoesSort) {
+        $command = 'UPDATE TABLE SET `TodoesSort` = ? WHERE `ID` = ?';
+        $args = [ json_encode($todoesSort), $account->ID ];
         $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
         if ($result === false) {
-            ExitWithStatus('Error: Saving todos sort failed');
+            ExitWithStatus('Error: Saving todoes sort failed');
         }
     }
 

@@ -573,15 +573,15 @@
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
-    "todos": {
+    "todoes": {
         "container-title": "Todo liste",
-        "todos-empty-title": "Tu n'as pas encore de tâches",
-        "todos-empty-button": "En ajouter une",
+        "todoes-empty-title": "Tu n'as pas encore de tâches",
+        "todoes-empty-button": "En ajouter une",
 
         "todo-type-deadline": "Avant le:",
 
-        "alert-todoslimit-title": "Limite atteinte",
-        "alert-todoslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+        "alert-todoeslimit-title": "Limite atteinte",
+        "alert-todoeslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "quest": {

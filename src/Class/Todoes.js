@@ -29,7 +29,7 @@ class Todo {
     tasks = [];
 }
 
-class Todos {
+class Todoes {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
@@ -38,7 +38,7 @@ class Todos {
     /**
      * @type {Array<Todo>}
      */
-    SAVED_todos = [];
+    SAVED_todoes = [];
 
     /**
      * @type {Array<Todo>}
@@ -51,21 +51,21 @@ class Todos {
     UNSAVED_deletions = [];
 
     /**
-     * Sorted todos using titles
+     * Sorted todoes using titles
      * @type {Array<string>}
      */
-    todosSort = [];
+    todoesSort = [];
 
     /**
-     * @type {boolean} True if todos sort is saved
+     * @type {boolean} True if todoes sort is saved
      */
     SAVED_sort = true;
 
     /**
-     * @description All todos (saved and unsaved)
+     * @description All todoes (saved and unsaved)
      * @type {DynamicVar<Array<Todo>>}
      */
-    allTodos = new DynamicVar([]);
+    allTodoes = new DynamicVar([]);
 
     /**
      * @description Not saved, only to undo last deletion
@@ -74,68 +74,58 @@ class Todos {
     lastDeletedTodo = null;
 
     Clear() {
-        this.SAVED_todos = [];
+        this.SAVED_todoes = [];
         this.UNSAVED_additions = [];
         this.UNSAVED_deletions = [];
-        this.todosSort = [];
+        this.todoesSort = [];
         this.SAVED_sort = true;
-        this.allTodos.Set([]);
+        this.allTodoes.Set([]);
     }
-    Load(todos) {
-        const contains = (key) => todos.hasOwnProperty(key);
-        if (contains('todos'))      this.SAVED_todos = todos['todos'];
-        if (contains('additions'))  this.UNSAVED_additions = todos['additions'];
-        if (contains('deletions'))  this.UNSAVED_deletions = todos['deletions'];
-        if (contains('todosSort'))  this.todosSort = todos['todosSort'];
-        if (contains('sortSaved'))  this.SAVED_sort = todos['sortSaved'];
-        this.allTodos.Set(this.Get());
+    Load(todoes) {
+        const contains = (key) => todoes.hasOwnProperty(key);
+        if (contains('todoes'))      this.SAVED_todoes = todoes['todoes'];
+        if (contains('additions'))  this.UNSAVED_additions = todoes['additions'];
+        if (contains('deletions'))  this.UNSAVED_deletions = todoes['deletions'];
+        if (contains('todoesSort'))  this.todoesSort = todoes['todoesSort'];
+        if (contains('sortSaved'))  this.SAVED_sort = todoes['sortSaved'];
+        this.allTodoes.Set(this.Get());
     }
-    LoadOnline(todos) {
-        if (typeof(todos) !== 'object') return;
-        this.SAVED_todos = todos.map(todo => Object.assign(new Todo(), todo));
-        this.user.interface.console.AddLog('info', `${this.SAVED_todos.length} todos loaded`);
-        this.allTodos.Set(this.Get());
+    LoadOnline(todoes) {
+        if (typeof(todoes) !== 'object') return;
+        this.SAVED_todoes = todoes.map(todo => Object.assign(new Todo(), todo));
+        this.user.interface.console.AddLog('info', `${this.SAVED_todoes.length} todoes loaded`);
+        this.allTodoes.Set(this.Get());
     }
     Save() {
-        const todos = {
-            todos: this.SAVED_todos,
+        const todoes = {
+            todoes: this.SAVED_todoes,
             additions: this.UNSAVED_additions,
             deletions: this.UNSAVED_deletions,
-            todosSort: this.todosSort,
+            todoesSort: this.todoesSort,
             sortSaved: this.SAVED_sort
         };
-        return todos;
+        return todoes;
     }
     /**
-     * Return all todos (save and unsaved) sorted by start time (ascending)
+     * Return all todoes (save and unsaved) sorted by start time (ascending)
      * @returns {Array<Todo>}
      */
     Get() {
-        let todos = [ ...this.SAVED_todos, ...this.UNSAVED_additions ];
-        console.log('All new todos', todos.length, todos);
-        const a = todos.length;
-        console.log('UUUUUU', this.todosSort);
+        let todoes = [ ...this.SAVED_todoes, ...this.UNSAVED_additions ];
 
-        // Add new todos title at the top
-        for (const todo of todos) {
-            if (!this.todosSort.includes(todo.title)) {
-                this.todosSort.splice(0, 0, todo.title);
+        // Add new todoes title at the top
+        for (const todo of todoes) {
+            if (!this.todoesSort.includes(todo.title)) {
+                this.todoesSort.splice(0, 0, todo.title);
             }
         }
 
-        console.log('All new todos', this.todosSort.length);
-        console.log('UUUUUU', this.todosSort);
-
-        // Remove deleted todos title
-        this.todosSort = this.todosSort.filter(title => {
-            console.log('Search', title, 'in', todos, todos.findIndex(todo => todo.title === title) !== -1);
-            return todos.findIndex(todo => todo.title === title) !== -1;
+        // Remove deleted todoes title
+        this.todoesSort = this.todoesSort.filter(title => {
+            return todoes.findIndex(todo => todo.title === title) !== -1;
         });
 
-        console.log('All new todos', this.todosSort.length);
-        console.log('UUUUUU', this.todosSort);
-
-        return this.todosSort.map(title => todos.find(todo => todo.title === title));
+        return this.todoesSort.map(title => todoes.find(todo => todo.title === title));
     }
 
     IsUnsaved = () => {
@@ -151,22 +141,20 @@ class Todos {
             const todo = this.UNSAVED_deletions[a];
             unsaved.push({ action: 'rem', ...todo });
         }
-        console.log('Unsaved todos', this.Get());
         return unsaved;
     }
     Purge = () => {
-        this.SAVED_todos.push(...this.UNSAVED_additions);
+        this.SAVED_todoes.push(...this.UNSAVED_additions);
         this.UNSAVED_additions = [];
 
         for (let i = this.UNSAVED_deletions.length - 1; i >= 0; i--) {
-            const index = this.GetIndex(this.SAVED_todos, this.UNSAVED_deletions[i]);
+            const index = this.GetIndex(this.SAVED_todoes, this.UNSAVED_deletions[i]);
             if (index !== null) {
-                this.SAVED_todos.splice(index, 1);
+                this.SAVED_todoes.splice(index, 1);
             }
         }
         this.UNSAVED_deletions = [];
         this.SAVED_sort = true;
-        console.log('Purged todos', this.Get());
     }
 
     /**
@@ -188,7 +176,7 @@ class Todos {
         newTodo.tasks = tasks.filter(st => !!st.title);
 
         // Check if not exist
-        const indexSaved = this.GetIndex(this.SAVED_todos, newTodo);
+        const indexSaved = this.GetIndex(this.SAVED_todoes, newTodo);
         const indexUnsaved = this.GetIndex(this.UNSAVED_additions, newTodo);
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, newTodo);
 
@@ -199,23 +187,19 @@ class Todos {
         // Todo already exist
         if (indexSaved !== null || indexUnsaved !== null) {
             if (indexSaved !== null) {
-                this.SAVED_todos.splice(indexSaved, 1);
+                this.SAVED_todoes.splice(indexSaved, 1);
             }
             if (indexUnsaved !== null) {
                 this.UNSAVED_additions.splice(indexUnsaved, 1);
             }
-            console.log('Edited todo', newTodo);
             this.UNSAVED_additions.push(newTodo);
-            this.allTodos.Set(this.Get());
-            console.log('Edited todo2', newTodo);
+            this.allTodoes.Set(this.Get());
             return 'edited';
         }
 
         // Todo not exist, add it
-        console.log('Added todo', newTodo);
         this.UNSAVED_additions.push(newTodo);
-        this.allTodos.Set(this.Get());
-        console.log('Added todo2', newTodo);
+        this.allTodoes.Set(this.Get());
         return 'added';
     }
 
@@ -225,13 +209,13 @@ class Todos {
      * @returns {'removed' | 'notExist'}
      */
     Remove(todo) {
-        const indexTodo = this.GetIndex(this.SAVED_todos, todo);
+        const indexTodo = this.GetIndex(this.SAVED_todoes, todo);
         const indexUnsaved = this.GetIndex(this.UNSAVED_additions, todo);
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, todo);
         let deleted = null;
 
         if (indexTodo !== null) {
-            deleted = this.SAVED_todos.splice(indexTodo, 1)[0];
+            deleted = this.SAVED_todoes.splice(indexTodo, 1)[0];
             if (indexDeletion === null) {
                 this.UNSAVED_deletions.push(deleted);
             }
@@ -245,7 +229,7 @@ class Todos {
 
         if (deleted !== null) {
             this.lastDeletedTodo = deleted;
-            this.allTodos.Set(this.Get());
+            this.allTodoes.Set(this.Get());
             return 'removed';
         }
 
@@ -253,53 +237,53 @@ class Todos {
     }
 
     /**
-     * Change sort order of todos titles
+     * Change sort order of todoes titles
      * @param {Todo} todo
      * @param {number} newIndex
      * @returns {boolean} Success of the operation
      */
     Move(todo, newIndex) {
-        if (!this.todosSort.includes(todo.title)) {
-            this.user.interface.console.AddLog('warn', `Todos - move failed: todo not found (${todo.title} ${newIndex})`);
+        if (!this.todoesSort.includes(todo.title)) {
+            this.user.interface.console.AddLog('warn', `Todoes - move failed: todo not found (${todo.title} ${newIndex})`);
             return false;
         }
-        if (newIndex < 0 || newIndex > this.todosSort.length) {
-            this.user.interface.console.AddLog('warn', `Todos - move failed: index out of range (${todo.title} ${newIndex})`);
+        if (newIndex < 0 || newIndex > this.todoesSort.length) {
+            this.user.interface.console.AddLog('warn', `Todoes - move failed: index out of range (${todo.title} ${newIndex})`);
             return false;
         }
-        const oldIndex = this.todosSort.indexOf(todo.title);
+        const oldIndex = this.todoesSort.indexOf(todo.title);
         if (oldIndex === newIndex) {
-            this.user.interface.console.AddLog('warn', `Todos - move failed: same index (${todo.title} ${newIndex})`);
+            this.user.interface.console.AddLog('warn', `Todoes - move failed: same index (${todo.title} ${newIndex})`);
             return false;
         }
-        this.todosSort.splice(oldIndex, 1);
-        this.todosSort.splice(newIndex, 0, todo.title);
+        this.todoesSort.splice(oldIndex, 1);
+        this.todoesSort.splice(newIndex, 0, todo.title);
         this.SAVED_sort = false;
-        this.allTodos.Set(this.Get());
+        this.allTodoes.Set(this.Get());
         return true;
     }
 
     /**
-     * Change sort order of todos titles
+     * Change sort order of todoes titles
      * @param {Todo} todo
      * @param {number} checkedTime UTC Time in seconds or 0 if unchecked
      * @returns {boolean} Success of the operation
      */
     Check(todo, checkedTime) {
         let selectedTodo = null;
-        const indexTodo = this.GetIndex(this.SAVED_todos, todo);
+        const indexTodo = this.GetIndex(this.SAVED_todoes, todo);
         const indexUnsaved = this.GetIndex(this.UNSAVED_additions, todo);
 
-        if (indexTodo !== null) selectedTodo = this.SAVED_todos.splice(indexTodo, 1)[0];
+        if (indexTodo !== null) selectedTodo = this.SAVED_todoes.splice(indexTodo, 1)[0];
         if (indexUnsaved !== null) selectedTodo = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
         if (selectedTodo === null) {
-            this.user.interface.console.AddLog('warn', `Todos - check failed: todo not found (${todo.title} ${checkedTime})`);
+            this.user.interface.console.AddLog('warn', `Todoes - check failed: todo not found (${todo.title} ${checkedTime})`);
             return false;
         }
 
         selectedTodo.checked = checkedTime;
         this.UNSAVED_additions.push(selectedTodo);
-        this.allTodos.Set(this.Get());
+        this.allTodoes.Set(this.Get());
         return true;
     }
 
@@ -326,7 +310,7 @@ class Todos {
         this.lastDeletedTodo.checked = 0;
         this.UNSAVED_additions.push(this.lastDeletedTodo);
         this.lastDeletedTodo = null;
-        this.allTodos.Set(this.Get());
+        this.allTodoes.Set(this.Get());
 
         // Save new sort
         this.SAVED_sort = false;
@@ -347,4 +331,4 @@ class Todos {
 }
 
 export { Todo };
-export default Todos;
+export default Todoes;

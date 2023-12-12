@@ -573,15 +573,15 @@
         "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
     },
 
-    "todos": {
+    "todoes": {
         "container-title": "Todo list",
-        "todos-empty-title": "No quest",
-        "todos-empty-button": "Add a quest",
+        "todoes-empty-title": "No quest",
+        "todoes-empty-button": "Add a quest",
 
         "todo-type-deadline": "Ends on:",
 
-        "alert-todoslimit-title": "Limit reached",
-        "alert-todoslimit-text": "You have reached the limit of todos, please delete some of them to add more."
+        "alert-todoeslimit-title": "Limit reached",
+        "alert-todoeslimit-text": "You have reached the limit of todoes, please delete some of them to add more."
     },
 
     "quest": {
@@ -712,7 +712,7 @@
 
         "todo": {
             "1": "Here you can set the deadline for your todo",
-            "2": "You can also add sub-todos to your main todo, to organize yourself better.",
+            "2": "You can also add sub-todoes to your main todo, to organize yourself better.",
             "3": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
         },
 

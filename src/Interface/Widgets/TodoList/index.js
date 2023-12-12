@@ -15,12 +15,12 @@ import { Container, Button, Text } from 'Interface/Components';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Class/Todos').Todo} Todo
+ * @typedef {import('Class/Todoes').Todo} Todo
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
 const TodoListProps = {
-    /** @type {StyleProp} Style of todos container */
+    /** @type {StyleProp} Style of todoes container */
     style: {}
 };
 
@@ -49,20 +49,20 @@ class TodoList extends BackTodoList {
     }
 
     renderEmpty = () => {
-        const lang = langManager.curr['todos'];
+        const lang = langManager.curr['todoes'];
 
         return (
             <>
-                <Text style={styles.emptyText}>{lang['todos-empty-title']}</Text>
-                <Button onPress={this.addTodo} color='main1'>{lang['todos-empty-button']}</Button>
+                <Text style={styles.emptyText}>{lang['todoes-empty-title']}</Text>
+                <Button onPress={this.addTodo} color='main1'>{lang['todoes-empty-button']}</Button>
             </>
         );
     }
 
     render() {
-        const lang = langManager.curr['todos'];
+        const lang = langManager.curr['todoes'];
         const {
-            scrollable, todos,
+            scrollable, todoes,
             draggedItem, mouseY,
             undoEnabled
         } = this.state;
@@ -74,7 +74,7 @@ class TodoList extends BackTodoList {
         return (
             <Container
                 style={this.props.style}
-                styleContainer={styles.todosContainer}
+                styleContainer={styles.todoesContainer}
                 type='static'
                 icon={containerIcon}
                 text={lang['container-title']}
@@ -93,7 +93,7 @@ class TodoList extends BackTodoList {
                     onTouchMove={this.onTouchMove}
                     onTouchEnd={this.onTouchEnd}
 
-                    data={todos}
+                    data={todoes}
                     scrollEnabled={scrollable}
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}

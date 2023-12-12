@@ -10,7 +10,7 @@ import Quests from 'Class/Quests';
 import Server from 'Class/Server';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
-import Todos from 'Class/Todos';
+import Todoes from 'Class/Todoes';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
@@ -46,7 +46,7 @@ class UserManager {
         this.server = new Server(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this)
-        this.todos = new Todos(this);
+        this.todoes = new Todoes(this);
 
         this.stats = this.experience.GetEmptyExperience();
     }
@@ -98,7 +98,7 @@ class UserManager {
         this.server.Clear();
         this.settings.Clear();
         this.shop.Clear();
-        this.todos.Clear();
+        this.todoes.Clear();
         await this.settings.Save();
 
         await DataStorage.ClearAll();
@@ -193,7 +193,7 @@ class UserManager {
             'inventory': this.inventory.Save(),
             'quests': this.quests.Save(),
             'shop': this.shop.Save(),
-            'todos': this.todos.Save()
+            'todoes': this.todoes.Save()
         };
 
         const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
@@ -219,7 +219,7 @@ class UserManager {
             if (contains('inventory')) this.inventory.Load(data['inventory']);
             if (contains('quests')) this.quests.Load(data['quests']);
             if (contains('shop')) this.shop.Load(data['shop']);
-            if (contains('todos')) this.todos.Load(data['todos']);
+            if (contains('todoes')) this.todoes.Load(data['todoes']);
 
             this.interface.console.EditLog(debugIndex, 'same', 'User data: local load success');
         } else {
@@ -250,12 +250,12 @@ class UserManager {
             data['questsSort'] = this.quests.questsSort;
         }
 
-        if (this.todos.IsUnsaved()) {
-            data['todos'] = this.todos.GetUnsaved();
+        if (this.todoes.IsUnsaved()) {
+            data['todoes'] = this.todoes.GetUnsaved();
         }
 
-        if (!this.todos.SAVED_sort) {
-            data['todosSort'] = this.todos.todosSort;
+        if (!this.todoes.SAVED_sort) {
+            data['todoesSort'] = this.todoes.todoesSort;
         }
 
         if (this.inventory.IsUnsaved()) {
@@ -278,7 +278,7 @@ class UserManager {
                 this.activities.Purge();
                 this.informations.Purge();
                 this.quests.Purge();
-                this.todos.Purge();
+                this.todoes.Purge();
                 this.interface.console.EditLog(debugIndex, 'same', 'User data: online save success');
                 await this.LocalSave();
             } else {
@@ -312,8 +312,8 @@ class UserManager {
             if (contains('quests')) this.quests.LoadOnline(data['quests']);
             if (contains('questsSort')) this.quests.questsSort = data['questsSort'];
             if (contains('shop')) this.shop.LoadOnline(data['shop']);
-            if (contains('todos')) this.todos.LoadOnline(data['todos']);
-            if (contains('todosSort')) this.todos.todosSort = data['todosSort'];
+            if (contains('todoes')) this.todoes.LoadOnline(data['todoes']);
+            if (contains('todoesSort')) this.todoes.todoesSort = data['todoesSort'];
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

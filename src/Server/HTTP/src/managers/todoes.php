@@ -13,20 +13,20 @@ class TodoUnsaved extends Todo {
     public $action = '';
 }
 
-class Todos
+class Todoes
 {
     /**
      * @param DataBase $db
      * @param Account $account
      * @return Todo[]
      */
-    public static function GetTodos($db, $account) {
+    public static function GetTodoes($db, $account) {
         $command = 'SELECT `Checked`, `Title`, `Description`, `Created`, `Deadline`, `Tasks` FROM TABLE WHERE `AccountID` = ?';
-        $rows = $db->QueryPrepare('Todos', $command, 'i', [ $account->ID ]);
-        if ($rows === false) ExitWithStatus('Error: getting todos failed');
+        $rows = $db->QueryPrepare('Todoes', $command, 'i', [ $account->ID ]);
+        if ($rows === false) ExitWithStatus('Error: getting todoes failed');
 
         /** @var Todo[] $newActivity */
-        $todos = array();
+        $todoes = array();
         for ($i = 0; $i < count($rows); $i++) {
             $tasks = $rows[$i]['Tasks'];
             if ($tasks !== '[]') {
@@ -43,20 +43,20 @@ class Todos
                 'tasks' => json_decode($tasks, true)
             );
 
-            array_push($todos, $newTodo);
+            array_push($todoes, $newTodo);
         }
 
-        return $todos;
+        return $todoes;
     }
 
     /**
      * @param DataBase $db
      * @param Account $account
-     * @param TodoUnsaved[] $todos
+     * @param TodoUnsaved[] $todoes
      */
-    public static function AddTodos($db, $account, $todos) {
-        for ($i = 0; $i < count($todos); $i++) {
-            $todo = $todos[$i];
+    public static function AddTodoes($db, $account, $todoes) {
+        for ($i = 0; $i < count($todoes); $i++) {
+            $todo = $todoes[$i];
 
             // Check if todo is valid
             $keysTodo = array_keys(get_object_vars(new TodoUnsaved()));
@@ -76,7 +76,7 @@ class Todos
 
             // Check if todo exists
             $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Title` = ?';
-            $reqTodo = $db->QueryPrepare('Todos', $command, 'is', [ $account->ID, $title ]);
+            $reqTodo = $db->QueryPrepare('Todoes', $command, 'is', [ $account->ID, $title ]);
             if ($reqTodo === false) ExitWithStatus('Error: adding todo failed');
             $exists = count($reqTodo) > 0;
 
@@ -101,8 +101,8 @@ class Todos
                 ];
                 $types = 'issiisi';
 
-                $r = $db->QueryPrepare('Todos', $command, $types, $args);
-                if ($r === false) ExitWithStatus('Error: saving todos failed (update)');
+                $r = $db->QueryPrepare('Todoes', $command, $types, $args);
+                if ($r === false) ExitWithStatus('Error: saving todoes failed (update)');
             }
 
             // Add todo
@@ -131,16 +131,16 @@ class Todos
                 $commandArgs = implode(', ', array_fill(0, count($args), '?'));
                 $command = str_replace('{?}', $commandArgs, $command);
 
-                $r = $db->QueryPrepare('Todos', $command, $types, $args);
-                if ($r === false) ExitWithStatus('Error: saving todos failed (add)');
+                $r = $db->QueryPrepare('Todoes', $command, $types, $args);
+                if ($r === false) ExitWithStatus('Error: saving todoes failed (add)');
             }
 
             // Remove todo
             else if ($action === 'rem' && $exists) {
                 $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `ID` = ?';
                 $args = [ $account->ID, $reqTodo[0]['ID'] ];
-                $r = $db->QueryPrepare('Todos', $command, 'ii', $args);
-                if ($r === false) ExitWithStatus('Error: saving todos failed (remove)');
+                $r = $db->QueryPrepare('Todoes', $command, 'ii', $args);
+                if ($r === false) ExitWithStatus('Error: saving todoes failed (remove)');
             }
         }
     }

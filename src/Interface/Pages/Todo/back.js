@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import { GetTime } from 'Utils/Time';
 
 /**
- * @typedef {import('Class/Todos').Todo} Todo
+ * @typedef {import('Class/Todoes').Todo} Todo
  * 
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
@@ -154,7 +154,7 @@ class BackTodo extends PageBase {
         let message = '';
 
         const titleIsCurrent = title === (this.selectedTodo?.title || null);
-        const titleUsed = user.todos.Get().some(t => t.title === title);
+        const titleUsed = user.todoes.Get().some(t => t.title === title);
 
         if (title.trim().length <= 0) {
             message = langManager.curr['todo']['error-title-empty'];
@@ -190,7 +190,7 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const addition = user.todos.Add(
+        const addition = user.todoes.Add(
             title,
             description,
             GetTime(),
@@ -222,7 +222,7 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const edition = user.todos.Add(
+        const edition = user.todoes.Add(
             title,
             description,
             this.selectedTodo.created || GetTime(),
@@ -232,7 +232,7 @@ class BackTodo extends PageBase {
 
         // Remove old todo (title different => new todo)
         if (edition === 'added') {
-            const remove = user.todos.Remove(this.selectedTodo);
+            const remove = user.todoes.Remove(this.selectedTodo);
             if (remove === 'notExist') {
                 user.interface.console.AddLog('warn', 'Todo: Todo not exist');
             }
@@ -250,7 +250,7 @@ class BackTodo extends PageBase {
 
         const callback = (btn) => {
             if (btn === 'yes') {
-                const remove = user.todos.Remove(this.selectedTodo);
+                const remove = user.todoes.Remove(this.selectedTodo);
                 if (remove === 'removed') {
                     user.GlobalSave();
                     user.interface.ResetCustomBackHandler();

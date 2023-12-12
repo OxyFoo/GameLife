@@ -9,7 +9,7 @@ import { TodoList } from 'Interface/Widgets';
 import { Icon, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Todos').Task} Task
+ * @typedef {import('Class/Todoes').Task} Task
  */
 
 const SectionTasksProps = {

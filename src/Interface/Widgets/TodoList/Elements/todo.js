@@ -14,7 +14,7 @@ import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Class/Todos').Todo} Todo
+ * @typedef {import('Class/Todoes').Todo} Todo
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
@@ -68,7 +68,7 @@ class TodoElement extends React.Component {
                 minDeltaDays = delta;
 
                 // Define deadline text
-                const lang = langManager.curr['todos'];
+                const lang = langManager.curr['todoes'];
                 this.deadlineText = lang['todo-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
             }
         }

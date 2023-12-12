@@ -13,7 +13,7 @@ require('./src/managers/items.php');
 require('./src/managers/quests.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
-require('./src/managers/todos.php');
+require('./src/managers/todoes.php');
 
 require('./src/sql/app.php');
 require('./src/sql/accounts.php');
@@ -312,7 +312,7 @@ class Commands {
             $userData['lastbirthtime']    = $account->LastChangeBirth;
             $userData['ox']               = $account->Ox;
             $userData['questsSort']       = $account->QuestsSort;
-            $userData['todosSort']       = $account->TodosSort;
+            $userData['todoesSort']       = $account->TodoesSort;
             $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
             $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
             $userData['achievements']     = Achievements::Get($this->db, $account);
@@ -330,7 +330,7 @@ class Commands {
                 'buyToday' => Users::GetBuyToday($this->db, $account)
             );
             $userData['quests'] = Quests::GetQuests($this->db, $account);
-            $userData['todos'] = Todos::GetTodos($this->db, $account);
+            $userData['todoes'] = Todoes::GetTodoes($this->db, $account);
             $userData['dataToken'] = $dbDataToken;
         }
 

@@ -5,7 +5,7 @@ import styles from './style';
 import TodoElement from './todo';
 
 /** 
- * @typedef {import('Class/Todos').Todo} Todo
+ * @typedef {import('Class/Todoes').Todo} Todo
  */
 
 const TodoSelectionProps = {

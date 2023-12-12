@@ -8,9 +8,9 @@ import Home from './Pages/Home/index';
 import Loading from './Pages/Loading/index';
 import Login from './Pages/Login/index';
 import Multiplayer from './Pages/Multiplayer/index';
+import MyQuest from './Pages/MyQuest/index';
 import Onboarding from './Pages/Onboarding/index';
 import Profile from './Pages/Profile/index';
-import Quest from './Pages/Quest/index';
 import Quests from './Pages/Quests/index';
 import Report from './Pages/Report/index';
 import Settings from './Pages/Settings/index';
@@ -33,9 +33,9 @@ const PAGES = {
     'loading':          Loading,
     'login':            Login,
     'multiplayer':      Multiplayer,
+    'myquest':          MyQuest,
     'onboarding':       Onboarding,
     'profile':          Profile,
-    'quest':            Quest,
     'quests':           Quests,
     'report':           Report,
     'settings':         Settings,

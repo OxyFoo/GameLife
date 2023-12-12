@@ -237,6 +237,7 @@ jobs:
 
       - name: 'Archive app'
         env:
+          ENVFILE: .env.prod
           KEYCHAIN_PATH: $RUNNER_TEMP/app-signing.keychain-db
         run: |
           # Specify the keychain for codesign
@@ -339,12 +340,23 @@ jobs:
             --apiIssuer "$ISSUER_ID" \
             --verbose
 
+          # Check if upload was successful
+          if [ $? -eq 0 ]; then
+            echo "Upload successful"
+          else
+            echo "Upload failed"
+            exit 1
+          fi
+
   notify-android:
     name: '📣 Notify Team - App Published 🤖'
     if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     runs-on: ubuntu-latest
     needs: delivery-android
     steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
@@ -376,6 +388,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: delivery-ios
     steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 

@@ -1,6 +1,6 @@
 import { PageBase } from 'Interface/Components';
 
-class BackQuests extends PageBase {
+class BackNewPage extends PageBase {
     state = {
     }
 
@@ -9,4 +9,4 @@ class BackQuests extends PageBase {
     }
 }
 
-export default BackQuests;
+export default BackNewPage;

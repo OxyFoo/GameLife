@@ -9,6 +9,7 @@ import Loading from './Pages/Loading/index';
 import Login from './Pages/Login/index';
 import Multiplayer from './Pages/Multiplayer/index';
 import MyQuest from './Pages/MyQuest/index';
+import MyQuestStats from './Pages/MyQuestStats/index';
 import Onboarding from './Pages/Onboarding/index';
 import Profile from './Pages/Profile/index';
 import Quests from './Pages/Quests/index';
@@ -34,6 +35,7 @@ const PAGES = {
     'login':            Login,
     'multiplayer':      Multiplayer,
     'myquest':          MyQuest,
+    'myqueststats':     MyQuestStats,
     'onboarding':       Onboarding,
     'profile':          Profile,
     'quests':           Quests,

@@ -87,7 +87,7 @@ class BackQuestsList extends React.Component {
             user.interface.popup.Open('ok', [title, text]);
             return;
         }
-        user.interface.ChangePage('quest', undefined, true);
+        user.interface.ChangePage('myquest', undefined, true);
     }
 
     undo = () => {

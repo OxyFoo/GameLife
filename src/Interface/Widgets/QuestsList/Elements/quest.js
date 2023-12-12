@@ -63,7 +63,7 @@ class QuestElement extends React.Component {
         if (quest === null) return null;
 
         const { Title } = quest;
-        const openQuest = () => user.interface.ChangePage('myquest', { quest });
+        const openQuest = () => user.interface.ChangePage('myqueststats', { quest }, true);
 
         return (
             <Button

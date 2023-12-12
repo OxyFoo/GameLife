@@ -633,9 +633,6 @@
         "quests-empty-title": "No quest",
         "quests-empty-button": "Add a quest",
 
-        "quest-type-deadline": "Ends on:",
-        "quest-type-repeat-before": "To be done before:",
-
         "alert-questslimit-title": "Limit reached",
         "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more."
     },

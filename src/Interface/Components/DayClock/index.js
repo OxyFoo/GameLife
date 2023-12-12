@@ -11,7 +11,6 @@ import FilledCircle from './filledCircle';
 
 /**
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 class DayClock extends BackDayClock {
@@ -21,29 +20,51 @@ class DayClock extends BackDayClock {
 
         const fistLetterUpper = langDays[(day+1)%7].charAt(0).toUpperCase();
 
-        /** @type {ThemeColor | ThemeText} */
-        let textColor = 'main2';
-        const borderColor = { borderColor: themeManager.GetColor('main2') };
-        const styleOblicLine = { backgroundColor: themeManager.GetColor('disabled') };
+        /** @type {ThemeColor} */
+        let fillingColor = 'main1';
 
-        if (state === 'disabled') {
-            textColor = 'disabled';
-            borderColor.borderColor = themeManager.GetColor('disabled');
+        const styleCircle = {};
+        const styleOblicLine = {};
+
+        if (state === 'normal') {
+            let color = themeManager.GetColor('main1');
+            if (this.props.isToday) {
+                color = themeManager.GetColor('main2');
+            }
+            styleCircle.borderColor = color;
+        }
+
+        else if (state === 'disabled') {
+            fillingColor = 'main2';
+            let color = themeManager.GetColor('disabled');
+
+            if (this.props.isToday) {
+                color = themeManager.GetColor('main2', { opacity: .5 });
+            }
+
+            styleCircle.borderColor = color;
+            styleOblicLine.backgroundColor = color;
         }
 
         else if (state === 'full') {
-            textColor = 'primary';
-            borderColor.borderColor = themeManager.GetColor('main1');
-            borderColor.backgroundColor = themeManager.GetColor('main1');
+            let color = themeManager.GetColor('main1');
+            if (this.props.isToday) {
+                color = themeManager.GetColor('main2');
+            }
+            styleCircle.borderColor = color;
+            styleCircle.backgroundColor = color;
         }
 
         else if (state === 'filling') {
-            textColor = 'primary';
-            borderColor.borderColor = themeManager.GetColor('disabled');
+            let color = themeManager.GetColor('disabled');
+            if (this.props.isToday) {
+                fillingColor = 'main2';
+            }
+            styleCircle.borderColor = color;
         }
 
         return (
-            <View style={[styles.parent, borderColor]}>
+            <View style={[styles.parent, styleCircle]}>
                 {/** Disable oblic line */}
                 {state === 'disabled' && (
                     <View style={[styles.oblicLine, styleOblicLine]} />
@@ -55,11 +76,12 @@ class DayClock extends BackDayClock {
                             percentage={Math.random() * 100}
                             size={32}
                             margin={0}
+                            color={fillingColor}
                         />
                     </View>
                 )}
 
-                <Text style={{ fontSize: 12 }} color={textColor}>
+                <Text fontSize={12}>
                     {fistLetterUpper}
                 </Text>
 

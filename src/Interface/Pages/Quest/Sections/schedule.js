@@ -1,41 +1,30 @@
 import * as React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Range } from 'Utils/Functions';
-import { DateToFormatString } from 'Utils/Date';
-import { GetDate, GetTime } from 'Utils/Time';
 import { Text, Button, TextSwitch } from 'Interface/Components';
-import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('Class/Quests').RepeatModes} RepeatModes
  * 
  * @callback OnChangeScheduleEvent
- * @param {number} deadline Unix timestamp in seconds
  * @param {RepeatModes} repeatMode Repeat mode
  * @param {Array<number>} repeatDays Array of days of week
  */
 
 const SectionScheduleProps = {
     /** @type {OnChangeScheduleEvent} */
-    onChange: (deadline, repeatMode, repeatDays) => {}
+    onChange: (repeatMode, repeatDays) => {}
 };
 
 class SectionSchedule extends React.Component {
     state = {
-        /** @type {'' | 'date' | 'time'} */
-        DTPMode: '',
-        /** @type {number} */
-        deadline: 0,
-        /** @type {string} */
-        deadlineText: '',
-
         /** @type {RepeatModes} */
-        repeatMode: 'none',
+        repeatMode: 'week',
+
         /** @type {Array<number>} */
         selectedDays: []
     }
@@ -47,39 +36,34 @@ class SectionSchedule extends React.Component {
 
     /** @param {number} index */
     switchMode = (index) => {
-        if (index < 0 || index > 2) return;
-        const repeatMode = ['none', 'week', 'month'][index];
+        if (index < 0 || index > 1) return;
+        const repeatMode = ['week', 'month'][index];
         this.setState({ repeatMode, selectedDays: [] }, this.onChange);
     }
-    showDTP = () => this.setState({ DTPMode: 'date' });
-    hideDTP = () => this.setState({ DTPMode: '' });
 
     /**
-     * 
-     * @param {number} deadline
      * @param {RepeatModes} repeatMode
      * @param {Array<number>} selectedDays
      */
-    SetValues = (deadline, repeatMode, selectedDays) => {
+    SetValues = (repeatMode, selectedDays) => {
         this.setState({
-            deadline,
             repeatMode,
-            selectedDays,
-            deadlineText: DateToFormatString(GetDate(deadline))
+            selectedDays
         });
 
-        const repeatModeIndex = ['none', 'week', 'month'].indexOf(repeatMode);
+        const repeatModeIndex = ['week', 'month'].indexOf(repeatMode);
         this.refTextSwitch?.SetSelectedIndex(repeatModeIndex);
     }
+
     GetValues = () => {
-        let { deadline, repeatMode, selectedDays } = this.state;
+        let { repeatMode, selectedDays } = this.state;
         selectedDays = selectedDays.filter(day => day <= 30);
-        return { deadline, repeatMode, selectedDays };
+        return { repeatMode, selectedDays };
     }
 
     onChange = () => {
-        const { deadline, repeatMode, selectedDays } = this.state;
-        this.props.onChange(deadline, repeatMode, selectedDays);
+        const { repeatMode, selectedDays } = this.state;
+        this.props.onChange(repeatMode, selectedDays);
     }
 
     /**
@@ -101,10 +85,6 @@ class SectionSchedule extends React.Component {
      */
     onDaysSelect = (index) => {
         const { repeatMode, selectedDays } = this.state;
-
-        if (repeatMode === 'none') {
-            return;
-        }
 
         if (repeatMode === 'week') {
             let days = Range(7);
@@ -129,30 +109,8 @@ class SectionSchedule extends React.Component {
         this.setState({ selectedDays }, this.onChange);
     }
 
-    /** @param {Date} date */
-    onChangeDateTimePicker = (date) => {
-        const { DTPMode } = this.state;
-        const newDate = new Date(date);
-        this.hideDTP();
-
-        if (DTPMode === 'date') {
-            newDate.setUTCHours(0, 0, 0, 0);
-            this.setState({
-                deadline: GetTime(newDate),
-                deadlineText: DateToFormatString(newDate)
-            }, this.onChange);
-        }
-    }
-    onResetDeadline = () => {
-        this.setState({
-            deadline: 0,
-            deadlineText: ''
-        }, this.onChange);
-    }
-
     renderDaySelector = () => {
         const { repeatMode, selectedDays } = this.state;
-        if (repeatMode === 'none') return null;
 
         const langDates = langManager.curr['dates'];
         let elements = [];
@@ -200,59 +158,30 @@ class SectionSchedule extends React.Component {
         const { repeatMode } = this.state;
 
         const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
-        const textDeadline = this.state.deadline === 0 ? lang['input-deadline-empty'] : this.state.deadlineText;
-        const defaultDate = new Date();
-        defaultDate.setUTCHours(0, 0, 0, 0);
-        defaultDate.setUTCDate(defaultDate.getUTCDate() + 1);
 
         const dateNames = langManager.curr['dates']['names'];
-        const timeIntervals = [ dateNames['never'], dateNames['weekly'], dateNames['monthly'] ];
-        const repeatMessage = repeatMode === 'month' && (
-            <Text style={{ marginTop: 12 }}>{lang['text-hint-select']}</Text>
-        );
-        const isVisibleDTP = this.state.DTPMode === 'time' || this.state.DTPMode === 'date';
+        const timeIntervals = [ dateNames['weekly'], dateNames['monthly'] ];
 
         return (
             <>
-                <Text style={styles.sectionTitle} fontSize={22}>{lang['title-schedule']}</Text>
+                <Text style={styles.sectionTitle} fontSize={22}>{lang['input-repeat-title']}</Text>
                 <View
                     ref={ref => this.refHelp1 = ref}
                     style={[backgroundColor, styles.schedulePanel]}
                 >
-                    <View style={[styles.row, { marginBottom: 12 }]}>
-                        <Text>{lang['input-deadline-title']}</Text>
-                        <Button
-                            colorText='main1'
-                            style={styles.smallBtn}
-                            fontSize={14}
-                            onPress={this.showDTP}
-                            onLongPress={this.onResetDeadline}
-                        >
-                            {textDeadline}
-                        </Button>
-                    </View>
-
-                    <Text>{lang['input-repeat-title']}</Text>
                     <TextSwitch
                         ref={ref => this.refTextSwitch = ref}
-                        style={{ height: 48, marginTop: 12 }}
+                        style={styles.textSwitch}
                         texts={timeIntervals}
                         onChange={this.switchMode}
                     />
-                    {repeatMessage}
+                    {repeatMode === 'month' && (
+                        <Text style={styles.hintText}>
+                            {lang['text-hint-select']}
+                        </Text>
+                    )}
                     {this.renderDaySelector()}
                 </View>
-
-                <DateTimePickerModal
-                    date={defaultDate}
-                    minimumDate={defaultDate}
-                    mode={this.state.DTPMode || 'date'}
-                    onConfirm={this.onChangeDateTimePicker}
-                    onCancel={this.hideDTP}
-                    isVisible={isVisibleDTP}
-                    minuteInterval={TIME_STEP_MINUTES}
-                    is24Hour={true}
-                />
             </>
         );
     }
@@ -270,14 +199,11 @@ const styles = StyleSheet.create({
         padding: 24,
         borderRadius: 12
     },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+    textSwitch: {
+        height: 46
     },
-    smallBtn: {
-        height: 42,
-        paddingHorizontal: 12
+    hintText: {
+        marginTop: 12
     },
     selectorButton: {
         flex: 1/7,

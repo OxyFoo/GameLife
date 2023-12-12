@@ -3,14 +3,15 @@ import { StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 
+import StartHelp from './help';
 import BackQuest from './back';
 import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
 import SectionSkill from './Sections/activity';
+import SectionDeadline from './Sections/deadline';
 import SectionSchedule from './Sections/schedule';
 import SectionTasks from './Sections/tasks';
 
-import StartHelp from './help';
 import { PageHeader } from 'Interface/Widgets';
 import { Button, Page } from 'Interface/Components';
 
@@ -31,9 +32,14 @@ class Quest extends BackQuest {
                     onChangeTitle={this.onChangeTitle}
                 />
 
+                <SectionDeadline
+                    ref={ref => this.refSectionDeadline = ref}
+                    onChange={this.onEditQuest}
+                />
+
                 <SectionSchedule
                     ref={ref => this.refSectionSchedule = ref}
-                    onChange={this.onChangeSchedule}
+                    onChange={this.onEditQuest}
                 />
 
                 <SectionSkill

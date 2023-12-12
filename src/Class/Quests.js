@@ -4,7 +4,7 @@ import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {'none' | 'week' | 'month'} RepeatModes
+ * @typedef {'week' | 'month'} RepeatModes
  * 
  * @typedef {object} Schedule
  * @property {RepeatModes} Type
@@ -37,7 +37,7 @@ class Quest {
 
     /** @type {Schedule} Null to don't repeat */
     Schedule = {
-        Type: 'none',
+        Type: 'week',
         Repeat: []
     };
 
@@ -181,7 +181,7 @@ class Quests {
         const quests = this.Get();
         for (let i = 0; i < quests.length; i++) {
             let quest = quests[i];
-            if (quest.Checked === 0 || quest.Schedule.Type === 'none') continue;
+            if (quest.Checked === 0) continue; // || quest.Schedule.Type === 'none'
 
             let reset = false;
             const now = GetTime();
@@ -206,7 +206,7 @@ class Quests {
      * @param {Array<number>} repeatDays Repeat days
      * @param {Skill | null} skill Skill informations
      * @param {Array<Task>} tasks Tasks informations
-     * @returns {'added' | 'alreadyExist'}
+     * @returns {'added' | 'alreadyExist' | 'wrong-repeat-days'}
      */
     Add(title, description, deadline, repeatMode, repeatDays, skill, tasks) {
         const newQuest = new Quest();
@@ -223,8 +223,8 @@ class Quests {
         newQuest.Tasks = tasks.filter(st => !!st.Title);
 
         // Check if repeat mode is valid
-        if (repeatMode !== 'none' && repeatDays.length <= 0) {
-            repeatMode = 'none';
+        if (repeatDays.length <= 0) {
+            return 'wrong-repeat-days';
         }
 
         // Check if not exist
@@ -257,15 +257,15 @@ class Quests {
      * @param {Array<number>} repeatDays Repeat days
      * @param {Skill | null} skill Skill informations
      * @param {Array<Task>} tasks Tasks informations
-     * @returns {'edited' | 'notExist'}
+     * @returns {'edited' | 'notExist' | 'wrong-repeat-days'}
      */
     Edit(oldQuest, title, description, deadline, repeatMode, repeatDays, skill, tasks) {
         const rem = this.Remove(oldQuest);
         if (rem === 'notExist') return 'notExist';
 
         // Check if repeat mode is valid
-        if (repeatMode !== 'none' && repeatDays.length <= 0) {
-            repeatMode = 'none';
+        if (repeatDays.length <= 0) {
+            return 'wrong-repeat-days';
         }
 
         const add = this.Add(title, description, deadline, repeatMode, repeatDays, skill, tasks);

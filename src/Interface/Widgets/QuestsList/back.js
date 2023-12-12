@@ -52,7 +52,7 @@ class BackQuestsList extends React.Component {
         /** @type {LayoutRectangle | null} */
         this.tmpLayoutContainer = null;
 
-        user.quests.RefreshScheduleQuests();
+        //user.quests.RefreshScheduleQuests();
         this.state.quests = user.quests.Get();
         this.listenerQuest = user.quests.allQuests.AddListener(this.refreshQuests);
     }
@@ -88,60 +88,6 @@ class BackQuestsList extends React.Component {
             return;
         }
         user.interface.ChangePage('quest', undefined, true);
-    }
-
-    /**
-     * @param {Quest} quest
-     * @param {(cancel: () => void) => void} callbackRemove
-     * @returns {Promise<void>}
-     */
-    onQuestCheck = async (quest, callbackRemove) => {
-        // If quest has a skill, go to activity page
-        //     (will be checked when activity is done)
-        if (quest.Skill !== null) {
-            if (quest.Checked === 0) {
-                const { id, isCategory } = quest.Skill;
-                const args = isCategory ? { categoryID: id } : { skillID: id };
-                user.interface.ChangePage('activity', args, true);
-            }
-        }
-
-        // If quest is scheduled, check it
-        else if (quest.Schedule.Type !== 'none') {
-            // Quest already checked
-            if (quest.Checked !== 0) {
-                user.quests.Uncheck(quest);
-                user.GlobalSave();
-            } else {
-                const checkedTime = GetTime();
-                user.quests.Check(quest, checkedTime);
-                user.GlobalSave();
-            }
-        }
-
-        // If quest is not scheduled, remove it
-        else {
-            // Close undo button after 10 seconds
-            this.undoTimeout = setTimeout(() => {
-                this.setState({ undoEnabled: false });
-            }, 10 * 1000);
-
-            // Remove quest
-            callbackRemove((cancel) => {
-                const success = user.quests.Remove(quest) === 'removed';
-                if (!success) {
-                    cancel();
-                    return;
-                }
-
-                this.setState({
-                    quests: [ ...user.quests.Get() ],
-                    undoEnabled: true
-                });
-                user.GlobalSave();
-            });
-        }
-
     }
 
     undo = () => {

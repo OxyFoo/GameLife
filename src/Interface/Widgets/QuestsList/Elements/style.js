@@ -1,30 +1,36 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    parent: {
-        height: 32,
-        marginTop: 14,
-        overflow: 'hidden'
-    },
     content: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    title: {
-        flex: 1,
-        height: '100%',
-        justifyContent: 'center'
+    item: {
+        width: '100%',
+        height: 'auto',
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+        flexDirection: 'column',
+
+        borderRadius: 0
+    },
+    itemScrollable: {
+        width: '100%',
+        height: 'auto',
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+
+        justifyContent: 'space-between',
+        flexDirection: 'row',
     },
     titleText: {
         height: 24,
         textAlign: 'left'
-    },
-    dateText: {
-        textAlign: 'right',
-        fontSize: 12,
-        marginBottom: 2
     },
     checkbox: {
         width: 32,

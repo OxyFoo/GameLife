@@ -1,14 +1,10 @@
 import * as React from 'react';
-import { View, Animated, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
 
-import { GetDate, GetTime } from 'Utils/Time';
-import { DateToFormatString, GetDay } from 'Utils/Date';
 import { Text, Icon, Button } from 'Interface/Components';
-import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
 
 import DayClock from '../../../Components/DayClock';
 
@@ -28,150 +24,103 @@ const QuestProps = {
     quest: null,
 
     /** Icon to drag => onTouchStart event (quest only) */
-    onDrag: () => {},
-
-    /**
-     * @param {Quest} quest
-     * @param {(resolve: (cancel: () => void) => void) => void} callbackRemove
-     * @returns {Promise<void>} True to enable remove animation
-     */
-    onQuestCheck: async (quest, callbackRemove) => {}
+    onDrag: () => {}
 };
 
 class QuestElement extends React.Component {
-    state = {
-        translateY : new Animated.Value(0)
-    }
-
+    /** @param {QuestProps} props */
     constructor(props) {
         super(props);
 
-        this.mountQuest();
+        if (props.quest === null) return;
     }
 
-    mountQuest() {
+    renderDay = ({ item, index }) => {
+        /** @type {import('Interface/Components/DayClock/back').DayClockStates[]} */
+        const states = [
+            'normal',
+            'normal',
+            'full',
+            'full',
+            'filling',
+            'disabled',
+            'disabled'
+        ];
+        const randomState = states[index];
+
+        return (
+            <DayClock
+                day={item}
+                isToday={index === 0}
+                state={randomState}
+                fillingValue={.5}
+            />
+        );
+    }
+
+    renderContent() {
         const { quest } = this.props;
-        if (quest === null) return;
-
-        const { Deadline, Schedule } = quest;
-
-        const d = new Date();
-        d.setUTCHours(1, 0, 0, 0);
-        const now = GetTime();
-
-        /** @type {'schedule' | 'deadline' | null} */
-        let deadlineType = null;
-
-        /** @type {number | null} Minimum number of days */
-        let minDeltaDays = null;
-
-        // Search next schedule
-        let i = 0;
-        let days = Schedule.Repeat;
-        if (Schedule.Type === 'month') days = days.map(day => day + 1);
-
-        if (days.length > 0) {
-            while (minDeltaDays === null) {
-                const weekMatch = Schedule.Type === 'week' && days.includes(GetDay(d));
-                const monthMatch = Schedule.Type === 'month' && days.includes(d.getUTCDate());
-                if (weekMatch || monthMatch) {
-                    minDeltaDays = i + 1;
-                    deadlineType = 'schedule';
-                }
-                i++;
-                d.setUTCDate(d.getUTCDate() + 1);
-            }
-        }
-
-        // Search next deadline (if earlier than schedule or no schedule)
-        if (Deadline > 0) {
-            const delta = (Deadline - now) / (60 * 60 * 24);
-            if (minDeltaDays === null || delta < minDeltaDays) {
-                deadlineType = 'deadline';
-                minDeltaDays = delta;
-            }
-        }
-
-        // Define text (deadline or schedule)
-        this.text = '';
-        const lang = langManager.curr['quests'];
-        if (deadlineType === 'deadline') {
-            this.text = lang['quest-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
-        } else if (deadlineType === 'schedule') {
-            const nextDate = GetDate(now + (minDeltaDays * 24 * 60 * 60));
-            this.text = lang['quest-type-repeat-before'] + ' ' + DateToFormatString(nextDate);
-        }
-
-        // Define color (red if overdue, orange if today, white otherwise)
-        /** @type {ThemeText} */
-        this.colorText = 'primary';
-        if (minDeltaDays !== null && minDeltaDays < 0) this.colorText = 'error';
-        else if (minDeltaDays !== null && minDeltaDays < 1) this.colorText = 'warning';
-    }
-
-    onCheck = () => {
-        const { translateY } = this.state;
-        const { quest, onQuestCheck } = this.props;
-
-        onQuestCheck(quest, (resolve) => {
-            SpringAnimation(translateY, 1).start();
-            setTimeout(() => {
-                resolve(() => {
-                    SpringAnimation(translateY, 0).start();
-                });
-            }, 200);
-        });
-    }
-
-    render() {
-        const { translateY } = this.state;
-        const { style, quest, onDrag } = this.props;
         if (quest === null) return null;
 
-        const { Title, Schedule, Checked } = quest;
-        const isTodo = Schedule.Type === 'none';
-
-        const styleAnimation = {
-            transform: [
-                { translateY: WithInterpolation(translateY, 0, -46) }
-            ]
-        };
-        const styleButtonRadius = { borderRadius: isTodo ? 8 : 200 };
+        const { Title } = quest;
         const openQuest = () => user.interface.ChangePage('quest', { quest });
 
         return (
-            <View style={styles.parent}>
-            <Animated.View
-                style={[styles.content, styleAnimation, style]}
+            <Button
+                style={styles.item}
+                onPress={openQuest}
             >
-                <Button
-                    style={[styles.checkbox, styleButtonRadius]}
-                    color={Checked !== 0 ? 'white' : 'transparent'}
-                    onPress={this.onCheck}
-                >
-                    {Checked !== 0 && (
-                        <Icon icon='check' color='main1' size={16} />
-                    )}
-                </Button>
-                <TouchableOpacity
-                    style={styles.title}
-                    onPress={openQuest}
-                    activeOpacity={.6}
-                >
-                    <Text style={styles.titleText}>{Title}</Text>
-                    {!!this.text.length && (
-                        <Text
-                            style={styles.dateText}
-                            color={this.colorText}
-                        >
-                            {this.text}
-                        </Text>
-                    )}
-                </TouchableOpacity>
-                <View onTouchStart={() => onDrag()}>
-                    <Icon icon='moveVertical' color='main1' />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Icon icon='default' color='main1' />
+                        <Text style={[styles.titleText, { marginLeft: 8 }]}>{Title}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={[styles.titleText, { marginRight: 8 }]}>{'182'}</Text>
+                        <Icon icon='flame' />
+                    </View>
                 </View>
-            </Animated.View>
+                <FlatList
+                    data={[0,1,2,3,4,5,6]}
+                    numColumns={7}
+                    keyExtractor={item => 'quest-day-' + item.toString()}
+                    columnWrapperStyle={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}
+                    renderItem={this.renderDay}
+                />
+            </Button>
+        );
+    }
+
+    renderContentScrollable() {
+        const { quest, onDrag } = this.props;
+        if (quest === null) return null;
+
+        const { Title } = quest;
+
+        return (
+            <View
+                style={styles.itemScrollable}
+                onTouchStart={() => onDrag()}
+            >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Icon icon='default' color='main1' />
+                    <Text style={[styles.titleText, { marginLeft: 8 }]}>{Title}</Text>
+                </View>
+                <Icon icon='moveVertical' color='main1' />
+            </View>
+        );
+    }
+
+    render() {
+        const { style, quest } = this.props;
+        if (quest === null) return null;
+
+        return (
+            <View style={[styles.content, style]}>
+                {this.renderContent()}
             </View>
         );
     }

@@ -15,7 +15,7 @@ import langManager from 'Managers/LangManager';
  * 
  * @typedef {import('./Sections/activity').default} SectionActivity
  * @typedef {import('./Sections/schedule').default} SectionSchedule
- * @typedef {import('./Sections/schedule').OnChangeScheduleEvent} OnChangeScheduleEvent
+ * @typedef {import('./Sections/deadline').default} SectionDeadline
  * @typedef {import('./Sections/tasks').default} SectionTasks
  * @typedef {import('./Sections/description').default} SectionDescription
  */
@@ -42,6 +42,9 @@ class BackQuest extends PageBase {
     /** @type {SectionActivity | null} */
     refSectionSkill = null;
 
+    /** @type {SectionDeadline | null} */
+    refSectionDeadline = null;
+
     /** @type {SectionSchedule | null} */
     refSectionSchedule = null;
 
@@ -55,7 +58,7 @@ class BackQuest extends PageBase {
     selectedQuest = null;
 
     /** @type {RepeatModes} */
-    lastRepeatMode = 'none';
+    lastRepeatMode = 'week';
 
     constructor(props) {
         super(props);
@@ -92,7 +95,8 @@ class BackQuest extends PageBase {
         if (selectedQuest === null) return;
 
         const { Deadline, Schedule: { Type, Repeat } } = selectedQuest;
-        this.refSectionSchedule.SetValues(Deadline, Type, Repeat);
+        this.refSectionSchedule.SetValues(Type, Repeat);
+        this.refSectionDeadline.SetValues(Deadline);
         this.refSectionTasks.SetTasks(selectedQuest.Tasks);
         this.refSectionSkill.SetSkill(selectedQuest.Skill);
         this.refSectionDescription.SetDescription(selectedQuest.Description);
@@ -178,17 +182,6 @@ class BackQuest extends PageBase {
         return message.length > 0;
     }
 
-    /** @type {OnChangeScheduleEvent} */
-    onChangeSchedule = (deadline, repeatMode, repeatDays) => {
-        // Check if repeat mode has changed to reset scroll position
-        if (this.lastRepeatMode !== repeatMode) {
-            this.lastRepeatMode = repeatMode;
-            this.refPage.GotoY(0);
-        }
-
-        this.onEditQuest();
-    }
-
     onButtonPress = () => {
         const { action } = this.state;
         switch (action) {
@@ -201,11 +194,12 @@ class BackQuest extends PageBase {
     }
     addQuest = () => {
         const { title } = this.state;
-        const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         const skill = this.refSectionSkill.GetSkill();
         const tasks = this.refSectionTasks.GetTasks()
         const description = this.refSectionDescription.GetDescription();
+        const deadline = this.refSectionDeadline.GetValues();
+        const { repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         if (this.checkTitleErrors(title)) {
             return;
@@ -231,11 +225,12 @@ class BackQuest extends PageBase {
     }
     editQuest = () => {
         const { title } = this.state;
-        const { deadline, repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         const skill = this.refSectionSkill.GetSkill();
         const tasks = this.refSectionTasks.GetTasks();
         const description = this.refSectionDescription.GetDescription();
+        const deadline = this.refSectionDeadline.GetValues();
+        const { repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
 
         if (this.selectedQuest === null) {
             user.interface.console.AddLog('error', 'Quest: Selected quest is null');

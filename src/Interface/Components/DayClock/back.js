@@ -14,6 +14,9 @@ const DayClockProps = {
     /** @type {number} [0,6] */
     day: 0,
 
+    /** @type {boolean} True if day represent today */
+    isToday: false,
+
     /** @type {DayClockStates} */
     state: 'normal',
 

@@ -633,9 +633,6 @@
         "quests-empty-title": "Tu n'as pas encore de quête",
         "quests-empty-button": "En ajouter une",
 
-        "quest-type-deadline": "Avant le:",
-        "quest-type-repeat-before": "À faire avant le:",
-
         "alert-questslimit-title": "Limite de quêtes atteinte",
         "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres."
     },

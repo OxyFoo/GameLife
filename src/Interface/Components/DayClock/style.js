@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
             { translateX: -.75 }, // -width/2
             { rotate: '45deg' }
         ]
+    },
+
+    filling: {
+        position: 'absolute'
     }
 });
 

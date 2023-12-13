@@ -1,34 +1,33 @@
 import React from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, FlatList } from 'react-native';
 
 import HeatMapBack from './back';
 import styles from './style';
 
-const LEVELS = 7; // Number of different color levels
-const WEEKS = 52; // Number of weeks in a year
-
 class HeatMap extends HeatMapBack {
 
     render() {
-        // You might want to calculate the color based on the activity level
-        const getColor = (level) => {
-            const colorLevel = Math.floor((255 * level) / (LEVELS - 1));
-            return `rgb(0, ${colorLevel}, 0)`; // Green color with varying intensity
-        };
+        
 
-        const dataToDisplay = this.props.yearData.map((weekLevel, i) => (
+        /*
+        // Je le laisse for now pour voir si t'as une soluce mieux que ce que j'ai fait 
+        // mais dans l'idée lui il est appelé avant le compute() du back 
+        // et donc le styleCell à pas eu le temps de se mettre à jour donc l'affichage fais pas ce que je veux
+        console.log("Render component", this.props.gridSize, this.state.styleCell)
+        const dataToDisplay = this.props.data.map((weekLevel, i) => (
             <View
                 key={i}
                 style={[
                     this.state.styleCell,
-                    { backgroundColor: getColor(weekLevel) },
+                    { backgroundColor: activityLevelToColor(weekLevel) },
                 ]}
             />
         ))
+        */
 
         return (
             <View style={styles.container}>
-                {dataToDisplay}
+                {this.state.dataToDisplay.length > 0 && this.state.dataToDisplay}
             </View>
         );
     };

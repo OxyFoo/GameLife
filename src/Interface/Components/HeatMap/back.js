@@ -1,16 +1,10 @@
 import * as React from 'react';
-
-import langManager from 'Managers/LangManager';
-
-import { Svg, Path, Text, Defs, LinearGradient, Stop } from 'react-native-svg';
-
+import { View } from 'react-native';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Managers/ThemeManager').ColorTheme} ColorTheme
- * @typedef {import('Managers/ThemeManager').ColorThemeText} ColorThemeText
  */
 
 const HeatMapProps = {
@@ -18,11 +12,14 @@ const HeatMapProps = {
     style: {},
 
     /** @type {Object} */
-    yearData: {},
+    data: {},
 
     /** @type {number} */
-    gridSize: 10,
+    gridSize: 5
 }
+
+const LEVELS = 7; // Number of different color levels
+const WEEKS = 52; // Number of weeks in a year
 
 class HeatMapBack extends React.Component {
 
@@ -31,17 +28,10 @@ class HeatMapBack extends React.Component {
             height: 5,
             width: 5,
             margin: 1,
-        }
-    }
+        },
 
-    compute() {
-        const { yearData, gridSize } = this.props;
-        const styleCell = {
-            height: gridSize,
-            width: gridSize,
-            margin: gridSize / 5,
-        }
-        this.setState({ styleCell });
+        /** @type {number[]} */
+        dataToDisplay: []
     }
 
     componentDidMount() {
@@ -49,13 +39,58 @@ class HeatMapBack extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.yearData !== this.props.yearData || nextState.styleCell !== this.state.styleCell;
+
+        // lui si je le met pas, j'ai rien au premier rendering, enfin genre un élément vide quoi 
+        if (nextState.dataToDisplay.length !== this.state.dataToDisplay.length) {
+            return true;
+        }
+
+        if (nextProps.gridSize !== this.props.gridSize) {
+            return true;
+        }
+
+        if (nextProps.data.length !== this.props.data.length) {
+            return true;
+        }
+
+        for (let i = 0; i < nextProps.data.length; i++) {
+            if (nextProps.data[i] !== this.props.data[i]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.yearData !== this.props.yearData ) {
-            this.compute();
+        this.compute();
+    }
+
+    activityLevelToColor = (level) => {
+        const colorLevel = Math.floor((255 * level) / (LEVELS - 1));
+        return `rgb(0, ${colorLevel}, 0)`; // Green color with varying intensity
+    };
+
+    compute() {
+        const { data, gridSize } = this.props;
+        const styleCell = {
+            height: gridSize,
+            width: gridSize,
+            margin: gridSize / 5,
         }
+
+        // Du coup si je calcule le dataToDisplay ici, il n'y a plus de décalage. 
+        const dataToDisplay = data.map((weekLevel, i) => (
+            <View
+                key={i}
+                style={[
+                    styleCell,
+                    { backgroundColor: this.activityLevelToColor(weekLevel) },
+                ]}
+            />
+        ))
+
+        this.setState({ styleCell, dataToDisplay });
     }
 }
 

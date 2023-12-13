@@ -41,39 +41,28 @@ class StreakChartBack extends React.Component {
     }
 
     componentDidMount() {
-        console.log("componentDidMount")
         this.compute();
     }
 
 
-    /*
+
     // Je l'ai commenté parce que ça fonctionne MAIS ça rajoute un délai de 1 valeur 
     // quand tu cliques sur le bouton.
     // ce décalage n'est pas normal mais je comprend pas pourquoi il arrive.
     shouldComponentUpdate(nextProps, nextState) {
-        console.log("shouldComponentUpdate")
-        console.log("nextProps : ", this.props.bestStreak, nextProps.bestStreak)
-        console.log("nextState : ", this.state.rotation, nextState.rotation)
         return nextProps.currentStreak !== this.props.currentStreak ||
             nextProps.bestStreak !== this.props.bestStreak ||
-            nextState.rotation !== this.state.rotation ; // Comme ca il apparait au début sinon il apparait pas 
+            nextState.rotation !== this.state.rotation;
     }
-    */
+
 
 
     componentDidUpdate(prevProps, prevState) {
-        // This will be called only if shouldComponentUpdate returned true
-        if (this.props.currentStreak !== prevProps.currentStreak ||
-            this.props.bestStreak !== prevProps.bestStreak ||
-            this.state.rotation !== prevState.rotation ) {
-            this.compute();
-            // Any other logic that should run after the component updates
-        }
+        this.compute();
     }
 
 
     compute() {
-        console.log("COMPUUUUUUUUTE")
         // So we don't have 120% or something like that 
         let bestStreak = this.props.bestStreak;
         if (this.props.currentStreak >= bestStreak) {
@@ -83,7 +72,8 @@ class StreakChartBack extends React.Component {
         // Compute the progress bar 
         const radius = (this.props.size - this.props.strokeWidth) / 2;
         const circumference = Math.PI * radius;
-        const strokeDasharray = `${(this.props.currentStreak / bestStreak) * circumference} ${circumference}`; // pour déterminer à quel niveau arreter la progress Bar 
+        const filling = (this.props.currentStreak / bestStreak) * circumference;
+        const strokeDasharray = `${filling} ${circumference}`;
         const rotation = 270;
 
         // Compute the center item with text and background
@@ -101,55 +91,7 @@ class StreakChartBack extends React.Component {
         const endX = this.props.size / 2 + radius * Math.cos(angleRadians);
         const endY = this.props.size / 2 + radius * Math.sin(angleRadians);
 
-        // Compute the text elements 
-        const leftTextX = 10; // X position for left-aligned text
-        const centerTextX = this.props.size / 2; // X position for center-aligned text
-        const rightTextX = this.props.size; // X position for right-aligned text
-        const bottomTextY = this.props.size / 2 + this.props.strokeWidth + 5; // Y position for text at the bottom
-
-        const texts = [ // On va peut etre pas l'utiliser, tout dépend de ce que tu dis sur le commentaire de la ligne 126 avec le map. 
-            {
-                x: textX,
-                y: textY + 5,
-                fontSize: this.props.strokeWidth / 1.5,
-                text: this.props.currentStreak
-            },
-            {
-                x: leftTextX,
-                y: bottomTextY,
-                textAnchor: "start",
-                text: '0',
-            },
-            {
-                x: centerTextX,
-                y: bottomTextY,
-                textAnchor: "middle",
-                fontSize: 14,
-                fontWeight: 'normal',
-                fill: '#bbb',
-                text: langManager.curr['quests']['current-streak']
-            },
-            {
-                x: rightTextX,
-                y: bottomTextY,
-                textAnchor: "end",
-                text: bestStreak
-            }
-        ]
-        const renderTexts = texts.map((item, index) => (
-            <Text
-                key={index}
-                x={item.x}
-                y={item.y}
-                textAnchor={item.textAnchor || "middle"}
-                fontSize={item.fontSize || 16}
-                fontWeight={item.fontWeight || 'bold'}
-                fill={item.fill || '#fff'}
-            >
-                {item.text}
-            </Text>
-        ))
-
+        // Compute the texts to display
         const dottedLine = `M ${textX},${textY} L ${endX},${endY}`
 
         const backgroundProgressBar = `M ${this.props.size / 2},${this.props.size / 2 - radius} 
@@ -171,12 +113,10 @@ class StreakChartBack extends React.Component {
             backgroundProgressBar,
             progressBar,
             filledSemiCircle,
-            renderTexts,
             rotation,
             strokeDasharray
         })
 
-        //console.log("New values from compute : ", dottedLine, backgroundProgressBar, progressBar, filledSemiCircle, renderTexts, rotation, strokeDasharray)
 
     }
 

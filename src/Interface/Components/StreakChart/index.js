@@ -4,14 +4,24 @@ import { Svg, Path, Text, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 import StreakChartBack from './back';
 import themeManager from 'Managers/ThemeManager';
+import langManager from 'Managers/LangManager';
 
 class StreakChart extends StreakChartBack {
 
     render() {
 
+        const textX = this.props.size / 2;
+        const textY = this.props.size / 2 + this.props.strokeWidth / 12; // TODO : CHANGE THE METHOD OF CALCULATION BECAUSE /
+
+        const leftTextX = 10; // X position for left-aligned text
+        const centerTextX = this.props.size / 2; // X position for center-aligned text
+        const rightTextX = this.props.size; // X position for right-aligned text
+        const bottomTextY = this.props.size / 2 + this.props.strokeWidth + 5; // Y position for text at the bottom
+
+
         return (
             <View>
-                <RNText style={{color:"white"}}>{this.state.dottedLine}</RNText>
+                <RNText style={{ color: "white" }}>{this.state.dottedLine}</RNText>
                 <Svg height={this.props.size} width={this.props.size}>
                     <Defs>
                         <LinearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -63,8 +73,56 @@ class StreakChart extends StreakChartBack {
                         />
                     }
 
-                    {/* All texts elements */}
-                    {this.state.renderTexts ?? this.state.renderTexts}
+
+                    {/* Text element for current streak number */}
+                    <Text
+                        x={textX}
+                        y={textY}
+                        textAnchor="middle"
+                        fontSize={this.props.strokeWidth / 2}
+                        fontWeight="bold"
+                        fill="#fff"
+                    >
+                        {this.props.currentStreak}
+                    </Text>
+
+                    {/* Text for "0" */}
+                    <Text
+                        x={leftTextX}
+                        y={bottomTextY}
+                        textAnchor="start"
+                        fill="white"
+                        fontSize="16"
+                        fontWeight="bold"
+                    >
+                        0
+                    </Text>
+
+                    {/* Text for "current streak" */}
+                    <Text
+                        x={centerTextX}
+                        y={bottomTextY}
+                        textAnchor="middle"
+                        fill="white"
+                        fontSize="14"
+                    >
+                        {langManager.curr['quests']['currSteak']}
+                    </Text>
+
+                    {/* Text for "208" */}
+                    <Text
+                        x={rightTextX}
+                        y={bottomTextY}
+                        textAnchor="end"
+                        fill="white"
+                        fontSize="16"
+                        fontWeight="bold"
+                    >
+                        {this.props.bestStreak}
+                    </Text>
+
+
+
 
                 </Svg>
             </View>

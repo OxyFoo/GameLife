@@ -27,53 +27,53 @@ const InputProps = {
     style: {}
 };
 
+const WEEKS = 52;
+const DAYS_PER_WEEK = 7;
+const LEVELS = 7;
+
 class YearHeatMapBack extends React.Component {
     state = {
         /** @type {boolean} */
         switchValue: false,
 
+        /** @type TO DEFINE WITH @GEREM */
         dataToDisplay: [],
 
         /** @type {number} */
         gridSize: 5
     }
 
-    WEEKS = 52;
-    DAYS_PER_WEEK = 7;
-    LEVELS = 7;
-
     saveTimeout = null;
 
     componentDidMount() {
-        this.compute(user.settings.questHeatMap);
+        this.compute();
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.compute(user.settings.questHeatMap);
+            this.compute();
         });
     }
 
     componentWillUnmount() {
-        clearTimeout
+        clearTimeout(this.saveTimeout)
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     /**
      * Compute and prepare the data for the heat map 
-     * @param {boolean} value 
      */
-    compute = (value) => {
+    compute = () => {
 
+        let value = user.settings.questHeatMap;
         let dataToDisplay = [];
-        let gridSize = 10;
+        const gridSize = value ? 10 : 5;
 
         if (value) {
             // Data with 52 cells, one for each week
-            dataToDisplay = new Array(this.WEEKS).fill(null).map(() => Math.floor(Math.random() * this.LEVELS));
+            dataToDisplay = new Array(WEEKS).fill(null).map(() => Math.floor(Math.random() * LEVELS));
         }
         else {
             // Data with 52 * 7 cells, one for each day of the year (assuming 7 days per week)
-            dataToDisplay = new Array(this.WEEKS * this.DAYS_PER_WEEK).fill(null).map(() => Math.floor(Math.random() * this.LEVELS));
-            gridSize = 5;
+            dataToDisplay = new Array(WEEKS * DAYS_PER_WEEK).fill(null).map(() => Math.floor(Math.random() * LEVELS));
         }
 
         this.setState({
@@ -92,8 +92,7 @@ class YearHeatMapBack extends React.Component {
         }, 3 * 1000);
 
         user.settings.questHeatMap = value;
-        this.setState({ switchValue: value });
-        this.compute(value);
+        this.compute();
     }
 
 }

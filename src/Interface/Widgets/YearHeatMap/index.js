@@ -33,7 +33,7 @@ class YearHeatMap extends YearHeatMapBack {
                 </View>
 
                 {/* Heat Map view */}
-                <HeatMap yearData={this.state.dataToDisplay} gridSize={this.state.gridSize} />
+                <HeatMap data={this.state.dataToDisplay} gridSize={this.state.gridSize} />
 
             </View>
         );

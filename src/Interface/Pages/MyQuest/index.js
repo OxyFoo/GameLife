@@ -10,7 +10,6 @@ import SectionDescription from './Sections/description';
 import SectionSkill from './Sections/activity';
 import SectionDeadline from './Sections/deadline';
 import SectionSchedule from './Sections/schedule';
-import SectionTasks from './Sections/tasks';
 
 import { PageHeader } from 'Interface/Widgets';
 import { Button, Page } from 'Interface/Components';
@@ -44,11 +43,6 @@ class Quest extends BackQuest {
 
                 <SectionSkill
                     ref={ref => this.refSectionSkill = ref}
-                    onChange={this.onEditQuest}
-                />
-
-                <SectionTasks
-                    ref={ref => this.refSectionTasks = ref}
                     onChange={this.onEditQuest}
                 />
 

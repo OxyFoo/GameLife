@@ -46,7 +46,7 @@ class TextSwitchBack extends React.Component {
      * @returns {boolean} True if index is valid
      */
     SetSelectedIndex(index) {
-        if (index < 0 && index >= this.props.texts.length) {
+        if (index < 0 || index >= this.props.texts.length) {
             user.interface.console.AddLog('warn', 'TextSwitch index is out of bounds');
             return false;
         }

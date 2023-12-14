@@ -4,7 +4,6 @@ import { FlatList } from 'react-native';
 import styles from './style';
 import BackQuestsList from './back';
 import QuestElement from './Elements/quest';
-import TaskElement from './Elements/tasks';
 import QuestSelection from './Elements/questSelection';
 
 import langManager from 'Managers/LangManager';
@@ -24,13 +23,12 @@ const QuestsProps = {
 
 class QuestsList extends BackQuestsList {
     static QuestElement = QuestElement;
-    static TaskElement = TaskElement;
 
     renderItem = ({ item }) => {
         const { draggedItem } = this.state;
 
         const styleOpacity = { opacity: 1 };
-        if (draggedItem !== null && item.Title === draggedItem.Title) {
+        if (draggedItem !== null && item.Title === draggedItem.title) {
             styleOpacity.opacity = .25;
         }
 

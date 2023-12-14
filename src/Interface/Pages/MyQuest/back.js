@@ -16,7 +16,6 @@ import langManager from 'Managers/LangManager';
  * @typedef {import('./Sections/activity').default} SectionActivity
  * @typedef {import('./Sections/schedule').default} SectionSchedule
  * @typedef {import('./Sections/deadline').default} SectionDeadline
- * @typedef {import('./Sections/tasks').default} SectionTasks
  * @typedef {import('./Sections/description').default} SectionDescription
  */
 
@@ -48,9 +47,6 @@ class BackQuest extends PageBase {
     /** @type {SectionSchedule | null} */
     refSectionSchedule = null;
 
-    /** @type {SectionTasks | null} */
-    refSectionTasks = null;
-
     /** @type {SectionDescription | null} */
     refSectionDescription = null;
 
@@ -67,7 +63,7 @@ class BackQuest extends PageBase {
             /** @type {Quest | null} */
             const quest = this.props.args.quest || null;
             this.selectedQuest = quest;
-            this.lastRepeatMode = quest.Schedule.Type;
+            this.lastRepeatMode = quest.schedule.type;
 
             if (quest === null) {
                 user.interface.BackHandle();
@@ -82,7 +78,7 @@ class BackQuest extends PageBase {
                     color: 'danger'
                 },
 
-                title: quest.Title,
+                title: quest.title,
                 error: ''
             };
         }
@@ -94,12 +90,11 @@ class BackQuest extends PageBase {
         const { selectedQuest } = this;
         if (selectedQuest === null) return;
 
-        const { Deadline, Schedule: { Type, Repeat } } = selectedQuest;
-        this.refSectionSchedule.SetValues(Type, Repeat);
-        this.refSectionDeadline.SetValues(Deadline);
-        this.refSectionTasks.SetTasks(selectedQuest.Tasks);
-        this.refSectionSkill.SetSkill(selectedQuest.Skill);
-        this.refSectionDescription.SetDescription(selectedQuest.Description);
+        const { deadline, schedule: { type, repeat } } = selectedQuest;
+        this.refSectionSchedule.SetValues(type, repeat);
+        this.refSectionDeadline.SetValues(deadline);
+        this.refSectionSkill.SetSkill(selectedQuest.skill);
+        this.refSectionDescription.SetDescription(selectedQuest.description);
     }
 
     componentDidFocused = () => {
@@ -167,8 +162,8 @@ class BackQuest extends PageBase {
     checkTitleErrors = (title) => {
         let message = '';
 
-        const titleIsCurrent = title === (this.selectedQuest?.Title || null);
-        const titleUsed = user.quests.Get().some(t => t.Title === title);
+        const titleIsCurrent = title === (this.selectedQuest?.title || null);
+        const titleUsed = user.quests.Get().some(t => t.title === title);
 
         if (title.trim().length <= 0) {
             message = langManager.curr['quest']['error-title-empty'];
@@ -196,7 +191,6 @@ class BackQuest extends PageBase {
         const { title } = this.state;
 
         const skill = this.refSectionSkill.GetSkill();
-        const tasks = this.refSectionTasks.GetTasks()
         const description = this.refSectionDescription.GetDescription();
         const deadline = this.refSectionDeadline.GetValues();
         const { repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
@@ -211,8 +205,7 @@ class BackQuest extends PageBase {
             deadline,
             repeatMode,
             selectedDays,
-            skill,
-            tasks
+            skill
         );
 
         if (addition === 'added') {
@@ -227,7 +220,6 @@ class BackQuest extends PageBase {
         const { title } = this.state;
 
         const skill = this.refSectionSkill.GetSkill();
-        const tasks = this.refSectionTasks.GetTasks();
         const description = this.refSectionDescription.GetDescription();
         const deadline = this.refSectionDeadline.GetValues();
         const { repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
@@ -248,8 +240,7 @@ class BackQuest extends PageBase {
             deadline,
             repeatMode,
             selectedDays,
-            skill,
-            tasks
+            skill
         );
 
         if (edition === 'edited') {

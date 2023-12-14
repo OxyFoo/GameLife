@@ -23,18 +23,10 @@ function StartHelp() {
             }
         },
         {
-            component: this.refSectionTasks.refHelp1,
+            component: this.refSectionDescription.refHelp1,
             text: lang['3'],
             execBefore: async () => {
                 this.refPage.GotoY(200);
-                await Sleep(400);
-            }
-        },
-        {
-            component: this.refSectionDescription.refHelp1,
-            text: lang['4'],
-            execBefore: async () => {
-                this.refPage.GotoY(300);
                 await Sleep(400);
             }
         }

@@ -62,7 +62,7 @@ class QuestElement extends React.Component {
         const { quest } = this.props;
         if (quest === null) return null;
 
-        const { Title } = quest;
+        const { title } = quest;
         const openQuest = () => user.interface.ChangePage('myqueststats', { quest }, true);
 
         return (
@@ -73,7 +73,7 @@ class QuestElement extends React.Component {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Icon icon='default' color='main1' />
-                        <Text style={[styles.titleText, { marginLeft: 8 }]}>{Title}</Text>
+                        <Text style={[styles.titleText, { marginLeft: 8 }]}>{title}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={[styles.titleText, { marginRight: 8 }]}>{'182'}</Text>
@@ -98,7 +98,7 @@ class QuestElement extends React.Component {
         const { quest, onDrag } = this.props;
         if (quest === null) return null;
 
-        const { Title } = quest;
+        const { title } = quest;
 
         return (
             <View
@@ -107,7 +107,7 @@ class QuestElement extends React.Component {
             >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Icon icon='default' color='main1' />
-                    <Text style={[styles.titleText, { marginLeft: 8 }]}>{Title}</Text>
+                    <Text style={[styles.titleText, { marginLeft: 8 }]}>{title}</Text>
                 </View>
                 <Icon icon='moveVertical' color='main1' />
             </View>

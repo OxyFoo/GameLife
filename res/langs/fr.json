@@ -215,7 +215,6 @@
         "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
-        "display-quest-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",
         "display-activity-button": "Retour vers l'accueil",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil"
@@ -586,7 +585,6 @@
 
     "quest": {
         "title-schedule": "Planification",
-        "title-tasks": "Tâches",
         "title-activity": "Activité",
         "title-commentary": "Commentaire",
 
@@ -605,7 +603,6 @@
 
         "input-repeat-title": "Répétition",
         "input-description": "Description",
-        "input-task-placeholder": "Tâche",
         "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
         "button-commentary": "Ajouter un commentaire",
@@ -620,10 +617,6 @@
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
         "alert-remquest-title": "Suppression ?",
         "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
-        "alert-remtask-title": "Suppression ?",
-        "alert-remtask-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
-        "alert-taskslimit-title": "Limite atteinte",
-        "alert-taskslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
@@ -716,8 +709,7 @@
         "quest": {
             "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
             "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Tu peux également ajouter des tâches à ta quête principale, pour mieux t'organiser.",
-            "4": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+            "3": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
         },
 
         "other": {

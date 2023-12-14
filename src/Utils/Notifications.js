@@ -212,20 +212,20 @@ class Notifications {
             let halftime = {}, tomorrow = {}, today = {};
 
             for (let i = 0; i < quests.length; i++) {
-                const { Title, Checked, Starttime, Deadline, Schedule } = quests[i];
-                if (Checked || Deadline < Starttime) continue;
+                const { title, checked, starttime, deadline, schedule } = quests[i];
+                if (checked || deadline < starttime) continue;
 
-                const midTime = (Deadline - Starttime) / 2;
-                if (Schedule !== null) {
-                } else if (Deadline !== null) {
-                    if (Deadline > now && Deadline < now + day) {
+                const midTime = (deadline - starttime) / 2;
+                if (schedule !== null) {
+                } else if (deadline !== null) {
+                    if (deadline > now && deadline < now + day) {
                         // Today
-                    } else if (Deadline < now && Deadline > now - day) {
+                    } else if (deadline < now && deadline > now - day) {
                         // Tomorrow
                     } else if (midTime > now && midTime < now + day) {
                         // Mid date
                     }
-                    const date = Deadline;
+                    const date = deadline;
                     
                 }
             }

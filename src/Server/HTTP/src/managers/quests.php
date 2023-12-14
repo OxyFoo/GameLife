@@ -8,7 +8,7 @@ class Quests
      * @return array quests => [ Title, startTime, duration, comment ]
      */
     public static function GetQuests($db, $account) {
-        $command = 'SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule`, `Tasks` FROM TABLE WHERE `AccountID` = ?';
+        $command = 'SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule` FROM TABLE WHERE `AccountID` = ?';
         $quests = $db->QueryPrepare('Quests', $command, 'i', [ $account->ID ]);
         if ($quests === false) ExitWithStatus('Error: getting quests failed');
 
@@ -20,10 +20,6 @@ class Quests
             if ($quests[$i]['Skill'] !== null) {
                 $quests[$i]['Skill'] = json_decode($quests[$i]['Skill'], true);
             }
-            if ($quests[$i]['Tasks'] !== '[]') {
-                $quests[$i]['Tasks'] = $db->Decrypt($quests[$i]['Tasks']);
-            }
-            $quests[$i]['Tasks'] = json_decode($quests[$i]['Tasks'], true);
         }
         return $quests;
     }
@@ -46,10 +42,10 @@ class Quests
             $Deadline = $quest['Deadline'];                      // int
             $Schedule = json_encode($quest['Schedule']);         // string
             $Skill = $quest['Skill'];                            // null or json
-            $Tasks = json_encode($quest['Tasks']);               // string
 
-            if ($Skill !== null) $Skill = json_encode($Skill);
-            if ($Tasks !== '[]') $Tasks = $db->Encrypt($Tasks);
+            if ($Skill !== null) {
+                $Skill = json_encode($Skill);
+            }
 
             // Check if quest exists
             $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Title` = ?';
@@ -66,8 +62,7 @@ class Quests
                     `Starttime` = ?,
                     `Deadline` = ?,
                     `Schedule` = ?,
-                    `Skill` = ?,
-                    `Tasks` = ?
+                    `Skill` = ?
                     WHERE `ID` = ?';
                 $args = [
                     $Checked,
@@ -77,15 +72,14 @@ class Quests
                     $Deadline,
                     $Schedule,
                     $Skill,
-                    $Tasks,
                     $reqQuest[0]['ID']
                 ];
-                $types = 'issiisssi';
+                $types = 'issiissi';
 
                 if ($Skill === null) {
                     array_splice($args, 6, 1);
                     $command = str_replace('`Skill` = ?,', '`Skill` = NULL,', $command);
-                    $types = 'issiissi';
+                    $types = 'issiisi';
                 }
 
                 $r = $db->QueryPrepare('Quests', $command, $types, $args);
@@ -101,8 +95,7 @@ class Quests
                     `Description`,
                     `Deadline`,
                     `Schedule`,
-                    `Skill`,
-                    `Tasks`
+                    `Skill`
                 ) VALUES ({?})';
                 $args = [
                     $account->ID,
@@ -111,15 +104,14 @@ class Quests
                     $Description,
                     $Deadline,
                     $Schedule,
-                    $Skill,
-                    $Tasks
+                    $Skill
                 ];
-                $types = 'iississs';
+                $types = 'iississ';
 
                 if ($Skill === null) {
                     array_splice($args, 6, 1);
                     $command = str_replace('`Skill`,', '', $command);
-                    $types = 'iississ';
+                    $types = 'iissis';
                 }
 
                 // Replace {?} with ?, ?, ?, ... with the correct number of arguments

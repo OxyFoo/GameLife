@@ -52,7 +52,6 @@ class BackQuestsList extends React.Component {
         /** @type {LayoutRectangle | null} */
         this.tmpLayoutContainer = null;
 
-        //user.quests.RefreshScheduleQuests();
         this.state.quests = user.quests.Get();
         this.listenerQuest = user.quests.allQuests.AddListener(this.refreshQuests);
     }
@@ -68,11 +67,11 @@ class BackQuestsList extends React.Component {
     /** @param {Quest} item */
     keyExtractor = (item) => (
         'quest-' + [
-            item.Title,
-            ...item.Schedule.Type,
-            ...item.Schedule.Repeat,
-            ...item.Starttime.toString(),
-            ...item.Deadline.toString()
+            item.title,
+            ...item.schedule.type,
+            ...item.schedule.repeat,
+            ...item.starttime.toString(),
+            ...item.deadline.toString()
         ].join('-')
     )
 
@@ -154,7 +153,7 @@ class BackQuestsList extends React.Component {
 
         // Change quest order when dragging
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.quests.questsSort.indexOf(draggedItem.Title);
+        const currIndex = user.quests.questsSort.indexOf(draggedItem.title);
         if (index !== currIndex && user.quests.Move(draggedItem, index)) {
             this.setState({ quests: user.quests.Get() });
         }

@@ -1,51 +1,43 @@
 import DynamicVar from 'Utils/DynamicVar';
 import { GetTime } from 'Utils/Time';
-import { MonthDayBetween, WeekDayBetween } from 'Utils/Date';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'week' | 'month'} RepeatModes
  * 
  * @typedef {object} Schedule
- * @property {RepeatModes} Type
- * @property {Array<number>} Repeat
+ * @property {RepeatModes} type
+ * @property {Array<number>} repeat
  * 
  * @typedef {object} Skill
  * @property {number} id
  * @property {boolean} isCategory
- * 
- * @typedef {object} Task
- * @property {boolean} Checked
- * @property {string} Title
  */
 
 class Quest {
     /** @type {number} Time in seconds or 0 if unchecked */
-    Checked = 0;
+    checked = 0;
 
     /** @type {string} Quest title with max 128 characters */
-    Title = '';
+    title = '';
 
     /** @type {string} Quest description with max 2048 characters */
-    Description = '';
+    description = '';
 
     /** @type {number} Timestamp in seconds */
-    Starttime = 0;
+    starttime = 0;
 
     /** @type {number} Timestamp in seconds, 0 if disabled */
-    Deadline = 0;
+    deadline = 0;
 
     /** @type {Schedule} Null to don't repeat */
-    Schedule = {
-        Type: 'week',
-        Repeat: []
+    schedule = {
+        type: 'week',
+        repeat: []
     };
 
     /** @type {Skill | null} */
-    Skill = null;
-
-    /** @type {Array<Task>} Tasks informations */
-    Tasks = [];
+    skill = null;
 }
 
 class Quests {
@@ -134,15 +126,15 @@ class Quests {
 
         // Add new quests title at the top
         quests.forEach(quest =>
-            this.questsSort.findIndex(title => quest.Title === title) === -1 &&
-            this.questsSort.splice(0, 0, quest.Title)
+            this.questsSort.findIndex(title => quest.title === title) === -1 &&
+            this.questsSort.splice(0, 0, quest.title)
         );
 
         // Remove deleted quests title
-        const filter = title => quests.findIndex(quest => quest.Title === title) !== -1;
+        const filter = title => quests.findIndex(quest => quest.title === title) !== -1;
         this.questsSort = this.questsSort.filter(filter);
 
-        return this.questsSort.map(title => quests.find(quest => quest.Title === title));
+        return this.questsSort.map(title => quests.find(quest => quest.title === title));
     }
 
     IsUnsaved = () => {
@@ -175,29 +167,6 @@ class Quests {
     }
 
     /**
-     * Reset quests which are scheduled to be reset (checked & repeat)
-     */
-    RefreshScheduleQuests() {
-        const quests = this.Get();
-        for (let i = 0; i < quests.length; i++) {
-            let quest = quests[i];
-            if (quest.Checked === 0) continue; // || quest.Schedule.Type === 'none'
-
-            let reset = false;
-            const now = GetTime();
-            if (quest.Schedule.Type === 'week') {
-                reset ||= WeekDayBetween(quest.Schedule.Repeat, quest.Checked, now);
-            } else if (quest.Schedule.Type === 'month') {
-                reset ||= MonthDayBetween(quest.Schedule.Repeat, quest.Checked, now);
-            }
-            if (reset) {
-                this.Remove(quest);
-                this.Undo();
-            }
-        }
-    }
-
-    /**
      * Add quest
      * @param {string} title Title of the quest
      * @param {string} description Description of the quest
@@ -205,22 +174,20 @@ class Quests {
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
      * @param {Skill | null} skill Skill informations
-     * @param {Array<Task>} tasks Tasks informations
      * @returns {'added' | 'alreadyExist' | 'wrong-repeat-days'}
      */
-    Add(title, description, deadline, repeatMode, repeatDays, skill, tasks) {
+    Add(title, description, deadline, repeatMode, repeatDays, skill) {
         const newQuest = new Quest();
-        newQuest.Checked = 0;
-        newQuest.Title = title;
-        newQuest.Description = description;
-        newQuest.Starttime = GetTime();
-        newQuest.Deadline = deadline;
-        newQuest.Skill = skill;
-        newQuest.Schedule = {
-            Type: repeatMode,
-            Repeat: repeatDays
+        newQuest.checked = 0;
+        newQuest.title = title;
+        newQuest.description = description;
+        newQuest.starttime = GetTime();
+        newQuest.deadline = deadline;
+        newQuest.skill = skill;
+        newQuest.schedule = {
+            type: repeatMode,
+            repeat: repeatDays
         };
-        newQuest.Tasks = tasks.filter(st => !!st.Title);
 
         // Check if repeat mode is valid
         if (repeatDays.length <= 0) {
@@ -256,10 +223,9 @@ class Quests {
      * @param {RepeatModes} repeatMode Repeat mode
      * @param {Array<number>} repeatDays Repeat days
      * @param {Skill | null} skill Skill informations
-     * @param {Array<Task>} tasks Tasks informations
      * @returns {'edited' | 'notExist' | 'wrong-repeat-days'}
      */
-    Edit(oldQuest, title, description, deadline, repeatMode, repeatDays, skill, tasks) {
+    Edit(oldQuest, title, description, deadline, repeatMode, repeatDays, skill) {
         const rem = this.Remove(oldQuest);
         if (rem === 'notExist') return 'notExist';
 
@@ -268,7 +234,7 @@ class Quests {
             return 'wrong-repeat-days';
         }
 
-        const add = this.Add(title, description, deadline, repeatMode, repeatDays, skill, tasks);
+        const add = this.Add(title, description, deadline, repeatMode, repeatDays, skill);
         this.SAVED_sort = false;
         this.allQuests.Set(this.Get());
         return add === 'added' ? 'edited' : 'notExist';
@@ -314,21 +280,21 @@ class Quests {
      * @returns {boolean} Success of the operation
      */
     Move(quest, newIndex) {
-        if (!this.questsSort.includes(quest.Title)) {
-            this.user.interface.console.AddLog('warn', `Quests - move failed: quest not found (${quest.Title} ${newIndex})`);
+        if (!this.questsSort.includes(quest.title)) {
+            this.user.interface.console.AddLog('warn', `Quests - move failed: quest not found (${quest.title} ${newIndex})`);
             return false;
         }
         if (newIndex < 0 || newIndex > this.questsSort.length) {
-            this.user.interface.console.AddLog('warn', `Quests - move failed: index out of range (${quest.Title} ${newIndex})`);
+            this.user.interface.console.AddLog('warn', `Quests - move failed: index out of range (${quest.title} ${newIndex})`);
             return false;
         }
-        const oldIndex = this.questsSort.indexOf(quest.Title);
+        const oldIndex = this.questsSort.indexOf(quest.title);
         if (oldIndex === newIndex) {
-            this.user.interface.console.AddLog('warn', `Quests - move failed: same index (${quest.Title} ${newIndex})`);
+            this.user.interface.console.AddLog('warn', `Quests - move failed: same index (${quest.title} ${newIndex})`);
             return false;
         }
         this.questsSort.splice(oldIndex, 1);
-        this.questsSort.splice(newIndex, 0, quest.Title);
+        this.questsSort.splice(newIndex, 0, quest.title);
         this.SAVED_sort = false;
         this.allQuests.Set(this.Get());
         return true;
@@ -348,11 +314,11 @@ class Quests {
         if (indexQuest !== null) selectedQuest = this.SAVED_quests.splice(indexQuest, 1)[0];
         if (indexUnsaved !== null) selectedQuest = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
         if (selectedQuest === null) {
-            this.user.interface.console.AddLog('warn', `Quests - check failed: quest not found (${quest.Title} ${checkedTime})`);
+            this.user.interface.console.AddLog('warn', `Quests - check failed: quest not found (${quest.title} ${checkedTime})`);
             return false;
         }
 
-        selectedQuest.Checked = checkedTime;
+        selectedQuest.checked = checkedTime;
         this.UNSAVED_additions.push(selectedQuest);
         this.allQuests.Set(this.Get());
         return true;
@@ -378,7 +344,7 @@ class Quests {
         if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
 
         // Save unchecked quest in UNSAVED_additions
-        this.lastDeletedQuest.Checked = 0;
+        this.lastDeletedQuest.checked = 0;
         this.UNSAVED_additions.push(this.lastDeletedQuest);
         this.lastDeletedQuest = null;
         this.allQuests.Set(this.Get());
@@ -395,7 +361,7 @@ class Quests {
      * @returns {number | null} Index of quest or null if not found
      */
     GetIndex(arr, quest) {
-        const index = arr.findIndex(a => a.Title === quest.Title);
+        const index = arr.findIndex(a => a.title === quest.title);
         if (index === -1) return null;
         return index;
     }

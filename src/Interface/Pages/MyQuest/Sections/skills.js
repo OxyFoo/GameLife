@@ -10,35 +10,23 @@ import { Button, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('Interface/Widgets/ScreenList').ScreenListItem} ScreenListItem
- * 
- * @typedef {Object} SelectedSkill
- * @property {number} id
- * @property {boolean} isCategory
  */
 
+/////////////////////////////
+// TODO: Manage skills ids //
+/////////////////////////////
+
 const SectionSkillProps = {
-    onChange: () => {}
+    /** @type {Array<number>} */
+    skills: [],
+
+    /** @param {Array<number>} skills */
+    onChange: (skills) => {}
 };
 
 class SectionSkill extends React.Component {
-    state = {
-        /** @type {SelectedSkill | null} */
-        skill: null
-    }
-
-    refHelp1 = null;
-
-    /** @param {SelectedSkill | null} skill */
-    SetSkill = (skill) => {
-        this.setState({ skill });
-    }
-    GetSkill = () => {
-        return this.state.skill;
-    }
-
     onUnselectSkill = () => {
-        this.setState({ skill: null });
-        this.props.onChange();
+        this.props.onChange([]);
     }
 
     OpenCategoriesSelection = () => {
@@ -68,14 +56,14 @@ class SectionSkill extends React.Component {
 
     OpenSkillSelection = (SkillID) => {
         const callback = (id) => {
-            this.props.onChange();
+            //this.props.onChange();
 
             if (id === 0) {
-                this.setState({ skill: { id: SkillID, isCategory: true } });
+                //this.setState({ skills: { id: SkillID, isCategory: true } });
                 return;
             }
 
-            this.setState({ skill: { id: id, isCategory: false } });
+            //this.setState({ skills: { id: id, isCategory: false } });
         };
 
         const title = langManager.curr['quest']['input-panel-activity'];
@@ -96,23 +84,26 @@ class SectionSkill extends React.Component {
 
     render() {
         const lang = langManager.curr['quest'];
-        const { skill } = this.state;
+        const { skills } = this.props;
 
         let activityTitle = lang['input-activity-title'];
         let activityText = lang['input-activity-empty'];
 
-        if (!!skill) {
-            if (skill.isCategory) {
-                const category = dataManager.skills.GetCategoryByID(skill.id);
+        if (skills.length > 0) {
+            // TODO: End this
+            /*
+            if (skills.isCategory) {
+                const category = dataManager.skills.GetCategoryByID(skills.id);
                 activityTitle = lang['input-activity-title-category'];
                 activityText = dataManager.GetText(category.Name);
             } else {
-                const activityData = dataManager.skills.GetByID(skill.id);
+                const activityData = dataManager.skills.GetByID(skills.id);
                 if (activityData !== null) {
                     activityTitle = lang['input-activity-title-activity'];
                     activityText = dataManager.GetText(activityData.Name);
                 }
             }
+            */
         }
 
         const backgroundColor = {
@@ -120,26 +111,21 @@ class SectionSkill extends React.Component {
         };
 
         return (
-            <>
-                <Text style={styles.sectionTitle} fontSize={22}>
-                    {lang['title-activity']}
-                </Text>
-                <View
-                    ref={ref => this.refHelp1 = ref}
-                    style={[backgroundColor, styles.schedulePanel]}
+            <View
+                ref={ref => this.refHelp1 = ref}
+                style={[backgroundColor, styles.schedulePanel]}
+            >
+                <Text style={styles.text}>{activityTitle}</Text>
+                <Button
+                    colorText='main1'
+                    style={styles.smallBtn}
+                    fontSize={14}
+                    onPress={this.OpenCategoriesSelection}
+                    onLongPress={this.onUnselectSkill}
                 >
-                    <Text style={styles.text}>{activityTitle}</Text>
-                    <Button
-                        colorText='main1'
-                        style={styles.smallBtn}
-                        fontSize={14}
-                        onPress={this.OpenCategoriesSelection}
-                        onLongPress={this.onUnselectSkill}
-                    >
-                        {activityText}
-                    </Button>
-                </View>
-            </>
+                    {activityText}
+                </Button>
+            </View>
         );
     }
 }
@@ -148,11 +134,6 @@ SectionSkill.prototype.props = SectionSkillProps;
 SectionSkill.defaultProps = SectionSkillProps;
 
 const styles = StyleSheet.create({
-    sectionTitle: {
-        marginTop: 32,
-        marginBottom: 12
-    },
-
     schedulePanel: {
         padding: 24,
         borderRadius: 12

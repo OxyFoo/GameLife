@@ -6,55 +6,56 @@ import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {import('Class/Quests').Quest} Quest
+ * @typedef {import('Class/Quests').InputsError} InputsError
  * @typedef {import('Class/Quests').RepeatModes} RepeatModes
  * 
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ * @typedef {'add' | 'save' | 'remove'} States
  * 
- * @typedef {'new' | 'edit' | 'remove'} States
- * 
- * @typedef {import('./Sections/activity').default} SectionActivity
+ * @typedef {import('./Sections/skills').default} SectionActivity
  * @typedef {import('./Sections/schedule').default} SectionSchedule
- * @typedef {import('./Sections/deadline').default} SectionDeadline
- * @typedef {import('./Sections/description').default} SectionDescription
+ * @typedef {import('./Sections/comment').default} SectionComment
  */
 
 class BackQuest extends PageBase {
     state = {
         /** @type {States} */
-        action: 'new',
-        button: {
-            /** @type {string} */
-            text: langManager.curr['quest']['button-add'],
-
-            /** @type {ThemeColor | ThemeText} */
-            color: 'main2'
-        },
+        action: 'add',
 
         /** @type {string} */
         title: '',
 
-        /** @type {string} Error message to display */
-        error: ''
+        /** @type {Array<number>} */
+        skills: [],
+
+        schedule: {
+            /** @type {RepeatModes} */
+            type: 'week',
+
+            /** @type {Array<number>} */
+            repeat: []
+        },
+
+        /** @type {number} */
+        duration: 60,
+
+        /** @type {string} */
+        comment: '',
+
+        /** @type {Array<InputsError>} Error message to display */
+        errors: []
     }
 
     /** @type {SectionActivity | null} */
     refSectionSkill = null;
 
-    /** @type {SectionDeadline | null} */
-    refSectionDeadline = null;
-
     /** @type {SectionSchedule | null} */
     refSectionSchedule = null;
 
-    /** @type {SectionDescription | null} */
-    refSectionDescription = null;
+    /** @type {SectionComment | null} */
+    refSectionComment = null;
 
     /** @type {Quest | null} */
     selectedQuest = null;
-
-    /** @type {RepeatModes} */
-    lastRepeatMode = 'week';
 
     constructor(props) {
         super(props);
@@ -63,7 +64,6 @@ class BackQuest extends PageBase {
             /** @type {Quest | null} */
             const quest = this.props.args.quest || null;
             this.selectedQuest = quest;
-            this.lastRepeatMode = quest.schedule.type;
 
             if (quest === null) {
                 user.interface.BackHandle();
@@ -73,13 +73,15 @@ class BackQuest extends PageBase {
 
             this.state = {
                 action: 'remove',
-                button: {
-                    text: langManager.curr['quest']['button-remove'],
-                    color: 'danger'
-                },
-
                 title: quest.title,
-                error: ''
+                skills: quest.skills,
+                schedule: {
+                    type: quest.schedule.type,
+                    repeat: quest.schedule.repeat
+                },
+                duration: quest.schedule.duration,
+                comment: quest.comment,
+                errors: []
             };
         }
     }
@@ -87,14 +89,10 @@ class BackQuest extends PageBase {
     componentDidMount() {
         super.componentDidMount();
 
-        const { selectedQuest } = this;
-        if (selectedQuest === null) return;
-
-        const { deadline, schedule: { type, repeat } } = selectedQuest;
-        this.refSectionSchedule.SetValues(type, repeat);
-        this.refSectionDeadline.SetValues(deadline);
-        this.refSectionSkill.SetSkill(selectedQuest.skill);
-        this.refSectionDescription.SetDescription(selectedQuest.description);
+        if (this.selectedQuest === null) {
+            user.interface.console.AddLog('error', 'Quest: Selected quest is null');
+            this.BackHandler(false);
+        }
     }
 
     componentDidFocused = () => {
@@ -126,132 +124,112 @@ class BackQuest extends PageBase {
         return false;
     }
 
-    onEditQuest = () => {
-        if (this.selectedQuest !== null && this.state.action !== 'edit') {
-            this.setState({
-                action: 'edit',
-                button: {
-                    text: langManager.curr['quest']['button-save'],
-                    color: 'success'
-                }
-            });
-        }
-    }
-
     keyboardDismiss = () => {
         Keyboard.dismiss();
         return false;
     }
 
-    /**
-     * @param {string} title 
-     * @param {boolean} [init=false]
-     */
-    onChangeTitle = (title, init = false) => {
-        // Edition mode if title is modified
-        if (!init) this.onEditQuest();
+    onEditQuest = () => {
+        const newStates = {};
 
-        this.checkTitleErrors(title);
-        this.setState({ title });
+        const errors = user.quests.VerifyInputs({
+            title: this.state.title,
+            comment: this.state.comment,
+            created: this.selectedQuest.created,
+            schedule: {
+                type: this.state.schedule.type,
+                repeat: this.state.schedule.repeat,
+                duration: this.state.duration
+            },
+            skills: this.state.skills
+        });
+        if (this.state.errors.join() !== errors.join()) {
+            newStates.errors = errors;
+        }
+
+        if (this.selectedQuest !== null && this.state.action !== 'save') {
+            newStates.action = 'save';
+        }
+
+        if (Object.keys(newStates).length > 0) {
+            this.setState(newStates);
+        }
+    }
+
+    /** @param {string} title */
+    onChangeTitle = (title) => {
+        this.setState({ title }, this.onEditQuest);
+    }
+
+    /** @param {Array<number>} skills */
+    onChangeSkills = (skills) => {
+        this.setState({ skills }, this.onEditQuest);
     }
 
     /**
-     * @param {string} title 
-     * @returns {boolean} True if error
+     * @param {RepeatModes} repeatMode
+     * @param {Array<number>} repeatDays
      */
-    checkTitleErrors = (title) => {
-        let message = '';
+    onScheduleChange = (repeatMode, repeatDays) => {
+        const schedule = { type: repeatMode, repeat: repeatDays };
+        this.setState({ schedule }, this.onEditQuest);
+    }
 
-        const titleIsCurrent = title === (this.selectedQuest?.title || null);
-        const titleUsed = user.quests.Get().some(t => t.title === title);
+    /** @param {number} duration */
+    onChangeDuration = (duration) => {
+        this.setState({ duration }, this.onEditQuest);
+    }
 
-        if (title.trim().length <= 0) {
-            message = langManager.curr['quest']['error-title-empty'];
-        }
-
-        else if (!titleIsCurrent && titleUsed) {
-            message = langManager.curr['quest']['error-title-exists'];
-        }
-
-        this.setState({ error: message });
-        return message.length > 0;
+    /** @param {string} comment */
+    onChangeComment = (comment) => {
+        this.setState({ comment }, this.onEditQuest);
     }
 
     onButtonPress = () => {
         const { action } = this.state;
         switch (action) {
-            case 'new': this.addQuest(); break;
-            case 'edit': this.editQuest(); break;
-            case 'remove': this.remQuest(); break;
+            case 'add': this.addOrEditQuest(false); break;
+            case 'save': this.addOrEditQuest(true); break;
+            case 'remove': this.removeQuest(); break;
             default:
                 user.interface.console.AddLog('error', 'Quest: Unknown action');
         }
     }
-    addQuest = () => {
-        const { title } = this.state;
 
-        const skill = this.refSectionSkill.GetSkill();
-        const description = this.refSectionDescription.GetDescription();
-        const deadline = this.refSectionDeadline.GetValues();
-        const { repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
+    addOrEditQuest = (edit = false) => {
+        const { title, skills, schedule, duration, comment } = this.state;
 
-        if (this.checkTitleErrors(title)) {
-            return;
-        }
-
-        const addition = user.quests.Add(
-            title,
-            description,
-            deadline,
-            repeatMode,
-            selectedDays,
-            skill
-        );
-
-        if (addition === 'added') {
-            user.GlobalSave();
-            user.interface.ResetCustomBackHandler();
-            user.interface.BackHandle();
-        } else if (addition === 'alreadyExist') {
-            user.interface.console.AddLog('warn', 'Quest: Quest already exist');
-        }
-    }
-    editQuest = () => {
-        const { title } = this.state;
-
-        const skill = this.refSectionSkill.GetSkill();
-        const description = this.refSectionDescription.GetDescription();
-        const deadline = this.refSectionDeadline.GetValues();
-        const { repeatMode, selectedDays } = this.refSectionSchedule.GetValues();
-
-        if (this.selectedQuest === null) {
+        if (edit && this.selectedQuest === null) {
             user.interface.console.AddLog('error', 'Quest: Selected quest is null');
             return;
         }
 
-        if (this.checkTitleErrors(title)) {
+        if (user.quests.VerifyInputs(this.selectedQuest).length > 0) {
             return;
         }
 
-        const edition = user.quests.Edit(
-            this.selectedQuest,
+        const addition = user.quests.AddOrEdit({
             title,
-            description,
-            deadline,
-            repeatMode,
-            selectedDays,
-            skill
-        );
+            comment: comment,
+            created: edit ? this.selectedQuest.created : null,
+            schedule: {
+                type: schedule.type,
+                repeat: schedule.repeat,
+                duration: duration
+            },
+            skills
+        });
 
-        if (edition === 'edited') {
+        if (addition === 'added' || addition === 'edited') {
             user.GlobalSave();
             user.interface.ResetCustomBackHandler();
             user.interface.BackHandle();
-        } else if (edition === 'notExist') {
-            user.interface.console.AddLog('warn', 'Quest: Quest not exist');
+        } else {
+            user.interface.console.AddLog('error', 'Quest: Unknown error');
         }
     }
-    remQuest = () => {
+
+    removeQuest = () => {
         if (this.selectedQuest === null) {
             user.interface.console.AddLog('error', 'Quest: Selected quest is null');
             return;

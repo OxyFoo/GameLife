@@ -11,59 +11,33 @@ import { Text, Button, TextSwitch } from 'Interface/Components';
  * @typedef {import('Class/Quests').RepeatModes} RepeatModes
  * 
  * @callback OnChangeScheduleEvent
- * @param {RepeatModes} repeatMode Repeat mode
- * @param {Array<number>} repeatDays Array of days of week
+ * @param {RepeatModes} type Repeat mode
+ * @param {Array<number>} repeat Array of days of week
  */
 
+/** @type {RepeatModes[]} */
+const TYPES = [ 'week', 'month' ];
+
 const SectionScheduleProps = {
+    schedule: {
+        /** @type {RepeatModes} */
+        type: 'week',
+
+        /** @type {Array<number>} */
+        repeat: []
+    },
+
     /** @type {OnChangeScheduleEvent} */
-    onChange: (repeatMode, repeatDays) => {}
+    onChange: (type, repeat) => {}
 };
 
 class SectionSchedule extends React.Component {
-    state = {
-        /** @type {RepeatModes} */
-        repeatMode: 'week',
-
-        /** @type {Array<number>} */
-        selectedDays: []
-    }
-
-    /** @type {TextSwitch | null} */
-    refTextSwitch = null;
-
     refHelp1 = null;
 
     /** @param {number} index */
     switchMode = (index) => {
         if (index < 0 || index > 1) return;
-        const repeatMode = ['week', 'month'][index];
-        this.setState({ repeatMode, selectedDays: [] }, this.onChange);
-    }
-
-    /**
-     * @param {RepeatModes} repeatMode
-     * @param {Array<number>} selectedDays
-     */
-    SetValues = (repeatMode, selectedDays) => {
-        this.setState({
-            repeatMode,
-            selectedDays
-        });
-
-        const repeatModeIndex = ['week', 'month'].indexOf(repeatMode);
-        this.refTextSwitch?.SetSelectedIndex(repeatModeIndex);
-    }
-
-    GetValues = () => {
-        let { repeatMode, selectedDays } = this.state;
-        selectedDays = selectedDays.filter(day => day <= 30);
-        return { repeatMode, selectedDays };
-    }
-
-    onChange = () => {
-        const { repeatMode, selectedDays } = this.state;
-        this.props.onChange(repeatMode, selectedDays);
+        this.props.onChange(TYPES[index], []);
     }
 
     /**
@@ -71,11 +45,11 @@ class SectionSchedule extends React.Component {
      * @param {number} index
      */
     onDaySelect = (index) => {
-        const { selectedDays } = this.state;
-        const include = selectedDays.includes(index);
-        if (include) selectedDays.splice(selectedDays.indexOf(index), 1);
-        else         selectedDays.push(index);
-        this.setState({ selectedDays }, this.onChange);
+        const { schedule: { type, repeat } } = this.props;
+        const include = repeat.includes(index);
+        if (include) repeat.splice(repeat.indexOf(index), 1);
+        else         repeat.push(index);
+        this.props.onChange(type, repeat);
     }
 
     /**
@@ -84,12 +58,12 @@ class SectionSchedule extends React.Component {
      * @param {number} index
      */
     onDaysSelect = (index) => {
-        const { repeatMode, selectedDays } = this.state;
+        const { schedule: { type, repeat } } = this.props;
 
-        if (repeatMode === 'week') {
+        if (type === 'week') {
             let days = Range(7);
-            if (selectedDays.length === 7) days = [];
-            this.setState({ selectedDays: days }, this.onChange);
+            if (repeat.length === 7) days = [];
+            this.props.onChange(type, days);
             return;
         }
 
@@ -97,57 +71,68 @@ class SectionSchedule extends React.Component {
         const days = Range(31).filter(i => i % 7 === modulo);
 
         // Remove all column
-        if (days.every(day => selectedDays.includes(day))) {
-            days.forEach(day => selectedDays.splice(selectedDays.indexOf(day), 1));
+        if (days.every(day => repeat.includes(day))) {
+            days.forEach(day => repeat.splice(repeat.indexOf(day), 1));
         }
 
         // Select all column
         else {
-            days.forEach(day => !selectedDays.includes(day) && selectedDays.push(day));
+            days.forEach(day => !repeat.includes(day) && repeat.push(day));
         }
 
-        this.setState({ selectedDays }, this.onChange);
+        this.props.onChange(type, repeat);
+    }
+
+    renderDay = ({ item, index }) => {
+        const { schedule: { repeat } } = this.props;
+
+        if (index > 30) {
+            return (
+                <View style={styles.selectorButton} />
+            );
+        }
+
+        const styleBorder = { borderColor: themeManager.GetColor('main1') };
+
+        return (
+            <Button
+                style={[styles.selectorButton, styleBorder]}
+                color={repeat.includes(index) ? 'main1' : 'transparent'}
+                colorText={repeat.includes(index) ? 'white' : 'main1'}
+                rippleColor='white'
+                onPress={() => this.onDaySelect(index)}
+                onLongPress={() => this.onDaysSelect(index)}
+            >
+                {item}
+            </Button>
+        );
     }
 
     renderDaySelector = () => {
-        const { repeatMode, selectedDays } = this.state;
-
+        const { schedule: { type } } = this.props;
         const langDates = langManager.curr['dates'];
+
         let elements = [];
 
         // Add first letter of each day
-        if (repeatMode === 'week') {
+        if (type === 'week') {
             elements = langDates['days'].map(day => day.charAt(0));
             elements.push(elements.splice(0, 1)[0]);
         }
 
         // Add numbers from 1 to 31
-        else if (repeatMode === 'month') {
+        else if (type === 'month') {
             elements = Range(35).map(i => (i + 1).toString());
         }
 
-        const styleBorder = { borderColor: themeManager.GetColor('main1') };
-        const emptyButton = <View style={styles.selectorButton} />;
-
         return (
             <FlatList
-                style={{ marginTop: 12 }}
-                columnWrapperStyle={{ flex: 1 }}
-                contentContainerStyle={{ justifyContent: 'space-between' }}
+                style={styles.daysFlatlist}
+                columnWrapperStyle={styles.daysColumnWrapperStyle}
+                contentContainerStyle={styles.daysContentContainerStyle}
                 data={elements}
                 numColumns={7}
-                renderItem={({ item, index }) => index > 30 ? emptyButton : (
-                    <Button
-                        style={[styles.selectorButton, styleBorder]}
-                        color={selectedDays.includes(index) ? 'main1' : 'transparent'}
-                        colorText={selectedDays.includes(index) ? 'white' : 'main1'}
-                        rippleColor='white'
-                        onPress={() => this.onDaySelect(index)}
-                        onLongPress={() => this.onDaysSelect(index)}
-                    >
-                        {item}
-                    </Button>
-                )}
+                renderItem={this.renderDay}
                 keyExtractor={(item, index) => 'pickday-' + index.toString()}
             />
         );
@@ -155,7 +140,7 @@ class SectionSchedule extends React.Component {
 
     render() {
         const lang = langManager.curr['quest'];
-        const { repeatMode } = this.state;
+        const { schedule: { type } } = this.props;
 
         const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
@@ -163,26 +148,23 @@ class SectionSchedule extends React.Component {
         const timeIntervals = [ dateNames['weekly'], dateNames['monthly'] ];
 
         return (
-            <>
-                <Text style={styles.sectionTitle} fontSize={22}>{lang['input-repeat-title']}</Text>
-                <View
-                    ref={ref => this.refHelp1 = ref}
-                    style={[backgroundColor, styles.schedulePanel]}
-                >
-                    <TextSwitch
-                        ref={ref => this.refTextSwitch = ref}
-                        style={styles.textSwitch}
-                        texts={timeIntervals}
-                        onChange={this.switchMode}
-                    />
-                    {repeatMode === 'month' && (
-                        <Text style={styles.hintText}>
-                            {lang['text-hint-select']}
-                        </Text>
-                    )}
-                    {this.renderDaySelector()}
-                </View>
-            </>
+            <View
+                ref={ref => this.refHelp1 = ref}
+                style={[backgroundColor, styles.schedulePanel]}
+            >
+                <TextSwitch
+                    style={styles.textSwitch}
+                    texts={timeIntervals}
+                    initialIndex={TYPES.indexOf(type)}
+                    onChange={this.switchMode}
+                />
+                {type === 'month' && (
+                    <Text style={styles.hintText}>
+                        {lang['text-hint-select']}
+                    </Text>
+                )}
+                {this.renderDaySelector()}
+            </View>
         );
     }
 }
@@ -191,10 +173,6 @@ SectionSchedule.prototype.props = SectionScheduleProps;
 SectionSchedule.defaultProps = SectionScheduleProps;
 
 const styles = StyleSheet.create({
-    sectionTitle: {
-        marginTop: 32,
-        marginBottom: 12
-    },
     schedulePanel: {
         padding: 24,
         borderRadius: 12
@@ -213,6 +191,16 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'transparent'
+    },
+
+    daysFlatlist: {
+        marginTop: 12
+    },
+    daysColumnWrapperStyle: {
+        flex: 1
+    },
+    daysContentContainerStyle: {
+        justifyContent: 'space-between'
     }
 });
 

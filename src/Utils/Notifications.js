@@ -212,22 +212,7 @@ class Notifications {
             let halftime = {}, tomorrow = {}, today = {};
 
             for (let i = 0; i < quests.length; i++) {
-                const { title, checked, starttime, deadline, schedule } = quests[i];
-                if (checked || deadline < starttime) continue;
-
-                const midTime = (deadline - starttime) / 2;
-                if (schedule !== null) {
-                } else if (deadline !== null) {
-                    if (deadline > now && deadline < now + day) {
-                        // Today
-                    } else if (deadline < now && deadline > now - day) {
-                        // Tomorrow
-                    } else if (midTime > now && midTime < now + day) {
-                        // Mid date
-                    }
-                    const date = deadline;
-                    
-                }
+                const { title, created, schedule } = quests[i];
             }
             //ParsePlural()
             return null;

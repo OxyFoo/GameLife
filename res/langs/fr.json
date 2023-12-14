@@ -549,7 +549,6 @@
         "input-deadline-title": "Date limite",
         "input-deadline-empty": "Aucune",
 
-        "input-description": "Description",
         "input-task-placeholder": "Tâche",
 
         "button-commentary": "Ajouter un commentaire",
@@ -584,13 +583,15 @@
     },
 
     "quest": {
-        "title-schedule": "Planification",
-        "title-activity": "Activité",
-        "title-commentary": "Commentaire",
+        "titles": {
+            "title": "Titre de la quête",
+            "skills": "Sélectionne tes activités",
+            "schedule": "Planification",
+            "duration": "Durée minimum pour chaque jour",
+            "comment": "Commentaire"
+        },
 
         "input-title": "Titre",
-        "input-deadline-title": "Date limite",
-        "input-deadline-empty": "Aucune",
         "input-activity-title": "Aucune catégorie ou activité sélectionnée",
         "input-activity-title-activity": "Activité sélectionnée:",
         "input-activity-title-category": "Catégorie sélectionnée:",
@@ -601,20 +602,22 @@
         "input-panel-activity": "Sélectionne une activité",
         "input-panel-category": "Sélectionne une catégorie",
 
-        "input-repeat-title": "Répétition",
-        "input-description": "Description",
+        "input-comment": "Commentaire",
+
         "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
-        "button-commentary": "Ajouter un commentaire",
-        "button-add": "Ajouter",
-        "button-save": "Sauvegarder",
-        "button-remove": "Supprimer",
+        "input-errors": {
+            "title-empty": "Le titre ne peut pas être vide",
+            "title-exists": "Une quête avec ce titre existe déjà",
+            "schedule-empty": "Tu dois sélectionner les jours durant lesquels tu veux faire cette quête"
+        },
 
-        "error-title-empty": "Le titre ne peut pas être vide",
-        "error-title-exists": "Une quête avec ce titre existe déjà",
+        "button-text": {
+            "add": "Ajouter",
+            "save": "Sauvegarder",
+            "remove": "Supprimer"
+        },
 
-        "alert-remcomment-title": "Suppression ?",
-        "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
         "alert-remquest-title": "Suppression ?",
         "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
         "alert-back-title": "Retour",
@@ -622,7 +625,7 @@
     },
 
     "quests": {
-        "container-title": "Todo liste",
+        "container-title": "Mes quêtes",
         "quests-empty-title": "Tu n'as pas encore de quête",
         "quests-empty-button": "En ajouter une",
 

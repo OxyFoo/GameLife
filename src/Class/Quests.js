@@ -4,10 +4,12 @@ import { GetTime } from 'Utils/Time';
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'week' | 'month'} RepeatModes
+ * @typedef {'title-empty' | 'title-exists' | 'schedule-empty'} InputsError
  * 
  * @typedef {object} Schedule
  * @property {RepeatModes} type
  * @property {Array<number>} repeat
+ * @property {number} duration In minutes
  * 
  * @typedef {object} Skill
  * @property {number} id
@@ -15,29 +17,24 @@ import { GetTime } from 'Utils/Time';
  */
 
 class Quest {
-    /** @type {number} Time in seconds or 0 if unchecked */
-    checked = 0;
-
     /** @type {string} Quest title with max 128 characters */
     title = '';
 
     /** @type {string} Quest description with max 2048 characters */
-    description = '';
+    comment = '';
 
     /** @type {number} Timestamp in seconds */
-    starttime = 0;
-
-    /** @type {number} Timestamp in seconds, 0 if disabled */
-    deadline = 0;
+    created = 0;
 
     /** @type {Schedule} Null to don't repeat */
     schedule = {
         type: 'week',
-        repeat: []
+        repeat: [],
+        duration: 0
     };
 
-    /** @type {Skill | null} */
-    skill = null;
+    /** @type {Array<number>} Skills ids */
+    skills = [];
 }
 
 class Quests {
@@ -62,8 +59,8 @@ class Quests {
     UNSAVED_deletions = [];
 
     /**
-     * Sorted quests using titles
-     * @type {Array<string>}
+     * Sorted quests using created time
+     * @type {Array<number>}
      */
     questsSort = [];
 
@@ -78,12 +75,6 @@ class Quests {
      */
     allQuests = new DynamicVar([]);
 
-    /**
-     * @description Not saved, only to undo last deletion
-     * @type {Quest | null}
-     */
-    lastDeletedQuest = null;
-
     Clear() {
         this.SAVED_quests = [];
         this.UNSAVED_additions = [];
@@ -94,10 +85,10 @@ class Quests {
     }
     Load(quests) {
         const contains = (key) => quests.hasOwnProperty(key);
-        if (contains('quests'))      this.SAVED_quests = quests['quests'];
+        if (contains('quests'))     this.SAVED_quests = quests['quests'];
         if (contains('additions'))  this.UNSAVED_additions = quests['additions'];
         if (contains('deletions'))  this.UNSAVED_deletions = quests['deletions'];
-        if (contains('questsSort'))  this.questsSort = quests['questsSort'];
+        if (contains('questsSort')) this.questsSort = quests['questsSort'];
         if (contains('sortSaved'))  this.SAVED_sort = quests['sortSaved'];
         this.allQuests.Set(this.Get());
     }
@@ -124,17 +115,20 @@ class Quests {
     Get() {
         let quests = [ ...this.SAVED_quests, ...this.UNSAVED_additions ];
 
-        // Add new quests title at the top
+        // Add new quests at the top (use created time as index)
         quests.forEach(quest =>
-            this.questsSort.findIndex(title => quest.title === title) === -1 &&
-            this.questsSort.splice(0, 0, quest.title)
+            this.questsSort.findIndex(created => quest.created === created) === -1 &&
+            this.questsSort.splice(0, 0, quest.created)
         );
 
-        // Remove deleted quests title
-        const filter = title => quests.findIndex(quest => quest.title === title) !== -1;
-        this.questsSort = this.questsSort.filter(filter);
+        // Remove deleted quests from sort
+        this.questsSort = this.questsSort.filter(created => 
+            quests.findIndex(quest => quest.created === created) !== -1
+        );
 
-        return this.questsSort.map(title => quests.find(quest => quest.title === title));
+        return this.questsSort.map(created =>
+            quests.find(quest => quest.created === created)
+        );
     }
 
     IsUnsaved = () => {
@@ -144,11 +138,11 @@ class Quests {
         let unsaved = [];
         for (let a in this.UNSAVED_additions) {
             const quest = this.UNSAVED_additions[a];
-            unsaved.push({ Action: 'add', ...quest });
+            unsaved.push({ action: 'add', ...quest });
         }
         for (let a in this.UNSAVED_deletions) {
             const quest = this.UNSAVED_deletions[a];
-            unsaved.push({ Action: 'rem', ...quest });
+            unsaved.push({ action: 'rem', ...quest });
         }
         return unsaved;
     }
@@ -167,77 +161,73 @@ class Quests {
     }
 
     /**
-     * Add quest
-     * @param {string} title Title of the quest
-     * @param {string} description Description of the quest
-     * @param {number} deadline Unix timestamp in seconds
-     * @param {RepeatModes} repeatMode Repeat mode
-     * @param {Array<number>} repeatDays Repeat days
-     * @param {Skill | null} skill Skill informations
-     * @returns {'added' | 'alreadyExist' | 'wrong-repeat-days'}
+     * @param {Quest} quest
+     * @returns {Array<InputsError>} Null if no error
      */
-    Add(title, description, deadline, repeatMode, repeatDays, skill) {
-        const newQuest = new Quest();
-        newQuest.checked = 0;
-        newQuest.title = title;
-        newQuest.description = description;
-        newQuest.starttime = GetTime();
-        newQuest.deadline = deadline;
-        newQuest.skill = skill;
-        newQuest.schedule = {
-            type: repeatMode,
-            repeat: repeatDays
-        };
+    VerifyInputs = (quest) => {
+        /** @type {Array<InputsError>} */
+        const errors = [];
 
-        // Check if repeat mode is valid
-        if (repeatDays.length <= 0) {
-            return 'wrong-repeat-days';
+        // Check title
+        if (quest.title.trim().length <= 0) {
+            errors.push('title-empty');
         }
 
-        // Check if not exist
-        const indexQuest = this.GetIndex(this.SAVED_quests, newQuest);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, newQuest);
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, newQuest);
+        // Check if title already exists
+        if (this.Get().some(q => q.title === quest.title && q.created !== quest.created)) {
+            errors.push('title-exists');
+        }
 
+        // Check if repeat mode is valid
+        if (quest.schedule.repeat.length <= 0) {
+            errors.push('schedule-empty');
+        }
+
+        return errors;
+    }
+
+    /**
+     * Add quest
+     * @param {Quest} quest Auto define created time if null
+     * @returns {'added' | 'edited' | InputsError}
+     */
+    AddOrEdit(quest) {
+        quest.created ??= GetTime(undefined, 'local');
+
+        const errors = this.VerifyInputs(quest);
+        if (errors.length > 0) {
+            return errors[0];
+        }
+
+        // Check where the quest is
+        const indexQuest = this.GetIndex(this.SAVED_quests, quest);
+        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, quest);
+        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, quest);
+
+        // Quest was deleted, remove it from deletion list
         if (indexDeletion !== null) {
             this.UNSAVED_deletions.splice(indexDeletion, 1);
         }
 
         // Quest already exist
         if (indexQuest !== null || indexUnsaved !== null) {
-            return 'alreadyExist';
+            if (indexQuest !== null) {
+                this.SAVED_quests.splice(indexQuest, 1, quest);
+            }
+            if (indexUnsaved !== null) {
+                this.UNSAVED_additions.splice(indexUnsaved, 1, quest);
+            }
+
+            // Add edited quests as new quest to save
+            this.UNSAVED_additions.push(quest);
+            this.allQuests.Set(this.Get());
+            return 'edited';
         }
 
         // Quest not exist, add it
-        this.UNSAVED_additions.push(newQuest);
+        this.UNSAVED_additions.push(quest);
         this.allQuests.Set(this.Get());
         return 'added';
-    }
-
-    /**
-     * Edit quest
-     * @param {Quest} oldQuest Quest to edit
-     * @param {string} title Title of the quest
-     * @param {string} description Description of the quest
-     * @param {number} deadline Unix timestamp in seconds (0 = no deadline)
-     * @param {RepeatModes} repeatMode Repeat mode
-     * @param {Array<number>} repeatDays Repeat days
-     * @param {Skill | null} skill Skill informations
-     * @returns {'edited' | 'notExist' | 'wrong-repeat-days'}
-     */
-    Edit(oldQuest, title, description, deadline, repeatMode, repeatDays, skill) {
-        const rem = this.Remove(oldQuest);
-        if (rem === 'notExist') return 'notExist';
-
-        // Check if repeat mode is valid
-        if (repeatDays.length <= 0) {
-            return 'wrong-repeat-days';
-        }
-
-        const add = this.Add(title, description, deadline, repeatMode, repeatDays, skill);
-        this.SAVED_sort = false;
-        this.allQuests.Set(this.Get());
-        return add === 'added' ? 'edited' : 'notExist';
     }
 
     /**
@@ -265,7 +255,6 @@ class Quests {
         }
 
         if (deleted !== null) {
-            this.lastDeletedQuest = deleted;
             this.allQuests.Set(this.Get());
             return 'removed';
         }
@@ -280,7 +269,7 @@ class Quests {
      * @returns {boolean} Success of the operation
      */
     Move(quest, newIndex) {
-        if (!this.questsSort.includes(quest.title)) {
+        if (!this.questsSort.includes(quest.created)) {
             this.user.interface.console.AddLog('warn', `Quests - move failed: quest not found (${quest.title} ${newIndex})`);
             return false;
         }
@@ -288,43 +277,31 @@ class Quests {
             this.user.interface.console.AddLog('warn', `Quests - move failed: index out of range (${quest.title} ${newIndex})`);
             return false;
         }
-        const oldIndex = this.questsSort.indexOf(quest.title);
+        const oldIndex = this.questsSort.indexOf(quest.created);
         if (oldIndex === newIndex) {
             this.user.interface.console.AddLog('warn', `Quests - move failed: same index (${quest.title} ${newIndex})`);
             return false;
         }
         this.questsSort.splice(oldIndex, 1);
-        this.questsSort.splice(newIndex, 0, quest.title);
+        this.questsSort.splice(newIndex, 0, quest.created);
         this.SAVED_sort = false;
         this.allQuests.Set(this.Get());
         return true;
     }
 
     /**
+     * TODO: Finish & use this
      * Change sort order of quests titles
      * @param {Quest} quest
-     * @param {number} checkedTime UTC Time in seconds or 0 if unchecked
+     * @param {number} date
      * @returns {boolean} Success of the operation
      */
-    Check(quest, checkedTime) {
-        let selectedQuest = null;
-        const indexQuest = this.GetIndex(this.SAVED_quests, quest);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, quest);
-
-        if (indexQuest !== null) selectedQuest = this.SAVED_quests.splice(indexQuest, 1)[0];
-        if (indexUnsaved !== null) selectedQuest = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
-        if (selectedQuest === null) {
-            this.user.interface.console.AddLog('warn', `Quests - check failed: quest not found (${quest.title} ${checkedTime})`);
-            return false;
-        }
-
-        selectedQuest.checked = checkedTime;
-        this.UNSAVED_additions.push(selectedQuest);
-        this.allQuests.Set(this.Get());
-        return true;
+    Check(quest, date) {
+        return false;
     }
 
     /**
+     * TODO: Finish & use this
      * @param {Quest} quest
      * @returns {boolean} Success of the operation
      */
@@ -333,35 +310,12 @@ class Quests {
     }
 
     /**
-     * Restore last deleted quest
-     * @returns {boolean} Success of the operation
-     */
-    Undo() {
-        if (this.lastDeletedQuest === null) return false;
-
-        // Delete quest from UNSAVED_deletions
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, this.lastDeletedQuest);
-        if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
-
-        // Save unchecked quest in UNSAVED_additions
-        this.lastDeletedQuest.checked = 0;
-        this.UNSAVED_additions.push(this.lastDeletedQuest);
-        this.lastDeletedQuest = null;
-        this.allQuests.Set(this.Get());
-
-        // Save new sort
-        this.SAVED_sort = false;
-
-        return true;
-    }
-
-    /**
      * @param {Array<Quest>} arr
      * @param {Quest} quest
      * @returns {number | null} Index of quest or null if not found
      */
     GetIndex(arr, quest) {
-        const index = arr.findIndex(a => a.title === quest.title);
+        const index = arr.findIndex(a => a.created === quest.created);
         if (index === -1) return null;
         return index;
     }

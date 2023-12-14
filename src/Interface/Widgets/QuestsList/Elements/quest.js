@@ -58,42 +58,6 @@ class QuestElement extends React.Component {
         );
     }
 
-    renderContent() {
-        const { quest } = this.props;
-        if (quest === null) return null;
-
-        const { title } = quest;
-        const openQuest = () => user.interface.ChangePage('myqueststats', { quest }, true);
-
-        return (
-            <Button
-                style={styles.item}
-                onPress={openQuest}
-            >
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Icon icon='default' color='main1' />
-                        <Text style={[styles.titleText, { marginLeft: 8 }]}>{title}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={[styles.titleText, { marginRight: 8 }]}>{'182'}</Text>
-                        <Icon icon='flame' />
-                    </View>
-                </View>
-                <FlatList
-                    data={[0,1,2,3,4,5,6]}
-                    numColumns={7}
-                    keyExtractor={item => 'quest-day-' + item.toString()}
-                    columnWrapperStyle={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between'
-                    }}
-                    renderItem={this.renderDay}
-                />
-            </Button>
-        );
-    }
-
     renderContentScrollable() {
         const { quest, onDrag } = this.props;
         if (quest === null) return null;
@@ -105,9 +69,9 @@ class QuestElement extends React.Component {
                 style={styles.itemScrollable}
                 onTouchStart={() => onDrag()}
             >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={styles.scrollableHeader}>
                     <Icon icon='default' color='main1' />
-                    <Text style={[styles.titleText, { marginLeft: 8 }]}>{title}</Text>
+                    <Text style={styles.scrollableTitle}>{title}</Text>
                 </View>
                 <Icon icon='moveVertical' color='main1' />
             </View>
@@ -118,9 +82,34 @@ class QuestElement extends React.Component {
         const { style, quest } = this.props;
         if (quest === null) return null;
 
+        const { title } = quest;
+        const openQuest = () => user.interface.ChangePage('myqueststats', { quest }, true);
+
         return (
-            <View style={[styles.content, style]}>
-                {this.renderContent()}
+            <View style={[styles.item, style]}>
+                <Button
+                    style={styles.content}
+                    onPress={openQuest}
+                >
+                    <View style={styles.header}>
+                        <View style={styles.headerTitle}>
+                            <Icon icon='default' color='main1' />
+                            <Text style={styles.title}>{title}</Text>
+                        </View>
+                        <View style={styles.headerStreak}>
+                            <Text style={styles.streak}>{'[182]'}</Text>
+                            <Icon icon='flame' />
+                        </View>
+                    </View>
+
+                    <FlatList
+                        data={[0,1,2,3,4,5,6]}
+                        numColumns={7}
+                        keyExtractor={item => 'quest-day-' + item.toString()}
+                        columnWrapperStyle={styles.flatlistColumnWrapper}
+                        renderItem={this.renderDay}
+                    />
+                </Button>
             </View>
         );
     }

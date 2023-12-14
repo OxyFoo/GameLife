@@ -13,7 +13,6 @@ import { Container, Button, Text, Separator } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
 const QuestsProps = {
@@ -52,17 +51,16 @@ class QuestsList extends BackQuestsList {
         );
     }
 
+    renderSeparator = () => (
+        <Separator.Horizontal
+            color='backgroundTransparent'
+            style={styles.separator}
+        />
+    )
+
     render() {
         const lang = langManager.curr['quests'];
-        const {
-            scrollable, quests,
-            draggedItem, mouseY,
-            undoEnabled
-        } = this.state;
-
-        /** @type {Icons} */
-        const containerIcon = undoEnabled ? 'undo' : 'addSquare';
-        const containerAction = undoEnabled ? this.undo : this.addQuest;
+        const { scrollable, quests, draggedItem, mouseY } = this.state;
 
         return (
             <Container
@@ -70,8 +68,8 @@ class QuestsList extends BackQuestsList {
                 styleContainer={styles.questsContainer}
                 type='static'
                 text={lang['container-title']}
-                icon={containerIcon}
-                onIconPress={containerAction}
+                icon={'addSquare'}
+                onIconPress={this.addQuest}
             >
                 <QuestSelection
                     draggedItem={draggedItem}
@@ -91,7 +89,7 @@ class QuestsList extends BackQuestsList {
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                     ListEmptyComponent={this.renderEmpty}
-                    ItemSeparatorComponent={() => <Separator.Horizontal color='backgroundTransparent' style={{ width: 'auto', height: 1.5, marginHorizontal: 12, opacity: .5 }} />}
+                    ItemSeparatorComponent={this.renderSeparator}
                 />
             </Container>
         );

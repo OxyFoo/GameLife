@@ -6,6 +6,13 @@ const styles = StyleSheet.create({
     },
     emptyText: {
         marginBottom: 12
+    },
+
+    separator: {
+        width: 'auto',
+        height: 1.5,
+        marginHorizontal: 12,
+        opacity: .5
     }
 });
 

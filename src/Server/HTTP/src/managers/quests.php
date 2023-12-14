@@ -1,26 +1,42 @@
 <?php
 
+class Quest {
+    public $title = '';
+    public $comment = '';
+    public $created = 0;
+    public $schedule = '[]';
+    public $skills = '[]';
+}
+class QuestUnsaved extends Quest {
+    /** @var 'add'|'rem' $type */
+    public $action = '';
+}
+
 class Quests
 {
     /**
      * @param DataBase $db
      * @param Account $account
-     * @return array quests => [ Title, startTime, duration, comment ]
+     * @return Quest[]
      */
     public static function GetQuests($db, $account) {
-        $command = 'SELECT `Checked`, `Title`, `Description`, `Deadline`, `Schedule` FROM TABLE WHERE `AccountID` = ?';
-        $quests = $db->QueryPrepare('Quests', $command, 'i', [ $account->ID ]);
-        if ($quests === false) ExitWithStatus('Error: getting quests failed');
+        $command = 'SELECT `Title`, `Comment`, `Created`, `Schedule`, `Skills` FROM TABLE WHERE `AccountID` = ?';
+        $rows = $db->QueryPrepare('Quests', $command, 'i', [ $account->ID ]);
+        if ($rows === false) ExitWithStatus('Error: getting quests failed');
 
-        for ($i = 0; $i < count($quests); $i++) {
-            $quests[$i]['Checked'] = intval($quests[$i]['Checked']);
-            $quests[$i]['Schedule'] = json_decode($quests[$i]['Schedule'], true);
-            $quests[$i]['Description'] = $db->Decrypt($quests[$i]['Description']);
-            $quests[$i]['Deadline'] = intval($quests[$i]['Deadline']);
-            if ($quests[$i]['Skill'] !== null) {
-                $quests[$i]['Skill'] = json_decode($quests[$i]['Skill'], true);
-            }
+        $quests = array();
+        for ($i = 0; $i < count($rows); $i++) {
+            $newQuest = array(
+                'title' => $rows[$i]['Title'],
+                'comment' => $db->Decrypt($rows[$i]['Comment']),
+                'created' => intval($rows[$i]['Created']),
+                'schedule' => json_decode($rows[$i]['Schedule'], true),
+                'skills' => json_decode($rows[$i]['Skills'], true)
+            );
+
+            array_push($quests, $newQuest);
         }
+
         return $quests;
     }
 
@@ -32,100 +48,76 @@ class Quests
     public static function AddQuests($db, $account, $quests) {
         for ($i = 0; $i < count($quests); $i++) {
             $quest = $quests[$i];
-            if (count($quest) !== 9) continue;
 
-            $Action = $quest['Action'];                          // 'add' or 'rem'
-            $Checked = $quest['Checked'];                        // int
-            $Title = $quest['Title'];                            // string
-            $Description = $db->Encrypt($quest['Description']);  // string
-            $Starttime = $quest['Starttime'];                    // int
-            $Deadline = $quest['Deadline'];                      // int
-            $Schedule = json_encode($quest['Schedule']);         // string
-            $Skill = $quest['Skill'];                            // null or json
-
-            if ($Skill !== null) {
-                $Skill = json_encode($Skill);
+            // Check if quest is valid
+            $keysTodo = array_keys(get_object_vars(new QuestUnsaved()));
+            $wrongKeys = array_diff($keysTodo, array_keys((array)$quest));
+            if (count($wrongKeys) > 0) {
+                continue;
             }
 
+            $action = $quest['action'];                     // 'add' or 'rem'
+            $title = $quest['title'];                       // string
+            $comment = $db->Encrypt($quest['comment']);     // string
+            $created = $quest['created'];                   // int
+            $schedule = json_encode($quest['schedule']);    // string
+            $skills = json_encode($quest['skills']);        // object => string
+
             // Check if quest exists
-            $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Title` = ?';
-            $reqQuest = $db->QueryPrepare('Quests', $command, 'is', [ $account->ID, $Title ]);
+            $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Created` = ?';
+            $reqQuest = $db->QueryPrepare('Quests', $command, 'ii', [ $account->ID, $created ]);
             if ($reqQuest === false) ExitWithStatus('Error: adding quest failed');
             $exists = count($reqQuest) > 0;
 
-            // Update quest
-            if ($Action === 'add' && $exists) {
-                $command = 'UPDATE TABLE SET
-                    `Checked` = ?,
-                    `Title` = ?,
-                    `Description` = ?,
-                    `Starttime` = ?,
-                    `Deadline` = ?,
-                    `Schedule` = ?,
-                    `Skill` = ?
-                    WHERE `ID` = ?';
-                $args = [
-                    $Checked,
-                    $Title,
-                    $Description,
-                    $Starttime,
-                    $Deadline,
-                    $Schedule,
-                    $Skill,
-                    $reqQuest[0]['ID']
-                ];
-                $types = 'issiissi';
-
-                if ($Skill === null) {
-                    array_splice($args, 6, 1);
-                    $command = str_replace('`Skill` = ?,', '`Skill` = NULL,', $command);
-                    $types = 'issiisi';
-                }
-
-                $r = $db->QueryPrepare('Quests', $command, $types, $args);
-                if ($r === false) ExitWithStatus('Error: saving quests failed (update)');
-            }
-
             // Add quest
-            else if ($Action === 'add' && !$exists) {
+            if ($action === 'add' && !$exists) {
                 $command = 'INSERT INTO TABLE (
                     `AccountID`,
-                    `Checked`,
                     `Title`,
-                    `Description`,
-                    `Deadline`,
+                    `Comment`,
+                    `Created`,
                     `Schedule`,
-                    `Skill`
-                ) VALUES ({?})';
+                    `Skills`
+                ) VALUES (?, ?, ?, ?, ?, ?)';
                 $args = [
                     $account->ID,
-                    $Checked,
-                    $Title,
-                    $Description,
-                    $Deadline,
-                    $Schedule,
-                    $Skill
+                    $title,
+                    $comment,
+                    $created,
+                    $schedule,
+                    $skills
                 ];
-                $types = 'iississ';
-
-                if ($Skill === null) {
-                    array_splice($args, 6, 1);
-                    $command = str_replace('`Skill`,', '', $command);
-                    $types = 'iissis';
-                }
-
-                // Replace {?} with ?, ?, ?, ... with the correct number of arguments
-                $commandArgs = implode(', ', array_fill(0, count($args), '?'));
-                $command = str_replace('{?}', $commandArgs, $command);
+                $types = 'ississ';
 
                 $r = $db->QueryPrepare('Quests', $command, $types, $args);
                 if ($r === false) ExitWithStatus('Error: saving quests failed (add)');
             }
 
+            // Update quest
+            else if ($action === 'add' && $exists) {
+                $command = 'UPDATE TABLE SET
+                    `Title` = ?,
+                    `Comment` = ?,
+                    `Schedule` = ?,
+                    `Skills` = ?
+                    WHERE `ID` = ?';
+                $args = [
+                    $title,
+                    $comment,
+                    $schedule,
+                    $skills,
+                    $reqQuest[0]['ID']
+                ];
+                $types = 'ssssi';
+
+                $r = $db->QueryPrepare('Quests', $command, $types, $args);
+                if ($r === false) ExitWithStatus('Error: saving quests failed (update)');
+            }
+
             // Remove quest
-            else if ($Action === 'rem' && $exists) {
-                $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `Title` = ?';
-                $r = $db->QueryPrepare('Quests', $command, 'is', [ $account->ID, $Title ]);
+            else if ($action === 'rem' && $exists) {
+                $command = 'DELETE FROM TABLE WHERE `AccountID` = ? AND `Created` = ?';
+                $r = $db->QueryPrepare('Quests', $command, 'ii', [ $account->ID, $created ]);
                 if ($r === false) ExitWithStatus('Error: saving quests failed (remove)');
             }
         }

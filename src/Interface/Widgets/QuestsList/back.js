@@ -4,7 +4,6 @@ import { Animated, FlatList } from 'react-native';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
 import { MinMax } from 'Utils/Functions';
 import { GetAbsolutePosition } from 'Utils/UI';
 import { TimingAnimation } from 'Utils/Animations';
@@ -25,9 +24,6 @@ class BackQuestsList extends React.Component {
         /** @type {boolean} Used to disable scroll when dragging a quest */
         scrollable: true,
 
-        /** @type {boolean} Used to enable/disable undo button */
-        undoEnabled: false,
-
         /** @type {Quest | null} Used to manage selected quest */
         draggedItem: null,
 
@@ -46,33 +42,27 @@ class BackQuestsList extends React.Component {
             contentOffsetY: 0,
         }
 
-        /** @type {NodeJS.Timeout | null} */
-        this.undoTimeout = null;
-
         /** @type {LayoutRectangle | null} */
         this.tmpLayoutContainer = null;
 
         this.state.quests = user.quests.Get();
-        this.listenerQuest = user.quests.allQuests.AddListener(this.refreshQuests);
     }
 
-    refreshQuests = () => {
-        this.setState({ quests: user.quests.Get() });
+    componentDidMount() {
+        this.listenerQuest = user.quests.allQuests.AddListener(this.refreshQuests);
     }
 
     componentWillUnmount() {
         user.quests.allQuests.RemoveListener(this.listenerQuest);
     }
 
+    refreshQuests = () => {
+        this.setState({ quests: user.quests.Get() });
+    }
+
     /** @param {Quest} item */
     keyExtractor = (item) => (
-        'quest-' + [
-            item.title,
-            ...item.schedule.type,
-            ...item.schedule.repeat,
-            ...item.starttime.toString(),
-            ...item.deadline.toString()
-        ].join('-')
+        'quest-' + item.title + '-' + item.created.toString()
     )
 
     /**
@@ -87,23 +77,6 @@ class BackQuestsList extends React.Component {
             return;
         }
         user.interface.ChangePage('myquest', undefined, true);
-    }
-
-    undo = () => {
-        if (user.quests.lastDeletedQuest === null) {
-            return;
-        }
-
-        // Close undo button
-        clearTimeout(this.undoTimeout);
-
-        this.setState({
-            quests: [...user.quests.Get()],
-            undoEnabled: false
-        });
-
-        user.quests.Undo();
-        user.GlobalSave();
     }
 
     /** @param {Quest} item */
@@ -153,7 +126,7 @@ class BackQuestsList extends React.Component {
 
         // Change quest order when dragging
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.quests.questsSort.indexOf(draggedItem.title);
+        const currIndex = user.quests.questsSort.indexOf(draggedItem.created);
         if (index !== currIndex && user.quests.Move(draggedItem, index)) {
             this.setState({ quests: user.quests.Get() });
         }

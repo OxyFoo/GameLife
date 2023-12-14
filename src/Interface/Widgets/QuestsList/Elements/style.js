@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    content: {
+    // Base item
+    item: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    item: {
+    content: {
         width: '100%',
         height: 'auto',
         paddingVertical: 10,
@@ -19,6 +20,35 @@ const styles = StyleSheet.create({
 
         borderRadius: 0
     },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8
+    },
+    headerTitle: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    title: {
+        height: 24,
+        marginLeft: 8,
+        textAlign: 'left'
+    },
+    headerStreak: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    streak: {
+        height: 24,
+        marginRight: 8,
+        textAlign: 'left'
+    },
+    flatlistColumnWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+
+    // Scrollable item
     itemScrollable: {
         width: '100%',
         height: 'auto',
@@ -28,33 +58,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
-    titleText: {
-        height: 24,
-        textAlign: 'left'
-    },
-    checkbox: {
-        width: 32,
-        aspectRatio: 1,
-        marginRight: 16,
-        paddingHorizontal: 0,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 8
-    },
-
-    // Tasks
-    parentTask: {
-        marginTop: 14,
+    scrollableHeader: {
         flexDirection: 'row',
         alignItems: 'center'
     },
-    input: {
-        flex: 1,
-        height: '100%',
-        borderColor: '#fff',
-        borderRightWidth: 1,
-        borderBottomWidth: 1,
-        borderBottomRightRadius: 8
+    scrollableTitle: {
+        height: 24,
+        marginLeft: 8,
+        textAlign: 'left'
     },
 
     // Selection

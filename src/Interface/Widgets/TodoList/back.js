@@ -62,6 +62,7 @@ class BackTodoList extends React.Component {
     }
 
     componentWillUnmount() {
+        clearTimeout(this.undoTimeout);
         user.todoes.allTodoes.RemoveListener(this.listenerTodo);
     }
 

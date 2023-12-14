@@ -71,7 +71,7 @@ class Todoes
             $description = $db->Encrypt($todo['description']);  // string
             $created = $todo['created'];                        // int
             $deadline = $todo['deadline'];                      // int
-            $tasks = json_encode($todo['tasks']);               // string
+            $tasks = json_encode($todo['tasks']);               // object => string
             if ($tasks !== '[]') $tasks = $db->Encrypt($tasks);
 
             // Check if todo exists

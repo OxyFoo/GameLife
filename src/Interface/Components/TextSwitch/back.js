@@ -19,6 +19,9 @@ const TextSwitchProps = {
     texts: [],
 
     /** @type {number} */
+    initialIndex: 0,
+
+    /** @type {number} */
     fontSize: 12,
 
     /** @param {number} index Called when seleted part change */
@@ -27,9 +30,9 @@ const TextSwitchProps = {
 
 class TextSwitchBack extends React.Component {
     state = {
-        anim: new Animated.Value(0),
+        anim: new Animated.Value(this.props.initialIndex),
         parentWidth: 0,
-        selectedIndex: 0
+        selectedIndex: this.props.initialIndex
     }
 
     /** @param {LayoutChangeEvent} event */

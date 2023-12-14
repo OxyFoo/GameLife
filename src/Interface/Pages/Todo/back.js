@@ -190,7 +190,7 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const addition = user.todoes.Add(
+        const addition = user.todoes.AddOrEdit(
             title,
             description,
             GetTime(),
@@ -222,7 +222,7 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const edition = user.todoes.Add(
+        const edition = user.todoes.AddOrEdit(
             title,
             description,
             this.selectedTodo.created || GetTime(),

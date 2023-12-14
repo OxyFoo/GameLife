@@ -1,5 +1,4 @@
 import DynamicVar from 'Utils/DynamicVar';
-import { GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -83,10 +82,10 @@ class Todoes {
     }
     Load(todoes) {
         const contains = (key) => todoes.hasOwnProperty(key);
-        if (contains('todoes'))      this.SAVED_todoes = todoes['todoes'];
+        if (contains('todoes'))     this.SAVED_todoes = todoes['todoes'];
         if (contains('additions'))  this.UNSAVED_additions = todoes['additions'];
         if (contains('deletions'))  this.UNSAVED_deletions = todoes['deletions'];
-        if (contains('todoesSort'))  this.todoesSort = todoes['todoesSort'];
+        if (contains('todoesSort')) this.todoesSort = todoes['todoesSort'];
         if (contains('sortSaved'))  this.SAVED_sort = todoes['sortSaved'];
         this.allTodoes.Set(this.Get());
     }
@@ -166,7 +165,7 @@ class Todoes {
      * @param {Array<Task>} tasks Tasks informations
      * @returns {'added' | 'edited'}
      */
-    Add(title, description, created, deadline, tasks) {
+    AddOrEdit(title, description, created, deadline, tasks) {
         const newTodo = new Todo();
         newTodo.checked = 0;
         newTodo.title = title;

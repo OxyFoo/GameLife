@@ -86,15 +86,6 @@ class BackQuest extends PageBase {
         }
     }
 
-    componentDidMount() {
-        super.componentDidMount();
-
-        if (this.selectedQuest === null) {
-            user.interface.console.AddLog('error', 'Quest: Selected quest is null');
-            this.BackHandler(false);
-        }
-    }
-
     componentDidFocused = () => {
         user.interface.SetCustomBackHandler(this.BackHandler);
     }
@@ -129,13 +120,14 @@ class BackQuest extends PageBase {
         return false;
     }
 
+    /** @returns {boolean} True if no errors */
     onEditQuest = () => {
         const newStates = {};
 
         const errors = user.quests.VerifyInputs({
             title: this.state.title,
             comment: this.state.comment,
-            created: this.selectedQuest.created,
+            created: this.selectedQuest?.created || 0,
             schedule: {
                 type: this.state.schedule.type,
                 repeat: this.state.schedule.repeat,
@@ -154,6 +146,8 @@ class BackQuest extends PageBase {
         if (Object.keys(newStates).length > 0) {
             this.setState(newStates);
         }
+
+        return errors.length === 0;
     }
 
     /** @param {string} title */
@@ -204,7 +198,7 @@ class BackQuest extends PageBase {
             return;
         }
 
-        if (user.quests.VerifyInputs(this.selectedQuest).length > 0) {
+        if (!this.onEditQuest()) {
             return;
         }
 

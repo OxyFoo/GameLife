@@ -6,15 +6,8 @@ const styles = StyleSheet.create({
         //paddingHorizontal: 12
     },
 
-    tempContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        marginVertical: '30%'
-    },
-    tempTitle: {
-        paddingHorizontal: 12,
-        fontSize: 32
+    quest: {
+        marginBottom: 24
     }
 });
 

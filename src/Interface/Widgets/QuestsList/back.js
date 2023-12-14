@@ -17,6 +17,8 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Class/Quests').Quest} Quest
  */
 
+const MAX_QUESTS = 10;
+
 class BackQuestsList extends React.Component {
     state = {
         quests: [],
@@ -70,7 +72,7 @@ class BackQuestsList extends React.Component {
      * Max 8 quests
      */
     addQuest = () => {
-        if (this.state.quests.length >= 8) {
+        if (this.state.quests.length >= MAX_QUESTS) {
             const title = langManager.curr['quests']['alert-questslimit-title'];
             const text = langManager.curr['quests']['alert-questslimit-text'];
             user.interface.popup.Open('ok', [title, text]);

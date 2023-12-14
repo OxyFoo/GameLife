@@ -7,6 +7,7 @@ import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
 import Console from './Widgets/Console';
 import News from './Widgets/News';
+import NonZeroDay from './Widgets/NonZeroDay';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
 import Popup from './Widgets/Popup';
@@ -31,6 +32,7 @@ export {
     BottomBar,
     Console,
     News,
+    NonZeroDay,
     PageHeader,
     PanelScreen,
     Popup,

@@ -1,21 +1,22 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Svg, Polyline, Line, Text, Circle } from 'react-native-svg';
+import { Svg, Polyline, Line, Text, Circle, Path } from 'react-native-svg';
 
 import LineChartSvgBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 class LineChartSvg extends LineChartSvgBack {
     renderChartContent() {
-        const { data, lineColor } = this.props;
+        const { data, lineColor, graphHeight, isAreaChart } = this.props;
         const { points, layoutWidth } = this.state;
 
         if (points.length <= 1 || layoutWidth === 0) {
             return null;
         }
 
-        // Ensure this is visible against the background
-        const svgColor = themeManager.GetColor(lineColor);
+        // Colors
+        const topLineColor = themeManager.GetColor(lineColor); // Color for the fill
+        const fillColor = topLineColor + '30'; // Change this to the desired color for the line on top
 
         // Single point
         if (data.length === 1) {
@@ -25,20 +26,32 @@ class LineChartSvg extends LineChartSvgBack {
                     key={`point_single`}
                     cx={x}
                     cy={y}
-                    r='3' // Adjust if needed
-                    fill={svgColor}
+                    r='3'
+                    fill={topLineColor}
                 />
             );
         }
 
-        // Line chart
+        // Area chart path for the filled area
+        const areaPath = `M${this.leftMargin},${graphHeight} L${points} L${layoutWidth},${graphHeight} Z`;
+
         return (
-            <Polyline
-                points={points}
-                fill='none'
-                stroke={svgColor}
-                strokeWidth='2'
-            />
+            <>
+                {/* Area fill */}
+                {isAreaChart &&
+                    <Path
+                        d={areaPath}
+                        fill={fillColor}
+                    />
+                }
+                {/* Line on top */}
+                <Polyline
+                    points={points}
+                    fill='none'
+                    stroke={topLineColor}
+                    strokeWidth='3'
+                />
+            </>
         );
     }
 

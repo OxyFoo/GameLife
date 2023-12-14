@@ -19,7 +19,10 @@ const LineChartSvgProps = {
     lineColor: 'black',
 
     /** @type {number} */
-    graphHeight: 200
+    graphHeight: 200,
+
+    /** @type {boolean} */
+    isAreaChart: false
 };
 
 class LineChartSvgBack extends React.Component {

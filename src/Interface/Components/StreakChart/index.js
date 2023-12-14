@@ -18,8 +18,6 @@ class StreakChart extends StreakChartBack {
         const rightTextX = this.props.size; // X position for right-aligned text
         const bottomTextY = this.props.size / 2 + this.props.strokeWidth + 5; // Y position for text at the bottom
 
-        console.log('render STREAKCHART');
-
         return (
             <View>
                 <RNText style={{ color: "white" }}>{this.state.dottedLine}</RNText>
@@ -50,7 +48,7 @@ class StreakChart extends StreakChartBack {
                             stroke="#9095FF3D"
                             strokeWidth={this.props.strokeWidth}
                             strokeLinecap="round"
-                            transform={`rotate(${this.state.rotation} ${this.props.size / 2} ${this.props.size / 2})`}
+                            transform={`rotate(270 ${this.props.size / 2} ${this.props.size / 2})`}
                         />}
 
                     {/* Progress bar */}
@@ -62,7 +60,7 @@ class StreakChart extends StreakChartBack {
                             strokeWidth={this.props.strokeWidth}
                             strokeDasharray={this.state.strokeDasharray}
                             strokeLinecap="round"
-                            transform={`rotate(${this.state.rotation} ${this.props.size / 2} ${this.props.size / 2})`}
+                            transform={`rotate(270 ${this.props.size / 2} ${this.props.size / 2})`}
                         />
                     }
 

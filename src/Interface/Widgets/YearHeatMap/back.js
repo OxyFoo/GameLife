@@ -63,11 +63,11 @@ class YearHeatMapBack extends React.Component {
      */
     compute = () => {
 
-        let value = user.settings.questHeatMap;
+        let isWeekMode = user.settings.questHeatMap;
         let dataToDisplay = [];
-        const gridSize = value ? 10 : 5;
+        const gridSize = isWeekMode ? 10 : 5;
 
-        if (value) {
+        if (isWeekMode) {
             // Data with 52 cells, one for each week
             dataToDisplay = new Array(WEEKS).fill(null).map(() => Math.floor(Math.random() * LEVELS));
         }
@@ -79,19 +79,19 @@ class YearHeatMapBack extends React.Component {
         this.setState({
             dataToDisplay,
             gridSize,
-            switchValue: value,
+            switchValue: isWeekMode,
         });
     }
 
-    /** @param {boolean} value */
-    changeSwitchValue = (value) => {
+    /** @param {boolean} isWeekMode */
+    changeSwitchValue = (isWeekMode) => {
         // Save the settings (avoid spamming the save)
         clearTimeout(this.saveTimeout);
         this.saveTimeout = setTimeout(() => {
             user.settings.Save();
         }, 3 * 1000);
 
-        user.settings.questHeatMap = value;
+        user.settings.questHeatMap = isWeekMode;
         this.compute();
     }
 

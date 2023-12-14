@@ -26,6 +26,9 @@ const StreakChartProps = {
 
     /** @type {number} */
     strokeWidth: 30,
+
+    /** @type {number} */
+    overValue: 0
 }
 
 class StreakChartBack extends React.Component {
@@ -36,7 +39,6 @@ class StreakChartBack extends React.Component {
         progressBar: null,
         filledSemiCircle: null,
         renderTexts: null,
-        rotation: 0,
         strokeDasharray: null,
     }
 
@@ -60,36 +62,20 @@ class StreakChartBack extends React.Component {
     }
 
 
-
-    // Je l'ai commenté parce que ça fonctionne MAIS ça rajoute un délai de 1 valeur 
-    // quand tu cliques sur le bouton.
-    // ce décalage n'est pas normal mais je comprend pas pourquoi il arrive.
     shouldComponentUpdate(nextProps, nextState) {
-        console.log('shouldComponentUpdate0 STREAKCHART', this.props, nextProps);
-        //console.log('shouldComponentUpdate0 STREAKCHART', this.state, nextState); // Lui jle print pas avec le render ds le state c'est illisible mdr
-        console.log('shouldComponentUpdate1 STREAKCHART', nextProps.currentStreak !== this.props.currentStreak);
-        console.log('shouldComponentUpdate2 STREAKCHART', nextProps.bestStreak !== this.props.bestStreak);
-        console.log('shouldComponentUpdate3 STREAKCHART', nextState.rotation !== this.state.rotation);
-
+        
         // Si les valeurs des props (qui ont besoin d'un rerencer) changent, on update
         if (nextProps.currentStreak !== this.props.currentStreak ||
             nextProps.bestStreak !== this.props.bestStreak) {
             return true;
         }
 
-        // On pourrait faire la comparaison avec le state.rotation ici
-        // ça aiderait le 1er render (enfin, le ferait une 2e fois pour forcer l'affichage)
-        // Et sa valeur (comme ceux du state) ne sont pas censé changer (et ne sont pas censé impliquer de rendus si les props ne changent pas)
-        // Donc inutile de comparer les states a priori
-
         // Dans les autres cas on rerender pas
         return false;
     }
 
 
-
     componentDidUpdate(prevProps, prevState) {
-        console.log('componentDidUpdate STREAKCHART', this.props, prevProps);
         this.compute();
     }
 
@@ -98,7 +84,7 @@ class StreakChartBack extends React.Component {
         // So we don't have 120% or something like that 
         let bestStreak = this.props.bestStreak;
         if (this.props.currentStreak >= bestStreak) {
-            bestStreak = this.props.currentStreak + 5;
+            bestStreak = this.props.currentStreak + this.props.overValue;
         }
 
         // Compute the progress bar 
@@ -150,7 +136,6 @@ class StreakChartBack extends React.Component {
                 backgroundProgressBar,
                 progressBar,
                 filledSemiCircle,
-                rotation,
                 strokeDasharray
             });
         }
@@ -164,7 +149,6 @@ class StreakChartBack extends React.Component {
             backgroundProgressBar,
             progressBar,
             filledSemiCircle,
-            rotation,
             strokeDasharray
         };
     }

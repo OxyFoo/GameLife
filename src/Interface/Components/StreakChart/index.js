@@ -18,6 +18,7 @@ class StreakChart extends StreakChartBack {
         const rightTextX = this.props.size; // X position for right-aligned text
         const bottomTextY = this.props.size / 2 + this.props.strokeWidth + 5; // Y position for text at the bottom
 
+        console.log('render STREAKCHART');
 
         return (
             <View>

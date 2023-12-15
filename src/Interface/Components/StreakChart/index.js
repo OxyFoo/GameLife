@@ -17,7 +17,6 @@ class StreakChart extends StreakChartBack {
 
         return (
             <View>
-                <RNText style={{ color: 'white' }}>{this.state.dottedLine}</RNText>
                 <Svg height={this.props.size} width={this.props.size}>
                     <Defs>
                         <LinearGradient id='progressGradient' x1='0%' y1='0%' x2='100%' y2='0%'>

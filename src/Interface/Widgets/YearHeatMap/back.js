@@ -1,28 +1,13 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
-import dataManager from 'Managers/DataManager';
-
-import { GetTime } from 'Utils/Time';
 
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {import('Interface/Components/PieChart').Item} Item
- * @typedef {import('Interface/Components/PieChart').FocusedActivity} FocusedActivity
- * 
- * @typedef {object} UpdatingData
- * @property {number} id
- * @property {string} name
- * @property {number} value
- * @property {number} valueMin
- * @property {string} color
- * @property {string} gradientCenterColor
- * @property {boolean} focused
  */
 
-const InputProps = {
+const YearHeatMapProps = {
     /** @type {StyleProp} */
     style: {}
 };
@@ -36,7 +21,7 @@ class YearHeatMapBack extends React.Component {
         /** @type {boolean} */
         switchValue: false,
 
-        /** @type TO DEFINE WITH @GEREM */
+        /** @type {Array<number>} */
         dataToDisplay: [],
 
         /** @type {number} */
@@ -47,10 +32,7 @@ class YearHeatMapBack extends React.Component {
 
     componentDidMount() {
         this.compute();
-
-        this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.compute();
-        });
+        this.activitiesListener = user.activities.allActivities.AddListener(this.compute);
     }
 
     componentWillUnmount() {
@@ -62,7 +44,6 @@ class YearHeatMapBack extends React.Component {
      * Compute and prepare the data for the heat map 
      */
     compute = () => {
-
         let isWeekMode = user.settings.questHeatMap;
         let dataToDisplay = [];
         const gridSize = isWeekMode ? 10 : 5;
@@ -79,7 +60,7 @@ class YearHeatMapBack extends React.Component {
         this.setState({
             dataToDisplay,
             gridSize,
-            switchValue: isWeekMode,
+            switchValue: isWeekMode
         });
     }
 
@@ -94,10 +75,9 @@ class YearHeatMapBack extends React.Component {
         user.settings.questHeatMap = isWeekMode;
         this.compute();
     }
-
 }
 
-YearHeatMapBack.prototype.props = InputProps;
-YearHeatMapBack.defaultProps = InputProps;
+YearHeatMapBack.prototype.props = YearHeatMapProps;
+YearHeatMapBack.defaultProps = YearHeatMapProps;
 
 export default YearHeatMapBack;

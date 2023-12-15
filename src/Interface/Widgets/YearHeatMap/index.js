@@ -24,7 +24,9 @@ class YearHeatMap extends YearHeatMapBack {
                 {/* Top row view */}
                 <View style={styles.flexBetween}>
 
-                    <Text style={styles.headerText}>{this.state.switchValue ? titleWeek : titleDay}</Text>
+                    <Text style={styles.headerText}>
+                        {this.state.switchValue ? titleWeek : titleDay}
+                    </Text>
 
                     <Switch
                         value={this.state.switchValue}
@@ -33,8 +35,10 @@ class YearHeatMap extends YearHeatMapBack {
                 </View>
 
                 {/* Heat Map view */}
-                <HeatMap data={this.state.dataToDisplay} gridSize={this.state.gridSize} />
-
+                <HeatMap
+                    data={this.state.dataToDisplay}
+                    gridSize={this.state.gridSize}
+                />
             </View>
         );
     }

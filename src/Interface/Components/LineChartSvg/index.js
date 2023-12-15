@@ -15,7 +15,7 @@ class LineChartSvg extends LineChartSvgBack {
         }
 
         // Colors
-        const topLineColor = themeManager.GetColor(lineColor); // Color for the fill
+        const topLineColor = themeManager.GetColor(lineColor);
         const fillColor = topLineColor + '30'; // Change this to the desired color for the line on top
 
         // Single point
@@ -38,12 +38,13 @@ class LineChartSvg extends LineChartSvgBack {
         return (
             <>
                 {/* Area fill */}
-                {isAreaChart &&
+                {isAreaChart && (
                     <Path
                         d={areaPath}
                         fill={fillColor}
                     />
-                }
+                )}
+
                 {/* Line on top */}
                 <Polyline
                     points={points}

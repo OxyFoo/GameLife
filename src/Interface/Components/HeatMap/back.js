@@ -1,29 +1,27 @@
 import * as React from 'react';
-import { View } from 'react-native';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  */
 
 const HeatMapProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {Object} */
-    data: {},
+    /** @type {Array<number>} */
+    data: [],
 
     /** @type {number} */
     gridSize: 5
-}
+};
 
-const LEVELS = 7; // Number of different color levels
+/** Number of different color levels */
+const LEVELS = 7;
 
 class HeatMapBack extends React.Component {
-
-    shouldComponentUpdate(nextProps, nextState) {
-
+    /** @param {HeatMapProps} nextProps */
+    shouldComponentUpdate(nextProps) {
         if (nextProps.gridSize !== this.props.gridSize) {
             return true;
         }
@@ -41,11 +39,15 @@ class HeatMapBack extends React.Component {
         return false;
     }
 
+    /**
+     * Green color with varying intensity
+     * @param {number} level 
+     * @returns {string} Returns a color string
+     */
     activityLevelToColor (level) {
         const colorLevel = Math.floor((255 * level) / (LEVELS - 1));
-        return `rgb(0, ${colorLevel}, 0)`; // Green color with varying intensity
-    };
-
+        return `rgb(0, ${colorLevel}, 0)`;
+    }
 }
 
 HeatMapBack.prototype.props = HeatMapProps;

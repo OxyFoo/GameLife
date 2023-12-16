@@ -43,30 +43,19 @@ class Quests {
         this.user = user;
     }
 
-    /**
-     * @type {Array<Quest>}
-     */
+    /** @type {Array<Quest>} */
     SAVED_quests = [];
 
-    /**
-     * @type {Array<Quest>}
-     */
+    /** @type {Array<Quest>} */
     UNSAVED_additions = [];
 
-    /**
-     * @type {Array<Quest>}
-     */
+    /** @type {Array<Quest>} */
     UNSAVED_deletions = [];
 
-    /**
-     * Sorted quests using created time
-     * @type {Array<number>}
-     */
+    /** @type {Array<number>} Sorted quests using created time */
     questsSort = [];
 
-    /**
-     * @type {boolean} True if quests sort is saved
-     */
+    /** @type {boolean} True if quests sort is saved */
     SAVED_sort = true;
 
     /**
@@ -287,26 +276,6 @@ class Quests {
         this.SAVED_sort = false;
         this.allQuests.Set(this.Get());
         return true;
-    }
-
-    /**
-     * TODO: Finish & use this
-     * Change sort order of quests titles
-     * @param {Quest} quest
-     * @param {number} date
-     * @returns {boolean} Success of the operation
-     */
-    Check(quest, date) {
-        return false;
-    }
-
-    /**
-     * TODO: Finish & use this
-     * @param {Quest} quest
-     * @returns {boolean} Success of the operation
-     */
-    Uncheck(quest) {
-        return this.Check(quest, 0);
     }
 
     /**

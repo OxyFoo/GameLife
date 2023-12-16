@@ -183,7 +183,7 @@
         "title-experience": "Experience",
         "title-no-experience": "This activity has no experience",
         "title-not-past": "This activity has not yet been completed",
-        "title-before-limit": "This activity does not provide any experience because it was added more than 48 hours after it was completed",
+        "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience and does not count towards quests.",
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",

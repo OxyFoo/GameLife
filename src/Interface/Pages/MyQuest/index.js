@@ -100,8 +100,8 @@ class Quest extends BackQuest {
 
                 <ShowTitle title='duration' />
                 <SectionDuration
-                    initDuration={duration}
-                    onChange={this.onEditQuest}
+                    duration={duration}
+                    onChange={this.onChangeDuration}
                 />
 
                 <ShowTitle title='comment' />

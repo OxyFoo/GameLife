@@ -50,6 +50,9 @@ const DigitProps = {
     /** @type {number} Multiplier of the animation speed */
     velocity: 1,
 
+    /** @type {number} */
+    fontSize: undefined,
+
     /** @type {ThemeColor | ThemeText} */
     fadeColor: 'background',
 

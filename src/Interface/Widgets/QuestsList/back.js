@@ -64,12 +64,14 @@ class BackQuestsList extends React.Component {
 
     /** @param {Quest} item */
     keyExtractor = (item) => (
-        'quest-' + item.title + '-' + item.created.toString()
+        'quest-' + item.title +
+            JSON.stringify(item.skills) +
+            JSON.stringify(item.schedule)
     )
 
     /**
      * Add a new quest to the list and open the quest page\
-     * Max 8 quests
+     * Max 10 quests
      */
     addQuest = () => {
         if (this.state.quests.length >= MAX_QUESTS) {

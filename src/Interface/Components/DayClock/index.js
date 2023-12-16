@@ -15,7 +15,7 @@ import FilledCircle from './filledCircle';
 
 class DayClock extends BackDayClock {
     render() {
-        const { day, state } = this.props;
+        const { day, state, fillingValue } = this.props;
         const langDays = langManager.curr['dates']['days'];
 
         const fistLetterUpper = langDays[(day+1)%7].charAt(0).toUpperCase();
@@ -36,10 +36,10 @@ class DayClock extends BackDayClock {
 
         else if (state === 'disabled') {
             fillingColor = 'main2';
-            let color = themeManager.GetColor('disabled');
+            let color = themeManager.GetColor('unfocused');
 
             if (this.props.isToday) {
-                color = themeManager.GetColor('main2', { opacity: .5 });
+                color = themeManager.GetColor('main2', { opacity: .75 });
             }
 
             styleCircle.borderColor = color;
@@ -59,6 +59,9 @@ class DayClock extends BackDayClock {
             let color = themeManager.GetColor('disabled');
             if (this.props.isToday) {
                 fillingColor = 'main2';
+            } else {
+                color = themeManager.GetColor('danger');
+                fillingColor = 'danger';
             }
             styleCircle.borderColor = color;
         }
@@ -73,7 +76,7 @@ class DayClock extends BackDayClock {
                 {state === 'filling' && (
                     <View style={{ position: 'absolute' }}>
                         <FilledCircle
-                            percentage={Math.random() * 100}
+                            percentage={fillingValue}
                             size={32}
                             margin={0}
                             color={fillingColor}

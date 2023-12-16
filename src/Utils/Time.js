@@ -1,5 +1,7 @@
 import { TwoDigit } from './Functions';
 
+const DAY_TIME = 24 * 60 * 60;
+
 /**
  * Get absolute UTC time in seconds
  * @param {Date} [date] (now default)
@@ -100,6 +102,6 @@ function GetTimeZone() {
 }
 
 export {
-    GetTime, GetDate, TimeToFormatString, RoundTimeTo, GetMidnightTime,
-    GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone
+    DAY_TIME, GetTime, GetDate, TimeToFormatString, RoundTimeTo,
+    GetMidnightTime, GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone
 };

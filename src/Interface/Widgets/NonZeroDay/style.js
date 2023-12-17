@@ -1,24 +1,59 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 16,
-        borderRadius: 20
+    // Popup
+    popup: {
+        paddingVertical: 12,
+        paddingHorizontal: 12
     },
-    flexBetween: {
-        display: 'flex',
+    popupFlatList: {
+        height: 400,
+        marginVertical: 12
+    },
+    popupText: {
+        color: 'white',
+        fontSize: 24
+    },
+
+    item: {
+        marginTop: 12,
+        padding: 6,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderRadius: 8
     },
-    headerText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold'
+    content: {
+        flexDirection: 'row',
+        alignItems: 'stretch'
     },
-    notEnoughData: {
-        marginTop:8,
-        fontSize: 16
+    itemDay: {
+        width: 'auto',
+        maxWidth: 120,
+        paddingVertical: 12,
+        paddingHorizontal: 12,
+        borderRadius: 6
+    },
+
+    flatlistReward: {
+        marginLeft: 12
+    },
+    flatlistRewardSeparation: {
+        width: 6
+    },
+    itemReward: {
+        aspectRatio: 1
+    },
+
+    itemState: {
+        aspectRatio: 1,
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        margin: 12,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

@@ -633,6 +633,10 @@
         "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more."
     },
 
+    "nonzerodays": {
+        "container-title": "Non Zero Days"
+    },
+
     "wait": {
         "wait-internet-text": "You must be connected to the internet to be able to connect!",
         "wait-maintenance-text": "The servers are currently in maintenance, come back later!",

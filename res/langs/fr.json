@@ -633,6 +633,10 @@
         "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres."
     },
 
+    "nonzerodays": {
+        "container-title": "Jours non zéro"
+    },
+
     "wait": {
         "wait-internet-text": "Tu dois être connecté à internet pour pouvoir te connecter !",
         "wait-maintenance-text": "Les serveurs sont actuellement en maintenance, reviens plus tard !",

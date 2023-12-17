@@ -90,6 +90,7 @@ class DigitBack extends React.Component {
         }, 200);
     }
 
+    /** @param {DigitProps} prevProps */
     componentDidUpdate(prevProps) {
         const { digitWidth } = this.state;
         const { name, minValue, maxValue, stepValue, callback } = this.props;

@@ -123,6 +123,9 @@ class ActivityPanelBack extends React.Component {
         }
 
         activity.skillID = skill.ID;
+        if (skill.ID !== 168 && activity.duration > 4 * 60) {
+            activity.duration = 4 * 60;
+        }
 
         this.setState({
             mode: 'skill',
@@ -132,6 +135,8 @@ class ActivityPanelBack extends React.Component {
         });
 
         // Update digits
+        this.indexHour = Math.floor(activity.duration / 60);
+        this.indexMinute = (activity.duration % 60) / TIME_STEP_MINUTES;
         if (this.indexHour !== -1 && this.indexMinute !== -1) {
             this.refActivitySchedule.current.refDigitHour.current.SetDigitsIndex(this.indexHour);
             this.refActivitySchedule.current.refDigitMinute.current.SetDigitsIndex(this.indexMinute);

@@ -592,12 +592,9 @@
         },
 
         "input-title": "Title",
-        "input-activity-title": "No category or activity selected",
-        "input-activity-title-activity": "Activity selected:",
-        "input-activity-title-category": "Category selected:",
-        "input-activity-none": "No activity",
-        "input-activity-empty": "Select",
-        "input-activity-only": "All activities of category: {}",
+        "input-activity-title": "No activity selected",
+        "input-activity-reset": "Reset",
+        "input-activity-add": "Add",
 
         "input-panel-activity": "Select an activity",
         "input-panel-category": "Select a category",
@@ -609,6 +606,7 @@
         "input-errors": {
             "title-empty": "Please enter a title",
             "title-exists": "A quest with this title already exists",
+            "skills-empty": "You must add at least one activity",
             "schedule-empty": "You must select the days on which you want to do this quest"
         },
 

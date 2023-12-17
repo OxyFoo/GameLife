@@ -132,6 +132,7 @@ class DigitBack extends React.Component {
     /** @param {number} posX Scroll position in pixels */
     SetDigitsPosX = (posX) => {
         this.scrollX = posX;
+        this.newPosX = posX;
         SpringAnimation(this.state.animLeft, this.scrollX).start();
     }
 

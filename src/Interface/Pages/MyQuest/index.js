@@ -87,8 +87,10 @@ class Quest extends BackQuest {
                 <ShowTitle title='skills' />
                 <SectionSkill
                     ref={ref => this.refSectionSkill = ref}
+                    skillsIDs={skills}
                     onChange={this.onChangeSkills}
                 />
+                <ShowError error='skills-empty' />
 
                 <ShowTitle title='schedule' />
                 <SectionSchedule

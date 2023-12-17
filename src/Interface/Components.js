@@ -4,6 +4,7 @@ import Character from './Components/Character/Character';
 import Checkbox from './Components/Checkbox';
 import ComboBox from './Components/ComboBox';
 import Container from './Components/Container';
+import DayClock from './Components/DayClock';
 import Digit from './Components/Digit';
 import Frame from './Components/Character/Frame';
 import GLLoading from './Components/GLLoading';
@@ -31,6 +32,7 @@ export {
     Checkbox,
     ComboBox,
     Container,
+    DayClock,
     Digit,
     Frame,
     GLLoading,

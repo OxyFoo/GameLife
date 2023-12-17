@@ -592,12 +592,9 @@
         },
 
         "input-title": "Titre",
-        "input-activity-title": "Aucune catégorie ou activité sélectionnée",
-        "input-activity-title-activity": "Activité sélectionnée:",
-        "input-activity-title-category": "Catégorie sélectionnée:",
-        "input-activity-none": "Aucune",
-        "input-activity-empty": "Sélectionner",
-        "input-activity-only": "Toutes les activités de la catégorie: {}",
+        "input-activity-title": "Aucune activité sélectionnée",
+        "input-activity-reset": "Réinitialiser",
+        "input-activity-add": "Ajouter",
 
         "input-panel-activity": "Sélectionne une activité",
         "input-panel-category": "Sélectionne une catégorie",
@@ -609,6 +606,7 @@
         "input-errors": {
             "title-empty": "Le titre ne peut pas être vide",
             "title-exists": "Une quête avec ce titre existe déjà",
+            "skills-empty": "Tu dois ajouter au moins une activité",
             "schedule-empty": "Tu dois sélectionner les jours durant lesquels tu veux faire cette quête"
         },
 

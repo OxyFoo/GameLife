@@ -1,15 +1,24 @@
 import DynamicVar from 'Utils/DynamicVar';
-import { GetTime } from 'Utils/Time';
+import { Sum } from 'Utils/Functions';
+import { DAY_TIME, GetDate, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'week' | 'month'} RepeatModes
- * @typedef {'title-empty' | 'title-exists' | 'schedule-empty'} InputsError
+ * @typedef {'title-empty' | 'title-exists' | 'skills-empty' | 'schedule-empty'} InputsError
  * 
  * @typedef {object} Schedule
  * @property {RepeatModes} type
  * @property {Array<number>} repeat
  * @property {number} duration In minutes
+ * 
+ * @typedef {'normal' | 'full' | 'filling' | 'disabled'} DayClockStates
+ * 
+ * @typedef {object} DayType
+ * @property {number} day
+ * @property {boolean} isToday
+ * @property {DayClockStates} state
+ * @property {number} [fillingValue] Only used if state === 'filling'
  */
 
 class MyQuest {
@@ -163,6 +172,11 @@ class MyQuests {
             errors.push('title-exists');
         }
 
+        // Check if skills are valid
+        if (quest.skills.length <= 0) {
+            errors.push('skills-empty');
+        }
+
         // Check if repeat mode is valid
         if (quest.schedule.repeat.length <= 0) {
             errors.push('schedule-empty');
@@ -283,6 +297,88 @@ class MyQuests {
         const index = arr.findIndex(a => a.created === quest.created);
         if (index === -1) return null;
         return index;
+    }
+
+    /**
+     * @param {MyQuest} quest
+     * @param {number} time in seconds
+     */
+    GetDays(quest, time = GetTime(undefined, 'local')) {
+        if (quest === null) return [];
+
+        const dateNow = GetDate(time);
+        const currentDate = dateNow.getDate() - 1;
+        const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
+        const { skills, schedule: { type, repeat, duration } } = quest;
+
+        if (duration === 0) return []; // Avoid division by 0
+
+        /** @type {Array<DayType>} */
+        const days = [];
+
+        for (let i = 0; i < 7; i++) {
+            const isToday = i === currentDayIndex;
+
+            /** @type {DayClockStates} */
+            let state = 'normal';
+            let fillingValue = 0;
+
+            // Disabled if not in repeat
+            if (type === 'week' && !repeat.includes(i)) {
+                state = 'disabled';
+            } else if (type === 'month' && !repeat.includes((currentDate - currentDayIndex + i + 31) % 31)) {
+                state = 'disabled';
+            }
+
+            // Filling if in repeat and not completed
+            if (state !== 'disabled') {
+                const deltaToNewDay = i - currentDayIndex;
+                const activitiesNewDay = this.user.activities
+                    .GetByTime(time + deltaToNewDay * DAY_TIME)
+                    .filter(activity => skills.includes(activity.skillID))
+                    .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant');
+
+                if (deltaToNewDay <= 0) {
+                    const totalDuration = Sum(activitiesNewDay.map(activity => activity.duration));
+                    const progress = totalDuration / duration;
+                    state = progress >= 1 ? 'full' : 'filling';
+                    fillingValue = Math.min(progress, 1) * 100;
+                }
+                else if (deltaToNewDay > 0) {
+                    state = 'normal';
+                }
+            }
+
+            days.push({ day: i, isToday, state, fillingValue });
+        }
+
+        return days;
+    }
+
+    /** @param {MyQuest} quest */
+    GetStreak(quest) {
+        let i = 0;
+        let streak = 0;
+        const timeNow = GetTime(undefined, 'local');
+
+        while (true) {
+            const week = this
+                .GetDays(quest, timeNow - i++ * DAY_TIME * 7)
+                .filter(day => !['disabled', 'normal', 'filling'].includes(day.state))
+                .reverse();
+
+            if (week.length === 0 && i !== 1) {
+                return streak;
+            }
+
+            for (let i = 0; i < week.length; i++) {
+                if (week[i].state !== 'full' && !week[i].isToday) {
+                    return streak;
+                } else if (week[i].state === 'full') {
+                    streak++;
+                }
+            }
+        }
     }
 }
 

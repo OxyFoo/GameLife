@@ -29,12 +29,6 @@ class SectionDuration extends React.Component {
 
     refHelp1 = null;
 
-    onChange = () => {
-        // TODO: Calculate duration
-        const duration = 0;
-        this.props.onChange(duration);
-    }
-
     /** @type {DigitCallback} */
     onChangeDurationDigit = (name, index) => {
         // Get current durations (hour / minute)

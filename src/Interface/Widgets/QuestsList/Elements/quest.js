@@ -4,11 +4,7 @@ import { View, FlatList } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 
-import { Text, Icon, Button } from 'Interface/Components';
-
-import DayClock from '../../../Components/DayClock';
-import { Sum } from 'Utils/Functions';
-import { DAY_TIME, GetDate, GetTime } from 'Utils/Time';
+import { Text, Icon, Button, DayClock } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -16,13 +12,9 @@ import { DAY_TIME, GetDate, GetTime } from 'Utils/Time';
  *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * @typedef {import('Interface/Components/DayClock/back').DayClockStates} DayClockStates
+ * @typedef {import('Class/Quests/MyQuests').DayType} DayType
+ * @typedef {import('Class/Quests/MyQuests').DayClockStates} DayClockStates
  * 
- * @typedef {object} DayType
- * @property {number} day
- * @property {boolean} isToday
- * @property {DayClockStates} state
- * @property {number} [fillingValue] Only used if state === 'filling'
  */
 
 const QuestProps = {
@@ -50,16 +42,17 @@ class QuestElement extends React.Component {
         super(props);
 
         if (props.quest !== null) {
-            this.state.days = this.getDays(GetTime(undefined, 'local'));
-            this.state.streakCount = this.getStreak();
+            this.state.days = user.quests.myquests.GetDays(props.quest);
+            this.state.streakCount = user.quests.myquests.GetStreak(props.quest);
         }
     }
 
     componentDidMount() {
         this.listenerActivities = user.activities.allActivities.AddListener(() => {
+            const { quest } = this.props;
             this.setState({
-                days: this.getDays(GetTime(undefined, 'local')),
-                streakCount: this.getStreak()
+                days: user.quests.myquests.GetDays(quest),
+                streakCount: user.quests.myquests.GetStreak(quest)
             });
         });
     }
@@ -90,92 +83,7 @@ class QuestElement extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (JSON.stringify(prevState.days) !== JSON.stringify(this.state.days)) {
-            this.setState({ days: this.getDays(GetTime(undefined, 'local')) });
-        }
-    }
-
-    /** @param {number} time in seconds */
-    getDays(time) {
-        const { quest } = this.props;
-        if (quest === null) return [];
-
-        const dateNow = GetDate(time);
-        const currentDate = dateNow.getDate() - 1;
-        const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
-        const { skills, schedule: { type, repeat, duration } } = quest;
-
-        if (duration === 0) return []; // Avoid division by 0
-
-        /** @type {Array<DayType>} */
-        const days = [];
-
-        for (let i = 0; i < 7; i++) {
-            const isToday = i === currentDayIndex;
-
-            /** @type {DayClockStates} */
-            let state = 'normal';
-            let fillingValue = 0;
-
-            // Disabled if not in repeat
-            if (type === 'week' && !repeat.includes(i)) {
-                state = 'disabled';
-            } else if (type === 'month' && !repeat.includes((currentDate - currentDayIndex + i + 31) % 31)) {
-                state = 'disabled';
-            }
-
-            // Filling if in repeat and not completed
-            if (state !== 'disabled') {
-                const deltaToNewDay = i - currentDayIndex;
-                const activitiesNewDay = user.activities
-                    .GetByTime(time + deltaToNewDay * DAY_TIME)
-                    .filter(activity => skills.includes(activity.skillID))
-                    .filter(activity => user.activities.GetExperienceStatus(activity) === 'grant');
-
-                if (deltaToNewDay === 0) {
-                    const activitiesQuest = activitiesNewDay
-                        .filter(activity =>
-                            activity.startTime + activity.duration * 60 <= time
-                        );
-
-                    const totalDuration = Sum(activitiesQuest.map(activity => activity.duration));
-                    const progress = totalDuration / duration;
-                    state = progress >= 1 ? 'full' : 'filling';
-                    fillingValue = Math.min(progress, 1) * 100;
-                }
-                else if (deltaToNewDay < 0) {
-                    const totalDuration = Sum(activitiesNewDay.map(activity => activity.duration));
-                    const progress = totalDuration / duration;
-                    state = progress >= 1 ? 'full' : 'filling';
-                    fillingValue = Math.min(progress, 1) * 100;
-                }
-                else if (deltaToNewDay > 0) {
-                    state = 'normal';
-                }
-            }
-
-            days.push({ day: i, isToday, state, fillingValue });
-        }
-
-        return days;
-    }
-
-    getStreak() {
-        let i = 0;
-        let streak = 0;
-        const timeNow = GetTime(undefined, 'local');
-
-        while (true) {
-            const week = this
-                .getDays(timeNow - i++ * DAY_TIME * 7)
-                .filter(day => day.state !== 'disabled' && day.state !== 'normal')
-                .reverse();
-            for (let i = 0; i < week.length; i++) {
-                if (week[i].state !== 'full' && !week[i].isToday) {
-                    return streak;
-                } else if (week[i].state === 'full') {
-                    streak++;
-                }
-            }
+            this.setState({ days: user.quests.myquests.GetDays(this.props.quest) });
         }
     }
 

@@ -5,9 +5,9 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Class/Quests').Quest} Quest
- * @typedef {import('Class/Quests').InputsError} InputsError
- * @typedef {import('Class/Quests').RepeatModes} RepeatModes
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
+ * @typedef {import('Class/Quests/MyQuests').RepeatModes} RepeatModes
  * 
  * @typedef {'add' | 'save' | 'remove'} States
  * 
@@ -54,14 +54,14 @@ class BackQuest extends PageBase {
     /** @type {SectionComment | null} */
     refSectionComment = null;
 
-    /** @type {Quest | null} */
+    /** @type {MyQuest | null} */
     selectedQuest = null;
 
     constructor(props) {
         super(props);
 
         if (this.props.args?.quest) {
-            /** @type {Quest | null} */
+            /** @type {MyQuest | null} */
             const quest = this.props.args.quest || null;
             this.selectedQuest = quest;
 
@@ -124,7 +124,7 @@ class BackQuest extends PageBase {
     onEditQuest = () => {
         const newStates = {};
 
-        const errors = user.quests.VerifyInputs({
+        const errors = user.quests.myquests.VerifyInputs({
             title: this.state.title,
             comment: this.state.comment,
             created: this.selectedQuest?.created || 0,
@@ -202,7 +202,7 @@ class BackQuest extends PageBase {
             return;
         }
 
-        const addition = user.quests.AddOrEdit({
+        const addition = user.quests.myquests.AddOrEdit({
             title,
             comment: comment,
             created: edit ? this.selectedQuest.created : null,
@@ -231,7 +231,7 @@ class BackQuest extends PageBase {
 
         const callback = (btn) => {
             if (btn === 'yes') {
-                const remove = user.quests.Remove(this.selectedQuest);
+                const remove = user.quests.myquests.Remove(this.selectedQuest);
                 if (remove === 'removed') {
                     user.GlobalSave();
                     user.interface.ResetCustomBackHandler();

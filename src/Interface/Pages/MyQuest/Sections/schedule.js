@@ -8,7 +8,7 @@ import { Range } from 'Utils/Functions';
 import { Text, Button, TextSwitch } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Quests').RepeatModes} RepeatModes
+ * @typedef {import('Class/Quests/MyQuests').RepeatModes} RepeatModes
  * 
  * @callback OnChangeScheduleEvent
  * @param {RepeatModes} type Repeat mode

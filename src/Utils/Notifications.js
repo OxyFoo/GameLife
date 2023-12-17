@@ -208,7 +208,7 @@ class Notifications {
             return null;
             const now = GetTime();
             const day = 24 * 60 * 60;
-            const quests = user.quests.Get();
+            const quests = user.quests.myquests.Get();
             let halftime = {}, tomorrow = {}, today = {};
 
             for (let i = 0; i < quests.length; i++) {

@@ -6,7 +6,7 @@ import user from 'Managers/UserManager';
 import { Page, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
-class Quest extends BackQuest {
+class MyQuestStats extends BackQuest {
     render() {
         return (
             <Page ref={ref => this.refPage = ref}>
@@ -21,4 +21,4 @@ class Quest extends BackQuest {
     }
 }
 
-export default Quest;
+export default MyQuestStats;

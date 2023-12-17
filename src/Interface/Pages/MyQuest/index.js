@@ -18,7 +18,7 @@ import { Page, Text, Button } from 'Interface/Components';
 /**
  * @typedef {import('Managers/LangManager').Lang} Lang
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * @typedef {import('Class/Quests').InputsError} InputsError
+ * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
  */
 
 class Quest extends BackQuest {

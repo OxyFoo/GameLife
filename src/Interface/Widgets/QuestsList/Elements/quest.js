@@ -14,7 +14,7 @@ import { DAY_TIME, GetDate, GetTime } from 'Utils/Time';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Class/Quests').Quest} Quest
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * @typedef {import('Interface/Components/DayClock/back').DayClockStates} DayClockStates
  * 
@@ -29,7 +29,7 @@ const QuestProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {Quest | null} */
+    /** @type {MyQuest | null} */
     quest: null,
 
     /** Icon to drag => onTouchStart event (quest only) */
@@ -162,17 +162,19 @@ class QuestElement extends React.Component {
     getStreak() {
         let i = 0;
         let streak = 0;
+        const timeNow = GetTime(undefined, 'local');
+
         while (true) {
             const week = this
-                .getDays(GetTime(undefined, 'local') - i++ * DAY_TIME * 7)
-                .map(day => day.state)
-                .filter(state => state !== 'disabled' && state !== 'normal')
+                .getDays(timeNow - i++ * DAY_TIME * 7)
+                .filter(day => day.state !== 'disabled' && day.state !== 'normal')
                 .reverse();
             for (let i = 0; i < week.length; i++) {
-                if (week[i] !== 'full') {
+                if (week[i].state !== 'full' && !week[i].isToday) {
                     return streak;
+                } else if (week[i].state === 'full') {
+                    streak++;
                 }
-                streak++;
             }
         }
     }

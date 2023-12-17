@@ -5,11 +5,11 @@ import styles from './style';
 import QuestElement from './quest';
 
 /** 
- * @typedef {import('Class/Quests').Quest} Quest
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  */
 
 const QuestSelectionProps = {
-    /** @type {Quest | null} */
+    /** @type {MyQuest | null} */
     draggedItem: null,
 
     mouseY: new Animated.Value(0)

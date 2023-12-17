@@ -14,7 +14,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * 
- * @typedef {import('Class/Quests').Quest} Quest
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  */
 
 const MAX_QUESTS = 10;
@@ -26,7 +26,7 @@ class BackQuestsList extends React.Component {
         /** @type {boolean} Used to disable scroll when dragging a quest */
         scrollable: true,
 
-        /** @type {Quest | null} Used to manage selected quest */
+        /** @type {MyQuest | null} Used to manage selected quest */
         draggedItem: null,
 
         mouseY: new Animated.Value(0)
@@ -35,7 +35,7 @@ class BackQuestsList extends React.Component {
     constructor(props) {
         super(props);
 
-        /** @type {FlatList<Quest> | null} Used to manage quest sorting */
+        /** @type {FlatList<MyQuest> | null} Used to manage quest sorting */
         this.refFlatlist = null;
 
         this.flatlist = {
@@ -47,22 +47,22 @@ class BackQuestsList extends React.Component {
         /** @type {LayoutRectangle | null} */
         this.tmpLayoutContainer = null;
 
-        this.state.quests = user.quests.Get();
+        this.state.quests = user.quests.myquests.Get();
     }
 
     componentDidMount() {
-        this.listenerQuest = user.quests.allQuests.AddListener(this.refreshQuests);
+        this.listenerQuest = user.quests.myquests.allQuests.AddListener(this.refreshQuests);
     }
 
     componentWillUnmount() {
-        user.quests.allQuests.RemoveListener(this.listenerQuest);
+        user.quests.myquests.allQuests.RemoveListener(this.listenerQuest);
     }
 
     refreshQuests = () => {
-        this.setState({ quests: user.quests.Get() });
+        this.setState({ quests: user.quests.myquests.Get() });
     }
 
-    /** @param {Quest} item */
+    /** @param {MyQuest} item */
     keyExtractor = (item) => (
         'quest-' + item.title +
             JSON.stringify(item.skills) +
@@ -83,7 +83,7 @@ class BackQuestsList extends React.Component {
         user.interface.ChangePage('myquest', undefined, true);
     }
 
-    /** @param {Quest} item */
+    /** @param {MyQuest} item */
     onDrag = (item) => {
         this.setState({
             scrollable: false,
@@ -99,7 +99,7 @@ class BackQuestsList extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [ ...user.quests.questsSort ];
+        this.initialSort = [ ...user.quests.myquests.questsSort ];
 
         GetAbsolutePosition(this.refFlatlist).then(pos => {
             this.tmpLayoutContainer = pos;
@@ -130,9 +130,9 @@ class BackQuestsList extends React.Component {
 
         // Change quest order when dragging
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.quests.questsSort.indexOf(draggedItem.created);
-        if (index !== currIndex && user.quests.Move(draggedItem, index)) {
-            this.setState({ quests: user.quests.Get() });
+        const currIndex = user.quests.myquests.questsSort.indexOf(draggedItem.created);
+        if (index !== currIndex && user.quests.myquests.Move(draggedItem, index)) {
+            this.setState({ quests: user.quests.myquests.Get() });
         }
 
         // Scroll flatlist when dragging quest near top or bottom
@@ -159,8 +159,8 @@ class BackQuestsList extends React.Component {
         });
 
         // Save changes if quests order changed (and not just a quest check)
-        if (this.initialSort.join() !== user.quests.questsSort.join() &&
-            this.initialSort.length === user.quests.questsSort.length) {
+        if (this.initialSort.join() !== user.quests.myquests.questsSort.join() &&
+            this.initialSort.length === user.quests.myquests.questsSort.length) {
                 user.GlobalSave();
         }
 

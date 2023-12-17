@@ -2,12 +2,10 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { GetDay } from 'Utils/Date';
-import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('Class/Quests').Quest} Quest
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */

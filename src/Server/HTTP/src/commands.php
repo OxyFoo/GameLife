@@ -10,7 +10,7 @@ require('./src/classes/account.php');
 require('./src/classes/device.php');
 
 require('./src/managers/items.php');
-require('./src/managers/quests.php');
+require('./src/managers/myquests.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
 require('./src/managers/todoes.php');
@@ -329,7 +329,9 @@ class Commands {
             $userData['shop'] = array(
                 'buyToday' => Users::GetBuyToday($this->db, $account)
             );
-            $userData['quests'] = Quests::GetQuests($this->db, $account);
+            $userData['quests'] = array(
+                'myquests' => MyQuests::GetQuests($this->db, $account)
+            );
             $userData['todoes'] = Todoes::GetTodoes($this->db, $account);
             $userData['dataToken'] = $dbDataToken;
         }

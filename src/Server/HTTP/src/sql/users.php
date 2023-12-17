@@ -28,8 +28,8 @@ class Users
         if (isset($todoes)) {
             Todoes::AddTodoes($db, $account, $todoes);
         }
-        if (isset($quests)) {
-            Quests::AddQuests($db, $account, $quests);
+        if (isset($quests) && isset($quests['myquests'])) {
+            MyQuests::AddQuests($db, $account, $quests['myquests']);
         }
         if (isset($avatar)) {
             self::SetAvatar($db, $account, $avatar);

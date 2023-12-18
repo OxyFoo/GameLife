@@ -56,6 +56,7 @@ class ActivityCard extends React.Component {
          * @type {ThemeColor | ThemeText}
         */
         let color = 'main1';
+        let colorCategory = null;
 
         /** @type {Icons | undefined} */
         this.icon = undefined;
@@ -64,10 +65,8 @@ class ActivityCard extends React.Component {
             const skill = dataManager.skills.GetByID(activity.skillID);
             const LogoID = skill?.LogoID ?? 0;
             this.XML = dataManager.skills.icons.find(x => x.ID === LogoID)?.Content ?? '';
-
-            if ((skill?.XP ?? 0) === 0) {
-                color = 'main2';
-            }
+            const category = dataManager.skills.GetCategoryByID(skill?.CategoryID);
+            colorCategory = category?.Color ?? null ;
 
             // Line 1: Start - End (Duration)
             const textStart_value = TimeToFormatString(activity.startTime - offsetUTC);
@@ -116,7 +115,7 @@ class ActivityCard extends React.Component {
 
         // Theme
         this.themeBackground = {
-            backgroundColor: themeManager.GetColor(color)
+            backgroundColor: colorCategory ? colorCategory : themeManager.GetColor(color)
         };
         this.themeAnimation = {
             opacity: this.state.anim,

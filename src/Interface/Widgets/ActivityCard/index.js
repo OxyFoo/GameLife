@@ -68,6 +68,11 @@ class ActivityCard extends React.Component {
             const category = dataManager.skills.GetCategoryByID(skill?.CategoryID);
             colorCategory = category?.Color ?? null ;
 
+            if ((skill?.XP ?? 0) === 0) {
+                color = 'main2';
+                colorCategory = null;
+            }
+
             // Line 1: Start - End (Duration)
             const textStart_value = TimeToFormatString(activity.startTime - offsetUTC);
             const textEnd_value = TimeToFormatString(activity.startTime + activity.duration * 60 - offsetUTC);

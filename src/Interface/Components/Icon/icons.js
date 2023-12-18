@@ -30,6 +30,7 @@ import svgOnboarding1 from 'Ressources/icons/onboarding1';
 import svgOnboarding2 from 'Ressources/icons/onboarding2';
 import svgOnboarding3 from 'Ressources/icons/onboarding3';
 import svgOx from 'Ressources/icons/ox';
+import svgQuests from 'Ressources/icons/quests';
 import svgSetting from 'Ressources/icons/setting';
 import svgShop from 'Ressources/icons/shop';
 import svgSleepZzz from 'Ressources/icons/sleep-zzz';
@@ -81,6 +82,7 @@ const SVGIcons = {
     onboarding2: svgOnboarding2,
     onboarding3: svgOnboarding3,
     ox: svgOx,
+    quests: svgQuests,
     setting: svgSetting,
     shop: svgShop,
     sleepZzz: svgSleepZzz,

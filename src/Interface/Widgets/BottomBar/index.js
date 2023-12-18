@@ -72,7 +72,7 @@ class BottomBar extends BottomBarBack {
                         rippleColor='main1'
                         onPress={this.goToQuests}
                     >
-                        <Icon icon='default' color={isChecked(3)} />
+                        <Icon icon='quests' color={isChecked(3)} />
                     </Button>
 
                     <Button

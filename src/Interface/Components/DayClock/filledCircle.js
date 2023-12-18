@@ -38,8 +38,10 @@ const FilledCircle = ({ percentage = 100, size = 32, margin = 6, circleStrokeWid
 
     return (
         <View style={{ width: containerSize, height: containerSize, marginTop: -circleStrokeWidth, marginLeft: -circleStrokeWidth-1, overflow: 'visible' }}>
-            <Svg width={containerSize} height={containerSize} rotation={-90}>
+            <Svg width={containerSize} height={containerSize}>
                 <Circle
+                    rotation={-90}
+                    origin={[cx + 1, cy + 1]}
                     cx={cx}
                     cy={cy}
                     r={circleRadius}
@@ -51,6 +53,8 @@ const FilledCircle = ({ percentage = 100, size = 32, margin = 6, circleStrokeWid
                     strokeLinecap='butt'
                 />
                 <Circle
+                    rotation={-90}
+                    origin={[cx2 + 1, cy2 + 1]}
                     cx={cx2}
                     cy={cy2}
                     r={diskRadius}

@@ -3,20 +3,9 @@ import Svg, { Path } from 'react-native-svg';
 
 function SvgComponent(props) {
     return (
-        <Svg viewBox='0 0 24 24' {...props}>
-            <Path
-                opacity={0.3}
-                fill={props.color || 'white'}
-                d='M7 10.1899V17.9999H9V11.9999H15V17.9999H17V10.1899L12 5.68994L7 10.1899ZM14 9.99994H10C10 8.89994 10.9 7.99994 12 7.99994C13.1 7.99994 14 8.89994 14 9.99994Z'
-            />
-            <Path
-                fill={props.color || 'white'}
-                d='M19 9.3V4H16V6.6L12 3L2 12H5V20H11V14H13V20H19V12H22L19 9.3ZM17 18H15V12H9V18H7V10.19L12 5.69L17 10.19V18Z'
-            />
-            <Path
-                fill={props.color || 'white'}
-                d='M10 10H14C14 8.9 13.1 8 12 8C10.9 8 10 8.9 10 10Z'
-            />
+        <Svg viewBox='0 0 60 60' {...props}>
+            <Path fill={props.color || 'white'} d='M51 22V7.5h-9v5.1L30 0 0 31.5h9V60h18V37.5h6V60h18V31.5h9L51 22zm-6 33.3h-6V32.7H21v22.6h-6V27.4l15-14.8 15 14.8v27.9z' />
+            <Path fill={props.color || 'white'} d='M24 29.1h12c0-3.3-2.7-6-6-6s-6 2.7-6 6z' />
         </Svg>
     )
 }

@@ -11,7 +11,7 @@ import NonZeroDay from './Widgets/NonZeroDay';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
 import Popup from './Widgets/Popup';
-import QuestsList from './Widgets/QuestsList';
+import MyQuestsList from './Widgets/MyQuestsList';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import ScreenTuto from './Widgets/ScreenTuto';
@@ -36,7 +36,7 @@ export {
     PageHeader,
     PanelScreen,
     Popup,
-    QuestsList,
+    MyQuestsList,
     ScreenInput,
     ScreenList,
     ScreenTuto,

@@ -6,7 +6,7 @@ import BackQuests from './back';
 import langManager from 'Managers/LangManager';
 
 import { Button, Container, Page, Text } from 'Interface/Components';
-import { NonZeroDay, QuestsList } from 'Interface/Widgets';
+import { NonZeroDay, MyQuestsList } from 'Interface/Widgets';
 
 class Quests extends BackQuests {
     render() {
@@ -18,7 +18,7 @@ class Quests extends BackQuests {
                 canScrollOver
             >
                 <NonZeroDay style={styles.quest} />
-                <QuestsList style={styles.quest} />
+                <MyQuestsList style={styles.quest} />
             </Page>
         );
     }

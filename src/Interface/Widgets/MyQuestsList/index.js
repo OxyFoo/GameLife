@@ -20,7 +20,7 @@ const QuestsProps = {
     style: {}
 };
 
-class QuestsList extends BackQuestsList {
+class MyQuestsList extends BackQuestsList {
     static QuestElement = QuestElement;
 
     renderItem = ({ item }) => {
@@ -96,7 +96,7 @@ class QuestsList extends BackQuestsList {
     }
 }
 
-QuestsList.prototype.props = QuestsProps;
-QuestsList.defaultProps = QuestsProps;
+MyQuestsList.prototype.props = QuestsProps;
+MyQuestsList.defaultProps = QuestsProps;
 
-export default QuestsList;
+export default MyQuestsList;

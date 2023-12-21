@@ -6,12 +6,12 @@ import ActivitySchedule from './Widgets/ActivitySchedule';
 import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
 import Console from './Widgets/Console';
+import MyQuestsList from './Widgets/MyQuestsList';
 import News from './Widgets/News';
 import NonZeroDay from './Widgets/NonZeroDay';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
 import Popup from './Widgets/Popup';
-import MyQuestsList from './Widgets/MyQuestsList';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import ScreenTuto from './Widgets/ScreenTuto';
@@ -31,12 +31,12 @@ export {
     BlockMonth,
     BottomBar,
     Console,
+    MyQuestsList,
     News,
     NonZeroDay,
     PageHeader,
     PanelScreen,
     Popup,
-    MyQuestsList,
     ScreenInput,
     ScreenList,
     ScreenTuto,

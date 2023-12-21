@@ -17,8 +17,6 @@ class Users
         $quests = $data['quests'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
-        $todoesSort = $data['todoesSort'];
-        $questsSort = $data['questsSort'];
         $titleID = $data['titleID'];
         $birthTime = $data['birthTime'];
 
@@ -26,22 +24,19 @@ class Users
             Skills::AddActivities($db, $account, $activities);
         }
         if (isset($todoes)) {
-            Todoes::AddTodoes($db, $account, $todoes);
+            Todoes::Save($db, $account, $todoes);
         }
         if (isset($quests) && isset($quests['myquests'])) {
-            MyQuests::AddQuests($db, $account, $quests['myquests']);
+            MyQuests::Save($db, $account, $quests['myquests']);
+        }
+        if (isset($quests) && isset($quests['nonzerodays'])) {
+            NonZeroDays::Save($db, $account, $quests['nonzerodays']);
         }
         if (isset($avatar)) {
             self::SetAvatar($db, $account, $avatar);
         }
         if (isset($xp)) {
             self::setXP($db, $account->ID, $xp);
-        }
-        if (isset($todoesSort)) {
-            self::SetTodoesSort($db, $account, $todoesSort);
-        }
-        if (isset($questsSort)) {
-            self::SetQuestsSort($db, $account, $questsSort);
         }
         if (isset($titleID)) {
             self::setTitle($db, $account, $titleID);
@@ -285,34 +280,6 @@ class Users
         $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $xp, $accountID ]);
         if ($result === false) {
             ExitWithStatus('Error: Saving XP failed');
-        }
-    }
-
-    /**
-     * @param DataBase $db
-     * @param Account $account
-     * @param string[] $todoesSort
-     */
-    private static function SetTodoesSort($db, $account, $todoesSort) {
-        $command = 'UPDATE TABLE SET `TodoesSort` = ? WHERE `ID` = ?';
-        $args = [ json_encode($todoesSort), $account->ID ];
-        $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
-        if ($result === false) {
-            ExitWithStatus('Error: Saving todoes sort failed');
-        }
-    }
-
-    /**
-     * @param DataBase $db
-     * @param Account $account
-     * @param string[] $questsSort
-     */
-    private static function SetQuestsSort($db, $account, $questsSort) {
-        $command = 'UPDATE TABLE SET `QuestsSort` = ? WHERE `ID` = ?';
-        $args = [ json_encode($questsSort), $account->ID ];
-        $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
-        if ($result === false) {
-            ExitWithStatus('Error: Saving quests sort failed');
         }
     }
 

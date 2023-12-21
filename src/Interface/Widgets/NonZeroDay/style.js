@@ -54,6 +54,11 @@ const styles = StyleSheet.create({
         margin: 12,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    itemButton: {
+        width: 64,
+        marginRight: 12,
+        paddingHorizontal: 0
     }
 });
 

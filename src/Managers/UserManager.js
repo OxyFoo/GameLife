@@ -246,16 +246,8 @@ class UserManager {
             data['quests'] = this.quests.GetUnsaved();
         }
 
-        if (!this.quests.SAVED_sort) {
-            data['questsSort'] = this.quests.questsSort;
-        }
-
         if (this.todoes.IsUnsaved()) {
             data['todoes'] = this.todoes.GetUnsaved();
-        }
-
-        if (!this.todoes.SAVED_sort) {
-            data['todoesSort'] = this.todoes.todoesSort;
         }
 
         if (this.inventory.IsUnsaved()) {
@@ -310,10 +302,8 @@ class UserManager {
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('quests')) this.quests.LoadOnline(data['quests']);
-            if (contains('questsSort')) this.quests.questsSort = data['questsSort'];
             if (contains('shop')) this.shop.LoadOnline(data['shop']);
             if (contains('todoes')) this.todoes.LoadOnline(data['todoes']);
-            if (contains('todoesSort')) this.todoes.todoesSort = data['todoesSort'];
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

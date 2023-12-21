@@ -58,7 +58,7 @@ class MyQuests {
     UNSAVED_deletions = [];
 
     /** @type {Array<number>} Sorted quests using created time */
-    questsSort = [];
+    sort = [];
 
     /** @type {boolean} True if quests sort is saved */
     SAVED_sort = true;
@@ -73,31 +73,35 @@ class MyQuests {
         this.SAVED_quests = [];
         this.UNSAVED_additions = [];
         this.UNSAVED_deletions = [];
-        this.questsSort = [];
+        this.sort = [];
         this.SAVED_sort = true;
         this.allQuests.Set([]);
     }
-    Load(quests) {
-        const contains = (key) => quests.hasOwnProperty(key);
-        if (contains('quests'))     this.SAVED_quests = quests['quests'];
-        if (contains('additions'))  this.UNSAVED_additions = quests['additions'];
-        if (contains('deletions'))  this.UNSAVED_deletions = quests['deletions'];
-        if (contains('questsSort')) this.questsSort = quests['questsSort'];
-        if (contains('sortSaved'))  this.SAVED_sort = quests['sortSaved'];
+    Load(data) {
+        const contains = (key) => data.hasOwnProperty(key);
+        if (contains('quests'))     this.SAVED_quests = data['quests'];
+        if (contains('additions'))  this.UNSAVED_additions = data['additions'];
+        if (contains('deletions'))  this.UNSAVED_deletions = data['deletions'];
+        if (contains('sort'))       this.sort = data['sort'];
+        if (contains('sortSaved'))  this.SAVED_sort = data['sortSaved'];
         this.allQuests.Set(this.Get());
     }
-    LoadOnline(quests) {
-        if (typeof(quests) !== 'object') return;
-        this.SAVED_quests = quests.map(quest => Object.assign(new MyQuest(), quest));
-        this.user.interface.console.AddLog('info', `${this.SAVED_quests.length} quests loaded`);
-        this.allQuests.Set(this.Get());
+    LoadOnline(data) {
+        if (typeof(data) !== 'object') return;
+        const contains = (key) => data.hasOwnProperty(key);
+        if (contains('data')) {
+            this.SAVED_quests = data['data'].map(quest => Object.assign(new MyQuest(), quest));
+            this.user.interface.console.AddLog('info', `${this.SAVED_quests.length} quests loaded`);
+            this.allQuests.Set(this.Get());
+        }
+        if (contains('sort')) this.sort = data['sort'];
     }
     Save() {
         const quests = {
             quests: this.SAVED_quests,
             additions: this.UNSAVED_additions,
             deletions: this.UNSAVED_deletions,
-            questsSort: this.questsSort,
+            sort: this.sort,
             sortSaved: this.SAVED_sort
         };
         return quests;
@@ -110,35 +114,55 @@ class MyQuests {
         let quests = [ ...this.SAVED_quests, ...this.UNSAVED_additions ];
 
         // Add new quests at the top (use created time as index)
-        quests.forEach(quest =>
-            this.questsSort.findIndex(created => quest.created === created) === -1 &&
-            this.questsSort.splice(0, 0, quest.created)
-        );
+        quests.forEach(quest => {
+            if (this.sort.findIndex(created => quest.created === created) === -1) {
+                this.sort.splice(0, 0, quest.created);
+                this.SAVED_sort = false;
+            }
+        });
 
         // Remove deleted quests from sort
-        this.questsSort = this.questsSort.filter(created => 
-            quests.findIndex(quest => quest.created === created) !== -1
-        );
+        this.sort = this.sort.filter(created => {
+            const index = quests.findIndex(quest => quest.created === created);
+            if (index !== -1) return true;
+            this.SAVED_sort = false;
+            return false;
+        });
 
-        return this.questsSort.map(created =>
+        return this.sort.map(created =>
             quests.find(quest => quest.created === created)
         );
     }
 
     IsUnsaved = () => {
-        return this.UNSAVED_additions.length || this.UNSAVED_deletions.length;
+        if (this.SAVED_sort === false) {
+            return true;
+        }
+        if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
+            return true;
+        }
+        return false;
     }
     GetUnsaved = () => {
-        let unsaved = [];
-        for (let a in this.UNSAVED_additions) {
-            const quest = this.UNSAVED_additions[a];
-            unsaved.push({ action: 'add', ...quest });
+        const data = {};
+
+        if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
+            let unsaved = [];
+            for (let a in this.UNSAVED_additions) {
+                const quest = this.UNSAVED_additions[a];
+                unsaved.push({ action: 'add', ...quest });
+            }
+            for (let a in this.UNSAVED_deletions) {
+                const quest = this.UNSAVED_deletions[a];
+                unsaved.push({ action: 'rem', ...quest });
+            }
+            data['data'] = unsaved;
         }
-        for (let a in this.UNSAVED_deletions) {
-            const quest = this.UNSAVED_deletions[a];
-            unsaved.push({ action: 'rem', ...quest });
+
+        if (this.SAVED_sort === false) {
+            data['sort'] = this.sort;
         }
-        return unsaved;
+        return data;
     }
     Purge = () => {
         this.SAVED_quests.push(...this.UNSAVED_additions);
@@ -268,21 +292,21 @@ class MyQuests {
      * @returns {boolean} Success of the operation
      */
     Move(quest, newIndex) {
-        if (!this.questsSort.includes(quest.created)) {
+        if (!this.sort.includes(quest.created)) {
             this.user.interface.console.AddLog('warn', `Quests - move failed: quest not found (${quest.title} ${newIndex})`);
             return false;
         }
-        if (newIndex < 0 || newIndex > this.questsSort.length) {
+        if (newIndex < 0 || newIndex > this.sort.length) {
             this.user.interface.console.AddLog('warn', `Quests - move failed: index out of range (${quest.title} ${newIndex})`);
             return false;
         }
-        const oldIndex = this.questsSort.indexOf(quest.created);
+        const oldIndex = this.sort.indexOf(quest.created);
         if (oldIndex === newIndex) {
             this.user.interface.console.AddLog('warn', `Quests - move failed: same index (${quest.title} ${newIndex})`);
             return false;
         }
-        this.questsSort.splice(oldIndex, 1);
-        this.questsSort.splice(newIndex, 0, quest.created);
+        this.sort.splice(oldIndex, 1);
+        this.sort.splice(newIndex, 0, quest.created);
         this.SAVED_sort = false;
         this.allQuests.Set(this.Get());
         return true;

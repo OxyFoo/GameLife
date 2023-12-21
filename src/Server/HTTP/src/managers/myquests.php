@@ -19,7 +19,7 @@ class MyQuests
      * @param Account $account
      * @return MyQuest[]
      */
-    public static function GetQuests($db, $account) {
+    public static function Get($db, $account) {
         $command = 'SELECT `Title`, `Comment`, `Created`, `Schedule`, `Skills` FROM TABLE WHERE `AccountID` = ?';
         $rows = $db->QueryPrepare('MyQuests', $command, 'i', [ $account->ID ]);
         if ($rows === false) ExitWithStatus('Error: getting myquests failed');
@@ -40,18 +40,41 @@ class MyQuests
         return $myquests;
     }
 
+    public static function Save($db, $account, $data) {
+        if (isset($data['data'])) {
+            self::Add($db, $account, $data['data']);
+        }
+        if (isset($data['sort'])) {
+            self::SetSort($db, $account, $data['sort']);
+        }
+    }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param string[] $questsSort
+     */
+    private static function SetSort($db, $account, $questsSort) {
+        $command = 'UPDATE TABLE SET `QuestsSort` = ? WHERE `ID` = ?';
+        $args = [ json_encode($questsSort), $account->ID ];
+        $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
+        if ($result === false) {
+            ExitWithStatus('Error: Saving quests sort failed');
+        }
+    }
+
     /**
      * @param DataBase $db
      * @param Account $account
      * @param array $myquests
      */
-    public static function AddQuests($db, $account, $myquests) {
+    private static function Add($db, $account, $myquests) {
         for ($i = 0; $i < count($myquests); $i++) {
             $myquest = $myquests[$i];
 
             // Check if quest is valid
-            $keysTodo = array_keys(get_object_vars(new MyQuestUnsaved()));
-            $wrongKeys = array_diff($keysTodo, array_keys((array)$myquest));
+            $keysQuest = array_keys(get_object_vars(new MyQuestUnsaved()));
+            $wrongKeys = array_diff($keysQuest, array_keys((array)$myquest));
             if (count($wrongKeys) > 0) {
                 continue;
             }

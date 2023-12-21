@@ -20,7 +20,7 @@ class Todoes
      * @param Account $account
      * @return Todo[]
      */
-    public static function GetTodoes($db, $account) {
+    public static function Get($db, $account) {
         $command = 'SELECT `Checked`, `Title`, `Description`, `Created`, `Deadline`, `Tasks` FROM TABLE WHERE `AccountID` = ?';
         $rows = $db->QueryPrepare('Todoes', $command, 'i', [ $account->ID ]);
         if ($rows === false) ExitWithStatus('Error: getting todoes failed');
@@ -49,12 +49,35 @@ class Todoes
         return $todoes;
     }
 
+    public static function Save($db, $account, $data) {
+        if (isset($data['content'])) {
+            self::Add($db, $account, $data['content']);
+        }
+        if (isset($data['sort'])) {
+            self::SetSort($db, $account, $data['sort']);
+        }
+    }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param string[] $todoesSort
+     */
+    private static function SetSort($db, $account, $todoesSort) {
+        $command = 'UPDATE TABLE SET `TodoesSort` = ? WHERE `ID` = ?';
+        $args = [ json_encode($todoesSort), $account->ID ];
+        $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
+        if ($result === false) {
+            ExitWithStatus('Error: Saving todoes sort failed');
+        }
+    }
+
     /**
      * @param DataBase $db
      * @param Account $account
      * @param TodoUnsaved[] $todoes
      */
-    public static function AddTodoes($db, $account, $todoes) {
+    private static function Add($db, $account, $todoes) {
         for ($i = 0; $i < count($todoes); $i++) {
             $todo = $todoes[$i];
 

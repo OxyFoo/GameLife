@@ -2,10 +2,11 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 
 import styles from './style';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Icon, Text } from 'Interface/Components';
+import { Text, Icon, Button } from 'Interface/Components';
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
 
 /**
@@ -18,6 +19,18 @@ function RenderPopup(props) {
         backgroundColor: themeManager.GetColor('background')
     };
 
+    const claimIndex = user.quests.nonzerodays.claimsList
+        .findIndex(claimList => claimList.daysCount !== claimList.claimed.length);
+    if (claimIndex === -1) {
+        return (
+            <View style={[styles.popup, stylePopup]}>
+                <Text style={styles.popupText}>
+                    {'[no-claim]'}
+                </Text>
+            </View>
+        );
+    }
+
     return (
         <View style={[styles.popup, stylePopup]}>
             <Text style={styles.popupText}>
@@ -28,13 +41,18 @@ function RenderPopup(props) {
                 style={styles.popupFlatList}
                 data={NONZERODAYS_REWARDS}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={(RenderItem)}
+                renderItem={(props) => RenderItem({ ...props, claimIndex })}
+                initialNumToRender={10}
+                getItemLayout={(data, index) => (
+                    { length: 60, offset: 60 * index, index }
+                )}
+                showsVerticalScrollIndicator={false}
             />
         </View>
     );
 }
 
-/** @param {{ item: Array<NonZeroDayRewardType>, index: number }} props */
+/** @param {{ item: Array<NonZeroDayRewardType>, index: number, claimIndex: number }} props */
 function RenderItem(props) {
     const lang = langManager.curr['dates']['names'];
 
@@ -50,6 +68,16 @@ function RenderItem(props) {
     const styleReward = {
         backgroundColor: themeManager.GetColor('background')
     };
+
+    const claimList = user.quests.nonzerodays.claimsList[props.claimIndex];
+
+    /** @type {'notclaimed' | 'claiming' | 'claimed'} */
+    let status = 'notclaimed';
+    if (claimList.claimed.includes(currentDay)) {
+        status = 'claimed';
+    } else if (claimList.daysCount >= currentDay) {
+        status = 'claiming';
+    }
 
     return (
         <View style={[styles.item, styleItem]}>
@@ -75,7 +103,15 @@ function RenderItem(props) {
             </View>
 
             <View style={styles.itemState}>
-                <Icon icon='check' color='success' />
+                {status === 'notclaimed' && (
+                    <Icon icon='cross' color='error' />
+                )}
+                {status === 'claiming' && (
+                    <Button style={styles.itemButton} color='main1' colorText='primary'>{'[CLAIM]'}</Button>
+                )}
+                {status === 'claimed' && (
+                    <Icon icon='check' color='success' />
+                )}
             </View>
         </View>
     );

@@ -159,7 +159,7 @@ class BackTodoList extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [ ...user.todoes.todoesSort ];
+        this.initialSort = [ ...user.todoes.sort ];
 
         GetAbsolutePosition(this.refFlatlist).then(pos => {
             this.tmpLayoutContainer = pos;
@@ -190,7 +190,7 @@ class BackTodoList extends React.Component {
 
         // Change todo order when dragging
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.todoes.todoesSort.indexOf(draggedItem.title);
+        const currIndex = user.todoes.sort.indexOf(draggedItem.title);
         if (index !== currIndex && user.todoes.Move(draggedItem, index)) {
             this.setState({ todoes: user.todoes.Get() });
         }
@@ -215,8 +215,8 @@ class BackTodoList extends React.Component {
         });
 
         // Save changes if todoes order changed (and not just a todo check)
-        if (this.initialSort.join() !== user.todoes.todoesSort.join() &&
-            this.initialSort.length === user.todoes.todoesSort.length) {
+        if (this.initialSort.join() !== user.todoes.sort.join() &&
+            this.initialSort.length === user.todoes.sort.length) {
                 user.GlobalSave();
         }
 

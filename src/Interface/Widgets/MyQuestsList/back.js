@@ -99,7 +99,7 @@ class BackQuestsList extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [ ...user.quests.myquests.questsSort ];
+        this.initialSort = [ ...user.quests.myquests.sort ];
 
         GetAbsolutePosition(this.refFlatlist).then(pos => {
             this.tmpLayoutContainer = pos;
@@ -130,7 +130,7 @@ class BackQuestsList extends React.Component {
 
         // Change quest order when dragging
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.quests.myquests.questsSort.indexOf(draggedItem.created);
+        const currIndex = user.quests.myquests.sort.indexOf(draggedItem.created);
         if (index !== currIndex && user.quests.myquests.Move(draggedItem, index)) {
             this.setState({ quests: user.quests.myquests.Get() });
         }
@@ -159,8 +159,8 @@ class BackQuestsList extends React.Component {
         });
 
         // Save changes if quests order changed (and not just a quest check)
-        if (this.initialSort.join() !== user.quests.myquests.questsSort.join() &&
-            this.initialSort.length === user.quests.myquests.questsSort.length) {
+        if (this.initialSort.join() !== user.quests.myquests.sort.join() &&
+            this.initialSort.length === user.quests.myquests.sort.length) {
                 user.GlobalSave();
         }
 

@@ -11,6 +11,7 @@ require('./src/classes/device.php');
 
 require('./src/managers/items.php');
 require('./src/managers/myquests.php');
+require('./src/managers/nonzerodays.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
 require('./src/managers/todoes.php');
@@ -304,19 +305,15 @@ class Commands {
         if (!isset($appDataToken, $dbDataToken)) return;
 
         $userData = array();
-        if (isset($account->Username, $account->Title)) {
-            $userData['username']         = $account->Username;
-            $userData['usernameTime']     = $account->LastChangeUsername;
-            $userData['title']            = $account->Title;
-            $userData['birthtime']        = $account->Birthtime;
-            $userData['lastbirthtime']    = $account->LastChangeBirth;
-            $userData['ox']               = $account->Ox;
-            $userData['questsSort']       = $account->QuestsSort;
-            $userData['todoesSort']       = $account->TodoesSort;
-            $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
-            $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
-            $userData['achievements']     = Achievements::Get($this->db, $account);
-        }
+        $userData['username']         = $account->Username;
+        $userData['usernameTime']     = $account->LastChangeUsername;
+        $userData['title']            = $account->Title;
+        $userData['birthtime']        = $account->Birthtime;
+        $userData['lastbirthtime']    = $account->LastChangeBirth;
+        $userData['ox']               = $account->Ox;
+        $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
+        $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
+        $userData['achievements']     = Achievements::Get($this->db, $account);
 
         // Some data, load only if needed
         if ($appDataToken != $dbDataToken) {
@@ -330,9 +327,18 @@ class Commands {
                 'buyToday' => Users::GetBuyToday($this->db, $account)
             );
             $userData['quests'] = array(
-                'myquests' => MyQuests::GetQuests($this->db, $account)
+                'myquests' => array(
+                    'data' => MyQuests::Get($this->db, $account),
+                    'sort' => $account->QuestsSort
+                ),
+                'nonzerodays' => array(
+                    'data' => NonZeroDays::Get($this->db, $account)
+                )
             );
-            $userData['todoes'] = Todoes::GetTodoes($this->db, $account);
+            $userData['todoes'] = array(
+                'data' => Todoes::Get($this->db, $account),
+                'sort' => $account->TodoesSort
+            );
             $userData['dataToken'] = $dbDataToken;
         }
 

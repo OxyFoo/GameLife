@@ -125,6 +125,9 @@ async function Initialisation(nextStep) {
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     user.interface.header.ShowAvatar(true);
 
+    // Loading: Quests
+    user.quests.nonzerodays.RefreshCaimsList();
+
     // Loading: Notifications
     const time_start_notification = new Date().getTime();
     Notifications.DisableAll().then(() => {

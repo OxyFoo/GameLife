@@ -2,6 +2,12 @@ import { DAY_TIME, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * 
+ * @typedef {Object} ClaimType
+ * @property {number} start Midnight Local TimeZone unix time of the first day
+ * @property {number} end Midnight Local TimeZone unix time of the last day
+ * @property {number} daysCount
+ * @property {Array<number>} claimed
  */
 
 class NonZeroQuest {
@@ -9,34 +15,59 @@ class NonZeroQuest {
     constructor(user) {
         this.user = user;
 
-        /** @type {number} */
-        this.lastIndexClaim = 0;
+        /** @type {Array<ClaimType>} */
+        this.claimsList = [];
+
+        /** @type {number} Last midnight unix time of the last day saved */
+        this.lastSavedTime = 0;
+
+        /** @type {boolean} */
+        this.SAVED_claimsList = true;
     }
 
     Clear() {
-        this.lastIndexClaim = 0;
+        this.claimsList = [];
+        this.lastSavedTime = 0;
+        this.SAVED_claimsList = true;
     }
-    Load(quests) {
-        const contains = (key) => quests.hasOwnProperty(key);
-        if (contains('lastIndexClaim')) this.lastIndexClaim = quests['lastIndexClaim'];
+    Load(data) {
+        const contains = (key) => data.hasOwnProperty(key);
+        if (contains('claimsList')) this.claimsList = data['claimsList'];
+        if (contains('lastSavedTime')) this.lastSavedTime = data['lastSavedTime'];
+        if (contains('SAVED_claimsList')) this.SAVED_claimsList = data['SAVED_claimsList'];
     }
-    LoadOnline(quests) {
-        if (typeof(quests) !== 'object') return;
+    LoadOnline(data) {
+        if (typeof(data) !== 'object') return;
+        const contains = (key) => data.hasOwnProperty(key);
+        if (contains('data')) this.claimsList = data['data'];
+        if (this.claimsList.length > 0) {
+            this.lastSavedTime = this.claimsList[this.claimsList.length - 1].start;
+        }
     }
     Save() {
         const quests = {
-            lastIndexClaim: this.lastIndexClaim
+            claimsList: this.claimsList,
+            lastSavedTime: this.lastSavedTime,
+            SAVED_claimsList: this.SAVED_claimsList
         };
         return quests;
     }
 
     IsUnsaved = () => {
-        return false;
+        return !this.SAVED_claimsList;
     }
     GetUnsaved = () => {
-        return [];
+        return {
+            data: this.claimsList,
+            lastSavedTime: this.lastSavedTime
+        };
     }
     Purge = () => {
+        this.lastSavedTime = 0;
+        if (this.claimsList.length > 0) {
+            this.lastSavedTime = this.claimsList[this.claimsList.length - 1].start;
+        }
+        this.SAVED_claimsList = true;
     }
 
     GetConsecutiveDays() {
@@ -56,6 +87,47 @@ class NonZeroQuest {
                 return combo;
             }
             combo++;
+        }
+    }
+
+    RefreshCaimsList() {
+        let timeStart = 0;
+        if (this.claimsList.length > 0) {
+            timeStart = this.claimsList[this.claimsList.length - 1].end;
+        }
+
+        const timeNow = GetTime(undefined, 'local');
+        const allActivitiesTime = this.user.activities.Get()
+            .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant')
+            .map(activity => activity.startTime + activity.timezone * 60 * 60)
+            .filter(time => time > timeStart && time < timeNow - 2 * DAY_TIME);
+
+        let claimIndex = this.claimsList.length === 0 ? -1 : 0;
+        for (let i = 0; i < allActivitiesTime.length; i++) {
+            if (claimIndex !== -1) {
+                if (allActivitiesTime[i] < this.claimsList[claimIndex].end) {
+                    continue;
+                }
+
+                if (allActivitiesTime[i] < this.claimsList[claimIndex].end + DAY_TIME) {
+                    // Update claim
+                    this.claimsList[claimIndex].end += DAY_TIME;
+                    this.claimsList[claimIndex].daysCount++;
+                    this.SAVED_claimsList = false;
+                    continue;
+                }
+            }
+
+            // New claim
+            const midnight = allActivitiesTime[i] - allActivitiesTime[i] % DAY_TIME;
+            this.claimsList.push({
+                start: midnight,
+                end: midnight + DAY_TIME,
+                daysCount: 1,
+                claimed: []
+            });
+            claimIndex++;
+            this.SAVED_claimsList = false;
         }
     }
 }

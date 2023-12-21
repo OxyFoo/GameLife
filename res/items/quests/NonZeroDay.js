@@ -1,8 +1,12 @@
 /**
- * @typedef {{ type: 'ox' | 'title' | 'chest', value: number }} NonZeroDayRewardType
+ * @typedef {{ type: 'ox' | 'chest', value: number }} NonZeroDayRewardType
  */
 
-/** @type {Array<Array<NonZeroDayRewardType>>} */
+/**
+ * /!\ Warning: This is not linked to the server side \
+ * Server side data are in `src/Server/HTTP/src/Managers/NZD_rewards.php`
+ * @type {Array<Array<NonZeroDayRewardType>>}
+ */
 const NONZERODAYS_REWARDS = [
     [{ type: 'ox', value: 1 }],
     [{ type: 'ox', value: 1 }],

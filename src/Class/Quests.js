@@ -1,5 +1,5 @@
 import MyQuests from './Quests/MyQuests';
-import NonZeroQuest from './Quests/NonZeroQuest';
+import NonZeroDays from './Quests/NonZeroDays';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -11,7 +11,7 @@ class Quests {
         this.user = user;
 
         this.myquests = new MyQuests(user);
-        this.nonzerodays = new NonZeroQuest(user);
+        this.nonzerodays = new NonZeroDays(user);
     }
 
     Clear() {

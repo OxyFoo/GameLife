@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     },
 
     item: {
+        height: 56,
         marginTop: 12,
         padding: 6,
         flexDirection: 'row',
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     },
     content: {
         flexDirection: 'row',
-        alignItems: 'stretch'
+        alignItems: 'center'
     },
     itemDay: {
         width: 'auto',
@@ -35,17 +36,27 @@ const styles = StyleSheet.create({
         borderRadius: 6
     },
 
-    flatlistReward: {
-        marginLeft: 12
+    rewardItem: {
+        width: 48,
+        height: 48,
+        padding: 6,
+        marginLeft: 8,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'visible'
     },
-    flatlistRewardSeparation: {
-        width: 6
+    rewardImage: {
+        width: '100%',
+        height: '100%'
     },
-    itemReward: {
-        aspectRatio: 1
+    rewardValue: {
+        position: 'absolute',
+        right: -32,
+        bottom: -12
     },
 
-    itemState: {
+    claimState: {
         aspectRatio: 1,
         position: 'absolute',
         top: 0,
@@ -55,10 +66,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    itemButton: {
-        width: 64,
+    claimButton: {
+        width: 72,
         marginRight: 12,
-        paddingHorizontal: 0
+        paddingHorizontal: 6
     }
 });
 

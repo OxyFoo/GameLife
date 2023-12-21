@@ -117,6 +117,74 @@ class NonZeroDays
             }
         }
     }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param Device $device
+     * @param int $claimListStart
+     * @param int $dayIndex
+     * @return int[]|false New items IDs or false if failed
+     */
+    public static function ClaimReward($db, $account, $device, $claimListStart, $dayIndex) {
+        global $NONZERODAYS_REWARDS;
+
+        $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Start` = ?';
+        $rows = $db->QueryPrepare('NonZeroDays', $command, 'ii', [ $account->ID, $claimListStart ]);
+        if ($rows === false) ExitWithStatus('Error: claiming nzd failed (get claimed)');
+
+        // ClaimList not found
+        if (count($rows) !== 1) {
+            $message = 'ClaimList count is ' . count($rows) . " (expected 1) for '$claimListStart,$dayIndex'";
+            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', $message);
+            return false;
+        }
+
+        // Check if already claimed
+        $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Type` = ? AND `Data` = ?';
+        $args = [ $account->ID, 'claimNZD', "$claimListStart,$dayIndex" ];
+        $rows = $db->QueryPrepare('Logs', $command, 'iss', $args);
+        if ($rows === false) ExitWithStatus('Error: claiming nzd failed (check claimed)');
+
+        // Already claimed
+        if (count($rows) > 0) {
+            $message = "Already claimed for '$claimListStart,$dayIndex'";
+            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', $message);
+            return false;
+        }
+
+        $newItems = array();
+        $rewards = $NONZERODAYS_REWARDS[$dayIndex];
+        for ($i = 0; $i < count($rewards); $i++) {
+            $type = $rewards[$i]['type'];
+            $value = $rewards[$i]['value'];
+
+            switch ($type) {
+                case 'ox':
+                    if (Users::AddOx($db, $account->ID, $value) === false) {
+                        return false;
+                    }
+                    $account->Ox += $value;
+                    break;
+                case 'chest':
+                    $chestItemID = Shop::BuyRandomChest($db, $account, $device, $value + 1);
+                    if ($chestItemID === false) {
+                        return false;
+                    }
+                    array_push($newItems, $chestItemID);
+                    break;
+                default:
+                    $message = "Unknown reward type '$type' for '$claimListStart,$dayIndex'";
+                    $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', $message);
+                    return false;
+            }
+        }
+
+        // Confirm claim
+        $db->AddLog($account->ID, $device->ID, 'claimNZD', "$claimListStart,$dayIndex");
+
+        return $newItems;
+    }
 }
 
 ?>

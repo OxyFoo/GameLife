@@ -63,6 +63,7 @@
             "never": "Never",
             "weekly": "Weekly",
             "monthly": "Monthly",
+            "day-min": "d",
             "seconds-min": "m",
             "hours-min": "h"
         },
@@ -632,7 +633,12 @@
     },
 
     "nonzerodays": {
-        "container-title": "Non Zero Days"
+        "container-title": "Non Zero Days",
+        "claim": "Claim",
+        "claim-in": "Claim dans {}",
+
+        "alert-claim-error-title": "Error",
+        "alert-claim-error-text": "An error has occurred, please try again later."
     },
 
     "wait": {

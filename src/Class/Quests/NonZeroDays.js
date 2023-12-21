@@ -10,7 +10,7 @@ import { DAY_TIME, GetTime } from 'Utils/Time';
  * @property {Array<number>} claimed
  */
 
-class NonZeroQuest {
+class NonZeroDays {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
@@ -23,6 +23,9 @@ class NonZeroQuest {
 
         /** @type {boolean} */
         this.SAVED_claimsList = true;
+
+        /** @type {boolean} Currently claiming (to prevent multiple claims) */
+        this.claiming = false;
     }
 
     Clear() {
@@ -130,6 +133,54 @@ class NonZeroQuest {
             this.SAVED_claimsList = false;
         }
     }
+
+    /**
+     * @param {number} claimListStart
+     * @param {number} dayIndex
+     * @returns {Promise<boolean>} True if the claim was successful
+     */
+    async ClaimReward(claimListStart, dayIndex) {
+        if (this.claiming) return false;
+        this.claiming = true;
+
+        const data = {
+            'claimListStart': claimListStart,
+            'dayIndex': dayIndex,
+            'dataToken': this.user.server.dataToken
+        };
+        const response = await this.user.server.Request('claimNonZeroDays', data);
+        if (response === null) return false;
+
+        // Update Ox amount
+        if (response.hasOwnProperty('ox')) {
+            this.user.informations.ox.Set(response['ox']);
+        }
+
+        // Update inventory
+        if (response.hasOwnProperty('newItems')) {
+            const newItems = response['newItems'];
+            this.user.inventory.stuffs.push(...newItems);
+        }
+
+        // Update claims list
+        const claimList = this.claimsList.find(claim => claim.start === claimListStart);
+        if (claimList === undefined) {
+            this.claiming = false;
+            return false;
+        }
+
+        claimList.claimed.push(dayIndex + 1);
+        this.SAVED_claimsList = false;
+
+        // Save inventory
+        await this.user.LocalSave();
+
+        // TODO: Go to chest page
+        //this.user.interface.ChangePage('');
+
+        this.claiming = false;
+        return true;
+    }
 }
 
-export default NonZeroQuest;
+export default NonZeroDays;

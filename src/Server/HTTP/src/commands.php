@@ -12,6 +12,7 @@ require('./src/classes/device.php');
 require('./src/managers/items.php');
 require('./src/managers/myquests.php');
 require('./src/managers/nonzerodays.php');
+require('./src/managers/NZD_rewards.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
 require('./src/managers/todoes.php');
@@ -425,11 +426,13 @@ class Commands {
         $account = $this->account;
         $device = $this->device;
 
-        $newItems = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
-        if ($newItems === false) return;
+        $newItemID = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
+        if ($newItemID === false) return;
 
         $this->output['ox'] = $account->Ox;
-        $this->output['newItems'] = $newItems;
+        $this->output['newItems'] = array(
+            'items' => [ $newItemID ]
+        );
         $this->output['status'] = 'ok';
     }
 
@@ -485,6 +488,25 @@ class Commands {
 
         $this->output['ox'] = $ox;
         $this->output['stuffs'] = Items::GetInventory($this->db, $account);
+        $this->output['status'] = 'ok';
+    }
+
+    public function ClaimNonZeroDays() {
+        $claimListStart = $this->data['claimListStart'];
+        $dayIndex = $this->data['dayIndex'];
+        if (!isset($claimListStart, $dayIndex) || !$this->tokenChecked) return;
+
+        $newItemsIDs = NonZeroDays::ClaimReward(
+            $this->db,
+            $this->account,
+            $this->device,
+            $claimListStart,
+            $dayIndex
+        );
+        if ($newItemsIDs === false) return;
+
+        $this->output['ox'] = $this->account->Ox;
+        $this->output['newItems'] = $newItemsIDs;
         $this->output['status'] = 'ok';
     }
 

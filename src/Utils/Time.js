@@ -78,12 +78,11 @@ function GetAge(time) {
 
 /**
  * Time until tomorrow midnight
- * @returns {string} HH:MM
+ * @param {number} [now] in seconds
+ * @returns {number} time in seconds
  */
-function GetTimeToTomorrow() {
-    const today = GetTime(undefined, 'local');
-    const delta = (24 * 60 * 60) - today % (24 * 60 * 60);
-    return TimeToFormatString(delta);
+function GetTimeToTomorrow(now = GetTime()) {
+    return (24 * 60 * 60) - now % (24 * 60 * 60);
 }
 
 /**

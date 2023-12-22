@@ -25,6 +25,10 @@ const styles = StyleSheet.create({
     dyeAmountPrice: {
         flexDirection: 'row'
     },
+    dyeOxImage: {
+        width: 24,
+        aspectRatio: 1
+    },
 
     dyeDecoration: {
         position: 'absolute',

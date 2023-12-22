@@ -3,10 +3,10 @@ import { Animated, Image, View } from 'react-native';
 
 import styles from './style';
 import BackChestReward from './back';
-import { IMG_CHESTS } from './chests';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { Page, Frame, Text, Button } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
@@ -66,6 +66,7 @@ class ChestReward extends BackChestReward {
                             characters={[ this.character ]}
                             onlyItems={true}
                             size={this.characterSize}
+                            loadingTime={0}
                         />
                     </Animated.View>
                 </Animated.View>

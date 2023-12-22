@@ -8,7 +8,8 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Button, Text, Icon, IconCheckable } from 'Interface/Components';
+import { IMG_OX } from 'Ressources/items/currencies/currencies';
+import { Button, Text, IconCheckable } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').Target} Target
@@ -70,7 +71,7 @@ class ShopItems extends BackShopItems {
                         {/** Chest price */}
                         <View style={styles.itemPrice}>
                             <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
-                            <Icon icon='ox' color='main1' size={20} />
+                            <Image style={styles.itemOxImage} source={IMG_OX} />
                         </View>
 
                         {/** Decoration */}

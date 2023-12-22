@@ -5,9 +5,10 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
-import { IMG_OX, IMG_CHESTS } from './images';
 
+import IMG_CHESTS from 'Ressources/items/chests/chests';
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
+import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import { Text, Icon, Button } from 'Interface/Components';
 import { DateToFormatString } from 'Utils/Date';
 import { GetDate, GetTimeToTomorrow, TimeToFormatString } from 'Utils/Time';

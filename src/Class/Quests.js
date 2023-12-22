@@ -16,6 +16,7 @@ class Quests {
 
     Clear() {
         this.myquests.Clear();
+        this.nonzerodays.Clear();
     }
     Load(quests) {
         const contains = (key) => quests.hasOwnProperty(key);

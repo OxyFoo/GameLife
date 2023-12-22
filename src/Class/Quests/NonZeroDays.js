@@ -1,5 +1,6 @@
 import { DAY_TIME, GetTime } from 'Utils/Time';
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
+import DynamicVar from 'Utils/DynamicVar';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -16,11 +17,8 @@ class NonZeroDays {
     constructor(user) {
         this.user = user;
 
-        /** @type {Array<ClaimType>} */
-        this.claimsList = [];
-
-        /** @type {number} Last midnight unix time of the last day saved */
-        this.lastSavedTime = 0;
+        /** @type {DynamicVar<Array<ClaimType>>} */
+        this.claimsList = new DynamicVar([]);
 
         /** @type {boolean} */
         this.SAVED_claimsList = true;
@@ -30,28 +28,22 @@ class NonZeroDays {
     }
 
     Clear() {
-        this.claimsList = [];
-        this.lastSavedTime = 0;
+        this.claimsList.Set([]);
         this.SAVED_claimsList = true;
     }
     Load(data) {
         const contains = (key) => data.hasOwnProperty(key);
-        if (contains('claimsList')) this.claimsList = data['claimsList'];
-        if (contains('lastSavedTime')) this.lastSavedTime = data['lastSavedTime'];
+        if (contains('claimsList')) this.claimsList.Set(data['claimsList']);
         if (contains('SAVED_claimsList')) this.SAVED_claimsList = data['SAVED_claimsList'];
     }
     LoadOnline(data) {
         if (typeof(data) !== 'object') return;
         const contains = (key) => data.hasOwnProperty(key);
-        if (contains('data')) this.claimsList = data['data'];
-        if (this.claimsList.length > 0) {
-            this.lastSavedTime = this.claimsList[this.claimsList.length - 1].start;
-        }
+        if (contains('data')) this.claimsList.Set(data['data']);
     }
     Save() {
         const quests = {
-            claimsList: this.claimsList,
-            lastSavedTime: this.lastSavedTime,
+            claimsList: this.claimsList.Get(),
             SAVED_claimsList: this.SAVED_claimsList
         };
         return quests;
@@ -62,15 +54,10 @@ class NonZeroDays {
     }
     GetUnsaved = () => {
         return {
-            data: this.claimsList,
-            lastSavedTime: this.lastSavedTime
+            data: this.claimsList.Get()
         };
     }
     Purge = () => {
-        this.lastSavedTime = 0;
-        if (this.claimsList.length > 0) {
-            this.lastSavedTime = this.claimsList[this.claimsList.length - 1].start;
-        }
         this.SAVED_claimsList = true;
     }
 
@@ -95,9 +82,11 @@ class NonZeroDays {
     }
 
     RefreshCaimsList() {
+        const claimsList = this.claimsList.Get();
+
         let timeStart = 0;
-        if (this.claimsList.length > 0) {
-            timeStart = this.claimsList[this.claimsList.length - 1].end;
+        if (claimsList.length > 0) {
+            timeStart = claimsList[claimsList.length - 1].end;
         }
 
         const timeNow = GetTime(undefined, 'local');
@@ -106,17 +95,17 @@ class NonZeroDays {
             .map(activity => activity.startTime + activity.timezone * 60 * 60)
             .filter(time => time > timeStart && time < timeNow - 2 * DAY_TIME);
 
-        let claimIndex = this.claimsList.length === 0 ? -1 : 0;
+        let claimIndex = claimsList.length === 0 ? -1 : 0;
         for (let i = 0; i < allActivitiesTime.length; i++) {
             if (claimIndex !== -1) {
-                if (allActivitiesTime[i] < this.claimsList[claimIndex].end) {
+                if (allActivitiesTime[i] < claimsList[claimIndex].end) {
                     continue;
                 }
 
-                if (allActivitiesTime[i] < this.claimsList[claimIndex].end + DAY_TIME) {
+                if (allActivitiesTime[i] < claimsList[claimIndex].end + DAY_TIME) {
                     // Update claim
-                    this.claimsList[claimIndex].end += DAY_TIME;
-                    this.claimsList[claimIndex].daysCount++;
+                    claimsList[claimIndex].end += DAY_TIME;
+                    claimsList[claimIndex].daysCount++;
                     this.SAVED_claimsList = false;
                     continue;
                 }
@@ -124,7 +113,7 @@ class NonZeroDays {
 
             // New claim
             const midnight = allActivitiesTime[i] - allActivitiesTime[i] % DAY_TIME;
-            this.claimsList.push({
+            claimsList.push({
                 start: midnight,
                 end: midnight + DAY_TIME,
                 daysCount: 1,
@@ -133,6 +122,8 @@ class NonZeroDays {
             claimIndex++;
             this.SAVED_claimsList = false;
         }
+
+        this.claimsList.Set(claimsList);
     }
 
     /**
@@ -141,7 +132,7 @@ class NonZeroDays {
      * @returns {Promise<boolean>} True if the claim was successful
      */
     async ClaimReward(claimListStart, dayIndex) {
-        if (this.claiming) return false;
+        if (this.claiming) return null;
         this.claiming = true;
 
         const data = {
@@ -163,16 +154,20 @@ class NonZeroDays {
         }
 
         const newItems = response['newItems'];
-        this.user.inventory.stuffs.push(...newItems);
+        if (newItems.length > 0) {
+            this.user.inventory.stuffs.push(...newItems);
+        }
 
         // Update claims list
-        const claimList = this.claimsList.find(claim => claim.start === claimListStart);
-        if (claimList === undefined) {
+        const claimsList = this.claimsList.Get();
+        const claimListIndex = claimsList.findIndex(claim => claim.start === claimListStart);
+        if (claimListIndex === -1) {
             this.claiming = false;
             return false;
         }
 
-        claimList.claimed.push(dayIndex + 1);
+        claimsList[claimListIndex].claimed.push(dayIndex + 1);
+        this.claimsList.Set(claimsList);
         this.SAVED_claimsList = false;
 
         // Save inventory

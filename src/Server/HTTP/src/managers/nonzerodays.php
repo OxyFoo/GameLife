@@ -35,8 +35,8 @@ class NonZeroDays
     }
 
     public static function Save($db, $account, $data) {
-        if (isset($data['data'], $data['lastSavedTime'])) {
-            self::Add($db, $account, $data['data'], $data['lastSavedTime']);
+        if (isset($data['data'])) {
+            self::Add($db, $account, $data['data']);
         } else {
             ExitWithStatus('Error: saving nzd failed (no data)');
         }
@@ -46,9 +46,15 @@ class NonZeroDays
      * @param DataBase $db
      * @param Account $account
      * @param array $data
-     * @param int $lastSavedTime
      */
-    private static function Add($db, $account, $data, $lastSavedTime) {
+    private static function Add($db, $account, $data) {
+        $maxSavedTime = 0;
+        $command = 'SELECT `Start` FROM TABLE WHERE `AccountID` = ? ORDER BY `Start` DESC LIMIT 1';
+        $rows = $db->QueryPrepare('NonZeroDays', $command, 'i', [ $account->ID ]);
+        if ($rows !== false && count($rows) > 0) {
+            $maxSavedTime = intval($rows[0]['Start']);
+        }
+
         for ($i = 0; $i < count($data); $i++) {
             $nzd = $data[$i];
 
@@ -64,17 +70,13 @@ class NonZeroDays
             $daysCount = $nzd['daysCount'];             // int
             $claimed = json_encode($nzd['claimed']);    // object => string
 
-            // Already saved
-            if ($start < $lastSavedTime) {
-                continue;
-            }
-
             // Check if NZD exists
             $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Start` = ?';
             $reqQuest = $db->QueryPrepare('NonZeroDays', $command, 'ii', [ $account->ID, $start ]);
             if ($reqQuest === false) ExitWithStatus('Error: adding NZD failed');
             $exists = count($reqQuest) > 0;
 
+            $alreadySaved = $start < $maxSavedTime;
             // Add NZD
             if (!$exists) {
                 $command = 'INSERT INTO TABLE (
@@ -97,8 +99,23 @@ class NonZeroDays
                 if ($r === false) ExitWithStatus('Error: saving nzd failed (add)');
             }
 
-            // Update NZD
-            else if ($exists) {
+            // Update only claimed
+            else if ($exists && $alreadySaved) {
+                $command = 'UPDATE TABLE SET
+                    `Claimed` = ?
+                    WHERE `ID` = ?';
+                $args = [
+                    $claimed,
+                    $reqQuest[0]['ID']
+                ];
+                $types = 'si';
+
+                $r = $db->QueryPrepare('NonZeroDays', $command, $types, $args);
+                if ($r === false) ExitWithStatus('Error: saving nzd failed (update claimed)');
+            }
+
+            // Update all NZD
+            else if ($exists && !$alreadySaved) {
                 $command = 'UPDATE TABLE SET
                     `End` = ?,
                     `DaysCount` = ?,
@@ -150,7 +167,7 @@ class NonZeroDays
         if (count($rows) > 0) {
             $message = "Already claimed for '$claimListStart,$dayIndex'";
             $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', $message);
-            return false;
+            return array();
         }
 
         $newItems = array();

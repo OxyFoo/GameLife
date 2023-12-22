@@ -15,7 +15,7 @@ const NonZeroDayProps = {
 
 class NonZeroDayBack extends React.Component {
     openPopup = () => {
-        user.interface.popup.Open('custom', RenderPopup, undefined);
+        user.interface.popup.Open('custom', () => <RenderPopup />, undefined);
     }
 }
 

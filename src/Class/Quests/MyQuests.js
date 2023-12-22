@@ -388,7 +388,7 @@ class MyQuests {
         while (true) {
             const week = this
                 .GetDays(quest, timeNow - i++ * DAY_TIME * 7)
-                .filter(day => !['disabled', 'normal', 'filling'].includes(day.state))
+                .filter(day => !['disabled', 'normal'].includes(day.state))
                 .reverse();
 
             if (week.length === 0 && i !== 1) {

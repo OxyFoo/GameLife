@@ -5,6 +5,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
+import { IMG_OX, IMG_CHESTS } from './images';
 
 import { Text, Icon, Button } from 'Interface/Components';
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
@@ -13,14 +14,6 @@ import { GetTimeToTomorrow, TimeToFormatString } from 'Utils/Time';
 /**
  * @typedef {import('Ressources/items/quests/NonZeroDay').NonZeroDayRewardType} NonZeroDayRewardType
  */
-
-const IMG_OX = require('Ressources/items/currencies/ox.png');
-const IMG_CHESTS = [
-    require('Ressources/items/chests/common.png'),
-    require('Ressources/items/chests/rare.png'),
-    require('Ressources/items/chests/epic.png'),
-    require('Ressources/items/chests/legendary.png')
-];
 
 function RenderPopup(props) {
     const lang = langManager.curr['nonzerodays'];

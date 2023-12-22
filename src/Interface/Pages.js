@@ -3,6 +3,7 @@ import Achievements from './Pages/Achievements/index';
 import Activity from './Pages/Activity/index';
 import ActivityTimer from './Pages/ActivityTimer/index';
 import Calendar from './Pages/Calendar/index';
+import ChestReward from './Pages/ChestReward/index';
 import Display from './Pages/Display/index';
 import Home from './Pages/Home/index';
 import Loading from './Pages/Loading/index';
@@ -29,6 +30,7 @@ const PAGES = {
     'activity':         Activity,
     'activitytimer':    ActivityTimer,
     'calendar':         Calendar,
+    'chestreward':      ChestReward,
     'display':          Display,
     'home':             Home,
     'loading':          Loading,

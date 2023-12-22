@@ -449,9 +449,7 @@
             "chest-random-epic": "Coffre des légendes",
 
             "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",
-            "popup-chest-button": "Ouvrir pour {} Ox",
-            "popup-buysuccess-title": "Achat réussi",
-            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
+            "popup-chest-button": "Ouvrir pour {} Ox"
         },
 
         "targetedChests": {
@@ -463,9 +461,7 @@
             },
 
             "popup-chest-text": "Tu veux ouvrir un coffre {} pour obtenir un item de type \"{}\" pour {} Ox ?",
-            "popup-chest-button": "Ouvrir pour {} Ox",
-            "popup-buysuccess-title": "Achat réussi",
-            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
+            "popup-chest-button": "Ouvrir pour {} Ox"
         },
 
         "dyes": {

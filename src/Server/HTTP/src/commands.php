@@ -426,13 +426,11 @@ class Commands {
         $account = $this->account;
         $device = $this->device;
 
-        $newItemID = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
-        if ($newItemID === false) return;
+        $newItem = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
+        if ($newItem === false) return;
 
         $this->output['ox'] = $account->Ox;
-        $this->output['newItems'] = array(
-            'items' => [ $newItemID ]
-        );
+        $this->output['newItem'] = $newItem;
         $this->output['status'] = 'ok';
     }
 
@@ -450,11 +448,11 @@ class Commands {
             return false;
         }
 
-        $newItems = Shop::BuyTargetChest($this->db, $account, $device, $slot, $rarity);
-        if ($newItems === false) return;
+        $newItem = Shop::BuyTargetChest($this->db, $account, $device, $slot, $rarity);
+        if ($newItem === false) return;
 
         $this->output['ox'] = $account->Ox;
-        $this->output['newItems'] = $newItems;
+        $this->output['newItem'] = $newItem;
         $this->output['status'] = 'ok';
     }
 
@@ -496,17 +494,17 @@ class Commands {
         $dayIndex = $this->data['dayIndex'];
         if (!isset($claimListStart, $dayIndex) || !$this->tokenChecked) return;
 
-        $newItemsIDs = NonZeroDays::ClaimReward(
+        $newItems = NonZeroDays::ClaimReward(
             $this->db,
             $this->account,
             $this->device,
             $claimListStart,
             $dayIndex
         );
-        if ($newItemsIDs === false) return;
+        if ($newItems === false) return;
 
         $this->output['ox'] = $this->account->Ox;
-        $this->output['newItems'] = $newItemsIDs;
+        $this->output['newItems'] = $newItems;
         $this->output['status'] = 'ok';
     }
 

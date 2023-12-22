@@ -449,9 +449,7 @@
             "chest-random-epic": "Chest of legends",
 
             "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
-            "popup-chest-button": "Open for {} Ox",
-            "popup-buysuccess-title": "Successful purchase",
-            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+            "popup-chest-button": "Open for {} Ox"
         },
 
         "targetedChests": {
@@ -463,9 +461,7 @@
             },
 
             "popup-chest-text": "You want to open a {} chest to get an item of type \"{}\" for {} Ox?",
-            "popup-chest-button": "Open for {} Ox",
-            "popup-buysuccess-title": "Successful purchase",
-            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+            "popup-chest-button": "Open for {} Ox"
         },
 
         "dyes": {

@@ -1,4 +1,5 @@
 import { DAY_TIME, GetTime } from 'Utils/Time';
+import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -157,10 +158,12 @@ class NonZeroDays {
         }
 
         // Update inventory
-        if (response.hasOwnProperty('newItems')) {
-            const newItems = response['newItems'];
-            this.user.inventory.stuffs.push(...newItems);
+        if (!response.hasOwnProperty('newItems')) {
+            return false;
         }
+
+        const newItems = response['newItems'];
+        this.user.inventory.stuffs.push(...newItems);
 
         // Update claims list
         const claimList = this.claimsList.find(claim => claim.start === claimListStart);
@@ -175,8 +178,16 @@ class NonZeroDays {
         // Save inventory
         await this.user.LocalSave();
 
-        // TODO: Go to chest page
-        //this.user.interface.ChangePage('');
+        // Go to chest page
+        const rewardIndex = NONZERODAYS_REWARDS[dayIndex].findIndex(reward => reward.type === 'chest');
+        if (rewardIndex !== -1) {
+            const args = {
+                itemID: newItems[0]['ItemID'],
+                chestRarity: NONZERODAYS_REWARDS[dayIndex][rewardIndex].value - 1,
+                callback: this.user.interface.BackHandle
+            };
+            this.user.interface.ChangePage('chestreward', args, true);
+        }
 
         this.claiming = false;
         return true;

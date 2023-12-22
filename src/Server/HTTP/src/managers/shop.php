@@ -85,7 +85,7 @@ class Shop
      * @param Account $account
      * @param Device $device
      * @param int $rarity 0 = common, 1 = rare, 2 = epic
-     * @return int|false Return item ID if success, false otherwise
+     * @return object|false Return item if success, false otherwise
      */
     public static function BuyRandomChest($db, $account, $device, $rarity) {
         if ($rarity < 0 || $rarity > 2) return false;
@@ -149,7 +149,7 @@ class Shop
      * @param Device $device
      * @param 'hair'|'top'|'bottom'|'shoes' $slot
      * @param int $rarity 0 = common, 1 = rare, 2 = epic
-     * @return string[]|false Return items ID if success, false otherwise
+     * @return object|false Return items if success, false otherwise
      */
     public static function BuyTargetChest($db, $account, $device, $slot, $rarity) {
         $rarities = array('common', 'rare', 'epic', 'legendary');
@@ -202,9 +202,7 @@ class Shop
         // Add result in logs and return new values (item, ox ?)
         $db->AddLog($account->ID, $device->ID, 'buyRandomChest', "$rarity/$randomRarity/$randomItem[ID]");
 
-        return array(
-            'items' => [ $addedItem ]
-        );
+        return $addedItem;
     }
 
     /**

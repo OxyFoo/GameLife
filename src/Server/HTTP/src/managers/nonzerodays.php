@@ -167,11 +167,11 @@ class NonZeroDays
                     $account->Ox += $value;
                     break;
                 case 'chest':
-                    $chestItemID = Shop::BuyRandomChest($db, $account, $device, $value + 1);
-                    if ($chestItemID === false) {
+                    $chestItem = Shop::BuyRandomChest($db, $account, $device, $value + 1);
+                    if ($chestItem === false) {
                         return false;
                     }
-                    array_push($newItems, $chestItemID);
+                    array_push($newItems, $chestItem);
                     break;
                 default:
                     $message = "Unknown reward type '$type' for '$claimListStart,$dayIndex'";

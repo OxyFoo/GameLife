@@ -6,11 +6,12 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Character, PageBase } from 'Interface/Components';
-import { SpringAnimation } from 'Utils/Animations';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 class BackChestReward extends PageBase {
     state = {
         animGlobal: new Animated.Value(.7),
+        animChest: new Animated.Value(0),
         animItem: new Animated.Value(0),
         animInteractions: new Animated.Value(0)
     }
@@ -46,6 +47,7 @@ class BackChestReward extends PageBase {
         super.componentDidMount();
 
         SpringAnimation(this.state.animGlobal, 1).start();
+        TimingAnimation(this.state.animChest, 4, 1000).start();
         this.timeout1 = setTimeout(() => {
             SpringAnimation(this.state.animItem, 1).start();
         }, 1000);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Image, View } from 'react-native';
+import { Animated, Image } from 'react-native';
 
 import styles from './style';
 import BackChestReward from './back';
@@ -18,6 +18,17 @@ class ChestReward extends BackChestReward {
             borderColor: this.rarityColor,
             backgroundColor: themeManager.GetColor('backgroundCard')
         };
+
+        // Shake the chest
+        const styleChestAnimation = {
+            transform: [{
+                rotateZ: this.state.animChest.interpolate({
+                    inputRange: [0, 1, 2, 3, 4],
+                    outputRange: ['0deg', '1deg', '-1deg', '1deg', '0deg']
+                })
+            }]
+        };
+
         const styleText = {
             opacity: this.state.animItem,
             transform: [
@@ -47,12 +58,12 @@ class ChestReward extends BackChestReward {
                     ]}
                 >
                     {/* Chest */}
-                    <View style={styles.chestContainer}>
+                    <Animated.View style={[styleChestAnimation, styles.chestContainer]}>
                         <Image
                             style={styles.chestImage}
                             source={IMG_CHESTS[this.chestRarity]}
                         />
-                    </View>
+                    </Animated.View>
 
                     {/* Item */}
                     <Animated.View

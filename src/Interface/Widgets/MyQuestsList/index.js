@@ -70,6 +70,7 @@ class MyQuestsList extends BackQuestsList {
                 text={lang['container-title']}
                 icon={'addSquare'}
                 onIconPress={this.addQuest}
+                colorNextGen
             >
                 <QuestSelection
                     draggedItem={draggedItem}

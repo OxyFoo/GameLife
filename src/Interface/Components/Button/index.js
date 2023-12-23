@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import ButtonBack from './back';
 import themeManager from 'Managers/ThemeManager';
@@ -51,7 +52,7 @@ class Button extends ButtonBack {
             {
                 justifyContent: onlyOneChild ? 'center' : 'space-between',
                 borderRadius: this.props.borderRadius,
-                backgroundColor: color,
+                backgroundColor: this.props.colorNextGen ? 'transparent' : color,
                 opacity: enabled ? 1 : 0.6
             },
             styleProp,
@@ -70,7 +71,7 @@ class Button extends ButtonBack {
                     </>;
         }
 
-        return (
+        let output = (
             <ButtonView
                 testID={this.props.testID}
                 style={style}
@@ -90,6 +91,30 @@ class Button extends ButtonBack {
                 )}
             </ButtonView>
         );
+
+        
+        if (this.props.colorNextGen) {
+            const titleColors = [
+                themeManager.GetColor('backgroundCard'),
+                themeManager.GetColor('main1'),
+                themeManager.GetColor('main2')
+            ];
+            output = (
+                <LinearGradient
+                    style={{
+                        borderTopLeftRadius: this.props.borderRadius,
+                        borderTopRightRadius: this.props.borderRadius
+                    }}
+                    colors={titleColors}
+                    start={{ x: 0, y: -2 }}
+                    end={{ x: 1, y: 2 }}
+                >
+                    {output}
+                </LinearGradient>
+            );
+        }
+
+        return output;
     }
 }
 

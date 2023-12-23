@@ -21,9 +21,11 @@ class NonZeroDay extends NonZeroDayBack {
                 icon='arrowLeft'
                 iconAngle={180}
                 onIconPress={this.openPopup}
+                colorNextGen
             >
                 {claimIndex !== -1 ? (
                     <RenderItemMemo
+                        style={styles.containerItem}
                         index={claimDay}
                         claimIndex={claimIndex}
                         onPress={this.onClaimPress}

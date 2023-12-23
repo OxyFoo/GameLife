@@ -50,6 +50,9 @@ const ButtonProps = {
     /** @type {ThemeColor | ThemeText} */
     color: 'transparent',
 
+    /** @type {boolean} True to show new UI gradient */
+    colorNextGen: false,
+
     /** @type {ThemeColor | ThemeText} */
     colorText: 'primary',
 

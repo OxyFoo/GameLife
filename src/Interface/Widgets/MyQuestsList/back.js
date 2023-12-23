@@ -104,7 +104,7 @@ class BackQuestsList extends React.Component {
         GetAbsolutePosition(this.refFlatlist).then(pos => {
             this.tmpLayoutContainer = pos;
 
-            const posY = this.tmpLayoutContainer.y + 32 / 2;
+            const posY = this.tmpLayoutContainer.y + 92 / 2;
             const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
             TimingAnimation(this.state.mouseY, newY, 0).start();
         });
@@ -124,7 +124,7 @@ class BackQuestsList extends React.Component {
         }
 
         // Move quest selection
-        const posY = this.tmpLayoutContainer.y + 32 / 2;
+        const posY = this.tmpLayoutContainer.y + 92 / 2;
         const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
         TimingAnimation(this.state.mouseY, newY, 0).start();
 

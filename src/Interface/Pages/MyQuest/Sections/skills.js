@@ -79,7 +79,9 @@ class SectionSkill extends React.Component {
             }));
         }
 
-        user.interface.screenList.Open(title, data, callback);
+        if (data.length !== 0) {
+            user.interface.screenList.Open(title, data, callback);
+        }
     }
 
     /** @param {number} skillID */

@@ -69,6 +69,15 @@ const ButtonProps = {
 
     onLongPress: () => {},
 
+    /** @param {GestureResponderEvent} event */
+    onTouchStart: (event) => {},
+
+    /** @param {GestureResponderEvent} event */
+    onTouchMove: (event) => {},
+
+    /** @param {GestureResponderEvent} event */
+    onTouchEnd: (event) => {},
+
     /** @type {(event: LayoutChangeEvent) => void} */
     onLayout: (event) => {},
 
@@ -86,12 +95,18 @@ class ButtonBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
+        this.props.onTouchStart(event);
         if (this.props.enabled) {
             this.rippleRef.current.onTouchStart(event);
         }
         this.posX = event.nativeEvent.pageX;
         this.posY = event.nativeEvent.pageY;
         this.time = new Date().getTime();
+    }
+
+    /** @param {GestureResponderEvent} event */
+    onTouchMove = (event) => {
+        this.props.onTouchMove(event);
     }
 
     /** @param {GestureResponderEvent} event */
@@ -103,6 +118,7 @@ class ButtonBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
+        this.props.onTouchEnd(event);
         if (this.props.enabled) {
             this.rippleRef.current.onTouchEnd(event);
         }

@@ -9,6 +9,7 @@ import { Text, Icon, Button, DayClock } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
@@ -119,6 +120,18 @@ class QuestElement extends React.Component {
         );
     }
 
+    timeout;
+    /** @param {GestureResponderEvent} event */
+    onTouchStart = (event) => {
+        const { onDrag } = this.props;
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => onDrag(), 500);
+    }
+    /** @param {GestureResponderEvent} event */
+    onTouchMove = (event) => {
+        clearTimeout(this.timeout);
+    }
+
     render() {
         const { days, streakCount } = this.state;
         const { style, quest } = this.props;
@@ -132,6 +145,8 @@ class QuestElement extends React.Component {
                 <Button
                     style={styles.content}
                     onPress={openQuest}
+                    onTouchStart={this.onTouchStart}
+                    onTouchMove={this.onTouchMove}
                 >
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>

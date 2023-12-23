@@ -77,6 +77,7 @@ class Button extends ButtonBack {
                 style={style}
                 onTouchStart={this.onTouchStart}
                 onTouchCancel={this.onTouchCancel}
+                onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
                 onLayout={this.onLayout}
                 pointerEvents={this.props.pointerEvents}

@@ -35,7 +35,7 @@ class MyQuestsList extends BackQuestsList {
             <QuestElement
                 style={styleOpacity}
                 quest={item}
-                //onDrag={() => this.onDrag(item)}
+                onDrag={() => this.onDrag(item)}
             />
         );
     }

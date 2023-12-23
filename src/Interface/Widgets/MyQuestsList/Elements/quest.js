@@ -147,6 +147,8 @@ class QuestElement extends React.Component {
                     onPress={openQuest}
                     onTouchStart={this.onTouchStart}
                     onTouchMove={this.onTouchMove}
+                    onTouchEnd={this.onTouchMove}
+                    onTouchCancel={this.onTouchMove}
                 >
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>

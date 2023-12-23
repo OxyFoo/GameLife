@@ -78,6 +78,9 @@ const ButtonProps = {
     /** @param {GestureResponderEvent} event */
     onTouchEnd: (event) => {},
 
+    /** @param {GestureResponderEvent} event */
+    onTouchCancel: (event) => {},
+
     /** @type {(event: LayoutChangeEvent) => void} */
     onLayout: (event) => {},
 
@@ -111,6 +114,7 @@ class ButtonBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchCancel = (event) => {
+        this.props.onTouchCancel(event);
         if (this.props.enabled) {
             this.rippleRef.current.onTouchEnd(event);
         }

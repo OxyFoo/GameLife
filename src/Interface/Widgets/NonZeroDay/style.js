@@ -14,13 +14,18 @@ const styles = StyleSheet.create({
         height: 500,
         paddingVertical: 12,
         paddingHorizontal: 12,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        overflow: 'visible'
     },
-    popupFlatList: {
-        marginVertical: 12
+    popupTitleContainer: {
+        marginTop: -38,
+        borderRadius: 8
     },
     popupTitle: {
-        fontSize: 24
+        paddingVertical: 8,
+        fontSize: 24,
+        borderRadius: 8,
+        backgroundColor: '#00000040'
     },
     popupText: {
         fontSize: 14

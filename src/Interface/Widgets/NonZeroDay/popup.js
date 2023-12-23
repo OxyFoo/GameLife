@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import { RenderItemMemo } from './element';
@@ -17,6 +18,11 @@ function RenderPopup(props) {
     const stylePopup = {
         backgroundColor: themeManager.GetColor('background')
     };
+    const titleColors = [
+        themeManager.GetColor('backgroundCard'),
+        themeManager.GetColor('main1'),
+        themeManager.GetColor('main2')
+    ];
 
     const claimsList = user.quests.nonzerodays.claimsList.Get();
     const [ claimIndex, setClaimIndex ] = React.useState(user.quests.nonzerodays.GetCurrentClaimIndex());
@@ -37,9 +43,16 @@ function RenderPopup(props) {
 
     return (
         <View style={[styles.popup, stylePopup]}>
-            <Text style={styles.popupTitle}>
-                {lang['container-title']}
-            </Text>
+            <LinearGradient
+                style={styles.popupTitleContainer}
+                colors={titleColors}
+                start={{ x: 0, y: -2 }}
+                end={{ x: 1, y: 2 }}
+            >
+                <Text style={styles.popupTitle}>
+                    {lang['container-title']}
+                </Text>
+            </LinearGradient>
 
             {claimIndex !== -1 && claimIndex !== claimsList.length - 1 && (
                 <Text style={styles.popupText}>
@@ -50,7 +63,6 @@ function RenderPopup(props) {
             )}
 
             <FlatList
-                style={styles.popupFlatList}
                 data={NONZERODAYS_REWARDS}
                 keyExtractor={(item, index) => index.toString()}
                 initialNumToRender={10}

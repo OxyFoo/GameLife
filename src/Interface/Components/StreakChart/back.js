@@ -128,7 +128,6 @@ class StreakChartBack extends React.Component {
             strokeDasharray
         };
     }
-
 }
 
 StreakChartBack.prototype.props = StreakChartProps;

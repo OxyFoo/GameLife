@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text as RNText } from 'react-native';
+import { View } from 'react-native';
 import { Svg, Path, Text, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 import StreakChartBack from './back';
@@ -10,10 +10,10 @@ class StreakChart extends StreakChartBack {
         const textX = this.props.size / 2;
         const textY = this.props.size / 2 + this.props.strokeWidth / 12; // TODO : CHANGE THE METHOD OF CALCULATION BECAUSE /
 
-        const leftTextX = 10; // X position for left-aligned text
-        const centerTextX = this.props.size / 2; // X position for center-aligned text
-        const rightTextX = this.props.size; // X position for right-aligned text
-        const bottomTextY = this.props.size / 2 + this.props.strokeWidth + 5; // Y position for text at the bottom
+        const leftTextX = 10;
+        const centerTextX = this.props.size / 2;
+        const rightTextX = this.props.size;
+        const bottomTextY = this.props.size / 2 + this.props.strokeWidth + 5;
 
         return (
             <View>
@@ -115,7 +115,6 @@ class StreakChart extends StreakChartBack {
                     >
                         {this.props.bestStreak}
                     </Text>
-
                 </Svg>
             </View>
 

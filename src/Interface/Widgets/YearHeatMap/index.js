@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 
 import styles from './style';
 import YearHeatMapBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Switch, HeatMap } from 'Interface/Components';
+import { Text, Switch, HeatMap } from 'Interface/Components';
 
 class YearHeatMap extends YearHeatMapBack {
     render() {

@@ -41,7 +41,8 @@ class YearHeatMapBack extends React.Component {
     }
 
     /**
-     * Compute and prepare the data for the heat map 
+     * Compute and prepare the data for the heat map
+     * Call setState to update the component
      */
     compute = () => {
         let isWeekMode = user.settings.questHeatMap;

@@ -1,51 +1,20 @@
 import * as React from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
-import { Container, Page, Text, HeatMap, StreakChart } from 'Interface/Components';
-import { YearHeatMap } from 'Interface/Widgets';
+import { Button, Container, Page, Text } from 'Interface/Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {
         const lang = langManager.curr['multiplayer'];
-        const WEEKS = 52;
-        const DAYS_PER_WEEK = 7;
-        const LEVELS = 7;
-
-        // Data with 52 cells, one for each week
-        const weeklyData = new Array(WEEKS).fill(null).map(() => Math.floor(Math.random() * LEVELS));
-
-        // Data with 52 * 7 cells, one for each day of the year (assuming 7 days per week)
-        const dailyData = new Array(WEEKS * DAYS_PER_WEEK).fill(null).map(() => Math.floor(Math.random() * LEVELS));
-
-        const gridSize = 10; // For example, 7 cells per column
-        //const lang = langManager.curr['quests'];
-
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-
-                <View>
-                    {/*}             
-                <FullQuest questID={1}/> 
-                <FullQuest questID={2}/> 
-                <FullQuest questID={3}/> 
-
-                <Button title="Add quest" onPress={() => this.createQuest()}/>
-            */}
-
-
-                    <YearHeatMap />
-
-                    <Text>{this.state.buttonTestValue}</Text>
-                    <Button title="Change value" onPress={() => { console.log("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIiiIIIIIIIIIIIIIIICK"); this.setState({ buttonTestValue: this.state.buttonTestValue + 1 }) }} />
-
-                    <StreakChart currentStreak={12} bestStreak={this.state.buttonTestValue} />
-                    {/*<StreakChart currentStreak={342} bestStreak={432} />*/}
-
-
+                <View style={styles.tempContainer}>
+                    <Text style={styles.tempTitle}>{lang['temp-comingsoon-title']}</Text>
+                    <Text style={styles.tempText}>{lang['temp-comingsoon-text']}</Text>
                 </View>
             </Page>
         );

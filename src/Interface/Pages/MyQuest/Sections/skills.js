@@ -6,7 +6,10 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Button, Text } from 'Interface/Components';
+import { GetTime } from 'Utils/Time';
+import { Button, Text, Icon } from 'Interface/Components';
+
+const MAX_SKILLS = 10;
 
 /**
  * @typedef {import('Interface/Widgets/ScreenList').ScreenListItem} ScreenListItem
@@ -21,17 +24,8 @@ const SectionSkillProps = {
 };
 
 class SectionSkill extends React.Component {
-    onUnselectSkill = () => {
-        this.props.onChange([]);
-    }
-
     OpenCategoriesSelection = () => {
         const callback = (id) => {
-            if (id === 0) {
-                this.onUnselectSkill();
-                return;
-            }
-
             setTimeout(() => {
                 this.OpenSkillSelection(id);
             }, 100);
@@ -43,63 +37,131 @@ class SectionSkill extends React.Component {
             id: category.ID,
             value: dataManager.GetText(category.Name)
         }));
-        data.splice(0, 1, {
-            id: 0,
-            value: langManager.curr['quest']['input-activity-reset']
-        });
         user.interface.screenList.Open(title, data, callback);
     }
 
-    OpenSkillSelection = (SkillID) => {
+    OpenSkillSelection = (categoryID) => {
         const callback = (id) => {
             const { skillsIDs } = this.props;
-            this.props.onChange([...skillsIDs, id]);
+            if (skillsIDs.length >= MAX_SKILLS || skillsIDs.includes(id)) {
+                return;
+            }
+            this.props.onChange([ ...skillsIDs, id ]);
         };
 
         const title = langManager.curr['quest']['input-panel-activity'];
         /** @type {Array<ScreenListItem>} */
-        const data = dataManager.skills.GetByCategory(SkillID).map(skill => ({
-            id: skill.ID,
-            value: dataManager.GetText(skill.Name)
-        }));
+        let data = [];
+
+        // If category is 'Recent'
+        if (categoryID === 0) {
+            const now = GetTime(undefined, 'local');
+            const usersActivities = user.activities.Get()
+                .filter(activity => activity.startTime <= now)
+                .sort((a, b) => b.startTime - a.startTime);
+            for (const activity of usersActivities) {
+                const skill = dataManager.skills.GetByID(activity.skillID);
+                if (skill !== null && !data.find(s => s.id === skill.ID)) {
+                    data.push({
+                        id: skill.ID,
+                        value: dataManager.GetText(skill.Name)
+                    });
+                }
+            }
+        }
+
+        // If it's a category
+        else {
+            /** @type {Array<ScreenListItem>} */
+            data = dataManager.skills.GetByCategory(categoryID).map(skill => ({
+                id: skill.ID,
+                value: dataManager.GetText(skill.Name)
+            }));
+        }
 
         user.interface.screenList.Open(title, data, callback);
+    }
+
+    /** @param {number} skillID */
+    handleUnselectSkill = (skillID) => {
+        const { skillsIDs } = this.props;
+        this.props.onChange(skillsIDs.filter(id => id !== skillID));
+    }
+
+    /**
+     * @param {Object} props
+     * @param {import('Data/Skills').Skill} props.skill
+     */
+    renderSkills = ({ skill }) => {
+        const skillTitle = dataManager.GetText(skill.Name);
+        const handleUnselectSkill = () => this.handleUnselectSkill(skill.ID);
+        const styleBackground = {
+            backgroundColor: themeManager.GetColor('background')
+        };
+
+        return (
+            <View style={[styles.skillsItem, styleBackground]}>
+                <Text>{skillTitle}</Text>
+                <Icon
+                    containerStyle={styles.skillsIconContainer}
+                    size={16}
+                    icon='cross'
+                    color='main1'
+                    onPress={handleUnselectSkill}
+                />
+            </View>
+        );
     }
 
     render() {
         const lang = langManager.curr['quest'];
         const { skillsIDs } = this.props;
 
-        let activityText = lang['input-activity-title'];
-        let activityBtn = lang['input-activity-add'];
-
+        let selectedSkills = [];
         if (skillsIDs.length > 0) {
-            activityText = skillsIDs
+            selectedSkills = skillsIDs
                 .map(id => dataManager.skills.GetByID(id))
-                .filter(skill => skill !== null)
-                .map(skill => dataManager.GetText(skill.Name))
-                .join(', ');
+                .filter(skill => skill !== null);
         }
 
         const backgroundColor = {
             backgroundColor: themeManager.GetColor('backgroundCard')
         };
 
+        const RenderSkills = this.renderSkills;
         return (
             <View
                 ref={ref => this.refHelp1 = ref}
                 style={[backgroundColor, styles.schedulePanel]}
             >
-                <Text style={styles.text}>{activityText}</Text>
-                <Button
-                    colorText='main1'
-                    style={styles.smallBtn}
-                    fontSize={14}
-                    onPress={this.OpenCategoriesSelection}
-                    onLongPress={this.onUnselectSkill}
-                >
-                    {activityBtn}
-                </Button>
+                {/* No skills selected */}
+                {selectedSkills.length === 0 && (
+                    <Text style={styles.text}>{lang['input-activity-title']}</Text>
+                )}
+
+                {/* Skills selected */}
+                {selectedSkills.length > 0 && (
+                    <View style={styles.skillsContainer}>
+                        {selectedSkills.map(skill => (
+                            <RenderSkills
+                                key={skill.ID}
+                                skill={skill}
+                            />
+                        ))}
+                    </View>
+                )}
+
+                {/* Add skill (if not max) */}
+                {selectedSkills.length < MAX_SKILLS && (
+                    <Button
+                        colorText='main1'
+                        style={styles.smallBtn}
+                        fontSize={14}
+                        onPress={this.OpenCategoriesSelection}
+                    >
+                        {lang['input-activity-add']}
+                    </Button>
+                )}
             </View>
         );
     }
@@ -110,14 +172,35 @@ SectionSkill.defaultProps = SectionSkillProps;
 
 const styles = StyleSheet.create({
     schedulePanel: {
-        padding: 24,
+        padding: 6,
         borderRadius: 12
     },
     text: {
-        marginBottom: 12
+        marginTop: 12
+    },
+    skillsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap'
+    },
+    skillsItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 4,
+        marginBottom: 4,
+        padding: 8,
+        borderRadius: 12
+    },
+    skillsIconContainer: {
+        width: 24,
+        height: 24,
+        padding: 0,
+        marginLeft: 8,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     smallBtn: {
         height: 42,
+        marginTop: 12,
         paddingHorizontal: 12
     }
 });

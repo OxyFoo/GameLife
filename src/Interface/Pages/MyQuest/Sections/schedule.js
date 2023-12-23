@@ -46,10 +46,13 @@ class SectionSchedule extends React.Component {
      */
     onDaySelect = (index) => {
         const { schedule: { type, repeat } } = this.props;
-        const include = repeat.includes(index);
-        if (include) repeat.splice(repeat.indexOf(index), 1);
-        else         repeat.push(index);
-        this.props.onChange(type, repeat);
+        const newRepeat = [ ...repeat ];
+        if (newRepeat.includes(index)) {
+            newRepeat.splice(newRepeat.indexOf(index), 1);
+        } else {
+            newRepeat.push(index);
+        }
+        this.props.onChange(type, newRepeat);
     }
 
     /**

@@ -2,11 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        padding: 0
-    },
-    containerItem: {
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0
+        padding: 8
     },
     noClaim: {
         padding: 12,

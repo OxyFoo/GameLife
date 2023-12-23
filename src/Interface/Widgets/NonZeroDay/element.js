@@ -43,7 +43,7 @@ const RenderItem = (props) => {
         }
     ];
     const styleBorder = {
-        borderColor: themeManager.GetColor('main1'),
+        borderColor: '#B83EFFE3',
         borderWidth: 1.5
     };
 

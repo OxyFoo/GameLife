@@ -25,7 +25,6 @@ class NonZeroDay extends NonZeroDayBack {
             >
                 {claimIndex !== -1 ? (
                     <RenderItemMemo
-                        style={styles.containerItem}
                         index={claimDay}
                         claimIndex={claimIndex}
                         onPress={this.onClaimPress}

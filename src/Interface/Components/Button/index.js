@@ -95,9 +95,8 @@ class Button extends ButtonBack {
         
         if (this.props.colorNextGen) {
             const titleColors = [
-                themeManager.GetColor('backgroundCard'),
-                themeManager.GetColor('main1'),
-                themeManager.GetColor('main2')
+                '#384065',
+                '#B83EFFE3'
             ];
             output = (
                 <LinearGradient

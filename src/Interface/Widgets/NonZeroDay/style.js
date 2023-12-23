@@ -39,6 +39,9 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
 
+    separatorFirst: {
+        height: 16
+    },
     separator: {
         height: 8
     },
@@ -56,11 +59,8 @@ const styles = StyleSheet.create({
     },
     itemDay: {
         width: 'auto',
-        height: '100%',
         maxWidth: 120,
-        paddingHorizontal: 12,
-        borderRadius: 6,
-        verticalAlign: 'middle'
+        paddingHorizontal: 12
     },
 
     rewardItem: {
@@ -89,13 +89,14 @@ const styles = StyleSheet.create({
         top: 0,
         right: 0,
         bottom: 0,
-        margin: 12,
+        paddingVertical: 6,
         alignItems: 'center',
         justifyContent: 'center'
     },
     claimButton: {
         width: 72,
-        marginRight: 12,
+        height: '100%',
+        marginRight: 28,
         paddingVertical: 0,
         paddingHorizontal: 6
     }

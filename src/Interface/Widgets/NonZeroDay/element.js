@@ -42,8 +42,9 @@ const RenderItem = (props) => {
             backgroundColor: themeManager.GetColor('backgroundCard')
         }
     ];
-    const styleDay = {
-        backgroundColor: themeManager.GetColor('main1')
+    const styleBorder = {
+        borderColor: themeManager.GetColor('main1'),
+        borderWidth: 1.5
     };
 
     let timeToTomorrow;
@@ -93,7 +94,7 @@ const RenderItem = (props) => {
     return (
         <View style={[styles.item, styleItem]}>
             <View style={[styles.content, styleOpacity]}>
-                <Text style={[styles.itemDay, styleDay]}>{textToday}</Text>
+                <Text style={styles.itemDay}>{textToday}</Text>
 
                 {
                     NONZERODAYS_REWARDS[props.index].map((reward, index) => (
@@ -105,9 +106,8 @@ const RenderItem = (props) => {
             <View style={styles.claimState}>
                 {status === 'claiming' && (
                     <Button
-                        style={styles.claimButton}
+                        style={[styles.claimButton, styleBorder]}
                         color='transparent'
-                        colorText='main1'
                         onPress={handleEvent}
                     >
                         {lang['claim']}

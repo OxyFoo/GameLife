@@ -18,11 +18,6 @@ function RenderPopup(props) {
     const stylePopup = {
         backgroundColor: themeManager.GetColor('background')
     };
-    const titleColors = [
-        themeManager.GetColor('backgroundCard'),
-        themeManager.GetColor('main1'),
-        themeManager.GetColor('main2')
-    ];
 
     const claimsList = user.quests.nonzerodays.claimsList.Get();
     const [ claimIndex, setClaimIndex ] = React.useState(user.quests.nonzerodays.GetCurrentClaimIndex());
@@ -45,7 +40,7 @@ function RenderPopup(props) {
         <View style={[styles.popup, stylePopup]}>
             <LinearGradient
                 style={styles.popupTitleContainer}
-                colors={titleColors}
+                colors={[ '#384065', '#B83EFFE3' ]}
                 start={{ x: 0, y: -2 }}
                 end={{ x: 1, y: 2 }}
             >
@@ -71,6 +66,9 @@ function RenderPopup(props) {
                         index={props.index}
                         claimIndex={claimIndex}
                     />
+                )}
+                ListHeaderComponent={() => (
+                    <View style={styles.separatorFirst} />
                 )}
                 ItemSeparatorComponent={() => (
                     <View style={styles.separator} />

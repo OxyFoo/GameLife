@@ -102,6 +102,7 @@ class BackTodo extends PageBase {
 
         // Don't show popup or todo not edited => leave
         if (!askPopup || action === 'remove') {
+            user.interface.ResetCustomBackHandler();
             return true;
         }
 

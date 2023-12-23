@@ -43,10 +43,11 @@ const styles = StyleSheet.create({
     },
     itemDay: {
         width: 'auto',
+        height: '100%',
         maxWidth: 120,
-        paddingVertical: 12,
         paddingHorizontal: 12,
-        borderRadius: 6
+        borderRadius: 6,
+        verticalAlign: 'middle'
     },
 
     rewardItem: {
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
     claimButton: {
         width: 72,
         marginRight: 12,
+        paddingVertical: 0,
         paddingHorizontal: 6
     }
 });

@@ -78,6 +78,8 @@ class PageManager extends React.Component{
     /**
      * @description Represent all pages before current page
      * Increment when changing page
+     * Decrement when back page
+     * @type {Array<[PageName, object]>}
      */
     path = [];
 

@@ -122,6 +122,8 @@ class BackActivity extends PageBase {
             this.refActivityPanel.SelectActivity(activity);
         }
 
+        const fromCalendar = user.interface.path.at(-1)[0] === 'calendar';
+
         // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
             const { time } = this.props.args;
@@ -138,8 +140,30 @@ class BackActivity extends PageBase {
                 }
             }
             this.refActivityPanel.SetChangeSchedule(time, duration);
-        } else if (user.tempSelectedTime !== null) {
+        }
+
+        // User from calendar
+        else if (user.tempSelectedTime !== null && fromCalendar) {
             this.refActivityPanel.SetChangeSchedule(user.tempSelectedTime, 60);
+        }
+
+        // Default time (local) to add an activity
+        else {
+            const time = GetTime(undefined, 'local');
+            const activities = user.activities
+                .GetByTime(time)
+                .filter(activity => activity.startTime > time);
+
+            let duration = 60;
+            if (activities.length > 0) {
+                const delta = activities[0].startTime - time;
+                if (delta <= MAX_TIME_MINUTES * 60) {
+                    duration = RoundTimeTo(TIME_STEP_MINUTES, delta) / 60;
+                    duration = Math.max(MIN_TIME_MINUTES, duration);
+                }
+            }
+
+            this.refActivityPanel.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
     }
 

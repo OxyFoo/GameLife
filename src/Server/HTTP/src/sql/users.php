@@ -27,7 +27,7 @@ class Users
             Todoes::Save($db, $account, $todoes);
         }
         if (isset($quests) && isset($quests['myquests'])) {
-            MyQuests::Save($db, $account, $quests['myquests']);
+            MyQuests::Save($db, $account, $deviceID, $quests['myquests']);
         }
         if (isset($quests) && isset($quests['nonzerodays'])) {
             NonZeroDays::Save($db, $account, $quests['nonzerodays']);

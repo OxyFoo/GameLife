@@ -19,7 +19,7 @@ class ScreenTuto extends ScreenTutoBack {
         const styleTopPanel = {
             width: '100%',
             height: component.ref !== null ? component.position.y : '100%',
-            opacity: component.ref !== null ? .6 : .3
+            opacity: component.ref !== null ? .8 : .6
         };
         return <Animated.View style={[styles.background, styleTopPanel]} />;
     }

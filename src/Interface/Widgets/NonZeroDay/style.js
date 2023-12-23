@@ -3,16 +3,19 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     // Popup
     popup: {
+        height: 500,
         paddingVertical: 12,
-        paddingHorizontal: 12
+        paddingHorizontal: 12,
+        justifyContent: 'center'
     },
     popupFlatList: {
-        height: 400,
         marginVertical: 12
     },
-    popupText: {
-        color: 'white',
+    popupTitle: {
         fontSize: 24
+    },
+    popupText: {
+        fontSize: 14
     },
 
     item: {

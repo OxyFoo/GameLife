@@ -17,6 +17,13 @@ import { GetDate, GetTimeToTomorrow, TimeToFormatString } from 'Utils/Time';
  * @typedef {import('Ressources/items/quests/NonZeroDay').NonZeroDayRewardType} NonZeroDayRewardType
  */
 
+function GetCurrentClaimIndex() {
+    const claimsList = user.quests.nonzerodays.claimsList.Get();
+    let index = claimsList.findIndex(claimList => claimList.daysCount !== claimList.claimed.length);
+    if (index === -1) index = claimsList.length - 1;
+    return index;
+}
+
 function RenderPopup(props) {
     const lang = langManager.curr['nonzerodays'];
     const stylePopup = {
@@ -24,18 +31,14 @@ function RenderPopup(props) {
     };
 
     const claimsList = user.quests.nonzerodays.claimsList.Get();
-    const [ claimIndex, setClaimIndex ] = React.useState(
-        claimsList.findIndex(claimList => claimList.daysCount !== claimList.claimed.length)
-    );
+    const [ claimIndex, setClaimIndex ] = React.useState(GetCurrentClaimIndex());
 
     let timeout;
     React.useEffect(() => {
         const listener = user.quests.nonzerodays.claimsList.AddListener((claimsList) => {
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
-                setClaimIndex(
-                    claimsList.findIndex(claimList => claimList.daysCount !== claimList.claimed.length)
-                );
+                setClaimIndex(GetCurrentClaimIndex());
             }, 1000);
         });
 
@@ -44,29 +47,19 @@ function RenderPopup(props) {
         }
     }, []);
 
-    if (claimIndex === -1) {
-        return (
-            <View style={[styles.popup, stylePopup]}>
-                <Text style={styles.popupText}>
-                    {'[no-claim]'}
-                </Text>
-            </View>
-        );
-    }
-
-    const startTime = claimsList[claimIndex].start;
-    const claimDate = '[Rewards du ] ' + DateToFormatString(GetDate(startTime));
-    const claimTotal = user.quests.nonzerodays.GetConsecutiveDays();
-
     return (
         <View style={[styles.popup, stylePopup]}>
-            <Text style={styles.popupText}>
+            <Text style={styles.popupTitle}>
                 {lang['container-title']}
             </Text>
 
-            <Text style={styles.popupText}>
-                {claimDate}
-            </Text>
+            {claimIndex !== -1 && claimIndex !== claimsList.length - 1 && (
+                <Text style={styles.popupText}>
+                    {lang['container-date'].replace('{}',
+                        DateToFormatString(GetDate(claimsList[claimIndex].start))
+                    )}
+                </Text>
+            )}
 
             <FlatList
                 style={styles.popupFlatList}
@@ -74,10 +67,9 @@ function RenderPopup(props) {
                 keyExtractor={(item, index) => index.toString()}
                 initialNumToRender={10}
                 renderItem={(props) => (
-                    <RenderItem
+                    <RenderItemMemo
                         {...props}
                         claimIndex={claimIndex}
-                        claimTotal={claimTotal}
                     />
                 )}
                 getItemLayout={(data, index) => (
@@ -89,7 +81,7 @@ function RenderPopup(props) {
     );
 }
 
-/** @param {{ item: Array<NonZeroDayRewardType>, index: number, claimIndex: number, claimTotal: number }} props */
+/** @param {{ item: Array<NonZeroDayRewardType>, index: number, claimIndex: number }} props */
 const RenderItem = (props) => {
     const lang = langManager.curr['nonzerodays'];
     const langD = langManager.curr['dates']['names'];
@@ -105,20 +97,23 @@ const RenderItem = (props) => {
         backgroundColor: themeManager.GetColor('main1')
     };
 
-    const claimList = user.quests.nonzerodays.claimsList.Get()[props.claimIndex];
-
     let timeToTomorrow;
     /** @type {'not-claimed' | 'claiming' | 'claim-in' | 'claimed'} */
     let status = 'not-claimed';
-    if (claimList.claimed.includes(currentDay) || loading) {
-        status = 'claimed';
-    } else if (currentDay <= claimList.daysCount) {
-        status = 'claiming';
-    } else if (currentDay <= props.claimTotal) {
-        status = 'claim-in';
-        timeToTomorrow = TimeToFormatString(GetTimeToTomorrow());
-        if (props.claimTotal - currentDay === 1) {
-            timeToTomorrow = '1 ' + langD['day-min'] + ' ' + timeToTomorrow;
+
+    if (props.claimIndex !== -1) {
+        const claimList = user.quests.nonzerodays.claimsList.Get()[props.claimIndex];
+
+        if (claimList.claimed.includes(currentDay) || loading) {
+            status = 'claimed';
+        } else if (currentDay <= claimList.daysCount) {
+            status = 'claiming';
+        } else if (claimList.daysCount - currentDay === -1) {
+            status = 'claim-in';
+            timeToTomorrow = langD['day-min'] + ' ' + TimeToFormatString(GetTimeToTomorrow());
+        } else if (claimList.daysCount - currentDay === -2) {
+            status = 'claim-in';
+            timeToTomorrow = '1 ' + langD['day-min'] + ' ' + TimeToFormatString(GetTimeToTomorrow());
         }
     }
 
@@ -127,9 +122,10 @@ const RenderItem = (props) => {
     };
 
     const handleEvent = async () => {
-        if (loading) return;
+        if (loading || props.claimIndex === -1) return;
 
         setLoading(true);
+        const claimList = user.quests.nonzerodays.claimsList.Get()[props.claimIndex];
         const result = await user.quests.nonzerodays.ClaimReward(claimList.start, props.index);
         setLoading(false);
 
@@ -181,6 +177,11 @@ const RenderItem = (props) => {
         </View>
     );
 }
+
+const RenderItemMemo = React.memo(RenderItem, (prevProps, nextProps) => {
+    if (prevProps.claimIndex !== nextProps.claimIndex) return false;
+    return true;
+});
 
 /** @param {{ item: NonZeroDayRewardType, index: number }} props */
 function RenderReward(props) {

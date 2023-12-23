@@ -629,6 +629,7 @@
 
     "nonzerodays": {
         "container-title": "Non Zero Days",
+        "container-date": "Rewards from {}",
         "claim": "Claim",
         "claim-in": "Claim dans {}",
 

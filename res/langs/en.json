@@ -620,7 +620,7 @@
 
     "quests": {
         "container-title": "My quests",
-        "quests-empty-title": "No quest",
+        "quests-empty-title": "If you don't have a quest yet, add one by clicking on the button below or on the + at top right.",
         "quests-empty-button": "Add a quest",
 
         "alert-questslimit-title": "Limit reached",

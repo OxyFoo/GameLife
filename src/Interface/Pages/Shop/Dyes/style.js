@@ -23,10 +23,11 @@ const styles = StyleSheet.create({
         marginRight: 6
     },
     dyeAmountPrice: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     dyeOxImage: {
-        width: 24,
+        width: 20,
         aspectRatio: 1
     },
 

@@ -22,8 +22,11 @@ const styles = StyleSheet.create({
         overflow: 'visible'
     },
     popupTitleContainer: {
-        marginTop: -38,
-        borderRadius: 8
+        marginTop: -42,
+        transform: [{ translateY: 4 }],
+        borderRadius: 8,
+        zIndex: 1,
+        elevation: 1
     },
     popupTitle: {
         paddingVertical: 8,
@@ -32,11 +35,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#00000040'
     },
     popupText: {
+        paddingVertical: 12,
         fontSize: 14
     },
 
-    marginTop: {
-        marginTop: 12
+    separator: {
+        height: 8
     },
     item: {
         height: 56,

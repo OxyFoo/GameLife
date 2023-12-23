@@ -620,7 +620,7 @@
 
     "quests": {
         "container-title": "Mes quêtes",
-        "quests-empty-title": "Tu n'as pas encore de quête",
+        "quests-empty-title": "Tu n'as pas encore de quête, ajoutes-en une en cliquant sur le bouton ci-dessous ou sur le + en haut à droite",
         "quests-empty-button": "En ajouter une",
 
         "alert-questslimit-title": "Limite de quêtes atteinte",

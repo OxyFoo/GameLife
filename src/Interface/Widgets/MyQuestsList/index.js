@@ -45,8 +45,12 @@ class MyQuestsList extends BackQuestsList {
 
         return (
             <>
-                <Text style={styles.emptyText}>{lang['quests-empty-title']}</Text>
-                <Button onPress={this.addQuest} color='main1'>{lang['quests-empty-button']}</Button>
+                <Text style={styles.emptyText}>
+                    {lang['quests-empty-title']}
+                </Text>
+                <Button onPress={this.addQuest} color='main1' colorNextGen>
+                    {lang['quests-empty-button']}
+                </Button>
             </>
         );
     }

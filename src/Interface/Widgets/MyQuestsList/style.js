@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
         padding: 0
     },
     emptyText: {
-        marginBottom: 12
+        padding: 24
     },
 
     separator: {

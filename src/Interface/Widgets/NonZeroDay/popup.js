@@ -68,10 +68,12 @@ function RenderPopup(props) {
                 initialNumToRender={10}
                 renderItem={(props) => (
                     <RenderItemMemo
-                        style={styles.marginTop}
                         index={props.index}
                         claimIndex={claimIndex}
                     />
+                )}
+                ItemSeparatorComponent={() => (
+                    <View style={styles.separator} />
                 )}
                 getItemLayout={(data, index) => (
                     { length: 68, offset: 68 * index, index }

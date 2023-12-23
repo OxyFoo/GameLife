@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         marginRight: 4
     },
     itemOxImage: {
-        width: 20,
+        width: 16,
         aspectRatio: 1
     },
 

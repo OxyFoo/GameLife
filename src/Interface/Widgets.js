@@ -19,6 +19,7 @@ import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import TodayPieChart from './Widgets/TodayPieChart';
 import UserHeader from './Widgets/UserHeader';
+import YearHeatMap from './Widgets/YearHeatMap';
 
 export {
     ActivityPanel,
@@ -41,5 +42,6 @@ export {
     SkillChart,
     SkillsGroup,
     TodayPieChart,
-    UserHeader
+    UserHeader,
+    YearHeatMap
 };

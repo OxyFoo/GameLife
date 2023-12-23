@@ -594,7 +594,11 @@
         "quest-type-repeat-before": "To be done before:",
 
         "alert-questslimit-title": "Limit reached",
-        "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more."
+        "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more.",
+
+        "current-streak": "Current streak",
+        "heatmap-title-weeks": "Completion by week",
+        "heatmap-title-days": "Completion by day"
     },
 
     "wait": {

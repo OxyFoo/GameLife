@@ -631,7 +631,8 @@
         "container-title": "Jours non zéro",
         "container-date": "Récompenses du {}",
         "claim": "Claim",
-        "claim-in": "Claim in {}",
+        "claim-in": "Claim dans {}",
+        "no-claim": "Pas de claim",
 
         "alert-claim-error-title": "Erreur",
         "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard."

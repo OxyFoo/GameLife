@@ -631,7 +631,8 @@
         "container-title": "Non Zero Days",
         "container-date": "Rewards from {}",
         "claim": "Claim",
-        "claim-in": "Claim dans {}",
+        "claim-in": "Claim in {}",
+        "no-claim": "No claim available",
 
         "alert-claim-error-title": "Error",
         "alert-claim-error-text": "An error has occurred, please try again later."

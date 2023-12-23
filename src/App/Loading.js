@@ -128,6 +128,7 @@ async function Initialisation(nextStep) {
     // Loading: Quests
     user.quests.nonzerodays.RefreshCaimsList();
     await user.OnlineSave();
+    await user.LocalSave();
 
     // Loading: Notifications
     const time_start_notification = new Date().getTime();

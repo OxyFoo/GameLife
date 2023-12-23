@@ -61,24 +61,11 @@ class NonZeroDays {
         this.SAVED_claimsList = true;
     }
 
-    GetConsecutiveDays() {
-        let i = 0;
-        let combo = 0;
-        const timeNow = GetTime(undefined, 'local');
-
-        while (true) {
-            const activities = this.user.activities
-                .GetByTime(timeNow - i++ * DAY_TIME)
-                .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant');
-
-            if (activities.length === 0) {
-                if (i === 1) {
-                    continue;
-                }
-                return combo;
-            }
-            combo++;
-        }
+    GetCurrentClaimIndex = () => {
+        const claimsList = this.claimsList.Get();
+        let index = claimsList.findIndex(claimList => claimList.daysCount !== claimList.claimed.length);
+        if (index === -1) index = claimsList.length - 1;
+        return index;
     }
 
     RefreshCaimsList() {

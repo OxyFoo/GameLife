@@ -1,6 +1,14 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    container: {
+        padding: 0
+    },
+    noClaim: {
+        padding: 12,
+        fontSize: 24
+    },
+
     // Popup
     popup: {
         height: 500,
@@ -18,9 +26,11 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
 
+    marginTop: {
+        marginTop: 12
+    },
     item: {
         height: 56,
-        marginTop: 12,
         padding: 6,
         flexDirection: 'row',
         alignItems: 'center',

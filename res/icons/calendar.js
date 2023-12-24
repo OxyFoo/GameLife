@@ -3,11 +3,8 @@ import Svg, { Path } from 'react-native-svg';
 
 function SvgComponent(props) {
     return (
-        <Svg viewBox='0 0 20 22' {...props}>
-            <Path
-                fill={props.color || 'white'}
-                d='M18 2H17V0H15V2H5V0H3V2H2C0.9 2 0 2.9 0 4V20C0 21.1 0.9 22 2 22H18C19.1 22 20 21.1 20 20V4C20 2.9 19.1 2 18 2ZM18 4V7H2V4H18ZM2 20V9H18V20H2Z'
-            />
+        <Svg viewBox='0 0 60 60' {...props}>
+            <Path fill={props.color || 'white'} d='M53 2.4h-2.9V0h-5.8v2.4H15.6V0H9.8v2.4H7C3.8 2.4 1.2 5 1.2 8.2v46.1C1.2 57.4 3.8 60 7 60h46c3.2 0 5.8-2.6 5.8-5.8v-46c0-3.2-2.6-5.8-5.8-5.8zm0 5.8v8.6H7V8.2h46zm-46 46V22.6h46v31.7H7z' />
         </Svg>
     )
 }

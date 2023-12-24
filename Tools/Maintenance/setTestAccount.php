@@ -18,7 +18,7 @@ if ($db_source->connect_error) {
 }
 
 $new_devices = $argv[5] === '0' ? '[]' : '[1]';
-$query = "UPDATE `Accounts` SET `Devices` = $new_devices WHERE `Email` = 'gamelife-test@oxyfoo.com'";
+$query = "UPDATE `Accounts` SET `Devices` = '$new_devices' WHERE `Email` = 'gamelife-test@oxyfoo.com'";
 $result = $db_source->query($query);
 if (!$result) {
     die("Query failed: " . $db_source->error);

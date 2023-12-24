@@ -80,42 +80,7 @@ function DateToFormatTimeString(date) {
     return [ HH, MM ].join(':');
 }
 
-/**
- * @param {Array<number>} days Array of week days (0-6)
- * @param {number} start Time in seconds
- * @param {number} end Time in seconds
- * @returns {boolean} Days contained between start and end
- */
-function WeekDayBetween(days, start, end) {
-    if (end < start) return false;
-    let day = GetDay(GetDate(start));
-    const endDay = GetDay(GetDate(end));
-    while (day !== endDay) {
-        if (days.includes(day)) return true;
-        day = (day + 1) % 7;
-    }
-    return false;
-}
-
-/**
- * @param {Array<number>} days Array of month days (0-30)
- * @param {number} start Time in seconds
- * @param {number} end Time in seconds
- * @returns {boolean} Days contained between start and end
- */
-function MonthDayBetween(days, start, end) {
-    if (end < start) return false;
-    let day = GetDay(GetDate(start));
-    const endDay = GetDay(GetDate(end));
-    while (day !== endDay) {
-        if (days.includes(day)) return true;
-        day = (day + 1) % 31;
-    }
-    return false;
-}
-
 export {
     DAYS, GetDay, GetMonthAndYear, GetFullDate,
-    DateToFormatString, DateToFormatTimeString,
-    WeekDayBetween, MonthDayBetween
+    DateToFormatString, DateToFormatTimeString
 };

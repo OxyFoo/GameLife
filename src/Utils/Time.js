@@ -1,5 +1,7 @@
 import { TwoDigit } from './Functions';
 
+const DAY_TIME = 24 * 60 * 60;
+
 /**
  * Get absolute UTC time in seconds
  * @param {Date} [date] (now default)
@@ -76,12 +78,11 @@ function GetAge(time) {
 
 /**
  * Time until tomorrow midnight
- * @returns {string} HH:MM
+ * @param {number} [now] in seconds
+ * @returns {number} time in seconds
  */
-function GetTimeToTomorrow() {
-    const today = GetTime(undefined, 'local');
-    const delta = (24 * 60 * 60) - today % (24 * 60 * 60);
-    return TimeToFormatString(delta);
+function GetTimeToTomorrow(now = GetTime()) {
+    return (24 * 60 * 60) - now % (24 * 60 * 60);
 }
 
 /**
@@ -100,6 +101,6 @@ function GetTimeZone() {
 }
 
 export {
-    GetTime, GetDate, TimeToFormatString, RoundTimeTo, GetMidnightTime,
-    GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone
+    DAY_TIME, GetTime, GetDate, TimeToFormatString, RoundTimeTo,
+    GetMidnightTime, GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone
 };

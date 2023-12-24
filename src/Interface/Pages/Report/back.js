@@ -28,7 +28,7 @@ class BackReport extends PageBase {
         statsRemain: this.stats
     }
 
-    maxPoints = 6;
+    maxPoints = 7;
 
     reportTypes = [
         { key: 0, value: langManager.curr['report']['types']['activity'] },

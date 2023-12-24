@@ -116,6 +116,7 @@ class ActivityPanelBack extends React.Component {
      */
     SelectSkill = (skill) => {
         const { activity, selectedSkillID } = this.state;
+        user.interface.SetCustomBackHandler(this.Close);
 
         // Skill is already selected
         if (selectedSkillID === skill.ID) {
@@ -123,6 +124,9 @@ class ActivityPanelBack extends React.Component {
         }
 
         activity.skillID = skill.ID;
+        if (skill.ID !== 168 && activity.duration > 4 * 60) {
+            activity.duration = 4 * 60;
+        }
 
         this.setState({
             mode: 'skill',
@@ -132,6 +136,8 @@ class ActivityPanelBack extends React.Component {
         });
 
         // Update digits
+        this.indexHour = Math.floor(activity.duration / 60);
+        this.indexMinute = (activity.duration % 60) / TIME_STEP_MINUTES;
         if (this.indexHour !== -1 && this.indexMinute !== -1) {
             this.refActivitySchedule.current.refDigitHour.current.SetDigitsIndex(this.indexHour);
             this.refActivitySchedule.current.refDigitMinute.current.SetDigitsIndex(this.indexMinute);
@@ -155,6 +161,8 @@ class ActivityPanelBack extends React.Component {
             return false;
         }
 
+        user.interface.SetCustomBackHandler(this.Close);
+
         this.setState({
             mode: 'activity',
             selectedSkillID: skill.ID,
@@ -171,9 +179,10 @@ class ActivityPanelBack extends React.Component {
     Close = () => {
         // Skill is already deselected
         if (this.state.selectedSkillID === 0) {
-            return;
+            return false;
         }
 
+        user.interface.ResetCustomBackHandler();
         this.__callback_closed();
         this.__callback_closed = () => { };
 
@@ -184,6 +193,7 @@ class ActivityPanelBack extends React.Component {
                 activityText: langManager.curr['activity']['title-activity']
             });
         }, 200);
+        return false;
     }
 
     onOpenSkill = async () => {

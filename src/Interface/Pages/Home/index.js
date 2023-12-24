@@ -5,7 +5,7 @@ import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
 import { Button, Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { Quests, TodayPieChart, News } from 'Interface/Widgets';
+import { News, TodayPieChart, TodoList  } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -19,6 +19,7 @@ class Home extends BackHome {
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
+
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
                         <Text style={styles.level}>{txt_level}</Text>
@@ -51,7 +52,7 @@ class Home extends BackHome {
 
                 <TodayPieChart style={styles.topSpace} />
 
-                <Quests
+                <TodoList
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />

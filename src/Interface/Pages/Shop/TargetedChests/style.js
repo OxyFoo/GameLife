@@ -80,6 +80,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginRight: 4
     },
+    itemOxImage: {
+        width: 16,
+        aspectRatio: 1
+    },
 
     itemDecoration: {
         position: 'absolute',

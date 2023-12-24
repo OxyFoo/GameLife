@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, Image, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import BackShopItems from './back';
@@ -8,7 +8,8 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Button, Text, Icon, Frame } from 'Interface/Components';
+import { IMG_OX } from 'Ressources/items/currencies/currencies';
+import { Button, Text, Frame } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').BuyableItem} BuyableItem
@@ -53,7 +54,7 @@ class ShopDailyDeals extends BackShopItems {
                         {/** Item price */}
                         <View style={styles.itemPrice}>
                             <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
-                            <Icon icon='ox' color='main1' size={20} />
+                            <Image style={styles.itemOxImage} source={IMG_OX} />
                         </View>
 
                         {/** Decoration */}

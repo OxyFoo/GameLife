@@ -64,9 +64,13 @@ class ActivityCard extends React.Component {
             const skill = dataManager.skills.GetByID(activity.skillID);
             const LogoID = skill?.LogoID ?? 0;
             this.XML = dataManager.skills.icons.find(x => x.ID === LogoID)?.Content ?? '';
+            const category = dataManager.skills.GetCategoryByID(skill?.CategoryID);
+            const categoryColor = /** @type {ThemeColor} */ (category?.Color);
 
             if ((skill?.XP ?? 0) === 0) {
                 color = 'main2';
+            } else {
+                color = categoryColor;
             }
 
             // Line 1: Start - End (Duration)

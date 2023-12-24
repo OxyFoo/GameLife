@@ -110,7 +110,7 @@ class Shop {
         if (result === null) return;
 
         // Check error
-        if (result['status'] !== 'ok' || !result.hasOwnProperty('newItems')) {
+        if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
             const title = lang['reward-failed-title'];
             const text = lang['reward-failed-text'];
             this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
@@ -123,23 +123,19 @@ class Shop {
         }
 
         // Update inventory
-        const newItems = result['newItems']['items'];
-        this.user.inventory.stuffs.push(...newItems);
+        const newItem = result['newItem'];
+        this.user.inventory.stuffs.push(newItem);
 
         // Save inventory
         this.user.LocalSave();
 
-        // Show success message
-        const itemsName = newItems
-                .map(rawItem => {
-                    const item = dataManager.items.GetByID(rawItem.ItemID);
-                    const rarityText = langManager.curr['rarities'][item.Rarity];
-                    return `- ${dataManager.GetText(item.Name)} (${rarityText}) -`;
-                })
-                .join('\n');
-        const title = lang['randomChests']['popup-buysuccess-title'];
-        const text = lang['randomChests']['popup-buysuccess-text'].replace('{}', itemsName);
-        this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+        // Show chest opening
+        const args = {
+            itemID: newItem['ItemID'],
+            chestRarity: chest.Rarity,
+            callback: this.user.interface.BackHandle
+        };
+        this.user.interface.ChangePage('chestreward', args, true);
     }
 
     /** @param {BuyableTargetedChest} chest */
@@ -163,7 +159,7 @@ class Shop {
         if (result === null) return;
 
         // Check error
-        if (result['status'] !== 'ok' || !result.hasOwnProperty('newItems')) {
+        if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
             const title = lang['reward-failed-title'];
             const text = lang['reward-failed-text'];
             this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
@@ -176,23 +172,19 @@ class Shop {
         }
 
         // Update inventory
-        const newItems = result['newItems']['items'];
-        this.user.inventory.stuffs.push(...newItems);
+        const newItem = result['newItem'];
+        this.user.inventory.stuffs.push(newItem);
 
         // Save inventory
         this.user.LocalSave();
 
-        // Show success message
-        const itemsName = newItems
-                .map(rawItem => {
-                    const item = dataManager.items.GetByID(rawItem.ItemID);
-                    const rarityText = langManager.curr['rarities'][item.Rarity];
-                    return `- ${dataManager.GetText(item.Name)} (${rarityText}) -`;
-                })
-                .join('\n');
-        const title = lang['targetedChests']['popup-buysuccess-title'];
-        const text = lang['targetedChests']['popup-buysuccess-text'].replace('{}', itemsName);
-        this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+        // Show chest opening
+        const args = {
+            itemID: newItem['ItemID'],
+            chestRarity: chest.Rarity,
+            callback: this.user.interface.BackHandle
+        };
+        this.user.interface.ChangePage('chestreward', args, true);
     }
 }
 

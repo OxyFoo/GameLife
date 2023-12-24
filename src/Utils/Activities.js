@@ -2,12 +2,10 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { GetDay } from 'Utils/Date';
-import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('Class/Quests').Quest} Quest
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
@@ -61,33 +59,13 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
     return AddActivity(newActivity);
 }
 
-const times = {};
-let texts = [];
-function TEST_measure_time(str) {
-    if (!times.hasOwnProperty(str)) {
-        times[str] = new Date().getTime();
-        return;
-    }
-
-    const now = new Date().getTime();
-    const diff = now - times[str];
-    texts.push('[' + str + '] ' + diff + 'ms');
-    delete times[str];
-}
-function TEST_print_times() {
-    setTimeout(() => {
-        user.interface.console.AddLog('info', texts.join(', '));
-    }, 3000);
-}
-
 /**
  * @param {Activity} activity
  * @returns {boolean} True if activity was added or edited successfully
  */
 function AddActivity(activity) {
     const lang = langManager.curr['activity'];
-    const now = GetTime();
-    TEST_measure_time('AddActivity');
+
     const addState = user.activities.Add({
         skillID: activity.skillID,
         startTime: activity.startTime,
@@ -97,12 +75,10 @@ function AddActivity(activity) {
         startNow: activity.startNow,
         addedTime: null
     });
-    TEST_measure_time('AddActivity');
 
     if (addState === 'added') {
-        TEST_measure_time('notif');
-        Notifications.Evening.RemoveToday()
-        .then(() => TEST_measure_time('notif'));
+        Notifications.Evening.RemoveToday();
+
         const text = lang['display-activity-text'];
         const button = lang['display-activity-button'];
         const args = {
@@ -124,72 +100,6 @@ function AddActivity(activity) {
                 'action': Back
             }, true);
         }
-
-        /** @param {Quest} quest @returns {boolean} */
-        const matchID = ({ Skill: { id, isCategory } }) => {
-            if (isCategory) return id === skill.CategoryID;
-            else            return id === activity.skillID;
-        };
-        /** @param {Quest} quest @returns {boolean} */
-        const matchTime = ({ Checked, Schedule, Deadline }) => {
-            const d = new Date();
-            d.setUTCHours(1, 0, 0, 0);
-            const now = GetTime();
-
-            /** @type {'schedule' | 'deadline' | null} */
-            let deadlineType = null;
-
-            /** @type {number | null} Minimum number of days */
-            let minDeltaDays = null;
-
-            let i = 0;
-            let days = Schedule.Repeat;
-            if (Schedule.Type === 'month') {
-                days = days.map(day => day + 1);
-            }
-
-            if (days.length > 0) {
-                while (minDeltaDays === null) {
-                    const weekMatch = Schedule.Type === 'week' && days.includes(GetDay(d));
-                    const monthMatch = Schedule.Type === 'month' && days.includes(d.getUTCDate());
-                    if (weekMatch || monthMatch) {
-                        minDeltaDays = i + 1;
-                        deadlineType = 'schedule';
-                    }
-                    i++;
-                    d.setUTCDate(d.getUTCDate() + 1);
-                }
-            }
-
-            // Search next deadline (if earlier than schedule or no schedule)
-            if (Deadline > 0) {
-                const delta = (Deadline - now) / (60 * 60 * 24);
-                if (minDeltaDays === null || delta < minDeltaDays) {
-                    deadlineType = 'deadline';
-                    minDeltaDays = delta;
-                }
-            }
-
-            return activity.startTime < now + (minDeltaDays * 24 * 60 * 60);
-        };
-
-        TEST_measure_time('quest');
-        const quests = user.quests.Get()
-                        .filter(quest => quest.Checked === 0)
-                        .filter(quest => quest.Skill !== null)
-                        .filter(matchID)
-                        .filter(matchTime);
-        TEST_measure_time('quest');
-
-        TEST_measure_time('quest-check');
-        if (quests.length > 0) {
-            quests.forEach(quest => user.quests.Check(quest, now));
-            const text = lang['display-quest-complete-text'];
-            const completeArgs = { 'icon': 'success', 'text': text, 'button': button, 'action': Back };
-            args['action'] = () => user.interface.ChangePage('display', completeArgs, true, true);
-        }
-        TEST_measure_time('quest-check');
-        TEST_print_times();
 
         user.interface.ChangePage('display', args, true);
         user.GlobalSave()

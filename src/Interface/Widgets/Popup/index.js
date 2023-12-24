@@ -91,7 +91,7 @@ class Popup extends PopupBack {
                 onTouchEnd={() => { this.forceUpdate() }}
             >
                 <View style={styles.background} onTouchStart={() => { this.Close(false) }} />
-                {(this.state.cancelable || this.state.cross) && <Button style={buttonQuit} color='backgroundCard' colorText='main1' onPress={() => { this.Close(this.state.cross) }}>X</Button>}
+                {(this.state.cross) && <Button style={buttonQuit} color='backgroundCard' colorText='main1' onPress={() => { this.Close(this.state.cross) }}>X</Button>}
                 <Animated.View style={containerStyle} onLayout={this.onLayout}>
                     {this.content()}
                 </Animated.View>

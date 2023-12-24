@@ -59,7 +59,7 @@ class BottomBarBack extends React.Component {
     goToHome = () => user.interface.ChangePage('home');
     goToCalendar = () => user.interface.ChangePage('calendar');
     goToActivity = () => user.interface.ChangePage('activity', undefined, true);
-    goToMultiplayer = () => user.interface.ChangePage('multiplayer');
+    goToQuests = () => user.interface.ChangePage('quests');
     goToShop = () => user.interface.ChangePage('shop');
 }
 

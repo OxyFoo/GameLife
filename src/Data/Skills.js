@@ -98,7 +98,7 @@ class Skills {
      * @param {number} ID
      * @returns {Skill[]} Return skills by category
      */
-    GetByCategory = (ID) => this.skills.filter(skill => skill.CategoryID === ID);
+    GetByCategory = (ID) => this.Get().filter(skill => skill.CategoryID === ID);
 
     /**
      * Return XML of logo by ID

@@ -10,9 +10,12 @@ require('./src/classes/account.php');
 require('./src/classes/device.php');
 
 require('./src/managers/items.php');
+require('./src/managers/myquests.php');
+require('./src/managers/nonzerodays.php');
+require('./src/managers/NZD_rewards.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
-require('./src/managers/quests.php');
+require('./src/managers/todoes.php');
 
 require('./src/sql/app.php');
 require('./src/sql/accounts.php');
@@ -303,18 +306,15 @@ class Commands {
         if (!isset($appDataToken, $dbDataToken)) return;
 
         $userData = array();
-        if (isset($account->Username, $account->Title)) {
-            $userData['username']         = $account->Username;
-            $userData['usernameTime']     = $account->LastChangeUsername;
-            $userData['title']            = $account->Title;
-            $userData['birthtime']        = $account->Birthtime;
-            $userData['lastbirthtime']    = $account->LastChangeBirth;
-            $userData['ox']               = $account->Ox;
-            $userData['questsSort']       = $account->QuestsSort;
-            $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
-            $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
-            $userData['achievements']     = Achievements::Get($this->db, $account);
-        }
+        $userData['username']         = $account->Username;
+        $userData['usernameTime']     = $account->LastChangeUsername;
+        $userData['title']            = $account->Title;
+        $userData['birthtime']        = $account->Birthtime;
+        $userData['lastbirthtime']    = $account->LastChangeBirth;
+        $userData['ox']               = $account->Ox;
+        $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
+        $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
+        $userData['achievements']     = Achievements::Get($this->db, $account);
 
         // Some data, load only if needed
         if ($appDataToken != $dbDataToken) {
@@ -327,7 +327,19 @@ class Commands {
             $userData['shop'] = array(
                 'buyToday' => Users::GetBuyToday($this->db, $account)
             );
-            $userData['quests'] = Quests::GetQuests($this->db, $account);
+            $userData['quests'] = array(
+                'myquests' => array(
+                    'data' => MyQuests::Get($this->db, $account),
+                    'sort' => $account->QuestsSort
+                ),
+                'nonzerodays' => array(
+                    'data' => NonZeroDays::Get($this->db, $account)
+                )
+            );
+            $userData['todoes'] = array(
+                'data' => Todoes::Get($this->db, $account),
+                'sort' => $account->TodoesSort
+            );
             $userData['dataToken'] = $dbDataToken;
         }
 
@@ -414,11 +426,11 @@ class Commands {
         $account = $this->account;
         $device = $this->device;
 
-        $newItems = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
-        if ($newItems === false) return;
+        $newItem = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
+        if ($newItem === false) return;
 
         $this->output['ox'] = $account->Ox;
-        $this->output['newItems'] = $newItems;
+        $this->output['newItem'] = $newItem;
         $this->output['status'] = 'ok';
     }
 
@@ -436,11 +448,11 @@ class Commands {
             return false;
         }
 
-        $newItems = Shop::BuyTargetChest($this->db, $account, $device, $slot, $rarity);
-        if ($newItems === false) return;
+        $newItem = Shop::BuyTargetChest($this->db, $account, $device, $slot, $rarity);
+        if ($newItem === false) return;
 
         $this->output['ox'] = $account->Ox;
-        $this->output['newItems'] = $newItems;
+        $this->output['newItem'] = $newItem;
         $this->output['status'] = 'ok';
     }
 
@@ -474,6 +486,25 @@ class Commands {
 
         $this->output['ox'] = $ox;
         $this->output['stuffs'] = Items::GetInventory($this->db, $account);
+        $this->output['status'] = 'ok';
+    }
+
+    public function ClaimNonZeroDays() {
+        $claimListStart = $this->data['claimListStart'];
+        $dayIndex = $this->data['dayIndex'];
+        if (!isset($claimListStart, $dayIndex) || !$this->tokenChecked) return;
+
+        $newItems = NonZeroDays::ClaimReward(
+            $this->db,
+            $this->account,
+            $this->device,
+            $claimListStart,
+            $dayIndex
+        );
+        if ($newItems === false) return;
+
+        $this->output['ox'] = $this->account->Ox;
+        $this->output['newItems'] = $newItems;
         $this->output['status'] = 'ok';
     }
 

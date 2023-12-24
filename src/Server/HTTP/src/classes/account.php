@@ -35,6 +35,9 @@ class Account
     /** @var int $XP */
     public $XP;
 
+    /** @var string[] $TodoesSort */
+    public $TodoesSort;
+
     /** @var string[] $QuestsSort */
     public $QuestsSort;
 
@@ -71,6 +74,7 @@ class Account
         $this->DevicesWait = json_decode($account['DevicesWait'], true);
         $this->Ox = intval($account['Ox']);
         $this->XP = intval($account['XP']);
+        $this->TodoesSort = json_decode($account['TodoesSort'], true);
         $this->QuestsSort = json_decode($account['QuestsSort'], true);
         $this->DataToken = $account['DataToken'];
         $this->LastSendMail = $account['LastSendMail'] === null ? null : strtotime($account['LastSendMail']);

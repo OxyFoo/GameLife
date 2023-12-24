@@ -22,6 +22,11 @@ class BackQuest extends PageBase {
         }
     }
 
+    onAddPress = () => {
+        const { skills } = this.selectedQuest;
+        user.interface.ChangePage('activity', { skills }, true);
+    }
+
     onEditPress = () => {
         const quest = this.selectedQuest;
         user.interface.ChangePage('myquest', { quest }, true);

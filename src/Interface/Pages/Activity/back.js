@@ -43,6 +43,9 @@ class BackActivity extends PageBase {
 
     refTuto1 = null;
 
+    /** @type {Array<number>} Filled with props args 'skills' */
+    preselectedSkillsIDs = [];
+
     /** @type {Array<ItemSkill>} */
     allSkillItems = [];
 
@@ -89,6 +92,15 @@ class BackActivity extends PageBase {
 
             const skill = dataManager.skills.GetByID(activity.skillID);
             this.state.selectedCategory = skill?.CategoryID || null;
+        }
+
+        // Preselected skills
+        if (this.props.args.hasOwnProperty('skills')) {
+            this.preselectedSkillsIDs = this.props.args.skills;
+            this.state.skills = this.state.skills.filter(skill => (
+                this.preselectedSkillsIDs.length === 0 ||
+                this.preselectedSkillsIDs.includes(skill.id)
+            ));
         }
     }
 
@@ -186,6 +198,11 @@ class BackActivity extends PageBase {
         /** @param {ItemSkill} skill */
         const filter = skill => !categoryID || skill.categoryID === categoryID;
         /** @param {ItemSkill} skill */
+        const filterPreselected = skill => (
+            this.preselectedSkillsIDs.length === 0 ||
+            this.preselectedSkillsIDs.includes(skill.id)
+        );
+        /** @param {ItemSkill} skill */
         const searchMatch = skill => skill.value.toLowerCase().includes(textSearch.toLowerCase());
 
         /** @type {ItemSkill[]} */
@@ -207,6 +224,7 @@ class BackActivity extends PageBase {
             itemSkills = skills
                 .slice(0, 10)
                 .map(convert)
+                .filter(filterPreselected)
                 .filter(searchMatch);
         }
 
@@ -214,6 +232,7 @@ class BackActivity extends PageBase {
         else {
             itemSkills = this.allSkillItems
                 .filter(filter)
+                .filter(filterPreselected)
                 .filter(searchMatch);
         }
 

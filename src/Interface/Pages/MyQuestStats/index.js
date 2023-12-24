@@ -16,6 +16,9 @@ class MyQuestStats extends BackQuest {
                 <Button color='main1' onPress={this.onEditPress}>
                     [Edit]
                 </Button>
+                <Button color='main1' onPress={this.onAddPress}>
+                    [Add]
+                </Button>
             </Page>
         );
     }

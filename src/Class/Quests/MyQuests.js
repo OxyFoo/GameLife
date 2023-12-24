@@ -48,6 +48,8 @@ class MyQuests {
         this.user = user;
     }
 
+    MAX_QUESTS = 10;
+
     /** @type {Array<MyQuest>} */
     SAVED_quests = [];
 
@@ -177,6 +179,8 @@ class MyQuests {
         this.UNSAVED_deletions = [];
         this.SAVED_sort = true;
     }
+
+    IsMax = () => this.Get().length >= this.MAX_QUESTS;
 
     /**
      * @param {MyQuest} quest
@@ -381,28 +385,65 @@ class MyQuests {
 
     /** @param {MyQuest} quest */
     GetStreak(quest) {
-        let i = 0;
         let streak = 0;
         const timeNow = GetTime(undefined, 'local');
 
+        const allActivitiesTime = this.user.activities.Get()
+            .filter(activity => quest.skills.includes(activity.skillID))
+            .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant')
+            .map(activity => ({
+                start: activity.startTime + activity.timezone * 60 * 60,
+                duration: activity.duration
+            }))
+            .filter(activity => activity.start < timeNow);
+
+        let n = allActivitiesTime.length;
+        let currDuration = 0;
+        let lastMidnight = timeNow - timeNow % DAY_TIME + DAY_TIME;
+
+        if (allActivitiesTime.length === 0) {
+            return 0;
+        }
+
         while (true) {
-            const week = this
-                .GetDays(quest, timeNow - i++ * DAY_TIME * 7)
-                .filter(day => !['disabled', 'normal'].includes(day.state))
-                .reverse();
-
-            if (week.length === 0 && i !== 1) {
-                return streak;
-            }
-
-            for (let i = 0; i < week.length; i++) {
-                if (week[i].state !== 'full' && !week[i].isToday) {
-                    return streak;
-                } else if (week[i].state === 'full') {
-                    streak++;
+            if (quest.schedule.type === 'week') {
+                const dayType = (GetDate(lastMidnight - DAY_TIME / 2).getDay() + 7 - 1) % 7;;
+                if (!quest.schedule.repeat.includes(dayType)) {
+                    currDuration = 0;
+                    lastMidnight -= DAY_TIME;
+                    continue;
+                }
+            } else if (quest.schedule.type === 'month') {
+                const dayType = GetDate(lastMidnight - DAY_TIME / 2).getDate() - 1;
+                if (!quest.schedule.repeat.includes(dayType)) {
+                    currDuration = 0;
+                    lastMidnight -= DAY_TIME;
+                    continue;
                 }
             }
+
+            if (--n < 0) break;
+            if (currDuration >= quest.schedule.duration) break;
+
+            const activity = allActivitiesTime[n];
+            const isToday = activity.start >= lastMidnight - DAY_TIME && activity.start < lastMidnight;
+
+            if (isToday) {
+                currDuration += activity.duration;
+            }
+
+            if (!isToday && currDuration <= quest.schedule.duration) {
+                break;
+            }
+
+            if (currDuration >= quest.schedule.duration) {
+                streak++;
+                currDuration = 0;
+                lastMidnight -= DAY_TIME;
+            }
         }
+
+        return streak;
     }
 }
 

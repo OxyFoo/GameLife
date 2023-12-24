@@ -134,6 +134,14 @@ class BackActivity extends PageBase {
             this.refActivityPanel.SelectActivity(activity);
         }
 
+        // If default skills is defined and contains only one skill
+        else if (this.preselectedSkillsIDs.length === 1) {
+            const skill = dataManager.skills.GetByID(this.preselectedSkillsIDs[0]);
+            if (skill !== null) {
+                this.refActivityPanel.SelectSkill(skill);
+            }
+        }
+
         const fromCalendar = user.interface.path.at(-1)[0] === 'calendar';
 
         // Set default time (UTC) to add an activity
@@ -243,9 +251,10 @@ class BackActivity extends PageBase {
         }
 
         this.setState({
-            skills: itemSkills, inputText,
+            inputText,
+            skills: itemSkills,
             skillSearch: textSearch,
-            selectedCategory: categoryID,
+            selectedCategory: categoryID
         });
     }
 
@@ -269,7 +278,13 @@ class BackActivity extends PageBase {
      * @param {Skill} skill
      */
     selectSkill = (skill) => {
-        this.refreshSkills(this.state.skillSearch, skill.CategoryID);
+        // If preselected skills, do not change category
+        let categoryID = null;
+        if (this.preselectedSkillsIDs.length === 0) {
+            categoryID = skill.CategoryID;
+        }
+
+        this.refreshSkills(this.state.skillSearch, categoryID);
         this.refActivityPanel.SelectSkill(skill);
     }
 }

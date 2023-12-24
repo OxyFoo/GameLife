@@ -6,6 +6,7 @@ import BackQuestsList from './back';
 import QuestElement from './Elements/quest';
 import QuestSelection from './Elements/questSelection';
 
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Container, Button, Text, Separator } from 'Interface/Components';
@@ -13,6 +14,8 @@ import { Container, Button, Text, Separator } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Class/Shop').Icons} Icons
  */
 
 const QuestsProps = {
@@ -66,14 +69,22 @@ class MyQuestsList extends BackQuestsList {
         const lang = langManager.curr['quests'];
         const { scrollable, quests, draggedItem, mouseY } = this.state;
 
+        /** @type {Icons | null} */
+        let icon = null;
+        let iconPress = null;
+        if (!user.quests.myquests.IsMax()) {
+            icon = 'addSquare';
+            iconPress = this.addQuest;
+        }
+
         return (
             <Container
                 style={this.props.style}
                 styleContainer={styles.questsContainer}
                 type='static'
                 text={lang['container-title']}
-                icon={'addSquare'}
-                onIconPress={this.addQuest}
+                icon={icon}
+                onIconPress={iconPress}
                 colorNextGen
             >
                 <QuestSelection

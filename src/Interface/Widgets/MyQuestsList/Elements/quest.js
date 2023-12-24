@@ -152,7 +152,6 @@ class QuestElement extends React.Component {
                 >
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>
-                            <Icon icon='default' color='main1' />
                             <Text style={styles.title}>{title}</Text>
                         </View>
                         <View style={styles.headerStreak}>

@@ -56,6 +56,8 @@ class ConsoleBack extends React.Component {
      * @returns {number} index of the message
      */
     AddLog = (type, text, ...params) => {
+        if (!this.state.enabled) return -1;
+
         // Add to app console
         let messages = [...this.state.debug];
 
@@ -100,6 +102,8 @@ class ConsoleBack extends React.Component {
      * @returns {boolean} Success of edition
      */
     EditLog = (index, type, text, ...params) => {
+        if (!this.state.enabled) return false;
+
         let messages = [...this.state.debug];
         if (index < 0 || index >= messages.length) return false;
 

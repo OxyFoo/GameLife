@@ -17,8 +17,6 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  */
 
-const MAX_QUESTS = 10;
-
 class BackQuestsList extends React.Component {
     state = {
         quests: [],
@@ -74,7 +72,7 @@ class BackQuestsList extends React.Component {
      * Max 10 quests
      */
     addQuest = () => {
-        if (this.state.quests.length >= MAX_QUESTS) {
+        if (user.quests.myquests.IsMax()) {
             const title = langManager.curr['quests']['alert-questslimit-title'];
             const text = langManager.curr['quests']['alert-questslimit-text'];
             user.interface.popup.Open('ok', [title, text]);
@@ -123,13 +121,15 @@ class BackQuestsList extends React.Component {
             return;
         }
 
+        const componentHeight = 92;
+
         // Move quest selection
-        const posY = this.tmpLayoutContainer.y + 92 / 2;
-        const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
+        const posY = this.tmpLayoutContainer.y + componentHeight / 2;
+        const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height - componentHeight);
         TimingAnimation(this.state.mouseY, newY, 0).start();
 
         // Change quest order when dragging
-        const index = Math.floor((newY + scrollY) / 46);
+        const index = Math.floor((newY + scrollY + componentHeight / 1.5) / componentHeight);
         const currIndex = user.quests.myquests.sort.indexOf(draggedItem.created);
         if (index !== currIndex && user.quests.myquests.Move(draggedItem, index)) {
             this.setState({ quests: user.quests.myquests.Get() });

@@ -133,7 +133,8 @@ class BackQuest extends PageBase {
                 repeat: this.state.schedule.repeat,
                 duration: this.state.duration
             },
-            skills: this.state.skills
+            skills: this.state.skills,
+            maximumStreak: 0
         });
         if (this.state.errors.join() !== errors.join()) {
             newStates.errors = errors;
@@ -211,7 +212,8 @@ class BackQuest extends PageBase {
                 repeat: schedule.repeat,
                 duration: duration
             },
-            skills
+            skills,
+            maximumStreak: 0
         });
 
         if (addition === 'added' || addition === 'edited') {

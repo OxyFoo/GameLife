@@ -40,6 +40,9 @@ class MyQuest {
 
     /** @type {Array<number>} Skills ids */
     skills = [];
+
+    /** @type {number} Maximum consecutive days */
+    maximumStreak = 0;
 }
 
 class MyQuests {
@@ -443,6 +446,12 @@ class MyQuests {
             }
         }
 
+        if (streak > quest.maximumStreak) {
+            const newQuest = Object.assign({}, quest);
+            newQuest.maximumStreak = streak;
+            this.AddOrEdit(newQuest);
+            this.user.GlobalSave();
+        }
         return streak;
     }
 }

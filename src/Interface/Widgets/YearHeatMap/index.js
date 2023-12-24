@@ -20,16 +20,16 @@ class YearHeatMap extends YearHeatMapBack {
         const titleDay = lang['heatmap-title-days'];
 
         return (
-            <View style={[styleContainer, styles.container, this.props.style]}>
+            <View style={[styles.container, styleContainer, this.props.style]}>
                 {/* Top row view */}
                 <View style={styles.flexBetween}>
 
                     <Text style={styles.headerText}>
-                        {this.state.switchValue ? titleWeek : titleDay}
+                        {this.state.switchWeekValue ? titleDay : titleWeek}
                     </Text>
 
                     <Switch
-                        value={this.state.switchValue}
+                        value={this.state.switchWeekValue}
                         onValueChanged={this.changeSwitchValue}
                     />
                 </View>

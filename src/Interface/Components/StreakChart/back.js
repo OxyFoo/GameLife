@@ -22,6 +22,9 @@ const StreakChartProps = {
     size: 200,
 
     /** @type {number} */
+    height: 200,
+
+    /** @type {number} */
     strokeWidth: 30
 }
 
@@ -49,7 +52,8 @@ class StreakChartBack extends React.Component {
     /** @param {StreakChartProps} nextProps */
     shouldComponentUpdate(nextProps) {
         if (nextProps.currentStreak !== this.props.currentStreak ||
-            nextProps.bestStreak !== this.props.bestStreak) {
+            nextProps.bestStreak !== this.props.bestStreak ||
+            nextProps.overValue !== this.props.overValue) {
             return true;
         }
 

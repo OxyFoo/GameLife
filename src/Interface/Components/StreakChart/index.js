@@ -1,12 +1,17 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Svg, Path, Text, Defs, LinearGradient, Stop } from 'react-native-svg';
+import { View, StyleSheet } from 'react-native';
+import { Svg, Path, Text as TextSVG, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 import StreakChartBack from './back';
 import langManager from 'Managers/LangManager';
 
+import { Text } from 'Interface/Components';
+
 class StreakChart extends StreakChartBack {
     render() {
+        const lang = langManager.curr['quests'];
+        const title = lang['current-streak'];
+
         const textX = this.props.size / 2;
         const textY = this.props.size / 2 + this.props.strokeWidth / 12; // TODO : CHANGE THE METHOD OF CALCULATION BECAUSE /
 
@@ -16,8 +21,10 @@ class StreakChart extends StreakChartBack {
         const bottomTextY = this.props.size / 2 + this.props.strokeWidth + 5;
 
         return (
-            <View>
-                <Svg height={this.props.size} width={this.props.size}>
+            <View style={this.props.style}>
+                <Text style={styles.text} fontSize={18} bold>{title}</Text>
+
+                <Svg width={this.props.size} height={this.props.height}>
                     <Defs>
                         <LinearGradient id='progressGradient' x1='0%' y1='0%' x2='100%' y2='0%'>
                             <Stop offset='0%' stopColor='#21CF46' stopOpacity='1' />
@@ -70,7 +77,7 @@ class StreakChart extends StreakChartBack {
 
 
                     {/* Text element for current streak number */}
-                    <Text
+                    <TextSVG
                         x={textX}
                         y={textY}
                         textAnchor='middle'
@@ -79,10 +86,10 @@ class StreakChart extends StreakChartBack {
                         fill='#fff'
                     >
                         {this.props.currentStreak}
-                    </Text>
+                    </TextSVG>
 
                     {/* Text for '0' */}
-                    <Text
+                    <TextSVG
                         x={leftTextX}
                         y={bottomTextY}
                         textAnchor='start'
@@ -91,10 +98,10 @@ class StreakChart extends StreakChartBack {
                         fontWeight='bold'
                     >
                         0
-                    </Text>
+                    </TextSVG>
 
                     {/* Text for 'current streak' */}
-                    <Text
+                    <TextSVG
                         x={centerTextX}
                         y={bottomTextY}
                         textAnchor='middle'
@@ -102,10 +109,10 @@ class StreakChart extends StreakChartBack {
                         fontSize='14'
                     >
                         {langManager.curr['quests']['currSteak']}
-                    </Text>
+                    </TextSVG>
 
                     {/* Text for '208' */}
-                    <Text
+                    <TextSVG
                         x={rightTextX}
                         y={bottomTextY}
                         textAnchor='end'
@@ -114,12 +121,18 @@ class StreakChart extends StreakChartBack {
                         fontWeight='bold'
                     >
                         {this.props.bestStreak}
-                    </Text>
+                    </TextSVG>
                 </Svg>
             </View>
 
         );
     }
 }
+
+const styles = StyleSheet.create({
+    text: {
+        marginBottom: 16
+    }
+});
 
 export default StreakChart;

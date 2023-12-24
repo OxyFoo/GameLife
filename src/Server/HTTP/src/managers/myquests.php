@@ -6,6 +6,7 @@ class MyQuest {
     public $created = 0;
     public $schedule = '[]';
     public $skills = '[]';
+    public $maximumStreak = 0;
 }
 class MyQuestUnsaved extends MyQuest {
     /** @var 'add'|'rem' $type */
@@ -20,7 +21,7 @@ class MyQuests
      * @return MyQuest[]
      */
     public static function Get($db, $account) {
-        $command = 'SELECT `Title`, `Comment`, `Created`, `Schedule`, `Skills` FROM TABLE WHERE `AccountID` = ?';
+        $command = 'SELECT `Title`, `Comment`, `Created`, `Schedule`, `Skills`, `MaximumStreak` FROM TABLE WHERE `AccountID` = ?';
         $rows = $db->QueryPrepare('MyQuests', $command, 'i', [ $account->ID ]);
         if ($rows === false) ExitWithStatus('Error: getting myquests failed');
 
@@ -31,7 +32,8 @@ class MyQuests
                 'comment' => $db->Decrypt($rows[$i]['Comment']),
                 'created' => intval($rows[$i]['Created']),
                 'schedule' => json_decode($rows[$i]['Schedule'], true),
-                'skills' => json_decode($rows[$i]['Skills'], true)
+                'skills' => json_decode($rows[$i]['Skills'], true),
+                'maximumStreak' => intval($rows[$i]['MaximumStreak'])
             );
 
             array_push($myquests, $newQuest);
@@ -86,6 +88,7 @@ class MyQuests
             $created = $myquest['created'];                   // int
             $schedule = json_encode($myquest['schedule']);    // string
             $skills = json_encode($myquest['skills']);        // object => string
+            $maximumStreak = $myquest['maximumStreak'];       // int
 
             // Check if quest exists
             $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Created` = ?';
@@ -101,17 +104,19 @@ class MyQuests
                     `Comment`,
                     `Created`,
                     `Schedule`,
-                    `Skills`
-                ) VALUES (?, ?, ?, ?, ?, ?)';
+                    `Skills`,
+                    `MaximumStreak`
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)';
                 $args = [
                     $account->ID,
                     $title,
                     $comment,
                     $created,
                     $schedule,
-                    $skills
+                    $skills,
+                    $maximumStreak
                 ];
-                $types = 'ississ';
+                $types = 'ississi';
 
                 $r = $db->QueryPrepare('MyQuests', $command, $types, $args);
                 if ($r === false) ExitWithStatus('Error: saving myquests failed (add)');
@@ -123,16 +128,18 @@ class MyQuests
                     `Title` = ?,
                     `Comment` = ?,
                     `Schedule` = ?,
-                    `Skills` = ?
+                    `Skills` = ?,
+                    `MaximumStreak` = ?
                     WHERE `ID` = ?';
                 $args = [
                     $title,
                     $comment,
                     $schedule,
                     $skills,
+                    $maximumStreak,
                     $reqQuest[0]['ID']
                 ];
-                $types = 'ssssi';
+                $types = 'ssssii';
 
                 $r = $db->QueryPrepare('MyQuests', $command, $types, $args);
                 if ($r === false) ExitWithStatus('Error: saving myquests failed (update)');

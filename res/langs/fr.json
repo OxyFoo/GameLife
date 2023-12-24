@@ -624,7 +624,11 @@
         "quests-empty-button": "En ajouter une",
 
         "alert-questslimit-title": "Limite de quêtes atteinte",
-        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres."
+        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
+
+        "current-streak": "Série actuelle",
+        "heatmap-title-weeks": "Réalisation par semaine",
+        "heatmap-title-days": "Réalisation par jour"
     },
 
     "nonzerodays": {

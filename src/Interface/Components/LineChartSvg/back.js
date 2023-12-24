@@ -12,14 +12,17 @@ const LineChartSvgProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {{date:string, value:number}[]} */
+    /** @type {{ date:string, value:number }[]} */
     data: [],
 
     /** @type {ThemeColor | ThemeText} */
     lineColor: 'black',
 
     /** @type {number} */
-    graphHeight: 200
+    graphHeight: 200,
+
+    /** @type {boolean} */
+    isAreaChart: false
 };
 
 class LineChartSvgBack extends React.Component {
@@ -28,7 +31,7 @@ class LineChartSvgBack extends React.Component {
         maxValue: 0,
         points: '',
         yAxisValues: null
-    };
+    }
 
     leftMargin = 40;
     firstDate = null;

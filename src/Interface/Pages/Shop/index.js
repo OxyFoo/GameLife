@@ -37,7 +37,7 @@ class Shop extends BackShop {
     }
 
     render() {
-        if (!user.server.online) {
+        if (!user.server.IsConnected(false)) {
             return this.noInternetRender();
         }
 

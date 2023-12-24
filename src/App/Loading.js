@@ -20,7 +20,7 @@ async function Initialisation(nextStep) {
 
     // Ping request
     await user.server.Ping();
-    const online = user.server.online;
+    const online = user.server.IsConnected();
     if (!online) {
         user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
     }
@@ -38,7 +38,7 @@ async function Initialisation(nextStep) {
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
-        if (user.server.status === 'maintenance') {
+        if (!online) {
             user.interface.ChangePage('waitinternet', { force: 1 }, true);
         }
         return;

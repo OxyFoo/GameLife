@@ -8,6 +8,7 @@ import DayClock from './Components/DayClock';
 import Digit from './Components/Digit';
 import Frame from './Components/Character/Frame';
 import GLLoading from './Components/GLLoading';
+import HeatMap from './Components/HeatMap';
 import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
@@ -18,6 +19,7 @@ import PageBase from './Components/Page/PageBase';
 import PieChart from './Components/PieChart';
 import ProgressBar from './Components/ProgressBar';
 import Separator from './Components/Separator';
+import StreakChart from './Components/StreakChart';
 import Swiper from './Components/Swiper';
 import Switch from './Components/Switch';
 import Text from './Components/Text';
@@ -36,6 +38,7 @@ export {
     Digit,
     Frame,
     GLLoading,
+    HeatMap,
     Icon,
     IconCheckable,
     Input,
@@ -46,6 +49,7 @@ export {
     PieChart,
     ProgressBar,
     Separator,
+    StreakChart,
     Swiper,
     Switch,
     Text,

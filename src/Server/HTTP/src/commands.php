@@ -101,11 +101,12 @@ class Commands {
         $maintenance    = $appData['Maintenance'];
         $reset          = array_key_exists('reset', $this->data);
 
+        $this->output['status'] = 'ok';
+
         if (!isset($versionApp)) {
             return;
         } else if ($versionServer < $versionApp) {
             $this->output['status'] = 'downdate';
-            return;
         } else if ($maintenance) {
             $this->output['status'] = 'maintenance';
             return;
@@ -148,7 +149,6 @@ class Commands {
 
         Devices::Refresh($this->db, $device, $deviceName, $osName, $osVersion);
         $this->output['devMode'] = $device->DevMode;
-        $this->output['status'] = 'ok';
     }
 
     /**

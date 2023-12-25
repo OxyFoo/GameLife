@@ -44,17 +44,17 @@ class MyQuestStats extends BackQuest {
                     onPress={this.onEditPress}
                 />
 
-                <YearHeatMap
-                    style={styles.yearHeatMap}
-                    quest={this.selectedQuest}
-                />
-
                 <StreakChart
                     style={[styles.streakChartContainer, styleContainer]}
                     size={200}
                     height={150}
                     currentStreak={currentStreak}
                     bestStreak={maxStreak}
+                />
+
+                <YearHeatMap
+                    style={styles.yearHeatMap}
+                    quest={this.selectedQuest}
                 />
             </Page>
         );

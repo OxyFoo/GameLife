@@ -434,7 +434,10 @@ class MyQuests {
 
             // Add duration of activities in the same day
             const activity = allActivitiesTime[n];
-            const currDay = activity.localStart >= lastMidnight && activity.localStart < lastMidnight + DAY_TIME;
+            if (activity.localStart > lastMidnight + DAY_TIME) {
+                continue;
+            }
+            const currDay = activity.localStart >= lastMidnight;
             if (currDay) {
                 currDuration += activity.duration;
             }

@@ -63,6 +63,7 @@
             "never": "Jamais",
             "weekly": "Semaine",
             "monthly": "Mois",
+            "day-min": "j",
             "seconds-min": "m",
             "hours-min": "h"
         },
@@ -183,7 +184,7 @@
         "title-experience": "Expérience",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
         "title-not-past": "Cette activité n'a pas encore été réalisée",
-        "title-before-limit": "Cette activité n'apporte pas d'expérience car elle a été ajoutée plus de 48h après avoir été réalisée",
+        "title-before-limit": "Cette activité a été ajoutée plus de 48 heures après sa réalisation. Elle ne rapporte donc pas d'expérience et n'est pas prise en compte pour les quêtes.",
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
@@ -215,7 +216,6 @@
         "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
-        "display-quest-complete-text": "Bravo ! Tu as rempli des tâches pour aujourd'hui !",
         "display-activity-button": "Retour vers l'accueil",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil"
@@ -449,9 +449,7 @@
             "chest-random-epic": "Coffre des légendes",
 
             "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",
-            "popup-chest-button": "Ouvrir pour {} Ox",
-            "popup-buysuccess-title": "Achat réussi",
-            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
+            "popup-chest-button": "Ouvrir pour {} Ox"
         },
 
         "targetedChests": {
@@ -463,9 +461,7 @@
             },
 
             "popup-chest-text": "Tu veux ouvrir un coffre {} pour obtenir un item de type \"{}\" pour {} Ox ?",
-            "popup-chest-button": "Ouvrir pour {} Ox",
-            "popup-buysuccess-title": "Achat réussi",
-            "popup-buysuccess-text": "Félicitation ! Tu as obtenu les items suivant:\n\n{}"
+            "popup-chest-button": "Ouvrir pour {} Ox"
         },
 
         "dyes": {
@@ -541,29 +537,16 @@
         }
     },
 
-    "quest": {
+    "todo": {
         "title-schedule": "Planification",
         "title-tasks": "Tâches",
-        "title-activity": "Activité",
         "title-commentary": "Commentaire",
 
         "input-title": "Titre",
         "input-deadline-title": "Date limite",
         "input-deadline-empty": "Aucune",
-        "input-activity-title": "Aucune catégorie ou activité sélectionnée",
-        "input-activity-title-activity": "Activité sélectionnée:",
-        "input-activity-title-category": "Catégorie sélectionnée:",
-        "input-activity-none": "Aucune",
-        "input-activity-empty": "Sélectionner",
-        "input-activity-only": "Toutes les activités de la catégorie: {}",
 
-        "input-panel-activity": "Sélectionne une activité",
-        "input-panel-category": "Sélectionne une catégorie",
-
-        "input-repeat-title": "Répétition",
-        "input-description": "Description",
         "input-task-placeholder": "Tâche",
-        "text-hint-select": "Reste appuyé pour sélectionner un colone",
 
         "button-commentary": "Ajouter un commentaire",
         "button-add": "Ajouter",
@@ -571,12 +554,12 @@
         "button-remove": "Supprimer",
 
         "error-title-empty": "Le titre ne peut pas être vide",
-        "error-title-exists": "Une quête avec ce titre existe déjà",
+        "error-title-exists": "Une tâche avec ce titre existe déjà",
 
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
-        "alert-remquest-title": "Suppression ?",
-        "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
+        "alert-remtodo-title": "Suppression ?",
+        "alert-remtodo-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
         "alert-remtask-title": "Suppression ?",
         "alert-remtask-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
         "alert-taskslimit-title": "Limite atteinte",
@@ -585,16 +568,78 @@
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
-    "quests": {
+    "todoes": {
         "container-title": "Todo liste",
-        "quests-empty-title": "Tu n'as pas encore de quête",
+        "todoes-empty-title": "Tu n'as pas encore de tâches",
+        "todoes-empty-button": "En ajouter une",
+
+        "todo-type-deadline": "Avant le:",
+
+        "alert-todoeslimit-title": "Limite atteinte",
+        "alert-todoeslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+    },
+
+    "quest": {
+        "titles": {
+            "title": "Titre de la quête",
+            "skills": "Sélectionne tes activités",
+            "schedule": "Planification",
+            "duration": "Durée minimum pour chaque jour",
+            "comment": "Commentaire"
+        },
+
+        "input-title": "Titre",
+        "input-activity-title": "Aucune activité sélectionnée",
+        "input-activity-add": "Ajouter",
+
+        "input-panel-activity": "Sélectionne une activité",
+        "input-panel-category": "Sélectionne une catégorie",
+
+        "input-comment": "Commentaire",
+
+        "text-hint-select": "Reste appuyé pour sélectionner un colone",
+
+        "input-errors": {
+            "title-empty": "Le titre ne peut pas être vide",
+            "title-exists": "Une quête avec ce titre existe déjà",
+            "skills-empty": "Tu dois ajouter au moins une activité",
+            "schedule-empty": "Tu dois sélectionner les jours durant lesquels tu veux faire cette quête"
+        },
+
+        "button-text": {
+            "add": "Ajouter",
+            "save": "Sauvegarder",
+            "remove": "Supprimer"
+        },
+
+        "alert-remquest-title": "Suppression ?",
+        "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
+        "alert-back-title": "Retour",
+        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
+    },
+
+    "quests": {
+        "container-title": "Mes quêtes",
+        "quests-empty-title": "Tu n'as pas encore de quête, ajoutes-en une en cliquant sur le bouton ci-dessous ou sur le + en haut à droite",
         "quests-empty-button": "En ajouter une",
 
-        "quest-type-deadline": "Avant le:",
-        "quest-type-repeat-before": "À faire avant le:",
-
         "alert-questslimit-title": "Limite de quêtes atteinte",
-        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres."
+        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
+
+        "current-streak": "Série actuelle",
+        "heatmap-title-weeks": "Réalisation par semaine",
+        "heatmap-title-days": "Réalisation par jour"
+    },
+
+    "nonzerodays": {
+        "container-title": "Jours non zéro",
+        "container-date": "Récompenses du {}",
+        "claim": "Claim",
+        "claim-in": "Claim dans {}",
+        "no-claim": "Pas de claim",
+
+        "alert-claim-error-title": "Erreur",
+        "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard."
     },
 
     "wait": {
@@ -667,11 +712,16 @@
             "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
         },
 
+        "todo": {
+            "1": "Ici tu peux définir la date limite de ta tâche.",
+            "2": "Tu peux également ajouter des tâches à ta tâche principale, pour mieux t'organiser.",
+            "3": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        },
+
         "quest": {
             "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
             "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Tu peux également ajouter des tâches à ta quête principale, pour mieux t'organiser.",
-            "4": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+            "3": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
         },
 
         "other": {

@@ -13,27 +13,30 @@ class Users
      */
     public static function ExecQueue($db, $account, $deviceID, $data) {
         $activities = $data['activities'];
+        $todoes = $data['todoes'];
         $quests = $data['quests'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
-        $questsSort = $data['questsSort'];
         $titleID = $data['titleID'];
         $birthTime = $data['birthTime'];
 
         if (isset($activities)) {
             Skills::AddActivities($db, $account, $activities);
         }
-        if (isset($quests)) {
-            Quests::AddQuests($db, $account, $quests);
+        if (isset($todoes)) {
+            Todoes::Save($db, $account, $todoes);
+        }
+        if (isset($quests) && isset($quests['myquests'])) {
+            MyQuests::Save($db, $account, $deviceID, $quests['myquests']);
+        }
+        if (isset($quests) && isset($quests['nonzerodays'])) {
+            NonZeroDays::Save($db, $account, $quests['nonzerodays']);
         }
         if (isset($avatar)) {
             self::SetAvatar($db, $account, $avatar);
         }
         if (isset($xp)) {
             self::setXP($db, $account->ID, $xp);
-        }
-        if (isset($questsSort)) {
-            self::SetQuestsSort($db, $account, $questsSort);
         }
         if (isset($titleID)) {
             self::setTitle($db, $account, $titleID);
@@ -277,20 +280,6 @@ class Users
         $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $xp, $accountID ]);
         if ($result === false) {
             ExitWithStatus('Error: Saving XP failed');
-        }
-    }
-
-    /**
-     * @param DataBase $db
-     * @param Account $account
-     * @param string[] $questsSort
-     */
-    private static function SetQuestsSort($db, $account, $questsSort) {
-        $command = 'UPDATE TABLE SET `QuestsSort` = ? WHERE `ID` = ?';
-        $args = [ json_encode($questsSort), $account->ID ];
-        $result = $db->QueryPrepare('Accounts', $command, 'si', $args);
-        if ($result === false) {
-            ExitWithStatus('Error: Saving quests sort failed');
         }
     }
 

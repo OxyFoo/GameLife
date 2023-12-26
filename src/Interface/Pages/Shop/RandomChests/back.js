@@ -53,7 +53,7 @@ class BackShopItems extends React.Component {
     /** @param {number} chestID */
     openItemPopup = (chestID) => {
         const chest = this.CHESTS.find(chest => chest.ID === chestID);
-        const render = () => renderBuyPopup.call(this, chest);
+        const render = () => renderBuyPopup.call(this, chest, user.interface.popup.Close);
         user.interface.popup.Open('custom', render);
     }
 }

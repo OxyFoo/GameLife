@@ -125,6 +125,11 @@ async function Initialisation(nextStep) {
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     user.interface.header.ShowAvatar(true);
 
+    // Loading: Quests
+    user.quests.nonzerodays.RefreshCaimsList();
+    await user.OnlineSave();
+    await user.LocalSave();
+
     // Loading: Notifications
     const time_start_notification = new Date().getTime();
     Notifications.DisableAll().then(() => {
@@ -147,7 +152,7 @@ async function Initialisation(nextStep) {
 
     // Load admob
     const time_start_admob = new Date().getTime();
-    user.consent.ShowTrackingPopup()
+    await user.consent.ShowTrackingPopup()
     .then(user.admob.LoadAds)
     .then(() => {
         const time_end_admob = new Date().getTime();

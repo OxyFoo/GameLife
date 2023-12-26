@@ -34,7 +34,7 @@ class DynamicVar {
             return;
         }
 
-        if (this.var !== value) {
+        if (this.var !== value || typeof(this.var) === 'object') {
             const oldValue = this.var;
             this.var = value;
             this._updateListeners(value, oldValue);

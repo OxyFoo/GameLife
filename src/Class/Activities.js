@@ -9,6 +9,7 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * 
+ * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'edited' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
  * 
  * @typedef {object} CurrentActivity
@@ -61,7 +62,10 @@ class Activities {
     /** @type {Array<Activity>} */
     UNSAVED_deletions = [];
 
-    /** @description Contain all activities, updated when adding, editing or removing */
+    /**
+     * @description Contain all activities, updated when adding, editing or removing
+     * @type {DynamicVar<Array<Activity>>}
+     */
     allActivities = new DynamicVar([]);
 
     /** @type {CurrentActivity | null} */
@@ -407,7 +411,7 @@ class Activities {
 
     /**
      * @param {Activity} activity
-     * @returns {'grant' | 'isNotPast' | 'beforeLimit'}
+     * @returns {ActivityStatus}
      */
     GetExperienceStatus(activity) {
         const { startTime, addedTime } = activity;

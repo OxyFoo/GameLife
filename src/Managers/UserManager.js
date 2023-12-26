@@ -6,10 +6,11 @@ import Experience from 'Class/Experience';
 import Informations from 'Class/Informations';
 import Inventory from 'Class/Inventory';
 import Multiplayer from 'Class/Multiplayer';
+import Quests from 'Class/Quests';
 import Server from 'Class/Server';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
-import Quests from 'Class/Quests';
+import Todoes from 'Class/Todoes';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
@@ -41,10 +42,11 @@ class UserManager {
         this.informations = new Informations(this);
         this.inventory = new Inventory(this);
         this.multiplayer = new Multiplayer(this);
+        this.quests = new Quests(this);
         this.server = new Server(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this)
-        this.quests = new Quests(this);
+        this.todoes = new Todoes(this);
 
         this.stats = this.experience.GetEmptyExperience();
     }
@@ -92,10 +94,11 @@ class UserManager {
         this.activities.Clear();
         this.informations.Clear();
         this.inventory.Clear();
+        this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
         this.shop.Clear();
-        this.quests.Clear();
+        this.todoes.Clear();
         await this.settings.Save();
 
         await DataStorage.ClearAll();
@@ -188,8 +191,9 @@ class UserManager {
             'consent': this.consent.Save(),
             'informations': this.informations.Save(),
             'inventory': this.inventory.Save(),
+            'quests': this.quests.Save(),
             'shop': this.shop.Save(),
-            'quests': this.quests.Save()
+            'todoes': this.todoes.Save()
         };
 
         const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
@@ -213,8 +217,9 @@ class UserManager {
             if (contains('consent')) this.consent.Load(data['consent']);
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('inventory')) this.inventory.Load(data['inventory']);
-            if (contains('shop')) this.shop.Load(data['shop']);
             if (contains('quests')) this.quests.Load(data['quests']);
+            if (contains('shop')) this.shop.Load(data['shop']);
+            if (contains('todoes')) this.todoes.Load(data['todoes']);
 
             this.interface.console.EditLog(debugIndex, 'same', 'User data: local load success');
         } else {
@@ -241,8 +246,8 @@ class UserManager {
             data['quests'] = this.quests.GetUnsaved();
         }
 
-        if (!this.quests.SAVED_sort) {
-            data['questsSort'] = this.quests.questsSort;
+        if (this.todoes.IsUnsaved()) {
+            data['todoes'] = this.todoes.GetUnsaved();
         }
 
         if (this.inventory.IsUnsaved()) {
@@ -265,6 +270,7 @@ class UserManager {
                 this.activities.Purge();
                 this.informations.Purge();
                 this.quests.Purge();
+                this.todoes.Purge();
                 this.interface.console.EditLog(debugIndex, 'same', 'User data: online save success');
                 await this.LocalSave();
             } else {
@@ -295,9 +301,9 @@ class UserManager {
             if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
-            if (contains('shop')) this.shop.LoadOnline(data['shop']);
             if (contains('quests')) this.quests.LoadOnline(data['quests']);
-            if (contains('questsSort')) this.quests.questsSort = data['questsSort'];
+            if (contains('shop')) this.shop.LoadOnline(data['shop']);
+            if (contains('todoes')) this.todoes.LoadOnline(data['todoes']);
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

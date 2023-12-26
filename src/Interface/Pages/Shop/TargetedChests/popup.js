@@ -12,8 +12,11 @@ import { Text, Button } from 'Interface/Components';
  * @typedef {import('Class/Shop').BuyableTargetedChest} BuyableTargetedChest
  */
 
-/** @param {BuyableTargetedChest} item */
-function renderBuyPopup(item) {
+/**
+ * @param {BuyableTargetedChest} item
+ * @param {() => void} closePopup
+ */
+function renderBuyPopup(item, closePopup) {
     const lang = langManager.curr['shop']['targetedChests'];
     let [ loading, setLoading ] = React.useState(false);
 
@@ -28,6 +31,7 @@ function renderBuyPopup(item) {
         setLoading(true);
         await user.shop.BuyTargetedChest(item);
         setLoading(false);
+        closePopup();
     };
 
     return (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, Image, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import BackShopDyes from './back';
@@ -8,6 +8,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import { Button, Text, Icon, Frame } from 'Interface/Components';
 
 /**
@@ -42,7 +43,7 @@ class ShopDyes extends BackShopDyes {
                     <Icon icon='arrowLeft' angle={180} color='white' size={48} />
                     <View style={styles.dyeAmountPrice}>
                         <Text style={styles.dyeAmountText}>{dyer.Price.toString()}</Text>
-                        <Icon icon='ox' color='main1' size={24} />
+                        <Image style={styles.dyeOxImage} source={IMG_OX} />
                     </View>
                 </View>
 

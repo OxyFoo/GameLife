@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
+import { Animated, View, Image, StyleSheet } from 'react-native';
 
 import { openPopupCode } from './popupGiftCode';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import { OX_AMOUNT } from 'Class/Admob';
-import { Icon, Text, Button } from 'Interface/Components';
+import { Text, Button } from 'Interface/Components';
 
 /**
  * @typedef {import('Class/Admob').AdEvent} AdEvent
@@ -151,7 +152,7 @@ class ShopHeader extends React.Component {
                         <Text fontSize={16} color='main1'>
                             {lang['button-header-ad'].replace('{}', OX_AMOUNT.toString())}
                         </Text>
-                        <Icon icon='ox' color='main1' size={20} />
+                        <Image style={styles.ox} source={IMG_OX} />
                     </Button.Badge>
 
                     <Button.Badge
@@ -163,7 +164,7 @@ class ShopHeader extends React.Component {
                         disabled={!user.server.IsConnected()}
                     >
                         <Text fontSize={oxTextSize} color='main1'>{oxAmountStr}</Text>
-                        <Icon style={styles.ox} icon='ox' color='main1' size={oxIconSize} />
+                        <Image style={[styles.ox, { width: oxIconSize }]} source={IMG_OX} />
                     </Button.Badge>
                 </View>
             </Animated.View>
@@ -193,6 +194,8 @@ const styles = StyleSheet.create({
         width: '32%',
     },
     ox: {
+        width: 20,
+        aspectRatio: 1,
         marginLeft: 2
     }
 });

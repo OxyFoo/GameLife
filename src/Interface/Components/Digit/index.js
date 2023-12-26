@@ -11,14 +11,15 @@ import { Range } from 'Utils/Functions';
 
 class Digit extends DigitBack {
     renderDigit = (i) => {
-        const { name, color } = this.props;
+        const { name, color, fontSize } = this.props;
         return (
             <Text
                 key={name + '-text-' + i}
                 style={[
                     styles.digit,
                     {
-                        minWidth: this.state.digitWidth - 4
+                        minWidth: this.state.digitWidth - 4,
+                        fontSize: fontSize
                     }
                 ]}
                 color={color}

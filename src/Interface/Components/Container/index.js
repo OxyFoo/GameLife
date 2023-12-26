@@ -28,6 +28,7 @@ class Container extends ContainerBack {
                 style={this.props.styleHeader}
                 styleAnimation={borderStyle}
                 color={color}
+                colorNextGen={this.props.colorNextGen}
                 iconAngle={iconAngle}
                 rippleColor={rippleColor}
                 borderRadius={8}
@@ -46,6 +47,7 @@ class Container extends ContainerBack {
                 style={[{ justifyContent: 'space-between' }, this.props.styleHeader]}
                 styleAnimation={borderStyle}
                 color={color}
+                colorNextGen={this.props.colorNextGen}
                 rippleColor='transparent'
                 borderRadius={8}
                 pointerEvents='box-none'
@@ -72,7 +74,7 @@ class Container extends ContainerBack {
         const children = this.props.children;
         const contentHeight = Animated.multiply(this.state.animHeightContent, this.state.maxHeight);
         const contentStyle = {
-            backgroundColor: themeManager.GetColor(this.props.backgroundColor),
+            backgroundColor: themeManager.GetColor(this.props.backgroundColor, { opacity: this.props.colorNextGen ? 0.1 : 1 }),
             opacity: this.state.maxHeight === 0 && this.props.type === 'rollable' ? 0 : 1,
             maxHeight: this.state.maxHeight === 0 ? 'auto' : contentHeight
         };

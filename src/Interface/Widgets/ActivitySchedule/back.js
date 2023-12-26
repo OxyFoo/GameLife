@@ -25,6 +25,8 @@ const ActivityScheduleProps = {
     /** @type {number} Duration in minutes */
     selectedDuration: 60,
 
+    maxDuration: 4,
+
     /**
      * @param {number} startTime Unix timestamp of the start of the activity
      * @param {number} durationTime Duration of the activity in minutes

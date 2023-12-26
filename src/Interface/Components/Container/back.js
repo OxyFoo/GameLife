@@ -37,6 +37,9 @@ const ContainerProps = {
     /** @type {ThemeColor} */
     color: 'main1',
 
+    /** @type {boolean} True to show new UI gradient */
+    colorNextGen: false,
+
     /** @type {ThemeColor} */
     rippleColor: undefined,
 

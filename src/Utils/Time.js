@@ -97,6 +97,7 @@ function GetDaysUntil(time) {
     return days;
 }
 
+/** @returns {number} Timezone in hours */
 function GetTimeZone() {
     return - (new Date()).getTimezoneOffset() / 60;
 }

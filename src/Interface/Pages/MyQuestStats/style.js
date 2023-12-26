@@ -18,7 +18,9 @@ const styles = StyleSheet.create({
         height: 50,
         top: 36,
         right: 36,
-        paddingHorizontal: 0
+        paddingHorizontal: 0,
+        zIndex: 1010,
+        elevation: 1010
     },
     addActivity: {
         position: 'absolute',

@@ -1,6 +1,6 @@
 import DynamicVar from 'Utils/DynamicVar';
 import { Sum } from 'Utils/Functions';
-import { DAY_TIME, GetDate, GetTime } from 'Utils/Time';
+import { DAY_TIME, GetDate, GetTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -390,57 +390,72 @@ class MyQuests {
     GetStreak(quest) {
         let streak = 0;
         const timeNow = GetTime(undefined, 'local');
+        const todayMidnight = timeNow - timeNow % DAY_TIME - GetTimeZone() * 60 * 60;
 
         const allActivitiesTime = this.user.activities.Get()
             .filter(activity => quest.skills.includes(activity.skillID))
             .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant')
             .map(activity => ({
-                start: activity.startTime + activity.timezone * 60 * 60,
+                localStart: activity.startTime + activity.timezone * 60 * 60,
                 duration: activity.duration
-            }))
-            .filter(activity => activity.start < timeNow);
+            }));
 
         let n = allActivitiesTime.length;
         let currDuration = 0;
-        let lastMidnight = timeNow - timeNow % DAY_TIME + DAY_TIME;
+        let lastMidnight = todayMidnight;
 
         if (allActivitiesTime.length === 0) {
             return 0;
         }
 
         while (true) {
+            // Skip days that are not in repeat
+            const day = GetDate(lastMidnight + GetTimeZone() * 60 * 60);
             if (quest.schedule.type === 'week') {
-                const dayType = (GetDate(lastMidnight - DAY_TIME / 2).getDay() + 7 - 1) % 7;;
-                if (!quest.schedule.repeat.includes(dayType)) {
+                const dayIndex = (day.getDay() + 7 - 1) % 7;
+                if (!quest.schedule.repeat.includes(dayIndex)) {
                     currDuration = 0;
                     lastMidnight -= DAY_TIME;
                     continue;
                 }
             } else if (quest.schedule.type === 'month') {
-                const dayType = GetDate(lastMidnight - DAY_TIME / 2).getDate() - 1;
-                if (!quest.schedule.repeat.includes(dayType)) {
+                const dayIndex = day.getDate() - 1;
+                if (!quest.schedule.repeat.includes(dayIndex)) {
                     currDuration = 0;
                     lastMidnight -= DAY_TIME;
                     continue;
                 }
             }
 
-            if (--n < 0) break;
-            if (currDuration >= quest.schedule.duration) break;
-
-            const activity = allActivitiesTime[n];
-            const isToday = activity.start >= lastMidnight - DAY_TIME && activity.start < lastMidnight;
-
-            if (isToday) {
-                currDuration += activity.duration;
-            }
-
-            if (!isToday && currDuration <= quest.schedule.duration) {
+            // Check if there is no more activities
+            if (--n < 0) {
                 break;
             }
 
-            if (currDuration >= quest.schedule.duration) {
+            // Add duration of activities in the same day
+            const activity = allActivitiesTime[n];
+            const currDay = activity.localStart >= lastMidnight && activity.localStart < lastMidnight + DAY_TIME;
+            if (currDay) {
+                currDuration += activity.duration;
+            }
+
+            // Check if streak is broken
+            const isToday = lastMidnight === todayMidnight;
+            const isComplete = currDuration >= quest.schedule.duration;
+            if (!currDay && !isToday && !isComplete) {
+                break;
+            }
+
+            // Check if streak is continued
+            if (isComplete) {
                 streak++;
+                currDuration = 0;
+                lastMidnight -= DAY_TIME;
+            }
+
+            // Check if streak is continued even if not complete (only if today)
+            else if (isToday) {
+                n++;
                 currDuration = 0;
                 lastMidnight -= DAY_TIME;
             }

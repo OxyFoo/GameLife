@@ -26,11 +26,11 @@ PACKAGE_JSON_VERSION_NAME=$(grep version $PACKAGE_JSON_PATH | head -1 | awk '{ p
 
 # Increment package.json version
 if [ "$VERSION_TYPE" == "major" ]; then
-    NEXT_PACKAGE_JSON_VERSION=$(echo $PACKAGE_JSON_VERSION | awk -F. '{$1 = $1 + 1;} 1' | sed 's/ /./g')
-    NEXT_PACKAGE_JSON_VERSION_NAME=$(echo $PACKAGE_JSON_VERSION_NAME | awk -F. '{$1 = $1 + 1;} 1' | sed 's/ /./g')
+    NEXT_PACKAGE_JSON_VERSION=$(echo $PACKAGE_JSON_VERSION | awk -F. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1' | sed 's/ /./g')
+    NEXT_PACKAGE_JSON_VERSION_NAME=$(echo $PACKAGE_JSON_VERSION_NAME | awk -F. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1' | sed 's/ /./g')
 elif [ "$VERSION_TYPE" == "minor" ]; then
-    NEXT_PACKAGE_JSON_VERSION=$(echo $PACKAGE_JSON_VERSION | awk -F. '{$2 = $2 + 1;} 1' | sed 's/ /./g')
-    NEXT_PACKAGE_JSON_VERSION_NAME=$(echo $PACKAGE_JSON_VERSION_NAME | awk -F. '{$2 = $2 + 1;} 1' | sed 's/ /./g')
+    NEXT_PACKAGE_JSON_VERSION=$(echo $PACKAGE_JSON_VERSION | awk -F. '{$2 = $2 + 1; $3 = 0;} 1' | sed 's/ /./g')
+    NEXT_PACKAGE_JSON_VERSION_NAME=$(echo $PACKAGE_JSON_VERSION_NAME | awk -F. '{$2 = $2 + 1; $3 = 0;} 1' | sed 's/ /./g')
 elif [ "$VERSION_TYPE" == "patch" ]; then
     NEXT_PACKAGE_JSON_VERSION=$(echo $PACKAGE_JSON_VERSION | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
     NEXT_PACKAGE_JSON_VERSION_NAME=$(echo $PACKAGE_JSON_VERSION_NAME | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
@@ -43,9 +43,9 @@ ANDROID_VERSION_NAME=$(grep versionName $ANDROID_BUILD_GRADLE_PATH | head -1 | a
 # Increment android version
 NEXT_ANDROID_VERSION_CODE=$(($ANDROID_VERSION_CODE + 1))
 if [ "$VERSION_TYPE" == "major" ]; then
-    NEXT_ANDROID_VERSION_NAME=$(echo $ANDROID_VERSION_NAME | awk -F. '{$1 = $1 + 1;} 1' | sed 's/ /./g')
+    NEXT_ANDROID_VERSION_NAME=$(echo $ANDROID_VERSION_NAME | awk -F. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1' | sed 's/ /./g')
 elif [ "$VERSION_TYPE" == "minor" ]; then
-    NEXT_ANDROID_VERSION_NAME=$(echo $ANDROID_VERSION_NAME | awk -F. '{$2 = $2 + 1;} 1' | sed 's/ /./g')
+    NEXT_ANDROID_VERSION_NAME=$(echo $ANDROID_VERSION_NAME | awk -F. '{$2 = $2 + 1; $3 = 0;} 1' | sed 's/ /./g')
 elif [ "$VERSION_TYPE" == "patch" ]; then
     NEXT_ANDROID_VERSION_NAME=$(echo $ANDROID_VERSION_NAME | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
 fi
@@ -57,9 +57,9 @@ IOS_VERSION=$(grep 'MARKETING_VERSION' $IOS_XCODEPROJ_PATH | head -1 | awk '{ pr
 # Increment iOS version
 NEXT_IOS_BUILD_NUMBER=$(($IOS_BUILD_NUMBER + 1))
 if [ "$VERSION_TYPE" == "major" ]; then
-    NEXT_IOS_VERSION=$(echo $IOS_VERSION | awk -F. '{$1 = $1 + 1;} 1' | sed 's/ /./g')
+    NEXT_IOS_VERSION=$(echo $IOS_VERSION | awk -F. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1' | sed 's/ /./g')
 elif [ "$VERSION_TYPE" == "minor" ]; then
-    NEXT_IOS_VERSION=$(echo $IOS_VERSION | awk -F. '{$2 = $2 + 1;} 1' | sed 's/ /./g')
+    NEXT_IOS_VERSION=$(echo $IOS_VERSION | awk -F. '{$2 = $2 + 1; $3 = 0;} 1' | sed 's/ /./g')
 elif [ "$VERSION_TYPE" == "patch" ]; then
     NEXT_IOS_VERSION=$(echo $IOS_VERSION | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
 fi

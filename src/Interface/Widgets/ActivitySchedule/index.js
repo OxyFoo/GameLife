@@ -14,7 +14,7 @@ import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
 
 class ActivitySchedule extends ActivityScheduleBack {
     renderPanel() {
-        const { selectedDuration } = this.props;
+        const { selectedDuration, maxDuration } = this.props;
         const { x, y, width, height } = this.state.parent;
         const animValue = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: [y+height-20, y+height] });
         const overlayPos = [styles.overlay, {
@@ -81,7 +81,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 minDigitWidth={12}
                                 fadeColor='backgroundGrey'
                                 initValue={1}
-                                maxValue={4}
+                                maxValue={maxDuration}
                                 velocity={.75}
                                 callback={this.onChangeDurationDigit}
                             />
@@ -96,7 +96,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 }}
                                 fadeColor='backgroundGrey'
                                 minValue={selectedDuration < 60 ? 5 : 0}
-                                maxValue={selectedDuration >= 240 ? 0 : 59}
+                                maxValue={selectedDuration >= maxDuration * 60 ? 0 : 59}
                                 stepValue={5}
                                 velocity={2}
                                 callback={this.onChangeDurationDigit}

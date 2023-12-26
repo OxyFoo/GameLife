@@ -43,6 +43,9 @@ class BackActivity extends PageBase {
 
     refTuto1 = null;
 
+    /** @type {Array<number>} Filled with props args 'skills' */
+    preselectedSkillsIDs = [];
+
     /** @type {Array<ItemSkill>} */
     allSkillItems = [];
 
@@ -90,6 +93,15 @@ class BackActivity extends PageBase {
             const skill = dataManager.skills.GetByID(activity.skillID);
             this.state.selectedCategory = skill?.CategoryID || null;
         }
+
+        // Preselected skills
+        if (this.props.args.hasOwnProperty('skills')) {
+            this.preselectedSkillsIDs = this.props.args.skills;
+            this.state.skills = this.state.skills.filter(skill => (
+                this.preselectedSkillsIDs.length === 0 ||
+                this.preselectedSkillsIDs.includes(skill.id)
+            ));
+        }
     }
 
     async componentDidMount() {
@@ -122,6 +134,16 @@ class BackActivity extends PageBase {
             this.refActivityPanel.SelectActivity(activity);
         }
 
+        // If default skills is defined and contains only one skill
+        else if (this.preselectedSkillsIDs.length === 1) {
+            const skill = dataManager.skills.GetByID(this.preselectedSkillsIDs[0]);
+            if (skill !== null) {
+                this.refActivityPanel.SelectSkill(skill);
+            }
+        }
+
+        const fromCalendar = user.interface.path.at(-1)[0] === 'calendar';
+
         // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
             const { time } = this.props.args;
@@ -138,8 +160,30 @@ class BackActivity extends PageBase {
                 }
             }
             this.refActivityPanel.SetChangeSchedule(time, duration);
-        } else if (user.tempSelectedTime !== null) {
+        }
+
+        // User from calendar
+        else if (user.tempSelectedTime !== null && fromCalendar) {
             this.refActivityPanel.SetChangeSchedule(user.tempSelectedTime, 60);
+        }
+
+        // Default time (local) to add an activity
+        else {
+            const time = GetTime(undefined, 'local');
+            const activities = user.activities
+                .GetByTime(time)
+                .filter(activity => activity.startTime > time);
+
+            let duration = 60;
+            if (activities.length > 0) {
+                const delta = activities[0].startTime - time;
+                if (delta <= MAX_TIME_MINUTES * 60) {
+                    duration = RoundTimeTo(TIME_STEP_MINUTES, delta) / 60;
+                    duration = Math.max(MIN_TIME_MINUTES, duration);
+                }
+            }
+
+            this.refActivityPanel.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
     }
 
@@ -162,6 +206,11 @@ class BackActivity extends PageBase {
         /** @param {ItemSkill} skill */
         const filter = skill => !categoryID || skill.categoryID === categoryID;
         /** @param {ItemSkill} skill */
+        const filterPreselected = skill => (
+            this.preselectedSkillsIDs.length === 0 ||
+            this.preselectedSkillsIDs.includes(skill.id)
+        );
+        /** @param {ItemSkill} skill */
         const searchMatch = skill => skill.value.toLowerCase().includes(textSearch.toLowerCase());
 
         /** @type {ItemSkill[]} */
@@ -183,6 +232,7 @@ class BackActivity extends PageBase {
             itemSkills = skills
                 .slice(0, 10)
                 .map(convert)
+                .filter(filterPreselected)
                 .filter(searchMatch);
         }
 
@@ -190,6 +240,7 @@ class BackActivity extends PageBase {
         else {
             itemSkills = this.allSkillItems
                 .filter(filter)
+                .filter(filterPreselected)
                 .filter(searchMatch);
         }
 
@@ -200,9 +251,10 @@ class BackActivity extends PageBase {
         }
 
         this.setState({
-            skills: itemSkills, inputText,
+            inputText,
+            skills: itemSkills,
             skillSearch: textSearch,
-            selectedCategory: categoryID,
+            selectedCategory: categoryID
         });
     }
 
@@ -226,7 +278,13 @@ class BackActivity extends PageBase {
      * @param {Skill} skill
      */
     selectSkill = (skill) => {
-        this.refreshSkills(this.state.skillSearch, skill.CategoryID);
+        // If preselected skills, do not change category
+        let categoryID = null;
+        if (this.preselectedSkillsIDs.length === 0) {
+            categoryID = skill.CategoryID;
+        }
+
+        this.refreshSkills(this.state.skillSearch, categoryID);
         this.refActivityPanel.SelectSkill(skill);
     }
 }

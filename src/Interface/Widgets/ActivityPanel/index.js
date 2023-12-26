@@ -70,6 +70,7 @@ class ActivityPanel extends ActivityPanelBack {
         const { variantTheme } = this.props;
         const { activity, startMode, mode } = this.state;
 
+        const maxDuration = activity?.skillID === 168 ? 12 : 4;
         const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
         const viewOpacity = {
@@ -102,6 +103,7 @@ class ActivityPanel extends ActivityPanelBack {
                     editable={mode === 'skill'}
                     selectedDate={activity?.startTime ?? 0}
                     selectedDuration={activity?.duration ?? 60}
+                    maxDuration={maxDuration}
                     onChange={this.onChangeSchedule}
                     onChangeState={this.onChangeStateSchedule}
                 />

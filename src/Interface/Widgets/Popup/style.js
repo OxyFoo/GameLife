@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         width: '80%',
         maxHeight: '60%',
         borderRadius: 16,
-        overflow: 'hidden'
+        overflow: 'visible'
     },
 
     title: {

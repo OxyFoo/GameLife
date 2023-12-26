@@ -23,6 +23,7 @@ class Activity extends BackActivity {
     renderCategory = ({ item }) => {
         const { id, icon } = item;
         const checked = this.state.selectedCategory === id;
+        const pressable = !this.editMode && this.preselectedSkillsIDs.length === 0;
 
         return (
             <IconCheckable
@@ -33,7 +34,7 @@ class Activity extends BackActivity {
                 size={32}
                 checked={checked}
                 onPress={this.selectCategory}
-                pressable={!this.editMode}
+                pressable={pressable}
             />
         );
     }

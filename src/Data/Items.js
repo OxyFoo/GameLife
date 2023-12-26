@@ -96,7 +96,7 @@ class Items {
 
     /**
      * @param {string} ID
-     * @returns {Item?}
+     * @returns {Item | null}
      */
     GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
 

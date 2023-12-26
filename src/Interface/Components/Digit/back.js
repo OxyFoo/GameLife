@@ -50,6 +50,9 @@ const DigitProps = {
     /** @type {number} Multiplier of the animation speed */
     velocity: 1,
 
+    /** @type {number} */
+    fontSize: undefined,
+
     /** @type {ThemeColor | ThemeText} */
     fadeColor: 'background',
 
@@ -87,6 +90,7 @@ class DigitBack extends React.Component {
         }, 200);
     }
 
+    /** @param {DigitProps} prevProps */
     componentDidUpdate(prevProps) {
         const { digitWidth } = this.state;
         const { name, minValue, maxValue, stepValue, callback } = this.props;
@@ -128,6 +132,7 @@ class DigitBack extends React.Component {
     /** @param {number} posX Scroll position in pixels */
     SetDigitsPosX = (posX) => {
         this.scrollX = posX;
+        this.newPosX = posX;
         SpringAnimation(this.state.animLeft, this.scrollX).start();
     }
 

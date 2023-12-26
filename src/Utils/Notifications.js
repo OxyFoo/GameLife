@@ -208,26 +208,11 @@ class Notifications {
             return null;
             const now = GetTime();
             const day = 24 * 60 * 60;
-            const quests = user.quests.Get();
+            const quests = user.quests.myquests.Get();
             let halftime = {}, tomorrow = {}, today = {};
 
             for (let i = 0; i < quests.length; i++) {
-                const { Title, Checked, Starttime, Deadline, Schedule } = quests[i];
-                if (Checked || Deadline < Starttime) continue;
-
-                const midTime = (Deadline - Starttime) / 2;
-                if (Schedule !== null) {
-                } else if (Deadline !== null) {
-                    if (Deadline > now && Deadline < now + day) {
-                        // Today
-                    } else if (Deadline < now && Deadline > now - day) {
-                        // Tomorrow
-                    } else if (midTime > now && midTime < now + day) {
-                        // Mid date
-                    }
-                    const date = Deadline;
-                    
-                }
+                const { title, created, schedule } = quests[i];
             }
             //ParsePlural()
             return null;

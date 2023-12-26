@@ -70,9 +70,9 @@ class BottomBar extends BottomBarBack {
                         color='transparent'
                         borderRadius={0}
                         rippleColor='main1'
-                        onPress={this.goToMultiplayer}
+                        onPress={this.goToQuests}
                     >
-                        <Icon icon='social' color={isChecked(3)} />
+                        <Icon icon='quests' color={isChecked(3)} />
                     </Button>
 
                     <Button

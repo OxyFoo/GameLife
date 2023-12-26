@@ -50,6 +50,9 @@ const ButtonProps = {
     /** @type {ThemeColor | ThemeText} */
     color: 'transparent',
 
+    /** @type {boolean} True to show new UI gradient */
+    colorNextGen: false,
+
     /** @type {ThemeColor | ThemeText} */
     colorText: 'primary',
 
@@ -65,6 +68,18 @@ const ButtonProps = {
     onPress: () => {},
 
     onLongPress: () => {},
+
+    /** @param {GestureResponderEvent} event */
+    onTouchStart: (event) => {},
+
+    /** @param {GestureResponderEvent} event */
+    onTouchMove: (event) => {},
+
+    /** @param {GestureResponderEvent} event */
+    onTouchEnd: (event) => {},
+
+    /** @param {GestureResponderEvent} event */
+    onTouchCancel: (event) => {},
 
     /** @type {(event: LayoutChangeEvent) => void} */
     onLayout: (event) => {},
@@ -83,6 +98,7 @@ class ButtonBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
+        this.props.onTouchStart(event);
         if (this.props.enabled) {
             this.rippleRef.current.onTouchStart(event);
         }
@@ -92,7 +108,13 @@ class ButtonBack extends React.Component {
     }
 
     /** @param {GestureResponderEvent} event */
+    onTouchMove = (event) => {
+        this.props.onTouchMove(event);
+    }
+
+    /** @param {GestureResponderEvent} event */
     onTouchCancel = (event) => {
+        this.props.onTouchCancel(event);
         if (this.props.enabled) {
             this.rippleRef.current.onTouchEnd(event);
         }
@@ -100,6 +122,7 @@ class ButtonBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
+        this.props.onTouchEnd(event);
         if (this.props.enabled) {
             this.rippleRef.current.onTouchEnd(event);
         }

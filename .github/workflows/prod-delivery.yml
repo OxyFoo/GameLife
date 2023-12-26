@@ -369,10 +369,13 @@ jobs:
             '${{ secrets.DB_TEST_PASS }}' \
             '${{ vars.DB_TEST_NAME }}' \
           )
+
           echo "Version: $GL_VERSION"
+          echo "GL_VERSION=$GL_VERSION" >> $GITHUB_ENV
 
       - name: 'Send notification to Discord'
         env:
+          GL_VERSION: ${{ env.GL_VERSION }}
           NEXT_WORKFLOW_URL: 'https://github.com/OxyFoo/GameLife/actions/workflows/prod-deploy.yml'
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
@@ -403,10 +406,13 @@ jobs:
             '${{ secrets.DB_TEST_PASS }}' \
             '${{ vars.DB_TEST_NAME }}' \
           )
+
           echo "Version: $GL_VERSION"
+          echo "GL_VERSION=$GL_VERSION" >> $GITHUB_ENV
 
       - name: 'Send notification to Discord'
         env:
+          GL_VERSION: ${{ env.GL_VERSION }}
           NEXT_WORKFLOW_URL: 'https://github.com/OxyFoo/GameLife/actions/workflows/prod-deploy.yml'
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |

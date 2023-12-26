@@ -1,7 +1,7 @@
 {
   "name": "gamelife",
-  "version": "1.0.4",
-  "versionName": "1.0.4",
+  "version": "1.1.0",
+  "versionName": "1.1.0",
   "private": true,
   "scripts": {
     "start": "npx react-native start --reset-cache",

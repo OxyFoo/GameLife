@@ -16,6 +16,7 @@ import svgError from 'Ressources/icons/error';
 import svgFilter from 'Ressources/icons/filter';
 import svgFlagEnglish from 'Ressources/icons/flag-english';
 import svgFlagFrench from 'Ressources/icons/flag-french';
+import svgFlame from 'Ressources/icons/flame';
 import svgGift from 'Ressources/icons/gift';
 import svgHome from 'Ressources/icons/home';
 import svgHuman from 'Ressources/icons/human';
@@ -29,6 +30,7 @@ import svgOnboarding1 from 'Ressources/icons/onboarding1';
 import svgOnboarding2 from 'Ressources/icons/onboarding2';
 import svgOnboarding3 from 'Ressources/icons/onboarding3';
 import svgOx from 'Ressources/icons/ox';
+import svgQuests from 'Ressources/icons/quests';
 import svgSetting from 'Ressources/icons/setting';
 import svgShop from 'Ressources/icons/shop';
 import svgSleepZzz from 'Ressources/icons/sleep-zzz';
@@ -39,6 +41,7 @@ import svgSlotTop from 'Ressources/icons/slot-top';
 import svgSocial from 'Ressources/icons/social';
 import svgSuccess from 'Ressources/icons/success';
 import svgTiktok from 'Ressources/icons/tiktok';
+import svgTrash from 'Ressources/icons/trash';
 import svgUndo from 'Ressources/icons/undo';
 import svgUserAdd from 'Ressources/icons/user-add';
 import svgWorld from 'Ressources/icons/world';
@@ -65,6 +68,7 @@ const SVGIcons = {
     filter: svgFilter,
     flagEnglish: svgFlagEnglish,
     flagFrench: svgFlagFrench,
+    flame: svgFlame,
     gift: svgGift,
     home: svgHome,
     human: svgHuman,
@@ -78,6 +82,7 @@ const SVGIcons = {
     onboarding2: svgOnboarding2,
     onboarding3: svgOnboarding3,
     ox: svgOx,
+    quests: svgQuests,
     setting: svgSetting,
     shop: svgShop,
     sleepZzz: svgSleepZzz,
@@ -88,6 +93,7 @@ const SVGIcons = {
     social: svgSocial,
     success: svgSuccess,
     tiktok: svgTiktok,
+    trash: svgTrash,
     undo: svgUndo,
     userAdd: svgUserAdd,
     world: svgWorld,

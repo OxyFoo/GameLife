@@ -63,6 +63,7 @@
             "never": "Never",
             "weekly": "Weekly",
             "monthly": "Monthly",
+            "day-min": "d",
             "seconds-min": "m",
             "hours-min": "h"
         },
@@ -183,7 +184,7 @@
         "title-experience": "Experience",
         "title-no-experience": "This activity has no experience",
         "title-not-past": "This activity has not yet been completed",
-        "title-before-limit": "This activity does not provide any experience because it was added more than 48 hours after it was completed",
+        "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience and does not count towards quests.",
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",
@@ -215,7 +216,6 @@
         "timeralert-tooshort-text": "You cannot add an activity of less than 5 minutes",
 
         "display-activity-text": "Your activity has been created!",
-        "display-quest-complete-text": "Congratulations! You've completed today's quests!",
         "display-activity-button": "Back home",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home"
@@ -449,9 +449,7 @@
             "chest-random-epic": "Chest of legends",
 
             "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
-            "popup-chest-button": "Open for {} Ox",
-            "popup-buysuccess-title": "Successful purchase",
-            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+            "popup-chest-button": "Open for {} Ox"
         },
 
         "targetedChests": {
@@ -463,9 +461,7 @@
             },
 
             "popup-chest-text": "You want to open a {} chest to get an item of type \"{}\" for {} Ox?",
-            "popup-chest-button": "Open for {} Ox",
-            "popup-buysuccess-title": "Successful purchase",
-            "popup-buysuccess-text": "Congratulations! You got the following items:\n\n{}"
+            "popup-chest-button": "Open for {} Ox"
         },
 
         "dyes": {
@@ -541,29 +537,16 @@
         }
     },
 
-    "quest": {
+    "todo": {
         "title-schedule": "Scheduling",
         "title-tasks": "Tasks",
-        "title-activity": "Activity",
         "title-commentary": "Commentary",
 
         "input-title": "Title",
         "input-deadline-title": "Due date",
         "input-deadline-empty": "None",
-        "input-activity-title": "No category or activity selected",
-        "input-activity-title-activity": "Activity selected:",
-        "input-activity-title-category": "Category selected:",
-        "input-activity-none": "No activity",
-        "input-activity-empty": "Select",
-        "input-activity-only": "All activities of category: {}",
 
-        "input-panel-activity": "Select an activity",
-        "input-panel-category": "Select a category",
-
-        "input-repeat-title": "Repeat",
-        "input-description": "Description",
         "input-task-placeholder": "Task",
-        "text-hint-select": "Press and hold to select the column",
 
         "button-commentary": "Add a commentary",
         "button-add": "Add",
@@ -571,30 +554,92 @@
         "button-remove": "Delete",
 
         "error-title-empty": "Please enter a title",
-        "error-title-exists": "A quest with this title already exists",
+        "error-title-exists": "A todo with this title already exists",
 
         "alert-remcomment-title": "Delete comment?",
         "alert-remcomment-text": "Are you sure you want to delete this comment?",
-        "alert-remquest-title": "Delete quest?",
-        "alert-remquest-text": "Are you sure you want to delete this quest?",
-        "alert-remtask-title": "Delete quest?",
+        "alert-remtodo-title": "Delete todo?",
+        "alert-remtodo-text": "Are you sure you want to delete this todo?",
+        "alert-remtask-title": "Delete todo?",
         "alert-remtask-text": "Are you sure you want to delete this task?",
         "alert-taskslimit-title": "Limit reached",
-        "alert-taskslimit-text": "You can't add more than 20 tasks to this quest",
+        "alert-taskslimit-text": "You can't add more than 20 tasks to this todo",
+        "alert-back-title": "Back",
+        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
+    },
+
+    "todoes": {
+        "container-title": "Todo list",
+        "todoes-empty-title": "No quest",
+        "todoes-empty-button": "Add a quest",
+
+        "todo-type-deadline": "Ends on:",
+
+        "alert-todoeslimit-title": "Limit reached",
+        "alert-todoeslimit-text": "You have reached the limit of todoes, please delete some of them to add more."
+    },
+
+    "quest": {
+        "titles": {
+            "title": "Title quest",
+            "skills": "Select your activities",
+            "schedule": "Schedule quest",
+            "duration": "Minimum duration for each day",
+            "comment": "Commentary"
+        },
+
+        "input-title": "Title",
+        "input-activity-title": "No activity selected",
+        "input-activity-add": "Add",
+
+        "input-panel-activity": "Select an activity",
+        "input-panel-category": "Select a category",
+
+        "input-comment": "Commentary",
+
+        "text-hint-select": "Press and hold to select the column",
+
+        "input-errors": {
+            "title-empty": "Please enter a title",
+            "title-exists": "A quest with this title already exists",
+            "skills-empty": "You must add at least one activity",
+            "schedule-empty": "You must select the days on which you want to do this quest"
+        },
+
+        "button-text": {
+            "add": "Add",
+            "save": "Save",
+            "remove": "Delete"
+        },
+
+        "alert-remquest-title": "Delete quest?",
+        "alert-remquest-text": "Are you sure you want to delete this quest?",
         "alert-back-title": "Back",
         "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
     },
 
     "quests": {
-        "container-title": "Todo list",
-        "quests-empty-title": "No quest",
+        "container-title": "My quests",
+        "quests-empty-title": "If you don't have a quest yet, add one by clicking on the button below or on the + at top right.",
         "quests-empty-button": "Add a quest",
 
-        "quest-type-deadline": "Ends on:",
-        "quest-type-repeat-before": "To be done before:",
-
         "alert-questslimit-title": "Limit reached",
-        "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more."
+        "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more.",
+
+        "current-streak": "Current streak",
+        "heatmap-title-weeks": "Completion by week",
+        "heatmap-title-days": "Completion by day"
+    },
+
+    "nonzerodays": {
+        "container-title": "Non Zero Days",
+        "container-date": "Rewards from {}",
+        "claim": "Claim",
+        "claim-in": "Claim in {}",
+        "no-claim": "No claim available",
+
+        "alert-claim-error-title": "Error",
+        "alert-claim-error-text": "An error has occurred, please try again later."
     },
 
     "wait": {
@@ -667,11 +712,16 @@
             "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
         },
 
+        "todo": {
+            "1": "Here you can set the deadline for your todo",
+            "2": "You can also add sub-todoes to your main todo, to organize yourself better.",
+            "3": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
+        },
+
         "quest": {
             "1": "Here you can set the deadline for your quest, or its frequency if it's a recurring one",
             "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
-            "3": "You can also add sub-quests to your main quest, to organize yourself better.",
-            "4": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
+            "3": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
         },
 
         "other": {

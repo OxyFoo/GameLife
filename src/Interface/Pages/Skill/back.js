@@ -66,16 +66,6 @@ class BackSkill extends PageBase {
         this.__updateHIstory();
     }
 
-    componentDidMount() {
-        super.componentDidMount();
-
-        // Back handler
-        user.interface.SetCustomBackHandler(() => {
-            this.refActivityPanel?.Close();
-            return true;
-        });
-    }
-
     __updateHIstory = () => {
         const userActivities = user.activities.GetBySkillID(this.skillID);
 
@@ -91,9 +81,11 @@ class BackSkill extends PageBase {
             const onPress = () => {
                 this.refActivityPanel?.SelectActivity(activity, () => {
                     this.__updateHIstory();
-                    const empty = this.history.length === 0;
-                    if (empty) user.interface.BackHandle();
-                    else       this.forceUpdate();
+                    if (this.history.length === 0) {
+                        user.interface.BackHandle();
+                    } else {
+                        this.forceUpdate();
+                    }
                 });
             }
 

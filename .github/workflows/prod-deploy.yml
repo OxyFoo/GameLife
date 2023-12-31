@@ -186,5 +186,5 @@ jobs:
           curl \
             -H "Content-Type: application/json" \
             -X POST \
-            -d "{\"content\":\"🎉 GameLife v$GL_VERSION a été envoyée sur le PlayStore et l'AppStore avec succès\"}" \
+            -d "{\"content\":\"🎉 Le serveur et la base de donnée de GameLife v$GL_VERSION bien été déployés\"}" \
             $DISCORD_WEBHOOK_URL

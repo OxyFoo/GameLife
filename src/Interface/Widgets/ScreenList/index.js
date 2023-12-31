@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Animated, TouchableHighlight, FlatList } from 'react-native';
 
 import styles from './style';
+import user from 'Managers/UserManager';
 import ScreenListBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
@@ -19,7 +20,11 @@ class ScreenList extends ScreenListBack {
     renderItem = ({ item }) => {
         const { id, value } = item;
         const onPress = () => {
-            if (this.inScroll) return;
+            if (this.inScroll) {
+                user.interface.console.AddLog('info', 'ScreenList onPress failed');
+                return;
+            }
+            user.interface.console.AddLog('info', 'ScreenList onPress:', id);
             this.callback(id);
             this.Close();
         }

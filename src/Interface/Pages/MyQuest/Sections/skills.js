@@ -26,7 +26,6 @@ const SectionSkillProps = {
 class SectionSkill extends React.Component {
     OpenCategoriesSelection = () => {
         const callback = (id) => {
-            setTimeout(() => user.interface.console.AddLog('info', 'MyQuest => Category onPress:', id), 300);
             setTimeout(() => {
                 this.OpenSkillSelection(id);
             }, 100);
@@ -43,7 +42,6 @@ class SectionSkill extends React.Component {
 
     OpenSkillSelection = (categoryID) => {
         const callback = (id) => {
-            setTimeout(() => user.interface.console.AddLog('info', 'MyQuest => Skill onPress:', id), 300);
             const { skillsIDs } = this.props;
             if (skillsIDs.length >= MAX_SKILLS || skillsIDs.includes(id)) {
                 return;

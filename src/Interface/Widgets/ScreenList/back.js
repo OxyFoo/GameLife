@@ -122,6 +122,7 @@ class ScreenListBack extends React.Component {
 
         this.isPressed = true;
         this.tickTime = Date.now();
+        user.interface.console.AddLog('info', 'ScreenList onTouchStart');
     }
 
     /** @param {GestureResponderEvent} event */
@@ -171,7 +172,12 @@ class ScreenListBack extends React.Component {
         }
 
         this.isPressed = false;
-        this.inScrollTimeout = setTimeout(() => this.inScroll = false, 200);
+        user.interface.console.AddLog('info', 'ScreenList onTouchEnd');
+        this.inScrollTimeout = setTimeout(() => {
+            const oldInScroll = this.inScroll;
+            this.inScroll = false;
+            user.interface.console.AddLog('info', `ScreenList inScroll: ${oldInScroll} => ${this.inScroll}`);
+        }, 200);
     }
 }
 

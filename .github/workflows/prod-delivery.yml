@@ -17,6 +17,11 @@ on:
         required: true
         default: false
         type: boolean
+      apk-artifact:
+        description: 'Download apk artifact'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   test-client:
@@ -140,6 +145,32 @@ jobs:
         with:
           name: GameLife-prod-mapping.txt
           path: GameLife-prod-mapping.txt
+
+      - name: 'Download buildtool'
+        if: github.event.inputs.apk-artifact == true
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
+
+      - name: 'Generate universal APK'
+        if: github.event.inputs.apk-artifact == true
+        run: |
+          java -jar ./bundletool.jar build-apks \
+            --bundle=GameLife-prod.aab \
+            --output=my_app.apks \
+            --mode=universal \
+            --ks=./android/app/gamelife.keystore \
+            --ks-key-alias=gameLifeAlias \
+            --ks-pass=file:./keystore
+          unzip -p my_app.apks universal.apk > GameLife-test.apk
+
+      - name: 'Upload apk artifact'
+        if: github.event.inputs.apk-artifact == true
+        uses: actions/upload-artifact@v3
+        with:
+          name: GameLife-test.apk
+          path: GameLife-test.apk
 
   delivery-android:
     name: '📦 Continuous Delivery 🤖'

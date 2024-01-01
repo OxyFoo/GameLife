@@ -101,22 +101,6 @@ class Commands {
         $maintenance    = $appData['Maintenance'];
         $reset          = array_key_exists('reset', $this->data);
 
-        $this->output['status'] = 'ok';
-
-        if (!isset($versionApp)) {
-            return;
-        } else if ($versionServer < $versionApp) {
-            $this->output['status'] = 'downdate';
-        } else if ($maintenance) {
-            $this->output['status'] = 'maintenance';
-            return;
-        } else if ($versionServer > $versionApp) {
-            $this->output['status'] = 'update';
-            return;
-        } else if (!isset($versionApp) || $versionApp != $versionServer) {
-            return;
-        }
-
         $deviceID = $this->data['deviceID'];
         $deviceName = $this->data['deviceName'];
         $osName = $this->data['deviceOSName'];
@@ -132,6 +116,22 @@ class Commands {
             if ($device === null) {
                 return;
             }
+        }
+
+        $this->output['status'] = 'ok';
+
+        if (!isset($versionApp)) {
+            return;
+        } else if ($versionServer < $versionApp) {
+            $this->output['status'] = 'downdate';
+        } else if ($maintenance) {
+            $this->output['status'] = 'maintenance';
+            return;
+        } else if ($versionServer > $versionApp) {
+            $this->output['status'] = 'update';
+            return;
+        } else if (!isset($versionApp) || $versionApp != $versionServer) {
+            return;
         }
 
         if ($reset) {

@@ -18,8 +18,6 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 class ScreenListBack extends React.Component {
     posY = 0;
     isPressed = false;
-    inScroll = false;
-    inScrollTimeout = null;
 
     heightPanel = 0;
     heightFlatlist = 0;
@@ -122,6 +120,7 @@ class ScreenListBack extends React.Component {
 
         this.isPressed = true;
         this.tickTime = Date.now();
+        user.interface.console.AddLog('info', 'ScreenList onTouchStart');
     }
 
     /** @param {GestureResponderEvent} event */
@@ -136,10 +135,6 @@ class ScreenListBack extends React.Component {
         const deltaTime = (Date.now() - this.tickTime) / 1000;
         this.accY = deltaY / deltaTime;
         this.tickTime = Date.now();
-
-        // Avoid press when scrolling
-        this.inScroll = true;
-        clearTimeout(this.inScrollTimeout);
 
         // Update
         let maxScrollY = heightPanel;
@@ -171,7 +166,6 @@ class ScreenListBack extends React.Component {
         }
 
         this.isPressed = false;
-        this.inScrollTimeout = setTimeout(() => this.inScroll = false, 200);
     }
 }
 

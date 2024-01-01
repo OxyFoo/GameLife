@@ -1,4 +1,4 @@
-name: 'GL Prod - Continuous Delivery'
+name: 'GL - Tests'
 
 on:
   workflow_dispatch:

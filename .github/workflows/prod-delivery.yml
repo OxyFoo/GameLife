@@ -12,6 +12,11 @@ on:
         - both
         - android
         - ios
+      delivery:
+        description: 'Delivery to stores'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   test-client:
@@ -138,7 +143,7 @@ jobs:
 
   delivery-android:
     name: '📦 Continuous Delivery 🤖'
-    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
+    if: (github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android') && github.event.inputs.delivery == true
     runs-on: ubuntu-latest
     needs: build-android
     steps:
@@ -284,7 +289,7 @@ jobs:
 
   delivery-ios:
     name: '📦 Continuous Delivery 🍏'
-    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
+    if: (github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios') && github.event.inputs.delivery == true
     runs-on: macos-latest
     needs: build-ios
     steps:

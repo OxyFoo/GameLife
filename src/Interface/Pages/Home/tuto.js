@@ -51,6 +51,39 @@ function StartTutorial(tutoValue) {
             }
         ]);
     }
+    else if (tutoValue === 100) { // pourquoi 100 ? j'ai pas trop compris dans ton ordre donc j'ai mis 100 par défaut, on pourra le changer
+        user.interface.screenTuto.ShowTutorial([
+            {
+                component: null,
+                text: lang['first']['greetings'].replace('{}', user.informations.username.Get())
+            },
+            {
+                component: null,
+                text: lang['first']['hello'],
+            },
+            {
+                component: null,
+                text: lang['first']['home'],
+                fontSize: 20,
+                execAfter: () => {
+                    user.interface.ChangePage('calendar', { tuto: 101 }, true);
+                    return false;
+                }
+            }
+        ]);
+    }
+    else if (tutoValue === 106) { 
+        user.interface.screenTuto.ShowTutorial([
+            {
+                component: null,
+                text: lang['first']['final'],
+                fontSize: 20,
+                execAfter: () => {
+                    return true;
+                }
+            }
+        ]);
+    }
 }
 
 export default StartTutorial;

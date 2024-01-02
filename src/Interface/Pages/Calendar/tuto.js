@@ -32,6 +32,19 @@ function StartTutorial(tutoValue) {
             }
         ]);
     }
+    else if (tutoValue === 101) { 
+        user.interface.screenTuto.ShowTutorial([
+            {
+                component: null,
+                text: lang['first']['calendar'],
+                fontSize: 20,
+                execAfter: () => {
+                    user.interface.ChangePage('quests', { tuto: 102 }, true);
+                    return false;
+                }
+            }
+        ]);
+    }
 }
 
 export default StartTutorial;

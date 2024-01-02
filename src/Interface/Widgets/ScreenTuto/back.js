@@ -13,6 +13,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {object} TutoElement
  * @property {React.Component | null} component Ref of component to display (null to hide all the screen)
  * @property {string} text Text to display
+ * @property {number} [fontSize] Font size of the text
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
@@ -21,6 +22,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 const DEFAULT_TUTO_ELEMENT = {
     component: null,
     text: 'Empty',
+    fontSize: 24,
     execBefore: null,
     execAfter: null,
     showButton: true
@@ -133,7 +135,7 @@ class ScreenTutoBack extends React.Component {
     Show = async (element) => {
         let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight * 2 / 3, width: 0, height: 0 };
 
-        const { component, text, showButton } = element;
+        const { component, text, showButton, fontSize } = element;
 
         let error = false;
         if (component !== null) {
@@ -167,7 +169,8 @@ class ScreenTutoBack extends React.Component {
                 ...this.state.message,
                 text: text,
                 isOnTop: isOnTop
-            }
+            },
+            fontSize: fontSize
         });
 
         this.UpdatePositions();

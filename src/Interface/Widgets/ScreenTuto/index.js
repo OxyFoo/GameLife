@@ -116,7 +116,7 @@ class ScreenTuto extends ScreenTutoBack {
 
     renderZapMessage() {
         const { smallScreen } = this.props;
-        const { message } = this.state;
+        const { message, fontSize } = this.state;
 
         const styleTextContainer = {
             top: 0,
@@ -129,7 +129,7 @@ class ScreenTuto extends ScreenTutoBack {
             ]
         };
         const styleText = {
-            fontSize: smallScreen ? 16 : 24
+            fontSize: fontSize && !smallScreen ? fontSize : fontSize - 4 || 16
         };
 
         return (

@@ -10,6 +10,8 @@ import { Sleep } from 'Utils/Functions';
 import { PageBase } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import StartTutorial from './tuto';
+
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -102,6 +104,10 @@ class BackActivity extends PageBase {
                 this.preselectedSkillsIDs.includes(skill.id)
             ));
         }
+    }
+
+    componentDidFocused = (args) => {
+        StartTutorial.call(this, args?.tuto);
     }
 
     async componentDidMount() {

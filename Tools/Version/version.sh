@@ -1,7 +1,23 @@
 #!/bin/bash
 
+#
+# ./version.sh [major/minor/patch] [--version] ["What's new (fr)" "What's new (en)"] [--force]
+#
+# Exemples:
+# ./version.sh major/minor/patch --version ["What's new (fr)" "What's new (en)"] [--force]
+# ./version.sh major/minor/patch "What's new (fr)" "What's new (en)" --force
+#
+
 # Arrête le script si une commande échoue
 set -e
+
+# Get parameters
+ARG_PRINT=false
+ARG_FORCE=false
+case " $@ " in
+    *' --version '*) ARG_PRINT=true ;;
+    *' --force '*) ARG_FORCE=true ;;
+esac
 
 # Ask for version type or get parameters
 if [ -z "$1" ]; then
@@ -34,6 +50,12 @@ elif [ "$VERSION_TYPE" == "minor" ]; then
 elif [ "$VERSION_TYPE" == "patch" ]; then
     NEXT_PACKAGE_JSON_VERSION=$(echo $PACKAGE_JSON_VERSION | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
     NEXT_PACKAGE_JSON_VERSION_NAME=$(echo $PACKAGE_JSON_VERSION_NAME | awk -F. '{$3 = $3 + 1;} 1' | sed 's/ /./g')
+fi
+
+# Only print version if --version anywhere in parameters without using grep
+if $ARG_PRINT; then
+    echo "$NEXT_PACKAGE_JSON_VERSION_NAME"
+    exit 0
 fi
 
 # Android versions
@@ -75,6 +97,12 @@ show_versions() {
     echo -e "iOS"
     echo -e "\tBuild:\t\t$IOS_BUILD_NUMBER\t-> [\e[32m$NEXT_IOS_BUILD_NUMBER\e[0m]"
     echo -e "\tVersion:\t$IOS_VERSION\t-> [\e[32m$NEXT_IOS_VERSION\e[0m]"
+    if [ ! -z "$1" ] && [ ! -z "$2" ]; then
+        echo -e "What's new (fr)"
+        echo -e "\t$1"
+        echo -e "What's new (en)"
+        echo -e "\t$2"
+    fi
     echo ""
 }
 
@@ -96,10 +124,19 @@ update_ios_version() {
     echo "Version iOS mise à jour."
 }
 
-show_versions
+update_whats_new() {
+    # Save what's new (fr/en) if in parameters
+    if [ ! -z "$1" ] && [ ! -z "$2" ]; then
+        echo "$1" > ./distribution/whatsnew/whatsnew-fr-FR
+        echo "$2" > ./distribution/whatsnew/whatsnew-en-US
+        echo "What's new saved."
+    fi
+}
 
-# Ask for confirmation if not --force
-if [ "$2" != "--force" ]; then
+show_versions $2 $3
+
+# Ask for confirmation if not --force anywhere in parameters without using grep
+if ! $ARG_FORCE; then
     echo "Voulez-vous mettre à jour les versions? (y/N)"
     read ANSWER
     echo ""
@@ -111,6 +148,7 @@ if [ "$ANSWER" == "y" ]; then
     update_package_json_version
     update_android_version
     update_ios_version
+    update_whats_new $2 $3
 else
     echo "Mise à jour annulée."
 fi

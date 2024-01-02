@@ -1,9 +1,13 @@
-name: 'GL Dev - Continuous Integration'
+name: 'Continuous Integration'
 
 on:
   push:
     branches:
       - dev
+      - test
+      - hotfix/**/*
+      - bugfix/**/*
+      - feature/**/*
 
 jobs:
   test-client:

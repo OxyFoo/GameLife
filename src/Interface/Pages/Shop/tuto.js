@@ -60,12 +60,14 @@ function StartTutorial(tutoValue) {
             }
         ]);
     }
-    else if (tutoValue === 104) { // pourquoi 100 ? j'ai pas trop compris dans ton ordre donc j'ai mis 100 par défaut, on pourra le changer
+    else if (tutoValue === 104) {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: null,
+                component: user.interface.bottomBar.refButtons[2],
+                zapSideToMessage: true,
                 text: lang['first']['shop'],
                 fontSize: 20,
+                yPos: 0.05 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('activity', { tuto: 105 }, true);
                     return false;

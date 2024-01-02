@@ -17,6 +17,8 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
+ * @property {number} [yPos=null] Y position of the message (null to center)
+ * @property {boolean} [zapSideToMessage=null] is Zap going to be displayed side to the message or not
  */
 
 const DEFAULT_TUTO_ELEMENT = {
@@ -25,7 +27,9 @@ const DEFAULT_TUTO_ELEMENT = {
     fontSize: 24,
     execBefore: null,
     execAfter: null,
-    showButton: true
+    showButton: true,
+    yPos: null,
+    zapSideToMessage: null
 };
 
 class ScreenTutoBack extends React.Component {
@@ -133,9 +137,15 @@ class ScreenTutoBack extends React.Component {
      * @returns {Promise<void>}
      */
     Show = async (element) => {
-        let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight * 2 / 3, width: 0, height: 0 };
 
-        const { component, text, showButton, fontSize } = element;
+        const { component, text, showButton, fontSize, yPos, zapSideToMessage} = element;
+
+        let position = { 
+            x: user.interface.screenWidth / 2, 
+            y: user.interface.screenHeight * 2 / 3,
+            width: 0, 
+            height: 0
+        };
 
         let error = false;
         if (component !== null) {
@@ -170,7 +180,9 @@ class ScreenTutoBack extends React.Component {
                 text: text,
                 isOnTop: isOnTop
             },
-            fontSize: fontSize
+            fontSize: fontSize,
+            yPos: yPos,
+            zapSideToMessage: zapSideToMessage
         });
 
         this.UpdatePositions();
@@ -189,16 +201,16 @@ class ScreenTutoBack extends React.Component {
     }
 
     UpdatePositions = async (layout = this.lastMessageLayout) => {
-        const { component: { ref } } = this.state;
+        const { component: { ref }, yPos, zapSideToMessage } = this.state;
 
         let position = {
             x: user.interface.screenWidth / 2,
-            y: user.interface.screenHeight / 2,
+            y: yPos ? yPos : user.interface.screenHeight / 2,
             width: 0,
             height: 0
         };
 
-        if (ref !== null) {
+        if (ref !== null && !zapSideToMessage) {
             position = await GetAbsolutePosition(ref);
         }
 
@@ -217,7 +229,7 @@ class ScreenTutoBack extends React.Component {
 
         // Message position (with delay)
         let messageX = btnMidX + offsetX - layout.width / 2;
-        let messageY = btnMidY + offsetY + (isOnTop ? 24 : - layout.height - 24);
+        let messageY = btnMidY + offsetY + (isOnTop ? zapSideToMessage ? 0 : 24 : - layout.height - 24);
 
         // Message position verification
         if (messageX < 0)
@@ -237,7 +249,7 @@ class ScreenTutoBack extends React.Component {
         }, 100);
 
         // Zap position
-        this.refZap?.UpdateTarget(position, layout);
+        this.refZap?.UpdateTarget(position, layout, zapSideToMessage);
     }
 
     IsOpened = () => {

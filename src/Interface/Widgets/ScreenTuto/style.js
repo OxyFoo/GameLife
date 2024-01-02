@@ -42,13 +42,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         opacity: .8
     },
+    defaultButtonArrowContainer: {
+        position: 'absolute',
+        opacity: .8,
+        right: 12,
+        bottom: 12, 
+        alignItems:"flex-end"
+    },
     defaultButton: {
         width: '50%'
     },
 
     skipButton: {
         position: 'absolute',
-        top: 12,
+        bottom: 12,
         left: 12
     },
 

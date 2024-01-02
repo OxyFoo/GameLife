@@ -63,8 +63,11 @@ class ZapBack extends React.Component {
      * @param {LayoutRectangle} layoutTarget
      * @param {LayoutRectangle} layoutMessage
      */
-    UpdateTarget = (layoutTarget, layoutMessage) => {
+    UpdateTarget = (layoutTarget, layoutMessage, zapSideToMessage = false) => {
+
         const { layout } = this.state;
+
+        console.log(layoutTarget, layoutMessage, layout)
 
         const btnMidX = layoutTarget.x + layoutTarget.width / 2;
         const btnMidY = layoutTarget.y + layoutTarget.height / 2;
@@ -88,17 +91,29 @@ class ZapBack extends React.Component {
         const offsetX = - Math.cos(theta) * offset;
         const offsetY = Math.sin(theta) * offset;
 
-        let zapPosX = btnMidX + offsetX;
-        let zapPosY = btnMidY + offsetY;
+        let zapPosX, zapPosY;
+
+        if (!zapSideToMessage) {
+            zapPosX = btnMidX + offsetX;
+            zapPosY = btnMidY + offsetY;
+        }
+        else {
+            zapPosX = 50
+            zapPosY = layoutTarget.y ;
+        }
 
         if (zapPosX < 0)
             zapPosX = 0;
         if (zapPosX + layout.width > user.interface.screenWidth)
             zapPosX = user.interface.screenWidth - layout.width;
-        if (zapPosY < 0)
-            zapPosY = 0;
+        if (zapPosY - layout.height < 0)
+            zapPosY = layoutTarget.y + layout.height;
         if (zapPosY + layout.height > user.interface.screenHeight)
-            zapPosY = user.interface.screenHeight - layout.height - 108;
+            if (!zapSideToMessage)
+                zapPosY = user.interface.screenHeight - layout.height - 108;
+            else {
+                zapPosY = zapPosY - 36;
+            }
 
         // Zap position
         SpringAnimation(this.state.position, {

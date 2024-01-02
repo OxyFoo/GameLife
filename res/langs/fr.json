@@ -653,13 +653,13 @@
     "tuto": {
         "first": {
             "greetings": "Re-bonjour {} !",
-            "hello": "Bienvenue dans Game Life, laisse moi te montrer l'application !",
-            "home": "1ere page : le menu, avec des infos générales.",
-            "calendar": "2eme page : Le calendrier avec toutes les activités que tu as réalisé.",
-            "quest" : "4eme page : La page des quêtes, avec des objectifs à remplir !",
-            "avatar" : "Te voilà, enfin.. ton avatar plutôt, tu peux le personnaliser en obtenant des équipements.",
-            "shop" : "5eme page : La boutique, tu peux y acheter des items pour ton avatar, des coffres et des teintures !",
-            "activity": "Et enfin, en cliquant sur le bouton rose avec un +, tu peux ajouter les activités que tu as réalisé !",
+            "hello": "Bienvenue dans Game Life, laisse moi te montrer l'application ! (Clique sur l'icône brillante pour continuer)",
+            "home": "Ici tu es sur le menu, avec des infos générales. (Clique sur l'icône brillante pour continuer)",
+            "calendar": "Le calendrier contient toutes les activités que tu as réalisé. (Clique sur l'icône brillante pour continuer)",
+            "quest" : "La page des quêtes, pour te motiver à faire des activités de manière quotidienne !",
+            "avatar" : "Te voilà !! Enfin.. ton avatar plutôt, tu peux le personnaliser en gagnant ou en obtenant des équipements. (Clique sur l'icône brillante pour continuer)",
+            "shop" : "La boutique, tu peux y acheter des items pour ton avatar, des coffres et des teintures ! (Clique sur l'icône brillante pour continuer)",
+            "activity": "Et enfin, c'est ici que tu ajoutes tes activités !",
             "final": "Ton aventure Game Life commence maintenant ! Un monde pleins de défis et de récompenses t'attend, alors n'attends plus et fonce !"
         },
         

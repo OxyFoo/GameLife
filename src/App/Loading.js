@@ -16,7 +16,7 @@ async function Initialisation(nextStep) {
     const time_start = new Date().getTime();
 
     // Loading: Settings
-    await user.settings.Load();
+    await user.settings.Load();  
 
     // Ping request
     await user.server.Ping();
@@ -168,8 +168,9 @@ async function Initialisation(nextStep) {
 
     // Start tutorial
     let homeProps = {};
+    console.log(user.settings.tutoFinished)
     if (!user.settings.tutoFinished) {
-        homeProps = { tuto: 1 };
+        homeProps = { tuto: 100 };
         user.settings.tutoFinished = true;
         user.settings.Save();
     }

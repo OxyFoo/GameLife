@@ -55,16 +55,21 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
+                zapSideToMessage: true,
                 text: lang['first']['greetings'].replace('{}', user.informations.username.Get())
             },
             {
-                component: null,
+                component: user.interface.bottomBar.refButtons[0],
+                zapSideToMessage: true,
                 text: lang['first']['hello'],
             },
+            
             {
-                component: null,
+                component: user.interface.bottomBar.refButtons[1],
+                zapSideToMessage: true,
                 text: lang['first']['home'],
                 fontSize: 20,
+                yPos: 0.05 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('calendar', { tuto: 101 }, true);
                     return false;
@@ -76,6 +81,7 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
+                zapSideToMessage: true,
                 text: lang['first']['final'],
                 fontSize: 20,
                 execAfter: () => {

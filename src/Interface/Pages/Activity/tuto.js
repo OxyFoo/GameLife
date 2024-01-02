@@ -7,12 +7,14 @@ import langManager from 'Managers/LangManager';
  */
 function StartTutorial(tutoValue) {
     const lang = langManager.curr['tuto'];
-    if (tutoValue === 105) { // pourquoi 100 ? j'ai pas trop compris dans ton ordre donc j'ai mis 100 par défaut, on pourra le changer
+    if (tutoValue === 105) { 
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
+                zapSideToMessage: true,
                 text: lang['first']['activity'],
                 fontSize: 20,
+                yPos: 0.05 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('home', { tuto: 106 }, true);
                     return false;

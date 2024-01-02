@@ -7,19 +7,22 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import FadeInText from './fadeInText';
-import { Button, Text, Zap } from 'Interface/Components';
+import { Button, Text, Zap, Icon } from 'Interface/Components';
 
 const ScreenTutoProps = {
     smallScreen: false
 };
 
 class ScreenTuto extends ScreenTutoBack {
-    renderTopPanel() {
+    renderTopPanel(zapSideToMessage) {
         const { component } = this.state;
         const styleTopPanel = {
             width: '100%',
             height: component.ref !== null ? component.position.y : '100%',
-            opacity: component.ref !== null ? .8 : .6
+            opacity: component.ref !== null ?
+                zapSideToMessage ? .4 : .8
+                :
+                zapSideToMessage ? .4 : .6
         };
         return <Animated.View style={[styles.background, styleTopPanel]} />;
     }
@@ -101,14 +104,15 @@ class ScreenTuto extends ScreenTutoBack {
         const lang = langManager.curr['tuto']['other'];
 
         return (
-            <Animated.View style={styles.defaultButtonContainer}>
+            <Animated.View style={styles.defaultButtonArrowContainer}>
                 <Button
                     style={styles.defaultButton}
                     color='main1'
                     borderRadius={4}
                     onPress={this.onComponentPress}
                 >
-                    {lang['button']}
+                    <Icon icon='arrowLeft' size={24} angle={180} />
+                    {/*lang['button']*/}
                 </Button>
             </Animated.View>
         );
@@ -117,11 +121,12 @@ class ScreenTuto extends ScreenTutoBack {
     renderZapMessage() {
         const { smallScreen } = this.props;
         const { message, fontSize } = this.state;
+        //console.log("[renderZapMessage - index.js] ", message)
 
         const styleTextContainer = {
             top: 0,
-            left: 0,
-            width: '75%',
+            left: '10%',
+            width: '70%',
             borderColor: themeManager.GetColor('main2'),
             transform: [
                 { translateX: message.position.x },
@@ -160,19 +165,19 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     render() {
-        const { visible } = this.state;
+        const { visible, zapSideToMessage } = this.state;
         if (!visible) return null;
 
         return (
             <View style={styles.parent}>
 
                 {/** Background */}
-                {this.renderTopPanel()}
+                {this.renderTopPanel(zapSideToMessage)}
                 {this.renderLeftPanel()}
                 {this.renderRightPanel()}
                 {this.renderBottomPanel()}
 
-                <Zap ref={ref => this.refZap = ref } />
+                <Zap ref={ref => this.refZap = ref} />
                 {this.renderZapMessage()}
 
                 {this.renderSkipButton()}

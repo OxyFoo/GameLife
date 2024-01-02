@@ -268,8 +268,8 @@
     },
 
     "login": {
-        "page-title": "Yo",
-        "page-text": "Hello to you, player of your own life, come and join the LVL-UP community",
+        "page-title": "Welcome !",
+        "page-text": "I need an email address and a username to create your account, don't worry, it will be quick!",
 
         "input-email-title": "Email address",
         "input-username-title": "Pseudo",

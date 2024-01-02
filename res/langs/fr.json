@@ -268,8 +268,8 @@
     },
 
     "login": {
-        "page-title": "Yo",
-        "page-text": "Bonjour à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
+        "page-title": "Bienvenue !",
+        "page-text": "J'aurais besoin de ton email et d'un pseudo pour pouvoir créer ton compte, ne t'inquiète pas, c'est hyper rapide !",
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
@@ -474,7 +474,7 @@
         },
 
         "alert-code-title": "Utiliser un code",
-        "alert-code-text": "Tu peux gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant les codes dans nos vidéos Tiktok et Youtube\n\t- En gagnant un concours sur Instagram ou sur X",
+        "alert-code-text": "Tu peux gagner des codes en :\n\t- Jouant sur notre serveur Discord\n\t- En trouvant des codes sur tiktok ou dans l'app\n\t- En gagnant un concours sur Instagram ou sur X",
         "alert-code-input": "Code",
         "alert-code-button": "Valider",
 

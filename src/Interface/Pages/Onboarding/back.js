@@ -5,7 +5,6 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { PageBase, Swiper } from 'Interface/Components';
-import { SpringAnimation } from 'Utils/Animations';
 
 class BackOnboarding extends PageBase {
     state = {
@@ -14,43 +13,63 @@ class BackOnboarding extends PageBase {
     }
 
     last = false;
-
-    /** @type {Swiper} */
-    refSwiper = null;
+    tutoLaunch = 0;
+    refInfo = null;
 
     selectEnglish = () => {
         langManager.SetLangage('en');
         this.forceUpdate();
-        this.next();
     }
     selectFrench = () => {
         langManager.SetLangage('fr');
         this.forceUpdate();
-        this.next();
-    }
-    next = async () => {
-        if (this.refSwiper.posX === 3) {
-            user.settings.onboardingWatched = true;
-            const saved = await user.settings.Save();
-            if (!saved) RNExitApp.exitApp();
-            else user.interface.ChangePage('loading', undefined, true);
-            return;
-        }
-        this.refSwiper.Next();
     }
 
-    /** @param {number} index */
-    onSwipe = (index) => {
-        // Define if the last page is reached
-        if (this.last === true && index !== 3) {
-            SpringAnimation(this.state.animButtonNext, 1).start();
-            SpringAnimation(this.state.animButtonStart, 0).start();
-            this.last = false;
-        } else if (this.last === false && index === 3) {
-            SpringAnimation(this.state.animButtonNext, 0).start();
-            SpringAnimation(this.state.animButtonStart, 1).start();
-            this.last = true;
-        }
+    launchOnboarding = () => {
+        const lang = langManager.curr['onboarding'];
+
+        // je sais pas si c'est mieux de force update ou d'utiliser un state pour tutoLaunch
+        this.tutoLaunch = 1;
+        this.forceUpdate();
+
+        user.interface.screenTuto.ShowTutorial([
+            {
+                component: null,
+                text: lang['page1']
+            },
+            {
+                component: null,
+                text: lang['page2']
+            },
+            {
+                component: null,
+                text: lang['page3']
+            },
+            {
+                component: this.refInfo,
+                text: lang['page4']
+            },
+            {
+                component: null,
+                text: lang['page5'],
+                execAfter: () => {
+                    this.endOnboarding();
+                    return true;
+                }
+            }
+        ]);
+
+    }
+
+    endOnboarding = async () => {
+        user.settings.onboardingWatched = true;
+        user.settings.tutoFinished = false; // lui c'est pour être sur qu'on lance le tuto 
+
+        const saved = await user.settings.Save();
+
+        if (!saved) RNExitApp.exitApp();
+        else user.interface.ChangePage('loading', undefined, true);
+        return;
     }
 }
 

@@ -66,5 +66,5 @@ Et les suivantes contienent des données annexes:
 - `GiftCodes`
 - `Logs`
 - `Reports`
-Ces tables ne sont pas synchronisées entre chaque déploiement, donc les modifications **peuvent** être faites **directement** sur la base de donnéesde n'importe quel environnement.
+Ces tables ne sont pas synchronisées entre chaque déploiement, donc les modifications **peuvent** être faites **directement** sur la base de données de n'importe quel environnement.
 Il est tout de même conseillé de faire très attention lors des manipulations de données utilisateur, la suppression de contenu et la modification de données sensibles peuvent entraîner des problèmes côté client.

@@ -91,7 +91,6 @@ class ScreenTutoBack extends React.Component {
             await new Promise(resolve => {
                 this.onComponentPress = resolve;
                 this.onSkipPress = () => { skip = true; resolve(); };
-                console.log(element)
                 this.Show(element);
             });
 

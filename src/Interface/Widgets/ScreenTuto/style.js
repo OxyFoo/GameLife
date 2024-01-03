@@ -35,13 +35,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         backgroundColor: '#000000A0',
     },
-    defaultButtonContainer: {
-        position: 'absolute',
-        width: '100%',
-        bottom: '10%',
-        alignItems: 'center',
-        opacity: .8
-    },
     defaultButtonArrowContainer: {
         position: 'absolute',
         opacity: .8,

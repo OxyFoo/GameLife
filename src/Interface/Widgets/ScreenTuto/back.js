@@ -17,8 +17,8 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
- * @property {number} [yPos=null] Y position of the message (null to center)
- * @property {boolean} [zapSideToMessage=null] is Zap going to be displayed side to the message or not
+ * @property {number|null} [messagePosY=null] Y position of the message (null to center)
+ * @property {boolean} [zapSideToMessage=false] is Zap going to be displayed side to the message or not
  */
 
 const DEFAULT_TUTO_ELEMENT = {
@@ -28,7 +28,7 @@ const DEFAULT_TUTO_ELEMENT = {
     execBefore: null,
     execAfter: null,
     showButton: true,
-    yPos: null,
+    messagePosY: null,
     zapSideToMessage: null
 };
 
@@ -138,7 +138,7 @@ class ScreenTutoBack extends React.Component {
      */
     Show = async (element) => {
 
-        const { component, text, showButton, fontSize, yPos, zapSideToMessage} = element;
+        const { component, text, showButton, fontSize, messagePosY, zapSideToMessage} = element;
 
         let position = { 
             x: user.interface.screenWidth / 2, 
@@ -181,7 +181,7 @@ class ScreenTutoBack extends React.Component {
                 isOnTop: isOnTop
             },
             fontSize: fontSize,
-            yPos: yPos,
+            messagePosY: messagePosY,
             zapSideToMessage: zapSideToMessage
         });
 
@@ -201,16 +201,16 @@ class ScreenTutoBack extends React.Component {
     }
 
     UpdatePositions = async (layout = this.lastMessageLayout) => {
-        const { component: { ref }, yPos, zapSideToMessage } = this.state;
+        const { component: { ref }, messagePosY, zapSideToMessage } = this.state;
 
         let position = {
             x: user.interface.screenWidth / 2,
-            y: yPos ? yPos : user.interface.screenHeight / 2,
+            y: messagePosY !== null ? messagePosY : user.interface.screenHeight / 2,
             width: 0,
             height: 0
         };
 
-        if (ref !== null && zapSideToMessage !== null && !zapSideToMessage) {
+        if (ref !== null && !zapSideToMessage) {
             position = await GetAbsolutePosition(ref);
         }
 

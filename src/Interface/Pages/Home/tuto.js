@@ -69,7 +69,7 @@ function StartTutorial(tutoValue) {
                 zapSideToMessage: true,
                 text: lang['first']['home'],
                 fontSize: 20,
-                yPos: 0.05 * user.interface.screenHeight,
+                messagePosY: 0.05 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('calendar', { tuto: 101 }, true);
                     return false;

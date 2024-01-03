@@ -14,7 +14,7 @@ function StartTutorial(tutoValue) {
                 zapSideToMessage: true,
                 text: lang['first']['quest'],
                 fontSize: 20,
-                yPos: 0.85 * user.interface.screenHeight,
+                messagePosY: 0.85 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('profile', { tuto: 103 }, true);
                     return false;

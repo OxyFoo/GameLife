@@ -10,11 +10,11 @@ function StartTutorial(tutoValue) {
     if (tutoValue === 102) { 
         user.interface.screenTuto.ShowTutorial([
             {
-                component: null,
+                component: user.interface.header.refContainer,
                 zapSideToMessage: true,
                 text: lang['first']['quest'],
                 fontSize: 20,
-                yPos: 0.05 * user.interface.screenHeight,
+                yPos: 0.85 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('profile', { tuto: 103 }, true);
                     return false;

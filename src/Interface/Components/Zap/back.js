@@ -67,8 +67,6 @@ class ZapBack extends React.Component {
 
         const { layout } = this.state;
 
-        console.log(layoutTarget, layoutMessage, layout)
-
         const btnMidX = layoutTarget.x + layoutTarget.width / 2;
         const btnMidY = layoutTarget.y + layoutTarget.height / 2;
 

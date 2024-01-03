@@ -210,7 +210,7 @@ class ScreenTutoBack extends React.Component {
             height: 0
         };
 
-        if (ref !== null && !zapSideToMessage) {
+        if (ref !== null && zapSideToMessage !== null && !zapSideToMessage) {
             position = await GetAbsolutePosition(ref);
         }
 

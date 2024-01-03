@@ -10,7 +10,7 @@ function StartTutorial(tutoValue) {
     if (tutoValue === 103) { 
         user.interface.screenTuto.ShowTutorial([
             {
-                component: user.interface.bottomBar.refButtons[4],
+                component: null,
                 zapSideToMessage: true,
                 text: lang['first']['avatar'],
                 fontSize: 20,

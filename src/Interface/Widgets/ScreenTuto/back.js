@@ -16,6 +16,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
+ * @property {boolean} [showSkip=true] Show the button to skip
  */
 
 const DEFAULT_TUTO_ELEMENT = {
@@ -23,7 +24,8 @@ const DEFAULT_TUTO_ELEMENT = {
     text: 'Empty',
     execBefore: null,
     execAfter: null,
-    showButton: true
+    showButton: true,
+    showSkip: true
 };
 
 class ScreenTutoBack extends React.Component {
@@ -89,6 +91,7 @@ class ScreenTutoBack extends React.Component {
             await new Promise(resolve => {
                 this.onComponentPress = resolve;
                 this.onSkipPress = () => { skip = true; resolve(); };
+                console.log(element)
                 this.Show(element);
             });
 
@@ -133,7 +136,7 @@ class ScreenTutoBack extends React.Component {
     Show = async (element) => {
         let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight * 2 / 3, width: 0, height: 0 };
 
-        const { component, text, showButton } = element;
+        const { component, text, showButton, showSkip } = element;
 
         let error = false;
         if (component !== null) {
@@ -167,7 +170,8 @@ class ScreenTutoBack extends React.Component {
                 ...this.state.message,
                 text: text,
                 isOnTop: isOnTop
-            }
+            },
+            showSkip: showSkip
         });
 
         this.UpdatePositions();

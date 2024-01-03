@@ -9,11 +9,11 @@ import { PageBase, Swiper } from 'Interface/Components';
 class BackOnboarding extends PageBase {
     state = {
         animButtonNext: new Animated.Value(1),
-        animButtonStart: new Animated.Value(0)
+        animButtonStart: new Animated.Value(0),
+        tutoLaunch: 0,
     }
 
     last = false;
-    tutoLaunch = 0;
     refInfo = null;
 
     selectEnglish = () => {
@@ -28,29 +28,32 @@ class BackOnboarding extends PageBase {
     launchOnboarding = () => {
         const lang = langManager.curr['onboarding'];
 
-        // je sais pas si c'est mieux de force update ou d'utiliser un state pour tutoLaunch
-        this.tutoLaunch = 1;
-        this.forceUpdate();
+        this.setState({ tutoLaunch: 1 });
 
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
+                showSkip: false,
                 text: lang['page1']
             },
             {
                 component: null,
+                showSkip: false,
                 text: lang['page2']
             },
             {
                 component: null,
+                showSkip: false,
                 text: lang['page3']
             },
             {
                 component: this.refInfo,
+                showSkip: false,
                 text: lang['page4']
             },
             {
                 component: null,
+                showSkip: false,
                 text: lang['page5'],
                 execAfter: () => {
                     this.endOnboarding();
@@ -63,7 +66,6 @@ class BackOnboarding extends PageBase {
 
     endOnboarding = async () => {
         user.settings.onboardingWatched = true;
-        user.settings.tutoFinished = false; // lui c'est pour être sur qu'on lance le tuto 
 
         const saved = await user.settings.Save();
 

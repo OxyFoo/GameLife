@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
 import BackOnboarding from './back';
+import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { Button, Icon, Text } from 'Interface/Components';
+import { Page, Button, Icon, Text } from 'Interface/Components';
 
 class Onboarding extends BackOnboarding {
     render() {
@@ -12,12 +13,18 @@ class Onboarding extends BackOnboarding {
         const langs = langManager.GetAllLangs();
 
         return (
-            <View>
-                <View style={{ marginTop: 24, marginRight: 24, alignItems: "flex-end", justifyContent: "flex-end" }}>
-                    <Icon icon="info" size={30} ref={ref => this.refInfo = ref} />
-                </View>
+            <Page
+                ref={ref => this.refPage = ref}
+                style={styles.page}
+                scrollable={false}
+            >
+                {this.state.tutoLaunch === 1 &&
+                    <View style={styles.buttonQuestion}>
+                        <Icon icon="info" size={30} ref={ref => this.refInfo = ref} />
+                    </View>
+                }
 
-                {this.tutoLaunch === 0 &&
+                {this.state.tutoLaunch === 0 &&
                     <View style={{ alignItems: "center", justifyContent: "center", marginTop: "10%" }}>
                         <Text fontSize={32}>{lang['select-language']}</Text>
                         <TouchableOpacity style={styles.flagRow} onPress={this.selectEnglish} activeOpacity={.6}>
@@ -43,26 +50,9 @@ class Onboarding extends BackOnboarding {
                     </View>
                 }
 
-            </View>
+            </Page>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    flagRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 12,
-    },
-    flagText: {
-        marginLeft: 16
-    },
-    buttonNext: {
-        height: 42,
-        width: 125,
-        marginTop: 24,
-        paddingHorizontal: 16
-    }
-});
 
 export default Onboarding;

@@ -45,6 +45,7 @@ class BackLogin extends PageBase {
 
         // Load images
         this.imageBackground = require('../../../../res/logo/login_circles.png');
+        this.imageMain = require('../../../../res/logo/login_hand.png');
     }
 
     refInputEmail = null;

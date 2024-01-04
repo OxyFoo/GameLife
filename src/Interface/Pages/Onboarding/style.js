@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    page:{
+    page: {
         height: '100%',
         width: '100%',
         padding: 0,
-        paddingBottom: 0,
+        paddingBottom: 0
     },
     langsContainer: {
         height: '100%',

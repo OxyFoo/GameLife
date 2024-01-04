@@ -35,6 +35,8 @@ class BackQuestsList extends React.Component {
 
         /** @type {FlatList<MyQuest> | null} Used to manage quest sorting */
         this.refFlatlist = null;
+        this.refContainer = null;
+        this.refAddQuest = null;
 
         this.flatlist = {
             contentSizeHeight: 0,

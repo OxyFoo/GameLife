@@ -1,40 +1,93 @@
 import React from 'react';
+import { View } from 'react-native';
 
 import styles from './style';
 import { RenderItemMemo } from './element';
 import NonZeroDayBack from './back';
+import StartHelp from './help';
+
 import langManager from 'Managers/LangManager';
 
-import { Container, Text } from 'Interface/Components';
+import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
 
 class NonZeroDay extends NonZeroDayBack {
-    render() {
-        const { claimIndex, claimDay } = this.state;
+
+    renderHeader = (icon) => {
+
+        const lang = langManager.curr['nonzerodays'];
+        const headerStatic = (
+            <Button
+                style={{ justifyContent: 'space-between', paddingHorizontal: 0 }}
+                color={'main1'}
+                colorNextGen={true}
+                rippleColor='transparent'
+                borderRadius={8}
+                pointerEvents='box-none'
+            >
+                <View style={styles.buttonInfo}>
+                    <Icon
+                        containerStyle={styles.iconStaticHeader}
+                        icon={'info'}
+                        size={24}
+                        onPress={StartHelp.bind(this)}
+                    />
+                    <Text color={'primary'}>
+                        {lang['container-title']}
+                    </Text>
+                </View>
+                {icon !== null && (
+                    <Icon
+                        ref={ref => this.refMore = ref}
+                        containerStyle={styles.iconStaticHeader}
+                        icon={icon}
+                        size={24}
+                        angle={180}
+                        onPress={() => this.openPopup()}
+                    />
+                )}
+            </Button>
+        );
+        return headerStatic
+    }
+
+    renderBody = (claimIndex, claimDay) => {
         const lang = langManager.curr['nonzerodays'];
 
+        const body = claimIndex !== -1 ? (
+            <RenderItemMemo
+                index={claimDay}
+                claimIndex={claimIndex}
+                onPress={this.onClaimPress}
+            />
+        ) : (
+            <Text style={styles.noClaim}>
+                {lang['no-claim']}
+            </Text>
+        );
+
+        return body;
+    }
+
+
+    render() {
+        const { claimIndex, claimDay } = this.state;
+
         return (
-            <Container
+            <SimpleContainer
+                ref={ref => this.refContainer = ref}
                 style={this.props.style}
                 styleContainer={styles.container}
-                type='static'
-                text={lang['container-title']}
-                icon='arrowLeft'
-                iconAngle={180}
-                onIconPress={this.openPopup}
                 colorNextGen
             >
-                {claimIndex !== -1 ? (
-                    <RenderItemMemo
-                        index={claimDay}
-                        claimIndex={claimIndex}
-                        onPress={this.onClaimPress}
-                    />
-                ) : (
-                    <Text style={styles.noClaim}>
-                        {lang['no-claim']}
-                    </Text>
-                )}
-            </Container>
+                <SimpleContainer.Header>
+                    {this.renderHeader('arrowLeft')}
+                </SimpleContainer.Header>
+
+                <SimpleContainer.Body>
+                    {this.renderBody(claimIndex, claimDay)}
+                </SimpleContainer.Body >
+
+            </SimpleContainer >
         );
     }
 }

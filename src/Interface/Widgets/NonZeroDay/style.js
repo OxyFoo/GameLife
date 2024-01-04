@@ -9,6 +9,20 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
 
+    iconStaticHeader: {
+        width: 'auto',
+        height: 'auto',
+        padding: 12,
+        alignContent: 'center',
+    },
+    buttonInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingLeft: 0,
+        borderRadius:0
+    },
+
     // Popup
     popup: {
         height: 500,

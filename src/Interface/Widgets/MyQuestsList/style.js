@@ -8,6 +8,20 @@ const styles = StyleSheet.create({
         padding: 24
     },
 
+    iconStaticHeader: {
+        width: 'auto',
+        height: 'auto',
+        padding: 12,
+        alignContent: 'center',
+    },
+    buttonInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingLeft: 0,
+        borderRadius:0
+    },
+
     separator: {
         width: 'auto',
         height: 1.5,

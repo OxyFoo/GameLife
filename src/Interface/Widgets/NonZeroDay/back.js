@@ -22,6 +22,9 @@ class NonZeroDayBack extends React.Component {
     timeout;
     nzdListener;
 
+    refContainer = null;
+    refMore = null;
+
     componentDidMount() {
         this.update();
         this.nzdListener = user.quests.nonzerodays.claimsList.AddListener(this.update);

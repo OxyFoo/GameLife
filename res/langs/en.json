@@ -726,6 +726,22 @@
             "3": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
         },
 
+        "nzd": {
+            "1": "Here, it's the 'Non Zero Days' (inspired by Ryan from Reddit), the connection streak basically.",
+            "2": "The way it works is simple, every day you have to do at least one activity that earns you xp.",
+            "3": "You can then collect your reward the next day, and so on.",
+            "4": "If you want to see a list of all the possible rewards, you can click on the arrow right here!"
+        },
+
+        "quests": {
+            "1": "These are the quests! Missions you can give yourself to motivate yourself.",
+            "2": "If you want to add one, just click on the button here!",
+            "3": "Under each quest, you'll see circles. They can have several colours, here are their meanings:",
+            "4": "Red: the quest has not been completed.  Pink: it's happening today.  Purple: other days",
+            "5": "Oh yes! If you click on a quest, you can see its details!",
+            "6": "What are you waiting for? Go for it! If you need help, you can click on the info button and I'll come to you!"
+        },
+
         "other": {
             "skip": "Skip",
             "press": "Press",

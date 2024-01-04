@@ -130,10 +130,9 @@
     },
 
     "onboarding": {
-        "next": "Suivant",
         "start": "Commencer",
         "select-language": "Choisis ta langue",
-        "page1": "Salut ! Bienvenue dans Game Life, je suis Zap, ton guide !",
+        "page1": "Salut ! Bienvenue dans GameLife, je suis Zap, ton guide !",
         "page2": "Le but de cette application est simple : transformer ta vie en un jeu !",
         "page3": "Gagne des points d'expérience, améliore tes compétences et fixe toi des objectifs.",
         "page4": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",

@@ -2,29 +2,39 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     page:{
-        height: "100%",
-        width: "100%",
-        padding:0,
+        height: '100%',
+        width: '100%',
+        padding: 0,
+        paddingBottom: 0,
+    },
+    langsContainer: {
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-around'
+    },
+
+    flagsContainer: {
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     flagRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
         marginVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     flagText: {
         marginLeft: 16
     },
+
     buttonNext: {
         height: 42,
         width: 125,
-        marginTop: 24,
         paddingHorizontal: 16
     },
     buttonQuestion: {
-        marginTop: 24,
-        marginRight: 24,
-        alignItems: "flex-end",
-        justifyContent: "flex-end"
+        position: 'absolute',
+        top: 16,
+        right: 16
     }
 });
 

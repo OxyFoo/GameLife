@@ -4,16 +4,16 @@ import RNExitApp from 'react-native-exit-app';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase, Swiper } from 'Interface/Components';
+import { Button, PageBase } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 class BackOnboarding extends PageBase {
     state = {
-        animButtonNext: new Animated.Value(1),
-        animButtonStart: new Animated.Value(0),
-        tutoLaunch: 0,
+        helpAnimation: new Animated.Value(-64),
+        tutoLaunched: false
     }
 
-    last = false;
+    /** @type {Button} */
     refInfo = null;
 
     selectEnglish = () => {
@@ -27,8 +27,6 @@ class BackOnboarding extends PageBase {
 
     launchOnboarding = () => {
         const lang = langManager.curr['onboarding'];
-
-        this.setState({ tutoLaunch: 1 });
 
         user.interface.screenTuto.ShowTutorial([
             {
@@ -62,16 +60,20 @@ class BackOnboarding extends PageBase {
             }
         ]);
 
+        SpringAnimation(this.state.helpAnimation, 0).start();
+        this.setState({ tutoLaunched: true });
     }
 
     endOnboarding = async () => {
         user.settings.onboardingWatched = true;
 
         const saved = await user.settings.Save();
+        if (!saved) {
+            RNExitApp.exitApp();
+            return;
+        }
 
-        if (!saved) RNExitApp.exitApp();
-        else user.interface.ChangePage('loading', undefined, true);
-        return;
+        user.interface.ChangePage('loading', undefined, true);
     }
 }
 

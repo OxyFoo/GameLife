@@ -3,7 +3,6 @@ import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 
-import { Sleep } from 'Utils/Functions';
 import { GetAbsolutePosition } from 'Utils/UI';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
@@ -153,6 +152,7 @@ class ScreenTutoBack extends React.Component {
         this.setState({
             visible: true,
             showButton: showButton,
+            showSkip: showSkip,
             component: {
                 ...this.state.component,
                 ref: error ? null : component,
@@ -169,8 +169,7 @@ class ScreenTutoBack extends React.Component {
                 ...this.state.message,
                 text: text,
                 isOnTop: isOnTop
-            },
-            showSkip: showSkip
+            }
         });
 
         this.UpdatePositions();

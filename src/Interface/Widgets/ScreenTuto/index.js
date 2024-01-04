@@ -145,9 +145,10 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     renderSkipButton() {
+        const { showSkip } = this.state;
         const lang = langManager.curr['tuto']['other'];
 
-        return (
+        return showSkip && (
             <Button
                 style={styles.skipButton}
                 color='transparent'
@@ -160,7 +161,7 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     render() {
-        const { visible, showSkip} = this.state;
+        const { visible } = this.state;
         if (!visible) return null;
 
         return (
@@ -175,7 +176,7 @@ class ScreenTuto extends ScreenTutoBack {
                 <Zap ref={ref => this.refZap = ref } />
                 {this.renderZapMessage()}
 
-                {showSkip && this.renderSkipButton()}
+                {this.renderSkipButton()}
 
                 {this.renderOverlay()}
                 {this.renderDefaultButton()}

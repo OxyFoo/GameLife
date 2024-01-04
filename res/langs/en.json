@@ -130,10 +130,9 @@
     },
 
     "onboarding": {
-        "next": "Next",
         "start": "Start",
         "select-language": "Select your language",
-        "page1": "Hi, welcome to Game Life, I'm Zap, your guide!",
+        "page1": "Hi, welcome to GameLife, I'm Zap, your guide!",
         "page2": "The aim of this app is simple : turn your life into a game !",
         "page3": "Earn experience points, improve your skills and set yourself goals",
         "page4": "Tips : Are you lost? Click on the info button at the top right for help!",

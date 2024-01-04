@@ -133,11 +133,9 @@
         "next": "Next",
         "start": "Start",
         "select-language": "Select your language",
-        "page1": "Hi, welcome to Game Life, I'm Zap, your guide!",
-        "page2": "The aim of this app is simple : turn your life into a game !",
-        "page3": "Earn experience points, improve your skills and set yourself goals",
-        "page4": "Tips : Are you lost? Click on the info button at the top right for help!",
-        "page5": "All you have to do is sign up and off you go!"
+        "page1": "Welcome to Game-Life, Turn your routine into a quest. Every day becomes an exciting adventure.",
+        "page2": "Plan and complete your quests. With each achievement, your avatar gains strength.",
+        "page3": "Earn XP for every mission accomplished. Become the champion of your productivity."
     },
 
     "about": {
@@ -270,8 +268,8 @@
     },
 
     "login": {
-        "page-title": "Welcome !",
-        "page-text": "I need an email address and a username to create your account, don't worry, it will be quick!",
+        "page-title": "Yo",
+        "page-text": "Hello to you, player of your own life, come and join the LVL-UP community",
 
         "input-email-title": "Email address",
         "input-username-title": "Pseudo",

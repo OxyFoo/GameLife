@@ -3,6 +3,9 @@ import * as React from 'react';
 import RenderPopup from './popup';
 import user from 'Managers/UserManager';
 
+import { GetDate } from 'Utils/Time';
+import { DateToFormatString } from 'Utils/Date';
+
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
@@ -16,10 +19,14 @@ const NonZeroDayProps = {
 class NonZeroDayBack extends React.Component {
     state = {
         claimIndex: -1,
-        claimDay: 0
+        claimDay: 0,
+        claimDate: null
     }
 
-    timeout;
+    /** @type {NodeJS.Timeout} */
+    timeoutToNextClaim;
+
+    /** @type {Symbol} */
     nzdListener;
 
     componentDidMount() {
@@ -28,21 +35,27 @@ class NonZeroDayBack extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.timeout) clearTimeout(this.timeout);
+        if (this.timeoutToNextClaim) clearTimeout(this.timeoutToNextClaim);
         user.quests.nonzerodays.claimsList.RemoveListener(this.nzdListener);
     }
 
     update = () => {
         let claimDay = 0;
+        let claimDate = null;
+
         const claimIndex = user.quests.nonzerodays.GetCurrentClaimIndex();
-        const claimList = user.quests.nonzerodays.claimsList.Get()[claimIndex];
+        const claimsList = user.quests.nonzerodays.claimsList.Get();
+        const claimList = claimsList[claimIndex];
         if (claimIndex !== -1) {
             for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
                 if (!claimList.claimed.includes(claimDay + 1)) break;
             }
+            if (!user.quests.nonzerodays.IsCurrentList(claimList)) {
+                claimDate = DateToFormatString(GetDate(claimList.start));
+            }
         }
 
-        this.setState({ claimIndex, claimDay });
+        this.setState({ claimIndex, claimDay, claimDate });
     }
 
     openPopup = () => {
@@ -51,7 +64,7 @@ class NonZeroDayBack extends React.Component {
 
     /** @param {number} index */
     onClaimPress = (index) => {
-        this.timeout = setTimeout(this.update, 500);
+        this.timeoutToNextClaim = setTimeout(this.update, 500);
     }
 }
 

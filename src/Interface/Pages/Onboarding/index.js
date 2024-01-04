@@ -1,16 +1,23 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 import BackOnboarding from './back';
-import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { Page, Button, Icon, Text } from 'Interface/Components';
+import { renderPage0, renderPage1, renderPage2, renderPage3 } from './panels';
+import { Button, Page, Swiper } from 'Interface/Components';
 
 class Onboarding extends BackOnboarding {
     render() {
+        const { animButtonNext, animButtonStart } = this.state;
         const lang = langManager.curr['onboarding'];
-        const langs = langManager.GetAllLangs();
+
+        const pages = [
+            renderPage0.call(this),
+            renderPage1.call(this),
+            renderPage2.call(this),
+            renderPage3.call(this)
+        ];
 
         return (
             <Page
@@ -18,41 +25,64 @@ class Onboarding extends BackOnboarding {
                 style={styles.page}
                 scrollable={false}
             >
-                {this.state.tutoLaunch === 1 &&
-                    <View style={styles.buttonQuestion}>
-                        <Icon icon="info" size={30} ref={ref => this.refInfo = ref} />
-                    </View>
-                }
+                <Swiper
+                    ref={ref => this.refSwiper = ref}
+                    height={'100%'}
+                    style={styles.swiper}
+                    pages={pages}
+                    onSwipe={this.onSwipe}
+                    backgroundColor='transparent'
+                    enableAutoNext={false}
+                    disableCircular
+                />
 
-                {this.state.tutoLaunch === 0 &&
-                    <View style={{ alignItems: "center", justifyContent: "center", marginTop: "10%" }}>
-                        <Text fontSize={32}>{lang['select-language']}</Text>
-                        <TouchableOpacity style={styles.flagRow} onPress={this.selectEnglish} activeOpacity={.6}>
-                            <Icon icon='flagEnglish' size={64} />
-                            <Text style={styles.flagText}>{langs.en.name}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.flagRow} onPress={this.selectFrench} activeOpacity={.6}>
-                            <Icon icon='flagFrench' size={64} />
-                            <Text style={styles.flagText}>{langs.fr.name}</Text>
-                        </TouchableOpacity>
+                {/* Start button */}
+                <Button
+                    style={styles.buttonNext}
+                    styleAnimation={{
+                        opacity: animButtonStart,
+                        transform: [{ translateX: Animated.multiply(Animated.subtract(1, animButtonStart), 96) }]
+                    }}
+                    onPress={this.next}
+                    color='main1'
+                    fontSize={14}
+                    pointerEvents={this.last ? 'none' : 'auto'}
+                >
+                    {lang['start']}
+                </Button>
 
-                        <View>
-                            <Button
-                                style={styles.buttonNext}
-                                onPress={this.launchOnboarding}
-                                color='main1'
-                                fontSize={14}
-                                pointerEvents={this.last ? 'none' : 'auto'}
-                            >
-                                {lang['start']}
-                            </Button>
-                        </View>
-                    </View>
-                }
-
+                {/* Next button */}
+                <Button
+                    style={styles.buttonNext}
+                    styleAnimation={{
+                        opacity: animButtonNext,
+                        transform: [{ translateY: Animated.multiply(animButtonStart, 96) }]
+                    }}
+                    onPress={this.next}
+                    color='main1'
+                    fontSize={14}
+                >
+                    {lang['next']}
+                </Button>
             </Page>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    page: {
+        paddingHorizontal: 0
+    },
+    swiper: {
+        justifyContent: 'center'
+    },
+    buttonNext: {
+        position: 'absolute',
+        right: 24,
+        bottom: 36,
+        height: 42,
+        paddingHorizontal: 16
+    }
+});
 
 export default Onboarding;

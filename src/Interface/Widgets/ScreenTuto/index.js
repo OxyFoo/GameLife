@@ -160,7 +160,7 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     render() {
-        const { visible, showSkip} = this.state;
+        const { visible } = this.state;
         if (!visible) return null;
 
         return (
@@ -175,7 +175,7 @@ class ScreenTuto extends ScreenTutoBack {
                 <Zap ref={ref => this.refZap = ref } />
                 {this.renderZapMessage()}
 
-                {showSkip && this.renderSkipButton()}
+                {this.renderSkipButton()}
 
                 {this.renderOverlay()}
                 {this.renderDefaultButton()}

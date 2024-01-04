@@ -5,73 +5,52 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { PageBase, Swiper } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 class BackOnboarding extends PageBase {
     state = {
         animButtonNext: new Animated.Value(1),
-        animButtonStart: new Animated.Value(0),
-        tutoLaunch: 0,
+        animButtonStart: new Animated.Value(0)
     }
 
     last = false;
-    refInfo = null;
+
+    /** @type {Swiper} */
+    refSwiper = null;
 
     selectEnglish = () => {
         langManager.SetLangage('en');
         this.forceUpdate();
+        this.next();
     }
     selectFrench = () => {
         langManager.SetLangage('fr');
         this.forceUpdate();
+        this.next();
+    }
+    next = async () => {
+        if (this.refSwiper.posX === 3) {
+            user.settings.onboardingWatched = true;
+            const saved = await user.settings.Save();
+            if (!saved) RNExitApp.exitApp();
+            else user.interface.ChangePage('loading', undefined, true);
+            return;
+        }
+        this.refSwiper.Next();
     }
 
-    launchOnboarding = () => {
-        const lang = langManager.curr['onboarding'];
-
-        this.setState({ tutoLaunch: 1 });
-
-        user.interface.screenTuto.ShowTutorial([
-            {
-                component: null,
-                showSkip: false,
-                text: lang['page1']
-            },
-            {
-                component: null,
-                showSkip: false,
-                text: lang['page2']
-            },
-            {
-                component: null,
-                showSkip: false,
-                text: lang['page3']
-            },
-            {
-                component: this.refInfo,
-                showSkip: false,
-                text: lang['page4']
-            },
-            {
-                component: null,
-                showSkip: false,
-                text: lang['page5'],
-                execAfter: () => {
-                    this.endOnboarding();
-                    return true;
-                }
-            }
-        ]);
-
-    }
-
-    endOnboarding = async () => {
-        user.settings.onboardingWatched = true;
-
-        const saved = await user.settings.Save();
-
-        if (!saved) RNExitApp.exitApp();
-        else user.interface.ChangePage('loading', undefined, true);
-        return;
+    /** @param {number} index */
+    onSwipe = (index) => {
+        // Define if the last page is reached
+        if (this.last === true && index !== 3) {
+            SpringAnimation(this.state.animButtonNext, 1).start();
+            SpringAnimation(this.state.animButtonStart, 0).start();
+            this.last = false;
+        } else if (this.last === false && index === 3) {
+            SpringAnimation(this.state.animButtonNext, 0).start();
+            SpringAnimation(this.state.animButtonStart, 1).start();
+            this.last = true;
+        }
     }
 }
 

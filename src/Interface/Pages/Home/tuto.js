@@ -45,10 +45,7 @@ function StartTutorial(tutoValue) {
                 component: null,
                 zapSideToMessage: true,
                 text: lang['main']['home-final'],
-                fontSize: 20,
-                execAfter: () => {
-                    return true;
-                }
+                fontSize: 20
             }
         ]);
     }

@@ -10,8 +10,8 @@ import themeManager from 'Managers/ThemeManager';
 
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
 import { Text } from 'Interface/Components';
-import { DateToFormatString } from 'Utils/Date';
 import { GetDate } from 'Utils/Time';
+import { DateToFormatString } from 'Utils/Date';
 
 function RenderPopup(props) {
     const lang = langManager.curr['nonzerodays'];
@@ -36,6 +36,12 @@ function RenderPopup(props) {
         }
     }, []);
 
+    let claimDate = null;
+    const isCurrentStreak = user.quests.nonzerodays.IsCurrentList(claimsList[claimIndex]);
+    if (!isCurrentStreak) {
+        claimDate = DateToFormatString(GetDate(claimsList[claimIndex].start));
+    }
+
     return (
         <View style={[styles.popup, stylePopup]}>
             <LinearGradient
@@ -49,11 +55,9 @@ function RenderPopup(props) {
                 </Text>
             </LinearGradient>
 
-            {claimIndex !== -1 && claimIndex !== claimsList.length - 1 && (
+            {claimIndex !== -1 && !isCurrentStreak && (
                 <Text style={styles.popupText}>
-                    {lang['container-date'].replace('{}',
-                        DateToFormatString(GetDate(claimsList[claimIndex].start))
-                    )}
+                    {lang['container-date'].replace('{}', claimDate)}
                 </Text>
             )}
 

@@ -9,7 +9,7 @@ import { Container, Text } from 'Interface/Components';
 
 class NonZeroDay extends NonZeroDayBack {
     render() {
-        const { claimIndex, claimDay } = this.state;
+        const { claimIndex, claimDay, claimDate } = this.state;
         const lang = langManager.curr['nonzerodays'];
 
         return (
@@ -23,13 +23,24 @@ class NonZeroDay extends NonZeroDayBack {
                 onIconPress={this.openPopup}
                 colorNextGen
             >
-                {claimIndex !== -1 ? (
+                {/* Claim date if not last streak */}
+                {claimDate !== null && (
+                    <Text style={styles.containerDateText}>
+                        {lang['container-date'].replace('{}', claimDate)}
+                    </Text>
+                )}
+
+                {/* Claim item */}
+                {claimIndex !== -1 && (
                     <RenderItemMemo
                         index={claimDay}
                         claimIndex={claimIndex}
                         onPress={this.onClaimPress}
                     />
-                ) : (
+                )}
+
+                {/* Text if no claim available */}
+                {claimIndex === -1 && (
                     <Text style={styles.noClaim}>
                         {lang['no-claim']}
                     </Text>

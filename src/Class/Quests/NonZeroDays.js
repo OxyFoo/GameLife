@@ -70,6 +70,12 @@ class NonZeroDays {
         return index;
     }
 
+    /** @param {ClaimType} claimList */
+    IsCurrentList(claimList) {
+        const timeLimit = GetTime(undefined, 'local') - 2 * DAY_TIME;
+        return claimList.end >= timeLimit;
+    }
+
     RefreshCaimsList() {
         const claimsList = this.claimsList.Get();
 

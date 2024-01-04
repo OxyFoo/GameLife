@@ -88,7 +88,6 @@ class YearHeatMapBack extends React.Component {
                 const level = totalDuration / quest.schedule.duration;
                 dataToDisplay.push(Math.min(LEVELS, level * LEVELS));
             }
-            dataToDisplay = dataToDisplay.reverse();
         }
 
         // Year by weeks: Data with 52 cells, one for each week
@@ -108,7 +107,6 @@ class YearHeatMapBack extends React.Component {
                 const level = totalDuration / (quest.schedule.duration * DAYS_PER_WEEK);
                 dataToDisplay.push(Math.min(LEVELS, level * LEVELS));
             }
-            dataToDisplay = dataToDisplay.reverse();
         }
 
         this.setState({

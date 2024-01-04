@@ -725,6 +725,12 @@
             "3": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
         },
 
+        "quest-detail": {
+            "1": "Voici le nom de la quete avec les activités associées et le bouton de crayon pour modifier tout ça !",
+            "2": "Ici, c'est juste une manière cool de voir combien de jours d'affilé tu as réalisé ta quête !",
+            "3": "Et enfin là, c'est pour avoir une vision globale de ta quête, soit par semaine, soit par jour ! (+ la case est verte, + tu es proche des 100% !)"
+        },
+
         "other": {
             "skip": "Passer",
             "press": "Appuyez",

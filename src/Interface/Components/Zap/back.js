@@ -64,7 +64,6 @@ class ZapBack extends React.Component {
      * @param {LayoutRectangle} layoutMessage
      */
     UpdateTarget = (layoutTarget, layoutMessage, zapSideToMessage = false) => {
-
         const { layout } = this.state;
 
         const btnMidX = layoutTarget.x + layoutTarget.width / 2;

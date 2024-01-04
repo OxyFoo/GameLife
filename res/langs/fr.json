@@ -651,41 +651,20 @@
     },
 
     "tuto": {
-        "first": {
-            "greetings": "Re-bonjour {} !",
-            "hello": "Bienvenue dans Game Life, laisse moi te montrer l'application ! (Clique sur l'icône brillante pour continuer)",
-            "home": "Ici tu es sur le menu, avec des infos générales. (Clique sur l'icône brillante pour continuer)",
-            "calendar": "Le calendrier contient toutes les activités que tu as réalisé. (Clique sur l'icône brillante pour continuer)",
-            "quest" : "La page des quêtes, pour te motiver à faire des activités de manière quotidienne !",
-            "avatar" : "Te voilà !! Enfin.. ton avatar plutôt, tu peux le personnaliser en gagnant ou en obtenant des équipements. (Clique sur l'icône brillante pour continuer)",
-            "shop" : "La boutique, tu peux y acheter des items pour ton avatar, des coffres et des teintures ! (Clique sur l'icône brillante pour continuer)",
-            "activity": "Et enfin, c'est ici que tu ajoutes tes activités !",
-            "final": "Ton aventure Game Life commence maintenant ! Un monde pleins de défis et de récompenses t'attend, alors n'attends plus et fonce !"
-        },
-        
         "main": {
-            "home-1": "Salut ! J'espère que tu vas bien. Je vais te présenter l'application, suis-moi !",
-            "home-2": "En haut a droite tu peux voir ton avatar, tu peux cliquer dessus pour aller modifier ton profil, ton avatar ou voir des informations sur ton compte",
-
-            "home-3": "Voici les actualités, on commence par une citation choisie par la communauté et des news concernant l'application",
-            "home-4": "Ce bouton sert à ajouter les activités que tu fais dans la vraie vie, tu les verras apparaître dans le calendrier et ça te permettra de gagner de l'expérience !",
-
-            "home-5": "Tu peux aussi ajouter des tâches, pour ajouter des activités plus rapidement, ou suivre des objectifs personnels",
-            "home-6": "Viens voir par ici, on va faire un tour dans le calendrier",
-
-            "calendar-1": "C'est ici qu'apparaîtront toutes tes activités, tu peux les sélectionner pour afficher leurs détails et les modifier.",
-            "calendar-2": "Tu peux sélectionner un autre jour ou naviguer entre les semaines avec les flèches",
-            "calendar-3": "Et tu peux cliquer ici pour afficher le calendrier des mois",
-            "calendar-4": "Pour finir allons voir la boutique !",
-
-            "shop-1": "En haut tu peux entrer un code pour obtenir des récompenses",
-            "shop-2": "Ici tu peux regarder une pub pour gagner des Ox gratuitement (les Ox étant la monnaie virtuelle de l'application)",
-            "shop-3": "Et ici c'est pour acheter des Ox avec de l'argent (cette page sera disponible dans les prochaines mises à jour !)",
-            "shop-4": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
-            "shop-5": "Dans cette catégorie tu peux acheter des coffres dans lesquels se trouvent un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
-            "shop-no-internet": "Malheureusement je ne peux pas te présenter la boutique car tu n'as pas internet, mais tu peux y accéder en étant connecté !",
-
-            "home-7": "Voilà ! Je vais maintenant te laisser découvrir l'application par toi-même, si tu as besoin d'aide tu peux m'appeler en appuyant sur les boutons d'aide !\n\nBonne chance, même si je sais que tu n'en as pas besoin ;)"
+            "home-greetings": "Re-bonjour {} !",
+            "home-hello": "Bienvenue dans Game Life, laisse moi te montrer l'application !",
+            "home": "Ici tu es sur le menu, tu y trouveras des infos générales sur GameLife et ton profil.",
+            "home-next": "Clique sur l'icône brillante pour aller sur le calendrier",
+            "calendar": "Là c'est le calendrier, il contient toutes les activités que tu as réalisé.",
+            "calendar-next": "Prochain clic : les quêtes ! (l'icône brillante en bas de l'écran)",
+            "quest" : "Ici c'est la page des quêtes, elles vont t'aider à te motiver et à prendre des habitudes. Tu pourras cliquer sur les 'i' pour avoir plus d'infos !",
+            "quest-next": "Direction : ton avatar ! (l'icône brillante en haut à droite de l'écran)",
+            "avatar" : "Te voilà !! Enfin.. ton avatar plutôt. Tu peux le personnaliser en gagnant ou en achetant des équipements.",
+            "shop" : "Équipement que tu peux acheter ici, dans la boutique ! Tu y trouveras des items pour ton avatar, des coffres et des teintures !",
+            "shop-next" : "Et enfin le plus important, clique sur le gros bouton rose en bas !",
+            "activity": "C'est ici que tu viendras pour ajouter tes activités ! Plus qu'à choisir une activité et à commencer à jouer !",
+            "home-final": "Ton aventure Game Life commence maintenant ! Un monde pleins de défis et de récompenses t'attend, alors n'attends plus et fonce !"
         },
 
         "achievements": {

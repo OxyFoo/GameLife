@@ -7,16 +7,23 @@ import langManager from 'Managers/LangManager';
  */
 function StartTutorial(tutoValue) {
     const lang = langManager.curr['tuto'];
-    if (tutoValue === 102) { 
+    if (tutoValue === 3) { 
         user.interface.screenTuto.ShowTutorial([
+            {
+                component: null,
+                zapSideToMessage: true,
+                text: lang['main']['quest'],
+                fontSize: 18,
+                messagePosY: 0.05 * user.interface.screenHeight
+            },
             {
                 component: user.interface.header.refContainer,
                 zapSideToMessage: true,
-                text: lang['first']['quest'],
-                fontSize: 20,
+                text: lang['main']['quest-next'],
+                fontSize: 18,
                 messagePosY: 0.85 * user.interface.screenHeight,
                 execAfter: () => {
-                    user.interface.ChangePage('profile', { tuto: 103 }, true);
+                    user.interface.ChangePage('profile', { tuto: 4 }, true);
                     return false;
                 }
             }

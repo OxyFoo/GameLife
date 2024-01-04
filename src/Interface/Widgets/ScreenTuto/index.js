@@ -98,8 +98,6 @@ class ScreenTuto extends ScreenTutoBack {
         const { component, showButton } = this.state;
         if (component.ref !== null && !showButton) return null;
 
-        const lang = langManager.curr['tuto']['other'];
-
         return (
             <Animated.View style={styles.defaultButtonArrowContainer}>
                 <Button
@@ -109,7 +107,6 @@ class ScreenTuto extends ScreenTutoBack {
                     onPress={this.onComponentPress}
                 >
                     <Icon icon='arrowLeft' size={24} angle={180} />
-                    {/*lang['button']*/}
                 </Button>
             </Animated.View>
         );

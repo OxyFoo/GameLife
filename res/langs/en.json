@@ -651,41 +651,20 @@
     },
 
     "tuto": {
-        "first": {
-            "greetings": "Hello again {} !",
-            "hello": "Welcome to Game Life, let me show you the app! (Click on the shiny icon to continue)",
-            "home": "Here you are on the menu, with general info. (Click on the shiny icon to continue)",
-            "calendar": "The calendar contains all the activities you've done. (Click on the shiny icon to continue)",
-            "quest": "The quest page, to motivate you to do activities every day!",
-            "avatar": "There you are! Well, your avatar. You can customise it by winning or obtaining equipment. (Click on the shiny icon to continue)",
-            "shop": "The shop, where you can buy items for your avatar, chests and dyes! (Click on the shiny icon to continue)",
-            "activity": "And finally, this is where you add your activities!",
-            "final": "Your Game Life adventure starts now! A world full of challenges and rewards awaits you, so don't wait any longer and go for it!"
-        },
-        
         "main": {
-            "home-1": "Hi! I hope you're well. I'm going to introduce you to the applications, follow me!",
-            "home-2": "At the top right you can see your avatar, you can click on it to change your profile, your avatar or see information on your account",
-
-            "home-3": "Here's the news, starting with a quote chosen by the community and news about the application",
-            "home-4": "This button is used to add the activities you do in real life, you'll see them appear in the calendar and you'll earn experience!",
-
-            "home-5": "You can also add quests, to add activities more quickly, or follow personal goals",
-            "home-6": "Come here, let's take a look at the calendar",
-
-            "calendar-1": "This is where all your activities will appear, you can select them to view their details and edit them.",
-            "calendar-2": "You can select another day or navigate between weeks with the arrows",
-            "calendar-3": "And you can click here to display the month calendar",
-            "calendar-4": "Finally, let's go and see the store!",
-
-            "shop-1": "At the top you can enter a code to get rewards",
-            "shop-2": "Here you can watch an ad to earn Ox for free (Ox are the app's virtual currency)",
-            "shop-3": "Yan can buy Ox with money (this page will be available in future updates!)",
-            "shop-4": "You can spend your Ox here to buy items, which you can equip in your profile - offers change every day!",
-            "shop-5": "In this category, you can buy chests containing a random item. The rarer the chest, the greater the chance of getting a quality item!",
-            "shop-no-internet": "Unfortunately I cannot present the shop to you because you do not have the internet, but you can access it by being connected!",
-
-            "home-7": "That's it! Now I'll let you discover the app for yourself, if you need help you can call me by pressing the help buttons!\n\nGood luck, even if I know you don't need it ;)"
+            "home-greetings": "Hello again {}!",
+            "home-hello": "Welcome to Game Life, let me show you the application!",
+            "home": "Here you are on the menu, where you'll find general information about GameLife and your profile",
+            "home-next": "Click on the shiny icon to go to the calendar",
+            "calendar": "This is the calendar, it contains all the activities you've done",
+            "calendar-next": "Next click: the quests! (the shiny icon at the bottom of the screen)",
+            "quest": "This is the quests page, which will help to motivate you and get you into the habit of doing things. You can click on the 'i's for more information!",
+            "quest-next": "Direction: your avatar (the shiny icon at the top right of the screen)",
+            "avatar": "There you are! Well, your avatar. You can customise it by earning or buying equipment",
+            "shop": "Equipment you can buy here, in the shop! You'll find items for your avatar, chests and dyes!",
+            "shop-next": "And most importantly, click on the big pink button at the bottom!",
+            "activity": "This is where you can add your activities! All you have to do is choose an activity and start playing!",
+            "home-final": "Your Game Life adventure starts now! A world full of challenges and rewards is waiting for you, so don't wait any longer and go for it!"
         },
 
         "achievements": {

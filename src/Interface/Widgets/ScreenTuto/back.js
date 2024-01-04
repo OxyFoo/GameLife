@@ -29,7 +29,7 @@ const DEFAULT_TUTO_ELEMENT = {
     execAfter: null,
     showButton: true,
     messagePosY: null,
-    zapSideToMessage: null
+    zapSideToMessage: false
 };
 
 class ScreenTutoBack extends React.Component {
@@ -67,8 +67,8 @@ class ScreenTutoBack extends React.Component {
         this.UpdatePositions(layout);
     }
 
-    onComponentPress = (value) => {}
-    onSkipPress = () => {}
+    onComponentPress = (value) => { }
+    onSkipPress = () => { }
 
     setStateSync = (state) => new Promise(resolve => this.setState(state, () => resolve()));
 
@@ -138,12 +138,12 @@ class ScreenTutoBack extends React.Component {
      */
     Show = async (element) => {
 
-        const { component, text, showButton, fontSize, messagePosY, zapSideToMessage} = element;
+        const { component, text, showButton, fontSize, messagePosY, zapSideToMessage } = element;
 
-        let position = { 
-            x: user.interface.screenWidth / 2, 
+        let position = {
+            x: user.interface.screenWidth / 2,
             y: user.interface.screenHeight * 2 / 3,
-            width: 0, 
+            width: 0,
             height: 0
         };
 
@@ -229,7 +229,14 @@ class ScreenTutoBack extends React.Component {
 
         // Message position (with delay)
         let messageX = btnMidX + offsetX - layout.width / 2;
-        let messageY = btnMidY + offsetY + (isOnTop ? zapSideToMessage ? 0 : 24 : - layout.height - 24);
+        let messageY = btnMidY + offsetY;
+        if (isOnTop) {
+            if (!zapSideToMessage) {
+                messageY = messageY + 24;
+            }
+        } else {
+            messageY = messageY - layout.height - 24;
+        }
 
         // Message position verification
         if (messageX < 0)

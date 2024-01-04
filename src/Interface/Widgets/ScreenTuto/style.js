@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         opacity: .8,
         right: 12,
         bottom: 12, 
-        alignItems:"flex-end"
+        alignItems:'flex-end'
     },
     defaultButton: {
         width: '50%'

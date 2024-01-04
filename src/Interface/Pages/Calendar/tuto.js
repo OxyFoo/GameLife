@@ -10,38 +10,20 @@ function StartTutorial(tutoValue) {
     if (tutoValue === 2) {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto1,
-                text: lang['main']['calendar-1']
+                component: null,
+                zapSideToMessage: true,
+                text: lang['main']['calendar'],
+                fontSize: 18,
+                messagePosY: 0.05 * user.interface.screenHeight
             },
-            {
-                component: this.refTuto2,
-                text: lang['main']['calendar-2']
-            },
-            {
-                component: this.refTuto3,
-                text: lang['main']['calendar-3']
-            },
-            {
-                component: user.interface.bottomBar.refButtons[4],
-                text: lang['main']['calendar-4'],
-                showButton: false,
-                execAfter: () => {
-                    user.interface.ChangePage('shop', { tuto: 3 }, true);
-                    return false;
-                }
-            }
-        ]);
-    }
-    else if (tutoValue === 101) { 
-        user.interface.screenTuto.ShowTutorial([
             {
                 component: user.interface.bottomBar.refButtons[3],
                 zapSideToMessage: true,
-                text: lang['first']['calendar'],
-                fontSize: 20,
+                text: lang['main']['calendar-next'],
+                fontSize: 18,
                 messagePosY: 0.05 * user.interface.screenHeight,
                 execAfter: () => {
-                    user.interface.ChangePage('quests', { tuto: 102 }, true);
+                    user.interface.ChangePage('quests', { tuto: 3 }, true);
                     return false;
                 }
             }

@@ -169,7 +169,7 @@ async function Initialisation(nextStep) {
     // Start tutorial
     let homeProps = {};
     if (!user.settings.tutoFinished) {
-        homeProps = { tuto: 100 };
+        homeProps = { tuto: 1 };
         user.settings.tutoFinished = true;
         user.settings.Save();
     }

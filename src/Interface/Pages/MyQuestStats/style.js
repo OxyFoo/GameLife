@@ -13,9 +13,9 @@ const styles = StyleSheet.create({
 
     // Overlay
     editActivity: {
+        paddingHorizontal: 0,
         zIndex: 1010,
         elevation: 1010,
-        paddingHorizontal: 0,
     },
     addActivity: {
         position: 'absolute',

@@ -25,20 +25,17 @@ class MyQuestStats extends BackQuest {
         );
     }
     render() {
+        const { skills, maximumStreak } = this.selectedQuest;
+
         const currentStreak = user.quests.myquests.GetStreak(this.selectedQuest);
-        const maxStreak = Math.max(10, this.selectedQuest.maximumStreak);
+        const maxStreak = Math.max(10, maximumStreak);
 
-        const skills = this.selectedQuest.skills;
-        let skillsName = "";
-        for (let i = 0; i < skills.length; i++) {
-            const skill = dataManager.skills.GetByID(skills[i]);
-            if (skill === null) continue;
-
-            const name = skill?.Name[langManager.currentLangageKey];
-            skillsName += name;
-            if (i !== skills.length - 1) skillsName += ' • ';
-        }
-
+        const skillsName = this.selectedQuest.skills
+            .map(skillID => dataManager.skills.GetByID(skillID))
+            .filter(skill => skill !== null) 
+            .map(skill => dataManager.GetText(skill.Name))
+            .join(' • ');
+            
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
         };
@@ -71,7 +68,6 @@ class MyQuestStats extends BackQuest {
                             style={styles.skills}
                             color='primary'
                             fontSize={14}
-                            bold={true}
                         >
                             {skillsName}
                         </Text>

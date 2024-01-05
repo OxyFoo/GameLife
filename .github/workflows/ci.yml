@@ -11,7 +11,7 @@ on:
 
 jobs:
   test-client:
-    uses: ./.github/workflows/shared/test-client-step.yml
+    uses: ./.github/workflows/step-test-client.yml
 
   test-server:
     name: '🔍 Server tests'

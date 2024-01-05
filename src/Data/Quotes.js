@@ -2,8 +2,7 @@ import { Random } from 'Utils/Functions';
 
 class Quote {
     ID = 0;
-    Lang = '';
-    Quote = '';
+    Quote = { fr: '', en: '' };
     Author = '';
 }
 
@@ -11,7 +10,7 @@ class Quotes {
     /** @type {Quote[]} */
     quotes = [];
 
-    /** @type {?Quote} */
+    /** @type {Quote|null} */
     currentQuote = null;
 
     Clear() {
@@ -35,7 +34,7 @@ class Quotes {
     }
 
     /**
-     * @returns {?Quote}
+     * @returns {Quote|null}
      */
     GetRandomQuote() {
         let quote = null;
@@ -47,4 +46,5 @@ class Quotes {
     }
 }
 
+export { Quote };
 export default Quotes;

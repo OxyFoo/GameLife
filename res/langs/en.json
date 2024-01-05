@@ -748,5 +748,25 @@
         "Forging equipment",
         "Creating the shop",
         "Filling the chests"
-    ]
+    ],
+
+    "quote": {
+        "not-found": "No quote found",
+        "anonymous-author-list": [
+            "An anonymous wise man.",
+            "An old sailor.",
+            "A mountain hermit.",
+            "A traveling soul.",
+            "A forgotten poet.",
+            "A solitary dreamer.",
+            "A silent observer.",
+            "An unknown mystic.",
+            "A desert storyteller.",
+            "A voice from the past.",
+            "A wandering spirit.",
+            "A hidden healer.",
+            "A night watchman.",
+            "A keeper of secrets."
+        ]
+    }
 }

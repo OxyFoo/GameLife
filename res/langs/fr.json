@@ -748,5 +748,25 @@
         "Fabrication de l'équipement",
         "Création de la boutique",
         "Remplissage des coffres"
-    ]
+    ],
+
+    "quote": {
+        "not-found": "Aucune citation trouvée",
+        "anonymous-author-list": [
+            "Un sage anonyme.",
+            "Un vieux marin.",
+            "Un ermite des montagnes.",
+            "Une âme voyageuse.",
+            "Un poète oublié.",
+            "Un rêveur solitaire.",
+            "Un observateur silencieux.",
+            "Un mystique inconnu.",
+            "Un conteur du désert.",
+            "Une voix du passé.",
+            "Un esprit vagabond.",
+            "Un guérisseur caché.",
+            "Un veilleur de nuit.",
+            "Un gardien de secrets."
+        ]
+    }
 }

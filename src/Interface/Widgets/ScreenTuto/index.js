@@ -14,12 +14,12 @@ const ScreenTutoProps = {
 };
 
 class ScreenTuto extends ScreenTutoBack {
-    renderTopPanel(zapSideToMessage) {
+    renderTopPanel() {
         const { component } = this.state;
         const styleTopPanel = {
             width: '100%',
             height: component.ref !== null ? component.position.y : '100%',
-            opacity: zapSideToMessage ? .4 : component.ref !== null ? .8 : .6
+            opacity: component.ref !== null ? .6 : .4
         };
         return <Animated.View style={[styles.background, styleTopPanel]} />;
     }
@@ -126,8 +126,20 @@ class ScreenTuto extends ScreenTutoBack {
                 { translateY: message.position.y }
             ]
         };
+
+        let chosenFontSize; 
+        if (fontSize !== null && fontSize) {
+            if (!smallScreen) {
+                chosenFontSize = fontSize;
+            } else {
+                chosenFontSize = fontSize - 4;
+            }
+        } else {
+            chosenFontSize = 16;
+        }
+
         const styleText = {
-            fontSize: fontSize !== null && fontSize ? !smallScreen ? fontSize : fontSize - 4 : 16,
+            fontSize: chosenFontSize,
         };
 
         return (
@@ -158,14 +170,14 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     render() {
-        const { visible, zapSideToMessage } = this.state;
+        const { visible } = this.state;
         if (!visible) return null;
 
         return (
             <View style={styles.parent}>
 
                 {/** Background */}
-                {this.renderTopPanel(zapSideToMessage)}
+                {this.renderTopPanel()}
                 {this.renderLeftPanel()}
                 {this.renderRightPanel()}
                 {this.renderBottomPanel()}

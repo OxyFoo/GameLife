@@ -90,13 +90,13 @@ class ZapBack extends React.Component {
 
         let zapPosX, zapPosY;
 
-        if (!zapSideToMessage) {
-            zapPosX = btnMidX + offsetX;
-            zapPosY = btnMidY + offsetY;
-        }
-        else {
+        if (zapSideToMessage) {
             zapPosX = 50
             zapPosY = layoutTarget.y ;
+        }
+        else {
+            zapPosX = btnMidX + offsetX;
+            zapPosY = btnMidY + offsetY;
         }
 
         if (zapPosX < 0)

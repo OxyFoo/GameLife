@@ -12,7 +12,10 @@ function StartTutorial(tutoValue) {
             {
                 component: null,
                 zapSideToMessage: true,
-                text: lang['main']['home-greetings'].replace('{}', user.informations.username.Get())
+                text: lang['main']['home-greetings'].replace('{}', user.informations.username.Get()),
+                execBefore: () => {
+                    this.refPage?.GotoY(0);
+                }
             },
             {
                 component: user.interface.bottomBar.refButtons[0],

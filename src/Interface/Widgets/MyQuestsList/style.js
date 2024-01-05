@@ -8,11 +8,16 @@ const styles = StyleSheet.create({
         padding: 24
     },
 
+
+    headerStyle: {
+        justifyContent: 'space-between',
+        paddingHorizontal: 0
+    },
     iconStaticHeader: {
         width: 'auto',
         height: 'auto',
-        padding: 12,
         alignContent: 'center',
+        padding: 12,
     },
     buttonInfo: {
         flexDirection: 'row',

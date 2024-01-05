@@ -9,6 +9,10 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
 
+    headerStyle: {
+        justifyContent: 'space-between',
+        paddingHorizontal: 0
+    },
     iconStaticHeader: {
         width: 'auto',
         height: 'auto',

@@ -726,13 +726,13 @@
 
         "nzd": {
             "1": "Ici, c'est les 'Jours non zéro' (inspiré du Non Zero Days), la chaîne de connexion en gros.",
-            "2": "Le fonctionnement est simple, chaque jour, tu dois faire au moins une activité qui rapport de l'xp.",
+            "2": "Le fonctionnement est simple, chaque jour, tu dois faire au moins une activité qui rapporte de l'xp.",
             "3": "Tu pourras alors récuperer ta récompense le lendemain, et ainsi de suite.",
             "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
         },
 
         "quests": {
-            "1": "Ici, ce sont les quêtes ! Des missions que tu peux te donner pour t'aider à te motiver.",
+            "1": "Ici, ce sont les quêtes ! Des missions que tu peux TE donner pour t'aider à te motiver.",
             "2": "Pour en ajouter une, rien de plus simple, tu cliques sur le bouton ici !",
             "3": "Sous chaque quête, tu verras des cercles. Ils peuvent avoir plusieurs couleurs, voici leurs significations :",
             "4": "Rouge : la quête n'a pas été complétée.  Rose, ça se déroule aujourd'hui.  Violet: les autres jours.",

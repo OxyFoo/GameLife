@@ -8,7 +8,6 @@ import themeManager from 'Managers/ThemeManager';
 class SimpleContainer extends SimpleContainerBack {
 
     render() {
-
         let header, content;
         React.Children.forEach(this.props.children, child => {
             if (React.isValidElement(child)) {
@@ -25,11 +24,11 @@ class SimpleContainer extends SimpleContainerBack {
         };
 
         return (
-            <View style={this.props.style} onLayout={this.props.onLayout}>
+            <View style={this.props.style}>
                 <View style={this.props.styleHeader}>
                     {header}
                 </View>
-                <View style={[styles.content, contentStyle, this.props.styleContainer]}>
+                <View style={[styles.content, contentStyle, this.props.styleContent]}>
                     {content}
                 </View>
             </View>

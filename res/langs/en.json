@@ -732,7 +732,7 @@
         },
 
         "quests": {
-            "1": "These are the quests! Missions you can give yourself to motivate yourself.",
+            "1": "These are the quests! Missions you can give yourself to help motivate you.",
             "2": "If you want to add one, just click on the button here!",
             "3": "Under each quest, you'll see circles. They can have several colours, here are their meanings:",
             "4": "Red: the quest has not been completed.  Pink: it's happening today.  Purple: other days",

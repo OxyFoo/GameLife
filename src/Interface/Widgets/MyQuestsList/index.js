@@ -27,13 +27,15 @@ const QuestsProps = {
 class MyQuestsList extends BackQuestsList {
     static QuestElement = QuestElement;
 
+    /**
+     * @param {Icons} icon
+     * @param {() => void} onPress
+     */
     renderHeader = (icon, onPress) => {
-
         const lang = langManager.curr['quests'];
         const headerStatic = (
             <Button
-                style={{ justifyContent: 'space-between', paddingHorizontal: 0}}
-                color={'main1'}
+                style={styles.headerStyle}
                 colorNextGen={true}
                 rippleColor='transparent'
                 borderRadius={8}

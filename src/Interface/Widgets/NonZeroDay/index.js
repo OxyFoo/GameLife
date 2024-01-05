@@ -10,15 +10,21 @@ import langManager from 'Managers/LangManager';
 
 import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
 
+/**
+ * @typedef {import('Class/Shop').Icons} Icons
+ */
+
 class NonZeroDay extends NonZeroDayBack {
 
-    renderHeader = (icon) => {
-
+    /**
+     * @param {Icons} icon
+     * @param {() => void} onPress
+     */
+    renderHeader = (icon, onPress) => {
         const lang = langManager.curr['nonzerodays'];
         const headerStatic = (
             <Button
-                style={{ justifyContent: 'space-between', paddingHorizontal: 0 }}
-                color={'main1'}
+                style={styles.headerStyle}
                 colorNextGen={true}
                 rippleColor='transparent'
                 borderRadius={8}
@@ -42,7 +48,7 @@ class NonZeroDay extends NonZeroDayBack {
                         icon={icon}
                         size={24}
                         angle={180}
-                        onPress={() => this.openPopup()}
+                        onPress={() => onPress}
                     />
                 )}
             </Button>
@@ -76,11 +82,11 @@ class NonZeroDay extends NonZeroDayBack {
             <SimpleContainer
                 ref={ref => this.refContainer = ref}
                 style={this.props.style}
-                styleContainer={styles.container}
+                styleContent={styles.container}
                 colorNextGen
             >
                 <SimpleContainer.Header>
-                    {this.renderHeader('arrowLeft')}
+                    {this.renderHeader('arrowLeft', this.openPopup)}
                 </SimpleContainer.Header>
 
                 <SimpleContainer.Body>

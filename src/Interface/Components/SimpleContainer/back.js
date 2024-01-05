@@ -20,7 +20,7 @@ const SimpleContainerProps = {
     styleHeader: {},
 
     /** @type {StyleProp} */
-    styleContainer: {},
+    styleContent: {},
 
     /** @type {boolean} True to show new UI gradient */
     colorNextGen: false,

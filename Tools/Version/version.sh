@@ -77,7 +77,7 @@ IOS_BUILD_NUMBER=$(grep 'CURRENT_PROJECT_VERSION' $IOS_XCODEPROJ_PATH | head -1 
 IOS_VERSION=$(grep 'MARKETING_VERSION' $IOS_XCODEPROJ_PATH | head -1 | awk '{ print $3 }' | tr -d ';')
 
 # Increment iOS version
-NEXT_IOS_BUILD_NUMBER=$(($IOS_BUILD_NUMBER + 1))
+NEXT_IOS_BUILD_NUMBER=1
 if [ "$VERSION_TYPE" == "major" ]; then
     NEXT_IOS_VERSION=$(echo $IOS_VERSION | awk -F. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1' | sed 's/ /./g')
 elif [ "$VERSION_TYPE" == "minor" ]; then

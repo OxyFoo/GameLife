@@ -1,0 +1,17 @@
+name: '⚙️ Continuous Integration'
+
+on:
+  push:
+    branches:
+      - dev
+      - test
+      - hotfix/**/*
+      - bugfix/**/*
+      - feature/**/*
+
+jobs:
+  test-client:
+    name: '🔍 Tests'
+    uses: ./.github/workflows/step-tests.yml
+    with:
+      environment: dev

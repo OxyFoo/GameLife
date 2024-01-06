@@ -1,4 +1,4 @@
-# Game Life - Guidelines
+# GameLife - Guidelines
 
 ## Fonctions et variables
 Tous les noms de fonctions et de variable sont en anglais et en minuscules avec une majuscule par mot à partir du second (ex: variableDeOuf) et représentent le plus précisément possible ce qu'elles font.

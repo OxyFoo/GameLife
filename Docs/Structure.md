@@ -1,4 +1,4 @@
-# Game Life - Structure
+# GameLife - Structure
 
 ## Fichiers source
 | Répertoire | Fonction |

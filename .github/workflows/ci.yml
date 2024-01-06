@@ -1,4 +1,4 @@
-name: 'Continuous Integration'
+name: '⚙️ Continuous Integration'
 
 on:
   push:
@@ -11,25 +11,7 @@ on:
 
 jobs:
   test-client:
-    name: '🔍 Client tests'
+    name: '🔍 Tests'
     uses: ./.github/workflows/step-tests.yml
     with:
       environment: dev
-
-  test-server:
-    name: '🔍 Server tests'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v4
-
-      - name: 'Install PHP with mysqli extension'
-        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
-
-      - name: 'Run skills tests'
-        run: |
-          php ./Tools/RessourcesChecker/skills.php \
-          '${{ vars.DB_DEV_HOST }}' \
-          '${{ vars.DB_DEV_USER }}' \
-          '${{ secrets.DB_DEV_PASS }}' \
-          '${{ vars.DB_DEV_NAME }}'

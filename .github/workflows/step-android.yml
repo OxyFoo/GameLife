@@ -1,0 +1,151 @@
+name: '🧩 Android build & delivery'
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Choose environment to deploy (dev, test, prod)'
+        required: true
+        type: string
+      delivery:
+        description: 'Delivery to Google Play'
+        required: true
+        type: boolean
+      save-apk-artifact:
+        description: 'Save build APK artifact'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  FILE_AAB: GameLife-${{ github.event.inputs.environment }}.aab
+  FILE_APK: GameLife-${{ github.event.inputs.environment }}.apk
+  FILE_MAPPING: GameLife-${{ github.event.inputs.environment }}-mapping.txt
+
+jobs:
+  build-android:
+    name: '🏗️ Build'
+    runs-on: ubuntu-latest
+    container: reactnativecommunity/react-native-android
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: 'Cache NPM packages'
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: 'Install Dependencies'
+        run: npm install
+
+      - name: 'Get config files'
+        run: |
+          echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
+          echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
+          echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
+
+      - name: 'Build app'
+        env:
+          ENVFILE: .env.${{ github.event.inputs.environment }}
+        run: |
+          # Execute bundleSwitcher.sh if environment is test
+          if [ ${{ github.event.inputs.environment }} == 'test' ]; then
+            ./Tools/BundleSwitcher/bundleSwitcher.sh test
+          fi
+
+          # Build the app
+          npm run build
+
+          # Move aab & mapping files to root
+          mv android/app/build/outputs/bundle/release/app-release.aab ./$FILE_AAB
+          mv android/app/build/outputs/mapping/release/mapping.txt ./$FILE_MAPPING
+
+      - name: 'Upload aab artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: $FILE_AAB
+          path: $FILE_AAB
+
+      - name: 'Upload mapping artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: $FILE_MAPPING
+          path: $FILE_MAPPING
+
+      - name: 'Download buildtool'
+        if: ${{ github.event.inputs.save-apk-artifact }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
+
+      - name: 'Generate universal APK'
+        if: ${{ github.event.inputs.save-apk-artifact }}
+        run: |
+          java -jar ./bundletool.jar build-apks \
+            --bundle=$FILE_AAB \
+            --output=my_app.apks \
+            --mode=universal \
+            --ks=./android/app/gamelife.keystore \
+            --ks-key-alias=gameLifeAlias \
+            --ks-pass=file:./keystore
+          unzip -p my_app.apks universal.apk > $FILE_APK
+
+      - name: 'Upload apk artifact'
+        if: ${{ github.event.inputs.save-apk-artifact }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: $FILE_APK
+          path: $FILE_APK
+
+  delivery-android:
+    name: '📦 Delivery'
+    if: github.event.inputs.delivery == true && github.event.inputs.environment != 'dev'
+    runs-on: ubuntu-latest
+    needs: build-android
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Get aab artifact'
+        uses: actions/download-artifact@v3
+        with:
+          name: $FILE_AAB
+
+      - name: 'Get mapping artifact'
+        uses: actions/download-artifact@v3
+        with:
+          name: $FILE_MAPPING
+
+      - name: 'Get google-services.json - firebase-adminsdk secret'
+        run: |
+          echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ./google-services.json
+
+      - name: 'Upload to Google Play'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ./google-services.json
+          packageName: com.gamelife
+          releaseFiles: $FILE_AAB
+          track: production
+          whatsNewDirectory: distribution/whatsnew
+          mappingFile: $FILE_MAPPING
+
+      - name: 'Check if upload was successful'
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "PLAYSTORE_STATUS=success" >> $GITHUB_ENV
+            echo "Upload successful, state saved"
+          else
+            echo "PLAYSTORE_STATUS=failure" >> $GITHUB_ENV
+            echo "Upload failed"
+            exit 1
+          fi

@@ -1,4 +1,4 @@
-name: 'Server tests'
+name: '🧩 Server tests'
 
 on:
   workflow_call:

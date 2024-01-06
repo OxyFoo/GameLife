@@ -12,7 +12,9 @@ on:
 jobs:
   test-client:
     name: '🔍 Client tests'
-    uses: ./.github/workflows/step-test-client.yml
+    uses: ./.github/workflows/step-tests.yml
+    with:
+      environment: dev
 
   test-server:
     name: '🔍 Server tests'

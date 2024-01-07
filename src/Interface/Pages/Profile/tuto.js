@@ -9,13 +9,12 @@ function StartTutorial(tutoValue) {
     const lang = langManager.curr['tuto'];
     if (tutoValue === 4) { 
         user.interface.screenTuto.ShowTutorial([
-            
             {
                 component: null,
                 zapSideToMessage: true,
                 text: lang['main']['avatar'],
                 fontSize: 18,
-                messagePosY: 0.05 * user.interface.screenHeight,
+                messagePosY: 0.05,
                 execAfter: () => {
                     user.interface.ChangePage('shop', { tuto: 5 }, true);
                     return false;

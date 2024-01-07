@@ -17,7 +17,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
- * @property {number|null} [messagePosY=null] Y position of the message (null to center)
+ * @property {number|null} [messagePosY=null] Y position in % of the message (null to center) [0,1]
  * @property {boolean} [zapSideToMessage=false] is Zap going to be displayed side to the message or not
  */
 
@@ -47,7 +47,6 @@ class ScreenTutoBack extends React.Component {
         message: {
             text: '',
             position: new Animated.ValueXY({ x: 0, y: 0 }),
-            isOnTop: false,
             hintOpacity: new Animated.Value(0)
         }
     }
@@ -178,10 +177,9 @@ class ScreenTutoBack extends React.Component {
             message: {
                 ...this.state.message,
                 text: text,
-                isOnTop: isOnTop
             },
             fontSize: fontSize,
-            messagePosY: messagePosY,
+            messagePosY: messagePosY * user.interface.screenHeight,
             zapSideToMessage: zapSideToMessage
         });
 

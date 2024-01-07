@@ -1,5 +1,7 @@
 import { FlatList } from 'react-native';
 
+import StartTutorial from './tuto';
+
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
@@ -10,8 +12,6 @@ import { Sleep } from 'Utils/Functions';
 import { PageBase } from 'Interface/Components';
 import { CategoryToItem, SkillToItem } from './types';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
-import StartTutorial from './tuto';
-
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent

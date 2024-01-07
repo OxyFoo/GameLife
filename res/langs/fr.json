@@ -652,8 +652,7 @@
 
     "tuto": {
         "main": {
-            "home-greetings": "Re-bonjour {} !",
-            "home-hello": "Bienvenue dans Game Life, laisse moi te montrer l'application !",
+            "home-greetings": "Re-bonjour {} ! Bienvenue dans Game Life, laisse moi te montrer l'application !",
             "home": "Ici tu es sur le menu, tu y trouveras des infos générales sur GameLife et ton profil.",
             "home-next": "Clique sur l'icône brillante pour aller sur le calendrier",
             "calendar": "Là c'est le calendrier, il contient toutes les activités que tu as réalisé.",

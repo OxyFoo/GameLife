@@ -652,8 +652,7 @@
 
     "tuto": {
         "main": {
-            "home-greetings": "Hello again {}!",
-            "home-hello": "Welcome to Game Life, let me show you the application!",
+            "home-greetings": "Hello again {}! Welcome to Game Life, let me show you the application!",
             "home": "Here you are on the menu, where you'll find general information about GameLife and your profile",
             "home-next": "Click on the shiny icon to go to the calendar",
             "calendar": "This is the calendar, it contains all the activities you've done",

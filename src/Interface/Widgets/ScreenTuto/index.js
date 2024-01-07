@@ -114,11 +114,11 @@ class ScreenTuto extends ScreenTutoBack {
 
     renderZapMessage() {
         const { smallScreen } = this.props;
-        const { message, fontSize } = this.state;
+        const { message, fontSize, zapSideToMessage } = this.state;
 
         const styleTextContainer = {
             top: 0,
-            left: '10%',
+            left: zapSideToMessage ? '10%' : 0,
             width: '70%',
             borderColor: themeManager.GetColor('main2'),
             transform: [
@@ -127,20 +127,15 @@ class ScreenTuto extends ScreenTutoBack {
             ]
         };
 
-        let chosenFontSize; 
-        if (fontSize !== null && fontSize) {
-            if (!smallScreen) {
-                chosenFontSize = fontSize;
-            } else {
-                chosenFontSize = fontSize - 4;
-            }
-        } else {
-            chosenFontSize = 16;
-        }
+        const styleText = { fontSize };
 
-        const styleText = {
-            fontSize: chosenFontSize,
-        };
+        styleText.fontSize = 16;
+        if (fontSize !== null) {
+            styleText.fontSize = fontSize;
+        }
+        if (smallScreen) {
+            styleText.fontSize -= 4;
+        }
 
         return (
             <Animated.View

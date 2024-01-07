@@ -14,14 +14,12 @@ function StartTutorial(tutoValue) {
                 zapSideToMessage: true,
                 text: lang['main']['quest'],
                 fontSize: 18,
-                messagePosY: 0.05 * user.interface.screenHeight
+                messagePosY: 0.05
             },
             {
                 component: user.interface.header.refContainer,
-                zapSideToMessage: true,
                 text: lang['main']['quest-next'],
                 fontSize: 18,
-                messagePosY: 0.85 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('profile', { tuto: 4 }, true);
                     return false;

@@ -16,14 +16,12 @@ function StartTutorial(tutoValue) {
                 zapSideToMessage: true,
                 text: lang['main']['shop'],
                 fontSize: 18,
-                messagePosY: 0.05 * user.interface.screenHeight
+                messagePosY: 0.05
             },
             {
                 component: user.interface.bottomBar.refButtons[2],
-                zapSideToMessage: true,
                 text: lang['main']['shop-next'],
                 fontSize: 18,
-                messagePosY: 0.05 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('activity', { tuto: 6 }, true);
                     return false;

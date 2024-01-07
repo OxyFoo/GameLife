@@ -18,23 +18,16 @@ function StartTutorial(tutoValue) {
                 }
             },
             {
-                component: user.interface.bottomBar.refButtons[0],
-                zapSideToMessage: true,
-                text: lang['main']['home-hello']
-            },
-            {
                 component: null,
                 zapSideToMessage: true,
                 text: lang['main']['home'],
                 fontSize: 18,
-                messagePosY: 0.05 * user.interface.screenHeight
+                messagePosY: 0.05
             },
             {
                 component: user.interface.bottomBar.refButtons[1],
-                zapSideToMessage: true,
                 text: lang['main']['home-next'],
                 fontSize: 18,
-                messagePosY: 0.05 * user.interface.screenHeight,
                 execAfter: () => {
                     user.interface.ChangePage('calendar', { tuto: 2 }, true);
                     return false;
@@ -42,7 +35,7 @@ function StartTutorial(tutoValue) {
             }
         ]);
     }
-    else if (tutoValue === 7) { 
+    else if (tutoValue === 7) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,

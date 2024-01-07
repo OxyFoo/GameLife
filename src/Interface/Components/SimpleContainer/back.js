@@ -30,7 +30,6 @@ const SimpleContainerProps = {
 };
 
 class SimpleContainerBack extends React.Component {
-
     static Header = (props) => {
         return <View {...props} />;
     };

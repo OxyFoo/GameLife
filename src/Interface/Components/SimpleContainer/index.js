@@ -6,9 +6,9 @@ import SimpleContainerBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 class SimpleContainer extends SimpleContainerBack {
-
     render() {
         let header, content;
+
         React.Children.forEach(this.props.children, child => {
             if (React.isValidElement(child)) {
                 if (child.type === SimpleContainer.Header) {

@@ -17,14 +17,14 @@ const styles = StyleSheet.create({
         width: 'auto',
         height: 'auto',
         padding: 12,
-        alignContent: 'center',
+        alignContent: 'center'
     },
     buttonInfo: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingLeft: 0,
-        borderRadius:0
+        borderRadius: 0
     },
 
     // Popup

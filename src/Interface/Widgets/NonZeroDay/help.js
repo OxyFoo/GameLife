@@ -5,7 +5,6 @@ import langManager from 'Managers/LangManager';
  * @this {import('./back').default}
  */
 function StartHelp() {
-
     const lang = langManager.curr['tuto']['nzd'];
 
     user.interface.screenTuto.ShowTutorial([

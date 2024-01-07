@@ -10,7 +10,7 @@ import QuestSelection from './Elements/questSelection';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Container, SimpleContainer, Button, Text, Separator, Icon } from 'Interface/Components';
+import { SimpleContainer, Button, Text, Separator, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -27,13 +27,18 @@ const QuestsProps = {
 class MyQuestsList extends BackQuestsList {
     static QuestElement = QuestElement;
 
-    /**
-     * @param {Icons} icon
-     * @param {() => void} onPress
-     */
-    renderHeader = (icon, onPress) => {
+    renderHeader = () => {
         const lang = langManager.curr['quests'];
-        const headerStatic = (
+
+        /** @type {Icons | null} */
+        let icon = null;
+        let onPress = null;
+        if (!user.quests.myquests.IsMax()) {
+            icon = 'addSquare';
+            onPress = this.addQuest;
+        }
+
+        return (
             <Button
                 style={styles.headerStyle}
                 colorNextGen={true}
@@ -64,7 +69,6 @@ class MyQuestsList extends BackQuestsList {
                 )}
             </Button>
         );
-        return headerStatic
     }
 
     renderItem = ({ item }) => {
@@ -109,23 +113,14 @@ class MyQuestsList extends BackQuestsList {
     render() {
         const { scrollable, quests, draggedItem, mouseY } = this.state;
 
-        /** @type {Icons | null} */
-        let icon = null;
-        let iconPress = null;
-        if (!user.quests.myquests.IsMax()) {
-            icon = 'addSquare';
-            iconPress = this.addQuest;
-        }
-
         return (
-
             <SimpleContainer
                 ref={ref => this.refContainer = ref}
                 style={this.props.style}
                 colorNextGen
             >
                 <SimpleContainer.Header>
-                    {this.renderHeader(icon, iconPress)}
+                    {this.renderHeader()}
                 </SimpleContainer.Header>
 
                 <SimpleContainer.Body>
@@ -150,7 +145,6 @@ class MyQuestsList extends BackQuestsList {
                         ItemSeparatorComponent={this.renderSeparator}
                     />
                 </SimpleContainer.Body >
-
             </SimpleContainer >
         );
     }

@@ -15,7 +15,6 @@ import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
  */
 
 class NonZeroDay extends NonZeroDayBack {
-
     /**
      * @param {Icons} icon
      * @param {() => void} onPress
@@ -73,7 +72,6 @@ class NonZeroDay extends NonZeroDayBack {
 
         return body;
     }
-
 
     render() {
         const { claimIndex, claimDay } = this.state;

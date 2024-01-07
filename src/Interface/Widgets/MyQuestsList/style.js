@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
         padding: 24
     },
 
-
     headerStyle: {
         justifyContent: 'space-between',
         paddingHorizontal: 0
@@ -17,14 +16,14 @@ const styles = StyleSheet.create({
         width: 'auto',
         height: 'auto',
         alignContent: 'center',
-        padding: 12,
+        padding: 12
     },
     buttonInfo: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingLeft: 0,
-        borderRadius:0
+        borderRadius: 0
     },
 
     separator: {

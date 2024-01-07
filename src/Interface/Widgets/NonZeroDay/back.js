@@ -44,8 +44,8 @@ class NonZeroDayBack extends React.Component {
         let claimDate = null;
 
         const claimIndex = user.quests.nonzerodays.GetCurrentClaimIndex();
-        const claimsList = user.quests.nonzerodays.claimsList.Get();
-        const claimList = claimsList[claimIndex];
+        const claimLists = user.quests.nonzerodays.claimsList.Get();
+        const claimList = claimLists[claimIndex];
         if (claimIndex !== -1) {
             for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
                 if (!claimList.claimed.includes(claimDay + 1)) break;

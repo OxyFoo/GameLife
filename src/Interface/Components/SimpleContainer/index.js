@@ -7,29 +7,27 @@ import themeManager from 'Managers/ThemeManager';
 
 class SimpleContainer extends SimpleContainerBack {
     render() {
-        let header, content;
+        let header, body;
 
         React.Children.forEach(this.props.children, child => {
             if (React.isValidElement(child)) {
                 if (child.type === SimpleContainer.Header) {
                     header = child;
                 } else if (child.type === SimpleContainer.Body) {
-                    content = child;
+                    body = child;
                 }
             }
         });
 
-        const contentStyle = {
-            backgroundColor: themeManager.GetColor(this.props.backgroundColor, { opacity: this.props.colorNextGen ? 0.1 : 1 }),
+        const bodyStyle = {
+            backgroundColor: themeManager.GetColor(this.props.backgroundColor, { opacity: 0.1 }),
         };
 
         return (
             <View style={this.props.style}>
-                <View style={this.props.styleHeader}>
-                    {header}
-                </View>
-                <View style={[styles.content, contentStyle, this.props.styleContent]}>
-                    {content}
+                {header}
+                <View style={[styles.body, bodyStyle]}>
+                    {body}
                 </View>
             </View>
         );

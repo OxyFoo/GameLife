@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    content: {
+    body: {
         borderBottomStartRadius: 8,
         borderBottomEndRadius: 8,
         overflow: 'hidden'

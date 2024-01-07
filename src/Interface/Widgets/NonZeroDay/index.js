@@ -15,11 +15,14 @@ import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
  */
 
 class NonZeroDay extends NonZeroDayBack {
-    /**
-     * @param {Icons} icon
-     * @param {() => void} onPress
-     */
-    renderHeader = (icon, onPress) => {
+
+
+    renderHeader = () => {
+
+        /** @type {Icons} */
+        let icon = 'arrowLeft';
+        let onPress = this.openPopup;
+
         const lang = langManager.curr['nonzerodays'];
         const headerStatic = (
             <Button
@@ -30,25 +33,27 @@ class NonZeroDay extends NonZeroDayBack {
                 pointerEvents='box-none'
             >
                 <View style={styles.buttonInfo}>
+                    <Button onPress={StartHelp.bind(this)} style={styles.iconButtonPadding}>
                     <Icon
                         containerStyle={styles.iconStaticHeader}
                         icon={'info'}
                         size={24}
-                        onPress={StartHelp.bind(this)}
                     />
+                    </Button>
                     <Text color={'primary'}>
                         {lang['container-title']}
                     </Text>
                 </View>
                 {icon !== null && (
+                    <Button onPress={onPress}  style={styles.iconButtonPadding}>
                     <Icon
-                        ref={ref => this.refMore = ref}
+                        ref={ref => this.refFullStreak = ref}
                         containerStyle={styles.iconStaticHeader}
                         icon={icon}
                         size={24}
                         angle={180}
-                        onPress={() => onPress}
                     />
+                    </Button>
                 )}
             </Button>
         );
@@ -63,6 +68,7 @@ class NonZeroDay extends NonZeroDayBack {
                 index={claimDay}
                 claimIndex={claimIndex}
                 onPress={this.onClaimPress}
+                style={styles.container}
             />
         ) : (
             <Text style={styles.noClaim}>
@@ -80,11 +86,9 @@ class NonZeroDay extends NonZeroDayBack {
             <SimpleContainer
                 ref={ref => this.refContainer = ref}
                 style={this.props.style}
-                styleContent={styles.container}
-                colorNextGen
             >
                 <SimpleContainer.Header>
-                    {this.renderHeader('arrowLeft', this.openPopup)}
+                    {this.renderHeader()}
                 </SimpleContainer.Header>
 
                 <SimpleContainer.Body>

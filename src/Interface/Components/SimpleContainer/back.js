@@ -16,20 +16,12 @@ const SimpleContainerProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {StyleProp} */
-    styleHeader: {},
-
-    /** @type {StyleProp} */
-    styleContent: {},
-
-    /** @type {boolean} True to show new UI gradient */
-    colorNextGen: false,
-
     /** @type {ThemeColor} */
     backgroundColor: 'backgroundTransparent',
 };
 
 class SimpleContainerBack extends React.Component {
+
     static Header = (props) => {
         return <View {...props} />;
     };

@@ -13,10 +13,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 0
     },
+    iconButtonPadding: {
+        paddingHorizontal: 12
+    },
     iconStaticHeader: {
         width: 'auto',
         height: 'auto',
-        padding: 12,
         alignContent: 'center'
     },
     buttonInfo: {

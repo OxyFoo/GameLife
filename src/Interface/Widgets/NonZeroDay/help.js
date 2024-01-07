@@ -21,7 +21,7 @@ function StartHelp() {
             text: lang["3"],
         },
         {
-            component: this.refMore,
+            component: this.refFullStreak,
             text: lang["4"],
         }
     ]);

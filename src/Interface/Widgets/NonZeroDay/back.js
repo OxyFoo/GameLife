@@ -23,7 +23,7 @@ class NonZeroDayBack extends React.Component {
     nzdListener;
 
     refContainer = null;
-    refMore = null;
+    refFullStreak = null;
 
     componentDidMount() {
         this.update();

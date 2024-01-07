@@ -47,25 +47,27 @@ class MyQuestsList extends BackQuestsList {
                 pointerEvents='box-none'
             >
                 <View style={styles.buttonInfo}>
+                    <Button onPress={StartHelp.bind(this)} style={styles.iconButtonPadding}>
                     <Icon
                         containerStyle={styles.iconStaticHeader}
                         icon={'info'}
                         size={24}
-                        onPress={StartHelp.bind(this)}
                     />
+                    </Button>
                     <Text color={'primary'}>
                         {lang['container-title']}
                     </Text>
                 </View>
                 {icon !== null && (
+                    <Button onPress={onPress} style={styles.iconButtonPadding}>
                     <Icon
                         ref={ref => this.refAddQuest = ref}
                         containerStyle={styles.iconStaticHeader}
                         icon={icon}
                         size={24}
                         angle={180}
-                        onPress={onPress}
                     />
+                    </Button>
                 )}
             </Button>
         );
@@ -117,7 +119,6 @@ class MyQuestsList extends BackQuestsList {
             <SimpleContainer
                 ref={ref => this.refContainer = ref}
                 style={this.props.style}
-                colorNextGen
             >
                 <SimpleContainer.Header>
                     {this.renderHeader()}

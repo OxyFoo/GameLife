@@ -10,7 +10,11 @@ const styles = StyleSheet.create({
     },
 
     headerStyle: {
+        display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'space-between',
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
         paddingHorizontal: 0
     },
     iconButtonPadding: {

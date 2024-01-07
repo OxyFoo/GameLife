@@ -9,6 +9,7 @@ import StartHelp from './help';
 import langManager from 'Managers/LangManager';
 
 import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
+import LinearGradient from 'react-native-linear-gradient';
 
 /**
  * @typedef {import('Class/Shop').Icons} Icons
@@ -16,48 +17,46 @@ import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
 
 class NonZeroDay extends NonZeroDayBack {
 
-
     renderHeader = () => {
+        const titleColors = ['#384065', '#B83EFFE3'];
 
         /** @type {Icons} */
         let icon = 'arrowLeft';
         let onPress = this.openPopup;
 
         const lang = langManager.curr['nonzerodays'];
-        const headerStatic = (
-            <Button
+
+        return (
+            <LinearGradient
+                colors={titleColors}
+                start={{ x: 0, y: -2 }} end={{ x: 1, y: 2 }}
                 style={styles.headerStyle}
-                colorNextGen={true}
-                rippleColor='transparent'
-                borderRadius={8}
-                pointerEvents='box-none'
             >
                 <View style={styles.buttonInfo}>
                     <Button onPress={StartHelp.bind(this)} style={styles.iconButtonPadding}>
-                    <Icon
-                        containerStyle={styles.iconStaticHeader}
-                        icon={'info'}
-                        size={24}
-                    />
+                        <Icon
+                            containerStyle={styles.iconStaticHeader}
+                            icon={'info'}
+                            size={24}
+                        />
                     </Button>
                     <Text color={'primary'}>
                         {lang['container-title']}
                     </Text>
                 </View>
                 {icon !== null && (
-                    <Button onPress={onPress}  style={styles.iconButtonPadding}>
-                    <Icon
-                        ref={ref => this.refFullStreak = ref}
-                        containerStyle={styles.iconStaticHeader}
-                        icon={icon}
-                        size={24}
-                        angle={180}
-                    />
+                    <Button onPress={onPress} style={styles.iconButtonPadding}>
+                        <Icon
+                            ref={ref => this.refFullStreak = ref}
+                            containerStyle={styles.iconStaticHeader}
+                            icon={icon}
+                            size={24}
+                            angle={180}
+                        />
                     </Button>
                 )}
-            </Button>
-        );
-        return headerStatic
+            </LinearGradient>
+        )
     }
 
     renderBody = (claimIndex, claimDay) => {

@@ -11,6 +11,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { SimpleContainer, Button, Text, Separator, Icon } from 'Interface/Components';
+import LinearGradient from 'react-native-linear-gradient';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -29,6 +30,7 @@ class MyQuestsList extends BackQuestsList {
 
     renderHeader = () => {
         const lang = langManager.curr['quests'];
+        const titleColors = ['#384065', '#B83EFFE3'];
 
         /** @type {Icons | null} */
         let icon = null;
@@ -39,20 +41,18 @@ class MyQuestsList extends BackQuestsList {
         }
 
         return (
-            <Button
+            <LinearGradient
+                colors={titleColors}
+                start={{ x: 0, y: -2 }} end={{ x: 1, y: 2 }}
                 style={styles.headerStyle}
-                colorNextGen={true}
-                rippleColor='transparent'
-                borderRadius={8}
-                pointerEvents='box-none'
             >
                 <View style={styles.buttonInfo}>
                     <Button onPress={StartHelp.bind(this)} style={styles.iconButtonPadding}>
-                    <Icon
-                        containerStyle={styles.iconStaticHeader}
-                        icon={'info'}
-                        size={24}
-                    />
+                        <Icon
+                            containerStyle={styles.iconStaticHeader}
+                            icon={'info'}
+                            size={24}
+                        />
                     </Button>
                     <Text color={'primary'}>
                         {lang['container-title']}
@@ -60,16 +60,16 @@ class MyQuestsList extends BackQuestsList {
                 </View>
                 {icon !== null && (
                     <Button onPress={onPress} style={styles.iconButtonPadding}>
-                    <Icon
-                        ref={ref => this.refAddQuest = ref}
-                        containerStyle={styles.iconStaticHeader}
-                        icon={icon}
-                        size={24}
-                        angle={180}
-                    />
+                        <Icon
+                            ref={ref => this.refAddQuest = ref}
+                            containerStyle={styles.iconStaticHeader}
+                            icon={icon}
+                            size={24}
+                            angle={180}
+                        />
                     </Button>
                 )}
-            </Button>
+            </LinearGradient>
         );
     }
 

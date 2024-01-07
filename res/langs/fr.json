@@ -716,8 +716,7 @@
 
         "other": {
             "skip": "Passer",
-            "press": "Appuyez",
-            "button": "Suivant"
+            "press": "Appuyez"
         }
     },
 

@@ -98,7 +98,7 @@ jobs:
           DB_PASS: ${{ secrets.DB_DEV_PASS }}
           DB_NAME: ${{ vars.DB_DEV_NAME }}
         run: |
-          php ./Tools/RessourcesChecker/skills.php '$DB_HOST' '$DB_USER' '$DB_PASS' '$DB_NAME'
+          php ./Tools/RessourcesChecker/skills.php $DB_HOST $DB_USER $DB_PASS $DB_NAME
 
       - name: 'Run skills tests - test'
         if: github.event.inputs.environment == 'test'
@@ -108,7 +108,7 @@ jobs:
           DB_PASS: ${{ secrets.DB_TEST_PASS }}
           DB_NAME: ${{ vars.DB_TEST_NAME }}
         run: |
-          php ./Tools/RessourcesChecker/skills.php '$DB_HOST' '$DB_USER' '$DB_PASS' '$DB_NAME'
+          php ./Tools/RessourcesChecker/skills.php $DB_HOST $DB_USER $DB_PASS $DB_NAME
 
       - name: 'Run skills tests - prod'
         if: github.event.inputs.environment == 'prod'
@@ -118,7 +118,7 @@ jobs:
           DB_PASS: ${{ secrets.DB_PROD_PASS }}
           DB_NAME: ${{ vars.DB_PROD_NAME }}
         run: |
-          php ./Tools/RessourcesChecker/skills.php '$DB_HOST' '$DB_USER' '$DB_PASS' '$DB_NAME'
+          php ./Tools/RessourcesChecker/skills.php $DB_HOST $DB_USER $DB_PASS $DB_NAME
 
   test-migration:
     name: '🔍 Database migration tests'
@@ -143,7 +143,7 @@ jobs:
           DB_BEFORE_PASS: ${{ secrets.DB_DEV_PASS }}
           DB_BEFORE_NAME: ${{ vars.DB_DEV_NAME }}
         run: |
-          php ./Tools/TableFusion/check.php '$DB_BEFORE_HOST' '$DB_BEFORE_USER' '$DB_BEFORE_PASS' '$DB_BEFORE_NAME'
+          php ./Tools/TableFusion/check.php $DB_BEFORE_HOST $DB_BEFORE_USER $DB_BEFORE_PASS $DB_BEFORE_NAME $DB_HOST $DB_USER $DB_PASS $DB_NAME
 
       - name: 'Run skills tests - prod'
         if: github.event.inputs.environment == 'prod'
@@ -157,5 +157,5 @@ jobs:
           DB_BEFORE_PASS: ${{ secrets.DB_TEST_PASS }}
           DB_BEFORE_NAME: ${{ vars.DB_TEST_NAME }}
         run: |
-          php ./Tools/TableFusion/check.php '$DB_BEFORE_HOST' '$DB_BEFORE_USER' '$DB_BEFORE_PASS' '$DB_BEFORE_NAME'
+          php ./Tools/TableFusion/check.php $DB_BEFORE_HOST $DB_BEFORE_USER $DB_BEFORE_PASS $DB_BEFORE_NAME $DB_HOST $DB_USER $DB_PASS $DB_NAME
         

@@ -133,7 +133,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: ./google-services.json
-          packageName: com.gamelife
+          packageName: ${{ github.event.inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
           releaseFiles: $FILE_AAB
           track: production
           whatsNewDirectory: distribution/whatsnew

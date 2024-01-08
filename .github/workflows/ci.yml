@@ -15,3 +15,6 @@ jobs:
     uses: ./.github/workflows/step-tests.yml
     with:
       environment: dev
+      test-client: true
+      test-database: true
+      test-migration: true

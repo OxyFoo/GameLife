@@ -1,4 +1,4 @@
-name: '🧩 Server tests'
+name: '🔍 All tests'
 
 on:
   workflow_dispatch:
@@ -80,7 +80,7 @@ jobs:
         run: cd Tools/RessourcesChecker/ && python3 main.py
 
   test-database:
-    name: '🔍 Server tests'
+    name: '🔍 Database ressources tests'
     if: github.event.inputs.test-database == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -121,7 +121,7 @@ jobs:
           php ./Tools/RessourcesChecker/skills.php '$DB_HOST' '$DB_USER' '$DB_PASS' '$DB_NAME'
 
   test-migration:
-    name: '🔍 Database tests'
+    name: '🔍 Database migration tests'
     if: github.event.inputs.test-migration == 'true'
     runs-on: ubuntu-latest
     steps:

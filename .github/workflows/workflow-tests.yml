@@ -1,0 +1,39 @@
+name: '✋ GameLife - All tests'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        type: choice
+        default: 'prod'
+        options:
+          - dev
+          - test
+          - prod
+      test-client:
+        description: 'Run client tests'
+        required: true
+        type: boolean
+        default: true
+      test-database:
+        description: 'Run database ressources tests'
+        required: true
+        type: boolean
+        default: true
+      test-migration:
+        description: 'Run database migration tests'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  tests:
+    name: '🔍 Tests'
+    uses: ./.github/workflows/step-tests.yml
+    with:
+      environment: ${{ github.event.inputs.environment }}
+      test-client: ${{ github.event.inputs.test-client }}
+      test-database: ${{ github.event.inputs.test-database }}
+      test-migration: ${{ github.event.inputs.test-migration }}

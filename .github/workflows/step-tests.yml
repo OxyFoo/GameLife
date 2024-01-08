@@ -1,32 +1,6 @@
-name: '🔍 All tests'
+name: '🧩 All tests'
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to test'
-        required: true
-        type: choice
-        default: 'prod'
-        options:
-          - dev
-          - test
-          - prod
-      test-client:
-        description: 'Run client tests'
-        required: false
-        type: boolean
-        default: true
-      test-database:
-        description: 'Run database ressources tests'
-        required: false
-        type: boolean
-        default: true
-      test-migration:
-        description: 'Run database migration tests'
-        required: false
-        type: boolean
-        default: true
   workflow_call:
     inputs:
       environment:

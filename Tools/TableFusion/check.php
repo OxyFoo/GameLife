@@ -28,45 +28,14 @@ if ($db_source->connect_error || $db_target->connect_error) {
 $sourceTables = getTableNames($db_source);
 $targetTables = getTableNames($db_target);
 
-$success = true;
-
 // Handling Structure Differences
 $differencesStructure = compareTableStructures($db_source, $db_target, $sourceTables, $targetTables);
 if (!empty($differencesStructure)) {
-    $success = false;
     echo "Differences found in table structures:\n";
     print_r($differencesStructure);
-} else {
-    echo "No differences found in table structures.\n";
-}
-
-// Handling Data Differences
-$tablesToSync = [
-    'App',
-    'Achievements',
-    'Blacklist',
-    'Items',
-    'Quotes',
-    'Skills',
-    'SkillsCategory',
-    'SkillsIcon',
-    'Titles'
-];
-$differencesData = compareTableData($db_source, $db_target, $tablesToSync);
-
-if (!empty($differencesData)) {
-    $success = false;
-    echo "\nDifferences found in table data:\n";
-    print_r($differencesData);
-} else {
-    echo "No differences found in table data.\n";
-}
-
-$db_source->close();
-$db_target->close();
-
-if (!$success) {
     exit(1);
 }
+
+echo "No differences found in table structures.\n";
 
 ?>

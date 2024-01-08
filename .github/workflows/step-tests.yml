@@ -135,4 +135,3 @@ jobs:
           DB_BEFORE_NAME: ${{ vars.DB_TEST_NAME }}
         run: |
           php ./Tools/TableFusion/check.php $DB_BEFORE_HOST $DB_BEFORE_USER $DB_BEFORE_PASS $DB_BEFORE_NAME $DB_HOST $DB_USER $DB_PASS $DB_NAME
-        

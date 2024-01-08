@@ -51,6 +51,20 @@ on:
         default: true
 
 jobs:
+  tester-testing-test:
+    name: 'Print inputs'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Print inputs'
+        run: |
+          echo "environment: ${{ github.event.inputs.environment }}"
+          echo "test-client: ${{ github.event.inputs.test-client }}"
+          echo "test-database: ${{ github.event.inputs.test-database }}"
+          echo "test-migration: ${{ github.event.inputs.test-migration }}"
+          echo "workflow_call: ${{ github.event.workflow_call }}"
+          echo "workflow_dispatch: ${{ github.event.workflow_dispatch }}"
+          echo "github: ${{ github }}"
+
   test-client:
     name: '🔍 Client tests'
     if: ${{ github.event.inputs.test-client }}

@@ -27,8 +27,8 @@ jobs:
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.APPLE_PROVISION_PROFILE_BASE64 }}
-          BUILD_PROVISION_PROFILE_TEST_BASE64: ${{ secrets.APPLE_PROVISION_PROFILE_TEST_BASE64 }}
+          PROVISION_PROFILE_BASE64: ${{ secrets.APPLE_PROVISION_PROFILE_BASE64 }}
+          PROVISION_PROFILE_TEST_BASE64: ${{ secrets.APPLE_PROVISION_PROFILE_TEST_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
         run: |
           # Create variables
@@ -38,7 +38,12 @@ jobs:
 
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          
+          if [ ${{ github.event.inputs.environment }} == 'test' ]; then
+            echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
+          else
+            echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          fi
 
           # Create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH

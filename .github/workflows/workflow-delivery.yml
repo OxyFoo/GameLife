@@ -38,7 +38,8 @@ jobs:
     uses: ./.github/workflows/step-tests.yml
     with:
       test-client: true
-      test-server: true
+      test-database: true
+      test-migration: true
       environment: ${{ github.event.inputs.environment == 'prod' && 'test' || 'dev' }}
 
   android:

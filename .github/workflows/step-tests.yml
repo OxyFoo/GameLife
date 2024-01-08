@@ -1,6 +1,32 @@
 name: '🧩 Server tests'
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        type: choice
+        default: 'prod'
+        options:
+          - dev
+          - test
+          - prod
+      test-client:
+        description: 'Run client tests'
+        required: true
+        type: boolean
+        default: true
+      test-database:
+        description: 'Run database ressources tests'
+        required: true
+        type: boolean
+        default: true
+      test-migration:
+        description: 'Run database migration tests'
+        required: true
+        type: boolean
+        default: true
   workflow_call:
     inputs:
       environment:
@@ -10,16 +36,21 @@ on:
         default: 'dev'
       test-client:
         description: 'Run client tests'
-        required: false
+        required: true
         type: boolean
-      test-server:
-        description: 'Run server tests'
-        required: false
+      test-database:
+        description: 'Run database ressources tests'
+        required: true
+        type: boolean
+      test-migration:
+        description: 'Run database migration tests'
+        required: true
         type: boolean
 
 jobs:
   test-client:
     name: '🔍 Client tests'
+    if: github.event.inputs.test-client == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -48,8 +79,9 @@ jobs:
       - name: 'Run ressource tests'
         run: cd Tools/RessourcesChecker/ && python3 main.py
 
-  test-server:
+  test-database:
     name: '🔍 Server tests'
+    if: github.event.inputs.test-database == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -87,3 +119,43 @@ jobs:
           DB_NAME: ${{ vars.DB_PROD_NAME }}
         run: |
           php ./Tools/RessourcesChecker/skills.php '$DB_HOST' '$DB_USER' '$DB_PASS' '$DB_NAME'
+
+  test-migration:
+    name: '🔍 Database tests'
+    if: github.event.inputs.test-migration == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Install PHP with mysqli extension'
+        run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
+      - name: 'Run skills tests - test'
+        if: github.event.inputs.environment == 'test'
+        env:
+          DB_HOST: ${{ vars.DB_TEST_HOST }}
+          DB_USER: ${{ vars.DB_TEST_USER }}
+          DB_PASS: ${{ secrets.DB_TEST_PASS }}
+          DB_NAME: ${{ vars.DB_TEST_NAME }}
+          DB_BEFORE_HOST: ${{ vars.DB_DEV_HOST }}
+          DB_BEFORE_USER: ${{ vars.DB_DEV_USER }}
+          DB_BEFORE_PASS: ${{ secrets.DB_DEV_PASS }}
+          DB_BEFORE_NAME: ${{ vars.DB_DEV_NAME }}
+        run: |
+          php ./Tools/TableFusion/check.php '$DB_BEFORE_HOST' '$DB_BEFORE_USER' '$DB_BEFORE_PASS' '$DB_BEFORE_NAME'
+
+      - name: 'Run skills tests - prod'
+        if: github.event.inputs.environment == 'prod'
+        env:
+          DB_HOST: ${{ vars.DB_PROD_HOST }}
+          DB_USER: ${{ vars.DB_PROD_USER }}
+          DB_PASS: ${{ secrets.DB_PROD_PASS }}
+          DB_NAME: ${{ vars.DB_PROD_NAME }}
+          DB_BEFORE_HOST: ${{ vars.DB_TEST_HOST }}
+          DB_BEFORE_USER: ${{ vars.DB_TEST_USER }}
+          DB_BEFORE_PASS: ${{ secrets.DB_TEST_PASS }}
+          DB_BEFORE_NAME: ${{ vars.DB_TEST_NAME }}
+        run: |
+          php ./Tools/TableFusion/check.php '$DB_BEFORE_HOST' '$DB_BEFORE_USER' '$DB_BEFORE_PASS' '$DB_BEFORE_NAME'
+        

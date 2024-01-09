@@ -34,6 +34,6 @@ jobs:
     uses: ./.github/workflows/step-tests.yml
     with:
       environment: ${{ github.event.inputs.environment }}
-      test-client: '${{ github.event.inputs.test-client }}'
-      test-database: '${{ github.event.inputs.test-database }}'
-      test-migration: '${{ github.event.inputs.test-migration }}'
+      test-client: ${{ github.event.inputs.test-client == 'true' }}
+      test-database: ${{ github.event.inputs.test-database == 'true' }}
+      test-migration: ${{ github.event.inputs.test-migration == 'true' }}

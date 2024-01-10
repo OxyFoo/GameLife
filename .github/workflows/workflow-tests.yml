@@ -32,6 +32,7 @@ jobs:
   tests:
     name: '🔍 Tests'
     uses: ./.github/workflows/step-tests.yml
+    secrets: inherit
     with:
       environment: ${{ github.event.inputs.environment }}
       test-client: ${{ github.event.inputs.test-client == 'true' }}

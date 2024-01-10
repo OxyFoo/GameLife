@@ -31,13 +31,6 @@ on:
         description: 'Database password (used for database migration tests)'
         required: false
         type: string
-    secrets:
-      DB_DEV_PASS:
-        required: false
-      DB_TEST_PASS:
-        required: false
-      DB_PROD_PASS:
-        required: false
 
 jobs:
   test-client:

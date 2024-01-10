@@ -33,14 +33,14 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 12,
         borderWidth: 1,
-        backgroundColor: '#000000A0',
+        backgroundColor: '#000000A0'
     },
     defaultButtonArrowContainer: {
         position: 'absolute',
-        opacity: .8,
         right: 12,
         bottom: 12, 
-        alignItems:'flex-end'
+        alignItems: 'flex-end',
+        opacity: .8
     },
     defaultButton: {
         width: '50%'

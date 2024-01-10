@@ -17,10 +17,11 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
  * @property {boolean} [showButton=true] Show the button to continue
- * @property {number|null} [messagePosY=null] Y position in % of the message (null to center) [0,1]
+ * @property {number|null} [messagePosY=null] Y position of the message (null to center) [0,1]
  * @property {boolean} [zapSideToMessage=false] is Zap going to be displayed side to the message or not
  */
 
+/** @type {TutoElement} */
 const DEFAULT_TUTO_ELEMENT = {
     component: null,
     text: 'Empty',
@@ -66,8 +67,8 @@ class ScreenTutoBack extends React.Component {
         this.UpdatePositions(layout);
     }
 
-    onComponentPress = (value) => { }
-    onSkipPress = () => { }
+    onComponentPress = (value) => {}
+    onSkipPress = () => {}
 
     setStateSync = (state) => new Promise(resolve => this.setState(state, () => resolve()));
 
@@ -136,7 +137,6 @@ class ScreenTutoBack extends React.Component {
      * @returns {Promise<void>}
      */
     Show = async (element) => {
-
         const { component, text, showButton, fontSize, messagePosY, zapSideToMessage } = element;
 
         let position = {
@@ -155,9 +155,6 @@ class ScreenTutoBack extends React.Component {
                 position = pos;
             }
         }
-
-        const btnMidY = position.y + position.height / 2;
-        const isOnTop = btnMidY < user.interface.screenHeight / 2;
 
         this.setState({
             visible: true,

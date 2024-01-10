@@ -80,7 +80,6 @@ class Calendar extends BackCalendar {
                         <Icon size={32} />
                         <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
                         <Icon
-                            ref={ref => this.refTuto3 = ref}
                             icon='calendar'
                             onPress={this.dayRefresh}
                             color='main1'
@@ -92,7 +91,6 @@ class Calendar extends BackCalendar {
                     <View style={styles.row}>
                         <Icon onPress={this.selectPrevWeek} icon='chevron' color='main1' size={18} angle={180} />
                         <BlockMonth
-                            ref={ref => this.refTuto2 = ref}
                             style={styles.weekRow}
                             data={selectedALL}
                             onPressDay={this.daySelect}
@@ -103,7 +101,6 @@ class Calendar extends BackCalendar {
 
                     {/* CurrDate + Activities panel */}
                     <View
-                        ref={ref => this.refTuto1 = ref}
                         style={[styles.panel, styleBackground]}
                     >
                         <ActivityTimeline

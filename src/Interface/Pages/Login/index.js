@@ -10,10 +10,13 @@ import { Page, Text, Button, Input, Checkbox } from 'Interface/Components';
 class Login extends BackLogin {
     render() {
         const { langs } = this;
+        const { mainContentHeight } = this.state;
+
         const contentHeight = Animated.add(100, Animated.multiply(160, this.state.animSignin));
         const btnLoginX = Animated.multiply(84, this.state.animSignin);
         const btnBackX = Animated.add(-128, Animated.multiply(128, this.state.animSignin));
         const imageAnim = {
+            height: user.interface.screenHeight - mainContentHeight - 388,
             transform: [
                 { scale: this.state.animImage },
                 { translateY: Animated.multiply(this.state.animFocus, -250) }
@@ -36,22 +39,20 @@ class Login extends BackLogin {
                 )}
 
                 {/* Main image */}
-                {smallScreen ? null : (
-                    <Animated.View
-                        style={[styles.mainImageContainer, imageAnim]}
-                        onTouchStart={this.onPressImageIn}
-                        onTouchEnd={this.onPressImageOut}
-                    >
-                        <Image
-                            style={styles.mainImage}
-                            resizeMode='contain'
-                            source={this.imageMain}
-                        />
-                    </Animated.View>
-                )}
+                <Animated.View
+                    style={[styles.mainImageContainer, imageAnim]}
+                    onTouchStart={this.onPressImageIn}
+                    onTouchEnd={this.onPressImageOut}
+                >
+                    <Image
+                        style={styles.mainImage}
+                        resizeMode='contain'
+                        source={this.imageMain}
+                    />
+                </Animated.View>
 
                 {/* Title */}
-                <Animated.View style={contentNoAnim}>
+                <Animated.View style={contentNoAnim} onLayout={this.onLayout}>
                     <Text
                         style={smallScreen ? styles.smallTitle : styles.title}
                         color='primary'

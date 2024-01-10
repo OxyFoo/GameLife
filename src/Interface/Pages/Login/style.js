@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
     },
     mainImageContainer: {
         width: '100%',
-        height: '30%',
         marginTop: '15%',
 
         display: 'flex',

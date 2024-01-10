@@ -138,7 +138,7 @@ jobs:
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: $FILE_IPA
+          name: ./${FILE_IPA}
           path: ios/build/GameLife.ipa
 
   delivery:
@@ -153,7 +153,7 @@ jobs:
       - name: 'Get ipa artifact'
         uses: actions/download-artifact@v3
         with:
-          name: $FILE_IPA
+          name: ./${FILE_IPA}
           path: ios/build
 
       - name: 'Setup API App Store Connect'

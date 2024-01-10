@@ -23,14 +23,6 @@ on:
         required: false
         type: boolean
         default: true
-      db-password:
-        description: 'Database password (used for database migration & ressources tests)'
-        required: false
-        type: string
-      db-password-before:
-        description: 'Database password (used for database migration tests)'
-        required: false
-        type: string
 
 jobs:
   test-client:

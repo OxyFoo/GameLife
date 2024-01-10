@@ -724,6 +724,12 @@
             "3": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
         },
 
+        "quest-detail": {
+            "1": "Here you will find the name of the quest, its linked activities and the button to edit it.",
+            "2": "This chart is just a cool way to see your streak.",
+            "3": "Finally, this one will give you a global vision of your progress, either per week or per day. The greener, the better!"
+        },
+
         "other": {
             "skip": "Skip",
             "press": "Press",

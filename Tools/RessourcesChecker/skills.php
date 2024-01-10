@@ -4,8 +4,6 @@ $argv = $_SERVER['argv'];
 
 if ($argc !== 5) {
     echo "Usage: php {$argv[0]} <host> <user> <pass> <database>\n";
-    print_r($argc);
-    print_r($argv);
     exit(1);
 }
 

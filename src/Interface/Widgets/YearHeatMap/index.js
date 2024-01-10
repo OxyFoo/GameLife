@@ -23,7 +23,6 @@ class YearHeatMap extends YearHeatMapBack {
             <View style={[styles.container, styleContainer, this.props.style]}>
                 {/* Top row view */}
                 <View style={styles.flexBetween}>
-
                     <Text style={styles.headerText}>
                         {this.state.switchWeekValue ? titleDay : titleWeek}
                     </Text>

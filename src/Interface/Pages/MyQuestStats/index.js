@@ -52,11 +52,11 @@ class MyQuestStats extends BackQuest {
 
                 <View
                     ref={ref => this.refTuto1 = ref}
-                    style={[styles.headerView, styleContainer]}
+                    style={[styles.questHeader, styleContainer]}
                 >
-                    <View>
+                    <View style={styles.questText}>
                         <Text
-                            style={styles.titleQuest}
+                            style={styles.questTitle}
                             color='primary'
                             fontSize={30}
                             bold={true}
@@ -64,7 +64,7 @@ class MyQuestStats extends BackQuest {
                             {this.selectedQuest.title}
                         </Text>
                         <Text
-                            style={styles.skills}
+                            style={styles.questSkills}
                             color='primary'
                             fontSize={14}
                         >

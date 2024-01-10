@@ -25,6 +25,7 @@ jobs:
   deploy:
     name: '🚀 Deploy'
     uses: ./.github/workflows/step-deploy.yml
+    secrets: inherit
     with:
       environment: ${{ github.event.inputs.environment }}
       actions: ${{ github.event.inputs.actions }}

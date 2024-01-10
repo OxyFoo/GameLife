@@ -13,6 +13,7 @@ jobs:
   test-client:
     name: '🔍 Tests'
     uses: ./.github/workflows/step-tests.yml
+    secrets: inherit
     with:
       environment: dev
       test-client: true

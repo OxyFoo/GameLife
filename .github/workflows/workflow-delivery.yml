@@ -36,6 +36,7 @@ jobs:
   tests:
     name: '🔍 Tests'
     uses: ./.github/workflows/step-tests.yml
+    secrets: inherit
     with:
       environment: ${{ github.event.inputs.environment }}
       test-client: true
@@ -47,6 +48,7 @@ jobs:
     if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     needs: tests
     uses: ./.github/workflows/step-android.yml
+    secrets: inherit
     with:
       environment: ${{ github.event.inputs.environment }}
       delivery: ${{ github.event.inputs.delivery }}
@@ -57,6 +59,7 @@ jobs:
     if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     needs: tests
     uses: ./.github/workflows/step-ios.yml
+    secrets: inherit
     with:
       environment: ${{ github.event.inputs.environment }}
       delivery: ${{ github.event.inputs.delivery }}

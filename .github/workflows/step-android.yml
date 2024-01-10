@@ -65,46 +65,46 @@ jobs:
           npm run build
 
           # Move aab & mapping files to root
-          mv android/app/build/outputs/bundle/release/app-release.aab ./$FILE_AAB
-          mv android/app/build/outputs/mapping/release/mapping.txt ./$FILE_MAPPING
+          mv android/app/build/outputs/bundle/release/app-release.aab ./${FILE_AAB}
+          mv android/app/build/outputs/mapping/release/mapping.txt ./${FILE_MAPPING}
 
       - name: 'Upload aab artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: $FILE_AAB
-          path: $FILE_AAB
+          name: ./${FILE_AAB}
+          path: ./${FILE_AAB}
 
       - name: 'Upload mapping artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: $FILE_MAPPING
-          path: $FILE_MAPPING
+          name: ./${FILE_MAPPING}
+          path: ./${FILE_MAPPING}
 
       - name: 'Download buildtool'
-        if: ${{ github.event.inputs.save-apk-artifact }}
+        if: ${{ github.event.inputs.save-apk-artifact == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
           wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
 
       - name: 'Generate universal APK'
-        if: ${{ github.event.inputs.save-apk-artifact }}
+        if: ${{ github.event.inputs.save-apk-artifact == 'true' }}
         run: |
           java -jar ./bundletool.jar build-apks \
-            --bundle=$FILE_AAB \
+            --bundle=./${FILE_AAB} \
             --output=my_app.apks \
             --mode=universal \
             --ks=./android/app/gamelife.keystore \
             --ks-key-alias=gameLifeAlias \
             --ks-pass=file:./keystore
-          unzip -p my_app.apks universal.apk > $FILE_APK
+          unzip -p my_app.apks universal.apk > ./$FILE_APK
 
       - name: 'Upload apk artifact'
-        if: ${{ github.event.inputs.save-apk-artifact }}
+        if: ${{ github.event.inputs.save-apk-artifact == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: $FILE_APK
-          path: $FILE_APK
+          name: ./$FILE_APK
+          path: ./$FILE_APK
 
   delivery-android:
     name: '📦 Delivery'
@@ -118,12 +118,12 @@ jobs:
       - name: 'Get aab artifact'
         uses: actions/download-artifact@v3
         with:
-          name: $FILE_AAB
+          name: ./${FILE_AAB}
 
       - name: 'Get mapping artifact'
         uses: actions/download-artifact@v3
         with:
-          name: $FILE_MAPPING
+          name: ./${FILE_MAPPING}
 
       - name: 'Get google-services.json - firebase-adminsdk secret'
         run: |
@@ -134,10 +134,10 @@ jobs:
         with:
           serviceAccountJson: ./google-services.json
           packageName: ${{ github.event.inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
-          releaseFiles: $FILE_AAB
+          releaseFiles: ./${FILE_AAB}
           track: production
           whatsNewDirectory: distribution/whatsnew
-          mappingFile: $FILE_MAPPING
+          mappingFile: ./${FILE_MAPPING}
 
       - name: 'Check if upload was successful'
         run: |

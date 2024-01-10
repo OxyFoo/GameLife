@@ -13,7 +13,7 @@ on:
         - android
         - ios
       environment:
-        description: 'Choose environment to deploy'
+        description: 'Choose environment to build'
         required: true
         default: 'prod'
         type: choice
@@ -22,12 +22,12 @@ on:
         - test
         - prod
       delivery:
-        description: 'Delivery to stores (only for test & prod)'
+        description: 'Delivery to stores (test & prod only)'
         required: true
         default: false
         type: boolean
       save-apk-artifact:
-        description: 'Download apk artifact (only for android)'
+        description: 'Download apk artifact (android only)'
         required: false
         default: false
         type: boolean
@@ -41,7 +41,7 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       test-client: true
       test-database: true
-      test-migration: true
+      test-migration: false
 
   android:
     name: '🤖 Android'

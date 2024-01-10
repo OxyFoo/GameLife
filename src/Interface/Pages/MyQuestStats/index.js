@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 
 import styles from './style';
 import BackQuest from './back';
+import StartHelp from './help';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
-import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import StartHelp from './help';
 import { Page, Button, StreakChart, Text } from 'Interface/Components';
 import { PageHeader, YearHeatMap } from 'Interface/Widgets';
 
@@ -25,7 +24,7 @@ class MyQuestStats extends BackQuest {
         );
     }
     render() {
-        const { skills, maximumStreak } = this.selectedQuest;
+        const { maximumStreak } = this.selectedQuest;
 
         const currentStreak = user.quests.myquests.GetStreak(this.selectedQuest);
         const maxStreak = Math.max(10, maximumStreak);
@@ -47,13 +46,13 @@ class MyQuestStats extends BackQuest {
             >
                 <PageHeader
                     style={styles.pageHeaderView}
-                    onBackPress={() => user.interface.BackHandle()}
+                    onBackPress={user.interface.BackHandle}
                     onHelpPress={StartHelp.bind(this)}
                 />
 
                 <View
-                    style={[styles.headerView, styleContainer]}
                     ref={ref => this.refTuto1 = ref}
+                    style={[styles.headerView, styleContainer]}
                 >
                     <View>
                         <Text
@@ -82,18 +81,18 @@ class MyQuestStats extends BackQuest {
                 </View>
 
                 <StreakChart
+                    ref={ref => this.refTuto2 = ref}
                     style={[styles.streakChartContainer, styleContainer]}
                     size={200}
                     height={150}
                     currentStreak={currentStreak}
                     bestStreak={maxStreak}
-                    ref={ref => this.refTuto2 = ref}
                 />
 
                 <YearHeatMap
+                    ref={ref => this.refTuto3 = ref}
                     style={styles.yearHeatMap}
                     quest={this.selectedQuest}
-                    ref={ref => this.refTuto3 = ref}
                 />
             </Page>
         );

@@ -72,7 +72,7 @@ class Quest extends BackQuest {
             >
                 <PageHeader
                     style={styles.pageHeader}
-                    onBackPress={() => user.interface.BackHandle()}
+                    onBackPress={user.interface.BackHandle}
                     onHelpPress={StartHelp.bind(this)}
                 />
 

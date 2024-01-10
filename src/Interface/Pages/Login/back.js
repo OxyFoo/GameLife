@@ -73,12 +73,12 @@ class BackLogin extends PageBase {
     onPressImageOut = () => SpringAnimation(this.state.animImage, 1, false).start();
 
     onFocus = () => {
-        if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
+        if (Platform.OS === 'ios') {
             SpringAnimation(this.state.animFocus, 1, false).start();
         }
     }
     onBlur = () => {
-        if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
+        if (Platform.OS === 'ios') {
             SpringAnimation(this.state.animFocus, 0, false).start();
         }
     }

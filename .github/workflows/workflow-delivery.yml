@@ -56,7 +56,7 @@ jobs:
 
   ios:
     name: '🍏 iOS'
-    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
+    if: github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
     needs: tests
     uses: ./.github/workflows/step-ios.yml
     secrets: inherit

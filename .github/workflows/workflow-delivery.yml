@@ -51,8 +51,8 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ github.event.inputs.environment }}
-      delivery: ${{ github.event.inputs.delivery }}
-      save-apk-artifact: ${{ github.event.inputs.save-apk-artifact }}
+      delivery: ${{ github.event.inputs.delivery == 'true' }}
+      save-apk-artifact: ${{ github.event.inputs.save-apk-artifact == 'true' }}
 
   ios:
     name: '🍏 iOS'
@@ -62,7 +62,7 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ github.event.inputs.environment }}
-      delivery: ${{ github.event.inputs.delivery }}
+      delivery: ${{ github.event.inputs.delivery == 'true' }}
 
   enable-test-account:
     name: '🔑 Enable test account'

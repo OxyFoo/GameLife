@@ -49,7 +49,8 @@ class ScreenTutoBack extends React.Component {
             text: '',
             position: new Animated.ValueXY({ x: 0, y: 0 }),
             hintOpacity: new Animated.Value(0),
-            fontSize: 24
+            fontSize: 24,
+            leftPos: '0%'
         }
     }
 
@@ -57,7 +58,6 @@ class ScreenTutoBack extends React.Component {
     refZap = null;
 
     lastMessageLayout = { x: 0, y: 0, width: 0, height: 0 };
-    leftPos = '0%';
 
     componentWillUnmount() {
         clearTimeout(this.hinterval);
@@ -176,7 +176,8 @@ class ScreenTutoBack extends React.Component {
             message: {
                 ...this.state.message,
                 text: text,
-                fontSize: fontSize
+                fontSize: fontSize,
+                leftPos: zapSideToMessage ? '10%' : '0%'
             },
             messagePosY: messagePosY * user.interface.screenHeight,
             zapSideToMessage: zapSideToMessage
@@ -234,8 +235,6 @@ class ScreenTutoBack extends React.Component {
         } else {
             messageY = messageY - layout.height - 24;
         }
-
-        this.leftPos = zapSideToMessage ? '10%' : '0%';
 
         // Message position verification
         if (messageX < 0)

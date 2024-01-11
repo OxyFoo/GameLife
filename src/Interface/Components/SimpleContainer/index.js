@@ -9,29 +9,30 @@ class SimpleContainer extends SimpleContainerBack {
     render() {
         let header, body;
 
+        const bodyStyle = {
+            backgroundColor: themeManager.GetColor(this.props.backgroundColor, { opacity: 0.1 }),
+        };
+
         React.Children.forEach(this.props.children, child => {
             if (React.isValidElement(child)) {
                 if (child.type === SimpleContainer.Header) {
                     header = child;
                 } else if (child.type === SimpleContainer.Body) {
-                    body = child;
+                    body = React.cloneElement(child, {
+                        style: [styles.body, bodyStyle, child.props.style]
+                    });
                 }
             }
         });
 
-        const bodyStyle = {
-            backgroundColor: themeManager.GetColor(this.props.backgroundColor, { opacity: 0.1 }),
-        };
-
         return (
             <View style={this.props.style}>
                 {header}
-                <View style={[styles.body, bodyStyle]}>
-                    {body}
-                </View>
+                {body}
             </View>
         );
     }
 }
+
 
 export default SimpleContainer;

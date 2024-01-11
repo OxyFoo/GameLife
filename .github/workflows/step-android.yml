@@ -123,12 +123,12 @@ jobs:
       - name: 'Get aab artifact'
         uses: actions/download-artifact@v3
         with:
-          name: ${FILE_AAB}
+          name: ${{ env.FILE_AAB }}
 
       - name: 'Get mapping artifact'
         uses: actions/download-artifact@v3
         with:
-          name: ${FILE_MAPPING}
+          name: ${{ env.FILE_MAPPING }}
 
       - name: 'Get google-services.json - firebase-adminsdk secret'
         run: |

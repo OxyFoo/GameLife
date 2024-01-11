@@ -154,7 +154,7 @@ jobs:
       - name: 'Get ipa artifact'
         uses: actions/download-artifact@v3
         with:
-          name: ${FILE_IPA}
+          name: ${{ env.FILE_IPA }}
           path: ios/build
 
       - name: 'Setup API App Store Connect'

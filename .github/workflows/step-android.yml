@@ -71,13 +71,13 @@ jobs:
       - name: 'Upload aab artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: ./${FILE_AAB}
+          name: ${FILE_AAB}
           path: ./${FILE_AAB}
 
       - name: 'Upload mapping artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: ./${FILE_MAPPING}
+          name: ${FILE_MAPPING}
           path: ./${FILE_MAPPING}
 
       - name: 'Download buildtool'
@@ -97,14 +97,14 @@ jobs:
             --ks=./android/app/gamelife.keystore \
             --ks-key-alias=gameLifeAlias \
             --ks-pass=file:./keystore
-          unzip -p my_app.apks universal.apk > ./$FILE_APK
+          unzip -p my_app.apks universal.apk > ./${FILE_APK}
 
       - name: 'Upload apk artifact'
         if: ${{ github.event.inputs.save-apk-artifact == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: ./$FILE_APK
-          path: ./$FILE_APK
+          name: ${FILE_APK}
+          path: ./${FILE_APK}
 
   delivery-android:
     name: '📦 Delivery'
@@ -118,12 +118,12 @@ jobs:
       - name: 'Get aab artifact'
         uses: actions/download-artifact@v3
         with:
-          name: ./${FILE_AAB}
+          name: ${FILE_AAB}
 
       - name: 'Get mapping artifact'
         uses: actions/download-artifact@v3
         with:
-          name: ./${FILE_MAPPING}
+          name: ${FILE_MAPPING}
 
       - name: 'Get google-services.json - firebase-adminsdk secret'
         run: |

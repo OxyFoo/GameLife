@@ -18,9 +18,9 @@ on:
         default: false
 
 env:
-  FILE_AAB: GameLife-${{ github.event.inputs.environment }}.aab
-  FILE_APK: GameLife-${{ github.event.inputs.environment }}.apk
-  FILE_MAPPING: GameLife-${{ github.event.inputs.environment }}-mapping.txt
+  FILE_AAB: GameLife-${{ inputs.environment }}.aab
+  FILE_APK: GameLife-${{ inputs.environment }}.apk
+  FILE_MAPPING: GameLife-${{ inputs.environment }}-mapping.txt
 
 jobs:
   build-android:
@@ -54,10 +54,10 @@ jobs:
 
       - name: 'Build app'
         env:
-          ENVFILE: .env.${{ github.event.inputs.environment }}
+          ENVFILE: .env.${{ inputs.environment }}
         run: |
           # Execute bundleSwitcher.sh if environment is test
-          if [ ${{ github.event.inputs.environment }} == 'test' ]; then
+          if [ ${{ inputs.environment }} == 'test' ]; then
             ./Tools/BundleSwitcher/bundleSwitcher.sh test
           fi
 
@@ -81,14 +81,14 @@ jobs:
           path: ./${FILE_MAPPING}
 
       - name: 'Download buildtool'
-        if: ${{ github.event.inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
           wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
 
       - name: 'Generate universal APK'
-        if: ${{ github.event.inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact == 'true' }}
         run: |
           java -jar ./bundletool.jar build-apks \
             --bundle=./${FILE_AAB} \
@@ -100,7 +100,7 @@ jobs:
           unzip -p my_app.apks universal.apk > ./${FILE_APK}
 
       - name: 'Upload apk artifact'
-        if: ${{ github.event.inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact == 'true' }}
         uses: actions/upload-artifact@v3
         with:
           name: ${FILE_APK}
@@ -108,7 +108,7 @@ jobs:
 
   delivery-android:
     name: '📦 Delivery'
-    if: github.event.inputs.delivery == true && github.event.inputs.environment != 'dev'
+    if: inputs.delivery == true && inputs.environment != 'dev'
     runs-on: ubuntu-latest
     needs: build-android
     steps:
@@ -133,7 +133,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: ./google-services.json
-          packageName: ${{ github.event.inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
+          packageName: ${{ inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
           releaseFiles: ./${FILE_AAB}
           track: production
           whatsNewDirectory: distribution/whatsnew

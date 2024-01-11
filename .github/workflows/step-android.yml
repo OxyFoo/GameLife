@@ -68,17 +68,21 @@ jobs:
           mv android/app/build/outputs/bundle/release/app-release.aab ./${FILE_AAB}
           mv android/app/build/outputs/mapping/release/mapping.txt ./${FILE_MAPPING}
 
+          ls -la
+
       - name: 'Upload aab artifact'
         uses: actions/upload-artifact@v3
         with:
           name: ${FILE_AAB}
           path: ./${FILE_AAB}
+          if-no-files-found: error  
 
       - name: 'Upload mapping artifact'
         uses: actions/upload-artifact@v3
         with:
           name: ${FILE_MAPPING}
           path: ./${FILE_MAPPING}
+          if-no-files-found: error  
 
       - name: 'Download buildtool'
         if: ${{ inputs.save-apk-artifact == 'true' }}
@@ -105,6 +109,7 @@ jobs:
         with:
           name: ${FILE_APK}
           path: ./${FILE_APK}
+          if-no-files-found: error  
 
   delivery-android:
     name: '📦 Delivery'

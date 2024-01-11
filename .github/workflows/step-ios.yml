@@ -140,6 +140,7 @@ jobs:
         with:
           name: ${FILE_IPA}
           path: ios/build/${FILE_IPA}
+          if-no-files-found: error  
 
   delivery:
     name: '📦 Delivery'

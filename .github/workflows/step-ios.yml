@@ -138,8 +138,8 @@ jobs:
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: ${FILE_IPA}
-          path: ios/build/${FILE_IPA}
+          name: ${{ env.FILE_IPA }}
+          path: ios/build/${{ env.FILE_IPA }}
           if-no-files-found: error  
 
   delivery:

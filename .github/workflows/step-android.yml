@@ -76,7 +76,7 @@ jobs:
 
       - name: 'Upload mapping artifact'
         uses: actions/upload-artifact@v3
-        with:
+        with
           name: ${FILE_MAPPING}
           path: ./${FILE_MAPPING}
 

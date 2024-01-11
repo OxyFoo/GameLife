@@ -1,0 +1,27 @@
+name: '[TEST] ✋ GameLife - Continuous Delivery'
+
+on:
+  push:
+    branches:
+      - feature/test-cicd
+
+jobs:
+  tests:
+    name: '🔍 Tests'
+    uses: ./.github/workflows/step-tests.yml
+    secrets: inherit
+    with:
+      environment: test
+      test-client: true
+      test-database: true
+      test-migration: false
+
+  android:
+    name: '🤖 Android'
+    needs: tests
+    uses: ./.github/workflows/step-android.yml
+    secrets: inherit
+    with:
+      environment: test
+      delivery: true
+      save-apk-artifact: false

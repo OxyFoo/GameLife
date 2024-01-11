@@ -11,7 +11,6 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                zapSideToMessage: true,
                 text: lang['main']['home-greetings'].replace('{}', user.informations.username.Get()),
                 execBefore: () => {
                     this.refPage?.GotoY(0);
@@ -39,7 +38,7 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                zapSideToMessage: true,
+                zapSideToMessage: false,
                 text: lang['main']['home-final'],
                 fontSize: 20
             }

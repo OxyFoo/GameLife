@@ -114,11 +114,12 @@ class ScreenTuto extends ScreenTutoBack {
 
     renderZapMessage() {
         const { smallScreen } = this.props;
-        const { message, fontSize, zapSideToMessage } = this.state;
+        const { message, zapSideToMessage } = this.state;
+        const fontSize = message.fontSize !== null ? message.fontSize : 16;
 
         const styleTextContainer = {
             top: 0,
-            left: zapSideToMessage ? '10%' : 0,
+            left: this.leftPos,
             width: '70%',
             borderColor: themeManager.GetColor('main2'),
             transform: [
@@ -128,8 +129,6 @@ class ScreenTuto extends ScreenTutoBack {
         };
 
         const styleText = { fontSize };
-
-        styleText.fontSize = 16;
         if (fontSize !== null) {
             styleText.fontSize = fontSize;
         }

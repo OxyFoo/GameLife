@@ -103,14 +103,10 @@ class ZapBack extends React.Component {
             zapPosX = 0;
         if (zapPosX + layout.width > user.interface.screenWidth)
             zapPosX = user.interface.screenWidth - layout.width;
-        if (zapPosY - layout.height < 0)
-            zapPosY = layoutTarget.y + layout.height;
+        if (zapPosY - layout.height <= 0)
+            zapPosY = layoutTarget.y + 108 ; // j'ai remplacé le layout.height par 108 parce qu'à des moments le layout.height est égal à 0 et donc ca bogue pas sa position
         if (zapPosY + layout.height > user.interface.screenHeight)
-            if (!zapSideToMessage)
-                zapPosY = user.interface.screenHeight - layout.height - 108;
-            else {
-                zapPosY = zapPosY - 36;
-            }
+            zapPosY = user.interface.screenHeight - layout.height - 108;
 
         // Zap position
         SpringAnimation(this.state.position, {

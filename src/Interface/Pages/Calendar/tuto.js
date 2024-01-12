@@ -24,7 +24,6 @@ function StartTutorial(tutoValue) {
             {
                 component: user.interface.bottomBar.refButtons[4],
                 text: lang['main']['calendar-4'],
-                showButton: false,
                 execAfter: () => {
                     user.interface.ChangePage('shop', { tuto: 3 }, true);
                     return false;

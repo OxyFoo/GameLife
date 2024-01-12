@@ -1,23 +1,22 @@
 import * as React from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 import BackOnboarding from './back';
+import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { renderPage0, renderPage1, renderPage2, renderPage3 } from './panels';
-import { Button, Page, Swiper } from 'Interface/Components';
+import { Page, Button, Icon, Text } from 'Interface/Components';
+
+/**
+ * @typedef {import('Managers/LangManager').LangKey} LangKey
+ */
 
 class Onboarding extends BackOnboarding {
     render() {
-        const { animButtonNext, animButtonStart } = this.state;
-        const lang = langManager.curr['onboarding'];
-
-        const pages = [
-            renderPage0.call(this),
-            renderPage1.call(this),
-            renderPage2.call(this),
-            renderPage3.call(this)
-        ];
+        const { helpAnimation, tutoLaunched } = this.state;
+        const helpStyle = {
+            transform: [{ translateY: helpAnimation }]
+        };
 
         return (
             <Page
@@ -25,64 +24,53 @@ class Onboarding extends BackOnboarding {
                 style={styles.page}
                 scrollable={false}
             >
-                <Swiper
-                    ref={ref => this.refSwiper = ref}
-                    height={'100%'}
-                    style={styles.swiper}
-                    pages={pages}
-                    onSwipe={this.onSwipe}
-                    backgroundColor='transparent'
-                    enableAutoNext={false}
-                    disableCircular
-                />
-
-                {/* Start button */}
                 <Button
-                    style={styles.buttonNext}
-                    styleAnimation={{
-                        opacity: animButtonStart,
-                        transform: [{ translateX: Animated.multiply(Animated.subtract(1, animButtonStart), 96) }]
-                    }}
-                    onPress={this.next}
-                    color='main1'
-                    fontSize={14}
-                    pointerEvents={this.last ? 'none' : 'auto'}
+                    ref={ref => this.refInfo = ref}
+                    style={styles.buttonQuestion}
+                    color='transparent'
+                    styleAnimation={helpStyle}
                 >
-                    {lang['start']}
+                    <Icon icon='info' size={30} />
                 </Button>
 
-                {/* Next button */}
-                <Button
-                    style={styles.buttonNext}
-                    styleAnimation={{
-                        opacity: animButtonNext,
-                        transform: [{ translateY: Animated.multiply(animButtonStart, 96) }]
-                    }}
-                    onPress={this.next}
-                    color='main1'
-                    fontSize={14}
-                >
-                    {lang['next']}
-                </Button>
+                {!tutoLaunched && this.renderLangSelector()}
             </Page>
         );
     }
-}
 
-const styles = StyleSheet.create({
-    page: {
-        paddingHorizontal: 0
-    },
-    swiper: {
-        justifyContent: 'center'
-    },
-    buttonNext: {
-        position: 'absolute',
-        right: 24,
-        bottom: 36,
-        height: 42,
-        paddingHorizontal: 16
+    renderLangSelector() {
+        const lang = langManager.curr['onboarding'];
+        const langs = langManager.GetAllLangs();
+
+        /** @param {LangKey} key */
+        const getSize = (key) => langManager.currentLangageKey === key ? 24 : 18;
+
+        return (
+            <View style={styles.langsContainer}>
+                <Text fontSize={32}>{lang['select-language']}</Text>
+
+                <View style={styles.flagsContainer}>
+                    <TouchableOpacity style={styles.flagRow} onPress={this.selectEnglish} activeOpacity={.6}>
+                        <Icon icon='flagEnglish' size={64} />
+                        <Text style={styles.flagText} fontSize={getSize('en')}>{langs.en.name}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.flagRow} onPress={this.selectFrench} activeOpacity={.6}>
+                        <Icon icon='flagFrench' size={64} />
+                        <Text style={styles.flagText} fontSize={getSize('fr')}>{langs.fr.name}</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <Button
+                    style={styles.buttonNext}
+                    onPress={this.launchOnboarding}
+                    color='main1'
+                    fontSize={14}
+                >
+                    {lang['start']}
+                </Button>
+            </View>
+        );
     }
-});
+}
 
 export default Onboarding;

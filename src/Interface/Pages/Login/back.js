@@ -8,6 +8,10 @@ import { Login, Signin } from './login';
 import { IsEmail } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
+/**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ */
+
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
 
@@ -23,6 +27,7 @@ class BackLogin extends PageBase {
         errorUsername: '',
         errorCgu: '',
 
+        mainContentHeight: 0,
         animImage: new Animated.Value(1),
         animFocus: new Animated.Value(0),
         animSignin: new Animated.Value(0)
@@ -59,16 +64,21 @@ class BackLogin extends PageBase {
         user.interface.ResetCustomBackHandler();
     }
 
+    /** @param {LayoutChangeEvent} e */
+    onLayout = (e) => {
+        this.setState({ mainContentHeight: e.nativeEvent.layout.height });
+    }
+
     onPressImageIn = () => SpringAnimation(this.state.animImage, .9, false).start();
     onPressImageOut = () => SpringAnimation(this.state.animImage, 1, false).start();
 
     onFocus = () => {
-        if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
+        if (Platform.OS === 'ios') {
             SpringAnimation(this.state.animFocus, 1, false).start();
         }
     }
     onBlur = () => {
-        if (Platform.OS === 'ios' && user.interface.screenHeight > 600) {
+        if (Platform.OS === 'ios') {
             SpringAnimation(this.state.animFocus, 0, false).start();
         }
     }

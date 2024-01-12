@@ -9,6 +9,9 @@ import { DateToFormatString } from 'Utils/Date';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Interface/Components').Button} Button
+ * @typedef {import('Interface/Components').SimpleContainer} SimpleContainer
  */
 
 const NonZeroDayProps = {
@@ -23,11 +26,17 @@ class NonZeroDayBack extends React.Component {
         claimDate: null
     }
 
-    /** @type {NodeJS.Timeout} */
-    timeoutToNextClaim;
+    /** @type {NodeJS.Timeout | null} */
+    timeoutToNextClaim = null;
 
-    /** @type {Symbol} */
-    nzdListener;
+    /** @type {Symbol | null} */
+    nzdListener = null;
+
+    /** @type {SimpleContainer | null} */
+    refContainer = null;
+
+    /** @type {Button | null} */
+    refOpenStreakPopup = null;
 
     componentDidMount() {
         this.update();

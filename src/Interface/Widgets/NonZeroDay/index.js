@@ -1,51 +1,104 @@
 import React from 'react';
+import { View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
-import { RenderItemMemo } from './element';
+import StartHelp from './help';
 import NonZeroDayBack from './back';
+import { RenderItemMemo } from './element';
+
 import langManager from 'Managers/LangManager';
 
-import { Container, Text } from 'Interface/Components';
+import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
+
+/**
+ * @typedef {import('Class/Shop').Icons} Icons
+ */
 
 class NonZeroDay extends NonZeroDayBack {
-    render() {
-        const { claimIndex, claimDay, claimDate } = this.state;
+    renderHeader = () => {
         const lang = langManager.curr['nonzerodays'];
+        const titleColors = ['#384065', '#B83EFFE3'];
+
+        /** @type {Icons} */
+        let icon = 'arrowLeft';
+        let onPress = this.openPopup;
 
         return (
-            <Container
-                style={this.props.style}
-                styleContainer={styles.container}
-                type='static'
-                text={lang['container-title']}
-                icon='arrowLeft'
-                iconAngle={180}
-                onIconPress={this.openPopup}
-                colorNextGen
+            <LinearGradient
+                colors={titleColors}
+                start={{ x: 0, y: -2 }} end={{ x: 1, y: 2 }}
+                style={styles.headerStyle}
             >
-                {/* Claim date if not last streak */}
-                {claimDate !== null && (
-                    <Text style={styles.containerDateText}>
-                        {lang['container-date'].replace('{}', claimDate)}
+                <View style={styles.buttonInfo}>
+                    <Button
+                        style={styles.headerButtonLeft}
+                        onPress={StartHelp.bind(this)}
+                    >
+                        <Icon
+                            containerStyle={styles.iconStaticHeader}
+                            icon={'info'}
+                            size={24}
+                        />
+                    </Button>
+                    <Text color={'primary'}>
+                        {lang['container-title']}
                     </Text>
-                )}
+                </View>
 
-                {/* Claim item */}
-                {claimIndex !== -1 && (
-                    <RenderItemMemo
-                        index={claimDay}
-                        claimIndex={claimIndex}
-                        onPress={this.onClaimPress}
-                    />
+                {icon !== null && (
+                    <Button
+                        ref={ref => this.refOpenStreakPopup = ref}
+                        style={styles.headerButtonRight}
+                        onPress={onPress}
+                    >
+                        <Icon
+                            containerStyle={styles.iconStaticHeader}
+                            icon={icon}
+                            size={24}
+                            angle={180}
+                        />
+                    </Button>
                 )}
+            </LinearGradient>
+        )
+    }
 
-                {/* Text if no claim available */}
-                {claimIndex === -1 && (
-                    <Text style={styles.noClaim}>
-                        {lang['no-claim']}
-                    </Text>
-                )}
-            </Container>
+    renderBody = () => {
+        const lang = langManager.curr['nonzerodays'];
+        const { claimIndex, claimDay } = this.state;
+
+        if (claimIndex === -1) {
+            return (
+                <Text style={styles.noClaim}>
+                    {lang['no-claim']}
+                </Text>
+            );
+        }
+
+        return (
+            <RenderItemMemo
+                index={claimDay}
+                claimIndex={claimIndex}
+                onPress={this.onClaimPress}
+            />
+        );
+    }
+
+    render() {
+        return (
+            <SimpleContainer
+                ref={ref => this.refContainer = ref}
+                style={this.props.style}
+            >
+                <SimpleContainer.Header>
+                    {this.renderHeader()}
+                </SimpleContainer.Header>
+
+                <SimpleContainer.Body style={styles.containerItem}>
+                    {this.renderBody()}
+                </SimpleContainer.Body>
+            </SimpleContainer>
         );
     }
 }

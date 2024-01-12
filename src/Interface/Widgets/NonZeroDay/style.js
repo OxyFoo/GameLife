@@ -43,6 +43,10 @@ const styles = StyleSheet.create({
         padding: 12,
         fontSize: 24
     },
+    containerDateText: {
+        marginBottom: 12,
+        fontSize: 14
+    },
 
     // Popup
     popup: {
@@ -66,7 +70,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#00000040'
     },
     popupText: {
-        paddingVertical: 12,
+        paddingTop: 12,
+        paddingBottom: 8,
         fontSize: 14
     },
 

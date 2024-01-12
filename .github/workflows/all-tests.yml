@@ -1,4 +1,4 @@
-name: 'GL - Tests'
+name: 'Tests'
 
 on:
   workflow_dispatch:

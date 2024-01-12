@@ -3,7 +3,6 @@ import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 
-import { Sleep } from 'Utils/Functions';
 import { GetAbsolutePosition } from 'Utils/UI';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
@@ -15,7 +14,8 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {string} text Text to display
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
- * @property {boolean} [showButton=true] Show the button to continue
+ * @property {boolean | null} [showNextButton=null] Show the button to continue (default is showed when component is null)
+ * @property {boolean} [showSkipButton=true] Show or hide the skip button (default is always showed)
  */
 
 const DEFAULT_TUTO_ELEMENT = {
@@ -23,13 +23,14 @@ const DEFAULT_TUTO_ELEMENT = {
     text: 'Empty',
     execBefore: null,
     execAfter: null,
-    showButton: true
+    showNextButton: null,
+    showSkipButton: true
 };
 
 class ScreenTutoBack extends React.Component {
     state = {
         visible: false,
-        showButton: false,
+        showNextButton: true,
 
         component: {
             /** @type {React.Component | null} */
@@ -133,16 +134,25 @@ class ScreenTutoBack extends React.Component {
     Show = async (element) => {
         let position = { x: user.interface.screenWidth / 2, y: user.interface.screenHeight * 2 / 3, width: 0, height: 0 };
 
-        const { component, text, showButton } = element;
+        const { component, text, showNextButton, showSkipButton } = element;
 
         let error = false;
+        let showNext = true;
+
+        // Get component position
         if (component !== null) {
             const pos = await GetAbsolutePosition(component);
             if (!pos.width || !pos.height) {
                 error = true;
             } else {
                 position = pos;
+                showNext = false;
             }
+        }
+
+        // Show next button manually
+        if (showNextButton !== null) {
+            showNext = showNextButton;
         }
 
         const btnMidY = position.y + position.height / 2;
@@ -150,7 +160,8 @@ class ScreenTutoBack extends React.Component {
 
         this.setState({
             visible: true,
-            showButton: showButton,
+            showNextButton: showNext,
+            showSkipButton: showSkipButton,
             component: {
                 ...this.state.component,
                 ref: error ? null : component,

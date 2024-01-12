@@ -1,5 +1,6 @@
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { View, FlatList } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import BackQuestsList from './back';
@@ -11,7 +12,6 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { SimpleContainer, Button, Text, Separator, Icon } from 'Interface/Components';
-import LinearGradient from 'react-native-linear-gradient';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -47,7 +47,10 @@ class MyQuestsList extends BackQuestsList {
                 style={styles.headerStyle}
             >
                 <View style={styles.buttonInfo}>
-                    <Button onPress={StartHelp.bind(this)} style={styles.iconButtonPadding}>
+                    <Button
+                        style={styles.headerButtonLeft}
+                        onPress={StartHelp.bind(this)}
+                    >
                         <Icon
                             containerStyle={styles.iconStaticHeader}
                             icon={'info'}
@@ -59,9 +62,12 @@ class MyQuestsList extends BackQuestsList {
                     </Text>
                 </View>
                 {icon !== null && (
-                    <Button onPress={onPress} style={styles.iconButtonPadding}>
+                    <Button
+                        ref={ref => this.refAddQuest = ref}
+                        onPress={onPress}
+                        style={styles.headerButtonRight}
+                    >
                         <Icon
-                            ref={ref => this.refAddQuest = ref}
                             containerStyle={styles.iconStaticHeader}
                             icon={icon}
                             size={24}

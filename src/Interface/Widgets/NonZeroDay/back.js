@@ -6,6 +6,9 @@ import user from 'Managers/UserManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
+ * @typedef {import('Interface/Components').Button} Button
+ * @typedef {import('Interface/Components').SimpleContainer} SimpleContainer
  */
 
 const NonZeroDayProps = {
@@ -19,11 +22,17 @@ class NonZeroDayBack extends React.Component {
         claimDay: 0
     }
 
-    timeout;
-    nzdListener;
+    /** @type {NodeJS.Timeout | null} */
+    timeout = null;
 
+    /** @type {Symbol | null} */
+    nzdListener = null;
+
+    /** @type {SimpleContainer | null} */
     refContainer = null;
-    refFullStreak = null;
+
+    /** @type {Button | null} */
+    refOpenStreakPopup = null;
 
     componentDidMount() {
         this.update();

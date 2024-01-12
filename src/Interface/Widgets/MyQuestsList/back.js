@@ -15,6 +15,8 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * 
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Interface/Components').Button} Button
+ * @typedef {import('Interface/Components').SimpleContainer} SimpleContainer
  */
 
 class BackQuestsList extends React.Component {
@@ -35,14 +37,18 @@ class BackQuestsList extends React.Component {
 
         /** @type {FlatList<MyQuest> | null} Used to manage quest sorting */
         this.refFlatlist = null;
+
+        /** @type {SimpleContainer | null} Used for help */
         this.refContainer = null;
+
+        /** @type {Button | null} Used for help */
         this.refAddQuest = null;
 
         this.flatlist = {
             contentSizeHeight: 0,
             layoutMeasurementHeight: 0,
-            contentOffsetY: 0,
-        }
+            contentOffsetY: 0
+        };
 
         /** @type {LayoutRectangle | null} */
         this.tmpLayoutContainer = null;

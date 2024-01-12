@@ -1,30 +1,28 @@
 import React from 'react';
 import { View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
-import { RenderItemMemo } from './element';
-import NonZeroDayBack from './back';
 import StartHelp from './help';
+import NonZeroDayBack from './back';
+import { RenderItemMemo } from './element';
 
 import langManager from 'Managers/LangManager';
 
 import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
-import LinearGradient from 'react-native-linear-gradient';
 
 /**
  * @typedef {import('Class/Shop').Icons} Icons
  */
 
 class NonZeroDay extends NonZeroDayBack {
-
     renderHeader = () => {
+        const lang = langManager.curr['nonzerodays'];
         const titleColors = ['#384065', '#B83EFFE3'];
 
         /** @type {Icons} */
         let icon = 'arrowLeft';
         let onPress = this.openPopup;
-
-        const lang = langManager.curr['nonzerodays'];
 
         return (
             <LinearGradient
@@ -33,7 +31,10 @@ class NonZeroDay extends NonZeroDayBack {
                 style={styles.headerStyle}
             >
                 <View style={styles.buttonInfo}>
-                    <Button onPress={StartHelp.bind(this)} style={styles.iconButtonPadding}>
+                    <Button
+                        style={styles.headerButtonLeft}
+                        onPress={StartHelp.bind(this)}
+                    >
                         <Icon
                             containerStyle={styles.iconStaticHeader}
                             icon={'info'}
@@ -44,10 +45,14 @@ class NonZeroDay extends NonZeroDayBack {
                         {lang['container-title']}
                     </Text>
                 </View>
+
                 {icon !== null && (
-                    <Button onPress={onPress} style={styles.iconButtonPadding}>
+                    <Button
+                        ref={ref => this.refOpenStreakPopup = ref}
+                        style={styles.headerButtonRight}
+                        onPress={onPress}
+                    >
                         <Icon
-                            ref={ref => this.refFullStreak = ref}
                             containerStyle={styles.iconStaticHeader}
                             icon={icon}
                             size={24}
@@ -59,28 +64,28 @@ class NonZeroDay extends NonZeroDayBack {
         )
     }
 
-    renderBody = (claimIndex, claimDay) => {
+    renderBody = () => {
         const lang = langManager.curr['nonzerodays'];
+        const { claimIndex, claimDay } = this.state;
 
-        const body = claimIndex !== -1 ? (
+        if (claimIndex === -1) {
+            return (
+                <Text style={styles.noClaim}>
+                    {lang['no-claim']}
+                </Text>
+            );
+        }
+
+        return (
             <RenderItemMemo
                 index={claimDay}
                 claimIndex={claimIndex}
                 onPress={this.onClaimPress}
-                style={styles.container}
             />
-        ) : (
-            <Text style={styles.noClaim}>
-                {lang['no-claim']}
-            </Text>
         );
-
-        return body;
     }
 
     render() {
-        const { claimIndex, claimDay } = this.state;
-
         return (
             <SimpleContainer
                 ref={ref => this.refContainer = ref}
@@ -90,11 +95,10 @@ class NonZeroDay extends NonZeroDayBack {
                     {this.renderHeader()}
                 </SimpleContainer.Header>
 
-                <SimpleContainer.Body>
-                    {this.renderBody(claimIndex, claimDay)}
-                </SimpleContainer.Body >
-
-            </SimpleContainer >
+                <SimpleContainer.Body style={styles.containerItem}>
+                    {this.renderBody()}
+                </SimpleContainer.Body>
+            </SimpleContainer>
         );
     }
 }

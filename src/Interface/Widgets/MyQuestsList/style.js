@@ -16,8 +16,17 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         paddingHorizontal: 0
     },
-    iconButtonPadding: {
-        paddingHorizontal: 12
+    headerButtonLeft: {
+        marginRight: 4,
+        paddingHorizontal: 12,
+        borderTopLeftRadius: 8,
+        borderBottomLeftRadius: 0
+    },
+    headerButtonRight: {
+        marginLeft: 4,
+        paddingHorizontal: 12,
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 0
     },
     iconStaticHeader: {
         width: 'auto',

@@ -10,19 +10,19 @@ function StartHelp() {
     user.interface.screenTuto.ShowTutorial([
         {
             component: this.refContainer,
-            text: lang["1"],
+            text: lang['1'],
         },
         {
             component: null,
-            text: lang["2"],
+            text: lang['2'],
         },
         {
             component: null,
-            text: lang["3"],
+            text: lang['3'],
         },
         {
-            component: this.refFullStreak,
-            text: lang["4"],
+            component: this.refOpenStreakPopup,
+            text: lang['4'],
         }
     ]);
 }

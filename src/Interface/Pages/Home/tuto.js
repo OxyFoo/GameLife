@@ -6,12 +6,12 @@ import langManager from 'Managers/LangManager';
  * @param {number} tutoValue 
  */
 function StartTutorial(tutoValue) {
-    const lang = langManager.curr['tuto'];
+    const lang = langManager.curr['tuto']['main'];
     if (tutoValue === 1) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                text: lang['main']['home-greetings'].replace('{}', user.informations.username.Get()),
+                text: lang['home-greetings'].replace('{}', user.informations.username.Get()),
                 execBefore: () => {
                     this.refPage?.GotoY(0);
                 }
@@ -19,13 +19,13 @@ function StartTutorial(tutoValue) {
             {
                 component: null,
                 zapInline: true,
-                text: lang['main']['home'],
+                text: lang['home'],
                 fontSize: 18,
                 positionY: 0.25
             },
             {
                 component: user.interface.bottomBar.refButtons[1],
-                text: lang['main']['home-next'],
+                text: lang['home-next'],
                 fontSize: 18,
                 execAfter: () => {
                     user.interface.ChangePage('calendar', { tuto: 2 }, true);
@@ -38,7 +38,7 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                text: lang['main']['home-final'],
+                text: lang['home-final'],
                 fontSize: 20
             }
         ]);

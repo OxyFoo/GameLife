@@ -22,7 +22,8 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {number} [fontSize] Font size of the text
  * @property {() => void | Promise<void> | null} [execBefore=null] Function to execute before showing the element
  * @property {() => boolean | Promise<boolean> | null} [execAfter=null] Function to execute after showing the element, return true to close the tutorial
- * @property {boolean} [showButton=true] Show the button to continue
+ * @property {boolean | null} [showNextButton=null] Show the button to continue (default is showed when component is null)
+ * @property {boolean} [showSkipButton=true] Show or hide the skip button (default is always showed)
  * @property {number|null} [positionY=null] Y position of the message (null to center) [0,1]
  * @property {boolean} [zapInline=false] is Zap going to be displayed side to the message or not
  */
@@ -34,7 +35,8 @@ const DEFAULT_TUTO_ELEMENT = {
     fontSize: 24,
     execBefore: null,
     execAfter: null,
-    showButton: true,
+    showNextButton: null,
+    showSkipButton: true,
     positionY: null,
     zapInline: false
 };
@@ -42,8 +44,9 @@ const DEFAULT_TUTO_ELEMENT = {
 class ScreenTutoBack extends React.Component {
     state = {
         visible: false,
-        showButton: false,
         positionY: null,
+        showNextButton: true,
+        showSkipButton: true,
 
         component: {
             /** @type {React.Component | null} */
@@ -170,7 +173,7 @@ class ScreenTutoBack extends React.Component {
      * @returns {Promise<void>}
      */
     Show = async (element) => {
-        const { component, text, showButton, fontSize, positionY, zapInline } = element;
+        const { component, text, showNextButton, showSkipButton, fontSize, positionY, zapInline } = element;
 
         let position = {
             x: user.interface.screenWidth / 2,
@@ -180,19 +183,30 @@ class ScreenTutoBack extends React.Component {
         };
 
         let error = false;
+        let showNext = true;
+
+        // Get component position
         if (component !== null) {
             const pos = await GetAbsolutePosition(component);
             if (!pos.width || !pos.height) {
                 error = true;
             } else {
                 position = pos;
+                showNext = false;
             }
+        }
+
+        // Show next button manually
+        if (showNextButton !== null) {
+            showNext = showNextButton;
         }
 
         this.setState({
             visible: true,
-            showButton: showButton,
             positionY: positionY,
+            showNextButton: showNext,
+            showSkipButton: showSkipButton,
+
             component: {
                 ...this.state.component,
                 ref: error ? null : component,

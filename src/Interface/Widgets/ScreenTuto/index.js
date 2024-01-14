@@ -95,8 +95,12 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     renderDefaultButton() {
-        const { component, showButton } = this.state;
-        if (component.ref !== null && !showButton) return null;
+        const { showNextButton } = this.state;
+        const lang = langManager.curr['tuto']['other'];
+
+        if (!showNextButton) {
+            return null;
+        }
 
         return (
             <Button
@@ -162,7 +166,12 @@ class ScreenTuto extends ScreenTutoBack {
     }
 
     renderSkipButton() {
+        const { showSkipButton } = this.state;
         const lang = langManager.curr['tuto']['other'];
+
+        if (!showSkipButton) {
+            return null;
+        }
 
         return (
             <Button

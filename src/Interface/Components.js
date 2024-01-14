@@ -19,6 +19,7 @@ import PageBase from './Components/Page/PageBase';
 import PieChart from './Components/PieChart';
 import ProgressBar from './Components/ProgressBar';
 import Separator from './Components/Separator';
+import SimpleContainer from './Components/SimpleContainer';
 import StreakChart from './Components/StreakChart';
 import Swiper from './Components/Swiper';
 import Switch from './Components/Switch';
@@ -49,6 +50,7 @@ export {
     PieChart,
     ProgressBar,
     Separator,
+    SimpleContainer,
     StreakChart,
     Swiper,
     Switch,

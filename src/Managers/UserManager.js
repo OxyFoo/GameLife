@@ -73,7 +73,7 @@ class UserManager {
 
     /** @type {number | null} To avoid spamming mail (UTC) */
     tempMailSent = null;
-    
+
     StartTimers() {
         const saveTime = 5 * 60 * 1000; // 5 minutes
         const save = this.server.IsConnected() ? this.OnlineSave : this.LocalSave;
@@ -132,6 +132,9 @@ class UserManager {
             await this.Clear();
             this.interface.ChangePage('login');
         }
+
+        clearInterval(this.intervalSave);
+        clearInterval(this.intervalAchievements);
 
         return result['status'] === 'ok';
     }

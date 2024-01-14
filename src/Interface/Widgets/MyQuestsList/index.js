@@ -1,15 +1,17 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import BackQuestsList from './back';
+import StartHelp from './help';
 import QuestElement from './Elements/quest';
 import QuestSelection from './Elements/questSelection';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Container, Button, Text, Separator } from 'Interface/Components';
+import { SimpleContainer, Button, Text, Separator, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -25,6 +27,57 @@ const QuestsProps = {
 
 class MyQuestsList extends BackQuestsList {
     static QuestElement = QuestElement;
+
+    renderHeader = () => {
+        const lang = langManager.curr['quests'];
+        const titleColors = ['#384065', '#B83EFFE3'];
+
+        /** @type {Icons | null} */
+        let icon = null;
+        let onPress = null;
+        if (!user.quests.myquests.IsMax()) {
+            icon = 'addSquare';
+            onPress = this.addQuest;
+        }
+
+        return (
+            <LinearGradient
+                colors={titleColors}
+                start={{ x: 0, y: -2 }} end={{ x: 1, y: 2 }}
+                style={styles.headerStyle}
+            >
+                <View style={styles.buttonInfo}>
+                    <Button
+                        style={styles.headerButtonLeft}
+                        onPress={StartHelp.bind(this)}
+                    >
+                        <Icon
+                            containerStyle={styles.iconStaticHeader}
+                            icon={'info'}
+                            size={24}
+                        />
+                    </Button>
+                    <Text color={'primary'}>
+                        {lang['container-title']}
+                    </Text>
+                </View>
+                {icon !== null && (
+                    <Button
+                        ref={ref => this.refAddQuest = ref}
+                        onPress={onPress}
+                        style={styles.headerButtonRight}
+                    >
+                        <Icon
+                            containerStyle={styles.iconStaticHeader}
+                            icon={icon}
+                            size={24}
+                            angle={180}
+                        />
+                    </Button>
+                )}
+            </LinearGradient>
+        );
+    }
 
     renderItem = ({ item }) => {
         const { draggedItem } = this.state;
@@ -66,48 +119,40 @@ class MyQuestsList extends BackQuestsList {
     )
 
     render() {
-        const lang = langManager.curr['quests'];
         const { scrollable, quests, draggedItem, mouseY } = this.state;
 
-        /** @type {Icons | null} */
-        let icon = null;
-        let iconPress = null;
-        if (!user.quests.myquests.IsMax()) {
-            icon = 'addSquare';
-            iconPress = this.addQuest;
-        }
-
         return (
-            <Container
+            <SimpleContainer
+                ref={ref => this.refContainer = ref}
                 style={this.props.style}
-                styleContainer={styles.questsContainer}
-                type='static'
-                text={lang['container-title']}
-                icon={icon}
-                onIconPress={iconPress}
-                colorNextGen
             >
-                <QuestSelection
-                    draggedItem={draggedItem}
-                    mouseY={mouseY}
-                />
+                <SimpleContainer.Header>
+                    {this.renderHeader()}
+                </SimpleContainer.Header>
 
-                <FlatList
-                    ref={ref => this.refFlatlist = ref}
+                <SimpleContainer.Body>
+                    <QuestSelection
+                        draggedItem={draggedItem}
+                        mouseY={mouseY}
+                    />
 
-                    onScroll={this.onScroll}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
-                    onTouchEnd={this.onTouchEnd}
+                    <FlatList
+                        ref={ref => this.refFlatlist = ref}
 
-                    data={quests}
-                    scrollEnabled={scrollable}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={this.renderItem}
-                    ListEmptyComponent={this.renderEmpty}
-                    ItemSeparatorComponent={this.renderSeparator}
-                />
-            </Container>
+                        onScroll={this.onScroll}
+                        onTouchStart={this.onTouchStart}
+                        onTouchMove={this.onTouchMove}
+                        onTouchEnd={this.onTouchEnd}
+
+                        data={quests}
+                        scrollEnabled={scrollable}
+                        keyExtractor={this.keyExtractor}
+                        renderItem={this.renderItem}
+                        ListEmptyComponent={this.renderEmpty}
+                        ItemSeparatorComponent={this.renderSeparator}
+                    />
+                </SimpleContainer.Body >
+            </SimpleContainer >
         );
     }
 }

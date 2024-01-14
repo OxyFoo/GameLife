@@ -96,7 +96,6 @@ class ScreenTuto extends ScreenTutoBack {
 
     renderDefaultButton() {
         const { showNextButton } = this.state;
-        const lang = langManager.curr['tuto']['other'];
 
         if (!showNextButton) {
             return null;

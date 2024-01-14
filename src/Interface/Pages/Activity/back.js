@@ -1,5 +1,7 @@
 import { FlatList } from 'react-native';
 
+import StartTutorial from './tuto';
+
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
@@ -102,6 +104,10 @@ class BackActivity extends PageBase {
                 this.preselectedSkillsIDs.includes(skill.id)
             ));
         }
+    }
+
+    componentDidFocused = (args) => {
+        StartTutorial.call(this, args?.tuto);
     }
 
     async componentDidMount() {

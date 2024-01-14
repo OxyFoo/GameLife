@@ -66,7 +66,7 @@ class NonZeroDay extends NonZeroDayBack {
 
     renderBody = () => {
         const lang = langManager.curr['nonzerodays'];
-        const { claimIndex, claimDay } = this.state;
+        const { claimIndex, claimDay, claimDate } = this.state;
 
         if (claimIndex === -1) {
             return (
@@ -77,11 +77,21 @@ class NonZeroDay extends NonZeroDayBack {
         }
 
         return (
-            <RenderItemMemo
-                index={claimDay}
-                claimIndex={claimIndex}
-                onPress={this.onClaimPress}
-            />
+            <>
+                {/* Claim date if not last streak */}
+                {claimDate !== null && (
+                    <Text style={styles.containerDateText}>
+                        {lang['container-date'].replace('{}', claimDate)}
+                    </Text>
+                )}
+    
+                {/* Claim day */}
+                <RenderItemMemo
+                    index={claimDay}
+                    claimIndex={claimIndex}
+                    onPress={this.onClaimPress}
+                />
+            </>
         );
     }
 

@@ -40,6 +40,8 @@
     <dict>
         <key>org.reactjs.native.example.GameLife</key>
         <string>Game Life Distributed</string>
+        <key>org.reactjs.native.example.GameLife.test</key>
+        <string>GameLife Test Profile</string>
     </dict>
     <key>signingCertificate</key>
     <string>Apple Distribution</string>

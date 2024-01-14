@@ -85,14 +85,14 @@ jobs:
           if-no-files-found: error  
 
       - name: 'Download buildtool'
-        if: ${{ inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact }}
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
           wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
 
       - name: 'Generate universal APK'
-        if: ${{ inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact }}
         run: |
           java -jar ./bundletool.jar build-apks \
             --bundle=./${FILE_AAB} \
@@ -104,7 +104,7 @@ jobs:
           unzip -p my_app.apks universal.apk > ./${FILE_APK}
 
       - name: 'Upload apk artifact'
-        if: ${{ inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILE_APK }}

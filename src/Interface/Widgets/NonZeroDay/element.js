@@ -54,7 +54,7 @@ const RenderItem = (props) => {
     if (props.claimIndex !== -1) {
         const allClaimLists = user.quests.nonzerodays.claimsList.Get();
         const claimList = allClaimLists[props.claimIndex];
-        const isCurrent = props.claimIndex === allClaimLists.length - 1;
+        const isCurrent = user.quests.nonzerodays.IsCurrentList(claimList);
 
         if (claimList.claimed.includes(currentDay) || loading) {
             status = 'claimed';

@@ -33,17 +33,13 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 12,
         borderWidth: 1,
-        backgroundColor: '#000000A0',
+        backgroundColor: '#000000A0'
     },
-    defaultButtonContainer: {
+    nextButton: {
         position: 'absolute',
-        width: '100%',
-        bottom: '10%',
-        alignItems: 'center',
-        opacity: .8
-    },
-    defaultButton: {
-        width: '50%'
+        right: 24,
+        bottom: 24,
+        opacity: .75
     },
 
     skipButton: {

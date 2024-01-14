@@ -100,8 +100,8 @@ android {
         applicationId "com.gamelife"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
-        versionName "1.1.0"
+        versionCode 15
+        versionName "1.1.1"
     }
     splits {
         abi {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
-import { DAY_TIME, GetTime, YEAR_TIME } from 'Utils/Time';
+import { DAY_TIME, GetYearTime } from 'Utils/Time';
 
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -61,8 +61,7 @@ class YearHeatMapBack extends React.Component {
         let dataToDisplay = [];
         const gridSize = isWeekMode ? 5 : 10;
 
-        const timeNow = GetTime();
-        const timeYear = timeNow - timeNow % YEAR_TIME;
+        const timeYear = GetYearTime();
         const allActivitiesTime = user.activities.Get()
             .filter(activity => quest.skills.includes(activity.skillID))
             .filter(activity => user.activities.GetExperienceStatus(activity) === 'grant')
@@ -88,7 +87,6 @@ class YearHeatMapBack extends React.Component {
                 const level = totalDuration / quest.schedule.duration;
                 dataToDisplay.push(Math.min(LEVELS, level * LEVELS));
             }
-            dataToDisplay = dataToDisplay.reverse();
         }
 
         // Year by weeks: Data with 52 cells, one for each week
@@ -108,7 +106,6 @@ class YearHeatMapBack extends React.Component {
                 const level = totalDuration / (quest.schedule.duration * DAYS_PER_WEEK);
                 dataToDisplay.push(Math.min(LEVELS, level * LEVELS));
             }
-            dataToDisplay = dataToDisplay.reverse();
         }
 
         this.setState({

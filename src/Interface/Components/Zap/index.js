@@ -11,9 +11,9 @@ import InputBack from './back';
 
 class Zap extends InputBack {
     render() {
-        const { position, layout, orientation } = this.state;
-        const posX = Animated.subtract(position.x, layout.width / 2);
-        const posY = Animated.subtract(position.y, layout.height / 2);
+        const { position, orientation } = this.props;
+        const posX = position.x;
+        const posY = position.y;
 
         const transformZap = {
             transform: [
@@ -26,7 +26,7 @@ class Zap extends InputBack {
         return (
             <Animated.Image
                 style={[styles.zap, transformZap]}
-                onLayout={this.onZapLayout}
+                onLayout={this.onLayout}
                 source={this.getZapImage()}
             />
         );

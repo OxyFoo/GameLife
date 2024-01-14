@@ -98,12 +98,15 @@ function GetItems($db) {
  * @param DataBase $db
  */
 function GetQuotes($db) {
-    $quotes = $db->QueryPrepare('Quotes', 'SELECT * FROM TABLE');
+    $quotes = $db->QueryPrepare('Quotes', 'SELECT `ID`, `Quote`, `Author` FROM TABLE');
     if ($quotes === null) return array();
-    for ($i = 0; $i < count($quotes); $i++) {
-        $quotes[$i]['ID'] = intval($quotes[$i]['ID']);
-    }
-    return $quotes;
+
+    return array_map(function($quote) {
+        $quote['ID'] = intval($quote['ID']);
+        $quote['Quote'] = json_decode($quote['Quote']);
+        $quote['Author'] = $quote['Author'];
+        return $quote;
+    }, $quotes);
 }
 
 /**

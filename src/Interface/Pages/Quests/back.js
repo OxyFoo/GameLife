@@ -1,10 +1,14 @@
-import { PageBase } from 'Interface/Components';
+import StartTutorial from './tuto';
 
-import user from 'Managers/UserManager';
+import { PageBase } from 'Interface/Components';
 
 class BackNewPage extends PageBase {
     componentDidMount() {
         super.componentDidMount();
+    }
+
+    componentDidFocused = (args) => {
+        StartTutorial.call(this, args?.tuto);
     }
 }
 

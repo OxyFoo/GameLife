@@ -1,7 +1,6 @@
 import { TwoDigit } from './Functions';
 
 const DAY_TIME = 24 * 60 * 60;
-const YEAR_TIME = 365 * DAY_TIME;
 
 /**
  * Get absolute UTC time in seconds
@@ -17,6 +16,16 @@ function GetTime(date = new Date(), UTC = 'global') {
     // Global UTC
     const offset = date.getTimezoneOffset() * 60;
     return Math.floor(date.getTime() / 1000) - offset;
+}
+
+/**
+ * Get year (01/01/XX 00:00) from time in seconds
+ * @param {number} [time] in seconds [default: now, local UTC]
+ * @returns {number} year in seconds
+ */
+function GetYearTime(time = GetTime(undefined, 'local')) {
+    const startYear = new Date(time * 1000).getFullYear();
+    return GetTime(new Date(startYear, 0, 1), 'local');
 }
 
 /**
@@ -73,7 +82,7 @@ function GetMidnightTime(time) {
 function GetAge(time) {
     const today = GetTime();
     const delta = today - time - (GetTimeZone() * 60 * 60);
-    const age = delta / (60 * 60 * 24 * 365);
+    const age = delta / (60 * 60 * 24 * 365.25);
     return Math.floor(age)
 }
 
@@ -102,8 +111,20 @@ function GetTimeZone() {
     return - (new Date()).getTimezoneOffset() / 60;
 }
 
+/**
+ * @param {number} year
+ * @returns {number} Days count in year
+ */
+function GetDaysCountInYear(year) {
+    let days = 365;
+    if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))
+        days++;
+    return days;
+}
+
 export {
-    DAY_TIME, YEAR_TIME,
-    GetTime, GetDate, TimeToFormatString, RoundTimeTo,
-    GetMidnightTime, GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone
+    DAY_TIME,
+    GetTime, GetYearTime, GetDate, TimeToFormatString, RoundTimeTo,
+    GetMidnightTime, GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone,
+    GetDaysCountInYear
 };

@@ -74,8 +74,8 @@ class ActivityPanelBack extends React.Component {
     /** @type {Activity | null} */
     __selectedActivity = null;
 
-    __callback_removed = () => { };
-    __callback_closed = () => { };
+    __callback_removed = () => {};
+    __callback_closed = () => {};
 
     /** @type {PanelScreen} */
     refPanelScreen = null;
@@ -153,7 +153,7 @@ class ActivityPanelBack extends React.Component {
      * @param {() => void} callbackClosed Callback called when the panel is closed
      * @returns {boolean} True if the activity is valid
      */
-    SelectActivity = (activity, callbackRemoved = () => { }, callbackClosed = () => { }) => {
+    SelectActivity = (activity, callbackRemoved = () => {}, callbackClosed = () => {}) => {
         const skill = dataManager.skills.GetByID(activity?.skillID ?? 0);
         if (activity === null || skill === null) {
             console.error('SelectActivity: Invalid activity or skill', activity, skill);
@@ -184,7 +184,7 @@ class ActivityPanelBack extends React.Component {
 
         user.interface.ResetCustomBackHandler();
         this.__callback_closed();
-        this.__callback_closed = () => { };
+        this.__callback_closed = () => {};
 
         this.refPanelScreen?.Close();
         setTimeout(() => {

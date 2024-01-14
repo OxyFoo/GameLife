@@ -1,11 +1,14 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
 import styles from './style';
 import BackQuest from './back';
+import StartHelp from './help';
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page, Button, StreakChart } from 'Interface/Components';
+import { Page, Button, StreakChart, Text } from 'Interface/Components';
 import { PageHeader, YearHeatMap } from 'Interface/Widgets';
 
 class MyQuestStats extends BackQuest {
@@ -21,9 +24,17 @@ class MyQuestStats extends BackQuest {
         );
     }
     render() {
-        const currentStreak = user.quests.myquests.GetStreak(this.selectedQuest);
-        const maxStreak = Math.max(10, this.selectedQuest.maximumStreak);
+        const { maximumStreak } = this.selectedQuest;
 
+        const currentStreak = user.quests.myquests.GetStreak(this.selectedQuest);
+        const maxStreak = Math.max(10, maximumStreak);
+
+        const skillsName = this.selectedQuest.skills
+            .map(skillID => dataManager.skills.GetByID(skillID))
+            .filter(skill => skill !== null) 
+            .map(skill => dataManager.GetText(skill.Name))
+            .join(' • ');
+            
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
         };
@@ -34,17 +45,43 @@ class MyQuestStats extends BackQuest {
                 footer={this.renderFooter()}
             >
                 <PageHeader
-                    onBackPress={() => user.interface.BackHandle()}
+                    style={styles.pageHeaderView}
+                    onBackPress={user.interface.BackHandle}
+                    onHelpPress={StartHelp.bind(this)}
                 />
 
-                <Button
-                    style={styles.editActivity}
-                    color='main1'
-                    icon='edit'
-                    onPress={this.onEditPress}
-                />
+                <View
+                    ref={ref => this.refTuto1 = ref}
+                    style={[styles.questHeader, styleContainer]}
+                >
+                    <View style={styles.questText}>
+                        <Text
+                            style={styles.questTitle}
+                            color='primary'
+                            fontSize={30}
+                            bold={true}
+                        >
+                            {this.selectedQuest.title}
+                        </Text>
+                        <Text
+                            style={styles.questSkills}
+                            color='primary'
+                            fontSize={14}
+                        >
+                            {skillsName}
+                        </Text>
+                    </View>
+
+                    <Button
+                        style={styles.editActivity}
+                        icon='edit'
+                        iconSize={24}
+                        onPress={this.onEditPress}
+                    />
+                </View>
 
                 <StreakChart
+                    ref={ref => this.refTuto2 = ref}
                     style={[styles.streakChartContainer, styleContainer]}
                     size={200}
                     height={150}
@@ -53,6 +90,7 @@ class MyQuestStats extends BackQuest {
                 />
 
                 <YearHeatMap
+                    ref={ref => this.refTuto3 = ref}
                     style={styles.yearHeatMap}
                     quest={this.selectedQuest}
                 />

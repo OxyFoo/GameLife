@@ -13,6 +13,16 @@ on:
         - patch
         - minor
         - major
+      whatsnew-fr:
+        description: "What's new file - French"
+        required: false
+        default: ''
+        type: string
+      whatsnew-en:
+        description: "What's new file - English"
+        required: false
+        default: ''
+        type: string
 
 jobs:
   update-version:
@@ -25,13 +35,20 @@ jobs:
           ref: 'dev'
 
       - name: 'Update version'
+        env:
+          ACTIONS: ${{ github.event.inputs.actions }}
+          WHATSNEW_FR: ${{ github.event.inputs.whatsnew-fr }}
+          WHATSNEW_EN: ${{ github.event.inputs.whatsnew-en }}
         run: |
-          ./Tools/Version/version.sh ${{ github.event.inputs.actions }} --force
+          NEWVERSION=$(./Tools/Version/version.sh $ACTIONS --version)
+          echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
+
+          ./Tools/Version/version.sh $ACTIONS $WHATSNEW_FR $WHATSNEW_EN --force
 
       - name: 'Commit changes'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
-          git commit -m "📝 Update version"
+          git commit -m "📝 Update version to $VERSION"
           git push

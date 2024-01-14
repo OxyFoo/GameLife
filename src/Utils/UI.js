@@ -15,7 +15,7 @@ function GetAbsolutePosition(ref) {
     return new Promise((resolve, reject) => {
         UIManager.measureInWindow(handle, (x, y, width, height) => {
             if (Platform.OS === 'ios') {
-                y -= 48;
+                y -= 24;
             }
             resolve({ x, y, width, height });
         });

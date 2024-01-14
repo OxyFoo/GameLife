@@ -6,27 +6,22 @@ import langManager from 'Managers/LangManager';
  * @param {number} tutoValue 
  */
 function StartTutorial(tutoValue) {
-    const lang = langManager.curr['tuto'];
+    const lang = langManager.curr['tuto']['main'];
     if (tutoValue === 2) {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto1,
-                text: lang['main']['calendar-1']
+                component: null,
+                zapInline: true,
+                text: lang['calendar'],
+                fontSize: 18,
+                positionY: 0.25
             },
             {
-                component: this.refTuto2,
-                text: lang['main']['calendar-2']
-            },
-            {
-                component: this.refTuto3,
-                text: lang['main']['calendar-3']
-            },
-            {
-                component: user.interface.bottomBar.refButtons[4],
-                text: lang['main']['calendar-4'],
-                showButton: false,
+                component: user.interface.bottomBar.refButtons[3],
+                text: lang['calendar-next'],
+                fontSize: 18,
                 execAfter: () => {
-                    user.interface.ChangePage('shop', { tuto: 3 }, true);
+                    user.interface.ChangePage('quests', { tuto: 3 }, true);
                     return false;
                 }
             }

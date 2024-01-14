@@ -169,10 +169,17 @@ class Notifications {
         minutes: 0,
         __generate: (index) => {
             if (index === 0) return null;
-            const Title = langManager.curr['notifications']['morning']['title'];
+            const title = langManager.curr['notifications']['morning']['title'];
+            const anonymousAuthors = langManager.curr['quote']['anonymous-author-list'];
+
             const quote = dataManager.quotes.GetRandomQuote();
-            const Body = quote.Quote + ' (' + quote.Author + ')';
-            return { Title, Body };
+            const text = dataManager.GetText(quote.Quote);
+            const author = quote.Author || anonymousAuthors[Random(0, anonymousAuthors.length)];
+
+            return {
+                Title: title,
+                Body: `${text} (${author})`
+            };
         },
 
         Enable: () => Setup(Notifications.Morning),

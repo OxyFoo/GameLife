@@ -1,9 +1,11 @@
 import { DAY_TIME, GetTime } from 'Utils/Time';
-import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
 import DynamicVar from 'Utils/DynamicVar';
+import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * 
+ * @typedef {import('Class/Inventory').Stuff} Stuff
  * 
  * @typedef {Object} ClaimType
  * @property {number} start Midnight Local TimeZone unix time of the first day
@@ -66,6 +68,12 @@ class NonZeroDays {
         let index = claimsList.findIndex(claimList => claimList.daysCount !== claimList.claimed.length);
         if (index === -1) index = claimsList.length - 1;
         return index;
+    }
+
+    /** @param {ClaimType} claimList */
+    IsCurrentList(claimList) {
+        const timePastLimit = GetTime(undefined, 'local') - 2 * DAY_TIME;
+        return claimList.end >= timePastLimit;
     }
 
     RefreshCaimsList() {
@@ -131,15 +139,14 @@ class NonZeroDays {
         if (response === null) return false;
 
         // Update Ox amount
-        if (response.hasOwnProperty('ox')) {
-            this.user.informations.ox.Set(response['ox']);
-        }
-
-        // Update inventory
-        if (!response.hasOwnProperty('newItems')) {
+        if (!response.hasOwnProperty('ox') || !response.hasOwnProperty('newItems')) {
             return false;
         }
 
+        this.user.informations.ox.Set(response['ox']);
+
+        // Update inventory
+        /** @type {Array<Stuff>} */
         const newItems = response['newItems'];
         if (newItems.length > 0) {
             this.user.inventory.stuffs.push(...newItems);
@@ -161,13 +168,15 @@ class NonZeroDays {
         await this.user.LocalSave();
 
         // Go to chest page
+        // TODO: Don't work with multiple items (unnecessary for now)
         const rewardIndex = NONZERODAYS_REWARDS[dayIndex].findIndex(reward => reward.type === 'chest');
-        if (rewardIndex !== -1) {
+        if (newItems.length > 0 && rewardIndex !== -1) {
             const args = {
                 itemID: newItems[0]['ItemID'],
                 chestRarity: NONZERODAYS_REWARDS[dayIndex][rewardIndex].value - 1,
                 callback: this.user.interface.BackHandle
             };
+            this.user.interface.popup.Close();
             this.user.interface.ChangePage('chestreward', args, true);
         }
 

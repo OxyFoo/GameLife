@@ -1,6 +1,40 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    pageHeaderView: {
+        marginBottom: 20
+    },
+
+    // MyQuest info
+    questHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderRadius: 16,
+        paddingVertical: 4,
+        paddingLeft: 16,
+        paddingRight: 8
+    },
+    questText: {
+        flex: 1
+    },
+    questTitle: {
+        margin: 0,
+        padding: 0,
+        textAlign: 'left'
+    },
+    questSkills: {
+        textAlign: 'left',
+        flexWrap: 'wrap',
+        paddingBottom: 6
+    },
+    editActivity: {
+        width: 50,
+        height: 50,
+        paddingHorizontal: 0
+    },
+
+    // Widgets
     yearHeatMap: {
         marginTop: 24
     },
@@ -12,16 +46,6 @@ const styles = StyleSheet.create({
     },
 
     // Overlay
-    editActivity: {
-        position: 'absolute',
-        width: 50,
-        height: 50,
-        top: 36,
-        right: 36,
-        paddingHorizontal: 0,
-        zIndex: 1010,
-        elevation: 1010
-    },
     addActivity: {
         position: 'absolute',
         width: 50,

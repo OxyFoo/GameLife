@@ -28,10 +28,6 @@ class BackCalendar extends PageBase {
     /** @type {boolean} Used for ActivityTimeline */
     isScrolling = false;
 
-    refTuto1 = null;
-    refTuto2 = null;
-    refTuto3 = null;
-
     state = {
         /** @type {Array<MonthData>} */
         months: [],

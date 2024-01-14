@@ -29,7 +29,7 @@ class Todo extends BackTodo {
                 </Button>
             )}>
                 <PageHeader
-                    onBackPress={() => user.interface.BackHandle()}
+                    onBackPress={user.interface.BackHandle}
                     onHelpPress={StartHelp.bind(this)}
                 />
 

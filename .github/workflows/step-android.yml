@@ -139,10 +139,10 @@ jobs:
         with:
           serviceAccountJson: ./google-services.json
           packageName: ${{ inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
-          releaseFiles: ./${FILE_AAB}
+          releaseFiles: ./${{ env.FILE_AAB }}
           track: production
           whatsNewDirectory: distribution/whatsnew
-          mappingFile: ./${FILE_MAPPING}
+          mappingFile: ./${{ env.FILE_MAPPING }}
 
       - name: 'Check if upload was successful'
         run: |

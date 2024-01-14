@@ -1,9 +1,14 @@
 import { Animated, Easing } from 'react-native';
 
 /**
+ * @typedef {Animated.Value | Animated.ValueXY} AnimatedType
+ * @typedef {number | Animated.Value | Animated.ValueXY | { x: number; y: number; } | Animated.AnimatedInterpolation<number>} AnimatedValue
+ */
+
+/**
  * @description Used to create a timing animation
- * @param {Animated.Value | Animated.ValueXY} anim Animated value to animate
- * @param {number | Animated.ValueXY} toValue Value to animate to
+ * @param {AnimatedType} anim Animated value to animate
+ * @param {AnimatedValue} toValue Value to animate to
  * @param {number} [duration=300] Duration of animation
  * @param {boolean} [native=true] Use native driver
  * @returns {Animated.CompositeAnimation}
@@ -21,7 +26,7 @@ function TimingAnimation(anim, toValue, duration = 300, native = true) {
 /**
  * @description Used to create a spring animation
  * @param {Animated.Value | Animated.ValueXY} anim Animated value to animate
- * @param {number | Animated.ValueXY} toValue Value to animate to
+ * @param {AnimatedValue} toValue Value to animate to
  * @param {boolean} [native=true] Use native driver
  * @returns {Animated.CompositeAnimation}
  */

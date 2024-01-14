@@ -18,10 +18,10 @@ function StartTutorial(tutoValue) {
             },
             {
                 component: null,
-                zapSideToMessage: true,
+                zapInline: true,
                 text: lang['main']['home'],
                 fontSize: 18,
-                messagePosY: 0.05
+                positionY: 0.25
             },
             {
                 component: user.interface.bottomBar.refButtons[1],
@@ -38,7 +38,6 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                zapSideToMessage: false,
                 text: lang['main']['home-final'],
                 fontSize: 20
             }

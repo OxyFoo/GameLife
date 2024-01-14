@@ -35,20 +35,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         backgroundColor: '#000000A0'
     },
-    defaultButtonArrowContainer: {
+    nextButton: {
         position: 'absolute',
-        right: 12,
-        bottom: 12, 
-        alignItems: 'flex-end',
-        opacity: .8
-    },
-    defaultButton: {
-        width: '50%'
+        right: 24,
+        bottom: 24,
+        opacity: .75
     },
 
     skipButton: {
         position: 'absolute',
-        bottom: 12,
+        top: 12,
         left: 12
     },
 

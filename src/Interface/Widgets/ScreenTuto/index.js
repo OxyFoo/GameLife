@@ -73,7 +73,7 @@ class ScreenTuto extends ScreenTutoBack {
             borderColor: themeManager.GetColor('main1'),
         };
         const styleOverlayHint = {
-            opacity: message.hintOpacity,
+            opacity: component.hintOpacity,
             backgroundColor: themeManager.GetColor('main1', { opacity: 0.6 })
         };
 
@@ -99,16 +99,29 @@ class ScreenTuto extends ScreenTutoBack {
         if (component.ref !== null && !showButton) return null;
 
         return (
-            <Animated.View style={styles.defaultButtonArrowContainer}>
-                <Button
-                    style={styles.defaultButton}
-                    color='main1'
-                    borderRadius={4}
-                    onPress={this.onComponentPress}
-                >
-                    <Icon icon='arrowLeft' size={24} angle={180} />
-                </Button>
-            </Animated.View>
+            <Button
+                style={styles.nextButton}
+                color='main1'
+                borderRadius={4}
+                onPress={this.onComponentPress}
+            >
+                <Icon icon='arrowLeft' size={24} angle={180} />
+            </Button>
+        );
+    }
+
+    renderZap() {
+        const { zap } = this.state;
+
+        return (
+            <Zap
+                onLayout={this.onZapLayout}
+                position={zap.position}
+                color={zap.color}
+                inclinaison={zap.inclinaison}
+                face={zap.face}
+                orientation={zap.orientation}
+            />
         );
     }
 
@@ -119,7 +132,7 @@ class ScreenTuto extends ScreenTutoBack {
 
         const styleTextContainer = {
             top: 0,
-            left: message.leftPos,
+            left: 0,
             width: '70%',
             borderColor: themeManager.GetColor('main2'),
             transform: [
@@ -176,7 +189,7 @@ class ScreenTuto extends ScreenTutoBack {
                 {this.renderRightPanel()}
                 {this.renderBottomPanel()}
 
-                <Zap ref={ref => this.refZap = ref} />
+                {this.renderZap()}
                 {this.renderZapMessage()}
 
                 {this.renderSkipButton()}

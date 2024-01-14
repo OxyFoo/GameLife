@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-import user from 'Managers/UserManager';
-
-import { GetDate } from 'Utils/Time';
-import { SpringAnimation } from 'Utils/Animations';
-
 /**
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
  * @typedef {'day' | 'night'} ZapColor
  * @typedef {'onTwoLegs' | 'onFourLegs'} ZapInclinaison
@@ -39,107 +35,33 @@ const ZAP_IMAGES = {
 };
 
 const ZapProps = {
-    // TODO: Manage the position of the zap
+    /** @type {Animated.ValueXY} */
+    position: new Animated.ValueXY({ x: 0, y: 0 }),
+
+    /** @type {ZapColor} */
+    color: 'day',
+
+    /** @type {ZapInclinaison} */
+    inclinaison: 'onTwoLegs',
+
+    /** @type {ZapFace} */
+    face: 'face',
+
+    /** @type {ZapOrientation} */
+    orientation: 'right',
+
+    /** @param {LayoutChangeEvent} event */
+    onLayout: (event) => {}
 };
 
 class ZapBack extends React.Component {
-    state = {
-        position: new Animated.ValueXY({ x: 0, y: 0 }),
-
-        /** @type {LayoutRectangle} */
-        layout: { x: 0, y: 0, width: 0, height: 0 },
-
-        /** @type {ZapColor} */
-        color: 'day',
-        /** @type {ZapInclinaison} */
-        inclinaison: 'onTwoLegs',
-        /** @type {ZapFace} */
-        face: 'face',
-        /** @type {ZapOrientation} */
-        orientation: 'right'
-    }
-
-    /**
-     * @param {LayoutRectangle} layoutTarget
-     * @param {LayoutRectangle} layoutMessage
-     */
-    UpdateTarget = (layoutTarget, layoutMessage, zapSideToMessage = false) => {
-        const { layout } = this.state;
-
-        const btnMidX = layoutTarget.x + layoutTarget.width / 2;
-        const btnMidY = layoutTarget.y + layoutTarget.height / 2;
-
-        const theta = Math.atan2(
-            btnMidX - user.interface.screenWidth / 2,
-            btnMidY - user.interface.screenHeight / 2
-        ) + Math.PI / 2;
-
-        // Get quarter of the screen
-        const quarterIndex = Math.floor(btnMidY / (user.interface.screenHeight / 4));
-
-        const isTop = quarterIndex === 0 || quarterIndex === 2;
-        const isLeft = layoutTarget.x < user.interface.screenWidth / 2;
-        const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
-
-        let offset = layoutTarget.height / 2 + layout.height / 2 + 36;
-        if (quarterIndex === 0 || quarterIndex === 3) {
-            offset = - offset - layoutMessage.height - 36;
-        }
-        const offsetX = - Math.cos(theta) * offset;
-        const offsetY = Math.sin(theta) * offset;
-
-        let zapPosX, zapPosY;
-
-        if (zapSideToMessage) {
-            zapPosX = 50
-            zapPosY = layoutTarget.y ;
-        }
-        else {
-            zapPosX = btnMidX + offsetX;
-            zapPosY = btnMidY + offsetY;
-        }
-
-        if (zapPosX < 0)
-            zapPosX = 0;
-        if (zapPosX + layout.width > user.interface.screenWidth)
-            zapPosX = user.interface.screenWidth - layout.width;
-        if (zapPosY - layout.height <= 0)
-            zapPosY = layoutTarget.y + 108 ; // j'ai remplacé le layout.height par 108 parce qu'à des moments le layout.height est égal à 0 et donc ca bogue pas sa position
-        if (zapPosY + layout.height > user.interface.screenHeight)
-            zapPosY = user.interface.screenHeight - layout.height - 108;
-
-        // Zap position
-        SpringAnimation(this.state.position, {
-            x: zapPosX,
-            y: zapPosY
-        }).start(() => {
-            if (layoutTarget.width > 0 && layoutTarget.height > 0) {
-                this.setState({ face: 'show' });
-            }
-        });
-
-        this.setState({
-            /** @type {ZapColor} */
-            color: isNight ? 'night' : 'day',
-            /** @type {ZapInclinaison} */
-            inclinaison: isTop ? 'onTwoLegs' : 'onFourLegs',
-            /** @type {ZapFace} */
-            face: 'face',
-            /** @type {ZapOrientation} */
-            orientation: isLeft ? 'left' : 'right'
-        });
-    }
-
-    onZapLayout = (event) => {
-        const { layout } = event.nativeEvent;
-        if (this.state.layout.width !== layout.width ||
-            this.state.layout.height !== layout.height) {
-            this.setState({ layout });
-        }
+    /** @param {LayoutChangeEvent} event */
+    onLayout = (event) => {
+        this.props.onLayout(event);
     }
 
     getZapImage = () => {
-        const { color, inclinaison, face } = this.state;
+        const { color, inclinaison, face } = this.props;
         return ZAP_IMAGES[color][inclinaison][face];
     }
 }

@@ -11,10 +11,10 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                zapSideToMessage: true,
+                zapInline: true,
                 text: lang['main']['avatar'],
                 fontSize: 18,
-                messagePosY: 0.05,
+                positionY: 0.25,
                 execAfter: () => {
                     user.interface.ChangePage('shop', { tuto: 5 }, true);
                     return false;

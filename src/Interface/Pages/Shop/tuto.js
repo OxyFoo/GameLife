@@ -1,8 +1,6 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Sleep } from 'Utils/Functions';
-
 /**
  * @this {import('./back').default}
  * @param {number} tutoValue 
@@ -13,10 +11,10 @@ function StartTutorial(tutoValue) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                zapSideToMessage: true,
+                zapInline: true,
                 text: lang['main']['shop'],
                 fontSize: 18,
-                messagePosY: 0.05
+                positionY: 0.25
             },
             {
                 component: user.interface.bottomBar.refButtons[2],

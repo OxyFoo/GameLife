@@ -1,6 +1,6 @@
-import { PageBase } from 'Interface/Components';
-
 import StartTutorial from './tuto';
+
+import { PageBase } from 'Interface/Components';
 
 class BackNewPage extends PageBase {
     componentDidMount() {

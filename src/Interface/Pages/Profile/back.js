@@ -1,8 +1,8 @@
 import StartTutorial from './tuto';
 
-import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 
+import { PageBase } from 'Interface/Components';
 import { GetDate, GetTime } from 'Utils/Time';
 
 /**

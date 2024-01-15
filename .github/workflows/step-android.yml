@@ -21,6 +21,7 @@ env:
   FILE_AAB: GameLife-${{ inputs.environment }}.aab
   FILE_APK: GameLife-${{ inputs.environment }}.apk
   FILE_MAPPING: GameLife-${{ inputs.environment }}-mapping.txt
+  FILE_GOOGLE_SERVICES_JSON: ./android/app/google-services.json
 
 jobs:
   build-android:
@@ -46,16 +47,16 @@ jobs:
       - name: 'Install Dependencies'
         run: npm install
 
+      - name: 'Change bundle id for test environment'
+        if: ${{ inputs.environment }} == 'test'
+        run: ./Tools/BundleSwitcher/bundleSwitcher.sh test
+
       - name: 'Get config files'
         run: |
           echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
-          echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ./android/app/google-services.json
-
-      - name: 'Change bundle id for test environment'
-        if: ${{ inputs.environment }} == 'test'
-        run: ./Tools/BundleSwitcher/bundleSwitcher.sh test
+          echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ${{ env.FILE_GOOGLE_SERVICES_JSON }}
 
       - name: 'Build app'
         env:
@@ -132,12 +133,12 @@ jobs:
 
       - name: 'Get google-services.json - firebase-adminsdk secret'
         run: |
-          echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ./android/app/google-services.json
+          echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ${{ env.FILE_GOOGLE_SERVICES_JSON }}
 
       - name: 'Upload to Google Play'
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ./google-services.json
+          serviceAccountJson: ${{ env.FILE_GOOGLE_SERVICES_JSON }}
           packageName: ${{ inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
           releaseFiles: ./${{ env.FILE_AAB }}
           track: production

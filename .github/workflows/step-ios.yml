@@ -14,7 +14,7 @@ on:
 
 env:
   FILE_IPA: GameLife-${{ inputs.environment }}.ipa
-  PROVISION_PROFILE_NAME: ${{ inputs.environment == 'prod' && 'Game Life Distributed' || 'Game Life Test' }}
+  PROVISION_PROFILE_NAME: ${{ inputs.environment == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
 
 jobs:
   build:

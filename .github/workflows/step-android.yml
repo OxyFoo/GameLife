@@ -57,7 +57,7 @@ jobs:
           ENVFILE: .env.${{ inputs.environment }}
         run: |
           # Execute bundleSwitcher.sh if environment is test
-          if [ ${{ inputs.environment }} == 'test' ]; then
+          if [[ ${{ inputs.environment }} == 'test' ]]; then
             ./Tools/BundleSwitcher/bundleSwitcher.sh test
           fi
 

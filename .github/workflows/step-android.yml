@@ -130,8 +130,14 @@ jobs:
           name: ${{ env.FILE_MAPPING }}
 
       - name: 'Get google-services.json - firebase-adminsdk secret'
+        if: ${{ inputs.environment }} != 'test'
         run: |
           echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ./google-services.json
+
+      - name: 'Get google-services.json - firebase-adminsdk secret for test environment'
+        if: ${{ inputs.environment }} == 'test'
+        run: |
+          echo ${{ secrets.GOOGLE_PLAY_SERVICES_TEST_JSON_BASE64 }} | base64 -d > ./google-services.json
 
       - name: 'Upload to Google Play'
         uses: r0adkll/upload-google-play@v1

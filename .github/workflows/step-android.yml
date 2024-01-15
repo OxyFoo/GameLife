@@ -52,15 +52,14 @@ jobs:
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
 
+      - name: 'Change bundle id for test environment'
+        if: ${{ inputs.environment }} == 'test'
+        run: ./Tools/BundleSwitcher/bundleSwitcher.sh test
+
       - name: 'Build app'
         env:
           ENVFILE: .env.${{ inputs.environment }}
         run: |
-          # Execute bundleSwitcher.sh if environment is test
-          if [[ ${{ inputs.environment }} == 'test' ]]; then
-            ./Tools/BundleSwitcher/bundleSwitcher.sh test
-          fi
-
           # Build the app
           npm run build
 

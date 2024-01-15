@@ -137,10 +137,10 @@ jobs:
           # Export the archived app to an .ipa file
           xcodebuild \
             -exportArchive \
+            -allowProvisioningUpdates \
             -archivePath $PWD/build/GameLife.xcarchive \
             -exportOptionsPlist GoogleService-Info.plist \
             -exportPath $PWD/build \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
             PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"

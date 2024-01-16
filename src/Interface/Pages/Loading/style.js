@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'space-evenly'
     },
     iconTest: {
         marginBottom: 24,
@@ -42,16 +42,10 @@ const styles = StyleSheet.create({
     zapTest: {
         marginTop: 24
     },
-    buttonTestContent: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 60,
-        alignItems: 'center'
-    },
     buttonTest: {
         width: '60%',
-        height: 60
+        height: 60,
+        marginTop: 24
     }
 });
 

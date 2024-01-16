@@ -1,4 +1,4 @@
-import { Animated } from 'react-native';
+import { Animated, Linking } from 'react-native';
 import Config from 'react-native-config';
 
 import { PageBase } from 'Interface/Components';
@@ -45,6 +45,10 @@ class BackLoading extends PageBase {
         if (event.nativeEvent.pageY - this.startY < -200 && !user.server.online) {
             user.interface.console.Enable();
         }
+    }
+
+    handleDiscordRedirection = () => {
+        Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
     }
 
     nextStep = () => {

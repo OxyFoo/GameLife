@@ -1,12 +1,18 @@
+import { Animated } from 'react-native';
+import Config from 'react-native-config';
+
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Initialisation } from '../../../App/Loading';
+import { Initialisation } from 'App/Loading';
+import { Sleep } from 'Utils/Functions';
+import { TimingAnimation } from 'Utils/Animations';
 
 class BackLoading extends PageBase {
     state = {
         icon: 0,
+        animTestButton: new Animated.Value(0),
         displayedSentence: ''
     }
 
@@ -15,7 +21,7 @@ class BackLoading extends PageBase {
 
     componentDidMount() {
         super.componentDidMount();
-        Initialisation(this.nextStep);
+        Initialisation(this.nextStep, this.nextPage);
 
         this.pickRandomSentence();
         this.intervalId = setInterval(this.pickRandomSentence, 3 * 1000);
@@ -31,10 +37,6 @@ class BackLoading extends PageBase {
         this.setState({ displayedSentence: sentences[randomIndex] });
     }
 
-    nextStep = () => {
-        this.setState({ icon: this.state.icon + 1 });
-    }
-
     onToucheStart = (event) => {
         this.startY = event.nativeEvent.pageY;
     }
@@ -42,6 +44,47 @@ class BackLoading extends PageBase {
         // Check if the user is offline and if he has scrolled up to open the console
         if (event.nativeEvent.pageY - this.startY < -200 && !user.server.online) {
             user.interface.console.Enable();
+        }
+    }
+
+    nextStep = () => {
+        this.setState({ icon: this.state.icon + 1 });
+    }
+
+    nextPage = async () => {
+        // If test release, go to test page
+        const { icon } = this.state;
+        const isTestMode = Config.ENV === 'test' && !__DEV__;
+
+        // Loading finished & test mode (release) => go to "test message"
+        if (isTestMode && icon === 3) {
+            this.setState({ icon: icon + 1 });
+            setTimeout(() => {
+                TimingAnimation(this.state.animTestButton, 1, 500).start();
+            }, user.settings.testMessageReaded ? 0 : 5000);
+            return;
+        }
+
+        // Start tutorial & valid test message
+        const homeProps = {};
+        if (!user.settings.tutoFinished || !user.settings.testMessageReaded) {
+            if (!user.settings.tutoFinished) {
+                homeProps.tuto = 1;
+                user.settings.tutoFinished = true;
+            }
+            if (!user.settings.testMessageReaded) {
+                user.settings.testMessageReaded = true;
+            }
+            await user.settings.Save();
+        }
+
+        // Go to home or activity timer
+        if (user.activities.currentActivity === null) {
+            while (!user.interface.ChangePage('home', homeProps))
+                await Sleep(100);
+        } else {
+            while (!user.interface.ChangePage('activitytimer', undefined, true))
+                await Sleep(100);
         }
     }
 }

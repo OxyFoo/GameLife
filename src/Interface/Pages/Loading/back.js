@@ -7,12 +7,12 @@ import langManager from 'Managers/LangManager';
 
 import { Initialisation } from 'App/Loading';
 import { Sleep } from 'Utils/Functions';
-import { TimingAnimation } from 'Utils/Animations';
+import { SpringAnimation } from 'Utils/Animations';
 
 class BackLoading extends PageBase {
     state = {
         icon: 0,
-        animTestButton: new Animated.Value(0),
+        animTestButton: new Animated.Value(1),
         displayedSentence: ''
     }
 
@@ -64,7 +64,7 @@ class BackLoading extends PageBase {
         if (isTestMode && icon === 3) {
             this.setState({ icon: icon + 1 });
             setTimeout(() => {
-                TimingAnimation(this.state.animTestButton, 1, 500).start();
+                SpringAnimation(this.state.animTestButton, 0).start();
             }, user.settings.testMessageReaded ? 0 : 5000);
             return;
         }

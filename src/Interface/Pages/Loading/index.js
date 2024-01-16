@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Animated, View } from 'react-native';
 import Config from 'react-native-config';
 
 import styles from './style';
@@ -45,6 +45,9 @@ class Loading extends BackLoading {
         const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
         const smallScreen = user.interface.screenHeight < 600;
         const textSize = smallScreen ? 18 : 22;
+        const buttonPosY = {
+            transform: [{ translateY: Animated.multiply(300, this.state.animTestButton) }]
+        };
 
         return (
             <View style={styles.contentTest}>
@@ -60,7 +63,7 @@ class Loading extends BackLoading {
                 <Zap style={styles.zapTest} color={isNight ? 'night' : 'day'} />
                 <Button
                     style={styles.buttonTest}
-                    styleAnimation={{ opacity: this.state.animTestButton }}
+                    styleAnimation={buttonPosY}
                     color='main1'
                     onPress={this.nextPage}
                 >

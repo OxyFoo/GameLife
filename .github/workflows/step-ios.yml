@@ -137,6 +137,7 @@ jobs:
           # Export the archived app to an .ipa file
           xcodebuild \
             -exportArchive \
+            -sdk iphoneos \
             -allowProvisioningUpdates \
             -archivePath $PWD/build/GameLife.xcarchive \
             -exportOptionsPlist GoogleService-Info.plist \

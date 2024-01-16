@@ -54,9 +54,7 @@ if [ "$1" == "test" ]; then
         sed -i 's/94a736940ff60c834b1898/22189fa611f1a9d64b1898/g' ./ios/GoogleService-Info.plist
     elif [ "$(uname)" == "Darwin" ]; then
         sed -i '' 's/PRODUCT_NAME = GameLife;/PRODUCT_NAME = GameLife.test;/g' ./ios/GameLife.xcodeproj/project.pbxproj
-        sed -i '' '/PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";/a \\t\t\t\t"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = org.reactjs.native.example.GameLife.test;' ./ios/GameLife.xcodeproj/project.pbxproj
-        sed -i '' '/PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";/a\
-\\t\\t\\t\\tPRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*] = org.reactjs.native.example.GameLife.test;' chemin/vers/votre/fichier
+        sed -i '' '/PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";/a\'$'\n''\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*] = org.reactjs.native.example.GameLife.test;' ./ios/GameLife.xcodeproj/project.pbxproj
         sed -i '' 's/<string>org.reactjs.native.example.GameLife/<string>org.reactjs.native.example.GameLife.test/g' ./ios/GoogleService-Info.plist
         sed -i '' 's/94a736940ff60c834b1898/22189fa611f1a9d64b1898/g' ./ios/GoogleService-Info.plist
     fi

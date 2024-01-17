@@ -48,7 +48,7 @@ jobs:
         run: npm install
 
       - name: 'Change bundle id for test environment'
-        if: ${{ inputs.environment }} == 'test'
+        if: inputs.environment == 'test'
         run: ./Tools/BundleSwitcher/bundleSwitcher.sh test
 
       - name: 'Get config files'

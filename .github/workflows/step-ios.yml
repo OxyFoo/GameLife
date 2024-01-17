@@ -14,6 +14,7 @@ on:
 
 env:
   FILE_IPA: GameLife-${{ inputs.environment }}.ipa
+  PROVISION_PROFILE_NAME: ${{ inputs.environment == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
 
 jobs:
   build:
@@ -121,7 +122,7 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
-            PROVISIONING_PROFILE_SPECIFIER="Game Life Distributed"
+            PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
 
       - name: 'Export app to ipa'
         env:
@@ -136,13 +137,14 @@ jobs:
           # Export the archived app to an .ipa file
           xcodebuild \
             -exportArchive \
+            -sdk iphoneos \
+            -allowProvisioningUpdates \
             -archivePath $PWD/build/GameLife.xcarchive \
             -exportOptionsPlist GoogleService-Info.plist \
             -exportPath $PWD/build \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
-            PROVISIONING_PROFILE_SPECIFIER="Game Life Distributed"
+            PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
 
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v3

@@ -11,8 +11,9 @@ import { Character } from 'Interface/Components';
 /**
  * Intialisation of all data
  * @param {Function} nextStep Used to change the icon
+ * @param {Function} nextPage Used to go to the next page
  */
-async function Initialisation(nextStep) {
+async function Initialisation(nextStep, nextPage) {
     const time_start = new Date().getTime();
 
     // Loading: Settings
@@ -166,14 +167,6 @@ async function Initialisation(nextStep) {
     nextStep();
     await Sleep(500);
 
-    // Start tutorial
-    let homeProps = {};
-    if (!user.settings.tutoFinished) {
-        homeProps = { tuto: 1 };
-        user.settings.tutoFinished = true;
-        user.settings.Save();
-    }
-
     CheckDate();
     user.StartTimers();
 
@@ -191,11 +184,7 @@ async function Initialisation(nextStep) {
     console.log(time_text);
     user.interface.console.AddLog('info', time_text);
 
-    if (user.activities.currentActivity === null) {
-        while (!user.interface.ChangePage('home', homeProps)) await Sleep(100);
-    } else {
-        while (!user.interface.ChangePage('activitytimer', undefined, true)) await Sleep(100);
-    }
+    nextPage();
 }
 
 export { Initialisation };

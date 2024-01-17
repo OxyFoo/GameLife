@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
@@ -35,8 +37,11 @@ const ZAP_IMAGES = {
 };
 
 const ZapProps = {
-    /** @type {Animated.ValueXY} */
-    position: new Animated.ValueXY({ x: 0, y: 0 }),
+    /** @type {StyleProp} */
+    style: {},
+
+    /** @type {Animated.ValueXY | null} */
+    position: null,
 
     /** @type {ZapColor} */
     color: 'day',

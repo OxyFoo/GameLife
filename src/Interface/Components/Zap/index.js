@@ -7,25 +7,36 @@ import InputBack from './back';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {Animated.WithAnimatedObject<import('react-native').ImageStyle>} StyleAnimProp
  */
 
 class Zap extends InputBack {
     render() {
         const { position, orientation } = this.props;
-        const posX = position.x;
-        const posY = position.y;
 
-        const transformZap = {
-            transform: [
-                { translateX: posX },
-                { translateY: posY },
+        /** @type {StyleAnimProp} */
+        const zapStyle = { ...styles.zap };
+        if (position !== null) {
+            // Add styles.zapAbsolute to the style
+            for (const key in styles.zapAbsolute) {
+                zapStyle[key] = styles.zapAbsolute[key];
+            }
+
+            zapStyle.transform = [
+                { translateX: position.x },
+                { translateY: position.y },
                 { scaleX: orientation === 'left' ? -1 : 1 },
-            ]
-        };
+            ];
+        }
+
+        // Add props style to the style
+        for (const key in Object(this.props.style)) {
+            zapStyle[key] = this.props.style[key];
+        }
 
         return (
             <Animated.Image
-                style={[styles.zap, transformZap]}
+                style={zapStyle}
                 onLayout={this.onLayout}
                 source={this.getZapImage()}
             />
@@ -35,12 +46,14 @@ class Zap extends InputBack {
 
 const styles = StyleSheet.create({
     zap: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
         width: 96,
         height: 96,
         resizeMode: 'contain'
+    },
+    zapAbsolute: {
+        position: 'absolute',
+        top: 0,
+        left: 0
     }
 });
 

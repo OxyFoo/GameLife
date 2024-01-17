@@ -21,6 +21,7 @@ env:
   FILE_AAB: GameLife-${{ inputs.environment }}.aab
   FILE_APK: GameLife-${{ inputs.environment }}.apk
   FILE_MAPPING: GameLife-${{ inputs.environment }}-mapping.txt
+  FILE_GOOGLE_SERVICES_JSON: ./android/app/google-services.json
 
 jobs:
   build-android:
@@ -46,21 +47,21 @@ jobs:
       - name: 'Install Dependencies'
         run: npm install
 
+      - name: 'Change bundle id for test environment'
+        if: inputs.environment == 'test'
+        run: ./Tools/BundleSwitcher/bundleSwitcher.sh test
+
       - name: 'Get config files'
         run: |
           echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
+          echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ${{ env.FILE_GOOGLE_SERVICES_JSON }}
 
       - name: 'Build app'
         env:
           ENVFILE: .env.${{ inputs.environment }}
         run: |
-          # Execute bundleSwitcher.sh if environment is test
-          if [ ${{ inputs.environment }} == 'test' ]; then
-            ./Tools/BundleSwitcher/bundleSwitcher.sh test
-          fi
-
           # Build the app
           npm run build
 
@@ -85,14 +86,14 @@ jobs:
           if-no-files-found: error  
 
       - name: 'Download buildtool'
-        if: ${{ inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact }}
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
           wget -O bundletool.jar https://github.com/google/bundletool/releases/download/1.15.0/bundletool-all-1.15.0.jar
 
       - name: 'Generate universal APK'
-        if: ${{ inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact }}
         run: |
           java -jar ./bundletool.jar build-apks \
             --bundle=./${FILE_AAB} \
@@ -104,7 +105,7 @@ jobs:
           unzip -p my_app.apks universal.apk > ./${FILE_APK}
 
       - name: 'Upload apk artifact'
-        if: ${{ inputs.save-apk-artifact == 'true' }}
+        if: ${{ inputs.save-apk-artifact }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILE_APK }}
@@ -132,17 +133,17 @@ jobs:
 
       - name: 'Get google-services.json - firebase-adminsdk secret'
         run: |
-          echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ./google-services.json
+          echo ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 }} | base64 -d > ./serviceAccount.json
 
       - name: 'Upload to Google Play'
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ./google-services.json
+          serviceAccountJson: ./serviceAccount.json
           packageName: ${{ inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
-          releaseFiles: ./${FILE_AAB}
+          releaseFiles: ./${{ env.FILE_AAB }}
           track: production
           whatsNewDirectory: distribution/whatsnew
-          mappingFile: ./${FILE_MAPPING}
+          mappingFile: ./${{ env.FILE_MAPPING }}
 
       - name: 'Check if upload was successful'
         run: |

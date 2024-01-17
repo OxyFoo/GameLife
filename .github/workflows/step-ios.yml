@@ -13,7 +13,8 @@ on:
         type: boolean
 
 env:
-  FILE_IPA: GameLife-${{ github.event.inputs.environment }}.ipa
+  FILE_IPA: GameLife-${{ inputs.environment }}.ipa
+  PROVISION_PROFILE_NAME: ${{ inputs.environment == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
 
 jobs:
   build:
@@ -32,6 +33,7 @@ jobs:
           KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
         run: |
           # Create variables
+          echo "Creating variables in $RUNNER_TEMP"
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
@@ -39,10 +41,12 @@ jobs:
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
           
-          if [ ${{ github.event.inputs.environment }} == 'test' ]; then
+          if [ ${{ inputs.environment }} == 'test' ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
+            echo "Test environment selected"
           else
             echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+            echo "Production environment selected"
           fi
 
           # Create temporary keychain
@@ -57,6 +61,12 @@ jobs:
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+          # List keychains and provisioning profiles
+          security list-keychains
+          security find-identity -v -p codesigning
+          security find-certificate -a -c "Apple Distribution: Oxy Foo (54ZUH596XX)"
+          ls ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -88,14 +98,14 @@ jobs:
 
       - name: 'Archive app'
         env:
-          ENVFILE: .env.${{ github.event.inputs.environment }}
+          ENVFILE: .env.${{ inputs.environment }}
           KEYCHAIN_PATH: $RUNNER_TEMP/app-signing.keychain-db
         run: |
           # Specify the keychain for codesign
           security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
 
           # Execute bundleSwitcher.sh if environment is test
-          if [ ${{ github.event.inputs.environment }} == 'test' ]; then
+          if [ ${{ inputs.environment }} == 'test' ]; then
             ./Tools/BundleSwitcher/bundleSwitcher.sh test
           fi
 
@@ -112,7 +122,7 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
-            PROVISIONING_PROFILE_SPECIFIER="Game Life Distributed"
+            PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
 
       - name: 'Export app to ipa'
         env:
@@ -127,13 +137,14 @@ jobs:
           # Export the archived app to an .ipa file
           xcodebuild \
             -exportArchive \
+            -sdk iphoneos \
+            -allowProvisioningUpdates \
             -archivePath $PWD/build/GameLife.xcarchive \
             -exportOptionsPlist GoogleService-Info.plist \
             -exportPath $PWD/build \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
-            PROVISIONING_PROFILE_SPECIFIER="Game Life Distributed"
+            PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
 
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v3
@@ -144,7 +155,7 @@ jobs:
 
   delivery:
     name: '📦 Delivery'
-    if: github.event.inputs.delivery == true && github.event.inputs.environment != 'dev'
+    if: inputs.delivery == true && inputs.environment != 'dev'
     runs-on: macos-latest
     needs: build
     steps:

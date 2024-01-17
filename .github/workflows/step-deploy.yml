@@ -25,7 +25,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: 'Enable maintenance mode - test'
-        if: ${{ github.event.inputs.environment == 'test' }}
+        if: ${{ inputs.environment == 'test' }}
         run: |
           php ./Tools/Maintenance/setMaintenance.php \
             '${{ vars.DB_TEST_HOST }}' \
@@ -35,7 +35,7 @@ jobs:
             1
 
       - name: 'Enable maintenance mode - prod'
-        if: ${{ github.event.inputs.environment == 'prod' }}
+        if: ${{ inputs.environment == 'prod' }}
         run: |
           php ./Tools/Maintenance/setMaintenance.php \
             '${{ vars.DB_PROD_HOST }}' \
@@ -47,13 +47,13 @@ jobs:
   deploy:
     name: '🔁 Update server codebase'
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.actions == 'both' || github.event.inputs.actions == 'deploy' }}
+    if: ${{ inputs.actions == 'both' || inputs.actions == 'deploy' }}
     needs: enable-maintenance
     env:
       ARCHIVE: archive_code_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz
-      DB_HOST: ${{ github.event.inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_PROD_HOST }}
-      DB_USER: ${{ github.event.inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_PROD_USER }}
-      DB_PASS: ${{ github.event.inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_PROD_PASS }}
+      DB_HOST: ${{ inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_PROD_HOST }}
+      DB_USER: ${{ inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_PROD_USER }}
+      DB_PASS: ${{ inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_PROD_PASS }}
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4
@@ -88,7 +88,7 @@ jobs:
   migration:
     name: '🚚 Database migration'
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.actions == 'both' || github.event.inputs.actions == 'migration' }}
+    if: ${{ inputs.actions == 'both' || inputs.actions == 'migration' }}
     needs: enable-maintenance
     steps:
       - name: 'Checkout code'
@@ -98,7 +98,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
       - name: 'Run migration - prod'
-        if: ${{ github.event.inputs.environment == 'prod' }}
+        if: ${{ inputs.environment == 'prod' }}
         run: |
           php ./Tools/TableFusion/index.php \
           '${{ vars.DB_TEST_HOST }}' \
@@ -112,7 +112,7 @@ jobs:
           --no-confirm
 
       - name: 'Run migration - test'
-        if: ${{ github.event.inputs.environment == 'test' }}
+        if: ${{ inputs.environment == 'test' }}
         run: |
           php ./Tools/TableFusion/index.php \
           '${{ vars.DB_DEV_HOST }}' \

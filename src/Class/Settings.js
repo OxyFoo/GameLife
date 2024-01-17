@@ -16,6 +16,7 @@ class Settings {
     email = '';
     connected = false;
     onboardingWatched = false;
+    testMessageReaded = false;
     tutoFinished = false;
     homePieChart = false; 
     questHeatMap = false;
@@ -43,6 +44,7 @@ class Settings {
             if (contains('email')) this.email = settings['email'];
             if (contains('connected')) this.connected = settings['connected'];
             if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
+            if (contains('testMessageReaded')) this.testMessageReaded = settings['testMessageReaded'];
             if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
             if (contains('homePieChart')) this.homePieChart = settings['homePieChart'];
             if (contains('questHeatMap')) this.questHeatMap = settings['questHeatMap'];
@@ -62,6 +64,7 @@ class Settings {
             email: this.email,
             connected: this.connected,
             onboardingWatched: this.onboardingWatched,
+            testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,
             homePieChart: this.homePieChart,
             questHeatMap: this.questHeatMap,

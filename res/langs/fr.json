@@ -136,7 +136,10 @@
         "page2": "Le but de cette application est simple : transformer ta vie en un jeu !",
         "page3": "Gagne des points d'expérience, améliore tes compétences et fixe toi des objectifs.",
         "page4": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",
-        "page5": "Tu n'as plus qu'à t'inscrire et c'est parti !"
+        "page5": "Tu n'as plus qu'à t'inscrire et c'est parti !",
+        "test-caution-message": "Version test :\n\nRisque de bugs et instabilité.\nLes comptes sont indépendants de la version principale.\nDonnées susceptibles d'être supprimées.\n\nAidez-nous à améliorer l'app et gagnez des récompenses pour chaque bug trouvé !",
+        "test-caution-redirect": "Viens sur le Discord pour en savoir plus !",
+        "test-caution-button": "J'ai compris"
     },
 
     "about": {

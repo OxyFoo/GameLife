@@ -13,11 +13,6 @@ on:
         type: string
         default: 'both'
 
-env:
-  FTP_HOST: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}
-  FTP_USER: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}
-  FTP_PASS: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}
-
 jobs:
   enable-maintenance:
     name: '🚧 Enable Maintenance'
@@ -53,18 +48,13 @@ jobs:
     name: '📦 Archive'
     runs-on: ubuntu-latest
     needs: enable-maintenance
+    env:
+      FTP_HOST: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}
+      FTP_USER: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}
+      FTP_PASS: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4
-
-      - name: 'Print environment variables'
-        run: |
-          echo "FTP_HOST: $FTP_HOST"
-          echo "FTP_USER: $FTP_USER"
-          echo "FTP_PASS: $FTP_PASS"
-          echo "FTP_HOST: ${{ env.FTP_HOST }}"
-          echo "FTP_USER: ${{ env.FTP_USER }}"
-          echo "FTP_PASS: ${{ env.FTP_PASS }}"
 
       - name: 'Install FTP client'
         run: sudo apt-get update && sudo apt-get install php php-mysqli lftp tar -y
@@ -136,6 +126,10 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.actions == 'both' || inputs.actions == 'deploy'
     needs: archive
+    env:
+      FTP_HOST: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}
+      FTP_USER: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}
+      FTP_PASS: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4

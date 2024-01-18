@@ -48,10 +48,6 @@ jobs:
     name: '📦 Archive'
     runs-on: ubuntu-latest
     needs: enable-maintenance
-    env:
-      FTP_HOST: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}
-      FTP_USER: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}
-      FTP_PASS: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4
@@ -66,12 +62,17 @@ jobs:
           echo "ARCHIVE_DATABASE_STRUCT=archive_database_structure_$(date +'%Y-%m-%d_%H-%M-%S').sql" >> $GITHUB_ENV
           echo "ARCHIVE_DATABASE_DATA=archive_database_data_$(date +'%Y-%m-%d_%H-%M-%S').sql" >> $GITHUB_ENV
 
+          # Define FTP env
+          echo "FTP_HOST='${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}'" >> $GITHUB_ENV
+          echo "FTP_USER='${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}'" >> $GITHUB_ENV
+          echo "FTP_PASS='${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}'" >> $GITHUB_ENV
+
           # Create temporary directores
           mkdir -p ftp_backup
 
       - name: 'Download files from FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
+              open -u '$FTP_USER','$FTP_PASS' '$FTP_HOST';
               mirror --exclude=backups/ / ftp_backup/"
 
       - name: 'Archive downloaded files'
@@ -79,7 +80,7 @@ jobs:
 
       - name: 'Upload archive to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
+              open -u '$FTP_USER','$FTP_PASS' '$FTP_HOST';
               put -O ./backups/ $ARCHIVE_SERVER"
 
       - name: 'Get database archive - dev'
@@ -117,7 +118,7 @@ jobs:
 
       - name: 'Upload database archive to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
+              open -u '$FTP_USER','$FTP_PASS' '$FTP_HOST';
               put -O ./backups/ $ARCHIVE_DATABASE_STRUCT;
               put -O ./backups/ $ARCHIVE_DATABASE_DATA"
 
@@ -126,10 +127,6 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.actions == 'both' || inputs.actions == 'deploy'
     needs: archive
-    env:
-      FTP_HOST: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}
-      FTP_USER: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}
-      FTP_PASS: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4
@@ -139,7 +136,7 @@ jobs:
 
       - name: 'Upload files to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
+              open -u '$FTP_USER','$FTP_PASS' '$FTP_HOST';
               mirror --reverse --delete --exclude backups/ ./src/Server/HTTP/ /"
 
   migration:

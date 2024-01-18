@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to test'
+        description: 'Environment to archive & deploy'
         required: true
         type: choice
         default: 'prod'
         options:
+        - dev
         - test
         - prod
       actions:

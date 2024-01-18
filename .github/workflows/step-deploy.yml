@@ -63,9 +63,9 @@ jobs:
       - name: 'Archive code'
         run: |
           # Define ARCHIVE env
-          echo "ARCHIVE_SERVER=archive_server_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz" >> $GITHUB_ENV
-          echo "ARCHIVE_DATABASE_STRUCT=archive_database_structure_$(date +'%Y-%m-%d_%H-%M-%S').sql" >> $GITHUB_ENV
-          echo "ARCHIVE_DATABASE_DATA=archive_database_data_$(date +'%Y-%m-%d_%H-%M-%S').sql" >> $GITHUB_ENV
+          echo "ARCHIVE_SERVER=./archive_server_$(date +'%Y-%m-%d_%H-%M-%S').tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_DATABASE_STRUCT=./archive_database_structure_$(date +'%Y-%m-%d_%H-%M-%S').sql" >> $GITHUB_ENV
+          echo "ARCHIVE_DATABASE_DATA=./archive_database_data_$(date +'%Y-%m-%d_%H-%M-%S').sql" >> $GITHUB_ENV
 
           # Create temporary directores
           mkdir -p ftp_backup
@@ -91,8 +91,8 @@ jobs:
             '${{ vars.DB_DEV_USER }}' \
             '${{ secrets.DB_DEV_PASS }}' \
             '${{ vars.DB_DEV_NAME }}' \
-            './$ARCHIVE_DATABASE_STRUCT' \
-            './$ARCHIVE_DATABASE_DATA'
+            '${{ env.ARCHIVE_DATABASE_STRUCT }}' \
+            '${{ env.ARCHIVE_DATABASE_DATA }}'
 
       - name: 'Get database archive - test'
         if: inputs.environment == 'test'
@@ -102,8 +102,8 @@ jobs:
             '${{ vars.DB_TEST_USER }}' \
             '${{ secrets.DB_TEST_PASS }}' \
             '${{ vars.DB_TEST_NAME }}' \
-            './$ARCHIVE_DATABASE_STRUCT' \
-            './$ARCHIVE_DATABASE_DATA'
+            '${{ env.ARCHIVE_DATABASE_STRUCT }}' \
+            '${{ env.ARCHIVE_DATABASE_DATA }}'
 
       - name: 'Get database archive - prod'
         if: inputs.environment == 'prod'
@@ -113,14 +113,14 @@ jobs:
             '${{ vars.DB_PROD_USER }}' \
             '${{ secrets.DB_PROD_PASS }}' \
             '${{ vars.DB_PROD_NAME }}' \
-            './$ARCHIVE_DATABASE_STRUCT' \
-            './$ARCHIVE_DATABASE_DATA'
+            '${{ env.ARCHIVE_DATABASE_STRUCT }}' \
+            '${{ env.ARCHIVE_DATABASE_DATA }}'
 
       - name: 'Upload database archive to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
               open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
-              put -O ./backups/ './$ARCHIVE_DATABASE_STRUCT';
-              put -O ./backups/ './$ARCHIVE_DATABASE_DATA'"
+              put -O ./backups/ '$ARCHIVE_DATABASE_STRUCT';
+              put -O ./backups/ '$ARCHIVE_DATABASE_DATA'"
 
   deploy:
     name: '🔁 Server update'

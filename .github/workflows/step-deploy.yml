@@ -1,4 +1,4 @@
-name: '🧩 Server tests'
+name: '🧩 Server deploy'
 
 on:
   workflow_call:
@@ -14,9 +14,9 @@ on:
         default: 'both'
 
 env:
-  DB_HOST: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}
-  DB_USER: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}
-  DB_PASS: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}
+  FTP_HOST: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_HOST || inputs.environment == 'test' && secrets.FTP_TEST_HOST || secrets.FTP_DEV_HOST }}
+  FTP_USER: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_USER || inputs.environment == 'test' && secrets.FTP_TEST_USER || secrets.FTP_DEV_USER }}
+  FTP_PASS: ${{ inputs.environment == 'prod' && secrets.FTP_PROD_PASS || inputs.environment == 'test' && secrets.FTP_TEST_PASS || secrets.FTP_DEV_PASS }}
 
 jobs:
   enable-maintenance:
@@ -57,6 +57,15 @@ jobs:
       - name: 'Checkout code'
         uses: actions/checkout@v4
 
+      - name: 'Print environment variables'
+        run: |
+          echo "FTP_HOST: $FTP_HOST"
+          echo "FTP_USER: $FTP_USER"
+          echo "FTP_PASS: $FTP_PASS"
+          echo "FTP_HOST: ${{ env.FTP_HOST }}"
+          echo "FTP_USER: ${{ env.FTP_USER }}"
+          echo "FTP_PASS: ${{ env.FTP_PASS }}"
+
       - name: 'Install FTP client'
         run: sudo apt-get update && sudo apt-get install php php-mysqli lftp tar -y
 
@@ -72,7 +81,7 @@ jobs:
 
       - name: 'Download files from FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u ${{ env.DB_USER }},${{ env.DB_PASS }} ${{ env.DB_HOST }};
+              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
               mirror --exclude=backups/ / ftp_backup/"
 
       - name: 'Archive downloaded files'
@@ -80,7 +89,7 @@ jobs:
 
       - name: 'Upload archive to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u ${{ env.DB_USER }},${{ env.DB_PASS }} ${{ env.DB_HOST }};
+              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
               put -O ./backups/ $ARCHIVE_SERVER"
 
       - name: 'Get database archive - dev'
@@ -118,7 +127,7 @@ jobs:
 
       - name: 'Upload database archive to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u ${{ env.DB_USER }},${{ env.DB_PASS }} ${{ env.DB_HOST }};
+              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
               put -O ./backups/ $ARCHIVE_DATABASE_STRUCT;
               put -O ./backups/ $ARCHIVE_DATABASE_DATA"
 
@@ -136,7 +145,7 @@ jobs:
 
       - name: 'Upload files to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
-              open -u ${{ env.DB_USER }},${{ env.DB_PASS }} ${{ env.DB_HOST }};
+              open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
               mirror --reverse --delete --exclude backups/ ./src/Server/HTTP/ /"
 
   migration:

@@ -137,7 +137,7 @@ jobs:
       - name: 'Upload files to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
               open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
-              mirror --reverse --delete --exclude backups/ ./src/Server/HTTP/ /"
+              mirror --reverse --delete --exclude backups/ --exclude config.php ./src/Server/HTTP/ /"
 
   migration:
     name: '🚚 Database migration'

@@ -117,7 +117,7 @@ class BackActivityTimer extends PageBase {
 
         // Too short
         const now = GetTime(undefined, 'local');
-        const endTime = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
+        const endTime = RoundTimeTo(TIME_STEP_MINUTES, now + 150, 'near');
         if (startTime >= endTime) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];

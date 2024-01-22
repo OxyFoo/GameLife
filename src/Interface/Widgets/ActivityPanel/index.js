@@ -181,12 +181,8 @@ class ActivityPanel extends ActivityPanelBack {
     render() {
         const lang = langManager.curr['activity'];
         const { style, topOffset, variantTheme } = this.props;
-        const { loaded, activityText, mode } = this.state;
+        const { activityText, mode } = this.state;
         const { selectedPage } = user.interface.state;
-
-        if (!loaded) {
-            return null;
-        }
 
         const stylePanel = {
             backgroundColor: themeManager.GetColor(

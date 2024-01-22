@@ -29,9 +29,6 @@ const ActivityPanelProps = {
     /** @type {StyleProp} */
     style: {},
 
-    /** @type {number} Render after delay in ms */
-    delay: 0,
-
     /** @type {number} Top distance of the panel when it's opened */
     topOffset: 0,
 
@@ -41,9 +38,6 @@ const ActivityPanelProps = {
 
 class ActivityPanelBack extends React.Component {
     state = {
-        /** @type {boolean} Enable render after the first layout */
-        loaded: false,
-
         /** @type {number} */
         selectedSkillID: 0,
 
@@ -89,26 +83,6 @@ class ActivityPanelBack extends React.Component {
     refHelp1 = null;
     refHelp3 = null;
     refHelp4 = null;
-
-    /**
-     * @param {ActivityPanelProps} props
-     */
-    constructor(props) {
-        super(props);
-
-        if (props.delay <= 0) {
-            this.state.loaded = true;
-        }
-    }
-
-    componentDidMount() {
-        const { delay } = this.props;
-
-        if (delay > 0) {
-            const enableRender = () => this.setState({ loaded: true });
-            setTimeout(enableRender, delay);
-        }
-    }
 
     /**
      * @param {Skill} skill

@@ -21,7 +21,7 @@
     "react-native-config": "^1.5.1",
     "react-native-device-info": "^10.3.0",
     "react-native-exit-app": "^1.1.0",
-    "react-native-gifted-charts": "github:AphroMad/react-native-gifted-charts",
+    "react-native-gifted-charts": "^1.3.33",
     "react-native-google-mobile-ads": "^12.3.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-modal-datetime-picker": "^14.0.1",

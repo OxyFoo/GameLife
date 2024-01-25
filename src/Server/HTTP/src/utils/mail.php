@@ -31,17 +31,19 @@ function GetMailContent($title, $text, $textButton, $textLink, $deviceName, $act
     $link_button = "$URL?data=$actionButton";
     $link_view = "$URL?data=$actionView&action=$actionButton";
 
+    // Check if text is an array and pick a random string if it is
+    $randomText = is_array($text) ? $text[array_rand($text)] : $text;
+
     $content = $actionView !== null ? str_replace('%link%', $link_view, $textLink) : '';
     $content .= file_get_contents('mail/mail-check.html');
     $content = str_replace('%title%', $title, $content);
-    $content = str_replace('%text%', $text, $content);
+    $content = str_replace('%text%', $randomText, $content);
     $content = str_replace('%button%', $textButton, $content);
     $content = str_replace('%buttonLink%', $link_button, $content);
     $content = str_replace('%device%', $deviceName, $content);
 
     return $content;
 }
-
 function SendSigninMail($email, $deviceName, $actionButton, $actionView, $langKey) {
     $lang = GetMailLangText($langKey);
     $subject = $lang->{'signin-subject'};

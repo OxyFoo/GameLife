@@ -85,16 +85,23 @@ class Shop
      * @param Account $account
      * @param Device $device
      * @param int $rarity 0 = common, 1 = rare, 2 = epic
+     * @param string|false $error Error message if failed
      * @return object|false Return item if success, false otherwise
      */
-    public static function BuyRandomChest($db, $account, $device, $rarity) {
-        if ($rarity < 0 || $rarity > 2) return false;
+    public static function BuyRandomChest($db, $account, $device, $rarity, &$error = null) {
+        $error = false;
+        if ($rarity < 0 || $rarity > 2) {
+            $error = 'Error: invalid rarity';
+            return false;
+        }
+
         $rarities = array('common', 'rare', 'epic', 'legendary');
         $prices = array(50, 200, 500);
         $stats = array(
-            /* Common */ array('common' => .90, 'rare' => .09, 'epic' => .0099, 'legendary' => 0.0001),
-            /* Rare */   array('common' => .20, 'rare' => .75, 'epic' => .045,  'legendary' => .005),
-            /* Epic */   array('common' => 0,   'rare' => .29, 'epic' => .70,   'legendary' => .01)
+            /* Common */    array('common' => .90, 'rare' => .09, 'epic' => .0099, 'legendary' => 0.0001),
+            /* Rare */      array('common' => .20, 'rare' => .75, 'epic' => .045,  'legendary' => .005),
+            /* Epic */      array('common' => 0,   'rare' => .29, 'epic' => .70,   'legendary' => .01),
+            /* Legendary */ array('common' => 0,   'rare' => .05, 'epic' => .80,   'legendary' => .15)
         );
 
         // Check if account has enough ox
@@ -106,7 +113,10 @@ class Shop
         // Update account ox
         $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
         $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $prices[$rarity], $account->ID ]);
-        if ($result === false) return false;
+        if ($result === false) {
+            $error = 'Error: Update account ox failed';
+            return false;
+        }
         $account->Ox -= $prices[$rarity];
 
         // Get random rarity (with stats)
@@ -119,21 +129,30 @@ class Shop
             }
             $random -= $chance;
         }
-        if ($randomRarity === null) return false;
+        if ($randomRarity === null) {
+            $error = "Error: random rarity failed ($random)";
+            return false;
+        }
 
-        // Get random item from rarity
+        // Get buyable items from rarity
         $command = 'SELECT `ID` FROM TABLE WHERE `Rarity` = ? AND `Buyable` = 1';
         $items = $db->QueryPrepare('Items', $command, 'i', [ $randomRarity ]);
-        if ($items === false || count($items) === 0) return false;
+        if ($items === false || count($items) === 0) {
+            $error = 'Error: random item failed';
+            return false;
+        }
 
-        // Add item to inventory
+        // Pick random item and add it to inventory
         $randomItem = $items[rand(0, count($items) - 1)];
         $result = Items::AddInventoryItem($db, $account, $randomItem['ID']);
 
         // Get new item
         $command = 'SELECT `ID`, `ItemID`, `CreatedBy`, `CreatedAt` FROM TABLE WHERE `ID` = ?';
         $result = $db->QueryPrepare('Inventories', $command, 'i', [ $result ]);
-        if ($result === false || count($result) === 0) return false;
+        if ($result === false || count($result) === 0) {
+            $error = 'Error: get new item failed';
+            return false;
+        }
         $addedItem = $result[0];
 
         // Add result in logs and return new values (item, ox ?)
@@ -155,9 +174,10 @@ class Shop
         $rarities = array('common', 'rare', 'epic', 'legendary');
         $prices = array(60, 240, 600);
         $stats = array(
-            /* Common */ array('common' => .99, 'rare' => .009, 'epic' => .001, 'legendary'  => 0),
-            /* Rare */   array('common' => .27, 'rare' => .70,  'epic' => .029,  'legendary' => .001),
-            /* Epic */   array('common' => 0,   'rare' => .3,   'epic' => .65,   'legendary' => .05)
+            /* Common */    array('common' => .99, 'rare' => .009, 'epic' => .001, 'legendary'  => 0),
+            /* Rare */      array('common' => .27, 'rare' => .70,  'epic' => .029,  'legendary' => .001),
+            /* Epic */      array('common' => 0,   'rare' => .3,   'epic' => .65,   'legendary' => .05),
+            /* Legendary */ array('common' => 0,   'rare' => .08,  'epic' => .82,   'legendary1' => .10)
         );
 
         // Check if account has enough ox

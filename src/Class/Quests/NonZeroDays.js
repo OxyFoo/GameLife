@@ -136,7 +136,10 @@ class NonZeroDays {
             'dataToken': this.user.server.dataToken
         };
         const response = await this.user.server.Request('claimNonZeroDays', data);
-        if (response === null) return false;
+        if (response === null) {
+            this.user.interface.console.AddLog('error', 'Claim error:', response);
+            return false;
+        }
 
         // Update Ox amount
         if (!response.hasOwnProperty('ox') || !response.hasOwnProperty('newItems')) {
@@ -173,7 +176,7 @@ class NonZeroDays {
         if (newItems.length > 0 && rewardIndex !== -1) {
             const args = {
                 itemID: newItems[0]['ItemID'],
-                chestRarity: NONZERODAYS_REWARDS[dayIndex][rewardIndex].value - 1,
+                chestRarity: NONZERODAYS_REWARDS[dayIndex][rewardIndex].value,
                 callback: this.user.interface.BackHandle
             };
             this.user.interface.popup.Close();

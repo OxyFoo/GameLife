@@ -27,8 +27,8 @@ class MonthType {
 
 /**
  * @description Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
- * @param {number?} [month] Current month if null
- * @param {number?} [year] Current year if null
+ * @param {number | null} [month=null] Current month if null
+ * @param {number | null} [year=null] Current year if null
  * @param {number} [start=1] First day of week, default: 1 (monday)
  * @param {number} [selectedDay=-1] Current day (0-6)
  * @returns {MonthType}
@@ -75,6 +75,7 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
         } while (tmpDate.getMonth() === month && day !== lastDay);
         output.data.push(tempOutput);
     }
+
     return output;
 }
 

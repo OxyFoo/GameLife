@@ -1,6 +1,7 @@
-import { DAY_TIME, GetTime } from 'Utils/Time';
-import DynamicVar from 'Utils/DynamicVar';
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
+import DynamicVar from 'Utils/DynamicVar';
+import { Sleep } from 'Utils/Functions';
+import { DAY_TIME, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -127,7 +128,11 @@ class NonZeroDays {
      * @returns {Promise<boolean>} True if the claim was successful
      */
     async ClaimReward(claimListStart, dayIndex) {
-        if (this.claiming) return null;
+        // Wait for the previous claim to finish
+        while (this.claiming) {
+            await Sleep(50);
+        }
+
         this.claiming = true;
 
         const data = {

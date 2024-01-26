@@ -73,15 +73,11 @@ class BackCalendar extends PageBase {
         this.opened = false;
 
         this.activitiesListener = user.activities.allActivities.AddListener(async () => {
-            const time_start = new Date().getTime();
             // Update activities
             if (this.state.selectedALL === null) return;
 
             const { day, month, year } = this.state.selectedALL;
             await this.daySelect(day, month, year, true);
-            const time_end = new Date().getTime();
-            console.log('Calendar update activities', time_end - time_start);
-            user.interface.console.AddLog('info', `Calendar update activities in ${time_end - time_start} ms`);
         });
     }
 

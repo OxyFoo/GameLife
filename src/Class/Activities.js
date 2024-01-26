@@ -391,6 +391,7 @@ class Activities {
     }
 
     /**
+     * TODO: Don't take timezone into account here
      * Get activities in a specific date
      * @param {number} time Time in seconds to define day (auto define of midnights)
      * @param {Activity[]} activities

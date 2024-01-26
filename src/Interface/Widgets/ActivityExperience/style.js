@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     fullWidth: {
         width: '100%',
-        marginBottom: 48
+        marginBottom: 24
     },
     container: {
         justifyContent: 'center'

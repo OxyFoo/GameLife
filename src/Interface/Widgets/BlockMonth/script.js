@@ -49,7 +49,9 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
     };
 
     const tmpDate = new Date(year, month, 1);
+    const todayString = new Date().toDateString();
     const lastDay = (start + 5) % 7;
+    const allActivities = user.activities.Get();
 
     while (tmpDate.getMonth() === month) {
         let day;
@@ -58,9 +60,9 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
         let tempOutput = new Array(7).fill(null);
         do {
             day = (tmpDate.getDay() + 5 + start) % 7;
-            const isToday = tmpDate.toDateString() === new Date().toDateString();
+            const isToday = tmpDate.toDateString() === todayString;
             const isSelected = selectedDay === tmpDate.getDate();
-            const activities = user.activities.GetByTime(GetTime(tmpDate, 'global'));
+            const activities = user.activities.GetByTime(GetTime(tmpDate, 'global'), allActivities);
             const isActivity = activities.length > 0;
             const isActivityXP = !!activities.find(a => dataManager.skills.GetByID(a.skillID)?.XP ?? 0 > 0);
 

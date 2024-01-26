@@ -17,7 +17,7 @@ class Display extends BackDisplay {
                         size={SCREEN_WIDTH * this.iconRatio}
                     />
                 </Animated.View>
-                <Text style={styles.text}>{this.text}</Text>
+                <Text>{this.text}</Text>
                 <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
                 <View style={styles.quoteContainer}>
                     <Text fontSize={16} color={'light'} style={[styles.quote]}>{this.quote}</Text>
@@ -38,11 +38,6 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '80%',
-    },
-    text: {
-        marginTop: 20,
-        marginBottom: 20,
-        textAlign: 'center',
     },
     quoteContainer: {
         alignItems:'center',

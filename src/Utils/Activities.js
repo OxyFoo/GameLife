@@ -80,10 +80,13 @@ function AddActivity(activity) {
         Notifications.Evening.RemoveToday();
 
         const text = lang['display-activity-text'];
+        const quoteObject = dataManager.quotes.GetRandomQuote();
+        const quote = quoteObject != undefined ? quoteObject.Quote[langManager.currentLangageKey] : '';
         const button = lang['display-activity-button'];
         const args = {
             'icon': 'success',
             'text': text,
+            'quote': quote,
             'button': button,
             'action': Back
         };
@@ -95,7 +98,7 @@ function AddActivity(activity) {
                 /** @type {Icons} */
                 'icon': 'error',
                 'iconRatio': .4,
-                'text': lang['display-fail-text'].replace('{}', 'skill not fount'),
+                'text': lang['display-fail-text'].replace('{}', 'skill not found'),
                 'button': lang['display-fail-button'],
                 'action': Back
             }, true);

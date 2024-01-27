@@ -88,15 +88,15 @@ class Shop
      * @param string|false $error Error message if failed
      * @return object|false Return item if success, false otherwise
      */
-    public static function BuyRandomChest($db, $account, $device, $rarity, &$error = null) {
+    public static function BuyRandomChest($db, $account, $device, $rarity, $isFree = false, &$error = null) {
         $error = false;
-        if ($rarity < 0 || $rarity > 2) {
+        if ($rarity < 0 || $rarity > 3) {
             $error = 'Error: invalid rarity';
             return false;
         }
 
         $rarities = array('common', 'rare', 'epic', 'legendary');
-        $prices = array(50, 200, 500);
+        $prices = array(50, 200, 500, 1250);
         $stats = array(
             /* Common */    array('common' => .90, 'rare' => .09, 'epic' => .0099, 'legendary' => 0.0001),
             /* Rare */      array('common' => .20, 'rare' => .75, 'epic' => .045,  'legendary' => .005),
@@ -105,19 +105,21 @@ class Shop
         );
 
         // Check if account has enough ox
-        if ($account->Ox < $prices[$rarity]) {
+        if (!$isFree && $account->Ox < $prices[$rarity]) {
             $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$prices[$rarity])");
             return false;
         }
 
         // Update account ox
-        $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
-        $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $prices[$rarity], $account->ID ]);
-        if ($result === false) {
-            $error = 'Error: Update account ox failed';
-            return false;
+        if (!$isFree) {
+            $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $prices[$rarity], $account->ID ]);
+            if ($result === false) {
+                $error = 'Error: Update account ox failed';
+                return false;
+            }
+            $account->Ox -= $prices[$rarity];
         }
-        $account->Ox -= $prices[$rarity];
 
         // Get random rarity (with stats)
         $random = (rand()&1000000)/1000001;
@@ -167,12 +169,13 @@ class Shop
      * @param Account $account
      * @param Device $device
      * @param 'hair'|'top'|'bottom'|'shoes' $slot
-     * @param int $rarity 0 = common, 1 = rare, 2 = epic
+     * @param int $rarity 0 = common, 1 = rare, 2 = epic, 3 = legendary
      * @return object|false Return items if success, false otherwise
      */
     public static function BuyTargetChest($db, $account, $device, $slot, $rarity) {
+        if ($rarity < 0 || $rarity > 3) return false;
         $rarities = array('common', 'rare', 'epic', 'legendary');
-        $prices = array(60, 240, 600);
+        $prices = array(60, 240, 600, 1500);
         $stats = array(
             /* Common */    array('common' => .99, 'rare' => .009, 'epic' => .001, 'legendary'  => 0),
             /* Rare */      array('common' => .27, 'rare' => .70,  'epic' => .029,  'legendary' => .001),

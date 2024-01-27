@@ -98,7 +98,9 @@ class NonZeroDays {
                     continue;
                 }
 
-                if (allActivitiesTime[i] < claimsList[claimIndex].end + DAY_TIME) {
+                if (allActivitiesTime[i] < claimsList[claimIndex].end + DAY_TIME &&
+                    claimsList[claimIndex].daysCount < NONZERODAYS_REWARDS.length)
+                {
                     // Update claim
                     claimsList[claimIndex].end += DAY_TIME;
                     claimsList[claimIndex].daysCount++;

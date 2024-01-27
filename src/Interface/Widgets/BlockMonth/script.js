@@ -48,26 +48,30 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
         data: []
     };
 
-    const todayTime = GetMidnightTime(GetTime(undefined, 'local'));
+    const timezone = GetTimeZone() * 60 * 60;
+    const todayTime = GetMidnightTime(GetTime()) + timezone;
     const firstDay = new Date(year, month, 1);
-    const firstTime = GetTime(firstDay, 'global');
+    const firstDayTime = GetTime(firstDay, 'global');
     const firstDayIndex = (firstDay.getDay() + 5 + start) % 7;
-    const lastDay = new Date(year, month + 1, 0);
-    const lastTime = GetTime(lastDay, 'global');
-    const weekCount = Math.ceil((lastTime - firstTime) / (DAY_TIME * 7));
+    const lastDay = new Date(year, month + 1, 1);
+    const lastDayTime = GetTime(lastDay, 'global');
+    const weekCount = Math.ceil((lastDayTime - firstDayTime) / (DAY_TIME * 7));
 
     const allActivities = user.activities.Get();
 
-    let tmpTime = firstTime;
+    let tmpTime = firstDayTime;
     let tmpDay = 1;
     let tmpDayIndex = firstDayIndex;
     let tmpActivityIndex = 0;
 
-    for (let w = 0; w < weekCount; w++) {
+    for (let w = 0; w < weekCount || tmpTime < lastDayTime; w++) {
         let tempOutput = new Array(7).fill(null);
         for (let i = 0; i < 7; i++) {
             if (w === 0 && i < firstDayIndex) {
                 continue;
+            }
+            if (tmpTime >= lastDayTime) {
+                break;
             }
 
             const isToday = tmpTime >= todayTime && tmpTime < todayTime + DAY_TIME;
@@ -75,11 +79,11 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
             let isActivity = false;
             let isActivityXP = false;
 
-            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime < tmpTime) {
+            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime + timezone < tmpTime) {
                 tmpActivityIndex++;
             }
 
-            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime < tmpTime + DAY_TIME) {
+            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime + timezone < tmpTime + DAY_TIME) {
                 isActivity = true;
                 const skill = dataManager.skills.GetByID(allActivities[tmpActivityIndex].skillID);
                 if (skill?.XP ?? 0 > 0) {

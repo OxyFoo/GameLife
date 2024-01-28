@@ -85,13 +85,13 @@ async function UpdatePositions() {
         ) + Math.PI / 2;
 
         // Invert zap & message position if component is on first or last quarter of the screen
-        let offset = targetPosition.height / 2 + zapLayout.height / 2 + 36;
+        let distance = targetPosition.height / 2 + zapLayout.height;
         if (quarterIndex === 0 || quarterIndex >= 3) {
-            offset = - offset - messageLayout.height - 36;
+            distance = - distance - messageLayout.height;
         }
 
-        const offsetX = - Math.cos(theta) * offset;
-        const offsetY = Math.sin(theta) * offset;
+        const offsetX = - Math.cos(theta) * distance;
+        const offsetY = Math.sin(theta) * distance;
 
         zapPosX = componentMidX + offsetX - zapLayout.width / 2;
         zapPosY = componentMidY + offsetY - zapLayout.height / 2;

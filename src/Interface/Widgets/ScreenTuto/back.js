@@ -244,7 +244,7 @@ class ScreenTutoBack extends React.Component {
                     fontSize: fontSize
                 }
             }, async () => {
-                await UpdatePositions.bind(this);
+                await UpdatePositions.call(this);
                 resolve();
             });
         });

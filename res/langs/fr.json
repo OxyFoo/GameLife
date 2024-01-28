@@ -177,7 +177,11 @@
         },
 
         "alert-achievement-title": "Succès déverouillé",
-        "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}"
+        "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
+
+        "tuto": {
+            "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
+        }
     },
 
     "activity": {
@@ -222,7 +226,17 @@
         "display-activity-text": "Ton activité a bien été créée !",
         "display-activity-button": "Retour vers l'accueil",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
-        "display-fail-button": "Retour vers l'accueil"
+        "display-fail-button": "Retour vers l'accueil",
+
+        "tuto": {
+            "1": "Tu peux filtrer les activités par catégorie: {}",
+            "2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
+
+            "3": "Tu peux choisir d'ajouter une activité que tu as fait ou que tu comptes faire plus tard, ou alors tu peux lancer un minuteur pour commencer l'activité maintenant",
+            "4": "Tu peux cliquer sur ce composant pour définir le début et la durée de l'activité",
+            "5": "Ici tu peux voir l'expérience que tu vas gagner en faisant cette activité",
+            "6": "Tu peux ajouter un commentaire à ton activité, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        }
     },
 
     "calendar": {
@@ -351,7 +365,12 @@
         "alert-birthtimewait-title": "Changement de date de naissance",
         "alert-birthtimewait-text": "Tu dois attendre {} jours avant de pouvoir modifier ta date de naissance à nouveau.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-text": "Tu as bien {} ans ?"
+        "alert-birthconfirm-text": "Tu as bien {} ans ?",
+
+        "tuto": {
+            "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
+            "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
+        }
     },
 
     "profile-avatar": {
@@ -398,7 +417,11 @@
         "alert-success-title": "Envoyé",
         "alert-success-text": "Merci beacoup pour ton retour !",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Une erreur est survenue, réessaye plus tard."
+        "alert-error-text": "Une erreur est survenue, réessaye plus tard.",
+
+        "tuto": {
+            "bug": "Merci de fournir un maximum de détails sur la nature du bug ainsi que dans les conditions dans lesquelles il est apparu (android/ios ? Connecté à internet ou non ? Marque du smartphone ou émulateur ? etc)"
+        }
     },
 
     "settings": {
@@ -496,7 +519,20 @@
         "reward-success-text": "Tu as obtenu les récompenses suivantes :",
 
         "temp-comingsoon-title": "Boutique",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
+        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+
+        "tuto": {
+            "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
+            "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
+            "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
+            "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",
+            "randomChests-epic": "Quant au coffre épique, il offre 29% de chance d'obtenir un objet rare, 70% pour un objet épique et 1% pour un objet légendaire; il n'y a aucune chance d'y trouver un objet commun.",
+            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr d'avoir un item de la catégorie que tu as choisie !",
+            "targetedChests-common": "Dans le coffre commun, les chances d'obtenir un objet de rareté commune sont extrêmement élevées à 99%, suivies de 0,9% pour un objet rare et 0,1% pour un objet épique; il est à noter qu'il n'y a aucune chance d'y trouver un objet légendaire.",
+            "targetedChests-rare": "En ouvrant le coffre rare, tu as 27% de chances d'obtenir un objet commun, 70% pour un objet rare, 2,9% pour un objet épique et une mince chance de 0,1% pour un objet légendaire.",
+            "targetedChests-epic": "Quant au coffre épique, celui-ci ne contient pas d'objets communs et offre 30% de chances d'obtenir un objet rare, 65% pour un objet épique, et une probabilité non négligeable de 5% pour un objet légendaire.", 
+            "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
+        }
     },
 
     "skill": {
@@ -569,7 +605,13 @@
         "alert-taskslimit-title": "Limite atteinte",
         "alert-taskslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
-        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
+        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
+
+        "tuto": {
+            "1": "Ici tu peux définir la date limite de ta tâche.",
+            "2": "Tu peux également ajouter des tâches à ta tâche principale, pour mieux t'organiser.",
+            "3": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        }
     },
 
     "todoes": {
@@ -619,7 +661,21 @@
         "alert-remquest-title": "Suppression ?",
         "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
         "alert-back-title": "Retour",
-        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
+        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
+
+        "tuto": {
+            "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
+            "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
+            "3": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
+        }
+    },
+
+    "quest-stats": {
+        "tuto": {
+            "1": "Ici tu peux voir le nom de ta quête et les activités concernées, tu peux cliquer dessus pour la modifier.",
+            "2": "Là c'est la série actuelle, c'est le nombre de jours consécutifs où tu as réalisé ta quête.",
+            "3": "Et ici tu peux voir la réalisation de ta quête par semaine ou par jour sur la dernière année."
+        }
     },
 
     "quests": {
@@ -632,7 +688,16 @@
 
         "current-streak": "Série actuelle",
         "heatmap-title-weeks": "Réalisation par semaine",
-        "heatmap-title-days": "Réalisation par jour"
+        "heatmap-title-days": "Réalisation par jour",
+
+        "tuto": {
+            "1": "Ici, ce sont les quêtes ! Des missions que tu peux TE donner pour t'aider à te motiver.",
+            "2": "Pour en ajouter une, rien de plus simple, tu cliques sur le bouton ici !",
+            "3": "Sous chaque quête, tu verras des cercles. Ils peuvent avoir plusieurs couleurs, voici leurs significations: ",
+            "4": "Rouge: la quête n'a pas été complétée.  Rose: ça se déroule aujourd'hui.  Violet: les autres jours.",
+            "5": "Ah oui ! Si tu cliques sur une quête, tu peux voir les détails de celle ci !",
+            "6": "Tu attends quoi ? Lance toi ! Si tu as besoin d'aide, tu peux cliquer sur le bouton d'info et je viendrais !"
+        }
     },
 
     "nonzerodays": {
@@ -643,7 +708,14 @@
         "no-claim": "Pas de claim",
 
         "alert-claim-error-title": "Erreur",
-        "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard."
+        "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard.",
+
+        "tuto": {
+            "1": "Ici, c'est les 'Jours non zéro' (inspiré du Non Zero Days), la chaîne de connexion en gros.",
+            "2": "Le fonctionnement est simple, chaque jour, tu dois faire au moins une activité qui rapporte de l'xp.",
+            "3": "Tu pourras alors récuperer ta récompense le lendemain, et ainsi de suite.",
+            "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
+        }
     },
 
     "wait": {
@@ -668,70 +740,6 @@
             "shop-next" : "Et enfin le plus important, clique sur le gros bouton rose en bas !",
             "activity": "C'est ici que tu viendras pour ajouter tes activités ! Plus qu'à choisir une activité et à commencer à jouer !",
             "home-final": "Ton aventure GameLife commence maintenant ! Un monde pleins de défis et de récompenses t'attend, alors n'attends plus et fonce !"
-        },
-
-        "achievements": {
-            "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
-        },
-
-        "activity": {
-            "1": "Tu peux filtrer les activités par catégorie: {}",
-            "2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
-
-            "3": "Tu peux choisir d'ajouter une activité que tu as fait ou que tu comptes faire plus tard, ou alors tu peux lancer un minuteur pour commencer l'activité maintenant",
-            "4": "Tu peux cliquer sur ce composant pour définir le début et la durée de l'activité",
-            "5": "Ici tu peux voir l'expérience que tu vas gagner en faisant cette activité",
-            "6": "Tu peux ajouter un commentaire à ton activité, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        },
-
-        "profile": {
-            "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
-            "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
-        },
-
-        "report": {
-            "bug": "Merci de fournir un maximum de détails sur la nature du bug ainsi que dans les conditions dans lesquelles il est apparu (android/ios ? Connecté à internet ou non ? Marque du smartphone ou émulateur ? etc)"
-        },
-
-        "shop": {
-            "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
-            "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
-            "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
-            "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",
-            "randomChests-epic": "Quant au coffre épique, il offre 29% de chance d'obtenir un objet rare, 70% pour un objet épique et 1% pour un objet légendaire; il n'y a aucune chance d'y trouver un objet commun.",
-            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr d'avoir un item de la catégorie que tu as choisie !",
-            "targetedChests-common": "Dans le coffre commun, les chances d'obtenir un objet de rareté commune sont extrêmement élevées à 99%, suivies de 0,9% pour un objet rare et 0,1% pour un objet épique; il est à noter qu'il n'y a aucune chance d'y trouver un objet légendaire.",
-            "targetedChests-rare": "En ouvrant le coffre rare, tu as 27% de chances d'obtenir un objet commun, 70% pour un objet rare, 2,9% pour un objet épique et une mince chance de 0,1% pour un objet légendaire.",
-            "targetedChests-epic": "Quant au coffre épique, celui-ci ne contient pas d'objets communs et offre 30% de chances d'obtenir un objet rare, 65% pour un objet épique, et une probabilité non négligeable de 5% pour un objet légendaire.", 
-            "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
-        },
-
-        "todo": {
-            "1": "Ici tu peux définir la date limite de ta tâche.",
-            "2": "Tu peux également ajouter des tâches à ta tâche principale, pour mieux t'organiser.",
-            "3": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        },
-
-        "quest": {
-            "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
-            "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        },
-
-        "nzd": {
-            "1": "Ici, c'est les 'Jours non zéro' (inspiré du Non Zero Days), la chaîne de connexion en gros.",
-            "2": "Le fonctionnement est simple, chaque jour, tu dois faire au moins une activité qui rapporte de l'xp.",
-            "3": "Tu pourras alors récuperer ta récompense le lendemain, et ainsi de suite.",
-            "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
-        },
-
-        "quests": {
-            "1": "Ici, ce sont les quêtes ! Des missions que tu peux TE donner pour t'aider à te motiver.",
-            "2": "Pour en ajouter une, rien de plus simple, tu cliques sur le bouton ici !",
-            "3": "Sous chaque quête, tu verras des cercles. Ils peuvent avoir plusieurs couleurs, voici leurs significations: ",
-            "4": "Rouge: la quête n'a pas été complétée.  Rose: ça se déroule aujourd'hui.  Violet: les autres jours.",
-            "5": "Ah oui ! Si tu cliques sur une quête, tu peux voir les détails de celle ci !",
-            "6": "Tu attends quoi ? Lance toi ! Si tu as besoin d'aide, tu peux cliquer sur le bouton d'info et je viendrais !"
         },
 
         "other": {

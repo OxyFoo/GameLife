@@ -58,6 +58,7 @@ class ActivityPanel extends ActivityPanelBack {
                     {lang['title-experience']}
                 </Text>
                 <ActivityExperience
+                    style={styles.experience}
                     skillID={selectedSkillID}
                     duration={activity?.duration ?? 0}
                 />

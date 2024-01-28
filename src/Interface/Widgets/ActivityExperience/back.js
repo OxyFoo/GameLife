@@ -7,10 +7,16 @@ import langManager from 'Managers/LangManager';
 import { Round } from 'Utils/Functions';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
  * @typedef {{ key: string, name: string, value: number }} Stat
  */
 
 const ActivityExperienceProps = {
+    /** @type {StyleProp} */
+    style: {},
+
     /** @type {number} Skill ID or 0 to unselect */
     skillID: 0,
 

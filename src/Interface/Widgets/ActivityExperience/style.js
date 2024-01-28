@@ -2,8 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     fullWidth: {
-        width: '100%',
-        marginBottom: 24
+        width: '100%'
     },
     container: {
         justifyContent: 'center'

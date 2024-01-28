@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
@@ -53,11 +54,18 @@ class ActivityTimerScore extends React.Component {
 
         return (
             <ActivityExperience
+                style={styles.experience}
                 skillID={user.activities.currentActivity.skillID}
                 duration={duration}
             />
         );
     }
 }
+
+const styles = StyleSheet.create({
+    experience: {
+        marginBottom: 24
+    }
+});
 
 export default ActivityTimerScore;

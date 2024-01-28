@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
     page: {
         width: '100%',
         height: '100%',
-        paddingTop: '20%',
+        paddingTop: 48,
         paddingBottom: 10,
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-evenly'
     },
     button: {
         width: '80%'
@@ -46,8 +46,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     quote: {
-        margin: 0,
-        padding: 0,
         fontStyle: 'italic'
     }
 });

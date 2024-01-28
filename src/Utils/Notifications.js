@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 import user from 'Managers/UserManager';
@@ -18,6 +19,16 @@ import { Random, Range } from './Functions';
 const MAX_DAYS = 30;
 
 const Management = {
+    async checkPermissionsAndroid(forcePopup = false) {
+        let permissionStatus = await check(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
+        if (permissionStatus === RESULTS.DENIED) {
+            const newStatus = await request(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
+            if (newStatus !== RESULTS.GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    },
     async checkPermissionsIOS(forcePopup = false) {
         let authorization = false;
         const perms = { alert: true, badge: true, sound: true, critical: true };
@@ -60,23 +71,36 @@ const Management = {
 
 /** @param {Notification} notif */
 async function Setup(notif) {
-    let enabled = false;
-
     if (Platform.OS === 'ios') {
+        const enabled = await Management.checkPermissionsIOS();
+        if (enabled === false) {
+            user.interface.console.AddLog('warn', 'Notifications.Setup', 'Notifications are disabled (permissions denied)');
+            return false;
+        }
+
         await Remove(notif, false); // notif.Disable();
-        enabled = await Management.checkPermissionsIOS();
     } else if (Platform.OS === 'android') {
+        const enabled = await Management.checkPermissionsAndroid();
+        if (enabled === false) {
+            user.interface.console.AddLog('warn', 'Notifications.Setup', 'Notifications are disabled (permissions denied)');
+            return false;
+        }
+
         await Remove(notif, false); // notif.Disable();
         const lang = langManager.curr['notifications'];
         const channelId = notif.ID;
         const channelName = lang.hasOwnProperty(channelId) ? lang[channelId]['name'] : channelId;
-        enabled = await Management.addChannelAndroid(channelId, channelName);
+        const channelCreated = await Management.addChannelAndroid(channelId, channelName);
+        if (channelCreated === false) {
+            user.interface.console.AddLog('warn', 'Notifications.Setup', 'Notifications are disabled (channel creation failed)');
+            return false;
+        }
     } else {
         user.interface.console.AddLog('warn', 'Notifications.Setup', `Platform ${Platform.OS} is not supported`);
     }
 
-    if (enabled) await AddNotifications(notif);
-    return enabled;
+    await AddNotifications(notif);
+    return true;
 }
 
 /** @param {Notification} notif */

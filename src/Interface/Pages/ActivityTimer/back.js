@@ -1,4 +1,4 @@
-import { Linking } from 'react-native';
+import { Animated, Linking } from 'react-native';
 
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
@@ -9,6 +9,7 @@ import { AddActivityNow, TIME_STEP_MINUTES } from 'Utils/Activities';
 import { TwoDigit } from 'Utils/Functions';
 import { DateToFormatTimeString } from 'Utils/Date';
 import { GetDate, GetTime, RoundTimeTo } from 'Utils/Time';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('Class/Settings').MusicLinks} MusicLinks
@@ -50,6 +51,17 @@ class BackActivityTimer extends PageBase {
 
         user.interface.SetCustomBackHandler(this.onPressCancel);
         this.timer_tick = window.setInterval(this.tick, 100);
+
+        const transformedLinksArray = Object.keys(user.settings.musicLinks).map((key, index) => {
+            const animation = new Animated.Value(1);
+            setTimeout(() => {
+                SpringAnimation(animation, 0).start();
+            }, 200 * index);
+            return { [key]: animation };
+        });
+
+        /** @type {Record<keyof MusicLinks, Animated.Value>} */
+        this.animations = Object.assign({}, ...transformedLinksArray);
     }
 
     componentWillUnmount() {

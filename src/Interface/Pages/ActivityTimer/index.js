@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Animated, TouchableOpacity, Image } from 'react-native';
 
+import styles from './style';
 import BackActivityTimer from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -13,9 +14,6 @@ import IMG_MUSIC from 'Ressources/logo/music/music';
 /**
  * @typedef {import('Class/Settings').MusicLinks} MusicLinks
  */
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const IMAGE_SIZE = SCREEN_WIDTH * 0.8 / (Object.keys(user.settings.musicLinks).length + 2); 
 
 class ActivityTimer extends BackActivityTimer {
     render() {
@@ -95,57 +93,27 @@ class ActivityTimer extends BackActivityTimer {
      * @param {number} index
      */
     renderMusic = (musicKey, index) => {
+        const animStyle = {
+            opacity: this.animations[musicKey].interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0]
+            }),
+            transform: [
+                { translateY: Animated.multiply(128, this.animations[musicKey]) }
+            ]
+        };
+
         return (
-            <TouchableOpacity
-                key={'music-link-' + musicKey}
-                onPress={() => this.openURL(musicKey)}
-            >
-                <Image
-                    style={styles.image}
-                    source={IMG_MUSIC[index]}
-                />
-            </TouchableOpacity>
+            <Animated.View key={'music-link-' + musicKey} style={animStyle}>
+                <TouchableOpacity onPress={() => this.openURL(musicKey)}>
+                    <Image
+                        style={styles.image}
+                        source={IMG_MUSIC[index]}
+                    />
+                </TouchableOpacity>
+            </Animated.View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    content: {
-        height: '100%',
-        justifyContent: 'space-evenly'
-    },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    headActivityText: {
-        fontSize: 36
-    },
-    headText: {
-        fontSize: 20
-    },
-    title: {
-        fontSize: 28
-    },
-    button: {
-        width: '45%'
-    },
-    musicTitle: {
-        fontSize: 22
-    },
-    imageMap: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        width: '100%'
-    },
-    image: {
-        width: IMAGE_SIZE,
-        height: IMAGE_SIZE,
-        resizeMode: 'contain',
-        marginTop: 10
-    }
-});
 
 export default ActivityTimer;

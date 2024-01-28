@@ -214,6 +214,7 @@
         "timer-gain": "Current gains",
         "timer-complete": "Complete",
         "timer-cancel": "Cancel",
+        "timer-music": "Zap music will help you focus",
         "timeralert-cancel-title": "Cancel activity",
         "timeralert-cancel-text": "Are you sure you want to cancel this activity?",
         "timeralert-tooshort-title": "Too early",

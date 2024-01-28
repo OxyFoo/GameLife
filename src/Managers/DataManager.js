@@ -128,12 +128,17 @@ class DataManager {
             const status = reqInternalData.content['status'];
 
             if (status === 'ok') {
-                const reqHashes = reqInternalData.content['hashes'];
-                const reqTables = reqInternalData.content['tables'];
-
                 const reqNews = reqInternalData.content['news'];
-                if (typeof(reqNews) === 'object') this.news.Load(reqNews);
+                if (typeof(reqNews) === 'object') {
+                    this.news.Load(reqNews);
+                }
 
+                const reqMusicLinks = reqInternalData.content['music-links'];
+                if (typeof(reqMusicLinks) === 'object') {
+                    user.settings.LoadMusicLinks(reqMusicLinks);
+                }
+
+                const reqTables = reqInternalData.content['tables'];
                 if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
                 if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);
                 if (reqTables.hasOwnProperty('items')) this.items.Load(reqTables['items']);
@@ -141,6 +146,7 @@ class DataManager {
                 if (reqTables.hasOwnProperty('skills')) this.skills.Load(reqTables);
                 if (reqTables.hasOwnProperty('titles')) this.titles.Load(reqTables['titles']);
 
+                const reqHashes = reqInternalData.content['hashes'];
                 await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes);
                 user.interface.console.EditLog(debugIndex, 'same', 'Internal data: online load success');
                 await this.LocalSave(user);

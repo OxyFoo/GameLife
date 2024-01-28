@@ -24,10 +24,13 @@ function GetAppData($db) {
                 $appData['Maintenance'] = $data !== '0';
             } else if ($ID === 'News') {
                 $appData['News'] = json_decode($data, true);
+            } else if ($ID === 'MusicLinks') {
+                $appData['MusicLinks'] = json_decode($data, true);
             }
         }
     }
 
+    // TODO: Keep ?
     if ($lastHashRefresh > 60) {
         // RefreshHashes($db);
     }

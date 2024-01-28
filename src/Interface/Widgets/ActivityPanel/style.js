@@ -10,6 +10,10 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
 
+    experience: {
+        marginBottom: 48
+    },
+
     buttonNow: {
         position: 'absolute',
         top: 0,

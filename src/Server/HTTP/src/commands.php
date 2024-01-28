@@ -290,6 +290,7 @@ class Commands {
             $this->output['news'] = $appData['News'];
             $this->output['tables'] = $newTables;
             $this->output['hashes'] = $appHashes;
+            $this->output['music-links'] = $appData['MusicLinks'];
             $this->output['status'] = 'ok';
         }
     }

@@ -1,27 +1,19 @@
+import { Animated, Linking } from 'react-native';
+
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import dataManager from 'Managers/DataManager';
 
 import { AddActivityNow, TIME_STEP_MINUTES } from 'Utils/Activities';
-import { TwoDigit } from 'Utils/Functions';
-import { DateToFormatTimeString } from 'Utils/Date';
-import { GetDate, GetTime, RoundTimeTo } from 'Utils/Time';
+import { GetTime, RoundTimeTo } from 'Utils/Time';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('Class/Settings').MusicLinks} MusicLinks
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
 class BackActivityTimer extends PageBase {
-    state = {
-        displayActivity: '',
-        displayInitialTime: '00:00',
-        displayCurrentTime: '00:00:00',
-
-        /** @type {number} Used to show estimated stats */
-        duration: 0
-    }
-
     /** @type {boolean} */
     finished = false;
 
@@ -33,20 +25,19 @@ class BackActivityTimer extends PageBase {
             return;
         }
 
-        const { localTime } = user.activities.currentActivity;
-        const skill = dataManager.skills.GetByID(user.activities.currentActivity.skillID);
-        if (skill === null) {
-            user.interface.BackHandle();
-            return;
-        }
-
-        this.state.displayActivity = dataManager.GetText(skill.Name);
-        this.state.displayInitialTime = DateToFormatTimeString(GetDate(localTime));
-        this.state.displayCurrentTime = this.__getCurrentTime();
-        this.state.duration = this.__getDuration();
-
         user.interface.SetCustomBackHandler(this.onPressCancel);
-        this.timer_tick = window.setInterval(this.tick, 100);
+        this.timer_tick = window.setInterval(this.tick, 1000);
+
+        const transformedLinksArray = Object.keys(user.settings.musicLinks).map((key, index) => {
+            const animation = new Animated.Value(1);
+            setTimeout(() => {
+                SpringAnimation(animation, 0).start();
+            }, 200 * index);
+            return { [key]: animation };
+        });
+
+        /** @type {Record<keyof MusicLinks, Animated.Value>} */
+        this.animations = Object.assign({}, ...transformedLinksArray);
     }
 
     componentWillUnmount() {
@@ -67,29 +58,12 @@ class BackActivityTimer extends PageBase {
      */
     tick = () => {
         const { startTime } = user.activities.currentActivity;
-
-        const displayCurrentTime = this.__getCurrentTime();
         const duration = this.__getDuration();
 
         // Check if time plage is free
         if (duration > 0 && !user.activities.TimeIsFree(startTime, duration)) {
             this.onPressComplete();
-            return;
         }
-
-        // Update time
-        this.setState({ duration, displayCurrentTime });
-    }
-
-    __getCurrentTime = () => {
-        const { localTime } = user.activities.currentActivity;
-
-        const time = GetTime(undefined, 'local') - localTime;
-        const HH = Math.floor(time / 3600);
-        const MM = Math.floor((time - (HH * 3600)) / 60);
-        const SS = time - (HH * 3600) - (MM * 60);
-
-        return [HH, MM, SS].map(TwoDigit).join(':');
     }
 
     __getDuration = () => {
@@ -145,6 +119,14 @@ class BackActivityTimer extends PageBase {
             user.interface.ChangePage('calendar');
         }
     }
+
+    /** @param {keyof MusicLinks} musicKey */
+    openURL = (musicKey) => {
+        const url = user.settings.musicLinks[musicKey];
+        Linking.openURL(url).catch(err =>
+            user.interface.console.AddLog('error', "Couldn't load page", err)
+        );
+    };
 }
 
 export default BackActivityTimer;

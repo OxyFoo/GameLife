@@ -5,7 +5,7 @@ import langManager from 'Managers/LangManager';
  * @this {import('./back').default}
  */
 function StartHelp() {
-    const lang = langManager.curr['tuto']['report'];
+    const lang = langManager.curr['report']['tuto'];
 
     user.interface.screenTuto.ShowTutorial([
         {

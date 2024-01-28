@@ -391,14 +391,16 @@ class Activities {
     }
 
     /**
+     * TODO: Don't take timezone into account here
      * Get activities in a specific date
      * @param {number} time Time in seconds to define day (auto define of midnights)
+     * @param {Activity[]} activities
      * @returns {Activity[]} activities
      */
-    GetByTime(time = GetTime()) {
+    GetByTime(time = GetTime(), activities = this.Get()) {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
-        return this.Get().filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
+        return activities.filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
     }
 
     /**

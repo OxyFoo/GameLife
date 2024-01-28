@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Animated } from 'react-native';
 
 import styles from './style';
 import ActivityTimelineBack from './back';
@@ -16,35 +16,45 @@ class ActivityTimeline extends ActivityTimelineBack {
      * @param {{ item: ActivityTimelineItem }} param0
      */
     renderActivity = ({ item }) => {
-        const showIcon = !this.state.isScrolled && item.duration >= 60;
+        const showIcon = item.duration >= 60;
         const styleTimelineItem = {
             marginLeft: item.marginLeft,
             width: item.width,
             backgroundColor: item.color
         };
+        const styleIconAnim = {
+            opacity: this.state.animHeight
+        };
 
         return (
             <View style={[styles.timelineItem, styleTimelineItem]}>
                 {showIcon && (
-                    <Icon
-                        size={14}
-                        xml={item.logo}
-                        color={item.logoColor}
-                    />
+                    <Animated.View style={styleIconAnim}>
+                        <Icon
+                            size={14}
+                            xml={item.logo}
+                            color={item.logoColor}
+                        />
+                    </Animated.View>
                 )}
             </View>
         );
     }
 
     render() {
+        const heightMin = 5;
+        const heightMax = 16;
         const styleContainer = {
-            height: this.state.isScrolled ? 5 : 16
+            height: Animated.add(
+                Animated.multiply(this.state.animHeight, heightMax - heightMin),
+                heightMin
+            )
         };
 
         return (
-            <View style={styles.container}>
+            <View style={[styles.background, this.props.style]}>
 
-                <View style={[styles.timelineContainer, styleContainer]}>
+                <Animated.View style={[styles.container, styleContainer]}>
                     {this.state.activities.length > 0 && (
                         <FlatList
                             data={this.state.activities}
@@ -55,7 +65,7 @@ class ActivityTimeline extends ActivityTimelineBack {
                             scrollEnabled={false}
                         />
                     )}
-                </View>
+                </Animated.View>
 
             </View>
         );

@@ -37,10 +37,13 @@ function RenderPopup(props) {
     }, []);
 
     let claimDate = null;
-    const currentClaimList = claimsList[claimIndex];
-    const isCurrentStreak = user.quests.nonzerodays.IsCurrentList(currentClaimList);
-    if (!isCurrentStreak) {
-        claimDate = DateToFormatString(GetDate(currentClaimList.start));
+    let isCurrentStreak = false;
+    if (claimsList.length > 0) {
+        const currentClaimList = claimsList[claimIndex];
+        isCurrentStreak = user.quests.nonzerodays.IsCurrentList(currentClaimList);
+        if (!isCurrentStreak) {
+            claimDate = DateToFormatString(GetDate(currentClaimList.start));
+        }
     }
 
     return (

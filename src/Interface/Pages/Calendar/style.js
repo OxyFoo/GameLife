@@ -7,13 +7,14 @@ const styles = StyleSheet.create({
     row: {
         width: '100%',
         marginTop: 12,
-        paddingHorizontal: '5%',
+        paddingHorizontal: '2%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
     weekRow: {
         flex: 1,
+        paddingTop: 5,
         marginBottom: 0
     },
     title: {
@@ -22,6 +23,11 @@ const styles = StyleSheet.create({
     months: {
         minHeight: 260,
         maxHeight: 260
+    },
+    btnIcon: {
+        aspectRatio: 1,
+        height: 42,
+        paddingHorizontal: 0
     },
 
     mainContent: {
@@ -36,7 +42,7 @@ const styles = StyleSheet.create({
     },
     panel: {
         flex: 1,
-        marginTop: 12,
+        marginTop: 6,
         marginBottom: -48,          // Hide empty space during animation
         paddingBottom: 64 + 48,     // Stop before bottomBar
         borderTopLeftRadius: 16,

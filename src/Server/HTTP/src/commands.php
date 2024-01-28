@@ -500,9 +500,13 @@ class Commands {
             $this->account,
             $this->device,
             $claimListStart,
-            $dayIndex
+            $dayIndex,
+            $error
         );
-        if ($newItems === false) return;
+        if ($newItems === false || $error !== false) {
+            $this->output['error'] = $error;
+            return;
+        }
 
         $this->output['ox'] = $this->account->Ox;
         $this->output['newItems'] = $newItems;

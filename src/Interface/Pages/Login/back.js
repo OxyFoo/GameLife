@@ -145,9 +145,12 @@ class BackLogin extends PageBase {
     }
 
     onCGURedirect() {
-        const langKey = langManager.currentLangageKey;
-        const link = 'https://oxyfoo.com/tos/' + langKey;
-        Linking.openURL(link);
+        const websiteAvailableLang = [ 'fr', 'en' ];
+        let langKey = 'fr';
+        if (!websiteAvailableLang.includes(langManager.currentLangageKey)) {
+            langKey = langManager.currentLangageKey;
+        }
+        Linking.openURL(`https://${langKey}.oxyfoo.com/legal/terms-of-service`);
     }
 
     /**

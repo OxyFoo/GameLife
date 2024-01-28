@@ -141,10 +141,12 @@ class NonZeroDays
      * @param Device $device
      * @param int $claimListStart
      * @param int $dayIndex
+     * @param string|false $error Error message if failed
      * @return int[]|false New items IDs or false if failed
      */
-    public static function ClaimReward($db, $account, $device, $claimListStart, $dayIndex) {
+    public static function ClaimReward($db, $account, $device, $claimListStart, $dayIndex, &$error = null) {
         global $NONZERODAYS_REWARDS;
+        $error = false;
 
         $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Start` = ?';
         $rows = $db->QueryPrepare('NonZeroDays', $command, 'ii', [ $account->ID, $claimListStart ]);
@@ -179,18 +181,21 @@ class NonZeroDays
             switch ($type) {
                 case 'ox':
                     if (Users::AddOx($db, $account->ID, $value) === false) {
+                        $error = 'Error: claiming nzd failed (add ox)';
                         return false;
                     }
                     $account->Ox += $value;
                     break;
                 case 'chest':
-                    $chestItem = Shop::BuyRandomChest($db, $account, $device, $value + 1);
-                    if ($chestItem === false) {
+                    $chestItem = Shop::BuyRandomChest($db, $account, $device, $value, true, $errorBuyRandomChest);
+                    if ($chestItem === false || $errorBuyRandomChest !== false) {
+                        $error = "Error: claiming nzd failed (buy chest $value) => $errorBuyRandomChest";
                         return false;
                     }
                     array_push($newItems, $chestItem);
                     break;
                 default:
+                    $error = 'Error: claiming nzd failed (unknown reward type)';
                     $message = "Unknown reward type '$type' for '$claimListStart,$dayIndex'";
                     $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', $message);
                     return false;

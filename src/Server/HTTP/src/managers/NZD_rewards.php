@@ -31,7 +31,7 @@ $NONZERODAYS_REWARDS = array(
     [array( 'type' => 'ox', 'value' => 1 )],
     [array( 'type' => 'ox', 'value' => 1 )],
     [array( 'type' => 'ox', 'value' => 1 )],
-    [array( 'type' => 'ox', 'value' => 2 ), array( 'type' => 'chest', 'value' => 1 )],
+    [array( 'type' => 'ox', 'value' => 2 ), array( 'type' => 'chest', 'value' => 0 )],
     [array( 'type' => 'ox', 'value' => 2 )],
     [array( 'type' => 'ox', 'value' => 2 )],
     [array( 'type' => 'ox', 'value' => 2 )],
@@ -49,7 +49,7 @@ $NONZERODAYS_REWARDS = array(
     [array( 'type' => 'ox', 'value' => 2 )],
     [array( 'type' => 'ox', 'value' => 2 )],
     [array( 'type' => 'ox', 'value' => 2 )],
-    [array( 'type' => 'ox', 'value' => 3 ), array( 'type' => 'chest', 'value' => 2 )],
+    [array( 'type' => 'ox', 'value' => 3 ), array( 'type' => 'chest', 'value' => 1 )],
     [array( 'type' => 'ox', 'value' => 3 )],
     [array( 'type' => 'ox', 'value' => 3 )],
     [array( 'type' => 'ox', 'value' => 3 )],
@@ -67,7 +67,7 @@ $NONZERODAYS_REWARDS = array(
     [array( 'type' => 'ox', 'value' => 3 )],
     [array( 'type' => 'ox', 'value' => 3 )],
     [array( 'type' => 'ox', 'value' => 3 )],
-    [array( 'type' => 'ox', 'value' => 5 ), array( 'type' => 'chest', 'value' => 3 )],
+    [array( 'type' => 'ox', 'value' => 5 ), array( 'type' => 'chest', 'value' => 2 )],
     [array( 'type' => 'ox', 'value' => 5 )],
     [array( 'type' => 'ox', 'value' => 5 )],
     [array( 'type' => 'ox', 'value' => 5 )],
@@ -86,7 +86,7 @@ $NONZERODAYS_REWARDS = array(
     [array( 'type' => 'ox', 'value' => 5 )],
     [array( 'type' => 'ox', 'value' => 5 )],
     [array( 'type' => 'ox', 'value' => 5 )],
-    [array( 'type' => 'ox', 'value' => 10), array( 'type' => 'chest', 'value' => 4 )]
+    [array( 'type' => 'ox', 'value' => 10), array( 'type' => 'chest', 'value' => 3 )]
 );
 
 ?>

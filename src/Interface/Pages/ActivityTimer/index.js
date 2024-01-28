@@ -3,11 +3,12 @@ import { View, Animated, TouchableOpacity, Image } from 'react-native';
 
 import styles from './style';
 import BackActivityTimer from './back';
+import ActivityTimerTitle from './components/title';
+import ActivityTimerScore from './components/score';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Page, Text, Button } from 'Interface/Components';
-import { ActivityExperience } from 'Interface/Widgets';
 
 import IMG_MUSIC from 'Ressources/logo/music/music';
 
@@ -22,14 +23,7 @@ class ActivityTimer extends BackActivityTimer {
         }
 
         const lang = langManager.curr['activity'];
-        const {
-            displayActivity,
-            displayInitialTime,
-            displayCurrentTime,
-            duration
-        } = this.state;
 
-        const textLaunch = lang['timer-launch'] + ' ' + displayInitialTime;
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
 
@@ -43,11 +37,7 @@ class ActivityTimer extends BackActivityTimer {
                 style={styles.content}
             >
                 {/* Title */}
-                <View>
-                    <Text style={styles.headActivityText}>{displayActivity}</Text>
-                    <Text style={styles.headText}>{textLaunch}</Text>
-                    <Text fontSize={48}>{displayCurrentTime}</Text>
-                </View>
+                <ActivityTimerTitle />
 
                 {/* Buttons - Cancel / Done */}
                 <View style={styles.row}>
@@ -71,10 +61,7 @@ class ActivityTimer extends BackActivityTimer {
                 {/* Informations */}
                 <View>
                     <Text style={styles.title}>{lang['timer-gain']}</Text>
-                    <ActivityExperience
-                        skillID={user.activities.currentActivity.skillID}
-                        duration={duration}
-                    />
+                    <ActivityTimerScore />
                 </View>
 
                 {/* Zap'N'Music */}

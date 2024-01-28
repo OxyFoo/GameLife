@@ -15,12 +15,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    headActivityText: {
-        fontSize: 36
-    },
-    headText: {
-        fontSize: 20
-    },
     title: {
         fontSize: 28
     },

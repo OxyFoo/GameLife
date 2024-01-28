@@ -40,7 +40,9 @@ class ActivityTimer extends BackActivityTimer {
         const bt_complete = lang['timer-complete'];
 
         const openURL = (url) => {
-            Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+            Linking.openURL(url).catch(
+                err => user.interface.console.AddLog('error', "Couldn't load page", err)
+                );
         };
 
         return (

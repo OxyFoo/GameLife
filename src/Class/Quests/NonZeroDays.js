@@ -145,11 +145,13 @@ class NonZeroDays {
         const response = await this.user.server.Request('claimNonZeroDays', data);
         if (response === null) {
             this.user.interface.console.AddLog('error', 'Claim error:', response);
+            this.claiming = false;
             return false;
         }
 
         // Update Ox amount
         if (!response.hasOwnProperty('ox') || !response.hasOwnProperty('newItems')) {
+            this.claiming = false;
             return false;
         }
 

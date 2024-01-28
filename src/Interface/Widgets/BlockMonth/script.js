@@ -30,7 +30,7 @@ class MonthType {
  * @param {number | null} [month=null] Current month if null
  * @param {number | null} [year=null] Current year if null
  * @param {number} [start=1] First day of week, default: 1 (monday)
- * @param {number} [selectedDay=-1] Current selected day (0-31)
+ * @param {number} [selectedDay=-1] Current selected day (1-31)
  * @returns {MonthType}
  */
 function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {

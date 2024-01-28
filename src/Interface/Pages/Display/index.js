@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Dimensions, StyleSheet, View } from 'react-native';
+import { View, Animated, Dimensions, StyleSheet } from 'react-native';
 
 import BackDisplay from './back';
 
@@ -31,22 +31,22 @@ const styles = StyleSheet.create({
     page: {
         width: '100%',
         height: '100%',
-        paddingTop:'20%',
+        paddingTop: '20%',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingBottom:10
+        paddingBottom: 10
     },
     button: {
-        width: '80%',
+        width: '80%'
     },
     quoteContainer: {
         alignItems:'center',
-        justifyContent:'flex-end',
+        justifyContent:'flex-end'
     },
     quote: {
         fontStyle: 'italic',
         margin: 0,
-        padding: 0,
+        padding: 0
     }
 });
 

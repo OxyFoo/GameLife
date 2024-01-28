@@ -80,16 +80,18 @@ function AddActivity(activity) {
         Notifications.Evening.RemoveToday();
 
         const text = lang['display-activity-text'];
-        const quoteObject = dataManager.quotes.GetRandomQuote();
-        const quote = quoteObject !== null ? quoteObject.Quote[langManager.currentLangageKey] : '';
         const button = lang['display-activity-button'];
         const args = {
             'icon': 'success',
             'text': text,
-            'quote': quote,
             'button': button,
             'action': Back
         };
+
+        const quote = dataManager.quotes.GetRandomQuote();
+        if (quote !== null) {
+            args['quote'] = quote.Quote[langManager.currentLangageKey];
+        }
 
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {

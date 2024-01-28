@@ -19,9 +19,11 @@ class Display extends BackDisplay {
                 </Animated.View>
                 <Text>{this.text}</Text>
                 <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
-                <View style={styles.quoteContainer}>
-                    <Text fontSize={16} color={'light'} style={[styles.quote]}>{this.quote}</Text>
-                </View>
+                {this.quote !== null && (
+                    <View style={styles.quoteContainer}>
+                        <Text fontSize={16} color={'light'} style={[styles.quote]}>{this.quote}</Text>
+                    </View>
+                )}
             </Page>
         );
     }
@@ -32,21 +34,21 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         paddingTop: '20%',
+        paddingBottom: 10,
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingBottom: 10
+        justifyContent: 'space-between'
     },
     button: {
         width: '80%'
     },
     quoteContainer: {
-        alignItems:'center',
-        justifyContent:'flex-end'
+        alignItems: 'center',
+        justifyContent: 'flex-end'
     },
     quote: {
-        fontStyle: 'italic',
         margin: 0,
-        padding: 0
+        padding: 0,
+        fontStyle: 'italic'
     }
 });
 

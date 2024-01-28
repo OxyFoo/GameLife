@@ -14,20 +14,20 @@
                 "z": 0
             },
             "rotations": {
-                "bust": { "rZ": 0 },
-                "head": { "rZ": 0 },
-                "left_arm": { "rZ": -10 },
-                "left_forearm": { "rZ": -10 },
-                "left_hand": { "rZ": 0 },
-                "right_arm": { "rZ": 4 },
-                "right_forearm": { "rZ": -20 },
-                "right_hand": { "rZ": 0 },
-                "left_thigh": { "rZ": -6 },
-                "left_leg": { "rZ": 0 },
-                "left_foot": { "rZ": 0 },
-                "right_thigh": { "rZ": 0 },
-                "right_leg": { "rZ": 0 },
-                "right_foot": { "rZ": 0 }
+                "bust":             { "rZ": 0 },
+                "head":             { "rZ": 0 },
+                "left_arm":         { "rZ": -15 },
+                "left_forearm":     { "rZ": -8 },
+                "left_hand":        { "rZ": -4 },
+                "right_arm":        { "rZ": 0 },
+                "right_forearm":    { "rZ": -10 },
+                "right_hand":       { "rZ": -10 },
+                "left_thigh":       { "rZ": 0 },
+                "left_leg":         { "rZ": -12 },
+                "left_foot":        { "rZ": 11 },
+                "right_thigh":      { "rZ": 0 },
+                "right_leg":        { "rZ": 10 },
+                "right_foot":       { "rZ": -8 }
             }
         }
     ]

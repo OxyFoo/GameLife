@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Image, Dimensions, FlatList, TouchableOpacity, Linking } from 'react-native';
+import { View, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 
 import BackActivityTimer from './back';
 import user from 'Managers/UserManager';
@@ -10,16 +10,12 @@ import { ActivityExperience } from 'Interface/Widgets';
 
 import IMG_MUSIC from 'Ressources/logo/music/music';
 
-// TODO : faudrait foutre ces liens dans la bdd comme ca on est trql pour les changer
-const images = [
-    { key: '0', 'link': 'https://open.spotify.com/playlist/2qMPv8Re0IW2FzBGjS7HCG' },
-    { key: '1', 'link': 'https://music.apple.com/fr/playlist/zapnmusic-for-work/pl.u-JPAZEomsDXLGvEb' },
-    { key: '2', 'link': 'https://music.youtube.com/playlist?list=PLBo5aRk85uWnkkflI9Of9ecRn8e3SsclZ&si=6szeIToboXpBVot7' },
-    { key: '3', 'link': 'https://deezer.page.link/huyVFejy9ce3m7YY8' },
-]
+/**
+ * @typedef {import('Class/Settings').MusicLinks} MusicLinks
+ */
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const IMAGE_SIZE = SCREEN_WIDTH * 0.8 / (images.length + 2); 
+const IMAGE_SIZE = SCREEN_WIDTH * 0.8 / (Object.keys(user.settings.musicLinks).length + 2); 
 
 class ActivityTimer extends BackActivityTimer {
     render() {
@@ -39,11 +35,9 @@ class ActivityTimer extends BackActivityTimer {
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
 
-        const openURL = (url) => {
-            Linking.openURL(url).catch(
-                err => user.interface.console.AddLog('error', "Couldn't load page", err)
-                );
-        };
+        const musicKeys =
+            /** @type {(keyof MusicLinks)[]} */
+            (Object.keys(user.settings.musicLinks));
 
         return (
             <Page
@@ -88,19 +82,29 @@ class ActivityTimer extends BackActivityTimer {
                 {/* Zap'N'Music */}
                 <View>
                     <Text style={styles.musicTitle}>{lang['timer-music']}</Text>
-                    <View
-                        style={styles.imageMap}>
-                        {images.map((item, index) => (
-                            <TouchableOpacity key={item.key} onPress={() => openURL(item.link)}>
-                                <Image
-                                    source={IMG_MUSIC[parseInt(item.key)]}
-                                    style={styles.image}
-                                />
-                            </TouchableOpacity>
-                        ))}
+                    <View style={styles.imageMap}>
+                        {musicKeys.map(this.renderMusic)}
                     </View>
                 </View>
             </Page>
+        );
+    }
+
+    /**
+     * @param {keyof MusicLinks} musicKey
+     * @param {number} index
+     */
+    renderMusic = (musicKey, index) => {
+        return (
+            <TouchableOpacity
+                key={'music-link-' + musicKey}
+                onPress={() => this.openURL(musicKey)}
+            >
+                <Image
+                    style={styles.image}
+                    source={IMG_MUSIC[index]}
+                />
+            </TouchableOpacity>
         );
     }
 }
@@ -116,32 +120,32 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     headActivityText: {
-        fontSize: 36,
+        fontSize: 36
     },
     headText: {
-        fontSize: 20,
+        fontSize: 20
     },
     title: {
-        fontSize: 28,
+        fontSize: 28
     },
     button: {
         width: '45%'
     },
     musicTitle: {
-        fontSize: 22,
+        fontSize: 22
     },
     imageMap: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        width: '100%',
+        width: '100%'
     },
     image: {
         width: IMAGE_SIZE,
         height: IMAGE_SIZE,
         resizeMode: 'contain',
-        marginTop: 10,
-    },
+        marginTop: 10
+    }
 });
 
 export default ActivityTimer;

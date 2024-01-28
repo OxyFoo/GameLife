@@ -1,3 +1,5 @@
+import { Linking } from 'react-native';
+
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -9,6 +11,7 @@ import { DateToFormatTimeString } from 'Utils/Date';
 import { GetDate, GetTime, RoundTimeTo } from 'Utils/Time';
 
 /**
+ * @typedef {import('Class/Settings').MusicLinks} MusicLinks
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
@@ -145,6 +148,14 @@ class BackActivityTimer extends PageBase {
             user.interface.ChangePage('calendar');
         }
     }
+
+    /** @param {keyof MusicLinks} musicKey */
+    openURL = (musicKey) => {
+        const url = user.settings.musicLinks[musicKey];
+        Linking.openURL(url).catch(err =>
+            user.interface.console.AddLog('error', "Couldn't load page", err)
+        );
+    };
 }
 
 export default BackActivityTimer;

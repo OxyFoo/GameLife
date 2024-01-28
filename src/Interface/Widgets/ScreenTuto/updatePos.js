@@ -131,33 +131,39 @@ async function UpdatePositions() {
     /** @type {ZapOrientation} */
     const orientation = isRight ? 'right' : 'left';
 
-    this.setState({
-        zap: {
-            ...this.state.zap,
-            color: color,
-            inclinaison: inclinaison,
-            face: face,
-            orientation: orientation
-        }
-    }, () => {
-        Animated.parallel([
-            SpringAnimation(this.state.message.position, {
-                x: messageX,
-                y: messageY
-            }),
-            SpringAnimation(this.state.zap.position, {
-                x: zapPosX,
-                y: zapPosY
-            })
-        ]).start(() => {
-            if (ref !== null) {
-                this.setState({
-                    zap: {
-                        ...this.state.zap,
-                        face: 'show'
-                    }
-                });
+    return new Promise(resolve => {
+        this.setState({
+            zap: {
+                ...this.state.zap,
+                color: color,
+                inclinaison: inclinaison,
+                face: face,
+                orientation: orientation
             }
+        }, () => {
+            Animated.parallel([
+                SpringAnimation(this.state.message.position, {
+                    x: messageX,
+                    y: messageY
+                }),
+                SpringAnimation(this.state.zap.position, {
+                    x: zapPosX,
+                    y: zapPosY
+                })
+            ]).start(() => {
+                if (ref !== null) {
+                    this.setState({
+                        zap: {
+                            ...this.state.zap,
+                            face: 'show'
+                        }
+                    }, () => {
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
         });
     });
 }

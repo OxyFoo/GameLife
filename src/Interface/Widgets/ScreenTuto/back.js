@@ -128,10 +128,12 @@ class ScreenTutoBack extends React.Component {
 
             // Show the tutorial element
             let skip = false;
-            await new Promise(resolve => {
-                this.onComponentPress = resolve;
+            await new Promise(async (resolve) => {
+                let showed = false;
+                this.onComponentPress = () => showed && resolve();
                 this.onSkipPress = () => { skip = true; resolve(); };
-                this.Show(element);
+                await this.Show(element);
+                showed = true;
             });
 
             // Autorize skip during execAfter (if crashed)
@@ -139,6 +141,7 @@ class ScreenTutoBack extends React.Component {
                 skip = true;
                 this.setState({ visible: false });
             }
+            this.onComponentPress = () => {};
 
             // After
             const newState = {
@@ -201,35 +204,6 @@ class ScreenTutoBack extends React.Component {
             showNext = showNextButton;
         }
 
-        this.setState({
-            visible: true,
-            positionY: positionY,
-            showNextButton: showNext,
-            showSkipButton: showSkipButton,
-
-            component: {
-                ...this.state.component,
-                ref: error ? null : component,
-                position: {
-                    x: position.x,
-                    y: position.y
-                },
-                size: {
-                    x: position.width,
-                    y: position.height
-                }
-            },
-            zap: {
-                ...this.state.zap,
-                inline: zapInline
-            },
-            message: {
-                ...this.state.message,
-                text: text,
-                fontSize: fontSize
-            }
-        }, UpdatePositions.bind(this));
-
         // Hint opacity - Reset
         clearTimeout(this.hinterval);
         TimingAnimation(this.state.component.hintOpacity, 0, 0).start();
@@ -240,6 +214,40 @@ class ScreenTutoBack extends React.Component {
             hintOpacity = hintOpacity === 0 ? 1 : 0;
             TimingAnimation(this.state.component.hintOpacity, hintOpacity, 1000).start();
         }, 5000);
+
+        return new Promise(resolve => {
+            this.setState({
+                visible: true,
+                positionY: positionY,
+                showNextButton: showNext,
+                showSkipButton: showSkipButton,
+
+                component: {
+                    ...this.state.component,
+                    ref: error ? null : component,
+                    position: {
+                        x: position.x,
+                        y: position.y
+                    },
+                    size: {
+                        x: position.width,
+                        y: position.height
+                    }
+                },
+                zap: {
+                    ...this.state.zap,
+                    inline: zapInline
+                },
+                message: {
+                    ...this.state.message,
+                    text: text,
+                    fontSize: fontSize
+                }
+            }, async () => {
+                await UpdatePositions.bind(this);
+                resolve();
+            });
+        });
     }
 
     IsOpened = () => {

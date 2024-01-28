@@ -81,7 +81,7 @@ function AddActivity(activity) {
 
         const text = lang['display-activity-text'];
         const quoteObject = dataManager.quotes.GetRandomQuote();
-        const quote = quoteObject != undefined ? quoteObject.Quote[langManager.currentLangageKey] : '';
+        const quote = quoteObject !== null ? quoteObject.Quote[langManager.currentLangageKey] : '';
         const button = lang['display-activity-button'];
         const args = {
             'icon': 'success',

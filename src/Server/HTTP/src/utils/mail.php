@@ -44,6 +44,7 @@ function GetMailContent($title, $text, $textButton, $textLink, $deviceName, $act
 
     return $content;
 }
+
 function SendSigninMail($email, $deviceName, $actionButton, $actionView, $langKey) {
     $lang = GetMailLangText($langKey);
     $subject = $lang->{'signin-subject'};

@@ -11,11 +11,14 @@
             "Essayer sans avoir l'intention de gagner n'a pas de sens - Hiruma Youichi"
         ],
         "signin-button": "Accepter",
+
         "delete-subject": "GameLife : Suppression de compte",
         "delete-title": "Es-tu sûr(e) de vouloir supprimer ton compte ?",
         "delete-text": "Cette action est irreversible et supprimera toutes vos données.",
         "delete-button": "Supprimer",
+
         "link": "<p style=\"padding: 6px; color: black; background-color: #ecf0f1\">Si le mail ne s'affiche pas correctement cliquez <a href='%link%'>ICI</a></p>",
+
         "auth-title": "GAMELIFE",
         "auth-accept": "Ton appareil a été accepté avec succès",
         "auth-invalid-token": "Token invalide<br>Cet appareil a peut-être déjà été validé",
@@ -35,11 +38,14 @@
             "Trying without the winning intent is meaningless - Hiruma Youichi"
         ],
         "signin-button": "Accept",
+
         "delete-subject": "GameLife: Deleting your account",
         "delete-title": "Are you sure you want to delete your account?",
         "delete-text": "This action is irreversible and will delete all your data.",
         "delete-button": "Delete",
+
         "link": "<p style=\"padding: 6px; color: black; background-color: #ecf0f1\">If the email does not display correctly click <a href='%link%'>HERE</a></p>",
+
         "auth-title": "GAMELIFE",
         "auth-accept": "Your device has been successfully accepted",
         "auth-invalid-token": "Invalid token<br>This device has maybe already been validated",

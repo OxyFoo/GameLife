@@ -160,6 +160,15 @@ class SwiperBack extends React.Component {
 
         this.startTimer();
     }
+    /** @param {GestureResponderEvent} event */
+    onTouchCancel = (event) => {
+        // Prevent vertical scroll when horizontal swipe
+        event.stopPropagation();
+        this.startTimer();
+        const newIndex = Math.round(this.posX);
+        SpringAnimation(this.state.positionX, newIndex).start();
+        SpringAnimation(this.state.positionDots, newIndex, false).start();
+    }
 
     /** @param {LayoutChangeEvent} event */
     onLayoutPage = (event) => {

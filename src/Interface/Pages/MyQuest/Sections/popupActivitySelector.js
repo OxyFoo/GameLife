@@ -62,20 +62,19 @@ function RenderSkills({ category, callback }) {
     );
 
     return (
-        <View>
-            <Text>{`Skills ${category.name}`}</Text>
+        <Swiper.View>
+            <Text>{category.name}</Text>
             <FlatList
-                ref={ref => this.refActivities = ref}
                 style={styles.activitiesFlatlist}
                 data={skillsItems}
                 ListEmptyComponent={renderEmptyList}
                 renderItem={RenderSkill}
                 keyExtractor={item => 'act-skill-' + item.id}
             />
-        </View>
+        </Swiper.View>
     );
 }
-const RenderSkillsMemo = React.memo(RenderSkills);
+const RenderSkillsMemo = React.memo(RenderSkills, (prev, next) => prev.category.id === next.category.id);
 
 const ActivitySelectorProps = {
     /** @type {(param: number) => void} */

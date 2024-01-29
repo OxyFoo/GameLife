@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import ActivitySelector from './popupActivitySelector';
+import ActivitySelector from './ActivitySelector';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';

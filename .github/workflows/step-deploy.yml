@@ -145,7 +145,6 @@ jobs:
         run: sudo apt-get update && sudo apt-get install lftp -y
 
       - name: 'Install PHP config file'
-        if: inputs.environment == 'test' || inputs.environment == 'prod'
         env:
           SERVER_CONFIG_PHP_B64: ${{ inputs.environment == 'prod' && secrets.SERVER_PROD_CONFIG_PHP_BASE64 || inputs.environment == 'test' && secrets.SERVER_TEST_CONFIG_PHP_BASE64 || secrets.SERVER_DEV_CONFIG_PHP_BASE64 }}
         run: echo $SERVER_CONFIG_PHP_B64 | base64 -d > ./src/Server/HTTP/src/config.php

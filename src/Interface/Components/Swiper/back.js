@@ -92,6 +92,13 @@ class SwiperBack extends React.Component {
         SpringAnimation(this.state.positionDots, prevIndex, false).start();
         this.props.onSwipe(prevIndex);
     }
+    /** @param {number} index */
+    GoTo = (index) => {
+        this.posX = MinMax(0, index, this.props.pages.length - 1);
+        SpringAnimation(this.state.positionX, index).start();
+        SpringAnimation(this.state.positionDots, index, false).start();
+        this.props.onSwipe(index);
+    }
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {

@@ -1,16 +1,15 @@
 import { FlatList } from 'react-native';
 
 import StartTutorial from './tuto';
+import { GetRecentSkills, CategoryToItem, SkillToItem } from './types';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { GetTime, RoundTimeTo } from 'Utils/Time';
 import { Sleep } from 'Utils/Functions';
 import { PageBase } from 'Interface/Components';
-import { CategoryToItem, SkillToItem } from './types';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
@@ -74,15 +73,7 @@ class BackActivity extends PageBase {
             .map(skill => SkillToItem(skill, this.selectSkill));
 
         // Get recent skills
-        const now = GetTime(undefined, 'local');
-        this.allRecentSkillsItems = user.activities.Get()
-            .filter(activity => activity.startTime <= now)
-            .reverse()
-            .map(activity => dataManager.skills.GetByID(activity.skillID))
-            .filter(skill => skill !== null)
-            // Remove duplicate
-            .filter((skill, index, self) => self.findIndex(s => s.ID === skill.ID) === index)
-            .map(skill => SkillToItem(skill, this.selectSkill));
+        this.allRecentSkillsItems = GetRecentSkills(this.selectSkill);
 
         this.state.skills = this.allSkillsItems;
         this.state.inputText = langManager.curr['activity']['input-activity'];

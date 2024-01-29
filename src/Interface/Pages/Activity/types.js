@@ -1,4 +1,7 @@
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+
+import { GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/Skills').Category} Category
@@ -30,4 +33,19 @@ const CategoryToItem = (category) => ({
     icon: dataManager.skills.GetXmlByLogoID(category.LogoID)
 });
 
-export { SkillToItem, CategoryToItem };
+/**
+ * @param {(param: Skill) => void} callback
+ */
+const GetRecentSkills = (callback) => {
+    const now = GetTime(undefined, 'local');
+    return user.activities.Get()
+        .filter(activity => activity.startTime <= now)
+        .reverse()
+        .map(activity => dataManager.skills.GetByID(activity.skillID))
+        .filter(skill => skill !== null)
+        // Remove duplicate
+        .filter((skill, index, self) => self.findIndex(s => s.ID === skill.ID) === index)
+        .map(skill => SkillToItem(skill, callback));
+};
+
+export { SkillToItem, CategoryToItem, GetRecentSkills };

@@ -21,7 +21,7 @@ async function Initialisation(nextStep, nextPage) {
 
     // Ping request
     await user.server.Ping();
-    const online = user.server.IsConnected();
+    const { online } = user.server;
     if (!online) {
         user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
     }

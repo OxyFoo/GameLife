@@ -35,6 +35,7 @@ const CategoryToItem = (category) => ({
 
 /**
  * @param {(param: Skill) => void} callback
+ * @returns {Array<ItemSkill>}
  */
 const GetRecentSkills = (callback) => {
     const now = GetTime(undefined, 'local');

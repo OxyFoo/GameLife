@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 
-import { SkillToItem } from '../../../Activity/types';
+import { GetRecentSkills, SkillToItem } from '../../../Activity/types';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
@@ -56,14 +56,22 @@ function RenderSkill({ item }) {
  * @returns {React.ReactNode}
  */
 function RenderSkills({ category, callback }) {
-    const skills = dataManager.skills.GetByCategory(category.id);
-    const skillsItems = skills.map(skill =>
-        SkillToItem(skill, (skill) => callback(skill.ID))
-    );
+    const skillsItems = [];
+
+    // Recent skills
+    if (category.id === 0) {
+        skillsItems.push(...GetRecentSkills(skill => callback(skill.ID)));
+    }
+
+    else {
+        const skills = dataManager.skills.GetByCategory(category.id);
+        skillsItems.push(...skills.map(skill =>
+            SkillToItem(skill, (skill) => callback(skill.ID))
+        ));
+    }
 
     return (
         <Swiper.View>
-            <Text>{category.name}</Text>
             <FlatList
                 style={styles.activitiesFlatlist}
                 data={skillsItems}
@@ -76,13 +84,44 @@ function RenderSkills({ category, callback }) {
 }
 const RenderSkillsMemo = React.memo(RenderSkills, (prev, next) => prev.category.id === next.category.id);
 
+/**
+ * @param {object} param0
+ * @param {string} param0.searchInput
+ * @param {(param: number) => void} param0.callback
+ * @returns {React.ReactNode}
+ */
+function RenderSkillsSearch({ searchInput, callback }) {
+    const [ skillsItems, setSkillsItems ] = React.useState([]);
+
+    React.useEffect(() => {
+        const skills = dataManager.skills.Get();
+        const newSkills = skills
+            .map(skill => SkillToItem(skill, (skill) => callback(skill.ID)))
+            .filter(skill => skill.value.includes(searchInput));
+        setSkillsItems(newSkills);
+    }, [ searchInput ]);
+
+    return (
+        <Swiper.View>
+            <FlatList
+                style={styles.activitiesFlatlist}
+                data={skillsItems}
+                ListEmptyComponent={renderEmptyList}
+                renderItem={RenderSkill}
+                keyExtractor={item => 'act-skill-' + item.id}
+            />
+        </Swiper.View>
+    );
+}
+
 const styles = StyleSheet.create({
     activitiesFlatlist: {
         width: '100%',
-        height: 450
+        height: 450,
+        marginTop: 12
     },
     activityElement: {
-        marginHorizontal: 0,
+        marginHorizontal: 12,
         marginBottom: 6,
         padding: 8,
         borderRadius: 8,
@@ -97,4 +136,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export { RenderSkillsMemo };
+export { RenderSkillsMemo, RenderSkillsSearch };

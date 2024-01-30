@@ -47,7 +47,10 @@ const SwiperProps = {
     onSwipe: (index) => {},
 
     /** @type {(event: LayoutChangeEvent) => void} Callback is called when page layout change */
-    onLayout: (event) => {}
+    onLayout: (event) => {},
+
+    /** @type {boolean} */
+    disableSwipe: false
 };
 
 class SwiperBack extends React.Component {
@@ -114,6 +117,8 @@ class SwiperBack extends React.Component {
     }
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        if (this.props.disableSwipe) return;
+
         // Prevent vertical scroll when horizontal swipe
         event.stopPropagation();
 

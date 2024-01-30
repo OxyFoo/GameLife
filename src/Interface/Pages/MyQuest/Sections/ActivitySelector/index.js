@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { Animated, View, ScrollView, StyleSheet, Platform } from 'react-native';
 
-import { RenderSkillsMemo } from './renderSkills';
-import { CategoryToItem, GetRecentSkills } from '../../../Activity/types';
+import { RenderSkillsMemo, RenderSkillsSearch } from './renderSkills';
+import { CategoryToItem } from '../../../Activity/types';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
-import { IconCheckable, Swiper } from 'Interface/Components';
+import { Text, IconCheckable, Swiper, Button, Icon, Input } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('../../../Activity/types').ItemCategory} ItemCategory
@@ -20,7 +22,12 @@ const ActivitySelectorProps = {
 class ActivitySelector extends React.Component {
     state = {
         /** @type {number | null} */
-        selectedCategory: 0
+        selectedCategory: 0,
+
+        isSearching: false,
+        search: '',
+
+        animSearch: new Animated.Value(0)
     }
 
     /** @type {React.RefObject<Swiper>} */
@@ -28,30 +35,99 @@ class ActivitySelector extends React.Component {
 
     /** @type {Array<ItemCategory>} */
     allCategoriesItems = dataManager.skills.categories.map(CategoryToItem);
-    allRecentSkillsItems = GetRecentSkills((a) => console.log(dataManager.GetText(a.Name)));
+
+    handleSearchButton = () => {
+        const { isSearching } = this.state;
+        SpringAnimation(this.state.animSearch, isSearching ? 0 : 1).start();
+        this.setState({ isSearching: !isSearching });
+        this.refSwiper.current?.GoTo(0);
+    }
+    /** @param {string} search */
+    handleSearchInput = (search) => {
+        this.setState({ search });
+    }
 
     render() {
+        const lang = langManager.curr['quest'];
+        const { isSearching, search, animSearch } = this.state;
+        let title = '';
+        const pages = [];
+
+        if (isSearching) {
+            title = lang['popup-all-categories'];
+            pages.push(
+                <RenderSkillsSearch
+                    searchInput={search}
+                    callback={(id) => {
+                        this.props.callback(id);
+                        user.interface.popup.Close();
+                    }}
+                />
+            );
+        } else {
+            const selectedCategory = this.allCategoriesItems.find(category => category.id === this.state.selectedCategory);
+            title = selectedCategory?.name ?? '[ERROR]';
+            pages.push(...this.allCategoriesItems.map(category =>
+                <RenderSkillsMemo
+                    category={category}
+                    callback={(id) => {
+                        this.props.callback(id);
+                        user.interface.popup.Close();
+                    }}
+                />
+            ));
+        }
+
+        const styleAnimCategories = {
+            transform: [
+                { translateY: 10 },
+                { translateY: Animated.multiply(-100, animSearch) }
+            ]
+        };
+        const styleAnimSearch = {
+            transform: [
+                { translateY: -40 },
+                { translateY: Animated.multiply(-100, Animated.subtract(1, animSearch)) }
+            ]
+        };
+
         return (
-            <View>
-                <View style={styles.categoriesContainer}>
+            <View style={styles.popup}>
+                {/* Categories */}
+                <Animated.View style={[styles.categoriesContainer, styleAnimCategories]}>
                     <ScrollView style={styles.categoriesScrollView} horizontal>
                         {this.allCategoriesItems.map(category => this.renderCategory({ item: category }))}
                     </ScrollView>
+                </Animated.View>
+
+                {/* Search */}
+                <Animated.View style={[styles.searchContainer, styleAnimSearch]}>
+                    <Input
+                        label={lang['popup-all-categories']}
+                        text={search}
+                        onChangeText={this.handleSearchInput}
+                    />
+                </Animated.View>
+
+                {/* Title & search button */}
+                <View style={styles.containerTitle}>
+                    <Text fontSize={isSearching ? 16 : 24}>{title}</Text>
+                    <Button style={styles.searchButton} onPress={this.handleSearchButton}>
+                        <Icon
+                            icon={isSearching ? 'cross' : 'magnifyingGlass'}
+                            size={28}
+                        />
+                    </Button>
                 </View>
+
+                {/* Skills list */}
                 <Swiper
                     ref={this.refSwiper}
                     height={500}
                     onSwipe={this.handleCategorySwiper}
-                    pages={this.allCategoriesItems.map(category =>
-                        <RenderSkillsMemo
-                            category={category}
-                            callback={(id) => {
-                                this.props.callback(id);
-                                user.interface.popup.Close();
-                            }}
-                        />
-                    )}
+                    pages={pages}
                     enableAutoNext={false}
+                    disableSwipe={Platform.OS === 'ios'}
                 />
             </View>
         );
@@ -92,16 +168,38 @@ ActivitySelector.prototype.props = ActivitySelectorProps;
 ActivitySelector.defaultProps = ActivitySelectorProps;
 
 const styles = StyleSheet.create({
+    popup: {
+        overflow: 'hidden'
+    },
+
     category: {
         marginVertical: 4,
         marginHorizontal: 4
     },
     categoriesContainer: {
+        marginTop: 6,
         alignItems: 'center'
     },
     categoriesScrollView: {
         maxWidth: '100%',
-        marginBottom: 18
+        marginBottom: 0
+    },
+
+    searchContainer: {
+        height: 24,
+        marginHorizontal: 16
+    },
+
+    containerTitle: {
+        marginBottom: 4,
+        marginHorizontal: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    searchButton: {
+        aspectRatio: 1,
+        paddingHorizontal: 0
     }
 });
 

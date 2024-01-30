@@ -7,7 +7,7 @@ import { Sleep } from 'Utils/Functions';
  * @this {import('./back').default}
  */
 function StartHelp() {
-    const lang = langManager.curr['tuto']['quest'];
+    const lang = langManager.curr['quest']['tuto'];
 
     user.interface.screenTuto.ShowTutorial([
         {

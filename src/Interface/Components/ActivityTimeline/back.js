@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
 import dataManager from 'Managers/DataManager';
 
 import { GetDate, GetTimeZone } from 'Utils/Time';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -33,8 +34,10 @@ const ActivityTimelineProps = {
 class ActivityTimelineBack extends React.Component {
     state = {
         activities: [],
-        isScrolled: false
+        animHeight: new Animated.Value(1)
     }
+
+    isScrolled = false;
 
     componentDidMount() {
         this.compute();
@@ -122,11 +125,13 @@ class ActivityTimelineBack extends React.Component {
      * @param {boolean} thinMode
      */
     SetThinMode(thinMode) {
-        if (thinMode && !this.state.isScrolled) {
-            this.setState({ isScrolled: true });
+        if (thinMode && !this.isScrolled) {
+            this.isScrolled = true;
+            TimingAnimation(this.state.animHeight, 0, 200, false).start();
         }
-        else if (!thinMode && this.state.isScrolled) {
-            this.setState({ isScrolled: false });
+        else if (!thinMode && this.isScrolled) {
+            this.isScrolled = false;
+            TimingAnimation(this.state.animHeight, 1, 200, false).start();
         }
     }
 

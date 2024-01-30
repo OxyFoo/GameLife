@@ -8,7 +8,7 @@ import { Sleep } from 'Utils/Functions';
  * @this {import('./back').default}
  */
 function StartHelp() {
-    const lang = langManager.curr['tuto']['activity'];
+    const lang = langManager.curr['activity']['tuto'];
     const categoriesText = dataManager.skills.categories
         .map(category => dataManager.GetText(category.Name))
         .join(', ');

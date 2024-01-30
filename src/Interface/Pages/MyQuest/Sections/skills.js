@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
+import ActivitySelector from './ActivitySelector';
+
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { GetTime } from 'Utils/Time';
 import { Button, Text, Icon } from 'Interface/Components';
+import { GetTime } from 'Utils/Time';
 
 const MAX_SKILLS = 10;
 
@@ -115,6 +117,17 @@ class SectionSkill extends React.Component {
         );
     }
 
+    handleActivitySelector = () => {
+        const callback = (id) => {
+            const { skillsIDs } = this.props;
+            if (skillsIDs.length >= MAX_SKILLS || skillsIDs.includes(id)) {
+                return;
+            }
+            this.props.onChange([ ...skillsIDs, id ]);
+        }
+        user.interface.popup.Open('custom', () => <ActivitySelector callback={callback} />);
+    }
+
     render() {
         const lang = langManager.curr['quest'];
         const { skillsIDs } = this.props;
@@ -159,7 +172,7 @@ class SectionSkill extends React.Component {
                         colorText='main1'
                         style={styles.smallBtn}
                         fontSize={14}
-                        onPress={this.OpenCategoriesSelection}
+                        onPress={this.handleActivitySelector}
                     >
                         {lang['input-activity-add']}
                     </Button>

@@ -85,13 +85,13 @@ async function UpdatePositions() {
         ) + Math.PI / 2;
 
         // Invert zap & message position if component is on first or last quarter of the screen
-        let offset = targetPosition.height / 2 + zapLayout.height / 2 + 36;
+        let distance = targetPosition.height / 2 + zapLayout.height;
         if (quarterIndex === 0 || quarterIndex >= 3) {
-            offset = - offset - messageLayout.height - 36;
+            distance = - distance - messageLayout.height;
         }
 
-        const offsetX = - Math.cos(theta) * offset;
-        const offsetY = Math.sin(theta) * offset;
+        const offsetX = - Math.cos(theta) * distance;
+        const offsetY = Math.sin(theta) * distance;
 
         zapPosX = componentMidX + offsetX - zapLayout.width / 2;
         zapPosY = componentMidY + offsetY - zapLayout.height / 2;
@@ -131,33 +131,39 @@ async function UpdatePositions() {
     /** @type {ZapOrientation} */
     const orientation = isRight ? 'right' : 'left';
 
-    this.setState({
-        zap: {
-            ...this.state.zap,
-            color: color,
-            inclinaison: inclinaison,
-            face: face,
-            orientation: orientation
-        }
-    }, () => {
-        Animated.parallel([
-            SpringAnimation(this.state.message.position, {
-                x: messageX,
-                y: messageY
-            }),
-            SpringAnimation(this.state.zap.position, {
-                x: zapPosX,
-                y: zapPosY
-            })
-        ]).start(() => {
-            if (ref !== null) {
-                this.setState({
-                    zap: {
-                        ...this.state.zap,
-                        face: 'show'
-                    }
-                });
+    return new Promise(resolve => {
+        this.setState({
+            zap: {
+                ...this.state.zap,
+                color: color,
+                inclinaison: inclinaison,
+                face: face,
+                orientation: orientation
             }
+        }, () => {
+            Animated.parallel([
+                SpringAnimation(this.state.message.position, {
+                    x: messageX,
+                    y: messageY
+                }),
+                SpringAnimation(this.state.zap.position, {
+                    x: zapPosX,
+                    y: zapPosY
+                })
+            ]).start(() => {
+                if (ref !== null) {
+                    this.setState({
+                        zap: {
+                            ...this.state.zap,
+                            face: 'show'
+                        }
+                    }, () => {
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
         });
     });
 }

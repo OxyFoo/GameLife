@@ -8,7 +8,7 @@ import { Sleep } from 'Utils/Functions';
  * @param {'dailyDeals' | 'randomChests' | 'targetChests' | 'dyes'} section
  */
 function StartHelp(section) {
-    const lang = langManager.curr['tuto']['shop'];
+    const lang = langManager.curr['shop']['tuto'];
 
     if (section === 'dailyDeals') {
         user.interface.screenTuto.ShowTutorial([

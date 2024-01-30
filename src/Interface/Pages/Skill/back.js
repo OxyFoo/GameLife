@@ -108,8 +108,8 @@ class BackSkill extends PageBase {
     }
 
     addActivity = () => {
-        const args = { skillID: this.skillID };
-        user.interface.ChangePage('activity', args, true);
+        const { skillID } = this;
+        user.interface.ChangePage('activity', { skillID }, true);
     }
 }
 

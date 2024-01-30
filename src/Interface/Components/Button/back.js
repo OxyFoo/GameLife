@@ -17,7 +17,7 @@ const ButtonProps = {
     /** @type {string | JSX.Element | JSX.Element[] | undefined} */
     children: undefined,
 
-    /** @type {StyleProp | Object} */
+    /** @type {StyleProp} */
     style: {},
 
     /** @type {AnimatedProps | null} */

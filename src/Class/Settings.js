@@ -5,7 +5,15 @@ import DataStorage, { STORAGE } from "Utils/DataStorage";
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {DEFAULT_MUSIC_LINKS} MusicLinks
  */
+
+const DEFAULT_MUSIC_LINKS = {
+    'spotify': 'https://open.spotify.com/playlist/2qMPv8Re0IW2FzBGjS7HCG',
+    'applemusic': 'https://music.apple.com/fr/playlist/zapnmusic-for-work/pl.u-JPAZEomsDXLGvEb',
+    'youtubemusic': 'https://music.youtube.com/playlist?list=PLBo5aRk85uWnkkflI9Of9ecRn8e3SsclZ&si=6szeIToboXpBVot7',
+    'deezer': 'https://deezer.page.link/huyVFejy9ce3m7YY8'
+};
 
 class Settings {
     /** @param {UserManager} user */
@@ -23,6 +31,8 @@ class Settings {
 
     morningNotifications = true;
     eveningNotifications = true;
+
+    musicLinks = DEFAULT_MUSIC_LINKS;
 
     Clear() {
         this.email = '';
@@ -50,6 +60,7 @@ class Settings {
             if (contains('questHeatMap')) this.questHeatMap = settings['questHeatMap'];
             if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
             if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
+            if (contains('musicLinks')) this.musicLinks = settings['musicLinks'];
 
             EditLog(debugIndex, 'same', 'Settings data: local load success');
         } else {
@@ -70,6 +81,7 @@ class Settings {
             questHeatMap: this.questHeatMap,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
+            musicLinks: this.musicLinks
         };
 
         const debugIndex = AddLog('info', 'Settings data: local saving...');
@@ -81,6 +93,15 @@ class Settings {
         EditLog(debugIndex, statusType, 'Settings data: local save ' + statusText);
 
         return status;
+    }
+
+    /** @param {object} newLinks */
+    LoadMusicLinks(newLinks) {
+        for (const key in newLinks) {
+            if (this.musicLinks.hasOwnProperty(key)) {
+                this.musicLinks[key] = newLinks[key];
+            }
+        }
     }
 }
 

@@ -66,7 +66,6 @@ jobs:
 
   enable-test-account:
     name: '🔑 Enable test account'
-    if: success() || failure()
     runs-on: ubuntu-latest
     needs: [ android, ios ]
     steps:
@@ -76,7 +75,16 @@ jobs:
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
-      - name: 'Enable test account'
+      - name: 'Enable test account - Test'
+        run: |
+          php ./Tools/Maintenance/setTestAccount.php \
+          '${{ vars.DB_TEST_HOST }}' \
+          '${{ vars.DB_TEST_USER }}' \
+          '${{ secrets.DB_TEST_PASS }}' \
+          '${{ vars.DB_TEST_NAME }}' \
+          1
+
+      - name: 'Enable test account - Prod'
         run: |
           php ./Tools/Maintenance/setTestAccount.php \
           '${{ vars.DB_PROD_HOST }}' \
@@ -88,7 +96,7 @@ jobs:
   notify:
     name: '📣 App Published'
     runs-on: ubuntu-latest
-    needs: enable-test-account
+    needs: [ android, ios ]
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4

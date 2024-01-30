@@ -8,7 +8,7 @@ import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
-import { Icon, Page, Text, ActivityTimeline } from 'Interface/Components';
+import { Page, Text, Button, Icon, ActivityTimeline } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
@@ -89,14 +89,27 @@ class Calendar extends BackCalendar {
 
                     {/* Date selection + arrows prev/next */}
                     <View style={styles.row}>
-                        <Icon onPress={this.selectPrevWeek} icon='chevron' color='main1' size={18} angle={180} />
+                        <Button style={styles.btnIcon} rippleColor='white' onPress={this.selectPrevWeek}>
+                            <Icon
+                                icon='chevron'
+                                color='main1'
+                                size={18}
+                                angle={180}
+                            />
+                        </Button>
                         <BlockMonth
                             style={styles.weekRow}
                             data={selectedALL}
                             onPressDay={this.daySelect}
                             hideTitle
                         />
-                        <Icon onPress={this.selectNextWeek} icon='chevron' color='main1' size={18} />
+                        <Button style={styles.btnIcon} rippleColor='white' onPress={this.selectNextWeek}>
+                            <Icon
+                                icon='chevron'
+                                color='main1'
+                                size={18}
+                            />
+                        </Button>
                     </View>
 
                     {/* CurrDate + Activities panel */}
@@ -104,8 +117,8 @@ class Calendar extends BackCalendar {
                         style={[styles.panel, styleBackground]}
                     >
                         <ActivityTimeline
-                            activities={currActivities}
                             ref={this.refActivityTimeline}
+                            activities={currActivities}
                         />
                         <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
                         {selectedALL?.day && ( // Force re-render after date selection

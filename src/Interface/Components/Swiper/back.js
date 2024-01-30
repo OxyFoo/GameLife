@@ -47,7 +47,10 @@ const SwiperProps = {
     onSwipe: (index) => {},
 
     /** @type {(event: LayoutChangeEvent) => void} Callback is called when page layout change */
-    onLayout: (event) => {}
+    onLayout: (event) => {},
+
+    /** @type {boolean} */
+    disableSwipe: false
 };
 
 class SwiperBack extends React.Component {
@@ -92,6 +95,13 @@ class SwiperBack extends React.Component {
         SpringAnimation(this.state.positionDots, prevIndex, false).start();
         this.props.onSwipe(prevIndex);
     }
+    /** @param {number} index */
+    GoTo = (index) => {
+        this.posX = MinMax(0, index, this.props.pages.length - 1);
+        SpringAnimation(this.state.positionX, index).start();
+        SpringAnimation(this.state.positionDots, index, false).start();
+        this.props.onSwipe(index);
+    }
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
@@ -107,6 +117,8 @@ class SwiperBack extends React.Component {
     }
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        if (this.props.disableSwipe) return;
+
         // Prevent vertical scroll when horizontal swipe
         event.stopPropagation();
 
@@ -152,6 +164,15 @@ class SwiperBack extends React.Component {
         this.props.onSwipe(newIndex);
 
         this.startTimer();
+    }
+    /** @param {GestureResponderEvent} event */
+    onTouchCancel = (event) => {
+        // Prevent vertical scroll when horizontal swipe
+        event.stopPropagation();
+        this.startTimer();
+        const newIndex = Math.round(this.posX);
+        SpringAnimation(this.state.positionX, newIndex).start();
+        SpringAnimation(this.state.positionDots, newIndex, false).start();
     }
 
     /** @param {LayoutChangeEvent} event */

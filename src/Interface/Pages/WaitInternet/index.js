@@ -26,6 +26,7 @@ class Waitinternet extends BackWaitinternet {
                 </View>
 
                 <Text style={styles.text} color='primary'>{textWait}</Text>
+                <Text style={styles.link} onPress={this.goToWebsite} color='main1'>oxyfoo.com</Text>
             </Page>
         );
     }
@@ -44,8 +45,12 @@ const styles = StyleSheet.create({
         right: 0
     },
     text: {
-        fontSize: 16,
-        paddingHorizontal: 24
+        fontSize: 20,
+        paddingHorizontal: 12
+    },
+    link: {
+        marginTop: 12,
+        fontSize: 24
     }
 });
 

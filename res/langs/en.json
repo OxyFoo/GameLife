@@ -177,7 +177,11 @@
         },
 
         "alert-achievement-title": "Unlocked achievement",
-        "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}"
+        "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",
+
+        "tuto": {
+            "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."
+        }
     },
 
     "activity": {
@@ -214,6 +218,7 @@
         "timer-gain": "Current gains",
         "timer-complete": "Complete",
         "timer-cancel": "Cancel",
+        "timer-music": "Zap music will help you focus",
         "timeralert-cancel-title": "Cancel activity",
         "timeralert-cancel-text": "Are you sure you want to cancel this activity?",
         "timeralert-tooshort-title": "Too early",
@@ -222,7 +227,17 @@
         "display-activity-text": "Your activity has been created!",
         "display-activity-button": "Back home",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
-        "display-fail-button": "Back home"
+        "display-fail-button": "Back home",
+
+        "tuto": {
+            "1": "You can filter activities by category: {}",
+            "2": "You can select an activity here to open the activity panel",
+
+            "3": "You can choose to add an activity you've done or plan to do later, or you can set a timer to start the activity now",
+            "4": "You can click on this component to define the start and duration of the activity",
+            "5": "Here you can see the experience you'll gain by doing this activity",
+            "6": "You can add a comment to your activity, for example, to record your feelings or to note important information"
+        }
     },
 
     "calendar": {
@@ -351,7 +366,12 @@
         "alert-birthtimewait-title": "Change of date of birth",
         "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-text": "Are you {} years old?"
+        "alert-birthconfirm-text": "Are you {} years old?",
+
+        "tuto": {
+            "1": "This is your profile, you can change your personal information here",
+            "2": "This is your avatar, you can click on it to change your appearance"
+        }
     },
 
     "profile-avatar": {
@@ -398,7 +418,11 @@
         "alert-success-title": "Sent",
         "alert-success-text": "Thank you so much for your feedback!",
         "alert-error-title": "Error",
-        "alert-error-text": "An error has occurred, please try again later."
+        "alert-error-text": "An error has occurred, please try again later.",
+
+        "tuto": {
+            "bug": "Please provide as many details on the nature of the bug as well as in the conditions in which it appeared (Android/iOS? Connected to the Internet or not? Smartphone or emulator brand?)"
+        }
     },
 
     "settings": {
@@ -496,7 +520,20 @@
         "reward-success-text": "You have obtained the following rewards:",
 
         "temp-comingsoon-title": "Shop",
-        "temp-comingsoon-text": "🚧 Available soon 🚧"
+        "temp-comingsoon-text": "🚧 Available soon 🚧",
+
+        "tuto": {
+            "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
+            "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
+            "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
+            "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
+            "randomChests-epic": "As for the epic chest, it offers 29% chance of obtaining a rare object, 70% for an epic object and 1% for a legendary object;There is no chance to find a common object there.",
+            "targetedChests": "You can buy targeted chests, in which you are sure you have an item in the category you have chosen!",
+            "targetedChests-common": "In the common chest, the chances of obtaining an object of common rarity are extremely high at 99%, followed by 0.9% for a rare object and 0.1% for an epic object;It should be noted that there is no chance of finding a legendary object there.",
+            "targetedChests-rare": "By opening the rare chest, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
+            "targetedChests-epic": "As for the epic chest, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
+            "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
+        }
     },
 
     "skill": {
@@ -569,7 +606,13 @@
         "alert-taskslimit-title": "Limit reached",
         "alert-taskslimit-text": "You can't add more than 20 tasks to this todo",
         "alert-back-title": "Back",
-        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
+        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost.",
+
+        "tuto": {
+            "1": "Here you can set the deadline for your todo",
+            "2": "You can also add sub-todoes to your main todo, to organize yourself better.",
+            "3": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
+        }
     },
 
     "todoes": {
@@ -596,6 +639,8 @@
         "input-activity-title": "No activity selected",
         "input-activity-add": "Add",
 
+        "popup-all-categories": "All categories",
+
         "input-panel-activity": "Select an activity",
         "input-panel-category": "Select a category",
 
@@ -619,7 +664,21 @@
         "alert-remquest-title": "Delete quest?",
         "alert-remquest-text": "Are you sure you want to delete this quest?",
         "alert-back-title": "Back",
-        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost."
+        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost.",
+
+        "tuto": {
+            "1": "Here you can set the deadline for your quest, or its frequency if it's a recurring one",
+            "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
+            "3": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
+        }
+    },
+
+    "quest-stats": {
+        "tuto": {
+            "1": "Here you define the deadline for your quest, or its frequency if it's a recurring one.",
+            "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
+            "3": "Finally, you can add a comment to your quest, for example, to record your feelings or to note important information."
+        }
     },
 
     "quests": {
@@ -632,7 +691,16 @@
 
         "current-streak": "Current streak",
         "heatmap-title-weeks": "Completion by week",
-        "heatmap-title-days": "Completion by day"
+        "heatmap-title-days": "Completion by day",
+
+        "tuto": {
+            "1": "These are the quests! Missions you can give yourself to help motivate you.",
+            "2": "If you want to add one, just click on the button here!",
+            "3": "Under each quest, you'll see circles. They can have several colours, here are their meanings:",
+            "4": "Red: the quest has not been completed.  Pink: it's happening today.  Purple: other days",
+            "5": "Oh yes! If you click on a quest, you can see its details!",
+            "6": "What are you waiting for? Go for it! If you need help, you can click on the info button and I'll come to you!"
+        }
     },
 
     "nonzerodays": {
@@ -643,11 +711,18 @@
         "no-claim": "No claim available",
 
         "alert-claim-error-title": "Error",
-        "alert-claim-error-text": "An error has occurred, please try again later."
+        "alert-claim-error-text": "An error has occurred, please try again later.",
+
+        "tuto": {
+            "1": "Here, it's the 'Non Zero Days' (inspired by Ryan from Reddit), the activity streak basically.",
+            "2": "The way it works is simple, every day you have to do at least one activity that earns you xp.",
+            "3": "You can then collect your reward the day after, and so on.",
+            "4": "If you want to see a list of all the possible rewards, you can click on the arrow right here!"
+        }
     },
 
     "wait": {
-        "wait-internet-text": "You must be connected to the internet to be able to connect!",
+        "wait-internet-text": "The GameLife server is down.\n\nCheck your Internet connection or try again later!\n\nIf the problem persists, contact us on Discord or by e-mail, which you'll find on our website:",
         "wait-maintenance-text": "The servers are currently in maintenance, come back later!",
         "wait-email-text": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam.",
         "wait-email-remain": "Mail sent again in {}m{}s",
@@ -668,70 +743,6 @@
             "shop-next": "And most importantly, click on the big pink button at the bottom!",
             "activity": "This is where you can add your activities! All you have to do is choose an activity and start playing!",
             "home-final": "Your GameLife adventure starts now! A world full of challenges and rewards is waiting for you, so don't wait any longer and go for it!"
-        },
-
-        "achievements": {
-            "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."
-        },
-
-        "activity": {
-            "1": "You can filter activities by category: {}",
-            "2": "You can select an activity here to open the activity panel",
-
-            "3": "You can choose to add an activity you've done or plan to do later, or you can set a timer to start the activity now",
-            "4": "You can click on this component to define the start and duration of the activity",
-            "5": "Here you can see the experience you'll gain by doing this activity",
-            "6": "You can add a comment to your activity, for example, to record your feelings or to note important information"
-        },
-
-        "profile": {
-            "1": "This is your profile, you can change your personal information here",
-            "2": "This is your avatar, you can click on it to change your appearance"
-        },
-
-        "report": {
-            "bug": "Please provide as many details on the nature of the bug as well as in the conditions in which it appeared (Android/iOS? Connected to the Internet or not? Smartphone or emulator brand?)"
-        },
-
-        "shop": {
-            "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
-            "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
-            "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
-            "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
-            "randomChests-epic": "As for the epic chest, it offers 29% chance of obtaining a rare object, 70% for an epic object and 1% for a legendary object;There is no chance to find a common object there.",
-            "targetedChests": "You can buy targeted chests, in which you are sure you have an item in the category you have chosen!",
-            "targetedChests-common": "In the common chest, the chances of obtaining an object of common rarity are extremely high at 99%, followed by 0.9% for a rare object and 0.1% for an epic object;It should be noted that there is no chance of finding a legendary object there.",
-            "targetedChests-rare": "By opening the rare chest, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
-            "targetedChests-epic": "As for the epic chest, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
-            "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
-        },
-
-        "todo": {
-            "1": "Here you can set the deadline for your todo",
-            "2": "You can also add sub-todoes to your main todo, to organize yourself better.",
-            "3": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
-        },
-
-        "quest": {
-            "1": "Here you can set the deadline for your quest, or its frequency if it's a recurring one",
-            "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
-            "3": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
-        },
-
-        "nzd": {
-            "1": "Here, it's the 'Non Zero Days' (inspired by Ryan from Reddit), the activity streak basically.",
-            "2": "The way it works is simple, every day you have to do at least one activity that earns you xp.",
-            "3": "You can then collect your reward the day after, and so on.",
-            "4": "If you want to see a list of all the possible rewards, you can click on the arrow right here!"
-        },
-
-        "quests": {
-            "1": "These are the quests! Missions you can give yourself to help motivate you.",
-            "2": "If you want to add one, just click on the button here!",
-            "3": "Under each quest, you'll see circles. They can have several colours, here are their meanings:",
-            "4": "Red: the quest has not been completed.  Pink: it's happening today.  Purple: other days",
-            "5": "Oh yes! If you click on a quest, you can see its details!",
-            "6": "What are you waiting for? Go for it! If you need help, you can click on the info button and I'll come to you!"
         },
 
         "other": {

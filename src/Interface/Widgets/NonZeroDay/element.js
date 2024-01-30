@@ -167,7 +167,7 @@ function RenderReward(props) {
             <View key={`nzd-reward-${props.index}`} style={styleReward}>
                 <Image
                     style={styles.rewardImage}
-                    source={IMG_CHESTS[props.item.value - 1]}
+                    source={IMG_CHESTS[props.item.value]}
                 />
             </View>
         );

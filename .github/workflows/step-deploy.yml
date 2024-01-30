@@ -29,6 +29,16 @@ jobs:
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
+      - name: 'Enable maintenance mode - dev'
+        if: inputs.environment == 'dev'
+        run: |
+          php ./Tools/Maintenance/setMaintenance.php \
+            '${{ vars.DB_DEV_HOST }}' \
+            '${{ vars.DB_DEV_USER }}' \
+            '${{ secrets.DB_DEV_PASS }}' \
+            '${{ vars.DB_DEV_NAME }}' \
+            1
+
       - name: 'Enable maintenance mode - test'
         if: inputs.environment == 'test'
         run: |
@@ -134,6 +144,11 @@ jobs:
       - name: 'Install FTP client'
         run: sudo apt-get update && sudo apt-get install lftp -y
 
+      - name: 'Install PHP config file'
+        env:
+          SERVER_CONFIG_PHP_B64: ${{ inputs.environment == 'prod' && secrets.SERVER_PROD_CONFIG_PHP_BASE64 || inputs.environment == 'test' && secrets.SERVER_TEST_CONFIG_PHP_BASE64 || secrets.SERVER_DEV_CONFIG_PHP_BASE64 }}
+        run: echo $SERVER_CONFIG_PHP_B64 | base64 -d > ./src/Server/HTTP/src/config.php
+
       - name: 'Upload files to FTP server'
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
               open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
@@ -151,20 +166,6 @@ jobs:
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
 
-      - name: 'Run migration - prod'
-        if: inputs.environment == 'prod'
-        run: |
-          php ./Tools/TableFusion/index.php \
-          '${{ vars.DB_TEST_HOST }}' \
-          '${{ vars.DB_TEST_USER }}' \
-          '${{ secrets.DB_TEST_PASS }}' \
-          '${{ vars.DB_TEST_NAME }}' \
-          '${{ vars.DB_PROD_HOST }}' \
-          '${{ vars.DB_PROD_USER }}' \
-          '${{ secrets.DB_PROD_PASS }}' \
-          '${{ vars.DB_PROD_NAME }}' \
-          --no-confirm
-
       - name: 'Run migration - test'
         if: inputs.environment == 'test'
         run: |
@@ -179,6 +180,20 @@ jobs:
           '${{ vars.DB_TEST_NAME }}' \
           --no-confirm
 
+      - name: 'Run migration - prod'
+        if: inputs.environment == 'prod'
+        run: |
+          php ./Tools/TableFusion/index.php \
+          '${{ vars.DB_TEST_HOST }}' \
+          '${{ vars.DB_TEST_USER }}' \
+          '${{ secrets.DB_TEST_PASS }}' \
+          '${{ vars.DB_TEST_NAME }}' \
+          '${{ vars.DB_PROD_HOST }}' \
+          '${{ vars.DB_PROD_USER }}' \
+          '${{ secrets.DB_PROD_PASS }}' \
+          '${{ vars.DB_PROD_NAME }}' \
+          --no-confirm
+
   disable-maintenance:
     name: '🚧 Disable Maintenance'
     runs-on: ubuntu-latest
@@ -189,6 +204,15 @@ jobs:
 
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y
+
+      - name: 'Disable maintenance mode - dev'
+        run: |
+          php ./Tools/Maintenance/setMaintenance.php \
+            '${{ vars.DB_DEV_HOST }}' \
+            '${{ vars.DB_DEV_USER }}' \
+            '${{ secrets.DB_DEV_PASS }}' \
+            '${{ vars.DB_DEV_NAME }}' \
+            0
 
       - name: 'Disable maintenance mode - test'
         run: |

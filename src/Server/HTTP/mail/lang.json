@@ -2,7 +2,14 @@
     "fr": {
         "signin-subject": "GameLife : Nouvel appareil",
         "signin-title": "Es-tu sûr(e) de vouloir devenir un joueur ?",
-        "signin-text": "Cette action est irréversible et peut te faire devenir meilleur, ou bien pire...",
+        "signin-text": [
+            "Tout le monde peut se battre. C'est juste une question de choix. - Kirito",
+            "Nous créons notre propre destin, même dans un monde virtuel. - Kirito",
+            "Avez-vous besoin d'une raison pour ne pas vouloir perdre ? - Hinata Shoyo",
+            "L'avenir appartient à ceux qui croient en la beauté de leurs drames. - Hinata Shoyo",
+            "Tant que la chance n'est pas nulle, il est trop tôt pour abandonner ! - Hiruma Youichi",
+            "Essayer sans avoir l'intention de gagner n'a pas de sens - Hiruma Youichi"
+        ],
         "signin-button": "Accepter",
 
         "delete-subject": "GameLife : Suppression de compte",
@@ -22,7 +29,14 @@
     "en": {
         "signin-subject": "GameLife: New device",
         "signin-title": "Are you sure you want to become a player?",
-        "signin-text": "This action is there is no way to undo it and can make you better, or worse...",
+        "signin-text": [
+            "Everybody can fight. It's just a choice of whether you should. - Kirito",
+            "We create our own destiny, even in a virtual world. - Kirito",
+            "Do you need a reason not to want to lose? - Hinata Shoyo",
+            "The future belongs to those who believe in the beauty of their drams. - Hinata Shoyo",
+            "As long as the chance isn't zero, it's too soon to give up! - Hiruma Youichi",
+            "Trying without the winning intent is meaningless - Hiruma Youichi"
+        ],
         "signin-button": "Accept",
 
         "delete-subject": "GameLife: Deleting your account",

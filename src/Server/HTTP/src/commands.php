@@ -290,6 +290,7 @@ class Commands {
             $this->output['news'] = $appData['News'];
             $this->output['tables'] = $newTables;
             $this->output['hashes'] = $appHashes;
+            $this->output['music-links'] = $appData['MusicLinks'];
             $this->output['status'] = 'ok';
         }
     }
@@ -499,9 +500,13 @@ class Commands {
             $this->account,
             $this->device,
             $claimListStart,
-            $dayIndex
+            $dayIndex,
+            $error
         );
-        if ($newItems === false) return;
+        if ($newItems === false || $error !== false) {
+            $this->output['error'] = $error;
+            return;
+        }
 
         $this->output['ox'] = $this->account->Ox;
         $this->output['newItems'] = $newItems;

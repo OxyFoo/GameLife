@@ -1,14 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
+    background: {
         width: '100%',
         paddingHorizontal: 16,
         backgroundColor: 'rgba(0,0,0,0.1)'
     },
-    timelineContainer: {
+    container: {
         height: 16,
         width: '100%',
         borderLeftWidth: 1,

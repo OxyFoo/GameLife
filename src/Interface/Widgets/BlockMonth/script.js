@@ -2,7 +2,7 @@ import dataManager from 'Managers/DataManager';
 import user from 'Managers/UserManager';
 
 import { DAYS } from 'Utils/Date';
-import { GetTime } from 'Utils/Time';
+import { DAY_TIME, GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
@@ -27,10 +27,10 @@ class MonthType {
 
 /**
  * @description Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
- * @param {number?} [month] Current month if null
- * @param {number?} [year] Current year if null
+ * @param {number | null} [month=null] Current month if null
+ * @param {number | null} [year=null] Current year if null
  * @param {number} [start=1] First day of week, default: 1 (monday)
- * @param {number} [selectedDay=-1] Current day (0-6)
+ * @param {number} [selectedDay=-1] Current selected day (1-31)
  * @returns {MonthType}
  */
 function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
@@ -48,33 +48,66 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
         data: []
     };
 
-    const tmpDate = new Date(year, month, 1);
-    const lastDay = (start + 5) % 7;
+    const timezone = GetTimeZone() * 60 * 60;
+    const todayTime = GetMidnightTime(GetTime()) + timezone;
+    const firstDay = new Date(year, month, 1);
+    const firstDayTime = GetTime(firstDay, 'global');
+    const firstDayIndex = (firstDay.getDay() + 5 + start) % 7;
+    const lastDay = new Date(year, month + 1, 1);
+    const lastDayTime = GetTime(lastDay, 'global');
+    const weekCount = Math.ceil((lastDayTime - firstDayTime) / (DAY_TIME * 7));
 
-    while (tmpDate.getMonth() === month) {
-        let day;
+    const allActivities = user.activities.Get();
 
-        /** @type {Array<DayType>} */
+    let tmpTime = firstDayTime;
+    let tmpDay = 1;
+    let tmpDayIndex = firstDayIndex;
+    let tmpActivityIndex = 0;
+
+    for (let w = 0; w < weekCount || tmpTime < lastDayTime; w++) {
         let tempOutput = new Array(7).fill(null);
-        do {
-            day = (tmpDate.getDay() + 5 + start) % 7;
-            const isToday = tmpDate.toDateString() === new Date().toDateString();
-            const isSelected = selectedDay === tmpDate.getDate();
-            const activities = user.activities.GetByTime(GetTime(tmpDate, 'global'));
-            const isActivity = activities.length > 0;
-            const isActivityXP = !!activities.find(a => dataManager.skills.GetByID(a.skillID)?.XP ?? 0 > 0);
+        for (let i = 0; i < 7; i++) {
+            if (w === 0 && i < firstDayIndex) {
+                continue;
+            }
+            if (tmpTime >= lastDayTime) {
+                break;
+            }
 
-            tempOutput[day] = {
-                day: tmpDate.getDate(),
+            const isToday = tmpTime >= todayTime && tmpTime < todayTime + DAY_TIME;
+            const isSelected = tmpDay === selectedDay;
+            let isActivity = false;
+            let isActivityXP = false;
+
+            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime + timezone < tmpTime) {
+                tmpActivityIndex++;
+            }
+
+            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime + timezone < tmpTime + DAY_TIME) {
+                isActivity = true;
+                const skill = dataManager.skills.GetByID(allActivities[tmpActivityIndex].skillID);
+                if (skill?.XP ?? 0 > 0) {
+                    isActivityXP = true;
+                    break;
+                }
+                tmpActivityIndex++;
+            }
+
+            tempOutput[i] = {
+                day: tmpDay,
                 isToday: isToday,
                 isSelected: isSelected,
                 isActivity: isActivity,
                 isActivityXP: isActivityXP
             };
-            tmpDate.setDate(tmpDate.getDate() + 1);
-        } while (tmpDate.getMonth() === month && day !== lastDay);
+
+            tmpDay++;
+            tmpDayIndex = (tmpDayIndex + 1) % 7;
+            tmpTime += DAY_TIME;
+        }
         output.data.push(tempOutput);
     }
+
     return output;
 }
 

@@ -88,6 +88,11 @@ function AddActivity(activity) {
             'action': Back
         };
 
+        const quote = dataManager.quotes.GetRandomQuote();
+        if (quote !== null) {
+            args['quote'] = quote.Quote[langManager.currentLangageKey];
+        }
+
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {
             const lang = langManager.curr['activity'];
@@ -95,7 +100,7 @@ function AddActivity(activity) {
                 /** @type {Icons} */
                 'icon': 'error',
                 'iconRatio': .4,
-                'text': lang['display-fail-text'].replace('{}', 'skill not fount'),
+                'text': lang['display-fail-text'].replace('{}', 'skill not found'),
                 'button': lang['display-fail-button'],
                 'action': Back
             }, true);

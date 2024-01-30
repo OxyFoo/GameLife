@@ -72,12 +72,12 @@ class BackCalendar extends PageBase {
         this.animating = false;
         this.opened = false;
 
-        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+        this.activitiesListener = user.activities.allActivities.AddListener(async () => {
             // Update activities
             if (this.state.selectedALL === null) return;
 
             const { day, month, year } = this.state.selectedALL;
-            this.daySelect(day, month, year, true);
+            await this.daySelect(day, month, year, true);
         });
     }
 
@@ -205,44 +205,53 @@ class BackCalendar extends PageBase {
                 return;
         }
 
+        const date = new Date(year, month, day);
+
+        // Select day
         if (day !== null) {
-            // Select day
-            const weeks = GetBlockMonth(month, year, undefined, day).data;
-            const week = weeks.findIndex(w => w.filter(d => d?.day === day).length > 0);
-            const date = new Date(year, month, day);
             const now = new Date();
-            const activities = user.activities.GetByTime(GetTime(date));
-
-            this.setState({
-                currActivities: activities,
-                selectedALL: { day, week, month, year }
-            });
-
-            if (!this.opened) {
-                await this.showPanel();
-            }
             date.setHours(now.getHours(), now.getMinutes(), 0, 0);
             const nowLocalTime = GetTime(date, 'local') + GetTimeZone() * 60;
             user.tempSelectedTime = RoundTimeTo(TIME_STEP_MINUTES, nowLocalTime);
-        } else {
-            // Unselect day (calendar mode)
-            if (this.opened) {
-                await this.hidePanel();
+
+            if (!this.opened) {
+                this.showPanel();
             }
-            this.setState({ selectedALL: null });
-            user.tempSelectedTime = null;
         }
+
+        // Unselect day (calendar mode)
+        else {
+            user.tempSelectedTime = null;
+            if (this.opened) {
+                this.hidePanel();
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            if (day !== null) {
+                const weeks = GetBlockMonth(month, year, undefined, day).data;
+                const week = weeks.findIndex(w => w.filter(d => d?.day === day).length > 0);
+                const activities = user.activities.GetByTime(GetTime(date));
+
+                this.setState({
+                    currActivities: activities,
+                    selectedALL: { day, week, month, year }
+                }, resolve);
+            } else {
+                this.setState({ selectedALL: null }, resolve);
+            }
+        });
     }
     dayRefresh = () => this.daySelect();
 
     showPanel = () => this.animPanel(0);
     hidePanel = () => this.animPanel(1);
     animPanel = (value) => {
-        if (this.animating) return null;
-
         const { animation } = this.state;
 
-        const animFunc = (resolve, reject) => {
+        if (this.animating) return null;
+
+        return new Promise((resolve, reject) => {
             this.animating = true;
             SpringAnimation(animation, value).start();
             setTimeout(() => {
@@ -250,9 +259,7 @@ class BackCalendar extends PageBase {
                 this.opened = value === 0;
                 resolve();
             }, 300);
-        }
-
-        return new Promise(animFunc);
+        });
     }
 
     /**

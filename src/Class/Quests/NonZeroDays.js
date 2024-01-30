@@ -1,6 +1,7 @@
-import { DAY_TIME, GetTime } from 'Utils/Time';
-import DynamicVar from 'Utils/DynamicVar';
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
+import DynamicVar from 'Utils/DynamicVar';
+import { Sleep } from 'Utils/Functions';
+import { DAY_TIME, GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -97,7 +98,9 @@ class NonZeroDays {
                     continue;
                 }
 
-                if (allActivitiesTime[i] < claimsList[claimIndex].end + DAY_TIME) {
+                if (allActivitiesTime[i] < claimsList[claimIndex].end + DAY_TIME &&
+                    claimsList[claimIndex].daysCount < NONZERODAYS_REWARDS.length)
+                {
                     // Update claim
                     claimsList[claimIndex].end += DAY_TIME;
                     claimsList[claimIndex].daysCount++;
@@ -127,7 +130,11 @@ class NonZeroDays {
      * @returns {Promise<boolean>} True if the claim was successful
      */
     async ClaimReward(claimListStart, dayIndex) {
-        if (this.claiming) return null;
+        // Wait for the previous claim to finish
+        while (this.claiming) {
+            await Sleep(50);
+        }
+
         this.claiming = true;
 
         const data = {
@@ -136,10 +143,15 @@ class NonZeroDays {
             'dataToken': this.user.server.dataToken
         };
         const response = await this.user.server.Request('claimNonZeroDays', data);
-        if (response === null) return false;
+        if (response === null) {
+            this.user.interface.console.AddLog('error', 'Claim error:', response);
+            this.claiming = false;
+            return false;
+        }
 
         // Update Ox amount
         if (!response.hasOwnProperty('ox') || !response.hasOwnProperty('newItems')) {
+            this.claiming = false;
             return false;
         }
 
@@ -173,7 +185,7 @@ class NonZeroDays {
         if (newItems.length > 0 && rewardIndex !== -1) {
             const args = {
                 itemID: newItems[0]['ItemID'],
-                chestRarity: NONZERODAYS_REWARDS[dayIndex][rewardIndex].value - 1,
+                chestRarity: NONZERODAYS_REWARDS[dayIndex][rewardIndex].value,
                 callback: this.user.interface.BackHandle
             };
             this.user.interface.popup.Close();

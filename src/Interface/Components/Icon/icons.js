@@ -23,6 +23,7 @@ import svgHuman from 'Ressources/icons/human';
 import svgInfo from 'Ressources/icons/info';
 import svgInstagram from 'Ressources/icons/instagram';
 import svgItem from 'Ressources/icons/item';
+import svgMagnifyingGlass from 'Ressources/icons/magnifying-glass'; 
 import svgMedia from 'Ressources/icons/media';
 import svgMoveVertical from 'Ressources/icons/move-vertical';
 import svgNowifi from 'Ressources/icons/nowifi';
@@ -76,6 +77,7 @@ const SVGIcons = {
     info: svgInfo,
     instagram: svgInstagram,
     item: svgItem,
+    magnifyingGlass: svgMagnifyingGlass,
     media: svgMedia,
     moveVertical: svgMoveVertical,
     nowifi: svgNowifi,

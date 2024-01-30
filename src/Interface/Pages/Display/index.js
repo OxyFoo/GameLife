@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Dimensions, StyleSheet } from 'react-native';
+import { View, Animated, Dimensions, StyleSheet } from 'react-native';
 
 import BackDisplay from './back';
 
@@ -19,6 +19,11 @@ class Display extends BackDisplay {
                 </Animated.View>
                 <Text>{this.text}</Text>
                 <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
+                {this.quote !== null && (
+                    <View style={styles.quoteContainer}>
+                        <Text fontSize={16} color={'light'} style={[styles.quote]}>{this.quote}</Text>
+                    </View>
+                )}
             </Page>
         );
     }
@@ -28,13 +33,20 @@ const styles = StyleSheet.create({
     page: {
         width: '100%',
         height: '100%',
-        paddingTop: '30%',
+        paddingTop: 48,
+        paddingBottom: 10,
         alignItems: 'center',
         justifyContent: 'space-evenly'
     },
     button: {
-        width: '80%',
-        marginBottom: 48
+        width: '80%'
+    },
+    quoteContainer: {
+        alignItems: 'center',
+        justifyContent: 'flex-end'
+    },
+    quote: {
+        fontStyle: 'italic'
     }
 });
 

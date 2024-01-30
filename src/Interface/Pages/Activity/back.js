@@ -1,16 +1,15 @@
 import { FlatList } from 'react-native';
 
 import StartTutorial from './tuto';
+import { GetRecentSkills, CategoryToItem, SkillToItem } from './types';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { GetTime, RoundTimeTo } from 'Utils/Time';
 import { Sleep } from 'Utils/Functions';
 import { PageBase } from 'Interface/Components';
-import { CategoryToItem, SkillToItem } from './types';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
@@ -45,65 +44,66 @@ class BackActivity extends PageBase {
 
     refTuto1 = null;
 
-    /** @type {Array<number>} Filled with props args 'skills' */
-    preselectedSkillsIDs = [];
-
-    /** @type {Array<ItemSkill>} */
-    allSkillItems = [];
-
     /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 
     /** @type {FlatList | null} */
     refActivities = null;
 
-    /** @type {Array<ItemCategory | null>} */
-    categories = [];
+    /** @type {Array<number>} Defined with props args 'skills' (disable categories) */
+    preselectedSkillsIDs = [];
 
-    /** @type {boolean} If true, the page is in edition mode */
-    editMode = false;
+    /** @type {Array<ItemSkill>} All skills converted to ItemSkill used as source for the FlatList */
+    allSkillsItems = [];
 
-    /** @type {number} */
-    initTime = 0;
+    /** @type {Array<ItemSkill>} Recent skills converted to ItemSkill used as source */
+    allRecentSkillsItems = [];
 
-    backgroundCard = {
-        backgroundColor: themeManager.GetColor('dataSmallKpi')
-    };
+    /** @type {Array<ItemCategory | null>} All categories converted to ItemCategory used as source for the FlatList */
+    allCategoriesItems = [];
 
     constructor(props) {
         super(props);
 
-        // Check if the page is in edition mode
-        this.editMode = this.props.args.hasOwnProperty('activity');
-        this.categories = dataManager.skills.categories.map(CategoryToItem);
+        // Define all categories
+        this.allCategoriesItems = dataManager.skills.categories.map(CategoryToItem);
 
         // Define all skills
-        if (!this.editMode) {
-            const skills = dataManager.skills.Get();
-            const convert = (skill) => SkillToItem(skill, this.selectSkill);
+        this.allSkillsItems = dataManager.skills.Get()
+            .map(skill => SkillToItem(skill, this.selectSkill));
 
-            this.allSkillItems = skills.map(convert);
-            this.state.skills = this.allSkillItems;
-            this.state.inputText = langManager.curr['activity']['input-activity'];
-        }
+        // Get recent skills
+        this.allRecentSkillsItems = GetRecentSkills(this.selectSkill);
 
-        // Set default values to edit an activity
-        if (this.editMode) {
-            /** @type {Activity} */
-            const activity = this.props.args.activity;
-
-            const skill = dataManager.skills.GetByID(activity.skillID);
-            this.state.selectedCategory = skill?.CategoryID || null;
-        }
+        this.state.skills = this.allSkillsItems;
+        this.state.inputText = langManager.curr['activity']['input-activity'];
 
         // Preselected skills
         if (this.props.args.hasOwnProperty('skills')) {
-            this.preselectedSkillsIDs = this.props.args.skills;
-            this.state.skills = this.state.skills.filter(skill => (
-                this.preselectedSkillsIDs.length === 0 ||
-                this.preselectedSkillsIDs.includes(skill.id)
-            ));
+            if (this.props.args.skills.length > 0) {
+                this.preselectedSkillsIDs = this.props.args.skills;
+                this.state.skills = this.allSkillsItems.filter(skill => (
+                    this.preselectedSkillsIDs.includes(skill.id)
+                ));
+            }
         }
+
+        // Set default to recent if there is more than 5 skills
+        if (this.allRecentSkillsItems.length > 5 && this.preselectedSkillsIDs.length === 0) {
+            this.state.selectedCategory = 0;
+        }
+
+        // Select default category
+        if (this.props.args.hasOwnProperty('categoryID')) {
+            const { categoryID } = this.props.args;
+            this.state.selectedCategory = categoryID;
+        }
+
+        // Update state
+        this.state = {
+            ...this.state,
+            ...this.refreshSkills(this.state.skillSearch, this.state.selectedCategory, false)
+        };
     }
 
     componentDidFocused = (args) => {
@@ -114,7 +114,7 @@ class BackActivity extends PageBase {
         super.componentDidMount();
 
         // Wait for the layout to be calculated
-        while (this.state.topPanelOffset === 0 || !this.refActivityPanel?.state.loaded) {
+        while (this.state.topPanelOffset === 0) {
             await Sleep(100);
         }
 
@@ -124,24 +124,11 @@ class BackActivity extends PageBase {
             const skill = dataManager.skills.GetByID(skillID);
             if (skill !== null) {
                 this.refActivityPanel.SelectSkill(skill);
-                this.refreshSkills(this.state.skillSearch, skill.CategoryID);
             }
         }
 
-        else if (this.props.args.hasOwnProperty('categoryID')) {
-            const { categoryID } = this.props.args;
-            this.refreshSkills(this.state.skillSearch, categoryID);
-        }
-
-        // Set default values to edit an activity
-        else if (this.editMode) {
-            /** @type {Activity} */
-            const activity = this.props.args.activity;
-            this.refActivityPanel.SelectActivity(activity);
-        }
-
         // If default skills is defined and contains only one skill
-        else if (this.preselectedSkillsIDs.length === 1) {
+        if (this.preselectedSkillsIDs.length === 1) {
             const skill = dataManager.skills.GetByID(this.preselectedSkillsIDs[0]);
             if (skill !== null) {
                 this.refActivityPanel.SelectSkill(skill);
@@ -202,13 +189,9 @@ class BackActivity extends PageBase {
     /**
      * @param {string} textSearch
      * @param {number | null} categoryID
+     * @returns {object}
      */
-    refreshSkills = (textSearch = '', categoryID = null) => {
-        /**
-         * @param {Skill | EnrichedSkill} skill
-         * @returns {ItemSkill}
-         */
-        const convert = (skill) => SkillToItem(skill, this.selectSkill);
+    refreshSkills = (textSearch = '', categoryID = null, refreshState = true) => {
         /** @param {ItemSkill} skill */
         const filter = skill => !categoryID || skill.categoryID === categoryID;
         /** @param {ItemSkill} skill */
@@ -224,27 +207,14 @@ class BackActivity extends PageBase {
 
         // Recent skills
         if (categoryID === 0) {
-            let skills = [];
-            const now = GetTime(undefined, 'local');
-            const usersActivities = user.activities.Get()
-                .filter(activity => activity.startTime <= now)
-                .sort((a, b) => b.startTime - a.startTime);
-            for (const activity of usersActivities) {
-                const skill = dataManager.skills.GetByID(activity.skillID);
-                if (skill !== null && !skills.find(s => s.ID === skill.ID)) {
-                    skills.push(skill);
-                }
-            }
-            itemSkills = skills
-                .slice(0, 10)
-                .map(convert)
-                .filter(filterPreselected)
-                .filter(searchMatch);
+            itemSkills = this.allRecentSkillsItems
+                .filter(searchMatch)
+                .slice(0, 10);
         }
 
         // Get skills by category
         else {
-            itemSkills = this.allSkillItems
+            itemSkills = this.allSkillsItems
                 .filter(filter)
                 .filter(filterPreselected)
                 .filter(searchMatch);
@@ -256,12 +226,18 @@ class BackActivity extends PageBase {
             inputText = dataManager.GetText(category?.Name) || inputText;
         }
 
-        this.setState({
+        const newState = {
             inputText,
             skills: itemSkills,
             skillSearch: textSearch,
             selectedCategory: categoryID
-        });
+        };
+
+        if (refreshState) {
+            this.setState(newState);
+        }
+
+        return newState;
     }
 
     /** @param {string} text */
@@ -284,13 +260,6 @@ class BackActivity extends PageBase {
      * @param {Skill} skill
      */
     selectSkill = (skill) => {
-        // If preselected skills, do not change category
-        let categoryID = null;
-        if (this.preselectedSkillsIDs.length === 0) {
-            categoryID = skill.CategoryID;
-        }
-
-        this.refreshSkills(this.state.skillSearch, categoryID);
         this.refActivityPanel.SelectSkill(skill);
     }
 }

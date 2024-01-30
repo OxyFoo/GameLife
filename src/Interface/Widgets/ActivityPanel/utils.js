@@ -33,9 +33,8 @@ async function onRemComment(callback) {
 /** @this ActivityPanel */
 function StartActivity() {
     const skillID = this.state.selectedSkillID;
-    const now = GetTime(undefined, 'local');
-    const startTime = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
     const localTime = GetTime(undefined, 'local');
+    const startTime = RoundTimeTo(TIME_STEP_MINUTES, localTime, 'near');
 
     if (!user.activities.TimeIsFree(startTime, MIN_TIME_MINUTES)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];

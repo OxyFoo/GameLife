@@ -5,6 +5,7 @@ import BackActivity from './back';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
 import { Page, Text, IconCheckable, Input } from 'Interface/Components';
@@ -23,7 +24,7 @@ class Activity extends BackActivity {
     renderCategory = ({ item }) => {
         const { id, icon } = item;
         const checked = this.state.selectedCategory === id;
-        const pressable = !this.editMode && this.preselectedSkillsIDs.length === 0;
+        const pressable = this.preselectedSkillsIDs.length === 0;
 
         return (
             <IconCheckable
@@ -46,9 +47,13 @@ class Activity extends BackActivity {
     renderSkill = ({ item }) => {
         const { value, onPress } = item;
 
+        const backgroundCard = {
+            backgroundColor: themeManager.GetColor('dataSmallKpi')
+        };
+
         return (
             <Text
-                style={[styles.activityElement, this.backgroundCard]}
+                style={[styles.activityElement, backgroundCard]}
                 fontSize={22}
                 onPress={onPress}
             >
@@ -95,42 +100,36 @@ class Activity extends BackActivity {
                     </Text>
                     <View style={styles.categoriesContainer}>
                         <ScrollView style={styles.categoriesScrollView} horizontal>
-                            {this.categories.map(category => this.renderCategory({ item: category }))}
+                            {this.allCategoriesItems.map(category => this.renderCategory({ item: category }))}
                         </ScrollView>
                     </View>
                 </View>
 
-                {/* Activities */}
-                {!this.editMode && (
-                    <>
-                        {/* Search bar */}
-                        <Text style={styles.textTitle} color='light' bold>
-                            {lang['title-activity']}
-                        </Text>
-                        <View style={styles.activitiesSearchBar}>
-                            <Input
-                                label={inputText}
-                                text={skillSearch}
-                                onChangeText={this.onSearchChange}
-                            />
-                        </View>
+                {/* Search bar */}
+                <Text style={styles.textTitle} color='light' bold>
+                    {lang['title-activity']}
+                </Text>
+                <View style={styles.activitiesSearchBar}>
+                    <Input
+                        label={inputText}
+                        text={skillSearch}
+                        onChangeText={this.onSearchChange}
+                    />
+                </View>
 
-                        {/* Activities List */}
-                        <FlatList
-                            ref={ref => this.refActivities = ref}
-                            style={styles.activitiesFlatlist}
-                            data={skills}
-                            ListEmptyComponent={this.renderEmptyList}
-                            renderItem={this.renderSkill}
-                            keyExtractor={item => 'act-skill-' + item.id}
-                        />
-                    </>
-                )}
+                {/* Activities List */}
+                <FlatList
+                    ref={ref => this.refActivities = ref}
+                    style={styles.activitiesFlatlist}
+                    data={skills}
+                    ListEmptyComponent={this.renderEmptyList}
+                    renderItem={this.renderSkill}
+                    keyExtractor={item => 'act-skill-' + item.id}
+                />
 
                 {/* Panel */}
                 <ActivityPanel
                     ref={ref => this.refActivityPanel = ref}
-                    delay={this.editMode ? 0 : 300}
                     topOffset={topPanelOffset}
                 />
             </Page>

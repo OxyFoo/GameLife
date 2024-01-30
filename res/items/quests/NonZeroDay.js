@@ -25,7 +25,7 @@ const NONZERODAYS_REWARDS = [
     [{ type: 'ox', value: 1 }],
     [{ type: 'ox', value: 1 }],
     [{ type: 'ox', value: 1 }],
-    [{ type: 'ox', value: 2 }, { type: 'chest', value: 1 }],
+    [{ type: 'ox', value: 2 }, { type: 'chest', value: 0 }],
     [{ type: 'ox', value: 2 }],
     [{ type: 'ox', value: 2 }],
     [{ type: 'ox', value: 2 }],
@@ -43,7 +43,7 @@ const NONZERODAYS_REWARDS = [
     [{ type: 'ox', value: 2 }],
     [{ type: 'ox', value: 2 }],
     [{ type: 'ox', value: 2 }],
-    [{ type: 'ox', value: 3 }, { type: 'chest', value: 2 }],
+    [{ type: 'ox', value: 3 }, { type: 'chest', value: 1 }],
     [{ type: 'ox', value: 3 }],
     [{ type: 'ox', value: 3 }],
     [{ type: 'ox', value: 3 }],
@@ -61,7 +61,7 @@ const NONZERODAYS_REWARDS = [
     [{ type: 'ox', value: 3 }],
     [{ type: 'ox', value: 3 }],
     [{ type: 'ox', value: 3 }],
-    [{ type: 'ox', value: 5 }, { type: 'chest', value: 3 }],
+    [{ type: 'ox', value: 5 }, { type: 'chest', value: 2 }],
     [{ type: 'ox', value: 5 }],
     [{ type: 'ox', value: 5 }],
     [{ type: 'ox', value: 5 }],
@@ -80,7 +80,7 @@ const NONZERODAYS_REWARDS = [
     [{ type: 'ox', value: 5 }],
     [{ type: 'ox', value: 5 }],
     [{ type: 'ox', value: 5 }],
-    [{ type: 'ox', value: 10 }, { type: 'chest', value: 4 }]
+    [{ type: 'ox', value: 10 }, { type: 'chest', value: 3 }]
 ];
 
 export default NONZERODAYS_REWARDS;

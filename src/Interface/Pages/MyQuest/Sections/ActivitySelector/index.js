@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View, ScrollView, StyleSheet, Platform } from 'react-native';
+import { Animated, View, ScrollView, Dimensions, Platform, StyleSheet } from 'react-native';
 
 import { RenderSkillsMemo, RenderSkillsSearch } from './renderSkills';
 import { CategoryToItem } from '../../../Activity/types';
@@ -44,7 +44,7 @@ class ActivitySelector extends React.Component {
     }
     /** @param {string} search */
     handleSearchInput = (search) => {
-        this.setState({ search });
+        this.setState({ search: search.toLowerCase() });
     }
 
     render() {
@@ -91,6 +91,10 @@ class ActivitySelector extends React.Component {
             ]
         };
 
+        // Get swiper height from popup height (max 80% screen height)
+        const { height } = Dimensions.get('window');
+        const swiperHeight = Math.min(500, height * .8 - 142 - 16);
+
         return (
             <View style={styles.popup}>
                 {/* Categories */}
@@ -123,7 +127,7 @@ class ActivitySelector extends React.Component {
                 {/* Skills list */}
                 <Swiper
                     ref={this.refSwiper}
-                    height={500}
+                    height={swiperHeight}
                     onSwipe={this.handleCategorySwiper}
                     pages={pages}
                     enableAutoNext={false}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, Dimensions, Platform } from 'react-native';
 
 import { GetRecentSkills, SkillToItem } from '../../../Activity/types';
 import dataManager from 'Managers/DataManager';
@@ -13,6 +13,7 @@ import { Swiper, Text } from 'Interface/Components';
  * @typedef {import('../../../Activity/types').ItemCategory} ItemCategory
  */
 
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 /** @returns {JSX.Element} */
 function renderEmptyList() {
@@ -70,8 +71,11 @@ function RenderSkills({ category, callback }) {
         ));
     }
 
+    // Disable horizontal scroll on iOS
+    const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
+
     return (
-        <Swiper.View>
+        <FlatListView>
             <FlatList
                 style={styles.activitiesFlatlist}
                 data={skillsItems}
@@ -79,7 +83,7 @@ function RenderSkills({ category, callback }) {
                 renderItem={RenderSkill}
                 keyExtractor={item => 'act-skill-' + item.id}
             />
-        </Swiper.View>
+        </FlatListView>
     );
 }
 const RenderSkillsMemo = React.memo(RenderSkills, (prev, next) => prev.category.id === next.category.id);
@@ -97,12 +101,15 @@ function RenderSkillsSearch({ searchInput, callback }) {
         const skills = dataManager.skills.Get();
         const newSkills = skills
             .map(skill => SkillToItem(skill, (skill) => callback(skill.ID)))
-            .filter(skill => skill.value.includes(searchInput));
+            .filter(skill => skill.value.toLowerCase().includes(searchInput));
         setSkillsItems(newSkills);
     }, [ searchInput ]);
 
+    // Disable horizontal scroll on iOS
+    const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
+
     return (
-        <Swiper.View>
+        <FlatListView>
             <FlatList
                 style={styles.activitiesFlatlist}
                 data={skillsItems}
@@ -110,14 +117,14 @@ function RenderSkillsSearch({ searchInput, callback }) {
                 renderItem={RenderSkill}
                 keyExtractor={item => 'act-skill-' + item.id}
             />
-        </Swiper.View>
+        </FlatListView>
     );
 }
 
 const styles = StyleSheet.create({
     activitiesFlatlist: {
         width: '100%',
-        height: 450,
+        height: Math.min(500, SCREEN_HEIGHT * .8 - 142 - 16) - 50,
         marginTop: 12
     },
     activityElement: {

@@ -639,6 +639,8 @@
         "input-activity-title": "No activity selected",
         "input-activity-add": "Add",
 
+        "popup-all-categories": "All categories",
+
         "input-panel-activity": "Select an activity",
         "input-panel-category": "Select a category",
 
@@ -720,7 +722,7 @@
     },
 
     "wait": {
-        "wait-internet-text": "You must be connected to the internet to be able to connect!",
+        "wait-internet-text": "The GameLife server is down.\n\nCheck your Internet connection or try again later!\n\nIf the problem persists, contact us on Discord or by e-mail, which you'll find on our website:",
         "wait-maintenance-text": "The servers are currently in maintenance, come back later!",
         "wait-email-text": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam.",
         "wait-email-remain": "Mail sent again in {}m{}s",

@@ -1,6 +1,9 @@
-import { PageBase } from 'Interface/Components';
-import user from 'Managers/UserManager';
+import { Linking } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
+
+import user from 'Managers/UserManager';
+
+import { PageBase } from 'Interface/Components';
 
 const REFRESH_DELAY_SECONDS = 2;
 
@@ -27,6 +30,10 @@ class BackWaitinternet extends PageBase {
             }
             user.interface.ChangePage('login', undefined, true);
         }
+    }
+
+    goToWebsite = () => {
+        Linking.openURL('https://oxyfoo.com');
     }
 }
 

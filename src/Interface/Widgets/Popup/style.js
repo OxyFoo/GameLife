@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '80%',
-        maxHeight: '60%',
+        maxHeight: '80%',
         borderRadius: 16,
         overflow: 'visible'
     },

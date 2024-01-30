@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import SwiperBack from './back';
+import SwiperView from './view';
 import themeManager from 'Managers/ThemeManager';
 
 import Dots from '../Dots';
@@ -14,6 +15,8 @@ import Dots from '../Dots';
  */
 
 class Swiper extends SwiperBack {
+    static View = SwiperView;
+
     renderContent = (p, index) => {
         const { pages } = this.props;
 
@@ -67,6 +70,7 @@ class Swiper extends SwiperBack {
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
+                onTouchCancel={this.onTouchCancel}
             >
                 <Animated.View style={contentContainerStyle}>
                     {pagesContent}

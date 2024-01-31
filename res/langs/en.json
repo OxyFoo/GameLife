@@ -328,11 +328,9 @@
         "value-age-empty": "Date of birth unknown",
         "value-title-empty": "No title selected",
 
-        "row-title": "Informations",
-        "row-since": "Since",
-        "row-activities": "Number of activities",
-        "row-quests": "Number of quests",
-        "row-time": "Time spent",
+        "row-since": "of play",
+        "row-activities": "activities",
+        "row-time": "spent",
 
         "container-achievements-title": "Last achievements",
         "container-stats-title": "Statistics",

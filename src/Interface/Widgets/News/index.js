@@ -122,10 +122,6 @@ const renderNew = (Nw) => {
 const News = () => {
     let pages = [];
 
-    // First tab: Random quote
-    const currentQuote = dataManager.quotes.currentQuote;
-    pages.push(renderQuote(currentQuote));
-
     // Others tab: News (if online)
     if (dataManager.news.news.length) {
         try {

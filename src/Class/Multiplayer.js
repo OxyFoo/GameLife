@@ -10,7 +10,7 @@ const settings = {
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Friend').Friend} Friend
  * 
- * @typedef {'connected' | 'disconnected' | 'error'} ConnectionState
+ * @typedef {'waiting' | 'connected' | 'disconnected' | 'error'} ConnectionState
  */
 
 class Multiplayer {
@@ -65,8 +65,8 @@ class Multiplayer {
         }
 
         if (data.status === 'connected') {
-            this.state.Set('connected');
             this.friends = data.friends;
+            this.state.Set('connected');
         }
     }
     /** @param {Event} event */

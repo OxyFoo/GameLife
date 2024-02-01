@@ -149,16 +149,27 @@ class Users {
             // Get informations
             const commandInfo = `SELECT \`Username\` FROM \`Accounts\` WHERE ID = ${friendID}`;
             const friendInfo = await this.db.ExecQuery(commandInfo);
-            if (friendInfo.length === 0) {
+            if (friendInfo === null || friendInfo.length === 0) {
                 throw new Error(`Account not found: ${friendID}`);
             }
 
             // Get avatar
             const commandAvatar = `SELECT \`Sexe\`, \`Skin\`, \`SkinColor\`, \`Hair\`, \`Top\`, \`Bottom\`, \`Shoes\` FROM \`Avatars\` WHERE ID = ${friendID}`;
             const friendAvatar = await this.db.ExecQuery(commandAvatar);
-            if (friendAvatar.length === 0) {
+            if (friendAvatar === null || friendAvatar.length === 0) {
                 throw new Error(`Avatar not found for account ${friendID}`);
             }
+
+            const stuffKeys = [ 'Hair', 'Top', 'Bottom', 'Shoes' ];
+            for (const key of stuffKeys) {
+                // Get stuff by ItemID
+                const commandItemID = `SELECT \`ItemID\` FROM \`Inventories\` WHERE ID = ${friendAvatar[0][key]}`;
+                const itemID = await this.db.ExecQuery(commandItemID);
+                if (itemID === null || itemID.length === 0) {
+                    throw new Error(`ItemID not found for account ${friendID}`);
+                }
+                friendAvatar[0][key] = itemID[0]['ItemID'];
+            };
 
             /** @type {Friend} */
             const newFriend = {

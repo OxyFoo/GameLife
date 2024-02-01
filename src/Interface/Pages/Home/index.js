@@ -5,7 +5,7 @@ import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
 import { Button, Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { News, TodayPieChart, TodoList  } from 'Interface/Widgets';
+import { News, MultiplayerPanel, TodayPieChart, TodoList  } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -49,6 +49,8 @@ class Home extends BackHome {
                 >
                     {lang['btn-add-activity']}
                 </Button>
+
+                <MultiplayerPanel style={styles.topSpace} />
 
                 <TodayPieChart style={styles.topSpace} />
 

@@ -4,14 +4,22 @@ import { createServer } from 'http';
 import Users from './Users.js';
 import { StrIsJson } from '../Utils/Functions.js';
 
+/**
+ * @typedef {import('../Classes/Sql.js').default} SQL
+ * @typedef {import('./Users.js').User} User
+ */
+
 const debugMode = true;
 const Log = (msg, ...items) => debugMode && console.log(msg, ...items);
 
 class Server {
-    constructor() {
+    /** @param {SQL} database */
+    constructor(database) {
         this.server = createServer();
         this.server.on('error', this.onError);
-        this.users = new Users();
+
+        this.db = database;
+        this.users = new Users(database);
     }
 
     /**
@@ -38,12 +46,6 @@ class Server {
     /** @param {Error} error */
     onError = (error) => {
         console.error('WebSocket server:', error);
-        return;
-
-        if (error.code === 'EADDRINUSE') {
-            console.log('Address in use, retrying...');
-            setTimeout(WebSocket.server.close, 1000);
-        }
     }
 
     /** @param {WebSocket.request} request */
@@ -64,25 +66,32 @@ class Server {
 
     /** @param {WebSocket.connection} connection */
     onConnect = (connection) => {
-        let deviceID = null;
+        /** @type {User | null} */
+        let user = null;
 
         Log('User connected');
 
         connection.on('message', async (message) => {
-            Log('Data:', message.utf8Data);
-            if (StrIsJson(message.utf8Data)) {
-                const data = JSON.parse(message.utf8Data);
+            const rawData = message.type === 'utf8' ? message.utf8Data : null;
+            if (StrIsJson(rawData)) {
+                const data = JSON.parse(rawData);
                 if (data.hasOwnProperty('token')) {
-                    deviceID = await this.users.Add(connection, data.token);
-                    connection.send(deviceID !== null ? 'connected' : 'failed');
+                    user = await this.users.Add(connection, data.token);
+                    if (user === null) {
+                        const data = { status: 'error', message: 'Invalid token.' };
+                        connection.send(JSON.stringify(data));
+                    } else {
+                        const data = { status: 'connected', friends: user.friends };
+                        connection.send(JSON.stringify(data));
+                    }
                 }
             }
         });
 
         connection.on('close', () => {
             Log('User disconnected');
-            if (deviceID !== null) {
-                this.users.Rem(deviceID);
+            if (user !== null) {
+                this.users.RemoveByDeviceID(user.deviceID);
             }
         });
 

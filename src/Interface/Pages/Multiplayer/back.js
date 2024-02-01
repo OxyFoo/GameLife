@@ -7,34 +7,21 @@ class BackMultiplayer extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-        return;
-
-        this.setState({ server: 'connected' });
-        return;
         if (!user.server.online) {
             this.setState({ server: 'offline' });
             return;
         }
-        user.multiplayer.onChangeState = (state) => {
+        this.listener = user.multiplayer.state.AddListener((state) => {
             this.setState({ server: state });
-        };
-        user.multiplayer.Connect();
+        });
     }
     componentWillUnmount() {
-        return;
-        user.multiplayer.onChangeState = () => {};
-        user.multiplayer.Disconnect();
+        user.multiplayer.state.RemoveListener(this.listener);
     }
 
     Reconnect = () => {
-        this.setState({ server: '' });
-        user.multiplayer.Connect();
+        console.log('Reconnect');
     }
-
-    ConnectToServer = user.multiplayer.Connect;
-    Send = () => user.multiplayer.Send('test');
-    Disconnect = user.multiplayer.Disconnect;
 }
 
 export default BackMultiplayer;

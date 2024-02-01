@@ -8,27 +8,14 @@ import { Button, Container, Page, Text } from 'Interface/Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {
-        const lang = langManager.curr['multiplayer'];
-
-        return (
-            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-                <View style={styles.tempContainer}>
-                    <Text style={styles.tempTitle}>{lang['temp-comingsoon-title']}</Text>
-                    <Text style={styles.tempText}>{lang['temp-comingsoon-text']}</Text>
-                </View>
-            </Page>
-        );
-
         const { server } = this.state;
         const pages = {
             '': this.renderLoading,
             'connected': this.renderMultiplayer,
             'disconnected': this.renderFailed,
             'error': this.renderFailed,
-            'offline': this.renderOffline,
-            'test': this.renderTest
+            'offline': this.renderOffline
         };
-        console.log(server);
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
@@ -77,16 +64,6 @@ class Multiplayer extends BackMultiplayer {
         return (
             <>
                 <Text style={styles.firstText}>{textFailed}</Text>
-            </>
-        );
-    }
-
-    renderTest = () => {
-        return (
-            <>
-                <Button style={{ marginBottom: 24 }} color='main1' borderRadius={8} onPress={this.ConnectToServer}>Connect to server</Button>
-                <Button style={{ marginBottom: 24 }} color='main1' borderRadius={8} onPress={this.Send}>Send</Button>
-                <Button style={{ marginBottom: 24 }} color='main1' borderRadius={8} onPress={this.Disconnect}>Disconnect</Button>
             </>
         );
     }

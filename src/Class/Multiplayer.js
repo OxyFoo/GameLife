@@ -1,13 +1,16 @@
-const settings = { host: '45.82.73.154', port: 7121 };
+import DynamicVar from 'Utils/DynamicVar';
+import Config from 'react-native-config';
+
+const settings = {
+    host: Config.VPS_IP,
+    port: Config.VPS_PORT
+};
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- */
-
-/**
- * TCP server state change event
- * @callback onChangeCallback
- * @param {'connected' | 'disconnected' | 'error'} state
+ * @typedef {import('Types/Friend').Friend} Friend
+ * 
+ * @typedef {'connected' | 'disconnected' | 'error'} ConnectionState
  */
 
 class Multiplayer {
@@ -16,11 +19,14 @@ class Multiplayer {
         this.user = user;
     }
 
-    /** @type {WebSocket?} */
+    /** @type {Array<Friend>} */
+    friends = [];
+
+    /** @type {WebSocket | null} */
     socket = null;
 
-    /** @type {onChangeCallback} */
-    onChangeState = (state) => {};
+    /** @type {DynamicVar<ConnectionState>} */
+    state = new DynamicVar('disconnected');
 
     Connect = () => {
         if (this.isConnected()) {
@@ -51,23 +57,29 @@ class Multiplayer {
     }
     /** @param {MessageEvent} event */
     onMessage = (event) => {
-        if (event.data === 'connected') {
-            this.onChangeState('connected');
-        } else if (event.data === 'failed') {
-            this.onError('Server closed connection.');
+        const data = JSON.parse(event.data);
+
+        if (data.status === 'error') {
+            console.error('Server error:', event.data.message);
+            return;
+        }
+
+        if (data.status === 'connected') {
+            this.state.Set('connected');
+            this.friends = data.friends;
         }
     }
     /** @param {Event} event */
     onError = (event) => {
         this.user.interface.console.AddLog('error', 'TCP server:', event);
-        this.onChangeState('error');
+        this.state.Set('error');
         this.Disconnect();
     }
     /** @param {CloseEvent} event */
     onClose = (event) => {
         if (event.code !== 1000) {
             this.user.interface.console.AddLog('error', 'Disconnected:', event);
-            this.onChangeState('disconnected');
+            this.state.Set('disconnected');
         }
     }
 
@@ -79,13 +91,15 @@ class Multiplayer {
         if (typeof(message) === 'object') message = JSON.stringify(message);
         if (typeof(message) !== 'string') {
             this.user.interface.console.AddLog('warn', 'Send socket: Invalid message type.');
-        } else {
-            if (this.isConnected()) {
-                this.socket.send(message);
-                return true;
-            }
+            return false;
         }
-        return false;
+
+        if (this.isConnected() === false) {
+            return false;
+        }
+
+        this.socket.send(message);
+        return true;
     }
 }
 

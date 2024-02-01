@@ -1,9 +1,7 @@
 import fetch from 'node-fetch';
 
-const __DEV__ = require('../package.json').dev;
-const URL = __DEV__ ?
-    'https://oxyfoo.com/App/GameLife/Dev/app.php' :
-    'https://oxyfoo.com/App/GameLife/Public/app.php';
+// TODO: Fix URLs
+const URL = 'https://oxyfoo.com/App/GameLife/Dev/app.php';
 
 const defaultHeaders = {
     'Accept': 'application/json',

@@ -680,8 +680,6 @@ class Commands {
         $data = array(
             'deviceID' => $device->ID,
             'accountID' => $account->ID
-            // TODO - return friends (servTCP ?)
-            //'friends' => $account->Friends
         );
 
         $this->output['data'] = $data;

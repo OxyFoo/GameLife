@@ -73,19 +73,24 @@ class Server {
 
         connection.on('message', async (message) => {
             const rawData = message.type === 'utf8' ? message.utf8Data : null;
-            if (StrIsJson(rawData)) {
-                const data = JSON.parse(rawData);
-                if (data.hasOwnProperty('token')) {
-                    user = await this.users.Add(connection, data.token);
-                    if (user === null) {
-                        const data = { status: 'error', message: 'Invalid token.' };
-                        connection.send(JSON.stringify(data));
-                    } else {
-                        const data = { status: 'connected', friends: user.friends };
-                        connection.send(JSON.stringify(data));
-                    }
-                }
+            if (!StrIsJson(rawData)) {
+                return;
             }
+
+            const data = JSON.parse(rawData);
+            if (!data.hasOwnProperty('token')) {
+                return;
+            }
+
+            user = await this.users.Add(connection, data.token);
+            if (user === null) {
+                const response = { status: 'error', message: 'Invalid token.' };
+                connection.send(JSON.stringify(response));
+                return;
+            }
+
+            const response = { status: 'connected', friends: user.friends };
+            connection.send(JSON.stringify(response));
         });
 
         connection.on('close', () => {

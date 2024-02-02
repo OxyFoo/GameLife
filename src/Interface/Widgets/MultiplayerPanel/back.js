@@ -20,24 +20,41 @@ const MultiplayerPanelProps = {
 class BackMultiplayerPanel extends React.Component {
     state = {
         /** @type {ConnectionState} */
-        state: 'waiting',
+        state: 'idle',
 
         /** @type {Array<Friend>} */
         friends: []
     }
 
     componentDidMount() {
+        this.updateState(user.multiplayer.state.Get());
         this.listener = user.multiplayer.state.AddListener((state) => {
-            const newState = { state };
-            if (state === 'connected') {
-                newState.friends = user.multiplayer.friends;
-            }
-            this.setState(newState);
+            this.updateState(state);
         });
     }
 
     componentWillUnmount() {
         user.multiplayer.state.RemoveListener(this.listener);
+    }
+
+    /** @param {ConnectionState} state */
+    updateState = (state) => {
+        const newState = {};
+        if (state !== this.state.state) {
+            newState.state = state;
+        }
+        if (state === 'connected') {
+            newState.friends = user.multiplayer.friends;
+        }
+        this.setState(newState);
+    }
+
+    openMultiplayer = () => {
+        user.interface.ChangePage('multiplayer');
+    }
+    Reconnect = () => {
+        this.setState({ state: 'idle' });
+        user.multiplayer.Connect();
     }
 }
 

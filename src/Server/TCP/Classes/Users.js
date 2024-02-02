@@ -112,19 +112,13 @@ class Users {
         for (let i = 0; i < this.AllUsers.length; i++) {
             const user = this.AllUsers[i];
 
-            if (user.accountID === accountID) {
-                const data = {
-                    'type': connected ? 'connected' : 'disconnected',
-                    'accountID': accountID
-                };
-                user.connection.send(JSON.stringify(data));
-            }
+            const userFriendIndex = user.friends.findIndex(friend => friend.accountID === accountID);
+            if (userFriendIndex !== -1) {
+                // Change target status of the user
+                user.friends[userFriendIndex].status = connected ? 'online' : 'offline';
 
-            else if (user.friends.findIndex(friend => friend.accountID === accountID) !== -1) {
-                const data = {
-                    'type': connected ? 'userConnected' : 'userDisconnected',
-                    'accountID': accountID
-                };
+                // Send new status to the user
+                const data = { status: 'connected', friends: user.friends };
                 user.connection.send(JSON.stringify(data));
             }
         }
@@ -147,7 +141,7 @@ class Users {
             const friendID = friendships[i].AccountID === accountID ? friendships[i].TargetID : friendships[i].AccountID;
 
             // Get informations
-            const commandInfo = `SELECT \`Username\` FROM \`Accounts\` WHERE ID = ${friendID}`;
+            const commandInfo = `SELECT \`Username\`, \`Title\`, \`XP\` FROM \`Accounts\` WHERE ID = ${friendID}`;
             const friendInfo = await this.db.ExecQuery(commandInfo);
             if (friendInfo === null || friendInfo.length === 0) {
                 throw new Error(`Account not found: ${friendID}`);
@@ -176,6 +170,8 @@ class Users {
                 status: this.GetByAccountID(friendID) !== null ? 'online' : 'offline',
                 accountID: friendID,
                 username: friendInfo[0]['Username'],
+                title: friendInfo[0]['Title'],
+                xp: friendInfo[0]['XP'],
                 avatar: friendAvatar[0],
                 friendshipState: friendships[i].State
             };

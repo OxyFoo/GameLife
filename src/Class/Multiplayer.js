@@ -10,7 +10,7 @@ const settings = {
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Friend').Friend} Friend
  * 
- * @typedef {'waiting' | 'connected' | 'disconnected' | 'error'} ConnectionState
+ * @typedef {'idle' | 'connected' | 'disconnected' | 'error'} ConnectionState
  */
 
 class Multiplayer {
@@ -26,7 +26,7 @@ class Multiplayer {
     socket = null;
 
     /** @type {DynamicVar<ConnectionState>} */
-    state = new DynamicVar('disconnected');
+    state = new DynamicVar('idle');
 
     Connect = () => {
         if (this.isConnected()) {
@@ -66,8 +66,9 @@ class Multiplayer {
 
         if (data.status === 'connected') {
             this.friends = data.friends;
-            this.state.Set('connected');
         }
+
+        this.state.Set(data.status, true);
     }
     /** @param {Event} event */
     onError = (event) => {

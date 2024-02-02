@@ -8,6 +8,8 @@ class Friend {
     status = 'offline';
     accountID = 0;
     username = '';
+    title = 0;
+    xp = 0;
 
     avatar = {
         /** @type {Sexes} */

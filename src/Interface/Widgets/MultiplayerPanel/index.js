@@ -4,8 +4,7 @@ import { FlatList, View } from 'react-native';
 import styles from './style';
 import BackMultiplayerPanel from './back';
 
-import FriendElement from 'Interface/Pages/Multiplayer/friendElement';
-import { Container, Text } from 'Interface/Components';
+import { Container, Text, FriendElement } from 'Interface/Components';
 
 /**
  * @typedef {import('Interface/Components/Icon').Icons} Icons

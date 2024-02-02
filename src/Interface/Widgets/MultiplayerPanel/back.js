@@ -1,5 +1,6 @@
-import user from 'Managers/UserManager';
 import * as React from 'react';
+
+import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

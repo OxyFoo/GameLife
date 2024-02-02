@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
+import styles from './style';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
@@ -49,8 +50,14 @@ function FriendElement({ friend }) {
         statusStyle.borderColor = themeManager.GetColor('danger');
     }
 
+    const onPress = () => {
+        if (friend.friendshipState === 'accepted') {
+            user.interface.ChangePage('profilefriend', { friend });
+        }
+    }
+
     return (
-        <Button style={styles.friend}>
+        <Button style={styles.friend} onPress={onPress}>
             <View style={styles.friendInfo}>
                 <View style={[styles.frameBorder, statusStyle]}>
                     <Frame
@@ -77,47 +84,5 @@ function FriendElement({ friend }) {
         </Button>
     );
 }
-
-const styles = StyleSheet.create({
-    friend: {
-        width: '100%',
-        height: 'auto',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderRadius: 0
-    },
-    friendInfo: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        textAlign: 'left'
-    },
-    friendInfoTitle: {
-        marginLeft: 8,
-        alignItems: 'flex-start'
-    },
-    friendDetails: {
-    },
-    frame: {
-        paddingVertical: 0,
-        paddingHorizontal: 0
-    },
-    frameBorder: {
-        width: 48,
-        height: 48,
-        aspectRatio: 1,
-        borderRadius: 4,
-        borderWidth: 2,
-        borderColor: '#00000050'
-    },
-    level: {
-        aspectRatio: 1,
-        padding: 8,
-        borderRadius: 100,
-        backgroundColor: '#00000050'
-    }
-});
 
 export default FriendElement;

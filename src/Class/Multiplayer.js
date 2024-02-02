@@ -102,6 +102,11 @@ class Multiplayer {
         this.socket.send(message);
         return true;
     }
+
+    /** @param {string} username */
+    AddFriend = (username) => {
+        this.Send({ action: 'add-friend', username });
+    }
 }
 
 export default Multiplayer;

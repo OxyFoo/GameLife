@@ -72,6 +72,10 @@ class Server {
         Log('User connected');
 
         connection.on('message', async (message) => {
+            if (message.type !== 'utf8') {
+                return;
+            }
+
             const rawData = message.type === 'utf8' ? message.utf8Data : null;
             if (!StrIsJson(rawData)) {
                 return;

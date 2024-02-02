@@ -1,6 +1,8 @@
 import WebSocket from 'websocket';
 
 import { Request_Async } from '../Utils/Request.js';
+import { GetFriend, GetUserFriends } from '../Utils/Friends.js';
+import { StrIsJson } from '../Utils/Functions.js';
 
 /**
  * @typedef {import('../Classes/Sql.js').default} SQL
@@ -26,19 +28,6 @@ class Users {
     }
 
     /**
-     * TODO: Remove - Unused ?
-     * @param {number} accountID 
-     * @returns {User | null} User with the account ID
-     */
-    GetByAccountID = (accountID) => {
-        const index = this.AllUsers.findIndex(user => user.accountID === accountID);
-        if (index === -1) {
-            return null;
-        }
-        return this.AllUsers[index];
-    }
-
-    /**
      * @param {WebSocket.connection} connection
      * @param {string} token
      * @returns {Promise<User | null>} User if success or null
@@ -58,7 +47,7 @@ class Users {
         user.deviceID = deviceID;
         user.accountID = accountID;
         user.connection = connection;
-        user.friends = await this.GetFriends(accountID);
+        user.friends = await GetUserFriends(this, user);
 
         // Avoid multiple connections with the same account or device
         this.RemoveByAccountID(accountID);
@@ -68,9 +57,74 @@ class Users {
         this.AllUsers.push(user);
         this.handleConnections(accountID, true);
 
+        // Add events
+        connection.removeAllListeners('message');
+        connection.on('message', (message) => {
+            this.onMessage(user, message);
+        });
+
         console.log(`User added (${accountID} - ${deviceID})`);
 
         return user;
+    }
+
+    /**
+     * @param {User} user
+     * @param {WebSocket.Message} message
+     */
+    onMessage = async (user, message) => {
+        if (message.type !== 'utf8' || !StrIsJson(message.utf8Data)) {
+            return;
+        }
+
+        const data = JSON.parse(message.utf8Data);
+        if (!data.hasOwnProperty('action')) {
+            return;
+        }
+
+        switch (data.action) {
+            case 'add-friend':
+                await this.AddFriend(user, data.username);
+                user.connection.send(JSON.stringify({ status: 'connected', friends: user.friends }));
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @param {User} user
+     * @param {string} username
+     * @returns {Promise<boolean>} Whether the friend was added successfully
+     */
+    AddFriend = async (user, username) => {
+        // Get friend ID
+        const command = `SELECT \`ID\` FROM \`Accounts\` WHERE Username = '${username}'`;
+        const requestFriendID = await this.db.ExecQuery(command);
+        if (requestFriendID === null || requestFriendID.length === 0) {
+            return false;
+        }
+        const friendID = requestFriendID[0]['ID'];
+
+        // Check if the friendship already exists
+        const commandCheck = `SELECT \`ID\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
+        const requestCheck = await this.db.ExecQuery(commandCheck);
+        if (requestCheck === null || requestCheck.length > 0) {
+            return false;
+        }
+
+        // Add the friendship
+        const commandAdd = `INSERT INTO \`Friends\` (\`AccountID\`, \`TargetID\`) VALUES (${user.accountID}, ${friendID})`;
+        const added = await this.db.ExecQuery(commandAdd);
+        if (added === null) {
+            return false;
+        }
+
+        // Add the friend to the user
+        const newFriend = await GetFriend(this, user, friendID);
+        user.friends.push(newFriend);
+
+        return true;
     }
 
     /**
@@ -122,63 +176,6 @@ class Users {
                 user.connection.send(JSON.stringify(data));
             }
         }
-    }
-
-    /**
-     * @param {number} accountID
-     * @returns {Promise<Array<Friend>>} Friends of the account
-     */
-    async GetFriends(accountID) {
-        const command = `SELECT \`AccountID\`, \`TargetID\`, \`State\` FROM \`Friends\` WHERE AccountID = ${accountID} OR TargetID = ${accountID}`;
-        const friendships = await this.db.ExecQuery(command);
-        if (friendships === null) {
-            throw new Error(`Friendships not found: ${accountID}`);
-        }
-
-        /** @type {Array<Friend>} */
-        const friends = [];
-        for (let i = 0; i < friendships.length; i++) {
-            const friendID = friendships[i].AccountID === accountID ? friendships[i].TargetID : friendships[i].AccountID;
-
-            // Get informations
-            const commandInfo = `SELECT \`Username\`, \`Title\`, \`XP\` FROM \`Accounts\` WHERE ID = ${friendID}`;
-            const friendInfo = await this.db.ExecQuery(commandInfo);
-            if (friendInfo === null || friendInfo.length === 0) {
-                throw new Error(`Account not found: ${friendID}`);
-            }
-
-            // Get avatar
-            const commandAvatar = `SELECT \`Sexe\`, \`Skin\`, \`SkinColor\`, \`Hair\`, \`Top\`, \`Bottom\`, \`Shoes\` FROM \`Avatars\` WHERE ID = ${friendID}`;
-            const friendAvatar = await this.db.ExecQuery(commandAvatar);
-            if (friendAvatar === null || friendAvatar.length === 0) {
-                throw new Error(`Avatar not found for account ${friendID}`);
-            }
-
-            const stuffKeys = [ 'Hair', 'Top', 'Bottom', 'Shoes' ];
-            for (const key of stuffKeys) {
-                // Get stuff by ItemID
-                const commandItemID = `SELECT \`ItemID\` FROM \`Inventories\` WHERE ID = ${friendAvatar[0][key]}`;
-                const itemID = await this.db.ExecQuery(commandItemID);
-                if (itemID === null || itemID.length === 0) {
-                    throw new Error(`ItemID not found for account ${friendID}`);
-                }
-                friendAvatar[0][key] = itemID[0]['ItemID'];
-            };
-
-            /** @type {Friend} */
-            const newFriend = {
-                status: this.GetByAccountID(friendID) !== null ? 'online' : 'offline',
-                accountID: friendID,
-                username: friendInfo[0]['Username'],
-                title: friendInfo[0]['Title'],
-                xp: friendInfo[0]['XP'],
-                avatar: friendAvatar[0],
-                friendshipState: friendships[i].State
-            };
-
-            friends.push(newFriend);
-        }
-        return friends;
     }
 }
 

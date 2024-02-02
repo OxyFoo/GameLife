@@ -1,10 +1,12 @@
 /**
  * @typedef {import('Class/Inventory').Sexes} Sexes
  * @typedef {import('Class/Inventory').CharactersName} CharactersName
+ * @typedef {'online' | 'offline'} ConnectionState
+ * @typedef {'accepted' | 'pending' | 'blocked'} FriendshipState
  */
 
 class Friend {
-    /** @type {'online' | 'offline'} */
+    /** @type {ConnectionState} */
     status = 'offline';
     accountID = 0;
     username = '';
@@ -33,7 +35,7 @@ class Friend {
         /** @type {string} */
         Shoes: ''
     }
-    /** @type {'accepted' | 'pending' | 'blocked'} */
+    /** @type {FriendshipState} */
     friendshipState = 'pending';
 }
 

@@ -44,7 +44,10 @@ class BackMultiplayerPanel extends React.Component {
             newState.state = state;
         }
         if (state === 'connected') {
-            newState.friends = user.multiplayer.friends;
+            newState.friends = user.multiplayer.friends
+                .filter(friend => friend.friendshipState === 'accepted')
+                .filter(friend => friend.status === 'online')
+                .slice(0, 5);
         }
         this.setState(newState);
     }

@@ -6,26 +6,42 @@ import BackProfileFriend from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page, Text, Container, XPBar, Frame } from 'Interface/Components';
+import { Page, Text, Button, Container, XPBar, Frame } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 import dataManager from 'Managers/DataManager';
 
+function DataRow({ title = '', value = ''}) {
+    const lang = langManager.curr['profile'];
+    const rowStyle = [ styles.tableRow, { borderColor: themeManager.GetColor('main1') } ];
+    const cellStyle = [ styles.cell, { borderColor: themeManager.GetColor('main1') } ];
+    return (
+        <View style={rowStyle}>
+            <Text
+                style={styles.rowText}
+                containerStyle={cellStyle}
+            >
+                {lang[title]}
+            </Text>
+
+            <Text
+                style={styles.rowText}
+                containerStyle={[cellStyle, { borderRightWidth: 0 }]}
+            >
+                {value}
+            </Text>
+        </View>
+    );
+}
+
 class ProfileFriend extends BackProfileFriend {
     render() {
-        const { DataRow } = this;
         const lang = langManager.curr['profile'];
         const { friend, xpInfo } = this.state;
 
-        const age = '[0]';
         const username = friend.username;
         const title = friend.title !== 0 ? dataManager.titles.GetByID(friend.title) : null;
         const titleText = title === null ? null : dataManager.GetText(title.Name);
-
-        let ageText = '';
-        if (age !== null) {
-            ageText = lang['value-age'].replace('{}', age.toString());
-        }
 
         return (
             <Page ref={ref => this.refPage = ref}>
@@ -38,13 +54,8 @@ class ProfileFriend extends BackProfileFriend {
                 <View style={styles.header}>
                     <View style={styles.content}>
                         <View style={styles.usernameContainer}>
-
                             <Text style={styles.username} color='primary'>
                                 {username}
-                            </Text>
-
-                            <Text style={styles.age} color='secondary'>
-                                {ageText}
                             </Text>
                         </View>
 
@@ -68,7 +79,7 @@ class ProfileFriend extends BackProfileFriend {
                 {/** Avatar */}
                 <View style={styles.avatarContainer}>
                     <View style={styles.avatar}>
-                        <Frame characters={[ this.character ]} loadingTime={500} />
+                        <Frame characters={[ this.character ]} loadingTime={300} />
                     </View>
                 </View>
 
@@ -95,30 +106,16 @@ class ProfileFriend extends BackProfileFriend {
                         value={'[0]'}
                     />
                 </Container>
+
+                {/** Actions */}
+                <Button
+                    style={styles.topSpace}
+                    color='danger'
+                    onPress={this.removeFriendHandler}
+                >
+                    [Retirer de la liste d'amis]
+                </Button>
             </Page>
-        );
-    }
-
-    DataRow({ title = '', value = ''}) {
-        const lang = langManager.curr['profile'];
-        const rowStyle = [ styles.tableRow, { borderColor: themeManager.GetColor('main1') } ];
-        const cellStyle = [ styles.cell, { borderColor: themeManager.GetColor('main1') } ];
-        return (
-            <View style={rowStyle}>
-                <Text
-                    style={styles.rowText}
-                    containerStyle={cellStyle}
-                >
-                    {lang[title]}
-                </Text>
-
-                <Text
-                    style={styles.rowText}
-                    containerStyle={[cellStyle, { borderRightWidth: 0 }]}
-                >
-                    {value}
-                </Text>
-            </View>
         );
     }
 }

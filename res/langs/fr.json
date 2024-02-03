@@ -388,6 +388,11 @@
         "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
+    "profile-friend": {
+        "alert-removefriend-title": "Supprimer un ami",
+        "alert-removefriend-text": "Es-tu sûr de vouloir supprimer {} de ta liste d'amis ?"
+    },
+
     "report": {
         "page-title": "Report",
 

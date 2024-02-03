@@ -1,4 +1,6 @@
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+
 import { PageBase, Character } from 'Interface/Components';
 import { USER_XP_PER_LEVEL } from 'Class/Experience';
 
@@ -47,6 +49,22 @@ class BackProfileFriend extends PageBase {
         ];
         character.SetEquipment(stuff);
         this.character = character;
+    }
+
+    removeFriendHandler = () => {
+        const { friend } = this.state;
+        if (friend === null) return;
+
+        const callback = (button) => {
+            if (button !== 'yes') return;
+            user.multiplayer.RemoveFriend(friend.accountID);
+            this.Back();
+        };
+
+        const lang = langManager.curr['profile-friend'];
+        const title = lang['alert-removefriend-title'];
+        const text = lang['alert-removefriend-text'].replace('{}', friend.username);
+        user.interface.popup.Open('yesno', [ title, text ], callback);
     }
 
     Back = () => {

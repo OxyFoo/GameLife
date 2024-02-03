@@ -1,8 +1,9 @@
 import WebSocket from 'websocket';
 
 import { Request_Async } from '../Utils/Request.js';
-import { GetFriend, GetUserFriends } from '../Utils/Friends.js';
+import { GetUserFriends } from './Friends/GetFriends.js';
 import { StrIsJson } from '../Utils/Functions.js';
+import { AddFriend, RemoveFriend } from './Friends/Manager.js';
 
 /**
  * @typedef {import('../Classes/Sql.js').default} SQL
@@ -84,47 +85,16 @@ class Users {
 
         switch (data.action) {
             case 'add-friend':
-                await this.AddFriend(user, data.username);
+                await AddFriend(this, user, data.username);
+                user.connection.send(JSON.stringify({ status: 'connected', friends: user.friends }));
+                break;
+            case 'remove-friend':
+                await RemoveFriend(this, user, data.accountID);
                 user.connection.send(JSON.stringify({ status: 'connected', friends: user.friends }));
                 break;
             default:
                 break;
         }
-    }
-
-    /**
-     * @param {User} user
-     * @param {string} username
-     * @returns {Promise<boolean>} Whether the friend was added successfully
-     */
-    AddFriend = async (user, username) => {
-        // Get friend ID
-        const command = `SELECT \`ID\` FROM \`Accounts\` WHERE Username = '${username}'`;
-        const requestFriendID = await this.db.ExecQuery(command);
-        if (requestFriendID === null || requestFriendID.length === 0) {
-            return false;
-        }
-        const friendID = requestFriendID[0]['ID'];
-
-        // Check if the friendship already exists
-        const commandCheck = `SELECT \`ID\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
-        const requestCheck = await this.db.ExecQuery(commandCheck);
-        if (requestCheck === null || requestCheck.length > 0) {
-            return false;
-        }
-
-        // Add the friendship
-        const commandAdd = `INSERT INTO \`Friends\` (\`AccountID\`, \`TargetID\`) VALUES (${user.accountID}, ${friendID})`;
-        const added = await this.db.ExecQuery(commandAdd);
-        if (added === null) {
-            return false;
-        }
-
-        // Add the friend to the user
-        const newFriend = await GetFriend(this, user, friendID);
-        user.friends.push(newFriend);
-
-        return true;
     }
 
     /**

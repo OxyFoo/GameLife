@@ -33,6 +33,7 @@ class Server {
             this.wsServer.addListener('connect', this.onConnect);
             this.wsServer.addListener('request', this.onRequest);
             this.wsServer.addListener('close', this.onClose);
+            console.log('WebSocket server listening on port', port);
         }
     }
 
@@ -40,6 +41,7 @@ class Server {
         if (this.server.listening) {
             this.wsServer.shutDown();
             this.server.close();
+            console.log('WebSocket server closed');
         }
     }
 

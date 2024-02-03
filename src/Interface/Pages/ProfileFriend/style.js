@@ -22,11 +22,6 @@ const styles = StyleSheet.create({
         fontSize: 28,
         textAlign: 'left'
     },
-    age: {
-        marginLeft: 6,
-        marginBottom: 2,
-        fontSize: 20
-    },
     title: {
         fontSize: 24,
         textAlign: 'left'

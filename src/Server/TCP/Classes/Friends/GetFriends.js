@@ -1,6 +1,6 @@
 /**
- * @typedef {import('../Classes/Users.js').User} User
- * @typedef {import('../Classes/Users.js').default} Users
+ * @typedef {import('../Users.js').User} User
+ * @typedef {import('../Users.js').default} Users
  * @typedef {import('Types/Friend.js').Friend} Friend
  * @typedef {import('Types/Friend.js').ConnectionState} ConnectionState
  * @typedef {import('Types/Friend.js').FriendshipState} FriendshipState

@@ -1,12 +1,12 @@
 import WebSocket from 'websocket';
 
-import { Request_Async } from '../Utils/Request.js';
+import { Request_Async } from './Utils/Request.js';
 import { GetUserFriends } from './Friends/GetFriends.js';
-import { StrIsJson } from '../Utils/Functions.js';
+import { StrIsJson } from './Utils/Functions.js';
 import { AddFriend, RemoveFriend } from './Friends/Manager.js';
 
 /**
- * @typedef {import('../Classes/Sql.js').default} SQL
+ * @typedef {import('./Sql.js').default} SQL
  * @typedef {import('../../../Types/Friend.js').Friend} Friend
  */
 

@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import SQL from './Classes/Sql.js';
-import Server from './Classes/Server.js';
+import SQL from './src/Sql.js';
+import Server from './src/Server.js';
 
 const database = new SQL({
     database: process.env.DB_DATABASE,

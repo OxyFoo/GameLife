@@ -2,10 +2,10 @@ import WebSocket from 'websocket';
 import { createServer } from 'http';
 
 import Users from './Users.js';
-import { StrIsJson } from '../Utils/Functions.js';
+import { StrIsJson } from './Utils/Functions.js';
 
 /**
- * @typedef {import('../Classes/Sql.js').default} SQL
+ * @typedef {import('./Sql.js').default} SQL
  * @typedef {import('./Users.js').User} User
  */
 

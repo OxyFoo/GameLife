@@ -77,4 +77,82 @@ async function RemoveFriend(users, user, accountID) {
     return true;
 }
 
-export { AddFriend, RemoveFriend };
+/**
+ * @param {Users} users
+ * @param {User} user
+ * @param {number} accountID
+ * @returns {Promise<boolean>} Whether the friend was added successfully
+ */
+async function AcceptFriend(users, user, accountID) {
+    // Update the friendship
+    const command = `UPDATE \`Friends\` SET \`State\` = 'accepted' WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
+    const accepted = await users.db.ExecQuery(command);
+    if (accepted === null) {
+        return false;
+    }
+
+    // Add the friend to the user
+    const newFriend = await GetFriend(users, user, accountID);
+    user.friends.push(newFriend);
+
+    // Remove notification
+    const notifIndex = user.notificationsInApp.findIndex(notif => notif.type === 'friend-pending' && notif.data.accountID === accountID);
+    if (notifIndex !== -1) {
+        user.notificationsInApp.splice(notifIndex, 1);
+    }
+
+    // Send new status
+    users.SendAllData(user);
+
+    // If target is connected, send new status
+    const targetIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
+    if (targetIndex !== -1) {
+        const target = users.AllUsers[targetIndex];
+        const userIndex = target.friends.findIndex(friend => friend.accountID === user.accountID);
+        if (userIndex !== -1) {
+            target.friends[userIndex].friendshipState = 'accepted';
+            users.SendAllData(target);
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param {Users} users
+ * @param {User} user
+ * @param {number} accountID
+ * @returns {Promise<boolean>} Whether the friend was added successfully
+ */
+async function DeclineFriend(users, user, accountID) {
+    // Update the friendship
+    const command = `DELETE FROM \`Friends\` WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
+    const declined = await users.db.ExecQuery(command);
+    if (declined === null) {
+        return false;
+    }
+
+    // Remove notification
+    const notifIndex = user.notificationsInApp.findIndex(notif => notif.type === 'friend-pending' && notif.data.accountID === accountID);
+    if (notifIndex !== -1) {
+        user.notificationsInApp.splice(notifIndex, 1);
+    }
+
+    // Send new status
+    users.SendAllData(user);
+
+    // If target is connected, send new status
+    const targetIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
+    if (targetIndex !== -1) {
+        const target = users.AllUsers[targetIndex];
+        const userIndex = target.friends.findIndex(friend => friend.accountID === user.accountID);
+        if (userIndex !== -1) {
+            target.friends.splice(userIndex, 1);
+            users.SendAllData(target);
+        }
+    }
+
+    return true;
+}
+
+export { AddFriend, RemoveFriend, AcceptFriend, DeclineFriend };

@@ -3,6 +3,7 @@ import svgAdd from 'Ressources/icons/add';
 import svgAddSquare from 'Ressources/icons/add-square';
 import svgAlarmClock from 'Ressources/icons/alarm-clock';
 import svgArrowLeft from 'Ressources/icons/arrow-left';
+import svgBell from 'Ressources/icons/bell';
 import svgCalendar from 'Ressources/icons/calendar';
 import svgCheck from 'Ressources/icons/check';
 import svgCheckboxOn from 'Ressources/icons/checkbox-on';
@@ -58,6 +59,7 @@ const SVGIcons = {
     addSquare: svgAddSquare,
     alarmClock: svgAlarmClock,
     arrowLeft: svgArrowLeft,
+    bell: svgBell,
     calendar: svgCalendar,
     check: svgCheck,
     checkboxOn: svgCheckboxOn,

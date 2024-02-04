@@ -122,6 +122,14 @@ class Multiplayer {
     RemoveFriend = (accountID) => {
         this.Send({ action: 'remove-friend', accountID });
     }
+    /** @param {number} accountID */
+    AcceptFriend = (accountID) => {
+        this.Send({ action: 'accept-friend', accountID });
+    }
+    /** @param {number} accountID */
+    DeclineFriend = (accountID) => {
+        this.Send({ action: 'decline-friend', accountID });
+    }
 }
 
 export default Multiplayer;

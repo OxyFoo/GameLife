@@ -1,7 +1,7 @@
 import WebSocket from 'websocket';
 
 import { GetUserFriends } from './Friends/GetFriends.js';
-import { AddFriend, RemoveFriend } from './Friends/Manager.js';
+import { AcceptFriend, AddFriend, DeclineFriend, RemoveFriend } from './Friends/Manager.js';
 import { GetFriendNotifications } from './Friends/NotificationsInApp.js';
 
 import { StrIsJson } from './Utils/Functions.js';
@@ -99,6 +99,14 @@ class Users {
                 break;
             case 'remove-friend':
                 await RemoveFriend(this, user, data.accountID);
+                this.SendAllData(user);
+                break;
+            case 'accept-friend':
+                await AcceptFriend(this, user, data.accountID);
+                this.SendAllData(user);
+                break;
+            case 'decline-friend':
+                await DeclineFriend(this, user, data.accountID);
                 this.SendAllData(user);
                 break;
             default:

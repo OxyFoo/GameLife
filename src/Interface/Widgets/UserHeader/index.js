@@ -9,6 +9,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Icon, Button, Frame } from 'Interface/Components';
+import { NotificationsInAppButton } from 'Interface/Widgets';
 
 /**
  * @typedef {import('Interface/Components/Icon').Icons} Icons
@@ -52,6 +53,18 @@ class UserHeader extends UserHeaderBack {
         );
     }
 
+    renderNotificationsInApp = () => {
+        const { editorMode } = this.props;
+
+        if (editorMode) {
+            return null;
+        }
+
+        return (
+            <NotificationsInAppButton style={styles.interactionsButton} />
+        );
+    }
+
     renderContent() {
         const { style, editorMode, onPress } = this.props;
         const { username, titleText } = this.state;
@@ -92,7 +105,10 @@ class UserHeader extends UserHeaderBack {
                     )}
                 </View>
 
-                {this.renderInteraction()}
+                <View style={styles.interactions}>
+                    {this.renderNotificationsInApp()}
+                    {this.renderInteraction()}
+                </View>
             </TouchableOpacity>
         );
     }

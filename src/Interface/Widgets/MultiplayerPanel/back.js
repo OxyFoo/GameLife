@@ -29,28 +29,30 @@ class BackMultiplayerPanel extends React.Component {
 
     componentDidMount() {
         this.updateState(user.multiplayer.state.Get());
-        this.listener = user.multiplayer.state.AddListener((state) => {
-            this.updateState(state);
-        });
+        this.updateFriends(user.multiplayer.friends.Get());
+        this.listenerState = user.multiplayer.state.AddListener(this.updateState);
+        this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
     componentWillUnmount() {
-        user.multiplayer.state.RemoveListener(this.listener);
+        user.multiplayer.state.RemoveListener(this.listenerState);
+        user.multiplayer.friends.RemoveListener(this.listenerFriends);
     }
 
     /** @param {ConnectionState} state */
     updateState = (state) => {
-        const newState = {};
         if (state !== this.state.state) {
-            newState.state = state;
+            this.setState({ state });
         }
-        if (state === 'connected') {
-            newState.friends = user.multiplayer.friends
-                .filter(friend => friend.friendshipState === 'accepted')
-                .filter(friend => friend.status === 'online')
-                .slice(0, 5);
-        }
-        this.setState(newState);
+    }
+
+    /** @param {Array<Friend>} friends */
+    updateFriends = (friends) => {
+        const newFriends = friends
+            .filter(friend => friend.friendshipState === 'accepted')
+            .filter(friend => friend.status === 'online')
+            .slice(0, 5);
+        this.setState({ friends: newFriends });
     }
 
     openMultiplayer = () => {

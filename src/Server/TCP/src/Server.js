@@ -94,9 +94,6 @@ class Server {
                 connection.send(JSON.stringify(response));
                 return;
             }
-
-            const response = { status: 'connected', friends: user.friends };
-            connection.send(JSON.stringify(response));
         });
 
         connection.on('close', () => {

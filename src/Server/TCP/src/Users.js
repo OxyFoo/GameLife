@@ -1,13 +1,16 @@
 import WebSocket from 'websocket';
 
-import { Request_Async } from './Utils/Request.js';
 import { GetUserFriends } from './Friends/GetFriends.js';
-import { StrIsJson } from './Utils/Functions.js';
 import { AddFriend, RemoveFriend } from './Friends/Manager.js';
+import { GetFriendNotifications } from './Friends/NotificationsInApp.js';
+
+import { StrIsJson } from './Utils/Functions.js';
+import { Request_Async } from './Utils/Request.js';
 
 /**
  * @typedef {import('./Sql.js').default} SQL
  * @typedef {import('../../../Types/Friend.js').Friend} Friend
+ * @typedef {import('../../../Types/NotificationInApp.js').NotificationInApp} NotificationInApp
  */
 
 class User {
@@ -16,6 +19,8 @@ class User {
     accountID = 0;
     /** @type {Array<Friend>} */
     friends = [];
+    /** @type {Array<NotificationInApp>} */
+    notificationsInApp = [];
     /** @type {WebSocket.connection} */
     connection = null;
 }
@@ -47,8 +52,9 @@ class Users {
         user.token = token;
         user.deviceID = deviceID;
         user.accountID = accountID;
-        user.connection = connection;
         user.friends = await GetUserFriends(this, user);
+        user.notificationsInApp = await GetFriendNotifications(this, user);
+        user.connection = connection;
 
         // Avoid multiple connections with the same account or device
         this.RemoveByAccountID(accountID);
@@ -63,6 +69,9 @@ class Users {
         connection.on('message', (message) => {
             this.onMessage(user, message);
         });
+
+        connection.send(JSON.stringify({ status: 'connected' }));
+        this.SendAllData(user);
 
         console.log(`User added (${accountID} - ${deviceID})`);
 
@@ -86,15 +95,28 @@ class Users {
         switch (data.action) {
             case 'add-friend':
                 await AddFriend(this, user, data.username);
-                user.connection.send(JSON.stringify({ status: 'connected', friends: user.friends }));
+                this.SendAllData(user);
                 break;
             case 'remove-friend':
                 await RemoveFriend(this, user, data.accountID);
-                user.connection.send(JSON.stringify({ status: 'connected', friends: user.friends }));
+                this.SendAllData(user);
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * @param {User} user
+     */
+    SendAllData = (user) => {
+        // Update friends
+        const dataFriends = { status: 'update-friends', friends: user.friends };
+        user.connection.send(JSON.stringify(dataFriends));
+
+        // Update notifications
+        const dataNotificationsInApp = { status: 'update-notifications', notifications: user.notificationsInApp };
+        user.connection.send(JSON.stringify(dataNotificationsInApp));
     }
 
     /**
@@ -142,8 +164,7 @@ class Users {
                 user.friends[userFriendIndex].status = connected ? 'online' : 'offline';
 
                 // Send new status to the user
-                const data = { status: 'connected', friends: user.friends };
-                user.connection.send(JSON.stringify(data));
+                this.SendAllData(user);
             }
         }
     }

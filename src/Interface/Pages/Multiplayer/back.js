@@ -20,27 +20,32 @@ class BackMultiplayer extends PageBase {
 
     componentDidMount() {
         this.updateState(user.multiplayer.state.Get());
-        this.listener = user.multiplayer.state.AddListener((state) => {
-            this.updateState(state);
-        });
+        this.updateFriends(user.multiplayer.friends.Get());
+        this.listenerState = user.multiplayer.state.AddListener(this.updateState);
+        this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
     componentWillUnmount() {
-        user.multiplayer.state.RemoveListener(this.listener);
+        user.multiplayer.state.RemoveListener(this.listenerState);
+        user.multiplayer.friends.RemoveListener(this.listenerFriends);
     }
 
     /** @param {ConnectionState} state */
     updateState = (state) => {
-        const newState = { state, friends: [] };
-        if (state === 'connected') {
-            newState.friends = user.multiplayer.friends
-                .filter(friend => friend.friendshipState === 'accepted')
-                .sort((a, b) => a.username.localeCompare(b.username));
-            newState.friendsPending = user.multiplayer.friends
-                .filter(friend => friend.friendshipState === 'pending')
-                .sort((a, b) => a.username.localeCompare(b.username));
-        }
-        this.setState(newState);
+        this.setState({ state });
+    }
+
+    /** @param {Array<Friend>} friends */
+    updateFriends = (friends) => {
+        const newFriends = friends
+            .filter(friend => friend.friendshipState === 'accepted')
+            .sort((a, b) => a.username.localeCompare(b.username));
+
+        const newFriendsPending = friends
+            .filter(friend => friend.friendshipState === 'pending')
+            .sort((a, b) => a.username.localeCompare(b.username));
+
+        this.setState({ friends: newFriends, friendsPending: newFriendsPending });
     }
 
     addFriendHandle = () => {

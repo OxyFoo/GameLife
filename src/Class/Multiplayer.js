@@ -9,8 +9,10 @@ const settings = {
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/NotificationInApp').NotificationInApp} NotificationInApp
  * 
  * @typedef {'idle' | 'connected' | 'disconnected' | 'error'} ConnectionState
+ * @typedef {'connected' | 'disconnected' | 'error' | 'update-friends' | 'update-notifications'} RequestType
  */
 
 class Multiplayer {
@@ -19,14 +21,17 @@ class Multiplayer {
         this.user = user;
     }
 
-    /** @type {Array<Friend>} */
-    friends = [];
-
     /** @type {WebSocket | null} */
     socket = null;
 
     /** @type {DynamicVar<ConnectionState>} */
     state = new DynamicVar('idle');
+
+    /** @type {DynamicVar<Array<Friend>>} */
+    friends = new DynamicVar([]);
+
+    /** @type {DynamicVar<Array<NotificationInApp>>} */
+    notifications = new DynamicVar([]);
 
     Connect = () => {
         if (this.isConnected()) {
@@ -59,16 +64,22 @@ class Multiplayer {
     onMessage = (event) => {
         const data = JSON.parse(event.data);
 
-        if (data.status === 'error') {
-            console.error('Server error:', event.data.message);
-            return;
+        /** @type {RequestType} */
+        const status = data.status;
+
+        if (status === 'update-friends') {
+            this.friends.Set(data.friends);
+        }
+        if (status === 'update-notifications') {
+            this.notifications.Set(data.notifications);
         }
 
-        if (data.status === 'connected') {
-            this.friends = data.friends;
+        if (status === 'connected' || status === 'disconnected' || status === 'error') {
+            this.state.Set(status);
+            if (status === 'error') {
+                this.user.interface.console.AddLog('error', 'Server error:', event.data.message);
+            }
         }
-
-        this.state.Set(data.status, true);
     }
     /** @param {Event} event */
     onError = (event) => {

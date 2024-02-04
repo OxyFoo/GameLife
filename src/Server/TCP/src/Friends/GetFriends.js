@@ -13,7 +13,7 @@
  */
 async function GetUserFriends(users, user) {
     const userID = user.accountID;
-    const command = `SELECT \`AccountID\`, \`TargetID\`, \`State\` FROM \`Friends\` WHERE AccountID = ${userID} OR TargetID = ${userID}`;
+    const command = `SELECT \`AccountID\`, \`TargetID\`, \`State\` FROM \`Friends\` WHERE (AccountID = ${userID} AND (State = 'accepted' OR State = 'pending')) OR (TargetID = ${userID} AND (State = 'accepted'))`;
     const friendships = await users.db.ExecQuery(command);
     if (friendships === null) {
         throw new Error(`Friendships not found: ${userID}`);

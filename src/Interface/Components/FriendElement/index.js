@@ -47,7 +47,7 @@ function FriendElement({ friend }) {
     if (friend.status === 'online') {
         statusStyle.borderColor = themeManager.GetColor('success');
     } else if (friend.status === 'offline') {
-        statusStyle.borderColor = themeManager.GetColor('danger');
+        statusStyle.borderColor = themeManager.GetColor('disabled');
     }
 
     const onPress = () => {
@@ -71,9 +71,9 @@ function FriendElement({ friend }) {
                 </View>
 
                 <View style={styles.friendInfoTitle}>
-                    <Text>{friend.username}</Text>
+                    <Text fontSize={20}>{friend.username}</Text>
                     {friendTitle !== null && (
-                        <Text>{friendTitle}</Text>
+                        <Text fontSize={14}>{friendTitle}</Text>
                     )}
                 </View>
             </View>

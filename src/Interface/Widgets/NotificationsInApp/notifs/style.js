@@ -2,49 +2,53 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     // NotificationsInApp full screen
-    container: {
+    background: {
         position: 'absolute',
         top: 0,
         left: 0,
-        right: 0,
-        bottom: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#00000060'
+    },
+    container: {
+        position: 'absolute',
+        top: 120,
+        width: '70%',
+        minWidth: 200,
+        marginLeft: '15%',
+        padding: 12,
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#000000D0'
+        borderWidth: 2,
+        borderColor: 'white',
+        borderRadius: 10,
+        backgroundColor: '#000000D0',
     },
     flatlist: {
-        paddingHorizontal: 24,
         maxHeight: '100%'
     },
     separator: {
         width: '90%',
         marginLeft: '5%',
-        marginVertical: 24
-    },
-    backButton: {
-        position: 'absolute',
-        top: 24,
-        left: 24,
-        height: 'auto',
-        paddingVertical: 12,
-        paddingHorizontal: 12,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    backButtonArrow: {
-        marginRight: 12
+        marginVertical: 12
     },
 
     // FriendPending
+    friendPendingContainer: {
+        flexDirection: 'row'
+    },
+    friendPendingText: {
+        width: '65%'
+    },
     friendPendingButtons: {
-        marginTop: 12,
+        flex: 1,
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-evenly'
     },
     friendPendingButton: {
         width: '40%',
         height: 'auto',
+        aspectRatio: 1,
         paddingVertical: 12,
         paddingHorizontal: 0
     }

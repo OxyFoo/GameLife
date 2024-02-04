@@ -25,24 +25,28 @@ function NIA_FriendPending({ notif, index }) {
     }
 
     return (
-        <View>
-            <Text>{`${notif.data.username} [vous a demandé en amis]`}</Text>
+        <View style={styles.friendPendingContainer}>
+            <View style={styles.friendPendingText}>
+                <Text fontSize={16}>
+                    {`${notif.data.username} [vous a demandé en ami]`}
+                </Text>
+            </View>
 
             <View style={styles.friendPendingButtons}>
                 <Button
                     style={styles.friendPendingButton}
-                    color='success'
+                    color='main1'
                     onPress={onAccept}
-                >
-                    <Text>[Accepter]</Text>
-                </Button>
+                    icon='check'
+                    iconSize={16}
+                />
                 <Button
                     style={styles.friendPendingButton}
                     color='danger'
                     onPress={onDecline}
-                >
-                    <Text>[Refuser]</Text>
-                </Button>
+                    icon='cross'
+                    iconSize={16}
+                />
             </View>
         </View>
     );

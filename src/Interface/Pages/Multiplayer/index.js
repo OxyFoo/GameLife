@@ -12,11 +12,30 @@ class Multiplayer extends BackMultiplayer {
         return (
             <Page
                 ref={ref => this.refPage = ref}
+                overlay={this.renderAddButton()}
                 canScrollOver
             >
                 <PageHeader onBackPress={this.Back} />
                 {this.renderContent()}
             </Page>
+        );
+    }
+
+    renderAddButton = () => {
+        const { state } = this.state;
+
+        if (state !== 'connected') {
+            return null;
+        }
+
+        return (
+            <Button
+                style={styles.addFriendButton}
+                color='main2'
+                icon='userAdd'
+                borderRadius={12}
+                onPress={this.addFriendHandle}
+            />
         );
     }
 
@@ -29,15 +48,6 @@ class Multiplayer extends BackMultiplayer {
 
         return (
             <View>
-                <Button
-                    color='main2'
-                    icon='userAdd'
-                    borderRadius={12}
-                    onPress={this.addFriendHandle}
-                >
-                    [Ajouter un ami]
-                </Button>
-
                 <Button
                     style={styles.topMargin}
                     color='main1'
@@ -110,6 +120,13 @@ const styles = StyleSheet.create({
     flatList: {
         marginTop: 12,
         marginHorizontal: -24
+    },
+    addFriendButton: {
+        aspectRatio: 1,
+        position: 'absolute',
+        right: 24,
+        bottom: 24,
+        paddingHorizontal: 0
     },
 
     topMargin: {

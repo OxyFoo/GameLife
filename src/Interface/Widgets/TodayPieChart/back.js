@@ -4,6 +4,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 
 import { GetTime } from 'Utils/Time';
+import {getUppercaseLetters} from 'Utils/String';
 
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -61,22 +62,17 @@ class TodayPieChartBack extends React.Component {
 
     /**
      * Compute and prepare the data for the pie chart
-     * @param {boolean} value 
      */
-    compute = (value) => {
+    compute = () => {
         // Compute the data depending on the switch value
         this.updatingData = this.initCategoriesArray();
         this.addCategoriesName();
         this.computeTimeEachCategory();
         let totalTime = 0;
-        if (value) {
-            const totalPercent = this.convertTimeToPercent(1440);
-            this.addUndefinedActivity(totalPercent);
-        }
-        else {
-            totalTime = this.computeTotalTime();
-            this.convertTimeToPercent(totalTime);
-        }
+  
+        totalTime = this.computeTotalTime();
+        this.convertTimeToPercent(totalTime);
+        
         const focusedActivity = this.findBiggestActivity();
 
         if (focusedActivity && focusedActivity.id !== 0) {
@@ -85,30 +81,16 @@ class TodayPieChartBack extends React.Component {
         this.computeGradientShadow();
 
         // Remove the activities with 0% of the pie chart (avoid glitch on android)
-        this.updatingData = this.updatingData.filter(item => item.value > 0);
+        // this.updatingData = this.updatingData.filter(item => item.value > 0);
 
         // Focused and display handler
         this.setState({
             dataToDisplay: this.updatingData,
             focusedActivity: focusedActivity,
-            switchValue: value,
             totalTime: (totalTime / 60.0).toFixed(1)
         });
     }
-
-    /** @param {boolean} value */
-    changeSwitchValue = (value) => {
-        // Save the settings (avoid spamming the save)
-        clearTimeout(this.saveTimeout);
-        this.saveTimeout = setTimeout(() => {
-            user.settings.Save();
-        }, 3 * 1000);
-
-        user.settings.homePieChart = value;
-        this.setState({ switchValue: value });
-        this.compute(value);
-    }
-
+    
     /**
      * Create and return the init object needed because fuckin reference WON'T WORK 
      * @returns {UpdatingData[]}
@@ -147,7 +129,8 @@ class TodayPieChartBack extends React.Component {
 
             const categoryName = category.Name;
             if (categoryName) {
-                element.name = dataManager.GetText(categoryName);
+                const fullname = dataManager.GetText(categoryName);
+                element.name = fullname ; //getUppercaseLetters(fullname);
                 element.color = category.Color;
             } else {
                 element.name = '';
@@ -207,31 +190,6 @@ class TodayPieChartBack extends React.Component {
             }
         }
         return totalPercent;
-    }
-
-    /**
-     * Either actualize the value of the "undefined" activity or create it
-     * @param {number} totalPercent
-     * @return {void}
-     */
-    addUndefinedActivity = (totalPercent) => {
-        if (totalPercent < 100) {
-            const index = this.updatingData.findIndex(item => item.id === 6);
-            if (index !== -1) {
-                this.updatingData[index].value = 100 - totalPercent;
-            }
-            else {
-                this.updatingData.push({
-                    id: 6,
-                    name: 'Non défini',
-                    value: 100 - totalPercent,
-                    valueMin: 0,
-                    color: '#B0B0B0',
-                    gradientCenterColor: '#000000',
-                    focused: false
-                });
-            }
-        }
     }
 
     /**

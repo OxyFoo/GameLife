@@ -10,8 +10,8 @@ import StartHelp from './help';
 import EditorAvatar from './editorAvatar';
 import EditorProfile from './editorProfile';
 import { Round } from 'Utils/Functions';
-import { Page, Text, XPBar, Container, KPI } from 'Interface/Components';
-import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from 'Interface/Widgets';
+import { Page, Text, XPBar, Container, KPI, Button } from 'Interface/Components';
+import { UserHeader, PageHeader, AchievementsGroup } from 'Interface/Widgets';
 
 class Profile extends BackProfile {
     render() {
@@ -75,32 +75,6 @@ class Profile extends BackProfile {
                         style={[styles.kpiProfile, backgroundKpi]}/>
                 </View>
 
-                <View style={{ paddingHorizontal: 12 }}>
-                    <Container
-                        style={styles.topSpace}
-                        text={lang['container-stats-title']}
-                        type='rollable'
-                        opened={false}
-                        color='main3'
-                        rippleColor='white'
-                    >
-                        <StatsBars data={user.stats} />
-                    </Container>
-
-                    <Container
-                        key={'profile-skills-' + this.state.xpInfo.totalXP}
-                        style={styles.topSpace}
-                        text={lang['container-skills-title']}
-                        type='rollable'
-                        opened={this.state.skillsOpened}
-                        onChangeState={this.onChangeStateSkills}
-                        color='main3'
-                        rippleColor='white'
-                    >
-                        <SkillsGroup />
-                    </Container>
-                </View>
-
                 <Container
                     style={[styles.topSpace, styles.botSpace]}
                     text={lang['container-achievements-title']}
@@ -111,6 +85,17 @@ class Profile extends BackProfile {
                 >
                     <AchievementsGroup />
                 </Container>
+
+                <Button
+                    style={styles.topSpace}
+                    color='backgroundCard'
+                    rippleColor='white'
+                    borderRadius={8}
+                    icon='setting'
+                    onPress={this.openSettings}
+                >
+                    {lang['btn-settings']}
+                </Button>
 
                 <EditorProfile ref={ref => this.refProfileEditor = ref} />
             </Page>

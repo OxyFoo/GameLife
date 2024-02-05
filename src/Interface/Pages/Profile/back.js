@@ -64,8 +64,7 @@ class BackProfile extends PageBase {
     }
 
     openProfileEditor = () => this.refProfileEditor?.Open();
-
-    onChangeStateSkills = (opened) => this.setState({ skillsOpened: opened });
+    openSettings = () => user.interface.ChangePage('settings');
 
     /**
      * @returns {number} in hours

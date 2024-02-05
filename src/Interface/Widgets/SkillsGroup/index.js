@@ -16,7 +16,7 @@ class SkillsGroup extends SkillsGroupBack {
     renderSkill = ({ item: { ID, FullName, LogoXML } }) => (
         <TouchableOpacity
             style={styles.skill}
-            onPress={() => this.openSkill(ID)}
+            onPress={() => ID === -1 ? this.openSkills() : this.openSkill(ID)}
             activeOpacity={.6}
         >
             <View style={styles.skillImage}>
@@ -29,27 +29,25 @@ class SkillsGroup extends SkillsGroupBack {
     render() {
         const { style } = this.props;
         const lang = langManager.curr['other'];
-        const styleButton = { marginTop: this.state.skills.length === 0 ? 0 : 24 };
+
+        const allSkills = {
+            ID: -1,
+            FullName: lang['widget-skills-all'],
+            LogoXML: 'default'
+        };
 
         return (
-            <>
+            <View
+                style={[styles.container, style]}>
                 <FlatList
-                    style={style}
-                    data={this.state.skills}
+                    data={[...this.state.skills, allSkills]}
                     renderItem={this.renderSkill}
                     keyExtractor={(item, index) => 'skill-' + index}
-                    numColumns={3}
+                    numColumns={2}
                     ItemSeparatorComponent={() => <View style={styles.skillSpace} />}
                     scrollEnabled={false}
                 />
-
-                <Button
-                    style={[styles.btnAllSkill, styleButton]}
-                    onPress={this.openSkills}
-                >
-                    {lang['widget-skills-all']}
-                </Button>
-            </>
+            </View>
         );
     }
 }

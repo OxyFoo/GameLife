@@ -29,7 +29,7 @@ const PieChartProps = {
     data: [],
 
     /** @type {number} The number of legend items per row */
-    elementPerRow: 2,
+    elementPerRow: 3,
 
     /** @type {FocusedActivity | null} */
     focusedActivity: null,
@@ -56,7 +56,7 @@ class PieChart extends React.Component {
     renderLegendItem = ({ item, index }) => (
         <View key={index} style={styles.legendItem}>
             {this.renderDot(item.color)}
-            <Text color='white'>
+            <Text fontSize={14} color='white'>
                 {`${item.name}: ${item.value}%`}
             </Text>
         </View>
@@ -68,10 +68,10 @@ class PieChart extends React.Component {
      */
     renderCenterLabelComponent = () => (
         <View style={styles.centerLabel}>
-            <Text fontSize={22} color='white'>
+            <Text fontSize={16} color='white'>
                 {this.props.focusedActivity?.value + '%'}
             </Text>
-            <Text fontSize={14} color='white'>
+            <Text fontSize={10} color='white'>
                 {this.props.focusedActivity?.name}
             </Text>
         </View>
@@ -92,22 +92,18 @@ class PieChart extends React.Component {
                         donut
                         showGradient
                         sectionAutoFocus
-                        radius={90}
-                        innerRadius={60}
+                        radius={50}
+                        innerRadius={30}
                         innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
                         centerLabelComponent={this.renderCenterLabelComponent}
                     />
-                    <View style={styles.legendContainer}>
-                        <FlatList
-                            style={styles.legendFlatList}
-                            data={data}
-                            renderItem={this.renderLegendItem}
-                            keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
-                            numColumns={elementPerRow}
-                            contentContainerStyle={styles.legendFlatListContent} 
-                            columnWrapperStyle={styles.legendFlatListColumn}
-                            scrollEnabled={false}
-                        />
+                    <View style={[styles.legendContainer]}>
+
+                        {data.map((item, index) => (
+                            <View key={'piechart-legend-' + index.toString()} style={styles.legendItem}>
+                                {this.renderLegendItem({ item, index })}
+                            </View>
+                        ))}
                     </View>
                 </View>
             </View>

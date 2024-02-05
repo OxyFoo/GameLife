@@ -1,8 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     skill: {
-        width: '33%',
+        width: '50%',
         alignItems: 'center'
     },
     skillImage: {
@@ -16,11 +20,6 @@ const styles = StyleSheet.create({
     },
     skillSpace: {
         height: 12
-    },
-    btnAllSkill: {
-        height: 46,
-        marginHorizontal: 24,
-        borderRadius: 8
     }
 });
 

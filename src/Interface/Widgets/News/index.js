@@ -102,7 +102,7 @@ const renderNew = (Nw) => {
         const text = dataManager.GetText(Nw.Content);
         return (
             <View style={styles.newText}>
-                <Text>{text}</Text>
+                <Text fontSize={16}>{text}</Text>
             </View>
         )
     };

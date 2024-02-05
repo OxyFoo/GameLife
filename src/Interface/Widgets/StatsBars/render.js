@@ -88,4 +88,4 @@ function statComponent(statKey, stat, sup, index, clickable = true) {
     );
 }
 
-export { statComponent };
+export { statComponent, popupContent };

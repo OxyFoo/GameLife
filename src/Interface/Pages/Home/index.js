@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
+import user from 'Managers/UserManager';
 
-import { Button, Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { News, TodayPieChart, TodoList  } from 'Interface/Widgets';
+import { Swiper, Text, XPBar, Page } from 'Interface/Components';
+import { News, TodayPieChart, TodoList, SkillsGroup } from 'Interface/Widgets';
+import { popupContent } from 'Interface/Widgets/StatsBars/render';
 
 class Home extends BackHome {
     render() {
@@ -16,7 +19,28 @@ class Home extends BackHome {
 
         const lang = langManager.curr['home'];
         const txt_level = langManager.curr['level']['level'];
+        const stats_lang = langManager.curr['statistics']['names'];
 
+        // Handler function to log the key
+        const handlePress = (key) => {
+            user.interface.popup.Open('custom', () => popupContent(key), undefined, true);
+        };
+
+        // Render function for FlatList items
+        const renderItem = ({ item: key }) => (
+            <TouchableOpacity onPress={() => handlePress(key)}>
+                <Text>
+                    {stats_lang[key].substring(0, 3)}: {stats[key].totalXP}
+                </Text>
+            </TouchableOpacity>
+        );
+
+        const styleContainer = {
+            backgroundColor: themeManager.GetColor('dataBigKpi')
+        };
+        const styleSmallContainer = {
+            backgroundColor: themeManager.GetColor('ground2'),
+        };
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
 
@@ -39,6 +63,27 @@ class Home extends BackHome {
                     pages={News()}
                 />
 
+                <View style={[styles.homeRow, styles.topSpace]}>
+                    <TodayPieChart style={{ flex: 5 }} />
+                </View>
+
+                <View style={[styles.homeRow, styles.topSpace]}>
+                    <View style={[styleSmallContainer, { flex: 3, borderRadius: 24, marginRight: 18, padding: 8 }]}>
+                        <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-stats-title']}</Text>
+                        <FlatList
+                            data={Object.keys(stats)}
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item}
+                            scrollEnabled={false}
+                        />
+                    </View>
+                    <View style={[styleContainer, { flex: 5, borderRadius: 20, padding: 8 }]}>
+                        <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-skills-title']}</Text>
+                        <SkillsGroup />
+                    </View>
+                </View>
+
+                {/*
                 <Button
                     ref={ref => this.refTuto2 = ref}
                     style={styles.topSpace}
@@ -49,25 +94,13 @@ class Home extends BackHome {
                 >
                     {lang['btn-add-activity']}
                 </Button>
-
-                <TodayPieChart style={styles.topSpace} />
-
+                */}
+                {/*
                 <TodoList
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
-
-                <Button
-                    style={styles.topSpace}
-                    color='backgroundCard'
-                    rippleColor='white'
-                    borderRadius={8}
-                    icon='setting'
-                    onPress={this.openSettings}
-                >
-                    {lang['btn-settings']}
-                </Button>
-
+                */}
             </Page>
         );
     }
@@ -75,7 +108,7 @@ class Home extends BackHome {
 
 const styles = StyleSheet.create({
     XPHeader: {
-        marginTop: 16,
+        marginTop: 0,
         marginBottom: 12,
         paddingHorizontal: 16,
         flexDirection: 'row',
@@ -87,10 +120,16 @@ const styles = StyleSheet.create({
     level: {
         marginRight: 8
     },
-
+    homeRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     topSpace: {
-        marginTop: 24
-    }
+        marginTop: 16
+    },
+    titleWidget: {
+        marginBottom: 12,
+    },
 });
 
 export default Home;

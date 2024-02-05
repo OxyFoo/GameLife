@@ -45,4 +45,15 @@
     return text;
 }
 
-export { IsEmail, StrIsJSON, ParsePlural };
+
+/**
+ * Will return a string containing all the uppercase letters of the string
+ * @param {string} str 
+ * @returns 
+ */
+function getUppercaseLetters(str) {
+    const matches = str.match(/[A-Z]/g);
+    return matches ? matches.join('') : '';
+}
+
+export { IsEmail, StrIsJSON, ParsePlural, getUppercaseLetters };

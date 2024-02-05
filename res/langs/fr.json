@@ -43,6 +43,10 @@
         }
     },
 
+    "notifications-in-app": {
+        "list-empty": "Aucune notification pour le moment"
+    },
+
     "level": {
         "xp": "XP",
         "level": "Niveau",

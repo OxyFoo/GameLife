@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         width: '70%',
         minWidth: 200,
         marginLeft: '15%',
-        padding: 12,
+        paddingVertical: 12,
         flexDirection: 'row',
         borderWidth: 2,
         borderColor: 'white',
@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
 
     // FriendPending
     friendPendingContainer: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingHorizontal: 12
     },
     friendPendingText: {
         width: '65%'
@@ -51,6 +52,18 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         paddingVertical: 12,
         paddingHorizontal: 0
+    },
+
+    // FriendPendingBlock
+    friendPendingBlockView: {
+        marginTop: 6,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+    },
+    friendPendingBlockButton: {
+        height: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 12
     }
 });
 

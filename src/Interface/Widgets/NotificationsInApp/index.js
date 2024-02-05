@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import styles from './style';
 import BackNotificationsInApp from './back';
@@ -9,11 +9,20 @@ import { Text, Icon, Button } from 'Interface/Components';
 
 class NotificationsInAppButton extends BackNotificationsInApp {
     render() {
-        const { multiState, notificationsCount } = this.state;
+        const { multiState } = this.state;
 
-        if (multiState !== 'connected' || notificationsCount <= 0) {
+        if (multiState !== 'connected') {
             return null;
         }
+
+        const styleBellAnim = {
+            transform: [
+                { rotate: this.state.animBell.interpolate({
+                    inputRange: [0, .33, .66, 1],
+                    outputRange: ['0deg', '-15deg', '15deg', '0deg']
+                }) }
+            ]
+        };
 
         return (
             <Button
@@ -21,7 +30,9 @@ class NotificationsInAppButton extends BackNotificationsInApp {
                 rippleColor='white'
                 onPress={this.openNotificationsHandler}
             >
-                <Icon icon='bell' color='white' size={28} />
+                <Animated.View style={styleBellAnim}>
+                    <Icon icon='bell' color='white' size={28} />
+                </Animated.View>
                 {this.renderBadge()}
             </Button>
         );

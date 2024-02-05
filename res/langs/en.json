@@ -43,6 +43,10 @@
         }
     },
 
+    "notifications-in-app": {
+        "list-empty": "No notifications available"
+    },
+
     "level": {
         "xp": "XP",
         "level": "Level",

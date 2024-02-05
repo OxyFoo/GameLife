@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Animated, FlatList } from 'react-native';
 
 import styles from './style';
-import { NIA_Template, NIA_Separator } from './template';
-
+import { NIA_Template, NIA_Separator, NIA_Empty } from './template';
 import user from 'Managers/UserManager';
+
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -36,8 +36,8 @@ class Notifications extends React.Component {
         this.listener = user.multiplayer.notifications.AddListener(this.onUpdate);
     }
 
-    componentDidUpdate() {
-        if (this.state.opened && this.state.notifications.length === 0) {
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.opened && this.state.notifications.length === 0 && prevState.notifications.length > 0) {
             this.Close();
         }
     }
@@ -110,8 +110,10 @@ class Notifications extends React.Component {
                     <FlatList
                         style={styles.flatlist}
                         data={notifications}
+                        keyExtractor={(item, index) => 'notif-in-app-' + item.timestamp.toString() + index}
                         renderItem={({ item, index }) => <NIA_Template item={item} index={index} />}
                         ItemSeparatorComponent={() => <NIA_Separator />}
+                        ListEmptyComponent={() => <NIA_Empty />}
                         onTouchStart={this.backgroundPressHandler}
                     />
                 </Animated.View>

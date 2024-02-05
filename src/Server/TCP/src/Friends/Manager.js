@@ -1,3 +1,4 @@
+import { AddLog } from '../Utils/Logs.js';
 import { GetFriend } from './GetFriends.js';
 
 /**
@@ -6,6 +7,7 @@ import { GetFriend } from './GetFriends.js';
  * @typedef {import('Types/Friend.js').Friend} Friend
  * @typedef {import('Types/Friend.js').ConnectionState} ConnectionState
  * @typedef {import('Types/Friend.js').FriendshipState} FriendshipState
+ * @typedef {import('Types/NotificationInApp.js').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
  */
 
 /**
@@ -41,6 +43,29 @@ async function AddFriend(users, user, username) {
     const newFriend = await GetFriend(users, user, friendID);
     user.friends.push(newFriend);
 
+    // If target is connected, add request in notifications
+    const targetIndex = users.AllUsers.findIndex(u => u.accountID === friendID);
+    if (targetIndex !== -1) {
+        const target = users.AllUsers[targetIndex];
+
+        /** @type {NotificationInAppFriendPending} */
+        const notif = {
+            type: 'friend-pending',
+            data: {
+                accountID: user.accountID,
+                username: user.username
+            },
+            timestamp: 0,
+            read: false
+        };
+        target.notificationsInApp.push(notif);
+
+        users.SendAllData(target);
+    }
+
+    // Add log
+    await AddLog(users, user, 'friend-request', `Friend request: ${friendID}`);
+
     return true;
 }
 
@@ -73,6 +98,9 @@ async function RemoveFriend(users, user, accountID) {
             target.connection.send(JSON.stringify({ status: 'connected', friends: target.friends }));
         }
     }
+
+    // Add log
+    await AddLog(users, user, 'friend-removed', `Friend removed: ${accountID}`);
 
     return true;
 }
@@ -115,6 +143,9 @@ async function AcceptFriend(users, user, accountID) {
         }
     }
 
+    // Add log
+    await AddLog(users, user, 'friend-accepted', `Friend accepted: ${accountID}`);
+
     return true;
 }
 
@@ -122,14 +153,23 @@ async function AcceptFriend(users, user, accountID) {
  * @param {Users} users
  * @param {User} user
  * @param {number} accountID
+ * @param {boolean} block
  * @returns {Promise<boolean>} Whether the friend was added successfully
  */
-async function DeclineFriend(users, user, accountID) {
+async function DeclineFriend(users, user, accountID, block = false) {
     // Update the friendship
-    const command = `DELETE FROM \`Friends\` WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
-    const declined = await users.db.ExecQuery(command);
-    if (declined === null) {
-        return false;
+    if (block) {
+        const command = `UPDATE \`Friends\` SET \`State\` = 'blocked' WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
+        const declined = await users.db.ExecQuery(command);
+        if (declined === null) {
+            return false;
+        }
+    } else {
+        const command = `DELETE FROM \`Friends\` WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
+        const declined = await users.db.ExecQuery(command);
+        if (declined === null) {
+            return false;
+        }
     }
 
     // Remove notification
@@ -150,6 +190,13 @@ async function DeclineFriend(users, user, accountID) {
             target.friends.splice(userIndex, 1);
             users.SendAllData(target);
         }
+    }
+
+    // Add log
+    if (block) {
+        await AddLog(users, user, 'friend-blocked', `Friend blocked: ${accountID}`);
+    } else {
+        await AddLog(users, user, 'friend-declined', `Friend declined: ${accountID}`);
     }
 
     return true;

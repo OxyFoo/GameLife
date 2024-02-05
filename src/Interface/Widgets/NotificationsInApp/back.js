@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -17,6 +19,8 @@ const NotificationsInAppProps = {
 
 class BackNotificationsInApp extends React.Component {
     state = {
+        animBell: new Animated.Value(0),
+
         /** @type {ConnectionState} */
         multiState: user.multiplayer.state.Get(),
         notificationsCount: user.multiplayer.notifications.Get().length
@@ -33,6 +37,11 @@ class BackNotificationsInApp extends React.Component {
 
     openNotificationsHandler = () => {
         user.interface.notificationsInApp.Open();
+
+        // Bell animation
+        TimingAnimation(this.state.animBell, 1, 500).start(() => {
+            TimingAnimation(this.state.animBell, 0, 0).start()
+        });
     }
     closeNotificationsHandler = () => {
         user.interface.notificationsInApp.Close();
@@ -41,6 +50,11 @@ class BackNotificationsInApp extends React.Component {
     /** @param {ConnectionState} multiState */
     onMultiStateChange = (multiState) => {
         this.setState({ multiState });
+
+        // Close notifications if disconnected
+        if (multiState !== 'connected') {
+            this.closeNotificationsHandler();
+        }
     }
     /** @param {Array<NotificationInApp>} notifications */
     onNotificationsChange = (notifications) => {

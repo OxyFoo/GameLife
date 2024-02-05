@@ -17,6 +17,7 @@ class User {
     token = '';
     deviceID = 0;
     accountID = 0;
+    username = '';
     /** @type {Array<Friend>} */
     friends = [];
     /** @type {Array<NotificationInApp>} */
@@ -48,10 +49,20 @@ class Users {
 
         const { deviceID, accountID } = response.content.data;
 
+        // SQL request to check if the account exists
+        const command = `SELECT \`Username\` FROM \`Accounts\` WHERE ID = ${accountID}`;
+        const resultUsername = await this.db.ExecQuery(command);
+        if (resultUsername === null || resultUsername.length === 0) {
+            console.error('Account not found:', accountID);
+            return null;
+        }
+        const username = resultUsername[0].Username;
+
         const user = new User();
         user.token = token;
         user.deviceID = deviceID;
         user.accountID = accountID;
+        user.username = username;
         user.friends = await GetUserFriends(this, user);
         user.notificationsInApp = await GetFriendNotifications(this, user);
         user.connection = connection;
@@ -106,7 +117,11 @@ class Users {
                 this.SendAllData(user);
                 break;
             case 'decline-friend':
-                await DeclineFriend(this, user, data.accountID);
+                await DeclineFriend(this, user, data.accountID, false);
+                this.SendAllData(user);
+                break;
+            case 'block-friend':
+                await DeclineFriend(this, user, data.accountID, true);
                 this.SendAllData(user);
                 break;
             default:

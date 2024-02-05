@@ -65,7 +65,29 @@ class SQL {
                 }
             });
         });
-    };
+    }
+
+    /**
+     * @param {string} command
+     * @param {Array<any | null>} args
+     */
+    QueryPrepare = (command, args) => {
+        if (!this.connection?.threadId) {
+            console.warn('SQL Connection not opened, return null.');
+            return null;
+        }
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(command, args, (err, result) => {
+                if (err) {
+                    console.warn('SQL Query Error, return null:', err);
+                    resolve(null);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
 }
 
 export default SQL;

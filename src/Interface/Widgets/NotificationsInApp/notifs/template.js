@@ -4,8 +4,9 @@ import { Animated } from 'react-native';
 import styles from './style';
 import NIA_FriendPending from './friendPending';
 import NIA_AchievementPending from './achievementPending';
+import langManager from 'Managers/LangManager';
 
-import { Separator } from 'Interface/Components';
+import { Text, Separator } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -55,19 +56,17 @@ function NIA_Template({ item, index }) {
  * @returns {JSX.Element}
  */
 function NIA_Separator() {
-    const [ fadeAnim ] = React.useState(new Animated.Value(1));
+    const [ fadeAnim ] = React.useState(new Animated.Value(0));
 
     // Animation on mount
     React.useEffect(() => {
         setTimeout(() => {
-            SpringAnimation(fadeAnim, 0).start();
+            SpringAnimation(fadeAnim, 1).start();
         }, 100);
     }, []);
 
     const animStyle = {
-        transform: [
-            { translateX: Animated.multiply(-500, fadeAnim) }
-        ]
+        opacity: fadeAnim
     };
 
     return (
@@ -77,4 +76,12 @@ function NIA_Separator() {
     );
 }
 
-export { NIA_Template, NIA_Separator };
+function NIA_Empty() {
+    const lang = langManager.curr['notifications-in-app'];
+
+    return (
+        <Text>{lang['list-empty']}</Text>
+    );
+}
+
+export { NIA_Template, NIA_Separator, NIA_Empty };

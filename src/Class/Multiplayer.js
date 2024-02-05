@@ -130,6 +130,10 @@ class Multiplayer {
     DeclineFriend = (accountID) => {
         this.Send({ action: 'decline-friend', accountID });
     }
+    /** @param {number} accountID */
+    BlockFriend = (accountID) => {
+        this.Send({ action: 'block-friend', accountID });
+    }
 }
 
 export default Multiplayer;

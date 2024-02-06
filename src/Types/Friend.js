@@ -34,9 +34,21 @@ class Friend {
 
         /** @type {string} */
         Shoes: ''
-    }
+    };
+
     /** @type {FriendshipState} */
     friendshipState = 'pending';
+
+    activities = {
+        /** @type {number} Number of activities */
+        length: 0,
+
+        /** @type {number} Total duration of activities in minutes */
+        totalDuration: 0,
+
+        /** @type {number} Timestamp of the first activity (in seconds, UTC) */
+        firstTime: 0
+    };
 }
 
 export { Friend };

@@ -3,45 +3,28 @@ import { View } from 'react-native';
 
 import styles from './style';
 import BackProfileFriend from './back';
+import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page, Text, Button, Container, XPBar, Frame } from 'Interface/Components';
+import { Page, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
-import dataManager from 'Managers/DataManager';
-
-function DataRow({ title = '', value = ''}) {
-    const lang = langManager.curr['profile'];
-    const rowStyle = [ styles.tableRow, { borderColor: themeManager.GetColor('main1') } ];
-    const cellStyle = [ styles.cell, { borderColor: themeManager.GetColor('main1') } ];
-    return (
-        <View style={rowStyle}>
-            <Text
-                style={styles.rowText}
-                containerStyle={cellStyle}
-            >
-                {lang[title]}
-            </Text>
-
-            <Text
-                style={styles.rowText}
-                containerStyle={[cellStyle, { borderRightWidth: 0 }]}
-            >
-                {value}
-            </Text>
-        </View>
-    );
-}
 
 class ProfileFriend extends BackProfileFriend {
     render() {
         const lang = langManager.curr['profile'];
+        const langDates = langManager.curr['dates']['names'];
+
         const { friend, xpInfo } = this.state;
 
         const username = friend.username;
         const title = friend.title !== 0 ? dataManager.titles.GetByID(friend.title) : null;
         const titleText = title === null ? null : dataManager.GetText(title.Name);
+
+        const backgroundKpi = {
+            backgroundColor: themeManager.GetColor('backgroundCard')
+        };
 
         return (
             <Page ref={ref => this.refPage = ref}>
@@ -83,29 +66,23 @@ class ProfileFriend extends BackProfileFriend {
                     </View>
                 </View>
 
-                {/** User Data */}
-                <Container
-                    style={styles.topSpace}
-                    styleContainer={{ padding: 0 }}
-                    text={lang['row-title']}
-                    type='static'
-                    opened={true}
-                    color='main1'
-                    backgroundColor='backgroundCard'
-                >
-                    <DataRow
-                        title='row-since'
-                        value={'[0]'}
-                    />
-                    <DataRow
-                        title='row-activities'
-                        value={'[0]'}
-                    />
-                    <DataRow
-                        title='row-time'
-                        value={'[0]'}
-                    />
-                </Container>
+                {/** KPI */}
+                <View style={styles.kpiContainer}>
+                    <KPI
+                        title={lang['row-since']}
+                        value={this.totalDays}
+                        unit={langDates['day-min']}
+                        style={[styles.kpiProfile, backgroundKpi]} />
+                    <KPI
+                        title={lang['row-activities']}
+                        value={this.activitiesLength}
+                        style={[styles.kpiProfile, backgroundKpi]} />
+                    <KPI
+                        title={lang['row-time']}
+                        value={this.durationHours}
+                        unit={langDates['hours-min']}
+                        style={[styles.kpiProfile, backgroundKpi]}/>
+                </View>
 
                 {/** Actions */}
                 <Button

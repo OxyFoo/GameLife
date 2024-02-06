@@ -3,6 +3,7 @@ import langManager from 'Managers/LangManager';
 
 import { PageBase, Character } from 'Interface/Components';
 import { USER_XP_PER_LEVEL } from 'Class/Experience';
+import { GetTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Types/Friend').Friend} Friend
@@ -34,6 +35,10 @@ class BackProfileFriend extends PageBase {
         const friend = props.args.friend;
         this.state.friend = friend;
         this.state.xpInfo = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
+
+        this.totalDays = Math.floor((GetTime() - friend.activities.firstTime) / (24 * 60 * 60));
+        this.activitiesLength = friend.activities.length;
+        this.durationHours = Math.floor(friend.activities.totalDuration / 60);
 
         const character = new Character(
             'character-player-' + friend.accountID.toString(),

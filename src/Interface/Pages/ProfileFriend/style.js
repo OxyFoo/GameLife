@@ -38,21 +38,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    rowText: {
-        fontSize: 14,
-        textAlign: 'left'
-    },
-    tableRow: {
-        width: '100%',
-        height: 48,
+
+    // KPI
+    kpiContainer: {
         flexDirection: 'row',
-        borderTopWidth: .4
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 24
     },
-    cell: {
-        width: '50%',
-        paddingHorizontal: 16,
-        justifyContent: 'center',
-        borderRightWidth: .4
+    kpiProfile: {
+        paddingHorizontal: 2
     },
 
     // Avatar
@@ -66,14 +61,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         backgroundColor: '#FFFFFF',
         overflow: 'hidden'
-    },
-    avatarOverlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        borderRadius: 16
     }
 });
 

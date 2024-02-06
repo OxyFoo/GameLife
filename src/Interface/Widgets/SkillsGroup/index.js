@@ -5,7 +5,7 @@ import styles from './style';
 import SkillsGroupBack from './back';
 import langManager from 'Managers/LangManager';
 
-import { Button, Text, Icon } from 'Interface/Components';
+import { Text, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill

@@ -4,12 +4,10 @@ import { View, Linking } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
-import langManager from 'Managers/LangManager';
 
 import Text from 'Interface/Components/Text';
 import Icon from 'Interface/Components/Icon';
 import Button from 'Interface/Components/Button';
-import { Random } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/PageManager').PageName} PageName
@@ -27,29 +25,6 @@ const buttonEvent = (eventText) => {
         user.interface.ChangePage(eventText);
     }
 };
-
-/** @param {Quote} currentQuote */
-const renderQuote = (currentQuote) => {
-    const lang = langManager.curr['quote'];
-
-    if (currentQuote === null) {
-        return (
-            <View style={styles.quote}>
-                <Text style={styles.citation}>{lang['not-found']}</Text>
-            </View>
-        );
-    }
-
-    const anonymousAuthors = lang['anonymous-author-list'];
-    const quote = dataManager.GetText(currentQuote.Quote);
-    const author = currentQuote.Author || anonymousAuthors[Random(0, anonymousAuthors.length)];
-    return (
-        <View style={styles.quote}>
-            <Text style={styles.citation}>{quote}</Text>
-            <Text style={styles.author}>{author}</Text>
-        </View>
-    );
-}
 
 /**
  * @typedef {import('Data/News').New} New

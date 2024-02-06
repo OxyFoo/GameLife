@@ -47,10 +47,10 @@ class TodayPieChartBack extends React.Component {
     saveTimeout = null;
 
     componentDidMount() {
-        this.compute(user.settings.homePieChart);
+        this.compute();
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.compute(user.settings.homePieChart);
+            this.compute();
         });
     }
 
@@ -129,7 +129,7 @@ class TodayPieChartBack extends React.Component {
 
             const categoryName = category.Name;
             if (categoryName) {
-                element.name = dataManager.GetText(categoryName) ;
+                element.name = dataManager.GetText(categoryName);
                 element.color = category.Color;
             } else {
                 element.name = '';

@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
         marginRight: 4,
         marginLeft: 8
     },
-
     pieChartContainer: {
         paddingHorizontal: 0,
         paddingVertical: 0,
@@ -17,15 +16,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
     },
-
     legendContainer: {
+        paddingTop: 6
     },
-
     legendItem: {
         flexDirection: 'row',
         alignItems: 'center',
     },
-
     centerLabel: {
         justifyContent: 'center',
         alignItems: 'center'

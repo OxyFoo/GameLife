@@ -64,11 +64,11 @@ class Home extends BackHome {
                 />
 
                 <View style={[styles.homeRow, styles.topSpace]}>
-                    <TodayPieChart style={{ flex: 5 }} />
+                    <TodayPieChart style={styles.todayPieChart} />
                 </View>
 
                 <View style={[styles.homeRow, styles.topSpace]}>
-                    <View style={[styleSmallContainer, { flex: 3, borderRadius: 24, marginRight: 18, padding: 8 }]}>
+                    <View style={[styleSmallContainer, styles.stats]}>
                         <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-stats-title']}</Text>
                         <FlatList
                             data={Object.keys(stats)}
@@ -77,30 +77,18 @@ class Home extends BackHome {
                             scrollEnabled={false}
                         />
                     </View>
-                    <View style={[styleContainer, { flex: 5, borderRadius: 20, padding: 8 }]}>
+                    <View style={[styleContainer, styles.skills]}>
                         <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-skills-title']}</Text>
                         <SkillsGroup />
                     </View>
                 </View>
 
-                {/*
-                <Button
-                    ref={ref => this.refTuto2 = ref}
-                    style={styles.topSpace}
-                    color='main2'
-                    borderRadius={8}
-                    icon='add'
-                    onPress={this.addActivity}
-                >
-                    {lang['btn-add-activity']}
-                </Button>
-                */}
-                {/*
+                
                 <TodoList
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
-                */}
+                
             </Page>
         );
     }
@@ -130,6 +118,20 @@ const styles = StyleSheet.create({
     titleWidget: {
         marginBottom: 12,
     },
+    todayPieChart: {
+        flex: 1 
+    },
+    stats: { 
+        flex: 3,
+        borderRadius: 24, 
+        marginRight: 18, 
+        padding: 8 
+    },
+    skills: { 
+        flex: 5, 
+        borderRadius: 20, 
+        padding: 8 
+    }
 });
 
 export default Home;

@@ -28,9 +28,6 @@ const PieChartProps = {
     /** @type {Array<itemType>} */
     data: [],
 
-    /** @type {number} The number of legend items per row */
-    elementPerRow: 3,
-
     /** @type {FocusedActivity | null} */
     focusedActivity: null,
 
@@ -78,7 +75,7 @@ class PieChart extends React.Component {
     );
 
     render() {
-        const { style, data, focusedActivity, elementPerRow } = this.props;
+        const { style, data, focusedActivity } = this.props;
 
         if (!data || !focusedActivity) {
             return null;
@@ -97,13 +94,13 @@ class PieChart extends React.Component {
                         innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
                         centerLabelComponent={this.renderCenterLabelComponent}
                     />
-                    <View style={[styles.legendContainer]}>
-
-                        {data.map((item, index) => (
-                            <View key={'piechart-legend-' + index.toString()} style={styles.legendItem}>
-                                {this.renderLegendItem({ item, index })}
-                            </View>
-                        ))}
+                    <View style={styles.legendContainer}>
+                        <FlatList
+                            data={data}
+                            renderItem={this.renderLegendItem}
+                            keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
+                            scrollEnabled={false}
+                        />
                     </View>
                 </View>
             </View>

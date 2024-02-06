@@ -6,7 +6,7 @@ import TodayPieChartBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Switch, PieChart } from 'Interface/Components';
+import { PieChart } from 'Interface/Components';
 
 class TodayPieChart extends TodayPieChartBack {
     render() {
@@ -26,9 +26,7 @@ class TodayPieChart extends TodayPieChartBack {
             <View style={[styleContainer, styles.container, this.props.style]}>
                 {/* Top row view */}
                 <View style={styles.flexBetween}>
-
                     <Text style={styles.headerText}>{headerText}</Text>
-
                 </View>
 
                 {/* Pie chart view */}

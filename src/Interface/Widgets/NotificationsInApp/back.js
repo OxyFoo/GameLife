@@ -8,7 +8,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * 
- * @typedef {import('Class/Multiplayer').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  * @typedef {import('Types/NotificationInApp').NotificationInApp} NotificationInApp
  */
 
@@ -22,16 +22,16 @@ class BackNotificationsInApp extends React.Component {
         animBell: new Animated.Value(0),
 
         /** @type {ConnectionState} */
-        multiState: user.multiplayer.state.Get(),
+        multiState: user.tcp.state.Get(),
         notificationsCount: user.multiplayer.notifications.Get().length
     }
 
     componentDidMount() {
-        this.listenerState = user.multiplayer.state.AddListener(this.onMultiStateChange);
+        this.listenerState = user.tcp.state.AddListener(this.onMultiStateChange);
         this.listenerNotifications = user.multiplayer.notifications.AddListener(this.onNotificationsChange);
     }
     componentWillUnmount() {
-        user.multiplayer.state.RemoveListener(this.listenerState);
+        user.tcp.state.RemoveListener(this.listenerState);
         user.multiplayer.notifications.RemoveListener(this.listenerNotifications);
     }
 

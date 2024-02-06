@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * 
  * @typedef {import('Types/Friend').Friend} Friend
- * @typedef {import('Class/Multiplayer').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
@@ -28,14 +28,14 @@ class BackMultiplayerPanel extends React.Component {
     }
 
     componentDidMount() {
-        this.updateState(user.multiplayer.state.Get());
+        this.updateState(user.tcp.state.Get());
         this.updateFriends(user.multiplayer.friends.Get());
-        this.listenerState = user.multiplayer.state.AddListener(this.updateState);
+        this.listenerState = user.tcp.state.AddListener(this.updateState);
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
     componentWillUnmount() {
-        user.multiplayer.state.RemoveListener(this.listenerState);
+        user.tcp.state.RemoveListener(this.listenerState);
         user.multiplayer.friends.RemoveListener(this.listenerFriends);
     }
 
@@ -60,7 +60,7 @@ class BackMultiplayerPanel extends React.Component {
     }
     Reconnect = () => {
         this.setState({ state: 'idle' });
-        user.multiplayer.Connect();
+        user.tcp.Connect();
     }
 }
 

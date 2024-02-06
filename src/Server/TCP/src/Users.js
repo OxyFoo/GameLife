@@ -10,6 +10,8 @@ import { Request_Async } from './Utils/Request.js';
 /**
  * @typedef {import('./Sql.js').default} SQL
  * @typedef {import('../../../Types/Friend.js').Friend} Friend
+ * @typedef {import('../../../Types/TCP.js').TCPServerRequest} TCPServerRequest
+ * @typedef {import('../../../Types/TCP.js').TCPClientRequest} TCPClientRequest
  * @typedef {import('../../../Types/NotificationInApp.js').NotificationInApp} NotificationInApp
  */
 
@@ -98,6 +100,7 @@ class Users {
             return;
         }
 
+        /** @type {TCPClientRequest} */
         const data = JSON.parse(message.utf8Data);
         if (!data.hasOwnProperty('action')) {
             return;
@@ -106,23 +109,18 @@ class Users {
         switch (data.action) {
             case 'add-friend':
                 await AddFriend(this, user, data.username);
-                this.SendAllData(user);
                 break;
             case 'remove-friend':
                 await RemoveFriend(this, user, data.accountID);
-                this.SendAllData(user);
                 break;
             case 'accept-friend':
                 await AcceptFriend(this, user, data.accountID);
-                this.SendAllData(user);
                 break;
             case 'decline-friend':
                 await DeclineFriend(this, user, data.accountID, false);
-                this.SendAllData(user);
                 break;
             case 'block-friend':
                 await DeclineFriend(this, user, data.accountID, true);
-                this.SendAllData(user);
                 break;
             default:
                 break;
@@ -131,15 +129,18 @@ class Users {
 
     /**
      * @param {User} user
+     * @param {TCPServerRequest} data
+     */
+    Send = (user, data) => {
+        user.connection.send(JSON.stringify(data));
+    }
+
+    /**
+     * @param {User} user
      */
     SendAllData = (user) => {
-        // Update friends
-        const dataFriends = { status: 'update-friends', friends: user.friends };
-        user.connection.send(JSON.stringify(dataFriends));
-
-        // Update notifications
-        const dataNotificationsInApp = { status: 'update-notifications', notifications: user.notificationsInApp };
-        user.connection.send(JSON.stringify(dataNotificationsInApp));
+        this.Send(user, { status: 'update-friends', friends: user.friends });
+        this.Send(user, { status: 'update-notifications', notifications: user.notificationsInApp });
     }
 
     /**
@@ -187,7 +188,7 @@ class Users {
                 user.friends[userFriendIndex].status = connected ? 'online' : 'offline';
 
                 // Send new status to the user
-                this.SendAllData(user);
+                this.Send(user, { status: 'update-friends', friends: user.friends });
             }
         }
     }

@@ -3,7 +3,7 @@ import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('Types/Friend').Friend} Friend
- * @typedef {import('Class/Multiplayer').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  */
 
 class BackMultiplayer extends PageBase {
@@ -19,14 +19,14 @@ class BackMultiplayer extends PageBase {
     }
 
     componentDidMount() {
-        this.updateState(user.multiplayer.state.Get());
+        this.updateState(user.tcp.state.Get());
         this.updateFriends(user.multiplayer.friends.Get());
-        this.listenerState = user.multiplayer.state.AddListener(this.updateState);
+        this.listenerState = user.tcp.state.AddListener(this.updateState);
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
     componentWillUnmount() {
-        user.multiplayer.state.RemoveListener(this.listenerState);
+        user.tcp.state.RemoveListener(this.listenerState);
         user.multiplayer.friends.RemoveListener(this.listenerFriends);
     }
 
@@ -56,7 +56,7 @@ class BackMultiplayer extends PageBase {
 
     Reconnect = () => {
         this.setState({ state: 'idle' });
-        user.multiplayer.Connect();
+        user.tcp.Connect();
     }
 
     Back = () => {

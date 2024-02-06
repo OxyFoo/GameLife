@@ -59,12 +59,14 @@ async function AddFriend(users, user, username) {
             read: false
         };
         target.notificationsInApp.push(notif);
-
-        users.SendAllData(target);
+        users.Send(target, { status: 'update-notifications', notifications: target.notificationsInApp });
     }
 
     // Add log
     await AddLog(users, user, 'friend-request', `Friend request: ${friendID}`);
+
+    // Send new status
+    users.Send(user, { status: 'update-friends', friends: user.friends });
 
     return true;
 }
@@ -86,6 +88,7 @@ async function RemoveFriend(users, user, accountID) {
     const index = user.friends.findIndex(friend => friend.accountID === accountID);
     if (index !== -1) {
         user.friends.splice(index, 1);
+        users.Send(user, { status: 'update-friends', friends: user.friends });
     }
 
     // If target is connected, send new status
@@ -95,7 +98,7 @@ async function RemoveFriend(users, user, accountID) {
         const userIndex = target.friends.findIndex(friend => friend.accountID === user.accountID);
         if (userIndex !== -1) {
             target.friends.splice(userIndex, 1);
-            target.connection.send(JSON.stringify({ status: 'connected', friends: target.friends }));
+            users.Send(target, { status: 'update-friends', friends: target.friends });
         }
     }
 
@@ -122,15 +125,14 @@ async function AcceptFriend(users, user, accountID) {
     // Add the friend to the user
     const newFriend = await GetFriend(users, user, accountID);
     user.friends.push(newFriend);
+    users.Send(user, { status: 'update-friends', friends: user.friends });
 
     // Remove notification
     const notifIndex = user.notificationsInApp.findIndex(notif => notif.type === 'friend-pending' && notif.data.accountID === accountID);
     if (notifIndex !== -1) {
         user.notificationsInApp.splice(notifIndex, 1);
+        users.Send(user, { status: 'update-notifications', notifications: user.notificationsInApp });
     }
-
-    // Send new status
-    users.SendAllData(user);
 
     // If target is connected, send new status
     const targetIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
@@ -139,7 +141,7 @@ async function AcceptFriend(users, user, accountID) {
         const userIndex = target.friends.findIndex(friend => friend.accountID === user.accountID);
         if (userIndex !== -1) {
             target.friends[userIndex].friendshipState = 'accepted';
-            users.SendAllData(target);
+            users.Send(target, { status: 'update-friends', friends: target.friends });
         }
     }
 
@@ -176,10 +178,8 @@ async function DeclineFriend(users, user, accountID, block = false) {
     const notifIndex = user.notificationsInApp.findIndex(notif => notif.type === 'friend-pending' && notif.data.accountID === accountID);
     if (notifIndex !== -1) {
         user.notificationsInApp.splice(notifIndex, 1);
+        users.Send(user, { status: 'update-notifications', notifications: user.notificationsInApp });
     }
-
-    // Send new status
-    users.SendAllData(user);
 
     // If target is connected, send new status
     const targetIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
@@ -188,7 +188,7 @@ async function DeclineFriend(users, user, accountID, block = false) {
         const userIndex = target.friends.findIndex(friend => friend.accountID === user.accountID);
         if (userIndex !== -1) {
             target.friends.splice(userIndex, 1);
-            users.SendAllData(target);
+            users.Send(target, { status: 'update-friends', friends: target.friends });
         }
     }
 

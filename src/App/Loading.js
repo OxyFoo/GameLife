@@ -169,7 +169,7 @@ async function Initialisation(nextStep, nextPage) {
 
     CheckDate();
     user.StartTimers();
-    user.multiplayer.Connect();
+    user.tcp.Connect();
 
     // Maintenance message
     if (user.server.status === 'maintenance') {

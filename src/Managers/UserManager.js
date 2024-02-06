@@ -13,6 +13,7 @@ import Shop from 'Class/Shop';
 import Todoes from 'Class/Todoes';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
+import TCP from 'Utils/TCP';
 
 /**
  * @typedef {import('Interface/Components').Character} Character
@@ -46,6 +47,7 @@ class UserManager {
         this.server = new Server(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this)
+        this.tcp = new TCP(this);
         this.todoes = new Todoes(this);
 
         this.stats = this.experience.GetEmptyExperience();
@@ -100,7 +102,7 @@ class UserManager {
         this.shop.Clear();
         this.todoes.Clear();
         await this.settings.Save();
-        this.multiplayer.Disconnect();
+        this.tcp.Disconnect();
 
         await DataStorage.ClearAll();
         await this.LocalSave();
@@ -142,7 +144,7 @@ class UserManager {
     async Unmount() {
         clearInterval(this.intervalSave);
         clearInterval(this.intervalAchievements);
-        this.multiplayer.Disconnect();
+        this.tcp.Disconnect();
         await this.settings.Save();
         await this.LocalSave();
         await this.OnlineSave();

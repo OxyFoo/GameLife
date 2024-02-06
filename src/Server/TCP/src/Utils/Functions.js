@@ -1,3 +1,5 @@
+import os from 'os';
+
 /**
  * Check if a string is a valid json
  * @param {string} str 
@@ -9,4 +11,24 @@ function StrIsJson(str) {
     return true;
 }
 
-export { StrIsJson };
+/**
+ * @returns {string} Local IP address
+ */
+function GetLocalIP() {
+    const ifaces = os.networkInterfaces();
+    let localIP = '';
+
+    Object.keys(ifaces).forEach((ifname) => {
+        ifaces[ifname].forEach((iface) => {
+            if ('IPv4' !== iface.family || iface.internal !== false) {
+                return;
+            }
+
+            localIP = iface.address;
+        });
+    });
+
+    return localIP;
+}
+
+export { StrIsJson, GetLocalIP };

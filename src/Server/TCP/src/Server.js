@@ -2,7 +2,7 @@ import WebSocket from 'websocket';
 import { createServer } from 'http';
 
 import Users from './Users.js';
-import { StrIsJson } from './Utils/Functions.js';
+import { StrIsJson, GetLocalIP } from './Utils/Functions.js';
 
 /**
  * @typedef {import('./Sql.js').default} SQL
@@ -33,7 +33,8 @@ class Server {
             this.wsServer.addListener('connect', this.onConnect);
             this.wsServer.addListener('request', this.onRequest);
             this.wsServer.addListener('close', this.onClose);
-            console.log('WebSocket server listening on port', port);
+
+            console.log('WebSocket server listening on', GetLocalIP() + ':' + port);
         }
     }
 

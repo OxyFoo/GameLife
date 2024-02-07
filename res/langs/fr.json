@@ -324,7 +324,28 @@
         "button-retry": "Réessayer",
 
         "temp-comingsoon-title": "Multijoueur",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
+        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+
+        "alert-already-friend": {
+            "title": "Déjà ami",
+            "message": "Tu es déjà ami avec {}"
+        },
+        "alert-friend-notfound": {
+            "title": "Ami introuvable",
+            "message": "L'utilisateur {} n'a pas été trouvé"
+        },
+        "alert-friend-self": {
+            "title": "Impossible",
+            "message": "Tu ne peux pas t'ajouter toi-même en ami"
+        },
+        "alert-timeout": {
+            "title": "Temps écoulé",
+            "message": "La connexion au serveur a pris trop de temps, réessaye plus tard."
+        },
+        "alert-error": {
+            "title": "Erreur",
+            "message": "Une erreur est survenue, réessaye plus tard. ({})"
+        }
     },
 
     "profile": {

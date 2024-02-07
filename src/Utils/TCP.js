@@ -28,6 +28,8 @@ class TCP {
     /** @type {DynamicVar<ConnectionState>} */
     state = new DynamicVar('idle');
 
+    callbacks = {};
+
     /**
      * @returns {boolean} Whether the connection was successful, or if it was already connected
      */
@@ -74,7 +76,20 @@ class TCP {
             }
         }
 
-        this.user.multiplayer.onMessage(data);
+        if (status === 'update-friends' || status === 'update-notifications') {
+            this.user.multiplayer.onMessage(data);
+        }
+
+        if (status === 'callback') {
+            const callbackID = data.callbackID;
+            const callback = this.callbacks[callbackID];
+            if (typeof(callback) === 'function') {
+                callback(data);
+                delete this.callbacks[callbackID];
+            } else {
+                this.user.interface.console.AddLog('warn', 'Callback not found:', callbackID);
+            }
+        }
     }
 
     /** @param {Event} event */
@@ -106,6 +121,23 @@ class TCP {
 
         this.socket.send(JSON.stringify(message));
         return true;
+    }
+
+    /**
+     * @param {string} callbackID
+     * @param {number} [timeout] in milliseconds
+     * @returns {Promise<'timeout' | any>} The result of the callback or 'timeout' if it took too long
+     */
+    WaitCallback = (callbackID, timeout = 5000) => {
+        return new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                resolve('timeout');
+            }, timeout);
+            this.callbacks[callbackID] = (data) => {
+                clearTimeout(timer);
+                resolve(data);
+            };
+        });
     }
 }
 

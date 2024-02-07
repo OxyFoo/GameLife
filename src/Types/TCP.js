@@ -11,22 +11,27 @@
  * @typedef {Object} SendRequestAddFriend
  * @property {'add-friend'} action
  * @property {string} username
+ * @property {string} [callbackID]
  *
  * @typedef {Object} SendRequestRemoveFriend
  * @property {'remove-friend'} action
  * @property {number} accountID
+ * @property {string} [callbackID]
  *
  * @typedef {Object} SendRequestAcceptFriend
  * @property {'accept-friend'} action
  * @property {number} accountID
+ * @property {string} [callbackID]
  *
  * @typedef {Object} SendRequestDeclineFriend
  * @property {'decline-friend'} action
  * @property {number} accountID
+ * @property {string} [callbackID]
  *
  * @typedef {Object} SendRequestBlockFriend
  * @property {'block-friend'} action
  * @property {number} accountID
+ * @property {string} [callbackID]
  * 
  * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestBlockFriend} TCPClientRequest
  * 
@@ -52,5 +57,10 @@
  * @property {'update-notifications'} status
  * @property {Array<NotificationInApp>} notifications
  * 
- * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications} TCPServerRequest
+ * @typedef {Object} ReceiveRequestCallback
+ * @property {'callback'} status
+ * @property {string} callbackID
+ * @property {any} result
+ * 
+ * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications | ReceiveRequestCallback} TCPServerRequest
  */

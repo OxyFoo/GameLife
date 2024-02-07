@@ -14,33 +14,33 @@ import { GetFriend } from './GetFriends.js';
  * @param {Users} users
  * @param {User} user
  * @param {string} username
- * @returns {Promise<boolean>} Whether the friend was added successfully
+ * @returns {Promise<string>} Whether the friend was added successfully
  */
 async function AddFriend(users, user, username) {
     // Get friend ID
     const command = `SELECT \`ID\` FROM \`Accounts\` WHERE Username = '${username}'`;
     const requestFriendID = await users.db.ExecQuery(command);
     if (requestFriendID === null || requestFriendID.length === 0) {
-        return false;
+        return 'not-found';
     }
     const friendID = requestFriendID[0]['ID'];
 
     if (friendID === user.accountID) {
-        return false;
+        return 'self';
     }
 
     // Check if the friendship already exists
     const commandCheck = `SELECT \`ID\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
     const requestCheck = await users.db.ExecQuery(commandCheck);
     if (requestCheck === null || requestCheck.length > 0) {
-        return false;
+        return 'already-friend';
     }
 
     // Add the friendship
     const commandAdd = `INSERT INTO \`Friends\` (\`AccountID\`, \`TargetID\`) VALUES (${user.accountID}, ${friendID})`;
     const added = await users.db.ExecQuery(commandAdd);
     if (added === null) {
-        return false;
+        return 'sql-error';
     }
 
     // Add the friend to the user
@@ -72,20 +72,20 @@ async function AddFriend(users, user, username) {
     // Send new status
     users.Send(user, { status: 'update-friends', friends: user.friends });
 
-    return true;
+    return 'ok';
 }
 
 /**
  * @param {Users} users
  * @param {User} user
  * @param {number} accountID
- * @returns {Promise<boolean>} Whether the friend was removed successfully
+ * @returns {Promise<string>} Whether the friend was removed successfully
  */
 async function RemoveFriend(users, user, accountID) {
     const command = `DELETE FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${accountID}) OR (AccountID = ${accountID} AND TargetID = ${user.accountID})`;
     const removed = await users.db.ExecQuery(command);
     if (removed === null) {
-        return false;
+        return 'sql-error';
     }
 
     // Remove the friend from the user
@@ -109,21 +109,21 @@ async function RemoveFriend(users, user, accountID) {
     // Add log
     AddLog(users, user, 'friend-removed', `Friend removed: ${accountID}`);
 
-    return true;
+    return 'ok';
 }
 
 /**
  * @param {Users} users
  * @param {User} user
  * @param {number} accountID
- * @returns {Promise<boolean>} Whether the friend was added successfully
+ * @returns {Promise<string>} Whether the friend was added successfully
  */
 async function AcceptFriend(users, user, accountID) {
     // Update the friendship
     const command = `UPDATE \`Friends\` SET \`State\` = 'accepted' WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
     const accepted = await users.db.ExecQuery(command);
     if (accepted === null) {
-        return false;
+        return 'sql-error';
     }
 
     // Add the friend to the user
@@ -152,7 +152,7 @@ async function AcceptFriend(users, user, accountID) {
     // Add log
     AddLog(users, user, 'friend-accepted', `Friend accepted: ${accountID}`);
 
-    return true;
+    return 'ok';
 }
 
 /**
@@ -160,7 +160,7 @@ async function AcceptFriend(users, user, accountID) {
  * @param {User} user
  * @param {number} accountID
  * @param {boolean} block
- * @returns {Promise<boolean>} Whether the friend was added successfully
+ * @returns {Promise<string>} Whether the friend was added successfully
  */
 async function DeclineFriend(users, user, accountID, block = false) {
     // Update the friendship
@@ -168,13 +168,13 @@ async function DeclineFriend(users, user, accountID, block = false) {
         const command = `UPDATE \`Friends\` SET \`State\` = 'blocked' WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
         const declined = await users.db.ExecQuery(command);
         if (declined === null) {
-            return false;
+            return 'sql-error1';
         }
     } else {
         const command = `DELETE FROM \`Friends\` WHERE AccountID = ${accountID} AND TargetID = ${user.accountID}`;
         const declined = await users.db.ExecQuery(command);
         if (declined === null) {
-            return false;
+            return 'sql-error2';
         }
     }
 
@@ -203,7 +203,7 @@ async function DeclineFriend(users, user, accountID, block = false) {
         AddLog(users, user, 'friend-declined', `Friend declined: ${accountID}`);
     }
 
-    return true;
+    return 'ok';
 }
 
 export { AddFriend, RemoveFriend, AcceptFriend, DeclineFriend };

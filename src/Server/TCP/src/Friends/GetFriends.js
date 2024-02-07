@@ -60,6 +60,10 @@ async function GetUserFriends(users, user) {
         }
     }));
 
+    if (friends.length === 0) {
+        return friends;
+    }
+
     const friendIDs = friends.map(friend => friend.accountID);
     const activitiesQuery = `
         SELECT 

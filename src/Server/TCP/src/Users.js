@@ -106,21 +106,47 @@ class Users {
             return;
         }
 
+        let result = '';
         switch (data.action) {
             case 'add-friend':
-                await AddFriend(this, user, data.username);
+                result = await AddFriend(this, user, data.username);
+                this.Send(user, {
+                    status: 'callback',
+                    callbackID: data.callbackID,
+                    result: result
+                });
                 break;
             case 'remove-friend':
-                await RemoveFriend(this, user, data.accountID);
+                result = await RemoveFriend(this, user, data.accountID);
+                this.Send(user, {
+                    status: 'callback',
+                    callbackID: data.callbackID,
+                    result: result
+                });
                 break;
             case 'accept-friend':
-                await AcceptFriend(this, user, data.accountID);
+                result = await AcceptFriend(this, user, data.accountID);
+                this.Send(user, {
+                    status: 'callback',
+                    callbackID: data.callbackID,
+                    result: result
+                });
                 break;
             case 'decline-friend':
-                await DeclineFriend(this, user, data.accountID, false);
+                result = await DeclineFriend(this, user, data.accountID, false);
+                this.Send(user, {
+                    status: 'callback',
+                    callbackID: data.callbackID,
+                    result: result
+                });
                 break;
             case 'block-friend':
-                await DeclineFriend(this, user, data.accountID, true);
+                result = await DeclineFriend(this, user, data.accountID, true);
+                this.Send(user, {
+                    status: 'callback',
+                    callbackID: data.callbackID,
+                    result: result
+                });
                 break;
             default:
                 break;

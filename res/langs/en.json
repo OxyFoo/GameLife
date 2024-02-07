@@ -324,7 +324,28 @@
         "button-retry": "Retry",
 
         "temp-comingsoon-title": "Multiplayer",
-        "temp-comingsoon-text": "🚧 Coming soon 🚧"
+        "temp-comingsoon-text": "🚧 Coming soon 🚧",
+
+        "alert-already-friend": {
+            "title": "Already friends",
+            "message": "You are already friends with {}"
+        },
+        "alert-friend-notfound": {
+            "title": "User not found",
+            "message": "The user {} was not found"
+        },
+        "alert-friend-self": {
+            "title": "Impossible",
+            "message": "You can't add yourself as a friend"
+        },
+        "alert-timeout": {
+            "title": "Timeout",
+            "message": "The server is not responding, please try again later."
+        },
+        "alert-error": {
+            "title": "Error",
+            "message": "An error has occurred, please try again later. ({})"
+        }
     },
 
     "profile": {

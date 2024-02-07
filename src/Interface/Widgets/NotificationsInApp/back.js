@@ -7,9 +7,6 @@ import { TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
- * 
- * @typedef {import('Types/TCP').ConnectionState} ConnectionState
- * @typedef {import('Types/NotificationInApp').NotificationInApp} NotificationInApp
  */
 
 const NotificationsInAppProps = {
@@ -21,18 +18,14 @@ class BackNotificationsInApp extends React.Component {
     state = {
         animBell: new Animated.Value(0),
 
-        /** @type {ConnectionState} */
-        multiState: user.tcp.state.Get(),
         notificationsCount: user.multiplayer.notifications.Get().length + user.achievements.GetNotifications().length
     }
 
     componentDidMount() {
-        this.listenerState = user.tcp.state.AddListener(this.onMultiStateChange);
         this.listenerNotifications = user.multiplayer.notifications.AddListener(this.onNotificationsCountChange);
         this.listenerAchievements = user.achievements.achievements.AddListener(this.onNotificationsCountChange);
     }
     componentWillUnmount() {
-        user.tcp.state.RemoveListener(this.listenerState);
         user.multiplayer.notifications.RemoveListener(this.listenerNotifications);
         user.achievements.achievements.RemoveListener(this.listenerAchievements);
     }
@@ -44,19 +37,6 @@ class BackNotificationsInApp extends React.Component {
         TimingAnimation(this.state.animBell, 1, 500).start(() => {
             TimingAnimation(this.state.animBell, 0, 0).start()
         });
-    }
-    closeNotificationsHandler = () => {
-        user.interface.notificationsInApp.Close();
-    }
-
-    /** @param {ConnectionState} multiState */
-    onMultiStateChange = (multiState) => {
-        this.setState({ multiState });
-
-        // Close notifications if disconnected
-        if (multiState !== 'connected') {
-            this.closeNotificationsHandler();
-        }
     }
 
     onNotificationsCountChange = () => {

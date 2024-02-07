@@ -11,7 +11,7 @@
  */
 async function GetFriendNotifications(users, user) {
     const command = `
-        SELECT f.AccountID, f.TargetID, a.Username 
+        SELECT f.AccountID, f.TargetID, f.Date, a.Username 
         FROM Friends f
         JOIN Accounts a ON f.AccountID = a.ID
         WHERE f.TargetID = ${user.accountID} AND f.State = 'pending'
@@ -22,6 +22,9 @@ async function GetFriendNotifications(users, user) {
     }
 
     const notifications = results.map(row => {
+        const timezone = new Date().getTimezoneOffset() * 60;
+        const timestamp = Math.floor(new Date(row.Date).getTime() / 1000) - timezone;
+
         /** @type {NotificationInAppAchievements} */
         const notification = {
             type: 'friend-pending',
@@ -29,8 +32,7 @@ async function GetFriendNotifications(users, user) {
                 accountID: row.AccountID,
                 username: row.Username
             },
-            timestamp: 0,
-            read: false
+            timestamp: timestamp
         };
         return notification;
     });

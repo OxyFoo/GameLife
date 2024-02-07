@@ -15,6 +15,11 @@ import { Container, Text, FriendElement } from 'Interface/Components';
 class MultiplayerPanel extends BackMultiplayerPanel {
     render() {
         const { state } = this.state;
+        const { hideWhenOffline } = this.props;
+
+        if (state !== 'connected' && hideWhenOffline) {
+            return null;
+        }
 
         /** @type {Icons} */
         let icon = 'loadingDots';

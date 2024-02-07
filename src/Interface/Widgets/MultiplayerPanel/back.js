@@ -8,14 +8,14 @@ import user from 'Managers/UserManager';
  * 
  * @typedef {import('Types/Friend').Friend} Friend
  * @typedef {import('Types/TCP').ConnectionState} ConnectionState
- * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 const MultiplayerPanelProps = {
     /** @type {StyleViewProp} */
-    style: {}
+    style: {},
+
+    /** @type {boolean} Hide the panel when the user is offline, disconnected or TCP crash */
+    hideWhenOffline: false
 };
 
 class BackMultiplayerPanel extends React.Component {

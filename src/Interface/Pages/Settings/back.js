@@ -7,6 +7,7 @@ import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
+ * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
@@ -29,7 +30,10 @@ class BackSettings extends PageBase {
         switchEveningNotifs: user.settings.eveningNotifications,
         waitingConsentPopup: false,
         sendingMail: false,
-        devicesLoading: false
+        devicesLoading: false,
+
+        /** @param {ConnectionState} state */
+        serverTCPState: user.tcp.state.Get()
     }
 
     intervalConsentChecking = null;
@@ -44,11 +48,19 @@ class BackSettings extends PageBase {
                 }
             }, 100);
         }
+        this.listenerTCP = user.tcp.state.AddListener(this.onTCPStateChange);
     }
 
     componentWillUnmount() {
-        if (this.intervalConsentChecking !== null)
+        if (this.intervalConsentChecking !== null) {
             clearInterval(this.intervalConsentChecking);
+        }
+        user.tcp.state.RemoveListener(this.listenerTCP);
+    }
+
+    /** @param {ConnectionState} state */
+    onTCPStateChange = (state) => {
+        this.setState({ serverTCPState: state });
     }
 
     onBack = () => user.interface.BackHandle();
@@ -64,7 +76,7 @@ class BackSettings extends PageBase {
     /** @param {ComboBoxItem} lang */
     onChangeLang = (lang) => {
         this.setState({ cbSelectedLang: lang });
-        langManager.SetLangage(lang.key);
+        langManager.SetLangage(/** @type {'fr' | 'en'} */ (lang.key));
         user.settings.Save();
     }
 
@@ -131,6 +143,10 @@ class BackSettings extends PageBase {
         const textDevices = devices === null ? 'Error' : '- ' + devices.join(' - \n- ') + ' -\n';
         user.interface.popup.Open('yesno', [ title, text.replace('{}', textDevices) ], event);
         this.setState({ devicesLoading: false });
+    }
+
+    reconnectTCP = () => {
+        user.tcp.Connect();
     }
 
     deleteAccount = () => {

@@ -1,5 +1,6 @@
 import { AddLog } from '../Utils/Logs.js';
 import { GetFriend } from './GetFriends.js';
+import { GetTime } from '../Utils/Functions.js';
 
 /**
  * @typedef {import('../Users.js').User} User
@@ -59,8 +60,7 @@ async function AddFriend(users, user, username) {
                 accountID: user.accountID,
                 username: user.username
             },
-            timestamp: 0,
-            read: false
+            timestamp: GetTime()
         };
         target.notificationsInApp.push(notif);
         users.Send(target, { status: 'update-notifications', notifications: target.notificationsInApp });
@@ -144,6 +144,7 @@ async function AcceptFriend(users, user, accountID) {
         const target = users.AllUsers[targetIndex];
         const userIndex = target.friends.findIndex(friend => friend.accountID === user.accountID);
         if (userIndex !== -1) {
+            target.friends[userIndex].status = 'online';
             target.friends[userIndex].friendshipState = 'accepted';
             users.Send(target, { status: 'update-friends', friends: target.friends });
         }

@@ -51,6 +51,7 @@ class TCP {
             this.socket.close();
         }
         this.socket = null;
+        this.user.multiplayer.notifications.Set([]);
     }
 
     IsConnected = () => {
@@ -73,6 +74,9 @@ class TCP {
             this.state.Set(status);
             if (status === 'error') {
                 this.user.interface.console.AddLog('error', 'Server error:', event.data.message);
+            }
+            if (status !== 'connected') {
+                this.Disconnect();
             }
         }
 
@@ -102,6 +106,7 @@ class TCP {
     /** @param {CloseEvent} event */
     onClose = (event) => {
         this.state.Set('disconnected');
+        this.Disconnect();
     }
 
     /**

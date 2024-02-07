@@ -426,8 +426,7 @@ class Achievements {
                 data: {
                     achievementID: achievement.AchievementID
                 },
-                read: false,
-                timestamp: 0
+                timestamp: achievement.Date
             };
         });
     }

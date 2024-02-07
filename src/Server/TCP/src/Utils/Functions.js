@@ -31,4 +31,11 @@ function GetLocalIP() {
     return localIP;
 }
 
-export { StrIsJson, GetLocalIP };
+/**
+ * @returns {number} Unix timestamp in seconds (UTC)
+ */
+function GetTime() {
+    return Math.floor(Date.now() / 1000);
+}
+
+export { StrIsJson, GetLocalIP, GetTime };

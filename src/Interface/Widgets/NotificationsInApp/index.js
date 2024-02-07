@@ -9,12 +9,6 @@ import { Text, Icon, Button } from 'Interface/Components';
 
 class NotificationsInAppButton extends BackNotificationsInApp {
     render() {
-        const { multiState } = this.state;
-
-        if (multiState !== 'connected') {
-            return null;
-        }
-
         const styleBellAnim = {
             transform: [
                 { rotate: this.state.animBell.interpolate({

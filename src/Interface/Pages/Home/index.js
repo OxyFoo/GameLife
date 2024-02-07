@@ -50,7 +50,7 @@ class Home extends BackHome {
                     {lang['btn-add-activity']}
                 </Button>
 
-                <MultiplayerPanel style={styles.topSpace} />
+                <MultiplayerPanel style={styles.topSpace} hideWhenOffline />
 
                 <TodayPieChart style={styles.topSpace} />
 

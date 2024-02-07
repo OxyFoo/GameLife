@@ -18,6 +18,7 @@ class Settings extends BackSettings {
             sendingMail,
             devicesLoading
         } = this.state;
+
         const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
 
@@ -66,6 +67,9 @@ class Settings extends BackSettings {
                 <Button style={styles.margin} onPress={this.openConsentPopup} color='main2' loading={waitingConsentPopup}>{lang['input-consent']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
                 <Button style={styles.margin} onPress={this.disconnectAll} color='main2' loading={devicesLoading}>{lang['input-disconnect-all']}</Button>
+                {this.state.serverTCPState !== 'connected' && (
+                    <Button style={styles.margin} onPress={this.reconnectTCP} color='main3' loading={devicesLoading}>{'[Reconnect TCP]'}</Button>
+                )}
                 <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{lang['input-tuto-again']}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>
             </Page>

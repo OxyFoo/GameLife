@@ -34,11 +34,8 @@ class NotificationInApp {
     /** @type {NotificationInAppValue[T]} */
     data;
 
-    /** @type {number} */
+    /** @type {number} Unix timestamp in seconds (UTC) */
     timestamp;
-
-    /** @type {boolean} */
-    read;
 }
 
 export { NotificationInApp };

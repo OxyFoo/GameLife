@@ -140,7 +140,7 @@ class TCP {
             }, timeout);
             this.callbacks[callbackID] = (data) => {
                 clearTimeout(timer);
-                resolve(data);
+                resolve(data['result']);
             };
         });
     }

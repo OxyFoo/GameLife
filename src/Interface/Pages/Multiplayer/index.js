@@ -6,6 +6,7 @@ import langManager from 'Managers/LangManager';
 
 import { Button, Page, Text, FriendElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
+import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
 class Multiplayer extends BackMultiplayer {
     render() {
@@ -23,7 +24,7 @@ class Multiplayer extends BackMultiplayer {
     }
 
     renderAddButton = () => {
-        const { state } = this.state;
+        const { state, friends, friendsPending } = this.state;
 
         if (state !== 'connected') {
             return null;
@@ -38,13 +39,15 @@ class Multiplayer extends BackMultiplayer {
                     borderRadius={12}
                     onPress={this.openClassement}
                 />
-                <Button
-                    style={styles.addFriendButton}
-                    color='main2'
-                    icon='userAdd'
-                    borderRadius={12}
-                    onPress={this.addFriendHandle}
-                />
+                {friends.length + friendsPending.length < FRIENDS_LIMIT && (
+                    <Button
+                        style={styles.addFriendButton}
+                        color='main2'
+                        icon='userAdd'
+                        borderRadius={12}
+                        onPress={this.addFriendHandle}
+                    />
+                )}
             </>
         );
     }

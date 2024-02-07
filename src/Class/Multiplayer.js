@@ -2,6 +2,8 @@ import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
 
+const FRIENDS_LIMIT = 10;
+
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Friend').Friend} Friend
@@ -164,4 +166,5 @@ class Multiplayer {
     }
 }
 
+export { FRIENDS_LIMIT };
 export default Multiplayer;

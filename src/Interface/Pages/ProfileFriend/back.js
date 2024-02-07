@@ -36,7 +36,10 @@ class BackProfileFriend extends PageBase {
         this.state.friend = friend;
         this.state.xpInfo = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
 
-        this.totalDays = Math.floor((GetTime() - friend.activities.firstTime) / (24 * 60 * 60));
+        this.totalDays = 0;
+        if (friend.activities.firstTime) {
+            this.totalDays = Math.floor((GetTime() - friend.activities.firstTime) / (24 * 60 * 60));
+        }
         this.activitiesLength = friend.activities.length;
         this.durationHours = Math.floor(friend.activities.totalDuration / 60);
 
@@ -54,6 +57,14 @@ class BackProfileFriend extends PageBase {
         ];
         character.SetEquipment(stuff);
         this.character = character;
+    }
+
+    componentDidMount() {
+        this.listener = user.tcp.state.AddListener(state => state !== 'connected' && this.Back());
+    }
+
+    componentWillUnmount() {
+        user.tcp.state.RemoveListener(this.listener);
     }
 
     removeFriendHandler = () => {

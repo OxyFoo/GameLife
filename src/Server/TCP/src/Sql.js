@@ -1,4 +1,4 @@
-import { createConnection } from 'mysql2';
+import { createPool } from 'mysql2';
 
 /**
  * @typedef {object} credentials
@@ -13,55 +13,52 @@ class SQL {
      * @param {credentials} credentials
      */
     constructor(credentials) {
-        this.CreateConnection(credentials);
+        this.CreatePool(credentials);
     }
 
     /**
      * @param {credentials} credentials
      */
-    CreateConnection = (credentials) => {
-        this.connection = createConnection({
+    CreatePool = (credentials) => {
+        this.pool = createPool({
             host: credentials.hostname,
             database: credentials.database,
             user: credentials.username,
-            password: credentials.password
-        });
-        this.connection.connect((err) => {
-            if (err) {
-                console.warn('SQL Connection Error:', err);
-                return;
-            }
-
-            console.log('SQL Connected');
+            password: credentials.password,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
         });
 
-        // Auto restart
-        this.connection.on('error', (err) => {
-            console.warn('SQL Connection Error:', err);
-            this.connection.destroy();
-            this.CreateConnection(credentials);
+        this.pool.on('connection', (connection) => {
+            console.log('SQL Pool Connection established');
+        });
+
+        // Gestion des erreurs au niveau du pool
+        this.pool.on('error', (err) => {
+            console.error('SQL Pool Error:', err);
+            this.CreatePool(credentials);
         });
     }
 
     Unmount = () => {
-        if (this.connection?.threadId) {
-            this.connection.destroy();
-        }
+        this.pool.end((err) => {
+            if (err) {
+                console.warn('Error closing the pool:', err);
+            } else {
+                console.log('SQL Pool closed');
+            }
+        });
     }
 
     ExecQuery = (query) => {
-        if (!this.connection?.threadId) {
-            console.warn('SQL Connection not opened, return null.');
-            return null;
-        }
-
         return new Promise((resolve, reject) => {
-            this.connection.query(query, (err, result) => {
+            this.pool.query(query, (err, results) => {
                 if (err) {
-                    console.warn('SQL Query Error, return null:', err);
+                    console.warn('SQL Query Error:', err);
                     resolve(null);
                 } else {
-                    resolve(result);
+                    resolve(results);
                 }
             });
         });
@@ -72,18 +69,13 @@ class SQL {
      * @param {Array<any | null>} args
      */
     QueryPrepare = (command, args) => {
-        if (!this.connection?.threadId) {
-            console.warn('SQL Connection not opened, return null.');
-            return null;
-        }
-
         return new Promise((resolve, reject) => {
-            this.connection.query(command, args, (err, result) => {
+            this.pool.execute(command, args, (err, results) => {
                 if (err) {
-                    console.warn('SQL Query Error, return null:', err);
+                    console.warn('SQL Query Error:', err);
                     resolve(null);
                 } else {
-                    resolve(result);
+                    resolve(results);
                 }
             });
         });

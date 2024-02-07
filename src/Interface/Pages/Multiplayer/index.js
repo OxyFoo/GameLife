@@ -13,6 +13,7 @@ class Multiplayer extends BackMultiplayer {
             <Page
                 ref={ref => this.refPage = ref}
                 overlay={this.renderAddButton()}
+                bottomOffset={64}
                 canScrollOver
             >
                 <PageHeader onBackPress={this.Back} />
@@ -29,13 +30,22 @@ class Multiplayer extends BackMultiplayer {
         }
 
         return (
-            <Button
-                style={styles.addFriendButton}
-                color='main2'
-                icon='userAdd'
-                borderRadius={12}
-                onPress={this.addFriendHandle}
-            />
+            <>
+                <Button
+                    style={styles.classementButton}
+                    color='main1'
+                    icon='world'
+                    borderRadius={12}
+                    onPress={this.openClassement}
+                />
+                <Button
+                    style={styles.addFriendButton}
+                    color='main2'
+                    icon='userAdd'
+                    borderRadius={12}
+                    onPress={this.addFriendHandle}
+                />
+            </>
         );
     }
 
@@ -48,16 +58,7 @@ class Multiplayer extends BackMultiplayer {
 
         return (
             <View>
-                <Button
-                    style={styles.topMargin}
-                    color='main1'
-                    icon='world'
-                    borderRadius={12}
-                >
-                    [Classement]
-                </Button>
-
-                <Text style={styles.topMargin} fontSize={24}>[Amis]</Text>
+                <Text fontSize={24}>[Amis]</Text>
                 <FlatList
                     style={styles.flatList}
                     data={friends}
@@ -120,6 +121,13 @@ const styles = StyleSheet.create({
     flatList: {
         marginTop: 12,
         marginHorizontal: -24
+    },
+    classementButton: {
+        aspectRatio: 1,
+        position: 'absolute',
+        left: 24,
+        bottom: 24,
+        paddingHorizontal: 0
     },
     addFriendButton: {
         aspectRatio: 1,

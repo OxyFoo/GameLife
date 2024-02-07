@@ -25,6 +25,10 @@ async function AddFriend(users, user, username) {
     }
     const friendID = requestFriendID[0]['ID'];
 
+    if (friendID === user.accountID) {
+        return false;
+    }
+
     // Check if the friendship already exists
     const commandCheck = `SELECT \`ID\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
     const requestCheck = await users.db.ExecQuery(commandCheck);
@@ -63,7 +67,7 @@ async function AddFriend(users, user, username) {
     }
 
     // Add log
-    await AddLog(users, user, 'friend-request', `Friend request: ${friendID}`);
+    AddLog(users, user, 'friend-request', `Friend request: ${friendID}`);
 
     // Send new status
     users.Send(user, { status: 'update-friends', friends: user.friends });
@@ -103,7 +107,7 @@ async function RemoveFriend(users, user, accountID) {
     }
 
     // Add log
-    await AddLog(users, user, 'friend-removed', `Friend removed: ${accountID}`);
+    AddLog(users, user, 'friend-removed', `Friend removed: ${accountID}`);
 
     return true;
 }
@@ -146,7 +150,7 @@ async function AcceptFriend(users, user, accountID) {
     }
 
     // Add log
-    await AddLog(users, user, 'friend-accepted', `Friend accepted: ${accountID}`);
+    AddLog(users, user, 'friend-accepted', `Friend accepted: ${accountID}`);
 
     return true;
 }
@@ -194,9 +198,9 @@ async function DeclineFriend(users, user, accountID, block = false) {
 
     // Add log
     if (block) {
-        await AddLog(users, user, 'friend-blocked', `Friend blocked: ${accountID}`);
+        AddLog(users, user, 'friend-blocked', `Friend blocked: ${accountID}`);
     } else {
-        await AddLog(users, user, 'friend-declined', `Friend declined: ${accountID}`);
+        AddLog(users, user, 'friend-declined', `Friend declined: ${accountID}`);
     }
 
     return true;

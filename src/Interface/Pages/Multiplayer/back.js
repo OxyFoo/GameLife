@@ -48,6 +48,10 @@ class BackMultiplayer extends PageBase {
         this.setState({ friends: newFriends, friendsPending: newFriendsPending });
     }
 
+    openClassement = () => {
+        return; // TODO
+    }
+
     addFriendHandle = () => {
         user.interface.screenInput.Open('[Ajouter un ami]', '', (username) => {
             user.multiplayer.AddFriend(username);

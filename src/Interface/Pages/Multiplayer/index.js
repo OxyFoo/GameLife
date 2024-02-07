@@ -53,6 +53,7 @@ class Multiplayer extends BackMultiplayer {
     }
 
     renderContent = () => {
+        const lang = langManager.curr['multiplayer'];
         const { state, friends, friendsPending } = this.state;
 
         if (state === 'disconnected')   return this.renderDisconnected();
@@ -61,7 +62,7 @@ class Multiplayer extends BackMultiplayer {
 
         return (
             <View>
-                <Text fontSize={24}>[Amis]</Text>
+                <Text fontSize={24}>{lang['category-friend']}</Text>
                 <FlatList
                     style={styles.flatList}
                     data={friends}
@@ -73,7 +74,7 @@ class Multiplayer extends BackMultiplayer {
 
                 {friendsPending.length > 0 && (
                     <>
-                        <Text style={styles.topMargin} fontSize={24}>[En attente]</Text>
+                        <Text style={styles.topMargin} fontSize={24}>{lang['category-friend-pending']}</Text>
                         <FlatList
                             style={styles.flatList}
                             data={friendsPending}

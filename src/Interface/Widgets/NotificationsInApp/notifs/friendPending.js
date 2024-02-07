@@ -3,6 +3,7 @@ import { Animated, View } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 import { Text, Button } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
@@ -18,6 +19,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @returns {JSX.Element}
  */
 function NIA_FriendPending({ notif, index }) {
+    const lang = langManager.curr['notifications']['in-app'];
     const [ anim ] = React.useState(new Animated.Value(0));
     const [ askDecline, setAskDecline ] = React.useState(false);
 
@@ -64,7 +66,7 @@ function NIA_FriendPending({ notif, index }) {
                         icon='cross'
                         iconSize={16}
                     >
-                        [Refuser]
+                        {lang['friend-pending-decline']}
                     </Button>
                     <Button
                         style={styles.friendPendingBlockButton}
@@ -73,7 +75,7 @@ function NIA_FriendPending({ notif, index }) {
                         icon='trash'
                         iconSize={16}
                     >
-                        [Bloquer]
+                        {lang['friend-pending-block']}
                     </Button>
                 </View>
             </Animated.View>
@@ -85,7 +87,7 @@ function NIA_FriendPending({ notif, index }) {
         <Animated.View style={styles.friendPendingContainer}>
             <View style={styles.friendPendingText}>
                 <Text fontSize={16}>
-                    {`${notif.data.username} [vous a demandé en ami]`}
+                    {lang['friend-pending-text'].replace('{}', notif.data.username)}
                 </Text>
             </View>
 

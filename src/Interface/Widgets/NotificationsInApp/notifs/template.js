@@ -77,7 +77,7 @@ function NIA_Separator() {
 }
 
 function NIA_Empty() {
-    const lang = langManager.curr['notifications-in-app'];
+    const lang = langManager.curr['notifications']['in-app'];
 
     return (
         <Text>{lang['list-empty']}</Text>

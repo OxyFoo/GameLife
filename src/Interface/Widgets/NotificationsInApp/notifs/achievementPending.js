@@ -19,6 +19,7 @@ import { Button, Text } from 'Interface/Components';
  * @returns {JSX.Element}
  */
 function NIA_AchievementPending({ notif, index }) {
+    const lang = langManager.curr['notifications']['in-app'];
     const [ loading, setLoading ] = React.useState(false);
 
     const achievement = dataManager.achievements.GetByID(notif.data.achievementID);
@@ -44,7 +45,7 @@ function NIA_AchievementPending({ notif, index }) {
         <View style={styles.achievementPendingContainer}>
             <View style={styles.achievementPendingText}>
                 <Text fontSize={16}>
-                    {`[Succès dévérouillé: ] ${achievementTitle}`}
+                    {lang['achievement-pending-text'].replace('{}', achievementTitle)}
                 </Text>
             </View>
 
@@ -55,7 +56,7 @@ function NIA_AchievementPending({ notif, index }) {
                     onPress={claimHandle}
                     loading={loading}
                 >
-                    [Claim]
+                    {lang['achievement-pending-claim']}
                 </Button>
             </View>
         </View>

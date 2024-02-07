@@ -3,6 +3,7 @@ import { FlatList, View } from 'react-native';
 
 import styles from './style';
 import BackMultiplayerPanel from './back';
+import langManager from 'Managers/LangManager';
 
 import { Container, Text, FriendElement } from 'Interface/Components';
 
@@ -14,6 +15,7 @@ import { Container, Text, FriendElement } from 'Interface/Components';
 
 class MultiplayerPanel extends BackMultiplayerPanel {
     render() {
+        const lang = langManager.curr['multiplayer'];
         const { state } = this.state;
         const { hideWhenOffline } = this.props;
 
@@ -41,7 +43,7 @@ class MultiplayerPanel extends BackMultiplayerPanel {
                 style={this.props.style}
                 styleContainer={styles.container}
                 type='static'
-                text={'[Multiplayer]'}
+                text={lang['container-title']}
                 icon={icon}
                 onIconPress={iconPress}
             >
@@ -71,31 +73,39 @@ class MultiplayerPanel extends BackMultiplayerPanel {
     }
 
     renderEmpty = () => {
+        const lang = langManager.curr['multiplayer'];
+
         return (
             <View>
-                <Text>[Aucun ami en ligne]</Text>
+                <Text>{lang['container-content-empty']}</Text>
             </View>
         );
     }
 
     renderIdle = () => {
+        const lang = langManager.curr['multiplayer'];
+
         return (
             <View>
-                <Text>[Chargement...]</Text>
+                <Text>{lang['container-content-idle']}</Text>
             </View>
         );
     }
     renderDisconnected = () => {
+        const lang = langManager.curr['multiplayer'];
+
         return (
             <View>
-                <Text>[Vous avez été déconnecté !]</Text>
+                <Text>{lang['container-content-disconnected']}</Text>
             </View>
         );
     }
     renderError = () => {
+        const lang = langManager.curr['multiplayer'];
+
         return (
             <View>
-                <Text>[Error]</Text>
+                <Text>{lang['container-content-error']}</Text>
             </View>
         );
     }

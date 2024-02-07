@@ -40,11 +40,17 @@
                 "last-time": "La[-es] quête[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
                 "today-time": "La[-es] quête[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
             }
-        }
-    },
+        },
+        "in-app": {
+            "achievement-pending-text": "Succès dévérouillé: {}",
+            "achievement-pending-claim": "Claim",
 
-    "notifications-in-app": {
-        "list-empty": "Aucune notification pour le moment"
+            "friend-pending-text": "{} vous a demandé en ami",
+            "friend-pending-decline": "Refuser",
+            "friend-pending-block": "Bloquer",
+
+            "list-empty": "Aucune notification pour le moment"
+        }
     },
 
     "level": {
@@ -323,6 +329,17 @@
         "connection-failed": "La connexion au serveur a échouée, réessaye plus tard.",
         "button-retry": "Réessayer",
 
+        "container-title": "Multijoueur",
+        "container-content-empty": "Aucun ami pour le moment",
+        "container-content-idle": "Chargement...",
+        "container-content-disconnected": "Tu es déconnecté, réessaye plus tard.",
+        "container-content-error": "Une erreur est survenue, réessaye plus tard.",
+
+        "category-friend": "Amis",
+        "category-friend-pending": "Demandes en attente",
+
+        "input-search-friend": "Entre le pseudo de ton ami",
+
         "temp-comingsoon-title": "Multijoueur",
         "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
 
@@ -414,6 +431,11 @@
     },
 
     "profile-friend": {
+        "row-since": "Depuis",
+        "row-activities": "Nombre d'activités",
+        "row-time": "Nombre d'heures",
+
+        "button-remove": "Retirer de la liste d'amis",
         "alert-removefriend-title": "Supprimer un ami",
         "alert-removefriend-text": "Es-tu sûr de vouloir supprimer {} de ta liste d'amis ?"
     },

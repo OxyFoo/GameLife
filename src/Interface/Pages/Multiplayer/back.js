@@ -1,5 +1,6 @@
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {import('Types/Friend').Friend} Friend
@@ -53,7 +54,8 @@ class BackMultiplayer extends PageBase {
     }
 
     addFriendHandle = () => {
-        user.interface.screenInput.Open('[Ajouter un ami]', '', (username) => {
+        const lang = langManager.curr['multiplayer'];
+        user.interface.screenInput.Open(lang['input-search-friend'], '', (username) => {
             user.multiplayer.AddFriend(username);
         }, false);
     }

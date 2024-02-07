@@ -40,11 +40,17 @@
                 "last-time": "The following quest[s] are due tomorrow: {}, so hurry up and finish them!",
                 "today-time": "The following quest[s] are finished today: {}, hurry up and finish them!"
             }
-        }
-    },
+        },
+        "in-app": {
+            "achievement-pending-text": "You have unlocked the achievement: {}",
+            "achievement-pending-claim": "Claim",
 
-    "notifications-in-app": {
-        "list-empty": "No notifications available"
+            "friend-pending-text": "{} wants to be your friend",
+            "friend-pending-decline": "Decline",
+            "friend-pending-block": "Block",
+
+            "list-empty": "No notifications available"
+        }
     },
 
     "level": {
@@ -323,6 +329,17 @@
         "connection-failed": "The connection to the server failed, please try again later.",
         "button-retry": "Retry",
 
+        "container-title": "Multiplayer",
+        "container-content-empty": "No friends yet",
+        "container-content-idle": "Loading...",
+        "container-content-disconnected": "Disconnected, please try again later.",
+        "container-content-error": "An error has occurred, please try again later.",
+
+        "category-friend": "Friends",
+        "category-friend-pending": "Pending",
+
+        "input-search-friend": "Search for a friend",
+
         "temp-comingsoon-title": "Multiplayer",
         "temp-comingsoon-text": "🚧 Coming soon 🚧",
 
@@ -414,6 +431,11 @@
     },
 
     "profile-friend": {
+        "row-since": "Since",
+        "row-activities": "Number of activities",
+        "row-time": "Time spent",
+
+        "button-remove": "Remove friend",
         "alert-removefriend-title": "Remove friend",
         "alert-removefriend-text": "Are you sure you want to remove {} from your friends?"
     },

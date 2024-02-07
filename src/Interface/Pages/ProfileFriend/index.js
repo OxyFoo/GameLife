@@ -13,7 +13,7 @@ import { Round } from 'Utils/Functions';
 
 class ProfileFriend extends BackProfileFriend {
     render() {
-        const lang = langManager.curr['profile'];
+        const lang = langManager.curr['profile-friend'];
         const langDates = langManager.curr['dates']['names'];
 
         const { friend, xpInfo } = this.state;
@@ -90,7 +90,7 @@ class ProfileFriend extends BackProfileFriend {
                     color='danger'
                     onPress={this.removeFriendHandler}
                 >
-                    [Retirer de la liste d'amis]
+                    {lang['button-remove']}
                 </Button>
             </Page>
         );

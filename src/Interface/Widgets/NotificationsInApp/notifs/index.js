@@ -8,7 +8,8 @@ import user from 'Managers/UserManager';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Types/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInApp
+ * @typedef {import('Types/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
+ * @typedef {import('Types/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
 class Notifications extends React.Component {
@@ -22,8 +23,11 @@ class Notifications extends React.Component {
         /** @type {'auto' | 'none'} */
         pointerEvent: 'none',
 
-        /** @type {Array<NotificationInApp>} */
-        notifications: user.multiplayer.notifications.Get()
+        /** @type {Array<NotificationInAppFriendPending | NotificationInAppAchievementPending>} */
+        notifications: [
+            ...user.multiplayer.notifications.Get(),
+            ...user.achievements.GetNotifications()
+        ].sort((a, b) => b.timestamp - a.timestamp)
     };
 
     /**
@@ -34,6 +38,7 @@ class Notifications extends React.Component {
 
     componentDidMount() {
         this.listener = user.multiplayer.notifications.AddListener(this.onUpdate);
+        this.listenerAchievements = user.achievements.achievements.AddListener(this.onUpdate);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -44,11 +49,16 @@ class Notifications extends React.Component {
 
     componentWillUnmount() {
         user.multiplayer.notifications.RemoveListener(this.listener);
+        user.achievements.achievements.RemoveListener(this.listenerAchievements);
     }
 
-    /** @param {Array<NotificationInApp>} notifications */
-    onUpdate = (notifications) => {
-        this.setState({ notifications });
+    onUpdate = () => {
+        this.setState({
+            notifications: [
+                ...user.multiplayer.notifications.Get(),
+                ...user.achievements.GetNotifications()
+            ].sort((a, b) => b.timestamp - a.timestamp)
+        });
     }
 
     backgroundPressHandler = (e) => {
@@ -115,6 +125,7 @@ class Notifications extends React.Component {
                         ItemSeparatorComponent={() => <NIA_Separator />}
                         ListEmptyComponent={() => <NIA_Empty />}
                         onTouchStart={this.backgroundPressHandler}
+                        showsVerticalScrollIndicator={true}
                     />
                 </Animated.View>
             </Animated.View>

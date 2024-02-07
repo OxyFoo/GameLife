@@ -10,12 +10,13 @@ import { GetBattery } from 'Utils/Device';
  * @typedef {import('Data/Achievements').Condition} Condition
  * @typedef {import('Data/Achievements').Reward} Reward
  * @typedef {import('Data/Achievements').Achievement} Achievement
+ * @typedef {import('Types/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
 class AchievementItem {
     AchievementID = 0;
 
-    /** @type {'OK' | 'PENDING' | 'NONE'} */
+    /** @type {'OK' | 'PENDING'} */
     State = 'OK';
 
     /** @type {number} Unix UTC timestamp in seconds */
@@ -33,6 +34,12 @@ class Achievements {
 
     /** @type {DynamicVar<Array<AchievementItem>>} */
     achievements = new DynamicVar([]);
+
+    /**
+     * @private
+     * @type {boolean} Prevent multiple claim achievement
+     */
+    claimAchievementLoading = false;
 
     Clear() {
         this.achievements.Set([]);
@@ -52,13 +59,22 @@ class Achievements {
         };
         return achievements;
     }
-    Get() {
+    GetSolved() {
         return this.achievements.Get()
-                                .filter(a => a.State !== 'NONE')
+                                .filter(a => a.State === 'OK')
                                 .sort((a, b) => b.Date - a.Date);
     }
-    GetSolvedIndexes() {
-        return this.Get().map(a => a.AchievementID);
+    GetPending() {
+        return this.achievements.Get()
+                                .filter(a => a.State === 'PENDING')
+                                .sort((a, b) => b.Date - a.Date);
+    }
+
+    GetSolvedIDs() {
+        return this.GetSolved().map(a => a.AchievementID);
+    }
+    GetPendingIDs() {
+        return this.GetPending().map(a => a.AchievementID);
     }
 
     /**
@@ -67,7 +83,7 @@ class Achievements {
      * @returns {Array<Achievement>}
      */
     GetLast(last = 3) {
-        const completeAchievements = this.Get().reverse().slice(0, last);
+        const completeAchievements = this.GetSolved().reverse().slice(0, last);
         return completeAchievements.map(achievement => {
             return dataManager.achievements.GetByID(achievement.AchievementID);
         });
@@ -78,7 +94,7 @@ class Achievements {
      * @param {number} achievementID 
      */
     ShowCardPopup = (achievementID) => {
-        const solvedIndexes = this.GetSolvedIndexes();
+        const solvedIndexes = this.GetSolvedIDs();
         const achievement = dataManager.achievements.GetByID(achievementID);
         const title = dataManager.GetText(achievement.Name);
         let description = dataManager.GetText(achievement.Description);
@@ -229,20 +245,20 @@ class Achievements {
         if (!this.user.server.IsConnected() || this.loading) return;
         this.loading = true;
 
-        const solvedIndexes = this.GetSolvedIndexes();
-        const queueIndexes = this.Get()
-                                    .filter(a => a.State === 'PENDING')
-                                    .map(a => a.AchievementID);
-
-        const achievements = dataManager.achievements.GetAll(solvedIndexes);
         const stats = this.user.experience.GetExperience().stats;
 
+        const solvedIDs = this.GetSolvedIDs();
+        const pendingIDs = this.GetPendingIDs();
+        const achievements = dataManager.achievements.GetAll(solvedIDs);
+
+        const achievementsSolved = [];
         for (let a = 0; a < achievements.length; a++) {
             const achievement = achievements[a];
-            const isInQueue = queueIndexes.includes(achievement.ID);
+            const isPending = pendingIDs.includes(achievement.ID);
+            const isSolved = solvedIDs.includes(achievement.ID);
 
             // Skip if already solved or hasn't conditions
-            if (!isInQueue && (solvedIndexes.includes(achievement.ID) || achievement.Condition === null)) {
+            if (isPending || isSolved || achievement.Condition === null) {
                 continue;
             }
 
@@ -320,10 +336,6 @@ class Achievements {
                     break;
             }
 
-            if (isInQueue) {
-                completed = true;
-            }
-
             if (value !== null) {
                 switch (Condition.Operator) {
                     case 'GT':
@@ -338,25 +350,52 @@ class Achievements {
             }
 
             if (completed) {
-                await this.ShowRewardPopup(achievement);
+                achievementsSolved.push(achievement.ID);
             }
+        }
+
+        if (achievementsSolved.length > 0) {
+            const newAchievements = await this.user.server.AddAchievements(achievementsSolved);
+            if (newAchievements === false) {
+                this.user.interface.console.AddLog('error', 'Achievements: Error while adding achievement ( ID:', achievementsSolved, ')');
+                this.loading = false;
+                return;
+            }
+    
+            this.LoadOnline(newAchievements);
+            this.user.LocalSave();
         }
 
         this.loading = false;
     }
 
     /**
-     * @param {Achievement} achievement
+     * @param {number} achievementID
+     * @returns {Promise<string | false>}
      */
-    ShowRewardPopup = async (achievement) => {
-        const lang = langManager.curr['achievements'];
-        const result = await this.user.server.AddAchievement([ achievement.ID ]);
+    Claim = async (achievementID) => {
+        if (this.claimAchievementLoading) return false;
+        this.claimAchievementLoading = true;
 
-        if (result === false) {
-            this.user.interface.console.AddLog('error', 'Achievements: Error while adding achievement (ID: ' + achievement.ID + ')');
-            return;
+        const lang = langManager.curr['achievements'];
+
+        // Get achievement
+        const achievement = dataManager.achievements.GetByID(achievementID);
+        if (achievement === null) {
+            this.user.interface.console.AddLog('error', 'Achievements: Error while get achievement ( ID:', achievementID, ')');
+            this.claimAchievementLoading = false;
+            return false;
         }
 
+        // Claim request
+        const result = await this.user.server.ClaimAchievement(achievement.ID);
+        if (result === false) {
+            this.user.interface.console.AddLog('error', 'Achievements: Error while claim achievement ( ID:', achievement.ID, ')');
+            this.claimAchievementLoading = false;
+            return false;
+        }
+
+        // Get rewards
         let rewardText = '';
         if (result) {
             const rewards = dataManager.achievements.parseReward(result);
@@ -367,15 +406,29 @@ class Achievements {
         await this.user.LocalSave();
         await this.user.OnlineLoad(true);
 
+        // Show popup
         const achievementName = dataManager.GetText(achievement.Name);
-        const title = lang['alert-achievement-title'];
         let text = lang['alert-achievement-text'].replace('{}', achievementName);
         if (rewardText) {
             text += `\n\n${rewardText}`;
         }
 
-        await new Promise(resolve => {
-            this.user.interface.popup.Open('ok', [ title, text ], resolve, false);
+        this.claimAchievementLoading = false;
+        return text;
+    }
+
+    /** @returns {Array<NotificationInAppAchievementPending>} */
+    GetNotifications = () => {
+        const achievements = this.GetPending();
+        return achievements.map(achievement => {
+            return {
+                type: 'achievement-pending',
+                data: {
+                    achievementID: achievement.AchievementID
+                },
+                read: false,
+                timestamp: 0
+            };
         });
     }
 }

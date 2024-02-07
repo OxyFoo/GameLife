@@ -4,27 +4,53 @@ class Achievements {
     /**
      * @param DataBase $db
      * @param Account $account
+     * @param int $deviceID
      * @param int $achievementID
-     * @param 'OK'|'PENDING'|'NONE' $state
+     * @return bool True if the achievement was added, false if it was already completed
+     */
+    public static function AddByID($db, $account, $deviceID, $achievementID) {
+        // Check if the achievement is already completed
+        $solvedAchievements = Achievements::Get($db, $account);
+        $solvedAchievementsIDs = array_map(fn($solvedAchievement) => $solvedAchievement['AchievementID'], $solvedAchievements);
+        if (in_array($achievementID, $solvedAchievementsIDs)) {
+            return false;
+        }
+
+        // Add as pending achievement to account
+        $command = 'INSERT INTO TABLE (`AccountID`, `AchievementID`) VALUES (?, ?)';
+        $result = $db->QueryPrepare('InventoriesAchievements', $command, 'ii', [ $account->ID, $achievementID ]);
+        if ($result === false) {
+            ExitWithStatus('Error: Failed to add achievement to account');
+        }
+
+        return true;
+    }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param int $deviceID
+     * @param int $achievementID
      * @return string|false Reward string or false on error
      */
-    public static function AddByID($db, $account, $achievementID, $state = 'OK') {
+    public static function Claim($db, $account, $deviceID, $achievementID) {
         // Check if the achievement is already completed
-        $pending = false;
         $solvedAchievements = Achievements::Get($db, $account);
-        foreach ($solvedAchievements as $solvedAchievement) {
-            if ($solvedAchievement['AchievementID'] === $achievementID) {
-                if ($solvedAchievement['State'] === 'PENDING') {
-                    $pending = true;
-                }
-            }
+        $solvedAchievementsIDs = array_map(fn($solvedAchievement) => $solvedAchievement['AchievementID'], $solvedAchievements);
+        if (!in_array($achievementID, $solvedAchievementsIDs)) {
+            return false;
         }
 
         // Get reward
         $command = 'SELECT `Rewards` FROM TABLE WHERE `ID` = ?';
         $result = $db->QueryPrepare('Achievements', $command, 'i', [ $achievementID ]);
-        if ($result === false) ExitWithStatus('Error: Failed to get achievement reward');
-        if (count($result) === 0) ExitWithStatus('Error: Achievement not found');
+        if ($result === false) {
+            ExitWithStatus('Error: Failed to get achievement reward');
+        }
+        if (count($result) === 0) {
+            $db->AddLog($account->ID, $deviceID, 'cheatSuspicion', "Achievement '$achievementID' not found");
+            return false;
+        }
 
         $rawRewards = $result[0]['Rewards'];
         $rewards = explode(',', $rawRewards);
@@ -33,20 +59,11 @@ class Achievements {
             ExitWithStatus('Error: Failed to add achievement reward');
         }
 
-        // Add to account
-        if (!$pending) {
-            $command = 'INSERT INTO TABLE (`AccountID`, `AchievementID`, `State`) VALUES (?, ?, ?)';
-            $result = $db->QueryPrepare('InventoriesAchievements', $command, 'iis', [ $account->ID, $achievementID, $state ]);
-            if ($result === false) ExitWithStatus('Error: Failed to add achievement to account');
-        }
-
-        // Update achievement
-        else {
-            $command = 'UPDATE TABLE SET `State` = "OK" WHERE `AccountID` = ? AND `AchievementID` = ?';
-            $args = [ $account->ID, $achievementID ];
-            $result = $db->QueryPrepare('InventoriesAchievements', $command, 'ii', $args);
-            if ($result === false) ExitWithStatus('Error: Failed to update achievement state');
-        }
+        // Update achievement state
+        $command = 'UPDATE TABLE SET `State` = "OK" WHERE `AccountID` = ? AND `AchievementID` = ?';
+        $args = [ $account->ID, $achievementID ];
+        $result = $db->QueryPrepare('InventoriesAchievements', $command, 'ii', $args);
+        if ($result === false) ExitWithStatus('Error: Failed to claim achievement');
 
         return $rewardAdded;
     }

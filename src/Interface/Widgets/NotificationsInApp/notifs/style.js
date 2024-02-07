@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     // NotificationsInApp full screen
@@ -16,6 +18,7 @@ const styles = StyleSheet.create({
         width: '70%',
         minWidth: 200,
         marginLeft: '15%',
+        maxHeight: Math.max(SCREEN_HEIGHT / 2, 200),
         paddingVertical: 12,
         flexDirection: 'row',
         borderWidth: 2,
@@ -24,7 +27,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000D0',
     },
     flatlist: {
-        maxHeight: '100%'
+        width: '100%',
+        height: '100%'
     },
     separator: {
         width: '90%',
@@ -64,6 +68,24 @@ const styles = StyleSheet.create({
         height: 'auto',
         paddingVertical: 8,
         paddingHorizontal: 12
+    },
+
+    // AchievementPending
+    achievementPendingContainer: {
+        flexDirection: 'row',
+        paddingHorizontal: 12
+    },
+    achievementPendingText: {
+        width: '65%'
+    },
+    achievementPendingButtons: {
+        width: '35%',
+        paddingLeft: 12
+    },
+    achievementPendingButton: {
+        height: 48,
+        paddingVertical: 12,
+        paddingHorizontal: 0
     }
 });
 

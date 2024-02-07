@@ -23,16 +23,18 @@ class BackNotificationsInApp extends React.Component {
 
         /** @type {ConnectionState} */
         multiState: user.tcp.state.Get(),
-        notificationsCount: user.multiplayer.notifications.Get().length
+        notificationsCount: user.multiplayer.notifications.Get().length + user.achievements.GetNotifications().length
     }
 
     componentDidMount() {
         this.listenerState = user.tcp.state.AddListener(this.onMultiStateChange);
-        this.listenerNotifications = user.multiplayer.notifications.AddListener(this.onNotificationsChange);
+        this.listenerNotifications = user.multiplayer.notifications.AddListener(this.onNotificationsCountChange);
+        this.listenerAchievements = user.achievements.achievements.AddListener(this.onNotificationsCountChange);
     }
     componentWillUnmount() {
         user.tcp.state.RemoveListener(this.listenerState);
         user.multiplayer.notifications.RemoveListener(this.listenerNotifications);
+        user.achievements.achievements.RemoveListener(this.listenerAchievements);
     }
 
     openNotificationsHandler = () => {
@@ -56,9 +58,11 @@ class BackNotificationsInApp extends React.Component {
             this.closeNotificationsHandler();
         }
     }
-    /** @param {Array<NotificationInApp>} notifications */
-    onNotificationsChange = (notifications) => {
-        this.setState({ notificationsCount: notifications.length });
+
+    onNotificationsCountChange = () => {
+        const notifMultiCount = user.multiplayer.notifications.Get().length;
+        const notifAchievementCount = user.achievements.GetNotifications().length;
+        this.setState({ notificationsCount: notifMultiCount + notifAchievementCount });
     }
 }
 

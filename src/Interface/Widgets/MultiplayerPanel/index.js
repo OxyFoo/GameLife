@@ -77,7 +77,9 @@ class MultiplayerPanel extends BackMultiplayerPanel {
 
         return (
             <View>
-                <Text>{lang['container-content-empty']}</Text>
+                <Text style={styles.containerText}>
+                    {lang['container-content-empty']}
+                </Text>
             </View>
         );
     }
@@ -87,7 +89,9 @@ class MultiplayerPanel extends BackMultiplayerPanel {
 
         return (
             <View>
-                <Text>{lang['container-content-idle']}</Text>
+                <Text style={styles.containerText}>
+                    {lang['container-content-idle']}
+                </Text>
             </View>
         );
     }
@@ -96,7 +100,9 @@ class MultiplayerPanel extends BackMultiplayerPanel {
 
         return (
             <View>
-                <Text>{lang['container-content-disconnected']}</Text>
+                <Text style={styles.containerText}>
+                    {lang['container-content-disconnected']}
+                </Text>
             </View>
         );
     }
@@ -105,7 +111,9 @@ class MultiplayerPanel extends BackMultiplayerPanel {
 
         return (
             <View>
-                <Text>{lang['container-content-error']}</Text>
+                <Text style={styles.containerText}>
+                    {lang['container-content-error']}
+                </Text>
             </View>
         );
     }

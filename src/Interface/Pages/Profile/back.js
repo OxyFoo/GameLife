@@ -14,16 +14,14 @@ class BackProfile extends PageBase {
     state = {
         editorOpened: false,
         xpInfo: user.experience.GetExperience().xpInfo,
-        skillsOpened: false
+
+        playTime: 0,
+        totalActivityLength: 0,
+        totalActivityTime: 0
     }
 
     constructor(props) {
         super(props);
-
-        const activities = user.activities.Get();
-        this.totalActivityLength = activities.length;
-        this.totalActivityTime = this.getTotalDuration(activities);
-        this.playTime = this.getTimeFromFirst(activities);
 
         /** @type {EditorAvatar} */
         this.refAvatar = null;
@@ -37,6 +35,7 @@ class BackProfile extends PageBase {
 
     componentDidMount() {
         super.componentDidMount();
+        this.computeKPI(); 
         const time_end = Date.now();
         const time = time_end - this.time_start;
         user.interface.console.AddLog('info', 'PROFILE loaded in ' + time + 'ms');
@@ -46,9 +45,10 @@ class BackProfile extends PageBase {
                 xpInfo: user.experience.GetExperience().xpInfo
             });
         });
-    }
+    } 
 
     componentDidFocused = (args) => {
+        this.computeKPI(); 
         // Update the avatar
         // TODO: Don't update the avatar if the user didn't change anything
         this.refAvatar.updateEquippedItems();
@@ -65,6 +65,19 @@ class BackProfile extends PageBase {
 
     openProfileEditor = () => this.refProfileEditor?.Open();
     openSettings = () => user.interface.ChangePage('settings');
+
+    computeKPI() {
+        const activities = user.activities.Get();
+        const totalActivityLength = activities.length;
+        const totalActivityTime = this.getTotalDuration(activities);
+        const playTime = this.getTimeFromFirst(activities);
+
+        this.setState({
+            playTime,
+            totalActivityLength,
+            totalActivityTime
+        });
+    }
 
     /**
      * @returns {number} in hours

@@ -34,7 +34,7 @@ function popupContent(initStatKey) {
     return (
         <View style={{ padding: '5%' }}>
             <Swiper
-                ref={ref => { if (ref !== null) swiperRef = ref}}
+                ref={ref => { if (ref !== null) swiperRef = ref }}
                 pages={bars}
                 height={256}
                 enableAutoNext={false}
@@ -55,9 +55,10 @@ function popupContent(initStatKey) {
  * @param {number} sup
  * @param {number} index
  * @param {boolean} clickable
+ * @param {boolean} simplifiedDisplay
  * @returns {React.ReactElement}
  */
-function statComponent(statKey, stat, sup, index, clickable = true) {
+function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, clickable = true) {
     const langLevel = langManager.curr['level'];
 
     const popupRender = () => popupContent(statKey);
@@ -72,20 +73,38 @@ function statComponent(statKey, stat, sup, index, clickable = true) {
         textXP = `${stat.xp}/${stat.next} - ${stat.totalXP}${langLevel['xp']}`;
     }
 
+    let XPView;
+    if (simplifiedDisplay) {
+        XPView = (
+            <View style={styles.XPHeaderSimplified}>
+                <Text>{`${textLevel.substring(0, 3)}:`}</Text>
+                <Text fontSize={20} bold={true}>{stat.totalXP.toString()}</Text>
+            </View>
+        );
+    }
+    else {
+        XPView = (
+            <>
+                <View style={styles.XPHeader}>
+                    <Text>{textLevel}</Text>
+                    <Text>{textXP}</Text>
+                </View>
+                <XPBar
+                    style={styles.XPBar}
+                    value={stat.xp}
+                    maxValue={stat.next}
+                    supValue={sup}
+                />
+            </>
+        );
+    }
+
+
     return (
         <TouchableOpacity style={styles.fullW} key={'skill_' + index} activeOpacity={pressEvent === null ? 1 : .5} onPress={pressEvent}>
-            <View style={styles.XPHeader}>
-                <Text>{textLevel}</Text>
-                <Text>{textXP}</Text>
-            </View>
-            <XPBar
-                style={styles.XPBar}
-                value={stat.xp}
-                maxValue={stat.next}
-                supValue={sup}
-            />
+            {XPView}
         </TouchableOpacity>
     );
 }
 
-export { statComponent, popupContent };
+export { statComponent };

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import BackProfile from './back';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -61,16 +60,16 @@ class Profile extends BackProfile {
                 <View style={styles.kpiContainer}>
                     <KPI
                         title={lang['row-since']}
-                        value={this.playTime}
+                        value={this.state.playTime}
                         unit={langDates['day-min']}
                         style={[styles.kpiProfile, backgroundKpi]} />
                     <KPI
                         title={lang['row-activities']}
-                        value={this.totalActivityLength}
+                        value={this.state.totalActivityLength}
                         style={[styles.kpiProfile, backgroundKpi]} />
                     <KPI
                         title={lang['row-time']}
-                        value={this.totalActivityTime}
+                        value={this.state.totalActivityTime}
                         unit={langDates['hours-min']}
                         style={[styles.kpiProfile, backgroundKpi]}/>
                 </View>
@@ -107,22 +106,6 @@ const styles = StyleSheet.create({
     topSpace: { marginTop: 24 },
     botSpace: { marginBottom: 24 },
     xpRow: { flexDirection: 'row', justifyContent: 'space-between' },
-    rowText: {
-        fontSize: 14,
-        textAlign: 'left'
-    },
-    tableRow: {
-        width: '100%',
-        height: 48,
-        flexDirection: 'row',
-        borderTopWidth: .4
-    },
-    cell: {
-        width: '50%',
-        paddingHorizontal: 16,
-        justifyContent: 'center',
-        borderRightWidth: .4
-    },
     kpiContainer: {
         flexDirection: 'row',
         alignItems: 'center',

@@ -12,19 +12,22 @@ import { Text, Icon } from 'Interface/Components';
  */
 
 class SkillsGroup extends SkillsGroupBack {
-    /** @param {{ item: EnrichedSkill }} param0 */
-    renderSkill = ({ item: { ID, FullName, LogoXML } }) => (
-        <TouchableOpacity
-            style={styles.skill}
-            onPress={() => ID === -1 ? this.openSkills() : this.openSkill(ID)}
-            activeOpacity={.6}
-        >
-            <View style={styles.skillImage}>
-                <Icon xml={LogoXML} size={42} color='main1' />
-            </View>
-            <Text fontSize={12}>{FullName}</Text>
-        </TouchableOpacity>
-    )
+    /* @param {{ item: { ID: number, FullName: string, LogoXML: string }}} params - The item to render. */
+    renderSkill = ({ item: { ID, FullName, LogoXML } }) => {
+        const onPressSkill = () => ID === -1 ? this.openSkills() : this.openSkill(ID);
+        return (
+            <TouchableOpacity
+                style={styles.skill}
+                onPress={onPressSkill}
+                activeOpacity={.6}
+            >
+                <View style={styles.skillImage}>
+                    <Icon xml={LogoXML} size={42} color='main1' />
+                </View>
+                <Text fontSize={12}>{FullName}</Text>
+            </TouchableOpacity>
+        );
+    }
 
     render() {
         const { style } = this.props;

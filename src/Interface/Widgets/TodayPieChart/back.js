@@ -79,10 +79,6 @@ class TodayPieChartBack extends React.Component {
         }
         this.computeGradientShadow();
 
-        // Remove the activities with 0% of the pie chart (avoid glitch on android)
-        // Can be removed only if there is no issue with the pie chart on Gerem test
-        // this.updatingData = this.updatingData.filter(item => item.value > 0);
-
         // Focused and display handler
         this.setState({
             dataToDisplay: this.updatingData,

@@ -11,7 +11,6 @@ import Button from 'Interface/Components/Button';
 
 /**
  * @typedef {import('Managers/PageManager').PageName} PageName
- * @typedef {import('Data/Quotes').Quote} Quote
  */
 
 /**

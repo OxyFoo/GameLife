@@ -7,8 +7,7 @@ import themeManager from 'Managers/ThemeManager';
 import user from 'Managers/UserManager';
 
 import { Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { News, TodayPieChart, TodoList, SkillsGroup } from 'Interface/Widgets';
-import { popupContent } from 'Interface/Widgets/StatsBars/render';
+import { News, TodayPieChart, TodoList, SkillsGroup, StatsBars } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -19,21 +18,6 @@ class Home extends BackHome {
 
         const lang = langManager.curr['home'];
         const txt_level = langManager.curr['level']['level'];
-        const stats_lang = langManager.curr['statistics']['names'];
-
-        // Handler function to log the key
-        const handlePress = (key) => {
-            user.interface.popup.Open('custom', () => popupContent(key), undefined, true);
-        };
-
-        // Render function for FlatList items
-        const renderItem = ({ item: key }) => (
-            <TouchableOpacity onPress={() => handlePress(key)}>
-                <Text>
-                    {stats_lang[key].substring(0, 3)}: {stats[key].totalXP}
-                </Text>
-            </TouchableOpacity>
-        );
 
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
@@ -70,12 +54,7 @@ class Home extends BackHome {
                 <View style={[styles.homeRow, styles.topSpace]}>
                     <View style={[styleSmallContainer, styles.stats]}>
                         <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-stats-title']}</Text>
-                        <FlatList
-                            data={Object.keys(stats)}
-                            renderItem={renderItem}
-                            keyExtractor={(item) => item}
-                            scrollEnabled={false}
-                        />
+                        <StatsBars data={user.stats} simplifiedDisplay={true} />
                     </View>
                     <View style={[styleContainer, styles.skills]}>
                         <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-skills-title']}</Text>
@@ -83,12 +62,12 @@ class Home extends BackHome {
                     </View>
                 </View>
 
-                
+
                 <TodoList
                     ref={ref => this.refTuto3 = ref}
                     style={styles.topSpace}
                 />
-                
+
             </Page>
         );
     }
@@ -119,18 +98,18 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     todayPieChart: {
-        flex: 1 
+        flex: 1
     },
-    stats: { 
+    stats: {
         flex: 3,
-        borderRadius: 24, 
-        marginRight: 18, 
-        padding: 8 
+        borderRadius: 24,
+        marginRight: 18,
+        padding: 8
     },
-    skills: { 
-        flex: 5, 
-        borderRadius: 20, 
-        padding: 8 
+    skills: {
+        flex: 5,
+        borderRadius: 20,
+        padding: 8
     }
 });
 

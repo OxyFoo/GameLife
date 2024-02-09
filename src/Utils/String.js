@@ -49,7 +49,7 @@
 /**
  * Will return a string containing all the uppercase letters of the string
  * @param {string} str 
- * @returns 
+ * @returns {string}
  */
 function getUppercaseLetters(str) {
     const matches = str.match(/[A-Z]/g);

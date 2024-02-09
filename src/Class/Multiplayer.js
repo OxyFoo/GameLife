@@ -72,7 +72,7 @@ class Multiplayer {
             this.ShowError(lang['alert-friend-self']);
         } else if (result === 'already-friend') {
             this.ShowError(lang['alert-already-friend'], username);
-        } else if (result === 'sql-error') {
+        } else if (result === 'sql-error' || result === 'get-friend-error') {
             this.ShowError(lang['alert-error'], result);
         }
     }
@@ -116,7 +116,7 @@ class Multiplayer {
         const result = await this.user.tcp.WaitCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
-        } else if (result === 'sql-error') {
+        } else if (result === 'sql-error' || result === 'get-friend-error') {
             this.ShowError(lang['alert-error'], result);
         }
     }

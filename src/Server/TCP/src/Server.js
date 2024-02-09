@@ -9,9 +9,6 @@ import { StrIsJson, GetLocalIP } from './Utils/Functions.js';
  * @typedef {import('./Users.js').User} User
  */
 
-const debugMode = true;
-const Log = (msg, ...items) => debugMode && console.log(msg, ...items);
-
 class Server {
     /** @param {SQL} database */
     constructor(database) {
@@ -63,7 +60,7 @@ class Server {
      */
     onClose = (connection, reason, desc) => {
         if (reason !== 1000) {
-            Log('Connection closed:', reason, desc);
+            console.log('Connection closed:', reason, desc);
         }
     }
 
@@ -71,8 +68,6 @@ class Server {
     onConnect = (connection) => {
         /** @type {User | null} */
         let user = null;
-
-        Log('User connected');
 
         connection.on('message', async (message) => {
             if (message.type !== 'utf8') {
@@ -90,22 +85,24 @@ class Server {
             }
 
             user = await this.users.Add(connection, data.token);
-            if (user === null) {
-                const response = { status: 'error', message: 'Invalid token.' };
-                connection.send(JSON.stringify(response));
-                return;
+            if (user !== null) {
+                console.log('User connected:', user.username, `(${user.accountID} - ${user.deviceID})`);
             }
         });
 
         connection.on('close', () => {
-            Log('User disconnected');
             if (user !== null) {
                 this.users.RemoveByDeviceID(user.deviceID);
+                user = null;
             }
         });
 
         connection.on('error', (err) => {
             console.error('Connection error:', err);
+            if (user !== null) {
+                this.users.RemoveByDeviceID(user.deviceID);
+                user = null;
+            }
         });
     }
 }

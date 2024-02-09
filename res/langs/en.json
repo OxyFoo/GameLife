@@ -188,6 +188,8 @@
 
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",
+        "alert-achievement-error-title": "Error",
+        "alert-achievement-error-text": "An error has occurred, please try again later.",
 
         "tuto": {
             "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."

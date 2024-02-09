@@ -1,13 +1,10 @@
-import { AddLog } from '../Utils/Logs.js';
 import { GetFriend } from './GetFriends.js';
+import { AddLog } from '../Utils/Logs.js';
 import { GetTime } from '../Utils/Functions.js';
 
 /**
  * @typedef {import('../Users.js').User} User
  * @typedef {import('../Users.js').default} Users
- * @typedef {import('Types/Friend.js').Friend} Friend
- * @typedef {import('Types/Friend.js').ConnectionState} ConnectionState
- * @typedef {import('Types/Friend.js').FriendshipState} FriendshipState
  * @typedef {import('Types/NotificationInApp.js').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
  */
 
@@ -46,6 +43,10 @@ async function AddFriend(users, user, username) {
 
     // Add the friend to the user
     const newFriend = await GetFriend(users, user, friendID);
+    if (newFriend === null) {
+        return 'get-friend-error';
+    }
+
     user.friends.push(newFriend);
 
     // If target is connected, add request in notifications
@@ -128,6 +129,10 @@ async function AcceptFriend(users, user, accountID) {
 
     // Add the friend to the user
     const newFriend = await GetFriend(users, user, accountID);
+    if (newFriend === null) {
+        return 'get-friend-error';
+    }
+
     user.friends.push(newFriend);
     users.Send(user, { status: 'update-friends', friends: user.friends });
 

@@ -44,30 +44,53 @@ class Users {
     Add = async (connection, token) => {
         const settings = { 'action': 'checkToken', 'token': token };
         const response = await Request_Async(settings);
-        if (response.status !== 200 || response.content.status !== 'ok') {
-            console.error('Token error:', response);
+        if (response.status !== 200) {
+            connection.send(JSON.stringify({
+                status: 'error',
+                message: 'Auth error'
+            }));
             return null;
         }
 
-        const { deviceID, accountID } = response.content.data;
-
-        // SQL request to check if the account exists
-        const command = `SELECT \`Username\` FROM \`Accounts\` WHERE ID = ${accountID}`;
-        const resultUsername = await this.db.ExecQuery(command);
-        if (resultUsername === null || resultUsername.length === 0) {
-            console.error('Account not found:', accountID);
+        // Token error
+        if (response.content.status !== 'ok') {
+            const IP = connection.socket.remoteAddress;
+            const command = 'INSERT INTO `Logs` (`AccountID`, `DeviceID`, `IP`, `Type`, `Data`, `Server`) VALUES (?, ?, ?, ?, ?, "tcp")';
+            const args = [ 0, 0, IP, 'cheatSuspicion', `Token error: ${response.status} - ${response.content.status}` ];
+            this.db.QueryPrepare(command, args);
+            connection.send(JSON.stringify({
+                status: 'error',
+                message: '[Auth] Token error'
+            }));
             return null;
         }
-        const username = resultUsername[0].Username;
+
+        const { deviceID, accountID, username } = response.content.data;
 
         const user = new User();
         user.token = token;
         user.deviceID = deviceID;
         user.accountID = accountID;
         user.username = username;
-        user.friends = await GetUserFriends(this, user);
-        user.notificationsInApp = await GetFriendNotifications(this, user);
         user.connection = connection;
+
+        user.friends = await GetUserFriends(this, user);
+        if (user.friends === null) {
+            connection.send(JSON.stringify({
+                status: 'error',
+                message: '[Auth] Friends error'
+            }));
+            return null;
+        }
+
+        user.notificationsInApp = await GetFriendNotifications(this, user);
+        if (user.notificationsInApp === null) {
+            connection.send(JSON.stringify({
+                status: 'error',
+                message: '[Auth] Notifications error'
+            }));
+            return null;
+        }
 
         // Avoid multiple connections with the same account or device
         this.RemoveByAccountID(accountID);
@@ -85,8 +108,6 @@ class Users {
 
         connection.send(JSON.stringify({ status: 'connected' }));
         this.SendAllData(user);
-
-        console.log(`User added (${accountID} - ${deviceID})`);
 
         return user;
     }
@@ -179,7 +200,6 @@ class Users {
             if (index !== -1) {
                 const deleted = this.AllUsers.splice(index, 1)[0];
                 this.handleConnections(deleted.accountID, false);
-                console.log(`User removed (${deleted.accountID} - ${deleted.deviceID})`);
             }
         } while (index !== -1);
     }
@@ -194,7 +214,6 @@ class Users {
             if (index !== -1) {
                 const deleted = this.AllUsers.splice(index, 1)[0];
                 this.handleConnections(deleted.accountID, false);
-                console.log(`User removed (${deleted.accountID} - ${deleted.deviceID})`);
             }
         } while (index !== -1);
     }

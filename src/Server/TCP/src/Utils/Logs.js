@@ -13,12 +13,11 @@
  */
 async function AddLog(users, user, type, data) {
     const IP = user.connection.socket.remoteAddress;
-    const command = 'INSERT INTO `Logs` (`AccountID`, `DeviceID`, `IP`, `Type`, `Data`) VALUES (?, ?, ?, ?, ?)';
+    const command = 'INSERT INTO `Logs` (`AccountID`, `DeviceID`, `IP`, `Type`, `Data`, `Server`) VALUES (?, ?, ?, ?, ?, "tcp")';
     const args = [ user.accountID, user.deviceID, IP, type, data ];
     const result = users.db.QueryPrepare(command, args);
 
     if (result === null) {
-        console.error('Error: Adding device statistic in DB failed');
         return false;
     }
 

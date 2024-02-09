@@ -1,3 +1,5 @@
+import { AddLog } from '../Utils/Logs.js';
+
 /**
  * @typedef {import('../Users.js').User} User
  * @typedef {import('../Users.js').default} Users
@@ -9,7 +11,7 @@
 /**
  * @param {Users} users
  * @param {User} user
- * @returns {Promise<Array<Friend>>} Friends of the account
+ * @returns {Promise<Array<Friend> | null>} Friends of the account or null if error
  */
 async function GetUserFriends(users, user) {
     const userID = user.accountID;
@@ -33,7 +35,8 @@ async function GetUserFriends(users, user) {
     `;
     const friendships = await users.db.ExecQuery(command);
     if (friendships === null) {
-        throw new Error(`Friendships not found: ${userID}`);
+        AddLog(users, user, 'cheatSuspicion', `Friendships not found: ${userID}`);
+        return null;
     }
 
     /** @type {Array<Friend>} */
@@ -64,6 +67,7 @@ async function GetUserFriends(users, user) {
         return friends;
     }
 
+    // Get friends KPI
     const friendIDs = friends.map(friend => friend.accountID);
     const activitiesQuery = `
         SELECT 
@@ -77,7 +81,8 @@ async function GetUserFriends(users, user) {
     `;
     const activitiesResults = await users.db.ExecQuery(activitiesQuery);
     if (activitiesResults === null) {
-        throw new Error('Activities not found');
+        AddLog(users, user, 'cheatSuspicion', 'Activities not found');
+        return null;
     }
 
     friends.forEach(friend => {
@@ -98,14 +103,15 @@ async function GetUserFriends(users, user) {
  * @param {User} user User of the account
  * @param {number} friendID ID of the friend
  * @param {FriendshipState} friendshipsState State of the friendship or null to define it automatically
- * @returns {Promise<Friend>} Friend of the account
+ * @returns {Promise<Friend | null>} Friend of the account or null if not found
  */
 async function GetFriend(users, user, friendID, friendshipsState = null) {
     if (friendshipsState === null) {
         const commandState = `SELECT \`State\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
         const requestState = await users.db.ExecQuery(commandState);
         if (requestState === null || requestState.length === 0) {
-            throw new Error(`FriendshipState not found for account ${friendID}`);
+            AddLog(users, user, 'cheatSuspicion', `FriendshipState not found for account ${friendID}`);
+            return null;
         }
         friendshipsState = requestState[0]['State'];
     }
@@ -136,7 +142,8 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
     `;
     const friendInfo = await users.db.ExecQuery(commandInfo);
     if (friendInfo === null || friendInfo.length === 0) {
-        throw new Error(`Account not found: ${friendID}`);
+        AddLog(users, user, 'cheatSuspicion', `Friendship account not found: ${friendID}`);
+        return null;
     }
 
     const friendStatus = users.AllUsers.findIndex(u => u.accountID === friendID) !== -1 ? 'online' : 'offline';

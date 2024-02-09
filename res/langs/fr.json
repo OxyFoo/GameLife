@@ -188,6 +188,8 @@
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
+        "alert-achievement-error-title": "Erreur",
+        "alert-achievement-error-text": "Une erreur est survenue, réessaye plus tard.",
 
         "tuto": {
             "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."

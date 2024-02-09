@@ -692,7 +692,8 @@ class Commands {
 
         $data = array(
             'deviceID' => $device->ID,
-            'accountID' => $account->ID
+            'accountID' => $account->ID,
+            'username' => $account->Username
         );
 
         $this->output['data'] = $data;

@@ -4,6 +4,7 @@
 
 Add .env file
 ```
+LISTEN_PORT=""
 SERVER_URL=""
 DB_HOSTNAME=""
 DB_DATABASE=""

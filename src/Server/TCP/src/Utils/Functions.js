@@ -21,7 +21,7 @@ function GetLocalIP() {
     Object.keys(ifaces).forEach((ifname) => {
         ifaces[ifname].forEach((iface) => {
             if ('IPv4' !== iface.family || iface.internal !== false) {
-                return;
+                return '';
             }
 
             localIP = iface.address;

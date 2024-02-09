@@ -7,7 +7,7 @@
 /**
  * @param {Users} users
  * @param {User} user
- * @returns {Promise<Array<NotificationInAppAchievements>>}
+ * @returns {Promise<Array<NotificationInAppAchievements> | null>}
  */
 async function GetFriendNotifications(users, user) {
     const command = `
@@ -18,7 +18,7 @@ async function GetFriendNotifications(users, user) {
     `;
     const results = await users.db.ExecQuery(command);
     if (results === null) {
-        throw new Error('Database error');
+        return null;
     }
 
     const notifications = results.map(row => {

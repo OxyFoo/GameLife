@@ -26,17 +26,20 @@ function NIA_AchievementPending({ notif, index }) {
     const achievementTitle = dataManager.GetText(achievement.Name);
 
     const claimHandle = async () => {
+        const lang = langManager.curr['achievements'];
         setLoading(true);
         const text = await user.achievements.Claim(notif.data.achievementID);
         setLoading(false);
 
         if (text === false) {
+            const title = lang['alert-achievement-error-title'];
+            const text = lang['alert-achievement-error-text'];
+            user.interface.notificationsInApp.Close();
+            user.interface.popup.Open('ok', [ title, text ]);
             return;
         }
 
-        const lang = langManager.curr['achievements'];
         const title = lang['alert-achievement-title'];
-
         user.interface.notificationsInApp.Close();
         user.interface.popup.Open('ok', [ title, text ]);
     };

@@ -10,4 +10,4 @@ const database = new SQL({
 });
 
 const serv = new Server(database);
-serv.Listen(7121);
+serv.Listen(parseInt(process.env.LISTEN_PORT));

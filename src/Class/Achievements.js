@@ -413,7 +413,11 @@ class Achievements {
             text += `\n\n${rewardText}`;
         }
 
-        this.claimAchievementLoading = false;
+        // Prevent another claim before popup open
+        setTimeout(() => {
+            this.claimAchievementLoading = false;
+        }, 500);
+
         return text;
     }
 

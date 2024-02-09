@@ -487,6 +487,7 @@
         "input-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-all": "Se déconnecter de tous les appareils",
+        "input-reconnect-tcp": "Se reconnecter au multijoueur",
         "input-tuto-again": "Revoir le tutoriel",
         "input-delete-account": "Supprimer le compte",
 

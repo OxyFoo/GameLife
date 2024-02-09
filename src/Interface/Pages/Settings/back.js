@@ -147,6 +147,7 @@ class BackSettings extends PageBase {
 
     reconnectTCP = () => {
         user.tcp.Connect();
+        this.setState({ serverTCPState: 'idle' });
     }
 
     deleteAccount = () => {

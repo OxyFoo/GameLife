@@ -487,6 +487,7 @@
         "input-consent": "Consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-all": "Disconnect from all devices",
+        "input-reconnect-tcp": "Reconnect to multiplayer",
         "input-tuto-again": "Review the tutorial",
         "input-delete-account": "Delete my account",
 

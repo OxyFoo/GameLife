@@ -27,15 +27,14 @@ class DynamicVar {
 
     /**
      * @param {T} [value] New value to set. If left undefined, it updates without changing the value
-     * @param {boolean} [force] If true, it will update the listeners even if the value is the same
      */
-    Set(value, force = false) {
+    Set(value) {
         if (typeof(value) === 'undefined') {
             this._updateListeners(this.var, this.var);
             return;
         }
 
-        if ((this.var !== value || typeof(this.var) === 'object') || force) {
+        if ((this.var !== value || typeof(this.var) === 'object')) {
             const oldValue = this.var;
             this.var = value;
             this._updateListeners(value, oldValue);

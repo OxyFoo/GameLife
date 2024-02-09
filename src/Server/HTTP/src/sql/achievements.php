@@ -34,10 +34,12 @@ class Achievements {
      * @return string|false Reward string or false on error
      */
     public static function Claim($db, $account, $deviceID, $achievementID) {
-        // Check if the achievement is already completed
-        $solvedAchievements = Achievements::Get($db, $account);
+        // Check if the achievement is in pending state
+        $allAchievements = Achievements::Get($db, $account);
+        $solvedAchievements = array_filter($allAchievements, fn($achievement) => $achievement['State'] === 'PENDING');
         $solvedAchievementsIDs = array_map(fn($solvedAchievement) => $solvedAchievement['AchievementID'], $solvedAchievements);
         if (!in_array($achievementID, $solvedAchievementsIDs)) {
+            $db->AddLog($account->ID, $deviceID, 'cheatSuspicion', "Achievement '$achievementID' not found in pending state");
             return false;
         }
 

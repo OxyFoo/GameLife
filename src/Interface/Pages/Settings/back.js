@@ -151,12 +151,11 @@ class BackSettings extends PageBase {
     }
 
     deleteAccount = () => {
-        /** @param {"yes"|"no"} button */
+        /** @param {'yes' | 'no'} button */
         const event = async (button) => {
             if (button !== 'yes')
                 return;
 
-            const end = () => this.setState({ sendingMail: false });
             this.setState({ sendingMail: true });
 
             const data = {
@@ -172,13 +171,19 @@ class BackSettings extends PageBase {
                 // Mail sent
                 const title = langManager.curr['settings']['alert-deletedmailsent-title'];
                 const text = langManager.curr['settings']['alert-deletedmailsent-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
+                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
+                    this.setState({ sendingMail: false }, () => {
+                        user.Disconnect(true);
+                    });
+                }, false);
                 user.tempMailSent = now;
             } else {
                 // Mail sent failed
                 const title = langManager.curr['settings']['alert-deletedfailed-title'];
                 const text = langManager.curr['settings']['alert-deletedfailed-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
+                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
+                    this.setState({ sendingMail: false })
+                }, false);
             }
         };
 

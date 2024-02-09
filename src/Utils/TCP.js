@@ -1,7 +1,7 @@
-import DynamicVar from 'Utils/DynamicVar';
 import Config from 'react-native-config';
+import DynamicVar from 'Utils/DynamicVar';
 
-const settings = {
+const TCP_SETTINGS = {
     host: Config.VPS_IP,
     port: Config.VPS_PORT
 };
@@ -37,7 +37,7 @@ class TCP {
         if (this.IsConnected()) {
             return false;
         }
-        const url = `ws://${settings.host}:${settings.port}`;
+        const url = `ws://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'server-multiplayer');
         socket.addEventListener('open', this.onOpen);
         socket.addEventListener('message', this.onMessage);

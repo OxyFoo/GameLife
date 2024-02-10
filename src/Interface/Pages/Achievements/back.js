@@ -10,7 +10,7 @@ class BackAchievements extends PageBase {
     constructor(props) {
         super(props);
 
-        const completeAchievements = user.achievements.GetSolvedIndexes();
+        const completeAchievements = user.achievements.GetSolvedIDs();
         this.achievement = dataManager.achievements.GetAll(completeAchievements);
         this.achievement = this.achievement.map(achievement => ({
             ID: achievement.ID,

@@ -3,6 +3,7 @@ import svgAdd from 'Ressources/icons/add';
 import svgAddSquare from 'Ressources/icons/add-square';
 import svgAlarmClock from 'Ressources/icons/alarm-clock';
 import svgArrowLeft from 'Ressources/icons/arrow-left';
+import svgBell from 'Ressources/icons/bell';
 import svgCalendar from 'Ressources/icons/calendar';
 import svgCheck from 'Ressources/icons/check';
 import svgCheckboxOn from 'Ressources/icons/checkbox-on';
@@ -32,6 +33,7 @@ import svgOnboarding2 from 'Ressources/icons/onboarding2';
 import svgOnboarding3 from 'Ressources/icons/onboarding3';
 import svgOx from 'Ressources/icons/ox';
 import svgQuests from 'Ressources/icons/quests';
+import svgRetry from 'Ressources/icons/retry';
 import svgSetting from 'Ressources/icons/setting';
 import svgShop from 'Ressources/icons/shop';
 import svgSleepZzz from 'Ressources/icons/sleep-zzz';
@@ -57,6 +59,7 @@ const SVGIcons = {
     addSquare: svgAddSquare,
     alarmClock: svgAlarmClock,
     arrowLeft: svgArrowLeft,
+    bell: svgBell,
     calendar: svgCalendar,
     check: svgCheck,
     checkboxOn: svgCheckboxOn,
@@ -86,6 +89,7 @@ const SVGIcons = {
     onboarding3: svgOnboarding3,
     ox: svgOx,
     quests: svgQuests,
+    retry: svgRetry,
     setting: svgSetting,
     shop: svgShop,
     sleepZzz: svgSleepZzz,

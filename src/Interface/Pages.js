@@ -13,6 +13,7 @@ import MyQuest from './Pages/MyQuest/index';
 import MyQuestStats from './Pages/MyQuestStats/index';
 import Onboarding from './Pages/Onboarding/index';
 import Profile from './Pages/Profile/index';
+import ProfileFriend from './Pages/ProfileFriend/index';
 import Quests from './Pages/Quests/index';
 import Report from './Pages/Report/index';
 import Settings from './Pages/Settings/index';
@@ -40,6 +41,7 @@ const PAGES = {
     'myqueststats':     MyQuestStats,
     'onboarding':       Onboarding,
     'profile':          Profile,
+    'profilefriend':    ProfileFriend,
     'quests':           Quests,
     'report':           Report,
     'settings':         Settings,

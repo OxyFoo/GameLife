@@ -40,6 +40,16 @@
                 "last-time": "La[-es] quête[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
                 "today-time": "La[-es] quête[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
             }
+        },
+        "in-app": {
+            "achievement-pending-text": "Succès dévérouillé: {}",
+            "achievement-pending-claim": "Claim",
+
+            "friend-pending-text": "{} vous a demandé en ami",
+            "friend-pending-decline": "Refuser",
+            "friend-pending-block": "Bloquer",
+
+            "list-empty": "Aucune notification pour le moment"
         }
     },
 
@@ -179,6 +189,8 @@
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
+        "alert-achievement-error-title": "Erreur",
+        "alert-achievement-error-text": "Une erreur est survenue, réessaye plus tard.",
 
         "tuto": {
             "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
@@ -320,8 +332,40 @@
         "connection-failed": "La connexion au serveur a échouée, réessaye plus tard.",
         "button-retry": "Réessayer",
 
+        "container-title": "Multijoueur",
+        "container-content-empty": "Aucun ami pour le moment",
+        "container-content-idle": "Chargement...",
+        "container-content-disconnected": "Tu es déconnecté, réessaye plus tard.",
+        "container-content-error": "Une erreur est survenue, réessaye plus tard.",
+
+        "category-friend": "Amis",
+        "category-friend-pending": "Demandes en attente",
+
+        "input-search-friend": "Entre le pseudo de ton ami",
+
         "temp-comingsoon-title": "Multijoueur",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
+        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+
+        "alert-already-friend": {
+            "title": "Déjà ami",
+            "message": "Tu es déjà ami avec {}"
+        },
+        "alert-friend-notfound": {
+            "title": "Ami introuvable",
+            "message": "L'utilisateur {} n'a pas été trouvé"
+        },
+        "alert-friend-self": {
+            "title": "Impossible",
+            "message": "Tu ne peux pas t'ajouter toi-même en ami"
+        },
+        "alert-timeout": {
+            "title": "Temps écoulé",
+            "message": "La connexion au serveur a pris trop de temps, réessaye plus tard."
+        },
+        "alert-error": {
+            "title": "Erreur",
+            "message": "Une erreur est survenue, réessaye plus tard. ({})"
+        }
     },
 
     "profile": {
@@ -389,6 +433,16 @@
         "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
+    "profile-friend": {
+        "row-since": "Depuis",
+        "row-activities": "Nombre d'activités",
+        "row-time": "Nombre d'heures",
+
+        "button-remove": "Retirer de la liste d'amis",
+        "alert-removefriend-title": "Supprimer un ami",
+        "alert-removefriend-text": "Es-tu sûr de vouloir supprimer {} de ta liste d'amis ?"
+    },
+
     "report": {
         "page-title": "Report",
 
@@ -436,6 +490,7 @@
         "input-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-all": "Se déconnecter de tous les appareils",
+        "input-reconnect-tcp": "Se reconnecter au multijoueur",
         "input-tuto-again": "Revoir le tutoriel",
         "input-delete-account": "Supprimer le compte",
 

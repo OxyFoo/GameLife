@@ -21,6 +21,7 @@ switch ($action) {
     case 'getUserData':         $commands->GetUserData();       break;
     case 'addUserData':         $commands->AddUserData();       break;
     case 'addAchievements':     $commands->AddAchievements();   break;
+    case 'claimAchievement':    $commands->ClaimAchievement();  break;
     case 'setUsername':         $commands->SetUsername();       break;
     case 'getDailyDeals':       $commands->GetDailyDeals();     break;
     case 'buyDailyDeals':       $commands->BuyDailyDeals();     break;

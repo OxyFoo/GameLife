@@ -134,9 +134,10 @@
         "select-language": "Choisis ta langue",
         "page1": "Salut ! Bienvenue dans GameLife, je suis Zap, ton guide !",
         "page2": "Le but de cette application est simple : transformer ta vie en un jeu !",
-        "page3": "Gagne des points d'expérience, améliore tes compétences et fixe toi des objectifs.",
-        "page4": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",
-        "page5": "Tu n'as plus qu'à t'inscrire et c'est parti !",
+        "page3": "Quand tu feras une activité dans le monde réel, du sport, de la musique, des devoirs, tu le noteras dans l'application.",
+        "page4": "Ça te fera gagner de l'expérience et des récompenses, et tu pourras suivre ta progression dans le temps !",
+        "page5": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",
+        "page6": "Tu n'as plus qu'à t'inscrire et c'est parti !",
         "test-caution-message": "Version test :\n\nRisque de bugs et instabilité.\nLes comptes sont indépendants de la version principale.\nDonnées susceptibles d'être supprimées.\n\nAidez-nous à améliorer l'app et gagnez des récompenses pour chaque bug trouvé !",
         "test-caution-redirect": "Viens sur le Discord pour en savoir plus !",
         "test-caution-button": "J'ai compris"

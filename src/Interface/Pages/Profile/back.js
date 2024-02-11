@@ -14,10 +14,6 @@ class BackProfile extends PageBase {
     state = {
         editorOpened: false,
         xpInfo: user.experience.GetExperience().xpInfo,
-
-        playTime: 0,
-        totalActivityLength: 0,
-        totalActivityTime: 0
     }
 
     constructor(props) {
@@ -29,6 +25,12 @@ class BackProfile extends PageBase {
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
         this.time_start = Date.now();
+
+        const activities = user.activities.Get();
+        this.state.totalActivityLength = activities.length;
+        this.state.totalActivityTime = this.getTotalDuration(activities);
+        this.state.playTime = this.getTimeFromFirst(activities);
+
     }
 
     refTuto1 = null;

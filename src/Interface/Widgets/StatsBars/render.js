@@ -54,8 +54,8 @@ function popupContent(initStatKey) {
  * @param {XPInfo} stat Stat info
  * @param {number} sup
  * @param {number} index
- * @param {boolean} clickable
  * @param {boolean} simplifiedDisplay
+ * @param {boolean} clickable
  * @returns {React.ReactElement}
  */
 function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, clickable = true) {

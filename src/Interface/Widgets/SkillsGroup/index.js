@@ -12,9 +12,25 @@ import { Text, Icon } from 'Interface/Components';
  */
 
 class SkillsGroup extends SkillsGroupBack {
-    /* @param {{ item: { ID: number, FullName: string, LogoXML: string }}} params - The item to render. */
-    renderSkill = ({ item: { ID, FullName, LogoXML } }) => {
-        const onPressSkill = () => ID === -1 ? this.openSkills() : this.openSkill(ID);
+    /** @param {{ item: EnrichedSkill }} param0 */
+    renderSkill = ({ item }) => {
+        const lang = langManager.curr['other'];
+
+        let ID, FullName, LogoXML, onPressSkill;
+
+        if (!item || item.ID == null || item.FullName == null || item.LogoXML == null) {
+            ID = -1;
+            FullName = lang['widget-skills-all'];
+            LogoXML = 'default';
+            onPressSkill = () => this.openSkills();
+        }
+        else {
+            ID = item.ID;
+            FullName = item.FullName;
+            LogoXML = item.LogoXML;
+            onPressSkill = () => this.openSkill(ID);
+        }
+
         return (
             <TouchableOpacity
                 style={styles.skill}
@@ -31,19 +47,12 @@ class SkillsGroup extends SkillsGroupBack {
 
     render() {
         const { style } = this.props;
-        const lang = langManager.curr['other'];
-
-        const allSkills = {
-            ID: -1,
-            FullName: lang['widget-skills-all'],
-            LogoXML: 'default'
-        };
 
         return (
             <View
                 style={[styles.container, style]}>
                 <FlatList
-                    data={[...this.state.skills, allSkills]}
+                    data={[...this.state.skills, null]}
                     renderItem={this.renderSkill}
                     keyExtractor={(item, index) => 'skill-' + index}
                     numColumns={2}

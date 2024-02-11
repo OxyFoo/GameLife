@@ -30,9 +30,7 @@ class StatsBars extends React.PureComponent {
     render() {
         const { data, supData, style, simplifiedDisplay } = this.props;
         if (data === null) return null;
-
-        console.log('simplifiedDisplay', simplifiedDisplay) 
-        
+      
         const output = Object.keys(data).map((item, i) =>
             statComponent(item, data[item], supData[i], i, simplifiedDisplay)
         );

@@ -74,8 +74,8 @@
             "weekly": "Semaine",
             "monthly": "Mois",
             "day-min": "j",
-            "seconds-min": "m",
-            "hours-min": "h"
+            "hours-min": "h",
+            "minutes-min": "m"
         },
         "month": [
             "Janvier",
@@ -241,6 +241,8 @@
         "display-activity-button": "Retour vers l'accueil",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
+
+        "activity-zap-comment": "Ajouté par Zap",
 
         "tuto": {
             "1": "Tu peux filtrer les activités par catégorie: {}",
@@ -843,5 +845,26 @@
             "Un veilleur de nuit.",
             "Un gardien de secrets."
         ]
+    },
+
+    "zap-gpt": {
+        "title1": "Demander à Zap d'ajouter des activités",
+        "title2": "Zap va ajouter des activités pour toi",
+
+        "instructions": [
+            "- Descriptions le plus clair et simple possible",
+            "- Bien préciser les activitiés, leurs dates et heures de commencements et leurs durées",
+            "- Éviter de demander trop de choses d'un coup (conseillé 5, max 10)"
+        ],
+
+        "input-label": "Requête à Zap",
+
+        "added-message": "{} activité[s] a[-ont] été ajoutée[s]",
+
+        "errors": {
+            "tcp-not-connected": "La connexion au serveur a échouée",
+            "request-empty": "La requête est vide",
+            "request-invalid": "La requête a échouée"
+        }
     }
 }

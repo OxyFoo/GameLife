@@ -63,7 +63,7 @@ class Multiplayer {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitCallback(callbackID);
+        const result = await this.user.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'not-found') {
@@ -91,7 +91,7 @@ class Multiplayer {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitCallback(callbackID);
+        const result = await this.user.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error') {
@@ -113,7 +113,7 @@ class Multiplayer {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitCallback(callbackID);
+        const result = await this.user.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error' || result === 'get-friend-error') {
@@ -135,7 +135,7 @@ class Multiplayer {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitCallback(callbackID);
+        const result = await this.user.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error' || result === 'sql-error2') {
@@ -157,7 +157,7 @@ class Multiplayer {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitCallback(callbackID);
+        const result = await this.user.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error' || result === 'sql-error2') {

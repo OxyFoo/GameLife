@@ -88,7 +88,7 @@ class SectionDuration extends React.Component {
                     velocity={duration >= MAX_DURATION_MINUTES ? .25 : 2}
                     callback={this.onChangeDurationDigit}
                 />
-                <Text fontSize={24}>{langDatesNames['seconds-min']}</Text>
+                <Text fontSize={24}>{langDatesNames['minutes-min']}</Text>
             </View>
         );
     }

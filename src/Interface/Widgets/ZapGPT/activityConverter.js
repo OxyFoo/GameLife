@@ -37,11 +37,10 @@ function CheckZapGPTActivities(activities) {
         const newActivity = {
             skillID,
             duration: MinMax(5, duration, 240),
-            startTime: realStartTime,
-            addedTime: GetTime(undefined, 'local'),
             comment: lang['activity-zap-comment'],
-            // TODO: Add new activity add type ('normal', 'start-now', 'zap-gpt')
-            startNow: false,
+            startTime: realStartTime,
+            addedType: 'zap-gpt',
+            addedTime: GetTime(undefined, 'local'),
             timezone: GetTimeZone()
         };
 

@@ -864,7 +864,8 @@
         "errors": {
             "tcp-not-connected": "La connexion au serveur a échouée",
             "request-empty": "La requête est vide",
-            "request-invalid": "La requête a échouée"
+            "request-invalid": "La requête a échouée",
+            "no-activities": "Aucune activité n'a été générée"
         }
     }
 }

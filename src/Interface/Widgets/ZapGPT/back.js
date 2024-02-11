@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { CheckZapGPTActivities } from './activityConverter';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -70,7 +71,15 @@ class ZapGPTBack extends React.Component {
         }
 
         const rawActivities = JSON.parse(result);
-        const activities = user.activities.CheckZapGPTActivities(rawActivities);
+        const activities = CheckZapGPTActivities(rawActivities);
+
+        if (activities.length === 0) {
+            this.setState({
+                loading: false,
+                error: lang['errors']['no-activities']
+            });
+            return;
+        }
 
         this.setState({
             loading: false,

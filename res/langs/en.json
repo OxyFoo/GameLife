@@ -864,7 +864,8 @@
         "errors": {
             "tcp-not-connected": "The server is not connected",
             "request-empty": "The request is empty",
-            "request-invalid": "The request failed"
+            "request-invalid": "The request failed",
+            "no-activities": "No activities generated"
         }
     }
 }

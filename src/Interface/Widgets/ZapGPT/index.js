@@ -38,8 +38,8 @@ class ZapGPT extends ZapGPTBack {
                 </Text>
 
                 <View style={styles.texts}>
-                    {lang['instructions'].map(text => (
-                        <Text style={styles.text}>{text}</Text>
+                    {lang['instructions'].map((text, index) => (
+                        <Text key={`instruction-${index}`} style={styles.text}>{text}</Text>
                     ))}
                 </View>
 

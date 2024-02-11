@@ -12,29 +12,31 @@ import { Text, Icon } from 'Interface/Components';
  */
 
 class SkillsGroup extends SkillsGroupBack {
-    /** @param {{ item: EnrichedSkill }} param0 */
+    /** @param {{ item: EnrichedSkill | null }} param0 */
     renderSkill = ({ item }) => {
         const lang = langManager.curr['other'];
 
-        let ID, FullName, LogoXML, onPressSkill;
+        if (item === null) {
+            return (
+                <TouchableOpacity
+                    style={styles.skill}
+                    onPress={this.openSkills}
+                    activeOpacity={.6}
+                >
+                    <View style={styles.skillImage}>
+                        <Icon xml={'default'} size={42} color='main1' />
+                    </View>
+                    <Text fontSize={12}>{lang['widget-skills-all']}</Text>
+                </TouchableOpacity>
+            );
+        }
 
-        if (!item || item.ID == null || item.FullName == null || item.LogoXML == null) {
-            ID = -1;
-            FullName = lang['widget-skills-all'];
-            LogoXML = 'default';
-            onPressSkill = () => this.openSkills();
-        }
-        else {
-            ID = item.ID;
-            FullName = item.FullName;
-            LogoXML = item.LogoXML;
-            onPressSkill = () => this.openSkill(ID);
-        }
+        const { ID, FullName, LogoXML } = item;
 
         return (
             <TouchableOpacity
                 style={styles.skill}
-                onPress={onPressSkill}
+                onPress={() => this.openSkill(ID)}
                 activeOpacity={.6}
             >
                 <View style={styles.skillImage}>
@@ -49,8 +51,7 @@ class SkillsGroup extends SkillsGroupBack {
         const { style } = this.props;
 
         return (
-            <View
-                style={[styles.container, style]}>
+            <View style={[styles.container, style]}>
                 <FlatList
                     data={[...this.state.skills, null]}
                     renderItem={this.renderSkill}

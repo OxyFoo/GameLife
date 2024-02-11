@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackHome from './back';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
-import user from 'Managers/UserManager';
 
 import { Swiper, Text, XPBar, Page } from 'Interface/Components';
 import { News, TodayPieChart, TodoList, SkillsGroup, StatsBars } from 'Interface/Widgets';
@@ -12,7 +12,7 @@ import { News, TodayPieChart, TodoList, SkillsGroup, StatsBars } from 'Interface
 class Home extends BackHome {
     render() {
         const {
-            experience: { stats, xpInfo },
+            experience: { xpInfo },
             values: { current_level, next_level }
         } = this.state;
 
@@ -25,6 +25,7 @@ class Home extends BackHome {
         const styleSmallContainer = {
             backgroundColor: themeManager.GetColor('ground2'),
         };
+
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
 
@@ -42,7 +43,6 @@ class Home extends BackHome {
                 />
 
                 <Swiper
-                    ref={ref => this.refTuto1 = ref}
                     style={styles.topSpace}
                     pages={News()}
                 />
@@ -53,20 +53,22 @@ class Home extends BackHome {
 
                 <View style={[styles.homeRow, styles.topSpace]}>
                     <View style={[styleSmallContainer, styles.stats]}>
-                        <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-stats-title']}</Text>
+                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
+                            {lang['container-stats-title']}
+                        </Text>
                         <StatsBars data={user.stats} simplifiedDisplay={true} />
                     </View>
+
                     <View style={[styleContainer, styles.skills]}>
-                        <Text bold={true} fontSize={20} style={styles.titleWidget}>{lang['container-skills-title']}</Text>
+                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
+                            {lang['container-skills-title']}
+                        </Text>
                         <SkillsGroup />
                     </View>
                 </View>
 
 
-                <TodoList
-                    ref={ref => this.refTuto3 = ref}
-                    style={styles.topSpace}
-                />
+                <TodoList style={styles.topSpace} />
 
             </Page>
         );

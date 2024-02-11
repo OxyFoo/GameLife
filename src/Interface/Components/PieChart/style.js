@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
 
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     legendContainer: {
         paddingTop: 6
     },
     legendItem: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     centerLabel: {
         justifyContent: 'center',

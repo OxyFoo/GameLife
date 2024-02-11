@@ -10,19 +10,12 @@ class Quotes {
     /** @type {Quote[]} */
     quotes = [];
 
-    /** @type {Quote|null} */
-    currentQuote = null;
-
     Clear() {
         this.quotes = [];
-        this.currentQuote = null;
     }
     Load(quotes) {
         if (typeof(quotes) === 'object') {
             this.quotes = quotes;
-        }
-        if (this.quotes.length) {
-            this.currentQuote = this.GetRandomQuote();
         }
     }
     Save() {

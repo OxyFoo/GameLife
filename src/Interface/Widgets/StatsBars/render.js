@@ -73,36 +73,39 @@ function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, cli
         textXP = `${stat.xp}/${stat.next} - ${stat.totalXP}${langLevel['xp']}`;
     }
 
-    let XPView;
     if (simplifiedDisplay) {
-        XPView = (
-            <View style={styles.XPHeaderSimplified}>
-                <Text>{`${textLevel.substring(0, 3)}:`}</Text>
-                <Text fontSize={20} bold={true}>{stat.totalXP.toString()}</Text>
-            </View>
-        );
-    }
-    else {
-        XPView = (
-            <>
-                <View style={styles.XPHeader}>
-                    <Text>{textLevel}</Text>
-                    <Text>{textXP}</Text>
+        return (
+            <TouchableOpacity
+                style={styles.fullW}
+                key={'skill_' + index}
+                activeOpacity={pressEvent === null ? 1 : .5}
+                onPress={pressEvent}
+            >
+                <View style={styles.XPHeaderSimplified}>
+                    <Text>{`${textLevel.substring(0, 3)}:`}</Text>
+                    <Text fontSize={20} bold={true}>{stat.totalXP.toString()}</Text>
                 </View>
-                <XPBar
-                    style={styles.XPBar}
-                    value={stat.xp}
-                    maxValue={stat.next}
-                    supValue={sup}
-                />
-            </>
+            </TouchableOpacity>
         );
     }
-
 
     return (
-        <TouchableOpacity style={styles.fullW} key={'skill_' + index} activeOpacity={pressEvent === null ? 1 : .5} onPress={pressEvent}>
-            {XPView}
+        <TouchableOpacity
+            style={styles.fullW}
+            key={'skill_' + index}
+            activeOpacity={pressEvent === null ? 1 : .5}
+            onPress={pressEvent}
+        >
+            <View style={styles.XPHeader}>
+                <Text>{textLevel}</Text>
+                <Text>{textXP}</Text>
+            </View>
+            <XPBar
+                style={styles.XPBar}
+                value={stat.xp}
+                maxValue={stat.next}
+                supValue={sup}
+            />
         </TouchableOpacity>
     );
 }

@@ -14,6 +14,10 @@ class BackProfile extends PageBase {
     state = {
         editorOpened: false,
         xpInfo: user.experience.GetExperience().xpInfo,
+
+        playedDays: 0,
+        totalActivityLength: 0,
+        totalActivityTime: 0
     }
 
     constructor(props) {
@@ -27,17 +31,16 @@ class BackProfile extends PageBase {
         this.time_start = Date.now();
 
         const activities = user.activities.Get();
+        this.state.playedDays = this.getTimeFromFirst(activities);
         this.state.totalActivityLength = activities.length;
         this.state.totalActivityTime = this.getTotalDuration(activities);
-        this.state.playTime = this.getTimeFromFirst(activities);
-
     }
 
     refTuto1 = null;
 
     componentDidMount() {
         super.componentDidMount();
-        this.computeKPI(); 
+
         const time_end = Date.now();
         const time = time_end - this.time_start;
         user.interface.console.AddLog('info', 'PROFILE loaded in ' + time + 'ms');
@@ -47,10 +50,11 @@ class BackProfile extends PageBase {
                 xpInfo: user.experience.GetExperience().xpInfo
             });
         });
-    } 
+    }
 
     componentDidFocused = (args) => {
-        this.computeKPI(); 
+        this.updateKPI(); 
+
         // Update the avatar
         // TODO: Don't update the avatar if the user didn't change anything
         this.refAvatar.updateEquippedItems();
@@ -68,17 +72,13 @@ class BackProfile extends PageBase {
     openProfileEditor = () => this.refProfileEditor?.Open();
     openSettings = () => user.interface.ChangePage('settings');
 
-    computeKPI() {
+    updateKPI() {
         const activities = user.activities.Get();
+        const playedDays = this.getTimeFromFirst(activities);
         const totalActivityLength = activities.length;
         const totalActivityTime = this.getTotalDuration(activities);
-        const playTime = this.getTimeFromFirst(activities);
 
-        this.setState({
-            playTime,
-            totalActivityLength,
-            totalActivityTime
-        });
+        this.setState({ playedDays, totalActivityLength, totalActivityTime });
     }
 
     /**

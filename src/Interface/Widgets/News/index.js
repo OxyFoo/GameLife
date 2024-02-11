@@ -10,10 +10,6 @@ import Icon from 'Interface/Components/Icon';
 import Button from 'Interface/Components/Button';
 
 /**
- * @typedef {import('Managers/PageManager').PageName} PageName
- */
-
-/**
  * @param {*} eventText String to parse: if it starts with 'https://', open
  *                      the link in the browser, else change the page
  */

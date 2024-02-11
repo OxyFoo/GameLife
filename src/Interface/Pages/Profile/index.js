@@ -2,12 +2,12 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import BackProfile from './back';
-import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
-
 import StartHelp from './help';
 import EditorAvatar from './editorAvatar';
 import EditorProfile from './editorProfile';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
+
 import { Round } from 'Utils/Functions';
 import { Page, Text, XPBar, Container, KPI, Button } from 'Interface/Components';
 import { UserHeader, PageHeader, AchievementsGroup } from 'Interface/Widgets';
@@ -60,7 +60,7 @@ class Profile extends BackProfile {
                 <View style={styles.kpiContainer}>
                     <KPI
                         title={lang['row-since']}
-                        value={this.state.playTime}
+                        value={this.state.playedDays}
                         unit={langDates['day-min']}
                         style={[styles.kpiProfile, backgroundKpi]} />
                     <KPI
@@ -110,10 +110,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginVertical:12
+        marginVertical: 12
     },
     kpiProfile: {
-        paddingHorizontal:2
+        paddingHorizontal: 2
     }
 });
 

@@ -133,7 +133,7 @@ class TCP {
      * @param {number} [timeout] in milliseconds
      * @returns {Promise<'timeout' | any>} The result of the callback or 'timeout' if it took too long
      */
-    WaitCallback = (callbackID, timeout = 5000) => {
+    WaitForCallback = (callbackID, timeout = 5000) => {
         return new Promise((resolve, reject) => {
             const timer = setTimeout(() => {
                 resolve('timeout');

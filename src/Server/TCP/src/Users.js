@@ -4,6 +4,7 @@ import { GetUserFriends } from './Friends/GetFriends.js';
 import { AcceptFriend, AddFriend, DeclineFriend, RemoveFriend } from './Friends/Manager.js';
 import { GetFriendNotifications } from './Friends/NotificationsInApp.js';
 
+import GPT from './Utils/GPT.js';
 import { StrIsJson } from './Utils/Functions.js';
 import { Request_Async } from './Utils/Request.js';
 
@@ -34,6 +35,7 @@ class Users {
         /** @type {Array<User>} */
         this.AllUsers = [];
         this.db = database;
+        this.gpt = new GPT();
     }
 
     /**
@@ -131,46 +133,38 @@ class Users {
         switch (data.action) {
             case 'add-friend':
                 result = await AddFriend(this, user, data.username);
-                this.Send(user, {
-                    status: 'callback',
-                    callbackID: data.callbackID,
-                    result: result
-                });
                 break;
+
             case 'remove-friend':
                 result = await RemoveFriend(this, user, data.accountID);
-                this.Send(user, {
-                    status: 'callback',
-                    callbackID: data.callbackID,
-                    result: result
-                });
                 break;
+
             case 'accept-friend':
                 result = await AcceptFriend(this, user, data.accountID);
-                this.Send(user, {
-                    status: 'callback',
-                    callbackID: data.callbackID,
-                    result: result
-                });
                 break;
+
             case 'decline-friend':
                 result = await DeclineFriend(this, user, data.accountID, false);
-                this.Send(user, {
-                    status: 'callback',
-                    callbackID: data.callbackID,
-                    result: result
-                });
                 break;
+
             case 'block-friend':
                 result = await DeclineFriend(this, user, data.accountID, true);
-                this.Send(user, {
-                    status: 'callback',
-                    callbackID: data.callbackID,
-                    result: result
-                });
                 break;
+
+            case 'zap-gpt':
+                result = await this.gpt.PromptToActivities(data.prompt);
+                break;
+
             default:
                 break;
+        }
+
+        if (data.hasOwnProperty('callbackID')) {
+            this.Send(user, {
+                status: 'callback',
+                callbackID: data.callbackID,
+                result: result
+            });
         }
     }
 

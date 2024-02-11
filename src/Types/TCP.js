@@ -32,8 +32,13 @@
  * @property {'block-friend'} action
  * @property {number} accountID
  * @property {string} [callbackID]
+ *
+ * @typedef {Object} SendRequestZapGPT
+ * @property {'zap-gpt'} action
+ * @property {string} prompt
+ * @property {string} [callbackID]
  * 
- * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestBlockFriend} TCPClientRequest
+ * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestBlockFriend | SendRequestZapGPT} TCPClientRequest
  * 
  * 
  * 

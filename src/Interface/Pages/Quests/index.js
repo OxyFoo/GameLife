@@ -4,7 +4,7 @@ import styles from './style';
 import BackQuests from './back';
 
 import { Page } from 'Interface/Components';
-import { NonZeroDay, MyQuestsList } from 'Interface/Widgets';
+import { NonZeroDay, MyQuestsList, TodoList } from 'Interface/Widgets';
 
 class Quests extends BackQuests {
     render() {
@@ -17,6 +17,7 @@ class Quests extends BackQuests {
             >
                 <NonZeroDay style={styles.quest} />
                 <MyQuestsList style={styles.quest} />
+                <TodoList style={styles.quest} />
             </Page>
         );
     }

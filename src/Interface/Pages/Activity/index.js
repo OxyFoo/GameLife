@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Page, Text, IconCheckable, Input } from 'Interface/Components';
+import { Page, Text, IconCheckable, Input, Button } from 'Interface/Components';
 import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
 /**
@@ -77,6 +77,22 @@ class Activity extends BackActivity {
         );
     }
 
+    renderOverlay = () => {
+        if (user.tcp.IsConnected() === false) {
+            return null;
+        }
+
+        return (
+            <Button
+                style={styles.buttonZapGPT}
+                color='main1'
+                icon='flame'
+                iconSize={24}
+                onPress={this.PromptZapGPT}
+            />
+        );
+    }
+
     render() {
         const lang = langManager.curr['activity'];
         const { skillSearch, skills, topPanelOffset, inputText } = this.state;
@@ -86,6 +102,7 @@ class Activity extends BackActivity {
                 ref={ref => this.refPage = ref}
                 scrollable={false}
                 canScrollOver={false}
+                overlay={this.renderOverlay()}
             >
                 <PageHeader
                     style={styles.header}

@@ -74,8 +74,8 @@
             "weekly": "Weekly",
             "monthly": "Monthly",
             "day-min": "d",
-            "seconds-min": "m",
-            "hours-min": "h"
+            "hours-min": "h",
+            "minutes-min": "m"
         },
         "month": [
             "January",
@@ -241,6 +241,8 @@
         "display-activity-button": "Back home",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home",
+
+        "activity-zap-comment": "Added by Zap",
 
         "tuto": {
             "1": "You can filter activities by category: {}",
@@ -844,5 +846,27 @@
             "A night watchman.",
             "A keeper of secrets."
         ]
+    },
+
+    "zap-gpt": {
+        "title1": "Ask Zap to add activities",
+        "title2": "Zap will add activities for you",
+
+        "instructions": [
+            "- Descriptions as clear and simple as possible",
+            "- Be clear about the activities, their start dates and times, and their duration.",
+            "- Avoid asking for too many things at once (recommended 5, max 10)"
+        ],
+
+        "input-label": "Request to Zap",
+
+        "added-message": "{} activities have been added",
+
+        "errors": {
+            "tcp-not-connected": "The server is not connected",
+            "request-empty": "The request is empty",
+            "request-invalid": "The request failed",
+            "no-activities": "No activities generated"
+        }
     }
 }

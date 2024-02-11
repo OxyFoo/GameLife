@@ -9,6 +9,7 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * 
+ * @typedef {'normal' | 'start-now' | 'zap-gpt'} ActivityAddedType
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'edited' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
  * 
@@ -40,8 +41,8 @@ class Activity {
     /** @type {number} Timezone offset in hours */
     timezone = 0;
 
-    /** @type {boolean} If true, activity is "start now" */
-    startNow = false;
+    /** @type {ActivityAddedType} */
+    addedType = 'normal';
 
     /** @type {number} Time when activity was added (unix timestamp, UTC) */
     addedTime = 0;
@@ -108,7 +109,7 @@ class Activities {
                 duration: activity['duration'],
                 comment: activity['comment'],
                 timezone: activity['timezone'],
-                startNow: !!activity['startNow'],
+                addedType: activity['addedType'],
                 addedTime: activity['addedTime']
             }, true);
         }
@@ -160,7 +161,7 @@ class Activities {
                 duration: activity.duration,
                 comment: activity.comment,
                 timezone: activity.timezone,
-                startNow: activity.startNow,
+                addedType: activity.addedType,
                 addedTime: activity.addedTime
             });
         }
@@ -173,7 +174,7 @@ class Activities {
                 duration: activity.duration,
                 comment: '',
                 timezone: activity.timezone,
-                startNow: activity.startNow,
+                addedType: activity.addedType,
                 addedTime: activity.addedTime
             });
         }

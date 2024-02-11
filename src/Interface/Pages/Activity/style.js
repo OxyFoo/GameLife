@@ -49,6 +49,12 @@ const styles = StyleSheet.create({
     emptyListText: {
         textAlign: 'center',
         fontSize: 24
+    },
+
+    buttonZapGPT: {
+        position: 'absolute',
+        bottom: 24,
+        right: 24
     }
 });
 

@@ -2,9 +2,9 @@ import dataManager from 'Managers/DataManager';
 
 import { Sum } from 'Utils/Functions';
 
-const UserXPperLevel = 20;
-const StatXPperLevel = 2;
-const SkillXPperLevel = 20;
+const USER_XP_PER_LEVEL = 20;
+const STAT_XP_PER_LEVEL = 2;
+const SKILL_XP_PER_LEVEL = 20;
 
 
 /**
@@ -70,12 +70,12 @@ class Experience {
 
         for (let k in statsKey) {
             const key = statsKey[k];
-            stats[key] = this.getXPDict(statValues[key], StatXPperLevel);
+            stats[key] = this.getXPDict(statValues[key], STAT_XP_PER_LEVEL);
         }
 
         return {
             'stats': stats,
-            'xpInfo': this.getXPDict(XP, UserXPperLevel)
+            'xpInfo': this.getXPDict(XP, USER_XP_PER_LEVEL)
         };
     }
 
@@ -95,7 +95,7 @@ class Experience {
         const totalDuration = Sum(durations);
         const totalXP = skill.XP * (totalDuration / 60);
 
-        const experience = this.getXPDict(totalXP, SkillXPperLevel);
+        const experience = this.getXPDict(totalXP, SKILL_XP_PER_LEVEL);
         const lastTime = activities.length > 0 ? activities.at(-1).startTime : 0;
         return { ...experience, lastTime };
     }
@@ -119,7 +119,7 @@ class Experience {
             }
         }
 
-        return this.getXPDict(totalXP, SkillXPperLevel);
+        return this.getXPDict(totalXP, SKILL_XP_PER_LEVEL);
     }
 
     /**
@@ -152,4 +152,5 @@ class Experience {
     }
 }
 
+export { USER_XP_PER_LEVEL, STAT_XP_PER_LEVEL, SKILL_XP_PER_LEVEL };
 export default Experience;

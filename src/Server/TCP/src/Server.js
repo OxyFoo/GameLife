@@ -2,16 +2,21 @@ import WebSocket from 'websocket';
 import { createServer } from 'http';
 
 import Users from './Users.js';
-import { StrIsJson } from '../Utils/Functions.js';
+import { StrIsJson, GetLocalIP } from './Utils/Functions.js';
 
-const debugMode = true;
-const Log = (msg, ...items) => debugMode && console.log(msg, ...items);
+/**
+ * @typedef {import('./Sql.js').default} SQL
+ * @typedef {import('./Users.js').User} User
+ */
 
 class Server {
-    constructor() {
+    /** @param {SQL} database */
+    constructor(database) {
         this.server = createServer();
         this.server.on('error', this.onError);
-        this.users = new Users();
+
+        this.db = database;
+        this.users = new Users(database);
     }
 
     /**
@@ -25,6 +30,8 @@ class Server {
             this.wsServer.addListener('connect', this.onConnect);
             this.wsServer.addListener('request', this.onRequest);
             this.wsServer.addListener('close', this.onClose);
+
+            console.log('WebSocket server listening on', GetLocalIP() + ':' + port);
         }
     }
 
@@ -32,18 +39,13 @@ class Server {
         if (this.server.listening) {
             this.wsServer.shutDown();
             this.server.close();
+            console.log('WebSocket server closed');
         }
     }
 
     /** @param {Error} error */
     onError = (error) => {
         console.error('WebSocket server:', error);
-        return;
-
-        if (error.code === 'EADDRINUSE') {
-            console.log('Address in use, retrying...');
-            setTimeout(WebSocket.server.close, 1000);
-        }
     }
 
     /** @param {WebSocket.request} request */
@@ -58,36 +60,49 @@ class Server {
      */
     onClose = (connection, reason, desc) => {
         if (reason !== 1000) {
-            Log('Connection closed:', reason, desc);
+            console.log('Connection closed:', reason, desc);
         }
     }
 
     /** @param {WebSocket.connection} connection */
     onConnect = (connection) => {
-        let deviceID = null;
-
-        Log('User connected');
+        /** @type {User | null} */
+        let user = null;
 
         connection.on('message', async (message) => {
-            Log('Data:', message.utf8Data);
-            if (StrIsJson(message.utf8Data)) {
-                const data = JSON.parse(message.utf8Data);
-                if (data.hasOwnProperty('token')) {
-                    deviceID = await this.users.Add(connection, data.token);
-                    connection.send(deviceID !== null ? 'connected' : 'failed');
-                }
+            if (message.type !== 'utf8') {
+                return;
+            }
+
+            const rawData = message.type === 'utf8' ? message.utf8Data : null;
+            if (!StrIsJson(rawData)) {
+                return;
+            }
+
+            const data = JSON.parse(rawData);
+            if (!data.hasOwnProperty('token')) {
+                return;
+            }
+
+            user = await this.users.Add(connection, data.token);
+            if (user !== null) {
+                console.log('User connected:', user.username, `(${user.accountID} - ${user.deviceID})`);
             }
         });
 
         connection.on('close', () => {
-            Log('User disconnected');
-            if (deviceID !== null) {
-                this.users.Rem(deviceID);
+            if (user !== null) {
+                this.users.RemoveByDeviceID(user.deviceID);
+                user = null;
             }
         });
 
         connection.on('error', (err) => {
             console.error('Connection error:', err);
+            if (user !== null) {
+                this.users.RemoveByDeviceID(user.deviceID);
+                user = null;
+            }
         });
     }
 }

@@ -52,7 +52,16 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         borderWidth: 2,
         paddingVertical: 0,
-        paddingHorizontal: 0
+        paddingHorizontal: 0,
+        backgroundColor: '#00000050'
+    },
+    interactions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    interactionsButton: {
+        marginRight: 12
     }
 });
 

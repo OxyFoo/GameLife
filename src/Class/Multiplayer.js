@@ -1,13 +1,14 @@
-const settings = { host: '45.82.73.154', port: 7121 };
+import langManager from 'Managers/LangManager';
+
+import DynamicVar from 'Utils/DynamicVar';
+
+const FRIENDS_LIMIT = 10;
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- */
-
-/**
- * TCP server state change event
- * @callback onChangeCallback
- * @param {'connected' | 'disconnected' | 'error'} state
+ * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/NotificationInApp').NotificationInApp} NotificationInApp
+ * @typedef {import('Types/TCP').TCPServerRequest} ReceiveRequest
  */
 
 class Multiplayer {
@@ -16,77 +17,154 @@ class Multiplayer {
         this.user = user;
     }
 
-    /** @type {WebSocket?} */
-    socket = null;
+    /** @type {DynamicVar<Array<Friend>>} */
+    friends = new DynamicVar([]);
 
-    /** @type {onChangeCallback} */
-    onChangeState = (state) => {};
+    /** @type {DynamicVar<Array<NotificationInApp>>} */
+    notifications = new DynamicVar([]);
 
-    Connect = () => {
-        if (this.isConnected()) {
-            this.user.interface.console.AddLog('warn', 'Already connected to the node server.');
-            return;
-        }
-        const url = `ws://${settings.host}:${settings.port}`;
-        const socket = new WebSocket(url, 'server-multiplayer');
-        socket.addEventListener('open', this.onOpen);
-        socket.addEventListener('message', this.onMessage);
-        socket.addEventListener('error', this.onError);
-        socket.addEventListener('close', this.onClose);
-        this.socket = socket;
-    }
-    Disconnect = () => {
-        if (this.isConnected()) {
-            this.socket.close();
-        }
-        this.socket = null;
-    }
-    isConnected = () => {
-        return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
-    }
+    /** @param {ReceiveRequest} data */
+    onMessage = (data) => {
+        const status = data.status;
 
-    /** @param {Event} event */
-    onOpen = (event) => {
-        this.Send({ token: this.user.server.token });
-    }
-    /** @param {MessageEvent} event */
-    onMessage = (event) => {
-        if (event.data === 'connected') {
-            this.onChangeState('connected');
-        } else if (event.data === 'failed') {
-            this.onError('Server closed connection.');
+        if (status === 'update-friends') {
+            this.friends.Set(data.friends);
         }
-    }
-    /** @param {Event} event */
-    onError = (event) => {
-        this.user.interface.console.AddLog('error', 'TCP server:', event);
-        this.onChangeState('error');
-        this.Disconnect();
-    }
-    /** @param {CloseEvent} event */
-    onClose = (event) => {
-        if (event.code !== 1000) {
-            this.user.interface.console.AddLog('error', 'Disconnected:', event);
-            this.onChangeState('disconnected');
+        if (status === 'update-notifications') {
+            this.notifications.Set(data.notifications);
         }
     }
 
     /**
-     * @param {string | object} message
-     * @returns {boolean} Whether the message was sent successfully
+     * @param {{ title: string, message: string }} lang
+     * @param {string} [additionnal]
      */
-    Send = (message) => {
-        if (typeof(message) === 'object') message = JSON.stringify(message);
-        if (typeof(message) !== 'string') {
-            this.user.interface.console.AddLog('warn', 'Send socket: Invalid message type.');
-        } else {
-            if (this.isConnected()) {
-                this.socket.send(message);
-                return true;
-            }
+    ShowError = (lang, additionnal = null) => {
+        const title = lang.title;
+        let text = lang.message;
+        if (additionnal !== null) {
+            text = text.replace('{}', additionnal);
         }
-        return false;
+        this.user.interface.popup.Open('ok', [ title, text ]);
+    }
+
+    /** @param {string} username */
+    AddFriend = async (username) => {
+        const callbackID = 'add-friend-' + Date.now();
+        const sendSuccess = this.user.tcp.Send({
+            action: 'add-friend',
+            username: username,
+            callbackID: callbackID
+        });
+
+        // Wrong type or not connected
+        if (sendSuccess === false) {
+            return;
+        }
+
+        const lang = langManager.curr['multiplayer'];
+        const result = await this.user.tcp.WaitCallback(callbackID);
+        if (result === 'timeout') {
+            this.ShowError(lang['alert-timeout']);
+        } else if (result === 'not-found') {
+            this.ShowError(lang['alert-friend-notfound'], username);
+        } else if (result === 'self') {
+            this.ShowError(lang['alert-friend-self']);
+        } else if (result === 'already-friend') {
+            this.ShowError(lang['alert-already-friend'], username);
+        } else if (result === 'sql-error' || result === 'get-friend-error') {
+            this.ShowError(lang['alert-error'], result);
+        }
+    }
+    /** @param {number} accountID */
+    RemoveFriend = async (accountID) => {
+        const callbackID = 'remove-friend-' + Date.now();
+        const sendSuccess = this.user.tcp.Send({
+            action: 'remove-friend',
+            accountID: accountID,
+            callbackID: callbackID
+        });
+
+        // Wrong type or not connected
+        if (sendSuccess === false) {
+            return;
+        }
+
+        const lang = langManager.curr['multiplayer'];
+        const result = await this.user.tcp.WaitCallback(callbackID);
+        if (result === 'timeout') {
+            this.ShowError(lang['alert-timeout']);
+        } else if (result === 'sql-error') {
+            this.ShowError(lang['alert-error'], result);
+        }
+    }
+    /** @param {number} accountID */
+    AcceptFriend = async (accountID) => {
+        const callbackID = 'accept-friend-' + Date.now();
+        const sendSuccess = this.user.tcp.Send({
+            action: 'accept-friend',
+            accountID: accountID,
+            callbackID: callbackID
+        });
+
+        // Wrong type or not connected
+        if (sendSuccess === false) {
+            return;
+        }
+
+        const lang = langManager.curr['multiplayer'];
+        const result = await this.user.tcp.WaitCallback(callbackID);
+        if (result === 'timeout') {
+            this.ShowError(lang['alert-timeout']);
+        } else if (result === 'sql-error' || result === 'get-friend-error') {
+            this.ShowError(lang['alert-error'], result);
+        }
+    }
+    /** @param {number} accountID */
+    DeclineFriend = async (accountID) => {
+        const callbackID = 'decline-friend-' + Date.now();
+        const sendSuccess = this.user.tcp.Send({
+            action: 'decline-friend',
+            accountID: accountID,
+            callbackID: callbackID
+        });
+
+        // Wrong type or not connected
+        if (sendSuccess === false) {
+            return;
+        }
+
+        const lang = langManager.curr['multiplayer'];
+        const result = await this.user.tcp.WaitCallback(callbackID);
+        if (result === 'timeout') {
+            this.ShowError(lang['alert-timeout']);
+        } else if (result === 'sql-error' || result === 'sql-error2') {
+            this.ShowError(lang['alert-error'], result);
+        }
+    }
+    /** @param {number} accountID */
+    BlockFriend = async (accountID) => {
+        const callbackID = 'block-friend-' + Date.now();
+        const sendSuccess = this.user.tcp.Send({
+            action: 'block-friend',
+            accountID: accountID,
+            callbackID: callbackID
+        });
+
+        // Wrong type or not connected
+        if (sendSuccess === false) {
+            return;
+        }
+
+        const lang = langManager.curr['multiplayer'];
+        const result = await this.user.tcp.WaitCallback(callbackID);
+        if (result === 'timeout') {
+            this.ShowError(lang['alert-timeout']);
+        } else if (result === 'sql-error' || result === 'sql-error2') {
+            this.ShowError(lang['alert-error'], result);
+        }
     }
 }
 
+export { FRIENDS_LIMIT };
 export default Multiplayer;

@@ -40,6 +40,16 @@
                 "last-time": "The following quest[s] are due tomorrow: {}, so hurry up and finish them!",
                 "today-time": "The following quest[s] are finished today: {}, hurry up and finish them!"
             }
+        },
+        "in-app": {
+            "achievement-pending-text": "You have unlocked the achievement: {}",
+            "achievement-pending-claim": "Claim",
+
+            "friend-pending-text": "{} wants to be your friend",
+            "friend-pending-decline": "Decline",
+            "friend-pending-block": "Block",
+
+            "list-empty": "No notifications available"
         }
     },
 
@@ -134,9 +144,10 @@
         "select-language": "Select your language",
         "page1": "Hi, welcome to GameLife, I'm Zap, your guide!",
         "page2": "The aim of this app is simple : turn your life into a game !",
-        "page3": "Earn experience points, improve your skills and set yourself goals",
-        "page4": "Tips : Are you lost? Click on the info button at the top right for help!",
-        "page5": "All you have to do is sign up and off you go!",
+        "page3": "When you do an activity in the real world, sport, music, homework, you'll note it down in the application.",
+        "page4": " You'll earn experience and rewards, and you'll be able to track your progress over time!",
+        "page5": "Tips : Are you lost? Click on the info button at the top right for help!",
+        "page6": "All you have to do is sign up and off you go!",
         "test-caution-message": "Test version:\n\nRisk of bugs and instability.\nAccounts are independent of the main version.\nData may be deleted.\n\nHelp us improve the app and earn rewards for every bug found!",
         "test-caution-redirect": "Come to the Discord to find out more!",
         "test-caution-button": "I get it"
@@ -178,6 +189,8 @@
 
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",
+        "alert-achievement-error-title": "Error",
+        "alert-achievement-error-text": "An error has occurred, please try again later.",
 
         "tuto": {
             "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."
@@ -320,8 +333,40 @@
         "connection-failed": "The connection to the server failed, please try again later.",
         "button-retry": "Retry",
 
+        "container-title": "Multiplayer",
+        "container-content-empty": "No friends yet",
+        "container-content-idle": "Loading...",
+        "container-content-disconnected": "Disconnected, please try again later.",
+        "container-content-error": "An error has occurred, please try again later.",
+
+        "category-friend": "Friends",
+        "category-friend-pending": "Pending",
+
+        "input-search-friend": "Search for a friend",
+
         "temp-comingsoon-title": "Multiplayer",
-        "temp-comingsoon-text": "🚧 Coming soon 🚧"
+        "temp-comingsoon-text": "🚧 Coming soon 🚧",
+
+        "alert-already-friend": {
+            "title": "Already friends",
+            "message": "You are already friends with {}"
+        },
+        "alert-friend-notfound": {
+            "title": "User not found",
+            "message": "The user {} was not found"
+        },
+        "alert-friend-self": {
+            "title": "Impossible",
+            "message": "You can't add yourself as a friend"
+        },
+        "alert-timeout": {
+            "title": "Timeout",
+            "message": "The server is not responding, please try again later."
+        },
+        "alert-error": {
+            "title": "Error",
+            "message": "An error has occurred, please try again later. ({})"
+        }
     },
 
     "profile": {
@@ -389,6 +434,16 @@
         "alert-sellsuccess-text": "Congrats! The item \"{}\" was sold for {} Ox"
     },
 
+    "profile-friend": {
+        "row-since": "Since",
+        "row-activities": "Number of activities",
+        "row-time": "Time spent",
+
+        "button-remove": "Remove friend",
+        "alert-removefriend-title": "Remove friend",
+        "alert-removefriend-text": "Are you sure you want to remove {} from your friends?"
+    },
+
     "report": {
         "page-title": "Report",
 
@@ -436,6 +491,7 @@
         "input-consent": "Consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-all": "Disconnect from all devices",
+        "input-reconnect-tcp": "Reconnect to multiplayer",
         "input-tuto-again": "Review the tutorial",
         "input-delete-account": "Delete my account",
 

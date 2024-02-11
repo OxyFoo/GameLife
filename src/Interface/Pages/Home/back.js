@@ -39,7 +39,7 @@ class BackHome extends PageBase {
     }
 
     addActivity = () => user.interface.ChangePage('activity', undefined, true);
-    openSettings = () => user.interface.ChangePage('settings');
+    openSkills = () => user.interface.ChangePage('skills');
 }
 
 export default BackHome;

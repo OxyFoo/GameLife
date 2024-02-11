@@ -267,13 +267,14 @@
     },
 
     "home": {
-        "btn-add-activity": "Add activities",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
-        "btn-settings": "Settings",
 
-        "chart-today-performance": "Performance of the day ({}h)",
+        "chart-today-performance": "Activities of today",
         "chart-today-notmuch": "Not enough data to display graph",
+
+        "container-stats-title": "Stats",
+        "container-skills-title": "Skills",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
@@ -375,15 +376,15 @@
         "value-age-empty": "Date of birth unknown",
         "value-title-empty": "No title selected",
 
-        "row-title": "Informations",
-        "row-since": "Since",
-        "row-activities": "Number of activities",
-        "row-quests": "Number of quests",
-        "row-time": "Time spent",
+        "row-since": "of play",
+        "row-activities": "activities",
+        "row-time": "spent",
 
         "container-achievements-title": "Last achievements",
         "container-stats-title": "Statistics",
         "container-skills-title": "Skills",
+
+        "btn-settings": "Settings",
 
         "input-username": "Username",
         "input-select-title": "Select a title",

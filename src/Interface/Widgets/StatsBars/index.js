@@ -19,17 +19,20 @@ const StatsBarsProps = {
     /** @type {Stats | null} */
     data: null,
 
+    /** @type {boolean} */
+    simplifiedDisplay: false,
+
     /** @type {Array<number>} Optionnal, add secondary value, same length of user stats */
     supData: user.statsKey.map(() => 0)
 };
 
 class StatsBars extends React.PureComponent {
     render() {
-        const { data, supData, style } = this.props;
+        const { data, supData, style, simplifiedDisplay } = this.props;
         if (data === null) return null;
 
         const output = Object.keys(data).map((item, i) =>
-            statComponent(item, data[item], supData[i], i)
+            statComponent(item, data[item], supData[i], i, simplifiedDisplay)
         );
 
         return (

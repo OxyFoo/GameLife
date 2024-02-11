@@ -2,8 +2,15 @@ import { Animated } from 'react-native';
 
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
+import { Random } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
+
+/**
+ * @typedef {import('Data/Quotes').Quote} Quote
+ */
 
 class BackDisplay extends PageBase {
     state = {
@@ -28,9 +35,19 @@ class BackDisplay extends PageBase {
         this.icon = getFromProp('icon');
         this.iconRatio = getFromProp('iconRatio', 0.8);
         this.text = getFromProp('text');
-        this.quote = getFromProp('quote', null);
         this.button = getFromProp('button');
+        this.quote = null;
         this.callback = getFromProp('action', user.interface.BackHandle);
+
+        /** @type {Quote | null} */
+        const quoteItem = getFromProp('quote', null);
+        const anonymousAuthors = langManager.curr['quote']['anonymous-author-list'];
+        if (quoteItem !== null) {
+            this.quote = {
+                text: dataManager.GetText(quoteItem.Quote),
+                author: quoteItem.Author || anonymousAuthors[Random(0, anonymousAuthors.length)]
+            };
+        }
     }
 
     componentDidMount() {

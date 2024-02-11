@@ -21,7 +21,8 @@ class Display extends BackDisplay {
                 <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
                 {this.quote !== null && (
                     <View style={styles.quoteContainer}>
-                        <Text fontSize={16} color={'light'} style={[styles.quote]}>{this.quote}</Text>
+                        <Text fontSize={16} color={'light'} style={styles.quote}>{this.quote.text}</Text>
+                        <Text fontSize={14} color={'secondary'} style={styles.quote}>{this.quote.author}</Text>
                     </View>
                 )}
             </Page>

@@ -5,7 +5,7 @@ import user from 'Managers/UserManager';
 
 import { PageBase } from 'Interface/Components';
 
-const REFRESH_DELAY_SECONDS = 2;
+const REFRESH_DELAY_SECONDS = 30;
 
 class BackWaitinternet extends PageBase {
     state = {

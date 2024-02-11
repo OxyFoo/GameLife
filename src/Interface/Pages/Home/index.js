@@ -5,7 +5,7 @@ import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
 import { Button, Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { News, MultiplayerPanel, TodayPieChart, TodoList  } from 'Interface/Widgets';
+import { News, MultiplayerPanel, TodayPieChart } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -34,13 +34,11 @@ class Home extends BackHome {
                 />
 
                 <Swiper
-                    ref={ref => this.refTuto1 = ref}
                     style={styles.topSpace}
                     pages={News()}
                 />
 
                 <Button
-                    ref={ref => this.refTuto2 = ref}
                     style={styles.topSpace}
                     color='main2'
                     borderRadius={8}
@@ -53,11 +51,6 @@ class Home extends BackHome {
                 <MultiplayerPanel style={styles.topSpace} hideWhenOffline />
 
                 <TodayPieChart style={styles.topSpace} />
-
-                <TodoList
-                    ref={ref => this.refTuto3 = ref}
-                    style={styles.topSpace}
-                />
 
                 <Button
                     style={styles.topSpace}

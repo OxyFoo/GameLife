@@ -79,6 +79,7 @@ class TodoList extends BackTodoList {
                 icon={containerIcon}
                 text={lang['container-title']}
                 onIconPress={containerAction}
+                colorNextGen
             >
                 <TodoSelection
                     draggedItem={draggedItem}

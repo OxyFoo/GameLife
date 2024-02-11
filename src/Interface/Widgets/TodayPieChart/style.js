@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     notEnoughData: {
-        marginTop:8,
+        marginTop: 8,
         fontSize: 16
     }
 });

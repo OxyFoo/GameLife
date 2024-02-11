@@ -265,13 +265,14 @@
     },
 
     "home": {
-        "btn-add-activity": "Ajouter des activités",
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
-        "btn-settings": "Paramètres",
 
-        "chart-today-performance": "Performances du jour ({}h)",
+        "chart-today-performance": "Performances du jour",
         "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
+
+        "container-stats-title": "Stats",
+        "container-skills-title": "Compétences",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
@@ -373,15 +374,15 @@
         "value-age-empty": "Date de naissance inconnue",
         "value-title-empty": "Aucun titre sélectionné",
 
-        "row-title": "Informations",
-        "row-since": "Depuis",
-        "row-activities": "Nombre d'activités",
-        "row-quests": "Nombre de quêtes",
-        "row-time": "Nombre d'heures",
+        "row-since": "de jeu",
+        "row-activities": "activités",
+        "row-time": "heures",
 
         "container-achievements-title": "Derniers succès",
         "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
+
+        "btn-settings": "Paramètres",
 
         "input-username": "Pseudo",
         "input-select-title": "Sélectionnez un titre",
@@ -811,7 +812,7 @@
         "widget-button-editTime": "Modifier",
         "widget-duration": "Durée",
         "widget-achievements-all": "Tous les succès",
-        "widget-skills-all": "Toutes les comp.",
+        "widget-skills-all": "Autres",
         "sexe-male": "♂",
         "sexe-female": "♀"
     },

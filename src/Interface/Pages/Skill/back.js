@@ -44,7 +44,6 @@ class BackSkill extends PageBase {
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         const authorText = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
         const totalDuration = this.getTotalDurationFromSkillID(this.skillID);
-        const activitiesLength = user.activities.GetBySkillID(this.skillID).length;
 
         this.skill = {
             name: dataManager.GetText(skill.Name),
@@ -57,8 +56,7 @@ class BackSkill extends PageBase {
             stats: Object.values(skill.Stats),
             xml: dataManager.skills.GetXmlByLogoID(skill.LogoID),
             enabled: skill.Enabled,
-            totalDuration: totalDuration,
-            numberOfActivities: Round(activitiesLength, 1)
+            totalDuration: totalDuration
         };
 
         /** @type {Array<HistoryActivity>} */

@@ -84,14 +84,10 @@ function AddActivity(activity) {
         const args = {
             'icon': 'success',
             'text': text,
+            'quote': dataManager.quotes.GetRandomQuote(),
             'button': button,
             'action': Back
         };
-
-        const quote = dataManager.quotes.GetRandomQuote();
-        if (quote !== null) {
-            args['quote'] = quote.Quote[langManager.currentLangageKey];
-        }
 
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {

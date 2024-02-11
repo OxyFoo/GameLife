@@ -13,10 +13,6 @@ class BackHome extends PageBase {
         }
     }
 
-    refTuto1 = null;
-    refTuto2 = null;
-    refTuto3 = null;
-
     componentDidMount() {
         super.componentDidMount();
 
@@ -43,7 +39,7 @@ class BackHome extends PageBase {
     }
 
     addActivity = () => user.interface.ChangePage('activity', undefined, true);
-    openSettings = () => user.interface.ChangePage('settings');
+    openSkills = () => user.interface.ChangePage('skills');
 }
 
 export default BackHome;

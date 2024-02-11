@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { News, TodayPieChart, TodoList, SkillsGroup, StatsBars, MultiplayerPanel } from 'Interface/Widgets';
+import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -68,8 +68,6 @@ class Home extends BackHome {
                 </View>
 
                 <MultiplayerPanel style={styles.topSpace} hideWhenOffline />
-
-                <TodoList style={styles.topSpace} />
 
             </Page>
         );

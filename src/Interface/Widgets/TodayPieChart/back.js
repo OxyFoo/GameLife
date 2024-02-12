@@ -15,7 +15,7 @@ import { GetTime } from 'Utils/Time';
  * @property {number} id
  * @property {string} name
  * @property {number} value
- * @property {number} valueMin
+ * @property {number} valueMinutes
  * @property {string} color
  * @property {string} gradientCenterColor
  * @property {boolean} focused
@@ -60,6 +60,9 @@ class TodayPieChartBack extends React.Component {
         this.addCategoriesName();
         this.computeTimeEachCategory();
 
+        const totalTime = this.computeTotalTime();
+        this.convertTimeToPercent(totalTime);
+
         const focusedActivity = this.findBiggestActivity();
 
         if (focusedActivity && focusedActivity.id !== 0) {
@@ -92,7 +95,7 @@ class TodayPieChartBack extends React.Component {
             baseData.push({
                 id: allCategories[i].ID,
                 value: 0,
-                valueMin: 0,
+                valueMinutes: 0,
                 name: '',
                 color: '#000000',
                 gradientCenterColor: '#000000',
@@ -145,7 +148,7 @@ class TodayPieChartBack extends React.Component {
                 continue;
             }
 
-            this.updatingData[index].valueMin += activity.duration;
+            this.updatingData[index].valueMinutes += activity.duration;
         }
     };
 
@@ -167,13 +170,45 @@ class TodayPieChartBack extends React.Component {
     }
 
     /**
+     * Compute the time in minutes spent in total in the day 
+     * @return {number}
+     */
+    computeTotalTime = () => {
+        let totalMin = 0;
+        for (const element of this.updatingData) {
+            let item = element;
+            totalMin += item.valueMinutes;
+        }
+        return totalMin;
+    }
+
+    /**
+     * Convert the time in minutes to a percent of the day
+     * @param {number} totalMinutes
+     * @return {number}
+     */
+    convertTimeToPercent = (totalMinutes) => {
+        if (totalMinutes === 0) {
+            return 0;
+        }
+
+        let totalPercent = 0;
+        for (const element of this.updatingData) {
+            let item = element;
+            if (item.id > 0 && item.id < 6) {
+                item.value = Math.round(item.valueMinutes / totalMinutes * 100);
+                totalPercent += item.value;
+            }
+        }
+        return totalPercent;
+    }
+
+    /**
      * Gradient shadow chelou qui marchent pas de ouf sont calculés ici
      */
     computeGradientShadow = () => {
         for (const element of this.updatingData) {
-            let item = element;
-            item.value = !isNaN(item.value) && typeof item.value === 'number' ? item.value : 0;
-            item.gradientCenterColor = this.shadeColor(item.color, -20);
+            element.gradientCenterColor = this.shadeColor(element.color, -20);
         }
     }
 

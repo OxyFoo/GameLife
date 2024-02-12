@@ -865,7 +865,8 @@
         "errors": {
             "tcp-not-connected": "La connexion au serveur a échouée",
             "request-empty": "La requête est vide",
-            "request-invalid": "La requête a échouée",
+            "request-invalid": "La requête a échouée, essaie de reformuler",
+            "request-timeout": "Le délai de la requête a dépassé la limite",
             "no-activities": "Aucune activité n'a été générée"
         }
     }

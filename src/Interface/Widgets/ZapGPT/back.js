@@ -62,6 +62,13 @@ class ZapGPTBack extends React.Component {
         });
 
         const result = await user.tcp.WaitForCallback('activity-prompt', 15000);
+        if (result === 'timeout') {
+            this.setState({
+                loading: false,
+                error: lang['errors']['request-timeout']
+            });
+            return;
+        }
         if (result === null) {
             this.setState({
                 loading: false,

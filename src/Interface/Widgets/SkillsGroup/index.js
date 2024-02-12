@@ -5,51 +5,62 @@ import styles from './style';
 import SkillsGroupBack from './back';
 import langManager from 'Managers/LangManager';
 
-import { Button, Text, Icon } from 'Interface/Components';
+import { Text, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  */
 
 class SkillsGroup extends SkillsGroupBack {
-    /** @param {{ item: EnrichedSkill }} param0 */
-    renderSkill = ({ item: { ID, FullName, LogoXML } }) => (
-        <TouchableOpacity
-            style={styles.skill}
-            onPress={() => this.openSkill(ID)}
-            activeOpacity={.6}
-        >
-            <View style={styles.skillImage}>
-                <Icon xml={LogoXML} size={42} color='main1' />
-            </View>
-            <Text fontSize={12}>{FullName}</Text>
-        </TouchableOpacity>
-    )
+    /** @param {{ item: EnrichedSkill | null }} param0 */
+    renderSkill = ({ item }) => {
+        const lang = langManager.curr['other'];
+
+        if (item === null) {
+            return (
+                <TouchableOpacity
+                    style={styles.skill}
+                    onPress={this.openSkills}
+                    activeOpacity={.6}
+                >
+                    <View style={styles.skillImage}>
+                        <Icon xml={'default'} size={42} color='main1' />
+                    </View>
+                    <Text fontSize={12}>{lang['widget-skills-all']}</Text>
+                </TouchableOpacity>
+            );
+        }
+
+        const { ID, FullName, LogoXML } = item;
+
+        return (
+            <TouchableOpacity
+                style={styles.skill}
+                onPress={() => this.openSkill(ID)}
+                activeOpacity={.6}
+            >
+                <View style={styles.skillImage}>
+                    <Icon xml={LogoXML} size={42} color='main1' />
+                </View>
+                <Text fontSize={12}>{FullName}</Text>
+            </TouchableOpacity>
+        );
+    }
 
     render() {
         const { style } = this.props;
-        const lang = langManager.curr['other'];
-        const styleButton = { marginTop: this.state.skills.length === 0 ? 0 : 24 };
 
         return (
-            <>
+            <View style={[styles.container, style]}>
                 <FlatList
-                    style={style}
-                    data={this.state.skills}
+                    data={[...this.state.skills, null]}
                     renderItem={this.renderSkill}
                     keyExtractor={(item, index) => 'skill-' + index}
-                    numColumns={3}
+                    numColumns={2}
                     ItemSeparatorComponent={() => <View style={styles.skillSpace} />}
                     scrollEnabled={false}
                 />
-
-                <Button
-                    style={[styles.btnAllSkill, styleButton]}
-                    onPress={this.openSkills}
-                >
-                    {lang['widget-skills-all']}
-                </Button>
-            </>
+            </View>
         );
     }
 }

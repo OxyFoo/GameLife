@@ -9,7 +9,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { TimingAnimation } from 'Utils/Animations';
 import { IsUndefined, Sleep } from 'Utils/Functions';
-import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHeader } from 'Interface/Widgets';
+import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHeader, NotificationsInApp } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -85,13 +85,14 @@ class PageManager extends React.Component{
 
     intervalFastRefresh = null;
 
-    /** @type {Popup} */        popup       = null;
-    /** @type {ScreenInput} */  screenInput = null;
-    /** @type {ScreenList} */   screenList  = null;
-    /** @type {ScreenTuto} */   screenTuto  = null;
-    /** @type {UserHeader} */   header      = null;
-    /** @type {BottomBar} */    bottomBar   = null;
-    /** @type {Console} */      console     = null;
+    /** @type {Popup} */                popup       = null;
+    /** @type {ScreenInput} */          screenInput = null;
+    /** @type {ScreenList} */           screenList  = null;
+    /** @type {ScreenTuto} */           screenTuto  = null;
+    /** @type {UserHeader} */           header      = null;
+    /** @type {BottomBar} */            bottomBar   = null;
+    /** @type {NotificationsInApp} */   notificationsInApp = null;
+    /** @type {Console} */              console     = null;
 
     componentDidMount() {
         if (__DEV__) {
@@ -432,6 +433,8 @@ class PageManager extends React.Component{
                 <ScreenList ref={ref => { if (ref !== null) this.screenList = ref } } />
                 <ScreenInput ref={ref => { if (ref !== null) this.screenInput = ref } } />
                 <ScreenTuto ref={ref => { if (ref !== null) this.screenTuto = ref } } smallScreen={this.screenHeight < 600} />
+
+                <NotificationsInApp ref={ref => { if (ref !== null) this.notificationsInApp = ref } } />
 
                 <Console ref={ref => { if (ref !== null) this.console = ref } } />
             </LinearGradient>

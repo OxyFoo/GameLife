@@ -9,14 +9,13 @@ import { GetTime } from 'Utils/Time';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Interface/Components/PieChart').Item} Item
  * @typedef {import('Interface/Components/PieChart').FocusedActivity} FocusedActivity
  * 
  * @typedef {object} UpdatingData
  * @property {number} id
  * @property {string} name
  * @property {number} value
- * @property {number} valueMin
+ * @property {number} valueMinutes
  * @property {string} color
  * @property {string} gradientCenterColor
  * @property {boolean} focused
@@ -29,54 +28,41 @@ const InputProps = {
 
 class TodayPieChartBack extends React.Component {
     state = {
-        /** @type {boolean} */
-        switchValue: false,
-
         dataToDisplay: [],
 
         /** @type {FocusedActivity | null} */
-        focusedActivity: null,
-
-        /** @type {number} */
-        totalTime: 0
+        focusedActivity: null
     }
 
     /** @type {UpdatingData[]} */
     updatingData = [];
 
-    saveTimeout = null;
+    constructor(props) {
+        super(props);
+        this.state = { ...this.state, ...this.computeData(false) };
+    }
 
     componentDidMount() {
-        this.compute(user.settings.homePieChart);
-
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.compute(user.settings.homePieChart);
+            this.computeData();
         });
     }
 
     componentWillUnmount() {
-        clearTimeout
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
     /**
-     * Compute and prepare the data for the pie chart
-     * @param {boolean} value 
+     * @param {boolean} [setState=true] If true, call setState to update the component
      */
-    compute = (value) => {
-        // Compute the data depending on the switch value
+    computeData = (setState = true) => {
         this.updatingData = this.initCategoriesArray();
         this.addCategoriesName();
         this.computeTimeEachCategory();
-        let totalTime = 0;
-        if (value) {
-            const totalPercent = this.convertTimeToPercent(1440);
-            this.addUndefinedActivity(totalPercent);
-        }
-        else {
-            totalTime = this.computeTotalTime();
-            this.convertTimeToPercent(totalTime);
-        }
+
+        const totalTime = this.computeTotalTime();
+        this.convertTimeToPercent(totalTime);
+
         const focusedActivity = this.findBiggestActivity();
 
         if (focusedActivity && focusedActivity.id !== 0) {
@@ -84,29 +70,16 @@ class TodayPieChartBack extends React.Component {
         }
         this.computeGradientShadow();
 
-        // Remove the activities with 0% of the pie chart (avoid glitch on android)
-        this.updatingData = this.updatingData.filter(item => item.value > 0);
-
-        // Focused and display handler
-        this.setState({
+        const newState = {
             dataToDisplay: this.updatingData,
-            focusedActivity: focusedActivity,
-            switchValue: value,
-            totalTime: (totalTime / 60.0).toFixed(1)
-        });
-    }
+            focusedActivity: focusedActivity
+        };
 
-    /** @param {boolean} value */
-    changeSwitchValue = (value) => {
-        // Save the settings (avoid spamming the save)
-        clearTimeout(this.saveTimeout);
-        this.saveTimeout = setTimeout(() => {
-            user.settings.Save();
-        }, 3 * 1000);
+        if (setState) {
+            this.setState(newState);
+        }
 
-        user.settings.homePieChart = value;
-        this.setState({ switchValue: value });
-        this.compute(value);
+        return newState;
     }
 
     /**
@@ -122,7 +95,7 @@ class TodayPieChartBack extends React.Component {
             baseData.push({
                 id: allCategories[i].ID,
                 value: 0,
-                valueMin: 0,
+                valueMinutes: 0,
                 name: '',
                 color: '#000000',
                 gradientCenterColor: '#000000',
@@ -175,64 +148,9 @@ class TodayPieChartBack extends React.Component {
                 continue;
             }
 
-            this.updatingData[index].valueMin += activity.duration;
+            this.updatingData[index].valueMinutes += activity.duration;
         }
     };
-
-    /**
-     * Compute the time in minutes spent in total in the day 
-     * @return {number}
-     */
-    computeTotalTime = () => {
-        let totalMin = 0;
-        for (const element of this.updatingData) {
-            let item = element;
-            totalMin += item.valueMin;
-        }
-        return totalMin;
-    }
-
-    /**
-     * Convert the time in minutes to a percent of the day
-     * @param {number} totalMin
-     * @return {number}
-     */
-    convertTimeToPercent = (totalMin) => {
-        let totalPercent = 0;
-        for (const element of this.updatingData) {
-            let item = element;
-            if (item.id > 0 && item.id < 6) {
-                item.value = Math.round(item.valueMin / totalMin * 100) || 0;
-                totalPercent += item.value;
-            }
-        }
-        return totalPercent;
-    }
-
-    /**
-     * Either actualize the value of the "undefined" activity or create it
-     * @param {number} totalPercent
-     * @return {void}
-     */
-    addUndefinedActivity = (totalPercent) => {
-        if (totalPercent < 100) {
-            const index = this.updatingData.findIndex(item => item.id === 6);
-            if (index !== -1) {
-                this.updatingData[index].value = 100 - totalPercent;
-            }
-            else {
-                this.updatingData.push({
-                    id: 6,
-                    name: 'Non défini',
-                    value: 100 - totalPercent,
-                    valueMin: 0,
-                    color: '#B0B0B0',
-                    gradientCenterColor: '#000000',
-                    focused: false
-                });
-            }
-        }
-    }
 
     /**
      * Find the biggest activity and update the state
@@ -252,13 +170,45 @@ class TodayPieChartBack extends React.Component {
     }
 
     /**
+     * Compute the time in minutes spent in total in the day 
+     * @return {number}
+     */
+    computeTotalTime = () => {
+        let totalMin = 0;
+        for (const element of this.updatingData) {
+            let item = element;
+            totalMin += item.valueMinutes;
+        }
+        return totalMin;
+    }
+
+    /**
+     * Convert the time in minutes to a percent of the day
+     * @param {number} totalMinutes
+     * @return {number}
+     */
+    convertTimeToPercent = (totalMinutes) => {
+        if (totalMinutes === 0) {
+            return 0;
+        }
+
+        let totalPercent = 0;
+        for (const element of this.updatingData) {
+            let item = element;
+            if (item.id > 0 && item.id < 6) {
+                item.value = Math.round(item.valueMinutes / totalMinutes * 100);
+                totalPercent += item.value;
+            }
+        }
+        return totalPercent;
+    }
+
+    /**
      * Gradient shadow chelou qui marchent pas de ouf sont calculés ici
      */
     computeGradientShadow = () => {
         for (const element of this.updatingData) {
-            let item = element;
-            item.value = !isNaN(item.value) && typeof item.value === 'number' ? item.value : 0;
-            item.gradientCenterColor = this.shadeColor(item.color, -20);
+            element.gradientCenterColor = this.shadeColor(element.color, -20);
         }
     }
 

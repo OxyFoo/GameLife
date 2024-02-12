@@ -39,27 +39,6 @@ class Devices
                 }
             }
         }
-
-        // Old identifier with slow hash | TODO: Remove after 1.0.3
-        $commandOld = "SELECT * FROM TABLE WHERE `Name` = ?";
-        $devicesOld = $db->QueryPrepare('Devices', $commandOld, 's', [ $deviceName ]);
-        if ($devicesOld !== null) {
-            for ($d = 0; $d < count($devicesOld); $d++) {
-                if (password_verify($deviceID, $devicesOld[$d]['Hash'])) {
-                    $device = new Device($devicesOld[$d]);
-
-                    $commandUpdate = "UPDATE TABLE SET `Identifier` = ? WHERE `ID` = ?";
-                    $args = [ $deviceIdentifier, $device->ID ];
-                    $result = $db->QueryPrepare('Devices', $commandUpdate, 'si', $args);
-                    if ($result === false) {
-                        ExitWithStatus('Error: Updating device in DB failed');
-                    }
-
-                    return self::GetByID($db, $device->ID);
-                }
-            }
-        }
-
         return null;
     }
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackSettings from './back';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -18,6 +19,7 @@ class Settings extends BackSettings {
             sendingMail,
             devicesLoading
         } = this.state;
+
         const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
 
@@ -66,6 +68,9 @@ class Settings extends BackSettings {
                 <Button style={styles.margin} onPress={this.openConsentPopup} color='main2' loading={waitingConsentPopup}>{lang['input-consent']}</Button>
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
                 <Button style={styles.margin} onPress={this.disconnectAll} color='main2' loading={devicesLoading}>{lang['input-disconnect-all']}</Button>
+                {user.server.IsConnected() && this.state.serverTCPState !== 'connected' && this.state.serverTCPState !== 'idle' && (
+                    <Button style={styles.margin} onPress={this.reconnectTCP} color='main3' loading={devicesLoading}>{lang['input-reconnect-tcp']}</Button>
+                )}
                 <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{lang['input-tuto-again']}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>
             </Page>

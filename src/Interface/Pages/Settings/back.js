@@ -7,6 +7,7 @@ import { GetTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
+ * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
@@ -29,7 +30,10 @@ class BackSettings extends PageBase {
         switchEveningNotifs: user.settings.eveningNotifications,
         waitingConsentPopup: false,
         sendingMail: false,
-        devicesLoading: false
+        devicesLoading: false,
+
+        /** @param {ConnectionState} state */
+        serverTCPState: user.tcp.state.Get()
     }
 
     intervalConsentChecking = null;
@@ -44,11 +48,19 @@ class BackSettings extends PageBase {
                 }
             }, 100);
         }
+        this.listenerTCP = user.tcp.state.AddListener(this.onTCPStateChange);
     }
 
     componentWillUnmount() {
-        if (this.intervalConsentChecking !== null)
+        if (this.intervalConsentChecking !== null) {
             clearInterval(this.intervalConsentChecking);
+        }
+        user.tcp.state.RemoveListener(this.listenerTCP);
+    }
+
+    /** @param {ConnectionState} state */
+    onTCPStateChange = (state) => {
+        this.setState({ serverTCPState: state });
     }
 
     onBack = () => user.interface.BackHandle();
@@ -64,7 +76,7 @@ class BackSettings extends PageBase {
     /** @param {ComboBoxItem} lang */
     onChangeLang = (lang) => {
         this.setState({ cbSelectedLang: lang });
-        langManager.SetLangage(lang.key);
+        langManager.SetLangage(/** @type {'fr' | 'en'} */ (lang.key));
         user.settings.Save();
     }
 
@@ -133,13 +145,17 @@ class BackSettings extends PageBase {
         this.setState({ devicesLoading: false });
     }
 
+    reconnectTCP = () => {
+        user.tcp.Connect();
+        this.setState({ serverTCPState: 'idle' });
+    }
+
     deleteAccount = () => {
-        /** @param {"yes"|"no"} button */
+        /** @param {'yes' | 'no'} button */
         const event = async (button) => {
             if (button !== 'yes')
                 return;
 
-            const end = () => this.setState({ sendingMail: false });
             this.setState({ sendingMail: true });
 
             const data = {
@@ -155,13 +171,19 @@ class BackSettings extends PageBase {
                 // Mail sent
                 const title = langManager.curr['settings']['alert-deletedmailsent-title'];
                 const text = langManager.curr['settings']['alert-deletedmailsent-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
+                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
+                    this.setState({ sendingMail: false }, () => {
+                        user.Disconnect(true);
+                    });
+                }, false);
                 user.tempMailSent = now;
             } else {
                 // Mail sent failed
                 const title = langManager.curr['settings']['alert-deletedfailed-title'];
                 const text = langManager.curr['settings']['alert-deletedfailed-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], end, false);
+                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
+                    this.setState({ sendingMail: false })
+                }, false);
             }
         };
 

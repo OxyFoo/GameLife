@@ -1,14 +1,15 @@
 {
   "name": "gamelife",
-  "version": "1.1.2",
-  "versionName": "1.1.2",
+  "version": "1.1.3",
+  "versionName": "1.1.3-test",
   "private": true,
   "scripts": {
     "start": "npx react-native start --reset-cache",
     "build": "cd android && ./gradlew bundleRelease",
     "clean": "cd android && ./gradlew clean",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "server": "cd src/Server/TCP && npm start"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",

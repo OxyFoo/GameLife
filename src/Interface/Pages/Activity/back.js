@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { FlatList } from 'react-native';
 
 import StartTutorial from './tuto';
@@ -7,9 +8,10 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime, RoundTimeTo } from 'Utils/Time';
-import { Sleep } from 'Utils/Functions';
 import { PageBase } from 'Interface/Components';
+import { ZapGPT } from 'Interface/Widgets';
+import { Sleep } from 'Utils/Functions';
+import { GetTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
@@ -261,6 +263,14 @@ class BackActivity extends PageBase {
      */
     selectSkill = (skill) => {
         this.refActivityPanel.SelectSkill(skill);
+    }
+
+    PromptZapGPT = () => {
+        if (user.tcp.IsConnected() === false) {
+            return;
+        }
+
+        user.interface.popup.Open('custom', () => <ZapGPT />, undefined, false);
     }
 }
 

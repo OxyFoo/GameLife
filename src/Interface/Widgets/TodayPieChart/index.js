@@ -6,12 +6,11 @@ import TodayPieChartBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Switch, PieChart } from 'Interface/Components';
+import { PieChart } from 'Interface/Components';
 
 class TodayPieChart extends TodayPieChartBack {
     render() {
         const lang = langManager.curr['home'];
-        const { switchValue, totalTime } = this.state;
 
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
@@ -21,20 +20,13 @@ class TodayPieChart extends TodayPieChartBack {
             color: themeManager.GetColor('primary')
         };
 
-        const dayPerformance = switchValue ? '24' : totalTime.toString();
-        const headerText = lang['chart-today-performance'].replace('{}', dayPerformance);
+        const headerText = lang['chart-today-performance'];
 
         return (
             <View style={[styleContainer, styles.container, this.props.style]}>
                 {/* Top row view */}
                 <View style={styles.flexBetween}>
-
                     <Text style={styles.headerText}>{headerText}</Text>
-
-                    <Switch
-                        value={this.state.switchValue}
-                        onValueChanged={this.changeSwitchValue}
-                    />
                 </View>
 
                 {/* Pie chart view */}

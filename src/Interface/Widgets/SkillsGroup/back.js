@@ -17,12 +17,12 @@ const SkillsGroupProps = {
 class SkillsGroupBack extends React.Component {
     state = {
         /** @type {Array<EnrichedSkill>} */
-        skills: user.activities.GetLastSkills()
+        skills: user.activities.GetLastSkills(3)
     }
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.setState({ skills: user.activities.GetLastSkills() });
+            this.setState({ skills: user.activities.GetLastSkills(3) });
         });
     }
 

@@ -6,7 +6,7 @@ class Activity {
     public $duration = 0;
     public $comment = '';
     public $timezone = 0;
-    public $startNow = false;
+    public $addedType = '';
     public $addedTime = 0;
 }
 class ActivityUnsaved extends Activity {
@@ -22,7 +22,7 @@ class Skills
      * @return Activity[]
      */
     public static function GetActivities($db, $account) {
-        $command = 'SELECT `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `StartNow`, `AddedTime` FROM TABLE WHERE `AccountID` = ?';
+        $command = 'SELECT `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `AddedType`, `AddedTime` FROM TABLE WHERE `AccountID` = ?';
         $rows = $db->QueryPrepare('Activities', $command, 'i', [ $account->ID ]);
         if ($rows === null) {
             ExitWithStatus('Error: getting activities failed');
@@ -36,7 +36,7 @@ class Skills
                 'duration'  => intval($rows[$i]['Duration']),
                 'comment'   => $db->Decrypt($rows[$i]['Comment']),
                 'timezone'  => intval($rows[$i]['TimeZone']),
-                'startNow'  => intval($rows[$i]['StartNow']),
+                'addedType' => $rows[$i]['AddedType'],
                 'addedTime' => intval($rows[$i]['AddedTime'])
             );
             array_push($activities, $newActivity);
@@ -66,7 +66,7 @@ class Skills
             $duration   = $activity['duration'];
             $comment    = $activity['comment'];
             $timezone   = $activity['timezone'];
-            $startNow   = $activity['startNow'];
+            $addedType  = $activity['addedType'];
             $addedTime  = $activity['addedTime'];
 
             // Check if activity exists
@@ -95,9 +95,9 @@ class Skills
 
                 // Add activity if not exists
                 else {
-                    $command = 'INSERT INTO TABLE (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `StartNow`, `AddedTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-                    $args = [ $account->ID, $skillID, $startTime, $duration, $commentFormat, $timezone, $startNow, $addedTime ];
-                    $r = $db->QueryPrepare('Activities', $command, 'iiiisiii', $args);
+                    $command = 'INSERT INTO TABLE (`AccountID`, `SkillID`, `StartTime`, `Duration`, `Comment`, `TimeZone`, `AddedType`, `AddedTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+                    $args = [ $account->ID, $skillID, $startTime, $duration, $commentFormat, $timezone, $addedType, $addedTime ];
+                    $r = $db->QueryPrepare('Activities', $command, 'iiiisisi', $args);
                     if ($r === false) ExitWithStatus('Error: saving activities failed (add)');
                 }
             }

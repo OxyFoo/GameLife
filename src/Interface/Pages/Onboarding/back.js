@@ -49,14 +49,19 @@ class BackOnboarding extends PageBase {
                 text: lang['page3']
             },
             {
-                component: this.refInfo,
+                component: null,
                 showSkipButton: false,
                 text: lang['page4']
             },
             {
+                component: this.refInfo,
+                showSkipButton: false,
+                text: lang['page5']
+            },
+            {
                 component: null,
                 showSkipButton: false,
-                text: lang['page5'],
+                text: lang['page6'],
                 execAfter: () => {
                     this.endOnboarding();
                     return true;

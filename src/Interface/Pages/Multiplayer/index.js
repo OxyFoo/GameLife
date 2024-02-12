@@ -1,39 +1,91 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
-import { Button, Container, Page, Text } from 'Interface/Components';
+import { Button, Page, Text, FriendElement } from 'Interface/Components';
+import { PageHeader } from 'Interface/Widgets';
+import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
 class Multiplayer extends BackMultiplayer {
     render() {
-        const lang = langManager.curr['multiplayer'];
-
         return (
-            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-                <View style={styles.tempContainer}>
-                    <Text style={styles.tempTitle}>{lang['temp-comingsoon-title']}</Text>
-                    <Text style={styles.tempText}>{lang['temp-comingsoon-text']}</Text>
-                </View>
+            <Page
+                ref={ref => this.refPage = ref}
+                overlay={this.renderAddButton()}
+                bottomOffset={64}
+                canScrollOver
+            >
+                <PageHeader onBackPress={this.Back} />
+                {this.renderContent()}
             </Page>
         );
+    }
 
-        const { server } = this.state;
-        const pages = {
-            '': this.renderLoading,
-            'connected': this.renderMultiplayer,
-            'disconnected': this.renderFailed,
-            'error': this.renderFailed,
-            'offline': this.renderOffline,
-            'test': this.renderTest
-        };
-        console.log(server);
+    renderAddButton = () => {
+        const { state, friends, friendsPending } = this.state;
+
+        if (state !== 'connected') {
+            return null;
+        }
 
         return (
-            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-                {pages[server]()}
-            </Page>
+            <>
+                <Button
+                    style={styles.classementButton}
+                    color='main1'
+                    icon='world'
+                    borderRadius={12}
+                    onPress={this.openClassement}
+                />
+                {friends.length + friendsPending.length < FRIENDS_LIMIT && (
+                    <Button
+                        style={styles.addFriendButton}
+                        color='main2'
+                        icon='userAdd'
+                        borderRadius={12}
+                        onPress={this.addFriendHandle}
+                    />
+                )}
+            </>
+        );
+    }
+
+    renderContent = () => {
+        const lang = langManager.curr['multiplayer'];
+        const { state, friends, friendsPending } = this.state;
+
+        if (state === 'disconnected')   return this.renderDisconnected();
+        else if (state === 'idle')      return this.renderLoading();
+        else if (state === 'error')     return this.renderError();
+
+        return (
+            <View>
+                <Text fontSize={24}>{lang['category-friend']}</Text>
+                <FlatList
+                    style={styles.flatList}
+                    data={friends}
+                    keyExtractor={(item, index) => 'multi-player-' + item.accountID}
+                    renderItem={({ item, index }) => (
+                        <FriendElement friend={item} />
+                    )}
+                />
+
+                {friendsPending.length > 0 && (
+                    <>
+                        <Text style={styles.topMargin} fontSize={24}>{lang['category-friend-pending']}</Text>
+                        <FlatList
+                            style={styles.flatList}
+                            data={friendsPending}
+                            keyExtractor={(item, index) => 'multi-player-' + item.accountID}
+                            renderItem={({ item, index }) => (
+                                <FriendElement friend={item} />
+                            )}
+                        />
+                    </>
+                )}
+            </View>
         );
     }
 
@@ -46,21 +98,7 @@ class Multiplayer extends BackMultiplayer {
         );
     }
 
-    renderMultiplayer = () => {
-        return (
-            <>
-                <Button color='main1' icon='world' borderRadius={12}>[Classement]</Button>
-                <Container
-                    text='[Alliés]'
-                    icon='userAdd'
-                    onIconPress={() => { console.log('test'); }}
-                >
-                </Container>
-            </>
-        );
-    }
-
-    renderFailed = () => {
+    renderError = () => {
         const textFailed = langManager.curr['multiplayer']['connection-failed'];
         const textRetry = langManager.curr['multiplayer']['button-retry'];
         return (
@@ -71,41 +109,40 @@ class Multiplayer extends BackMultiplayer {
         );
     }
 
-    renderOffline = () => {
+    renderDisconnected = () => {
         const textFailed = langManager.curr['multiplayer']['connection-offline'];
         const textRetry = langManager.curr['multiplayer']['button-retry'];
         return (
             <>
                 <Text style={styles.firstText}>{textFailed}</Text>
-            </>
-        );
-    }
-
-    renderTest = () => {
-        return (
-            <>
-                <Button style={{ marginBottom: 24 }} color='main1' borderRadius={8} onPress={this.ConnectToServer}>Connect to server</Button>
-                <Button style={{ marginBottom: 24 }} color='main1' borderRadius={8} onPress={this.Send}>Send</Button>
-                <Button style={{ marginBottom: 24 }} color='main1' borderRadius={8} onPress={this.Disconnect}>Disconnect</Button>
+                <Button style={{ marginTop: 24 }} color='main1' onPress={this.Reconnect}>{textRetry}</Button>
             </>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    tempContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        marginVertical: '30%'
+    flatList: {
+        marginTop: 12,
+        marginHorizontal: -24
     },
-    tempTitle: {
-        paddingHorizontal: 12,
-        fontSize: 32
+    classementButton: {
+        aspectRatio: 1,
+        position: 'absolute',
+        left: 24,
+        bottom: 24,
+        paddingHorizontal: 0
     },
-    tempText: {
-        paddingHorizontal: 12,
-        fontSize: 24
+    addFriendButton: {
+        aspectRatio: 1,
+        position: 'absolute',
+        right: 24,
+        bottom: 24,
+        paddingHorizontal: 0
+    },
+
+    topMargin: {
+        marginTop: 24
     },
 
     firstText: {

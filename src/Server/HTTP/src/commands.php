@@ -371,18 +371,31 @@ class Commands {
         $account = $this->account;
         $device = $this->device;
 
-        $rewards = array();
+        $achevementsAdded = array();
         foreach ($achievementsID as $achievementID) {
-            $newRewards = Achievements::AddByID($this->db, $account, $achievementID, 'OK');
-            if ($newRewards === false) {
+            $addedSuccess = Achievements::AddByID($this->db, $account, $device->ID, $achievementID);
+            if ($addedSuccess === false) {
                 $this->db->AddLog($account->ID, $device->ID, 'error', "Try to add achievement $achievementID");
                 continue;
             }
-            array_push($rewards, $newRewards);
+            array_push($achevementsAdded, $achievementID);
         }
 
         $this->output['status'] = 'ok';
-        $this->output['rewards'] = join(',', $rewards);
+        $this->output['newAchievements'] = Achievements::Get($this->db, $account);
+    }
+
+    public function ClaimAchievement() {
+        $achievementID = $this->data['achievementID'];
+        if (!isset($achievementID) || !$this->tokenChecked) return;
+        $account = $this->account;
+        $device = $this->device;
+
+        $newRewards = Achievements::Claim($this->db, $account, $device->ID, $achievementID);
+        if ($newRewards === false) return;
+
+        $this->output['status'] = 'ok';
+        $this->output['rewards'] = $newRewards;
     }
 
     public function SetUsername() {
@@ -679,9 +692,8 @@ class Commands {
 
         $data = array(
             'deviceID' => $device->ID,
-            'accountID' => $account->ID
-            // TODO - return friends (servTCP ?)
-            //'friends' => $account->Friends
+            'accountID' => $account->ID,
+            'username' => $account->Username
         );
 
         $this->output['data'] = $data;

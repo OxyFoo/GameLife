@@ -2,43 +2,18 @@ import * as React from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
 import BackProfile from './back';
-import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
-
 import StartHelp from './help';
 import EditorAvatar from './editorAvatar';
 import EditorProfile from './editorProfile';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
+
 import { Round } from 'Utils/Functions';
-import { Page, Text, XPBar, Container } from 'Interface/Components';
-import { UserHeader, PageHeader, StatsBars, SkillsGroup, AchievementsGroup } from 'Interface/Widgets';
+import { Page, Text, XPBar, Container, KPI, Button } from 'Interface/Components';
+import { UserHeader, PageHeader, AchievementsGroup } from 'Interface/Widgets';
 
 class Profile extends BackProfile {
-    DataRow({ title = '', value = ''}) {
-        const lang = langManager.curr['profile'];
-        const rowStyle = [ styles.tableRow, { borderColor: themeManager.GetColor('main1') } ];
-        const cellStyle = [ styles.cell, { borderColor: themeManager.GetColor('main1') } ];
-        return (
-            <View style={rowStyle}>
-                <Text
-                    style={styles.rowText}
-                    containerStyle={cellStyle}
-                >
-                    {lang[title]}
-                </Text>
-
-                <Text
-                    style={styles.rowText}
-                    containerStyle={[cellStyle, { borderRightWidth: 0 }]}
-                >
-                    {value}
-                </Text>
-            </View>
-        );
-    }
-
     render() {
-        const { DataRow } = this;
         const { editorOpened, xpInfo } = this.state;
         const lang = langManager.curr['profile'];
         const langDates = langManager.curr['dates']['names'];
@@ -46,6 +21,7 @@ class Profile extends BackProfile {
         const animAvatar = this.refAvatar?.state.editorAnim.interpolate(interReverse) || 1;
         const headerOpacity = { opacity: animAvatar };
         const headerPointer = this.refAvatar === null ? 'auto' : (this.state.editorOpened ? 'none' : 'auto');
+        const backgroundKpi = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
             <Page
@@ -78,56 +54,24 @@ class Profile extends BackProfile {
                 <EditorAvatar
                     ref={ref => this.refAvatar = ref}
                     refParent={this}
-                    onChangeState={opened => this.setState({ editorOpened: opened }) }
+                    onChangeState={opened => this.setState({ editorOpened: opened })}
                 />
 
-                <Container
-                    style={styles.topSpace}
-                    styleContainer={{ padding: 0 }}
-                    text={lang['row-title']}
-                    type='static'
-                    opened={true}
-                    color='main1'
-                    backgroundColor='backgroundCard'
-                >
-                    <DataRow
-                        title='row-since'
-                        value={this.playTime + ' ' + (this.playTime <= 1 ? langDates['day'] : langDates['days'])}
-                    />
-                    <DataRow
-                        title='row-activities'
-                        value={this.totalActivityLength.toString()}
-                    />
-                    <DataRow
-                        title='row-time'
-                        value={this.totalActivityTime.toString()}
-                    />
-                </Container>
-
-                <View style={{ paddingHorizontal: 12 }}>
-                    <Container
-                        style={styles.topSpace}
-                        text={lang['container-stats-title']}
-                        type='rollable'
-                        opened={false}
-                        color='main3'
-                        rippleColor='white'
-                    >
-                        <StatsBars data={user.stats} />
-                    </Container>
-
-                    <Container
-                        key={'profile-skills-' + this.state.xpInfo.totalXP}
-                        style={styles.topSpace}
-                        text={lang['container-skills-title']}
-                        type='rollable'
-                        opened={this.state.skillsOpened}
-                        onChangeState={this.onChangeStateSkills}
-                        color='main3'
-                        rippleColor='white'
-                    >
-                        <SkillsGroup />
-                    </Container>
+                <View style={styles.kpiContainer}>
+                    <KPI
+                        title={lang['row-since']}
+                        value={this.state.playedDays}
+                        unit={langDates['day-min']}
+                        style={[styles.kpiProfile, backgroundKpi]} />
+                    <KPI
+                        title={lang['row-activities']}
+                        value={this.state.totalActivityLength}
+                        style={[styles.kpiProfile, backgroundKpi]} />
+                    <KPI
+                        title={lang['row-time']}
+                        value={this.state.totalActivityTime}
+                        unit={langDates['hours-min']}
+                        style={[styles.kpiProfile, backgroundKpi]}/>
                 </View>
 
                 <Container
@@ -141,7 +85,18 @@ class Profile extends BackProfile {
                     <AchievementsGroup />
                 </Container>
 
-                <EditorProfile ref={ref => this.refProfileEditor = ref } />
+                <Button
+                    style={styles.topSpace}
+                    color='backgroundCard'
+                    rippleColor='white'
+                    borderRadius={8}
+                    icon='setting'
+                    onPress={this.openSettings}
+                >
+                    {lang['btn-settings']}
+                </Button>
+
+                <EditorProfile ref={ref => this.refProfileEditor = ref} />
             </Page>
         );
     }
@@ -151,21 +106,14 @@ const styles = StyleSheet.create({
     topSpace: { marginTop: 24 },
     botSpace: { marginBottom: 24 },
     xpRow: { flexDirection: 'row', justifyContent: 'space-between' },
-    rowText: {
-        fontSize: 14,
-        textAlign: 'left'
-    },
-    tableRow: {
-        width: '100%',
-        height: 48,
+    kpiContainer: {
         flexDirection: 'row',
-        borderTopWidth: .4
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 12
     },
-    cell: {
-        width: '50%',
-        paddingHorizontal: 16,
-        justifyContent: 'center',
-        borderRightWidth: .4
+    kpiProfile: {
+        paddingHorizontal: 2
     }
 });
 

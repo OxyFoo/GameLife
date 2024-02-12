@@ -1,18 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    citation: {
-        fontSize: 16,
-        textAlign: 'justify'
-    },
-    author: {
-        marginTop: 8,
-        marginRight: 24,
-        fontSize: 16,
-        textAlign: 'right',
-        fontWeight: 'bold'
-    },
-
     new: {
         padding: '5%',
         display: 'flex',
@@ -39,10 +27,6 @@ const styles = StyleSheet.create({
         flex: .6,
         alignItems: 'center',
         justifyContent: 'center'
-    },
-
-    quote: {
-        padding: '5%'
     }
 });
 

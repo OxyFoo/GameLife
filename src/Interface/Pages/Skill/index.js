@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-import { PageHeader, ActivityPanel, SkillChart } from 'Interface/Widgets';
+import { PageHeader, ActivityPanel, SkillChart, StatsBars } from 'Interface/Widgets';
 import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 
 /** @typedef {import('./back').HistoryActivity} HistoryActivity */
@@ -124,18 +124,13 @@ class Skill extends BackSkill {
                         title={langLevel['total-hour']}
                         value={this.skill.totalDuration}
                         unit={langTime['hours-min']}
-                        style={[styles.statsContainer]} />
+                        style={[styles.statsContainer]}
+                    />
                     <KPI
                         title={langLevel['total']}
                         value={this.skill.totalFloatXp}
-                        style={[styles.statsContainer]} />
-                    {/*
-                    <KPI
-                        title={'temps moyen'}
-                        value={this.skill.numberOfActivities || 0}
-                        unit={'h'}
-                        style={[styles.statsContainer]}/>
-                    */}
+                        style={[styles.statsContainer]}
+                    />
                 </View>
 
                 {/* Skill use chart */}
@@ -146,7 +141,6 @@ class Skill extends BackSkill {
                 />
 
                 {/* Stats */}
-                {/* 
                 <Container
                     text={lang['stats-title']}
                     style={styles.statsContainer}
@@ -155,8 +149,6 @@ class Skill extends BackSkill {
                 >
                     <StatsBars data={user.stats} supData={this.skill.stats} />
                 </Container>
-                */}
-
 
                 {/* History */}
                 {this.renderHistory()}

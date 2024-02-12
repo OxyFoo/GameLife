@@ -7,6 +7,7 @@ import Container from './Components/Container';
 import DayClock from './Components/DayClock';
 import Digit from './Components/Digit';
 import Frame from './Components/Character/Frame';
+import FriendElement from './Components/FriendElement';
 import GLLoading from './Components/GLLoading';
 import HeatMap from './Components/HeatMap';
 import Icon from './Components/Icon';
@@ -38,6 +39,7 @@ export {
     DayClock,
     Digit,
     Frame,
+    FriendElement,
     GLLoading,
     HeatMap,
     Icon,

@@ -225,12 +225,19 @@ class Accounts
      * @return bool Success of deletion
      */
     public static function Delete($db, $accountID) {
-        $remActivities = $db->QueryPrepare('Avatars',           'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
-        $remActivities = $db->QueryPrepare('Activities',        'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
-        $remInventory  = $db->QueryPrepare('Inventories',       'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
-        $remInventory  = $db->QueryPrepare('InventoriesTitles', 'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
-        $remUser       = $db->QueryPrepare('Accounts',          'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
-        return $remActivities !== false && $remUser !== false && $remInventory !== false;
+        $remFriends    = $db->QueryPrepare('Friends',                   'DELETE FROM TABLE WHERE `AccountID` = ? OR `TargetID` = ?', 'ii', [ $accountID, $accountID ]);
+        $remQuests     = $db->QueryPrepare('MyQuests',                  'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remNZD        = $db->QueryPrepare('NonZeroDays',               'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remTodoes     = $db->QueryPrepare('Todoes',                    'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remAvatar     = $db->QueryPrepare('Avatars',                   'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
+        $remActivities = $db->QueryPrepare('Activities',                'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remInventory  = $db->QueryPrepare('Inventories',               'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remInventoryT = $db->QueryPrepare('InventoriesTitles',         'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remInventoryA = $db->QueryPrepare('InventoriesAchievements',   'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remUser       = $db->QueryPrepare('Accounts',                  'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
+        return $remFriends !== false && $remQuests !== false && $remNZD !== false && $remTodoes !== false &&
+                $remActivities !== false && $remAvatar !== false && $remUser !== false &&
+                $remInventory !== false && $remInventoryT !== false && $remInventoryA !== false;
     }
 }
 

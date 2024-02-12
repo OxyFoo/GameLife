@@ -37,6 +37,7 @@ class SectionSchedule extends React.Component {
     /** @param {number} index */
     switchMode = (index) => {
         if (index < 0 || index > 1) return;
+        if (index === TYPES.indexOf(this.props.schedule.type)) return;
         this.props.onChange(TYPES[index], []);
     }
 

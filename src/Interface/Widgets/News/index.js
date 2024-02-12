@@ -4,17 +4,10 @@ import { View, Linking } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
-import langManager from 'Managers/LangManager';
 
 import Text from 'Interface/Components/Text';
 import Icon from 'Interface/Components/Icon';
 import Button from 'Interface/Components/Button';
-import { Random } from 'Utils/Functions';
-
-/**
- * @typedef {import('Managers/PageManager').PageName} PageName
- * @typedef {import('Data/Quotes').Quote} Quote
- */
 
 /**
  * @param {*} eventText String to parse: if it starts with 'https://', open
@@ -27,29 +20,6 @@ const buttonEvent = (eventText) => {
         user.interface.ChangePage(eventText);
     }
 };
-
-/** @param {Quote} currentQuote */
-const renderQuote = (currentQuote) => {
-    const lang = langManager.curr['quote'];
-
-    if (currentQuote === null) {
-        return (
-            <View style={styles.quote}>
-                <Text style={styles.citation}>{lang['not-found']}</Text>
-            </View>
-        );
-    }
-
-    const anonymousAuthors = lang['anonymous-author-list'];
-    const quote = dataManager.GetText(currentQuote.Quote);
-    const author = currentQuote.Author || anonymousAuthors[Random(0, anonymousAuthors.length)];
-    return (
-        <View style={styles.quote}>
-            <Text style={styles.citation}>{quote}</Text>
-            <Text style={styles.author}>{author}</Text>
-        </View>
-    );
-}
 
 /**
  * @typedef {import('Data/News').New} New
@@ -102,7 +72,7 @@ const renderNew = (Nw) => {
         const text = dataManager.GetText(Nw.Content);
         return (
             <View style={styles.newText}>
-                <Text>{text}</Text>
+                <Text fontSize={16}>{text}</Text>
             </View>
         )
     };
@@ -121,10 +91,6 @@ const renderNew = (Nw) => {
 
 const News = () => {
     let pages = [];
-
-    // First tab: Random quote
-    const currentQuote = dataManager.quotes.currentQuote;
-    pages.push(renderQuote(currentQuote));
 
     // Others tab: News (if online)
     if (dataManager.news.news.length) {

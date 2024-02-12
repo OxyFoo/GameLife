@@ -40,6 +40,16 @@
                 "last-time": "La[-es] quête[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
                 "today-time": "La[-es] quête[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
             }
+        },
+        "in-app": {
+            "achievement-pending-text": "Succès dévérouillé: {}",
+            "achievement-pending-claim": "Claim",
+
+            "friend-pending-text": "{} vous a demandé en ami",
+            "friend-pending-decline": "Refuser",
+            "friend-pending-block": "Bloquer",
+
+            "list-empty": "Aucune notification pour le moment"
         }
     },
 
@@ -64,8 +74,8 @@
             "weekly": "Semaine",
             "monthly": "Mois",
             "day-min": "j",
-            "seconds-min": "m",
-            "hours-min": "h"
+            "hours-min": "h",
+            "minutes-min": "m"
         },
         "month": [
             "Janvier",
@@ -134,9 +144,10 @@
         "select-language": "Choisis ta langue",
         "page1": "Salut ! Bienvenue dans GameLife, je suis Zap, ton guide !",
         "page2": "Le but de cette application est simple : transformer ta vie en un jeu !",
-        "page3": "Gagne des points d'expérience, améliore tes compétences et fixe toi des objectifs.",
-        "page4": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",
-        "page5": "Tu n'as plus qu'à t'inscrire et c'est parti !",
+        "page3": "Quand tu feras une activité dans le monde réel, du sport, de la musique, des devoirs, tu le noteras dans l'application.",
+        "page4": "Ça te fera gagner de l'expérience et des récompenses, et tu pourras suivre ta progression dans le temps !",
+        "page5": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",
+        "page6": "Tu n'as plus qu'à t'inscrire et c'est parti !",
         "test-caution-message": "Version test :\n\nRisque de bugs et instabilité.\nLes comptes sont indépendants de la version principale.\nDonnées susceptibles d'être supprimées.\n\nAidez-nous à améliorer l'app et gagnez des récompenses pour chaque bug trouvé !",
         "test-caution-redirect": "Viens sur le Discord pour en savoir plus !",
         "test-caution-button": "J'ai compris"
@@ -178,6 +189,8 @@
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
+        "alert-achievement-error-title": "Erreur",
+        "alert-achievement-error-text": "Une erreur est survenue, réessaye plus tard.",
 
         "tuto": {
             "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
@@ -229,6 +242,8 @@
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 
+        "activity-zap-comment": "Ajouté par Zap",
+
         "tuto": {
             "1": "Tu peux filtrer les activités par catégorie: {}",
             "2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
@@ -252,13 +267,14 @@
     },
 
     "home": {
-        "btn-add-activity": "Ajouter des activités",
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
-        "btn-settings": "Paramètres",
 
-        "chart-today-performance": "Performances du jour ({}h)",
+        "chart-today-performance": "Performances du jour",
         "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
+
+        "container-stats-title": "Stats",
+        "container-skills-title": "Compétences",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
@@ -319,8 +335,40 @@
         "connection-failed": "La connexion au serveur a échouée, réessaye plus tard.",
         "button-retry": "Réessayer",
 
+        "container-title": "Multijoueur",
+        "container-content-empty": "Aucun ami pour le moment",
+        "container-content-idle": "Chargement...",
+        "container-content-disconnected": "Tu es déconnecté, réessaye plus tard.",
+        "container-content-error": "Une erreur est survenue, réessaye plus tard.",
+
+        "category-friend": "Amis",
+        "category-friend-pending": "Demandes en attente",
+
+        "input-search-friend": "Entre le pseudo de ton ami",
+
         "temp-comingsoon-title": "Multijoueur",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧"
+        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+
+        "alert-already-friend": {
+            "title": "Déjà ami",
+            "message": "Tu es déjà ami avec {}"
+        },
+        "alert-friend-notfound": {
+            "title": "Ami introuvable",
+            "message": "L'utilisateur {} n'a pas été trouvé"
+        },
+        "alert-friend-self": {
+            "title": "Impossible",
+            "message": "Tu ne peux pas t'ajouter toi-même en ami"
+        },
+        "alert-timeout": {
+            "title": "Temps écoulé",
+            "message": "La connexion au serveur a pris trop de temps, réessaye plus tard."
+        },
+        "alert-error": {
+            "title": "Erreur",
+            "message": "Une erreur est survenue, réessaye plus tard. ({})"
+        }
     },
 
     "profile": {
@@ -328,15 +376,15 @@
         "value-age-empty": "Date de naissance inconnue",
         "value-title-empty": "Aucun titre sélectionné",
 
-        "row-title": "Informations",
-        "row-since": "Depuis",
-        "row-activities": "Nombre d'activités",
-        "row-quests": "Nombre de quêtes",
-        "row-time": "Nombre d'heures",
+        "row-since": "de jeu",
+        "row-activities": "activités",
+        "row-time": "heures",
 
         "container-achievements-title": "Derniers succès",
         "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
+
+        "btn-settings": "Paramètres",
 
         "input-username": "Pseudo",
         "input-select-title": "Sélectionnez un titre",
@@ -388,6 +436,16 @@
         "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
+    "profile-friend": {
+        "row-since": "Depuis",
+        "row-activities": "Nombre d'activités",
+        "row-time": "Nombre d'heures",
+
+        "button-remove": "Retirer de la liste d'amis",
+        "alert-removefriend-title": "Supprimer un ami",
+        "alert-removefriend-text": "Es-tu sûr de vouloir supprimer {} de ta liste d'amis ?"
+    },
+
     "report": {
         "page-title": "Report",
 
@@ -435,6 +493,7 @@
         "input-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-all": "Se déconnecter de tous les appareils",
+        "input-reconnect-tcp": "Se reconnecter au multijoueur",
         "input-tuto-again": "Revoir le tutoriel",
         "input-delete-account": "Supprimer le compte",
 
@@ -755,7 +814,7 @@
         "widget-button-editTime": "Modifier",
         "widget-duration": "Durée",
         "widget-achievements-all": "Tous les succès",
-        "widget-skills-all": "Toutes les comp.",
+        "widget-skills-all": "Autres",
         "sexe-male": "♂",
         "sexe-female": "♀"
     },
@@ -787,5 +846,28 @@
             "Un veilleur de nuit.",
             "Un gardien de secrets."
         ]
+    },
+
+    "zap-gpt": {
+        "title1": "Demander à Zap d'ajouter des activités",
+        "title2": "Zap va ajouter des activités pour toi",
+
+        "instructions": [
+            "- Descriptions le plus clair et simple possible",
+            "- Bien préciser les activitiés, leurs dates et heures de commencements et leurs durées",
+            "- Éviter de demander trop de choses d'un coup (conseillé 5, max 10)"
+        ],
+
+        "input-label": "Requête à Zap",
+
+        "added-message": "{} activité[s] a[-ont] été ajoutée[s]",
+
+        "errors": {
+            "tcp-not-connected": "La connexion au serveur a échouée",
+            "request-empty": "La requête est vide",
+            "request-invalid": "La requête a échouée, essaie de reformuler",
+            "request-timeout": "Le délai de la requête a dépassé la limite",
+            "no-activities": "Aucune activité n'a été générée"
+        }
     }
 }

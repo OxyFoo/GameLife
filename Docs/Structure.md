@@ -27,6 +27,21 @@
 
 
 
+## Serveurs
+### TCP (NodeJS - VPS)
+- Multijoueur
+- Notifications (amis)
+
+### HTTP (PHP - Apache2)
+- Internal data
+- Inventaires
+- Pubs
+- Shop
+- Notifications (succès)
+- Tout le reste
+
+
+
 ## Succès
 ### Conditions
 Syntaxe : ``` COMPARATEUR OPERATEUR COMPARANT ```\

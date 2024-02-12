@@ -101,7 +101,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 velocity={2}
                                 callback={this.onChangeDurationDigit}
                             />
-                            <Text>{langDatesNames['seconds-min']}</Text>
+                            <Text>{langDatesNames['minutes-min']}</Text>
                         </View>
                     </View>
                 </Animated.View>

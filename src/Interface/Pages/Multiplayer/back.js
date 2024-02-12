@@ -1,40 +1,73 @@
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+
+/**
+ * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/TCP').ConnectionState} ConnectionState
+ */
 
 class BackMultiplayer extends PageBase {
     state = {
-        server: ''
+        /** @type {ConnectionState} */
+        state: 'idle',
+
+        /** @type {Array<Friend>} */
+        friends: [],
+
+        /** @type {Array<Friend>} */
+        friendsPending: []
     }
 
     componentDidMount() {
-        super.componentDidMount();
-        return;
-
-        this.setState({ server: 'connected' });
-        return;
-        if (!user.server.online) {
-            this.setState({ server: 'offline' });
-            return;
-        }
-        user.multiplayer.onChangeState = (state) => {
-            this.setState({ server: state });
-        };
-        user.multiplayer.Connect();
+        this.updateState(user.tcp.state.Get());
+        this.updateFriends(user.multiplayer.friends.Get());
+        this.listenerState = user.tcp.state.AddListener(this.updateState);
+        this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
+
     componentWillUnmount() {
-        return;
-        user.multiplayer.onChangeState = () => {};
-        user.multiplayer.Disconnect();
+        user.tcp.state.RemoveListener(this.listenerState);
+        user.multiplayer.friends.RemoveListener(this.listenerFriends);
+    }
+
+    /** @param {ConnectionState} state */
+    updateState = (state) => {
+        this.setState({ state });
+    }
+
+    /** @param {Array<Friend>} friends */
+    updateFriends = (friends) => {
+        const newFriends = friends
+            .filter(friend => friend.friendshipState === 'accepted')
+            .sort((a, b) => a.username.localeCompare(b.username));
+
+        const newFriendsPending = friends
+            .filter(friend => friend.friendshipState === 'pending')
+            .sort((a, b) => a.username.localeCompare(b.username));
+
+        this.setState({ friends: newFriends, friendsPending: newFriendsPending });
+    }
+
+    openClassement = () => {
+        return; // TODO
+    }
+
+    addFriendHandle = () => {
+        const lang = langManager.curr['multiplayer'];
+        user.interface.screenInput.Open(lang['input-search-friend'], '', (username) => {
+            user.multiplayer.AddFriend(username);
+        }, false);
     }
 
     Reconnect = () => {
-        this.setState({ server: '' });
-        user.multiplayer.Connect();
+        this.setState({ state: 'idle' });
+        user.tcp.Connect();
     }
 
-    ConnectToServer = user.multiplayer.Connect;
-    Send = () => user.multiplayer.Send('test');
-    Disconnect = user.multiplayer.Disconnect;
+    Back = () => {
+        user.interface.BackHandle();
+    }
 }
 
 export default BackMultiplayer;

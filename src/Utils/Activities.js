@@ -52,7 +52,7 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
         duration:   duration,
         comment:    '',
         timezone:   0,
-        startNow:   true,
+        addedType:  'start-now',
         addedTime:  0
     };
 
@@ -72,7 +72,7 @@ function AddActivity(activity) {
         duration: activity.duration,
         comment: activity.comment,
         timezone: null,
-        startNow: activity.startNow,
+        addedType: activity.addedType,
         addedTime: null
     });
 
@@ -84,14 +84,10 @@ function AddActivity(activity) {
         const args = {
             'icon': 'success',
             'text': text,
+            'quote': dataManager.quotes.GetRandomQuote(),
             'button': button,
             'action': Back
         };
-
-        const quote = dataManager.quotes.GetRandomQuote();
-        if (quote !== null) {
-            args['quote'] = quote.Quote[langManager.currentLangageKey];
-        }
 
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {

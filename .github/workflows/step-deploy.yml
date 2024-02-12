@@ -132,7 +132,7 @@ jobs:
               put -O ./backups/ '$ARCHIVE_DATABASE_STRUCT';
               put -O ./backups/ '$ARCHIVE_DATABASE_DATA'"
 
-  deploy:
+  deploy-http:
     name: '🔁 Server update'
     runs-on: ubuntu-latest
     if: inputs.actions == 'both' || inputs.actions == 'deploy'
@@ -153,6 +153,92 @@ jobs:
         run: lftp -c "set ftp:ssl-allow true; set ssl:verify-certificate no;
               open -u '${{ env.FTP_USER }}','${{ env.FTP_PASS }}' '${{ env.FTP_HOST }}';
               mirror --reverse --delete --exclude backups/ ./src/Server/HTTP/ /"
+
+  deploy-tcp:
+    name: '🔄 Update TCP'
+    runs-on: ubuntu-latest
+    if: inputs.actions == 'both' || inputs.actions == 'deploy'
+    needs: archive
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: 'Install dependencies'
+        run: |
+          cd ./src/Server/TCP/
+          npm install
+
+      - name: 'Add config file - Dev'
+        if: inputs.environment == 'dev'
+        env:
+          ENV_FILE: ./src/Server/TCP/.env
+        run: |
+          echo "LISTEN_PORT=\"${{ vars.TCP_PORT_DEV }}\"" >> $ENV_FILE
+          echo "SERVER_URL=\"${{ vars.TCP_URL_DEV }}\"" >> $ENV_FILE
+          echo "DB_HOSTNAME=\"${{ vars.DB_DEV_HOST }}\"" >> $ENV_FILE
+          echo "DB_DATABASE=\"${{ vars.DB_DEV_NAME }}\"" >> $ENV_FILE
+          echo "DB_USERNAME=\"${{ vars.DB_DEV_USER }}\"" >> $ENV_FILE
+          echo "DB_PASSWORD=\"${{ secrets.DB_DEV_PASS }}\"" >> $ENV_FILE
+
+      - name: 'Add config file - Test'
+        if: inputs.environment == 'test'
+        env:
+          ENV_FILE: ./src/Server/TCP/.env
+        run: |
+          echo "LISTEN_PORT=\"${{ vars.TCP_PORT_TEST }}\"" >> $ENV_FILE
+          echo "SERVER_URL=\"${{ vars.TCP_URL_TEST }}\"" >> $ENV_FILE
+          echo "DB_HOSTNAME=\"${{ vars.DB_TEST_HOST }}\"" >> $ENV_FILE
+          echo "DB_DATABASE=\"${{ vars.DB_TEST_NAME }}\"" >> $ENV_FILE
+          echo "DB_USERNAME=\"${{ vars.DB_TEST_USER }}\"" >> $ENV_FILE
+          echo "DB_PASSWORD=\"${{ secrets.DB_TEST_PASS }}\"" >> $ENV_FILE
+
+      - name: 'Add config file - Prod'
+        if: inputs.environment == 'prod'
+        env:
+          ENV_FILE: ./src/Server/TCP/.env
+        run: |
+          echo "LISTEN_PORT=\"${{ vars.TCP_PORT_PROD }}\"" >> $ENV_FILE
+          echo "SERVER_URL=\"${{ vars.TCP_URL_PROD }}\"" >> $ENV_FILE
+          echo "DB_HOSTNAME=\"${{ vars.DB_PROD_HOST }}\"" >> $ENV_FILE
+          echo "DB_DATABASE=\"${{ vars.DB_PROD_NAME }}\"" >> $ENV_FILE
+          echo "DB_USERNAME=\"${{ vars.DB_PROD_USER }}\"" >> $ENV_FILE
+          echo "DB_PASSWORD=\"${{ secrets.DB_PROD_PASS }}\"" >> $ENV_FILE
+
+      - name: 'Deploy to Server - Test'
+        if: inputs.environment == 'test'
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SOURCE: ./
+          TARGET: ./Test/GameLife/
+          ARGS: "-rlgoDzvc -i --delete"
+          REMOTE_HOST: ${{ vars.VPS_HOST }}
+          REMOTE_USER: ${{ vars.VPS_USER }}
+          REMOTE_PORT: ${{ vars.VPS_PORT }}
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_PRIVATE_KEY }}
+
+      - name: 'Deploy to Server - Prod'
+        if: inputs.environment == 'prod'
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SOURCE: ./
+          TARGET: ./Prod/GameLife/
+          ARGS: "-rlgoDzvc -i --delete"
+          REMOTE_HOST: ${{ vars.VPS_HOST }}
+          REMOTE_USER: ${{ vars.VPS_USER }}
+          REMOTE_PORT: ${{ vars.VPS_PORT }}
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_PRIVATE_KEY }}
+
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: 'Start Bot'
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ vars.VPS_HOST }}
+          username: ${{ vars.VPS_USER }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
+          port: ${{ vars.VPS_PORT }}
+          script: sudo systemctl restart oxyfoo-gamelife-tcp-${{ inputs.environment }}
 
   migration:
     name: '🚚 Database migration'
@@ -197,7 +283,7 @@ jobs:
   disable-maintenance:
     name: '🚧 Disable Maintenance'
     runs-on: ubuntu-latest
-    needs: [ deploy, migration ]
+    needs: [ deploy-http, deploy-tcp, migration ]
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4

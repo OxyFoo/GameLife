@@ -2,20 +2,29 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackHome from './back';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { Button, Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { News, TodayPieChart, TodoList  } from 'Interface/Widgets';
+import { Swiper, Text, XPBar, Page } from 'Interface/Components';
+import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
         const {
-            experience: { stats, xpInfo },
+            experience: { xpInfo },
             values: { current_level, next_level }
         } = this.state;
 
         const lang = langManager.curr['home'];
         const txt_level = langManager.curr['level']['level'];
+
+        const styleContainer = {
+            backgroundColor: themeManager.GetColor('dataBigKpi')
+        };
+        const styleSmallContainer = {
+            backgroundColor: themeManager.GetColor('ground2'),
+        };
 
         return (
             <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
@@ -34,39 +43,31 @@ class Home extends BackHome {
                 />
 
                 <Swiper
-                    ref={ref => this.refTuto1 = ref}
                     style={styles.topSpace}
                     pages={News()}
                 />
 
-                <Button
-                    ref={ref => this.refTuto2 = ref}
-                    style={styles.topSpace}
-                    color='main2'
-                    borderRadius={8}
-                    icon='add'
-                    onPress={this.addActivity}
-                >
-                    {lang['btn-add-activity']}
-                </Button>
+                <View style={[styles.homeRow, styles.topSpace]}>
+                    <TodayPieChart style={styles.todayPieChart} />
+                </View>
 
-                <TodayPieChart style={styles.topSpace} />
+                <View style={[styles.homeRow, styles.topSpace]}>
+                    <View style={[styleSmallContainer, styles.stats]}>
+                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
+                            {lang['container-stats-title']}
+                        </Text>
+                        <StatsBars data={user.stats} simplifiedDisplay={true} />
+                    </View>
 
-                <TodoList
-                    ref={ref => this.refTuto3 = ref}
-                    style={styles.topSpace}
-                />
+                    <View style={[styleContainer, styles.skills]}>
+                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
+                            {lang['container-skills-title']}
+                        </Text>
+                        <SkillsGroup />
+                    </View>
+                </View>
 
-                <Button
-                    style={styles.topSpace}
-                    color='backgroundCard'
-                    rippleColor='white'
-                    borderRadius={8}
-                    icon='setting'
-                    onPress={this.openSettings}
-                >
-                    {lang['btn-settings']}
-                </Button>
+                <MultiplayerPanel style={styles.topSpace} hideWhenOffline />
 
             </Page>
         );
@@ -75,7 +76,7 @@ class Home extends BackHome {
 
 const styles = StyleSheet.create({
     XPHeader: {
-        marginTop: 16,
+        marginTop: 0,
         marginBottom: 12,
         paddingHorizontal: 16,
         flexDirection: 'row',
@@ -87,9 +88,29 @@ const styles = StyleSheet.create({
     level: {
         marginRight: 8
     },
-
+    homeRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     topSpace: {
-        marginTop: 24
+        marginTop: 16
+    },
+    titleWidget: {
+        marginBottom: 12,
+    },
+    todayPieChart: {
+        flex: 1
+    },
+    stats: {
+        flex: 3,
+        borderRadius: 24,
+        marginRight: 18,
+        padding: 8
+    },
+    skills: {
+        flex: 5,
+        borderRadius: 20,
+        padding: 8
     }
 });
 

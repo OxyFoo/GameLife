@@ -11,7 +11,7 @@ import { GetDeviceInformations } from 'Utils/Device';
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNonZeroDays'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNonZeroDays'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 
@@ -216,12 +216,27 @@ class Server {
     /**
      * Send achievements unsaved on server (don't reload dataToken or inventory)
      * @param {Array<number>} achievementsID Data to add to server
-     * @returns {Promise<string | false>} Return rewards string or false if failed
+     * @returns {Promise<Array<number> | false>} Return list of achievements ID added
      */
-    async AddAchievement(achievementsID) {
+    async AddAchievements(achievementsID) {
         const _data = { achievementsID };
         const response = await this.Request('addAchievements', _data);
-        console.log(response);
+        if (response === null) return false;
+
+        const status = response['status'];
+        if (status !== 'ok') return false;
+
+        return response['newAchievements'];
+    }
+
+    /**
+     * Send achievements unsaved on server (don't reload dataToken or inventory)
+     * @param {number} achievementID Data to add to server
+     * @returns {Promise<string | false>} Return rewards string or false if failed
+     */
+    async ClaimAchievement(achievementID) {
+        const _data = { achievementID };
+        const response = await this.Request('claimAchievement', _data);
         if (response === null) return false;
 
         const status = response['status'];
@@ -237,7 +252,7 @@ class Server {
     /**
      * Load all user data
      * @param {boolean} [force=false] Force to load data from server (use empty dataToken)
-     * @returns {Promise<object?>} Return all online data or null if failed
+     * @returns {Promise<object | null>} Return all online data or null if failed
      */
     async LoadUserData(force = false) {
         const _data = { 'dataToken': force ? '' : this.dataToken };

@@ -6,9 +6,12 @@ import ActivitySchedule from './Widgets/ActivitySchedule';
 import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
 import Console from './Widgets/Console';
+import MultiplayerPanel from './Widgets/MultiplayerPanel';
 import MyQuestsList from './Widgets/MyQuestsList';
 import News from './Widgets/News';
 import NonZeroDay from './Widgets/NonZeroDay';
+import NotificationsInApp from './Widgets/NotificationsInApp/notifs';
+import NotificationsInAppButton from './Widgets/NotificationsInApp';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
 import Popup from './Widgets/Popup';
@@ -22,6 +25,7 @@ import TodayPieChart from './Widgets/TodayPieChart';
 import TodoList from './Widgets/TodoList';
 import UserHeader from './Widgets/UserHeader';
 import YearHeatMap from './Widgets/YearHeatMap';
+import ZapGPT from './Widgets/ZapGPT';
 
 export {
     ActivityPanel,
@@ -32,9 +36,12 @@ export {
     BlockMonth,
     BottomBar,
     Console,
+    MultiplayerPanel,
     MyQuestsList,
     News,
     NonZeroDay,
+    NotificationsInApp,
+    NotificationsInAppButton,
     PageHeader,
     PanelScreen,
     Popup,
@@ -47,5 +54,6 @@ export {
     TodayPieChart,
     TodoList,
     UserHeader,
-    YearHeatMap
+    YearHeatMap,
+    ZapGPT
 };

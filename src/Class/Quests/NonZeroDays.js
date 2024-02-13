@@ -91,14 +91,14 @@ class NonZeroDays {
             .map(activity => activity.startTime + activity.timezone * 60 * 60)
             .filter(time => time > timeStart && time < timeNow - 2 * DAY_TIME);
 
-        let claimIndex = claimsList.length === 0 ? -1 : 0;
+        let claimIndex = claimsList.length - 1;
         for (let i = 0; i < allActivitiesTime.length; i++) {
             if (claimIndex !== -1) {
                 if (allActivitiesTime[i] < claimsList[claimIndex].end) {
                     continue;
                 }
 
-                if (allActivitiesTime[i] < claimsList[claimIndex].end + DAY_TIME &&
+                if (allActivitiesTime[i] <= claimsList[claimIndex].end + DAY_TIME &&
                     claimsList[claimIndex].daysCount < NONZERODAYS_REWARDS.length)
                 {
                     // Update claim

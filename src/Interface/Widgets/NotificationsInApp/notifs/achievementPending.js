@@ -31,6 +31,10 @@ function NIA_AchievementPending({ notif, index }) {
         const text = await user.achievements.Claim(notif.data.achievementID);
         setLoading(false);
 
+        if (text === null) {
+            return;
+        }
+
         if (text === false) {
             const title = lang['alert-achievement-error-title'];
             const text = lang['alert-achievement-error-text'];

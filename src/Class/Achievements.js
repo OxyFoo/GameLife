@@ -371,10 +371,10 @@ class Achievements {
 
     /**
      * @param {number} achievementID
-     * @returns {Promise<string | false>}
+     * @returns {Promise<string | false | null>} Text to show in popup, false if error, null if already claimed
      */
     Claim = async (achievementID) => {
-        if (this.claimAchievementLoading) return false;
+        if (this.claimAchievementLoading) return null;
         this.claimAchievementLoading = true;
 
         const lang = langManager.curr['achievements'];

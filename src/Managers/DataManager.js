@@ -51,6 +51,11 @@ class DataManager {
         return achievements && contributors && items && quotes && skills && titles;
     }
 
+    /**
+     * @deprecated Use same method from LangManager instead
+     * @param {object} value 
+     * @returns {string}
+     */
     GetText(value) {
         let output = '';
         if (typeof(value) === 'object') {

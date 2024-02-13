@@ -113,7 +113,8 @@ function GetQuotes($db) {
  * @param DataBase $db
  */
 function GetSkills($db) {
-    $skills = $db->QueryPrepare('Skills', 'SELECT * FROM TABLE');
+    // Pre-sorte skills for french users
+    $skills = $db->QueryPrepare('Skills', 'SELECT * FROM TABLE ORDER BY Name COLLATE utf8mb4_unicode_ci');
     $categories = $db->QueryPrepare('SkillsCategory', 'SELECT * FROM TABLE');
 
     $skills_safe = array();
@@ -178,9 +179,7 @@ function GetSkills($db) {
         }
     }
 
-    $skills_sorted = SortDictBy($skills_safe, 'Name');
-
-    return $skills_sorted;
+    return $skills_safe;
 }
 
 /**

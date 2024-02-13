@@ -38,6 +38,20 @@ class LangManager {
         this.currentLangageKey = newLang;
         this.curr = LANGAGES[newLang];
     }
+
+    /**
+     * @param {{ [key in LangKey]: string }} value
+     * @returns {string}
+     */
+    GetText(value) {
+        let output = '';
+        if (typeof(value) === 'object') {
+            const key = this.currentLangageKey;
+            if (value.hasOwnProperty(key)) output = value[key];
+            else if (value.hasOwnProperty('fr')) output = value['fr'];
+        }
+        return output;
+    }
 }
 
 const langManager = new LangManager();

@@ -3,10 +3,6 @@ import { OpenAI } from 'openai';
 
 import { StrIsJson } from './Functions.js';
 
-/**
- * @typedef {import('Class/Activities.js').Activity} Activity
- */
-
 const SYSTEM_PROMPT = readFileSync('./src/Utils/prompt.txt').toString();
 
 class GPT {

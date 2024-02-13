@@ -151,6 +151,9 @@ async function Initialisation(nextStep, nextPage) {
         user.interface.console.AddLog('info', 'No more ads available');
     }
 
+    // Connect to the server TCP
+    user.tcp.Connect();
+
     // Load admob
     const time_start_admob = new Date().getTime();
     await user.consent.ShowTrackingPopup()
@@ -169,7 +172,6 @@ async function Initialisation(nextStep, nextPage) {
 
     CheckDate();
     user.StartTimers();
-    user.tcp.Connect();
 
     // Maintenance message
     if (user.server.status === 'maintenance') {

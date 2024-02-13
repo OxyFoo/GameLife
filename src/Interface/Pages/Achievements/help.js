@@ -10,7 +10,8 @@ function StartHelp() {
     user.interface.screenTuto.ShowTutorial([
         {
             component: null,
-            text: lang['1']
+            text: lang['1'],
+            showNextButton: true
         }
     ]);
 }

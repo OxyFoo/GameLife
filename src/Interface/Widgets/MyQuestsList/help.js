@@ -10,27 +10,33 @@ function StartHelp() {
     user.interface.screenTuto.ShowTutorial([
         {
             component: this.refContainer,
-            text: lang['1']
+            text: lang['1'],
+            showNextButton: true
         },
         {
             component: this.refAddQuest,
-            text: lang['2']
+            text: lang['2'],
+            showNextButton: true
         },
         {
             component: this.refFlatlist,
-            text: lang['3']
+            text: lang['3'],
+            showNextButton: true
         },
         {
             component: null,
-            text: lang['4']
+            text: lang['4'],
+            showNextButton: true
         },
         {
             component: null,
-            text: lang['5']
+            text: lang['5'],
+            showNextButton: true
         },
         {
             component: null,
-            text: lang['6']
+            text: lang['6'],
+            showNextButton: true
         }
     ]);
 }

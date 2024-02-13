@@ -27,7 +27,6 @@ class Profile extends BackProfile {
             <Page
                 ref={ref => this.refPage = ref}
                 scrollable={!editorOpened}
-                canScrollOver={false}
             >
                 <PageHeader
                     style={{ marginBottom: 12 }}

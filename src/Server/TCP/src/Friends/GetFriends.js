@@ -88,11 +88,10 @@ async function GetUserFriends(users, user) {
     friends.forEach(friend => {
         const activity = activitiesResults.find(a => a.AccountID === friend.accountID);
         if (!activity) return;
-        friend.activities = {
-            firstTime: activity.FirstActivity,
-            length: activity.TotalActivities,
-            totalDuration: activity.TotalDuration,
-        };
+
+        friend.activities.firstTime = activity.FirstActivity;
+        friend.activities.length = activity.TotalActivities;
+        friend.activities.totalDuration = activity.TotalDuration;
     });
 
     return friends;

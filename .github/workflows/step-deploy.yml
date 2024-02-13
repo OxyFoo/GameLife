@@ -241,7 +241,7 @@ jobs:
           username: ${{ vars.VPS_USER }}
           key: ${{ secrets.VPS_PRIVATE_KEY }}
           port: ${{ vars.VPS_PORT }}
-          script: sudo systemctl restart oxyfoo-gamelife-tcp-${{ inputs.environment }}
+          script: sudo systemctl restart oxyfoo-gamelife-tcp-${{ inputs.environment }}.service
 
   migration:
     name: '🚚 Database migration'

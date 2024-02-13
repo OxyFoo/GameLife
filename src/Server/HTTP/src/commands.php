@@ -505,15 +505,15 @@ class Commands {
 
     public function ClaimNonZeroDays() {
         $claimListStart = $this->data['claimListStart'];
-        $dayIndex = $this->data['dayIndex'];
-        if (!isset($claimListStart, $dayIndex) || !$this->tokenChecked) return;
+        $dayIndexes = $this->data['dayIndexes'];
+        if (!isset($claimListStart, $dayIndexes) || !$this->tokenChecked) return;
 
-        $newItems = NonZeroDays::ClaimReward(
+        $newItems = NonZeroDays::ClaimRewards(
             $this->db,
             $this->account,
             $this->device,
             $claimListStart,
-            $dayIndex,
+            $dayIndexes,
             $error
         );
         if ($newItems === false || $error !== false) {

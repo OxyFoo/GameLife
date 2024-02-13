@@ -9,7 +9,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
-import { Text } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
 import { GetDate } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 
@@ -86,6 +86,17 @@ function RenderPopup(props) {
                 )}
                 showsVerticalScrollIndicator={false}
             />
+
+            <View style={styles.claimAllView}>
+                <Button
+                    style={styles.claimAllButton}
+                    color='background'
+                    rippleColor='white'
+                    onPress={user.quests.nonzerodays.ClaimAll}
+                >
+                    {lang['claim-all']}
+                </Button>
+            </View>
         </View>
     );
 }

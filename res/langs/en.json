@@ -767,6 +767,7 @@
         "container-date": "Rewards from {}",
         "claim": "Claim",
         "claim-in": "Claim in {}",
+        "claim-all": "Claim all",
         "no-claim": "No claim available",
 
         "alert-claim-error-title": "Error",

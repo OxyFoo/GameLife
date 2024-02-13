@@ -175,6 +175,7 @@ jobs:
         run: |
           echo "LISTEN_PORT=\"${{ vars.TCP_PORT_DEV }}\"" >> $ENV_FILE
           echo "SERVER_URL=\"${{ vars.TCP_URL_DEV }}\"" >> $ENV_FILE
+          echo "OPENAI_API_KEY=\"${{ secrets.OPENAI_API_KEY_TEST }}\"" >> $ENV_FILE
           echo "DB_HOSTNAME=\"${{ vars.DB_DEV_HOST }}\"" >> $ENV_FILE
           echo "DB_DATABASE=\"${{ vars.DB_DEV_NAME }}\"" >> $ENV_FILE
           echo "DB_USERNAME=\"${{ vars.DB_DEV_USER }}\"" >> $ENV_FILE
@@ -187,6 +188,7 @@ jobs:
         run: |
           echo "LISTEN_PORT=\"${{ vars.TCP_PORT_TEST }}\"" >> $ENV_FILE
           echo "SERVER_URL=\"${{ vars.TCP_URL_TEST }}\"" >> $ENV_FILE
+          echo "OPENAI_API_KEY=\"${{ secrets.OPENAI_API_KEY_TEST }}\"" >> $ENV_FILE
           echo "DB_HOSTNAME=\"${{ vars.DB_TEST_HOST }}\"" >> $ENV_FILE
           echo "DB_DATABASE=\"${{ vars.DB_TEST_NAME }}\"" >> $ENV_FILE
           echo "DB_USERNAME=\"${{ vars.DB_TEST_USER }}\"" >> $ENV_FILE
@@ -199,6 +201,7 @@ jobs:
         run: |
           echo "LISTEN_PORT=\"${{ vars.TCP_PORT_PROD }}\"" >> $ENV_FILE
           echo "SERVER_URL=\"${{ vars.TCP_URL_PROD }}\"" >> $ENV_FILE
+          echo "OPENAI_API_KEY=\"${{ secrets.OPENAI_API_KEY_PROD }}\"" >> $ENV_FILE
           echo "DB_HOSTNAME=\"${{ vars.DB_PROD_HOST }}\"" >> $ENV_FILE
           echo "DB_DATABASE=\"${{ vars.DB_PROD_NAME }}\"" >> $ENV_FILE
           echo "DB_USERNAME=\"${{ vars.DB_PROD_USER }}\"" >> $ENV_FILE

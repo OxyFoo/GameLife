@@ -6,6 +6,7 @@ Add .env file
 ```
 LISTEN_PORT=""
 SERVER_URL=""
+OPENAI_API_KEY=""
 DB_HOSTNAME=""
 DB_DATABASE=""
 DB_USERNAME=""

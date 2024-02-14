@@ -337,6 +337,7 @@
 
         "container-title": "Multiplayer",
         "container-content-empty": "No friends yet",
+        "container-friends-empty": "You have no friends yet, press the button below to add some!",
         "container-content-idle": "Loading...",
         "container-content-disconnected": "Disconnected, please try again later.",
         "container-content-error": "An error has occurred, please try again later.",

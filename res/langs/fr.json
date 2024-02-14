@@ -337,6 +337,7 @@
 
         "container-title": "Multijoueur",
         "container-content-empty": "Aucun ami pour le moment",
+        "container-friends-empty": "Tu n'as pas encore d'amis, appuie en bas à droite pour en ajouter !",
         "container-content-idle": "Chargement...",
         "container-content-disconnected": "Tu es déconnecté, réessaye plus tard.",
         "container-content-error": "Une erreur est survenue, réessaye plus tard.",

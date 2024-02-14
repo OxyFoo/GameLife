@@ -173,6 +173,7 @@ class NonZeroDays {
 
         // Update Ox amount
         if (!response.hasOwnProperty('ox') || !response.hasOwnProperty('newItems')) {
+            this.user.interface.console.AddLog('error', 'Claim error: Incorrect response');
             this.claiming = false;
             return 'error';
         }
@@ -190,6 +191,7 @@ class NonZeroDays {
         const claimsList = this.claimsList.Get();
         const claimListIndex = claimsList.findIndex(claim => claim.start === claimListStart);
         if (claimListIndex === -1) {
+            this.user.interface.console.AddLog('error', 'Claim error: Claim list not found');
             this.claiming = false;
             return 'error';
         }

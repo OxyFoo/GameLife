@@ -50,16 +50,26 @@ class SkillsGroup extends SkillsGroupBack {
     render() {
         const { style } = this.props;
 
+        let skillsToDisplay = [...this.state.skills];
+        if (skillsToDisplay.length === 3) {
+            skillsToDisplay.push(null);
+        }
+
         return (
             <View style={[styles.container, style]}>
-                <FlatList
-                    data={[...this.state.skills, null]}
-                    renderItem={this.renderSkill}
-                    keyExtractor={(item, index) => 'skill-' + index}
-                    numColumns={2}
-                    ItemSeparatorComponent={() => <View style={styles.skillSpace} />}
-                    scrollEnabled={false}
-                />
+                {skillsToDisplay.length > 0 ?
+                    <FlatList
+                        style={styles.flatlist}
+                        data={skillsToDisplay}
+                        renderItem={this.renderSkill}
+                        keyExtractor={(item, index) => 'skill-' + index}
+                        numColumns={2}
+                        ItemSeparatorComponent={() => <View style={styles.skillSpace} />}
+                        scrollEnabled={false}
+                    />
+                    : 
+                    <Text>{langManager.curr['home']['container-skills-empty']}</Text>
+                }
             </View>
         );
     }

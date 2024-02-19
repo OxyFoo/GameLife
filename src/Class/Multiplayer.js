@@ -6,7 +6,7 @@ const FRIENDS_LIMIT = 10;
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('Types/NotificationInApp').NotificationInApp} NotificationInApp
  * @typedef {import('Types/TCP').TCPServerRequest} ReceiveRequest
  */
@@ -22,6 +22,11 @@ class Multiplayer {
 
     /** @type {DynamicVar<Array<NotificationInApp>>} */
     notifications = new DynamicVar([]);
+
+    /** @param {number} accountID */
+    GetFriendByID = (accountID) => {
+        return this.friends.Get().find(f => f.accountID === accountID) || null;
+    }
 
     /** @param {ReceiveRequest} data */
     onMessage = (data) => {
@@ -81,6 +86,28 @@ class Multiplayer {
         const callbackID = 'remove-friend-' + Date.now();
         const sendSuccess = this.user.tcp.Send({
             action: 'remove-friend',
+            accountID: accountID,
+            callbackID: callbackID
+        });
+
+        // Wrong type or not connected
+        if (sendSuccess === false) {
+            return;
+        }
+
+        const lang = langManager.curr['multiplayer'];
+        const result = await this.user.tcp.WaitForCallback(callbackID);
+        if (result === 'timeout') {
+            this.ShowError(lang['alert-timeout']);
+        } else if (result === 'sql-error') {
+            this.ShowError(lang['alert-error'], result);
+        }
+    }
+    /** @param {number} accountID */
+    CancelFriend = async (accountID) => {
+        const callbackID = 'cancel-friend-' + Date.now();
+        const sendSuccess = this.user.tcp.Send({
+            action: 'cancel-friend',
             accountID: accountID,
             callbackID: callbackID
         });

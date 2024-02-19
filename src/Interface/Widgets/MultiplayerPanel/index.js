@@ -9,7 +9,7 @@ import { Container, Text, UserOnlineElement } from 'Interface/Components';
 
 /**
  * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('react-native').ListRenderItem<Friend>} ListRenderFriend
  */
 

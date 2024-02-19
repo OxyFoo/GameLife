@@ -10,6 +10,7 @@ import { GetBattery } from 'Utils/Device';
  * @typedef {import('Data/Achievements').Condition} Condition
  * @typedef {import('Data/Achievements').Reward} Reward
  * @typedef {import('Data/Achievements').Achievement} Achievement
+ * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  * @typedef {import('Types/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
@@ -223,7 +224,7 @@ class Achievements {
                     break;
 
                 case 'Item':
-                    const item = dataManager.items.GetByID(valueStr);
+                    const item = dataManager.items.GetByID(/** @type {StuffID} */ (valueStr));
                     const itemName = dataManager.GetText(item.Name);
                     const itemRarity = langManager.curr['rarities'][item.Rarity];
                     const itemText = itemName + ' (' + itemRarity + ')';

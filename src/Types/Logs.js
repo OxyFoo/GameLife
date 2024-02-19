@@ -19,5 +19,6 @@
  *  'friend-accepted' |
  *  'friend-blocked' |
  *  'friend-declined' |
+ *  'friend-canceled' |
  *  'error'} LogType
  */

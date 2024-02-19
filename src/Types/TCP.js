@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./Friend').Friend} Friend
+ * @typedef {import('./UserOnline').Friend} Friend
  * @typedef {import('./NotificationInApp').NotificationInApp} NotificationInApp
  * 
  * @typedef {'idle' | 'connected' | 'disconnected' | 'error'} ConnectionState
@@ -28,6 +28,11 @@
  * @property {number} accountID
  * @property {string} [callbackID]
  *
+ * @typedef {Object} SendRequestCancelFriend
+ * @property {'cancel-friend'} action
+ * @property {number} accountID
+ * @property {string} [callbackID]
+ *
  * @typedef {Object} SendRequestBlockFriend
  * @property {'block-friend'} action
  * @property {number} accountID
@@ -38,7 +43,7 @@
  * @property {string} prompt
  * @property {string} [callbackID]
  * 
- * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestBlockFriend | SendRequestZapGPT} TCPClientRequest
+ * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestCancelFriend | SendRequestBlockFriend | SendRequestZapGPT} TCPClientRequest
  * 
  * 
  * 

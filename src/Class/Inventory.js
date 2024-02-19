@@ -5,13 +5,15 @@ import dataManager from 'Managers/DataManager';
  * 
  * @typedef {import('Data/Items').Slot} Slot
  * @typedef {import('Data/Titles').Title} Title
+ * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
  */
 
 class Stuff {
     ID = 0;
-    ItemID = '';
+    /** @type {StuffID} */
+    ItemID = 'bottom_01';
     CreatedBy = 0;
     CreatedAt = 0;
 }

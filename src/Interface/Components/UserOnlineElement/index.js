@@ -10,7 +10,7 @@ import { USER_XP_PER_LEVEL } from 'Class/Experience';
 import { Text, Button, Frame, Character } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/UserOnline').Friend} Friend
  */
 
 /**
@@ -51,9 +51,7 @@ function UserOnlineElement({ friend }) {
     }
 
     const onPress = () => {
-        if (friend.friendshipState === 'accepted') {
-            user.interface.ChangePage('profilefriend', { friend });
-        }
+        user.interface.ChangePage('profilefriend', { friendID: friend.accountID });
     }
 
     return (

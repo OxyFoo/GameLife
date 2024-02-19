@@ -1,11 +1,13 @@
 /**
  * @typedef {import('Class/Inventory').Sexes} Sexes
  * @typedef {import('Class/Inventory').CharactersName} CharactersName
+ * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
+ * 
  * @typedef {'online' | 'offline'} ConnectionState
- * @typedef {'accepted' | 'pending' | 'blocked'} FriendshipState
+ * @typedef {'accepted' | 'pending' | 'blocked' | 'none'} FriendshipState
  */
 
-class Friend {
+class UserOnline {
     /** @type {ConnectionState} */
     status = 'offline';
     accountID = 0;
@@ -23,22 +25,25 @@ class Friend {
         /** @type {number} */
         SkinColor: 1,
 
-        /** @type {string} */
-        Hair: '',
+        /** @type {StuffID} */
+        Hair: 'hair_01',
 
-        /** @type {string} */
-        Top: '',
+        /** @type {StuffID} */
+        Top: 'top_01',
 
-        /** @type {string} */
-        Bottom: '',
+        /** @type {StuffID} */
+        Bottom: 'bottom_01',
 
-        /** @type {string} */
-        Shoes: ''
+        /** @type {StuffID} */
+        Shoes: 'shoes_01'
     };
 
     /** @type {FriendshipState} */
-    friendshipState = 'pending';
+    friendshipState = 'none';
+}
 
+class Friend extends UserOnline {
+    /** Defined if friendshipState is 'accepted' */
     activities = {
         /** @type {number} Number of activities */
         length: 0,
@@ -51,4 +56,4 @@ class Friend {
     };
 }
 
-export { Friend };
+export { UserOnline, Friend };

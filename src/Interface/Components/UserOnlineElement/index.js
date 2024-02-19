@@ -19,36 +19,46 @@ import { Text, Button, Frame, Character } from 'Interface/Components';
  * @returns {JSX.Element}
  */
 function UserOnlineElement({ friend }) {
-    const frameSize = { x: 200, y: 0, width: 500, height: 450 };
+    const [ character, setCharacter ] = React.useState(null);
+    const [ friendTitle, setFriendTitle ] = React.useState(null);
+    const [ friendExperience, setFriendExperience ] = React.useState(null);
+    const [ statusStyle, setStatusStyle ] = React.useState({});
 
-    let friendTitle = null;
-    if (friend.title !== 0) {
-        const friendTitleIndex = dataManager.titles.GetByID(friend.title);
-        friendTitle = dataManager.GetText(friendTitleIndex.Name);
-    }
+    React.useEffect(() => {
+        let friendTitle = null;
+        if (friend.title !== 0) {
+            const friendTitleIndex = dataManager.titles.GetByID(friend.title);
+            friendTitle = dataManager.GetText(friendTitleIndex.Name);
+        }
 
-    const friendExperience = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
+        const friendExperience = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
 
-    const character = new Character(
-        'character-player-' + friend.accountID.toString(),
-        friend.avatar.Sexe,
-        friend.avatar.Skin,
-        friend.avatar.SkinColor
-    );
-    const stuff = [
-        friend.avatar.Hair,
-        friend.avatar.Top,
-        friend.avatar.Bottom,
-        friend.avatar.Shoes
-    ];
-    character.SetEquipment(stuff);
+        const character = new Character(
+            'character-player-' + friend.accountID.toString(),
+            friend.avatar.Sexe,
+            friend.avatar.Skin,
+            friend.avatar.SkinColor
+        );
+        const stuff = [
+            friend.avatar.Hair,
+            friend.avatar.Top,
+            friend.avatar.Bottom,
+            friend.avatar.Shoes
+        ];
+        character.SetEquipment(stuff);
 
-    const statusStyle = {};
-    if (friend.status === 'online') {
-        statusStyle.borderColor = themeManager.GetColor('success');
-    } else if (friend.status === 'offline') {
-        statusStyle.borderColor = themeManager.GetColor('disabled');
-    }
+        const statusStyle = {};
+        if (friend.status === 'online') {
+            statusStyle.borderColor = themeManager.GetColor('success');
+        } else if (friend.status === 'offline') {
+            statusStyle.borderColor = themeManager.GetColor('disabled');
+        }
+
+        setCharacter(character);
+        setFriendTitle(friendTitle);
+        setFriendExperience(friendExperience);
+        setStatusStyle(statusStyle);
+    }, [ friend ]);
 
     const onPress = () => {
         user.interface.ChangePage('profilefriend', { friendID: friend.accountID });
@@ -57,16 +67,18 @@ function UserOnlineElement({ friend }) {
     return (
         <Button style={styles.friend} onPress={onPress}>
             <View style={styles.friendInfo}>
-                <View style={[styles.frameBorder, statusStyle]}>
-                    <Frame
-                        style={styles.frame}
-                        characters={[ character ]}
-                        size={frameSize}
-                        delayTime={0}
-                        loadingTime={0}
-                        bodyView={'topHalf'}
-                    />
-                </View>
+                {character !== null && (
+                    <View style={[styles.frameBorder, statusStyle]}>
+                        <Frame
+                            style={styles.frame}
+                            characters={[ character ]}
+                            size={{ x: 200, y: 0, width: 500, height: 450 }}
+                            delayTime={0}
+                            loadingTime={0}
+                            bodyView={'topHalf'}
+                        />
+                    </View>
+                )}
 
                 <View style={styles.friendInfoTitle}>
                     <Text fontSize={20}>{friend.username}</Text>
@@ -76,9 +88,13 @@ function UserOnlineElement({ friend }) {
                 </View>
             </View>
 
-            <View style={styles.friendDetails}>
-                <Text style={styles.level}>{friendExperience.lvl.toString()}</Text>
-            </View>
+            {friendExperience !== null && (
+                <View style={styles.friendDetails}>
+                    <Text style={styles.level}>
+                        {friendExperience.lvl.toString()}
+                    </Text>
+                </View>
+            )}
         </Button>
     );
 }

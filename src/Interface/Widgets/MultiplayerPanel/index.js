@@ -63,7 +63,7 @@ class MultiplayerPanel extends BackMultiplayerPanel {
         return (
             <FlatList
                 data={this.state.friends}
-                keyExtractor={(item, index) => 'multi-player-' + item.accountID}
+                keyExtractor={(item, index) => `multi-player-${item.accountID}`}
                 ListEmptyComponent={this.renderEmpty}
                 renderItem={({ item, index }) => (
                     <UserOnlineElement friend={item} />

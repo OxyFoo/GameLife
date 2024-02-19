@@ -76,6 +76,10 @@ async function GetUserFriends(users, user) {
         .filter(friend => friend.friendshipState === 'accepted')
         .map(friend => friend.accountID);
 
+    if (friendIDs.length === 0) {
+        return friends;
+    }
+
     const activitiesQuery = `
         SELECT 
             AccountID,

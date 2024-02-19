@@ -102,6 +102,14 @@
         ]
     },
 
+    "app": {
+        "loading-error-message": {
+            "internaldata-not-loaded": "Internal data not loaded",
+            "userdata-not-loaded": "User data not loaded"
+        },
+        "loading-error-button": "Quitter"
+    },
+
     "modal": {
         "back": "Back",
         "search": "Search",

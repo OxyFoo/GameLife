@@ -1,5 +1,6 @@
 import fs from 'fs';
 import WebSocket from 'websocket';
+import { createServer as createHTTPServer } from 'http';
 import { createServer } from 'https';
 
 import Users from './Users.js';
@@ -13,10 +14,17 @@ import { StrIsJson, GetLocalIP } from './Utils/Functions.js';
 class Server {
     /** @param {SQL} database */
     constructor(database) {
-        this.server = createServer({
-            key: fs.readFileSync('/etc/letsencrypt/live/www.oxyfoo.com/privkey.pem'),
-            cert: fs.readFileSync('/etc/letsencrypt/live/www.oxyfoo.com/cert.pem')
-        });
+        const ENV = process.env.ENV;
+
+        if (ENV === 'dev') {
+            this.server = createHTTPServer({});
+        } else {
+            this.server = createServer({
+                key: fs.readFileSync('/etc/letsencrypt/live/www.oxyfoo.com/privkey.pem'),
+                cert: fs.readFileSync('/etc/letsencrypt/live/www.oxyfoo.com/cert.pem')
+            });
+        }
+
         this.server.on('error', this.onError);
 
         this.db = database;

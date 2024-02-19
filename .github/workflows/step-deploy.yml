@@ -173,6 +173,7 @@ jobs:
         env:
           ENV_FILE: ./src/Server/TCP/.env
         run: |
+          echo "ENV=\"dev\"" >> $ENV_FILE
           echo "LISTEN_PORT=\"${{ vars.TCP_PORT_DEV }}\"" >> $ENV_FILE
           echo "SERVER_URL=\"${{ vars.TCP_URL_DEV }}\"" >> $ENV_FILE
           echo "OPENAI_API_KEY=\"${{ secrets.OPENAI_API_KEY_TEST }}\"" >> $ENV_FILE
@@ -186,6 +187,7 @@ jobs:
         env:
           ENV_FILE: ./src/Server/TCP/.env
         run: |
+          echo "ENV=\"test\"" >> $ENV_FILE
           echo "LISTEN_PORT=\"${{ vars.TCP_PORT_TEST }}\"" >> $ENV_FILE
           echo "SERVER_URL=\"${{ vars.TCP_URL_TEST }}\"" >> $ENV_FILE
           echo "OPENAI_API_KEY=\"${{ secrets.OPENAI_API_KEY_TEST }}\"" >> $ENV_FILE
@@ -199,6 +201,7 @@ jobs:
         env:
           ENV_FILE: ./src/Server/TCP/.env
         run: |
+          echo "ENV=\"prod\"" >> $ENV_FILE
           echo "LISTEN_PORT=\"${{ vars.TCP_PORT_PROD }}\"" >> $ENV_FILE
           echo "SERVER_URL=\"${{ vars.TCP_URL_PROD }}\"" >> $ENV_FILE
           echo "OPENAI_API_KEY=\"${{ secrets.OPENAI_API_KEY_PROD }}\"" >> $ENV_FILE

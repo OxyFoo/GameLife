@@ -8,15 +8,15 @@ import { GetDeviceInformations } from 'Utils/Device';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
- * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
+ * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
+ * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
  * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNonZeroDays'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 
 /** @type {ServerStatus[]} */
-const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'ban', 'newDevice', 'remDevice', 'maintenance', 'update', 'downdate', 'limitDevice', 'error' ];
+const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'newDevice', 'remDevice', 'maintenance', 'update', 'downdate', 'limitDevice', 'error' ];
 
 class Server {
     /** @param {UserManager} user */
@@ -29,6 +29,9 @@ class Server {
 
     /** @type {boolean} True if the server is online */
     online = false;
+
+    /** @type {boolean} True if the user is banned */
+    isBanned = false;
 
     /** @type {ServerStatus} */
     status = 'offline';
@@ -56,15 +59,16 @@ class Server {
             return false;
         }
 
-        if (this.status === 'ok') {
-            return true;
+        if (keepBanOrDowndate) {
+            if (this.status === 'downdate' || this.status === 'maintenance') {
+                return true;
+            }
+            if (this.status === 'ok' && this.isBanned) {
+                return true;
+            }
         }
 
-        if (keepBanOrDowndate && this.status === 'ban') {
-            return true;
-        }
-
-        if (keepBanOrDowndate && this.status === 'downdate') {
+        if (this.status === 'ok' && this.isBanned === false) {
             return true;
         }
 
@@ -152,12 +156,15 @@ class Server {
             }
         }
 
-        if (status === 'ban') {
-            this.user.interface.console.AddLog('warn', 'Request: connect - BANNED');
-        }
-        if (status === 'ok' || status === 'ban') {
-            const token = result_connect['token'];
-            if (typeof(token) !== 'undefined' && token.length) {
+        if (status === 'ok') {
+            const { isBanned, token } = result_connect;
+
+            if (isBanned === true) {
+                this.isBanned = true;
+                this.user.interface.console.AddLog('warn', 'Request: connect - banned');
+            }
+
+            if (typeof(token) === 'string' && token.length > 0) {
                 this.token = token;
             } else {
                 status = 'error';

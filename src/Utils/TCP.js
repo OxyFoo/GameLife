@@ -34,9 +34,11 @@ class TCP {
      * @returns {boolean} Whether the connection was successful, or if it was already connected
      */
     Connect = () => {
-        if (this.IsConnected()) {
+        // If already connected, or if the user is not connected to the server
+        if (this.IsConnected() || !this.user.server.IsConnected(false)) {
             return false;
         }
+
         const url = `wss://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'server-multiplayer');
         socket.addEventListener('open', this.onOpen);

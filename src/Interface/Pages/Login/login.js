@@ -15,8 +15,8 @@ async function Login(email) {
     const lang = langManager.curr['login'];
     const { status } = await user.server.Connect(email);
 
-    // Logged or banned (banned is connected too but in offline mode)
-    if (status === 'ok' || status === 'ban') {
+    // Logged in
+    if (status === 'ok') {
         user.settings.email = email;
         user.settings.connected = true;
         await user.settings.Save();

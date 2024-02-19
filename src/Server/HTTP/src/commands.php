@@ -124,6 +124,7 @@ class Commands {
             return;
         } else if ($versionServer < $versionApp) {
             $this->output['status'] = 'downdate';
+            // Don't return to download resources (internalData) if the app is newer than the server
         } else if ($maintenance) {
             $this->output['status'] = 'maintenance';
             return;
@@ -195,11 +196,14 @@ class Commands {
                     return;
                 }
 
+                // Account or device is banned
+                if ($account->Banned || $device->Banned) {
+                    $this->output['isBanned'] = true;
+                }
+
                 $this->output['token'] = $token;
                 $this->output['status'] = 'ok';
 
-                $isBanned = $account->Banned || $device->Banned;
-                if ($isBanned) $this->output['status'] = 'ban';
                 break;
             case 1: // Wait mail confirmation, remove the device after 30 minutes
                 $now = time();
@@ -689,6 +693,11 @@ class Commands {
         if (!$this->tokenChecked) return;
         $account = $this->account;
         $device = $this->device;
+
+        // Account or device is banned, return nothing
+        if ($account->Banned || $device->Banned) {
+            return;
+        }
 
         $data = array(
             'deviceID' => $device->ID,

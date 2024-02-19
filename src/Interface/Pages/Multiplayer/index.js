@@ -4,7 +4,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
-import { Button, Page, Text, FriendElement } from 'Interface/Components';
+import { Button, Page, Text, UserOnlineElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
@@ -70,7 +70,7 @@ class Multiplayer extends BackMultiplayer {
                     data={friends}
                     keyExtractor={(item, index) => 'multi-player-' + item.accountID}
                     renderItem={({ item, index }) => (
-                        <FriendElement friend={item} />
+                        <UserOnlineElement friend={item} />
                     )}
                     ListEmptyComponent={this.renderEmpty}
                 />
@@ -83,7 +83,7 @@ class Multiplayer extends BackMultiplayer {
                             data={friendsPending}
                             keyExtractor={(item, index) => 'multi-player-' + item.accountID}
                             renderItem={({ item, index }) => (
-                                <FriendElement friend={item} />
+                                <UserOnlineElement friend={item} />
                             )}
                         />
                     </>

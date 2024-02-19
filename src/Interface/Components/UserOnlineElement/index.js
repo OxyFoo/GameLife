@@ -18,7 +18,7 @@ import { Text, Button, Frame, Character } from 'Interface/Components';
  * @param {Friend} param0.friend
  * @returns {JSX.Element}
  */
-function FriendElement({ friend }) {
+function UserOnlineElement({ friend }) {
     const frameSize = { x: 200, y: 0, width: 500, height: 450 };
 
     let friendTitle = null;
@@ -85,4 +85,4 @@ function FriendElement({ friend }) {
     );
 }
 
-export default FriendElement;
+export default UserOnlineElement;

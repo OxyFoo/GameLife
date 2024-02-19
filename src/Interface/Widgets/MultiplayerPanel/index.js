@@ -5,7 +5,7 @@ import styles from './style';
 import BackMultiplayerPanel from './back';
 import langManager from 'Managers/LangManager';
 
-import { Container, Text, FriendElement } from 'Interface/Components';
+import { Container, Text, UserOnlineElement } from 'Interface/Components';
 
 /**
  * @typedef {import('Interface/Components/Icon').Icons} Icons
@@ -66,7 +66,7 @@ class MultiplayerPanel extends BackMultiplayerPanel {
                 keyExtractor={(item, index) => 'multi-player-' + item.accountID}
                 ListEmptyComponent={this.renderEmpty}
                 renderItem={({ item, index }) => (
-                    <FriendElement friend={item} />
+                    <UserOnlineElement friend={item} />
                 )}
             />
         );

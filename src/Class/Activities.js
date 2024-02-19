@@ -127,13 +127,27 @@ class Activities {
         return activities;
     }
 
+    cache_get = {
+        id: '',
+        /** @type {Array<Activity>} */
+        activities: []
+    };
+
     /**
      * Return all activities (save and unsaved) sorted by start time (ascending)
      * @returns {Array<Activity>}
      */
     Get() {
-        let activities = [ ...this.activities, ...this.UNSAVED_activities ];
-        return SortByKey(activities, 'startTime');
+        const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
+        if (id !== this.cache_get.id) {
+            const activities = [
+                ...this.activities,
+                ...this.UNSAVED_activities
+            ];
+            this.cache_get.id = id;
+            this.cache_get.activities = SortByKey(activities, 'startTime');
+        }
+        return this.cache_get.activities;
     }
 
     /**
@@ -193,11 +207,22 @@ class Activities {
         this.UNSAVED_deletions = [];
     }
 
+    cache_get_useful = {
+        id: '',
+        /** @type {Array<Activity>} */
+        activities: []
+    };
+
     /**
      * @description Get activities that have brought xp
      * @returns {Array<Activity>}
      */
     GetUseful = () => {
+        const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
+        if (id === this.cache_get_useful.id) {
+            return this.cache_get_useful.activities;
+        }
+
         const activities = this.user.activities.Get().filter(this.DoesGrantXP);
 
         let lastMidnight = 0;
@@ -223,6 +248,9 @@ class Activities {
 
             usefulActivities.push(activity);
         }
+
+        this.cache_get_useful.id = id;
+        this.cache_get_useful.activities = usefulActivities;
 
         return usefulActivities;
     }

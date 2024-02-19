@@ -6,6 +6,8 @@ import { OpenStore } from 'Utils/Store';
 import { Request_Async } from 'Utils/Request';
 import { GetDeviceInformations } from 'Utils/Device';
 
+const { versionName } = require('../../package.json');
+
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
@@ -138,8 +140,13 @@ class Server {
         let remainMailTime = null;
 
         const lang = langManager.currentLangageKey;
-        const device = GetDeviceInformations();
-        const result_connect = await this.Request('login', { email, lang, ...device });
+        const data = {
+            email,
+            lang,
+            version: versionName,
+            ...GetDeviceInformations()
+        };
+        const result_connect = await this.Request('login', data);
 
         if (result_connect === null) {
             this.user.interface.console.AddLog('error', 'Request - connect failed:', result_connect);

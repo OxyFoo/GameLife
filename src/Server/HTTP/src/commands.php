@@ -160,17 +160,25 @@ class Commands {
         $deviceName = $this->data['deviceName'];
         $email = $this->data['email'];
         $langKey = $this->data['lang'];
+        $version = $this->data['version'];
 
-        if (!isset($deviceID, $deviceName, $email, $langKey)) {
+        if (!isset($deviceID, $deviceName, $email, $langKey, $version)) {
             return;
         }
 
+        // Get account
         $account = Accounts::GetByEmail($this->db, $email);
         if ($account === null) {
             $this->output['status'] = 'free';
             return;
         }
 
+        // Update account version
+        if ($account->Version !== $version) {
+            Accounts::UpdateVersion($this->db, $account, $version);
+        }
+
+        // Get device
         $device = Devices::Get($this->db, $deviceID, $deviceName);
         if ($device === null) {
             $this->output['status'] = 'error';
@@ -262,7 +270,7 @@ class Commands {
             return;
         }
 
-        $account = Accounts::Add($this->db, $username, $email, $device->ID);
+        $account = Accounts::Add($this->db, $device, $username, $email);
         if ($account === null) return;
 
         // Legion - mail bypass

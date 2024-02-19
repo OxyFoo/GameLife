@@ -7,16 +7,16 @@ class Accounts
     /**
      * Add new empty account
      * @param DataBase $db
+     * @param Device $device
      * @param string $username
      * @param string $email
-     * @param int $deviceID
      * @return Account|null
      */
-    public static function Add($db, $username, $email, $deviceID) {
+    public static function Add($db, $device, $username, $email) {
         // Add account
-        $command = 'INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`) VALUES (?, ?, ?)';
-        $args = [ $username, $email, $deviceID ];
-        $result = $db->QueryPrepare('Accounts', $command, 'ssi', $args);
+        $command = 'INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`, `Banned`) VALUES (?, ?, ?, ?)';
+        $args = [ $username, $email, $device->ID, $device->Banned ? 1 : 0 ];
+        $result = $db->QueryPrepare('Accounts', $command, 'ssii', $args);
         if ($result === false) ExitWithStatus('Error: Adding device in DB failed');
         $account = Accounts::GetByID($db, $db->GetLastInsertID());
 
@@ -26,15 +26,15 @@ class Accounts
          * @param string[] $itemsIDs
          */
         function Rollback($db, $account, $itemsIDs) {
-            // Rollback account
-            $command = 'DELETE FROM TABLE WHERE `ID` = ?';
-            $db->QueryPrepare('Accounts', $command, 'i', [$account->ID]);
-
             // Rollback items
             foreach ($itemsIDs as $itemID) {
                 $command = 'DELETE FROM TABLE WHERE `ID` = ?';
                 $db->QueryPrepare('Inventory', $command, 'i', [$itemID]);
             }
+
+            // Rollback account
+            $command = 'DELETE FROM TABLE WHERE `ID` = ?';
+            $db->QueryPrepare('Accounts', $command, 'i', [$account->ID]);
         }
 
         // Add default items
@@ -216,6 +216,24 @@ class Accounts
         if ($result === false) {
             ExitWithStatus('Error: Saving last date failed');
         }
+    }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param string $newVersion
+     * @return bool Success of update (new version is saved in account object)
+     */
+    public static function UpdateVersion($db, $account, $newVersion) {
+        $command = 'UPDATE TABLE SET `Version` = ? WHERE `ID` = ?';
+        $result = $db->QueryPrepare('Accounts', $command, 'si', [ $newVersion, $account->ID ]);
+        if ($result === false) {
+            ExitWithStatus('Error: Saving version failed');
+        }
+
+        // Not sure (SQL limitations) but it should be OK
+        $account->Version = $newVersion;
+        return true;
     }
 
     /**

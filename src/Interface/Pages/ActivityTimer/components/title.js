@@ -27,7 +27,7 @@ class ActivityTimerTitle extends React.Component {
         }
 
         const { localTime } = user.activities.currentActivity;
-        this.state.displayActivity = dataManager.GetText(skill.Name);
+        this.state.displayActivity = langManager.GetText(skill.Name);
         this.state.displayInitialTime = DateToFormatTimeString(GetDate(localTime));
         this.state.displayCurrentTime = this.__getCurrentTime();
     }

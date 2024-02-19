@@ -3,7 +3,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  */
 

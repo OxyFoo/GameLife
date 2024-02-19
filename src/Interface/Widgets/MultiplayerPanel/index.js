@@ -5,11 +5,11 @@ import styles from './style';
 import BackMultiplayerPanel from './back';
 import langManager from 'Managers/LangManager';
 
-import { Container, Text, FriendElement } from 'Interface/Components';
+import { Container, Text, UserOnlineElement } from 'Interface/Components';
 
 /**
  * @typedef {import('Interface/Components/Icon').Icons} Icons
- * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('react-native').ListRenderItem<Friend>} ListRenderFriend
  */
 
@@ -63,10 +63,10 @@ class MultiplayerPanel extends BackMultiplayerPanel {
         return (
             <FlatList
                 data={this.state.friends}
-                keyExtractor={(item, index) => 'multi-player-' + item.accountID}
+                keyExtractor={(item, index) => `multi-player-${item.accountID}`}
                 ListEmptyComponent={this.renderEmpty}
                 renderItem={({ item, index }) => (
-                    <FriendElement friend={item} />
+                    <UserOnlineElement friend={item} />
                 )}
             />
         );

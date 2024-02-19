@@ -1,5 +1,6 @@
 import { Animated, Linking } from 'react-native';
 import Config from 'react-native-config';
+import RNExitApp from 'react-native-exit-app';
 
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
@@ -8,6 +9,11 @@ import langManager from 'Managers/LangManager';
 import { Initialisation } from 'App/Loading';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
+
+/**
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
+ */
 
 class BackLoading extends PageBase {
     state = {
@@ -21,7 +27,7 @@ class BackLoading extends PageBase {
 
     componentDidMount() {
         super.componentDidMount();
-        Initialisation(this.nextStep, this.nextPage);
+        Initialisation(this.nextStep, this.nextPage, this.handleError);
 
         this.pickRandomSentence();
         this.intervalId = setInterval(this.pickRandomSentence, 3 * 1000);
@@ -49,6 +55,19 @@ class BackLoading extends PageBase {
 
     handleDiscordRedirection = () => {
         Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
+    }
+
+    /** @param {ErrorMessages} message */
+    handleError = (message) => {
+        const lang = langManager.curr['app'];
+        user.interface.ChangePage('display', {
+            /** @type {Icons} */
+            'icon': 'error',
+            'iconRatio': .4,
+            'text': lang['loading-error-message'][message],
+            'button': lang['loading-error-button'],
+            'action': RNExitApp.exitApp
+        }, true);
     }
 
     nextStep = () => {

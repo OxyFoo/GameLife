@@ -4,6 +4,7 @@ import { View, Linking } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 import Text from 'Interface/Components/Text';
 import Icon from 'Interface/Components/Icon';
@@ -48,7 +49,7 @@ const renderNew = (Nw) => {
                         fontSize={12}
                         borderRadius={8}
                     >
-                        {dataManager.GetText(Nw.ButtonText)}
+                        {langManager.GetText(Nw.ButtonText)}
                     </Button>
                 </View>
             );
@@ -69,7 +70,7 @@ const renderNew = (Nw) => {
     };
 
     const RenderText = () => {
-        const text = dataManager.GetText(Nw.Content);
+        const text = langManager.GetText(Nw.Content);
         return (
             <View style={styles.newText}>
                 <Text fontSize={16}>{text}</Text>

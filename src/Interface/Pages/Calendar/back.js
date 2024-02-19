@@ -231,7 +231,7 @@ class BackCalendar extends PageBase {
             if (day !== null) {
                 const weeks = GetBlockMonth(month, year, undefined, day).data;
                 const week = weeks.findIndex(w => w.filter(d => d?.day === day).length > 0);
-                const activities = user.activities.GetByTime(GetTime(date));
+                const activities = user.activities.GetByTime(GetTime(date, 'local'));
 
                 this.setState({
                     currActivities: activities,

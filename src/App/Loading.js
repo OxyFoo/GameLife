@@ -9,11 +9,16 @@ import Notifications from 'Utils/Notifications';
 import { Character } from 'Interface/Components';
 
 /**
- * Intialisation of all data
- * @param {Function} nextStep Used to change the icon
- * @param {Function} nextPage Used to go to the next page
+ * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  */
-async function Initialisation(nextStep, nextPage) {
+
+/**
+ * Intialisation of all data
+ * @param {() => void} nextStep Used to change the icon
+ * @param {() => void} nextPage Used to go to the next page
+ * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
+ */
+async function Initialisation(nextStep, nextPage, callbackError) {
     const time_start = new Date().getTime();
 
     // Loading: Settings
@@ -41,6 +46,8 @@ async function Initialisation(nextStep, nextPage) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
         if (!online) {
             user.interface.ChangePage('waitinternet', { force: 1 }, true);
+        } else {
+            callbackError('internaldata-not-loaded');
         }
         return;
     }
@@ -113,6 +120,7 @@ async function Initialisation(nextStep, nextPage) {
     // Check if user data are loaded
     if (user.informations.username.Get() === '') {
         user.interface.console.AddLog('error', 'User data not loaded');
+        callbackError('userdata-not-loaded');
         return;
     }
 
@@ -151,6 +159,9 @@ async function Initialisation(nextStep, nextPage) {
         user.interface.console.AddLog('info', 'No more ads available');
     }
 
+    // Connect to the server TCP
+    user.tcp.Connect();
+
     // Load admob
     const time_start_admob = new Date().getTime();
     await user.consent.ShowTrackingPopup()
@@ -169,7 +180,6 @@ async function Initialisation(nextStep, nextPage) {
 
     CheckDate();
     user.StartTimers();
-    user.tcp.Connect();
 
     // Maintenance message
     if (user.server.status === 'maintenance') {

@@ -4,6 +4,7 @@
 
 Add .env file
 ```
+ENV="dev|test|prod"
 LISTEN_PORT=""
 SERVER_URL=""
 OPENAI_API_KEY=""

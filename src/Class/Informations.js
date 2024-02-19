@@ -105,7 +105,7 @@ class Informations {
 
     GetTitleText = () => {
         const title = dataManager.titles.GetByID(this.title.Get());
-        return title === null ? '' : dataManager.GetText(title.Name);
+        return title === null ? '' : langManager.GetText(title.Name);
     }
     SetTitle = (ID) => {
         if (typeof(ID) !== 'number') return;

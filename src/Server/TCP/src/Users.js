@@ -1,7 +1,7 @@
 import WebSocket from 'websocket';
 
 import { GetUserFriends } from './Friends/GetFriends.js';
-import { AcceptFriend, AddFriend, DeclineFriend, RemoveFriend } from './Friends/Manager.js';
+import { AcceptFriend, AddFriend, DeclineFriend, RemoveFriend, CancelFriend } from './Friends/Manager.js';
 import { GetFriendNotifications } from './Friends/NotificationsInApp.js';
 
 import GPT from './Utils/GPT.js';
@@ -10,7 +10,7 @@ import { Request_Async } from './Utils/Request.js';
 
 /**
  * @typedef {import('./Sql.js').default} SQL
- * @typedef {import('../../../Types/Friend.js').Friend} Friend
+ * @typedef {import('../../../Types/UserOnline.js').Friend} Friend
  * @typedef {import('../../../Types/TCP.js').TCPServerRequest} TCPServerRequest
  * @typedef {import('../../../Types/TCP.js').TCPClientRequest} TCPClientRequest
  * @typedef {import('../../../Types/NotificationInApp.js').NotificationInApp} NotificationInApp
@@ -135,16 +135,20 @@ class Users {
                 result = await AddFriend(this, user, data.username);
                 break;
 
-            case 'remove-friend':
-                result = await RemoveFriend(this, user, data.accountID);
-                break;
-
             case 'accept-friend':
                 result = await AcceptFriend(this, user, data.accountID);
                 break;
 
             case 'decline-friend':
                 result = await DeclineFriend(this, user, data.accountID, false);
+                break;
+
+            case 'cancel-friend':
+                result = await CancelFriend(this, user, data.accountID);
+                break;
+
+            case 'remove-friend':
+                result = await RemoveFriend(this, user, data.accountID);
                 break;
 
             case 'block-friend':

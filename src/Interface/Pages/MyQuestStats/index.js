@@ -6,6 +6,7 @@ import BackQuest from './back';
 import StartHelp from './help';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Page, Button, StreakChart, Text } from 'Interface/Components';
@@ -32,7 +33,7 @@ class MyQuestStats extends BackQuest {
         const skillsName = this.selectedQuest.skills
             .map(skillID => dataManager.skills.GetByID(skillID))
             .filter(skill => skill !== null) 
-            .map(skill => dataManager.GetText(skill.Name))
+            .map(skill => langManager.GetText(skill.Name))
             .join(' • ');
             
         const styleContainer = {

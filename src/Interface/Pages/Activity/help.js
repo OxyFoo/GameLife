@@ -10,24 +10,27 @@ import { Sleep } from 'Utils/Functions';
 function StartHelp() {
     const lang = langManager.curr['activity']['tuto'];
     const categoriesText = dataManager.skills.categories
-        .map(category => dataManager.GetText(category.Name))
+        .map(category => langManager.GetText(category.Name))
         .join(', ');
 
     user.interface.screenTuto.ShowTutorial([
         {
             component: this.refTuto1,
             text: lang['1'].replace('{}', categoriesText),
+            showNextButton: true,
             execBefore: () => {
                 this.refActivityPanel.Close();
             }
         },
         {
             component: this.refActivities,
-            text: lang['2']
+            text: lang['2'],
+            showNextButton: true
         },
         {
             component: this.refActivityPanel.refHelp1,
             text: lang['3'],
+            showNextButton: true,
             execBefore: async () => {
                 const helpSkill = dataManager.skills.GetByID(1);
                 if (helpSkill === null) return;
@@ -39,6 +42,7 @@ function StartHelp() {
         {
             component: this.refActivityPanel.refActivitySchedule,
             text: lang['4'],
+            showNextButton: true,
             execBefore: async () => {
                 this.refActivityPanel.refPanelScreen.GotoY(-100);
                 await Sleep(500);

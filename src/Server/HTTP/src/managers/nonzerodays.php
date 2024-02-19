@@ -140,6 +140,32 @@ class NonZeroDays
      * @param Account $account
      * @param Device $device
      * @param int $claimListStart
+     * @param int[] $dayIndexes
+     * @param string|false $error Error message if failed
+     * @return int[]|false New items IDs or false if failed
+     */
+    public static function ClaimRewards($db, $account, $device, $claimListStart, $dayIndexes, &$error = null) {
+        $error = false;
+        $newItems = array();
+
+        for ($i = 0; $i < count($dayIndexes); $i++) {
+            $dayIndex = $dayIndexes[$i];
+            $items = self::ClaimReward($db, $account, $device, $claimListStart, $dayIndex, $errorClaimReward);
+            if ($items === false || $errorClaimReward !== false) {
+                $error = "Error: claiming nzd failed (claim reward $dayIndex) => $errorClaimReward";
+                return false;
+            }
+            $newItems = array_merge($newItems, $items);
+        }
+
+        return $newItems;
+    }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param Device $device
+     * @param int $claimListStart
      * @param int $dayIndex
      * @param string|false $error Error message if failed
      * @return int[]|false New items IDs or false if failed

@@ -3,9 +3,9 @@ import { AddLog } from '../Utils/Logs.js';
 /**
  * @typedef {import('../Users.js').User} User
  * @typedef {import('../Users.js').default} Users
- * @typedef {import('Types/Friend.js').Friend} Friend
- * @typedef {import('Types/Friend.js').ConnectionState} ConnectionState
- * @typedef {import('Types/Friend.js').FriendshipState} FriendshipState
+ * @typedef {import('Types/UserOnline.js').Friend} Friend
+ * @typedef {import('Types/UserOnline.js').ConnectionState} ConnectionState
+ * @typedef {import('Types/UserOnline.js').FriendshipState} FriendshipState
  */
 
 /**
@@ -40,35 +40,46 @@ async function GetUserFriends(users, user) {
     }
 
     /** @type {Array<Friend>} */
-    const friends = friendships.map(/** @return {Friend} */ row => ({
-        status: users.AllUsers.findIndex(u => u.accountID === row.AccountID) !== -1 ? 'online' : 'offline',
-        accountID: row.AccountID === userID ? row.TargetID : row.AccountID,
-        username: row.Username,
-        title: row.Title,
-        xp: row.XP,
-        avatar: {
-            Sexe: row.Sexe,
-            Skin: row.Skin,
-            SkinColor: row.SkinColor,
-            Hair: row.HairItemID,
-            Top: row.TopItemID,
-            Bottom: row.BottomItemID,
-            Shoes: row.ShoesItemID,
-        },
-        friendshipState: row.State,
-        activities: {
-            firstTime: 0,
-            length: 0,
-            totalDuration: 0
-        }
-    }));
+    const friends = friendships.map(/** @return {Friend} */ row => {
+        const accountID = row.AccountID === userID ? row.TargetID : row.AccountID;
+        const friendInAllUsersIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
+        return ({
+            status: friendInAllUsersIndex !== -1 ? 'online' : 'offline',
+            accountID: accountID,
+            username: row.Username,
+            title: row.Title,
+            xp: row.XP,
+            avatar: {
+                Sexe: row.Sexe,
+                Skin: row.Skin,
+                SkinColor: row.SkinColor,
+                Hair: row.HairItemID,
+                Top: row.TopItemID,
+                Bottom: row.BottomItemID,
+                Shoes: row.ShoesItemID,
+            },
+            friendshipState: row.State,
+            activities: {
+                firstTime: 0,
+                length: 0,
+                totalDuration: 0
+            }
+        })
+    });
 
     if (friends.length === 0) {
         return friends;
     }
 
     // Get friends KPI
-    const friendIDs = friends.map(friend => friend.accountID);
+    const friendIDs = friends
+        .filter(friend => friend.friendshipState === 'accepted')
+        .map(friend => friend.accountID);
+
+    if (friendIDs.length === 0) {
+        return friends;
+    }
+
     const activitiesQuery = `
         SELECT 
             AccountID,
@@ -81,18 +92,16 @@ async function GetUserFriends(users, user) {
     `;
     const activitiesResults = await users.db.ExecQuery(activitiesQuery);
     if (activitiesResults === null) {
-        AddLog(users, user, 'cheatSuspicion', 'Activities not found');
         return null;
     }
 
     friends.forEach(friend => {
         const activity = activitiesResults.find(a => a.AccountID === friend.accountID);
         if (!activity) return;
-        friend.activities = {
-            firstTime: activity.FirstActivity,
-            length: activity.TotalActivities,
-            totalDuration: activity.TotalDuration,
-        };
+
+        friend.activities.firstTime = activity.FirstActivity;
+        friend.activities.length = activity.TotalActivities;
+        friend.activities.totalDuration = activity.TotalDuration;
     });
 
     return friends;
@@ -166,11 +175,17 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
         },
         friendshipState: friendshipsState,
         activities: {
-            firstTime: friendInfo[0]['FirstActivity'],
-            length: friendInfo[0]['TotalLength'],
-            totalDuration: friendInfo[0]['TotalDuration']
+            firstTime: 0,
+            length: 0,
+            totalDuration: 0
         }
     };
+
+    if (friendshipsState === 'accepted') {
+        newFriend.activities.firstTime = friendInfo[0]['FirstActivity'];
+        newFriend.activities.length = friendInfo[0]['TotalLength'];
+        newFriend.activities.totalDuration = friendInfo[0]['TotalDuration'];
+    }
 
     return newFriend;
 }

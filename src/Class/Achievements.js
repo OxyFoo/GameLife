@@ -10,6 +10,7 @@ import { GetBattery } from 'Utils/Device';
  * @typedef {import('Data/Achievements').Condition} Condition
  * @typedef {import('Data/Achievements').Reward} Reward
  * @typedef {import('Data/Achievements').Achievement} Achievement
+ * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  * @typedef {import('Types/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
@@ -96,8 +97,8 @@ class Achievements {
     ShowCardPopup = (achievementID) => {
         const solvedIndexes = this.GetSolvedIDs();
         const achievement = dataManager.achievements.GetByID(achievementID);
-        const title = dataManager.GetText(achievement.Name);
-        let description = dataManager.GetText(achievement.Description);
+        const title = langManager.GetText(achievement.Name);
+        let description = langManager.GetText(achievement.Description);
         if (description.length > 0) description += '\n';
 
         if (solvedIndexes.includes(achievementID)) {
@@ -144,7 +145,7 @@ class Achievements {
                                 .replace('{}', 'Error: Skill not found\n');
                     break;
                 }
-                const skillName = dataManager.GetText(skill.Name);
+                const skillName = langManager.GetText(skill.Name);
                 output += condText[Comparator.Type]
                             .replace('{}', valueStr)
                             .replace('{}', skillName) + '\n';
@@ -159,7 +160,7 @@ class Achievements {
 
             case 'Ca':
                 const category = dataManager.skills.GetCategoryByID(valueNum);
-                const categoryName = dataManager.GetText(category.Name);
+                const categoryName = langManager.GetText(category.Name);
                 output += condText[Comparator.Type]
                             .replace('{}', valueStr)
                             .replace('{}', categoryName) + '\n';
@@ -209,7 +210,7 @@ class Achievements {
                     }
 
                     const title = dataManager.titles.GetByID(titleID);
-                    const titleName = dataManager.GetText(title.Name);
+                    const titleName = langManager.GetText(title.Name);
                     const titleLine = lang['title'].replace('{}', titleName);
                     output += titleLine;
 
@@ -223,8 +224,8 @@ class Achievements {
                     break;
 
                 case 'Item':
-                    const item = dataManager.items.GetByID(valueStr);
-                    const itemName = dataManager.GetText(item.Name);
+                    const item = dataManager.items.GetByID(/** @type {StuffID} */ (valueStr));
+                    const itemName = langManager.GetText(item.Name);
                     const itemRarity = langManager.curr['rarities'][item.Rarity];
                     const itemText = itemName + ' (' + itemRarity + ')';
                     const itemLine = lang['item'].replace('{}', itemText);
@@ -371,10 +372,10 @@ class Achievements {
 
     /**
      * @param {number} achievementID
-     * @returns {Promise<string | false>}
+     * @returns {Promise<string | false | null>} Text to show in popup, false if error, null if already claimed
      */
     Claim = async (achievementID) => {
-        if (this.claimAchievementLoading) return false;
+        if (this.claimAchievementLoading) return null;
         this.claimAchievementLoading = true;
 
         const lang = langManager.curr['achievements'];
@@ -407,7 +408,7 @@ class Achievements {
         await this.user.OnlineLoad(true);
 
         // Show popup
-        const achievementName = dataManager.GetText(achievement.Name);
+        const achievementName = langManager.GetText(achievement.Name);
         let text = lang['alert-achievement-text'].replace('{}', achievementName);
         if (rewardText) {
             text += `\n\n${rewardText}`;

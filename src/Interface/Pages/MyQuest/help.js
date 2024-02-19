@@ -12,11 +12,13 @@ function StartHelp() {
     user.interface.screenTuto.ShowTutorial([
         {
             component: this.refSectionSchedule.refHelp1,
-            text: lang['1']
+            text: lang['1'],
+            showNextButton: true
         },
         {
             component: this.refSectionSkill.refHelp1,
             text: lang['2'],
+            showNextButton: true,
             execBefore: async () => {
                 this.refPage.GotoY(100);
                 await Sleep(400);
@@ -25,6 +27,7 @@ function StartHelp() {
         {
             component: this.refSectionComment,
             text: lang['3'],
+            showNextButton: true,
             execBefore: async () => {
                 this.refPage.GotoY(200);
                 await Sleep(400);

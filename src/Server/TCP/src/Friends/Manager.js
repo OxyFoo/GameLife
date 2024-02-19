@@ -28,9 +28,12 @@ async function AddFriend(users, user, username) {
     }
 
     // Check if the friendship already exists
-    const commandCheck = `SELECT \`ID\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
+    const commandCheck = `SELECT \`ID\`, \`State\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
     const requestCheck = await users.db.ExecQuery(commandCheck);
     if (requestCheck === null || requestCheck.length > 0) {
+        if (requestCheck[0]['State'] === 'blocked') {
+            return 'friend-blocked';
+        }
         return 'already-friend';
     }
 
@@ -149,8 +152,7 @@ async function AcceptFriend(users, user, accountID) {
         const target = users.AllUsers[targetIndex];
         const userIndex = target.friends.findIndex(friend => friend.accountID === user.accountID);
         if (userIndex !== -1) {
-            target.friends[userIndex].status = 'online';
-            target.friends[userIndex].friendshipState = 'accepted';
+            target.friends[userIndex] = await GetFriend(users, target, user.accountID, 'accepted');
             users.Send(target, { status: 'update-friends', friends: target.friends });
         }
     }
@@ -212,4 +214,42 @@ async function DeclineFriend(users, user, accountID, block = false) {
     return 'ok';
 }
 
-export { AddFriend, RemoveFriend, AcceptFriend, DeclineFriend };
+/**
+ * @param {Users} users
+ * @param {User} user
+ * @param {number} accountID
+ * @returns {Promise<string>} Whether the friend was added successfully
+ */
+async function CancelFriend(users, user, accountID) {
+    // Update the friendship
+    const command = `DELETE FROM \`Friends\` WHERE AccountID = ${user.accountID} AND TargetID = ${accountID}`;
+    const canceled = await users.db.ExecQuery(command);
+    if (canceled === null) {
+        return 'sql-error';
+    }
+
+    // Remove the friend from the user
+    const index = user.friends.findIndex(friend => friend.accountID === accountID);
+    if (index !== -1) {
+        user.friends.splice(index, 1);
+        users.Send(user, { status: 'update-friends', friends: user.friends });
+    }
+
+    // If target is connected, send new status (remove notification)
+    const targetIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
+    if (targetIndex !== -1) {
+        const target = users.AllUsers[targetIndex];
+        const notifIndex = target.notificationsInApp.findIndex(notif => notif.type === 'friend-pending' && notif.data.accountID === user.accountID);
+        if (notifIndex !== -1) {
+            target.notificationsInApp.splice(notifIndex, 1);
+            users.Send(target, { status: 'update-notifications', notifications: target.notificationsInApp });
+        }
+    }
+
+    // Add log
+    AddLog(users, user, 'friend-canceled', `Friend canceled: ${accountID}`);
+
+    return 'ok';
+}
+
+export { AddFriend, RemoveFriend, AcceptFriend, DeclineFriend, CancelFriend };

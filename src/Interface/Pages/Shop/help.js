@@ -15,6 +15,7 @@ function StartHelp(section) {
             {
                 component: this.refTuto2,
                 text: lang['dailyDeals'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(0);
                     await Sleep(400);
@@ -26,6 +27,7 @@ function StartHelp(section) {
             {
                 component: this.refTuto3,
                 text: lang['randomChests'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(200);
                     await Sleep(400);
@@ -33,15 +35,18 @@ function StartHelp(section) {
             },
             {
                 component: this.refTuto3.refChest1,
-                text: lang['randomChests-common']
+                text: lang['randomChests-common'],
+                showNextButton: true
             },
             {
                 component: this.refTuto3.refChest2,
-                text: lang['randomChests-rare']
+                text: lang['randomChests-rare'],
+                showNextButton: true
             },
             {
                 component: this.refTuto3.refChest3,
-                text: lang['randomChests-epic']
+                text: lang['randomChests-epic'],
+                showNextButton: true
             }
         ]);
     } else if (section === 'targetChests') {
@@ -49,6 +54,7 @@ function StartHelp(section) {
             {
                 component: this.refTuto4.refTuto1,
                 text: lang['targetedChests'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(500);
                     await Sleep(400);
@@ -56,15 +62,18 @@ function StartHelp(section) {
             },
             {
                 component: this.refTuto4.refChest1,
-                text: lang['targetedChests-common']
+                text: lang['targetedChests-common'],
+                showNextButton: true
             },
             {
                 component: this.refTuto4.refChest2,
-                text: lang['targetedChests-rare']
+                text: lang['targetedChests-rare'],
+                showNextButton: true
             },
             {
                 component: this.refTuto4.refChest3,
-                text: lang['targetedChests-epic']
+                text: lang['targetedChests-epic'],
+                showNextButton: true
             }
         ]);
     } else if (section === 'dyes') {
@@ -72,6 +81,7 @@ function StartHelp(section) {
             {
                 component: this.refTuto5,
                 text: lang['dyes'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(700);
                     await Sleep(600);

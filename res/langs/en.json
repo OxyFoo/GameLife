@@ -102,6 +102,14 @@
         ]
     },
 
+    "app": {
+        "loading-error-message": {
+            "internaldata-not-loaded": "Internal data not loaded",
+            "userdata-not-loaded": "User data not loaded"
+        },
+        "loading-error-button": "Quitter"
+    },
+
     "modal": {
         "back": "Back",
         "search": "Search",
@@ -336,7 +344,8 @@
         "button-retry": "Retry",
 
         "container-title": "Multiplayer",
-        "container-content-empty": "No friends yet",
+        "container-content-empty": "No friends connected yet",
+        "container-friends-empty": "You have no friends yet, press the button below to add some!",
         "container-content-idle": "Loading...",
         "container-content-disconnected": "Disconnected, please try again later.",
         "container-content-error": "An error has occurred, please try again later.",
@@ -352,6 +361,10 @@
         "alert-already-friend": {
             "title": "Already friends",
             "message": "You are already friends with {}"
+        },
+        "alert-friend-blocked": {
+            "title": "Blocked",
+            "message": "User {} has been blocked"
         },
         "alert-friend-notfound": {
             "title": "User not found",
@@ -441,7 +454,10 @@
         "row-activities": "Number of activities",
         "row-time": "Time spent",
 
+        "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",
+        "alert-cancelfriend-title": "Cancel request",
+        "alert-cancelfriend-text": "Are you sure you want to cancel the friend request to {}?",
         "alert-removefriend-title": "Remove friend",
         "alert-removefriend-text": "Are you sure you want to remove {} from your friends?"
     },
@@ -767,6 +783,7 @@
         "container-date": "Rewards from {}",
         "claim": "Claim",
         "claim-in": "Claim in {}",
+        "claim-all": "Claim all",
         "no-claim": "No claim available",
 
         "alert-claim-error-title": "Error",

@@ -35,7 +35,7 @@ class BackChestReward extends PageBase {
         }
 
         this.buttonEnabled = false;
-        this.text = dataManager.GetText(item.Name);
+        this.text = langManager.GetText(item.Name);
         this.textSecondary = langManager.curr['rarities'][item.Rarity];
         this.rarityColor = themeManager.GetRariryColors(item.Rarity)[0];
         this.character = new Character('character-reward', user.character.sexe, 'skin_01', 0);

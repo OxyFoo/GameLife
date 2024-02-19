@@ -72,7 +72,9 @@ function RenderSkills({ category, callback }) {
     }
 
     // Disable horizontal scroll on iOS
-    const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
+    //const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
+    // TODO: Fix this, double scrollview doesn't work on iOS and on some Android devices
+    const FlatListView = View;
 
     return (
         <FlatListView>
@@ -106,7 +108,9 @@ function RenderSkillsSearch({ searchInput, callback }) {
     }, [ searchInput ]);
 
     // Disable horizontal scroll on iOS
-    const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
+    //const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
+    // TODO: Fix this, double scrollview doesn't work on iOS and on some Android devices
+    const FlatListView = View;
 
     return (
         <FlatListView>

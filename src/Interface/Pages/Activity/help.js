@@ -10,7 +10,7 @@ import { Sleep } from 'Utils/Functions';
 function StartHelp() {
     const lang = langManager.curr['activity']['tuto'];
     const categoriesText = dataManager.skills.categories
-        .map(category => dataManager.GetText(category.Name))
+        .map(category => langManager.GetText(category.Name))
         .join(', ');
 
     user.interface.screenTuto.ShowTutorial([

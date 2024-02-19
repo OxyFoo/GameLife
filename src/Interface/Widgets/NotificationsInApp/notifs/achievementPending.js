@@ -23,7 +23,7 @@ function NIA_AchievementPending({ notif, index }) {
     const [ loading, setLoading ] = React.useState(false);
 
     const achievement = dataManager.achievements.GetByID(notif.data.achievementID);
-    const achievementTitle = dataManager.GetText(achievement.Name);
+    const achievementTitle = langManager.GetText(achievement.Name);
 
     const claimHandle = async () => {
         const lang = langManager.curr['achievements'];

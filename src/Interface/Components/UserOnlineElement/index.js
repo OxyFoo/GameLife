@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { USER_XP_PER_LEVEL } from 'Class/Experience';
@@ -28,7 +29,7 @@ function UserOnlineElement({ friend }) {
         let friendTitle = null;
         if (friend.title !== 0) {
             const friendTitleIndex = dataManager.titles.GetByID(friend.title);
-            friendTitle = dataManager.GetText(friendTitleIndex.Name);
+            friendTitle = langManager.GetText(friendTitleIndex.Name);
         }
 
         const friendExperience = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);

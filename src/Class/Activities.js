@@ -1,4 +1,5 @@
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
@@ -273,7 +274,7 @@ class Activities {
         /** @param {Skill} skill @returns {EnrichedSkill} */
         const getInfos = skill => ({
             ...skill,
-            FullName: dataManager.GetText(skill.Name),
+            FullName: langManager.GetText(skill.Name),
             LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
             Experience: this.user.experience.GetSkillExperience(skill.ID)
         });

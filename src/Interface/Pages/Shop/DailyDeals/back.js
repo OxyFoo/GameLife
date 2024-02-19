@@ -3,6 +3,7 @@ import * as React from 'react';
 import { renderItemPopup } from './popup';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Character } from 'Interface/Components';
@@ -52,7 +53,7 @@ class BackShopItems extends React.Component {
             /** @type {BuyableItem} */
             const buyableItem = {
                 ID: itemID,
-                Name: dataManager.GetText(item.Name),
+                Name: langManager.GetText(item.Name),
                 Price: item.Value,
                 Rarity: item.Rarity,
                 Colors: themeManager.GetRariryColors(item.Rarity),

@@ -1,5 +1,6 @@
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 import { GetTime } from 'Utils/Time';
 
@@ -18,7 +19,7 @@ import { GetTime } from 'Utils/Time';
  */
 const SkillToItem = (skill = null, callback = (param) => {}) => ({
     id: skill === null ? 0 : skill.ID,
-    value: skill === null ? '' : dataManager.GetText(skill.Name),
+    value: skill === null ? '' : langManager.GetText(skill.Name),
     categoryID: skill === null ? 0 : skill.CategoryID,
     onPress: () => callback(skill)
 });
@@ -29,7 +30,7 @@ const SkillToItem = (skill = null, callback = (param) => {}) => ({
  */
 const CategoryToItem = (category) => ({
     id: category.ID,
-    name: dataManager.GetText(category.Name),
+    name: langManager.GetText(category.Name),
     icon: dataManager.skills.GetXmlByLogoID(category.LogoID)
 });
 

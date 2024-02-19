@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 import { GetTime } from 'Utils/Time';
 
@@ -120,7 +121,7 @@ class TodayPieChartBack extends React.Component {
 
             const categoryName = category.Name;
             if (categoryName) {
-                element.name = dataManager.GetText(categoryName);
+                element.name = langManager.GetText(categoryName);
                 element.color = category.Color;
             } else {
                 element.name = '';

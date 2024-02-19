@@ -24,7 +24,7 @@ class ProfileFriend extends BackProfileFriend {
 
         const username = friend.username;
         const title = friend.title !== 0 ? dataManager.titles.GetByID(friend.title) : null;
-        const titleText = title === null ? null : dataManager.GetText(title.Name);
+        const titleText = title === null ? null : langManager.GetText(title.Name);
 
         const backgroundKpi = {
             backgroundColor: themeManager.GetColor('backgroundCard')

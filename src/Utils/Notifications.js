@@ -197,7 +197,7 @@ class Notifications {
             const anonymousAuthors = langManager.curr['quote']['anonymous-author-list'];
 
             const quote = dataManager.quotes.GetRandomQuote();
-            const text = dataManager.GetText(quote.Quote);
+            const text = langManager.GetText(quote.Quote);
             const author = quote.Author || anonymousAuthors[Random(0, anonymousAuthors.length)];
 
             return {

@@ -225,7 +225,7 @@ class BackActivity extends PageBase {
         let inputText = langManager.curr['activity']['input-activity'];
         if (categoryID !== null) {
             const category = dataManager.skills.GetCategoryByID(categoryID);
-            inputText = dataManager.GetText(category?.Name) || inputText;
+            inputText = langManager.GetText(category?.Name) || inputText;
         }
 
         const newState = {

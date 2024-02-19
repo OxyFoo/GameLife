@@ -37,7 +37,7 @@ class SectionSkill extends React.Component {
         /** @type {Array<ScreenListItem>} */
         const data = dataManager.skills.categories.map(category => ({
             id: category.ID,
-            value: dataManager.GetText(category.Name)
+            value: langManager.GetText(category.Name)
         }));
         user.interface.screenList.Open(title, data, callback);
     }
@@ -66,7 +66,7 @@ class SectionSkill extends React.Component {
                 if (skill !== null && !data.find(s => s.id === skill.ID)) {
                     data.push({
                         id: skill.ID,
-                        value: dataManager.GetText(skill.Name)
+                        value: langManager.GetText(skill.Name)
                     });
                 }
             }
@@ -77,7 +77,7 @@ class SectionSkill extends React.Component {
             /** @type {Array<ScreenListItem>} */
             data = dataManager.skills.GetByCategory(categoryID).map(skill => ({
                 id: skill.ID,
-                value: dataManager.GetText(skill.Name)
+                value: langManager.GetText(skill.Name)
             }));
         }
 
@@ -97,7 +97,7 @@ class SectionSkill extends React.Component {
      * @param {import('Data/Skills').Skill} props.skill
      */
     renderSkills = ({ skill }) => {
-        const skillTitle = dataManager.GetText(skill.Name);
+        const skillTitle = langManager.GetText(skill.Name);
         const handleUnselectSkill = () => this.handleUnselectSkill(skill.ID);
         const styleBackground = {
             backgroundColor: themeManager.GetColor('background')

@@ -106,7 +106,7 @@ class ActivityPanelBack extends React.Component {
             mode: 'skill',
             activity: activity,
             selectedSkillID: skill.ID,
-            activityText: dataManager.GetText(skill.Name)
+            activityText: langManager.GetText(skill.Name)
         });
 
         // Update digits
@@ -140,7 +140,7 @@ class ActivityPanelBack extends React.Component {
         this.setState({
             mode: 'activity',
             selectedSkillID: skill.ID,
-            activityText: dataManager.GetText(skill.Name),
+            activityText: langManager.GetText(skill.Name),
             activity: { ...activity }
         });
 

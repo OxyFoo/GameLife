@@ -129,7 +129,7 @@ class ZapGPT extends ZapGPTBack {
         const lang = langManager.curr['dates']['names'];
 
         const skill = dataManager.skills.GetByID(item.skillID);
-        const skillName = dataManager.GetText(skill?.Name) || item.skillID.toString();
+        const skillName = langManager.GetText(skill?.Name) || item.skillID.toString();
         const skillDate = GetFullDate(GetDate(item.startTime));
         const skillStart = TimeToFormatString(item.startTime + item.timezone * 3600);
         const skillDuration = TimeToFormatString(item.duration * 60);

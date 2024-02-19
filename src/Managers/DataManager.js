@@ -52,25 +52,6 @@ class DataManager {
     }
 
     /**
-     * @deprecated Use same method from LangManager instead
-     * @param {object} value 
-     * @returns {string}
-     */
-    GetText(value) {
-        let output = '';
-        if (typeof(value) === 'object') {
-            const key = langManager.currentLangageKey;
-            if (value.hasOwnProperty(key)) output = value[key];
-            else if (value.hasOwnProperty('fr')) output = value['fr'];
-        }
-        return output;
-    }
-
-    /**
-     * import user as argument, bad but it skip cycles warns
-     */
-
-    /**
      * Local save Internal data
      * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully saved

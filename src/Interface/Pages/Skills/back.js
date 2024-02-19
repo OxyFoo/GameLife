@@ -49,7 +49,7 @@ class BackSkills extends PageBase {
      */
     upgradeSkill = (skill) => ({
         ...skill,
-        FullName: dataManager.GetText(skill.Name),
+        FullName: langManager.GetText(skill.Name),
         LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
         Experience: user.experience.GetSkillExperience(skill.ID)
     });

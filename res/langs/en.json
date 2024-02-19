@@ -354,6 +354,10 @@
             "title": "Already friends",
             "message": "You are already friends with {}"
         },
+        "alert-friend-blocked": {
+            "title": "Blocked",
+            "message": "User {} has been blocked"
+        },
         "alert-friend-notfound": {
             "title": "User not found",
             "message": "The user {} was not found"

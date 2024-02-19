@@ -28,9 +28,12 @@ async function AddFriend(users, user, username) {
     }
 
     // Check if the friendship already exists
-    const commandCheck = `SELECT \`ID\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
+    const commandCheck = `SELECT \`ID\`, \`State\` FROM \`Friends\` WHERE (AccountID = ${user.accountID} AND TargetID = ${friendID}) OR (AccountID = ${friendID} AND TargetID = ${user.accountID})`;
     const requestCheck = await users.db.ExecQuery(commandCheck);
     if (requestCheck === null || requestCheck.length > 0) {
+        if (requestCheck[0]['State'] === 'blocked') {
+            return 'friend-blocked';
+        }
         return 'already-friend';
     }
 

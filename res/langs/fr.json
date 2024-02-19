@@ -354,6 +354,10 @@
             "title": "Déjà ami",
             "message": "Tu es déjà ami avec {}"
         },
+        "alert-friend-blocked": {
+            "title": "Bloqué",
+            "message": "L'utilisateur {} a été bloqué"
+        },
         "alert-friend-notfound": {
             "title": "Ami introuvable",
             "message": "L'utilisateur {} n'a pas été trouvé"

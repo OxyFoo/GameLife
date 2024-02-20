@@ -17,14 +17,18 @@ class BenchMark extends BackBenchMark {
         const { benchmarking, activitiesCount, activitiesLoaded, benchmarkResults, benchmarkTimes } = this.state;
 
         return (
-            <Page ref={ref => this.refPage = ref} canScrollOver>
+            <Page
+                ref={ref => this.refPage = ref}
+                bottomOffset={96}
+                canScrollOver
+            >
                 <PageHeader
                     style={styles.header}
                     onBackPress={this.handleBackPress}
                 />
 
                 <View style={styles.content}>
-                    <Text>BenchMark</Text>
+                    <Text fontSize={24}>BenchMark</Text>
 
                     <Text>{`Current activities: ${activitiesCount}`}</Text>
                     <Text>{`Activities extended for tests: ${activitiesLoaded.length}`}</Text>

@@ -25,10 +25,17 @@ class BackBenchMark extends PageBase {
     componentDidMount() {
         super.componentDidMount();
 
-        const activitiesCount = user.activities.Get().length;
+        const activities = user.activities.Get();
+        const activitiesCount = activities.length;
+
+        if (activitiesCount <= 0) {
+            this.handleBackPress();
+            return;
+        }
+
         const activitiesExtended = [];
         while (activitiesExtended.length < TOTAL_ACTIVITIES) {
-            activitiesExtended.push(...user.activities.Get());
+            activitiesExtended.push(...activities);
         }
         activitiesExtended.length = TOTAL_ACTIVITIES;
 

@@ -4,7 +4,7 @@ import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { AddActivityNow, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { AddActivityNow, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 import { GetTime, RoundTimeTo } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -57,11 +57,17 @@ class BackActivityTimer extends PageBase {
      * @returns {void}
      */
     tick = () => {
-        const { startTime } = user.activities.currentActivity;
+        const { skillID, startTime } = user.activities.currentActivity;
         const duration = this.__getDuration();
 
         // Check if time plage is free
         if (duration > 0 && !user.activities.TimeIsFree(startTime, duration)) {
+            this.onPressComplete();
+        }
+
+        // Check if activity exceeds max time
+        const maxDuration = skillID === 168 ? 12 * 60 : MAX_TIME_MINUTES;
+        if (duration >= maxDuration) {
             this.onPressComplete();
         }
     }

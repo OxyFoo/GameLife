@@ -28,7 +28,6 @@ class BackProfile extends PageBase {
 
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
-        this.time_start = Date.now();
 
         const activities = user.activities.Get();
         this.state.playedDays = this.getTimeFromFirst(activities);
@@ -40,10 +39,6 @@ class BackProfile extends PageBase {
 
     componentDidMount() {
         super.componentDidMount();
-
-        const time_end = Date.now();
-        const time = time_end - this.time_start;
-        user.interface.console.AddLog('info', 'PROFILE loaded in ' + time + 'ms');
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({

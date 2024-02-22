@@ -32,11 +32,18 @@ class Multiplayer {
     onMessage = (data) => {
         const status = data.status;
 
-        if (status === 'update-friends') {
-            this.friends.Set(data.friends);
-        }
-        if (status === 'update-notifications') {
-            this.notifications.Set(data.notifications);
+        switch (status) {
+            case 'update-friends':
+                this.friends.Set(data.friends);
+                break;
+
+            case 'update-notifications':
+                this.notifications.Set(data.notifications);
+                break;
+
+            case 'update-current-activity':
+                this.user.activities.currentActivity.Set(data.activity);
+                break;
         }
     }
 

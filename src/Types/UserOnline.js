@@ -10,6 +10,7 @@
  * @property {number} skillID
  * @property {number} startTime In seconds, unix timestamp UTC
  * @property {number} timezone In hours
+ * @property {Array<number>} friendsIDs Array of accountIDs of friends who are also doing this activity
  */
 
 /**

@@ -237,6 +237,7 @@
 
         "timer-launch": "Heure de lancement :",
         "timer-gain": "Gains actuel: {}",
+        "timer-friends": "Des amis font la même activité en même temps !",
         "timer-complete": "Terminer",
         "timer-cancel": "Annuler",
         "timer-music": "La musique de Zap t'aidera à te concentrer !",

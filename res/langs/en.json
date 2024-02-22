@@ -237,6 +237,7 @@
 
         "timer-launch": "Launch time:",
         "timer-gain": "Current gains: {}",
+        "timer-friends": "Friends doing the same activity at the same time!",
         "timer-complete": "Complete",
         "timer-cancel": "Cancel",
         "timer-music": "Zap music will help you focus",

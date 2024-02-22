@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
@@ -10,6 +9,15 @@ import { DateToFormatTimeString } from 'Utils/Date';
 import { GetDate, GetTime } from 'Utils/Time';
 import { TwoDigit } from 'Utils/Functions';
 
+/**
+ * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
+ */
+
+const ActivityTimerTitleProps = {
+    /** @type {CurrentActivity | null} */
+    currentActivity: null
+};
+
 class ActivityTimerTitle extends React.Component {
     state = {
         displayActivity: '',
@@ -17,16 +25,17 @@ class ActivityTimerTitle extends React.Component {
         displayCurrentTime: '00:00:00'
     }
 
+    /** @param {ActivityTimerTitleProps} props */
     constructor(props) {
         super(props);
 
-        const skill = dataManager.skills.GetByID(user.activities.currentActivity.skillID);
+        const currentActivity = this.props.currentActivity;
+        const skill = dataManager.skills.GetByID(currentActivity?.skillID);
         if (skill === null) {
-            user.interface.BackHandle();
             return;
         }
 
-        const { startTime } = user.activities.currentActivity;
+        const { startTime } = currentActivity;
         this.state.displayActivity = langManager.GetText(skill.Name);
         this.state.displayInitialTime = DateToFormatTimeString(GetDate(startTime));
         this.state.displayCurrentTime = this.__getCurrentTime();
@@ -44,13 +53,16 @@ class ActivityTimerTitle extends React.Component {
      * @returns {void}
      */
     tick = () => {
-        this.setState({
-            displayCurrentTime: this.__getCurrentTime()
-        });
+        this.setState({ displayCurrentTime: this.__getCurrentTime() });
     }
 
     __getCurrentTime = () => {
-        const { startTime } = user.activities.currentActivity;
+        const { currentActivity } = this.props;
+        if (currentActivity === null) {
+            return '00:00:00';
+        }
+
+        const { startTime } = currentActivity;
 
         const time = GetTime(undefined, 'local') - startTime;
         const HH = Math.floor(time / 3600);
@@ -63,6 +75,10 @@ class ActivityTimerTitle extends React.Component {
     render() {
         const lang = langManager.curr['activity'];
         const { displayActivity, displayInitialTime, displayCurrentTime } = this.state;
+        const { currentActivity } = this.props;
+        if (currentActivity === null) {
+            return null;
+        }
 
         const textLaunch = lang['timer-launch'] + ' ' + displayInitialTime;
 
@@ -75,6 +91,9 @@ class ActivityTimerTitle extends React.Component {
         );
     }
 }
+
+ActivityTimerTitle.prototype.props = ActivityTimerTitleProps;
+ActivityTimerTitle.defaultProps = ActivityTimerTitleProps;
 
 const styles = StyleSheet.create({
     headActivityText: {

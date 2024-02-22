@@ -5,6 +5,7 @@ import styles from './style';
 import BackActivityTimer from './back';
 import ActivityTimerTitle from './components/title';
 import ActivityTimerScore from './components/score';
+import ActivityTimerFriends from './components/friends';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -18,11 +19,11 @@ import IMG_MUSIC from 'Ressources/logo/music/music';
 
 class ActivityTimer extends BackActivityTimer {
     render() {
-        if (user.activities.currentActivity === null) {
+        const lang = langManager.curr['activity'];
+        const { currentActivity } = this.state;
+        if (currentActivity === null) {
             return null;
         }
-
-        const lang = langManager.curr['activity'];
 
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
@@ -37,7 +38,7 @@ class ActivityTimer extends BackActivityTimer {
                 style={styles.content}
             >
                 {/* Title */}
-                <ActivityTimerTitle />
+                <ActivityTimerTitle currentActivity={currentActivity} />
 
                 {/* Buttons - Cancel / Done */}
                 <View style={styles.row}>
@@ -59,7 +60,10 @@ class ActivityTimer extends BackActivityTimer {
                 </View>
 
                 {/* Informations */}
-                <ActivityTimerScore />
+                <ActivityTimerScore currentActivity={currentActivity} />
+
+                {/* Friends ! */}
+                <ActivityTimerFriends currentActivity={currentActivity} />
 
                 {/* Zap'N'Music */}
                 <View>

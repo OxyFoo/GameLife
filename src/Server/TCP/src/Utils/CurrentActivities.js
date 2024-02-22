@@ -10,7 +10,7 @@ import { AddLog } from './Logs.js';
 
 /**
  * @param {Users} users
- * @param {UserOnline} user
+ * @param {User | UserOnline} user
  * @returns {CurrentActivity | null} Current activity of the user
  */
 function GetCurrentActivity(users, user) {
@@ -51,8 +51,6 @@ function StartActivity(users, user, activity) {
         return;
     }
 
-    users.currentActivities[user.accountID] = activity;
-
     // Send the activity to friends
     for (const userFriend of user.friends) {
         const friendIndex = users.AllUsers.findIndex(u => u.accountID === userFriend.accountID);
@@ -66,8 +64,31 @@ function StartActivity(users, user, activity) {
             continue;
         }
 
+        // Update the friend's current activity
+        const friendCurrentActivity = GetCurrentActivity(users, friend);
+        if (friendCurrentActivity !== null &&
+            friendCurrentActivity.friendsIDs.indexOf(user.accountID) === -1 &&
+            friendCurrentActivity.skillID === activity.skillID
+        ) {
+            friendCurrentActivity.friendsIDs.push(user.accountID);
+            users.Send(friend, { status: 'update-current-activity', activity: friendCurrentActivity });
+        }
+
+        // Update the friend's friends list
         friend.friends[userIndexInFriend].currentActivity = activity;
         users.Send(friend, { status: 'update-friends', friends: friend.friends });
+    }
+
+    // Update the user's current activity to refresh the friends list
+    users.currentActivities[user.accountID] = activity;
+    const newFiendsIDs = user.friends
+        .filter(f => f.friendshipState === 'accepted')
+        .filter(f => f.currentActivity !== null && f.currentActivity.skillID === activity.skillID)
+        .map(f => f.accountID);
+
+    if (activity.friendsIDs.length !== newFiendsIDs.length) {
+        activity.friendsIDs = newFiendsIDs;
+        users.Send(user, { status: 'update-current-activity', activity });
     }
 }
 

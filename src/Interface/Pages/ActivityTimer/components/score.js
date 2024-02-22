@@ -1,12 +1,19 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
 
-import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { GetTime } from 'Utils/Time';
 import { ActivityExperience } from 'Interface/Widgets';
+
+/**
+ * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
+ */
+
+const ActivityTimerScoreProps = {
+    /** @type {CurrentActivity | null} */
+    currentActivity: null
+};
 
 class ActivityTimerScore extends React.Component {
     state = {
@@ -14,12 +21,13 @@ class ActivityTimerScore extends React.Component {
         duration: 0
     }
 
+    /** @param {ActivityTimerScoreProps} props */
     constructor(props) {
         super(props);
 
-        const skill = dataManager.skills.GetByID(user.activities.currentActivity.skillID);
+        const currentActivity = this.props.currentActivity;
+        const skill = dataManager.skills.GetByID(currentActivity?.skillID);
         if (skill === null) {
-            user.interface.BackHandle();
             return;
         }
 
@@ -43,7 +51,12 @@ class ActivityTimerScore extends React.Component {
     }
 
     __getDuration = () => {
-        const { startTime } = user.activities.currentActivity;
+        const { currentActivity } = this.props;
+        if (currentActivity === null) {
+            return 0;
+        }
+
+        const { startTime } = currentActivity;
         const now = GetTime(undefined, 'local');
         const currentMillis = new Date().getMilliseconds() / 1000;
         const duration = (now + currentMillis - startTime) / 60;
@@ -53,22 +66,24 @@ class ActivityTimerScore extends React.Component {
     render() {
         const lang = langManager.curr['activity'];
         const { duration } = this.state;
+        const { currentActivity } = this.props;
+
+        if (currentActivity === null) {
+            return null;
+        }
 
         return (
             <ActivityExperience
                 title={lang['timer-gain']}
-                style={styles.experience}
-                skillID={user.activities.currentActivity.skillID}
+                skillID={currentActivity.skillID}
                 duration={duration}
+                compact
             />
         );
     }
 }
 
-const styles = StyleSheet.create({
-    experience: {
-        marginBottom: 24
-    }
-});
+ActivityTimerScore.prototype.props = ActivityTimerScoreProps;
+ActivityTimerScore.defaultProps = ActivityTimerScoreProps;
 
 export default ActivityTimerScore;

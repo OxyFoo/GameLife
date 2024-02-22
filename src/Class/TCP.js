@@ -83,7 +83,7 @@ class TCP {
             }
         }
 
-        if (status === 'update-friends' || status === 'update-notifications') {
+        if (status.startsWith('update-')) {
             this.user.multiplayer.onMessage(data);
         }
 

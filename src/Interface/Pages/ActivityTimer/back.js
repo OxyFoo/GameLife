@@ -11,16 +11,22 @@ import { AddActivityNow, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activi
 /**
  * @typedef {import('Class/Settings').MusicLinks} MusicLinks
  * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
  */
 
 class BackActivityTimer extends PageBase {
+    state = {
+        /** @type {CurrentActivity | null} */
+        currentActivity: user.activities.currentActivity.Get()
+    }
+
     /** @type {boolean} */
     finished = false;
 
     constructor (props) {
         super(props);
 
-        if (user.activities.currentActivity === null) {
+        if (user.activities.currentActivity.Get() === null) {
             user.interface.BackHandle();
             return;
         }
@@ -38,13 +44,14 @@ class BackActivityTimer extends PageBase {
     }
 
     componentDidMount() {
-        user.interface.SetCustomBackHandler(this.onPressCancel);
         this.timer_tick = window.setInterval(this.tick, 1000);
+        user.interface.SetCustomBackHandler(this.onPressCancel);
+        this.currentActivityEvent = user.activities.currentActivity.AddListener(this.onCurrentActivityChange);
 
         if (user.tcp.IsConnected()) {
             user.tcp.Send({
                 action: 'start-activity',
-                activity: user.activities.currentActivity
+                activity: this.state.currentActivity
             });
         }
     }
@@ -52,6 +59,7 @@ class BackActivityTimer extends PageBase {
     componentWillUnmount() {
         clearInterval(this.timer_tick);
         user.interface.ResetCustomBackHandler();
+        user.activities.currentActivity.RemoveListener(this.currentActivityEvent);
 
         if (user.tcp.IsConnected()) {
             user.tcp.Send({ action: 'stop-activity' });
@@ -59,7 +67,7 @@ class BackActivityTimer extends PageBase {
 
         // Clear if activity is finished
         if (this.finished === true) {
-            user.activities.currentActivity = null;
+            user.activities.currentActivity.Set(null);
             user.LocalSave();
         }
     }
@@ -70,7 +78,7 @@ class BackActivityTimer extends PageBase {
      * @returns {void}
      */
     tick = () => {
-        const { skillID, startTime } = user.activities.currentActivity;
+        const { skillID, startTime } = this.state.currentActivity;
         const duration = this.__getDuration();
 
         // Check if time plage is free
@@ -86,12 +94,17 @@ class BackActivityTimer extends PageBase {
     }
 
     __getDuration = () => {
-        const { startTime, timezone } = user.activities.currentActivity;
+        const { startTime, timezone } = this.state.currentActivity;
         const now = GetTime(undefined, 'local');
         const localTime = startTime + timezone * 3600;
         const currentMillis = new Date().getMilliseconds() / 1000;
         const duration = (now + currentMillis - localTime) / 60;
         return duration;
+    }
+
+    /** @param {CurrentActivity} currentActivity */
+    onCurrentActivityChange = (currentActivity) => {
+        this.setState({ currentActivity });
     }
 
     onPressCancel = () => {
@@ -107,7 +120,7 @@ class BackActivityTimer extends PageBase {
         return false;
     }
     onPressComplete = () => {
-        const { skillID, startTime } = user.activities.currentActivity;
+        const { skillID, startTime } = this.state.currentActivity;
 
         // Too short
         const now = GetTime(undefined, 'local');

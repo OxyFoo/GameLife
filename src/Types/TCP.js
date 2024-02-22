@@ -77,10 +77,14 @@
  * @property {'update-notifications'} status
  * @property {Array<NotificationInApp>} notifications
  * 
+ * @typedef {Object} ReceiveRequestUpdateCurrentActivity
+ * @property {'update-current-activity'} status
+ * @property {CurrentActivity} activity
+ * 
  * @typedef {Object} ReceiveRequestCallback
  * @property {'callback'} status
  * @property {string} callbackID
  * @property {any} result
  * 
- * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications | ReceiveRequestCallback} TCPServerRequest
+ * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications | ReceiveRequestUpdateCurrentActivity | ReceiveRequestCallback} TCPServerRequest
  */

@@ -43,7 +43,12 @@ function StartActivity() {
         return;
     }
 
-    user.activities.currentActivity = { skillID, startTime, timezone: GetTimeZone() };
+    user.activities.currentActivity.Set({
+        skillID,
+        startTime,
+        timezone: GetTimeZone(),
+        friendsIDs: []
+    });
     user.LocalSave();
     user.interface.ChangePage('activitytimer', undefined, true);
 }

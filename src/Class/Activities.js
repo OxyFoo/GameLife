@@ -65,8 +65,8 @@ class Activities {
      */
     allActivities = new DynamicVar([]);
 
-    /** @type {CurrentActivity | null} */
-    currentActivity = null;
+    /** @type {DynamicVar<CurrentActivity | null>} */
+    currentActivity = new DynamicVar(null);
 
     /** @type {{[name: string]: function}} */
     callbacks = {};
@@ -75,7 +75,7 @@ class Activities {
         this.activities = [];
         this.UNSAVED_activities = [];
         this.UNSAVED_deletions = [];
-        this.currentActivity = null;
+        this.currentActivity.Set(null);
         this.allActivities.Set([]);
     }
     Load(activities) {
@@ -83,7 +83,7 @@ class Activities {
         if (contains('activities')) this.activities = activities['activities'];
         if (contains('unsaved'))    this.UNSAVED_activities = activities['unsaved'];
         if (contains('deletions'))  this.UNSAVED_deletions = activities['deletions'];
-        if (contains('current'))    this.currentActivity = activities['current'];
+        if (contains('current'))    this.currentActivity.Set(activities['current']);
         this.allActivities.Set(this.Get());
     }
     LoadOnline(activities) {
@@ -118,7 +118,7 @@ class Activities {
             activities: this.activities,
             unsaved: this.UNSAVED_activities,
             deletions: this.UNSAVED_deletions,
-            current: this.currentActivity
+            current: this.currentActivity.Get()
         };
         return activities;
     }

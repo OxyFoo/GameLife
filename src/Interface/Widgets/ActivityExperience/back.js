@@ -26,6 +26,8 @@ const ActivityExperienceProps = {
     /** @type {number} Duration of the activity in minutes */
     duration: 60,
 
+    bonus: 0,
+
     /** @type {boolean} */
     compact: false
 };
@@ -56,7 +58,7 @@ class ActivityExperienceBack extends React.Component {
 
     updateSkill = () => {
         const { title, data } = this.state;
-        const { skillID, duration } = this.props;
+        const { skillID, duration, bonus } = this.props;
 
         const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) {
@@ -66,7 +68,8 @@ class ActivityExperienceBack extends React.Component {
             return;
         }
 
-        const XPamount = Round(skill.XP * (duration / 60), 1);
+        const XP = skill.XP * (duration / 60) * (1 + bonus);
+        const XPamount = Round(XP, 1);
         const XPtext = langManager.curr['level']['xp'];
 
         /** @type {Stat[]} */

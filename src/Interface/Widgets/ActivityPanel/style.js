@@ -22,6 +22,11 @@ const styles = StyleSheet.create({
     title: {
         marginBottom: 4
     },
+    bonus: {
+        position: 'absolute',
+        top: 0,
+        right: 0
+    },
 
     buttonNow: {
         position: 'absolute',

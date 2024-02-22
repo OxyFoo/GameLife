@@ -53,18 +53,14 @@ class ActivityTimerFriends extends React.Component {
                             friend.currentActivity.skillID === currentActivity.skillID;
 
                         return (
-                            <>
-                                <Text
-                                    key={`activity-timer-friend-${friendID}`}
-                                    color={friendIsHere ? 'primary' : 'secondary'}
-                                    fontSize={16}
-                                >
+                            <View key={`activity-timer-friend-${friendID}`}>
+                                <Text color={friendIsHere ? 'primary' : 'secondary'} fontSize={16}>
                                     {friend.username}
                                 </Text>
-                                <Text key={`activity-timer-friend-${friendID}-comma`} color={'secondary'} fontSize={16}>
+                                <Text color={'secondary'} fontSize={16}>
                                     {index < currentActivity.friendsIDs.length - 1 ? ', ' : ''}
                                 </Text>
-                            </>
+                            </View>
                         );
                     })}
                 </View>

@@ -248,6 +248,7 @@ class ActivityPanel extends ActivityPanelBack {
                     style={styles.experience}
                     skillID={selectedSkillID}
                     duration={activity?.duration ?? 0}
+                    bonus={user.experience.GetExperienceFriendBonus(activity)}
                 />
             </>
         );
@@ -256,6 +257,10 @@ class ActivityPanel extends ActivityPanelBack {
     renderFriends() {
         const lang = langManager.curr['activity'];
         const { activity } = this.state;
+        if (activity === null) {
+            return null;
+        }
+
         const { friends } = activity;
 
         if (friends.length === 0) {
@@ -268,12 +273,16 @@ class ActivityPanel extends ActivityPanelBack {
             .map(friend => friend.username)
             .join(', ');
 
+        const bonus = user.experience.GetExperienceFriendBonus(activity);
+        const bonusText = `+${bonus * 100}%`;
+
         const styleBackground = {
             backgroundColor: themeManager.GetColor('background')
         };
 
         return (
             <View style={[styles.container, styleBackground]}>
+                <Text style={styles.bonus} fontSize={12}>{bonusText}</Text>
                 <Text style={styles.title}>{lang['title-friends']}</Text>
                 <Text color={'primary'} fontSize={16}>{friendsText}</Text>
             </View>

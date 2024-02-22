@@ -454,6 +454,9 @@
         "row-activities": "Number of activities",
         "row-time": "Time spent",
 
+        "activity-now-title": "Activity now: {}",
+        "activity-now-start": "Start the same activity",
+
         "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",
         "alert-cancelfriend-title": "Cancel request",

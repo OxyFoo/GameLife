@@ -8,7 +8,6 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { StartActivity } from './utils';
 import Text from 'Interface/Components/Text';
 import Icon from 'Interface/Components/Icon';
 import Button from 'Interface/Components/Button';
@@ -171,7 +170,7 @@ class ActivityPanel extends ActivityPanelBack {
             <Button
                 style={styles.buttonNow}
                 styleAnimation={btnOpacity}
-                onPress={StartActivity.bind(this)}
+                onPress={this.onStartNow}
                 color='main2'
             >
                 {lang['btn-start']}

@@ -42,6 +42,9 @@ class Activity {
 
     /** @type {number} Time when activity was added (unix timestamp, UTC) */
     addedTime = 0;
+
+    /** @type {Array<number>} IDs of friends who have participated in the activity */
+    friends = [];
 }
 
 class Activities {
@@ -106,7 +109,8 @@ class Activities {
                 comment: activity['comment'],
                 timezone: activity['timezone'],
                 addedType: activity['addedType'],
-                addedTime: activity['addedTime']
+                addedTime: activity['addedTime'],
+                friends: activity['friends']
             }, true);
         }
         this.allActivities.Set(this.Get());
@@ -172,7 +176,8 @@ class Activities {
                 comment: activity.comment,
                 timezone: activity.timezone,
                 addedType: activity.addedType,
-                addedTime: activity.addedTime
+                addedTime: activity.addedTime,
+                friends: activity.friends
             });
         }
         for (let a in this.UNSAVED_deletions) {
@@ -185,7 +190,8 @@ class Activities {
                 comment: '',
                 timezone: activity.timezone,
                 addedType: activity.addedType,
-                addedTime: activity.addedTime
+                addedTime: activity.addedTime,
+                friends: activity.friends
             });
         }
         return unsaved;

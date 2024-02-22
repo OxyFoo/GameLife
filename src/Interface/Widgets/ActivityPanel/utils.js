@@ -30,27 +30,4 @@ async function onRemComment(callback) {
     user.interface.popup.Open('yesno', [ title, text ], cb);
 }
 
-/** @this ActivityPanel */
-function StartActivity() {
-    const skillID = this.state.selectedSkillID;
-    const startTime = GetTime(undefined, 'local');
-    const roundedTime = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
-
-    if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES)) {
-        const title = langManager.curr['activity']['alert-wrongtiming-title'];
-        const text = langManager.curr['activity']['alert-wrongtiming-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
-        return;
-    }
-
-    user.activities.currentActivity.Set({
-        skillID,
-        startTime,
-        timezone: GetTimeZone(),
-        friendsIDs: []
-    });
-    user.LocalSave();
-    user.interface.ChangePage('activitytimer', undefined, true);
-}
-
-export { AskActivityComment, onRemComment, StartActivity };
+export { AskActivityComment, onRemComment };

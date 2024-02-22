@@ -41,7 +41,8 @@ function CheckZapGPTActivities(activities) {
             startTime: realStartTime,
             addedType: 'zap-gpt',
             addedTime: GetTime(undefined, 'local'),
-            timezone: GetTimeZone()
+            timezone: GetTimeZone(),
+            friends: []
         };
 
         return newActivity;

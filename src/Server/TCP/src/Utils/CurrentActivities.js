@@ -86,8 +86,13 @@ function StartActivity(users, user, activity) {
         .filter(f => f.currentActivity !== null && f.currentActivity.skillID === activity.skillID)
         .map(f => f.accountID);
 
-    if (activity.friendsIDs.length !== newFiendsIDs.length) {
-        activity.friendsIDs = newFiendsIDs;
+    if (activity.friendsIDs.toString() !== newFiendsIDs.toString()) {
+        // Keep friends that are already finish their activity
+        for (const friendID of newFiendsIDs) {
+            if (activity.friendsIDs.indexOf(friendID) === -1) {
+                activity.friendsIDs.push(friendID);
+            }
+        }
         users.Send(user, { status: 'update-current-activity', activity });
     }
 }

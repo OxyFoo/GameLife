@@ -1,9 +1,10 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase, Character } from 'Interface/Components';
 import { USER_XP_PER_LEVEL } from 'Class/Experience';
+import { PageBase, Character } from 'Interface/Components';
 import { GetTime } from 'Utils/Time';
+import { StartActivityNow } from 'Utils/Activities';
 
 /**
  * @typedef {import('Types/UserOnline').Friend} Friend
@@ -115,6 +116,11 @@ class BackProfileFriend extends PageBase {
         }
 
         this.setState({ friend: newFriend });
+    }
+
+    handleStartNow = () => {
+        const skillID = this.state.friend.currentActivity.skillID;
+        StartActivityNow(skillID);
     }
 
     removeFriendHandler = () => {

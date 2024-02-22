@@ -61,12 +61,12 @@ class BackActivityTimer extends PageBase {
         user.interface.ResetCustomBackHandler();
         user.activities.currentActivity.RemoveListener(this.currentActivityEvent);
 
-        if (user.tcp.IsConnected()) {
-            user.tcp.Send({ action: 'stop-activity' });
-        }
-
         // Clear if activity is finished
         if (this.finished === true) {
+            if (user.tcp.IsConnected()) {
+                user.tcp.Send({ action: 'stop-activity' });
+            }
+
             user.activities.currentActivity.Set(null);
             user.LocalSave();
         }
@@ -105,6 +105,7 @@ class BackActivityTimer extends PageBase {
     /** @param {CurrentActivity} currentActivity */
     onCurrentActivityChange = (currentActivity) => {
         this.setState({ currentActivity });
+        user.LocalSave();
     }
 
     onPressCancel = () => {
@@ -120,7 +121,7 @@ class BackActivityTimer extends PageBase {
         return false;
     }
     onPressComplete = () => {
-        const { skillID, startTime } = this.state.currentActivity;
+        const { skillID, startTime, friendsIDs } = this.state.currentActivity;
 
         // Too short
         const now = GetTime(undefined, 'local');
@@ -135,7 +136,7 @@ class BackActivityTimer extends PageBase {
 
         this.finished = true;
 
-        AddActivityNow(skillID, startTime, now, this.Back);
+        AddActivityNow(skillID, startTime, now, friendsIDs, this.Back);
     }
 
     Back = () => {

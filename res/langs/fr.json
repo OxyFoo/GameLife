@@ -454,6 +454,9 @@
         "row-activities": "Nombre d'activités",
         "row-time": "Nombre d'heures",
 
+        "activity-now-title": "Activité en cours: {}",
+        "activity-now-start": "Commencer la même activité",
+
         "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",
         "alert-cancelfriend-title": "Annuler la demande",

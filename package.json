@@ -7,6 +7,7 @@
     "start": "npx react-native start --reset-cache",
     "build": "cd android && ./gradlew bundleRelease",
     "install-android": "cd android && ./gradlew installRelease",
+    "install-server": "cd src/Server/TCP && npm install",
     "clean": "cd android && ./gradlew clean",
     "test": "jest",
     "lint": "eslint .",

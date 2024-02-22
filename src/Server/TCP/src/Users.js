@@ -8,6 +8,7 @@ import GPT from './Utils/GPT.js';
 import { StrIsJson } from './Utils/Functions.js';
 import { Request_Async } from './Utils/Request.js';
 import { StartActivity, StopActivity } from './Utils/CurrentActivities.js';
+import { AddLog } from './Utils/Logs.js';
 
 /**
  * @typedef {import('./Sql.js').default} SQL
@@ -174,7 +175,11 @@ class Users {
                 break;
 
             case 'zap-gpt':
-                result = await this.gpt.PromptToActivities(data.prompt);
+                result = await this.gpt.PromptToActivities(data.prompt, (error) => {
+                    AddLog(this, user, 'error', error);
+                });
+                const newlog = { prompt: data.prompt, response: result };
+                AddLog(this, user, 'zap-gpt-request', JSON.stringify(newlog));
                 break;
 
             default:

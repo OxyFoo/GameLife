@@ -20,5 +20,6 @@
  *  'friend-blocked' |
  *  'friend-declined' |
  *  'friend-canceled' |
+ *  'zap-gpt-request' |
  *  'error'} LogType
  */

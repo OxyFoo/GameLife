@@ -40,28 +40,36 @@ class ActivityTimerFriends extends React.Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>{lang['timer-friends']}</Text>
-                {currentActivity.friendsIDs.map((friendID, index) => {
-                    const friend = user.multiplayer.GetFriendByID(friendID);
-                    if (friend === null) {
-                        return null;
-                    }
 
-                    const friendIsHere = friend.status === 'online' &&
-                        friend.currentActivity !== null &&
-                        friend.currentActivity.skillID === currentActivity.skillID;
+                <View style={styles.containerFriends}>
+                    {currentActivity.friendsIDs.map((friendID, index) => {
+                        const friend = user.multiplayer.GetFriendByID(friendID);
+                        if (friend === null) {
+                            return null;
+                        }
 
-                    return (
-                        <Text
-                            key={`activity-timer-friend-${friendID}`}
-                            color={friendIsHere ? 'primary' : 'secondary'}
-                            fontSize={16}
-                        >
-                            {friend.username}
-                       </Text>
-                    );
-                })}
+                        const friendIsHere = friend.status === 'online' &&
+                            friend.currentActivity !== null &&
+                            friend.currentActivity.skillID === currentActivity.skillID;
+
+                        return (
+                            <>
+                                <Text
+                                    key={`activity-timer-friend-${friendID}`}
+                                    color={friendIsHere ? 'primary' : 'secondary'}
+                                    fontSize={16}
+                                >
+                                    {friend.username}
+                                </Text>
+                                <Text key={`activity-timer-friend-${friendID}-comma`} color={'secondary'} fontSize={16}>
+                                    {index < currentActivity.friendsIDs.length - 1 ? ', ' : ''}
+                                </Text>
+                            </>
+                        );
+                    })}
+                </View>
             </View>
-        )
+        );
     }
 }
 
@@ -73,6 +81,12 @@ const styles = StyleSheet.create({
         padding: 4,
         borderRadius: 10,
         backgroundColor: themeManager.GetColor('backgroundCard')
+    },
+    containerFriends: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     title: {
         marginBottom: 4

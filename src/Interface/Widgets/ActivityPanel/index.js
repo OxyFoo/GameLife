@@ -22,46 +22,75 @@ import ActivityExperience from 'Interface/Widgets/ActivityExperience';
  */
 
 class ActivityPanel extends ActivityPanelBack {
-    renderExperienceText() {
+    render() {
         const lang = langManager.curr['activity'];
-        const { activity, selectedSkillID, mode } = this.state;
+        const { style, topOffset, variantTheme } = this.props;
+        const { activityText, mode } = this.state;
+        const { selectedPage } = user.interface.state;
 
-        let noXpText = '';
-        const skill = dataManager.skills.GetByID(selectedSkillID);
-        if (skill === null) return null;
-
-        if (mode === 'activity') {
-            const experienceStatus = user.activities.GetExperienceStatus(activity);
-            if (experienceStatus === 'beforeLimit') {
-                noXpText = lang['title-before-limit'];
-            } else if (experienceStatus === 'isNotPast') {
-                noXpText = lang['title-not-past'];
-            }
-        }
-
-        if (skill.XP <= 0) {
-            noXpText = lang['title-no-experience'];
-        }
-
-        if (noXpText !== '') {
-            return (
-                <Text style={styles.tempTitleNoXP} bold>
-                    {noXpText}
-                </Text>
-            );
-        }
+        const stylePanel = {
+            backgroundColor: themeManager.GetColor(
+                !variantTheme ? 'backgroundGrey' : 'backgroundCard'
+            )
+        };
+        const styleTitle = {
+            borderColor: themeManager.GetColor('main1')
+        };
 
         return (
-            <>
-                <Text style={styles.tempTitle} bold>
-                    {lang['title-experience']}
-                </Text>
-                <ActivityExperience
-                    style={styles.experience}
-                    skillID={selectedSkillID}
-                    duration={activity?.duration ?? 0}
-                />
-            </>
+            <PanelScreen
+                ref={ref => this.refPanelScreen = ref}
+                containerStyle={[styles.panel, stylePanel, style]}
+                topOffset={topOffset}
+                onClose={this.Close}
+                disableBackground
+            >
+                {/* Title */}
+                <View style={styles.panelTitleView}>
+
+                    <Button
+                        onPress={this.onOpenSkill}
+                        style={[styleTitle, styles.buttonViewContainer]}
+                    >
+                        <View
+                            style={styles.buttonView}
+                        >
+                            <Text style={styles.panelTitle} bold>
+                                {activityText}
+                            </Text>
+                            {selectedPage !== 'skill' && (
+                                <Text style={styles.subPanelTitle}>
+                                    {lang['title-click-me']}
+                                </Text>
+                            )}
+                        </View>
+                    </Button>
+
+                    <Icon
+                        containerStyle={[styles.panelTitleIcon]}
+                        size={42}
+                        icon='arrowLeft'
+                        angle={-90}
+                        onPress={this.Close}
+                    />
+                </View>
+
+                {/* Start mode - Already / Now */}
+                <View ref={ref => this.refHelp1 = ref}>
+                    {mode === 'activity' ? null : (
+                        <TextSwitch
+                            style={styles.panelTextSwitch}
+                            texts={[lang['swiper-already'], lang['swiper-now']]}
+                            onChange={this.onChangeMode}
+                        />
+                    )}
+                </View>
+
+                <View>
+                    {this.renderStartActivity.call(this)}
+                    {this.renderPanelDetails.call(this)}
+                </View>
+            </PanelScreen>
         );
     }
 
@@ -112,6 +141,9 @@ class ActivityPanel extends ActivityPanelBack {
                 <View ref={ref => this.refHelp3 = ref}>
                     {this.renderExperienceText.call(this)}
                 </View>
+
+                {/* Friends */}
+                {this.renderFriends.call(this)}
 
                 {/* Commentary */}
                 {!activity?.comment ? (
@@ -178,73 +210,73 @@ class ActivityPanel extends ActivityPanelBack {
         );
     }
 
-    render() {
+    renderExperienceText() {
         const lang = langManager.curr['activity'];
-        const { style, topOffset, variantTheme } = this.props;
-        const { activityText, mode } = this.state;
-        const { selectedPage } = user.interface.state;
+        const { activity, selectedSkillID, mode } = this.state;
 
-        const stylePanel = {
-            backgroundColor: themeManager.GetColor(
-                !variantTheme ? 'backgroundGrey' : 'backgroundCard'
-            )
-        };
-        const styleTitle = {
-            borderColor: themeManager.GetColor('main1')
+        let noXpText = '';
+        const skill = dataManager.skills.GetByID(selectedSkillID);
+        if (skill === null) return null;
+
+        if (mode === 'activity') {
+            const experienceStatus = user.activities.GetExperienceStatus(activity);
+            if (experienceStatus === 'beforeLimit') {
+                noXpText = lang['title-before-limit'];
+            } else if (experienceStatus === 'isNotPast') {
+                noXpText = lang['title-not-past'];
+            }
+        }
+
+        if (skill.XP <= 0) {
+            noXpText = lang['title-no-experience'];
+        }
+
+        if (noXpText !== '') {
+            return (
+                <Text style={styles.tempTitleNoXP} bold>
+                    {noXpText}
+                </Text>
+            );
+        }
+
+        return (
+            <>
+                <Text style={styles.tempTitle} bold>
+                    {lang['title-experience']}
+                </Text>
+                <ActivityExperience
+                    style={styles.experience}
+                    skillID={selectedSkillID}
+                    duration={activity?.duration ?? 0}
+                />
+            </>
+        );
+    }
+
+    renderFriends() {
+        const lang = langManager.curr['activity'];
+        const { activity } = this.state;
+        const { friends } = activity;
+
+        if (friends.length === 0) {
+            return null;
+        }
+
+        const friendsText = friends
+            .map(friendID => user.multiplayer.GetFriendByID(friendID))
+            .filter(friend => friend !== null)
+            .map(friend => friend.username)
+            .join(', ');
+
+        const styleBackground = {
+            backgroundColor: themeManager.GetColor('background')
         };
 
         return (
-            <PanelScreen
-                ref={ref => this.refPanelScreen = ref}
-                containerStyle={[styles.panel, stylePanel, style]}
-                topOffset={topOffset}
-                onClose={this.Close}
-                disableBackground
-            >
-                {/* Title */}
-                <View style={styles.panelTitleView}>
-
-                    <Button
-                        onPress={this.onOpenSkill}
-                        style={[styleTitle, styles.buttonViewContainer]}>
-                        <View
-                            style={styles.buttonView}>
-                            <Text style={styles.panelTitle} bold>
-                                {activityText}
-                            </Text>
-                            {selectedPage !== 'skill' && (
-                                <Text style={styles.subPanelTitle}>
-                                    {lang['title-click-me']}
-                                </Text>
-                            )}
-                        </View>
-                    </Button>
-
-                    <Icon
-                        containerStyle={[styles.panelTitleIcon]}
-                        size={42}
-                        icon='arrowLeft'
-                        angle={-90}
-                        onPress={this.Close}
-                    />
-                </View>
-
-                {/* Start mode - Already / Now */}
-                <View ref={ref => this.refHelp1 = ref}>
-                    {mode === 'activity' ? null : (
-                        <TextSwitch
-                            style={styles.panelTextSwitch}
-                            texts={[lang['swiper-already'], lang['swiper-now']]}
-                            onChange={this.onChangeMode}
-                        />
-                    )}
-                </View>
-
-                <View>
-                    {this.renderStartActivity.call(this)}
-                    {this.renderPanelDetails.call(this)}
-                </View>
-            </PanelScreen>
+            <View style={[styles.container, styleBackground]}>
+                <Text style={styles.title}>{lang['title-friends']}</Text>
+                <Text color={'primary'} fontSize={16}>{friendsText}</Text>
+            </View>
         );
     }
 }

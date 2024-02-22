@@ -174,6 +174,10 @@ class EditorProfile extends React.PureComponent {
                 <Text style={styles.popupTitle}>{lang['edit-title']}</Text>
 
                 <View style={styles.popupRow}>
+                    <Text style={{ textAlign: 'left' }}>{user.settings.email}</Text>
+                </View>
+
+                <View style={styles.popupRow}>
                     <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.informations.username.Get()}</Text>
                     <Button style={styles.popupButtonEdit} onPress={usernameEdit} fontSize={12} color='main1'>{lang['input-edit']}</Button>
                 </View>

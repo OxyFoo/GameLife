@@ -44,7 +44,7 @@ const GetRecentSkills = (callback) => {
         .filter(activity => activity.startTime <= now)
         .reverse()
         .map(activity => dataManager.skills.GetByID(activity.skillID))
-        .filter(skill => skill !== null)
+        .filter(skill => skill !== null && skill.Enabled)
         // Remove duplicate
         .filter((skill, index, self) => self.findIndex(s => s.ID === skill.ID) === index)
         .map(skill => SkillToItem(skill, callback));

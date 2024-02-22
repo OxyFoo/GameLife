@@ -35,7 +35,8 @@ function GetLocalIP() {
  * @returns {number} Unix timestamp in seconds (UTC)
  */
 function GetTime() {
-    return Math.floor(Date.now() / 1000);
+    const offset = (new Date()).getTimezoneOffset() * 60;
+    return Math.floor(Date.now() / 1000) - offset;
 }
 
 export { StrIsJson, GetLocalIP, GetTime };

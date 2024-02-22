@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 import { GetTime } from 'Utils/Time';
 import { ActivityExperience } from 'Interface/Widgets';
@@ -42,18 +43,20 @@ class ActivityTimerScore extends React.Component {
     }
 
     __getDuration = () => {
-        const { localTime } = user.activities.currentActivity;
+        const { startTime } = user.activities.currentActivity;
         const now = GetTime(undefined, 'local');
         const currentMillis = new Date().getMilliseconds() / 1000;
-        const duration = (now + currentMillis - localTime) / 60;
+        const duration = (now + currentMillis - startTime) / 60;
         return duration;
     }
 
     render() {
+        const lang = langManager.curr['activity'];
         const { duration } = this.state;
 
         return (
             <ActivityExperience
+                title={lang['timer-gain']}
                 style={styles.experience}
                 skillID={user.activities.currentActivity.skillID}
                 duration={duration}

@@ -3,6 +3,8 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import Notifications from 'Utils/Notifications';
+import { MinMax } from 'Utils/Functions';
+import { RoundTimeTo } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -17,15 +19,22 @@ const MAX_TIME_MINUTES = 48 * TIME_STEP_MINUTES; // 4h
 /**
  * @param {number} skillID
  * @param {number} startTime
- * @param {number} duration
+ * @param {number} endTime
  * @param {() => void} funcBack
  * @returns {boolean} True if activity was added successfully
  */
-function AddActivityNow(skillID, startTime, duration, funcBack) {
+function AddActivityNow(skillID, startTime, endTime, funcBack) {
     const lang = langManager.curr['activity'];
 
+    const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
+    const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, endTime, 'next');
+
+    let duration = (endTimeRounded - startTimeRounded) / 60;
+    duration = RoundTimeTo(TIME_STEP_MINUTES, duration);
+    duration = MinMax(MIN_TIME_MINUTES, duration, MAX_TIME_MINUTES);
+
     // Get the max duration possible
-    while (!user.activities.TimeIsFree(startTime, duration)) {
+    while (!user.activities.TimeIsFree(startTimeRounded, duration)) {
         duration -= TIME_STEP_MINUTES;
         if (duration <= 0) {
             user.interface.ChangePage('display', {
@@ -40,15 +49,10 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
         }
     }
 
-    // Set max limit
-    if (duration > MAX_TIME_MINUTES) {
-        duration = MAX_TIME_MINUTES;
-    }
-
     /** @type {Activity} */
     const newActivity = {
         skillID:    skillID,
-        startTime:  startTime,
+        startTime:  startTimeRounded,
         duration:   duration,
         comment:    '',
         timezone:   0,

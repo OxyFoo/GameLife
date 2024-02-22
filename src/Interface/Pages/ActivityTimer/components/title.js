@@ -26,9 +26,9 @@ class ActivityTimerTitle extends React.Component {
             return;
         }
 
-        const { localTime } = user.activities.currentActivity;
+        const { startTime } = user.activities.currentActivity;
         this.state.displayActivity = langManager.GetText(skill.Name);
-        this.state.displayInitialTime = DateToFormatTimeString(GetDate(localTime));
+        this.state.displayInitialTime = DateToFormatTimeString(GetDate(startTime));
         this.state.displayCurrentTime = this.__getCurrentTime();
     }
 
@@ -50,9 +50,9 @@ class ActivityTimerTitle extends React.Component {
     }
 
     __getCurrentTime = () => {
-        const { localTime } = user.activities.currentActivity;
+        const { startTime } = user.activities.currentActivity;
 
-        const time = GetTime(undefined, 'local') - localTime;
+        const time = GetTime(undefined, 'local') - startTime;
         const HH = Math.floor(time / 3600);
         const MM = Math.floor((time - (HH * 3600)) / 60);
         const SS = time - (HH * 3600) - (MM * 60);

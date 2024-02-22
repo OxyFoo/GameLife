@@ -15,9 +15,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    title: {
-        fontSize: 28
-    },
     button: {
         width: '45%'
     },

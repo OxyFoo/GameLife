@@ -236,7 +236,7 @@
         "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
 
         "timer-launch": "Heure de lancement :",
-        "timer-gain": "Gains actuel",
+        "timer-gain": "Gains actuel: {}",
         "timer-complete": "Terminer",
         "timer-cancel": "Annuler",
         "timer-music": "La musique de Zap t'aidera à te concentrer !",
@@ -355,8 +355,7 @@
 
         "input-search-friend": "Entre le pseudo de ton ami",
 
-        "temp-comingsoon-title": "Multijoueur",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+        "friend-do-activity-now": "Activité: {}",
 
         "alert-already-friend": {
             "title": "Déjà ami",

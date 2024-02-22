@@ -9,16 +9,11 @@ import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
  * 
  * @typedef {'normal' | 'start-now' | 'zap-gpt'} ActivityAddedType
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'edited' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
- * 
- * @typedef {object} CurrentActivity
- * @property {number} skillID Skill ID
- * @property {number} startTime Start time of activity, unix timestamp (UTC)
- * @property {number} localTime Precise time when user started the activity
- *                              unix timestamp (local UTC)
  * 
  * @typedef {Activity & { type: 'add' | 'rem' }} ActivityUnsaved
  */

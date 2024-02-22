@@ -1,7 +1,7 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime, RoundTimeTo } from 'Utils/Time';
+import { GetTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
@@ -33,17 +33,17 @@ async function onRemComment(callback) {
 /** @this ActivityPanel */
 function StartActivity() {
     const skillID = this.state.selectedSkillID;
-    const localTime = GetTime(undefined, 'local');
-    const startTime = RoundTimeTo(TIME_STEP_MINUTES, localTime, 'near');
+    const startTime = GetTime(undefined, 'local');
+    const roundedTime = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
 
-    if (!user.activities.TimeIsFree(startTime, MIN_TIME_MINUTES)) {
+    if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];
         const text = langManager.curr['activity']['alert-wrongtiming-text'];
         user.interface.popup.Open('ok', [ title, text ]);
         return;
     }
 
-    user.activities.currentActivity = { skillID, startTime, localTime };
+    user.activities.currentActivity = { skillID, startTime, timezone: GetTimeZone() };
     user.LocalSave();
     user.interface.ChangePage('activitytimer', undefined, true);
 }

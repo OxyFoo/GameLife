@@ -7,25 +7,31 @@ import { GetFriendNotifications } from './Friends/NotificationsInApp.js';
 import GPT from './Utils/GPT.js';
 import { StrIsJson } from './Utils/Functions.js';
 import { Request_Async } from './Utils/Request.js';
+import { StartActivity, StopActivity } from './Utils/CurrentActivities.js';
 
 /**
  * @typedef {import('./Sql.js').default} SQL
- * @typedef {import('../../../Types/UserOnline.js').Friend} Friend
- * @typedef {import('../../../Types/TCP.js').TCPServerRequest} TCPServerRequest
- * @typedef {import('../../../Types/TCP.js').TCPClientRequest} TCPClientRequest
- * @typedef {import('../../../Types/NotificationInApp.js').NotificationInApp} NotificationInApp
+ * @typedef {import('Types/UserOnline.js').Friend} Friend
+ * @typedef {import('Types/UserOnline.js').CurrentActivity} CurrentActivity
+ * @typedef {import('Types/TCP.js').TCPServerRequest} TCPServerRequest
+ * @typedef {import('Types/TCP.js').TCPClientRequest} TCPClientRequest
+ * @typedef {import('Types/NotificationInApp.js').NotificationInApp} NotificationInApp
  */
 
+/**
+ * @description User class, used to store all the data of connected users
+ */
 class User {
     token = '';
     deviceID = 0;
     accountID = 0;
     username = '';
+
     /** @type {Array<Friend>} */
     friends = [];
     /** @type {Array<NotificationInApp>} */
     notificationsInApp = [];
-    /** @type {WebSocket.connection} */
+    /** @type {WebSocket.connection | null} */
     connection = null;
 }
 
@@ -34,6 +40,10 @@ class Users {
     constructor(database) {
         /** @type {Array<User>} */
         this.AllUsers = [];
+
+        /** @type {Object<number, CurrentActivity>} */
+        this.currentActivities = {};
+
         this.db = database;
         this.gpt = new GPT();
     }
@@ -105,7 +115,7 @@ class Users {
         // Add events
         connection.removeAllListeners('message');
         connection.on('message', (message) => {
-            this.onMessage(user, message);
+            this.onReceiveMessage(user, message);
         });
 
         connection.send(JSON.stringify({ status: 'connected' }));
@@ -118,7 +128,7 @@ class Users {
      * @param {User} user
      * @param {WebSocket.Message} message
      */
-    onMessage = async (user, message) => {
+    onReceiveMessage = async (user, message) => {
         if (message.type !== 'utf8' || !StrIsJson(message.utf8Data)) {
             return;
         }
@@ -153,6 +163,14 @@ class Users {
 
             case 'block-friend':
                 result = await DeclineFriend(this, user, data.accountID, true);
+                break;
+
+            case 'start-activity':
+                StartActivity(this, user, data.activity);
+                break;
+
+            case 'stop-activity':
+                StopActivity(this, user);
                 break;
 
             case 'zap-gpt':

@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     container: {
+        padding: 12
+    },
+    containerHeader: {
         justifyContent: 'center'
     },
     flatlist: {

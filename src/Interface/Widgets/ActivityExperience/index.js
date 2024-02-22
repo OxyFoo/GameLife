@@ -25,7 +25,8 @@ class ActivityExperience extends ActivityExperienceBack {
             <Container
                 text={title}
                 style={[styles.fullWidth, this.props.style]}
-                styleHeader={styles.container}
+                styleContainer={styles.container}
+                styleHeader={styles.containerHeader}
             >
                 <FlatList
                     style={styles.flatlist}

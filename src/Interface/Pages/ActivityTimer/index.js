@@ -59,10 +59,7 @@ class ActivityTimer extends BackActivityTimer {
                 </View>
 
                 {/* Informations */}
-                <View>
-                    <Text style={styles.title}>{lang['timer-gain']}</Text>
-                    <ActivityTimerScore />
-                </View>
+                <ActivityTimerScore />
 
                 {/* Zap'N'Music */}
                 <View>

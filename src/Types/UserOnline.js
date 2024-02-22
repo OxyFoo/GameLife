@@ -5,8 +5,16 @@
  * 
  * @typedef {'online' | 'offline'} ConnectionState
  * @typedef {'accepted' | 'pending' | 'blocked' | 'none'} FriendshipState
+ * 
+ * @typedef {Object} CurrentActivity
+ * @property {number} skillID
+ * @property {number} startTime In seconds, unix timestamp UTC
+ * @property {number} timezone In hours
  */
 
+/**
+ * @description Users from other accounts
+ */
 class UserOnline {
     /** @type {ConnectionState} */
     status = 'offline';
@@ -40,6 +48,9 @@ class UserOnline {
 
     /** @type {FriendshipState} */
     friendshipState = 'none';
+
+    /** @type {CurrentActivity | null} */
+    currentActivity = null;
 }
 
 class Friend extends UserOnline {

@@ -518,6 +518,7 @@
         "button-header-ad": "+ {}",
 
         "banner-daily": "Daily deals",
+        "banner-iap": "In-app purchases",
         "banner-random-chest": "Random chests",
         "banner-targeted-chest": "Targeted chests",
         "banner-dye": "Dyes",
@@ -528,6 +529,10 @@
             "popup-buysuccess-text": "You have successfully purshased item \"{}\" for {} Ox",
 
             "error-no-items": "An error occurred while loading the items for sale, please try again later."
+        },
+
+        "iap": {
+            "popup-item-button": "Buy for {}"
         },
 
         "randomChests": {

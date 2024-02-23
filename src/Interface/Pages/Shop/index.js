@@ -9,6 +9,7 @@ import ShopDailyDeals from './DailyDeals';
 import ShopRandomChests from './RandomChests';
 import ShopTargetedChests from './TargetedChests';
 import ShopDyes from './Dyes';
+import ShopIAP from './InAppPurchases'
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -58,6 +59,9 @@ class Shop extends BackShop {
 
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
                 <ShopDailyDeals ref={ref => this.refTuto2 = ref} />
+
+                <Banner title={lang['banner-iap']} />
+                <ShopIAP />
 
                 <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
                 <ShopRandomChests ref={ref => this.refTuto3 = ref} />

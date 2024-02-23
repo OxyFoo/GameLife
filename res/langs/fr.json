@@ -518,6 +518,7 @@
         "button-header-ad": "+ {}",
 
         "banner-daily": "Deals du jour",
+        "banner-iap": "Achats intégrés",
         "banner-random-chest": "Coffres aléatoires",
         "banner-targeted-chest": "Coffres ciblés",
         "banner-dye": "Teintures",
@@ -528,6 +529,10 @@
             "popup-buysuccess-text": "Tu as bien acheté l'item \"{}\" pour {} Ox",
 
             "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, réessaye plus tard."
+        },
+
+        "iap": {
+            "popup-item-button": "Acheter pour {}"
         },
 
         "randomChests": {

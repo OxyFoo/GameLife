@@ -105,7 +105,7 @@ class Experience {
      * @returns {number} XP bonus (between 0 and 0.2)
      */
     GetExperienceFriendBonus(activity) {
-        if (activity.friends.length === 0) return 0;
+        if (activity.friends?.length === 0) return 0;
 
         const bonus = activity.friends.length * 2;
         return MinMax(0, bonus, 20) / 100;

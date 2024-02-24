@@ -1,4 +1,5 @@
 import { EscapeString, IsInt } from '../Utils/Functions.js';
+import { AddLogRaw } from '../Utils/Logs.js';
 
 /**
  * @typedef {import('websocket').connection} connection
@@ -33,6 +34,10 @@ import { EscapeString, IsInt } from '../Utils/Functions.js';
  */
 async function ZapCommand(users, connection, data) {
     if (data.command === 'send-global-request') {
+        // Add request in logs
+        const rawData = EscapeString(JSON.stringify(data));
+        AddLogRaw(users, connection, 'global-notification-request', rawData);
+
         const ids = [];
         const idsToUpdate = [];
 

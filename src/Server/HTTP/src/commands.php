@@ -270,7 +270,12 @@ class Commands {
             return;
         }
 
-        $account = Accounts::Add($this->db, $device, $username, $email);
+        $initialOx = 0;
+        if ($this->db->IsTestEnvironment()) {
+            $initialOx = 100000;
+        }
+
+        $account = Accounts::Add($this->db, $device, $username, $email, $initialOx);
         if ($account === null) return;
 
         // Legion - mail bypass

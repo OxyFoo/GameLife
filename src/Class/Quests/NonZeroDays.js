@@ -1,7 +1,6 @@
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
 import DynamicVar from 'Utils/DynamicVar';
-import { Sleep } from 'Utils/Functions';
-import { DAY_TIME, GetTime } from 'Utils/Time';
+import { DAY_TIME, GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -73,7 +72,7 @@ class NonZeroDays {
 
     /** @param {ClaimType} claimList */
     IsCurrentList(claimList) {
-        const timePastLimit = GetTime(undefined, 'local') - 2 * DAY_TIME;
+        const timePastLimit = GetLocalTime() - 2 * DAY_TIME;
         return claimList.end >= timePastLimit;
     }
 
@@ -85,7 +84,7 @@ class NonZeroDays {
             timeStart = claimsList[claimsList.length - 1].end;
         }
 
-        const timeNow = GetTime(undefined, 'local');
+        const timeNow = GetLocalTime();
         const allActivitiesTime = this.user.activities.Get()
             .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant')
             .map(activity => activity.startTime + activity.timezone * 60 * 60)

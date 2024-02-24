@@ -4,7 +4,7 @@ import { Animated, FlatList } from 'react-native';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetGlobalTime } from 'Utils/Time';
 import { MinMax } from 'Utils/Functions';
 import { GetAbsolutePosition } from 'Utils/UI';
 import { TimingAnimation } from 'Utils/Animations';
@@ -95,7 +95,7 @@ class BackTodoList extends React.Component {
         if (todo.checked !== 0) {
             user.todoes.Uncheck(todo);
         } else {
-            user.todoes.Check(todo, GetTime());
+            user.todoes.Check(todo, GetGlobalTime());
         }
         user.GlobalSave();
     }

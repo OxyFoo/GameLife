@@ -7,7 +7,7 @@ import dataManager from 'Managers/DataManager';
 
 import { Sleep } from 'Utils/Functions';
 import { StartActivityNow } from 'Utils/Activities';
-import { GetTime, GetTimeZone } from 'Utils/Time';
+import { GetGlobalTime, GetTimeZone } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
 import { AskActivityComment, onRemComment } from './utils';
 import { AddActivity, RemActivity, TIME_STEP_MINUTES } from 'Utils/Activities';
@@ -59,7 +59,7 @@ class ActivityPanelBack extends React.Component {
             skillID: 0,
             comment: '',
             duration: 60,
-            startTime: GetTime(),
+            startTime: GetGlobalTime(),
             timezone: GetTimeZone(),
             addedType: 'normal',
             addedTime: 0,

@@ -12,6 +12,17 @@ function StrIsJson(str) {
 }
 
 /**
+ * Check if a string is an integer
+ * @param {*} value
+ * @returns {boolean}
+ */
+function IsInt(value) {
+    try { parseInt(value); }
+    catch (e) { return false; }
+    return !isNaN(parseInt(value));
+}
+
+/**
  * @returns {string} Local IP address
  */
 function GetLocalIP() {
@@ -34,9 +45,40 @@ function GetLocalIP() {
 /**
  * @returns {number} Unix timestamp in seconds (UTC)
  */
-function GetTime() {
+function GetGlobalTime() {
     const offset = (new Date()).getTimezoneOffset() * 60;
     return Math.floor(Date.now() / 1000) - offset;
 }
 
-export { StrIsJson, GetLocalIP, GetTime };
+/**
+ * Escape a string
+ * @param {string} val
+ * @returns {string}
+ * @see https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly
+ */
+function EscapeString(val) {
+    return val.replace(/[\0\n\r\b\t\\'"\x1a]/g, function (s) {
+        switch (s) {
+        case "\0":
+            return "\\0";
+        case "\n":
+            return "\\n";
+        case "\r":
+            return "\\r";
+        case "\b":
+            return "\\b";
+        case "\t":
+            return "\\t";
+        case "\x1a":
+            return "\\Z";
+        case "'":
+            return "\\'";
+        case '"':
+            return '\\"';
+        default:
+            return "\\" + s;
+        }
+    });
+}
+
+export { StrIsJson, IsInt, GetLocalIP, GetGlobalTime, EscapeString };

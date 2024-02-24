@@ -10,13 +10,14 @@ class Accounts
      * @param Device $device
      * @param string $username
      * @param string $email
+     * @param int $ox
      * @return Account|null
      */
-    public static function Add($db, $device, $username, $email) {
+    public static function Add($db, $device, $username, $email, $ox = 0) {
         // Add account
-        $command = 'INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`, `Banned`) VALUES (?, ?, ?, ?)';
-        $args = [ $username, $email, $device->ID, $device->Banned ? 1 : 0 ];
-        $result = $db->QueryPrepare('Accounts', $command, 'ssii', $args);
+        $command = 'INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`, `Banned`, `Ox`) VALUES (?, ?, ?, ?, ?)';
+        $args = [ $username, $email, $device->ID, $device->Banned ? 1 : 0, $ox ];
+        $result = $db->QueryPrepare('Accounts', $command, 'ssiii', $args);
         if ($result === false) ExitWithStatus('Error: Adding device in DB failed');
         $account = Accounts::GetByID($db, $db->GetLastInsertID());
 
@@ -252,6 +253,7 @@ class Accounts
         $remInventory  = $db->QueryPrepare('Inventories',               'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remInventoryT = $db->QueryPrepare('InventoriesTitles',         'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remInventoryA = $db->QueryPrepare('InventoriesAchievements',   'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remUser       = $db->QueryPrepare('GlobalNotifications',       'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remUser       = $db->QueryPrepare('Accounts',                  'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
         return $remFriends !== false && $remQuests !== false && $remNZD !== false && $remTodoes !== false &&
                 $remActivities !== false && $remAvatar !== false && $remUser !== false &&

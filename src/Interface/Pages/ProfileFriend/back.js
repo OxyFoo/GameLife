@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 
 import { USER_XP_PER_LEVEL } from 'Class/Experience';
 import { PageBase, Character } from 'Interface/Components';
-import { GetTime } from 'Utils/Time';
+import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
 
 /**
@@ -50,7 +50,7 @@ class BackProfileFriend extends PageBase {
 
         if (friend.friendshipState === 'accepted') {
             if (friend.activities.firstTime) {
-                this.state.activities.totalDays = Math.floor((GetTime() - friend.activities.firstTime) / (24 * 60 * 60));
+                this.state.activities.totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
             }
             this.state.activities.activitiesLength = friend.activities.length;
             this.state.activities.durationHours = Math.floor(friend.activities.totalDuration / 60);
@@ -101,7 +101,7 @@ class BackProfileFriend extends PageBase {
         if (friend.friendshipState === 'accepted') {
             let totalDays = 0;
             if (friend.activities.firstTime) {
-                totalDays = Math.floor((GetTime() - friend.activities.firstTime) / (24 * 60 * 60));
+                totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
             }
 
             this.setState({

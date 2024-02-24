@@ -3,7 +3,7 @@ import StartTutorial from './tuto';
 import user from 'Managers/UserManager';
 
 import { PageBase } from 'Interface/Components';
-import { GetDate, GetTime } from 'Utils/Time';
+import { GetDate, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('./editorAvatar').default} EditorAvatar
@@ -95,7 +95,7 @@ class BackProfile extends PageBase {
 
         const initTime = activities[0].startTime;
         const initDate = GetDate(initTime);
-        const diff = (GetTime() - GetTime(initDate)) / (60 * 60 * 24);
+        const diff = (GetGlobalTime() - GetGlobalTime(initDate)) / (60 * 60 * 24);
         return Math.floor(diff);
     }
 

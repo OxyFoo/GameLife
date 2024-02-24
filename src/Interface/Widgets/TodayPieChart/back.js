@@ -4,7 +4,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetLocalTime } from 'Utils/Time';
 
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -135,7 +135,7 @@ class TodayPieChartBack extends React.Component {
      * @return {void}
      */
     computeTimeEachCategory = () => {
-        const allActivitiesOfToday = user.activities.GetByTime(GetTime(undefined, 'local'));
+        const allActivitiesOfToday = user.activities.GetByTime(GetLocalTime());
         for (const activity of allActivitiesOfToday) {
             const category = dataManager.skills.GetByID(activity.skillID);
             if (category === null) {

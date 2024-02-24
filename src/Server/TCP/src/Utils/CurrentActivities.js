@@ -1,4 +1,4 @@
-import { GetTime } from './Functions.js';
+import { GetGlobalTime } from './Functions.js';
 import { AddLog } from './Logs.js';
 
 /**
@@ -18,7 +18,7 @@ function GetCurrentActivity(users, user) {
         return null;
     }
 
-    const now = GetTime();
+    const now = GetGlobalTime();
 
     // Check if the activity exceeds the limit (4h)
     const currentActivity = users.currentActivities[user.accountID];

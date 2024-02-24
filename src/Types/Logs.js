@@ -21,5 +21,6 @@
  *  'friend-declined' |
  *  'friend-canceled' |
  *  'zap-gpt-request' |
+ *  'global-notification-request' |
  *  'error'} LogType
  */

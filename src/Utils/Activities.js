@@ -4,7 +4,7 @@ import dataManager from 'Managers/DataManager';
 
 import Notifications from 'Utils/Notifications';
 import { MinMax } from 'Utils/Functions';
-import { GetTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
+import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -18,7 +18,7 @@ const MAX_TIME_MINUTES = 48 * TIME_STEP_MINUTES; // 4h
 
 /** @param {number} skillID */
 function StartActivityNow(skillID) {
-    const startTime = GetTime(undefined, 'local');
+    const startTime = GetLocalTime();
     const roundedTime = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
 
     if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES)) {

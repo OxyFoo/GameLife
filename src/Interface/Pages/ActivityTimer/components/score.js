@@ -3,7 +3,7 @@ import * as React from 'react';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetLocalTime } from 'Utils/Time';
 import { ActivityExperience } from 'Interface/Widgets';
 
 /**
@@ -57,7 +57,7 @@ class ActivityTimerScore extends React.Component {
         }
 
         const { startTime } = currentActivity;
-        const now = GetTime(undefined, 'local');
+        const now = GetLocalTime();
         const currentMillis = new Date().getMilliseconds() / 1000;
         const duration = (now + currentMillis - startTime) / 60;
         return duration;

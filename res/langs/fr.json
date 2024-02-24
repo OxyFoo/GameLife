@@ -49,7 +49,21 @@
             "friend-pending-decline": "Refuser",
             "friend-pending-block": "Bloquer",
 
-            "list-empty": "Aucune notification pour le moment"
+            "global-message-open": "Ouvrir",
+            "global-message-respond": "Répondre",
+            "global-message-claim": "Claim",
+            "global-message-close": "Fermer",
+            "global-message-input": "Répondre aux développeurs",
+            "global-message-mark-read": "Marquer comme lu",
+
+            "list-empty": "Aucune notification pour le moment",
+
+            "popup-responded-title": "Merci",
+            "popup-responded-text": "Merci pour ta réponse !",
+            "popup-claim-ox-title": "Bravo !",
+            "popup-claim-ox-text": "Tu as gagné {} Ox !",
+            "popup-error-title": "Erreur",
+            "popup-error-text": "Une erreur est survenue, réessaye plus tard."
         }
     },
 

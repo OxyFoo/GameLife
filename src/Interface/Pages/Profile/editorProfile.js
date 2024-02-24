@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
-import { GetAge, GetTime } from 'Utils/Time';
+import { GetAge, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/Titles').Title} Title
@@ -65,7 +65,7 @@ class EditorProfile extends React.PureComponent {
         }
 
         // Confirmation after changing age
-        const time = GetTime(date);
+        const time = GetGlobalTime(date);
         const age = GetAge(time);
         const title = lang['alert-birthconfirm-title'];
         const text = lang['alert-birthconfirm-text']

@@ -1,7 +1,7 @@
 import langManager from 'Managers/LangManager';
 
 import { MinMax } from 'Utils/Functions';
-import { GetTime, GetTimeZone } from 'Utils/Time';
+import { GetLocalTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
@@ -31,7 +31,7 @@ function CheckZapGPTActivities(activities) {
         const hour = parseInt(parts[3]);
         const minute = parseInt(parts[4]);
         const startDate = new Date(year, month, day, hour, minute);
-        const realStartTime = GetTime(startDate, 'local');
+        const realStartTime = GetLocalTime(startDate);
 
         /** @type {Activity} */
         const newActivity = {
@@ -40,7 +40,7 @@ function CheckZapGPTActivities(activities) {
             comment: lang['activity-zap-comment'],
             startTime: realStartTime,
             addedType: 'zap-gpt',
-            addedTime: GetTime(undefined, 'local'),
+            addedTime: GetLocalTime(),
             timezone: GetTimeZone(),
             friends: []
         };

@@ -53,7 +53,13 @@
  * @property {string} prompt
  * @property {string} [callbackID]
  * 
- * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestCancelFriend | SendRequestBlockFriend | SendRequestStartActivity | SendRequestStopActivity | SendRequestZapGPT} TCPClientRequest
+ * @typedef {Object} SendRequestGlobalMessage
+ * @property {'global-message'} action
+ * @property {number} ID Message ID in the database
+ * @property {string} [response]
+ * @property {string} [callbackID]
+ * 
+ * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestCancelFriend | SendRequestBlockFriend | SendRequestStartActivity | SendRequestStopActivity | SendRequestZapGPT | SendRequestGlobalMessage} TCPClientRequest
  * 
  * 
  * 

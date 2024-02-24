@@ -9,7 +9,7 @@ import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, Text, Icon } from 'Interface/Components';
-import { GetTime } from 'Utils/Time';
+import { GetLocalTime } from 'Utils/Time';
 
 const MAX_SKILLS = 10;
 
@@ -57,7 +57,7 @@ class SectionSkill extends React.Component {
 
         // If category is 'Recent'
         if (categoryID === 0) {
-            const now = GetTime(undefined, 'local');
+            const now = GetLocalTime();
             const usersActivities = user.activities.Get()
                 .filter(activity => activity.startTime <= now)
                 .sort((a, b) => b.startTime - a.startTime);

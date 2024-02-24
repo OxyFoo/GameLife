@@ -5,6 +5,8 @@ import { createServer } from 'https';
 
 import Users from './Users.js';
 import { StrIsJson, GetLocalIP } from './Utils/Functions.js';
+import { AddLogRaw } from './Utils/Logs.js';
+import { ZapCommand } from './ZapNotifications/index.js';
 
 /**
  * @typedef {import('./Sql.js').default} SQL
@@ -62,7 +64,23 @@ class Server {
 
     /** @param {WebSocket.request} request */
     onRequest = (request) => {
-        request.accept('server-multiplayer', request.origin);
+        const protocol = request.requestedProtocols;
+
+        // Accept the server-multiplayer protocol
+        if (protocol.indexOf('server-multiplayer') !== -1) {
+            request.accept('server-multiplayer', request.origin);
+        }
+
+        // Accept the zap protocol
+        else if (protocol.indexOf('zap') !== -1) {
+            console.log('Zap connected:', request.origin);
+            request.accept('zap', request.origin);
+        }
+
+        // Reject all other protocols
+        else {
+            request.reject(400, 'Invalid protocol');
+        }
     }
 
     /**
@@ -78,6 +96,17 @@ class Server {
 
     /** @param {WebSocket.connection} connection */
     onConnect = (connection) => {
+        const protocol = connection.protocol;
+        if (protocol === 'server-multiplayer') {
+            this.onConnectUser(connection);
+        } else if (protocol === 'zap') {
+            this.onConnectZap(connection);
+            console.log('Zap connected:', connection.remoteAddress);
+        }
+    }
+
+    /** @param {WebSocket.connection} connection */
+    onConnectUser = (connection) => {
         /** @type {User | null} */
         let user = null;
 
@@ -99,6 +128,8 @@ class Server {
             user = await this.users.Add(connection, data.token);
             if (user !== null) {
                 console.log('User connected:', user.username, `(${user.accountID} - ${user.deviceID})`);
+            } else {
+                AddLogRaw(this.users, connection, 'cheatSuspicion', `Try to connect from GL with invalid token ${data.token}`);
             }
         });
 
@@ -115,6 +146,29 @@ class Server {
                 this.users.RemoveByDeviceID(user.deviceID);
                 user = null;
             }
+        });
+    }
+
+    /** @param {WebSocket.connection} connection */
+    onConnectZap = (connection) => {
+        connection.on('message', async (message) => {
+            if (message.type !== 'utf8') {
+                return;
+            }
+
+            const rawData = message.type === 'utf8' ? message.utf8Data : null;
+            if (!StrIsJson(rawData)) {
+                return;
+            }
+
+            const data = JSON.parse(rawData);
+            if (!data.hasOwnProperty('token') || data.token !== 'P(QYE1iGqFtEv[qCT(E]x[YrPl#)Q997') {
+                AddLogRaw(this.users, connection, 'cheatSuspicion', `Try to connect from GL with invalid token (${data.token})`);
+                connection.close();
+                return;
+            }
+
+            ZapCommand(this.users, connection, data);
         });
     }
 }

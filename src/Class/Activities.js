@@ -3,22 +3,17 @@ import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
-import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
+import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
  * 
  * @typedef {'normal' | 'start-now' | 'zap-gpt'} ActivityAddedType
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'edited' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
- * 
- * @typedef {object} CurrentActivity
- * @property {number} skillID Skill ID
- * @property {number} startTime Start time of activity, unix timestamp (UTC)
- * @property {number} localTime Precise time when user started the activity
- *                              unix timestamp (local UTC)
  * 
  * @typedef {Activity & { type: 'add' | 'rem' }} ActivityUnsaved
  */
@@ -47,6 +42,9 @@ class Activity {
 
     /** @type {number} Time when activity was added (unix timestamp, UTC) */
     addedTime = 0;
+
+    /** @type {Array<number>} IDs of friends who have participated in the activity */
+    friends = [];
 }
 
 class Activities {
@@ -70,8 +68,8 @@ class Activities {
      */
     allActivities = new DynamicVar([]);
 
-    /** @type {CurrentActivity | null} */
-    currentActivity = null;
+    /** @type {DynamicVar<CurrentActivity | null>} */
+    currentActivity = new DynamicVar(null);
 
     /** @type {{[name: string]: function}} */
     callbacks = {};
@@ -80,7 +78,7 @@ class Activities {
         this.activities = [];
         this.UNSAVED_activities = [];
         this.UNSAVED_deletions = [];
-        this.currentActivity = null;
+        this.currentActivity.Set(null);
         this.allActivities.Set([]);
     }
     Load(activities) {
@@ -88,7 +86,7 @@ class Activities {
         if (contains('activities')) this.activities = activities['activities'];
         if (contains('unsaved'))    this.UNSAVED_activities = activities['unsaved'];
         if (contains('deletions'))  this.UNSAVED_deletions = activities['deletions'];
-        if (contains('current'))    this.currentActivity = activities['current'];
+        if (contains('current'))    this.currentActivity.Set(activities['current']);
         this.allActivities.Set(this.Get());
     }
     LoadOnline(activities) {
@@ -111,7 +109,8 @@ class Activities {
                 comment: activity['comment'],
                 timezone: activity['timezone'],
                 addedType: activity['addedType'],
-                addedTime: activity['addedTime']
+                addedTime: activity['addedTime'],
+                friends: activity['friends']
             }, true);
         }
         this.allActivities.Set(this.Get());
@@ -123,7 +122,7 @@ class Activities {
             activities: this.activities,
             unsaved: this.UNSAVED_activities,
             deletions: this.UNSAVED_deletions,
-            current: this.currentActivity
+            current: this.currentActivity.Get()
         };
         return activities;
     }
@@ -177,7 +176,8 @@ class Activities {
                 comment: activity.comment,
                 timezone: activity.timezone,
                 addedType: activity.addedType,
-                addedTime: activity.addedTime
+                addedTime: activity.addedTime,
+                friends: activity.friends
             });
         }
         for (let a in this.UNSAVED_deletions) {
@@ -190,7 +190,8 @@ class Activities {
                 comment: '',
                 timezone: activity.timezone,
                 addedType: activity.addedType,
-                addedTime: activity.addedTime
+                addedTime: activity.addedTime,
+                friends: activity.friends
             });
         }
         return unsaved;
@@ -261,7 +262,7 @@ class Activities {
      * @returns {Array<EnrichedSkill>}
      */
     GetLastSkills(number = 6) {
-        const now = GetTime();
+        const now = GetGlobalTime();
         const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
 
@@ -316,7 +317,7 @@ class Activities {
      */
     Add(newActivity, alreadySaved = false) {
         newActivity.timezone ??= GetTimeZone();
-        newActivity.addedTime ??= GetTime(undefined, 'local');
+        newActivity.addedTime ??= GetLocalTime();
 
         // Limit date (< 2020-01-01)
         if (newActivity.startTime < 1577836800) {
@@ -427,7 +428,7 @@ class Activities {
      * @param {Activity[]} activities
      * @returns {Activity[]} activities
      */
-    GetByTime(time = GetTime(), activities = this.Get()) {
+    GetByTime(time = GetGlobalTime(), activities = this.Get()) {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
         return activities.filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
@@ -449,7 +450,7 @@ class Activities {
         const { startTime, addedTime } = activity;
         const deltaHours = (addedTime - startTime) / 3600;
         const addedBeforeLimit = deltaHours > HOURS_BEFORE_LIMIT;
-        const isPast = startTime <= GetTime(undefined, 'local');
+        const isPast = startTime <= GetLocalTime();
 
         if (addedBeforeLimit)
             return 'beforeLimit';

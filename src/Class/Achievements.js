@@ -2,7 +2,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
-import { GetTime } from 'Utils/Time';
+import { GetGlobalTime } from 'Utils/Time';
 import { GetBattery } from 'Utils/Device';
 
 /**
@@ -287,7 +287,7 @@ class Achievements {
                 case 'SkT': // Skill time
                     const skillTimeID = Condition.Comparator.Value;
                     value = 0;
-                    const now = GetTime();
+                    const now = GetGlobalTime();
                     const activities = this.user.activities.Get();
                     for (const a in activities) {
                         if (activities[a].skillID === skillTimeID && activities[a].startTime < now) {

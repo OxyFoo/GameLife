@@ -140,7 +140,6 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     await user.LocalSave();
 
     // Loading: Notifications
-    const time_start_notification = new Date().getTime();
     Notifications.DisableAll().then(() => {
         if (user.settings.morningNotifications) {
             return Notifications.Morning.Enable();
@@ -148,10 +147,6 @@ async function Initialisation(nextStep, nextPage, callbackError) {
         if (user.settings.eveningNotifications) {
             return Notifications.Evening.Enable();
         }
-    }).then(() => {
-        const time_end_notification = new Date().getTime();
-        const time_delta_notification = time_end_notification - time_start_notification;
-        user.interface.console.AddLog('info', `Notifications loaded in ${time_delta_notification}ms`);
     });
 
     // Check if ads are available
@@ -163,14 +158,8 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     user.tcp.Connect();
 
     // Load admob
-    const time_start_admob = new Date().getTime();
     await user.consent.ShowTrackingPopup()
-    .then(user.admob.LoadAds)
-    .then(() => {
-        const time_end_admob = new Date().getTime();
-        const time_delta_admob = time_end_admob - time_start_admob;
-        user.interface.console.AddLog('info', `Admob loaded in ${time_delta_admob}ms`);
-    });
+    .then(user.admob.LoadAds);
 
     // Render default pages
     await user.interface.LoadDefaultPages();
@@ -189,9 +178,9 @@ async function Initialisation(nextStep, nextPage, callbackError) {
         user.interface.popup.Open('ok', [ title, text ], undefined, false);
     }
 
+    // End of initialisation
     const time_end = new Date().getTime();
-    const time_delta = time_end - time_start;
-    const time_text = `Initialisation done in ${time_delta}ms`;
+    const time_text = `Initialisation done in ${time_end - time_start}ms`;
     console.log(time_text);
     user.interface.console.AddLog('info', time_text);
 

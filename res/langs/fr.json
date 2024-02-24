@@ -49,7 +49,21 @@
             "friend-pending-decline": "Refuser",
             "friend-pending-block": "Bloquer",
 
-            "list-empty": "Aucune notification pour le moment"
+            "global-message-open": "Ouvrir",
+            "global-message-respond": "Répondre",
+            "global-message-claim": "Claim",
+            "global-message-close": "Fermer",
+            "global-message-input": "Répondre aux développeurs",
+            "global-message-mark-read": "Marquer comme lu",
+
+            "list-empty": "Aucune notification pour le moment",
+
+            "popup-responded-title": "Merci",
+            "popup-responded-text": "Merci pour ta réponse !",
+            "popup-claim-ox-title": "Bravo !",
+            "popup-claim-ox-text": "Tu as gagné {} Ox !",
+            "popup-error-title": "Erreur",
+            "popup-error-text": "Une erreur est survenue, réessaye plus tard."
         }
     },
 
@@ -211,6 +225,7 @@
         "title-click-me": "(tu peux cliquer !)",
         "title-schedule": "Horaire",
         "title-experience": "Expérience",
+        "title-friends": "Partenaires d'activité",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
         "title-not-past": "Cette activité n'a pas encore été réalisée",
         "title-before-limit": "Cette activité a été ajoutée plus de 48 heures après sa réalisation. Elle ne rapporte donc pas d'expérience et n'est pas prise en compte pour les quêtes.",
@@ -236,7 +251,8 @@
         "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
 
         "timer-launch": "Heure de lancement :",
-        "timer-gain": "Gains actuel",
+        "timer-gain": "Gains actuel: {}",
+        "timer-friends": "Des amis font la même activité en même temps !",
         "timer-complete": "Terminer",
         "timer-cancel": "Annuler",
         "timer-music": "La musique de Zap t'aidera à te concentrer !",
@@ -355,8 +371,7 @@
 
         "input-search-friend": "Entre le pseudo de ton ami",
 
-        "temp-comingsoon-title": "Multijoueur",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+        "friend-do-activity-now": "Activité: {}",
 
         "alert-already-friend": {
             "title": "Déjà ami",
@@ -453,6 +468,9 @@
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
         "row-time": "Nombre d'heures",
+
+        "activity-now-title": "Activité en cours: {}",
+        "activity-now-start": "Commencer la même activité",
 
         "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",

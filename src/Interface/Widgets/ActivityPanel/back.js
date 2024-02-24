@@ -6,7 +6,8 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { Sleep } from 'Utils/Functions';
-import { GetTime, GetTimeZone } from 'Utils/Time';
+import { StartActivityNow } from 'Utils/Activities';
+import { GetGlobalTime, GetTimeZone } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
 import { AskActivityComment, onRemComment } from './utils';
 import { AddActivity, RemActivity, TIME_STEP_MINUTES } from 'Utils/Activities';
@@ -58,10 +59,11 @@ class ActivityPanelBack extends React.Component {
             skillID: 0,
             comment: '',
             duration: 60,
-            startTime: GetTime(),
+            startTime: GetGlobalTime(),
             timezone: GetTimeZone(),
             addedType: 'normal',
-            addedTime: 0
+            addedTime: 0,
+            friends: []
         }
     };
 
@@ -252,6 +254,8 @@ class ActivityPanelBack extends React.Component {
         AddActivity(activity);
         this.Close();
     }
+
+    onStartNow = () => StartActivityNow(this.state.selectedSkillID);
 
     onRemoveActivity = () => {
         RemActivity(() => {

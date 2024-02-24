@@ -20,6 +20,7 @@ import { Text, Button, Frame, Character } from 'Interface/Components';
  * @returns {JSX.Element}
  */
 function UserOnlineElement({ friend }) {
+    const lang = langManager.curr['multiplayer'];
     const [ character, setCharacter ] = React.useState(null);
     const [ friendTitle, setFriendTitle ] = React.useState(null);
     const [ friendExperience, setFriendExperience ] = React.useState(null);
@@ -30,6 +31,12 @@ function UserOnlineElement({ friend }) {
         if (friend.title !== 0) {
             const friendTitleIndex = dataManager.titles.GetByID(friend.title);
             friendTitle = langManager.GetText(friendTitleIndex.Name);
+        }
+        if (friend.currentActivity !== null) {
+            const skill = dataManager.skills.GetByID(friend.currentActivity.skillID);
+            if (skill !== null) {
+                friendTitle = lang['friend-do-activity-now'].replace('{}', langManager.GetText(skill.Name));
+            }
         }
 
         const friendExperience = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);

@@ -1,5 +1,5 @@
 import { GetDeviceInformations } from './Device';
-import { GetTime, GetMidnightTime } from './Time';
+import { GetMidnightTime, GetLocalTime } from './Time';
 
 /**
  * Return a random integer depending on the day and device
@@ -30,7 +30,7 @@ function GetRandomIntByDay(min, max) {
  * @returns {Array<string | number>} Array of indexes of available items (keys of items)
  */
 function GetRandomIndexesByDay(items, length) {
-    const midnight = GetMidnightTime(GetTime(undefined, 'local'));
+    const midnight = GetMidnightTime(GetLocalTime());
 
     const device = GetDeviceInformations().deviceID;
     const deviceSeed = device

@@ -1,6 +1,7 @@
 /**
  * @typedef {import('./UserOnline').Friend} Friend
  * @typedef {import('./NotificationInApp').NotificationInApp} NotificationInApp
+ * @typedef {import('./UserOnline').CurrentActivity} CurrentActivity
  * 
  * @typedef {'idle' | 'connected' | 'disconnected' | 'error'} ConnectionState
  * 
@@ -38,12 +39,27 @@
  * @property {number} accountID
  * @property {string} [callbackID]
  *
+ * @typedef {Object} SendRequestStartActivity
+ * @property {'start-activity'} action
+ * @property {CurrentActivity} activity
+ * @property {string} [callbackID]
+ * 
+ * @typedef {Object} SendRequestStopActivity
+ * @property {'stop-activity'} action
+ * @property {string} [callbackID]
+ *
  * @typedef {Object} SendRequestZapGPT
  * @property {'zap-gpt'} action
  * @property {string} prompt
  * @property {string} [callbackID]
  * 
- * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestCancelFriend | SendRequestBlockFriend | SendRequestZapGPT} TCPClientRequest
+ * @typedef {Object} SendRequestGlobalMessage
+ * @property {'global-message'} action
+ * @property {number} ID Message ID in the database
+ * @property {string} [response]
+ * @property {string} [callbackID]
+ * 
+ * @typedef {SendRequestAddFriend | SendRequestRemoveFriend | SendRequestAcceptFriend | SendRequestDeclineFriend | SendRequestCancelFriend | SendRequestBlockFriend | SendRequestStartActivity | SendRequestStopActivity | SendRequestZapGPT | SendRequestGlobalMessage} TCPClientRequest
  * 
  * 
  * 
@@ -67,10 +83,14 @@
  * @property {'update-notifications'} status
  * @property {Array<NotificationInApp>} notifications
  * 
+ * @typedef {Object} ReceiveRequestUpdateCurrentActivity
+ * @property {'update-current-activity'} status
+ * @property {CurrentActivity} activity
+ * 
  * @typedef {Object} ReceiveRequestCallback
  * @property {'callback'} status
  * @property {string} callbackID
  * @property {any} result
  * 
- * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications | ReceiveRequestCallback} TCPServerRequest
+ * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications | ReceiveRequestUpdateCurrentActivity | ReceiveRequestCallback} TCPServerRequest
  */

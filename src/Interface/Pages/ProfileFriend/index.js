@@ -70,6 +70,9 @@ class ProfileFriend extends BackProfileFriend {
                     </View>
                 </View>
 
+                {/** Current activity */}
+                {this.renderCurrentActivity()}
+
                 {/** KPI */}
                 {this.state.friend.friendshipState === 'accepted' && (
                     <View style={styles.kpiContainer}>
@@ -93,6 +96,34 @@ class ProfileFriend extends BackProfileFriend {
                 {/** Actions */}
                 {this.renderAction()}
             </Page>
+        );
+    }
+
+    renderCurrentActivity = () => {
+        const lang = langManager.curr['profile-friend'];
+        const { friend } = this.state;
+
+        if (friend.friendshipState !== 'accepted' || friend.currentActivity === null) {
+            return null;
+        }
+
+        const skill = dataManager.skills.GetByID(friend.currentActivity.skillID);
+        if (skill === null) {
+            return null;
+        }
+
+        const skillName = langManager.GetText(skill.Name);
+        const titleCurrentActivity = lang['activity-now-title'].replace('{}', skillName);
+
+        return (
+            <View style={styles.startNowContainer}>
+                <Text>{titleCurrentActivity}</Text>
+                <Button style={styles.startNowButton} color='main1' onPress={this.handleStartNow}>
+                    <Text fontSize={16}>
+                        {lang['activity-now-start']}
+                    </Text>
+                </Button>
+            </View>
         );
     }
 

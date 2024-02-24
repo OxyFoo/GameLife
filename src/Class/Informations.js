@@ -2,7 +2,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
-import { GetAge, GetDaysUntil, GetTime } from 'Utils/Time';
+import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -90,7 +90,7 @@ class Informations {
 
         if (request === 'ok') {
             this.username.Set(username);
-            this.usernameTime = GetTime();
+            this.usernameTime = GetGlobalTime();
             this.user.LocalSave();
 
             // Refresh front
@@ -140,7 +140,7 @@ class Informations {
     SetBirthTime = (birthTime) => {
         this.birthTime = birthTime;
         this.UNSAVED_birthTime = birthTime;
-        this.lastBirthTime = GetTime();
+        this.lastBirthTime = GetGlobalTime();
         this.user.LocalSave();
     }
 

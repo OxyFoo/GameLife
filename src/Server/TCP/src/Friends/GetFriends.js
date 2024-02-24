@@ -1,4 +1,5 @@
 import { AddLog } from '../Utils/Logs.js';
+import { GetCurrentActivity } from '../Utils/CurrentActivities.js';
 
 /**
  * @typedef {import('../Users.js').User} User
@@ -43,6 +44,7 @@ async function GetUserFriends(users, user) {
     const friends = friendships.map(/** @return {Friend} */ row => {
         const accountID = row.AccountID === userID ? row.TargetID : row.AccountID;
         const friendInAllUsersIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
+
         return ({
             status: friendInAllUsersIndex !== -1 ? 'online' : 'offline',
             accountID: accountID,
@@ -63,7 +65,8 @@ async function GetUserFriends(users, user) {
                 firstTime: 0,
                 length: 0,
                 totalDuration: 0
-            }
+            },
+            currentActivity: null
         })
     });
 
@@ -97,11 +100,15 @@ async function GetUserFriends(users, user) {
 
     friends.forEach(friend => {
         const activity = activitiesResults.find(a => a.AccountID === friend.accountID);
-        if (!activity) return;
+        if (!!activity) {
+            friend.activities.firstTime = activity.FirstActivity;
+            friend.activities.length = activity.TotalActivities;
+            friend.activities.totalDuration = activity.TotalDuration;
+        }
 
-        friend.activities.firstTime = activity.FirstActivity;
-        friend.activities.length = activity.TotalActivities;
-        friend.activities.totalDuration = activity.TotalDuration;
+        if (friend.status === 'online') {
+            friend.currentActivity = GetCurrentActivity(users, friend);
+        }
     });
 
     return friends;
@@ -155,7 +162,11 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
         return null;
     }
 
-    const friendStatus = users.AllUsers.findIndex(u => u.accountID === friendID) !== -1 ? 'online' : 'offline';
+    /** @type {ConnectionState} */
+    let friendStatus = 'offline';
+    if (users.AllUsers.findIndex(u => u.accountID === friendID) !== -1) {
+        friendStatus = 'online';
+    }
 
     /** @type {Friend} */
     const newFriend = {
@@ -178,13 +189,18 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
             firstTime: 0,
             length: 0,
             totalDuration: 0
-        }
+        },
+        currentActivity: null
     };
 
     if (friendshipsState === 'accepted') {
         newFriend.activities.firstTime = friendInfo[0]['FirstActivity'];
         newFriend.activities.length = friendInfo[0]['TotalLength'];
         newFriend.activities.totalDuration = friendInfo[0]['TotalDuration'];
+
+        if (friendStatus === 'online') {
+            newFriend.currentActivity = GetCurrentActivity(users, newFriend);
+        }
     }
 
     return newFriend;

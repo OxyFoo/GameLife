@@ -1,9 +1,10 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase, Character } from 'Interface/Components';
 import { USER_XP_PER_LEVEL } from 'Class/Experience';
-import { GetTime } from 'Utils/Time';
+import { PageBase, Character } from 'Interface/Components';
+import { GetGlobalTime } from 'Utils/Time';
+import { StartActivityNow } from 'Utils/Activities';
 
 /**
  * @typedef {import('Types/UserOnline').Friend} Friend
@@ -49,7 +50,7 @@ class BackProfileFriend extends PageBase {
 
         if (friend.friendshipState === 'accepted') {
             if (friend.activities.firstTime) {
-                this.state.activities.totalDays = Math.floor((GetTime() - friend.activities.firstTime) / (24 * 60 * 60));
+                this.state.activities.totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
             }
             this.state.activities.activitiesLength = friend.activities.length;
             this.state.activities.durationHours = Math.floor(friend.activities.totalDuration / 60);
@@ -100,7 +101,7 @@ class BackProfileFriend extends PageBase {
         if (friend.friendshipState === 'accepted') {
             let totalDays = 0;
             if (friend.activities.firstTime) {
-                totalDays = Math.floor((GetTime() - friend.activities.firstTime) / (24 * 60 * 60));
+                totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
             }
 
             this.setState({
@@ -115,6 +116,11 @@ class BackProfileFriend extends PageBase {
         }
 
         this.setState({ friend: newFriend });
+    }
+
+    handleStartNow = () => {
+        const skillID = this.state.friend.currentActivity.skillID;
+        StartActivityNow(skillID);
     }
 
     removeFriendHandler = () => {

@@ -102,7 +102,7 @@ class BackLoading extends PageBase {
         }
 
         // Go to home or activity timer
-        if (user.activities.currentActivity === null) {
+        if (user.activities.currentActivity.Get() === null) {
             while (!user.interface.ChangePage('home', homeProps))
                 await Sleep(100);
         } else {

@@ -7,7 +7,7 @@ import PageManager from './src/Managers/PageManager';
 import { CheckDate } from './src/Utils/DateCheck';
 
 /**
- * @typedef {import("react-native").AppStateStatus} AppStateStatus
+ * @typedef {import('react-native').AppStateStatus} AppStateStatus
  */
 
 class App extends React.Component {
@@ -24,6 +24,7 @@ class App extends React.Component {
     async componentChangeState(state) {
         if (state === 'active') {
             CheckDate();
+            user.tcp.Connect();
         } else if (state === 'background' || state === 'inactive') {
             await user.OnlineSave() || await user.LocalSave();
         }

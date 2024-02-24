@@ -3,6 +3,7 @@ import * as React from 'react';
 import { renderDyePopup } from './popup';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Character } from 'Interface/Components';
@@ -85,7 +86,7 @@ class BackShopDyes extends React.Component {
                     Character: characterAfter,
                     Size: dataManager.items.GetContainerSize(itemAfter.Slot)
                 },
-                Name: dataManager.GetText(itemAfter.Name),
+                Name: langManager.GetText(itemAfter.Name),
                 Price: Round(itemAfter.Value * 3/4),
                 Colors: themeManager.GetRariryColors(itemAfter.Rarity),
                 BackgroundColor: themeManager.GetColor('backgroundCard'),

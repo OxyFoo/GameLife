@@ -11,7 +11,7 @@ import langManager from 'Managers/LangManager';
 import { PageBase } from 'Interface/Components';
 import { ZapGPT } from 'Interface/Widgets';
 import { Sleep } from 'Utils/Functions';
-import { GetTime, RoundTimeTo } from 'Utils/Time';
+import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
@@ -164,7 +164,7 @@ class BackActivity extends PageBase {
 
         // Default time (local) to add an activity
         else {
-            const time = GetTime(undefined, 'local');
+            const time = GetLocalTime();
             const activities = user.activities
                 .GetByTime(time)
                 .filter(activity => activity.startTime > time);
@@ -225,7 +225,7 @@ class BackActivity extends PageBase {
         let inputText = langManager.curr['activity']['input-activity'];
         if (categoryID !== null) {
             const category = dataManager.skills.GetCategoryByID(categoryID);
-            inputText = dataManager.GetText(category?.Name) || inputText;
+            inputText = langManager.GetText(category?.Name) || inputText;
         }
 
         const newState = {

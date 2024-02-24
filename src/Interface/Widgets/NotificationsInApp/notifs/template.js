@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 
 import styles from './style';
+import NIA_GlobalMessage from './globalMessage';
 import NIA_FriendPending from './friendPending';
 import NIA_AchievementPending from './achievementPending';
 import langManager from 'Managers/LangManager';
@@ -41,6 +42,8 @@ function NIA_Template({ item, index }) {
         content = <NIA_FriendPending notif={item} index={index} />;
     } else if (item.type === 'achievement-pending') {
         content = <NIA_AchievementPending notif={item} index={index} />;
+    } else if (item.type === 'global-message') {
+        content = <NIA_GlobalMessage notif={item} index={index} />;
     } else {
         return null;
     }

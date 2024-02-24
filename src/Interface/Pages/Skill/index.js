@@ -54,6 +54,10 @@ class Skill extends BackSkill {
     }
 
     renderFooter() {
+        if (!this.skill.enabled) {
+            return null;
+        }
+
         // Add activity button
         return (
             <Button

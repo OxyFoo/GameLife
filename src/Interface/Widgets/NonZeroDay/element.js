@@ -78,10 +78,10 @@ const RenderItem = (props) => {
 
         setLoading(true);
         const claimList = user.quests.nonzerodays.claimsList.Get()[props.claimIndex];
-        const result = await user.quests.nonzerodays.ClaimReward(claimList.start, props.index);
+        const result = await user.quests.nonzerodays.ClaimReward(claimList.start, [ props.index ]);
         setLoading(false);
 
-        if (result === false) {
+        if (result === 'error') {
             const title = lang['alert-claim-error-title'];
             const text = lang['alert-claim-error-text'];
             user.interface.popup.ForceOpen('ok', [ title, text ]);

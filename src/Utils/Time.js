@@ -5,17 +5,20 @@ const DAY_TIME = 24 * 60 * 60;
 /**
  * Get absolute UTC time in seconds
  * @param {Date} [date] (now default)
- * @param {'global' | 'local'} [UTC] [default: 'global']
- * @returns {number} time in seconds
+ * @returns {number} timestamp in seconds
  */
-function GetTime(date = new Date(), UTC = 'global') {
-    if (UTC === 'local') {
-        return Math.floor(date.getTime() / 1000);
-    }
-
-    // Global UTC
+function GetGlobalTime(date = new Date()) {
     const offset = date.getTimezoneOffset() * 60;
     return Math.floor(date.getTime() / 1000) - offset;
+}
+
+/**
+ * Get local time in seconds
+ * @param {Date} [date] (now default)
+ * @returns {number} timestamp in seconds
+ */
+function GetLocalTime(date = new Date()) {
+    return Math.floor(date.getTime() / 1000);
 }
 
 /**
@@ -23,9 +26,9 @@ function GetTime(date = new Date(), UTC = 'global') {
  * @param {number} [time] in seconds [default: now, local UTC]
  * @returns {number} year in seconds
  */
-function GetYearTime(time = GetTime(undefined, 'local')) {
+function GetYearTime(time = GetLocalTime()) {
     const startYear = new Date(time * 1000).getFullYear();
-    return GetTime(new Date(startYear, 0, 1), 'local');
+    return GetLocalTime(new Date(startYear, 0, 1));
 }
 
 /**
@@ -35,7 +38,7 @@ function GetYearTime(time = GetTime(undefined, 'local')) {
  */
 function GetDate(time = null) {
     if (time === null)
-        time = GetTime(undefined, 'local');
+        time = GetLocalTime();
     return new Date(time * 1000);
 }
 
@@ -80,7 +83,7 @@ function GetMidnightTime(time) {
  * @returns {number}
  */
 function GetAge(time) {
-    const today = GetTime();
+    const today = GetGlobalTime();
     const delta = today - time - (GetTimeZone() * 60 * 60);
     const age = delta / (60 * 60 * 24 * 365.25);
     return Math.floor(age)
@@ -91,7 +94,7 @@ function GetAge(time) {
  * @param {number} [now] in seconds
  * @returns {number} time in seconds
  */
-function GetTimeToTomorrow(now = GetTime()) {
+function GetTimeToTomorrow(now = GetGlobalTime()) {
     return (24 * 60 * 60) - now % (24 * 60 * 60);
 }
 
@@ -100,7 +103,7 @@ function GetTimeToTomorrow(now = GetTime()) {
  * @returns {number?} time rounded to hours in days until now
  */
 function GetDaysUntil(time) {
-    const today = GetTime();
+    const today = GetGlobalTime();
     const delta = today - time;
     const days = delta / (60 * 60 * 24);
     return days;
@@ -124,7 +127,7 @@ function GetDaysCountInYear(year) {
 
 export {
     DAY_TIME,
-    GetTime, GetYearTime, GetDate, TimeToFormatString, RoundTimeTo,
+    GetGlobalTime, GetLocalTime, GetYearTime, GetDate, TimeToFormatString, RoundTimeTo,
     GetMidnightTime, GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone,
     GetDaysCountInYear
 };

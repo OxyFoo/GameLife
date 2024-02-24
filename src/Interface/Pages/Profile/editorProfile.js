@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
-import { GetAge, GetTime } from 'Utils/Time';
+import { GetAge, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/Titles').Title} Title
@@ -65,7 +65,7 @@ class EditorProfile extends React.PureComponent {
         }
 
         // Confirmation after changing age
-        const time = GetTime(date);
+        const time = GetGlobalTime(date);
         const age = GetAge(time);
         const title = lang['alert-birthconfirm-title'];
         const text = lang['alert-birthconfirm-text']
@@ -113,7 +113,7 @@ class EditorProfile extends React.PureComponent {
         const title = user.informations.title.Get();
         const titleDefault = title === 0 ?
             lang['value-title-empty'] :
-            dataManager.GetText(dataManager.titles.GetByID(title).Name);
+            langManager.GetText(dataManager.titles.GetByID(title).Name);
 
         const [ titleTxt, setTitle ] = React.useState(titleDefault);
 
@@ -142,7 +142,7 @@ class EditorProfile extends React.PureComponent {
 
         // Title
         /** @param {Title} title */
-        const titleToDataMap = (title) => ({ id: title.ID, value: dataManager.GetText(title.Name) });
+        const titleToDataMap = (title) => ({ id: title.ID, value: langManager.GetText(title.Name) });
         const emptyTitle = { id: 0, value: lang['input-title-none'] };
         const userTitles = user.inventory.GetTitles().map(titleToDataMap);
         const availableTitles = [ emptyTitle, ...userTitles ];
@@ -158,7 +158,7 @@ class EditorProfile extends React.PureComponent {
                 user.informations.SetTitle(id);
                 this.forceUpdate();
 
-                const newTitle = dataManager.GetText(dataManager.titles.GetByID(id).Name);
+                const newTitle = langManager.GetText(dataManager.titles.GetByID(id).Name);
                 setTitle(newTitle);
             };
             const listTitle = lang['input-select-title'];
@@ -172,6 +172,10 @@ class EditorProfile extends React.PureComponent {
         return (
             <View style={styles.popup}>
                 <Text style={styles.popupTitle}>{lang['edit-title']}</Text>
+
+                <View style={styles.popupRow}>
+                    <Text style={{ textAlign: 'left' }}>{user.settings.email}</Text>
+                </View>
 
                 <View style={styles.popupRow}>
                     <Text containerStyle={styles.popupText} style={{ textAlign: 'left' }}>{user.informations.username.Get()}</Text>

@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     container: {
+        padding: 12
+    },
+    containerHeader: {
         justifyContent: 'center'
     },
     flatlist: {
@@ -15,11 +18,13 @@ const styles = StyleSheet.create({
     },
     item: {
         width: '100%',
-        textAlign: 'left',
-        fontSize: 18
+        textAlign: 'left'
     },
     itemContainer: {
         width: '50%'
+    },
+    itemContainerCompact: {
+        width: '33.33%'
     }
 });
 

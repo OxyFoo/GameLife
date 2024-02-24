@@ -6,7 +6,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, Icon, Button } from 'Interface/Components';
-import { GetDate, GetTime } from 'Utils/Time';
+import { GetDate, GetGlobalTime } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 import { SpringAnimation, WithInterpolation } from 'Utils/Animations';
 
@@ -56,7 +56,7 @@ class TodoElement extends React.Component {
 
         const { deadline: Deadline } = todo;
 
-        const now = GetTime();
+        const now = GetGlobalTime();
 
         /** @type {number | null} Minimum number of days */
         let minDeltaDays = null;

@@ -44,6 +44,9 @@ class Account
     /** @var string $DataToken */
     public $DataToken;
 
+    /** @var string $Version */
+    public $Version;
+
     /** @var int|null $LastSendMail */
     public $LastSendMail;
 
@@ -77,6 +80,7 @@ class Account
         $this->TodoesSort = json_decode($account['TodoesSort'], true);
         $this->QuestsSort = json_decode($account['QuestsSort'], true);
         $this->DataToken = $account['DataToken'];
+        $this->Version = $account['Version'];
         $this->LastSendMail = $account['LastSendMail'] === null ? null : strtotime($account['LastSendMail']);
         $this->LastChangeUsername = $account['LastChangeUsername'] === null ? null : strtotime($account['LastChangeUsername']);
         $this->LastChangeBirth = $account['LastChangeBirth'] === null ? null : strtotime($account['LastChangeBirth']);

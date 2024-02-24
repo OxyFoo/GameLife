@@ -47,7 +47,6 @@ class ActivityCard extends React.Component {
         super(props);
 
         const { type, activity } = this.props;
-        const GetName = dataManager.GetText;
         const offsetUTC = new Date().getTimezoneOffset() * 60;
         const lang = langManager.curr['calendar'];
 
@@ -95,9 +94,9 @@ class ActivityCard extends React.Component {
             if (skill !== null) {
                 const category = dataManager.skills.categories.find(x => x.ID === skill.CategoryID);
                 if (!!category) {
-                    textCategory = GetName(category.Name);
+                    textCategory = langManager.GetText(category.Name);
                 }
-                textActivity = GetName(skill.Name);
+                textActivity = langManager.GetText(skill.Name);
             }
 
             this.line1 = `${textStart_value} - ${textEnd_value} (${textDuration_value}${lang['hour-min']}) ${textUTC_value}`;

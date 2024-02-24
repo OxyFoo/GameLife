@@ -3,7 +3,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 import { SortByKey } from 'Utils/Functions';
 
 /**
@@ -49,14 +49,14 @@ class BackSkills extends PageBase {
      */
     upgradeSkill = (skill) => ({
         ...skill,
-        FullName: dataManager.GetText(skill.Name),
+        FullName: langManager.GetText(skill.Name),
         LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
         Experience: user.experience.GetSkillExperience(skill.ID)
     });
 
     /** @returns {EnrichedSkill[]} All skills with their Name, Logo & experience */
     getAllSkills = () => {
-        const now = GetTime();
+        const now = GetGlobalTime();
         const usersActivities = user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
         const filter = skill => usersActivitiesID.includes(skill.ID);
@@ -105,7 +105,7 @@ class BackSkills extends PageBase {
         if (selectedCategories.includes(0)) {
             /** @type {EnrichedSkill[]} */
             let recentSkills = [];
-            const now = GetTime(undefined, 'local');
+            const now = GetLocalTime();
             const usersActivities = user.activities
                 .Get()
                 .filter(activity => activity.startTime <= now)

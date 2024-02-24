@@ -13,7 +13,7 @@ import Shop from 'Class/Shop';
 import Todoes from 'Class/Todoes';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
-import TCP from 'Utils/TCP';
+import TCP from 'Class/TCP';
 
 /**
  * @typedef {import('Interface/Components').Character} Character

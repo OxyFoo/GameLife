@@ -11,18 +11,22 @@ function StartHelp() {
         {
             component: this.refContainer,
             text: lang['1'],
+            showNextButton: true
         },
         {
             component: null,
             text: lang['2'],
+            showNextButton: true
         },
         {
             component: null,
             text: lang['3'],
+            showNextButton: true
         },
         {
             component: this.refOpenStreakPopup,
             text: lang['4'],
+            showNextButton: true
         }
     ]);
 }

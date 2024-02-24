@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { PageBase } from 'Interface/Components';
-import { GetTime } from 'Utils/Time';
+import { GetGlobalTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
 /**
@@ -187,7 +187,7 @@ class BackSettings extends PageBase {
             }
         };
 
-        const now = GetTime();
+        const now = GetGlobalTime();
         if (user.tempMailSent === null || now - user.tempMailSent > 1 * 60) {
             // Confirmation popup
             const title = langManager.curr['settings']['alert-deleteaccount-title'];

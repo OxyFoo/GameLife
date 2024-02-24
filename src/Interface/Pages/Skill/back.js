@@ -46,8 +46,8 @@ class BackSkill extends PageBase {
         const totalDuration = this.getTotalDurationFromSkillID(this.skillID);
 
         this.skill = {
-            name: dataManager.GetText(skill.Name),
-            category: dataManager.GetText(category.Name),
+            name: langManager.GetText(skill.Name),
+            category: langManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
             totalFloatXp: Round(skillXP.totalXP, 0),
             xp: skillXP.xp,

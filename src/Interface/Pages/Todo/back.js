@@ -4,7 +4,7 @@ import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Todoes').Todo} Todo
@@ -194,7 +194,7 @@ class BackTodo extends PageBase {
         const addition = user.todoes.AddOrEdit(
             title,
             description,
-            GetTime(),
+            GetGlobalTime(),
             deadline,
             tasks
         );
@@ -226,7 +226,7 @@ class BackTodo extends PageBase {
         const edition = user.todoes.AddOrEdit(
             title,
             description,
-            this.selectedTodo.created || GetTime(),
+            this.selectedTodo.created || GetGlobalTime(),
             deadline,
             tasks
         );

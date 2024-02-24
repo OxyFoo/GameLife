@@ -7,16 +7,17 @@ class Accounts
     /**
      * Add new empty account
      * @param DataBase $db
+     * @param Device $device
      * @param string $username
      * @param string $email
-     * @param int $deviceID
+     * @param int $ox
      * @return Account|null
      */
-    public static function Add($db, $username, $email, $deviceID) {
+    public static function Add($db, $device, $username, $email, $ox = 0) {
         // Add account
-        $command = 'INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`) VALUES (?, ?, ?)';
-        $args = [ $username, $email, $deviceID ];
-        $result = $db->QueryPrepare('Accounts', $command, 'ssi', $args);
+        $command = 'INSERT INTO TABLE (`Username`, `Email`, `CreatedBy`, `Banned`, `Ox`) VALUES (?, ?, ?, ?, ?)';
+        $args = [ $username, $email, $device->ID, $device->Banned ? 1 : 0, $ox ];
+        $result = $db->QueryPrepare('Accounts', $command, 'ssiii', $args);
         if ($result === false) ExitWithStatus('Error: Adding device in DB failed');
         $account = Accounts::GetByID($db, $db->GetLastInsertID());
 
@@ -26,15 +27,15 @@ class Accounts
          * @param string[] $itemsIDs
          */
         function Rollback($db, $account, $itemsIDs) {
-            // Rollback account
-            $command = 'DELETE FROM TABLE WHERE `ID` = ?';
-            $db->QueryPrepare('Accounts', $command, 'i', [$account->ID]);
-
             // Rollback items
             foreach ($itemsIDs as $itemID) {
                 $command = 'DELETE FROM TABLE WHERE `ID` = ?';
                 $db->QueryPrepare('Inventory', $command, 'i', [$itemID]);
             }
+
+            // Rollback account
+            $command = 'DELETE FROM TABLE WHERE `ID` = ?';
+            $db->QueryPrepare('Accounts', $command, 'i', [$account->ID]);
         }
 
         // Add default items
@@ -219,6 +220,24 @@ class Accounts
     }
 
     /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param string $newVersion
+     * @return bool Success of update (new version is saved in account object)
+     */
+    public static function UpdateVersion($db, $account, $newVersion) {
+        $command = 'UPDATE TABLE SET `Version` = ? WHERE `ID` = ?';
+        $result = $db->QueryPrepare('Accounts', $command, 'si', [ $newVersion, $account->ID ]);
+        if ($result === false) {
+            ExitWithStatus('Error: Saving version failed');
+        }
+
+        // Not sure (SQL limitations) but it should be OK
+        $account->Version = $newVersion;
+        return true;
+    }
+
+    /**
      * Delete an account
      * @param DataBase $db
      * @param int $accountID
@@ -234,6 +253,7 @@ class Accounts
         $remInventory  = $db->QueryPrepare('Inventories',               'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remInventoryT = $db->QueryPrepare('InventoriesTitles',         'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remInventoryA = $db->QueryPrepare('InventoriesAchievements',   'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remUser       = $db->QueryPrepare('GlobalNotifications',       'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remUser       = $db->QueryPrepare('Accounts',                  'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
         return $remFriends !== false && $remQuests !== false && $remNZD !== false && $remTodoes !== false &&
                 $remActivities !== false && $remAvatar !== false && $remUser !== false &&

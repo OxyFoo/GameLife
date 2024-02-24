@@ -3,11 +3,6 @@ import * as React from 'react';
 import user from 'Managers/UserManager';
 
 import { PageBase } from 'Interface/Components';
-import ItemCard from '../Profile/cards/ItemCard';
-
-/**
- * @typedef {import('Class/Inventory').Stuff} Stuff
- */
 
 class BackTest extends PageBase {
     state = {
@@ -34,28 +29,6 @@ class BackTest extends PageBase {
             {id: 8, value:'yz'}
         ];
         user.interface.screenList.Open('test', test, console.log);
-    }
-
-    /** @param {{item: Stuff}} element */
-    renderCardItem = ({ item: stuff }) => {
-        const stuffSelected = null;
-        const equippedStuff = user.inventory.GetEquipments();
-
-        const isSelected = stuffSelected?.ID === stuff.ID;
-        const isEquipped = equippedStuff.includes(stuff.ID);
-
-        const onPress = () => {
-            console.log('onPress');
-        };
-
-        return (
-            <ItemCard
-                stuff={stuff}
-                isSelected={isSelected}
-                isEquipped={isEquipped}
-                onPress={onPress}
-            />
-        );
     }
 }
 

@@ -739,4 +739,8 @@ const STUFFS = {
     }
 };
 
+/**
+ * @typedef {keyof STUFFS['MALE']} StuffID
+ */
+
 export { STUFFS };

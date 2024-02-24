@@ -14,6 +14,20 @@ const styles = StyleSheet.create({
         marginBottom: 48
     },
 
+    container: {
+        marginBottom: 48,
+        padding: 4,
+        borderRadius: 10
+    },
+    title: {
+        marginBottom: 4
+    },
+    bonus: {
+        position: 'absolute',
+        top: 0,
+        right: 0
+    },
+
     buttonNow: {
         position: 'absolute',
         top: 0,

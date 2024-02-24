@@ -36,6 +36,7 @@ local.properties
 .jso/
 *.keystore
 !debug.keystore
+index.android.bundle.map
 
 # node.js
 #

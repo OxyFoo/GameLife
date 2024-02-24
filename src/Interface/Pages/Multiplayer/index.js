@@ -4,7 +4,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
-import { Button, Page, Text, FriendElement } from 'Interface/Components';
+import { Button, Page, Text, UserOnlineElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
@@ -32,6 +32,7 @@ class Multiplayer extends BackMultiplayer {
 
         return (
             <>
+                {/*
                 <Button
                     style={styles.classementButton}
                     color='main1'
@@ -39,6 +40,7 @@ class Multiplayer extends BackMultiplayer {
                     borderRadius={12}
                     onPress={this.openClassement}
                 />
+                */}
                 {friends.length + friendsPending.length < FRIENDS_LIMIT && (
                     <Button
                         style={styles.addFriendButton}
@@ -68,8 +70,9 @@ class Multiplayer extends BackMultiplayer {
                     data={friends}
                     keyExtractor={(item, index) => 'multi-player-' + item.accountID}
                     renderItem={({ item, index }) => (
-                        <FriendElement friend={item} />
+                        <UserOnlineElement friend={item} />
                     )}
+                    ListEmptyComponent={this.renderEmpty}
                 />
 
                 {friendsPending.length > 0 && (
@@ -80,12 +83,21 @@ class Multiplayer extends BackMultiplayer {
                             data={friendsPending}
                             keyExtractor={(item, index) => 'multi-player-' + item.accountID}
                             renderItem={({ item, index }) => (
-                                <FriendElement friend={item} />
+                                <UserOnlineElement friend={item} />
                             )}
                         />
                     </>
                 )}
             </View>
+        );
+    }
+
+    renderEmpty = () => {
+        const lang = langManager.curr['multiplayer'];
+        return (
+            <>
+                <Text style={styles.firstText}>{lang['container-friends-empty']}</Text>
+            </>
         );
     }
 

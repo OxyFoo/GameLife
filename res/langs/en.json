@@ -49,7 +49,21 @@
             "friend-pending-decline": "Decline",
             "friend-pending-block": "Block",
 
-            "list-empty": "No notifications available"
+            "global-message-open": "Open",
+            "global-message-respond": "Reply",
+            "global-message-claim": "Claim",
+            "global-message-close": "Close",
+            "global-message-input": "Reply to developers",
+            "global-message-mark-read": "Mark as read",
+
+            "list-empty": "No notifications available",
+
+            "popup-responded-title": "Thanks",
+            "popup-responded-text": "Thanks for your reply!",
+            "popup-claim-ox-title": "Congrats",
+            "popup-claim-ox-text": "You have won {} Ox!",
+            "popup-error-title": "Error",
+            "popup-error-text": "An error has occurred, please try again later."
         }
     },
 
@@ -100,6 +114,14 @@
             "Friday",
             "Saturday"
         ]
+    },
+
+    "app": {
+        "loading-error-message": {
+            "internaldata-not-loaded": "Internal data not loaded",
+            "userdata-not-loaded": "User data not loaded"
+        },
+        "loading-error-button": "Quitter"
     },
 
     "modal": {
@@ -203,6 +225,7 @@
         "title-click-me": "(you can click me)",
         "title-schedule": "Schedule",
         "title-experience": "Experience",
+        "title-friends": "Activity partner",
         "title-no-experience": "This activity has no experience",
         "title-not-past": "This activity has not yet been completed",
         "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience and does not count towards quests.",
@@ -228,7 +251,8 @@
         "alert-remcomment-text": "Are you sure you want to delete this comment?",
 
         "timer-launch": "Launch time:",
-        "timer-gain": "Current gains",
+        "timer-gain": "Current gains: {}",
+        "timer-friends": "Friends doing the same activity at the same time!",
         "timer-complete": "Complete",
         "timer-cancel": "Cancel",
         "timer-music": "Zap music will help you focus",
@@ -336,7 +360,8 @@
         "button-retry": "Retry",
 
         "container-title": "Multiplayer",
-        "container-content-empty": "No friends yet",
+        "container-content-empty": "No friends connected yet",
+        "container-friends-empty": "You have no friends yet, press the button below to add some!",
         "container-content-idle": "Loading...",
         "container-content-disconnected": "Disconnected, please try again later.",
         "container-content-error": "An error has occurred, please try again later.",
@@ -346,12 +371,15 @@
 
         "input-search-friend": "Search for a friend",
 
-        "temp-comingsoon-title": "Multiplayer",
-        "temp-comingsoon-text": "🚧 Coming soon 🚧",
+        "friend-do-activity-now": "Activity: {}",
 
         "alert-already-friend": {
             "title": "Already friends",
             "message": "You are already friends with {}"
+        },
+        "alert-friend-blocked": {
+            "title": "Blocked",
+            "message": "User {} has been blocked"
         },
         "alert-friend-notfound": {
             "title": "User not found",
@@ -441,7 +469,13 @@
         "row-activities": "Number of activities",
         "row-time": "Time spent",
 
+        "activity-now-title": "Activity now: {}",
+        "activity-now-start": "Start the same activity",
+
+        "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",
+        "alert-cancelfriend-title": "Cancel request",
+        "alert-cancelfriend-text": "Are you sure you want to cancel the friend request to {}?",
         "alert-removefriend-title": "Remove friend",
         "alert-removefriend-text": "Are you sure you want to remove {} from your friends?"
     },
@@ -767,6 +801,7 @@
         "container-date": "Rewards from {}",
         "claim": "Claim",
         "claim-in": "Claim in {}",
+        "claim-all": "Claim all",
         "no-claim": "No claim available",
 
         "alert-claim-error-title": "Error",

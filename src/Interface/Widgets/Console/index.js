@@ -46,6 +46,12 @@ class Console extends ConsoleBack {
                 { translateY: Animated.multiply(-116, animationDeleteButtons) }
             ]
         };
+        const buttonBenchMark = {
+            opacity: animation,
+            transform: [
+                { translateY: Animated.multiply(-160, animationDeleteButtons) }
+            ]
+        };
 
         return (
             <Animated.View style={[styles.console, translateY]} pointerEvents={'box-none'}>
@@ -69,7 +75,18 @@ class Console extends ConsoleBack {
                 </Button>
 
                 <Button
-                    style={styles.buttonDelete}
+                    style={styles.buttonAbsolute}
+                    styleAnimation={buttonBenchMark}
+                    fontSize={14}
+                    color='main1'
+                    onPress={this.goToBenchMark}
+                    pointerEvents={opened ? undefined : 'none'}
+                >
+                    BenchMark
+                </Button>
+
+                <Button
+                    style={styles.buttonAbsolute}
                     styleAnimation={buttonRefreshData}
                     fontSize={14}
                     color='main1'
@@ -80,7 +97,7 @@ class Console extends ConsoleBack {
                 </Button>
 
                 <Button
-                    style={styles.buttonDelete}
+                    style={styles.buttonAbsolute}
                     styleAnimation={buttonDelete}
                     fontSize={14}
                     color='main1'

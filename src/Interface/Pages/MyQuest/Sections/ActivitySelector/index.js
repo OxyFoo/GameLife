@@ -131,7 +131,8 @@ class ActivitySelector extends React.Component {
                     onSwipe={this.handleCategorySwiper}
                     pages={pages}
                     enableAutoNext={false}
-                    disableSwipe={Platform.OS === 'ios'}
+                    //disableSwipe={Platform.OS === 'ios'}
+                    disableSwipe={true}
                 />
             </View>
         );

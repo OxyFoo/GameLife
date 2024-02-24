@@ -49,7 +49,21 @@
             "friend-pending-decline": "Refuser",
             "friend-pending-block": "Bloquer",
 
-            "list-empty": "Aucune notification pour le moment"
+            "global-message-open": "Ouvrir",
+            "global-message-respond": "Répondre",
+            "global-message-claim": "Claim",
+            "global-message-close": "Fermer",
+            "global-message-input": "Répondre aux développeurs",
+            "global-message-mark-read": "Marquer comme lu",
+
+            "list-empty": "Aucune notification pour le moment",
+
+            "popup-responded-title": "Merci",
+            "popup-responded-text": "Merci pour ta réponse !",
+            "popup-claim-ox-title": "Bravo !",
+            "popup-claim-ox-text": "Tu as gagné {} Ox !",
+            "popup-error-title": "Erreur",
+            "popup-error-text": "Une erreur est survenue, réessaye plus tard."
         }
     },
 
@@ -100,6 +114,14 @@
             "Vendredi",
             "Samedi"
         ]
+    },
+
+    "app": {
+        "loading-error-message": {
+            "internaldata-not-loaded": "Les données internes n'ont pas pu être chargées",
+            "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées"
+        },
+        "loading-error-button": "Quitter"
     },
 
     "modal": {
@@ -203,6 +225,7 @@
         "title-click-me": "(tu peux cliquer !)",
         "title-schedule": "Horaire",
         "title-experience": "Expérience",
+        "title-friends": "Partenaires d'activité",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
         "title-not-past": "Cette activité n'a pas encore été réalisée",
         "title-before-limit": "Cette activité a été ajoutée plus de 48 heures après sa réalisation. Elle ne rapporte donc pas d'expérience et n'est pas prise en compte pour les quêtes.",
@@ -217,7 +240,7 @@
         "add-commentary": "Ajouter un commentaire",
 
         "alert-remove-title": "Suppression ?",
-        "alert-remove-text": "Es-tu sûr de vouloir supprimer cette activité ?",
+        "alert-remove-text": "Es-tu sûr(e) de vouloir supprimer cette activité ?",
         "alert-wrongtiming-title": "Impossible !",
         "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre.",
         "alert-alreadyexist-title": "Erreur",
@@ -225,10 +248,11 @@
         "alert-tooearly-title": "Erreur",
         "alert-tooearly-text": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
         "alert-remcomment-title": "Suppression ?",
-        "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
+        "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
 
         "timer-launch": "Heure de lancement :",
-        "timer-gain": "Gains actuel",
+        "timer-gain": "Gains actuel: {}",
+        "timer-friends": "Des amis font la même activité en même temps !",
         "timer-complete": "Terminer",
         "timer-cancel": "Annuler",
         "timer-music": "La musique de Zap t'aidera à te concentrer !",
@@ -336,7 +360,8 @@
         "button-retry": "Réessayer",
 
         "container-title": "Multijoueur",
-        "container-content-empty": "Aucun ami pour le moment",
+        "container-content-empty": "Aucun ami connecté pour le moment",
+        "container-friends-empty": "Tu n'as pas encore d'amis, appuie en bas à droite pour en ajouter !",
         "container-content-idle": "Chargement...",
         "container-content-disconnected": "Tu es déconnecté, réessaye plus tard.",
         "container-content-error": "Une erreur est survenue, réessaye plus tard.",
@@ -346,12 +371,15 @@
 
         "input-search-friend": "Entre le pseudo de ton ami",
 
-        "temp-comingsoon-title": "Multijoueur",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+        "friend-do-activity-now": "Activité: {}",
 
         "alert-already-friend": {
             "title": "Déjà ami",
             "message": "Tu es déjà ami avec {}"
+        },
+        "alert-friend-blocked": {
+            "title": "Bloqué",
+            "message": "L'utilisateur {} a été bloqué"
         },
         "alert-friend-notfound": {
             "title": "Ami introuvable",
@@ -429,7 +457,7 @@
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "Tu dois équiper un autre item pour pouvoir vendre celui-ci.",
         "alert-sellconfirm-title": "Vendre",
-        "alert-sellconfirm-text": "Es-tu sûr de vouloir vendre cet item pour {} Ox ?",
+        "alert-sellconfirm-text": "Es-tu sûr(e) de vouloir vendre cet item pour {} Ox ?",
         "alert-sellfailed-title": "Vente échouée",
         "alert-sellfailed-text": "Impossible de vendre l'item, une erreur est survenue, réessaye plus tard.",
         "alert-sellsuccess-title": "Vendu !",
@@ -441,9 +469,15 @@
         "row-activities": "Nombre d'activités",
         "row-time": "Nombre d'heures",
 
+        "activity-now-title": "Activité en cours: {}",
+        "activity-now-start": "Commencer la même activité",
+
+        "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",
+        "alert-cancelfriend-title": "Annuler la demande",
+        "alert-cancelfriend-text": "Es-tu sûr(e) de vouloir annuler la demande d'ami pour {} ?",
         "alert-removefriend-title": "Supprimer un ami",
-        "alert-removefriend-text": "Es-tu sûr de vouloir supprimer {} de ta liste d'amis ?"
+        "alert-removefriend-text": "Es-tu sûr(e) de vouloir supprimer {} de ta liste d'amis ?"
     },
 
     "report": {
@@ -504,7 +538,7 @@
         "alert-disconnecterror-title": "Erreur",
         "alert-disconnecterror-text": "Une erreur est survenue, vérifie ta connexion internet ou réessaye plus tard.",
         "alert-deleteaccount-title": "Supprimer le compte",
-        "alert-deleteaccount-text": "Es-tu sûr de vouloir supprimer ton compte ? Un mail de confirmation te sera envoyé.",
+        "alert-deleteaccount-text": "Es-tu sûr(e) de vouloir supprimer ton compte ? Un mail de confirmation te sera envoyé.",
         "alert-deletedmailsent-title": "Mail envoyé",
         "alert-deletedmailsent-text": "Un mail de confirmation t'a été envoyé, vérifie ta boîte mail.",
         "alert-deletedmailtooearly-title": "Mail déjà envoyé",
@@ -587,7 +621,7 @@
             "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
             "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",
             "randomChests-epic": "Quant au coffre épique, il offre 29% de chance d'obtenir un objet rare, 70% pour un objet épique et 1% pour un objet légendaire; il n'y a aucune chance d'y trouver un objet commun.",
-            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr d'avoir un item de la catégorie que tu as choisie !",
+            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr(e) d'avoir un item de la catégorie que tu as choisie !",
             "targetedChests-common": "Dans le coffre commun, les chances d'obtenir un objet de rareté commune sont extrêmement élevées à 99%, suivies de 0,9% pour un objet rare et 0,1% pour un objet épique; il est à noter qu'il n'y a aucune chance d'y trouver un objet légendaire.",
             "targetedChests-rare": "En ouvrant le coffre rare, tu as 27% de chances d'obtenir un objet commun, 70% pour un objet rare, 2,9% pour un objet épique et une mince chance de 0,1% pour un objet légendaire.",
             "targetedChests-epic": "Quant au coffre épique, celui-ci ne contient pas d'objets communs et offre 30% de chances d'obtenir un objet rare, 65% pour un objet épique, et une probabilité non négligeable de 5% pour un objet légendaire.", 
@@ -657,11 +691,11 @@
         "error-title-exists": "Une tâche avec ce titre existe déjà",
 
         "alert-remcomment-title": "Suppression ?",
-        "alert-remcomment-text": "Es-tu sûr de vouloir supprimer ce commentaire ?",
+        "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
         "alert-remtodo-title": "Suppression ?",
-        "alert-remtodo-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
+        "alert-remtodo-text": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
         "alert-remtask-title": "Suppression ?",
-        "alert-remtask-text": "Es-tu sûr de vouloir supprimer cette tâche ?",
+        "alert-remtask-text": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
         "alert-taskslimit-title": "Limite atteinte",
         "alert-taskslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
@@ -721,7 +755,7 @@
         },
 
         "alert-remquest-title": "Suppression ?",
-        "alert-remquest-text": "Es-tu sûr de vouloir supprimer cette quête ?",
+        "alert-remquest-text": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
         "alert-back-title": "Retour",
         "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
 
@@ -767,6 +801,7 @@
         "container-date": "Récompenses du {}",
         "claim": "Claim",
         "claim-in": "Claim dans {}",
+        "claim-all": "Tout claim",
         "no-claim": "Pas de claim",
 
         "alert-claim-error-title": "Erreur",

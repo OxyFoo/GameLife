@@ -17,11 +17,19 @@ const ActivityExperienceProps = {
     /** @type {StyleProp} */
     style: {},
 
+    /** @type {string} Replace {} by "+ X XP" */
+    title: '{}',
+
     /** @type {number} Skill ID or 0 to unselect */
     skillID: 0,
 
     /** @type {number} Duration of the activity in minutes */
-    duration: 60
+    duration: 60,
+
+    bonus: 0,
+
+    /** @type {boolean} */
+    compact: false
 };
 
 class ActivityExperienceBack extends React.Component {
@@ -50,7 +58,7 @@ class ActivityExperienceBack extends React.Component {
 
     updateSkill = () => {
         const { title, data } = this.state;
-        const { skillID, duration } = this.props;
+        const { skillID, duration, bonus } = this.props;
 
         const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) {
@@ -60,7 +68,8 @@ class ActivityExperienceBack extends React.Component {
             return;
         }
 
-        const XPamount = Round(skill.XP * (duration / 60), 2);
+        const XP = skill.XP * (duration / 60) * (1 + bonus);
+        const XPamount = Round(XP, 1);
         const XPtext = langManager.curr['level']['xp'];
 
         /** @type {Stat[]} */
@@ -72,7 +81,9 @@ class ActivityExperienceBack extends React.Component {
                 value: Round(skill.Stats[statKey] * (duration / 60), 2)
             }));
 
-        this.setState({ title: `+ ${XPamount} ${XPtext}`, data: newData });
+        const titleXP = `+ ${XPamount} ${XPtext}`;
+        const newTtitle = this.props.title.replace('{}', titleXP);
+        this.setState({ title: newTtitle, data: newData });
     }
 }
 

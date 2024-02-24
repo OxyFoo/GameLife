@@ -211,7 +211,7 @@ class EditorAvatarBack extends React.Component {
             // Show success message
             const title = lang['alert-sellsuccess-title'];
             let text = lang['alert-sellsuccess-text'];
-            text = text.replace('{}', dataManager.GetText(item.Name));
+            text = text.replace('{}', langManager.GetText(item.Name));
             text = text.replace('{}', Math.ceil(item.Value * .75).toString());
             user.interface.popup.Open('ok', [ title, text ], undefined, false);
         });

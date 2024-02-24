@@ -2,6 +2,8 @@ import * as React from 'react';
 import { View, Switch as RNSwitch, FlatList } from 'react-native';
 
 import BackTest from './back';
+import ItemCard from '../Profile/cards/ItemCard';
+import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import {
@@ -23,6 +25,11 @@ import {
 } from 'Interface/Components';
 
 import { Sleep } from 'Utils/Functions';
+import { STUFFS } from 'Ressources/items/stuffs/Stuffs';
+
+/**
+ * @typedef {import('Class/Inventory').Stuff} Stuff
+ */
 
 /** @type {import('Interface/Components/ComboBox').ComboBoxItem[]} */
 const TEST_VALUES = [
@@ -33,13 +40,14 @@ const TEST_VALUES = [
     {key: 4, value: 'Item 4'}
 ];
 
+/** @type {Stuff[]} */
 //const TEST_ITEMS = [ ...Object.values(STUFFS['MALE']), ...Object.values(STUFFS['FEMALE']) ];
 const TEST_ITEMS = [];
 
 class Test extends BackTest {
     render() {
         return (
-            <Page ref={ref => this.refPage = ref} canScrollOver={true}>
+            <Page ref={ref => this.refPage = ref}>
 
                 <FlatList
                     data={TEST_ITEMS}
@@ -161,7 +169,29 @@ class Test extends BackTest {
                 </Container>
                 
             </Page>
-        )
+        );
+    }
+
+    /** @param {{item: Stuff}} element */
+    renderCardItem = ({ item: stuff }) => {
+        const stuffSelected = null;
+        const equippedStuff = user.inventory.GetEquipments();
+
+        const isSelected = stuffSelected?.ID === stuff.ID;
+        const isEquipped = equippedStuff.includes(stuff.ID);
+
+        const onPress = () => {
+            console.log('onPress');
+        };
+
+        return (
+            <ItemCard
+                stuff={stuff}
+                isSelected={isSelected}
+                isEquipped={isEquipped}
+                onPress={onPress}
+            />
+        );
     }
 }
 

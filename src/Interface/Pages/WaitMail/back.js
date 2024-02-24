@@ -10,6 +10,7 @@ class BackWaitmail extends PageBase {
         time: null
     }
 
+    // @ts-ignore
     image = require('../../../../res/logo/login_circles.png');
 
     componentDidMount() {
@@ -48,7 +49,9 @@ class BackWaitmail extends PageBase {
         } else if (typeof(time) === 'number') {
             const SS = time % 60;
             const MM = (time - SS) / 60;
-            timeText = langWait['wait-email-remain'].replace('{}', MM).replace('{}', SS);
+            timeText = langWait['wait-email-remain']
+                .replace('{}', MM.toString())
+                .replace('{}', SS.toString());
         }
         return timeText;
     }
@@ -57,8 +60,8 @@ class BackWaitmail extends PageBase {
         const email = user.settings.email;
         const { status, remainMailTime } = await user.server.Connect(email);
 
-        // Connected or banned (banned is connected too but in offline mode)
-        if (status === 'ok' || status === 'ban') {
+        // Connected
+        if (status === 'ok') {
             user.settings.connected = true;
             await user.settings.Save();
             user.interface.ChangePage('loading', undefined, true);

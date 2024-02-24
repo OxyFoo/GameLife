@@ -47,6 +47,10 @@ class DataBase
         return !preg_match('/[^a-zA-Z0-9_]/', $string);
     }
 
+    function IsTestEnvironment() {
+        return strpos($this->db_name, 'Test') !== false && strpos($this->db_username, 'Test') !== false;
+    }
+
     /**
      * Used to select, insert, update or delete data.
      * @param string $table The table to replace in query.

@@ -86,6 +86,47 @@ const styles = StyleSheet.create({
         height: 48,
         paddingVertical: 12,
         paddingHorizontal: 0
+    },
+
+    // GlobalMessage
+    globalMessageContainer: {
+        paddingHorizontal: 12,
+        alignItems: 'center'
+    },
+    globalMessageText: {
+        marginBottom: 6
+    },
+    globalMessageButtons: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    globalMessageButton: {
+        width: 'auto',
+        height: 36,
+        marginHorizontal: 6,
+        paddingHorizontal: 12
+    },
+    globalMessageRewardItem: {
+        width: 48,
+        height: 48,
+        padding: 6,
+        marginLeft: 8,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'visible'
+    },
+    globalMessageRewardImage: {
+        width: '100%',
+        height: '100%'
+    },
+    globalMessageRewardValue: {
+        position: 'absolute',
+        left: -64,
+        right: -64,
+        bottom: -12
     }
 });
 

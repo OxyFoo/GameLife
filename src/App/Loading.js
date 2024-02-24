@@ -9,11 +9,16 @@ import Notifications from 'Utils/Notifications';
 import { Character } from 'Interface/Components';
 
 /**
- * Intialisation of all data
- * @param {Function} nextStep Used to change the icon
- * @param {Function} nextPage Used to go to the next page
+ * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  */
-async function Initialisation(nextStep, nextPage) {
+
+/**
+ * Intialisation of all data
+ * @param {() => void} nextStep Used to change the icon
+ * @param {() => void} nextPage Used to go to the next page
+ * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
+ */
+async function Initialisation(nextStep, nextPage, callbackError) {
     const time_start = new Date().getTime();
 
     // Loading: Settings
@@ -41,6 +46,8 @@ async function Initialisation(nextStep, nextPage) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
         if (!online) {
             user.interface.ChangePage('waitinternet', { force: 1 }, true);
+        } else {
+            callbackError('internaldata-not-loaded');
         }
         return;
     }
@@ -113,6 +120,7 @@ async function Initialisation(nextStep, nextPage) {
     // Check if user data are loaded
     if (user.informations.username.Get() === '') {
         user.interface.console.AddLog('error', 'User data not loaded');
+        callbackError('userdata-not-loaded');
         return;
     }
 
@@ -132,7 +140,6 @@ async function Initialisation(nextStep, nextPage) {
     await user.LocalSave();
 
     // Loading: Notifications
-    const time_start_notification = new Date().getTime();
     Notifications.DisableAll().then(() => {
         if (user.settings.morningNotifications) {
             return Notifications.Morning.Enable();
@@ -140,10 +147,6 @@ async function Initialisation(nextStep, nextPage) {
         if (user.settings.eveningNotifications) {
             return Notifications.Evening.Enable();
         }
-    }).then(() => {
-        const time_end_notification = new Date().getTime();
-        const time_delta_notification = time_end_notification - time_start_notification;
-        user.interface.console.AddLog('info', `Notifications loaded in ${time_delta_notification}ms`);
     });
 
     // Check if ads are available
@@ -151,15 +154,12 @@ async function Initialisation(nextStep, nextPage) {
         user.interface.console.AddLog('info', 'No more ads available');
     }
 
+    // Connect to the server TCP
+    user.tcp.Connect();
+
     // Load admob
-    const time_start_admob = new Date().getTime();
     await user.consent.ShowTrackingPopup()
-    .then(user.admob.LoadAds)
-    .then(() => {
-        const time_end_admob = new Date().getTime();
-        const time_delta_admob = time_end_admob - time_start_admob;
-        user.interface.console.AddLog('info', `Admob loaded in ${time_delta_admob}ms`);
-    });
+    .then(user.admob.LoadAds);
 
     // Render default pages
     await user.interface.LoadDefaultPages();
@@ -169,7 +169,6 @@ async function Initialisation(nextStep, nextPage) {
 
     CheckDate();
     user.StartTimers();
-    user.tcp.Connect();
 
     // Maintenance message
     if (user.server.status === 'maintenance') {
@@ -179,9 +178,9 @@ async function Initialisation(nextStep, nextPage) {
         user.interface.popup.Open('ok', [ title, text ], undefined, false);
     }
 
+    // End of initialisation
     const time_end = new Date().getTime();
-    const time_delta = time_end - time_start;
-    const time_text = `Initialisation done in ${time_delta}ms`;
+    const time_text = `Initialisation done in ${time_end - time_start}ms`;
     console.log(time_text);
     user.interface.console.AddLog('info', time_text);
 

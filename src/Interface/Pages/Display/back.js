@@ -2,7 +2,6 @@ import { Animated } from 'react-native';
 
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
-import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Random } from 'Utils/Functions';
@@ -44,7 +43,7 @@ class BackDisplay extends PageBase {
         const anonymousAuthors = langManager.curr['quote']['anonymous-author-list'];
         if (quoteItem !== null) {
             this.quote = {
-                text: dataManager.GetText(quoteItem.Quote),
+                text: langManager.GetText(quoteItem.Quote),
                 author: quoteItem.Author || anonymousAuthors[Random(0, anonymousAuthors.length)]
             };
         }

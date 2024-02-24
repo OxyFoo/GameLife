@@ -3,10 +3,6 @@ import { OpenAI } from 'openai';
 
 import { StrIsJson } from './Functions.js';
 
-/**
- * @typedef {import('Class/Activities.js').Activity} Activity
- */
-
 const SYSTEM_PROMPT = readFileSync('./src/Utils/prompt.txt').toString();
 
 class GPT {
@@ -16,13 +12,17 @@ class GPT {
 
     /**
      * @param {string} prompt
+     * @param {(error: string) => void} callbackError
      * @returns {Promise<string | null>}
      */
-    PromptToActivities = async (prompt) => {
-        const response = await this.AskGPT(prompt);
-        if (response === null) return null;
+    PromptToActivities = async (prompt, callbackError) => {
+        const response = await this.AskGPT(prompt)
+        .catch((error) => {
+            callbackError(error.message);
+            return null;
+        });
 
-        if (!StrIsJson(response)) {
+        if (response === null || !StrIsJson(response)) {
             return null;
         }
 

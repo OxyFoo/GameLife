@@ -3,7 +3,7 @@ import { Animated } from 'react-native';
 
 import { SpringAnimation } from 'Utils/Animations';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
-import { GetTime, GetTimeZone } from 'Utils/Time';
+import { GetGlobalTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -20,7 +20,7 @@ const ActivityScheduleProps = {
     editable: true,
 
     /** @type {number} UTC unix timestamp */
-    selectedDate: GetTime(),
+    selectedDate: GetGlobalTime(),
 
     /** @type {number} Duration in minutes */
     selectedDuration: 60,
@@ -80,7 +80,7 @@ class ActivityScheduleBack extends React.Component {
             return;
         }
 
-        const today = GetTime();
+        const today = GetGlobalTime();
         // Get start time at last TIME_STEP_MINUTES (e.g. 8h33 -> 8h30)
         const startTime = today - (today % (TIME_STEP_MINUTES * 60));
         const duration = 60;
@@ -95,7 +95,7 @@ class ActivityScheduleBack extends React.Component {
     onChangeDateTimePicker = (date) => {
         this.hideDTP();
 
-        const pickedTime = GetTime(date, 'global');
+        const pickedTime = GetGlobalTime(date);
         let newStartTime = this.props.selectedDate;
 
         newStartTime = pickedTime - GetTimeZone() * 3600;

@@ -86,6 +86,27 @@ const styles = StyleSheet.create({
         height: 48,
         paddingVertical: 12,
         paddingHorizontal: 0
+    },
+
+    // GlobalMessage
+    globalMessageContainer: {
+        paddingHorizontal: 12,
+        alignItems: 'center'
+    },
+    globalMessageText: {
+        marginBottom: 6
+    },
+    globalMessageButtons: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    globalMessageButton: {
+        width: 'auto',
+        height: 36,
+        marginHorizontal: 6,
+        paddingHorizontal: 12
     }
 });
 

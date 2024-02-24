@@ -12,6 +12,17 @@ function StrIsJson(str) {
 }
 
 /**
+ * Check if a string is an integer
+ * @param {*} value
+ * @returns {boolean}
+ */
+function IsInt(value) {
+    try { parseInt(value); }
+    catch (e) { return false; }
+    return !isNaN(parseInt(value));
+}
+
+/**
  * @returns {string} Local IP address
  */
 function GetLocalIP() {
@@ -39,4 +50,4 @@ function GetTime() {
     return Math.floor(Date.now() / 1000) - offset;
 }
 
-export { StrIsJson, GetLocalIP, GetTime };
+export { StrIsJson, IsInt, GetLocalIP, GetTime };

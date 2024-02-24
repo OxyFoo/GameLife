@@ -2,7 +2,7 @@ import WebSocket from 'websocket';
 
 import { GetUserFriends } from './Friends/GetFriends.js';
 import { AcceptFriend, AddFriend, DeclineFriend, RemoveFriend, CancelFriend } from './Friends/Manager.js';
-import { GetFriendNotifications } from './Friends/NotificationsInApp.js';
+import { GetUserNotifications, RespondToGlobalMessage } from './Friends/NotificationsInApp.js';
 
 import GPT from './Utils/GPT.js';
 import { StrIsJson } from './Utils/Functions.js';
@@ -96,7 +96,7 @@ class Users {
             return null;
         }
 
-        user.notificationsInApp = await GetFriendNotifications(this, user);
+        user.notificationsInApp = await GetUserNotifications(this, user);
         if (user.notificationsInApp === null) {
             connection.send(JSON.stringify({
                 status: 'error',
@@ -180,6 +180,10 @@ class Users {
                 });
                 const newlog = { prompt: data.prompt, response: result };
                 AddLog(this, user, 'zap-gpt-request', JSON.stringify(newlog));
+                break;
+
+            case 'global-message':
+                result = await RespondToGlobalMessage(this, user, data.ID, data.response);
                 break;
 
             default:

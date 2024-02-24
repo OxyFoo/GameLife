@@ -49,7 +49,19 @@
             "friend-pending-decline": "Decline",
             "friend-pending-block": "Block",
 
-            "list-empty": "No notifications available"
+            "global-message-open": "Open",
+            "global-message-respond": "Reply",
+            "global-message-claim": "Claim",
+            "global-message-close": "Close",
+            "global-message-input": "Reply to developers",
+            "global-message-mark-read": "Mark as read",
+
+            "list-empty": "No notifications available",
+
+            "popup-responded-title": "Thanks",
+            "popup-responded-text": "Thanks for your reply!",
+            "popup-error-title": "Error",
+            "popup-error-text": "An error has occurred, please try again later."
         }
     },
 

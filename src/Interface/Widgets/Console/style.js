@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         borderRadius: 8
     },
-    buttonDelete: {
+    buttonAbsolute: {
         position: 'absolute',
         bottom: 0,
         width: '40%',

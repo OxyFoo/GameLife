@@ -13,7 +13,7 @@ const { versionName } = require('../../package.json');
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNonZeroDays'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNonZeroDays'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 

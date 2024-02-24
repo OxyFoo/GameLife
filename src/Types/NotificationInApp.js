@@ -17,8 +17,7 @@
  * @typedef {object} NIA_GlobalMessage
  * @property {number} ID Unique ID in the database
  * @property {{ [key in LangKey]: string }} message
- * @property {'none' | 'respond' | 'open-page' | 'open-link' | 'reward-ox' | 'reward-chest'} action
- * @property {boolean} canRespond
+ * @property {'none' | 'can-respond' | 'must-respond' | 'open-page' | 'open-link' | 'reward-ox' | 'reward-chest'} action
  * @property {string | number} data Represent page name, link, reward index or Ox number
  */
 

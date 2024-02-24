@@ -6,18 +6,17 @@ import { EscapeString, IsInt } from '../Utils/Functions.js';
  * @typedef {import('Types/NotificationInApp.js').NIA_GlobalMessage} NIA_GlobalMessage
  * 
  * @typedef {Object} ReceiveDiscordZapNotificationRequest
- * @property {string} token
+ * @property {string} token Simple authentication to prevent unauthorized requests
  * @property {'send-global-request'} command
  * @property {string} userID
  * @property {string} ids Ids of the accounts to notify, separated by commas (or "all").
  * @property {string} message_fr
  * @property {string} message_en
- * @property {'none' | 'respond' | 'open-page' | 'open-link' | 'reward-chest' | 'reward-ox'} action
- * @property {boolean} canRespond
+ * @property {'none' | 'can-respond' | 'must-respond' | 'open-page' | 'open-link' | 'reward-chest' | 'reward-ox'} action
  * @property {string} page GameLife pagename to open
  * @property {string} link URL to open
  * @property {number} rewardOx Number of OX
- * @property {'common' | 'rare' | 'epic' | 'legendary'} rewardRarity
+ * @property {'common' | 'rare' | 'epic' | 'legendary'} rewardChest
  * @property {string} [callbackID]
  * 
  * @typedef {Object} SendDiscordZapNotificationRequest
@@ -53,17 +52,17 @@ async function ZapCommand(users, connection, data) {
             ids.push(...data.ids.split(',').map(id => parseInt(id)));
         }
 
-        let sqlAddAll = 'INSERT INTO GlobalNotifications (AccountID, Action, CanRespond, Message, Data) VALUES ';
+        let sqlAddAll = 'INSERT INTO GlobalNotifications (AccountID, Action, Message, Data) VALUES ';
 
         let value = null;
-        if (data.action === 'reward-chest' && ['common', 'rare', 'epic', 'legendary'].includes(data.rewardRarity)) {
-            value = data.rewardRarity;
+        if (data.action === 'reward-chest' && ['common', 'rare', 'epic', 'legendary'].includes(data.rewardChest)) {
+            value = data.rewardChest;
         } else if (data.action === 'reward-ox' && typeof data.rewardOx === 'number') {
             value = data.rewardOx;
         } else if ((data.action === 'open-page' && typeof data.page === 'string') ||
                     (data.action === 'open-link' && typeof data.link === 'string')) {
             value = data.action === 'open-page' ? data.page : data.link;
-        } else if (data.action === 'none' || data.action === 'respond') {
+        } else if (data.action === 'none' || data.action === 'can-respond' || data.action === 'must-respond') {
             value = '';
         }
 
@@ -89,7 +88,7 @@ async function ZapCommand(users, connection, data) {
             };
             const messageText = EscapeString(JSON.stringify(message));
 
-            sqlAddAll += `(${id}, '${data.action}', ${!!data.canRespond ? 1 : 0}, '${messageText}', '${value}'),`;
+            sqlAddAll += `(${id}, '${data.action}', '${messageText}', '${value}'),`;
         }
 
         sqlAddAll = sqlAddAll.slice(0, -1);
@@ -114,7 +113,7 @@ async function ZapCommand(users, connection, data) {
             return true;
         }
 
-        const commandUpdate = `SELECT ID, AccountID, Action, CanRespond, Message, Data, Date FROM GlobalNotifications WHERE AccountID IN (${idsToUpdate.join(',')})`;
+        const commandUpdate = `SELECT ID, AccountID, Action, Message, Data, Date FROM GlobalNotifications WHERE AccountID IN (${idsToUpdate.join(',')})`;
         const resultUpdate = await users.db.ExecQuery(commandUpdate);
         if (resultUpdate === null) {
             SendCallback(connection, {
@@ -136,7 +135,6 @@ async function ZapCommand(users, connection, data) {
                 const notification = {
                     ID: notifsRaw.ID,
                     action: notifsRaw.Action,
-                    canRespond: notifsRaw.CanRespond === 1,
                     message: JSON.parse(notifsRaw.Message),
                     data: IsInt(notifsRaw.Data) ? parseInt(notifsRaw.Data) : notifsRaw.Data
                 };

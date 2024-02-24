@@ -107,6 +107,26 @@ const styles = StyleSheet.create({
         height: 36,
         marginHorizontal: 6,
         paddingHorizontal: 12
+    },
+    globalMessageRewardItem: {
+        width: 48,
+        height: 48,
+        padding: 6,
+        marginLeft: 8,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'visible'
+    },
+    globalMessageRewardImage: {
+        width: '100%',
+        height: '100%'
+    },
+    globalMessageRewardValue: {
+        position: 'absolute',
+        left: -64,
+        right: -64,
+        bottom: -12
     }
 });
 

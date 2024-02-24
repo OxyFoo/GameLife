@@ -538,6 +538,71 @@ class Commands {
         $this->output['status'] = 'ok';
     }
 
+    public function ClaimGlobalNotifs() {
+        $notifID = $this->data['notifID'];
+        if (!isset($notifID) || !$this->tokenChecked) return;
+
+        $account = $this->account;
+        $device = $this->device;
+
+        // Check if the notification exists
+        $command = "SELECT `Action`, `Data` FROM TABLE WHERE `ID` = ? AND `AccountID` = ? AND `Readed` = 0";
+        $args = array($notifID, $account->ID);
+        $notif = $this->db->QueryPrepare('GlobalNotifications', $command, 'ii', $args);
+        if ($notif === false || count($notif) === 0) {
+            $this->output['status'] = 'error';
+            $this->output['error'] = 'Global notification not found';
+            return;
+        }
+
+        // Check if the notification is a reward (Ox or chest)
+        if ($notif[0]['Action'] !== 'reward-chest' && $notif[0]['Action'] !== 'reward-ox') {
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', 'Try to claim a non-reward notification');
+            $this->output['status'] = 'error';
+            $this->output['error'] = 'Invalid notification';
+            return;
+        }
+
+        // 1. Reward ox
+        if ($notif[0]['Action'] === 'reward-ox') {
+            $oxAmount = intval($notif[0]['Data']);
+            Users::AddOx($this->db, $account->ID, $oxAmount);
+            $this->output['ox'] = $account->Ox + $oxAmount;
+            $this->output['status'] = 'ok';
+            return;
+        }
+
+        // 2. Reward chest
+        // Check if the rarity is valid
+        $rarities = array('common', 'rare', 'epic', 'legendary');
+        if (!in_array($notif[0]['Data'], $rarities)) {
+            $this->output['status'] = 'error';
+            $this->output['error'] = 'Invalid rarity';
+            return;
+        }
+
+        $rarity = array_search($notif[0]['Data'], $rarities);
+
+        // Update the notification as read
+        $command = "UPDATE TABLE SET `Readed` = 1 WHERE `ID` = ?";
+        $result = $this->db->QueryPrepare('GlobalNotifications', $command, 'i', [ $notifID ]);
+        if ($result === false) {
+            $this->output['status'] = 'error';
+            $this->output['error'] = 'Error while updating the notification';
+            return;
+        }
+
+        $newItem = Shop::BuyRandomChest($this->db, $account, $device, $rarity, true, $error);
+        if ($newItem === false) {
+            $this->output['status'] = 'error';
+            $this->output['error'] = $error;
+            return;
+        }
+
+        $this->output['newItem'] = $newItem;
+        $this->output['status'] = 'ok';
+    }
+
     public function AdWatched() {
         if (!$this->tokenChecked) return;
         $account = $this->account;

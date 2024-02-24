@@ -1,26 +1,23 @@
 import * as React from 'react';
-import { View, Linking } from 'react-native';
+import { View, Image, Linking } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Button, Text } from 'Interface/Components';
+import IMG_CHESTS, { CHEST_RARITIES } from 'Ressources/items/chests/chests';
+import { IMG_OX } from 'Ressources/items/currencies/currencies';
 
 /**
  * @typedef {import('Types/NotificationInApp').NotificationInApp<'global-message'>} NotificationInApp
  */
 
-// - [x] none
-// - [x] respond
-// - [x] open-page
-// - [x] open-link
-// - [ ] reward-ox
-// - [ ] reward-chest
-
 /**
  * @param {NotificationInApp} notif
  * @param {string} [response]
+ * @returns {Promise<boolean>}
  */
 async function handleRead(notif, response) {
     const lang = langManager.curr['notifications']['in-app'];
@@ -29,14 +26,19 @@ async function handleRead(notif, response) {
     user.tcp.Send({
         action: 'global-message',
         ID: notif.data.ID,
-        callbackID: callbackID
+        callbackID: callbackID,
+        response: response
     });
+
     const tcpResponse = await user.tcp.WaitForCallback(callbackID);
     if (tcpResponse !== 'ok') {
         const title = lang['popup-error-title'];
         const text = lang['popup-error-text'];
         user.interface.popup.Open('ok', [ title, text ]);
+        return false;
     }
+
+    return true;
 }
 
 /** @param {NotificationInApp} notif */
@@ -58,36 +60,74 @@ function handleOpenPageOrURL(notif) {
 }
 
 /** @param {NotificationInApp} notif */
-function handleRespond(notif) {
+async function handleRespond(notif) {
     const lang = langManager.curr['notifications']['in-app'];
 
     user.interface.notificationsInApp.Close();
     user.interface.screenInput.Open(lang['global-message-input'], '', async (response) => {
-        const callbackID = `notif-${notif.data.ID}`;
-        user.tcp.Send({
-            action: 'global-message',
-            ID: notif.data.ID,
-            response: response,
-            callbackID: callbackID
-        });
-        const result = await user.tcp.WaitForCallback(callbackID);
-        if (result !== 'ok') {
-            const title = lang['popup-error-title'];
-            const text = lang['popup-error-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
+        if (typeof response !== 'string' || response.trim().length <= 0) {
             return;
         }
 
-        const title = lang['popup-responded-title'];
-        const text = lang['popup-responded-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
-        handleRead(notif, response);
+        const success = await handleRead(notif, response.trim());
+        if (success) {
+            const title = lang['popup-responded-title'];
+            const text = lang['popup-responded-text'];
+            user.interface.popup.Open('ok', [ title, text ]);
+        }
     }, true);
 }
 
 /** @param {NotificationInApp} notif */
-function handleClaim(notif) {
-    // TODO: Claim reward
+async function handleClaim(notif) {
+    const lang = langManager.curr['notifications']['in-app'];
+
+    user.interface.notificationsInApp.Close();
+
+    // Buy chest
+    const data = { notifID: notif.data.ID };
+    const result = await user.server.Request('claimGlobalNotifs', data);
+    if (result === null) return;
+
+    // Check error
+    if (result['status'] !== 'ok' || (!result.hasOwnProperty('newItem') && !result.hasOwnProperty('ox'))) {
+        const title = lang['popup-error-title'];
+        const text = lang['popup-error-text'];
+        user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+        return;
+    }
+
+    // Update Ox amount
+    if (result.hasOwnProperty('ox')) {
+        user.informations.ox.Set(result['ox']);
+        const title = lang['popup-claim-ox-title'];
+        const text = lang['popup-claim-ox-text'].replace('{}', notif.data.data.toString());
+        user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+    }
+
+    // Update inventory
+    if (result.hasOwnProperty('newItem')) {
+        const newItem = result['newItem'];
+        user.inventory.stuffs.push(newItem);
+
+        // Get chest rarity
+        let rarity = 0;
+        if (CHEST_RARITIES.includes(notif.data.data.toString())) {
+            rarity = CHEST_RARITIES.indexOf(notif.data.data.toString());
+        }
+
+        // Show chest opening
+        const args = {
+            itemID: newItem['ItemID'],
+            chestRarity: rarity,
+            callback: user.interface.BackHandle
+        };
+        user.interface.ChangePage('chestreward', args, true);
+    }
+
+    // Save inventory
+    user.LocalSave();
+    handleRead(notif);
 }
 
 /** @param {NotificationInApp} notif */
@@ -117,7 +157,7 @@ function renderButtons(notif) {
         );
     }
 
-    else if (notif.data.action === 'respond') {
+    else if (notif.data.action === 'can-respond' || notif.data.action === 'must-respond') {
         return (
             <View style={styles.globalMessageButtons}>
                 <Button
@@ -128,14 +168,16 @@ function renderButtons(notif) {
                 >
                     {lang['global-message-respond']}
                 </Button>
-                <Button
-                    style={styles.globalMessageButton}
-                    color='main1'
-                    fontSize={14}
-                    onPress={() => handleRead(notif)}
-                >
-                    {lang['global-message-close']}
-                </Button>
+                {notif.data.action === 'can-respond' && (
+                    <Button
+                        style={styles.globalMessageButton}
+                        color='danger'
+                        fontSize={14}
+                        onPress={() => handleRead(notif)}
+                    >
+                        {lang['global-message-close']}
+                    </Button>
+                )}
             </View>
         );
     }
@@ -143,7 +185,7 @@ function renderButtons(notif) {
     else if (notif.data.action === 'reward-ox' || notif.data.action === 'reward-chest') {
         return (
             <View style={styles.globalMessageButtons}>
-                {/** TODO: Show chest or ox images + count */}
+                {RenderReward(notif)}
                 <Button
                     style={styles.globalMessageButton}
                     color='main1'
@@ -190,6 +232,44 @@ function NIA_GlobalMessage({ notif, index }) {
             </View>
         </View>
     );
+}
+
+/** @param {NotificationInApp} notif */
+function RenderReward(notif) {
+    const styleReward = {
+        ...styles.globalMessageRewardItem,
+        backgroundColor: themeManager.GetColor('background')
+    };
+
+    if (notif.data.action === 'reward-ox') {
+        return (
+            <View style={styleReward}>
+                <Image
+                    style={styles.globalMessageRewardImage}
+                    source={IMG_OX}
+                />
+                <Text style={styles.globalMessageRewardValue}>
+                    {'x' + notif.data.data.toString()}
+                </Text>
+            </View>
+        );
+    }
+
+    else if (notif.data.action === 'reward-chest') {
+        let rarity = 0;
+        if (CHEST_RARITIES.includes(notif.data.data.toString())) {
+            rarity = CHEST_RARITIES.indexOf(notif.data.data.toString());
+        }
+
+        return (
+            <View style={styleReward}>
+                <Image
+                    style={styles.globalMessageRewardImage}
+                    source={IMG_CHESTS[rarity]}
+                />
+            </View>
+        );
+    }
 }
 
 export default NIA_GlobalMessage;

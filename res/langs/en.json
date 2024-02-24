@@ -60,6 +60,8 @@
 
             "popup-responded-title": "Thanks",
             "popup-responded-text": "Thanks for your reply!",
+            "popup-claim-ox-title": "Congrats",
+            "popup-claim-ox-text": "You have won {} Ox!",
             "popup-error-title": "Error",
             "popup-error-text": "An error has occurred, please try again later."
         }

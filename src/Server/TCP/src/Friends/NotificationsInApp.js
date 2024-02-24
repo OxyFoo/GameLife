@@ -1,4 +1,4 @@
-import { IsInt } from '../Utils/Functions.js';
+import { EscapeString, IsInt } from '../Utils/Functions.js';
 
 /**
  * @typedef {import('../Users.js').User} User
@@ -20,7 +20,7 @@ async function GetUserNotifications(users, user) {
         WHERE f.TargetID = ${user.accountID} AND f.State = 'pending'
     `;
     const commandGlobalNotifications = `
-        SELECT ID, Action, CanRespond, Message, Data, Date
+        SELECT ID, Action, Message, Data, Date
         FROM GlobalNotifications
         WHERE AccountID = ${user.accountID} AND Readed = 0
     `;
@@ -56,7 +56,6 @@ async function GetUserNotifications(users, user) {
             data: {
                 ID: row.ID,
                 action: row.Action,
-                canRespond: row.CanRespond === 1,
                 message: JSON.parse(row.Message),
                 data: IsInt(row.Data) ? parseInt(row.Data) : row.Data
             },
@@ -78,7 +77,7 @@ async function GetUserNotifications(users, user) {
 async function RespondToGlobalMessage(users, user, notificationID, response) {
     let command = `
         UPDATE GlobalNotifications
-        SET Readed = 1
+        SET Readed = 1, DateReaded = CURRENT_TIMESTAMP
         WHERE ID = ? AND AccountID = ?
     `;
 
@@ -88,10 +87,10 @@ async function RespondToGlobalMessage(users, user, notificationID, response) {
     if (typeof response === 'string') {
         command = `
             UPDATE GlobalNotifications
-            SET Response = ?, Readed = 1
+            SET Response = ?, Readed = 1, DateReaded = CURRENT_TIMESTAMP
             WHERE ID = ? AND AccountID = ?
         `;
-        args = [ response, notificationID, user.accountID ];
+        args = [ EscapeString(response), notificationID, user.accountID ];
     }
 
     const result = await users.db.QueryPrepare(command, args);

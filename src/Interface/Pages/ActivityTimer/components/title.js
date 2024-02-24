@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 
 import { Text } from 'Interface/Components';
 import { DateToFormatTimeString } from 'Utils/Date';
-import { GetDate, GetTime } from 'Utils/Time';
+import { GetDate, GetLocalTime } from 'Utils/Time';
 import { TwoDigit } from 'Utils/Functions';
 
 /**
@@ -64,7 +64,7 @@ class ActivityTimerTitle extends React.Component {
 
         const { startTime } = currentActivity;
 
-        const time = GetTime(undefined, 'local') - startTime;
+        const time = GetLocalTime() - startTime;
         const HH = Math.floor(time / 3600);
         const MM = Math.floor((time - (HH * 3600)) / 60);
         const SS = time - (HH * 3600) - (MM * 60);

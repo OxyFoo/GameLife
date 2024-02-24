@@ -1,6 +1,6 @@
 import { GetFriend } from './GetFriends.js';
 import { AddLog } from '../Utils/Logs.js';
-import { GetTime } from '../Utils/Functions.js';
+import { GetGlobalTime } from '../Utils/Functions.js';
 
 /**
  * @typedef {import('../Users.js').User} User
@@ -64,7 +64,7 @@ async function AddFriend(users, user, username) {
                 accountID: user.accountID,
                 username: user.username
             },
-            timestamp: GetTime()
+            timestamp: GetGlobalTime()
         };
         target.notificationsInApp.push(notif);
         users.Send(target, { status: 'update-notifications', notifications: target.notificationsInApp });

@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button } from 'Interface/Components';
-import { GetDate, GetTime } from 'Utils/Time';
+import { GetDate, GetGlobalTime } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
@@ -56,7 +56,7 @@ class SectionSchedule extends React.Component {
         if (DTPMode === 'date') {
             newDate.setUTCHours(0, 0, 0, 0);
             this.setState({
-                deadline: GetTime(newDate),
+                deadline: GetGlobalTime(newDate),
                 deadlineText: DateToFormatString(newDate)
             }, this.onChange);
         }

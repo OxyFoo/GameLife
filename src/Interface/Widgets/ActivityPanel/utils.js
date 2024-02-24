@@ -1,9 +1,6 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
-import { MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
-
 /**
  * @typedef {import('./index').default} ActivityPanel
  * @typedef {import('Class/Activities').Activity} Activity

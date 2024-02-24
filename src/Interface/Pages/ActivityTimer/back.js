@@ -4,7 +4,7 @@ import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetLocalTime } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
 import { AddActivityNow, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
 
@@ -95,7 +95,7 @@ class BackActivityTimer extends PageBase {
 
     __getDuration = () => {
         const { startTime, timezone } = this.state.currentActivity;
-        const now = GetTime(undefined, 'local');
+        const now = GetLocalTime();
         const localTime = startTime + timezone * 3600;
         const currentMillis = new Date().getMilliseconds() / 1000;
         const duration = (now + currentMillis - localTime) / 60;
@@ -124,7 +124,7 @@ class BackActivityTimer extends PageBase {
         const { skillID, startTime, friendsIDs } = this.state.currentActivity;
 
         // Too short
-        const now = GetTime(undefined, 'local');
+        const now = GetLocalTime();
         if (now - startTime < MIN_TIME_MINUTES * 60 / 2) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];

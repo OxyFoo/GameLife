@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import StartTutorial from './tuto';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
-import { GetTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
+import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 import { GetBlockMonth } from 'Interface/Widgets/BlockMonth/script';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
@@ -211,7 +211,7 @@ class BackCalendar extends PageBase {
         if (day !== null) {
             const now = new Date();
             date.setHours(now.getHours(), now.getMinutes(), 0, 0);
-            const nowLocalTime = GetTime(date, 'local') + GetTimeZone() * 60;
+            const nowLocalTime = GetLocalTime(date) + GetTimeZone() * 60;
             user.tempSelectedTime = RoundTimeTo(TIME_STEP_MINUTES, nowLocalTime);
 
             if (!this.opened) {
@@ -231,7 +231,7 @@ class BackCalendar extends PageBase {
             if (day !== null) {
                 const weeks = GetBlockMonth(month, year, undefined, day).data;
                 const week = weeks.findIndex(w => w.filter(d => d?.day === day).length > 0);
-                const activities = user.activities.GetByTime(GetTime(date, 'local'));
+                const activities = user.activities.GetByTime(GetLocalTime(date));
 
                 this.setState({
                     currActivities: activities,

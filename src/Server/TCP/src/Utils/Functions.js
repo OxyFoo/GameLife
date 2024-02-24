@@ -45,7 +45,7 @@ function GetLocalIP() {
 /**
  * @returns {number} Unix timestamp in seconds (UTC)
  */
-function GetTime() {
+function GetGlobalTime() {
     const offset = (new Date()).getTimezoneOffset() * 60;
     return Math.floor(Date.now() / 1000) - offset;
 }
@@ -81,4 +81,4 @@ function EscapeString(val) {
     });
 }
 
-export { StrIsJson, IsInt, GetLocalIP, GetTime, EscapeString };
+export { StrIsJson, IsInt, GetLocalIP, GetGlobalTime, EscapeString };

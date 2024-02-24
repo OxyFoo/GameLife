@@ -1,6 +1,6 @@
 import DynamicVar from 'Utils/DynamicVar';
 import { Sum } from 'Utils/Functions';
-import { DAY_TIME, GetDate, GetTime, GetTimeZone } from 'Utils/Time';
+import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -222,7 +222,7 @@ class MyQuests {
      * @returns {'added' | 'edited' | InputsError}
      */
     AddOrEdit(quest) {
-        quest.created ??= GetTime(undefined, 'local');
+        quest.created ??= GetLocalTime();
 
         const errors = this.VerifyInputs(quest);
         if (errors.length > 0) {
@@ -334,7 +334,7 @@ class MyQuests {
      * @param {MyQuest} quest
      * @param {number} time in seconds
      */
-    GetDays(quest, time = GetTime(undefined, 'local')) {
+    GetDays(quest, time = GetLocalTime()) {
         if (quest === null) return [];
 
         const dateNow = GetDate(time);
@@ -389,7 +389,7 @@ class MyQuests {
     /** @param {MyQuest} quest */
     GetStreak(quest) {
         let streak = 0;
-        const timeNow = GetTime(undefined, 'local');
+        const timeNow = GetLocalTime();
         const todayMidnight = timeNow - timeNow % DAY_TIME - GetTimeZone() * 60 * 60;
 
         const allActivitiesTime = this.user.activities.Get()

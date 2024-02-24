@@ -2,7 +2,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/Skills').Category} Category
@@ -39,7 +39,7 @@ const CategoryToItem = (category) => ({
  * @returns {Array<ItemSkill>}
  */
 const GetRecentSkills = (callback) => {
-    const now = GetTime(undefined, 'local');
+    const now = GetLocalTime();
     return user.activities.Get()
         .filter(activity => activity.startTime <= now)
         .reverse()

@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
-import { GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
+import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -262,7 +262,7 @@ class Activities {
      * @returns {Array<EnrichedSkill>}
      */
     GetLastSkills(number = 6) {
-        const now = GetTime();
+        const now = GetGlobalTime();
         const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map(activity => activity.skillID);
 
@@ -317,7 +317,7 @@ class Activities {
      */
     Add(newActivity, alreadySaved = false) {
         newActivity.timezone ??= GetTimeZone();
-        newActivity.addedTime ??= GetTime(undefined, 'local');
+        newActivity.addedTime ??= GetLocalTime();
 
         // Limit date (< 2020-01-01)
         if (newActivity.startTime < 1577836800) {
@@ -428,7 +428,7 @@ class Activities {
      * @param {Activity[]} activities
      * @returns {Activity[]} activities
      */
-    GetByTime(time = GetTime(), activities = this.Get()) {
+    GetByTime(time = GetGlobalTime(), activities = this.Get()) {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
         return activities.filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
@@ -450,7 +450,7 @@ class Activities {
         const { startTime, addedTime } = activity;
         const deltaHours = (addedTime - startTime) / 3600;
         const addedBeforeLimit = deltaHours > HOURS_BEFORE_LIMIT;
-        const isPast = startTime <= GetTime(undefined, 'local');
+        const isPast = startTime <= GetLocalTime();
 
         if (addedBeforeLimit)
             return 'beforeLimit';

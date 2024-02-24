@@ -3,7 +3,7 @@ import * as React from 'react';
 import langManager from 'Managers/LangManager';
 
 import { ActivityCard } from 'Interface/Widgets';
-import { GetDate, GetMidnightTime, GetTime } from 'Utils/Time';
+import { GetDate, GetGlobalTime, GetMidnightTime } from 'Utils/Time';
 import { ParsePlural } from 'Utils/String';
 
 /**
@@ -18,7 +18,7 @@ function cardHeader() {
     const { selectedALL, currActivities } = this.state;
 
     const date = new Date(selectedALL?.year, selectedALL?.month, selectedALL?.day);
-    const time = GetMidnightTime(GetTime(date));
+    const time = GetMidnightTime(GetGlobalTime(date));
 
     let addButtonAdd = true;
     let additonalText = createSeparatorText(0);

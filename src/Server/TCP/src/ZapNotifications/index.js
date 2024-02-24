@@ -1,4 +1,4 @@
-import { IsInt } from '../Utils/Functions.js';
+import { EscapeString, IsInt } from '../Utils/Functions.js';
 
 /**
  * @typedef {import('websocket').connection} connection
@@ -21,7 +21,7 @@ import { IsInt } from '../Utils/Functions.js';
  * @property {string} [callbackID]
  * 
  * @typedef {Object} SendDiscordZapNotificationRequest
- * @property {'sent' | 'incorrect-values' | 'query-error'} status
+ * @property {'sent' | 'incorrect-values' | 'query-error1' | 'query-error2' | 'query-error3'} status
  * @property {number} notificationsSent
  * @property {string} [callbackID]
  */
@@ -42,7 +42,7 @@ async function ZapCommand(users, connection, data) {
             const result = await users.db.ExecQuery(command);
             if (result === null) {
                 SendCallback(connection, {
-                    status: 'query-error',
+                    status: 'query-error1',
                     notificationsSent: 0,
                     callbackID: data.callbackID
                 });
@@ -79,20 +79,25 @@ async function ZapCommand(users, connection, data) {
         for (const id of ids) {
             const user = users.AllUsers.find(u => u.accountID === id);
             if (user !== undefined) {
-                idsToUpdate.push(id);
+                idsToUpdate.push(user.accountID);
             }
 
-            sqlAddAll += `(${id}, '${data.action}', ${!!data.canRespond ? 1 : 0}, '{"fr":"${data.message_fr}","en":"${data.message_en}"}', '${value}'),`;
+            // Escape single quotes and double quotes to prevent SQL injection & JSON.parse errors
+            const message = {
+                fr: data.message_fr,
+                en: data.message_en
+            };
+            const messageText = EscapeString(JSON.stringify(message));
+
+            sqlAddAll += `(${id}, '${data.action}', ${!!data.canRespond ? 1 : 0}, '${messageText}', '${value}'),`;
         }
 
         sqlAddAll = sqlAddAll.slice(0, -1);
 
-        console.log(sqlAddAll);
-
         const result = await users.db.ExecQuery(sqlAddAll);
         if (result === null) {
             SendCallback(connection, {
-                status: 'query-error',
+                status: 'query-error2',
                 notificationsSent: 0,
                 callbackID: data.callbackID
             });
@@ -100,11 +105,20 @@ async function ZapCommand(users, connection, data) {
         }
 
         // Get all added rows from idsToUpdate
+        if (idsToUpdate.length === 0) {
+            SendCallback(connection, {
+                status: 'sent',
+                notificationsSent: result.affectedRows,
+                callbackID: data.callbackID
+            });
+            return true;
+        }
+
         const commandUpdate = `SELECT ID, AccountID, Action, CanRespond, Message, Data, Date FROM GlobalNotifications WHERE AccountID IN (${idsToUpdate.join(',')})`;
         const resultUpdate = await users.db.ExecQuery(commandUpdate);
         if (resultUpdate === null) {
             SendCallback(connection, {
-                status: 'query-error',
+                status: 'query-error3',
                 notificationsSent: 0,
                 callbackID: data.callbackID
             });
@@ -113,8 +127,8 @@ async function ZapCommand(users, connection, data) {
 
         for (const id of idsToUpdate) {
             const user = users.AllUsers.find(u => u.accountID === id);
-            const notifsRaw = resultUpdate.find(row => row.AccountID === id);
-            if (user !== undefined && notifsRaw !== undefined) {
+            if (user !== undefined && resultUpdate.length > 0) {
+                const notifsRaw = resultUpdate.at(-1);
                 const timezone = new Date().getTimezoneOffset() * 60;
                 const timestamp = Math.floor(new Date(notifsRaw.Date).getTime() / 1000) - timezone;
 

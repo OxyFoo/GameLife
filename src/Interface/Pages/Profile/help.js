@@ -14,7 +14,7 @@ function StartHelp() {
             showNextButton: true
         },
         {
-            component: this.refAvatar.refButton,
+            component: this.refAvatar.refButton.current,
             text: lang['2'],
             showNextButton: true
         }

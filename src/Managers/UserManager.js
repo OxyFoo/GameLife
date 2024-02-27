@@ -5,6 +5,7 @@ import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
 import Informations from 'Class/Informations';
 import Inventory from 'Class/Inventory';
+import Missions from 'Class/Missions';
 import Multiplayer from 'Class/Multiplayer';
 import Quests from 'Class/Quests';
 import Server from 'Class/Server';
@@ -42,6 +43,7 @@ class UserManager {
         this.experience = new Experience(this);
         this.informations = new Informations(this);
         this.inventory = new Inventory(this);
+        this.missions = new Missions(this);
         this.multiplayer = new Multiplayer(this);
         this.quests = new Quests(this);
         this.server = new Server(this);
@@ -96,6 +98,7 @@ class UserManager {
         this.activities.Clear();
         this.informations.Clear();
         this.inventory.Clear();
+        this.missions.Clear();
         this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
@@ -198,6 +201,7 @@ class UserManager {
             'consent': this.consent.Save(),
             'informations': this.informations.Save(),
             'inventory': this.inventory.Save(),
+            'missions': this.missions.Save(),
             'quests': this.quests.Save(),
             'shop': this.shop.Save(),
             'todoes': this.todoes.Save()
@@ -224,6 +228,7 @@ class UserManager {
             if (contains('consent')) this.consent.Load(data['consent']);
             if (contains('informations')) this.informations.Load(data['informations']);
             if (contains('inventory')) this.inventory.Load(data['inventory']);
+            if (contains('missions')) this.missions.Load(data['missions']);
             if (contains('quests')) this.quests.Load(data['quests']);
             if (contains('shop')) this.shop.Load(data['shop']);
             if (contains('todoes')) this.todoes.Load(data['todoes']);
@@ -261,6 +266,10 @@ class UserManager {
             data['avatar'] = this.inventory.GetUnsaved();
         }
 
+        if (this.missions.IsUnsaved()) {
+            data['missions'] = this.missions.GetUnsaved();
+        }
+
         if (this.informations.IsUnsaved()) {
             if (this.informations.UNSAVED_title !== null) {
                 data['titleID'] = this.informations.UNSAVED_title;
@@ -278,6 +287,8 @@ class UserManager {
                 this.informations.Purge();
                 this.quests.Purge();
                 this.todoes.Purge();
+                this.inventory.Purge();
+                this.missions.Purge();
                 this.interface.console.EditLog(debugIndex, 'same', 'User data: online save success');
                 await this.LocalSave();
             } else {
@@ -306,6 +317,7 @@ class UserManager {
             if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
             if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
             if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
+            if (contains('missions')) this.missions.LoadOnline(data['missions']);
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('quests')) this.quests.LoadOnline(data['quests']);

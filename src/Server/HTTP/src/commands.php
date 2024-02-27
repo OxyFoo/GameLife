@@ -10,6 +10,7 @@ require('./src/classes/account.php');
 require('./src/classes/device.php');
 
 require('./src/managers/items.php');
+require('./src/managers/missions.php');
 require('./src/managers/myquests.php');
 require('./src/managers/nonzerodays.php');
 require('./src/managers/NZD_rewards.php');
@@ -342,6 +343,7 @@ class Commands {
                 'stuffs' => Items::GetInventory($this->db, $account),
                 'titles' => Items::GetInventoryTitles($this->db, $account)
             );
+            $userData['missions'] = Missions::Get($this->db, $account);
             $userData['shop'] = array(
                 'buyToday' => Users::GetBuyToday($this->db, $account)
             );
@@ -457,7 +459,7 @@ class Commands {
         $account = $this->account;
         $device = $this->device;
 
-        $newItem = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
+        $newItem = Shop::BuyRandomChest($this->db, $account, $device->ID, $rarity);
         if ($newItem === false) return;
 
         $this->output['ox'] = $account->Ox;
@@ -597,7 +599,7 @@ class Commands {
             return;
         }
 
-        $newItem = Shop::BuyRandomChest($this->db, $account, $device, $rarity, true, $error);
+        $newItem = Shop::BuyRandomChest($this->db, $account, $device->ID, $rarity, true, $error);
         if ($newItem === false) {
             $this->output['status'] = 'error';
             $this->output['error'] = $error;
@@ -605,6 +607,23 @@ class Commands {
         }
 
         $this->output['newItem'] = $newItem;
+        $this->output['status'] = 'ok';
+    }
+
+    public function claimMission() {
+        $missionName = $this->data['missionName'];
+        if (!isset($missionName) || !$this->tokenChecked) return;
+        $account = $this->account;
+        $device = $this->device;
+
+        $missionReward = Missions::Claim($this->db, $account, $device->ID, $missionName);
+        if ($missionReward === false) {
+            $this->output['status'] = 'error';
+            $this->output['error'] = 'Error while claiming missions';
+            return;
+        }
+
+        $this->output['rewards'] = $missionReward;
         $this->output['status'] = 'ok';
     }
 

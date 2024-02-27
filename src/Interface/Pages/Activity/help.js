@@ -40,7 +40,7 @@ function StartHelp() {
             }
         },
         {
-            component: this.refActivityPanel.refActivitySchedule,
+            component: this.refActivityPanel.refActivitySchedule.current,
             text: lang['4'],
             showNextButton: true,
             execBefore: async () => {

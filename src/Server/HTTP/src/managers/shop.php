@@ -83,12 +83,12 @@ class Shop
      * Buy a random chest
      * @param DataBase $db
      * @param Account $account
-     * @param Device $device
+     * @param int $deviceID
      * @param int $rarity 0 = common, 1 = rare, 2 = epic
      * @param string|false $error Error message if failed
      * @return object|false Return item if success, false otherwise
      */
-    public static function BuyRandomChest($db, $account, $device, $rarity, $isFree = false, &$error = null) {
+    public static function BuyRandomChest($db, $account, $deviceID, $rarity, $isFree = false, &$error = null) {
         $error = false;
         if ($rarity < 0 || $rarity > 3) {
             $error = 'Error: invalid rarity';
@@ -106,7 +106,7 @@ class Shop
 
         // Check if account has enough ox
         if (!$isFree && $account->Ox < $prices[$rarity]) {
-            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$prices[$rarity])");
+            $db->AddLog($account->ID, $deviceID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$prices[$rarity])");
             return false;
         }
 
@@ -158,7 +158,7 @@ class Shop
         $addedItem = $result[0];
 
         // Add result in logs and return new values (item, ox ?)
-        $db->AddLog($account->ID, $device->ID, 'buyRandomChest', "$rarity/$randomRarity/$randomItem[ID]");
+        $db->AddLog($account->ID, $deviceID, 'buyRandomChest', "$rarity/$randomRarity/$randomItem[ID]");
 
         return $addedItem;
     }

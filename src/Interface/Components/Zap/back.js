@@ -1,40 +1,20 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
+import { GetDate } from 'Utils/Time';
+import ZAP_IMAGES from 'Ressources/zap/zap';
+
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {'day' | 'night'} ZapColor
+ * @typedef {'auto' | 'day' | 'night'} ZapColor
  * @typedef {'onTwoLegs' | 'onFourLegs'} ZapInclinaison
  * @typedef {'face' | 'show'} ZapFace
  * @typedef {'left' | 'right'} ZapOrientation
  */
-
-const ZAP_IMAGES = {
-    day: {
-        onTwoLegs: {
-            face: require('Ressources/zap/purple/up.png'),
-            show: require('Ressources/zap/purple/upShow.png')
-        },
-        onFourLegs: {
-            face: require('Ressources/zap/purple/down.png'),
-            show: require('Ressources/zap/purple/downShow.png')
-        }
-    },
-    night: {
-        onTwoLegs: {
-            face: require('Ressources/zap/black/up.png'),
-            show: require('Ressources/zap/black/upShow.png')
-        },
-        onFourLegs: {
-            face: require('Ressources/zap/black/down.png'),
-            show: require('Ressources/zap/black/downShow.png')
-        }
-    }
-};
 
 const ZapProps = {
     /** @type {StyleProp} */
@@ -44,7 +24,7 @@ const ZapProps = {
     position: null,
 
     /** @type {ZapColor} */
-    color: 'day',
+    color: 'auto',
 
     /** @type {ZapInclinaison} */
     inclinaison: 'onTwoLegs',
@@ -67,7 +47,14 @@ class ZapBack extends React.Component {
 
     getZapImage = () => {
         const { color, inclinaison, face } = this.props;
-        return ZAP_IMAGES[color][inclinaison][face];
+
+        let _color = color;
+        if (color === 'auto') {
+            const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
+            _color = isNight ? 'night' : 'day';
+        }
+
+        return ZAP_IMAGES[_color][inclinaison][face];
     }
 }
 

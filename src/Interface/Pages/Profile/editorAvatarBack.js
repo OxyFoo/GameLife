@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -58,7 +58,8 @@ class EditorAvatarBack extends React.Component {
         selling: false
     }
 
-    refButton = null;
+    /** @type {React.RefObject<View>} */
+    refButton = React.createRef();
 
     constructor(props) {
         super(props);

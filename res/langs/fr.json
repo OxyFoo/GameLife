@@ -67,6 +67,57 @@
         }
     },
 
+    "missions": {
+        "text-title": "Missions de découverte",
+        "text-hint": "Appuie pour faire la missions",
+        "text-claim": "Appuie pour claim la récompense",
+
+        "content": {
+            "mission1": {
+                "title": "Faire une activité",
+                "texts": {
+                    "1": "Appuie sur ce bouton pour aller dans la page des activités",
+                    "2": "Commence par choisir une activité (tu peux utiliser les catégories ou la recherche pour trouver ce que tu veux)",
+                    "3": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
+                    "4": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\""
+                }
+            },
+            "mission2": {
+                "title": "Créer une quête",
+                "texts": {
+                    "1": "Appui ici pour aller dans la page des quêtes",
+                    "2": "Appuie sur le bouton + en haut à droite pour créer une nouvelle quête",
+                    "3": "Remplis les informations demandées, comme le titre, les activités à réaliser, la durée etc"
+                }
+            },
+            "mission3": {
+                "title": "Acheter un item",
+                "texts": {
+                    "1": "Commence par aller dans le shop",
+                    "2": "Les Ox sont la monnaie du jeu, tu peux les gagner en regardant des pubs, en faisant des quêtes, des succès etc",
+                    "3": "Ici tu peux les échanger contre ce que tu veux, un item précis (parmis 3 proposés, qui changent tous les jours), ou un coffre pour avoir un item aléatoire"
+                }
+            },
+            "mission4": {
+                "title": "Équipper un item",
+                "texts": {
+                    "1": "Commencer par aller dans ton profil",
+                    "2": "Ici tu peux voir ton avatar, clique dessus pour ouvrir ton inventaire",
+                    "3": "Tu peux équiper un item en appuyant dessus, ou le vendre pour gagner des Ox"
+                }
+            },
+            "mission5": {
+                "title": "Demander en ami",
+                "texts": {
+                    "1": "Dans ce widget tu peux voir tes amis connectés...",
+                    "2": "Clique sur ce bouton pour aller dans la page des amis",
+                    "3": "En bas à droite de cette page tu as un bouton pour ajouter un ami",
+                    "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
+                }
+            }
+        }
+    },
+
     "level": {
         "xp": "XP",
         "level": "Niveau",

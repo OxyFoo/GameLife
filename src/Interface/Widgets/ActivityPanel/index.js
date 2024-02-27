@@ -121,7 +121,11 @@ class ActivityPanel extends ActivityPanelBack {
         };
 
         return (
-            <Animated.View style={viewOpacity} pointerEvents={pointerEvents}>
+            <Animated.View
+                ref={this.refPanelContent}
+                style={viewOpacity}
+                pointerEvents={pointerEvents}
+            >
                 {/* Schedule */}
                 <Text style={styles.tempTitle} bold>
                     {lang['title-schedule']}

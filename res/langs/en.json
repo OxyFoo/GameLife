@@ -67,6 +67,57 @@
         }
     },
 
+    "missions": {
+        "text-title": "Discovery missions",
+        "text-hint": "Press to do the mission",
+        "text-claim": "Press to claim the reward",
+
+        "content": {
+            "mission1": {
+                "title": "Make an activity",
+                "texts": {
+                    "1": "Press this button to go to the activities page",
+                    "2": "Start by choosing an activity (you can use the categories or research to find what you want)",
+                    "3": "You can add an activity that you have already done, noting the time and duration of it ...",
+                    "4": "Or you can launch a timer to start the activity by pressing the \"Start button now \""
+                }
+            },
+            "mission2": {
+                "title": "Create a quest",
+                "texts": {
+                    "1": "Support here to go to the quest page",
+                    "2": "Pressing the + button to create a new quest",
+                    "3": "Fill in the requested information, such as the title, activities to be carried out, duration etc"
+                }
+            },
+            "mission3": {
+                "title": "Buy an item",
+                "texts": {
+                    "1": "Start by going to the shop",
+                    "2": "The Ox are the currency of the game, you can win them by looking at ads, by making quests, successes etc",
+                    "3": "Here you can exchange them for what you want, a specific item (among 3 proposed, which change every day), or a trunk to have a random item"
+                }
+            },
+            "mission4": {
+                "title": "Equip an item",
+                "texts": {
+                    "1": "Start by going to your profile",
+                    "2": "Here you can see your avatar, click on it to open your inventory",
+                    "3": "You can equip an item by pressing on it, or sell it to win ox"
+                }
+            },
+            "mission5": {
+                "title": "Ask for a friend",
+                "texts": {
+                    "1": "In this widget you can see your connected friends ...",
+                    "2": "Click on this button to go to the friends page",
+                    "3": "At the bottom right of this page you have a button to add a friend",
+                    "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
+                }
+            }
+        }
+    },
+
     "level": {
         "xp": "XP",
         "level": "Level",

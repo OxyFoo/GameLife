@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { Animated } from 'react-native';
 
 import StartMission from './mission';
 import user from 'Managers/UserManager';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -15,7 +17,6 @@ const MissionsProps = {
     /** @type {StyleViewProp} */
     style: {},
 
-    
     /** @type {Home | null} */
     refHome: null
 };
@@ -25,7 +26,9 @@ class BackMissions extends React.Component {
         step: 0,
 
         /** @type {MissionsItem} */
-        mission: null
+        mission: null,
+
+        animReward: new Animated.Value(0)
     };
 
     /** @param {typeof MissionsProps} props */
@@ -61,8 +64,22 @@ class BackMissions extends React.Component {
 
         // Claim mission if completed
         if (mission.state === 'completed') {
+            // Start animation
+            TimingAnimation(this.state.animReward, 1, 300).start();
+
+            const timeBefore = Date.now();
             const claimed = await user.missions.ClaimMission(mission.name);
             if (claimed === false) return;
+            const timeAfter = Date.now();
+
+            // Stop animation
+            if (timeAfter - timeBefore < 300) {
+                setTimeout(() => {
+                    TimingAnimation(this.state.animReward, 0, 0).start();
+                }, 300);
+            } else {
+                TimingAnimation(this.state.animReward, 0, 0).start();
+            }
         }
     };
 }

@@ -53,14 +53,16 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 100
     },
+    rewardCard: {
+        width: 48,
+        height: 48,
+        borderRadius: 6,
+        overflow: 'visible'
+    },
     rewardItem: {
         width: 48,
         height: 48,
-        padding: 6,
-        borderRadius: 6,
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'visible'
+        padding: 6
     },
     rewardImage: {
         width: '100%',
@@ -69,8 +71,8 @@ const styles = StyleSheet.create({
     rewardValue: {
         position: 'absolute',
         textAlign: 'right',
-        left: -28,
-        right: -28,
+        left: -12,
+        right: -12,
         bottom: -12
     }
 });

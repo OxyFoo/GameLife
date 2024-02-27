@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, Image, FlatList, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
@@ -32,6 +32,20 @@ class Missions extends BackMissions {
 
         const styleReward = {
             backgroundColor: themeManager.GetColor('main1')
+        };
+        const styleAnimation = {
+            opacity: this.state.animReward.interpolate({
+                inputRange: [0, .5, 1],
+                outputRange: [1, .8, 0]
+            }),
+            transform: [
+                {
+                    scale: this.state.animReward.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1, 2]
+                    })
+                }
+            ]
         };
 
         const backgroundColor = [ '#B839FE', '#8A3DFE' ];
@@ -83,8 +97,10 @@ class Missions extends BackMissions {
                     </View>
 
                     <View style={styles.columnReward}>
-                        <View style={[styles.rewardItem, styleReward]}>
-                            {this.renderReward(stepReward.rewardType, stepReward.rewardValue)}
+                        <View style={[styles.rewardCard, styleReward]}>
+                            <Animated.View style={[styles.rewardItem, styleAnimation]}>
+                                {this.renderReward(stepReward.rewardType, stepReward.rewardValue)}
+                            </Animated.View>
                         </View>
 
                         <Text fontSize={12}>

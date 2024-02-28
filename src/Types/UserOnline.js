@@ -66,6 +66,15 @@ class Friend extends UserOnline {
         /** @type {number} Timestamp of the first activity (in seconds, UTC) */
         firstTime: 0
     };
+
+    stats = {
+        int: 0,
+        for: 0,
+        dex: 0,
+        sta: 0,
+        agi: 0,
+        soc: 0
+    };
 }
 
 export { UserOnline, Friend };

@@ -9,7 +9,7 @@
  * @property {number} int
  * @property {number} soc
  * @property {number} for
- * @property {number} end
+ * @property {number} sta
  * @property {number} agi
  * @property {number} dex
  */

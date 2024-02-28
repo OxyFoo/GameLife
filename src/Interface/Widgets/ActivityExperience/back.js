@@ -10,7 +10,7 @@ import { Round } from 'Utils/Functions';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {{ key: string, name: string, value: number }} Stat
+ * @typedef {{ key: string, value: number }} Stat
  */
 
 const ActivityExperienceProps = {
@@ -77,7 +77,6 @@ class ActivityExperienceBack extends React.Component {
             .filter(stat => skill.Stats[stat] > 0)
             .map(statKey => ({
                 key: statKey,
-                name: langManager.curr['statistics']['names'][statKey],
                 value: Round(skill.Stats[statKey] * (duration / 60), 2)
             }));
 

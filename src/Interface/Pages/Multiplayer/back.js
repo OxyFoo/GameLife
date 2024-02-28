@@ -60,8 +60,8 @@ class BackMultiplayer extends PageBase {
         this.setState({ friends: newFriends, friendsPending: newFriendsPending });
     }
 
-    openClassement = () => {
-        return; // TODO
+    openLeaderboard = () => {
+        user.interface.ChangePage('leaderboard');
     }
 
     addFriendHandle = () => {

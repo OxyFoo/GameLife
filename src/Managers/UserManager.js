@@ -25,7 +25,7 @@ import TCP from 'Class/TCP';
  * @property {XPInfo} int
  * @property {XPInfo} soc
  * @property {XPInfo} for
- * @property {XPInfo} end
+ * @property {XPInfo} sta
  * @property {XPInfo} agi
  * @property {XPInfo} dex
  */
@@ -34,7 +34,7 @@ const DEBUG_DATA = false;
 
 class UserManager {
     constructor() {
-        this.statsKey = [ 'int', 'soc', 'for', 'end', 'agi', 'dex' ];
+        this.statsKey = [ 'int', 'soc', 'for', 'sta', 'agi', 'dex' ];
 
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
@@ -252,6 +252,11 @@ class UserManager {
         if (this.activities.IsUnsaved()) {
             data['activities'] = this.activities.GetUnsaved();
             data['xp'] = this.xp;
+            data['stats'] = Object.fromEntries(
+                Object.entries(this.stats).map(
+                    ([key, value]) => [key, value.totalXP]
+                )
+            );
         }
 
         if (this.quests.IsUnsaved()) {

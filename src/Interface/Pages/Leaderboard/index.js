@@ -2,14 +2,14 @@ import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
 import styles from './style';
-import BackClassement from './back';
+import BackLeaderboard from './back';
 import { RankElement } from './element';
 import langManager from 'Managers/LangManager';
 
 import { Page, Input, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
-class Classement extends BackClassement {
+class Leaderboard extends BackLeaderboard {
     render() {
         const lang = langManager.curr['leaderboard'];
         const { search, sortIndex, playersData } = this.state;
@@ -58,4 +58,4 @@ class Classement extends BackClassement {
     }
 }
 
-export default Classement;
+export default Leaderboard;

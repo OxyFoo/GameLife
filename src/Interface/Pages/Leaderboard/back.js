@@ -8,7 +8,7 @@ import { Round } from 'Utils/Functions';
  * @typedef {Friend & { label: string, rank: number }} RankedFriend
  */
 
-class BackClassement extends PageBase {
+class BackLeaderboard extends PageBase {
     sortList = {
         XP: langManager.curr['statistics']['xp']['small'],
         skills: langManager.curr['leaderboard']['label-activities'],
@@ -142,7 +142,7 @@ class BackClassement extends PageBase {
 
         // Error ?
         else {
-            user.interface.console.AddLog('error', 'Classement sort index unknown:', sortIndex);
+            user.interface.console.AddLog('error', 'Leaderboard sort index unknown:', sortIndex);
         }
 
         // Search filter
@@ -165,4 +165,4 @@ class BackClassement extends PageBase {
     }
 }
 
-export default BackClassement;
+export default BackLeaderboard;

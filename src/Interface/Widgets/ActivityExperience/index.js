@@ -3,6 +3,7 @@ import { FlatList } from 'react-native';
 
 import styles from './style';
 import ActivityExperienceBack from './back';
+import langManager from 'Managers/LangManager';
 
 import { Container, Text } from 'Interface/Components';
 
@@ -36,18 +37,26 @@ class ActivityExperience extends ActivityExperienceBack {
     }
 
     /** @param {{ item: Stat }} param0 */
-    renderExperience = ({ item: { key, name, value } }) => (
-        <Text containerStyle={styles.itemContainer} style={styles.item} fontSize={18}>
-            {'+ ' + value + ' ' + name}
-        </Text>
-    );
+    renderExperience = ({ item: { key, value } }) => {
+        const lang = langManager.curr['statistics']['names'];
+
+        return (
+            <Text containerStyle={styles.itemContainer} style={styles.item} fontSize={18}>
+                {'+ ' + value + ' ' + lang[key]}
+            </Text>
+        );
+    }
 
     /** @param {{ item: Stat }} param0 */
-    renderExperienceCompact = ({ item: { key, name, value } }) => (
-        <Text containerStyle={styles.itemContainerCompact} style={styles.item} fontSize={14}>
-            {'+ ' + value + ' ' + name.slice(0, 3)}
-        </Text>
-    );
+    renderExperienceCompact = ({ item: { key, value } }) => {
+        const lang = langManager.curr['statistics']['names-min'];
+
+        return (
+            <Text containerStyle={styles.itemContainerCompact} style={styles.item} fontSize={14}>
+                {'+ ' + value + ' ' + lang[key]}
+            </Text>
+        );
+    }
 }
 
 export default ActivityExperience;

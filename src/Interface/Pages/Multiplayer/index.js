@@ -33,11 +33,11 @@ class Multiplayer extends BackMultiplayer {
         return (
             <>
                 <Button
-                    style={styles.classementButton}
+                    style={styles.leaderboardButton}
                     color='main1'
                     icon='world'
                     borderRadius={12}
-                    onPress={this.openClassement}
+                    onPress={this.openLeaderboard}
                 />
                 {friends.length + friendsPending.length < FRIENDS_LIMIT && (
                     <Button
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginHorizontal: -24
     },
-    classementButton: {
+    leaderboardButton: {
         aspectRatio: 1,
         position: 'absolute',
         left: 24,

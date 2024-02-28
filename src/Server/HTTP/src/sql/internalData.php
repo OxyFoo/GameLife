@@ -145,7 +145,7 @@ function GetSkills($db) {
                 'int' => intval($Intelligence),
                 'soc' => intval($Social),
                 'for' => intval($Strength),
-                'end' => intval($Stamina),
+                'sta' => intval($Stamina),
                 'agi' => intval($Agility),
                 'dex' => intval($Dexterity)
             );

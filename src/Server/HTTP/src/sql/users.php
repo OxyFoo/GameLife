@@ -17,6 +17,7 @@ class Users
         $quests = $data['quests'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
+        $stats = $data['stats'];
         $titleID = $data['titleID'];
         $birthTime = $data['birthTime'];
 
@@ -37,6 +38,9 @@ class Users
         }
         if (isset($xp)) {
             self::setXP($db, $account->ID, $xp);
+        }
+        if (isset($stats)) {
+            self::setStats($db, $account, $stats);
         }
         if (isset($titleID)) {
             self::setTitle($db, $account, $titleID);
@@ -280,6 +284,19 @@ class Users
         $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $xp, $accountID ]);
         if ($result === false) {
             ExitWithStatus('Error: Saving XP failed');
+        }
+    }
+
+    /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param object $stats
+     */
+    private static function setStats($db, $account, $stats) {
+        $command = 'UPDATE TABLE SET `Stats` = ? WHERE `ID` = ?';
+        $result = $db->QueryPrepare('Accounts', $command, 'si', [ json_encode($stats), $account->ID ]);
+        if ($result === false) {
+            ExitWithStatus('Error: Saving stats failed');
         }
     }
 

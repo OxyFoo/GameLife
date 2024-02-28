@@ -301,15 +301,8 @@
     },
 
     "leaderboard": {
-        "page-title": "Leaderboard",
-
-        "button-global-text": "Global",
-        "button-week-text": "Week",
-
-        "alert-onlineneed-title": "Connection required",
-        "alert-onlineneed-text": "A connection is required to access the ranking!",
-        "alert-connectneed-title": "Log in",
-        "alert-connectneed-text": "To appear in the ranking, log in by entering your email address in the 'Identity' page."
+        "label-activities": "Activities",
+        "input-label-search": "Search for a player"
     },
 
     "login": {
@@ -643,15 +636,23 @@
             "int": "Intelligence",
             "soc": "Social",
             "for": "Strength",
-            "end": "Stamina",
+            "sta": "Stamina",
             "agi": "Agility",
             "dex": "Dexterity"
+        },
+        "names-min": {
+            "int": "Int",
+            "soc": "Soc",
+            "for": "Str",
+            "sta": "Sta",
+            "agi": "Agi",
+            "dex": "Dex"
         },
         "descriptions": {
             "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
             "soc": "Social competence is a skill that increases when you do activities with other people. For example, team sports or going out with friends.",
             "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
-            "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
+            "sta": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
             "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision quests, writing quests on a computer or even with musical instruments."
         }

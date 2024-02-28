@@ -75,8 +75,8 @@ function UserOnlineElement({ friend }) {
     return (
         <Button style={styles.friend} onPress={onPress}>
             <View style={styles.friendInfo}>
-                {character !== null && (
-                    <View style={[styles.frameBorder, statusStyle]}>
+                <View style={[styles.frameBorder, statusStyle]}>
+                    {character !== null && (
                         <Frame
                             style={styles.frame}
                             characters={[ character ]}
@@ -85,8 +85,8 @@ function UserOnlineElement({ friend }) {
                             loadingTime={0}
                             bodyView={'topHalf'}
                         />
-                    </View>
-                )}
+                    )}
+                </View>
 
                 <View style={styles.friendInfoTitle}>
                     <Text fontSize={20}>{friend.username}</Text>

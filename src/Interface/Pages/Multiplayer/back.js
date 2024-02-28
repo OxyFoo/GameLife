@@ -50,7 +50,7 @@ class BackMultiplayer extends PageBase {
     }
 
     openClassement = () => {
-        return; // TODO
+        user.interface.ChangePage('classement');
     }
 
     addFriendHandle = () => {

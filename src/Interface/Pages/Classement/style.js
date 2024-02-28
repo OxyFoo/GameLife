@@ -1,33 +1,24 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
+    // Index styles
+    header: {
+        marginBottom: 12
+    },
+    row: {
+        marginBottom: 24,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
 
-    myCharacterContainer: {
+    myRankContainer: {
         marginTop: 24
     },
     filter: {
         marginTop: 24,
         marginBottom: 0
-    },
-    rankingList: {
-        marginTop: 24
-
-    },
-
-
-    itemContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        marginBottom: 2,
-        borderRadius: 10,
-    },
-
-
-    row: {
-        marginBottom: 24,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
     },
     inputSearch: {
         flex: 2,
@@ -38,53 +29,78 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12
     },
 
+    rankingList: {
+        marginTop: 24
+    },
+    flatlist: {
+        height: SCREEN_HEIGHT - 350
+    },
 
+    // Element styles
+    itemContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 'auto',
+        padding: 10,
+        paddingHorizontal: 10,
+        marginBottom: 2,
+        borderRadius: 10
+    },
     avatar: {
         width: 50,
         height: 50,
-        borderRadius: 25, 
+        borderRadius: 25
+    },
+    frame: {
+        paddingVertical: 0,
+        paddingHorizontal: 0
+    },
+    frameBorder: {
+        width: 48,
+        height: 48,
+        aspectRatio: 1,
+        borderRadius: 4,
+        borderWidth: 2,
+        borderColor: '#00000050'
     },
     textContainer: {
         flex: 1,
-        marginLeft: 10,
+        marginLeft: 10
     },
     username: {
         fontWeight: 'bold',
-        textAlign: 'left',
+        textAlign: 'left'
     },
     details: {
-        textAlign: 'left',
+        textAlign: 'left'
     },
-
 
     rankContainer: {
-        position: 'relative',
+        width: 56,
+        height: 56,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     rankImage: {
-        width: 60,
-        height: 60,
-    },
-    rankText: { 
-        // je suis pas sûr que la méthode de placement soit vraiment bien, surtout pour le responsive
-        // UPDATE : C'est vraiment trop chiant mais je sais pas comment faire autrement
-        fontSize: 30,
         position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: [
-            { translateX: -7.5 },
-            { translateY: -55 },
-        ],
-        color: 'purple',
+        margin: 1,
+        top: 0,
+        left: 0,
+        width: 54,
+        height: 54
+    },
+    rankText: {
+        marginBottom: 14,
         fontWeight: 'bold',
         textAlign: 'center',
 
         textShadowColor: '#FFFFFF',
-        textShadowOffset: { width: 0, height: 0 }, 
-        textShadowRadius: 3, 
-    },
-
-    
+        textShadowOffset: {
+            width: 0,
+            height: 0
+        },
+        textShadowRadius: 3
+    }
 });
 
 export default styles;

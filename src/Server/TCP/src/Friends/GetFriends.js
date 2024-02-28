@@ -1,4 +1,5 @@
 import { AddLog } from '../Utils/Logs.js';
+import { StrIsJson } from '../Utils/Functions.js';
 import { GetCurrentActivity } from '../Utils/CurrentActivities.js';
 
 /**
@@ -19,7 +20,7 @@ async function GetUserFriends(users, user) {
     const command = `
         SELECT 
             f.AccountID, f.TargetID, f.State,
-            a.Username, a.Title, a.XP,
+            a.Username, a.Title, a.XP, a.Stats,
             av.Sexe, av.Skin, av.SkinColor,
             hair.ItemID AS HairItemID,
             top.ItemID AS TopItemID,
@@ -44,6 +45,13 @@ async function GetUserFriends(users, user) {
     const friends = friendships.map(/** @return {Friend} */ row => {
         const accountID = row.AccountID === userID ? row.TargetID : row.AccountID;
         const friendInAllUsersIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
+        const stats = { agi: 0, dex: 0, for: 0, int: 0, soc: 0, sta: 0 };
+        if (row.Stats !== null && StrIsJson(row.Stats)) {
+            const parsedStats = JSON.parse(row.Stats);
+            for (const key in parsedStats) {
+                stats[key] = parsedStats[key];
+            }
+        }
 
         return ({
             status: friendInAllUsersIndex !== -1 ? 'online' : 'offline',
@@ -51,6 +59,9 @@ async function GetUserFriends(users, user) {
             username: row.Username,
             title: row.Title,
             xp: row.XP,
+            stats: stats,
+            friendshipState: row.State,
+
             avatar: {
                 Sexe: row.Sexe,
                 Skin: row.Skin,
@@ -60,7 +71,6 @@ async function GetUserFriends(users, user) {
                 Bottom: row.BottomItemID,
                 Shoes: row.ShoesItemID,
             },
-            friendshipState: row.State,
             activities: {
                 firstTime: 0,
                 length: 0,
@@ -137,6 +147,7 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
             a.\`Username\`,
             a.\`Title\`,
             a.\`XP\`,
+            av.\`Stats\`,
             av.\`Sexe\`,
             av.\`Skin\`,
             av.\`SkinColor\`,
@@ -168,6 +179,14 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
         friendStatus = 'online';
     }
 
+    const stats = { agi: 0, dex: 0, for: 0, int: 0, soc: 0, sta: 0 };
+    if (friendInfo[0]['Stats'] !== null && StrIsJson(friendInfo[0]['Stats'])) {
+        const parsedStats = JSON.parse(friendInfo[0]['Stats']);
+        for (const key in parsedStats) {
+            stats[key] = parsedStats[key];
+        }
+    }
+
     /** @type {Friend} */
     const newFriend = {
         status: friendStatus,
@@ -175,6 +194,9 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
         username: friendInfo[0]['Username'],
         title: friendInfo[0]['Title'],
         xp: friendInfo[0]['XP'],
+        stats: stats,
+        friendshipState: friendshipsState,
+
         avatar: {
             Sexe: friendInfo[0]['Sexe'],
             Skin: friendInfo[0]['Skin'],
@@ -184,7 +206,6 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
             Bottom: friendInfo[0]['BottomItemID'],
             Shoes: friendInfo[0]['ShoesItemID'],
         },
-        friendshipState: friendshipsState,
         activities: {
             firstTime: 0,
             length: 0,

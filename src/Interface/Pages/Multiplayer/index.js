@@ -32,7 +32,6 @@ class Multiplayer extends BackMultiplayer {
 
         return (
             <>
-                {/*
                 <Button
                     style={styles.classementButton}
                     color='main1'
@@ -40,7 +39,6 @@ class Multiplayer extends BackMultiplayer {
                     borderRadius={12}
                     onPress={this.openClassement}
                 />
-                */}
                 {friends.length + friendsPending.length < FRIENDS_LIMIT && (
                     <Button
                         style={styles.addFriendButton}

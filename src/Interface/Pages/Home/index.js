@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Swiper, Text, XPBar, Page } from 'Interface/Components';
-import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel } from 'Interface/Widgets';
+import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -42,6 +42,11 @@ class Home extends BackHome {
                     maxValue={xpInfo.next}
                 />
 
+                <Missions
+                    style={styles.topSpace}
+                    refHome={this}
+                />
+
                 <Swiper
                     style={styles.topSpace}
                     pages={News()}
@@ -67,7 +72,11 @@ class Home extends BackHome {
                     </View>
                 </View>
 
-                <MultiplayerPanel style={styles.topSpace} hideWhenOffline />
+                <MultiplayerPanel
+                    ref={this.refMultiplayerPanel}
+                    style={styles.topSpace}
+                    hideWhenOffline
+                />
 
             </Page>
         );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated } from 'react-native';
+import { View, Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -75,6 +75,9 @@ class ActivityPanelBack extends React.Component {
 
     /** @type {PanelScreen} */
     refPanelScreen = null;
+
+    /** @type {React.RefObject<View>} */
+    refPanelContent = React.createRef();
 
     /** @type {React.RefObject<ActivitySchedule>} */
     refActivitySchedule = React.createRef();

@@ -1,8 +1,12 @@
+import React from 'react';
+
 import { PageBase } from 'Interface/Components';
+import StartTutorial from './tuto';
 import user from 'Managers/UserManager';
 
-import StartTutorial from './tuto';
+import { MultiplayerPanel } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
+import StartMission from './mission';
 
 class BackHome extends PageBase {
     state = {
@@ -12,6 +16,9 @@ class BackHome extends PageBase {
             next_level: '0'
         }
     }
+
+    /** @type {React.RefObject<MultiplayerPanel>} */
+    refMultiplayerPanel = React.createRef();
 
     componentDidMount() {
         super.componentDidMount();
@@ -37,6 +44,8 @@ class BackHome extends PageBase {
 
         this.setState({ experience, values: { current_level, next_level } });
     }
+
+    StartMission = StartMission.bind(this);
 
     addActivity = () => user.interface.ChangePage('activity', undefined, true);
     openSkills = () => user.interface.ChangePage('skills');

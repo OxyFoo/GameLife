@@ -105,7 +105,11 @@ function AddActivity(activity) {
     });
 
     if (addState === 'added') {
+        // Update notifications
         Notifications.Evening.RemoveToday();
+
+        // Update missions
+        user.missions.SetMissionState('mission1', 'completed');
 
         const text = lang['display-activity-text'];
         const button = lang['display-activity-button'];

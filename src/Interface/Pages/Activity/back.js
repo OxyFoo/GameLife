@@ -2,6 +2,7 @@ import * as React from 'react';
 import { FlatList } from 'react-native';
 
 import StartTutorial from './tuto';
+import StartMission from './mission';
 import { GetRecentSkills, CategoryToItem, SkillToItem } from './types';
 
 import user from 'Managers/UserManager';
@@ -110,6 +111,7 @@ class BackActivity extends PageBase {
 
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);
+        StartMission.call(this, args?.missionName);
     }
 
     async componentDidMount() {
@@ -262,6 +264,7 @@ class BackActivity extends PageBase {
      * @param {Skill} skill
      */
     selectSkill = (skill) => {
+        StartMission.call(this, this.props.args?.missionName, true);
         this.refActivityPanel.SelectSkill(skill);
     }
 

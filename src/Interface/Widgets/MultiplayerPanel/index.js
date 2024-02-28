@@ -40,6 +40,7 @@ class MultiplayerPanel extends BackMultiplayerPanel {
 
         return (
             <Container
+                ref={this.refContainer}
                 style={this.props.style}
                 styleContainer={styles.container}
                 type='static'

@@ -43,6 +43,7 @@ class Multiplayer extends BackMultiplayer {
                 */}
                 {friends.length + friendsPending.length < FRIENDS_LIMIT && (
                     <Button
+                        ref={this.refAddButton}
                         style={styles.addFriendButton}
                         color='main2'
                         icon='userAdd'

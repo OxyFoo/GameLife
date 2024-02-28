@@ -319,7 +319,7 @@ class EditorAvatarRender extends EditorAvatarBack {
         return (
             <>
                 {/* Character */}
-                <Animated.View ref={ref => this.refButton = ref} style={characterStyle} onLayout={this.onCharacterLayout}>
+                <Animated.View ref={this.refButton} style={characterStyle} onLayout={this.onCharacterLayout}>
                     <Animated.View style={[styles.columnSide, columnOpacity]}>
                         {this.renderButtonItem('hair')}
                         {this.renderButtonItem('top')}

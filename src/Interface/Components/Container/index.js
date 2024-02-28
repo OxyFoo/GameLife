@@ -57,6 +57,7 @@ class Container extends ContainerBack {
                 </Text>
                 {icon !== null && (
                     <Icon
+                        ref={this.refIcon}
                         containerStyle={styles.iconStaticHeader}
                         icon={icon}
                         size={iconSize}

@@ -2,14 +2,12 @@ import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 
-import { GetDate } from 'Utils/Time';
 import { GetAbsolutePosition } from 'Utils/UI';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Interface/Components/Zap/back').ZapColor} ZapColor
- * @typedef {import('Interface/Components/Zap/back').ZapInclinaison} ZapInclinaison
  * @typedef {import('Interface/Components/Zap/back').ZapFace} ZapFace
+ * @typedef {import('Interface/Components/Zap/back').ZapInclinaison} ZapInclinaison
  * @typedef {import('Interface/Components/Zap/back').ZapOrientation} ZapOrientation
  */
 
@@ -120,10 +118,7 @@ async function UpdatePositions() {
     // Zap states
     const isTop = quarterIndex === 0 || quarterIndex === 2;
     const isRight = targetPosition.x >= user.interface.screenWidth / 2 || inline;
-    const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
 
-    /** @type {ZapColor} */
-    const color = isNight ? 'night' : 'day';
     /** @type {ZapInclinaison} */
     const inclinaison = isTop ? 'onTwoLegs' : 'onFourLegs';
     /** @type {ZapFace} */
@@ -135,7 +130,6 @@ async function UpdatePositions() {
         this.setState({
             zap: {
                 ...this.state.zap,
-                color: color,
                 inclinaison: inclinaison,
                 face: face,
                 orientation: orientation

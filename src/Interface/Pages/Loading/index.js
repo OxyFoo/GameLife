@@ -8,7 +8,6 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Page, GLLoading, Button, Text, Icon, Zap } from 'Interface/Components';
-import { GetDate } from 'Utils/Time';
 
 class Loading extends BackLoading {
     render() {
@@ -42,7 +41,6 @@ class Loading extends BackLoading {
 
     renderTestCautionMessage() {
         const lang = langManager.curr['onboarding'];
-        const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
         const smallScreen = user.interface.screenHeight < 600;
         const textSize = smallScreen ? 18 : 22;
         const buttonPosY = {
@@ -60,7 +58,8 @@ class Loading extends BackLoading {
                     {lang['test-caution-redirect']}
                 </Text>
 
-                <Zap style={styles.zapTest} color={isNight ? 'night' : 'day'} />
+                <Zap style={styles.zapTest} />
+
                 <Button
                     style={styles.buttonTest}
                     styleAnimation={buttonPosY}

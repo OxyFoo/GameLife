@@ -11,7 +11,6 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {import('Interface/Components/Zap/back').ZapColor} ZapColor
  * @typedef {import('Interface/Components/Zap/back').ZapInclinaison} ZapInclinaison
  * @typedef {import('Interface/Components/Zap/back').ZapFace} ZapFace
  * @typedef {import('Interface/Components/Zap/back').ZapOrientation} ZapOrientation
@@ -59,9 +58,6 @@ class ScreenTutoBack extends React.Component {
         zap: {
             position: new Animated.ValueXY({ x: 0, y: 0 }),
             inline: false,
-
-            /** @type {ZapColor} */
-            color: 'day',
 
             /** @type {ZapInclinaison} */
             inclinaison: 'onFourLegs',

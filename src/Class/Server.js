@@ -9,11 +9,13 @@ import { GetDeviceInformations } from 'Utils/Device';
 const { versionName } = require('../../package.json');
 
 /**
+ * @typedef {import('Managers/LangManager').Lang} Lang
+ * 
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNonZeroDays'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNonZeroDays'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 
@@ -251,6 +253,26 @@ class Server {
     async ClaimAchievement(achievementID) {
         const _data = { achievementID };
         const response = await this.Request('claimAchievement', _data);
+        if (response === null) return false;
+
+        const status = response['status'];
+        if (status !== 'ok') return false;
+
+        if (!response.hasOwnProperty('rewards')) {
+            return false;
+        }
+
+        return response['rewards'];
+    }
+
+    /**
+     * Send achievements unsaved on server (don't reload dataToken or inventory)
+     * @param {keyof Lang['missions']['content']} missionName Data to add to server
+     * @returns {Promise<string | false>} Return rewards string or false if failed
+     */
+    async ClaimMission(missionName) {
+        const _data = { missionName };
+        const response = await this.Request('claimMission', _data);
         if (response === null) return false;
 
         const status = response['status'];

@@ -15,6 +15,7 @@ class Users
         $activities = $data['activities'];
         $todoes = $data['todoes'];
         $quests = $data['quests'];
+        $missions = $data['missions'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
         $titleID = $data['titleID'];
@@ -31,6 +32,9 @@ class Users
         }
         if (isset($quests) && isset($quests['nonzerodays'])) {
             NonZeroDays::Save($db, $account, $quests['nonzerodays']);
+        }
+        if (isset($missions)) {
+            Missions::Set($db, $account, $deviceID, $missions);
         }
         if (isset($avatar)) {
             self::SetAvatar($db, $account, $avatar);

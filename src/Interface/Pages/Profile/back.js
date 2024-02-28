@@ -1,4 +1,5 @@
 import StartTutorial from './tuto';
+import StartMission from './mission';
 
 import user from 'Managers/UserManager';
 
@@ -58,6 +59,7 @@ class BackProfile extends PageBase {
         this.refAvatar.refFrame.forceUpdate();
 
         StartTutorial.call(this, args?.tuto);
+        StartMission.call(this, args?.missionName);
     }
 
     componentWillUnmount() {

@@ -213,7 +213,7 @@ class NonZeroDays
                     $account->Ox += $value;
                     break;
                 case 'chest':
-                    $chestItem = Shop::BuyRandomChest($db, $account, $device, $value, true, $errorBuyRandomChest);
+                    $chestItem = Shop::BuyRandomChest($db, $account, $device->ID, $value, true, $errorBuyRandomChest);
                     if ($chestItem === false || $errorBuyRandomChest !== false) {
                         $error = "Error: claiming nzd failed (buy chest $value) => $errorBuyRandomChest";
                         return false;

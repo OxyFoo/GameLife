@@ -26,6 +26,7 @@ class SkillsGroupBack extends React.Component {
         this.state.skills = user.activities.GetLastSkills(4);
         if (this.state.skills.length >= 4) {
             this.state.skills[3] = null;
+            this.state.skills.length = 4;
         }
     }
 
@@ -34,6 +35,7 @@ class SkillsGroupBack extends React.Component {
             const skills = user.activities.GetLastSkills(4);
             if (skills.length >= 4) {
                 skills[3] = null;
+                skills.length = 4;
             }
             this.setState({ skills });
         });

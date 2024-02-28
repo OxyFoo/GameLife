@@ -350,6 +350,7 @@
 
         "container-stats-title": "Stats",
         "container-skills-title": "Skills",
+        "container-skills-empty": "No skills yet, do one and it will appear here !",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",

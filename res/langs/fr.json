@@ -350,6 +350,7 @@
 
         "container-stats-title": "Stats",
         "container-skills-title": "Compétences",
+        "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",

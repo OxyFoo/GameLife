@@ -89,7 +89,6 @@ class Missions {
 
         for (let i = 0; i < names.length; i++) {
             const missionName = names[i];
-
             const missionItem = missions.find(item => item.name === missionName);
 
             // If mission is found, return it
@@ -114,7 +113,7 @@ class Missions {
 
             return {
                 mission: missions[missions.length - 1],
-                index: missions.length - 1
+                index: i
             };
         }
 
@@ -129,11 +128,20 @@ class Missions {
      * @param {MissionsItem['state']} state
      */
     SetMissionState = (name, state) => {
+        if (MISSIONS.findIndex(mission => mission.name === name) === -1) {
+            this.user.interface.console.AddLog('error', `Mission ${name} not found`);
+            return;
+        }
+
         const missions = this.missions.Get();
 
         const mission = missions.find(mission => mission.name === name);
         if (!mission) {
-            this.user.interface.console.AddLog('error', `Mission ${name} not found`);
+            if (state === 'pending' || state === 'completed') {
+                missions.push({ name, state });
+                this.missions.Set(missions);
+                this.missionsEdited = true;
+            }
             return;
         }
 

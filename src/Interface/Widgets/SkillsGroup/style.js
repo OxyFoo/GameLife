@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        justifyContent: 'center',
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     flatlist: {
-        width: '100%',
+        width: '100%'
     },
     skill: {
         width: '50%',

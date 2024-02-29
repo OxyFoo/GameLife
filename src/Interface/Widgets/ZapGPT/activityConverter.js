@@ -47,7 +47,8 @@ function CheckZapGPTActivities(activities) {
 
         return newActivity;
     })
-    .filter(activity => activity !== null);
+    .filter(activity => activity !== null)
+    .slice(0, 10);
 }
 
 export { CheckZapGPTActivities };

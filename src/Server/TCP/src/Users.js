@@ -47,6 +47,15 @@ class Users {
 
         this.db = database;
         this.gpt = new GPT();
+
+        // Get skills list
+        this.skillsName = null;
+        this.db.ExecQuery('SELECT `ID`, `Name` FROM `Skills`')
+            .then((rows) => {
+                this.skillsName = rows
+                    .map(row => `${row.ID}:${JSON.parse(row.Name)?.en}`)
+                    .join('|');
+        });
     }
 
     /**
@@ -175,7 +184,7 @@ class Users {
                 break;
 
             case 'zap-gpt':
-                result = await this.gpt.PromptToActivities(data.prompt, (error) => {
+                result = await this.gpt.PromptToActivities(data.prompt, this.skillsName, (error) => {
                     AddLog(this, user, 'error', error);
                 });
                 const newlog = { prompt: data.prompt, response: result };

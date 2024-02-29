@@ -12,11 +12,12 @@ class GPT {
 
     /**
      * @param {string} prompt
+     * @param {string} skillsName
      * @param {(error: string) => void} callbackError
      * @returns {Promise<string | null>}
      */
-    PromptToActivities = async (prompt, callbackError) => {
-        const response = await this.AskGPT(prompt)
+    PromptToActivities = async (prompt, skillsName, callbackError) => {
+        const response = await this.AskGPT(prompt, skillsName)
         .catch((error) => {
             callbackError(error.message);
             return null;
@@ -32,11 +33,14 @@ class GPT {
     /**
      * @private
      * @param {string} message
+     * @param {string} skillsName
      * @returns {Promise<string | null>}
      */
-    AskGPT = async (message) => {
+    AskGPT = async (message, skillsName) => {
         const today = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        const prompt = SYSTEM_PROMPT.replace('{today}', today);
+        const prompt = SYSTEM_PROMPT
+            .replace('{today}', today)
+            .replace('{skills}', skillsName);
 
         const response = await this.openai.chat.completions.create({
             model: 'gpt-3.5-turbo',

@@ -318,6 +318,7 @@
         "display-fail-button": "Back home",
 
         "activity-zap-comment": "Added by Zap",
+        "activity-zap-hint": "I can quickly add several activities at the same time",
 
         "tuto": {
             "1": "You can filter activities by category: {}",
@@ -943,7 +944,7 @@
         "instructions": [
             "- Descriptions as clear and simple as possible",
             "- Be clear about the activities, their start dates and times, and their duration.",
-            "- Avoid asking for too many things at once (recommended 5, max 10)"
+            "- Example: I did basketball Monday, Wednesday and Friday from 6 p.m. to 8 p.m."
         ],
 
         "input-label": "Request to Zap",

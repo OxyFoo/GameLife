@@ -6,11 +6,35 @@ import InputBack from './back';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').ImageProps} ImageProps
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {Animated.WithAnimatedObject<import('react-native').ImageStyle>} StyleAnimProp
+ * @typedef {import('./back').ZapOrientation} ZapOrientation
+ * 
+ * @typedef {Omit<ImageProps & { orientation?: ZapOrientation }, 'source'>} ZapHighProps
  */
 
 class Zap extends InputBack {
+    /** @param {ZapHighProps} props */
+    static High = (props) => {
+        /** @type {ZapOrientation} */
+        const orientation = props.orientation || 'right';
+
+        const zapStyle = {
+            transform: [
+                { scaleX: orientation === 'left' ? -1 : 1 }
+            ]
+        };
+
+        return (
+            <Animated.Image
+                style={[styles.zap, zapStyle]}
+                source={this.getHighZapImage()}
+                {...props}
+            />
+        );
+    }
+
     render() {
         const { position, orientation } = this.props;
 

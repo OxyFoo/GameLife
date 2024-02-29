@@ -53,8 +53,12 @@ class TodoList extends BackTodoList {
 
         return (
             <>
-                <Text style={styles.emptyText}>{lang['todoes-empty-title']}</Text>
-                <Button onPress={this.addTodo} color='main1'>{lang['todoes-empty-button']}</Button>
+                <Text style={styles.emptyText}>
+                    {lang['todoes-empty-title']}
+                </Text>
+                <Button style={styles.emptyButton} onPress={this.addTodo} color='main1' colorNextGen>
+                    {lang['todoes-empty-button']}
+                </Button>
             </>
         );
     }

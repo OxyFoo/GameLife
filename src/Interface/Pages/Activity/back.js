@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList } from 'react-native';
+import { Animated, FlatList } from 'react-native';
 
 import StartTutorial from './tuto';
 import StartMission from './mission';
@@ -14,6 +14,7 @@ import { ZapGPT } from 'Interface/Widgets';
 import { Sleep } from 'Utils/Functions';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -42,7 +43,9 @@ class BackActivity extends PageBase {
         skillSearch: '',
 
         /** @type {string} Header of input - Name of category */
-        inputText: ''
+        inputText: '',
+
+        animZapGPT: new Animated.Value(0)
     }
 
     refTuto1 = null;
@@ -107,6 +110,13 @@ class BackActivity extends PageBase {
             ...this.state,
             ...this.refreshSkills(this.state.skillSearch, this.state.selectedCategory, false)
         };
+
+        // Show ZapGPT Message
+        if (user.settings.zapGPTMessageReaded === false) {
+            this.timeout = setTimeout(() => {
+                SpringAnimation(this.state.animZapGPT, 1).start();
+            }, 2000);
+        }
     }
 
     componentDidFocused = (args) => {
@@ -182,6 +192,10 @@ class BackActivity extends PageBase {
 
             this.refActivityPanel.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeout);
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -271,6 +285,13 @@ class BackActivity extends PageBase {
     PromptZapGPT = () => {
         if (user.tcp.IsConnected() === false) {
             return;
+        }
+
+        if (user.settings.zapGPTMessageReaded === false) {
+            clearTimeout(this.timeout);
+            SpringAnimation(this.state.animZapGPT, 0).start();
+            user.settings.zapGPTMessageReaded = true;
+            user.LocalSave();
         }
 
         user.interface.popup.Open('custom', () => <ZapGPT />, undefined, false);

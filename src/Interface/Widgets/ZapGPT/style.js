@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
     },
     texts: {
         marginBottom: 18,
-        paddingHorizontal: 12
+        paddingLeft: 24,
+        paddingRight: 12
     },
     text: {
         marginBottom: 6,

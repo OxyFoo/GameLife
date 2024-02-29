@@ -318,6 +318,7 @@
         "display-fail-button": "Retour vers l'accueil",
 
         "activity-zap-comment": "Ajouté par Zap",
+        "activity-zap-hint": "Je peux rapidement ajouter plusieurs activités à la fois",
 
         "tuto": {
             "1": "Tu peux filtrer les activités par catégorie: {}",
@@ -943,7 +944,7 @@
         "instructions": [
             "- Descriptions le plus clair et simple possible",
             "- Bien préciser les activitiés, leurs dates et heures de commencements et leurs durées",
-            "- Éviter de demander trop de choses d'un coup (conseillé 5, max 10)"
+            "- Exemple: J'ai fais du basket lundi, mercredi et vendredi de 18h à 20h"
         ],
 
         "input-label": "Requête à Zap",

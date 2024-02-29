@@ -29,9 +29,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12
     },
 
-    rankingList: {
-        marginTop: 24
-    },
     flatlist: {
         height: SCREEN_HEIGHT - 350
     },

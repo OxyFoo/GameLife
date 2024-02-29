@@ -77,9 +77,10 @@
                 "title": "Make an activity",
                 "texts": {
                     "1": "Press this button to go to the activities page",
-                    "2": "Start by choosing an activity (you can use the categories or research to find what you want)",
-                    "3": "You can add an activity that you have already done, noting the time and duration of it ...",
-                    "4": "Or you can launch a timer to start the activity by pressing the \"Start button now \""
+                    "2": "Here you are on the page of adding activity, you have to enter activities that you have done in real life!",
+                    "3": "Start by choosing an activity (you can use the categories or research to find what you want)",
+                    "4": "You can add an activity that you have already done, noting the time and duration of it ...",
+                    "5": "Or you can launch a timer to start the activity by pressing the \"Start button now \""
                 }
             },
             "mission2": {

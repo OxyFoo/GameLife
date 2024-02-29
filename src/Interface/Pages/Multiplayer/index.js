@@ -35,7 +35,7 @@ class Multiplayer extends BackMultiplayer {
                 <Button
                     style={styles.leaderboardButton}
                     color='main1'
-                    icon='world'
+                    icon='leaderboard'
                     borderRadius={12}
                     onPress={this.openLeaderboard}
                 />

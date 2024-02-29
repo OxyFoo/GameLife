@@ -15,6 +15,10 @@ function StartMission(missionName, nextStep = false) {
             {
                 component: null,
                 text: lang['texts']['2']
+            },
+            {
+                component: null,
+                text: lang['texts']['3']
             }
         ]);
     }
@@ -25,7 +29,7 @@ function StartMission(missionName, nextStep = false) {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: this.refActivityPanel.refPanelContent.current,
-                text: lang['texts']['3'],
+                text: lang['texts']['4'],
                 showNextButton: true,
                 execBefore: async () => {
                     await Sleep(300);
@@ -33,7 +37,7 @@ function StartMission(missionName, nextStep = false) {
             },
             {
                 component: this.refActivityPanel.refHelp1,
-                text: lang['texts']['4'],
+                text: lang['texts']['5'],
                 showNextButton: true
             }
         ]);

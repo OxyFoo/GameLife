@@ -404,15 +404,6 @@ class Server {
 
         return response.content;
     }
-
-    GetLeaderboard(week = false) {
-        let data = {
-            'action': 'getLeaderboard',
-            'token': this.token
-        }
-        if (week) data['time'] = 'week';
-        return Request_Async(data);
-    }
 }
 
 export default Server;

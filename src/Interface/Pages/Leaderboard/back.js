@@ -22,6 +22,9 @@ class BackLeaderboard extends PageBase {
     globalPlayersData = [];
 
     state = {
+        /** @type {RankedFriend} */
+        selfData: null,
+
         /** @type {Array<RankedFriend>} */
         playersData: [],
         search: '',
@@ -81,6 +84,7 @@ class BackLeaderboard extends PageBase {
         this.globalPlayersData.push(playerData);
         this.globalPlayersData.push(...friendsData);
 
+        this.state.selfData = playerData;
         this.state.playersData = this.refreshRanking(false).playersData;
     }
 

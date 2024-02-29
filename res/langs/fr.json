@@ -69,17 +69,18 @@
 
     "missions": {
         "text-title": "Missions de découverte",
-        "text-hint": "Appuie pour faire la missions",
-        "text-claim": "Appuie pour claim la récompense",
+        "text-hint": "Appuie pour faire la mission",
+        "text-claim": "Appuie pour obtenir la récompense",
 
         "content": {
             "mission1": {
                 "title": "Faire une activité",
                 "texts": {
                     "1": "Appuie sur ce bouton pour aller dans la page des activités",
-                    "2": "Commence par choisir une activité (tu peux utiliser les catégories ou la recherche pour trouver ce que tu veux)",
-                    "3": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
-                    "4": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\""
+                    "2": "Ici tu es dans la page d'ajout d'activité, tu dois entrer des activités que tu as faites dans la vie réelle !",
+                    "3": "Commence par choisir une activité (tu peux utiliser les catégories ou la recherche pour trouver ce que tu veux)",
+                    "4": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
+                    "5": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\""
                 }
             },
             "mission2": {

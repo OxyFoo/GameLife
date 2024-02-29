@@ -94,10 +94,10 @@ async function GetUserFriends(users, user) {
     }
 
     const activitiesQuery = `
-        SELECT 
+        SELECT
             AccountID,
-            MIN(AddedTime) AS FirstActivity, 
-            COUNT(*) AS TotalActivities, 
+            MIN(AddedTime) AS FirstActivity,
+            COUNT(*) AS TotalActivities,
             SUM(Duration) AS TotalDuration
         FROM Activities
         WHERE AccountID IN (${friendIDs.join(',')})
@@ -143,11 +143,11 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
     }
 
     const commandInfo = `
-        SELECT 
+        SELECT
             a.\`Username\`,
             a.\`Title\`,
             a.\`XP\`,
-            av.\`Stats\`,
+            a.\`Stats\`,
             av.\`Sexe\`,
             av.\`Skin\`,
             av.\`SkinColor\`,

@@ -12,19 +12,16 @@ import { PageHeader } from 'Interface/Widgets';
 class Leaderboard extends BackLeaderboard {
     render() {
         const lang = langManager.curr['leaderboard'];
-        const { search, sortIndex, playersData } = this.state;
+        const { search, sortIndex, selfData, playersData } = this.state;
 
         const sortType = Object.values(this.sortList)[sortIndex];
-        const thisPlayer = playersData.find(player => player.accountID === 0);
 
         return (
             <Page ref={ref => this.refPage = ref} scrollable={false}>
                 <PageHeader style={styles.header} onBackPress={this.Back} />
 
                 <View style={styles.myRankContainer}>
-                    {thisPlayer && (
-                        <RankElement item={thisPlayer} />
-                    )}
+                    <RankElement item={selfData} />
                 </View>
 
                 <View style={[styles.filter, styles.row]}>
@@ -45,14 +42,12 @@ class Leaderboard extends BackLeaderboard {
                     </Button>
                 </View>
 
-                <View style={styles.rankingList}>
-                    <FlatList
-                        data={playersData}
-                        style={styles.flatlist}
-                        renderItem={({ item }) => <RankElement item={item} />}
-                        keyExtractor={item => `rank-id-${item.accountID}`}
-                    />
-                </View>
+                <FlatList
+                    data={playersData}
+                    style={styles.flatlist}
+                    renderItem={({ item }) => <RankElement item={item} />}
+                    keyExtractor={item => `rank-id-${item.accountID}`}
+                />
             </Page>
         );
     }

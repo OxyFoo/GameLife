@@ -15,8 +15,10 @@ class Login extends BackLogin {
         const contentHeight = Animated.add(100, Animated.multiply(160, this.state.animSignin));
         const btnLoginX = Animated.multiply(84, this.state.animSignin);
         const btnBackX = Animated.add(-128, Animated.multiply(128, this.state.animSignin));
+
+        const imageHeight = user.interface.screenHeight - mainContentHeight - 388;
         const imageAnim = {
-            height: user.interface.screenHeight - mainContentHeight - 388,
+            height: imageHeight > 150 ? imageHeight : 0,
             transform: [
                 { scale: this.state.animImage },
                 { translateY: Animated.multiply(this.state.animFocus, -250) }

@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     },
     columnContent: {
         flex: 1,
+        paddingTop: 8,
         paddingBottom: 8,
         marginHorizontal: 8,
         justifyContent: 'space-between'
@@ -28,17 +29,13 @@ const styles = StyleSheet.create({
     zap: {
         width: 64
     },
-    title: {
-        width: '200%',
-        textAlign: 'left',
-        flexWrap: 'nowrap'
-    },
     text: {
         textAlign: 'left'
     },
     flatlist: {
         width: '100%',
-        maxHeight: 18
+        maxHeight: 18,
+        marginTop: 4
     },
     flatlistContainer: {
         width: '100%',

@@ -44,6 +44,10 @@ class Multiplayer {
             case 'update-current-activity':
                 this.user.activities.currentActivity.Set(data.activity);
                 break;
+
+            case 'update-zap-gpt':
+                this.user.informations.zapGPT = data.zapGPTStatus;
+                break;
         }
     }
 

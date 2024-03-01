@@ -138,18 +138,24 @@ class Activity extends BackActivity {
     }
 
     renderOverlay = () => {
-        if (user.tcp.IsConnected() === false) {
+        const lang = langManager.curr['activity'];
+        const { tcpState, animZapGPTOpened, animZapGPTMessage } = this.state;
+
+        if (tcpState !== 'connected') {
             return null;
         }
 
-        const lang = langManager.curr['activity'];
-        const { animZapGPT } = this.state;
+        const animOpened = {
+            transform: [
+                { translateX: Animated.multiply(animZapGPTOpened, 120) }
+            ]
+        };
 
-        const animStyle = {
-            opacity: animZapGPT,
+        const animMessage = {
+            opacity: animZapGPTMessage,
             transform: [
                 {
-                    translateX: animZapGPT.interpolate({
+                    translateX: animZapGPTMessage.interpolate({
                         inputRange: [0, 1],
                         outputRange: [24, 0]
                     })
@@ -158,8 +164,8 @@ class Activity extends BackActivity {
         };
 
         return (
-            <View style={styles.zapGptContainer}>
-                <Animated.View style={[styles.zapGptBubble, animStyle]}>
+            <Animated.View style={[styles.zapGptContainer, animOpened]}>
+                <Animated.View style={[styles.zapGptBubble, animMessage]}>
                     <Text fontSize={16}>
                         {lang['activity-zap-hint']}
                     </Text>
@@ -170,7 +176,7 @@ class Activity extends BackActivity {
                 >
                     <Zap.High orientation='left' />
                 </Button>
-            </View>
+            </Animated.View>
         );
     }
 }

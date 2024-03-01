@@ -947,7 +947,9 @@
             "- Exemple: J'ai fais du basket lundi, mercredi et vendredi de 18h à 20h"
         ],
 
+        "remaining-text": "Restantes:",
         "input-label": "Requête à Zap",
+        "no-remaining": "Tu as atteint la limite, pour en ajouter plus reviens demain",
 
         "added-message": "{} activité[s] a[-ont] été ajoutée[s]",
 
@@ -956,7 +958,8 @@
             "request-empty": "La requête est vide",
             "request-invalid": "La requête a échouée, essaie de reformuler",
             "request-timeout": "Le délai de la requête a dépassé la limite",
-            "no-activities": "Aucune activité n'a été générée"
+            "no-activities": "Aucune activité n'a été générée",
+            "limit-reached": "Tu as atteint la limite d'utilisation pour aujourd'hui"
         }
     }
 }

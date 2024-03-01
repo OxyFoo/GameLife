@@ -45,7 +45,9 @@ class BackActivity extends PageBase {
         /** @type {string} Header of input - Name of category */
         inputText: '',
 
-        animZapGPT: new Animated.Value(0)
+        tcpState: user.tcp.state.Get(),
+        animZapGPTMessage: new Animated.Value(0),
+        animZapGPTOpened: new Animated.Value(0)
     }
 
     refTuto1 = null;
@@ -114,14 +116,9 @@ class BackActivity extends PageBase {
         // Show ZapGPT Message
         if (user.settings.zapGPTMessageReaded === false) {
             this.timeout = setTimeout(() => {
-                SpringAnimation(this.state.animZapGPT, 1).start();
+                SpringAnimation(this.state.animZapGPTMessage, 1).start();
             }, 2000);
         }
-    }
-
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
-        StartMission.call(this, args?.missionName);
     }
 
     async componentDidMount() {
@@ -192,10 +189,24 @@ class BackActivity extends PageBase {
 
             this.refActivityPanel.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
+
+        // Show or hide ZapGPT
+        this.listenerTCP = user.tcp.state.AddListener((state) => {
+            this.setState({ tcpState: state });
+            if (state === 'connected') {
+                SpringAnimation(this.state.animZapGPTOpened, 0).start();
+            }
+        });
+    }
+
+    componentDidFocused = (args) => {
+        StartTutorial.call(this, args?.tuto);
+        StartMission.call(this, args?.missionName);
     }
 
     componentWillUnmount() {
         clearTimeout(this.timeout);
+        user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -289,12 +300,15 @@ class BackActivity extends PageBase {
 
         if (user.settings.zapGPTMessageReaded === false) {
             clearTimeout(this.timeout);
-            SpringAnimation(this.state.animZapGPT, 0).start();
+            SpringAnimation(this.state.animZapGPTMessage, 0).start();
             user.settings.zapGPTMessageReaded = true;
             user.LocalSave();
         }
 
-        user.interface.popup.Open('custom', () => <ZapGPT />, undefined, false);
+        SpringAnimation(this.state.animZapGPTOpened, 1).start();
+        user.interface.popup.Open('custom', () => <ZapGPT />, () => {
+            SpringAnimation(this.state.animZapGPTOpened, 0).start();
+        }, false);
     }
 }
 

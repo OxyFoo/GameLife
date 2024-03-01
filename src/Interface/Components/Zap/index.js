@@ -28,9 +28,9 @@ class Zap extends InputBack {
 
         return (
             <Animated.Image
-                style={[styles.zap, zapStyle]}
-                source={this.getHighZapImage()}
                 {...props}
+                style={[styles.zap, zapStyle, props.style]}
+                source={this.getHighZapImage()}
             />
         );
     }

@@ -6,6 +6,7 @@ import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Types/TCP').ZapGPTState} ZapGPTState
  */
 
 const DAYS_USERNAME_CHANGE = 30;
@@ -33,6 +34,9 @@ class Informations {
     adRemaining = 0;
     adTotalWatched = 0;
 
+    /** @type {ZapGPTState} */
+    zapGPT = { remaining: 0, total: 0 };
+
     Clear() {
         this.username = new DynamicVar('');
         this.usernameTime = null;
@@ -45,6 +49,7 @@ class Informations {
         this.ox = new DynamicVar(0);
         this.adRemaining = 0;
         this.adTotalWatched = 0;
+        this.zapGPT = { remaining: 0, total: 0 };
     }
     Load(informations) {
         const contains = (key) => informations.hasOwnProperty(key);

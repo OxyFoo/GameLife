@@ -47,6 +47,33 @@ const styles = StyleSheet.create({
         marginLeft: 12,
         borderRadius: 8
     },
+    noRemaining: {
+        alignItems: 'center',
+        paddingTop: 12,
+        marginBottom: 24,
+        marginHorizontal: 12,
+        borderTopWidth: 1,
+        borderTopColor: '#ffffff'
+    },
+    noRemainingText: {
+        textAlign: 'center',
+        marginBottom: 24
+    },
+    noRemainingBack: {
+        width: '100%',
+        paddingVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    },
+    noRemainingZap: {
+        width: 48,
+        height: 48,
+        transform: [
+            { scale: 1.8 },
+            { scaleX: -1 }
+        ]
+    },
 
     // Page 2 - Select & validate activities
     flatlistView: {

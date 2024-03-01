@@ -947,7 +947,9 @@
             "- Example: I did basketball Monday, Wednesday and Friday from 6 p.m. to 8 p.m."
         ],
 
+        "remaining-text": "Remaining:",
         "input-label": "Request to Zap",
+        "no-remaining": "You have reached the limit, to add more come from tomorrow",
 
         "added-message": "{} activities have been added",
 
@@ -956,7 +958,8 @@
             "request-empty": "The request is empty",
             "request-invalid": "Query failed, try to reformulate",
             "request-timeout": "Request time limit exceeded",
-            "no-activities": "No activities generated"
+            "no-activities": "No activities generated",
+            "limit-reached": "You have reached the use limit for today"
         }
     }
 }

@@ -72,7 +72,7 @@ class BackMultiplayer extends PageBase {
 
             // Update achievement
             if (username === user.informations.username.Get()) {
-                user.informations.achievementSelfFriend = 1;
+                user.informations.achievementSelfFriend = true;
             }
 
             user.multiplayer.AddFriend(username);

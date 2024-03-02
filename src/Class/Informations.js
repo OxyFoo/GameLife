@@ -36,7 +36,7 @@ class Informations {
 
     /** @type {ZapGPTState} */
     zapGPT = { remaining: 0, total: 0 };
-    achievementSelfFriend = 0;
+    achievementSelfFriend = false;
 
     Clear() {
         this.username = new DynamicVar('');
@@ -51,6 +51,7 @@ class Informations {
         this.adRemaining = 0;
         this.adTotalWatched = 0;
         this.zapGPT = { remaining: 0, total: 0 };
+        this.achievementSelfFriend = false;
     }
     Load(informations) {
         const contains = (key) => informations.hasOwnProperty(key);
@@ -65,6 +66,7 @@ class Informations {
         if (contains('ox')) this.ox.Set(parseInt(informations['ox']));
         if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
         if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
+        if (contains('achievementSelfFriend')) this.achievementSelfFriend = informations['achievementSelfFriend'];
     }
     Save() {
         const informations = {
@@ -78,7 +80,8 @@ class Informations {
             xp: this.xp,
             ox: this.ox.Get(),
             adRemaining: this.adRemaining,
-            adTotalWatched: this.adTotalWatched
+            adTotalWatched: this.adTotalWatched,
+            achievementSelfFriend: this.achievementSelfFriend
         };
         return informations;
     }

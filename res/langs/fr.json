@@ -242,7 +242,6 @@
             "GT": "supérieur à"
         },
         "conditions": {
-            "header": "Condition : ",
             "Battery": "Avoir un niveau de batterie {} {}%",
             "Level": "Atteindre le niveau {}",
             "Sk": "Atteindre le niveau {} pour la compétence \"{}\"",
@@ -258,8 +257,12 @@
             "title": "Nouveau titre : {}",
             "title-conversion": " (converti en {} Ox)",
             "item": "Nouvel item : {}",
-            "ox": "Bonus : {} Ox"
+            "ox": "Gain : {} Ox"
         },
+
+        "popup-condition-text": "Condition : ",
+        "popup-hidden-condition": "Condition cachée",
+        "popup-global-text": "{}% des joueurs ont débloqué ce succès",
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",

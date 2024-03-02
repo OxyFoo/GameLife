@@ -242,7 +242,6 @@
             "GT": "Greater than"
         },
         "conditions": {
-            "header": "Condition: ",
             "Battery": "Having a battery level {} {}%",
             "Level": "Reach level {}",
             "Sk": "Reach {} level for skill \"{}\"",
@@ -258,8 +257,12 @@
             "title": "New title: {}",
             "title-conversion": " (convert into {} Ox)",
             "item": "New item: {}",
-            "ox": "Bonus: {} Ox"
+            "ox": "Earn: {} Ox"
         },
+
+        "popup-condition-text": "Condition: ",
+        "popup-hidden-condition": "Hidden condition",
+        "popup-global-text": "{}% of the players have unlocked this achievement",
 
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",

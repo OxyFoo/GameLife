@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 
+import styles from './style';
 import BackAchievements from './back';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
@@ -9,32 +10,12 @@ import StartHelp from './help';
 import { Page, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
+/**
+ * @typedef {import('./back').PanelAchievementType} PanelAchievementType
+ * @typedef {import('react-native').ListRenderItem<PanelAchievementType>} AchievementListRenderItem
+ */
+
 class Achievements extends BackAchievements {
-    renderAchievement = ({ item: achievement }) => {
-        const { ID, Name, Description, isSolved } = achievement;
-
-        const style = [
-            styles.achievementsBox,
-            {
-                borderColor: isSolved ? themeManager.GetColor('main1') : '#888888',
-                backgroundColor: themeManager.GetColor('backgroundGrey')
-            }
-        ];
-
-        return (
-            <TouchableOpacity
-                style={styles.achievementsContainer}
-                onPress={() => this.onAchievementPress(ID)}
-                activeOpacity={.6}
-            >
-                <View style={style}>
-                    <Text style={styles.title}>{Name}</Text>
-                    <Text style={styles.description} color='secondary'>{Description}</Text>
-                </View>
-            </TouchableOpacity>
-        )
-    }
-
     render() {
         const styleFlatlist = {
             ...styles.flatlist,
@@ -60,37 +41,40 @@ class Achievements extends BackAchievements {
             </Page>
         );
     }
-}
 
-const styles = StyleSheet.create({
-    flatlist: {
-        position: 'absolute',
-        left: 12,
-        right: 12,
-        bottom: 0
-    },
+    /** @type {AchievementListRenderItem} */
+    renderAchievement = ({ item: achievement }) => {
+        const { ID, Name, isSolved, GlobalPercentage } = achievement;
 
-    achievementsContainer: {
-        width: '50%',
-        padding: 6
-    },
-    achievementsBox: {
-        height: 172,
-        display: 'flex',
-        justifyContent: 'space-evenly',
-        padding: 6,
-        borderWidth: 2,
-        borderRadius: 8
-    },
-    title: {
-        minHeight: 30,
-        marginBottom: 12,
-        fontSize: 18
-    },
-    description: {
-        marginBottom: 12,
-        fontSize: 14
+        const style = {
+            borderColor: isSolved ? themeManager.GetColor('main1') : '#888888',
+            backgroundColor: themeManager.GetColor('backgroundGrey')
+        };
+        const styleFilling = {
+            width: GlobalPercentage + '%',
+            backgroundColor: themeManager.GetColor('main1')
+        };
+
+        return (
+            <TouchableOpacity
+                style={styles.achievementsContainer}
+                onPress={() => this.onAchievementPress(ID)}
+                activeOpacity={.6}
+            >
+                <View style={[styles.achievementsBox, style]}>
+                    <Text style={styles.title}>{Name}</Text>
+
+                    {/** Global progression */}
+                    <Text style={styles.progressionValue} color='secondary' fontSize={10}>
+                        {GlobalPercentage + '%'}
+                    </Text>
+                    <View style={styles.progressBar}>
+                        <View style={[styles.progressBarInner, styleFilling]} />
+                    </View>
+                </View>
+            </TouchableOpacity>
+        )
     }
-});
+}
 
 export default Achievements;

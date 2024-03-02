@@ -70,11 +70,6 @@ class BackMultiplayer extends PageBase {
             // Update mission
             user.missions.SetMissionState('mission5', 'completed');
 
-            // Update achievement
-            if (username === user.informations.username.Get()) {
-                user.informations.achievementSelfFriend = true;
-            }
-
             user.multiplayer.AddFriend(username);
         }, false);
     }

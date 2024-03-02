@@ -65,10 +65,10 @@ class Achievements extends BackAchievements {
                     <Text style={styles.title}>{Name}</Text>
 
                     {/** Global progression */}
-                    <Text style={styles.progressionValue} color='secondary' fontSize={10}>
-                        {GlobalPercentage + '%'}
-                    </Text>
                     <View style={styles.progressBar}>
+                        <Text style={styles.progressionValue} color='secondary' fontSize={10}>
+                            {GlobalPercentage + '%'}
+                        </Text>
                         <View style={[styles.progressBarInner, styleFilling]} />
                     </View>
                 </View>

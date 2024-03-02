@@ -36,6 +36,7 @@ class Informations {
 
     /** @type {ZapGPTState} */
     zapGPT = { remaining: 0, total: 0 };
+    achievementSelfFriend = 0;
 
     Clear() {
         this.username = new DynamicVar('');

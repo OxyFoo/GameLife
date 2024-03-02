@@ -243,15 +243,16 @@
         },
         "conditions": {
             "header": "Condition: ",
-            "B": "Having a battery level {} {}%",
-            "Lvl": "Reach level {}",
+            "Battery": "Having a battery level {} {}%",
+            "Level": "Reach level {}",
             "Sk": "Reach {} level for skill \"{}\"",
             "SkT": "Practice for {} hours the skill \"{}\"",
             "St": "Wait for level {} with the statistic \"{}\"",
             "HCa": "Reach level {} in {} category(ies)",
             "Ca": "Reach level {} in category {}",
-            "It": "Have {} items",
-            "Ad": "Watch {} ads"
+            "ItemCount": "Have {} items",
+            "Ad": "Watch {} ads",
+            "SelfFriend": "Ask yourself as a friend"
         },
         "rewards": {
             "title": "New title: {}",

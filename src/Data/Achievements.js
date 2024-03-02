@@ -1,21 +1,22 @@
 /**
- * @typedef {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'|'Tt'} Comparator
+ * @typedef {'Battery'|'Level'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'ItemCount'|'Ad'|'Title'|'SelfFriend'} Comparator
  * @typedef {'LT' | 'GT'} Operator
  * @typedef {'Title' | 'Item' | 'OX'} RewardType
  */
 
 /** @type {Array<Comparator>} */
 const COMPARATORS = [
-    'B',
-    'Lvl',
+    'Battery',
+    'Level',
     'Sk',
     'SkT',
     'St',
     'HCa',
     'Ca',
-    'It',
+    'ItemCount',
     'Ad',
-    'Tt'
+    'Title',
+    'SelfFriend'
 ];
 
 /** @type {Array<Operator>} */

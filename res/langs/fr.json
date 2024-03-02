@@ -243,15 +243,16 @@
         },
         "conditions": {
             "header": "Condition : ",
-            "B": "Avoir un niveau de batterie {} {}%",
-            "Lvl": "Atteindre le niveau {}",
+            "Battery": "Avoir un niveau de batterie {} {}%",
+            "Level": "Atteindre le niveau {}",
             "Sk": "Atteindre le niveau {} pour la compétence \"{}\"",
             "SkT": "Pratiquer pendant {} heures la compétence \"{}\"",
             "St": "Attendre le niveau {} avec la statistique \"{}\"",
             "HCa": "Atteindre le niveau {} dans {} catégorie(s)",
             "Ca": "Atteindre le niveau {} dans la catégorie \"{}\"",
-            "It": "Posséder {} items",
-            "Ad": "Avoir vu {} pubs"
+            "ItemCount": "Posséder {} items",
+            "Ad": "Avoir vu {} pubs",
+            "SelfFriend": "Se demander soi-même en ami"
         },
         "rewards": {
             "title": "Nouveau titre : {}",

@@ -126,14 +126,14 @@ class Achievements {
         const condText = langManager.curr['achievements']['conditions'];
         let output = '\n' + condText['header'];
         switch (Comparator.Type) {
-            case 'B':
-                output += condText['B']
+            case 'Battery':
+                output += condText['Battery']
                             .replace('{}', operators[Operator])
                             .replace('{}', (valueNum * 100).toString()) + '\n';
                 break;
 
-            case 'Lvl':
-                output += condText['Lvl']
+            case 'Level':
+                output += condText['Level']
                             .replace('{}', valueStr) + '\n';
                 break;
 
@@ -172,13 +172,18 @@ class Achievements {
                             .replace('{}', Comparator.Value.toString()) + '\n';
                 break;
 
-            case 'It':
-                output += condText['It']
+            case 'ItemCount':
+                output += condText['ItemCount']
                             .replace('{}', valueStr) + '\n';
                 break;
 
             case 'Ad':
                 output += condText['Ad']
+                            .replace('{}', valueStr) + '\n';
+                break;
+
+            case 'SelfFriend':
+                output += condText['SelfFriend']
                             .replace('{}', valueStr) + '\n';
                 break;
         }
@@ -271,11 +276,11 @@ class Achievements {
 
             // Get value to compare
             switch (Condition?.Comparator.Type) {
-                case 'B': // Battery level
+                case 'Battery': // Battery level
                     value = GetBattery();
                     break;
 
-                case 'Lvl': // Level
+                case 'Level': // Level
                     value = this.user.experience.GetExperience().xpInfo.lvl;
                     break;
 
@@ -322,7 +327,7 @@ class Achievements {
                     value = categoryXP.lvl;
                     break;
 
-                case 'It': // Number of items
+                case 'ItemCount': // Number of items
                     value = this.user.inventory.stuffs.length;
                     break;
 
@@ -330,10 +335,14 @@ class Achievements {
                     value = this.user.informations.adTotalWatched;
                     break;
 
-                case 'Tt': // Title unlocked
+                case 'Title': // Title unlocked
                     const titles = this.user.inventory.GetTitles();
                     const title = titles.find(t => t.ID === Condition.Comparator.Value);
                     value = typeof(title) !== 'undefined' ? 1 : 0;
+                    break;
+
+                case 'SelfFriend': // Asking self friend
+                    value = this.user.informations.achievementSelfFriend;
                     break;
             }
 

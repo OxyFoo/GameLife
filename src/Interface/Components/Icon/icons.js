@@ -19,6 +19,7 @@ import svgFlagEnglish from 'Ressources/icons/flag-english';
 import svgFlagFrench from 'Ressources/icons/flag-french';
 import svgFlame from 'Ressources/icons/flame';
 import svgGift from 'Ressources/icons/gift';
+import svgHandPress from 'Ressources/icons/hand-press';
 import svgHome from 'Ressources/icons/home';
 import svgHuman from 'Ressources/icons/human';
 import svgInfo from 'Ressources/icons/info';
@@ -76,6 +77,7 @@ const SVGIcons = {
     flagFrench: svgFlagFrench,
     flame: svgFlame,
     gift: svgGift,
+    handPress: svgHandPress,
     home: svgHome,
     human: svgHuman,
     info: svgInfo,

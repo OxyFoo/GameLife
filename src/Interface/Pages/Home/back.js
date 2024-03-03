@@ -14,7 +14,8 @@ class BackHome extends PageBase {
         values: {
             current_level: '0',
             next_level: '0'
-        }
+        },
+        currentQuests: user.quests.myquests.GetFillingOnly()
     }
 
     /** @type {React.RefObject<MultiplayerPanel>} */
@@ -27,6 +28,9 @@ class BackHome extends PageBase {
         this.activitiesListener = user.activities.allActivities.AddListener(
             this.updateStateValues
         );
+        this.myquestsListener = user.quests.myquests.allQuests.AddListener(
+            this.updateQuestValues
+        );
     }
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);
@@ -34,6 +38,7 @@ class BackHome extends PageBase {
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
+        user.quests.myquests.allQuests.RemoveListener(this.myquestsListener);
     }
 
     updateStateValues = () => {
@@ -45,10 +50,17 @@ class BackHome extends PageBase {
         this.setState({ experience, values: { current_level, next_level } });
     }
 
+    updateQuestValues = () => {
+        this.setState({
+            currentQuests: user.quests.myquests.GetFillingOnly()
+        });
+    }
+
     StartMission = StartMission.bind(this);
 
     addActivity = () => user.interface.ChangePage('activity', undefined, true);
     openSkills = () => user.interface.ChangePage('skills');
+    openQuests = () => user.interface.ChangePage('quests');
 }
 
 export default BackHome;

@@ -139,6 +139,17 @@ class MyQuests {
         );
     }
 
+    GetFillingOnly = () => {
+        return this.Get()
+            .filter(quest => {
+                const days = this.GetDays(quest);
+                const today = days.find(day =>
+                    day.isToday && day.state === 'filling'
+                );
+                return today !== undefined;
+            });
+    }
+
     IsUnsaved = () => {
         if (this.SAVED_sort === false) {
             return true;

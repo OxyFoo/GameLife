@@ -151,8 +151,8 @@ class MyQuestsList extends BackQuestsList {
                         ListEmptyComponent={this.renderEmpty}
                         ItemSeparatorComponent={this.renderSeparator}
                     />
-                </SimpleContainer.Body >
-            </SimpleContainer >
+                </SimpleContainer.Body>
+            </SimpleContainer>
         );
     }
 }

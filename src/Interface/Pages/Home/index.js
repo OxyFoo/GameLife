@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 
 import styles from './style';
 import BackHome from './back';
@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Swiper, Text, Button, Icon, XPBar, Page } from 'Interface/Components';
+import { Swiper, Text, XPBar, Page } from 'Interface/Components';
 import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
 
 /**
@@ -19,7 +19,8 @@ class Home extends BackHome {
     render() {
         const {
             experience: { xpInfo },
-            values: { current_level, next_level }
+            values: { current_level, next_level },
+            mission
         } = this.state;
 
         const lang = langManager.curr['home'];
@@ -27,6 +28,10 @@ class Home extends BackHome {
 
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
+        };
+
+        const styleSmallContainer = {
+            backgroundColor: themeManager.GetColor('ground2'),
         };
 
         return (
@@ -45,22 +50,29 @@ class Home extends BackHome {
                     maxValue={xpInfo.next}
                 />
 
+                <View style={[styles.homeRow, styles.topSpace]}>
+                    <TodayPieChart style={styles.todayPieChart} />
+                </View>
+
                 <Missions
                     style={styles.topSpace}
                     refHome={this}
                 />
 
-                <Swiper
-                    style={styles.topSpace}
-                    pages={News()}
-                />
+                {mission.state === 'claimed' && (
+                    <Swiper
+                        style={styles.topSpace}
+                        pages={News()}
+                    />
+                )}
 
                 <View style={[styles.homeRow, styles.topSpace]}>
-                    <TodayPieChart style={styles.todayPieChart} />
-                </View>
-
-                <View style={[styles.homeRow, styles.topSpace]}>
-                    {this.renderQuestOrStats()}
+                    <View style={[styleSmallContainer, styles.stats]}>
+                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
+                            {lang['container-stats-title']}
+                        </Text>
+                        <StatsBars data={user.stats} simplifiedDisplay={true} />
+                    </View>
 
                     <View style={[styleContainer, styles.skills]}>
                         <Text bold={true} fontSize={20} style={styles.titleWidget}>
@@ -76,60 +88,14 @@ class Home extends BackHome {
                     hideWhenOffline
                 />
 
+                {mission.state !== 'claimed' && (
+                    <Swiper
+                        style={styles.topSpace}
+                        pages={News()}
+                    />
+                )}
+
             </Page>
-        );
-    }
-
-    renderQuestOrStats = () => {
-        const lang = langManager.curr['home'];
-        const { currentQuests } = this.state;
-
-        const styleSmallContainer = {
-            backgroundColor: themeManager.GetColor('ground2'),
-        };
-
-        // Return stats if no quests are available today
-        if (currentQuests.length <= 0) {
-            return (
-                <View style={[styleSmallContainer, styles.stats]}>
-                    <Text bold={true} fontSize={20} style={styles.titleWidget}>
-                        {lang['container-stats-title']}
-                    </Text>
-                    <StatsBars data={user.stats} simplifiedDisplay={true} />
-                </View>
-            );
-        }
-
-        return (
-            <Button style={[styleSmallContainer, styles.myquests]} onPress={this.openQuests}>
-                <Text bold={true} fontSize={20} style={styles.titleWidget}>
-                    {lang['container-myquests-title']}
-                </Text>
-                <FlatList
-                    style={styles.myquestsFlatlist}
-                    data={currentQuests}
-                    renderItem={this.renderMyQuest}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-                <Icon
-                    style={styles.myQuestsIcon}
-                    color='main1'
-                    icon='handPress'
-                    size={14}
-                />
-            </Button>
-        );
-    }
-
-    /** @type {FlatListMyQuestProps} */
-    renderMyQuest = ({ item: quest }) => {
-        return (
-            <Text
-                style={styles.myQuestsText}
-                fontSize={14}
-            >
-                {'- ' + quest.title}
-            </Text>
         );
     }
 }

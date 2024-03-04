@@ -8,16 +8,34 @@ const styles = StyleSheet.create({
         marginRight: 4,
         marginLeft: 8
     },
+    pieChart: {
+        width: '50%'
+    },
+    pieChartFullDay: {
+        position: 'absolute',
+        top: 0,
+        left: '50%',
+        right: 0,
+        bottom: 0
+    },
     pieChartContainer: {
+        width: '100%',
+        marginLeft: 12,
         paddingHorizontal: 0,
         paddingVertical: 0,
 
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         alignItems: 'center'
     },
+
     legendContainer: {
-        paddingTop: 6
+        width: '50%',
+        paddingTop: 12
+    },
+    legendContainerFullDay: {
+        width: '50%',
+        paddingTop: 12
     },
     legendItem: {
         flexDirection: 'row',
@@ -26,6 +44,14 @@ const styles = StyleSheet.create({
     centerLabel: {
         justifyContent: 'center',
         alignItems: 'center'
+    },
+
+    myquestsFlatlist: {
+        width: '100%'
+    },
+    myQuestsText: {
+        width: '100%',
+        textAlign: 'left'
     }
 });
 

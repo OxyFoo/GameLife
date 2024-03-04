@@ -33,27 +33,6 @@ const styles = StyleSheet.create({
         marginRight: 18,
         padding: 8
     },
-    myquests: {
-        height: 'auto',
-        flex: 1,
-        flexDirection: 'column',
-        marginRight: 18,
-        padding: 8,
-        paddingHorizontal: 8,
-        borderRadius: 24
-    },
-    myquestsFlatlist: {
-        width: '100%'
-    },
-    myQuestsIcon: {
-        position: 'absolute',
-        right: 6,
-        bottom: 8
-    },
-    myQuestsText: {
-        width: '100%',
-        textAlign: 'left'
-    },
     skills: {
         width: '60%',
         borderRadius: 20,

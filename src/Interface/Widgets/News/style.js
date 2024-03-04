@@ -49,9 +49,14 @@ const styles = StyleSheet.create({
     mqContainer: {
         marginBottom: 16
     },
+    mqContainerTitle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     mqTitle: {
-        marginTop: 8,
-        marginRight: 8
+        marginVertical: 4,
+        marginRight: 4
     },
     mqItem: {
         height: 'auto',

@@ -21,13 +21,51 @@ import { RenderItemMemo } from 'Interface/Widgets/NonZeroDay/element';
  */
 
 class News extends BackNews {
+    render() {
+        const { pagesNews } = this.state;
+
+        const pages = [
+            this.renderRecapMyquests(),
+            this.renderRecapNZD(),
+            ...pagesNews.map(RenderNew)
+        ].filter(page => page !== null);
+
+        return (
+            <Swiper
+                style={this.props.style}
+                pages={pages}
+                delayNext={15}
+            />
+        );
+    }
+
     renderRecapMyquests = () => {
         const lang = langManager.curr['quests'];
         const { quests } = this.state;
 
+        if (quests.length === 0) {
+            return null;
+        }
+
         return (
             <View style={styles.mqContainer}>
-                <Text style={styles.mqTitle}>{lang['container-title']}</Text>
+                <View style={styles.mqContainerTitle}>
+                    {/* Title */}
+                    <Text
+                        style={styles.mqTitle}
+                        onPress={this.goToQuestsPage}
+                    >
+                        {lang['container-title']}
+                    </Text>
+
+                    {/* Claim icon */}
+                    <Icon
+                        icon='handPress'
+                        size={18}
+                        color='main1'
+                    />
+                </View>
+
                 <FlatList
                     data={quests}
                     renderItem={this.renderMyQuestElement}
@@ -112,23 +150,6 @@ class News extends BackNews {
                     claimIndex={claimIndex}
                 />
             </View>
-        );
-    }
-
-    render() {
-        const { pagesNews } = this.state;
-
-        const pages = [
-            this.renderRecapMyquests(),
-            this.renderRecapNZD(),
-            ...pagesNews.map(RenderNew)
-        ].filter(page => page !== null);
-
-        return (
-            <Swiper
-                style={this.props.style}
-                pages={pages}
-            />
         );
     }
 };

@@ -8,6 +8,7 @@ import { GetCurrentActivity } from '../Utils/CurrentActivities.js';
  * @typedef {import('Types/UserOnline.js').Friend} Friend
  * @typedef {import('Types/UserOnline.js').ConnectionState} ConnectionState
  * @typedef {import('Types/UserOnline.js').FriendshipState} FriendshipState
+ * @typedef {import('Types/UserOnline.js').AchievementItem} AchievementItem
  */
 
 /**
@@ -18,14 +19,19 @@ import { GetCurrentActivity } from '../Utils/CurrentActivities.js';
 async function GetUserFriends(users, user) {
     const userID = user.accountID;
     const command = `
-        SELECT 
+        SELECT
             f.AccountID, f.TargetID, f.State,
             a.Username, a.Title, a.XP, a.Stats,
             av.Sexe, av.Skin, av.SkinColor,
             hair.ItemID AS HairItemID,
             top.ItemID AS TopItemID,
             bottom.ItemID AS BottomItemID,
-            shoes.ItemID AS ShoesItemID
+            shoes.ItemID AS ShoesItemID,
+            (
+                SELECT GROUP_CONCAT(CONCAT_WS('|', AchievementID, \`State\`, \`Date\`) SEPARATOR ';')
+                FROM InventoriesAchievements 
+                WHERE AccountID = a.ID
+            ) AS Achievements
         FROM Friends f
         JOIN Accounts a ON (f.AccountID = ${userID} AND f.TargetID = a.ID) OR (f.TargetID = ${userID} AND f.AccountID = a.ID)
         LEFT JOIN Avatars av ON a.ID = av.ID
@@ -52,6 +58,16 @@ async function GetUserFriends(users, user) {
                 stats[key] = parsedStats[key];
             }
         }
+        const achievements = row.Achievements === null ? [] : row.Achievements
+            .split(';')
+            .map(/** @param {string} achievement @return {AchievementItem} */ achievement => {
+                const [achievementID, state, date] = achievement.split('|');
+                return {
+                    AchievementID: parseInt(achievementID),
+                    State: /** @type {AchievementItem['State']} */ (state),
+                    Date: Math.floor(new Date(date).getTime() / 1000)
+                };
+            });
 
         return ({
             status: friendInAllUsersIndex !== -1 ? 'online' : 'offline',
@@ -76,6 +92,7 @@ async function GetUserFriends(users, user) {
                 length: 0,
                 totalDuration: 0
             },
+            achievements: achievements,
             currentActivity: null
         })
     });
@@ -157,7 +174,13 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
             shoesInv.\`ItemID\` AS \`ShoesItemID\`,
             MIN(ac.\`AddedTime\`) AS \`FirstActivity\`,
             COUNT(*) AS \`TotalLength\`,
-            SUM(\`Duration\`) AS \`TotalDuration\`
+            SUM(\`Duration\`) AS \`TotalDuration\`,
+            (
+                SELECT GROUP_CONCAT(CONCAT_WS('|', AchievementID, \`State\`, \`Date\`) SEPARATOR ';')
+                FROM InventoriesAchievements 
+                WHERE AccountID = a.ID
+            ) AS Achievements
+            )
         FROM \`Accounts\` a
         LEFT JOIN \`Avatars\` av ON a.ID = av.ID
         LEFT JOIN \`Activities\` ac ON a.ID = ac.AccountID
@@ -187,6 +210,17 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
         }
     }
 
+    const achievements = friendInfo[0]['Achievements'] === null ? [] : friendInfo[0]['Achievements']
+        .split(';')
+        .map(/** @param {string} achievement @return {AchievementItem} */ achievement => {
+            const [achievementID, state, date] = achievement.split('|');
+            return {
+                AchievementID: parseInt(achievementID),
+                State: /** @type {AchievementItem['State']} */ (state),
+                Date: Math.floor(new Date(date).getTime() / 1000)
+            };
+        });
+
     /** @type {Friend} */
     const newFriend = {
         status: friendStatus,
@@ -211,6 +245,7 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
             length: 0,
             totalDuration: 0
         },
+        achievements: achievements,
         currentActivity: null
     };
 

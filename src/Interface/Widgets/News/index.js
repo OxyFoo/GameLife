@@ -40,7 +40,7 @@ class News extends BackNews {
     }
 
     renderRecapMyquests = () => {
-        const lang = langManager.curr['quests'];
+        const lang = langManager.curr['home'];
         const { quests } = this.state;
 
         if (quests.length === 0) {
@@ -55,7 +55,7 @@ class News extends BackNews {
                         style={styles.mqTitle}
                         onPress={this.goToQuestsPage}
                     >
-                        {lang['container-title']}
+                        {lang['news-myquests-title']}
                     </Text>
 
                     {/* Claim icon */}

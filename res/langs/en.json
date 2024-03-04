@@ -355,6 +355,8 @@
         "chart-today-notmuch": "Not enough data to display graph",
         "chart-total-text": "Total",
 
+        "news-myquests-title": "My quests to do",
+
         "container-stats-title": "Stats",
         "container-skills-title": "Skills",
         "container-skills-empty": "No skills yet, do one and it will appear here !",

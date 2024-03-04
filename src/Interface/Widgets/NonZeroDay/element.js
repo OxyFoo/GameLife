@@ -37,10 +37,10 @@ const RenderItem = (props) => {
 
     /** @type {StyleProp[]} */
     const styleItem = [
-        props.style || {},
         {
             backgroundColor: themeManager.GetColor('backgroundCard')
-        }
+        },
+        props.style || {}
     ];
     const styleBorder = {
         borderColor: '#B83EFFE3',

@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
     },
     nzdItem: {
         marginHorizontal: 16,
-        marginBottom: 20
+        marginBottom: 20,
+        backgroundColor: 'transparent'
     },
 
     // MyQuest render

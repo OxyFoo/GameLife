@@ -73,7 +73,6 @@ class PieChart extends BackPieChart {
     );
 
     render() {
-        const lang = langManager.curr['home'];
         const { animSwitch } = this.state;
         const { style, data, dataFullDay, focusedActivity, layoutWidth } = this.props;
 
@@ -101,18 +100,19 @@ class PieChart extends BackPieChart {
         return (
             <View style={style}>
                 <Animated.View style={[styles.pieChartContainer, animStyle]}>
+                    {/** Left panel */}
                     <Animated.View style={[styles.legendContainerFullDay, opacityDataFullDay]}>
                         <FlatList
-                            data={dataFullDay.slice(0, -1)}
+                            data={dataFullDay}
                             renderItem={this.renderLegendItemFullDay}
                             keyExtractor={(item, index) => 'piechart-legend-full-' + index.toString()}
                             scrollEnabled={false}
                         />
                     </Animated.View>
 
-                    <Animated.View style={[styles.pieChart, opacityData]}>
+                    <Animated.View style={[styles.pieChartFullDay, opacityDataFullDay]}>
                         <PieGiftedChart
-                            data={data}
+                            data={dataFullDay}
                             donut
                             showGradient
                             sectionAutoFocus
@@ -123,9 +123,10 @@ class PieChart extends BackPieChart {
                         />
                     </Animated.View>
 
-                    <Animated.View style={[styles.pieChartFullDay, opacityDataFullDay]}>
+                    {/** Right panel */}
+                    <Animated.View style={[styles.pieChart, opacityData]}>
                         <PieGiftedChart
-                            data={dataFullDay}
+                            data={data}
                             donut
                             showGradient
                             sectionAutoFocus

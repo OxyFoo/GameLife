@@ -3,6 +3,7 @@ import * as React from 'react';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { GetLocalTime } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
@@ -72,13 +73,14 @@ class TodayPieChartBack extends React.Component {
         this.convertTimeToPercent(updatingData, totalTime);
 
         // updatingDataFullDay
+        const lang = langManager.curr['home'];
         const updatingDataFullDay = [ ...updatingData ];
         const pourcent = this.convertTimeToPercent(updatingDataFullDay, 24 * 60);
         updatingDataFullDay.push({
             id: 0,
             value: 100 - pourcent,
             valueMinutes: 0,
-            name: 'Total',
+            name: lang['chart-total-text'],
             color: '#130f40',
             gradientCenterColor: '#130f40',
             focused: false
@@ -89,14 +91,6 @@ class TodayPieChartBack extends React.Component {
         const focusedActivity = this.findBiggestActivity(updatingData);
         if (focusedActivity && focusedActivity.id !== 0) {
             updatingData.find(item => item.id === focusedActivity.id).focused = true;
-        }
-
-        // Compute Gradient Shadow
-        for (const element of updatingData) {
-            element.gradientCenterColor = this.shadeColor(element.color, -20);
-        }
-        for (const element of updatingDataFullDay) {
-            element.gradientCenterColor = this.shadeColor(element.color, -20);
         }
 
         // Update the state and return the new state
@@ -140,6 +134,7 @@ class TodayPieChartBack extends React.Component {
             } else if (category.Name) {
                 newData.name = langManager.GetText(category.Name);
                 newData.color = category.Color;
+                newData.gradientCenterColor = themeManager.ShadeColor(category.Color, -30);
             }
 
             baseData.push(newData);
@@ -202,12 +197,9 @@ class TodayPieChartBack extends React.Component {
      * @return {number} In minutes
      */
     computeTotalTime = (updatingData) => {
-        let totalMin = 0;
-        for (const element of updatingData) {
-            let item = element;
-            totalMin += item.valueMinutes;
-        }
-        return totalMin;
+        return updatingData
+            .map(item => item.valueMinutes)
+            .reduce((acc, cur) => acc + cur, 0);
     }
 
     /**
@@ -245,28 +237,6 @@ class TodayPieChartBack extends React.Component {
 
     onLayout = (event) => {
         this.setState({ layoutWidth: event.nativeEvent.layout.width });
-    }
-
-    // Je vais peut etre bouger cette function autre part ? 
-    // Marche pas trop mais y'a de l'idée 
-    shadeColor(color, percent) {
-        let R = parseInt(color.substring(1, 3), 16);
-        let G = parseInt(color.substring(3, 5), 16);
-        let B = parseInt(color.substring(5, 7), 16);
-
-        R = Math.round(R * (1 + percent / 100));
-        G = Math.round(G * (1 + percent / 100));
-        B = Math.round(B * (1 + percent / 100));
-
-        R = (R < 255) ? R : 255;
-        G = (G < 255) ? G : 255;
-        B = (B < 255) ? B : 255;
-
-        const RR = (R.toString(16).length === 1) ? `0${R.toString(16)}` : R.toString(16);
-        const GG = (G.toString(16).length === 1) ? `0${G.toString(16)}` : G.toString(16);
-        const BB = (B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16);
-
-        return `#${RR}${GG}${BB}`;
     }
 }
 

@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
     },
     legendContainerFullDay: {
         width: '50%',
-        paddingTop: 12
+        paddingTop: 6,
+        transform: [{ translateY: 2 }]
     },
     legendItem: {
         flexDirection: 'row',

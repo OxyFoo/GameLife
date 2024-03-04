@@ -15,7 +15,7 @@ import FilledCircle from './filledCircle';
 
 class DayClock extends BackDayClock {
     render() {
-        const { day, state, fillingValue } = this.props;
+        const { style, day, state, fillingValue } = this.props;
         const langDays = langManager.curr['dates']['days'];
 
         const fistLetterUpper = langDays[(day+1)%7].charAt(0).toUpperCase();
@@ -67,7 +67,7 @@ class DayClock extends BackDayClock {
         }
 
         return (
-            <View style={[styles.parent, styleCircle]}>
+            <View style={[styles.parent, styleCircle, style]}>
                 {/** Disable oblic line */}
                 {state === 'disabled' && (
                     <View style={[styles.oblicLine, styleOblicLine]} />

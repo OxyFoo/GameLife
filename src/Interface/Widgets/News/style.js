@@ -43,6 +43,42 @@ const styles = StyleSheet.create({
     nzdItem: {
         marginHorizontal: 16,
         marginBottom: 20
+    },
+
+    // MyQuest render
+    mqContainer: {
+        marginBottom: 16
+    },
+    mqTitle: {
+        marginTop: 8,
+        marginRight: 8
+    },
+    mqItem: {
+        height: 'auto',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginHorizontal: 12,
+        paddingVertical: 6,
+        paddingHorizontal: 12
+    },
+    headerStreak: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    mqDayClock: {
+        marginRight: 16
+    },
+    streak: {
+        height: 24,
+        marginRight: 8,
+        textAlign: 'left'
+    },
+    mqSeparator: {
+        width: '80%',
+        height: .5,
+        marginHorizontal: '10%',
+        opacity: .5
     }
 });
 

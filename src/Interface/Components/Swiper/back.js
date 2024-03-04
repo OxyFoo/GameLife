@@ -74,7 +74,7 @@ class SwiperBack extends React.Component {
 
     /** @param {SwiperProps} nextProps */
     shouldComponentUpdate(nextProps) {
-        if (nextProps.pages.length !== this.props.pages.length) {
+        if (nextProps.pages !== this.props.pages) {
             this.maxHeight = 0;
         }
         return true;

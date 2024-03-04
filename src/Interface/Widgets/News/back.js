@@ -10,6 +10,8 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * 
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Class/Quests/NonZeroDays').ClaimType} ClaimType
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
@@ -27,7 +29,10 @@ class BackNews extends React.Component {
         claimIndex: -1,
         claimDay: 0,
         /** @type {string | null} */
-        claimDate: null
+        claimDate: null,
+
+        /** @type {Array<MyQuest>} */
+        quests: []
     }
 
     constructor(props) {
@@ -44,20 +49,37 @@ class BackNews extends React.Component {
     }
 
     componentDidMount() {
-        this.update();
-        this.listener = user.quests.nonzerodays.claimsList.AddListener(this.update);
+        this.updateNZD(user.quests.nonzerodays.claimsList.Get());
+        this.updateMyQuests(user.quests.myquests.allQuests.Get());
+        this.listenerNZD = user.quests.nonzerodays.claimsList.AddListener(this.updateNZD);
+        this.listenerMyQuests = user.quests.myquests.allQuests.AddListener(this.updateMyQuests);
+        this.listenerActivities = user.activities.allActivities.AddListener(() =>
+            this.updateMyQuests(user.quests.myquests.allQuests.Get())
+        );
     }
 
     componentWillUnmount() {
-        user.quests.nonzerodays.claimsList.RemoveListener(this.listener);
+        user.quests.nonzerodays.claimsList.RemoveListener(this.listenerNZD);
+        user.quests.myquests.allQuests.RemoveListener(this.listenerMyQuests);
+        user.activities.allActivities.RemoveListener(this.listenerActivities);
     }
 
-    update = () => {
+    /** @param {Array<MyQuest>} newQuests */
+    updateMyQuests = (newQuests) => {
+        const quests = newQuests
+            .filter(quest =>
+                user.quests.myquests.GetDays(quest)
+                    .find(d => d.isToday && d.state === 'filling')
+            );
+        this.setState({ quests });
+    }
+
+    /** @param {Array<ClaimType>} claimLists */
+    updateNZD = (claimLists) => {
         let claimDay = 0;
         let claimDate = null;
 
         const claimIndex = user.quests.nonzerodays.GetCurrentClaimIndex();
-        const claimLists = user.quests.nonzerodays.claimsList.Get();
         const claimList = claimLists[claimIndex];
 
         if (claimIndex !== -1) {
@@ -65,16 +87,14 @@ class BackNews extends React.Component {
                 if (!claimList.claimed.includes(claimDay + 1)) break;
             }
             if (!user.quests.nonzerodays.IsCurrentList(claimList)) {
-                claimDate = DateToFormatString(GetDate(claimList.start));
+                claimDate = DateToFormatString(GetDate(claimList.start))
+                    .split('/')
+                    .slice(0, 2)
+                    .join('/');
             }
         }
 
         this.setState({ claimIndex, claimDay, claimDate });
-    }
-
-    /** @param {number} index */
-    onClaimPress = (index) => {
-        this.timeoutToNextClaim = setTimeout(this.update, 500);
     }
 
     goToQuestsPage = () => user.interface.ChangePage('quests');

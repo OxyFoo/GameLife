@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View, ScrollView, Dimensions, Platform, StyleSheet } from 'react-native';
+import { Animated, View, ScrollView, Dimensions, StyleSheet } from 'react-native';
 
 import { RenderSkillsMemo, RenderSkillsSearch } from './renderSkills';
 import { CategoryToItem } from '../../../Activity/types';
@@ -131,7 +131,6 @@ class ActivitySelector extends React.Component {
                     onSwipe={this.handleCategorySwiper}
                     pages={pages}
                     enableAutoNext={false}
-                    //disableSwipe={Platform.OS === 'ios'}
                     disableSwipe={true}
                 />
             </View>

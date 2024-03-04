@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Swiper, Text, XPBar, Page } from 'Interface/Components';
+import { Text, XPBar, Page } from 'Interface/Components';
 import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
 
 /**
@@ -60,10 +60,7 @@ class Home extends BackHome {
                 />
 
                 {mission.state === 'claimed' && (
-                    <Swiper
-                        style={styles.topSpace}
-                        pages={News()}
-                    />
+                    <News style={styles.topSpace} />
                 )}
 
                 <View style={[styles.homeRow, styles.topSpace]}>
@@ -89,10 +86,7 @@ class Home extends BackHome {
                 />
 
                 {mission.state !== 'claimed' && (
-                    <Swiper
-                        style={styles.topSpace}
-                        pages={News()}
-                    />
+                    <News style={styles.topSpace} />
                 )}
 
             </Page>

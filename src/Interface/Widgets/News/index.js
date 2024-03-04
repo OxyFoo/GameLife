@@ -1,108 +1,61 @@
 import * as React from 'react';
-import { View, Linking } from 'react-native';
 
-import styles from './style';
+import BackNews from './back';
+import RenderNew from './renderNews';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
-import langManager from 'Managers/LangManager';
 
 import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
-import Button from 'Interface/Components/Button';
+import Swiper from 'Interface/Components/Swiper';
 
-/**
- * @param {*} eventText String to parse: if it starts with 'https://', open
- *                      the link in the browser, else change the page
- */
-const buttonEvent = (eventText) => {
-    if (eventText.startsWith('https://')) {
-        Linking.openURL(eventText);
-    } else if (user.interface.IsPage(eventText)) {
-        user.interface.ChangePage(eventText);
+class News extends BackNews {
+    state = {
+        pagesNews: []
     }
-};
 
-/**
- * @typedef {import('Data/News').New} New
- * @param {New} Nw
- */
-const renderNew = (Nw) => {
-    const RenderInteraction = () => {
-        const svgIcon = Nw.Icon;
+    constructor(props) {
+        super(props);
 
-        if (Nw.ButtonText !== null) {
-            const eventText = Nw.ButtonEvent;
-
-            let event = undefined;
-            if (eventText !== null) {
-                event = buttonEvent.bind(null, eventText);
+        if (dataManager.news.news.length) {
+            try {
+                const news = dataManager.news.news.map(RenderNew);
+                this.state.pagesNews.push(...news);
+            } catch (e) {
+                user.interface.console.AddLog('error', 'News loading failed: ' + e);
             }
-
-            return (
-                <View style={styles.newInteraction}>
-                    <Button
-                        style={styles.newButton}
-                        color='main2'
-                        iconXml={svgIcon === null ? undefined : svgIcon}
-                        iconColor='white'
-                        onPress={event}
-                        fontSize={12}
-                        borderRadius={8}
-                    >
-                        {langManager.GetText(Nw.ButtonText)}
-                    </Button>
-                </View>
-            );
-        }
-
-        if (svgIcon !== null) {
-            return (
-                <Icon
-                    style={styles.newIcon}
-                    size={52}
-                    color='main2'
-                    xml={svgIcon}
-                />
-            );
-        }
-
-        return null;
-    };
-
-    const RenderText = () => {
-        const text = langManager.GetText(Nw.Content);
-        return (
-            <View style={styles.newText}>
-                <Text fontSize={16}>{text}</Text>
-            </View>
-        )
-    };
-
-    const reverse = Nw.TextAlign === 'right' && RenderInteraction() !== null;
-    const align = reverse ? 'row-reverse' : 'row';
-
-    return (
-        <View style={[styles.new, { flexDirection: align }]}>
-            <RenderText />
-            {Nw.ButtonText !== null && <View style={styles.separator} />}
-            <RenderInteraction />
-        </View>
-    );
-};
-
-const News = () => {
-    let pages = [];
-
-    // Others tab: News (if online)
-    if (dataManager.news.news.length) {
-        try {
-            pages.push(...dataManager.news.news.map(renderNew));
-        } catch (e) {
-            user.interface.console.AddLog('error', 'News loading failed: ' + e);
         }
     }
 
-    return pages;
+    renderRecapNZD = () => {
+        return (
+            <Text>RenderRecapNZD</Text>
+        );
+        return null;
+    }
+
+    renderRecapMyquests = () => {
+        return (
+            <Text>RenderRecapMyquests</Text>
+        );
+        return null;
+    }
+
+    render() {
+        const { pagesNews } = this.state;
+
+        const pages = [
+            this.renderRecapNZD(),
+            this.renderRecapMyquests(),
+            ...pagesNews
+        ];
+
+        return (
+            <Swiper
+                style={this.props.style}
+                pages={pages}
+            />
+        );
+    }
 };
 
 export default News;

@@ -63,6 +63,9 @@ class SwiperBack extends React.Component {
         positionDots: new Animated.Value(this.props.initIndex)
     }
 
+    /** @type {'none' | 'vertical' | 'horizontal'} */
+    scroll = 'none';
+
     componentDidMount() {
         this.startTimer();
     }
@@ -105,12 +108,10 @@ class SwiperBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
-        // Prevent vertical scroll when horizontal swipe
-        event.stopPropagation();
-
         this.stopTimer();
         this.firstPosX = this.posX;
         this.firstTouchX = event.nativeEvent.pageX;
+        this.firstTouchY = event.nativeEvent.pageY;
 
         this.tickPos = 0;
         this.tickTime = Date.now();
@@ -120,7 +121,17 @@ class SwiperBack extends React.Component {
         if (this.props.disableSwipe) return;
 
         // Prevent vertical scroll when horizontal swipe
-        event.stopPropagation();
+        if (this.scroll === 'none') {
+            const deltaX = Math.abs(event.nativeEvent.pageX - this.firstTouchX);
+            const deltaY = Math.abs(event.nativeEvent.pageY - this.firstTouchY);
+            this.scroll = deltaX > deltaY ? 'horizontal' : 'vertical';
+        }
+
+        if (this.scroll === 'horizontal') {
+            event.stopPropagation();
+        } else if (this.scroll === 'vertical') {
+            return;
+        }
 
         // Position
         const currPosX = event.nativeEvent.pageX;
@@ -141,8 +152,7 @@ class SwiperBack extends React.Component {
     }
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
-        // Prevent vertical scroll when horizontal swipe
-        event.stopPropagation();
+        this.scroll = 'none';
 
         // Define the next page index
         let newIndex = 0;

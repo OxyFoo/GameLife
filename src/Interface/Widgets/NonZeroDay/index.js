@@ -89,7 +89,7 @@ class NonZeroDay extends NonZeroDayBack {
                 <RenderItemMemo
                     index={claimDay}
                     claimIndex={claimIndex}
-                    onPress={this.onClaimPress}
+                    handleClaim={this.onClaimPress}
                 />
             </>
         );

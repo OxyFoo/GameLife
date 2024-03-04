@@ -24,7 +24,7 @@ import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
  * @param {StyleProp} [props.style] Style of the container
  * @param {number} props.index Selected day
  * @param {number} props.claimIndex Index of the claim in the nonzeroquests.claimsList
- * @param {(index: number) => void} [props.onPress] Function called when the user press the button
+ * @param {(index: number) => void} [props.handleClaim] Function called when the user press the button
  * @returns {JSX.Element}
  */
 const RenderItem = (props) => {
@@ -88,7 +88,7 @@ const RenderItem = (props) => {
             return;
         }
 
-        props.onPress && props.onPress(props.index);
+        props.handleClaim && props.handleClaim(props.index);
     }
 
     return (

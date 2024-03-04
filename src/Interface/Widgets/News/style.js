@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    // News render
     new: {
         padding: '5%',
         display: 'flex',
@@ -27,6 +28,21 @@ const styles = StyleSheet.create({
         flex: .6,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+
+    // NZD render
+    nzdContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    nzdTitle: {
+        marginVertical: 8,
+        marginRight: 8
+    },
+    nzdItem: {
+        marginHorizontal: 16,
+        marginBottom: 20
     }
 });
 

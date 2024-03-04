@@ -40,7 +40,7 @@ class Swiper extends SwiperBack {
             pages, height, style, onLayout,
             backgroundColor, borderRadius
         } = this.props;
-        const { width, maxHeight, positionX, positionDots } = this.state;
+        const { width, animHeight, positionX, positionDots } = this.state;
 
         if (pages.length === 0) return null;
 
@@ -53,11 +53,11 @@ class Swiper extends SwiperBack {
         }];
 
         return (
-            <View
+            <Animated.View
                 style={[
                     styles.parent,
                     {
-                        height: height || maxHeight,
+                        height: height || animHeight,
                         backgroundColor: themeManager.GetColor(backgroundColor),
                         borderRadius: borderRadius
                     },
@@ -77,7 +77,7 @@ class Swiper extends SwiperBack {
                     pagesLength={pages.length}
                     position={positionDots}
                 />
-            </View>
+            </Animated.View>
         );
     }
 }

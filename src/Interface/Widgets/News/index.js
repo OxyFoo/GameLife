@@ -1,53 +1,75 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
+import styles from './style';
 import BackNews from './back';
 import RenderNew from './renderNews';
 import user from 'Managers/UserManager';
-import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 import Text from 'Interface/Components/Text';
+import Icon from 'Interface/Components/Icon';
 import Swiper from 'Interface/Components/Swiper';
+import { RenderItemMemo } from 'Interface/Widgets/NonZeroDay/element';
 
 class News extends BackNews {
-    state = {
-        pagesNews: []
-    }
-
-    constructor(props) {
-        super(props);
-
-        if (dataManager.news.news.length) {
-            try {
-                const news = dataManager.news.news.map(RenderNew);
-                this.state.pagesNews.push(...news);
-            } catch (e) {
-                user.interface.console.AddLog('error', 'News loading failed: ' + e);
-            }
-        }
+    renderRecapMyquests = () => {
+        return null;
     }
 
     renderRecapNZD = () => {
-        return (
-            <Text>RenderRecapNZD</Text>
-        );
-        return null;
-    }
+        const lang = langManager.curr['nonzerodays'];
+        const { claimDay, claimIndex, claimDate } = this.state;
 
-    renderRecapMyquests = () => {
+        if (claimIndex < 0) {
+            return null;
+        }
+
+        const allClaimLists = user.quests.nonzerodays.claimsList.Get();
+        const claimList = allClaimLists[claimIndex];
+
+        if (claimList.claimed.includes(claimList.daysCount)) {
+            return null;
+        }
+
         return (
-            <Text>RenderRecapMyquests</Text>
+            <View>
+                <View style={styles.nzdContainer}>
+                    {/* Title */}
+                    <Text
+                        style={styles.nzdTitle}
+                        onPress={this.goToQuestsPage}
+                    >
+                        {lang['container-title'] + (claimDate !== null && ' - ' + claimDate)}
+                    </Text>
+
+                    {/* Claim icon */}
+                    <Icon
+                        icon='handPress'
+                        size={18}
+                        color='main1'
+                    />
+                </View>
+
+                {/* Claim item */}
+                <RenderItemMemo
+                    style={styles.nzdItem}
+                    index={claimDay}
+                    claimIndex={claimIndex}
+                    handleClaim={this.onClaimPress}
+                />
+            </View>
         );
-        return null;
     }
 
     render() {
         const { pagesNews } = this.state;
 
         const pages = [
-            this.renderRecapNZD(),
             this.renderRecapMyquests(),
-            ...pagesNews
-        ];
+            this.renderRecapNZD(),
+            ...pagesNews.map(RenderNew)
+        ].filter(page => page !== null);
 
         return (
             <Swiper

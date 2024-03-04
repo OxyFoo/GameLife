@@ -58,10 +58,12 @@ class SwiperBack extends React.Component {
 
     state = {
         width: 0,
-        maxHeight: 0,
+        animHeight: new Animated.Value(0),
         positionX: new Animated.Value(this.props.initIndex),
         positionDots: new Animated.Value(this.props.initIndex)
     }
+
+    maxHeight = 0;
 
     /** @type {'none' | 'vertical' | 'horizontal'} */
     scroll = 'none';
@@ -69,6 +71,15 @@ class SwiperBack extends React.Component {
     componentDidMount() {
         this.startTimer();
     }
+
+    /** @param {SwiperProps} nextProps */
+    shouldComponentUpdate(nextProps) {
+        if (nextProps.pages.length !== this.props.pages.length) {
+            this.maxHeight = 0;
+        }
+        return true;
+    }
+
     componentWillUnmount() {
         this.stopTimer();
     }
@@ -188,10 +199,11 @@ class SwiperBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayoutPage = (event) => {
         const { width, height } = event.nativeEvent.layout;
-        const { maxHeight } = this.state;
 
-        if (height > maxHeight) {
-            this.setState({ width: width, maxHeight: height });
+        if (height > this.maxHeight) {
+            this.maxHeight = height;
+            this.setState({ width: width });
+            SpringAnimation(this.state.animHeight, this.maxHeight, false).start();
         }
     }
 }

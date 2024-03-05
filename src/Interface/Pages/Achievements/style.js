@@ -43,6 +43,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 6,
         bottom: 0
+    },
+    progressBarIcon: {
+        position: 'absolute',
+        bottom: 6,
+        left: 6
     }
 });
 

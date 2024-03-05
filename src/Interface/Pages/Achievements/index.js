@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Page, Text } from 'Interface/Components';
+import { Icon, Page, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 /**
@@ -69,6 +69,7 @@ class Achievements extends BackAchievements {
                         <Text style={styles.progressionValue} color='secondary' fontSize={10}>
                             {GlobalPercentage + '%'}
                         </Text>
+                        <Icon style={styles.progressBarIcon} icon='social' size={12} color='secondary' />
                         <View style={[styles.progressBarInner, styleFilling]} />
                     </View>
                 </View>

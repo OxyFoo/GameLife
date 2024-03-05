@@ -4,6 +4,7 @@ import { View, FlatList, TouchableOpacity } from 'react-native';
 import styles from './style';
 import BackAchievements from './back';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
@@ -17,6 +18,8 @@ import { PageHeader } from 'Interface/Widgets';
 
 class Achievements extends BackAchievements {
     render() {
+        const lang = langManager.curr['achievements'];
+
         const styleFlatlist = {
             ...styles.flatlist,
             top: this.state.headerHeight
@@ -26,9 +29,17 @@ class Achievements extends BackAchievements {
             <Page ref={ref => this.refPage = ref} scrollable={false}>
                 <View onLayout={this.onLayout}>
                     <PageHeader
+                        style={styles.pageHeader}
                         onBackPress={user.interface.BackHandle}
                         onHelpPress={StartHelp.bind(this)}
                     />
+
+                    {/** Title for multiplayer success */}
+                    {this.friend !== null && (
+                        <Text style={styles.achievementsPlayerTitle} fontSize={22}>
+                            {lang['friend-title'].replace('{}', this.friend.username)}
+                        </Text>
+                    )}
                 </View>
 
                 <FlatList

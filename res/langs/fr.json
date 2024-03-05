@@ -237,6 +237,8 @@
     },
 
     "achievements": {
+        "friend-title": "Succès de {}",
+
         "operators": {
             "LT": "inférieur à",
             "GT": "supérieur à"
@@ -525,6 +527,8 @@
 
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
+
+        "container-achievements-title": "Derniers succès",
 
         "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",

@@ -8,9 +8,15 @@ const styles = StyleSheet.create({
         bottom: 12
     },
 
+    pageHeader: {
+        marginBottom: 24
+    },
     achievementsContainer: {
         width: '50%',
         padding: 6
+    },
+    achievementsPlayerTitle: {
+        marginBottom: 16
     },
     achievementsBox: {
         flex: 1,

@@ -237,6 +237,8 @@
     },
 
     "achievements": {
+        "friend-title": "Success of {}",
+
         "operators": {
             "LT": "Less than",
             "GT": "Greater than"
@@ -525,6 +527,8 @@
 
         "activity-now-title": "Activity now: {}",
         "activity-now-start": "Start the same activity",
+
+        "container-achievements-title": "Last achievements",
 
         "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",

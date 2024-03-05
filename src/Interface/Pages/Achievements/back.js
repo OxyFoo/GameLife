@@ -7,6 +7,7 @@ import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('Data/Achievements').Condition} Condition
+ * @typedef {import('Types/UserOnline').Friend} Friend
  * 
  * @typedef {Object} PanelAchievementType
  * @property {number} ID
@@ -23,7 +24,15 @@ class BackAchievements extends PageBase {
     constructor(props) {
         super(props);
 
-        const completeAchievements = user.achievements.GetSolvedIDs();
+        /** @type {Friend | null} */
+        this.friend = null;
+        if (this.props.args.hasOwnProperty('friend')) {
+            this.friend = this.props.args.friend;
+        }
+
+        const completeAchievements = this.friend === null ?
+            user.achievements.GetSolvedIDs() :
+            this.friend.achievements.map(achievement => achievement.AchievementID);
         const allAchievements = dataManager.achievements.GetAll(completeAchievements);
 
         /** @type {Array<PanelAchievementType>} */

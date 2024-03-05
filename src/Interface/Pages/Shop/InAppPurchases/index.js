@@ -1,26 +1,23 @@
 import * as React from 'react';
 import { View, Image, FlatList } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import BackShopIAP from './back';
 import styles from './style';
 
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Button, Text, Frame } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').BuyableItem} BuyableItem
+ * @typedef {import('./back').IAPItem} IAPItem
+ * @typedef {import('react-native').ListRenderItem<IAPItem>} ListRenderItemIAPItem
  */
 
 class ShopIAP extends BackShopIAP {
-    /**
-     * @param {{ item: ShopItem }} item
-     * @returns {JSX.Element}
-     */
+    /** @type {ListRenderItemIAPItem} */
     renderItem = ({ item }) => {
 
         const backgroundStyle = { backgroundColor: themeManager.GetColor('backgroundCard') };
@@ -42,7 +39,7 @@ class ShopIAP extends BackShopIAP {
 
                         {/** Item price */}
                         <View style={styles.itemPrice}>
-                            <Text style={styles.itemPriceOx}>{item.localizedPrice}</Text>
+                            <Text style={styles.itemPriceOx}>{item.Price}</Text>
                         </View>
 
                     </View>
@@ -62,12 +59,12 @@ class ShopIAP extends BackShopIAP {
     }
 
     render() {
-        const { shopItems } = this.state;
+        const { iapItems } = this.state;
 
         return (
             <FlatList
                 style={styles.flatlist}
-                data={shopItems}
+                data={iapItems}
                 ListEmptyComponent={this.renderEmpty}
                 numColumns={3}
                 renderItem={this.renderItem}

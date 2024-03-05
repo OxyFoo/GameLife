@@ -1,26 +1,24 @@
 import * as React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
+import { requestPurchase } from 'react-native-iap';
 
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
 
-import { requestPurchase } from 'react-native-iap';
-
 /**
+ * @typedef {import('react-native-iap').Product} Product
+ * @typedef {import('react-native-iap').RequestPurchase} RequestPurchase
  * @typedef {import('Data/Items').Item} Item
  */
 
 /**
- * @param {TODO} item
+ * @param {Product} item
  * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
  */
-function renderItemPopup(item, refreshCallback = () => { }) {
-    console.log("item", item)
-
+function renderItemPopup(item, refreshCallback = () => {}) {
     const lang = langManager.curr['shop']['iap'];
     let [loading, setLoading] = React.useState(false);
 
@@ -61,65 +59,20 @@ function renderItemPopup(item, refreshCallback = () => { }) {
     );
 }
 
+/** @param {string} sku Product ID */
 const purchase = async (sku) => {
-    const params = Platform.select({
-        ios: {
+    try {
+        console.log("purchase of sku", sku)
+        const result = await requestPurchase({
             sku: sku,
             andDangerouslyFinishTransactionAutomaticallyIOS: false
-        },
-        android: {
-            skus: [sku]
-        }
-    })
-
-    console.log("purchase of sku", sku, "with params", params)
-
-    try {
-        const result = await requestPurchase(params);
-        console.log("purchase of sku", sku, "success")
-        console.log(result)
+        });
+        console.log(result);
+        return result;
     } catch (err) {
-        console.error(err.code, err.message);
+        user.interface.console.AddLog('error', 'Error purchasing item', err);
+        return null;
     }
 };
-
-/** @param {Item} item */
-const buyDailyDeals = async (item) => {
-    const lang = langManager.curr['shop'];
-
-    // Check Ox Amount
-    if (user.informations.ox.Get() < item.Value) {
-        const title = lang['popup-notenoughox-title'];
-        const text = lang['popup-notenoughox-text'];
-        user.interface.popup.ForceOpen('ok', [title, text]);
-        return;
-    }
-
-    // Buy item
-    const response = await user.server.Request('buyDailyDeals', { itemID: item.ID });
-    if (response === null) return;
-
-    // Request failed
-    if (response['status'] !== 'ok') {
-        const title = lang['reward-failed-title'];
-        const text = lang['reward-failed-text'];
-        user.interface.popup.ForceOpen('ok', [title, text]);
-        return;
-    }
-
-    // Update inventory & Ox amount
-    user.inventory.LoadOnline({ stuffs: response['stuffs'] });
-    user.informations.ox.Set(parseInt(response['ox']));
-    user.shop.buyToday.items.push(item.ID);
-    user.LocalSave();
-
-    // Show success message
-    const itemName = dataManager.GetText(item.Name);
-    const title = lang['dailyDeals']['popup-buysuccess-title'];
-    const text = lang['dailyDeals']['popup-buysuccess-text']
-        .replace('{}', itemName)
-        .replace('{}', item.Value.toString());
-    user.interface.popup.ForceOpen('ok', [title, text], undefined, false);
-}
 
 export { renderItemPopup };

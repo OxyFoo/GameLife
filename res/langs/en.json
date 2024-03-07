@@ -586,7 +586,11 @@
         "temp-comingsoon-title": "Shop",
         "temp-comingsoon-text": "🚧 Available soon 🚧",
 
-        "popup-error": {
+        "popup-purchase": {
+            "purchase-pending": {
+                "title": "Purchase in progress",
+                "message": "Your purchase is in progress, you will receive your reward in a few moments."
+            },
             "purchase-error": {
                 "title": "Error",
                 "message": "An error occurred during the purchase, again again."

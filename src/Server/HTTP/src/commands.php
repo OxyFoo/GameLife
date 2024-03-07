@@ -280,6 +280,8 @@ class Commands {
      * namely: activities, quotes, icons, titles, successes etc.
      */
     public function GetInternalData() {
+        global $IAP_REWARDS;
+
         $appData = GetAppData($this->db);
         $reqHashes = $this->data['hashes'];
 
@@ -292,6 +294,7 @@ class Commands {
             $this->output['tables'] = $newTables;
             $this->output['hashes'] = $appHashes;
             $this->output['music-links'] = $appData['MusicLinks'];
+            $this->output['iap'] = array_keys($IAP_REWARDS);
             $this->output['status'] = 'ok';
         }
     }

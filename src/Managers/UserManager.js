@@ -67,6 +67,8 @@ class UserManager {
     /** @type {Stats | null} */
     stats = null;
 
+    appIsLoaded = false;
+
     /** @type {boolean} */
     globalSaving = false;
 

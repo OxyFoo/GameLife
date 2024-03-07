@@ -184,6 +184,7 @@ async function Initialisation(nextStep, nextPage) {
     const time_text = `Initialisation done in ${time_delta}ms`;
     console.log(time_text);
     user.interface.console.AddLog('info', time_text);
+    user.appIsLoaded = true;
 
     nextPage();
 }

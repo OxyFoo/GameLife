@@ -586,7 +586,11 @@
         "temp-comingsoon-title": "Boutique",
         "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
 
-        "popup-error": {
+        "popup-purchase": {
+            "purchase-pending": {
+                "title": "Achat en cours",
+                "message": "Ton achat est en cours, tu recevras ta récompense dans quelques instants."
+            },
             "purchase-error": {
                 "title": "Erreur",
                 "message": "Une erreur est survenue lors de l'achat, réessaye plus tard."

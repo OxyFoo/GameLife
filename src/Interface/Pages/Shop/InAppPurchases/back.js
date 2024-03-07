@@ -6,11 +6,13 @@ import {
     flushFailedPurchasesCachedAsPendingAndroid,
     getProducts, finishTransaction,
     purchaseUpdatedListener, purchaseErrorListener,
+    ErrorCode
 } from 'react-native-iap';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { Sleep } from 'Utils/Functions';
 import { Character } from 'Interface/Components';
 
 /**
@@ -41,11 +43,6 @@ import { Character } from 'Interface/Components';
  * @property {() => void} OnPress
  */
 
-const skus = Platform.select({
-    ios: ['First_Ox_0_99', 'test_0_99_ox'],
-    android: ['first_ox_0_99']
-});
-
 class BackShopIAP extends React.Component {
     state = {
         /** @type {Array<BuyableItem>} */
@@ -59,10 +56,6 @@ class BackShopIAP extends React.Component {
     purchaseErrorSubscription = null;
 
     componentDidMount() {
-        this.refreshIAP();
-    }
-
-    refreshIAP = async () => {
         initConnection()
             .then((canMakePaymentIOS) => {
                 // We make sure that "ghost" pending payment are removed
@@ -95,7 +88,9 @@ class BackShopIAP extends React.Component {
     }
 
     LoadIAP = async () => {
-        const allIAP = await getProducts({ skus })
+        const allIAP = await getProducts({
+            skus: user.shop.IAP_IDs
+        })
             .catch((error) => {
                 user.interface.console.AddLog('error', '[IAP] Error fetching products', error);
                 return /** @type {Array<Product>} */ ([]);
@@ -105,10 +100,20 @@ class BackShopIAP extends React.Component {
             return;
         }
 
+        /** @param {string} title */
+        const getTitle = (title) => {
+            if (title.endsWith(' (Game Life)')) {
+                return title.slice(0, -12);
+            } else if (title.endsWith(' (GameLife)')) {
+                return title.slice(0, -11);
+            }
+            return title;
+        };
+
         /** @type {Array<IAPItem>} */
         const iapItems = allIAP.map((product, index) => ({
             ID: product.productId,
-            Name: product.title,
+            Name: getTitle(product.title),
             Price: product.localizedPrice,
             Description: product.description,
             OnPress: () => this.purchase(product.productId)
@@ -126,6 +131,13 @@ class BackShopIAP extends React.Component {
 
     /** @param {Purchase} purchase */
     purchaseDidUpdate = async (purchase) => {
+        // If purchase is pending, we should just wait
+        if (purchase.purchaseStateAndroid === PurchaseStateAndroid.PENDING) {
+            const { title, message } = langManager.curr['shop']['popup-purchase']['purchase-pending'];
+            user.interface.popup.Open('ok', [ title, message ], undefined, true);
+            return;
+        }
+
         if (purchase.purchaseStateAndroid !== PurchaseStateAndroid.PURCHASED) {
             // Handle pending purchase, just wait
             return;
@@ -146,6 +158,12 @@ class BackShopIAP extends React.Component {
             return;
         }
 
+        // Wait if reward application is not loaded or 
+        while (user.appIsLoaded === false || user.interface.GetCurrentPageName() === 'chestreward') {
+            await Sleep(200);
+        }
+
+        // Show reward
         user.interface.ChangePage('chestreward', {
             chestRarity: 'ox',
             oxCount: addedOx,
@@ -154,6 +172,7 @@ class BackShopIAP extends React.Component {
             }
         }, true);
 
+        // Finish transaction
         finishTransaction({
             purchase,
 
@@ -164,7 +183,7 @@ class BackShopIAP extends React.Component {
 
     /** @param {PurchaseError} error */
     purchaseDidError = (error) => {
-        if (error.code === 'E_USER_CANCELLED') {
+        if (error.code === ErrorCode.E_USER_CANCELLED) {
             return;
         }
 
@@ -203,13 +222,13 @@ class BackShopIAP extends React.Component {
 
     /**
      * Show error in console & open a popup
-     * @param {keyof Lang['shop']['popup-error']} errorKey
+     * @param {keyof Lang['shop']['popup-purchase']} errorKey
      * @param {string} errorName
      * @param {*} error
      */
     handleError = (errorKey, errorName, error) => {
         user.interface.console.AddLog('error', `[IAP] ${errorName}:`, error);
-        const { title, message } = langManager.curr['shop']['popup-error'][errorKey];
+        const { title, message } = langManager.curr['shop']['popup-purchase'][errorKey];
         user.interface.popup.Open('ok', [ title, message ], undefined, true);
     }
 }

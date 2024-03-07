@@ -29,11 +29,12 @@ ios/.xcode.env.local
 build/
 .idea
 .gradle
-local.properties
 *.iml
 *.hprof
 .cxx/
 .jso/
+local.properties
+index.android.bundle.map
 *.keystore
 !debug.keystore
 
@@ -43,6 +44,7 @@ node_modules/
 npm-debug.log
 yarn-error.log
 package-lock.json
+hs_err_pid*.log
 
 # BUCK
 buck-out/

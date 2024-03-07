@@ -586,6 +586,29 @@
         "temp-comingsoon-title": "Boutique",
         "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
 
+        "popup-error": {
+            "purchase-error": {
+                "title": "Erreur",
+                "message": "Une erreur est survenue lors de l'achat, réessaye plus tard."
+            },
+            "request-purchase-error": {
+                "title": "Erreur",
+                "message": "Une erreur est survenue lors de la demande d'achat, réessaye plus tard."
+            },
+            "no-receipt": {
+                "title": "Erreur",
+                "message": "Aucun reçu n'a été trouvé, réessaye plus tard."
+            },
+            "purchase-handle-error": {
+                "title": "Erreur",
+                "message": "Une erreur est survenue lors de la gestion de l'achat, réessaye plus tard."
+            },
+            "wrong-platform": {
+                "title": "Plateforme incorrecte",
+                "message": "Tu ne peux pas acheter cet item sur cette plateforme."
+            }
+        },
+
         "tuto": {
             "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
             "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",

@@ -586,6 +586,29 @@
         "temp-comingsoon-title": "Shop",
         "temp-comingsoon-text": "🚧 Available soon 🚧",
 
+        "popup-error": {
+            "purchase-error": {
+                "title": "Error",
+                "message": "An error occurred during the purchase, again again."
+            },
+            "request-purchase-error": {
+                "title": "Error",
+                "message": "An error occurred during the purchase request, please try again later."
+            },
+            "no-receipt": {
+                "title": "Error",
+                "message": "No receipt found, please try again later."
+            },
+            "purchase-handle-error": {
+                "title": "Error",
+                "message": "An error occurred during management of the purchase, please try again later."
+            },
+            "wrong-platform": {
+                "title": "Incorrect platform",
+                "message": "You can't buy this item on this platform."
+            }
+        },
+
         "tuto": {
             "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
             "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",

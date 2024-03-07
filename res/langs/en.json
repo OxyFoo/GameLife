@@ -532,7 +532,7 @@
         },
 
         "iap": {
-            "popup-item-button": "Buy for {}"
+            "reward-page-text": "You got {} Ox, congratulations!"
         },
 
         "randomChests": {

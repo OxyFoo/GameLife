@@ -15,6 +15,7 @@ const Color = {
     disabled: '#535C68', // Grey
     transparent: '#00000000', // Transparent
 
+    ox: '#962D8B',
     dataBigKpi: '#232B5D', // Dark blue
     dataSmallKpi: '#38406550', // Transparent blue
 

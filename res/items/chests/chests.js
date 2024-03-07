@@ -5,4 +5,7 @@ const IMG_CHESTS = [
     require('Ressources/items/chests/legendary.png')
 ];
 
+const IMG_CHEST_OX = require('Ressources/items/chests/ox.png');
+
+export { IMG_CHEST_OX };
 export default IMG_CHESTS;

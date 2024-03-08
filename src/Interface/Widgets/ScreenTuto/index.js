@@ -120,7 +120,6 @@ class ScreenTuto extends ScreenTutoBack {
             <Zap
                 onLayout={this.onZapLayout}
                 position={zap.position}
-                color={zap.color}
                 inclinaison={zap.inclinaison}
                 face={zap.face}
                 orientation={zap.orientation}

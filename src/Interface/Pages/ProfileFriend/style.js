@@ -39,6 +39,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
+    // Current activity
+    startNowContainer: {
+        marginTop: 12,
+        alignItems: 'center'
+    },
+    startNowButton: {
+        height: 'auto',
+        width: 200,
+        marginTop: 6,
+        padding: 8,
+        paddingHorizontal: 0
+    },
+
     // KPI
     kpiContainer: {
         flexDirection: 'row',

@@ -138,6 +138,9 @@ class Shop {
         // Save inventory
         this.user.LocalSave();
 
+        // Update mission
+        this.user.missions.SetMissionState('mission3', 'completed');
+
         // Show chest opening
         const args = {
             itemID: newItem['ItemID'],
@@ -186,6 +189,9 @@ class Shop {
 
         // Save inventory
         this.user.LocalSave();
+
+        // Update mission
+        this.user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
         const args = {

@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { ParsePlural } from './String';
-import { GetTime } from './Time';
+import { GetGlobalTime } from './Time';
 import { Random, Range } from './Functions';
 
 /**
@@ -197,7 +197,7 @@ class Notifications {
             const anonymousAuthors = langManager.curr['quote']['anonymous-author-list'];
 
             const quote = dataManager.quotes.GetRandomQuote();
-            const text = dataManager.GetText(quote.Quote);
+            const text = langManager.GetText(quote.Quote);
             const author = quote.Author || anonymousAuthors[Random(0, anonymousAuthors.length)];
 
             return {
@@ -237,7 +237,7 @@ class Notifications {
         __generate: () => {
             // TODO - Finish that
             return null;
-            const now = GetTime();
+            const now = GetGlobalTime();
             const day = 24 * 60 * 60;
             const quests = user.quests.myquests.Get();
             let halftime = {}, tomorrow = {}, today = {};

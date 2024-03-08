@@ -7,7 +7,6 @@ import Container from './Components/Container';
 import DayClock from './Components/DayClock';
 import Digit from './Components/Digit';
 import Frame from './Components/Character/Frame';
-import FriendElement from './Components/FriendElement';
 import GLLoading from './Components/GLLoading';
 import HeatMap from './Components/HeatMap';
 import Icon from './Components/Icon';
@@ -26,6 +25,7 @@ import Swiper from './Components/Swiper';
 import Switch from './Components/Switch';
 import Text from './Components/Text';
 import TextSwitch from './Components/TextSwitch';
+import UserOnlineElement from './Components/UserOnlineElement';
 import XPBar from './Components/XPBar';
 import Zap from './Components/Zap';
 
@@ -39,7 +39,6 @@ export {
     DayClock,
     Digit,
     Frame,
-    FriendElement,
     GLLoading,
     HeatMap,
     Icon,
@@ -58,6 +57,7 @@ export {
     Switch,
     Text,
     TextSwitch,
+    UserOnlineElement,
     XPBar,
     Zap
 };

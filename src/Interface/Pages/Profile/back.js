@@ -1,9 +1,10 @@
 import StartTutorial from './tuto';
+import StartMission from './mission';
 
 import user from 'Managers/UserManager';
 
 import { PageBase } from 'Interface/Components';
-import { GetDate, GetTime } from 'Utils/Time';
+import { GetDate, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('./editorAvatar').default} EditorAvatar
@@ -28,7 +29,6 @@ class BackProfile extends PageBase {
 
         /** @type {ProfileEditor} */
         this.refProfileEditor = null;
-        this.time_start = Date.now();
 
         const activities = user.activities.Get();
         this.state.playedDays = this.getTimeFromFirst(activities);
@@ -40,10 +40,6 @@ class BackProfile extends PageBase {
 
     componentDidMount() {
         super.componentDidMount();
-
-        const time_end = Date.now();
-        const time = time_end - this.time_start;
-        user.interface.console.AddLog('info', 'PROFILE loaded in ' + time + 'ms');
 
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
@@ -63,6 +59,7 @@ class BackProfile extends PageBase {
         this.refAvatar.refFrame.forceUpdate();
 
         StartTutorial.call(this, args?.tuto);
+        StartMission.call(this, args?.missionName);
     }
 
     componentWillUnmount() {
@@ -100,7 +97,7 @@ class BackProfile extends PageBase {
 
         const initTime = activities[0].startTime;
         const initDate = GetDate(initTime);
-        const diff = (GetTime() - GetTime(initDate)) / (60 * 60 * 24);
+        const diff = (GetGlobalTime() - GetGlobalTime(initDate)) / (60 * 60 * 24);
         return Math.floor(diff);
     }
 

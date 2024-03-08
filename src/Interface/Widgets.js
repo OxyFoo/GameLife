@@ -6,6 +6,7 @@ import ActivitySchedule from './Widgets/ActivitySchedule';
 import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
 import Console from './Widgets/Console';
+import Missions from './Widgets/Missions';
 import MultiplayerPanel from './Widgets/MultiplayerPanel';
 import MyQuestsList from './Widgets/MyQuestsList';
 import News from './Widgets/News';
@@ -36,6 +37,7 @@ export {
     BlockMonth,
     BottomBar,
     Console,
+    Missions,
     MultiplayerPanel,
     MyQuestsList,
     News,

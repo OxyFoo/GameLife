@@ -9,7 +9,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
-import { Text } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
 import { GetDate } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 
@@ -21,6 +21,7 @@ function RenderPopup(props) {
 
     const claimsList = user.quests.nonzerodays.claimsList.Get();
     const [ claimIndex, setClaimIndex ] = React.useState(user.quests.nonzerodays.GetCurrentClaimIndex());
+    const [ claimCount, setClaimCount ] = React.useState(0);
 
     let timeout;
     React.useEffect(() => {
@@ -35,6 +36,14 @@ function RenderPopup(props) {
             user.quests.nonzerodays.claimsList.RemoveListener(listener);
         }
     }, []);
+
+    React.useEffect(() => {
+        if (claimIndex !== -1) {
+            const claimTotal = claimsList[claimIndex].daysCount;
+            const claimedCount = claimsList[claimIndex].claimed.length;
+            setClaimCount(claimTotal - claimedCount);
+        }
+    }, [ claimIndex ]);
 
     let claimDate = null;
     let isCurrentStreak = false;
@@ -86,6 +95,19 @@ function RenderPopup(props) {
                 )}
                 showsVerticalScrollIndicator={false}
             />
+
+            {claimCount > 3 && (
+                <View style={styles.claimAllView}>
+                    <Button
+                        style={styles.claimAllButton}
+                        color='background'
+                        rippleColor='white'
+                        onPress={user.quests.nonzerodays.ClaimAll}
+                    >
+                        {lang['claim-all']}
+                    </Button>
+                </View>
+            )}
         </View>
     );
 }

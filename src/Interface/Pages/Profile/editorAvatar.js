@@ -178,8 +178,8 @@ class EditorAvatarRender extends EditorAvatarBack {
             const item = dataManager.items.GetByID(stuffSelected.ItemID);
             const equippedStuffsID = user.inventory.GetEquipments();
 
-            name = dataManager.GetText(item.Name);
-            description = dataManager.GetText(item.Description);
+            name = langManager.GetText(item.Name);
+            description = langManager.GetText(item.Description);
             ox = Math.ceil(item.Value * .75);
             isEquipped = equippedStuffsID.includes(stuffSelected.ID);
         }
@@ -319,7 +319,7 @@ class EditorAvatarRender extends EditorAvatarBack {
         return (
             <>
                 {/* Character */}
-                <Animated.View ref={ref => this.refButton = ref} style={characterStyle} onLayout={this.onCharacterLayout}>
+                <Animated.View ref={this.refButton} style={characterStyle} onLayout={this.onCharacterLayout}>
                     <Animated.View style={[styles.columnSide, columnOpacity]}>
                         {this.renderButtonItem('hair')}
                         {this.renderButtonItem('top')}

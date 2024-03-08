@@ -6,17 +6,21 @@ import { OpenStore } from 'Utils/Store';
 import { Request_Async } from 'Utils/Request';
 import { GetDeviceInformations } from 'Utils/Device';
 
+const { versionName } = require('../../package.json');
+
 /**
+ * @typedef {import('Managers/LangManager').Lang} Lang
+ * 
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
- * @typedef {'ok'|'free'|'waitMailConfirmation'|'ban'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
+ * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
+ * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNonZeroDays'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNonZeroDays'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 
 /** @type {ServerStatus[]} */
-const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'ban', 'newDevice', 'remDevice', 'maintenance', 'update', 'downdate', 'limitDevice', 'error' ];
+const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'newDevice', 'remDevice', 'maintenance', 'update', 'downdate', 'limitDevice', 'error' ];
 
 class Server {
     /** @param {UserManager} user */
@@ -29,6 +33,9 @@ class Server {
 
     /** @type {boolean} True if the server is online */
     online = false;
+
+    /** @type {boolean} True if the user is banned */
+    isBanned = false;
 
     /** @type {ServerStatus} */
     status = 'offline';
@@ -56,15 +63,16 @@ class Server {
             return false;
         }
 
-        if (this.status === 'ok') {
-            return true;
+        if (keepBanOrDowndate) {
+            if (this.status === 'downdate' || this.status === 'maintenance') {
+                return true;
+            }
+            if (this.status === 'ok' && this.isBanned) {
+                return true;
+            }
         }
 
-        if (keepBanOrDowndate && this.status === 'ban') {
-            return true;
-        }
-
-        if (keepBanOrDowndate && this.status === 'downdate') {
+        if (this.status === 'ok' && this.isBanned === false) {
             return true;
         }
 
@@ -134,8 +142,13 @@ class Server {
         let remainMailTime = null;
 
         const lang = langManager.currentLangageKey;
-        const device = GetDeviceInformations();
-        const result_connect = await this.Request('login', { email, lang, ...device });
+        const data = {
+            email,
+            lang,
+            version: versionName,
+            ...GetDeviceInformations()
+        };
+        const result_connect = await this.Request('login', data);
 
         if (result_connect === null) {
             this.user.interface.console.AddLog('error', 'Request - connect failed:', result_connect);
@@ -152,12 +165,15 @@ class Server {
             }
         }
 
-        if (status === 'ban') {
-            this.user.interface.console.AddLog('warn', 'Request: connect - BANNED');
-        }
-        if (status === 'ok' || status === 'ban') {
-            const token = result_connect['token'];
-            if (typeof(token) !== 'undefined' && token.length) {
+        if (status === 'ok') {
+            const { isBanned, token } = result_connect;
+
+            if (isBanned === true) {
+                this.isBanned = true;
+                this.user.interface.console.AddLog('warn', 'Request: connect - banned');
+            }
+
+            if (typeof(token) === 'string' && token.length > 0) {
                 this.token = token;
             } else {
                 status = 'error';
@@ -237,6 +253,26 @@ class Server {
     async ClaimAchievement(achievementID) {
         const _data = { achievementID };
         const response = await this.Request('claimAchievement', _data);
+        if (response === null) return false;
+
+        const status = response['status'];
+        if (status !== 'ok') return false;
+
+        if (!response.hasOwnProperty('rewards')) {
+            return false;
+        }
+
+        return response['rewards'];
+    }
+
+    /**
+     * Send achievements unsaved on server (don't reload dataToken or inventory)
+     * @param {keyof Lang['missions']['content']} missionName Data to add to server
+     * @returns {Promise<string | false>} Return rewards string or false if failed
+     */
+    async ClaimMission(missionName) {
+        const _data = { missionName };
+        const response = await this.Request('claimMission', _data);
         if (response === null) return false;
 
         const status = response['status'];
@@ -367,15 +403,6 @@ class Server {
         }
 
         return response.content;
-    }
-
-    GetLeaderboard(week = false) {
-        let data = {
-            'action': 'getLeaderboard',
-            'token': this.token
-        }
-        if (week) data['time'] = 'week';
-        return Request_Async(data);
     }
 }
 

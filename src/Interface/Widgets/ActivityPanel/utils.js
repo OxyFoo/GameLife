@@ -1,9 +1,6 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime, RoundTimeTo } from 'Utils/Time';
-import { MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
-
 /**
  * @typedef {import('./index').default} ActivityPanel
  * @typedef {import('Class/Activities').Activity} Activity
@@ -30,22 +27,4 @@ async function onRemComment(callback) {
     user.interface.popup.Open('yesno', [ title, text ], cb);
 }
 
-/** @this ActivityPanel */
-function StartActivity() {
-    const skillID = this.state.selectedSkillID;
-    const localTime = GetTime(undefined, 'local');
-    const startTime = RoundTimeTo(TIME_STEP_MINUTES, localTime, 'near');
-
-    if (!user.activities.TimeIsFree(startTime, MIN_TIME_MINUTES)) {
-        const title = langManager.curr['activity']['alert-wrongtiming-title'];
-        const text = langManager.curr['activity']['alert-wrongtiming-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
-        return;
-    }
-
-    user.activities.currentActivity = { skillID, startTime, localTime };
-    user.LocalSave();
-    user.interface.ChangePage('activitytimer', undefined, true);
-}
-
-export { AskActivityComment, onRemComment, StartActivity };
+export { AskActivityComment, onRemComment };

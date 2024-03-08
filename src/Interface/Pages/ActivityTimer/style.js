@@ -15,9 +15,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    title: {
-        fontSize: 28
-    },
     button: {
         width: '45%'
     },
@@ -33,7 +30,7 @@ const styles = StyleSheet.create({
     image: {
         width: IMAGE_SIZE,
         height: IMAGE_SIZE,
-        marginTop: 24,
+        marginTop: 12,
         resizeMode: 'contain'
     }
 });

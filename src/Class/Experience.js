@@ -1,6 +1,6 @@
 import dataManager from 'Managers/DataManager';
 
-import { Sum } from 'Utils/Functions';
+import { MinMax, Sum } from 'Utils/Functions';
 
 const USER_XP_PER_LEVEL = 20;
 const STAT_XP_PER_LEVEL = 2;
@@ -8,6 +8,7 @@ const SKILL_XP_PER_LEVEL = 20;
 
 
 /**
+ * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Managers/UserManager').Stats} Stats
  * 
@@ -30,11 +31,20 @@ class Experience {
     constructor(user) {
         this.user = user;
         this.getUsefulActivities = this.user.activities.GetUseful;
+
+        this.cache = {
+            id: '',
+            /** @type {{stats: Stats, xpInfo: XPInfo}} */
+            experience: {
+                stats: this.GetEmptyExperience(),
+                xpInfo: this.getXPDict(0, 1)
+            }
+        };
     }
 
+    /** @returns {Stats} */
     GetEmptyExperience() {
-        const getDict = i => ({[i]: this.getXPDict()});
-        const stats = this.user.statsKey.map(getDict);
+        const stats = this.user.statsKey.map(i => ({[i]: this.getXPDict()}));
         return Object.assign({}, ...stats);
     }
 
@@ -44,6 +54,11 @@ class Experience {
     GetExperience() {
         const { statsKey } = this.user;
         const activities = this.getUsefulActivities();
+
+        if (this.cache.id === activities.length.toString()) {
+            return this.cache.experience;
+        }
+
         let XP = 0;
 
         /** @type {Stats} */
@@ -61,6 +76,9 @@ class Experience {
             const durationHour = activity.duration / 60;
             XP += skill.XP * durationHour;
 
+            // Friends bonus
+            XP += XP * this.GetExperienceFriendBonus(activity);
+
             // Stats
             for (let s in statsKey) {
                 const stat = statsKey[s];
@@ -73,10 +91,24 @@ class Experience {
             stats[key] = this.getXPDict(statValues[key], STAT_XP_PER_LEVEL);
         }
 
+        this.cache.id = activities.length.toString();
+        this.cache.experience = { stats, xpInfo: this.getXPDict(XP, USER_XP_PER_LEVEL) };
+
         return {
-            'stats': stats,
-            'xpInfo': this.getXPDict(XP, USER_XP_PER_LEVEL)
+            stats: stats,
+            xpInfo: this.getXPDict(XP, USER_XP_PER_LEVEL)
         };
+    }
+
+    /**
+     * @param {Activity} activity
+     * @returns {number} XP bonus (between 0 and 0.2)
+     */
+    GetExperienceFriendBonus(activity) {
+        if (activity.friends.length === 0) return 0;
+
+        const bonus = activity.friends.length * 2;
+        return MinMax(0, bonus, 20) / 100;
     }
 
     /**
@@ -143,12 +175,7 @@ class Experience {
         const xp = totalXP - (lvl * (lvl - 1) / 2) * xpPerLevel;
         const next = lvl * xpPerLevel;
 
-        return {
-            'xp': xp,
-            'lvl': lvl,
-            'next': next,
-            'totalXP': totalXP
-        };
+        return { xp, lvl, next, totalXP };
     }
 }
 

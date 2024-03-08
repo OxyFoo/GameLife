@@ -1,11 +1,13 @@
 import { AddLog } from '../Utils/Logs.js';
+import { StrIsJson } from '../Utils/Functions.js';
+import { GetCurrentActivity } from '../Utils/CurrentActivities.js';
 
 /**
  * @typedef {import('../Users.js').User} User
  * @typedef {import('../Users.js').default} Users
- * @typedef {import('Types/Friend.js').Friend} Friend
- * @typedef {import('Types/Friend.js').ConnectionState} ConnectionState
- * @typedef {import('Types/Friend.js').FriendshipState} FriendshipState
+ * @typedef {import('Types/UserOnline.js').Friend} Friend
+ * @typedef {import('Types/UserOnline.js').ConnectionState} ConnectionState
+ * @typedef {import('Types/UserOnline.js').FriendshipState} FriendshipState
  */
 
 /**
@@ -18,7 +20,7 @@ async function GetUserFriends(users, user) {
     const command = `
         SELECT 
             f.AccountID, f.TargetID, f.State,
-            a.Username, a.Title, a.XP,
+            a.Username, a.Title, a.XP, a.Stats,
             av.Sexe, av.Skin, av.SkinColor,
             hair.ItemID AS HairItemID,
             top.ItemID AS TopItemID,
@@ -40,40 +42,62 @@ async function GetUserFriends(users, user) {
     }
 
     /** @type {Array<Friend>} */
-    const friends = friendships.map(/** @return {Friend} */ row => ({
-        status: users.AllUsers.findIndex(u => u.accountID === row.AccountID) !== -1 ? 'online' : 'offline',
-        accountID: row.AccountID === userID ? row.TargetID : row.AccountID,
-        username: row.Username,
-        title: row.Title,
-        xp: row.XP,
-        avatar: {
-            Sexe: row.Sexe,
-            Skin: row.Skin,
-            SkinColor: row.SkinColor,
-            Hair: row.HairItemID,
-            Top: row.TopItemID,
-            Bottom: row.BottomItemID,
-            Shoes: row.ShoesItemID,
-        },
-        friendshipState: row.State,
-        activities: {
-            firstTime: 0,
-            length: 0,
-            totalDuration: 0
+    const friends = friendships.map(/** @return {Friend} */ row => {
+        const accountID = row.AccountID === userID ? row.TargetID : row.AccountID;
+        const friendInAllUsersIndex = users.AllUsers.findIndex(u => u.accountID === accountID);
+        const stats = { agi: 0, dex: 0, for: 0, int: 0, soc: 0, sta: 0 };
+        if (row.Stats !== null && StrIsJson(row.Stats)) {
+            const parsedStats = JSON.parse(row.Stats);
+            for (const key in parsedStats) {
+                stats[key] = parsedStats[key];
+            }
         }
-    }));
+
+        return ({
+            status: friendInAllUsersIndex !== -1 ? 'online' : 'offline',
+            accountID: accountID,
+            username: row.Username,
+            title: row.Title,
+            xp: row.XP,
+            stats: stats,
+            friendshipState: row.State,
+
+            avatar: {
+                Sexe: row.Sexe,
+                Skin: row.Skin,
+                SkinColor: row.SkinColor,
+                Hair: row.HairItemID,
+                Top: row.TopItemID,
+                Bottom: row.BottomItemID,
+                Shoes: row.ShoesItemID,
+            },
+            activities: {
+                firstTime: 0,
+                length: 0,
+                totalDuration: 0
+            },
+            currentActivity: null
+        })
+    });
 
     if (friends.length === 0) {
         return friends;
     }
 
     // Get friends KPI
-    const friendIDs = friends.map(friend => friend.accountID);
+    const friendIDs = friends
+        .filter(friend => friend.friendshipState === 'accepted')
+        .map(friend => friend.accountID);
+
+    if (friendIDs.length === 0) {
+        return friends;
+    }
+
     const activitiesQuery = `
-        SELECT 
+        SELECT
             AccountID,
-            MIN(AddedTime) AS FirstActivity, 
-            COUNT(*) AS TotalActivities, 
+            MIN(AddedTime) AS FirstActivity,
+            COUNT(*) AS TotalActivities,
             SUM(Duration) AS TotalDuration
         FROM Activities
         WHERE AccountID IN (${friendIDs.join(',')})
@@ -81,18 +105,20 @@ async function GetUserFriends(users, user) {
     `;
     const activitiesResults = await users.db.ExecQuery(activitiesQuery);
     if (activitiesResults === null) {
-        AddLog(users, user, 'cheatSuspicion', 'Activities not found');
         return null;
     }
 
     friends.forEach(friend => {
         const activity = activitiesResults.find(a => a.AccountID === friend.accountID);
-        if (!activity) return;
-        friend.activities = {
-            firstTime: activity.FirstActivity,
-            length: activity.TotalActivities,
-            totalDuration: activity.TotalDuration,
-        };
+        if (!!activity) {
+            friend.activities.firstTime = activity.FirstActivity;
+            friend.activities.length = activity.TotalActivities;
+            friend.activities.totalDuration = activity.TotalDuration;
+        }
+
+        if (friend.status === 'online') {
+            friend.currentActivity = GetCurrentActivity(users, friend);
+        }
     });
 
     return friends;
@@ -117,10 +143,11 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
     }
 
     const commandInfo = `
-        SELECT 
+        SELECT
             a.\`Username\`,
             a.\`Title\`,
             a.\`XP\`,
+            a.\`Stats\`,
             av.\`Sexe\`,
             av.\`Skin\`,
             av.\`SkinColor\`,
@@ -146,7 +173,19 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
         return null;
     }
 
-    const friendStatus = users.AllUsers.findIndex(u => u.accountID === friendID) !== -1 ? 'online' : 'offline';
+    /** @type {ConnectionState} */
+    let friendStatus = 'offline';
+    if (users.AllUsers.findIndex(u => u.accountID === friendID) !== -1) {
+        friendStatus = 'online';
+    }
+
+    const stats = { agi: 0, dex: 0, for: 0, int: 0, soc: 0, sta: 0 };
+    if (friendInfo[0]['Stats'] !== null && StrIsJson(friendInfo[0]['Stats'])) {
+        const parsedStats = JSON.parse(friendInfo[0]['Stats']);
+        for (const key in parsedStats) {
+            stats[key] = parsedStats[key];
+        }
+    }
 
     /** @type {Friend} */
     const newFriend = {
@@ -155,6 +194,9 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
         username: friendInfo[0]['Username'],
         title: friendInfo[0]['Title'],
         xp: friendInfo[0]['XP'],
+        stats: stats,
+        friendshipState: friendshipsState,
+
         avatar: {
             Sexe: friendInfo[0]['Sexe'],
             Skin: friendInfo[0]['Skin'],
@@ -164,13 +206,23 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
             Bottom: friendInfo[0]['BottomItemID'],
             Shoes: friendInfo[0]['ShoesItemID'],
         },
-        friendshipState: friendshipsState,
         activities: {
-            firstTime: friendInfo[0]['FirstActivity'],
-            length: friendInfo[0]['TotalLength'],
-            totalDuration: friendInfo[0]['TotalDuration']
-        }
+            firstTime: 0,
+            length: 0,
+            totalDuration: 0
+        },
+        currentActivity: null
     };
+
+    if (friendshipsState === 'accepted') {
+        newFriend.activities.firstTime = friendInfo[0]['FirstActivity'];
+        newFriend.activities.length = friendInfo[0]['TotalLength'];
+        newFriend.activities.totalDuration = friendInfo[0]['TotalDuration'];
+
+        if (friendStatus === 'online') {
+            newFriend.currentActivity = GetCurrentActivity(users, newFriend);
+        }
+    }
 
     return newFriend;
 }

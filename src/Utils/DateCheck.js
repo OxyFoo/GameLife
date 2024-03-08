@@ -3,7 +3,7 @@ import RNExitApp from 'react-native-exit-app';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetTime } from './Time';
+import { GetGlobalTime } from './Time';
 import DataStorage, { STORAGE } from './DataStorage';
 
 async function CheckDate() {
@@ -21,7 +21,7 @@ async function CheckDate() {
 
 async function DateIsSafe() {
     // Check local date
-    const now = GetTime();
+    const now = GetGlobalTime();
     const data = await DataStorage.Load(STORAGE.DATE);
     DataStorage.Save(STORAGE.DATE, { date: now });
 

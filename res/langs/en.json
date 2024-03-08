@@ -49,7 +49,72 @@
             "friend-pending-decline": "Decline",
             "friend-pending-block": "Block",
 
-            "list-empty": "No notifications available"
+            "global-message-open": "Open",
+            "global-message-respond": "Reply",
+            "global-message-claim": "Claim",
+            "global-message-close": "Close",
+            "global-message-input": "Reply to developers",
+            "global-message-mark-read": "Mark as read",
+
+            "list-empty": "No notifications available",
+
+            "popup-responded-title": "Thanks",
+            "popup-responded-text": "Thanks for your reply!",
+            "popup-claim-ox-title": "Congrats",
+            "popup-claim-ox-text": "You have won {} Ox!",
+            "popup-error-title": "Error",
+            "popup-error-text": "An error has occurred, please try again later."
+        }
+    },
+
+    "missions": {
+        "text-hint": "Press to do the mission",
+        "text-claim": "Press to claim the reward",
+
+        "content": {
+            "mission1": {
+                "title": "Make an activity",
+                "texts": {
+                    "1": "Press this button to go to the activities page",
+                    "2": "Here you are on the page of adding activity, you have to enter activities that you have done in real life!",
+                    "3": "Start by choosing an activity (you can use the categories or research to find what you want)",
+                    "4": "You can add an activity that you have already done, noting the time and duration of it ...",
+                    "5": "Or you can launch a timer to start the activity by pressing the \"Start button now \""
+                }
+            },
+            "mission2": {
+                "title": "Create a quest",
+                "texts": {
+                    "1": "Support here to go to the quest page",
+                    "2": "Pressing the + button to create a new quest",
+                    "3": "Fill in the requested information, such as the title, activities to be carried out, duration etc"
+                }
+            },
+            "mission3": {
+                "title": "Buy an item",
+                "texts": {
+                    "1": "Start by going to the shop",
+                    "2": "The Ox are the currency of the game, you can win them by looking at ads, by making quests, successes etc",
+                    "3": "Here you can exchange them for what you want, a specific item (among 3 proposed, which change every day), or a trunk to have a random item"
+                }
+            },
+            "mission4": {
+                "title": "Equip an item",
+                "texts": {
+                    "1": "Start by going to your profile",
+                    "2": "Here you can see your avatar, click on it to open your inventory",
+                    "3": "You can equip an item by pressing on it, or sell it to win ox"
+                }
+            },
+            "mission5": {
+                "title": "Ask for a friend",
+                "texts": {
+                    "1": "In this widget you can see your connected friends ...",
+                    "2": "Click on this button to go to the friends page",
+                    "3": "At the bottom right of this page you have a button to add a friend",
+                    "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
+                }
+            }
         }
     },
 
@@ -100,6 +165,14 @@
             "Friday",
             "Saturday"
         ]
+    },
+
+    "app": {
+        "loading-error-message": {
+            "internaldata-not-loaded": "Internal data not loaded",
+            "userdata-not-loaded": "User data not loaded"
+        },
+        "loading-error-button": "Quitter"
     },
 
     "modal": {
@@ -203,6 +276,7 @@
         "title-click-me": "(you can click me)",
         "title-schedule": "Schedule",
         "title-experience": "Experience",
+        "title-friends": "Activity partner",
         "title-no-experience": "This activity has no experience",
         "title-not-past": "This activity has not yet been completed",
         "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience and does not count towards quests.",
@@ -228,7 +302,8 @@
         "alert-remcomment-text": "Are you sure you want to delete this comment?",
 
         "timer-launch": "Launch time:",
-        "timer-gain": "Current gains",
+        "timer-gain": "Current gains: {}",
+        "timer-friends": "Friends doing the same activity at the same time!",
         "timer-complete": "Complete",
         "timer-cancel": "Cancel",
         "timer-music": "Zap music will help you focus",
@@ -275,6 +350,7 @@
 
         "container-stats-title": "Stats",
         "container-skills-title": "Skills",
+        "container-skills-empty": "No skills yet, do one and it will appear here !",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
@@ -291,15 +367,8 @@
     },
 
     "leaderboard": {
-        "page-title": "Leaderboard",
-
-        "button-global-text": "Global",
-        "button-week-text": "Week",
-
-        "alert-onlineneed-title": "Connection required",
-        "alert-onlineneed-text": "A connection is required to access the ranking!",
-        "alert-connectneed-title": "Log in",
-        "alert-connectneed-text": "To appear in the ranking, log in by entering your email address in the 'Identity' page."
+        "label-activities": "Activities",
+        "input-label-search": "Search for a player"
     },
 
     "login": {
@@ -336,7 +405,8 @@
         "button-retry": "Retry",
 
         "container-title": "Multiplayer",
-        "container-content-empty": "No friends yet",
+        "container-content-empty": "No friends connected yet",
+        "container-friends-empty": "You have no friends yet, press the button below to add some!",
         "container-content-idle": "Loading...",
         "container-content-disconnected": "Disconnected, please try again later.",
         "container-content-error": "An error has occurred, please try again later.",
@@ -346,12 +416,15 @@
 
         "input-search-friend": "Search for a friend",
 
-        "temp-comingsoon-title": "Multiplayer",
-        "temp-comingsoon-text": "🚧 Coming soon 🚧",
+        "friend-do-activity-now": "Activity: {}",
 
         "alert-already-friend": {
             "title": "Already friends",
             "message": "You are already friends with {}"
+        },
+        "alert-friend-blocked": {
+            "title": "Blocked",
+            "message": "User {} has been blocked"
         },
         "alert-friend-notfound": {
             "title": "User not found",
@@ -441,7 +514,13 @@
         "row-activities": "Number of activities",
         "row-time": "Time spent",
 
+        "activity-now-title": "Activity now: {}",
+        "activity-now-start": "Start the same activity",
+
+        "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",
+        "alert-cancelfriend-title": "Cancel request",
+        "alert-cancelfriend-text": "Are you sure you want to cancel the friend request to {}?",
         "alert-removefriend-title": "Remove friend",
         "alert-removefriend-text": "Are you sure you want to remove {} from your friends?"
     },
@@ -651,15 +730,23 @@
             "int": "Intelligence",
             "soc": "Social",
             "for": "Strength",
-            "end": "Stamina",
+            "sta": "Stamina",
             "agi": "Agility",
             "dex": "Dexterity"
+        },
+        "names-min": {
+            "int": "Int",
+            "soc": "Soc",
+            "for": "Str",
+            "sta": "Sta",
+            "agi": "Agi",
+            "dex": "Dex"
         },
         "descriptions": {
             "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
             "soc": "Social competence is a skill that increases when you do activities with other people. For example, team sports or going out with friends.",
             "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
-            "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
+            "sta": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
             "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision quests, writing quests on a computer or even with musical instruments."
         }
@@ -795,6 +882,7 @@
         "container-date": "Rewards from {}",
         "claim": "Claim",
         "claim-in": "Claim in {}",
+        "claim-all": "Claim all",
         "no-claim": "No claim available",
 
         "alert-claim-error-title": "Error",

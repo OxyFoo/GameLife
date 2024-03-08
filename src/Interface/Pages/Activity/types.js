@@ -1,7 +1,8 @@
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
-import { GetTime } from 'Utils/Time';
+import { GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/Skills').Category} Category
@@ -18,7 +19,7 @@ import { GetTime } from 'Utils/Time';
  */
 const SkillToItem = (skill = null, callback = (param) => {}) => ({
     id: skill === null ? 0 : skill.ID,
-    value: skill === null ? '' : dataManager.GetText(skill.Name),
+    value: skill === null ? '' : langManager.GetText(skill.Name),
     categoryID: skill === null ? 0 : skill.CategoryID,
     onPress: () => callback(skill)
 });
@@ -29,7 +30,7 @@ const SkillToItem = (skill = null, callback = (param) => {}) => ({
  */
 const CategoryToItem = (category) => ({
     id: category.ID,
-    name: dataManager.GetText(category.Name),
+    name: langManager.GetText(category.Name),
     icon: dataManager.skills.GetXmlByLogoID(category.LogoID)
 });
 
@@ -38,12 +39,12 @@ const CategoryToItem = (category) => ({
  * @returns {Array<ItemSkill>}
  */
 const GetRecentSkills = (callback) => {
-    const now = GetTime(undefined, 'local');
+    const now = GetLocalTime();
     return user.activities.Get()
         .filter(activity => activity.startTime <= now)
         .reverse()
         .map(activity => dataManager.skills.GetByID(activity.skillID))
-        .filter(skill => skill !== null)
+        .filter(skill => skill !== null && skill.Enabled)
         // Remove duplicate
         .filter((skill, index, self) => self.findIndex(s => s.ID === skill.ID) === index)
         .map(skill => SkillToItem(skill, callback));

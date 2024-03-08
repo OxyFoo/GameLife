@@ -2,10 +2,12 @@ import About from './Pages/About/index';
 import Achievements from './Pages/Achievements/index';
 import Activity from './Pages/Activity/index';
 import ActivityTimer from './Pages/ActivityTimer/index';
+import BenchMark from './Pages/BenchMark/index';
 import Calendar from './Pages/Calendar/index';
 import ChestReward from './Pages/ChestReward/index';
 import Display from './Pages/Display/index';
 import Home from './Pages/Home/index';
+import Leaderboard from './Pages/Leaderboard/index';
 import Loading from './Pages/Loading/index';
 import Login from './Pages/Login/index';
 import Multiplayer from './Pages/Multiplayer/index';
@@ -30,10 +32,12 @@ const PAGES = {
     'achievements':     Achievements,
     'activity':         Activity,
     'activitytimer':    ActivityTimer,
+    'benchmark':        BenchMark,
     'calendar':         Calendar,
     'chestreward':      ChestReward,
     'display':          Display,
     'home':             Home,
+    'leaderboard':      Leaderboard,
     'loading':          Loading,
     'login':            Login,
     'multiplayer':      Multiplayer,

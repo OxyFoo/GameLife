@@ -1,6 +1,7 @@
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 
 class BackAchievements extends PageBase {
     state = {
@@ -14,8 +15,8 @@ class BackAchievements extends PageBase {
         this.achievement = dataManager.achievements.GetAll(completeAchievements);
         this.achievement = this.achievement.map(achievement => ({
             ID: achievement.ID,
-            Name: dataManager.GetText(achievement.Name),
-            Description: dataManager.GetText(achievement.Description),
+            Name: langManager.GetText(achievement.Name),
+            Description: langManager.GetText(achievement.Description),
             isSolved: completeAchievements.includes(achievement.ID)
         }));
     }

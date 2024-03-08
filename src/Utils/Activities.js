@@ -3,6 +3,8 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import Notifications from 'Utils/Notifications';
+import { MinMax } from 'Utils/Functions';
+import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -14,18 +16,47 @@ const TIME_STEP_MINUTES = 5;
 const MIN_TIME_MINUTES =  1 * TIME_STEP_MINUTES; // 5m
 const MAX_TIME_MINUTES = 48 * TIME_STEP_MINUTES; // 4h
 
+/** @param {number} skillID */
+function StartActivityNow(skillID) {
+    const startTime = GetLocalTime();
+    const roundedTime = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
+
+    if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES)) {
+        const title = langManager.curr['activity']['alert-wrongtiming-title'];
+        const text = langManager.curr['activity']['alert-wrongtiming-text'];
+        user.interface.popup.Open('ok', [ title, text ]);
+        return;
+    }
+
+    user.activities.currentActivity.Set({
+        skillID,
+        startTime,
+        timezone: GetTimeZone(),
+        friendsIDs: []
+    });
+    user.LocalSave();
+    user.interface.ChangePage('activitytimer', undefined, true);
+}
+
 /**
  * @param {number} skillID
  * @param {number} startTime
- * @param {number} duration
+ * @param {number} endTime
+ * @param {Array<number>} friendsIDs
  * @param {() => void} funcBack
  * @returns {boolean} True if activity was added successfully
  */
-function AddActivityNow(skillID, startTime, duration, funcBack) {
+function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
     const lang = langManager.curr['activity'];
 
+    const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
+    const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, endTime, 'next');
+
+    let duration = (endTimeRounded - startTimeRounded) / 60;
+    duration = MinMax(MIN_TIME_MINUTES, duration, MAX_TIME_MINUTES);
+
     // Get the max duration possible
-    while (!user.activities.TimeIsFree(startTime, duration)) {
+    while (!user.activities.TimeIsFree(startTimeRounded, duration)) {
         duration -= TIME_STEP_MINUTES;
         if (duration <= 0) {
             user.interface.ChangePage('display', {
@@ -40,20 +71,16 @@ function AddActivityNow(skillID, startTime, duration, funcBack) {
         }
     }
 
-    // Set max limit
-    if (duration > MAX_TIME_MINUTES) {
-        duration = MAX_TIME_MINUTES;
-    }
-
     /** @type {Activity} */
     const newActivity = {
         skillID:    skillID,
-        startTime:  startTime,
+        startTime:  startTimeRounded,
         duration:   duration,
         comment:    '',
         timezone:   0,
         addedType:  'start-now',
-        addedTime:  0
+        addedTime:  0,
+        friends:    friendsIDs
     };
 
     return AddActivity(newActivity);
@@ -73,11 +100,16 @@ function AddActivity(activity) {
         comment: activity.comment,
         timezone: null,
         addedType: activity.addedType,
-        addedTime: null
+        addedTime: null,
+        friends: activity.friends
     });
 
     if (addState === 'added') {
+        // Update notifications
         Notifications.Evening.RemoveToday();
+
+        // Update missions
+        user.missions.SetMissionState('mission1', 'completed');
 
         const text = lang['display-activity-text'];
         const button = lang['display-activity-button'];
@@ -153,5 +185,5 @@ function Back() {
 
 export {
     TIME_STEP_MINUTES, MIN_TIME_MINUTES, MAX_TIME_MINUTES,
-    AddActivityNow, AddActivity, RemActivity
+    StartActivityNow, AddActivityNow, AddActivity, RemActivity
 };

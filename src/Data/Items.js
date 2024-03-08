@@ -1,4 +1,6 @@
 /**
+ * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
+ * 
  * @typedef {'skin' | 'skinColor'} SkinSlot
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * @typedef {{ x: number, y: number, width: number, height: number }} CharacterContainerSize
@@ -7,7 +9,7 @@
  * @property {number} int
  * @property {number} soc
  * @property {number} for
- * @property {number} end
+ * @property {number} sta
  * @property {number} agi
  * @property {number} dex
  */
@@ -29,8 +31,8 @@ const itemContainerSize = {
 };
 
 class Item {
-    /** @type {string} */
-    ID = '';
+    /** @type {StuffID} */
+    ID = 'hair_01';
 
     /** @type {Slot} */
     Slot = 'hair';
@@ -85,7 +87,7 @@ class Items {
     }
 
     /**
-     * @param {string} itemID Item ID
+     * @param {StuffID} itemID Item ID
      * @param {Array<Item>} items List of items to get dyables items
      * @returns {Array<Item>} List of dyables items for the given item
      */
@@ -95,7 +97,7 @@ class Items {
     }
 
     /**
-     * @param {string} ID
+     * @param {StuffID} ID
      * @returns {Item | null}
      */
     GetByID = (ID) => this.items.find(item => item.ID === ID) || null;

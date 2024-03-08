@@ -15,9 +15,9 @@ class Quests extends BackQuests {
                 isHomePage
                 canScrollOver
             >
-                <NonZeroDay style={styles.quest} />
-                <MyQuestsList style={styles.quest} />
-                <TodoList style={styles.quest} />
+                <NonZeroDay ref={this.refNonZeroDay} style={styles.quest} />
+                <MyQuestsList ref={this.refMyQuestsList} style={styles.quest} />
+                <TodoList ref={this.refTodoList} style={styles.quest} />
             </Page>
         );
     }

@@ -5,13 +5,15 @@ import dataManager from 'Managers/DataManager';
  * 
  * @typedef {import('Data/Items').Slot} Slot
  * @typedef {import('Data/Titles').Title} Title
+ * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
  * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
  */
 
 class Stuff {
     ID = 0;
-    ItemID = '';
+    /** @type {StuffID} */
+    ItemID = 'bottom_01';
     CreatedBy = 0;
     CreatedAt = 0;
 }
@@ -56,6 +58,17 @@ class Inventory {
 
     Clear() {
         this.stuffs = [];
+        this.titles = [];
+        this.avatar = {
+            sexe: 'MALE',
+            skin: 'skin_01',
+            skinColor: 1,
+            hair: 0,
+            top: 0,
+            bottom: 0,
+            shoes: 0
+        };
+        this.avatarEdited = false;
     }
     LoadOnline(inventory) {
         if (typeof(inventory) !== 'object') return;
@@ -110,6 +123,9 @@ class Inventory {
 
         // Refresh user character
         this.user.character.SetEquipment(this.GetEquippedItemsID());
+
+        // Update mission
+        this.user.missions.SetMissionState('mission4', 'completed');
     }
 
     /** @returns {Array<Title>} */

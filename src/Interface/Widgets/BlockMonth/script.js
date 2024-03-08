@@ -2,7 +2,7 @@ import dataManager from 'Managers/DataManager';
 import user from 'Managers/UserManager';
 
 import { DAYS } from 'Utils/Date';
-import { DAY_TIME, GetMidnightTime, GetTime, GetTimeZone } from 'Utils/Time';
+import { DAY_TIME, GetGlobalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
@@ -49,12 +49,12 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
     };
 
     const timezone = GetTimeZone() * 60 * 60;
-    const todayTime = GetMidnightTime(GetTime()) + timezone;
+    const todayTime = GetMidnightTime(GetGlobalTime()) + timezone;
     const firstDay = new Date(year, month, 1);
-    const firstDayTime = GetTime(firstDay, 'global');
+    const firstDayTime = GetGlobalTime(firstDay);
     const firstDayIndex = (firstDay.getDay() + 5 + start) % 7;
     const lastDay = new Date(year, month + 1, 1);
-    const lastDayTime = GetTime(lastDay, 'global');
+    const lastDayTime = GetGlobalTime(lastDay);
     const weekCount = Math.ceil((lastDayTime - firstDayTime) / (DAY_TIME * 7));
 
     const allActivities = user.activities.Get();

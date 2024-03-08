@@ -8,8 +8,9 @@ const styles = StyleSheet.create({
     iconStaticHeader: {
         width: 'auto',
         height: 'auto',
+        marginRight: -12,
         padding: 12,
-        paddingRight: 0
+        paddingRight: 12
     },
     content: {
         borderBottomStartRadius: 8,

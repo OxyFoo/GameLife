@@ -37,6 +37,7 @@ local.properties
 index.android.bundle.map
 *.keystore
 !debug.keystore
+index.android.bundle.map
 
 # node.js
 #

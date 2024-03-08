@@ -10,11 +10,13 @@ function StartHelp() {
     user.interface.screenTuto.ShowTutorial([
         {
             component: this.refTuto1,
-            text: lang['1']
+            text: lang['1'],
+            showNextButton: true
         },
         {
-            component: this.refAvatar.refButton,
-            text: lang['2']
+            component: this.refAvatar.refButton.current,
+            text: lang['2'],
+            showNextButton: true
         }
     ])
 }

@@ -34,10 +34,13 @@ class TCP {
      * @returns {boolean} Whether the connection was successful, or if it was already connected
      */
     Connect = () => {
-        if (this.IsConnected()) {
+        // If already connected, or if the user is not connected to the server
+        if (this.IsConnected() || !this.user.server.IsConnected(false)) {
             return false;
         }
-        const url = `ws://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
+
+        const protocol = __DEV__ ? 'ws' : 'wss';
+        const url = `${protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'server-multiplayer');
         socket.addEventListener('open', this.onOpen);
         socket.addEventListener('message', this.onMessage);
@@ -80,7 +83,7 @@ class TCP {
             }
         }
 
-        if (status === 'update-friends' || status === 'update-notifications') {
+        if (status.startsWith('update-')) {
             this.user.multiplayer.onMessage(data);
         }
 
@@ -133,7 +136,7 @@ class TCP {
      * @param {number} [timeout] in milliseconds
      * @returns {Promise<'timeout' | any>} The result of the callback or 'timeout' if it took too long
      */
-    WaitForCallback = (callbackID, timeout = 5000) => {
+    WaitForCallback = (callbackID, timeout = 10000) => {
         return new Promise((resolve, reject) => {
             const timer = setTimeout(() => {
                 resolve('timeout');

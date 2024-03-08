@@ -1,3 +1,5 @@
+import langManager from 'Managers/LangManager';
+
 import { GetByKey } from 'Utils/Functions';
 
 /**
@@ -9,12 +11,12 @@ class Skill {
     Name = { fr: '', en: '' };
     CategoryID = 0;
     Stats = {
-        'int': 0,
-        'soc': 0,
-        'for': 0,
-        'end': 0,
-        'agi': 0,
-        'dex': 0
+        int: 0,
+        soc: 0,
+        for: 0,
+        sta: 0,
+        agi: 0,
+        dex: 0
     };
     LogoID = 0;
     Creator = '';
@@ -80,7 +82,15 @@ class Skills {
     /**
      * @returns {Array<Skill>}
      */
-    Get = () => this.skills.filter(skill => skill.Enabled);
+    Get = () => {
+        return this.skills
+            .filter(skill => skill.Enabled)
+            .sort((a, b) => {
+                const nameA = langManager.GetText(a.Name).toLowerCase();
+                const nameB = langManager.GetText(b.Name).toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
+    }
 
     /**
      * @param {number} ID

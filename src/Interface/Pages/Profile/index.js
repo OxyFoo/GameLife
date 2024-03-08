@@ -27,7 +27,6 @@ class Profile extends BackProfile {
             <Page
                 ref={ref => this.refPage = ref}
                 scrollable={!editorOpened}
-                canScrollOver={false}
             >
                 <PageHeader
                     style={{ marginBottom: 12 }}
@@ -75,7 +74,7 @@ class Profile extends BackProfile {
                 </View>
 
                 <Container
-                    style={[styles.topSpace, styles.botSpace]}
+                    style={styles.topSpace}
                     text={lang['container-achievements-title']}
                     type='static'
                     opened={true}
@@ -103,14 +102,14 @@ class Profile extends BackProfile {
 }
 
 const styles = StyleSheet.create({
-    topSpace: { marginTop: 24 },
+    topSpace: { marginTop: 16 },
     botSpace: { marginBottom: 24 },
     xpRow: { flexDirection: 'row', justifyContent: 'space-between' },
     kpiContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginVertical: 12
+        marginTop: 12
     },
     kpiProfile: {
         paddingHorizontal: 2

@@ -3,7 +3,6 @@ import { TouchableOpacity, FlatList } from 'react-native';
 
 import styles from './style';
 import AchievementsGroupBack from './back';
-import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Button, Separator, Text } from 'Interface/Components';
@@ -13,7 +12,7 @@ class AchievementsGroup extends AchievementsGroupBack {
         if (item === null) return null;
 
         const { Name, ID } = item;
-        const Title = dataManager.GetText(Name);
+        const Title = langManager.GetText(Name);
         return (
             <TouchableOpacity
                 onPress={() => this.onAchievementPress(ID)}

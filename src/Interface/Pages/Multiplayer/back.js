@@ -1,9 +1,13 @@
+import React from 'react';
+
 import { PageBase } from 'Interface/Components';
+import StartMission from './mission';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Interface/Components/Button').default} Button
+ * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  */
 
@@ -19,11 +23,18 @@ class BackMultiplayer extends PageBase {
         friendsPending: []
     }
 
+    /** @type {React.RefObject<Button>} */
+    refAddButton = React.createRef();
+
     componentDidMount() {
         this.updateState(user.tcp.state.Get());
         this.updateFriends(user.multiplayer.friends.Get());
         this.listenerState = user.tcp.state.AddListener(this.updateState);
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
+    }
+
+    componentDidFocused = (args) => {
+        StartMission.call(this, args?.missionName);
     }
 
     componentWillUnmount() {
@@ -49,13 +60,16 @@ class BackMultiplayer extends PageBase {
         this.setState({ friends: newFriends, friendsPending: newFriendsPending });
     }
 
-    openClassement = () => {
-        return; // TODO
+    openLeaderboard = () => {
+        user.interface.ChangePage('leaderboard');
     }
 
     addFriendHandle = () => {
         const lang = langManager.curr['multiplayer'];
         user.interface.screenInput.Open(lang['input-search-friend'], '', (username) => {
+            // Update mission
+            user.missions.SetMissionState('mission5', 'completed');
+
             user.multiplayer.AddFriend(username);
         }, false);
     }

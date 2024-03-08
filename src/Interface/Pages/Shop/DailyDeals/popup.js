@@ -4,7 +4,6 @@ import { View } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import dataManager from 'Managers/DataManager';
 
 import { Text, Button } from 'Interface/Components';
 
@@ -20,8 +19,8 @@ function renderItemPopup(item, refreshCallback = () => {}) {
     const lang = langManager.curr['shop']['dailyDeals'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const itemName = dataManager.GetText(item.Name);
-    const itemDescription = dataManager.GetText(item.Description);
+    const itemName = langManager.GetText(item.Name);
+    const itemDescription = langManager.GetText(item.Description);
     const buttonText = lang['popup-item-button']
                         .replace('{}', item.Value.toString());
 
@@ -87,8 +86,11 @@ const buyDailyDeals = async(item) => {
     user.shop.buyToday.items.push(item.ID);
     user.LocalSave();
 
+    // Update mission
+    user.missions.SetMissionState('mission3', 'completed');
+
     // Show success message
-    const itemName = dataManager.GetText(item.Name);
+    const itemName = langManager.GetText(item.Name);
     const title = lang['dailyDeals']['popup-buysuccess-title'];
     const text = lang['dailyDeals']['popup-buysuccess-text']
                 .replace('{}', itemName)

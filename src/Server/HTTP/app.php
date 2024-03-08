@@ -31,6 +31,8 @@ switch ($action) {
     case 'buyOx':               $commands->BuyOx();             break;
     case 'sellStuff':           $commands->SellStuff();         break;
     case 'claimNonZeroDays':    $commands->ClaimNonZeroDays();  break;
+    case 'claimGlobalNotifs':   $commands->claimGlobalNotifs(); break;
+    case 'claimMission':        $commands->claimMission();      break;
     case 'adWatched':           $commands->AdWatched();         break;
     case 'report':              $commands->Report();            break;
     case 'getDate':             $commands->GetDate();           break;

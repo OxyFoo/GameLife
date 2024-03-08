@@ -13,8 +13,9 @@ function StartHelp(section) {
     if (section === 'dailyDeals') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto2,
+                component: this.refDailyDeals.current,
                 text: lang['dailyDeals'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(0);
                     await Sleep(400);
@@ -24,54 +25,63 @@ function StartHelp(section) {
     } else if (section === 'randomChests') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto3,
+                component: this.refRandomChests.current,
                 text: lang['randomChests'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(200);
                     await Sleep(400);
                 },
             },
             {
-                component: this.refTuto3.refChest1,
-                text: lang['randomChests-common']
+                component: this.refRandomChests.current.refChest1,
+                text: lang['randomChests-common'],
+                showNextButton: true
             },
             {
-                component: this.refTuto3.refChest2,
-                text: lang['randomChests-rare']
+                component: this.refRandomChests.current.refChest2,
+                text: lang['randomChests-rare'],
+                showNextButton: true
             },
             {
-                component: this.refTuto3.refChest3,
-                text: lang['randomChests-epic']
+                component: this.refRandomChests.current.refChest3,
+                text: lang['randomChests-epic'],
+                showNextButton: true
             }
         ]);
     } else if (section === 'targetChests') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto4.refTuto1,
+                component: this.refTargetedChests.current.refTuto1,
                 text: lang['targetedChests'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(500);
                     await Sleep(400);
                 }
             },
             {
-                component: this.refTuto4.refChest1,
-                text: lang['targetedChests-common']
+                component: this.refTargetedChests.current.refChest1,
+                text: lang['targetedChests-common'],
+                showNextButton: true
             },
             {
-                component: this.refTuto4.refChest2,
-                text: lang['targetedChests-rare']
+                component: this.refTargetedChests.current.refChest2,
+                text: lang['targetedChests-rare'],
+                showNextButton: true
             },
             {
-                component: this.refTuto4.refChest3,
-                text: lang['targetedChests-epic']
+                component: this.refTargetedChests.current.refChest3,
+                text: lang['targetedChests-epic'],
+                showNextButton: true
             }
         ]);
     } else if (section === 'dyes') {
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refTuto5,
+                component: this.refDyes.current,
                 text: lang['dyes'],
+                showNextButton: true,
                 execBefore: async () => {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(700);
                     await Sleep(600);

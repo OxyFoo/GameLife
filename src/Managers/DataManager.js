@@ -51,20 +51,6 @@ class DataManager {
         return achievements && contributors && items && quotes && skills && titles;
     }
 
-    GetText(value) {
-        let output = '';
-        if (typeof(value) === 'object') {
-            const key = langManager.currentLangageKey;
-            if (value.hasOwnProperty(key)) output = value[key];
-            else if (value.hasOwnProperty('fr')) output = value['fr'];
-        }
-        return output;
-    }
-
-    /**
-     * import user as argument, bad but it skip cycles warns
-     */
-
     /**
      * Local save Internal data
      * @param {User} user

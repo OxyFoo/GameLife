@@ -4,7 +4,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
-import { Button, Page, Text, FriendElement } from 'Interface/Components';
+import { Button, Page, Text, UserOnlineElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
@@ -33,14 +33,15 @@ class Multiplayer extends BackMultiplayer {
         return (
             <>
                 <Button
-                    style={styles.classementButton}
+                    style={styles.leaderboardButton}
                     color='main1'
-                    icon='world'
+                    icon='leaderboard'
                     borderRadius={12}
-                    onPress={this.openClassement}
+                    onPress={this.openLeaderboard}
                 />
                 {friends.length + friendsPending.length < FRIENDS_LIMIT && (
                     <Button
+                        ref={this.refAddButton}
                         style={styles.addFriendButton}
                         color='main2'
                         icon='userAdd'
@@ -68,8 +69,9 @@ class Multiplayer extends BackMultiplayer {
                     data={friends}
                     keyExtractor={(item, index) => 'multi-player-' + item.accountID}
                     renderItem={({ item, index }) => (
-                        <FriendElement friend={item} />
+                        <UserOnlineElement friend={item} />
                     )}
+                    ListEmptyComponent={this.renderEmpty}
                 />
 
                 {friendsPending.length > 0 && (
@@ -80,12 +82,21 @@ class Multiplayer extends BackMultiplayer {
                             data={friendsPending}
                             keyExtractor={(item, index) => 'multi-player-' + item.accountID}
                             renderItem={({ item, index }) => (
-                                <FriendElement friend={item} />
+                                <UserOnlineElement friend={item} />
                             )}
                         />
                     </>
                 )}
             </View>
+        );
+    }
+
+    renderEmpty = () => {
+        const lang = langManager.curr['multiplayer'];
+        return (
+            <>
+                <Text style={styles.firstText}>{lang['container-friends-empty']}</Text>
+            </>
         );
     }
 
@@ -126,7 +137,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginHorizontal: -24
     },
-    classementButton: {
+    leaderboardButton: {
         aspectRatio: 1,
         position: 'absolute',
         left: 24,

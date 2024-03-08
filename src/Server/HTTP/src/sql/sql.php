@@ -47,6 +47,10 @@ class DataBase
         return !preg_match('/[^a-zA-Z0-9_]/', $string);
     }
 
+    function IsTestEnvironment() {
+        return strpos($this->db_name, 'Test') !== false && strpos($this->db_username, 'Test') !== false;
+    }
+
     /**
      * Used to select, insert, update or delete data.
      * @param string $table The table to replace in query.
@@ -118,7 +122,7 @@ class DataBase
     /**
      * @param int $accountID 0 if not connected
      * @param int $deviceID
-     * @param 'mail'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition'|'giftCodeTry'|'giftCode'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNZD'|'myQuestArchive'|'error' $type
+     * @param 'mail'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition'|'giftCodeTry'|'giftCode'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNZD'|'claimMission'|'myQuestArchive'|'error' $type
      * @param string $data
      * @return void
      */

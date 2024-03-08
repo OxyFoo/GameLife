@@ -6,7 +6,8 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * 
- * @typedef {import('Types/Friend').Friend} Friend
+ * @typedef {import('Interface/Components/Container').default} Container
+ * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  */
 
@@ -26,6 +27,9 @@ class BackMultiplayerPanel extends React.Component {
         /** @type {Array<Friend>} */
         friends: []
     }
+
+    /** @type {React.RefObject<Container>} */
+    refContainer = React.createRef();
 
     componentDidMount() {
         this.updateState(user.tcp.state.Get());

@@ -135,6 +135,22 @@ const styles = StyleSheet.create({
         marginRight: 28,
         paddingVertical: 0,
         paddingHorizontal: 6
+    },
+
+    claimAllView: {
+        position: 'absolute',
+        bottom: -36,
+        left: 0,
+        right: 0,
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    claimAllButton: {
+        height: 'auto',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderWidth: 1.5,
+        borderColor: '#B83EFFE3'
     }
 });
 

@@ -14,6 +14,7 @@ const Color = {
     unfocused: '#6e6e6e', // Grey
     disabled: '#535C68', // Grey
     transparent: '#00000000', // Transparent
+    darkBlue: '#04052C', // Dark blue
 
     ox: '#962D8B',
     dataBigKpi: '#232B5D', // Dark blue

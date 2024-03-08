@@ -87,10 +87,7 @@ class ShopHeader extends React.Component {
     }
     openOxShop = () => {
         if (!user.server.IsConnected()) return;
-        const lang = langManager.curr['shop'];
-        const title = lang['temp-comingsoon-title'];
-        const text = lang['temp-comingsoon-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
+        user.interface.GetCurrentPage()?.refPage?.GotoY(400);
     }
 
     /** @type {AdEvent} */

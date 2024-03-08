@@ -49,7 +49,7 @@ class ActivitySelector extends React.Component {
     }
     /** @param {string} search */
     handleSearchInput = (search) => {
-        this.setState({ search: search.toLowerCase() });
+        this.setState({ search });
     }
 
     render() {

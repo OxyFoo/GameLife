@@ -93,10 +93,11 @@ function RenderSkillsSearch({ searchInput, callback }) {
     const [ skillsItems, setSkillsItems ] = React.useState([]);
 
     React.useEffect(() => {
+        const search = searchInput.toLowerCase();
         const skills = dataManager.skills.Get();
         const newSkills = skills
             .map(skill => SkillToItem(skill, (skill) => callback(skill.ID)))
-            .filter(skill => skill.value.toLowerCase().includes(searchInput));
+            .filter(skill => skill.value.toLowerCase().includes(search));
         setSkillsItems(newSkills);
     }, [ searchInput ]);
 

@@ -595,10 +595,6 @@
                 "title": "Erreur",
                 "message": "Une erreur est survenue lors de l'achat, réessaye plus tard."
             },
-            "request-purchase-error": {
-                "title": "Erreur",
-                "message": "Une erreur est survenue lors de la demande d'achat, réessaye plus tard."
-            },
             "no-receipt": {
                 "title": "Erreur",
                 "message": "Aucun reçu n'a été trouvé, réessaye plus tard."

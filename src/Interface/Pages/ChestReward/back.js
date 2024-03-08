@@ -9,6 +9,8 @@ import { Character, PageBase } from 'Interface/Components';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * 
  * @typedef {Object} ChestRewardProps
  * @property {number} chestRarity
  * @property {string} itemID
@@ -25,7 +27,12 @@ class BackChestReward extends PageBase {
         animGlobal: new Animated.Value(.7),
         animChest: new Animated.Value(0),
         animItem: new Animated.Value(0),
-        animInteractions: new Animated.Value(0)
+        animInteractions: new Animated.Value(0),
+
+        layoutFrameOx: {
+            width: 0,
+            height: 0
+        }
     }
 
     buttonEnabled = false;
@@ -85,6 +92,12 @@ class BackChestReward extends PageBase {
     componentWillUnmount() {
         clearTimeout(this.timeout1);
         clearTimeout(this.timeout2);
+    }
+
+    /** @param {LayoutChangeEvent} layout */
+    onOxLayout = (layout) => {
+        const { width, height } = layout.nativeEvent.layout;
+        this.setState({ layoutFrameOx: { width, height } })
     }
 
     onPress = () => {

@@ -117,13 +117,6 @@ class BackShopIAP extends React.Component {
             Price: product.localizedPrice,
             Description: product.description,
             OnPress: () => this.purchase(product.productId)
-                .catch((error) => {
-                    // Cancelled before purchase request
-                    if (error.code === 'E_USER_CANCELLED') {
-                        return;
-                    }
-                    this.handleError('request-purchase-error', 'Error requesting item', error);
-                })
         }));
 
         this.setState({ iapItems });

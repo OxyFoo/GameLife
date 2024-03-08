@@ -23,13 +23,20 @@ class ZapGPTBack extends React.Component {
     componentDidMount() {
         if (user.tcp.IsConnected() === false) {
             if (user.interface.popup.opened) {
-                user.interface.popup.Close();
+                this.Back();
             }
         }
         user.interface.SetCustomBackHandler(() => false);
+
+        this.listenerTCP = user.tcp.state.AddListener((state) => {
+            if (state !== 'connected') {
+                this.Back();
+            }
+        });
     }
     componentWillUnmount() {
         user.interface.ResetCustomBackHandler();
+        user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     /** @param {string} text */
@@ -76,6 +83,13 @@ class ZapGPTBack extends React.Component {
             });
             return;
         }
+        if (result === 'limit-reached') {
+            this.setState({
+                loading: false,
+                error: lang['errors']['limit-reached']
+            });
+            return;
+        }
 
         const rawActivities = JSON.parse(result);
         const activities = CheckZapGPTActivities(rawActivities);
@@ -119,7 +133,7 @@ class ZapGPTBack extends React.Component {
             }
         }
 
-        user.interface.popup.Close();
+        this.Back();
 
         const text = ParsePlural(lang['added-message'], addedActivities > 1);
         if (addedActivities > 0) {
@@ -150,6 +164,7 @@ class ZapGPTBack extends React.Component {
     }
 
     Back = () => {
+        user.interface.popup.state.callback();
         user.interface.popup.Close();
     }
 }

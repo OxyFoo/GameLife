@@ -69,7 +69,7 @@ class Settings extends BackSettings {
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
                 <Button style={styles.margin} onPress={this.disconnectAll} color='main2' loading={devicesLoading}>{lang['input-disconnect-all']}</Button>
                 {user.server.IsConnected() && this.state.serverTCPState !== 'connected' && this.state.serverTCPState !== 'idle' && (
-                    <Button style={styles.margin} onPress={this.reconnectTCP} color='main3' loading={devicesLoading}>{lang['input-reconnect-tcp']}</Button>
+                    <Button style={styles.margin} onPress={this.reconnectTCP} color='main3'>{lang['input-reconnect-tcp']}</Button>
                 )}
                 <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{lang['input-tuto-again']}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>

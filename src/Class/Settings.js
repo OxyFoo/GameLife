@@ -27,6 +27,7 @@ class Settings {
     testMessageReaded = false;
     tutoFinished = false;
     questHeatMap = false;
+    zapGPTMessageReaded = false;
 
     morningNotifications = true;
     eveningNotifications = true;
@@ -36,7 +37,10 @@ class Settings {
     Clear() {
         this.email = '';
         this.connected = false;
+        this.testMessageReaded = false;
         this.questHeatMap = false;
+        this.zapGPTMessageReaded = false;
+
         this.morningNotifications = true;
         this.eveningNotifications = true;
     }
@@ -55,6 +59,7 @@ class Settings {
             if (contains('testMessageReaded')) this.testMessageReaded = settings['testMessageReaded'];
             if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
             if (contains('questHeatMap')) this.questHeatMap = settings['questHeatMap'];
+            if (contains('zapGPTMessageReaded')) this.zapGPTMessageReaded = settings['zapGPTMessageReaded'];
             if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
             if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
             if (contains('musicLinks')) this.musicLinks = settings['musicLinks'];
@@ -75,6 +80,7 @@ class Settings {
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,
             questHeatMap: this.questHeatMap,
+            zapGPTMessageReaded: this.zapGPTMessageReaded,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
             musicLinks: this.musicLinks

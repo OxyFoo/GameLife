@@ -1,19 +1,26 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
+import styles from './style';
 import BackHome from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Swiper, Text, XPBar, Page } from 'Interface/Components';
+import { Text, XPBar, Page } from 'Interface/Components';
 import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
+
+/**
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('react-native').ListRenderItem<MyQuest>} FlatListMyQuestProps
+ */
 
 class Home extends BackHome {
     render() {
         const {
             experience: { xpInfo },
-            values: { current_level, next_level }
+            values: { current_level, next_level },
+            mission
         } = this.state;
 
         const lang = langManager.curr['home'];
@@ -22,6 +29,7 @@ class Home extends BackHome {
         const styleContainer = {
             backgroundColor: themeManager.GetColor('dataBigKpi')
         };
+
         const styleSmallContainer = {
             backgroundColor: themeManager.GetColor('ground2'),
         };
@@ -42,19 +50,18 @@ class Home extends BackHome {
                     maxValue={xpInfo.next}
                 />
 
+                <View style={[styles.homeRow, styles.topSpace]}>
+                    <TodayPieChart style={styles.todayPieChart} />
+                </View>
+
                 <Missions
                     style={styles.topSpace}
                     refHome={this}
                 />
 
-                <Swiper
-                    style={styles.topSpace}
-                    pages={News()}
-                />
-
-                <View style={[styles.homeRow, styles.topSpace]}>
-                    <TodayPieChart style={styles.todayPieChart} />
-                </View>
+                {mission.state === 'claimed' && (
+                    <News style={styles.topSpace} />
+                )}
 
                 <View style={[styles.homeRow, styles.topSpace]}>
                     <View style={[styleSmallContainer, styles.stats]}>
@@ -68,7 +75,7 @@ class Home extends BackHome {
                         <Text bold={true} fontSize={20} style={styles.titleWidget}>
                             {lang['container-skills-title']}
                         </Text>
-                        <SkillsGroup />
+                        <SkillsGroup style={styles.skillsGroup} />
                     </View>
                 </View>
 
@@ -78,49 +85,13 @@ class Home extends BackHome {
                     hideWhenOffline
                 />
 
+                {mission.state !== 'claimed' && (
+                    <News style={styles.topSpace} />
+                )}
+
             </Page>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    XPHeader: {
-        marginTop: 0,
-        marginBottom: 12,
-        paddingHorizontal: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    XPHeaderLvl: {
-        flexDirection: 'row'
-    },
-    level: {
-        marginRight: 8
-    },
-    homeRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    topSpace: {
-        marginTop: 16
-    },
-    titleWidget: {
-        marginBottom: 12,
-    },
-    todayPieChart: {
-        flex: 1
-    },
-    stats: {
-        flex: 3,
-        borderRadius: 24,
-        marginRight: 18,
-        padding: 8
-    },
-    skills: {
-        flex: 5,
-        borderRadius: 20,
-        padding: 8
-    }
-});
 
 export default Home;

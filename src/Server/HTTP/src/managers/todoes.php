@@ -61,7 +61,7 @@ class Todoes
     /**
      * @param DataBase $db
      * @param Account $account
-     * @param string[] $todoesSort
+     * @param int[] $todoesSort
      */
     private static function SetSort($db, $account, $todoesSort) {
         $command = 'UPDATE TABLE SET `TodoesSort` = ? WHERE `ID` = ?';

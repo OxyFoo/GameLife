@@ -35,10 +35,10 @@ class Account
     /** @var int $XP */
     public $XP;
 
-    /** @var string[] $TodoesSort */
+    /** @var int[] $TodoesSort */
     public $TodoesSort;
 
-    /** @var string[] $QuestsSort */
+    /** @var int[] $QuestsSort */
     public $QuestsSort;
 
     /** @var string $DataToken */

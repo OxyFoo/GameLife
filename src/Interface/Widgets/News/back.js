@@ -1,0 +1,107 @@
+import * as React from 'react';
+
+import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
+
+import { GetDate } from 'Utils/Time';
+import { DateToFormatString } from 'Utils/Date';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
+ * 
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Class/Quests/NonZeroDays').ClaimType} ClaimType
+ * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ */
+
+const NewsProps = {
+    /** @type {StyleViewProp} */
+    style: {}
+};
+
+class BackNews extends React.Component {
+    state = {
+        pagesNews: [],
+
+        claimIndex: -1,
+        claimDay: 0,
+        /** @type {string | null} */
+        claimDate: null,
+
+        /** @type {Array<MyQuest>} */
+        quests: []
+    }
+
+    constructor(props) {
+        super(props);
+
+        if (dataManager.news.news.length) {
+            try {
+                const news = dataManager.news.news;
+                this.state.pagesNews.push(...news);
+            } catch (e) {
+                user.interface.console.AddLog('error', 'News loading failed: ' + e);
+            }
+        }
+    }
+
+    componentDidMount() {
+        this.updateNZD(user.quests.nonzerodays.claimsList.Get());
+        this.updateMyQuests(user.quests.myquests.allQuests.Get());
+        this.listenerNZD = user.quests.nonzerodays.claimsList.AddListener(this.updateNZD);
+        this.listenerMyQuests = user.quests.myquests.allQuests.AddListener(this.updateMyQuests);
+        this.listenerActivities = user.activities.allActivities.AddListener(() =>
+            this.updateMyQuests(user.quests.myquests.allQuests.Get())
+        );
+    }
+
+    componentWillUnmount() {
+        user.quests.nonzerodays.claimsList.RemoveListener(this.listenerNZD);
+        user.quests.myquests.allQuests.RemoveListener(this.listenerMyQuests);
+        user.activities.allActivities.RemoveListener(this.listenerActivities);
+    }
+
+    /** @param {Array<MyQuest>} newQuests */
+    updateMyQuests = (newQuests) => {
+        const quests = newQuests
+            .filter(quest =>
+                user.quests.myquests.GetDays(quest)
+                    .find(d => d.isToday && d.state === 'filling')
+            )
+            .slice(0, 2);
+        this.setState({ quests });
+    }
+
+    /** @param {Array<ClaimType>} claimLists */
+    updateNZD = (claimLists) => {
+        let claimDay = 0;
+        let claimDate = null;
+
+        const claimIndex = user.quests.nonzerodays.GetCurrentClaimIndex();
+        const claimList = claimLists[claimIndex];
+
+        if (claimIndex !== -1) {
+            for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
+                if (!claimList.claimed.includes(claimDay + 1)) break;
+            }
+            if (!user.quests.nonzerodays.IsCurrentList(claimList)) {
+                claimDate = DateToFormatString(GetDate(claimList.start))
+                    .split('/')
+                    .slice(0, 2)
+                    .join('/');
+            }
+        }
+
+        this.setState({ claimIndex, claimDay, claimDate });
+    }
+
+    goToQuestsPage = () => user.interface.ChangePage('quests');
+}
+
+BackNews.prototype.props = NewsProps;
+BackNews.defaultProps = NewsProps;
+
+export default BackNews;

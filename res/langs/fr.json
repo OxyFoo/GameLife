@@ -237,28 +237,34 @@
     },
 
     "achievements": {
+        "friend-title": "Succès de {}",
+
         "operators": {
             "LT": "inférieur à",
             "GT": "supérieur à"
         },
         "conditions": {
-            "header": "Condition : ",
-            "B": "Avoir un niveau de batterie {} {}%",
-            "Lvl": "Atteindre le niveau {}",
+            "Battery": "Avoir un niveau de batterie {} {}%",
+            "Level": "Atteindre le niveau {}",
             "Sk": "Atteindre le niveau {} pour la compétence \"{}\"",
             "SkT": "Pratiquer pendant {} heures la compétence \"{}\"",
             "St": "Attendre le niveau {} avec la statistique \"{}\"",
             "HCa": "Atteindre le niveau {} dans {} catégorie(s)",
             "Ca": "Atteindre le niveau {} dans la catégorie \"{}\"",
-            "It": "Posséder {} items",
-            "Ad": "Avoir vu {} pubs"
+            "ItemCount": "Posséder {} items",
+            "Ad": "Avoir vu {} pubs",
+            "SelfFriend": "Se demander soi-même en ami"
         },
         "rewards": {
             "title": "Nouveau titre : {}",
             "title-conversion": " (converti en {} Ox)",
             "item": "Nouvel item : {}",
-            "ox": "Bonus : {} Ox"
+            "ox": "Gain : {} Ox"
         },
+
+        "popup-condition-text": "Condition : ",
+        "popup-hidden-condition": "Condition cachée",
+        "popup-global-text": "{}% des joueurs ont débloqué ce succès",
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
@@ -313,11 +319,13 @@
         "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
-        "display-activity-button": "Retour vers l'accueil",
+        "display-activity-button": "Continuer",
+        "display-activity-button2": "Ajouter une autre activité",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 
         "activity-zap-comment": "Ajouté par Zap",
+        "activity-zap-hint": "Je peux rapidement ajouter plusieurs activités à la fois",
 
         "tuto": {
             "1": "Tu peux filtrer les activités par catégorie: {}",
@@ -345,8 +353,12 @@
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
 
+        "chart-today-recap": "Récap du jour",
         "chart-today-performance": "Performances du jour",
         "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
+        "chart-total-text": "Total",
+
+        "news-myquests-title": "Mes quêtes à faire",
 
         "container-stats-title": "Stats",
         "container-skills-title": "Compétences",
@@ -492,7 +504,9 @@
         "tuto": {
             "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
             "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
-        }
+        },
+
+        "temporary-avatars": "Cet avatar sera bientôt remplacé ... en mieux !"
     },
 
     "profile-avatar": {
@@ -516,6 +530,8 @@
 
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
+
+        "container-achievements-title": "Derniers succès",
 
         "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",
@@ -943,10 +959,12 @@
         "instructions": [
             "- Descriptions le plus clair et simple possible",
             "- Bien préciser les activitiés, leurs dates et heures de commencements et leurs durées",
-            "- Éviter de demander trop de choses d'un coup (conseillé 5, max 10)"
+            "- Exemple: J'ai fais du basket lundi, mercredi et vendredi de 18h à 20h"
         ],
 
+        "remaining-text": "Restantes:",
         "input-label": "Requête à Zap",
+        "no-remaining": "Tu as atteint la limite, pour en ajouter plus reviens demain",
 
         "added-message": "{} activité[s] a[-ont] été ajoutée[s]",
 
@@ -955,7 +973,8 @@
             "request-empty": "La requête est vide",
             "request-invalid": "La requête a échouée, essaie de reformuler",
             "request-timeout": "Le délai de la requête a dépassé la limite",
-            "no-activities": "Aucune activité n'a été générée"
+            "no-activities": "Aucune activité n'a été générée",
+            "limit-reached": "Tu as atteint la limite d'utilisation pour aujourd'hui"
         }
     }
 }

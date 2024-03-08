@@ -111,14 +111,14 @@ function AddActivity(activity) {
         // Update missions
         user.missions.SetMissionState('mission1', 'completed');
 
-        const text = lang['display-activity-text'];
-        const button = lang['display-activity-button'];
         const args = {
             'icon': 'success',
-            'text': text,
+            'text': lang['display-activity-text'],
             'quote': dataManager.quotes.GetRandomQuote(),
-            'button': button,
-            'action': Back
+            'button': lang['display-activity-button'],
+            'button2': lang['display-activity-button2'],
+            'action': Back,
+            'action2': () => user.interface.ChangePage('activity', undefined, true)
         };
 
         const skill = dataManager.skills.GetByID(activity.skillID);

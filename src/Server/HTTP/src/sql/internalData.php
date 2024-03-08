@@ -51,13 +51,31 @@ function GetNewInternalData($db, $reqHashes, $appHashes) {
  * @param DataBase $db
  */
 function GetAchievements($db) {
-    $achievements = $db->QueryPrepare('Achievements', 'SELECT * FROM TABLE');
+    $command = <<<SQL
+SELECT A.*,
+    (
+        SELECT COUNT(*)
+        FROM InventoriesAchievements
+        WHERE AchievementID = A.ID
+    )
+    /
+    (
+        SELECT COUNT(*)
+        FROM Accounts
+    )
+    * 100
+    AS GlobalPercentage
+FROM TABLE A;
+SQL;
+
+    $achievements = $db->QueryPrepare('Achievements', $command);
     if ($achievements === null) return array();
     for ($i = 0; $i < count($achievements); $i++) {
         $achievements[$i]['ID']          = intval($achievements[$i]['ID']);
         $achievements[$i]['Type']        = intval($achievements[$i]['Type']);
         $achievements[$i]['Name']        = json_decode($achievements[$i]['Name']);
         $achievements[$i]['Description'] = json_decode($achievements[$i]['Description']);
+        $achievements[$i]['GlobalPercentage'] = floatval($achievements[$i]['GlobalPercentage']);
     }
     return $achievements;
 }

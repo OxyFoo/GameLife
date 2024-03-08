@@ -1,41 +1,25 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 
+import styles from './style';
 import BackAchievements from './back';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Page, Text } from 'Interface/Components';
+import { Icon, Page, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
+/**
+ * @typedef {import('./back').PanelAchievementType} PanelAchievementType
+ * @typedef {import('react-native').ListRenderItem<PanelAchievementType>} AchievementListRenderItem
+ */
+
 class Achievements extends BackAchievements {
-    renderAchievement = ({ item: achievement }) => {
-        const { ID, Name, Description, isSolved } = achievement;
-
-        const style = [
-            styles.achievementsBox,
-            {
-                borderColor: isSolved ? themeManager.GetColor('main1') : '#888888',
-                backgroundColor: themeManager.GetColor('backgroundGrey')
-            }
-        ];
-
-        return (
-            <TouchableOpacity
-                style={styles.achievementsContainer}
-                onPress={() => this.onAchievementPress(ID)}
-                activeOpacity={.6}
-            >
-                <View style={style}>
-                    <Text style={styles.title}>{Name}</Text>
-                    <Text style={styles.description} color='secondary'>{Description}</Text>
-                </View>
-            </TouchableOpacity>
-        )
-    }
-
     render() {
+        const lang = langManager.curr['achievements'];
+
         const styleFlatlist = {
             ...styles.flatlist,
             top: this.state.headerHeight
@@ -45,9 +29,17 @@ class Achievements extends BackAchievements {
             <Page ref={ref => this.refPage = ref} scrollable={false}>
                 <View onLayout={this.onLayout}>
                     <PageHeader
+                        style={styles.pageHeader}
                         onBackPress={user.interface.BackHandle}
                         onHelpPress={StartHelp.bind(this)}
                     />
+
+                    {/** Title for multiplayer success */}
+                    {this.friend !== null && (
+                        <Text style={styles.achievementsPlayerTitle} fontSize={22}>
+                            {lang['friend-title'].replace('{}', this.friend.username)}
+                        </Text>
+                    )}
                 </View>
 
                 <FlatList
@@ -60,37 +52,41 @@ class Achievements extends BackAchievements {
             </Page>
         );
     }
-}
 
-const styles = StyleSheet.create({
-    flatlist: {
-        position: 'absolute',
-        left: 12,
-        right: 12,
-        bottom: 0
-    },
+    /** @type {AchievementListRenderItem} */
+    renderAchievement = ({ item: achievement }) => {
+        const { ID, Name, isSolved, GlobalPercentage } = achievement;
 
-    achievementsContainer: {
-        width: '50%',
-        padding: 6
-    },
-    achievementsBox: {
-        height: 172,
-        display: 'flex',
-        justifyContent: 'space-evenly',
-        padding: 6,
-        borderWidth: 2,
-        borderRadius: 8
-    },
-    title: {
-        minHeight: 30,
-        marginBottom: 12,
-        fontSize: 18
-    },
-    description: {
-        marginBottom: 12,
-        fontSize: 14
+        const style = {
+            borderColor: isSolved ? themeManager.GetColor('main1') : '#888888',
+            backgroundColor: themeManager.GetColor('backgroundGrey')
+        };
+        const styleFilling = {
+            width: GlobalPercentage + '%',
+            backgroundColor: themeManager.GetColor('main1')
+        };
+
+        return (
+            <TouchableOpacity
+                style={styles.achievementsContainer}
+                onPress={() => this.onAchievementPress(ID)}
+                activeOpacity={.6}
+            >
+                <View style={[styles.achievementsBox, style]}>
+                    <Text style={styles.title}>{Name}</Text>
+
+                    {/** Global progression */}
+                    <View style={styles.progressBar}>
+                        <Text style={styles.progressionValue} color='secondary' fontSize={10}>
+                            {GlobalPercentage + '%'}
+                        </Text>
+                        <Icon style={styles.progressBarIcon} icon='social' size={12} color='secondary' />
+                        <View style={[styles.progressBarInner, styleFilling]} />
+                    </View>
+                </View>
+            </TouchableOpacity>
+        )
     }
-});
+}
 
 export default Achievements;

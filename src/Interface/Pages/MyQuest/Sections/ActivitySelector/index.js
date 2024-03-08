@@ -1,8 +1,8 @@
 import React from 'react';
-import { Animated, View, ScrollView, Dimensions, Platform, StyleSheet } from 'react-native';
+import { Animated, View, ScrollView, Dimensions, StyleSheet } from 'react-native';
 
 import { RenderSkillsMemo, RenderSkillsSearch } from './renderSkills';
-import { CategoryToItem } from '../../../Activity/types';
+import { CategoryToItem, GetRecentSkills } from '../../../Activity/types';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
@@ -36,6 +36,11 @@ class ActivitySelector extends React.Component {
     /** @type {Array<ItemCategory>} */
     allCategoriesItems = dataManager.skills.categories.map(CategoryToItem);
 
+    componentDidMount() {
+        const isRecentSkills = GetRecentSkills(undefined).length > 0;
+        this.refSwiper.current?.GoTo(isRecentSkills ? 0 : 1);
+    }
+
     handleSearchButton = () => {
         const { isSearching } = this.state;
         SpringAnimation(this.state.animSearch, isSearching ? 0 : 1).start();
@@ -44,7 +49,7 @@ class ActivitySelector extends React.Component {
     }
     /** @param {string} search */
     handleSearchInput = (search) => {
-        this.setState({ search: search.toLowerCase() });
+        this.setState({ search });
     }
 
     render() {
@@ -131,7 +136,6 @@ class ActivitySelector extends React.Component {
                     onSwipe={this.handleCategorySwiper}
                     pages={pages}
                     enableAutoNext={false}
-                    //disableSwipe={Platform.OS === 'ios'}
                     disableSwipe={true}
                 />
             </View>

@@ -1,16 +1,19 @@
 Today is {today}
 
-The structure of activities is as follows:
-{"skillID":0,"startTime":0,"duration":0}
+The structure of activities is as follows: {"skillID":0,"startTime":0,"duration":0}
 skillIDs are listed below
 startTime is date format dd/mm/YY-HH:mm
 duration is in minutes [5, 240]
 
-List of activities: 1:Jumping rope,2:Tree climbing,3:Volleyball,4:Taekwondo,5:Calisthenics,6:Reading,7:Via-Ferrata,8:Swimming,9:Writing,10:Drawing,11:Musculation,12:Dance,13:Scouting,14:Walk,15:School work,16:Piano,17:Handiwork,18:3D Modeling,19:String instrument,20:Cooking,21:Household,22:Jigsaw puzzle,23:Rubiks Cube,24:Sudoku,25:Painting,26:Basketball,27:Run,28:Bike,29:Ultimate,30:Trail,31:Fight,32:Freestyle sport,33:Fencing,34:Boxing,35:Hacking,36:Meditation,37:Surfing,38:Skateboarding,39:Language learning,40:Judo,41:Aikido,42:Knitting / Sewing,43:Singing,44:Climbing,45:Wrestling,46:Horseback riding,47:Shadow Boxing,48:mechanic,49:Yoga,50:Soccer,51:Gymnastics,52:Tennis,53:Rugby,54:Trampoline,55:Music production,56:Precision shooting,57:Gardening,58:Sprinting,59:Weapon controle,60:Pen spinning,61:Artistic creation,62:Pet walking,63:Childcare,64:Museum, gallery,65:Puzzle,66:Mixology,67:Roller,68:Free-ride bike,69:Muay thai,70:Football,71:Young firefighter,72:Coding,73:Wooden instrument,74:Speech,75:Crossword puzzles,76:Roleplay game,77:Blacksmith,78:Petanque,79:Scuba Diving,80:Sailing,81:Hike,82:Table tennis,83:Core building,84:Jujitsu,85:Crossfit,86:Weight throw,87:Jogging,88:muscular reinforcement,89:Dance pole,90:High Jump,91:Kait surfing,92:Apnea,93:Parkour,94:Kayak,95:Handball,96:Badminton,97:Rhythmic instruments,98:Brass intrument,99:Music theory,100:Pool,101:Chess,102:Card trick,103:Théâtre,104:Photography,105:Editing,106:Animal training,107:Redaction,108:Butterfly knife,109:Cosplay creation,110:Botany,111:Animal photography,112:Worker,113:Lethwei,114:Hockey,115:bedroom sport,116:Card games,117:Maintenance worker,118:Service technician,119:Kendo,120:Groceries / Shopping,121:Stretching,122:Ice skating,123:Farmer,124:Agri-food,125:Spikeball,126:Architecture,127:Armée, Rescue,128:Design, Fashion,129:Finance, insurance,130:Chemistry, biology,131:Buildings worker,132:Audiovisual,133:trade, real estate,134:Communication,135:Karate,136:Culture,137:Law,138:Bowling,139:School,140:Golf,141:Design-Fashion,142:Pets,143:Baseball,144:Scooter,145:Energy,146:Education,147:Environment,148:Secretariat,149:Industry,150:Mechanics,151:Health,152:Humanitarian,153:Computer science,154:Esthetics,155:Management, accounting,156:Hotel, restaurant,157:Literature, languages,158:Maths, physics,159:Sport, animation,160:Transport, logistics,161:Publishing, books,162:Electronics, robotics,163:Volunteering,164:Transportation,165:Socials,166:Meal,167:Hygiene,168:Sleep,169:Chill,170:Movie,171:Manga,172:Video games,173:Partying,174:Car,175:Interval Training,176:Juggling,177:Editing,178:Shovel the walkways,179:Core strength,180:Debate,181:Laundry,182:Homework
+List of activities: {skills}
 
-Following sentence want a response with javascript object list containing activities asked.
-If the dates are not mentioned, use the ones closest to today.
-startTime and duration are rounded to 5 minutes.
+# Say to prompt to chatGPT to follow following rules
+
+Rules to follow:
+- Respond with a list of json objects containing the skillID, startTime and duration of the activities.
+- If the dates are not mentioned, use the ones closest to today.
+- startTime and duration are rounded to 5 minutes.
+- Generate maximum 10 activities per request.
 
 ################
 

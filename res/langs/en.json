@@ -237,28 +237,34 @@
     },
 
     "achievements": {
+        "friend-title": "Success of {}",
+
         "operators": {
             "LT": "Less than",
             "GT": "Greater than"
         },
         "conditions": {
-            "header": "Condition: ",
-            "B": "Having a battery level {} {}%",
-            "Lvl": "Reach level {}",
+            "Battery": "Having a battery level {} {}%",
+            "Level": "Reach level {}",
             "Sk": "Reach {} level for skill \"{}\"",
             "SkT": "Practice for {} hours the skill \"{}\"",
             "St": "Wait for level {} with the statistic \"{}\"",
             "HCa": "Reach level {} in {} category(ies)",
             "Ca": "Reach level {} in category {}",
-            "It": "Have {} items",
-            "Ad": "Watch {} ads"
+            "ItemCount": "Have {} items",
+            "Ad": "Watch {} ads",
+            "SelfFriend": "Ask yourself as a friend"
         },
         "rewards": {
             "title": "New title: {}",
             "title-conversion": " (convert into {} Ox)",
             "item": "New item: {}",
-            "ox": "Bonus: {} Ox"
+            "ox": "Earn: {} Ox"
         },
+
+        "popup-condition-text": "Condition: ",
+        "popup-hidden-condition": "Hidden condition",
+        "popup-global-text": "{}% of the players have unlocked this achievement",
 
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",
@@ -313,11 +319,13 @@
         "timeralert-tooshort-text": "You cannot add an activity of less than 5 minutes",
 
         "display-activity-text": "Your activity has been created!",
-        "display-activity-button": "Back home",
+        "display-activity-button": "Continue",
+        "display-activity-button2": "Add another activity",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home",
 
         "activity-zap-comment": "Added by Zap",
+        "activity-zap-hint": "I can quickly add several activities at the same time",
 
         "tuto": {
             "1": "You can filter activities by category: {}",
@@ -345,8 +353,12 @@
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
+        "chart-today-recap": "Recap of the day",
         "chart-today-performance": "Activities of today",
         "chart-today-notmuch": "Not enough data to display graph",
+        "chart-total-text": "Total",
+
+        "news-myquests-title": "My quests to do",
 
         "container-stats-title": "Stats",
         "container-skills-title": "Skills",
@@ -492,7 +504,9 @@
         "tuto": {
             "1": "This is your profile, you can change your personal information here",
             "2": "This is your avatar, you can click on it to change your appearance"
-        }
+        },
+
+        "temporary-avatars": "This avatar will soon be replaced ... better!"
     },
 
     "profile-avatar": {
@@ -516,6 +530,8 @@
 
         "activity-now-title": "Activity now: {}",
         "activity-now-start": "Start the same activity",
+
+        "container-achievements-title": "Last achievements",
 
         "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",
@@ -943,10 +959,12 @@
         "instructions": [
             "- Descriptions as clear and simple as possible",
             "- Be clear about the activities, their start dates and times, and their duration.",
-            "- Avoid asking for too many things at once (recommended 5, max 10)"
+            "- Example: I did basketball Monday, Wednesday and Friday from 6 p.m. to 8 p.m."
         ],
 
+        "remaining-text": "Remaining:",
         "input-label": "Request to Zap",
+        "no-remaining": "You have reached the limit, to add more come from tomorrow",
 
         "added-message": "{} activities have been added",
 
@@ -955,7 +973,8 @@
             "request-empty": "The request is empty",
             "request-invalid": "Query failed, try to reformulate",
             "request-timeout": "Request time limit exceeded",
-            "no-activities": "No activities generated"
+            "no-activities": "No activities generated",
+            "limit-reached": "You have reached the use limit for today"
         }
     }
 }

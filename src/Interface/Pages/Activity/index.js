@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, ScrollView } from 'react-native';
+import { View, Animated, FlatList, ScrollView } from 'react-native';
 
 import BackActivity from './back';
 import styles from './style';
@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Page, Text, IconCheckable, Input, Button } from 'Interface/Components';
+import { Page, Text, IconCheckable, Input, Button, Zap } from 'Interface/Components';
 import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
 /**
@@ -17,6 +17,66 @@ import { PageHeader, ActivityPanel } from 'Interface/Widgets';
  */
 
 class Activity extends BackActivity {
+    render() {
+        const lang = langManager.curr['activity'];
+        const { skillSearch, skills, topPanelOffset, inputText } = this.state;
+
+        return (
+            <Page
+                ref={ref => this.refPage = ref}
+                scrollable={false}
+                canScrollOver={false}
+                overlay={this.renderOverlay()}
+            >
+                <PageHeader
+                    style={styles.header}
+                    onBackPress={(e) => user.interface.BackHandle()}
+                    onHelpPress={StartHelp.bind(this)}
+                />
+
+                {/* Categories */}
+                <View ref={ref => this.refTuto1 = ref} onLayout={this.onLayoutCategories}>
+                    <Text style={styles.textTitle} color='light' bold>
+                        {lang['title-category']}
+                    </Text>
+                    <View style={styles.categoriesContainer}>
+                        <ScrollView style={styles.categoriesScrollView} horizontal>
+                            {this.allCategoriesItems.map(category => this.renderCategory({ item: category }))}
+                        </ScrollView>
+                    </View>
+                </View>
+
+                {/* Search bar */}
+                <Text style={styles.textTitle} color='light' bold>
+                    {lang['title-activity']}
+                </Text>
+                <View style={styles.activitiesSearchBar}>
+                    <Input
+                        label={inputText}
+                        text={skillSearch}
+                        onChangeText={this.onSearchChange}
+                    />
+                </View>
+
+                {/* Activities List */}
+                <FlatList
+                    ref={ref => this.refActivities = ref}
+                    style={styles.activitiesFlatlist}
+                    data={skills}
+                    ListEmptyComponent={this.renderEmptyList}
+                    renderItem={this.renderSkill}
+                    keyExtractor={item => 'act-skill-' + item.id}
+                />
+
+                {/* Panel */}
+                <ActivityPanel
+                    ref={ref => this.refActivityPanel = ref}
+                    topOffset={topPanelOffset}
+                />
+            </Page>
+        );
+    }
+
     /**
      * @param {{ item: ItemCategory }} param0
      * @returns {JSX.Element}
@@ -78,78 +138,45 @@ class Activity extends BackActivity {
     }
 
     renderOverlay = () => {
-        if (user.tcp.IsConnected() === false) {
+        const lang = langManager.curr['activity'];
+        const { tcpState, animZapGPTOpened, animZapGPTMessage } = this.state;
+
+        if (tcpState !== 'connected') {
             return null;
         }
 
+        const animOpened = {
+            transform: [
+                { translateX: Animated.multiply(animZapGPTOpened, 120) }
+            ]
+        };
+
+        const animMessage = {
+            opacity: animZapGPTMessage,
+            transform: [
+                {
+                    translateX: animZapGPTMessage.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [24, 0]
+                    })
+                }
+            ]
+        };
+
         return (
-            <Button
-                style={styles.buttonZapGPT}
-                color='main1'
-                icon='flame'
-                iconSize={24}
-                onPress={this.PromptZapGPT}
-            />
-        );
-    }
-
-    render() {
-        const lang = langManager.curr['activity'];
-        const { skillSearch, skills, topPanelOffset, inputText } = this.state;
-
-        return (
-            <Page
-                ref={ref => this.refPage = ref}
-                scrollable={false}
-                canScrollOver={false}
-                overlay={this.renderOverlay()}
-            >
-                <PageHeader
-                    style={styles.header}
-                    onBackPress={(e) => user.interface.BackHandle()}
-                    onHelpPress={StartHelp.bind(this)}
-                />
-
-                {/* Categories */}
-                <View ref={ref => this.refTuto1 = ref} onLayout={this.onLayoutCategories}>
-                    <Text style={styles.textTitle} color='light' bold>
-                        {lang['title-category']}
+            <Animated.View style={[styles.zapGptContainer, animOpened]}>
+                <Animated.View style={[styles.zapGptBubble, animMessage]}>
+                    <Text fontSize={16}>
+                        {lang['activity-zap-hint']}
                     </Text>
-                    <View style={styles.categoriesContainer}>
-                        <ScrollView style={styles.categoriesScrollView} horizontal>
-                            {this.allCategoriesItems.map(category => this.renderCategory({ item: category }))}
-                        </ScrollView>
-                    </View>
-                </View>
-
-                {/* Search bar */}
-                <Text style={styles.textTitle} color='light' bold>
-                    {lang['title-activity']}
-                </Text>
-                <View style={styles.activitiesSearchBar}>
-                    <Input
-                        label={inputText}
-                        text={skillSearch}
-                        onChangeText={this.onSearchChange}
-                    />
-                </View>
-
-                {/* Activities List */}
-                <FlatList
-                    ref={ref => this.refActivities = ref}
-                    style={styles.activitiesFlatlist}
-                    data={skills}
-                    ListEmptyComponent={this.renderEmptyList}
-                    renderItem={this.renderSkill}
-                    keyExtractor={item => 'act-skill-' + item.id}
-                />
-
-                {/* Panel */}
-                <ActivityPanel
-                    ref={ref => this.refActivityPanel = ref}
-                    topOffset={topPanelOffset}
-                />
-            </Page>
+                </Animated.View>
+                <Button
+                    style={styles.zapGptButton}
+                    onPress={this.PromptZapGPT}
+                >
+                    <Zap.High orientation='left' />
+                </Button>
+            </Animated.View>
         );
     }
 }

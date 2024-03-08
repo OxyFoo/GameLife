@@ -3,10 +3,11 @@ import { FlatList, View } from 'react-native';
 
 import styles from './style';
 import ZapGPTBack from './back';
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Text, Input, Button, Separator } from 'Interface/Components';
+import { Text, Input, Button, Separator, Zap } from 'Interface/Components';
 import { GetFullDate } from 'Utils/Date';
 import { GetDate, TimeToFormatString } from 'Utils/Time';
 
@@ -18,7 +19,8 @@ import { GetDate, TimeToFormatString } from 'Utils/Time';
 class ZapGPT extends ZapGPTBack {
     render() {
         const lang = langManager.curr['zap-gpt'];
-        const { text, loading, error, data } = this.state;
+        const { data } = this.state;
+        const { zapGPT } = user.informations;
 
         if (data !== null) {
             return this.renderData();
@@ -30,7 +32,7 @@ class ZapGPT extends ZapGPTBack {
                     style={styles.globalCounter}
                     fontSize={12}
                 >
-                    {'[Restant: xx/5]'}
+                    {`${lang['remaining-text']} ${zapGPT.remaining}/${zapGPT.total}`}
                 </Text>
 
                 <Text style={styles.title} fontSize={24}>
@@ -43,6 +45,39 @@ class ZapGPT extends ZapGPTBack {
                     ))}
                 </View>
 
+                {this.renderInteraction()}
+            </View>
+        );
+    }
+
+    renderInteraction = () => {
+        const lang = langManager.curr['zap-gpt'];
+        const { text, loading, error } = this.state;
+
+        if (user.informations.zapGPT.remaining <= 0) {
+            return (
+                <View style={styles.noRemaining}>
+                    <Text style={styles.noRemainingText} color='primary' fontSize={22}>
+                        {lang['no-remaining']}
+                    </Text>
+
+                    <View style={styles.noRemainingBack}>
+                        <Button
+                            style={styles.buttonClose}
+                            color='main1'
+                            icon='arrowLeft'
+                            iconSize={48}
+                            onPress={this.Back}
+                        />
+                        <Zap.High style={styles.noRemainingZap} />
+                    </View>
+                </View>
+            );
+        }
+
+        return (
+            <>
+                {/* Input */}
                 <View style={styles.input}>
                     <Input
                         label={lang['input-label']}
@@ -56,6 +91,7 @@ class ZapGPT extends ZapGPTBack {
                     )}
                 </View>
 
+                {/* Buttons */}
                 <View style={styles.buttons}>
                     {!loading && (
                         <Button
@@ -73,7 +109,7 @@ class ZapGPT extends ZapGPTBack {
                         loading={loading}
                     />
                 </View>
-            </View>
+            </>
         );
     }
 

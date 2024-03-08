@@ -7,7 +7,8 @@ const ZAP_IMAGES = {
         onFourLegs: {
             face: require('Ressources/zap/purple/down.png'),
             show: require('Ressources/zap/purple/downShow.png')
-        }
+        },
+        high: require('Ressources/zap/purple/high.png')
     },
     night: {
         onTwoLegs: {
@@ -17,7 +18,8 @@ const ZAP_IMAGES = {
         onFourLegs: {
             face: require('Ressources/zap/black/down.png'),
             show: require('Ressources/zap/black/downShow.png')
-        }
+        },
+        high: require('Ressources/zap/black/high.png')
     }
 };
 

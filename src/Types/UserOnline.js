@@ -1,6 +1,7 @@
 /**
  * @typedef {import('Class/Inventory').Sexes} Sexes
  * @typedef {import('Class/Inventory').CharactersName} CharactersName
+ * @typedef {import('Class/Achievements').AchievementItem} AchievementItem
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  * 
  * @typedef {'online' | 'offline'} ConnectionState
@@ -75,6 +76,9 @@ class Friend extends UserOnline {
         agi: 0,
         soc: 0
     };
+
+    /** @type {Array<AchievementItem>} */
+    achievements = [];
 }
 
 export { UserOnline, Friend };

@@ -190,7 +190,7 @@ class BackTodoList extends React.Component {
 
         // Change todo order when dragging
         const index = Math.floor((newY + scrollY) / 46);
-        const currIndex = user.todoes.sort.indexOf(draggedItem.title);
+        const currIndex = user.todoes.sort.indexOf(draggedItem.created);
         if (index !== currIndex && user.todoes.Move(draggedItem, index)) {
             this.setState({ todoes: user.todoes.Get() });
         }

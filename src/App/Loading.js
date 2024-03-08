@@ -26,6 +26,11 @@ async function Initialisation(nextStep, nextPage, callbackError) {
 
     // Ping request
     await user.server.Ping();
+    if (user.server.IsConnected() === false) {
+        user.interface.console.AddLog('warn', 'Ping request failed, retrying...');
+        await user.server.Ping();
+    }
+
     const online = user.server.IsConnected();
     if (!online) {
         user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');

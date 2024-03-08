@@ -104,9 +104,16 @@ class MyQuestsList extends BackQuestsList {
                 <Text style={styles.emptyText}>
                     {lang['quests-empty-title']}
                 </Text>
-                <Button onPress={this.addQuest} color='main1' colorNextGen>
-                    {lang['quests-empty-button']}
-                </Button>
+                <View style={styles.emptyButtonContainer}>
+                    <Button
+                        style={styles.emptyButton}
+                        color='main1'
+                        onPress={this.addQuest}
+                        colorNextGen
+                    >
+                        {lang['quests-empty-button']}
+                    </Button>
+                </View>
             </>
         );
     }
@@ -151,8 +158,8 @@ class MyQuestsList extends BackQuestsList {
                         ListEmptyComponent={this.renderEmpty}
                         ItemSeparatorComponent={this.renderSeparator}
                     />
-                </SimpleContainer.Body >
-            </SimpleContainer >
+                </SimpleContainer.Body>
+            </SimpleContainer>
         );
     }
 }

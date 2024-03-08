@@ -11,23 +11,19 @@ import SectionTasks from './Sections/tasks';
 
 import StartHelp from './help';
 import { PageHeader } from 'Interface/Widgets';
-import { Button, Page } from 'Interface/Components';
+import { Button, Page, KeyboardSpacerView } from 'Interface/Components';
 
 class Todo extends BackTodo {
     render() {
-        const { button, title, error } = this.state;
+        const { title, error } = this.state;
 
         return (
-            <Page ref={ref => this.refPage = ref} onStartShouldSetResponder={this.keyboardDismiss} overlay={(
-                <Button
-                    style={styles.button}
-                    color={button.color}
-                    onPress={this.onButtonPress}
-                    enabled={error.length === 0}
-                >
-                    {button.text}
-                </Button>
-            )}>
+            <Page
+                ref={ref => this.refPage = ref}
+                onStartShouldSetResponder={this.keyboardDismiss}
+                overlay={this.renderOverlay()}
+                bottomOffset={72}
+            >
                 <PageHeader
                     onBackPress={user.interface.BackHandle}
                     onHelpPress={StartHelp.bind(this)}
@@ -53,7 +49,24 @@ class Todo extends BackTodo {
                     ref={ref => this.refSectionTasks = ref}
                     onChange={this.onEditTodo}
                 />
+
+                <KeyboardSpacerView />
             </Page>
+        );
+    }
+
+    renderOverlay = () => {
+        const { button, error } = this.state;
+
+        return (
+            <Button
+                style={styles.button}
+                color={button.color}
+                onPress={this.onButtonPress}
+                enabled={error.length === 0}
+            >
+                {button.text}
+            </Button>
         );
     }
 }

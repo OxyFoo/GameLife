@@ -2,8 +2,14 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
+        height: 'auto',
         padding: 16,
-        borderRadius: 20
+        paddingHorizontal: 16,
+        borderRadius: 20,
+
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start'
     },
     flexBetween: {
         display: 'flex',

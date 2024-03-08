@@ -45,19 +45,20 @@
 ## Succès
 ### Conditions
 Syntaxe : ``` COMPARATEUR OPERATEUR COMPARANT ```\
-Exemple : ``` Sk8 GT 7 ``` ou ``` B LT 0.05 ```
+Exemple : ``` Sk8 GT 7 ``` ou ``` Battery LT 0.05 ```
 <pre>
 * Comparateur
-    - B : Batterie (ratio de la batterie [0; 1])
-    - Lvl~ : Niveau du joueur
+    - Battery : Batterie (ratio de la batterie [0; 1])
+    - Level~ : Niveau du joueur
     - Sk~ : Niveau du skill avec l'ID ~
     - SkT~ : Temps en heure du skill avec l'ID ~
     - St~ : Niveau d'une statistique (joueur) avec ~ => 0 = int, 1 = soc, 2 = for, 3 = end, 4 = agi, 5 = dex
     - Ca~ : Niveau d'une catégorie avec l'ID ~
     - HCa~ : Niveau de la ~ème catégorie la plus élevée
-    - It~ : Nombre d'items accumulés
+    - ItemCount : Nombre d'items accumulés
     - Ad~ : Nombre de publicités regardées
-    - Tt~ : Avoir le titre avec l'ID ~
+    - Title~ : Avoir le titre avec l'ID ~
+    - SelfFriend : S'être demandé soi-même en ami (0: non, 1: oui)
 * Opérateur
     - LT : less than
     - GT : grater (or equal) than

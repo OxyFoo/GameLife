@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList } from 'react-native';
+import { Animated, FlatList } from 'react-native';
 
 import StartTutorial from './tuto';
 import StartMission from './mission';
@@ -14,6 +14,7 @@ import { ZapGPT } from 'Interface/Widgets';
 import { Sleep } from 'Utils/Functions';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -42,7 +43,11 @@ class BackActivity extends PageBase {
         skillSearch: '',
 
         /** @type {string} Header of input - Name of category */
-        inputText: ''
+        inputText: '',
+
+        tcpState: user.tcp.state.Get(),
+        animZapGPTMessage: new Animated.Value(0),
+        animZapGPTOpened: new Animated.Value(0)
     }
 
     refTuto1 = null;
@@ -107,11 +112,13 @@ class BackActivity extends PageBase {
             ...this.state,
             ...this.refreshSkills(this.state.skillSearch, this.state.selectedCategory, false)
         };
-    }
 
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
-        StartMission.call(this, args?.missionName);
+        // Show ZapGPT Message
+        if (user.settings.zapGPTMessageReaded === false) {
+            this.timeout = setTimeout(() => {
+                SpringAnimation(this.state.animZapGPTMessage, 1).start();
+            }, 2000);
+        }
     }
 
     async componentDidMount() {
@@ -127,7 +134,7 @@ class BackActivity extends PageBase {
             const { skillID } = this.props.args;
             const skill = dataManager.skills.GetByID(skillID);
             if (skill !== null) {
-                this.refActivityPanel.SelectSkill(skill);
+                this.refActivityPanel?.SelectSkill(skill);
             }
         }
 
@@ -135,7 +142,7 @@ class BackActivity extends PageBase {
         if (this.preselectedSkillsIDs.length === 1) {
             const skill = dataManager.skills.GetByID(this.preselectedSkillsIDs[0]);
             if (skill !== null) {
-                this.refActivityPanel.SelectSkill(skill);
+                this.refActivityPanel?.SelectSkill(skill);
             }
         }
 
@@ -156,12 +163,12 @@ class BackActivity extends PageBase {
                     duration = Math.max(MIN_TIME_MINUTES, duration);
                 }
             }
-            this.refActivityPanel.SetChangeSchedule(time, duration);
+            this.refActivityPanel?.SetChangeSchedule(time, duration);
         }
 
         // User from calendar
         else if (user.tempSelectedTime !== null && fromCalendar) {
-            this.refActivityPanel.SetChangeSchedule(user.tempSelectedTime, 60);
+            this.refActivityPanel?.SetChangeSchedule(user.tempSelectedTime, 60);
         }
 
         // Default time (local) to add an activity
@@ -180,8 +187,26 @@ class BackActivity extends PageBase {
                 }
             }
 
-            this.refActivityPanel.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
+            this.refActivityPanel?.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
+
+        // Show or hide ZapGPT
+        this.listenerTCP = user.tcp.state.AddListener((state) => {
+            this.setState({ tcpState: state });
+            if (state === 'connected') {
+                SpringAnimation(this.state.animZapGPTOpened, 0).start();
+            }
+        });
+    }
+
+    componentDidFocused = (args) => {
+        StartTutorial.call(this, args?.tuto);
+        StartMission.call(this, args?.missionName);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeout);
+        user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -257,7 +282,7 @@ class BackActivity extends PageBase {
     selectCategory = (ID, checked) => {
         this.refreshSkills(this.state.skillSearch, checked ? ID : null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
-        this.refActivityPanel.Close();
+        this.refActivityPanel?.Close();
     }
 
     /**
@@ -265,7 +290,7 @@ class BackActivity extends PageBase {
      */
     selectSkill = (skill) => {
         StartMission.call(this, this.props.args?.missionName, true);
-        this.refActivityPanel.SelectSkill(skill);
+        this.refActivityPanel?.SelectSkill(skill);
     }
 
     PromptZapGPT = () => {
@@ -273,7 +298,17 @@ class BackActivity extends PageBase {
             return;
         }
 
-        user.interface.popup.Open('custom', () => <ZapGPT />, undefined, false);
+        if (user.settings.zapGPTMessageReaded === false) {
+            clearTimeout(this.timeout);
+            SpringAnimation(this.state.animZapGPTMessage, 0).start();
+            user.settings.zapGPTMessageReaded = true;
+            user.LocalSave();
+        }
+
+        SpringAnimation(this.state.animZapGPTOpened, 1).start();
+        user.interface.popup.Open('custom', () => <ZapGPT />, () => {
+            SpringAnimation(this.state.animZapGPTOpened, 0).start();
+        }, false);
     }
 }
 

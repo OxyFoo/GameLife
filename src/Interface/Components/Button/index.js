@@ -101,10 +101,10 @@ class Button extends ButtonBack {
             ];
             output = (
                 <LinearGradient
-                    style={{
+                    style={[{
                         borderTopLeftRadius: this.props.borderRadius,
                         borderTopRightRadius: this.props.borderRadius
-                    }}
+                    }, styleProp]}
                     colors={titleColors}
                     start={{ x: 0, y: -2 }}
                     end={{ x: 1, y: 2 }}

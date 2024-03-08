@@ -145,7 +145,13 @@ class Missions {
             return;
         }
 
+        // Don't update if state is the same
         if (mission.state === state) {
+            return;
+        }
+
+        // Don't update if mission is claimed
+        if (mission.state === 'claimed') {
             return;
         }
 

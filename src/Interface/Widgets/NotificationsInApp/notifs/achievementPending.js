@@ -28,6 +28,7 @@ function NIA_AchievementPending({ notif, index }) {
     const claimHandle = async () => {
         const lang = langManager.curr['achievements'];
         setLoading(true);
+        user.interface.notificationsInApp.Close();
         const text = await user.achievements.Claim(notif.data.achievementID);
         setLoading(false);
 

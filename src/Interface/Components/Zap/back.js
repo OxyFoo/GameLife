@@ -56,6 +56,12 @@ class ZapBack extends React.Component {
 
         return ZAP_IMAGES[_color][inclinaison][face];
     }
+
+    static getHighZapImage = () => {
+        const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
+        const color = isNight ? 'night' : 'day';
+        return ZAP_IMAGES[color]['high'];
+    }
 }
 
 ZapBack.prototype.props = ZapProps;

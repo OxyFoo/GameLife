@@ -122,7 +122,7 @@ class DataBase
     /**
      * @param int $accountID 0 if not connected
      * @param int $deviceID
-     * @param 'mail'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition'|'giftCodeTry'|'giftCode'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'sellStuff'|'claimNZD'|'claimMission'|'myQuestArchive'|'error' $type
+     * @param 'mail'|'adWatched'|'cheatSuspicion'|'appState'|'accountState'|'accountEdition'|'giftCodeTry'|'giftCode'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNZD'|'claimMission'|'myQuestArchive'|'error' $type
      * @param string $data
      * @return void
      */

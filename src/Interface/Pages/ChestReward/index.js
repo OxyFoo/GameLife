@@ -1,18 +1,27 @@
 import * as React from 'react';
-import { Animated, Image } from 'react-native';
+import { Animated, View, Image } from 'react-native';
 
 import styles from './style';
+import OxObject from './OxObject';
 import BackChestReward from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import IMG_CHESTS from 'Ressources/items/chests/chests';
+import IMG_CHESTS, { IMG_CHEST_OX } from 'Ressources/items/chests/chests';
 import { Page, Frame, Text, Button } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
 class ChestReward extends BackChestReward {
     render() {
         const langM = langManager.curr['modal'];
+
+        // Default chest image
+        let chestImage = IMG_CHESTS[0];
+        if (this.chestRarity === 'ox') {
+            chestImage = IMG_CHEST_OX;
+        } else if (this.chestRarity > 0 && this.chestRarity < IMG_CHESTS.length) {
+            chestImage = IMG_CHESTS[this.chestRarity];
+        }
 
         const itemBackgroundStyle = {
             borderColor: this.rarityColor,
@@ -45,6 +54,25 @@ class ChestReward extends BackChestReward {
             ]
         };
 
+        // Ox objects
+        const oxObjects = [];
+        if (this.chestRarity === 'ox') {
+            let count = 10;
+            if (this.oxCount > 500) count = 50;
+            else if (this.oxCount > 1000) count = 100;
+
+            for (let i = 0; i < count; i++) {
+                oxObjects.push(
+                    <OxObject
+                        key={`ox-obj-${i}`}
+                        index={i}
+                        total={count}
+                        parentLayout={this.state.layoutFrameOx}
+                    />
+                );
+            }
+        }
+
         return (
             <Page
                 ref={ref => this.refPage = ref}
@@ -61,7 +89,7 @@ class ChestReward extends BackChestReward {
                     <Animated.View style={[styleChestAnimation, styles.chestContainer]}>
                         <Image
                             style={styles.chestImage}
-                            source={IMG_CHESTS[this.chestRarity]}
+                            source={chestImage}
                         />
                     </Animated.View>
 
@@ -72,20 +100,28 @@ class ChestReward extends BackChestReward {
                             { transform: [{ scale: this.state.animItem }] }
                         ]}
                     >
-                        <Frame
-                            style={[styles.frame, itemBackgroundStyle]}
-                            characters={[ this.character ]}
-                            onlyItems={true}
-                            size={this.characterSize}
-                            loadingTime={0}
-                        />
+                        {this.chestRarity !== 'ox' && (
+                            <Frame
+                                style={[styles.frame, itemBackgroundStyle]}
+                                characters={[ this.character ]}
+                                onlyItems={true}
+                                size={this.characterSize}
+                                loadingTime={0}
+                            />
+                        ) || (
+                            <View style={[styles.frameOX, itemBackgroundStyle]} onLayout={this.onOxLayout}>
+                                {oxObjects}
+                            </View>
+                        )}
                     </Animated.View>
                 </Animated.View>
 
                 {/* Text */}
                 <Animated.View style={styleText}>
                     <Text color='primary' fontSize={24}>{this.text}</Text>
-                    <Text style={styleTextSecondary}>{this.textSecondary}</Text>
+                    {!!this.textSecondary && (
+                        <Text style={styleTextSecondary}>{this.textSecondary}</Text>
+                    )}
                 </Animated.View>
 
                 <Button

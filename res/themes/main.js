@@ -16,6 +16,7 @@ const Color = {
     transparent: '#00000000', // Transparent
     darkBlue: '#04052C', // Dark blue
 
+    ox: '#962D8B',
     dataBigKpi: '#232B5D', // Dark blue
     dataSmallKpi: '#38406550', // Transparent blue
 

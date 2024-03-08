@@ -56,6 +56,9 @@ class Shop {
         dyes: []
     };
 
+    /** @type {Array<string>} */
+    IAP_IDs = [];
+
     Clear() {
         this.buyToday = {
             day: '',
@@ -90,6 +93,12 @@ class Shop {
             buyToday: this.buyToday
         };
         return data;
+    }
+
+    LoadIAPs(iaps) {
+        if (Array.isArray(iaps)) {
+            this.IAP_IDs = iaps;
+        }
     }
 
     /** @param {BuyableRandomChest} chest */

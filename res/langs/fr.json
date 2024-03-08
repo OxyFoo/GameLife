@@ -612,7 +612,10 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
+        "banner-header": "-50% sur tous les items avant l'arrivée des nouveaux avatars",
+        "banner-header-refonte": "Achetez maintenant et revendez plus tard pour profiter de la hausse des prix de revente et gagner un max",
         "banner-daily": "Deals du jour",
+        "banner-iap": "Achats intégrés",
         "banner-random-chest": "Coffres aléatoires",
         "banner-targeted-chest": "Coffres ciblés",
         "banner-dye": "Teintures",
@@ -623,6 +626,10 @@
             "popup-buysuccess-text": "Tu as bien acheté l'item \"{}\" pour {} Ox",
 
             "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, réessaye plus tard."
+        },
+
+        "iap": {
+            "reward-page-text": "Tu as obtenu {} Ox, félicitations !"
         },
 
         "randomChests": {
@@ -673,11 +680,37 @@
         "reward-success-title": "Code utilisé",
         "reward-success-text": "Tu as obtenu les récompenses suivantes :",
 
-        "temp-comingsoon-title": "Boutique",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+        "popup-purchase": {
+            "purchase-pending": {
+                "title": "Achat en cours",
+                "message": "Ton achat est en cours, tu recevras ta récompense dans quelques instants."
+            },
+            "purchase-error": {
+                "title": "Erreur",
+                "message": "Une erreur est survenue lors de l'achat, réessaye plus tard."
+            },
+            "no-receipt": {
+                "title": "Erreur",
+                "message": "Aucun reçu n'a été trouvé, réessaye plus tard."
+            },
+            "purchase-handle-error": {
+                "title": "Erreur",
+                "message": "Une erreur est survenue lors de la gestion de l'achat, réessaye plus tard."
+            },
+            "wrong-platform": {
+                "title": "Plateforme incorrecte",
+                "message": "Tu ne peux pas acheter cet item sur cette plateforme."
+            }
+        },
 
-        "tuto": {
+        "help": {
             "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
+            "iap1": "Ici, tu peux acheter des Ox contre du vrai argent, ça a plusieurs bénéfices",
+            "iap2": "Tout d'abord, tu aides ce projet à prendre vie et tu contribues à la refonte des avatars et de l'application",
+            "iap3": "Ensuite, tu peux t'acheter des items pour ton avatar. Ils ne sont pas en version définitive ne t'inquiètes pas !",
+            "iap4": "Mais si t'en achètes maintenant, tu pourras les revendre au double du prix quand les nouveaux avatars arriveront !",
+            "iap5": "C'est un moyen pour nous te remercier de nous avoir fait confiance dès le début !",
+            "iap6": "Bon achat, que la chance du drop soit avec toi, à + !",
             "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
             "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
             "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",

@@ -9,6 +9,7 @@ require('./src/utils/utils.php');
 require('./src/classes/account.php');
 require('./src/classes/device.php');
 
+require('./src/managers/IAP.php');
 require('./src/managers/items.php');
 require('./src/managers/missions.php');
 require('./src/managers/myquests.php');
@@ -297,6 +298,8 @@ class Commands {
      * namely: activities, quotes, icons, titles, successes etc.
      */
     public function GetInternalData() {
+        global $IAP_REWARDS;
+
         $appData = GetAppData($this->db);
         $reqHashes = $this->data['hashes'];
 
@@ -309,6 +312,7 @@ class Commands {
             $this->output['tables'] = $newTables;
             $this->output['hashes'] = $appHashes;
             $this->output['music-links'] = $appData['MusicLinks'];
+            $this->output['iap'] = array_keys($IAP_REWARDS);
             $this->output['status'] = 'ok';
         }
     }
@@ -505,6 +509,47 @@ class Commands {
             'stuffs' => Items::GetInventory($this->db, $account),
             'buyToday' => Users::GetBuyToday($this->db, $account)
         );
+        $this->output['status'] = 'ok';
+    }
+
+    public function BuyOx() {
+        global $IAP_REWARDS;
+
+        $rawTransactionReceipt = $this->data['transactionReceipt'];
+        if (!isset($rawTransactionReceipt) || !$this->tokenChecked) return;
+        $account = $this->account;
+        $device = $this->device;
+
+        // Decode & check transaction receipt
+        $transactionReceipt = json_decode($rawTransactionReceipt, true);
+        if ($transactionReceipt === null) {
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy ox with invalid transaction receipt: $rawTransactionReceipt");
+            $this->output['error'] = 'invalidTransactionReceipt';
+            return;
+        }
+
+        // Wrong product id (not exist or not in IAP_REWARDS)
+        if (!array_key_exists('productId', $transactionReceipt) || !array_key_exists($transactionReceipt['productId'], $IAP_REWARDS)) {
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy ox with invalid productId in receipt: $rawTransactionReceipt");
+            $this->output['error'] = 'invalidProductId';
+            return;
+        }
+
+        // Wrong quantity (not exist or not number)
+        if (!array_key_exists('quantity', $transactionReceipt) || !is_numeric($transactionReceipt['quantity'])) {
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy ox with invalid quantity: $rawTransactionReceipt");
+            $this->output['error'] = 'invalidQuantity';
+            return;
+        }
+
+        $quantity = intval($transactionReceipt['quantity']);
+        $oxAmount = $IAP_REWARDS[$transactionReceipt['productId']] * $quantity;
+
+        Users::AddOx($this->db, $account->ID, $oxAmount);
+        $this->db->AddLog($account->ID, $device->ID, 'buyOx', $rawTransactionReceipt);
+
+        $this->output['ox'] = $account->Ox + $oxAmount;
+        $this->output['addedOx'] = $oxAmount;
         $this->output['status'] = 'ok';
     }
 

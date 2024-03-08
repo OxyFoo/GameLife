@@ -8,6 +8,7 @@ import StartMission from './mission';
  * @typedef {import('Interface/Components').Page} Page
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
+ * @typedef {import('./InAppPurchases').default} InAppPurchases
  * @typedef {import('./RandomChests').default} ShopRandomChests
  * @typedef {import('./TargetedChests').default} ShopTargetedChests
  * @typedef {import('./Dyes').default} ShopDyes
@@ -24,6 +25,9 @@ class BackShop extends PageBase {
 
     /** @type {React.RefObject<ShopDailyDeals>} */
     refDailyDeals = React.createRef();
+
+    /** @type {React.RefObject<InAppPurchases>} */
+    refIAP = React.createRef();
 
     /** @type {React.RefObject<ShopRandomChests>} */
     refRandomChests = React.createRef();

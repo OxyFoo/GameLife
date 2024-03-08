@@ -38,6 +38,19 @@ const styles = StyleSheet.create({
         borderRadius: 24
     },
 
+    frameOX: {
+        width: '100%',
+        height: '100%',
+        padding: 48,
+        borderWidth: 4,
+        borderRadius: 24
+    },
+    OX: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain'
+    },
+
     button: {
         width: '80%',
         marginBottom: 48

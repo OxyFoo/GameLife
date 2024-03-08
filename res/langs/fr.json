@@ -503,7 +503,9 @@
         "tuto": {
             "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
             "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
-        }
+        },
+
+        "temporary-avatars": "Cet avatar sera bientôt remplacé ... en mieux !"
     },
 
     "profile-avatar": {

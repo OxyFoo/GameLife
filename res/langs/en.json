@@ -503,7 +503,9 @@
         "tuto": {
             "1": "This is your profile, you can change your personal information here",
             "2": "This is your avatar, you can click on it to change your appearance"
-        }
+        },
+
+        "temporary-avatars": "This avatar will soon be replaced ... better!"
     },
 
     "profile-avatar": {

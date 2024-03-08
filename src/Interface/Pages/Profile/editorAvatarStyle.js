@@ -101,6 +101,21 @@ const styles = StyleSheet.create({
     editorStuffEquipBtn: {
         width: '56%',
         borderRadius: 12
+    },
+
+    tempText: {
+        position: 'absolute',
+        top: 0,
+        left: 12,
+        right: 12,
+        zIndex: 100,
+        elevation: 100,
+        fontSize: 12,
+        transform: [
+            { rotate: '-90deg' },
+            { translateX: -80 },
+            { translateY: -70 }
+        ]
     }
 });
 

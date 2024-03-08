@@ -57,6 +57,8 @@ class Shop extends BackShop {
                     refPage={this.state.refPage}
                 />
 
+                <Text style={styles.title}>{lang['banner-header']}</Text>
+
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
                 <ShopDailyDeals ref={this.refDailyDeals} />
 
@@ -71,8 +73,6 @@ class Shop extends BackShop {
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
                 <ShopDyes ref={this.refDyes} />
-
-                {/*<ShopTitles ref={this.refTuto2} />*/}
             </Page>
         );
     }
@@ -82,7 +82,13 @@ const styles = StyleSheet.create({
     page: {
         paddingHorizontal: 0
     },
-
+    title: {
+        marginBottom: 24,
+        paddingHorizontal: 16,
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
     noInternetContainer: {
         width: '100%',
         justifyContent: 'center',

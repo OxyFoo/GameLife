@@ -86,7 +86,7 @@ class Achievements {
      * @returns {Array<Achievement>}
      */
     GetLast(last = 3, achievementItems = this.GetSolved()) {
-        const completeAchievements = achievementItems.reverse().slice(0, last);
+        const completeAchievements = achievementItems.slice(0, last);
         return completeAchievements.map(achievement => {
             return dataManager.achievements.GetByID(achievement.AchievementID);
         });

@@ -67,7 +67,8 @@ async function GetUserFriends(users, user) {
                     State: /** @type {AchievementItem['State']} */ (state),
                     Date: Math.floor(new Date(date).getTime() / 1000)
                 };
-            });
+            })
+            .sort((a, b) => b.Date - a.Date);
 
         return ({
             status: friendInAllUsersIndex !== -1 ? 'online' : 'offline',
@@ -180,7 +181,6 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
                 FROM InventoriesAchievements 
                 WHERE AccountID = a.ID
             ) AS Achievements
-            )
         FROM \`Accounts\` a
         LEFT JOIN \`Avatars\` av ON a.ID = av.ID
         LEFT JOIN \`Activities\` ac ON a.ID = ac.AccountID
@@ -219,7 +219,8 @@ async function GetFriend(users, user, friendID, friendshipsState = null) {
                 State: /** @type {AchievementItem['State']} */ (state),
                 Date: Math.floor(new Date(date).getTime() / 1000)
             };
-        });
+        })
+        .sort((a, b) => b.Date - a.Date);
 
     /** @type {Friend} */
     const newFriend = {

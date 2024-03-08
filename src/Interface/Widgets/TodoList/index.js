@@ -4,8 +4,8 @@ import { FlatList } from 'react-native';
 import styles from './style';
 import BackTodoList from './back';
 import TodoElement from './Elements/todo';
+import TaskElement from './Elements/taskElement';
 import TodoSelection from './Elements/todoSelection';
-import TaskElement from './Elements/tasks';
 
 import langManager from 'Managers/LangManager';
 

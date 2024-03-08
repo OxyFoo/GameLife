@@ -11,6 +11,9 @@ import { OX_AMOUNT } from 'Class/Admob';
 import { Text, Button } from 'Interface/Components';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
+ * 
  * @typedef {import('Class/Admob').AdEvent} AdEvent
  * @typedef {import('Class/Admob').AdStates} AdStates
  * @typedef {import('Class/Admob').AdTypes} AdTypes
@@ -19,7 +22,10 @@ import { Text, Button } from 'Interface/Components';
 
 const ShopHeaderPropTypes = {
     /** @type {Page | null} */
-    refPage: null
+    refPage: null,
+
+    /** @type {StyleViewProp} */
+    style: {}
 };
 
 class ShopHeader extends React.Component {
@@ -114,7 +120,7 @@ class ShopHeader extends React.Component {
 
     render() {
         const lang = langManager.curr['shop'];
-        const { refPage } = this.props;
+        const { refPage, style } = this.props;
         const { oxAmount, adState } = this.state;
         const oxAmountStr = oxAmount.toString();
 
@@ -128,7 +134,7 @@ class ShopHeader extends React.Component {
         const oxIconSize = oxAmountStr.length < 3 ? 20 : oxAmountStr.length < 5 ? 18 : 16;
 
         return (
-            <Animated.View style={[styles.parent, parentStyle]}>
+            <Animated.View style={[styles.parent, parentStyle, style]}>
                 <View style={styles.content}>
                     <Button.Badge
                         ref={ref => this.refTuto1 = ref}

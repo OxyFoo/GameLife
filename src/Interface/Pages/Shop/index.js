@@ -55,15 +55,17 @@ class Shop extends BackShop {
                 <ShopHeader
                     ref={this.refHeader}
                     refPage={this.state.refPage}
+                    style={styles.shopHeader}
                 />
 
                 <Text style={styles.title}>{lang['banner-header']}</Text>
+                <Text style={styles.title2} color='secondary'>{lang['banner-header-refonte']}</Text>
 
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
                 <ShopDailyDeals ref={this.refDailyDeals} />
 
-                <Banner title={lang['banner-iap']} />
-                <ShopIAP />
+                <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
+                <ShopIAP ref={this.refIAP} />
 
                 <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
                 <ShopRandomChests ref={this.refRandomChests} />
@@ -82,11 +84,21 @@ const styles = StyleSheet.create({
     page: {
         paddingHorizontal: 0
     },
+    shopHeader: {
+        marginBottom: 12
+    },
     title: {
+        marginBottom: 6,
+        paddingHorizontal: 16,
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    title2: {
         marginBottom: 24,
         paddingHorizontal: 16,
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontStyle: 'italic',
         textAlign: 'center'
     },
     noInternetContainer: {

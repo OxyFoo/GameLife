@@ -597,6 +597,7 @@
         "button-header-ad": "+ {}",
 
         "banner-header": "-50% on all items before the arrival of new avatars",
+        "banner-header-refonte": "Buy now and sell later to take advantage of the rise in resale prices and win a maximum",
         "banner-daily": "Daily deals",
         "banner-iap": "In-app purchases",
         "banner-random-chest": "Random chests",
@@ -689,8 +690,14 @@
             }
         },
 
-        "tuto": {
+        "help": {
             "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
+            "iap1": "Here, you can buy Ox with real money, which has several benefits",
+            "iap2": "First of all, you're helping this project to come to life and you're contributing to the redesign of the avatars and the application",
+            "iap3": "Secondly, you can buy items for your avatar. They're not in their final version, don't worry!",
+            "iap4": "But if you buy them now, you'll be able to resell them at double the price when the new avatars arrive!",
+            "iap5": "It's a way for us to thank you for trusting us from the start!",
+            "iap6": "Enjoy your purchase, and may the luck of the draw be with you, see you soon!",
             "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
             "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
             "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",

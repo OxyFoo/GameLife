@@ -8,7 +8,7 @@ import { Sleep } from 'Utils/Functions';
  * @param {'dailyDeals' | 'randomChests' | 'targetChests' | 'dyes'} section
  */
 function StartHelp(section) {
-    const lang = langManager.curr['shop']['tuto'];
+    const lang = langManager.curr['shop']['help'];
 
     if (section === 'dailyDeals') {
         user.interface.screenTuto.ShowTutorial([
@@ -86,6 +86,43 @@ function StartHelp(section) {
                     user.interface.GetCurrentPage()?.refPage?.GotoY(700);
                     await Sleep(600);
                 }
+            }
+        ]);
+    } else if (section === 'iap') {
+        user.interface.screenTuto.ShowTutorial([
+            {
+                component: this.refIAP.current,
+                text: lang['iap1'],
+                showNextButton: true,
+                execBefore: async () => {
+                    user.interface.GetCurrentPage()?.refPage?.GotoY(400);
+                    await Sleep(400);
+                }
+            },
+            {
+                component: null,
+                text: lang['iap2'],
+                showNextButton: true
+            },
+            {
+                component: null,
+                text: lang['iap3'],
+                showNextButton: true
+            },
+            {
+                component: null,
+                text: lang['iap4'],
+                showNextButton: true
+            },
+            {
+                component: null,
+                text: lang['iap5'],
+                showNextButton: true
+            },
+            {
+                component: null,
+                text: lang['iap6'],
+                showNextButton: true
             }
         ]);
     }

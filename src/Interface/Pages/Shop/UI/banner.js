@@ -36,9 +36,11 @@ class Banner extends React.Component {
                         {title}
                     </Text>
 
-                    {id !== '' && <View style={styles.help}>
-                        <Icon icon='info' size={24} />
-                    </View>}
+                    {id !== '' && (
+                        <View style={styles.help}>
+                            <Icon icon='info' size={24} />
+                        </View>
+                    )}
                 </LinearGradient>
             </Button>
         );

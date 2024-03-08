@@ -80,6 +80,7 @@ class DayClock extends BackDayClock {
                             size={32}
                             margin={0}
                             color={fillingColor}
+                            showEmptyFillingBar={state === 'filling' && fillingColor === 'main2'}
                         />
                     </View>
                 )}

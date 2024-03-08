@@ -70,7 +70,8 @@ class BackNews extends React.Component {
             .filter(quest =>
                 user.quests.myquests.GetDays(quest)
                     .find(d => d.isToday && d.state === 'filling')
-            );
+            )
+            .slice(0, 2);
         this.setState({ quests });
     }
 

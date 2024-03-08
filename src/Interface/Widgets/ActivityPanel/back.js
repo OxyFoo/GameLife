@@ -254,8 +254,10 @@ class ActivityPanelBack extends React.Component {
 
     onAddActivity = () => {
         const { activity } = this.state;
-        AddActivity(activity);
-        this.Close();
+        const added = AddActivity(activity);
+        if (added) {
+            this.Close();
+        }
     }
 
     onStartNow = () => StartActivityNow(this.state.selectedSkillID);

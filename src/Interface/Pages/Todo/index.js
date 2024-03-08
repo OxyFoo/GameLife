@@ -11,8 +11,7 @@ import SectionTasks from './Sections/tasks';
 
 import StartHelp from './help';
 import { PageHeader } from 'Interface/Widgets';
-import { Button, Page } from 'Interface/Components';
-import KeyboardSpacerView from 'Interface/Components/KeyboardSpacerView';
+import { Button, Page, KeyboardSpacerView } from 'Interface/Components';
 
 class Todo extends BackTodo {
     render() {

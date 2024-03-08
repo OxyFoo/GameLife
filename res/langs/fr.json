@@ -319,7 +319,8 @@
         "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
-        "display-activity-button": "Retour vers l'accueil",
+        "display-activity-button": "Continuer",
+        "display-activity-button2": "Ajouter une autre activité",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 

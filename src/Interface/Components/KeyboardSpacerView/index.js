@@ -19,14 +19,18 @@ import user from 'Managers/UserManager';
 function KeyboardSpacerView(props) {
     const [height, setHeight] = useState(0);
     let lastHeight = 0;
+    let timeoutDidShow = null;
+    let timeoutDidHide = null;
 
     useEffect(() => {
-        const eventDidShow = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-        const eventDidHide = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+        Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+        Keyboard.addListener('keyboardDidHide', keyboardDidHide);
 
-        return ()=>{
-            Keyboard.removeSubscription(eventDidShow);
-            Keyboard.removeSubscription(eventDidHide);
+        return () => {
+            Keyboard.removeAllListeners('keyboardDidShow');
+            Keyboard.removeAllListeners('keyboardDidHide');
+            clearTimeout(timeoutDidShow);
+            clearTimeout(timeoutDidHide);
         }
     }, []);
 
@@ -35,7 +39,8 @@ function KeyboardSpacerView(props) {
         const newHeight = event.endCoordinates.height;
         setHeight(newHeight / 2);
         lastHeight = newHeight / 2;
-        setTimeout(() => {
+        clearTimeout(timeoutDidHide);
+        timeoutDidShow = setTimeout(() => {
             user.interface.GetCurrentPage()?.refPage?.GoToYRelative(-newHeight / 2);
         }, 100);
     }
@@ -43,7 +48,8 @@ function KeyboardSpacerView(props) {
     /** @param {KeyboardEvent} event */
     const keyboardDidHide = (event) => {
         user.interface.GetCurrentPage()?.refPage?.GoToYRelative(lastHeight);
-        setTimeout(() => {
+        clearTimeout(timeoutDidShow);
+        timeoutDidHide = setTimeout(() => {
             setHeight(0)
         }, 100);
     }

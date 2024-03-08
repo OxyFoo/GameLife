@@ -134,7 +134,7 @@ class BackActivity extends PageBase {
             const { skillID } = this.props.args;
             const skill = dataManager.skills.GetByID(skillID);
             if (skill !== null) {
-                this.refActivityPanel.SelectSkill(skill);
+                this.refActivityPanel?.SelectSkill(skill);
             }
         }
 
@@ -142,7 +142,7 @@ class BackActivity extends PageBase {
         if (this.preselectedSkillsIDs.length === 1) {
             const skill = dataManager.skills.GetByID(this.preselectedSkillsIDs[0]);
             if (skill !== null) {
-                this.refActivityPanel.SelectSkill(skill);
+                this.refActivityPanel?.SelectSkill(skill);
             }
         }
 
@@ -163,12 +163,12 @@ class BackActivity extends PageBase {
                     duration = Math.max(MIN_TIME_MINUTES, duration);
                 }
             }
-            this.refActivityPanel.SetChangeSchedule(time, duration);
+            this.refActivityPanel?.SetChangeSchedule(time, duration);
         }
 
         // User from calendar
         else if (user.tempSelectedTime !== null && fromCalendar) {
-            this.refActivityPanel.SetChangeSchedule(user.tempSelectedTime, 60);
+            this.refActivityPanel?.SetChangeSchedule(user.tempSelectedTime, 60);
         }
 
         // Default time (local) to add an activity
@@ -187,7 +187,7 @@ class BackActivity extends PageBase {
                 }
             }
 
-            this.refActivityPanel.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
+            this.refActivityPanel?.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
 
         // Show or hide ZapGPT
@@ -282,7 +282,7 @@ class BackActivity extends PageBase {
     selectCategory = (ID, checked) => {
         this.refreshSkills(this.state.skillSearch, checked ? ID : null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
-        this.refActivityPanel.Close();
+        this.refActivityPanel?.Close();
     }
 
     /**
@@ -290,7 +290,7 @@ class BackActivity extends PageBase {
      */
     selectSkill = (skill) => {
         StartMission.call(this, this.props.args?.missionName, true);
-        this.refActivityPanel.SelectSkill(skill);
+        this.refActivityPanel?.SelectSkill(skill);
     }
 
     PromptZapGPT = () => {

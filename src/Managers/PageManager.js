@@ -385,6 +385,8 @@ class PageManager extends React.Component{
         return CACHE_PAGES.temp?.ref;
     }
 
+    GetCurrentPageName = () => this.state.selectedPage;
+
     render() {
         const { animTheme } = this.state;
 

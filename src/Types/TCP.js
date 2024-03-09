@@ -4,6 +4,7 @@
  * @typedef {import('./UserOnline').CurrentActivity} CurrentActivity
  * 
  * @typedef {'idle' | 'connected' | 'disconnected' | 'error'} ConnectionState
+ * @typedef {{ remaining: number, total: number }} ZapGPTState
  * 
  * 
  * 
@@ -87,10 +88,14 @@
  * @property {'update-current-activity'} status
  * @property {CurrentActivity} activity
  * 
+ * @typedef {Object} ReceiveRequestUpdateZapGPT
+ * @property {'update-zap-gpt'} status
+ * @property {ZapGPTState} zapGPTStatus
+ * 
  * @typedef {Object} ReceiveRequestCallback
  * @property {'callback'} status
  * @property {string} callbackID
  * @property {any} result
  * 
- * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications | ReceiveRequestUpdateCurrentActivity | ReceiveRequestCallback} TCPServerRequest
+ * @typedef {ReceiveRequestConnected | ReceiveRequestDisconnected | ReceiveRequestError | ReceiveRequestUpdateFriends | ReceiveRequestUpdateNotifications | ReceiveRequestUpdateCurrentActivity | ReceiveRequestUpdateZapGPT | ReceiveRequestCallback} TCPServerRequest
  */

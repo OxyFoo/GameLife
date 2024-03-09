@@ -9,7 +9,9 @@ require('./src/utils/utils.php');
 require('./src/classes/account.php');
 require('./src/classes/device.php');
 
+require('./src/managers/IAP.php');
 require('./src/managers/items.php');
+require('./src/managers/missions.php');
 require('./src/managers/myquests.php');
 require('./src/managers/nonzerodays.php');
 require('./src/managers/NZD_rewards.php');
@@ -296,6 +298,8 @@ class Commands {
      * namely: activities, quotes, icons, titles, successes etc.
      */
     public function GetInternalData() {
+        global $IAP_REWARDS;
+
         $appData = GetAppData($this->db);
         $reqHashes = $this->data['hashes'];
 
@@ -308,6 +312,7 @@ class Commands {
             $this->output['tables'] = $newTables;
             $this->output['hashes'] = $appHashes;
             $this->output['music-links'] = $appData['MusicLinks'];
+            $this->output['iap'] = array_keys($IAP_REWARDS);
             $this->output['status'] = 'ok';
         }
     }
@@ -324,15 +329,16 @@ class Commands {
         if (!isset($appDataToken, $dbDataToken)) return;
 
         $userData = array();
-        $userData['username']         = $account->Username;
-        $userData['usernameTime']     = $account->LastChangeUsername;
-        $userData['title']            = $account->Title;
-        $userData['birthtime']        = $account->Birthtime;
-        $userData['lastbirthtime']    = $account->LastChangeBirth;
-        $userData['ox']               = $account->Ox;
-        $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
-        $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
-        $userData['achievements']     = Achievements::Get($this->db, $account);
+        $userData['username']       = $account->Username;
+        $userData['usernameTime']   = $account->LastChangeUsername;
+        $userData['title']          = $account->Title;
+        $userData['birthtime']      = $account->Birthtime;
+        $userData['lastbirthtime']  = $account->LastChangeBirth;
+        $userData['ox']             = $account->Ox;
+        $userData['adRemaining']    = Users::GetAdRemaining($this->db, $account->ID);
+        $userData['adTotalWatched'] = Users::GetAdWatched($this->db, $account->ID);
+        $userData['achievements']   = Achievements::Get($this->db, $account);
+        $userData['purchasedCount'] = Users::GetPurchasedCount($this->db, $account->ID);
 
         // Some data, load only if needed
         if ($appDataToken != $dbDataToken) {
@@ -342,6 +348,7 @@ class Commands {
                 'stuffs' => Items::GetInventory($this->db, $account),
                 'titles' => Items::GetInventoryTitles($this->db, $account)
             );
+            $userData['missions'] = Missions::Get($this->db, $account);
             $userData['shop'] = array(
                 'buyToday' => Users::GetBuyToday($this->db, $account)
             );
@@ -457,7 +464,7 @@ class Commands {
         $account = $this->account;
         $device = $this->device;
 
-        $newItem = Shop::BuyRandomChest($this->db, $account, $device, $rarity);
+        $newItem = Shop::BuyRandomChest($this->db, $account, $device->ID, $rarity);
         if ($newItem === false) return;
 
         $this->output['ox'] = $account->Ox;
@@ -503,6 +510,47 @@ class Commands {
             'stuffs' => Items::GetInventory($this->db, $account),
             'buyToday' => Users::GetBuyToday($this->db, $account)
         );
+        $this->output['status'] = 'ok';
+    }
+
+    public function BuyOx() {
+        global $IAP_REWARDS;
+
+        $rawTransactionReceipt = $this->data['transactionReceipt'];
+        if (!isset($rawTransactionReceipt) || !$this->tokenChecked) return;
+        $account = $this->account;
+        $device = $this->device;
+
+        // Decode & check transaction receipt
+        $transactionReceipt = json_decode($rawTransactionReceipt, true);
+        if ($transactionReceipt === null) {
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy ox with invalid transaction receipt: $rawTransactionReceipt");
+            $this->output['error'] = 'invalidTransactionReceipt';
+            return;
+        }
+
+        // Wrong product id (not exist or not in IAP_REWARDS)
+        if (!array_key_exists('productId', $transactionReceipt) || !array_key_exists($transactionReceipt['productId'], $IAP_REWARDS)) {
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy ox with invalid productId in receipt: $rawTransactionReceipt");
+            $this->output['error'] = 'invalidProductId';
+            return;
+        }
+
+        // Wrong quantity (not exist or not number)
+        if (!array_key_exists('quantity', $transactionReceipt) || !is_numeric($transactionReceipt['quantity'])) {
+            $this->db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy ox with invalid quantity: $rawTransactionReceipt");
+            $this->output['error'] = 'invalidQuantity';
+            return;
+        }
+
+        $quantity = intval($transactionReceipt['quantity']);
+        $oxAmount = $IAP_REWARDS[$transactionReceipt['productId']] * $quantity;
+
+        Users::AddOx($this->db, $account->ID, $oxAmount);
+        $this->db->AddLog($account->ID, $device->ID, 'buyOx', $rawTransactionReceipt);
+
+        $this->output['ox'] = $account->Ox + $oxAmount;
+        $this->output['addedOx'] = $oxAmount;
         $this->output['status'] = 'ok';
     }
 
@@ -597,7 +645,7 @@ class Commands {
             return;
         }
 
-        $newItem = Shop::BuyRandomChest($this->db, $account, $device, $rarity, true, $error);
+        $newItem = Shop::BuyRandomChest($this->db, $account, $device->ID, $rarity, true, $error);
         if ($newItem === false) {
             $this->output['status'] = 'error';
             $this->output['error'] = $error;
@@ -605,6 +653,23 @@ class Commands {
         }
 
         $this->output['newItem'] = $newItem;
+        $this->output['status'] = 'ok';
+    }
+
+    public function claimMission() {
+        $missionName = $this->data['missionName'];
+        if (!isset($missionName) || !$this->tokenChecked) return;
+        $account = $this->account;
+        $device = $this->device;
+
+        $missionReward = Missions::Claim($this->db, $account, $device->ID, $missionName);
+        if ($missionReward === false) {
+            $this->output['status'] = 'error';
+            $this->output['error'] = 'Error while claiming missions';
+            return;
+        }
+
+        $this->output['rewards'] = $missionReward;
         $this->output['status'] = 'ok';
     }
 

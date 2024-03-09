@@ -58,6 +58,17 @@ class Inventory {
 
     Clear() {
         this.stuffs = [];
+        this.titles = [];
+        this.avatar = {
+            sexe: 'MALE',
+            skin: 'skin_01',
+            skinColor: 1,
+            hair: 0,
+            top: 0,
+            bottom: 0,
+            shoes: 0
+        };
+        this.avatarEdited = false;
     }
     LoadOnline(inventory) {
         if (typeof(inventory) !== 'object') return;
@@ -112,6 +123,9 @@ class Inventory {
 
         // Refresh user character
         this.user.character.SetEquipment(this.GetEquippedItemsID());
+
+        // Update mission
+        this.user.missions.SetMissionState('mission4', 'completed');
     }
 
     /** @returns {Array<Title>} */

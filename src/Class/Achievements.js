@@ -4,6 +4,7 @@ import langManager from 'Managers/LangManager';
 import DynamicVar from 'Utils/DynamicVar';
 import { GetGlobalTime } from 'Utils/Time';
 import { GetBattery } from 'Utils/Device';
+import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -81,10 +82,11 @@ class Achievements {
     /**
      * Get last achievements
      * @param {number} [last=3] Number of achievements to return
+     * @param {Array<AchievementItem>} [achievementItems=this.GetSolved()] List of achievements to get
      * @returns {Array<Achievement>}
      */
-    GetLast(last = 3) {
-        const completeAchievements = this.GetSolved().reverse().slice(0, last);
+    GetLast(last = 3, achievementItems = this.GetSolved()) {
+        const completeAchievements = achievementItems.slice(0, last);
         return completeAchievements.map(achievement => {
             return dataManager.achievements.GetByID(achievement.AchievementID);
         });
@@ -95,19 +97,47 @@ class Achievements {
      * @param {number} achievementID 
      */
     ShowCardPopup = (achievementID) => {
+        const lang = langManager.curr['achievements'];
         const solvedIndexes = this.GetSolvedIDs();
         const achievement = dataManager.achievements.GetByID(achievementID);
         const title = langManager.GetText(achievement.Name);
-        let description = langManager.GetText(achievement.Description);
-        if (description.length > 0) description += '\n';
 
-        if (solvedIndexes.includes(achievementID)) {
-            description += this.getConditionText(achievement.Condition);
+        const lines = [];
 
-            const rewardText = this.getRewardsText(achievement.Rewards);
-            if (rewardText) description += '\n' + rewardText;
+        // Add description
+        const description = langManager.GetText(achievement.Description);
+        if (!!description) {
+            lines.push(description);
         }
-        this.user.interface.popup.Open('ok', [ title, description ]);
+
+        if (achievement.Type === 1 || solvedIndexes.includes(achievementID)) {
+            // Add condition text
+            const conditionText = this.getConditionText(achievement.Condition);
+            if (!!conditionText) {
+                lines.push(lang['popup-condition-text'] + conditionText);
+            }
+
+            // Add rewards text
+            const rewardText = this.getRewardsText(achievement.Rewards);
+            if (!!rewardText) {
+                lines.push(rewardText);
+            }
+        } else if (achievement.Type === 0) {
+            // Add condition text
+            const conditionText = this.getConditionText(achievement.Condition);
+            if (!!conditionText) {
+                lines.push(lang['popup-hidden-condition']);
+            }
+        }
+
+        // Add global percentage text
+        const decimals = achievement.GlobalPercentage < 1 ? 2 : 0;
+        const pourcentage = Round(achievement.GlobalPercentage, decimals);
+        lines.push(lang['popup-global-text']
+            .replace('{}', pourcentage.toString()));
+
+        const text = lines.join('\n\n');
+        this.user.interface.popup.Open('ok', [ title, text ]);
     }
 
     /**
@@ -124,17 +154,17 @@ class Achievements {
 
         const operators = langManager.curr['achievements']['operators'];
         const condText = langManager.curr['achievements']['conditions'];
-        let output = '\n' + condText['header'];
+        let output = '';
         switch (Comparator.Type) {
-            case 'B':
-                output += condText['B']
+            case 'Battery':
+                output += condText['Battery']
                             .replace('{}', operators[Operator])
-                            .replace('{}', (valueNum * 100).toString()) + '\n';
+                            .replace('{}', (valueNum * 100).toString());
                 break;
 
-            case 'Lvl':
-                output += condText['Lvl']
-                            .replace('{}', valueStr) + '\n';
+            case 'Level':
+                output += condText['Level']
+                            .replace('{}', valueStr);
                 break;
 
             case 'Sk':
@@ -148,14 +178,14 @@ class Achievements {
                 const skillName = langManager.GetText(skill.Name);
                 output += condText[Comparator.Type]
                             .replace('{}', valueStr)
-                            .replace('{}', skillName) + '\n';
+                            .replace('{}', skillName);
                 break;
 
             case 'St':
                 const statName = langManager.curr['statistics']['names'][Value];
                 output += condText['St']
                             .replace('{}', valueStr)
-                            .replace('{}', statName) + '\n';
+                            .replace('{}', statName);
                 break;
 
             case 'Ca':
@@ -163,23 +193,28 @@ class Achievements {
                 const categoryName = langManager.GetText(category.Name);
                 output += condText[Comparator.Type]
                             .replace('{}', valueStr)
-                            .replace('{}', categoryName) + '\n';
+                            .replace('{}', categoryName);
                 break;
 
             case 'HCa':
                 output += condText[Comparator.Type]
                             .replace('{}', valueStr)
-                            .replace('{}', Comparator.Value.toString()) + '\n';
+                            .replace('{}', Comparator.Value.toString());
                 break;
 
-            case 'It':
-                output += condText['It']
-                            .replace('{}', valueStr) + '\n';
+            case 'ItemCount':
+                output += condText['ItemCount']
+                            .replace('{}', valueStr);
                 break;
 
             case 'Ad':
                 output += condText['Ad']
-                            .replace('{}', valueStr) + '\n';
+                            .replace('{}', valueStr);
+                break;
+
+            case 'SelfFriend':
+                output += condText['SelfFriend']
+                            .replace('{}', valueStr);
                 break;
         }
 
@@ -193,7 +228,7 @@ class Achievements {
      */
     getRewardsText = (rewards) => {
         const lang = langManager.curr['achievements']['rewards'];
-        let output = '';
+        const lines = [];
 
         for (let i = 0; i < rewards.length; i++) {
             const reward = rewards[i];
@@ -212,15 +247,15 @@ class Achievements {
                     const title = dataManager.titles.GetByID(titleID);
                     const titleName = langManager.GetText(title.Name);
                     const titleLine = lang['title'].replace('{}', titleName);
-                    output += titleLine;
+                    let line = titleLine;
 
                     // If already have this title
                     if (valueNum === null) {
                         const amount = valueStr.split('|')[1];
-                        output += lang['title-conversion'].replace('{}', amount);
+                        line += lang['title-conversion'].replace('{}', amount);
                     }
 
-                    output += '\n';
+                    lines.push(line);
                     break;
 
                 case 'Item':
@@ -229,16 +264,17 @@ class Achievements {
                     const itemRarity = langManager.curr['rarities'][item.Rarity];
                     const itemText = itemName + ' (' + itemRarity + ')';
                     const itemLine = lang['item'].replace('{}', itemText);
-                    output += itemLine + '\n';
+                    lines.push(itemLine);
                     break;
 
                 case 'OX':
                     const oxLine = lang['ox'].replace('{}', valueStr);
-                    output += oxLine + '\n';
+                    lines.push(oxLine);
                     break;
             }
         }
 
+        const output = lines.join('\n');
         return output;
     }
 
@@ -271,11 +307,11 @@ class Achievements {
 
             // Get value to compare
             switch (Condition?.Comparator.Type) {
-                case 'B': // Battery level
+                case 'Battery': // Battery level
                     value = GetBattery();
                     break;
 
-                case 'Lvl': // Level
+                case 'Level': // Level
                     value = this.user.experience.GetExperience().xpInfo.lvl;
                     break;
 
@@ -322,7 +358,7 @@ class Achievements {
                     value = categoryXP.lvl;
                     break;
 
-                case 'It': // Number of items
+                case 'ItemCount': // Number of items
                     value = this.user.inventory.stuffs.length;
                     break;
 
@@ -330,15 +366,23 @@ class Achievements {
                     value = this.user.informations.adTotalWatched;
                     break;
 
-                case 'Tt': // Title unlocked
+                case 'Title': // Title unlocked
                     const titles = this.user.inventory.GetTitles();
                     const title = titles.find(t => t.ID === Condition.Comparator.Value);
                     value = typeof(title) !== 'undefined' ? 1 : 0;
+                    break;
+
+                case 'SelfFriend': // Asking self friend
+                    value = this.user.informations.achievementSelfFriend ? 1 : 0;
                     break;
             }
 
             if (value !== null) {
                 switch (Condition.Operator) {
+                    case 'None':
+                        if (value >= 1)
+                            completed = true;
+                        break;
                     case 'GT':
                         if (value >= Condition.Value)
                             completed = true;

@@ -7,8 +7,8 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
-import { PageHeader } from 'Interface/Widgets';
+import { Page, Container, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
+import { PageHeader, AchievementsGroup } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 
 class ProfileFriend extends BackProfileFriend {
@@ -74,7 +74,7 @@ class ProfileFriend extends BackProfileFriend {
                 {this.renderCurrentActivity()}
 
                 {/** KPI */}
-                {this.state.friend.friendshipState === 'accepted' && (
+                {friend.friendshipState === 'accepted' && (
                     <View style={styles.kpiContainer}>
                         <KPI
                             title={lang['row-since']}
@@ -91,6 +91,20 @@ class ProfileFriend extends BackProfileFriend {
                             unit={langDates['hours-min']}
                             style={[styles.kpiProfile, backgroundKpi]}/>
                     </View>
+                )}
+
+                {/** Achievements */}
+                {friend.friendshipState === 'accepted' && (
+                    <Container
+                        style={styles.topSpace}
+                        text={lang['container-achievements-title']}
+                        type='static'
+                        opened={true}
+                        color='main1'
+                        backgroundColor='backgroundCard'
+                    >
+                        <AchievementsGroup friend={friend} />
+                    </Container>
                 )}
 
                 {/** Actions */}

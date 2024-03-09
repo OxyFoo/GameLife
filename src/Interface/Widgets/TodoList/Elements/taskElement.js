@@ -33,7 +33,7 @@ const TaskProps = {
 
 class TaskElement extends React.Component {
     textColor = { color: themeManager.GetColor('primary') };
-    hexActiveColor = themeManager.GetColor('main1');
+    hexActiveColor = themeManager.GetColor('primary');
 
     remove = () => {
         const { onTaskDelete } = this.props;
@@ -69,7 +69,7 @@ class TaskElement extends React.Component {
                 <TextInput
                     style={[styles.input, this.textColor, decoration]}
                     value={title}
-                    onChangeText={text => onTaskEdit(!!checked, text)} // TODO: !! added, right?
+                    onChangeText={text => onTaskEdit(checked, text)}
                     selectionColor={this.hexActiveColor}
                     multiline={true}
                     maxLength={256}

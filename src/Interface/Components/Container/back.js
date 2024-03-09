@@ -10,6 +10,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
+ * @typedef {import('Interface/Components/Icon').default} Icon
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
@@ -80,6 +81,9 @@ class ContainerBack extends React.Component {
         animHeightContent: new Animated.Value(0),
         animBorderRadius: new Animated.Value(8)
     }
+
+    /** @type {React.RefObject<Icon>} */
+    refIcon = React.createRef();
 
     componentDidMount() {
         if (this.props.opened !== this.state.opened) {

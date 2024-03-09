@@ -44,6 +44,10 @@ class Multiplayer {
             case 'update-current-activity':
                 this.user.activities.currentActivity.Set(data.activity);
                 break;
+
+            case 'update-zap-gpt':
+                this.user.informations.zapGPT = data.zapGPTStatus;
+                break;
         }
     }
 
@@ -81,6 +85,8 @@ class Multiplayer {
         } else if (result === 'not-found') {
             this.ShowError(lang['alert-friend-notfound'], username);
         } else if (result === 'self') {
+            // Update achievement
+            this.user.informations.achievementSelfFriend = true;
             this.ShowError(lang['alert-friend-self']);
         } else if (result === 'already-friend') {
             this.ShowError(lang['alert-already-friend'], username);

@@ -88,10 +88,18 @@ class PageBack extends React.Component {
         this.setState({ pointerEvents: 'none' });
     }
 
+    /** @param {number} y */
     GotoY = (y) => {
         this.posY = this.limitValues(-y, this.props.canScrollOver);
         SpringAnimation(this.state.positionY, this.posY).start();
     }
+
+    /** @param {number} y */
+    GoToYRelative = (y) => {
+        this.posY = this.limitValues(this.posY + y, this.props.canScrollOver);
+        SpringAnimation(this.state.positionY, this.posY).start();
+    }
+
     EnableScroll = () => this.scrollEnabled = true;
     DisableScroll = () => this.scrollEnabled = false;
 

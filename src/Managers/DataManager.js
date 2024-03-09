@@ -124,6 +124,11 @@ class DataManager {
                     user.settings.LoadMusicLinks(reqMusicLinks);
                 }
 
+                const reqIAP = reqInternalData.content['iap'];
+                if (typeof(reqIAP) === 'object') {
+                    user.shop.LoadIAPs(reqIAP);
+                }
+
                 const reqTables = reqInternalData.content['tables'];
                 if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
                 if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);

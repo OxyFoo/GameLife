@@ -7,6 +7,11 @@ const styles = StyleSheet.create({
     },
     emptyText: {
         marginBottom: 12
+    },
+    emptyButton: {
+        borderRadius: 6,
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6
     }
 });
 

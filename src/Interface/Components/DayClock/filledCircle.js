@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { View } from 'react-native';
+import { Circle, Svg, Path } from 'react-native-svg';
 
 import themeManager from 'Managers/ThemeManager';
-
-import { Circle, Svg } from 'react-native-svg';
 
 /**
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
@@ -16,9 +15,10 @@ import { Circle, Svg } from 'react-native-svg';
  * @param {number} [props.margin]
  * @param {number} [props.circleStrokeWidth]
  * @param {ThemeColor} [props.color]
+ * @param {boolean} [props.showEmptyFillingBar] Show verticalbar from circle origin to top middle to show empty state
  * @returns {JSX.Element}
  */
-const FilledCircle = ({ percentage = 100, size = 32, margin = 6, circleStrokeWidth = 2, color = 'main1' }) => {
+const FilledCircle = ({ percentage = 100, size = 32, margin = 6, circleStrokeWidth = 2, color = 'main1', showEmptyFillingBar = false }) => {
     const containerSize = size + margin * 2 + circleStrokeWidth * 2;
 
     const circleSize = size - circleStrokeWidth;
@@ -39,6 +39,14 @@ const FilledCircle = ({ percentage = 100, size = 32, margin = 6, circleStrokeWid
     return (
         <View style={{ width: containerSize, height: containerSize, marginTop: -circleStrokeWidth, marginLeft: -circleStrokeWidth-1, overflow: 'visible' }}>
             <Svg width={containerSize} height={containerSize}>
+                {/** Border line, from circle origin to top middle */}
+                {percentage <= 0 && showEmptyFillingBar && (
+                    <Path
+                        d={`M${cx} ${cy - circleRadius + 1} L${cx} ${cy + circleRadius / 2}`}
+                        stroke={circleFill}
+                        strokeWidth={1}
+                    />
+                )}
                 <Circle
                     rotation={-90}
                     origin={[cx + 1, cy + 1]}

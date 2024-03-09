@@ -56,6 +56,9 @@ class Shop {
         dyes: []
     };
 
+    /** @type {Array<string>} */
+    IAP_IDs = [];
+
     Clear() {
         this.buyToday = {
             day: '',
@@ -90,6 +93,12 @@ class Shop {
             buyToday: this.buyToday
         };
         return data;
+    }
+
+    LoadIAPs(iaps) {
+        if (Array.isArray(iaps)) {
+            this.IAP_IDs = iaps;
+        }
     }
 
     /** @param {BuyableRandomChest} chest */
@@ -128,6 +137,9 @@ class Shop {
 
         // Save inventory
         this.user.LocalSave();
+
+        // Update mission
+        this.user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
         const args = {
@@ -177,6 +189,9 @@ class Shop {
 
         // Save inventory
         this.user.LocalSave();
+
+        // Update mission
+        this.user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
         const args = {

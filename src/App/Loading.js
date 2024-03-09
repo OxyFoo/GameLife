@@ -26,7 +26,12 @@ async function Initialisation(nextStep, nextPage, callbackError) {
 
     // Ping request
     await user.server.Ping();
-    const { online } = user.server;
+    if (user.server.IsConnected() === false) {
+        user.interface.console.AddLog('warn', 'Ping request failed, retrying...');
+        await user.server.Ping();
+    }
+
+    const online = user.server.IsConnected();
     if (!online) {
         user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
     }
@@ -183,6 +188,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     const time_text = `Initialisation done in ${time_end - time_start}ms`;
     console.log(time_text);
     user.interface.console.AddLog('info', time_text);
+    user.appIsLoaded = true;
 
     nextPage();
 }

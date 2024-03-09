@@ -3,6 +3,19 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
+import { Round } from 'Utils/Functions';
+
+/**
+ * @typedef {import('Data/Achievements').Condition} Condition
+ * @typedef {import('Types/UserOnline').Friend} Friend
+ * 
+ * @typedef {Object} PanelAchievementType
+ * @property {number} ID
+ * @property {string} Name
+ * @property {boolean} isSolved
+ * @property {string} GlobalPercentage
+ */
+
 class BackAchievements extends PageBase {
     state = {
         headerHeight: 0
@@ -11,13 +24,24 @@ class BackAchievements extends PageBase {
     constructor(props) {
         super(props);
 
-        const completeAchievements = user.achievements.GetSolvedIDs();
-        this.achievement = dataManager.achievements.GetAll(completeAchievements);
-        this.achievement = this.achievement.map(achievement => ({
+        /** @type {Friend | null} */
+        this.friend = null;
+        if (this.props.args.hasOwnProperty('friendID')) {
+            const friendID = this.props.args.friendID;
+            this.friend = user.multiplayer.GetFriendByID(friendID);
+        }
+
+        const completeAchievements = this.friend === null ?
+            user.achievements.GetSolvedIDs() :
+            this.friend.achievements.map(achievement => achievement.AchievementID);
+        const allAchievements = dataManager.achievements.GetAll(completeAchievements);
+
+        /** @type {Array<PanelAchievementType>} */
+        this.achievement = allAchievements.map(achievement => ({
             ID: achievement.ID,
             Name: langManager.GetText(achievement.Name),
-            Description: langManager.GetText(achievement.Description),
-            isSolved: completeAchievements.includes(achievement.ID)
+            isSolved: completeAchievements.includes(achievement.ID),
+            GlobalPercentage: Round(achievement.GlobalPercentage, 0).toString()
         }));
     }
 

@@ -9,6 +9,7 @@ import ShopDailyDeals from './DailyDeals';
 import ShopRandomChests from './RandomChests';
 import ShopTargetedChests from './TargetedChests';
 import ShopDyes from './Dyes';
+import ShopIAP from './InAppPurchases'
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -52,23 +53,28 @@ class Shop extends BackShop {
                 canScrollOver
             >
                 <ShopHeader
-                    ref={ref => this.refTuto1 = ref}
+                    ref={this.refHeader}
                     refPage={this.state.refPage}
+                    style={styles.shopHeader}
                 />
 
+                <Text style={styles.title}>{lang['banner-header']}</Text>
+                <Text style={styles.title2} color='secondary'>{lang['banner-header-refonte']}</Text>
+
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
-                <ShopDailyDeals ref={ref => this.refTuto2 = ref} />
+                <ShopDailyDeals ref={this.refDailyDeals} />
+
+                <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
+                <ShopIAP ref={this.refIAP} />
 
                 <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
-                <ShopRandomChests ref={ref => this.refTuto3 = ref} />
+                <ShopRandomChests ref={this.refRandomChests} />
 
                 <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
-                <ShopTargetedChests ref={ref => this.refTuto4 = ref} />
+                <ShopTargetedChests ref={this.refTargetedChests} />
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
-                <ShopDyes ref={ref => this.refTuto5 = ref} />
-
-                {/*<ShopTitles ref={ref => this.refTuto2 = ref} />*/}
+                <ShopDyes ref={this.refDyes} />
             </Page>
         );
     }
@@ -78,7 +84,23 @@ const styles = StyleSheet.create({
     page: {
         paddingHorizontal: 0
     },
-
+    shopHeader: {
+        marginBottom: 12
+    },
+    title: {
+        marginBottom: 6,
+        paddingHorizontal: 16,
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    title2: {
+        marginBottom: 24,
+        paddingHorizontal: 16,
+        fontSize: 16,
+        fontStyle: 'italic',
+        textAlign: 'center'
+    },
     noInternetContainer: {
         width: '100%',
         justifyContent: 'center',

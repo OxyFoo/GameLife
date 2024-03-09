@@ -51,7 +51,7 @@ class Todoes {
 
     /**
      * Sorted todoes using titles
-     * @type {Array<string>}
+     * @type {Array<number>}
      */
     sort = [];
 
@@ -118,22 +118,22 @@ class Todoes {
 
         // Add new todoes title at the top
         for (const todo of todoes) {
-            if (!this.sort.includes(todo.title)) {
-                this.sort.splice(0, 0, todo.title);
+            if (!this.sort.includes(todo.created)) {
+                this.sort.splice(0, 0, todo.created);
                 this.SAVED_sort = false;
             }
         }
 
         // Remove deleted todoes title
-        this.sort = this.sort.filter(title => {
-            if (todoes.findIndex(todo => todo.title === title) !== -1) {
+        this.sort = this.sort.filter(created => {
+            if (todoes.findIndex(todo => todo.created === created) !== -1) {
                 return true;
             }
             this.SAVED_sort = false;
             return false;
         });
 
-        return this.sort.map(title => todoes.find(todo => todo.title === title));
+        return this.sort.map(created => todoes.find(todo => todo.created === created));
     }
 
     IsUnsaved = () => {
@@ -267,7 +267,7 @@ class Todoes {
      * @returns {boolean} Success of the operation
      */
     Move(todo, newIndex) {
-        if (!this.sort.includes(todo.title)) {
+        if (!this.sort.includes(todo.created)) {
             this.user.interface.console.AddLog('warn', `Todoes - move failed: todo not found (${todo.title} ${newIndex})`);
             return false;
         }
@@ -275,13 +275,13 @@ class Todoes {
             this.user.interface.console.AddLog('warn', `Todoes - move failed: index out of range (${todo.title} ${newIndex})`);
             return false;
         }
-        const oldIndex = this.sort.indexOf(todo.title);
+        const oldIndex = this.sort.indexOf(todo.created);
         if (oldIndex === newIndex) {
             this.user.interface.console.AddLog('warn', `Todoes - move failed: same index (${todo.title} ${newIndex})`);
             return false;
         }
         this.sort.splice(oldIndex, 1);
-        this.sort.splice(newIndex, 0, todo.title);
+        this.sort.splice(newIndex, 0, todo.created);
         this.SAVED_sort = false;
         this.allTodoes.Set(this.Get());
         return true;

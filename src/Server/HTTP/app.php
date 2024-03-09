@@ -28,9 +28,11 @@ switch ($action) {
     case 'buyRandomChest':      $commands->BuyRandomChest();    break;
     case 'buyTargetedChest':    $commands->BuyTargetChest();    break;
     case 'buyDye':              $commands->BuyDye();            break;
+    case 'buyOx':               $commands->BuyOx();             break;
     case 'sellStuff':           $commands->SellStuff();         break;
     case 'claimNonZeroDays':    $commands->ClaimNonZeroDays();  break;
     case 'claimGlobalNotifs':   $commands->claimGlobalNotifs(); break;
+    case 'claimMission':        $commands->claimMission();      break;
     case 'adWatched':           $commands->AdWatched();         break;
     case 'report':              $commands->Report();            break;
     case 'getDate':             $commands->GetDate();           break;

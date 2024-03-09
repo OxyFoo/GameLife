@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
         marginBottom: 6
     },
     globalMessageButtons: {
+        paddingBottom: 2,
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',

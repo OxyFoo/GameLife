@@ -70,29 +70,6 @@ class SectionTasks extends React.Component {
         this.props.onChange();
     }
 
-    renderTasks = () => {
-        if (!this.state.tasks.length) return null;
-
-        const background = { backgroundColor: themeManager.GetColor('main1') };
-
-        return (
-            <View style={[styles.tasksContainer, background]}>
-                <FlatList
-                    style={{ height: 'auto' }}
-                    data={this.state.tasks}
-                    keyExtractor={(item, index) => 'todo-' + index.toString()}
-                    renderItem={({ item, index }) => (
-                        <TodoList.TaskElement
-                            task={item}
-                            onTaskEdit={(checked, title) => this.onEditTask(index, checked, title)}
-                            onTaskDelete={() => this.onDeleteTask(index)}
-                        />
-                    )}
-                />
-            </View>
-        );
-    }
-
     render() {
         const lang = langManager.curr['todo'];
 
@@ -104,6 +81,28 @@ class SectionTasks extends React.Component {
                 </View>
 
                 <this.renderTasks />
+            </View>
+        );
+    }
+
+    renderTasks = () => {
+        if (!this.state.tasks.length) return null;
+
+        const background = {
+            backgroundColor: themeManager.GetColor('backgroundCard')
+        };
+
+        // Flatlist is not working properly (scroll height breaks)
+        return (
+            <View style={[styles.tasksContainer, background]}>
+                {this.state.tasks.map((task, index) => (
+                    <TodoList.TaskElement
+                        key={'todo-' + index.toString()}
+                        task={task}
+                        onTaskEdit={(checked, title) => this.onEditTask(index, checked, title)}
+                        onTaskDelete={() => this.onDeleteTask(index)}
+                    />
+                ))}
             </View>
         );
     }

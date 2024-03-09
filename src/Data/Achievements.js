@@ -1,25 +1,27 @@
 /**
- * @typedef {'B'|'Lvl'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'It'|'Ad'|'Tt'} Comparator
- * @typedef {'LT' | 'GT'} Operator
+ * @typedef {'Battery'|'Level'|'Sk'|'SkT'|'St'|'HCa'|'Ca'|'ItemCount'|'Ad'|'Title'|'SelfFriend'} Comparator
+ * @typedef {'None' | 'LT' | 'GT'} Operator
  * @typedef {'Title' | 'Item' | 'OX'} RewardType
  */
 
 /** @type {Array<Comparator>} */
 const COMPARATORS = [
-    'B',
-    'Lvl',
+    'Battery',
+    'Level',
     'Sk',
     'SkT',
     'St',
     'HCa',
     'Ca',
-    'It',
+    'ItemCount',
     'Ad',
-    'Tt'
+    'Title',
+    'SelfFriend'
 ];
 
 /** @type {Array<Operator>} */
 const OPERATORS = [
+    'None',
     'LT',
     'GT'
 ];
@@ -47,8 +49,12 @@ class Achievement {
 
     /** @type {Condition} */
     Condition = null;
+
     /** @type {Array<Reward>} */
     Rewards = [];
+
+    /** @type {number} Global players percentage [0-100] */
+    GlobalPercentage = 0;
 }
 
 class Condition {
@@ -61,7 +67,7 @@ class Condition {
     };
 
     /** @type {Operator} */
-    Operator = 'LT';
+    Operator = 'None';
 
     /** @type {string | number} */
     Value = '0';
@@ -110,8 +116,26 @@ class Achievements {
             return null;
         }
 
+        const output = new Condition();
+
         const elements = condition.split(' ');
-        if (elements.length !== 3) {
+
+        if (elements.length === 1) {
+            const _comparator = /** @type {Comparator} */ (elements[0]);
+
+            if (!COMPARATORS.includes(_comparator)) {
+                return null;
+            }
+
+            output.Comparator.Type = _comparator;
+            output.Comparator.Value = null;
+            output.Operator = 'None';
+            output.Value = null;
+
+            return output;
+        }
+
+        else if (elements.length !== 3) {
             return null;
         }
 
@@ -131,7 +155,6 @@ class Achievements {
             return null;
         }
 
-        let output = new Condition();
         output.Comparator.Type = comparatorType;
         output.Comparator.Value = comparatorValue;
         output.Operator = operator;

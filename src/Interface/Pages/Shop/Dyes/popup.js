@@ -93,6 +93,9 @@ const buyDye = async(item) => {
     user.shop.buyToday.dyes.push(item.ItemBefore.InventoryID);
     user.LocalSave();
 
+    // Update mission
+    user.missions.SetMissionState('mission3', 'completed');
+
     // Show success message
     const title = lang['dyes']['popup-dyesuccess-title'];
     let text = lang['dyes']['popup-dyesuccess-text']

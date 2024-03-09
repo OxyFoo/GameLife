@@ -1,5 +1,6 @@
 import THEMES from 'Ressources/themes';
 import { Rarity } from 'Data/Items';
+import { MinMax } from 'Utils/Functions';
 
 /**
  * @typedef {keyof typeof THEMES} ThemeName
@@ -116,6 +117,27 @@ class ThemeManager {
                 break;
         }
         return colors;
+    }
+
+    /**
+     * @param {string} color The color to shade, in hex format
+     * @param {number} percent The percentage of shade to apply [-100, 100]
+     * @returns {string} Final hex color
+     */
+    ShadeColor(color, percent) {
+        let R = parseInt(color.substring(1, 3), 16);
+        let G = parseInt(color.substring(3, 5), 16);
+        let B = parseInt(color.substring(5, 7), 16);
+
+        R = MinMax(0, Math.round(R * (1 + percent / 100)), 255);
+        G = MinMax(0, Math.round(G * (1 + percent / 100)), 255);
+        B = MinMax(0, Math.round(B * (1 + percent / 100)), 255);
+
+        const RR = (R.toString(16).length === 1) ? `0${R.toString(16)}` : R.toString(16);
+        const GG = (G.toString(16).length === 1) ? `0${G.toString(16)}` : G.toString(16);
+        const BB = (B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16);
+
+        return `#${RR}${GG}${BB}`;
     }
 }
 

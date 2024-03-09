@@ -12,6 +12,7 @@ import HeatMap from './Components/HeatMap';
 import Icon from './Components/Icon';
 import IconCheckable from './Components/IconCheckable';
 import Input from './Components/Input';
+import KeyboardSpacerView from './Components/KeyboardSpacerView';
 import KPI from './Components/KPI';
 import LineChartSvg from './Components/LineChartSvg';
 import Page from './Components/Page';
@@ -44,6 +45,7 @@ export {
     Icon,
     IconCheckable,
     Input,
+    KeyboardSpacerView,
     KPI,
     LineChartSvg,
     Page,

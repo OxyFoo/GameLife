@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
     container: {
         height: 'auto',
         padding: 16,
+        paddingBottom: 8,
         paddingHorizontal: 16,
         borderRadius: 20,
 

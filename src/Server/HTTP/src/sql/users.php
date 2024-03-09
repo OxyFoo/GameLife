@@ -15,8 +15,10 @@ class Users
         $activities = $data['activities'];
         $todoes = $data['todoes'];
         $quests = $data['quests'];
+        $missions = $data['missions'];
         $avatar = $data['avatar'];
         $xp = $data['xp'];
+        $stats = $data['stats'];
         $titleID = $data['titleID'];
         $birthTime = $data['birthTime'];
 
@@ -32,11 +34,17 @@ class Users
         if (isset($quests) && isset($quests['nonzerodays'])) {
             NonZeroDays::Save($db, $account, $quests['nonzerodays']);
         }
+        if (isset($missions)) {
+            Missions::Set($db, $account, $deviceID, $missions);
+        }
         if (isset($avatar)) {
             self::SetAvatar($db, $account, $avatar);
         }
         if (isset($xp)) {
             self::setXP($db, $account->ID, $xp);
+        }
+        if (isset($stats)) {
+            self::setStats($db, $account, $stats);
         }
         if (isset($titleID)) {
             self::setTitle($db, $account, $titleID);
@@ -284,6 +292,19 @@ class Users
     }
 
     /**
+     * @param DataBase $db
+     * @param Account $account
+     * @param object $stats
+     */
+    private static function setStats($db, $account, $stats) {
+        $command = 'UPDATE TABLE SET `Stats` = ? WHERE `ID` = ?';
+        $result = $db->QueryPrepare('Accounts', $command, 'si', [ json_encode($stats), $account->ID ]);
+        if ($result === false) {
+            ExitWithStatus('Error: Saving stats failed');
+        }
+    }
+
+    /**
      * Get the Ox amount of the account
      * @param DataBase $db
      * @param int $accountID
@@ -340,6 +361,20 @@ class Users
         $result = $db->QueryPrepare('Logs', $command, 'i', [ $accountID ]);
         if ($result === null) {
             ExitWithStatus('Error: Getting ad remaining failed');
+        }
+        return count($result);
+    }
+
+    /**
+     * Get number of all Ox purchased
+     * @param DataBase $db
+     * @param int $accountID
+     */
+    public static function GetPurchasedCount($db, $accountID) {
+        $command = "SELECT * FROM TABLE WHERE `AccountID` = ? AND `Type` = 'buyOx'";
+        $result = $db->QueryPrepare('Logs', $command, 'i', [ $accountID ]);
+        if ($result === null) {
+            ExitWithStatus('Error: Getting purchase failed');
         }
         return count($result);
     }

@@ -86,6 +86,9 @@ const buyDailyDeals = async(item) => {
     user.shop.buyToday.items.push(item.ID);
     user.LocalSave();
 
+    // Update mission
+    user.missions.SetMissionState('mission3', 'completed');
+
     // Show success message
     const itemName = langManager.GetText(item.Name);
     const title = lang['dailyDeals']['popup-buysuccess-title'];

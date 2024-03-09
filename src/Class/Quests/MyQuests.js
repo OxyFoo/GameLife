@@ -333,6 +333,7 @@ class MyQuests {
     /**
      * @param {MyQuest} quest
      * @param {number} time in seconds
+     * @returns {Array<DayType>} Days of the week
      */
     GetDays(quest, time = GetLocalTime()) {
         if (quest === null) return [];

@@ -35,8 +35,10 @@ class BackDisplay extends PageBase {
         this.iconRatio = getFromProp('iconRatio', 0.8);
         this.text = getFromProp('text');
         this.button = getFromProp('button');
+        this.button2 = getFromProp('button2');
         this.quote = null;
         this.callback = getFromProp('action', user.interface.BackHandle);
+        this.callback2 = getFromProp('action2', user.interface.BackHandle);
 
         /** @type {Quote | null} */
         const quoteItem = getFromProp('quote', null);

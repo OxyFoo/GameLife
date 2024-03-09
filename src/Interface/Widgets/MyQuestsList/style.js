@@ -5,7 +5,16 @@ const styles = StyleSheet.create({
         padding: 0
     },
     emptyText: {
-        padding: 24
+        padding: 24,
+        paddingBottom: 0
+    },
+    emptyButtonContainer: {
+        margin: 24
+    },
+    emptyButton: {
+        borderRadius: 6,
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6
     },
 
     headerStyle: {

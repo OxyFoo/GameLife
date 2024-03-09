@@ -16,13 +16,28 @@ const SkillsGroupProps = {
 
 class SkillsGroupBack extends React.Component {
     state = {
-        /** @type {Array<EnrichedSkill>} */
-        skills: user.activities.GetLastSkills(3)
+        /** @type {Array<EnrichedSkill | null>} 4th is null to show "all" button */
+        skills: []
+    }
+
+    constructor(props) {
+        super(props);
+
+        this.state.skills = user.activities.GetLastSkills(4);
+        if (this.state.skills.length >= 4) {
+            this.state.skills[3] = null;
+            this.state.skills.length = 4;
+        }
     }
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.setState({ skills: user.activities.GetLastSkills(3) });
+            const skills = user.activities.GetLastSkills(4);
+            if (skills.length >= 4) {
+                skills[3] = null;
+                skills.length = 4;
+            }
+            this.setState({ skills });
         });
     }
 

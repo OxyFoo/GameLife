@@ -18,7 +18,7 @@ class Display extends BackDisplay {
                     />
                 </Animated.View>
                 <Text>{this.text}</Text>
-                <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
+                {this.renderButtons()}
                 {this.quote !== null && (
                     <View style={styles.quoteContainer}>
                         <Text fontSize={16} color={'light'} style={styles.quote}>{this.quote.text}</Text>
@@ -26,6 +26,35 @@ class Display extends BackDisplay {
                     </View>
                 )}
             </Page>
+        );
+    }
+
+    renderButtons = () => {
+        // Show two buttons if both are defined
+        if (!!this.button2 && !!this.callback2) {
+            return (
+                <View style={styles.doubleButtons}>
+                    <Button
+                        style={styles.buttonHalf1}
+                        color='main1'
+                        fontSize={14}
+                        onPress={this.callback}
+                    >
+                        {this.button}
+                    </Button>
+                    <Button
+                        style={styles.buttonHalf2}
+                        color='main2'
+                        fontSize={14}
+                        onPress={this.callback2}
+                    >
+                        {this.button2}
+                    </Button>
+                </View>
+            );
+        }
+        return (
+            <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
         );
     }
 }
@@ -39,8 +68,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-evenly'
     },
+    doubleButtons: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     button: {
         width: '80%'
+    },
+    buttonHalf1: {
+        flex: 1,
+        marginRight: 6,
+        paddingHorizontal: 6
+    },
+    buttonHalf2: {
+        flex: 1,
+        marginLeft: 6,
+        paddingHorizontal: 6
     },
     quoteContainer: {
         alignItems: 'center',

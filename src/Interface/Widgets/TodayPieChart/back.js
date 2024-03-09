@@ -3,14 +3,16 @@ import * as React from 'react';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { GetLocalTime } from 'Utils/Time';
+import { SpringAnimation } from 'Utils/Animations';
 
 /** 
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Interface/Components/PieChart').FocusedActivity} FocusedActivity
+ * @typedef {import('Interface/Components/PieChart/back').FocusedActivity} FocusedActivity
  * 
  * @typedef {object} UpdatingData
  * @property {number} id
@@ -29,18 +31,28 @@ const InputProps = {
 
 class TodayPieChartBack extends React.Component {
     state = {
+        /** @type {UpdatingData[]} */
         dataToDisplay: [],
 
-        /** @type {FocusedActivity | null} */
-        focusedActivity: null
-    }
+        /** @type {UpdatingData[]} */
+        dataToDisplayFullDay: [],
 
-    /** @type {UpdatingData[]} */
-    updatingData = [];
+        /** @type {FocusedActivity | null} */
+        focusedActivity: null,
+
+        /** @type {FocusedActivity | null} */
+        focusedActivityFullDay: null,
+
+        switched: user.informations.switchHomeTodayPieChart,
+        layoutWidth: 0
+    }
 
     constructor(props) {
         super(props);
-        this.state = { ...this.state, ...this.computeData(false) };
+        this.state = {
+            ...this.state,
+            ...this.computeData(false) 
+        };
     }
 
     componentDidMount() {
@@ -57,23 +69,46 @@ class TodayPieChartBack extends React.Component {
      * @param {boolean} [setState=true] If true, call setState to update the component
      */
     computeData = (setState = true) => {
-        this.updatingData = this.initCategoriesArray();
-        this.addCategoriesName();
-        this.computeTimeEachCategory();
+        const updatingData = this.initCategoriesArray();
+        this.computeTimeEachCategory(updatingData);
 
-        const totalTime = this.computeTotalTime();
-        this.convertTimeToPercent(totalTime);
+        const totalTime = this.computeTotalTime(updatingData);
+        this.convertTimeToPercent(updatingData, totalTime);
 
-        const focusedActivity = this.findBiggestActivity();
+        // updatingDataFullDay
+        const lang = langManager.curr['home'];
+        const updatingDataFullDay = [ ...updatingData ];
 
-        if (focusedActivity && focusedActivity.id !== 0) {
-            this.updatingData.find(item => item.id === focusedActivity.id).focused = true;
+        // Find the biggest activity
+        const focusedActivityFullDay = this.findBiggestActivity(updatingDataFullDay);
+        if (focusedActivityFullDay && focusedActivityFullDay.id !== 0) {
+            updatingDataFullDay.find(item => item.id === focusedActivityFullDay.id).focused = true;
         }
-        this.computeGradientShadow();
 
+        const pourcent = this.convertTimeToPercent(updatingDataFullDay, 24 * 60);
+        updatingDataFullDay.push({
+            id: 0,
+            value: 100 - pourcent,
+            valueMinutes: updatingData.reduce((acc, cur) => acc + cur.valueMinutes, 0),
+            name: lang['chart-total-text'],
+            color: '#130f40',
+            gradientCenterColor: '#130f40',
+            focused: false
+        });
+
+
+        // Find the biggest activity
+        const focusedActivity = this.findBiggestActivity(updatingData);
+        if (focusedActivity && focusedActivity.id !== 0) {
+            updatingData.find(item => item.id === focusedActivity.id).focused = true;
+        }
+
+        // Update the state and return the new state
         const newState = {
-            dataToDisplay: this.updatingData,
-            focusedActivity: focusedActivity
+            dataToDisplay: updatingData,
+            dataToDisplayFullDay: updatingDataFullDay,
+            focusedActivity: focusedActivity,
+            focusedActivityFullDay: focusedActivityFullDay
         };
 
         if (setState) {
@@ -93,7 +128,8 @@ class TodayPieChartBack extends React.Component {
         let baseData = []
 
         for (let i = 1; i < allCategories.length; i++) {
-            baseData.push({
+            /** @type {UpdatingData} */
+            const newData = {
                 id: allCategories[i].ID,
                 value: 0,
                 valueMinutes: 0,
@@ -101,40 +137,28 @@ class TodayPieChartBack extends React.Component {
                 color: '#000000',
                 gradientCenterColor: '#000000',
                 focused: false
-            });
+            };
+
+            const category = dataManager.skills.GetCategoryByID(allCategories[i].ID);
+            if (category === null) {
+                user.interface.console.AddLog('error', 'Error in PieChartHome: category not found');
+            } else if (category.Name) {
+                newData.name = langManager.GetText(category.Name);
+                newData.color = category.Color;
+                newData.gradientCenterColor = themeManager.ShadeColor(category.Color, -30);
+            }
+
+            baseData.push(newData);
         }
 
         return baseData;
     }
 
     /**
-     * Add the name of the categories to the updatingData in the good language
-     * @return {void}
-     */
-    addCategoriesName = () => {
-        for (const element of this.updatingData) {
-            const category = dataManager.skills.GetCategoryByID(element.id);
-            if (category === null) {
-                user.interface.console.AddLog('error', 'Error in PieChartHome: category not found');
-                continue;
-            }
-
-            const categoryName = category.Name;
-            if (categoryName) {
-                element.name = langManager.GetText(categoryName);
-                element.color = category.Color;
-            } else {
-                element.name = '';
-                element.color = 'black';
-            }
-        }
-    }
-
-    /**
      * Compute the time spent in each category and update the state
-     * @return {void}
+     * @param {UpdatingData[]} updatingData
      */
-    computeTimeEachCategory = () => {
+    computeTimeEachCategory = (updatingData) => {
         const allActivitiesOfToday = user.activities.GetByTime(GetLocalTime());
         for (const activity of allActivitiesOfToday) {
             const category = dataManager.skills.GetByID(activity.skillID);
@@ -143,96 +167,87 @@ class TodayPieChartBack extends React.Component {
                 continue;
             }
 
-            const index = this.updatingData.findIndex(item => item.id === category.CategoryID);
+            const index = updatingData.findIndex(item => item.id === category.CategoryID);
             if (index === -1) {
                 user.interface.console.AddLog('error', 'Error in PieChartHome: categoryID not found in state.updatingData');
                 continue;
             }
 
-            this.updatingData[index].valueMinutes += activity.duration;
+            updatingData[index].valueMinutes += activity.duration;
         }
     };
 
     /**
      * Find the biggest activity and update the state
-     * @return {{id: number, value: number, name: string} | null} 
+     * @param {UpdatingData[]} updatingData
+     * @return {FocusedActivity | null} 
      */
-    findBiggestActivity = () => {
+    findBiggestActivity = (updatingData) => {
         let maxValue = 0;
-        let maxIndex = null;
-        for (const i in this.updatingData) {
-            const itemValue = this.updatingData[i].value;
-            if (itemValue > maxValue) {
-                maxValue = itemValue;
-                maxIndex = i;
+
+        /** @type {FocusedActivity | null} */
+        let selected = null;
+
+        for (const data of updatingData) {
+            if (data.value > maxValue) {
+                maxValue = data.value;
+                selected = {
+                    id: data.id,
+                    name: data.name,
+                    value: data.value
+                };
             }
         }
-        return maxIndex === null ? null : this.updatingData[maxIndex];
+
+        return selected;
     }
 
     /**
      * Compute the time in minutes spent in total in the day 
-     * @return {number}
+     * @param {UpdatingData[]} updatingData
+     * @return {number} In minutes
      */
-    computeTotalTime = () => {
-        let totalMin = 0;
-        for (const element of this.updatingData) {
-            let item = element;
-            totalMin += item.valueMinutes;
-        }
-        return totalMin;
+    computeTotalTime = (updatingData) => {
+        return updatingData
+            .map(item => item.valueMinutes)
+            .reduce((acc, cur) => acc + cur, 0);
     }
 
     /**
      * Convert the time in minutes to a percent of the day
+     * @param {UpdatingData[]} updatingData
      * @param {number} totalMinutes
      * @return {number}
      */
-    convertTimeToPercent = (totalMinutes) => {
+    convertTimeToPercent = (updatingData, totalMinutes) => {
         if (totalMinutes === 0) {
             return 0;
         }
 
         let totalPercent = 0;
-        for (const element of this.updatingData) {
-            let item = element;
+        for (const item of updatingData) {
             if (item.id > 0 && item.id < 6) {
                 item.value = Math.round(item.valueMinutes / totalMinutes * 100);
                 totalPercent += item.value;
             }
         }
+
         return totalPercent;
     }
 
-    /**
-     * Gradient shadow chelou qui marchent pas de ouf sont calculés ici
-     */
-    computeGradientShadow = () => {
-        for (const element of this.updatingData) {
-            element.gradientCenterColor = this.shadeColor(element.color, -20);
-        }
+    onPress = () => {
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            user.informations.switchHomeTodayPieChart = this.state.switched;
+            user.LocalSave();
+        }, 3000);
+
+        SpringAnimation(this.state.animSwitch, this.state.switched ? 0 : 1);
+        this.setState({ switched: !this.state.switched });
     }
 
-    // Je vais peut etre bouger cette function autre part ? 
-    // Marche pas trop mais y'a de l'idée 
-    shadeColor(color, percent) {
-        let R = parseInt(color.substring(1, 3), 16);
-        let G = parseInt(color.substring(3, 5), 16);
-        let B = parseInt(color.substring(5, 7), 16);
-
-        R = Math.round(R * (1 + percent / 100));
-        G = Math.round(G * (1 + percent / 100));
-        B = Math.round(B * (1 + percent / 100));
-
-        R = (R < 255) ? R : 255;
-        G = (G < 255) ? G : 255;
-        B = (B < 255) ? B : 255;
-
-        const RR = (R.toString(16).length === 1) ? `0${R.toString(16)}` : R.toString(16);
-        const GG = (G.toString(16).length === 1) ? `0${G.toString(16)}` : G.toString(16);
-        const BB = (B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16);
-
-        return `#${RR}${GG}${BB}`;
+    onLayout = (event) => {
+        this.setState({ layoutWidth: event.nativeEvent.layout.width });
     }
 }
 

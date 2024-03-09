@@ -67,6 +67,57 @@
         }
     },
 
+    "missions": {
+        "text-hint": "Press to do the mission",
+        "text-claim": "Press to claim the reward",
+
+        "content": {
+            "mission1": {
+                "title": "Make an activity",
+                "texts": {
+                    "1": "Press this button to go to the activities page",
+                    "2": "Here you are on the page of adding activity, you have to enter activities that you have done in real life!",
+                    "3": "Start by choosing an activity (you can use the categories or research to find what you want)",
+                    "4": "You can add an activity that you have already done, noting the time and duration of it ...",
+                    "5": "Or you can launch a timer to start the activity by pressing the \"Start button now \""
+                }
+            },
+            "mission2": {
+                "title": "Create a quest",
+                "texts": {
+                    "1": "Support here to go to the quest page",
+                    "2": "Pressing the + button to create a new quest",
+                    "3": "Fill in the requested information, such as the title, activities to be carried out, duration etc"
+                }
+            },
+            "mission3": {
+                "title": "Buy an item",
+                "texts": {
+                    "1": "Start by going to the shop",
+                    "2": "The Ox are the currency of the game, you can win them by looking at ads, by making quests, successes etc",
+                    "3": "Here you can exchange them for what you want, a specific item (among 3 proposed, which change every day), or a trunk to have a random item"
+                }
+            },
+            "mission4": {
+                "title": "Equip an item",
+                "texts": {
+                    "1": "Start by going to your profile",
+                    "2": "Here you can see your avatar, click on it to open your inventory",
+                    "3": "You can equip an item by pressing on it, or sell it to win ox"
+                }
+            },
+            "mission5": {
+                "title": "Ask for a friend",
+                "texts": {
+                    "1": "In this widget you can see your connected friends ...",
+                    "2": "Click on this button to go to the friends page",
+                    "3": "At the bottom right of this page you have a button to add a friend",
+                    "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
+                }
+            }
+        }
+    },
+
     "level": {
         "xp": "XP",
         "level": "Level",
@@ -151,9 +202,10 @@
         "alert-adsuccess-title": "Congrats",
         "alert-adsuccess-message": "You have won {} Ox!",
         "alert-aderror-title": "Unable to load ads",
-        "alert-aderror-message-wait": "The ads are loading",
-        "alert-aderror-message-nomore": "There are no more ads available. Try again tomorrow!",
-        "alert-aderror-message-error": "An error has occurred, please try again later.",
+        "alert-aderror-message": "An error has occurred, please try again later.",
+        "alert-aderror-loading-title": "Loading ads",
+        "alert-aderror-loading-message": "The ads are loading",
+        "alert-aderror-nomore-message": "There are no more ads available. Try again tomorrow!",
 
         "alert-adempty-title": "No ads available",
         "alert-adempty-text": "You have no more ads available for today.",
@@ -186,28 +238,34 @@
     },
 
     "achievements": {
+        "friend-title": "Success of {}",
+
         "operators": {
             "LT": "Less than",
             "GT": "Greater than"
         },
         "conditions": {
-            "header": "Condition: ",
-            "B": "Having a battery level {} {}%",
-            "Lvl": "Reach level {}",
+            "Battery": "Having a battery level {} {}%",
+            "Level": "Reach level {}",
             "Sk": "Reach {} level for skill \"{}\"",
             "SkT": "Practice for {} hours the skill \"{}\"",
             "St": "Wait for level {} with the statistic \"{}\"",
             "HCa": "Reach level {} in {} category(ies)",
             "Ca": "Reach level {} in category {}",
-            "It": "Have {} items",
-            "Ad": "Watch {} ads"
+            "ItemCount": "Have {} items",
+            "Ad": "Watch {} ads",
+            "SelfFriend": "Ask yourself as a friend"
         },
         "rewards": {
             "title": "New title: {}",
             "title-conversion": " (convert into {} Ox)",
             "item": "New item: {}",
-            "ox": "Bonus: {} Ox"
+            "ox": "Earn: {} Ox"
         },
+
+        "popup-condition-text": "Condition: ",
+        "popup-hidden-condition": "Hidden condition",
+        "popup-global-text": "{}% of the players have unlocked this achievement",
 
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",
@@ -262,11 +320,13 @@
         "timeralert-tooshort-text": "You cannot add an activity of less than 5 minutes",
 
         "display-activity-text": "Your activity has been created!",
-        "display-activity-button": "Back home",
+        "display-activity-button": "Continue",
+        "display-activity-button2": "Add another activity",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home",
 
         "activity-zap-comment": "Added by Zap",
+        "activity-zap-hint": "I can quickly add several activities at the same time",
 
         "tuto": {
             "1": "You can filter activities by category: {}",
@@ -294,11 +354,16 @@
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
+        "chart-today-recap": "Recap of the day",
         "chart-today-performance": "Activities of today",
         "chart-today-notmuch": "Not enough data to display graph",
+        "chart-total-text": "Total",
+
+        "news-myquests-title": "My quests to do",
 
         "container-stats-title": "Stats",
         "container-skills-title": "Skills",
+        "container-skills-empty": "No skills yet, do one and it will appear here !",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
@@ -315,15 +380,8 @@
     },
 
     "leaderboard": {
-        "page-title": "Leaderboard",
-
-        "button-global-text": "Global",
-        "button-week-text": "Week",
-
-        "alert-onlineneed-title": "Connection required",
-        "alert-onlineneed-text": "A connection is required to access the ranking!",
-        "alert-connectneed-title": "Log in",
-        "alert-connectneed-text": "To appear in the ranking, log in by entering your email address in the 'Identity' page."
+        "label-activities": "Activities",
+        "input-label-search": "Search for a player"
     },
 
     "login": {
@@ -447,7 +505,9 @@
         "tuto": {
             "1": "This is your profile, you can change your personal information here",
             "2": "This is your avatar, you can click on it to change your appearance"
-        }
+        },
+
+        "temporary-avatars": "This avatar will soon be replaced ... better!"
     },
 
     "profile-avatar": {
@@ -471,6 +531,8 @@
 
         "activity-now-title": "Activity now: {}",
         "activity-now-start": "Start the same activity",
+
+        "container-achievements-title": "Last achievements",
 
         "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",
@@ -551,7 +613,10 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
+        "banner-header": "-50% on all items before the arrival of new avatars",
+        "banner-header-refonte": "Buy now and sell later to take advantage of the rise in resale prices and win a maximum",
         "banner-daily": "Daily deals",
+        "banner-iap": "In-app purchases",
         "banner-random-chest": "Random chests",
         "banner-targeted-chest": "Targeted chests",
         "banner-dye": "Dyes",
@@ -562,6 +627,10 @@
             "popup-buysuccess-text": "You have successfully purshased item \"{}\" for {} Ox",
 
             "error-no-items": "An error occurred while loading the items for sale, please try again later."
+        },
+
+        "iap": {
+            "reward-page-text": "You got {} Ox, congratulations!"
         },
 
         "randomChests": {
@@ -612,11 +681,37 @@
         "reward-success-title": "Code used",
         "reward-success-text": "You have obtained the following rewards:",
 
-        "temp-comingsoon-title": "Shop",
-        "temp-comingsoon-text": "🚧 Available soon 🚧",
+        "popup-purchase": {
+            "purchase-pending": {
+                "title": "Purchase in progress",
+                "message": "Your purchase is in progress, you will receive your reward in a few moments."
+            },
+            "purchase-error": {
+                "title": "Error",
+                "message": "An error occurred during the purchase, again again."
+            },
+            "no-receipt": {
+                "title": "Error",
+                "message": "No receipt found, please try again later."
+            },
+            "purchase-handle-error": {
+                "title": "Error",
+                "message": "An error occurred during management of the purchase, please try again later."
+            },
+            "wrong-platform": {
+                "title": "Incorrect platform",
+                "message": "You can't buy this item on this platform."
+            }
+        },
 
-        "tuto": {
+        "help": {
             "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
+            "iap1": "Here, you can buy Ox with real money, which has several benefits",
+            "iap2": "First of all, you're helping this project to come to life and you're contributing to the redesign of the avatars and the application",
+            "iap3": "Secondly, you can buy items for your avatar. They're not in their final version, don't worry!",
+            "iap4": "But if you buy them now, you'll be able to resell them at double the price when the new avatars arrive!",
+            "iap5": "This is a way to thank you for trusting us from the start!",
+            "iap6": "By the way, by paying, you also gain access to Zapgpt which is a chatbot which allows you to add lots of activities at once",
             "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
             "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
             "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
@@ -657,15 +752,23 @@
             "int": "Intelligence",
             "soc": "Social",
             "for": "Strength",
-            "end": "Stamina",
+            "sta": "Stamina",
             "agi": "Agility",
             "dex": "Dexterity"
+        },
+        "names-min": {
+            "int": "Int",
+            "soc": "Soc",
+            "for": "Str",
+            "sta": "Sta",
+            "agi": "Agi",
+            "dex": "Dex"
         },
         "descriptions": {
             "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
             "soc": "Social competence is a skill that increases when you do activities with other people. For example, team sports or going out with friends.",
             "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
-            "end": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
+            "sta": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
             "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision quests, writing quests on a computer or even with musical instruments."
         }
@@ -890,10 +993,12 @@
         "instructions": [
             "- Descriptions as clear and simple as possible",
             "- Be clear about the activities, their start dates and times, and their duration.",
-            "- Avoid asking for too many things at once (recommended 5, max 10)"
+            "- Example: I did basketball Monday, Wednesday and Friday from 6 p.m. to 8 p.m."
         ],
 
+        "remaining-text": "Remaining:",
         "input-label": "Request to Zap",
+        "no-remaining": "You have reached the limit, to add more come from tomorrow",
 
         "added-message": "{} activities have been added",
 
@@ -902,7 +1007,8 @@
             "request-empty": "The request is empty",
             "request-invalid": "Query failed, try to reformulate",
             "request-timeout": "Request time limit exceeded",
-            "no-activities": "No activities generated"
+            "no-activities": "No activities generated",
+            "limit-reached": "You have reached the use limit for today"
         }
     }
 }

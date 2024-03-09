@@ -267,6 +267,7 @@ class EditorAvatarRender extends EditorAvatarBack {
     }
 
     render() {
+        const lang = langManager.curr['profile'];
         const {
             characterPosY,
             editorOpened,
@@ -319,7 +320,7 @@ class EditorAvatarRender extends EditorAvatarBack {
         return (
             <>
                 {/* Character */}
-                <Animated.View ref={ref => this.refButton = ref} style={characterStyle} onLayout={this.onCharacterLayout}>
+                <Animated.View ref={this.refButton} style={characterStyle} onLayout={this.onCharacterLayout}>
                     <Animated.View style={[styles.columnSide, columnOpacity]}>
                         {this.renderButtonItem('hair')}
                         {this.renderButtonItem('top')}
@@ -330,6 +331,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                             {this.renderButtonSkin('skinColor')}
                         </View>
                         <Animated.View style={avatarStyle}>
+                            <Text style={styles.tempText} color='secondary'>{lang['temporary-avatars']}</Text>
                             <Frame ref={ref => this.refFrame = ref} characters={[ user.character ]} />
                             {!editorOpened && (
                                 <Button

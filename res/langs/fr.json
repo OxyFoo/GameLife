@@ -67,6 +67,57 @@
         }
     },
 
+    "missions": {
+        "text-hint": "Appuie pour faire la mission",
+        "text-claim": "Appuie pour obtenir la récompense",
+
+        "content": {
+            "mission1": {
+                "title": "Faire une activité",
+                "texts": {
+                    "1": "Appuie sur ce bouton pour aller dans la page des activités",
+                    "2": "Ici tu es dans la page d'ajout d'activité, tu dois entrer des activités que tu as faites dans la vie réelle !",
+                    "3": "Commence par choisir une activité (tu peux utiliser les catégories ou la recherche pour trouver ce que tu veux)",
+                    "4": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
+                    "5": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\""
+                }
+            },
+            "mission2": {
+                "title": "Créer une quête",
+                "texts": {
+                    "1": "Appui ici pour aller dans la page des quêtes",
+                    "2": "Appuie sur le bouton + en haut à droite pour créer une nouvelle quête",
+                    "3": "Remplis les informations demandées, comme le titre, les activités à réaliser, la durée etc"
+                }
+            },
+            "mission3": {
+                "title": "Acheter un item",
+                "texts": {
+                    "1": "Commence par aller dans le shop",
+                    "2": "Les Ox sont la monnaie du jeu, tu peux les gagner en regardant des pubs, en faisant des quêtes, des succès etc",
+                    "3": "Ici tu peux les échanger contre ce que tu veux, un item précis (parmis 3 proposés, qui changent tous les jours), ou un coffre pour avoir un item aléatoire"
+                }
+            },
+            "mission4": {
+                "title": "Équipper un item",
+                "texts": {
+                    "1": "Commencer par aller dans ton profil",
+                    "2": "Ici tu peux voir ton avatar, clique dessus pour ouvrir ton inventaire",
+                    "3": "Tu peux équiper un item en appuyant dessus, ou le vendre pour gagner des Ox"
+                }
+            },
+            "mission5": {
+                "title": "Demander en ami",
+                "texts": {
+                    "1": "Dans ce widget tu peux voir tes amis connectés...",
+                    "2": "Clique sur ce bouton pour aller dans la page des amis",
+                    "3": "En bas à droite de cette page tu as un bouton pour ajouter un ami",
+                    "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
+                }
+            }
+        }
+    },
+
     "level": {
         "xp": "XP",
         "level": "Niveau",
@@ -151,9 +202,10 @@
         "alert-adsuccess-title": "Bravo",
         "alert-adsuccess-message": "Tu as gagné {} Ox !",
         "alert-aderror-title": "Impossible de charger les pubs",
-        "alert-aderror-message-wait": "Les pubs sont en cours de chargement",
-        "alert-aderror-message-nomore": "Il n'y a plus de pubs disponibles. Réessaye demain !",
-        "alert-aderror-message-error": "Une erreur est survenue, réessaye plus tard.",
+        "alert-aderror-message": "Une erreur est survenue, réessaye plus tard.",
+        "alert-aderror-loading-title": "Chargement des pubs",
+        "alert-aderror-loading-message": "Les pubs sont en cours de chargement",
+        "alert-aderror-nomore-message": "Il n'y a plus de pubs disponibles. Réessaye demain !",
 
         "alert-adempty-title": "Plus de pubs",
         "alert-adempty-text": "Il n'y a plus de pubs disponibles pour aujourd'hui.",
@@ -186,28 +238,34 @@
     },
 
     "achievements": {
+        "friend-title": "Succès de {}",
+
         "operators": {
             "LT": "inférieur à",
             "GT": "supérieur à"
         },
         "conditions": {
-            "header": "Condition : ",
-            "B": "Avoir un niveau de batterie {} {}%",
-            "Lvl": "Atteindre le niveau {}",
+            "Battery": "Avoir un niveau de batterie {} {}%",
+            "Level": "Atteindre le niveau {}",
             "Sk": "Atteindre le niveau {} pour la compétence \"{}\"",
             "SkT": "Pratiquer pendant {} heures la compétence \"{}\"",
             "St": "Attendre le niveau {} avec la statistique \"{}\"",
             "HCa": "Atteindre le niveau {} dans {} catégorie(s)",
             "Ca": "Atteindre le niveau {} dans la catégorie \"{}\"",
-            "It": "Posséder {} items",
-            "Ad": "Avoir vu {} pubs"
+            "ItemCount": "Posséder {} items",
+            "Ad": "Avoir vu {} pubs",
+            "SelfFriend": "Se demander soi-même en ami"
         },
         "rewards": {
             "title": "Nouveau titre : {}",
             "title-conversion": " (converti en {} Ox)",
             "item": "Nouvel item : {}",
-            "ox": "Bonus : {} Ox"
+            "ox": "Gain : {} Ox"
         },
+
+        "popup-condition-text": "Condition : ",
+        "popup-hidden-condition": "Condition cachée",
+        "popup-global-text": "{}% des joueurs ont débloqué ce succès",
 
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
@@ -262,11 +320,13 @@
         "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
-        "display-activity-button": "Retour vers l'accueil",
+        "display-activity-button": "Continuer",
+        "display-activity-button2": "Ajouter une autre activité",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 
         "activity-zap-comment": "Ajouté par Zap",
+        "activity-zap-hint": "Je peux rapidement ajouter plusieurs activités à la fois",
 
         "tuto": {
             "1": "Tu peux filtrer les activités par catégorie: {}",
@@ -294,11 +354,16 @@
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
 
+        "chart-today-recap": "Récap du jour",
         "chart-today-performance": "Performances du jour",
         "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
+        "chart-total-text": "Total",
+
+        "news-myquests-title": "Mes quêtes à faire",
 
         "container-stats-title": "Stats",
         "container-skills-title": "Compétences",
+        "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
@@ -315,15 +380,8 @@
     },
 
     "leaderboard": {
-        "page-title": "Classement",
-
-        "button-global-text": "Global",
-        "button-week-text": "Semaine",
-
-        "alert-onlineneed-title": "Connexion nécessaire",
-        "alert-onlineneed-text": "Une connexion est nécessaire pour pouvoir avoir accès au classement !",
-        "alert-connectneed-title": "Connecte-toi",
-        "alert-connectneed-text": "Pour apparaître dans le classement, connecte-toi en entrant votre adresse mail dans la page 'Identité'."
+        "label-activities": "Activitiés",
+        "input-label-search": "Rechercher un joueur"
     },
 
     "login": {
@@ -447,7 +505,9 @@
         "tuto": {
             "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
             "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
-        }
+        },
+
+        "temporary-avatars": "Cet avatar sera bientôt remplacé ... en mieux !"
     },
 
     "profile-avatar": {
@@ -471,6 +531,8 @@
 
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
+
+        "container-achievements-title": "Derniers succès",
 
         "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",
@@ -551,7 +613,10 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
+        "banner-header": "-50% sur tous les items avant l'arrivée des nouveaux avatars",
+        "banner-header-refonte": "Achetez maintenant et revendez plus tard pour profiter de la hausse des prix de revente et gagner un max",
         "banner-daily": "Deals du jour",
+        "banner-iap": "Achats intégrés",
         "banner-random-chest": "Coffres aléatoires",
         "banner-targeted-chest": "Coffres ciblés",
         "banner-dye": "Teintures",
@@ -562,6 +627,10 @@
             "popup-buysuccess-text": "Tu as bien acheté l'item \"{}\" pour {} Ox",
 
             "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, réessaye plus tard."
+        },
+
+        "iap": {
+            "reward-page-text": "Tu as obtenu {} Ox, félicitations !"
         },
 
         "randomChests": {
@@ -612,11 +681,37 @@
         "reward-success-title": "Code utilisé",
         "reward-success-text": "Tu as obtenu les récompenses suivantes :",
 
-        "temp-comingsoon-title": "Boutique",
-        "temp-comingsoon-text": "🚧 Bientôt disponible 🚧",
+        "popup-purchase": {
+            "purchase-pending": {
+                "title": "Achat en cours",
+                "message": "Ton achat est en cours, tu recevras ta récompense dans quelques instants."
+            },
+            "purchase-error": {
+                "title": "Erreur",
+                "message": "Une erreur est survenue lors de l'achat, réessaye plus tard."
+            },
+            "no-receipt": {
+                "title": "Erreur",
+                "message": "Aucun reçu n'a été trouvé, réessaye plus tard."
+            },
+            "purchase-handle-error": {
+                "title": "Erreur",
+                "message": "Une erreur est survenue lors de la gestion de l'achat, réessaye plus tard."
+            },
+            "wrong-platform": {
+                "title": "Plateforme incorrecte",
+                "message": "Tu ne peux pas acheter cet item sur cette plateforme."
+            }
+        },
 
-        "tuto": {
+        "help": {
             "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
+            "iap1": "Ici, tu peux acheter des Ox contre du vrai argent, ça a plusieurs bénéfices",
+            "iap2": "Tout d'abord, tu aides ce projet à prendre vie et tu contribues à la refonte des avatars et de l'application",
+            "iap3": "Ensuite, tu peux t'acheter des items pour ton avatar. Ils ne sont pas en version définitive ne t'inquiètes pas !",
+            "iap4": "Mais si t'en achètes maintenant, tu pourras les revendre au double du prix quand les nouveaux avatars arriveront !",
+            "iap5": "C'est un moyen pour nous te remercier de nous avoir fait confiance dès le début !",
+            "iap6": "Au passage, en payant, tu gagnes aussi l'accès à ZapGPT qui est un chatbot qui te permet d'ajouter pleins d'activités d'un coup",
             "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
             "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
             "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",
@@ -657,15 +752,23 @@
             "int": "Intelligence",
             "soc": "Social",
             "for": "Force",
-            "end": "Endurance",
+            "sta": "Endurance",
             "agi": "Agilité",
             "dex": "Dextérité"
+        },
+        "names-min": {
+            "int": "Int",
+            "soc": "Soc",
+            "for": "For",
+            "sta": "End",
+            "agi": "Agi",
+            "dex": "Dex"
         },
         "descriptions": {
             "int": "L’intelligence est une statistique très large, dès que tu fais fonctionner tes méninges, tu entraînes ton cerveau et gagnes donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
             "soc": "La compétence sociale est une compétence qui augmente quand tu fais des activités avec d'autres gens. Par exemple, des sports collectif ou des sorties avec des amis.",
             "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physiques par exemple !",
-            "end": "L’endurance est probablement la statistique que tu peux améliorerer le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
+            "sta": "L’endurance est probablement la statistique que tu peux améliorerer le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
             "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter ton agilité sont des activités comme des étirements ou encore du yoga.",
             "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
         }
@@ -890,10 +993,12 @@
         "instructions": [
             "- Descriptions le plus clair et simple possible",
             "- Bien préciser les activitiés, leurs dates et heures de commencements et leurs durées",
-            "- Éviter de demander trop de choses d'un coup (conseillé 5, max 10)"
+            "- Exemple: J'ai fais du basket lundi, mercredi et vendredi de 18h à 20h"
         ],
 
+        "remaining-text": "Restantes:",
         "input-label": "Requête à Zap",
+        "no-remaining": "Tu as atteint la limite, pour en ajouter plus reviens demain",
 
         "added-message": "{} activité[s] a[-ont] été ajoutée[s]",
 
@@ -902,7 +1007,8 @@
             "request-empty": "La requête est vide",
             "request-invalid": "La requête a échouée, essaie de reformuler",
             "request-timeout": "Le délai de la requête a dépassé la limite",
-            "no-activities": "Aucune activité n'a été générée"
+            "no-activities": "Aucune activité n'a été générée",
+            "limit-reached": "Tu as atteint la limite d'utilisation pour aujourd'hui"
         }
     }
 }

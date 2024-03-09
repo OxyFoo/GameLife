@@ -19,11 +19,13 @@ import svgFlagEnglish from 'Ressources/icons/flag-english';
 import svgFlagFrench from 'Ressources/icons/flag-french';
 import svgFlame from 'Ressources/icons/flame';
 import svgGift from 'Ressources/icons/gift';
+import svgHandPress from 'Ressources/icons/hand-press';
 import svgHome from 'Ressources/icons/home';
 import svgHuman from 'Ressources/icons/human';
 import svgInfo from 'Ressources/icons/info';
 import svgInstagram from 'Ressources/icons/instagram';
 import svgItem from 'Ressources/icons/item';
+import svgLeaderboard from 'Ressources/icons/leaderboard';
 import svgMagnifyingGlass from 'Ressources/icons/magnifying-glass'; 
 import svgMedia from 'Ressources/icons/media';
 import svgMoveVertical from 'Ressources/icons/move-vertical';
@@ -75,11 +77,13 @@ const SVGIcons = {
     flagFrench: svgFlagFrench,
     flame: svgFlame,
     gift: svgGift,
+    handPress: svgHandPress,
     home: svgHome,
     human: svgHuman,
     info: svgInfo,
     instagram: svgInstagram,
     item: svgItem,
+    leaderboard: svgLeaderboard,
     magnifyingGlass: svgMagnifyingGlass,
     media: svgMedia,
     moveVertical: svgMoveVertical,

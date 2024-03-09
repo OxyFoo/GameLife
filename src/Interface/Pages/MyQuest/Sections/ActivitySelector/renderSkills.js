@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
 
 import { GetRecentSkills, SkillToItem } from '../../../Activity/types';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Swiper, Text } from 'Interface/Components';
+import { Text } from 'Interface/Components';
 
 /**
  * @typedef {import('../../../Activity/types').ItemSkill} ItemSkill
@@ -71,21 +71,14 @@ function RenderSkills({ category, callback }) {
         ));
     }
 
-    // Disable horizontal scroll on iOS
-    //const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
-    // TODO: Fix this, double scrollview doesn't work on iOS and on some Android devices
-    const FlatListView = View;
-
     return (
-        <FlatListView>
-            <FlatList
-                style={styles.activitiesFlatlist}
-                data={skillsItems}
-                ListEmptyComponent={renderEmptyList}
-                renderItem={RenderSkill}
-                keyExtractor={item => 'act-skill-' + item.id}
-            />
-        </FlatListView>
+        <FlatList
+            style={styles.activitiesFlatlist}
+            data={skillsItems}
+            ListEmptyComponent={renderEmptyList}
+            renderItem={RenderSkill}
+            keyExtractor={item => 'act-skill-' + item.id}
+        />
     );
 }
 const RenderSkillsMemo = React.memo(RenderSkills, (prev, next) => prev.category.id === next.category.id);
@@ -100,28 +93,22 @@ function RenderSkillsSearch({ searchInput, callback }) {
     const [ skillsItems, setSkillsItems ] = React.useState([]);
 
     React.useEffect(() => {
+        const search = searchInput.toLowerCase();
         const skills = dataManager.skills.Get();
         const newSkills = skills
             .map(skill => SkillToItem(skill, (skill) => callback(skill.ID)))
-            .filter(skill => skill.value.toLowerCase().includes(searchInput));
+            .filter(skill => skill.value.toLowerCase().includes(search));
         setSkillsItems(newSkills);
     }, [ searchInput ]);
 
-    // Disable horizontal scroll on iOS
-    //const FlatListView = Platform.OS === 'ios' ? View : Swiper.View;
-    // TODO: Fix this, double scrollview doesn't work on iOS and on some Android devices
-    const FlatListView = View;
-
     return (
-        <FlatListView>
-            <FlatList
-                style={styles.activitiesFlatlist}
-                data={skillsItems}
-                ListEmptyComponent={renderEmptyList}
-                renderItem={RenderSkill}
-                keyExtractor={item => 'act-skill-' + item.id}
-            />
-        </FlatListView>
+        <FlatList
+            style={styles.activitiesFlatlist}
+            data={skillsItems}
+            ListEmptyComponent={renderEmptyList}
+            renderItem={RenderSkill}
+            keyExtractor={item => 'act-skill-' + item.id}
+        />
     );
 }
 

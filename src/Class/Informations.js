@@ -6,6 +6,7 @@ import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Types/TCP').ZapGPTState} ZapGPTState
  */
 
 const DAYS_USERNAME_CHANGE = 30;
@@ -33,6 +34,12 @@ class Informations {
     adRemaining = 0;
     adTotalWatched = 0;
 
+    /** @type {ZapGPTState} */
+    zapGPT = { remaining: 0, total: 0 };
+    switchHomeTodayPieChart = true;
+    achievementSelfFriend = false;
+    purchasedCount = 0;
+
     Clear() {
         this.username = new DynamicVar('');
         this.usernameTime = null;
@@ -45,6 +52,10 @@ class Informations {
         this.ox = new DynamicVar(0);
         this.adRemaining = 0;
         this.adTotalWatched = 0;
+        this.zapGPT = { remaining: 0, total: 0 };
+        this.switchHomeTodayPieChart = true;
+        this.achievementSelfFriend = false;
+        this.purchasedCount = 0;
     }
     Load(informations) {
         const contains = (key) => informations.hasOwnProperty(key);
@@ -59,6 +70,9 @@ class Informations {
         if (contains('ox')) this.ox.Set(parseInt(informations['ox']));
         if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
         if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
+        if (contains('switchHomeTodayPieChart')) this.switchHomeTodayPieChart = informations['switchHomeTodayPieChart'];
+        if (contains('achievementSelfFriend')) this.achievementSelfFriend = informations['achievementSelfFriend'];
+        if (contains('purchasedCount')) this.purchasedCount = informations['purchasedCount'];
     }
     Save() {
         const informations = {
@@ -72,7 +86,10 @@ class Informations {
             xp: this.xp,
             ox: this.ox.Get(),
             adRemaining: this.adRemaining,
-            adTotalWatched: this.adTotalWatched
+            adTotalWatched: this.adTotalWatched,
+            switchHomeTodayPieChart: this.switchHomeTodayPieChart,
+            achievementSelfFriend: this.achievementSelfFriend,
+            purchasedCount: this.purchasedCount
         };
         return informations;
     }

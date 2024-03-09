@@ -39,7 +39,7 @@ class TCP {
             return false;
         }
 
-        const protocol = Config.ENV === 'dev' ? 'ws' : 'wss';
+        const protocol = __DEV__ ? 'ws' : 'wss';
         const url = `${protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'server-multiplayer');
         socket.addEventListener('open', this.onOpen);

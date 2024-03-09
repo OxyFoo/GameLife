@@ -22,7 +22,7 @@ async function GetUserNotifications(users, user) {
     const commandGlobalNotifications = `
         SELECT ID, Action, Message, Data, Date
         FROM GlobalNotifications
-        WHERE AccountID = ${user.accountID} AND Readed = 0
+        WHERE AccountID = ${user.accountID} AND Readed = 0 AND DATEDIFF(CURRENT_DATE, Date) < DaysTimeout
     `;
 
     const [ friends, globalNotifications ] = await Promise.all([

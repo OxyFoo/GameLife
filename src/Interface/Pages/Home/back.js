@@ -1,8 +1,17 @@
+import React from 'react';
+
 import { PageBase } from 'Interface/Components';
+import StartTutorial from './tuto';
 import user from 'Managers/UserManager';
 
-import StartTutorial from './tuto';
+import { MultiplayerPanel } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
+import StartMission from './mission';
+
+/**
+ * @typedef {import('Interface/Widgets').Missions} Missions
+ * @typedef {import('Class/Missions').MissionsItem} MissionsItem
+ */
 
 class BackHome extends PageBase {
     state = {
@@ -10,26 +19,37 @@ class BackHome extends PageBase {
         values: {
             current_level: '0',
             next_level: '0'
-        }
+        },
+
+        /** @type {MissionsItem} */
+        mission: user.missions.GetCurrentMission().mission
     }
+
+    /** @type {React.RefObject<MultiplayerPanel>} */
+    refMultiplayerPanel = React.createRef();
+
+    /** @type {React.RefObject<Missions>} */
+    refMissions = React.createRef();
 
     componentDidMount() {
         super.componentDidMount();
 
-        this.updateStateValues();
-        this.activitiesListener = user.activities.allActivities.AddListener(
-            this.updateStateValues
+        this.handleLevelsUpdate();
+        this.listenerActivities = user.activities.allActivities.AddListener(
+            this.handleLevelsUpdate
         );
+        this.listenerMissions = user.missions.missions.AddListener(this.handleMissionsUpdate);
     }
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);
     }
 
     componentWillUnmount() {
-        user.activities.allActivities.RemoveListener(this.activitiesListener);
+        user.activities.allActivities.RemoveListener(this.listenerActivities);
+        user.missions.missions.RemoveListener(this.listenerMissions);
     }
 
-    updateStateValues = () => {
+    handleLevelsUpdate = () => {
         const experience = user.experience.GetExperience();
         const { xpInfo: { lvl, xp, next } } = experience;
         const current_level = lvl.toString();
@@ -38,8 +58,16 @@ class BackHome extends PageBase {
         this.setState({ experience, values: { current_level, next_level } });
     }
 
+    handleMissionsUpdate = () => {
+        const { mission } = user.missions.GetCurrentMission();
+        this.setState({ mission });
+    }
+
+    StartMission = StartMission.bind(this);
+
     addActivity = () => user.interface.ChangePage('activity', undefined, true);
     openSkills = () => user.interface.ChangePage('skills');
+    openQuests = () => user.interface.ChangePage('quests');
 }
 
 export default BackHome;

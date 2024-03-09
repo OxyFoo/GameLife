@@ -22,7 +22,7 @@ class Banner extends React.Component {
     }
 
     render() {
-        const { title } = this.props;
+        const { id, title } = this.props;
 
         return (
             <Button style={styles.banner} onPress={this.onPress}>
@@ -36,9 +36,11 @@ class Banner extends React.Component {
                         {title}
                     </Text>
 
-                    <View style={styles.help}>
-                        <Icon icon='info' size={24} />
-                    </View>
+                    {id !== '' && (
+                        <View style={styles.help}>
+                            <Icon icon='info' size={24} />
+                        </View>
+                    )}
                 </LinearGradient>
             </Button>
         );

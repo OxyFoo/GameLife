@@ -4,6 +4,8 @@ import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import StartMission from './mission';
+
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
@@ -86,7 +88,8 @@ class BackQuest extends PageBase {
         }
     }
 
-    componentDidFocused = () => {
+    componentDidFocused = (args) => {
+        StartMission.call(this, args?.missionName);
         user.interface.SetCustomBackHandler(this.BackHandler);
     }
 
@@ -217,6 +220,9 @@ class BackQuest extends PageBase {
         });
 
         if (addition === 'added' || addition === 'edited') {
+            // Update mission
+            user.missions.SetMissionState('mission2', 'completed');
+
             user.GlobalSave();
             user.interface.ResetCustomBackHandler();
             user.interface.BackHandle();

@@ -16,6 +16,7 @@ import { AddLog } from './Utils/Logs.js';
  * @typedef {import('Types/UserOnline.js').CurrentActivity} CurrentActivity
  * @typedef {import('Types/TCP.js').TCPServerRequest} TCPServerRequest
  * @typedef {import('Types/TCP.js').TCPClientRequest} TCPClientRequest
+ * @typedef {import('Types/TCP.js').ZapGPTState} ZapGPTState
  * @typedef {import('Types/NotificationInApp.js').NotificationInApp} NotificationInApp
  */
 
@@ -34,6 +35,12 @@ class User {
     notificationsInApp = [];
     /** @type {WebSocket.connection | null} */
     connection = null;
+
+    /** @type {ZapGPTState} */
+    ZapGPT = {
+        remaining: 0,
+        total: 0
+    };
 }
 
 class Users {
@@ -47,6 +54,15 @@ class Users {
 
         this.db = database;
         this.gpt = new GPT();
+
+        // Get skills list
+        this.skillsName = null;
+        this.db.ExecQuery('SELECT `ID`, `Name` FROM `Skills`')
+            .then((rows) => {
+                this.skillsName = rows
+                    .map(row => `${row.ID}:${JSON.parse(row.Name)?.en}`)
+                    .join('|');
+        });
     }
 
     /**
@@ -87,23 +103,37 @@ class Users {
         user.username = username;
         user.connection = connection;
 
-        user.friends = await GetUserFriends(this, user);
-        if (user.friends === null) {
+        // Make requests
+        const [friends, notifications, remainingZapGPT] = await Promise.all([
+            GetUserFriends(this, user),
+            GetUserNotifications(this, user),
+            this.gpt.GetRemaining(this, user)
+        ]);
+
+        if (friends === null) {
             connection.send(JSON.stringify({
                 status: 'error',
                 message: '[Auth] Friends error'
             }));
             return null;
         }
-
-        user.notificationsInApp = await GetUserNotifications(this, user);
-        if (user.notificationsInApp === null) {
+        else if (notifications === null) {
             connection.send(JSON.stringify({
                 status: 'error',
                 message: '[Auth] Notifications error'
             }));
             return null;
+        } else if (remainingZapGPT === null) {
+            connection.send(JSON.stringify({
+                status: 'error',
+                message: '[Auth] ZapGPT error'
+            }));
+            return null;
         }
+
+        user.friends = friends;
+        user.notificationsInApp = notifications;
+        user.ZapGPT = remainingZapGPT;
 
         // Avoid multiple connections with the same account or device
         this.RemoveByAccountID(accountID);
@@ -175,9 +205,23 @@ class Users {
                 break;
 
             case 'zap-gpt':
-                result = await this.gpt.PromptToActivities(data.prompt, (error) => {
+                if (user.ZapGPT.remaining <= 0) {
+                    result = 'limit-reached';
+                    AddLog(this, user, 'cheatSuspicion', 'ZapGPT limit reached');
+                    break;
+                }
+
+                result = await this.gpt.PromptToActivities(data.prompt, this.skillsName, (error) => {
                     AddLog(this, user, 'error', error);
                 });
+
+                // Update remaining ZapGPT
+                if (result !== null && user.ZapGPT.remaining > 0) {
+                    user.ZapGPT.remaining--;
+                    this.Send(user, { status: 'update-zap-gpt', zapGPTStatus: user.ZapGPT });
+                }
+
+                // Log the request
                 const newlog = { prompt: data.prompt, response: result };
                 AddLog(this, user, 'zap-gpt-request', JSON.stringify(newlog));
                 break;
@@ -213,6 +257,7 @@ class Users {
     SendAllData = (user) => {
         this.Send(user, { status: 'update-friends', friends: user.friends });
         this.Send(user, { status: 'update-notifications', notifications: user.notificationsInApp });
+        this.Send(user, { status: 'update-zap-gpt', zapGPTStatus: user.ZapGPT });
     }
 
     /**

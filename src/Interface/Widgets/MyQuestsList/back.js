@@ -21,6 +21,7 @@ import { TimingAnimation } from 'Utils/Animations';
 
 class BackQuestsList extends React.Component {
     state = {
+        /** @type {Array<MyQuest>} */
         quests: [],
 
         /** @type {boolean} Used to disable scroll when dragging a quest */

@@ -10,10 +10,11 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('Data/Items').StuffID} StuffID
  * 
  * @typedef {Object} ChestRewardProps
  * @property {number} chestRarity
- * @property {string} itemID
+ * @property {StuffID} itemID
  * @property {() => void} callback
  * 
  * @typedef {Object} OxRewardProps
@@ -67,12 +68,13 @@ class BackChestReward extends PageBase {
             return;
         }
 
-        this.text = dataManager.GetText(item.Name);
+        this.text = langManager.GetText(item.Name);
         this.textSecondary = langManager.curr['rarities'][item.Rarity];
         this.rarityColor = themeManager.GetRariryColors(item.Rarity)[0];
         this.character = new Character('character-reward', user.character.sexe, 'skin_01', 0);
         this.character.SetEquipment([ itemID.toString() ]);
         this.characterSize = dataManager.items.GetContainerSize(item.Slot);
+        this.chestRarity = props.args.chestRarity;
         this.callback = props.args.callback;
     }
 

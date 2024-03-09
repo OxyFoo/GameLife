@@ -57,7 +57,9 @@ class AchievementsGroupBack extends React.Component {
         if (this.props.friend === null) {
             user.interface.ChangePage('achievements');
         } else {
-            user.interface.ChangePage('achievements', { friend: this.props.friend });
+            user.interface.ChangePage('achievements', {
+                friendID: this.props.friend.accountID
+            });
         }
     }
     onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);

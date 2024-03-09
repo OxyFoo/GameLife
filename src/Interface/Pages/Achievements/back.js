@@ -26,8 +26,9 @@ class BackAchievements extends PageBase {
 
         /** @type {Friend | null} */
         this.friend = null;
-        if (this.props.args.hasOwnProperty('friend')) {
-            this.friend = this.props.args.friend;
+        if (this.props.args.hasOwnProperty('friendID')) {
+            const friendID = this.props.args.friendID;
+            this.friend = user.multiplayer.GetFriendByID(friendID);
         }
 
         const completeAchievements = this.friend === null ?

@@ -6,7 +6,8 @@ import {
     flushFailedPurchasesCachedAsPendingAndroid,
     getProducts, finishTransaction,
     purchaseUpdatedListener, purchaseErrorListener,
-    ErrorCode
+    ErrorCode,
+    clearProductsIOS
 } from 'react-native-iap';
 
 import user from 'Managers/UserManager';
@@ -58,9 +59,13 @@ class BackShopIAP extends React.Component {
     componentDidMount() {
         initConnection()
             .then((canMakePaymentIOS) => {
-                // We make sure that "ghost" pending payment are removed
-                // (ghost = failed pending payment that are still marked as pending in Google's native Vending module cache)
-                return flushFailedPurchasesCachedAsPendingAndroid();
+                if (Platform.OS === 'android') {
+                    // We make sure that "ghost" pending payment are removed
+                    // (ghost = failed pending payment that are still marked as pending in Google's native Vending module cache)
+                    return flushFailedPurchasesCachedAsPendingAndroid();
+                } else if (Platform.OS === 'ios' && canMakePaymentIOS) {
+                    return clearProductsIOS().then(() => true);
+                }
             })
             .catch((exception) => {
                 // Nothing to do here
@@ -136,15 +141,14 @@ class BackShopIAP extends React.Component {
             return;
         }
 
-        const receipt = purchase.transactionReceipt;
-        if (!receipt) {
+        if (!purchase.transactionReceipt) {
             // Handle error
-            this.handleError('no-receipt', 'No receipt', receipt);
+            this.handleError('no-receipt', 'No receipt', purchase);
             return;
         }
 
         // Handle purchase
-        const addedOx = await this.handlePurchase(receipt);
+        const addedOx = await this.handlePurchase(purchase);
         if (addedOx === false) {
             // Handle error
             this.handleError('purchase-handle-error', 'Error handling purchase', addedOx);
@@ -200,10 +204,20 @@ class BackShopIAP extends React.Component {
     }
 
     /**
-     * @param {Purchase['transactionReceipt']} transactionReceipt
+     * @param {Purchase} purchase
      * @returns {Promise<number | false>} Added ox count or false if error
      */
-    handlePurchase = async (transactionReceipt) => {
+    handlePurchase = async (purchase) => {
+        let transactionReceipt = null;
+        if (Platform.OS === 'android') {
+            transactionReceipt = purchase.transactionReceipt;
+        } else if (Platform.OS === 'ios') {
+            transactionReceipt = {
+                ...purchase,
+                quantity: 1
+            };
+        }
+
         const result = await user.server.Request('buyOx', { transactionReceipt });
         if (result === null || result?.status !== 'ok') {
             return false;

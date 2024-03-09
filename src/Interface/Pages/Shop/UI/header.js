@@ -61,14 +61,14 @@ class ShopHeader extends React.Component {
         // Check if the user can watch an ad
         if (user.informations.adRemaining <= 0) {
             const title = lang['alert-aderror-title'];
-            const message = lang['alert-aderror-message-nomore'];
+            const message = lang['alert-aderror-nomore-message'];
             user.interface.popup.Open('ok', [ title, message ]);
         }
 
         // Check if ads are loading
         else if (this.state.adState === 'wait') {
-            const title = lang['alert-aderror-title'];
-            const message = lang['alert-aderror-message-wait'];
+            const title = lang['alert-aderror-loading-title'];
+            const message = lang['alert-aderror-loading-message'];
             user.interface.popup.Open('ok', [ title, message ]);
         }
 
@@ -76,7 +76,7 @@ class ShopHeader extends React.Component {
         else if (!user.server.IsConnected() ||
                 !this.rewardedShop || !this.rewardedShop.ad.loaded) {
             const title = lang['alert-aderror-title'];
-            const message = lang['alert-aderror-message-error'];
+            const message = lang['alert-aderror-message'];
             user.interface.popup.Open('ok', [ title, message ]);
         }
 

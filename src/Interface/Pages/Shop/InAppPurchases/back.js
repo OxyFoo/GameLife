@@ -116,29 +116,33 @@ class BackShopIAP extends React.Component {
         };
 
         /** @type {Array<IAPItem>} */
-        const iapItems = allIAP.map((product, index) => ({
-            ID: product.productId,
-            Name: getTitle(product.title),
-            Price: product.localizedPrice,
-            Description: product.description,
-            OnPress: () => this.purchase(product.productId)
-        }));
+        const iapItems = allIAP
+            .map((product, index) => ({
+                ID: product.productId,
+                Name: getTitle(product.title),
+                Price: product.localizedPrice,
+                Description: product.description,
+                OnPress: () => this.purchase(product.productId)
+            }))
+            .sort((a, b) => a.ID.localeCompare(b.ID));
 
         this.setState({ iapItems });
     }
 
     /** @param {Purchase} purchase */
     purchaseDidUpdate = async (purchase) => {
-        // If purchase is pending, we should just wait
-        if (purchase.purchaseStateAndroid === PurchaseStateAndroid.PENDING) {
-            const { title, message } = langManager.curr['shop']['popup-purchase']['purchase-pending'];
-            user.interface.popup.Open('ok', [ title, message ], undefined, true);
-            return;
-        }
+        if (Platform.OS === 'android') {
+            // If purchase is pending, we should just wait
+            if (purchase.purchaseStateAndroid === PurchaseStateAndroid.PENDING) {
+                const { title, message } = langManager.curr['shop']['popup-purchase']['purchase-pending'];
+                user.interface.popup.Open('ok', [ title, message ], undefined, true);
+                return;
+            }
 
-        if (purchase.purchaseStateAndroid !== PurchaseStateAndroid.PURCHASED) {
-            // Handle pending purchase, just wait
-            return;
+            if (purchase.purchaseStateAndroid !== PurchaseStateAndroid.PURCHASED) {
+                // Handle pending purchase, just wait
+                return;
+            }
         }
 
         if (!purchase.transactionReceipt) {
@@ -212,10 +216,10 @@ class BackShopIAP extends React.Component {
         if (Platform.OS === 'android') {
             transactionReceipt = purchase.transactionReceipt;
         } else if (Platform.OS === 'ios') {
-            transactionReceipt = {
+            transactionReceipt = JSON.stringify({
                 ...purchase,
                 quantity: 1
-            };
+            });
         }
 
         const result = await user.server.Request('buyOx', { transactionReceipt });

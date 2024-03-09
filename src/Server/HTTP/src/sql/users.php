@@ -364,6 +364,20 @@ class Users
         }
         return count($result);
     }
+
+    /**
+     * Get number of all Ox purchased
+     * @param DataBase $db
+     * @param int $accountID
+     */
+    public static function GetPurchasedCount($db, $accountID) {
+        $command = "SELECT * FROM TABLE WHERE `AccountID` = ? AND `Type` = 'buyOx'";
+        $result = $db->QueryPrepare('Logs', $command, 'i', [ $accountID ]);
+        if ($result === null) {
+            ExitWithStatus('Error: Getting purchase failed');
+        }
+        return count($result);
+    }
 }
 
 ?>

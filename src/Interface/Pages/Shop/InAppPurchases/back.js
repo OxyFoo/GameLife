@@ -209,6 +209,7 @@ class BackShopIAP extends React.Component {
             return false;
         }
 
+        user.informations.purchasedCount++;
         user.informations.ox.Set(result.ox);
         return result.addedOx;
     }

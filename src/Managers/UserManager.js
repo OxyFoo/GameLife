@@ -323,6 +323,7 @@ class UserManager {
             if (contains('ox')) this.informations.ox.Set(parseInt(data['ox']));
             if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
             if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
+            if (contains('purchasedCount')) this.informations.purchasedCount = data['purchasedCount'];
             if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
             if (contains('missions')) this.missions.LoadOnline(data['missions']);
             if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);

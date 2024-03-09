@@ -329,15 +329,16 @@ class Commands {
         if (!isset($appDataToken, $dbDataToken)) return;
 
         $userData = array();
-        $userData['username']         = $account->Username;
-        $userData['usernameTime']     = $account->LastChangeUsername;
-        $userData['title']            = $account->Title;
-        $userData['birthtime']        = $account->Birthtime;
-        $userData['lastbirthtime']    = $account->LastChangeBirth;
-        $userData['ox']               = $account->Ox;
-        $userData['adRemaining']      = Users::GetAdRemaining($this->db, $account->ID);
-        $userData['adTotalWatched']   = Users::GetAdWatched($this->db, $account->ID);
-        $userData['achievements']     = Achievements::Get($this->db, $account);
+        $userData['username']       = $account->Username;
+        $userData['usernameTime']   = $account->LastChangeUsername;
+        $userData['title']          = $account->Title;
+        $userData['birthtime']      = $account->Birthtime;
+        $userData['lastbirthtime']  = $account->LastChangeBirth;
+        $userData['ox']             = $account->Ox;
+        $userData['adRemaining']    = Users::GetAdRemaining($this->db, $account->ID);
+        $userData['adTotalWatched'] = Users::GetAdWatched($this->db, $account->ID);
+        $userData['achievements']   = Achievements::Get($this->db, $account);
+        $userData['purchasedCount'] = Users::GetPurchasedCount($this->db, $account->ID);
 
         // Some data, load only if needed
         if ($appDataToken != $dbDataToken) {

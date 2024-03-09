@@ -38,6 +38,7 @@ class Informations {
     zapGPT = { remaining: 0, total: 0 };
     switchHomeTodayPieChart = true;
     achievementSelfFriend = false;
+    purchasedCount = 0;
 
     Clear() {
         this.username = new DynamicVar('');
@@ -54,6 +55,7 @@ class Informations {
         this.zapGPT = { remaining: 0, total: 0 };
         this.switchHomeTodayPieChart = true;
         this.achievementSelfFriend = false;
+        this.purchasedCount = 0;
     }
     Load(informations) {
         const contains = (key) => informations.hasOwnProperty(key);
@@ -70,6 +72,7 @@ class Informations {
         if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
         if (contains('switchHomeTodayPieChart')) this.switchHomeTodayPieChart = informations['switchHomeTodayPieChart'];
         if (contains('achievementSelfFriend')) this.achievementSelfFriend = informations['achievementSelfFriend'];
+        if (contains('purchasedCount')) this.purchasedCount = informations['purchasedCount'];
     }
     Save() {
         const informations = {
@@ -85,7 +88,8 @@ class Informations {
             adRemaining: this.adRemaining,
             adTotalWatched: this.adTotalWatched,
             switchHomeTodayPieChart: this.switchHomeTodayPieChart,
-            achievementSelfFriend: this.achievementSelfFriend
+            achievementSelfFriend: this.achievementSelfFriend,
+            purchasedCount: this.purchasedCount
         };
         return informations;
     }

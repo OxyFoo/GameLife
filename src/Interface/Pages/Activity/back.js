@@ -46,8 +46,10 @@ class BackActivity extends PageBase {
         inputText: '',
 
         tcpState: user.tcp.state.Get(),
+        /** @type {Animated.Value} 0 = closed, 1 = opened */
         animZapGPTMessage: new Animated.Value(0),
-        animZapGPTOpened: new Animated.Value(0)
+        /** @type {Animated.Value} 0 = opened, 1 = closed */
+        animZapGPTOpened: new Animated.Value(1)
     }
 
     refTuto1 = null;
@@ -112,17 +114,6 @@ class BackActivity extends PageBase {
             ...this.state,
             ...this.refreshSkills(this.state.skillSearch, this.state.selectedCategory, false)
         };
-
-        // Show ZapGPT Message
-        if (user.settings.zapGPTMessageReaded === false && user.tcp.IsConnected()) {
-            this.timeoutShowZapGPTMessage = setTimeout(() => {
-                SpringAnimation(this.state.animZapGPTMessage, 1).start();
-            }, 2000);
-            // Hide after 10 seconds
-            this.timeoutHideZapGPTMessage = setTimeout(() => {
-                SpringAnimation(this.state.animZapGPTMessage, 0).start();
-            }, 10000);
-        }
     }
 
     async componentDidMount() {
@@ -194,11 +185,30 @@ class BackActivity extends PageBase {
             this.refActivityPanel?.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
 
-        // Show or hide ZapGPT
+        // Show ZapGPT if connected and puchased & show message if not readed
+        if (user.tcp.IsConnected() && user.informations.purchasedCount > 0) {
+            // Show ZapGPT
+            SpringAnimation(this.state.animZapGPTOpened, 0).start();
+
+            // Show message
+            if (user.settings.zapGPTMessageReaded === false) {
+                this.timeoutShowZapGPTMessage = setTimeout(() => {
+                    SpringAnimation(this.state.animZapGPTMessage, 1).start();
+                }, 2000);
+                // Hide message after 10 seconds
+                this.timeoutHideZapGPTMessage = setTimeout(() => {
+                    SpringAnimation(this.state.animZapGPTMessage, 0).start();
+                }, 10000);
+            }
+        }
+
+        // Show or hide ZapGPT if tcp state change
         this.listenerTCP = user.tcp.state.AddListener((state) => {
             this.setState({ tcpState: state });
-            if (state === 'connected') {
+            if (state === 'connected' && user.informations.purchasedCount > 0) {
                 SpringAnimation(this.state.animZapGPTOpened, 0).start();
+            } else {
+                SpringAnimation(this.state.animZapGPTOpened, 1).start();
             }
         });
     }

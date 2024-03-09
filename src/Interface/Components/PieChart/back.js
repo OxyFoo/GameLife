@@ -28,6 +28,9 @@ const PieChartProps = {
     /** @type {FocusedActivity | null} */
     focusedActivity: null,
 
+    /** @type {FocusedActivity | null} */
+    focusedActivityFullDay: null,
+
     /** @type {boolean} */
     switched: false,
 

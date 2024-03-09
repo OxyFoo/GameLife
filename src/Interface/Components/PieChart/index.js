@@ -47,11 +47,13 @@ class PieChart extends BackPieChart {
     /** @type {ListRenderItem} */
     renderLegendItemFullDay = ({ item, index }) => {
         const lang = langManager.curr['dates']['names'];
+        const hour = Math.floor(item.valueMinutes / 60);
+        const minutes = item.valueMinutes % 60;
         return (
             <View key={index} style={styles.legendItem}>
                 {this.renderDot(item.color)}
                 <Text fontSize={14} color='white'>
-                    {`${item.name}: ${Round(item.valueMinutes / 60)}${lang['hours-min']}`}
+                    {`${item.name}: ${hour}${lang['hours-min']} ${minutes}${lang['minutes-min']}`}
                 </Text>
             </View>
         );
@@ -71,6 +73,23 @@ class PieChart extends BackPieChart {
             </Text>
         </View>
     );
+
+    /**
+     * Renders the center label component. (biggest activity value + name)
+     * @returns {JSX.Element} A View component styled as a center label component.
+     */
+    renderCenterLabelComponentFullDay = () => {
+        return (
+            <View style={styles.centerLabel}>
+                <Text fontSize={16} color='white'>
+                    {this.props.focusedActivityFullDay?.value + '%'}
+                </Text>
+                <Text fontSize={10} color='white'>
+                    {this.props.focusedActivityFullDay?.name}
+                </Text>
+            </View>
+        );
+    }
 
     render() {
         const { animSwitch } = this.state;
@@ -103,9 +122,9 @@ class PieChart extends BackPieChart {
                     {/** Left panel */}
                     <Animated.View style={[styles.legendContainerFullDay, opacityDataFullDay]}>
                         <FlatList
-                            data={dataFullDay}
-                            renderItem={this.renderLegendItemFullDay}
-                            keyExtractor={(item, index) => 'piechart-legend-full-' + index.toString()}
+                            data={data}
+                            renderItem={this.renderLegendItem}
+                            keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
                             scrollEnabled={false}
                         />
                     </Animated.View>
@@ -133,15 +152,15 @@ class PieChart extends BackPieChart {
                             radius={50}
                             innerRadius={30}
                             innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
-                            centerLabelComponent={this.renderCenterLabelComponent}
+                            centerLabelComponent={this.renderCenterLabelComponentFullDay}
                         />
                     </Animated.View>
 
                     <Animated.View style={[styles.legendContainer, opacityData]}>
                         <FlatList
-                            data={data}
-                            renderItem={this.renderLegendItem}
-                            keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
+                            data={dataFullDay}
+                            renderItem={this.renderLegendItemFullDay}
+                            keyExtractor={(item, index) => 'piechart-legend-full-' + index.toString()}
                             scrollEnabled={false}
                         />
                     </Animated.View>

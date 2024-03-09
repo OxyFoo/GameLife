@@ -40,6 +40,9 @@ class TodayPieChartBack extends React.Component {
         /** @type {FocusedActivity | null} */
         focusedActivity: null,
 
+        /** @type {FocusedActivity | null} */
+        focusedActivityFullDay: null,
+
         switched: user.informations.switchHomeTodayPieChart,
         layoutWidth: 0
     }
@@ -75,11 +78,18 @@ class TodayPieChartBack extends React.Component {
         // updatingDataFullDay
         const lang = langManager.curr['home'];
         const updatingDataFullDay = [ ...updatingData ];
+
+        // Find the biggest activity
+        const focusedActivityFullDay = this.findBiggestActivity(updatingDataFullDay);
+        if (focusedActivityFullDay && focusedActivityFullDay.id !== 0) {
+            updatingDataFullDay.find(item => item.id === focusedActivityFullDay.id).focused = true;
+        }
+
         const pourcent = this.convertTimeToPercent(updatingDataFullDay, 24 * 60);
         updatingDataFullDay.push({
             id: 0,
             value: 100 - pourcent,
-            valueMinutes: 0,
+            valueMinutes: updatingData.reduce((acc, cur) => acc + cur.valueMinutes, 0),
             name: lang['chart-total-text'],
             color: '#130f40',
             gradientCenterColor: '#130f40',
@@ -97,7 +107,8 @@ class TodayPieChartBack extends React.Component {
         const newState = {
             dataToDisplay: updatingData,
             dataToDisplayFullDay: updatingDataFullDay,
-            focusedActivity: focusedActivity
+            focusedActivity: focusedActivity,
+            focusedActivityFullDay: focusedActivityFullDay
         };
 
         if (setState) {

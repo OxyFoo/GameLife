@@ -47,9 +47,10 @@ class TodayPieChart extends TodayPieChartBack {
 
         return (
             <PieChart
-                focusedActivity={this.state.focusedActivity}
                 data={this.state.dataToDisplay}
                 dataFullDay={this.state.dataToDisplayFullDay}
+                focusedActivity={this.state.focusedActivity}
+                focusedActivityFullDay={this.state.focusedActivityFullDay}
                 switched={this.state.switched}
                 layoutWidth={this.state.layoutWidth - 32}
             />

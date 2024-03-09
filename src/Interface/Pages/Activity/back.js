@@ -114,10 +114,14 @@ class BackActivity extends PageBase {
         };
 
         // Show ZapGPT Message
-        if (user.settings.zapGPTMessageReaded === false) {
-            this.timeout = setTimeout(() => {
+        if (user.settings.zapGPTMessageReaded === false && user.tcp.IsConnected()) {
+            this.timeoutShowZapGPTMessage = setTimeout(() => {
                 SpringAnimation(this.state.animZapGPTMessage, 1).start();
             }, 2000);
+            // Hide after 10 seconds
+            this.timeoutHideZapGPTMessage = setTimeout(() => {
+                SpringAnimation(this.state.animZapGPTMessage, 0).start();
+            }, 10000);
         }
     }
 
@@ -205,7 +209,8 @@ class BackActivity extends PageBase {
     }
 
     componentWillUnmount() {
-        clearTimeout(this.timeout);
+        clearTimeout(this.timeoutShowZapGPTMessage);
+        clearTimeout(this.timeoutHideZapGPTMessage);
         user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
@@ -299,7 +304,8 @@ class BackActivity extends PageBase {
         }
 
         if (user.settings.zapGPTMessageReaded === false) {
-            clearTimeout(this.timeout);
+            clearTimeout(this.timeoutShowZapGPTMessage);
+            clearTimeout(this.timeoutHideZapGPTMessage);
             SpringAnimation(this.state.animZapGPTMessage, 0).start();
             user.settings.zapGPTMessageReaded = true;
             user.LocalSave();

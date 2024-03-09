@@ -164,8 +164,8 @@ class Activity extends BackActivity {
         };
 
         return (
-            <Animated.View style={[styles.zapGptContainer, animOpened]}>
-                <Animated.View style={[styles.zapGptBubble, animMessage]}>
+            <Animated.View style={[styles.zapGptContainer, animOpened]} pointerEvents={'box-none'}>
+                <Animated.View style={[styles.zapGptBubble, animMessage]} pointerEvents={'none'}>
                     <Text fontSize={16}>
                         {lang['activity-zap-hint']}
                     </Text>

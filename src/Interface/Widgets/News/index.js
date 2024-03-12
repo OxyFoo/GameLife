@@ -79,7 +79,7 @@ class News extends BackNews {
     /** @type {ListRenderItemMyQuest} */
     renderMyQuestElement = ({ item: quest }) => {
         const questsDays = user.quests.myquests.GetDays(quest);
-        const currentDay = new Date().getDay() - 1 + 7 % 7;
+        const currentDay = (new Date().getDay() - 1 + 7) % 7;
         const item = questsDays[currentDay];
         const onPress = () => {
             user.interface.ChangePage('activity', { skills: quest.skills }, true);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import BackShop from './back';
 import ShopHeader from './UI/header';
@@ -37,8 +37,34 @@ class Shop extends BackShop {
         );
     }
 
+    uselessRenderForAppleTesters = () => {
+        const lang = langManager.curr['shop'];
+
+        return (
+            <Page
+                ref={this.setRef}
+                style={styles.page}
+                isHomePage
+                canScrollOver
+            >
+                <ShopHeader
+                    ref={this.refHeader}
+                    refPage={this.state.refPage}
+                    style={styles.shopHeader}
+                />
+
+                <Banner title={lang['banner-iap']} />
+                <ShopIAP ref={this.refIAP} />
+            </Page>
+        );
+    }
+
     render() {
         if (!user.server.IsConnected(false)) {
+            // Ignore limits for APPLE TESTERS, THANKYOU
+            if (user.settings.email === 'gamelife-test@oxyfoo.com' && Platform.OS === 'ios') {
+                return this.uselessRenderForAppleTesters();
+            }
             return this.noInternetRender();
         }
 

@@ -169,7 +169,7 @@ class Achievements {
 
             case 'Sk':
             case 'SkT':
-                const skill = dataManager.skills.GetByID(valueNum);
+                const skill = dataManager.skills.GetByID(Comparator.Value);
                 if (skill === null) {
                     output += condText['Sk']
                                 .replace('{}', 'Error: Skill not found\n');

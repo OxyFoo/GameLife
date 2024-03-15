@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start'
     },
     friendDetails: {
+        aspectRatio: 1,
+        width: 36,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 100,
+        backgroundColor: '#00000050'
     },
     frame: {
         paddingVertical: 0,
@@ -35,10 +41,6 @@ const styles = StyleSheet.create({
         borderColor: '#00000050'
     },
     level: {
-        aspectRatio: 1,
-        padding: 8,
-        borderRadius: 100,
-        backgroundColor: '#00000050'
     }
 });
 

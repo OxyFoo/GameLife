@@ -11,6 +11,7 @@ import { USER_XP_PER_LEVEL } from 'Class/Experience';
 import { Text, Button, Frame, Character } from 'Interface/Components';
 
 /**
+ * @typedef {import('Class/Experience').XPInfo} XPInfo
  * @typedef {import('Types/UserOnline').Friend} Friend
  */
 
@@ -21,16 +22,18 @@ import { Text, Button, Frame, Character } from 'Interface/Components';
  */
 function UserOnlineElement({ friend }) {
     const lang = langManager.curr['multiplayer'];
-    const [ character, setCharacter ] = React.useState(null);
-    const [ friendTitle, setFriendTitle ] = React.useState(null);
-    const [ friendExperience, setFriendExperience ] = React.useState(null);
+    /** @type {[Character | null, React.Dispatch<React.SetStateAction<Character | null>>]} */
+    const [ character, setCharacter ] = React.useState(/** @type {Character | null} */ (null));
+    const [ friendTitle, setFriendTitle ] = React.useState(/** @type {string | null} */ (null));
     const [ statusStyle, setStatusStyle ] = React.useState({});
 
     React.useEffect(() => {
         let friendTitle = null;
         if (friend.title !== 0) {
             const friendTitleIndex = dataManager.titles.GetByID(friend.title);
-            friendTitle = langManager.GetText(friendTitleIndex.Name);
+            if (friendTitleIndex !== null) {
+                friendTitle = langManager.GetText(friendTitleIndex.Name);
+            }
         }
         if (friend.currentActivity !== null) {
             const skill = dataManager.skills.GetByID(friend.currentActivity.skillID);
@@ -38,8 +41,6 @@ function UserOnlineElement({ friend }) {
                 friendTitle = lang['friend-do-activity-now'].replace('{}', langManager.GetText(skill.Name));
             }
         }
-
-        const friendExperience = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
 
         const character = new Character(
             'character-player-' + friend.accountID.toString(),
@@ -64,7 +65,6 @@ function UserOnlineElement({ friend }) {
 
         setCharacter(character);
         setFriendTitle(friendTitle);
-        setFriendExperience(friendExperience);
         setStatusStyle(statusStyle);
     }, [ friend ]);
 
@@ -96,14 +96,35 @@ function UserOnlineElement({ friend }) {
                 </View>
             </View>
 
-            {friendExperience !== null && (
-                <View style={styles.friendDetails}>
-                    <Text style={styles.level}>
-                        {friendExperience.lvl.toString()}
-                    </Text>
-                </View>
-            )}
+            <Level friend={friend} />
         </Button>
+    );
+}
+
+/**
+ * @param {object} param0
+ * @param {Friend} param0.friend
+ * @returns {React.JSX.Element | null}
+ */
+function Level({ friend }) {
+    const [ friendExperience, setFriendExperience ] = React.useState(/** @type {XPInfo | null} */ (null));
+
+    React.useEffect(() => {
+        const friendExperience = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
+        setFriendExperience(friendExperience);
+    }, [ friend ]);
+
+    if (friendExperience === null) {
+        return null;
+    }
+
+    const levelStr = friendExperience.lvl.toString();
+    return (
+        <View style={styles.friendDetails}>
+            <Text style={styles.level} fontSize={18 - ((levelStr.length - 1) * 2)}>
+                {levelStr}
+            </Text>
+        </View>
     );
 }
 

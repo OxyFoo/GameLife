@@ -80,6 +80,7 @@ class News extends BackNews {
     renderMyQuestElement = ({ item: quest }) => {
         const questsDays = user.quests.myquests.GetDays(quest);
         const currentDay = (new Date().getDay() - 1 + 7) % 7;
+        const currentStreak =  user.quests.myquests.GetStreak(quest);
         const item = questsDays[currentDay];
         const onPress = () => {
             user.interface.ChangePage('activity', { skills: quest.skills }, true);
@@ -97,7 +98,7 @@ class News extends BackNews {
                         fillingValue={item.fillingValue}
                     />
                     <Text style={styles.streak}>
-                        {quest.maximumStreak.toString()}
+                        {currentStreak.toString()}
                     </Text>
                     <Icon icon='flame' />
                 </View>

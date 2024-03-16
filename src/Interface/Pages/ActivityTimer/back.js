@@ -94,11 +94,10 @@ class BackActivityTimer extends PageBase {
     }
 
     __getDuration = () => {
-        const { startTime, timezone } = this.state.currentActivity;
+        const { startTime } = this.state.currentActivity;
         const now = GetLocalTime();
-        const localTime = startTime + timezone * 3600;
         const currentMillis = new Date().getMilliseconds() / 1000;
-        const duration = (now + currentMillis - localTime) / 60;
+        const duration = (now + currentMillis - startTime) / 60;
         return duration;
     }
 

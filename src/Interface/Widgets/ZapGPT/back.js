@@ -127,8 +127,8 @@ class ZapGPTBack extends React.Component {
         let addedActivities = 0;
         for (let i = 0; i < this.state.data.length; i++) {
             const activity = this.state.data[i];
-            const result = user.activities.Add(activity);
-            if (result === 'added') {
+            const { status } = user.activities.Add(activity);
+            if (status === 'added') {
                 addedActivities++;
             }
         }

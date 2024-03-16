@@ -93,18 +93,18 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
 function AddActivity(activity) {
     const lang = langManager.curr['activity'];
 
-    const addState = user.activities.Add({
+    const { status, activity: newActivity } = user.activities.Add({
         skillID: activity.skillID,
         startTime: activity.startTime,
         duration: activity.duration,
         comment: activity.comment,
-        timezone: null,
+        timezone: 0,
         addedType: activity.addedType,
-        addedTime: null,
+        addedTime: 0,
         friends: activity.friends
     });
 
-    if (addState === 'added') {
+    if (status === 'added' && newActivity !== null) {
         // Update notifications
         Notifications.Evening.RemoveToday();
 
@@ -118,7 +118,7 @@ function AddActivity(activity) {
             'button': lang['display-activity-button'],
             'button2': lang['display-activity-button2'],
             'action': Back,
-            'action2': () => user.interface.ChangePage('activity', undefined, true)
+            'action2': () => user.interface.ChangePage('activity', { time: newActivity.startTime + newActivity.duration * 60 }, true)
         };
 
         const skill = dataManager.skills.GetByID(activity.skillID);
@@ -139,30 +139,30 @@ function AddActivity(activity) {
         .then(() => user.RefreshStats(false));
     }
 
-    else if (addState === 'edited') {
+    else if (status === 'edited') {
         user.GlobalSave()
         .then(() => user.RefreshStats(false));
     }
 
-    else if (addState === 'notFree') {
+    else if (status === 'notFree') {
         const title = lang['alert-wrongtiming-title'];
         const text = lang['alert-wrongtiming-text'];
         user.interface.popup.Open('ok', [ title, text ]);
     }
 
-    else if (addState === 'tooEarly') {
+    else if (status === 'tooEarly') {
         const title = lang['alert-alreadyexist-title'];
         const text = lang['alert-alreadyexist-text'];
         user.interface.popup.Open('ok', [ title, text ]);
     }
 
-    else if (addState === 'alreadyExist') {
+    else if (status === 'alreadyExist') {
         const title = lang['alert-tooearly-title'];
         const text = lang['alert-tooearly-text'];
         user.interface.popup.Open('ok', [ title, text ]);
     }
 
-    return addState === 'added' || addState === 'edited';
+    return status === 'added' || status === 'edited';
 }
 
 /**

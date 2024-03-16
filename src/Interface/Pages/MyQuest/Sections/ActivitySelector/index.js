@@ -33,6 +33,9 @@ class ActivitySelector extends React.Component {
     /** @type {React.RefObject<Swiper>} */
     refSwiper = React.createRef();
 
+    /** @type {React.RefObject<Input>} */
+    refInput = React.createRef();
+
     /** @type {Array<ItemCategory>} */
     allCategoriesItems = dataManager.skills.categories.map(CategoryToItem);
 
@@ -46,6 +49,13 @@ class ActivitySelector extends React.Component {
         SpringAnimation(this.state.animSearch, isSearching ? 0 : 1).start();
         this.setState({ isSearching: !isSearching });
         this.refSwiper.current?.GoTo(0);
+
+        // Focus input if searching
+        if (!isSearching) {
+            this.refInput.current?.focus();
+        } else {
+            this.refInput.current?.unfocus();
+        }
     }
     /** @param {string} search */
     handleSearchInput = (search) => {
@@ -112,6 +122,7 @@ class ActivitySelector extends React.Component {
                 {/* Search */}
                 <Animated.View style={[styles.searchContainer, styleAnimSearch]}>
                     <Input
+                        ref={this.refInput}
                         label={lang['popup-all-categories']}
                         text={search}
                         onChangeText={this.handleSearchInput}

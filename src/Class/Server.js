@@ -15,7 +15,7 @@ const { versionName } = require('../../package.json');
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNonZeroDays'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'getUserIntentories'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNonZeroDays'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 
@@ -293,6 +293,23 @@ class Server {
     async LoadUserData(force = false) {
         const _data = { 'dataToken': force ? '' : this.dataToken };
         const response = await this.Request('getUserData', _data);
+        if (response === null) return null;
+
+        const data = response['data'];
+        if (response['status'] !== 'ok' || typeof(data) !== 'object') {
+            return null;
+        }
+
+        return data;
+    }
+
+    /**
+     * Load all user data
+     * @returns {Promise<object | null>} Return all online data or null if failed
+     */
+    async LoadUserInventories() {
+        const _data = { 'dataToken': this.dataToken };
+        const response = await this.Request('getUserIntentories', _data);
         if (response === null) return null;
 
         const data = response['data'];

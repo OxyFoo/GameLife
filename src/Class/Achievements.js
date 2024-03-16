@@ -457,7 +457,7 @@ class Achievements {
 
         // Add achievement to solved & get rewards
         await this.user.LocalSave();
-        await this.user.OnlineLoad(true);
+        await this.user.OnlineLoad('inventories');
 
         // Show popup
         const achievementName = langManager.GetText(achievement.Name);

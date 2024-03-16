@@ -87,12 +87,10 @@ class BackNews extends React.Component {
             for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
                 if (!claimList.claimed.includes(claimDay + 1)) break;
             }
-            if (!user.quests.nonzerodays.IsCurrentList(claimList)) {
-                claimDate = DateToFormatString(GetDate(claimList.start))
-                    .split('/')
-                    .slice(0, 2)
-                    .join('/');
-            }
+            claimDate = DateToFormatString(GetDate(claimList.start))
+                .split('/')
+                .slice(0, 2)
+                .join('/');
         }
 
         this.setState({ claimIndex, claimDay, claimDate });

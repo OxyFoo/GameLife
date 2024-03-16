@@ -132,7 +132,7 @@ class News extends BackNews {
                         style={styles.nzdTitle}
                         onPress={this.goToQuestsPage}
                     >
-                        {lang['container-title'] + (claimDate !== null && ' - ' + claimDate)}
+                        {lang['container-title'] + (claimDate !== null ? (' - ' + claimDate) : '')}
                     </Text>
 
                     {/* Claim icon */}

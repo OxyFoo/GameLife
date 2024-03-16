@@ -381,6 +381,7 @@
 
     "leaderboard": {
         "label-activities": "Activitiés",
+        "label-activities-small": "Actis",
         "input-label-search": "Rechercher un joueur"
     },
 
@@ -532,6 +533,7 @@
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
 
+        "container-stats-title": "Statistiques",
         "container-achievements-title": "Derniers succès",
 
         "button-cancel": "Annuler la demande d'ami",

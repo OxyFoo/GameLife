@@ -60,6 +60,7 @@ function popupContent(initStatKey) {
  */
 function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, clickable = true) {
     const langLevel = langManager.curr['level'];
+    const langStats = langManager.curr['statistics']['names-min'];
 
     const popupRender = () => popupContent(statKey);
     const pressEvent = !clickable ? null : () => {
@@ -82,8 +83,8 @@ function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, cli
                 onPress={pressEvent}
             >
                 <View style={styles.XPHeaderSimplified}>
-                    <Text>{`${textLevel.substring(0, 3)}:`}</Text>
-                    <Text fontSize={20} bold={true}>{stat.totalXP.toString()}</Text>
+                    <Text>{langStats[statKey]}</Text>
+                    <Text fontSize={20} bold={true}>{stat.lvl.toString()}</Text>
                 </View>
             </TouchableOpacity>
         );

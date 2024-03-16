@@ -7,7 +7,6 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { USER_XP_PER_LEVEL } from 'Class/Experience';
 import { Text, Button, Frame, Character } from 'Interface/Components';
 
 /**
@@ -110,7 +109,7 @@ function Level({ friend }) {
     const [ friendExperience, setFriendExperience ] = React.useState(/** @type {XPInfo | null} */ (null));
 
     React.useEffect(() => {
-        const friendExperience = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
+        const friendExperience = user.experience.getXPDict(friend.xp);
         setFriendExperience(friendExperience);
     }, [ friend ]);
 

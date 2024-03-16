@@ -381,6 +381,7 @@
 
     "leaderboard": {
         "label-activities": "Activities",
+        "label-activities-small": "Actis",
         "input-label-search": "Search for a player"
     },
 
@@ -532,6 +533,7 @@
         "activity-now-title": "Activity now: {}",
         "activity-now-start": "Start the same activity",
 
+        "container-stats-title": "Statistics",
         "container-achievements-title": "Last achievements",
 
         "button-cancel": "Cancel friend request",

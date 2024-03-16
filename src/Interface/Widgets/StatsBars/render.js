@@ -8,70 +8,78 @@ import langManager from 'Managers/LangManager';
 import { Icon, Swiper, Text, XPBar } from 'Interface/Components';
 
 /**
+ * @typedef {import('Class/Experience').Stats} Stats
  * @typedef {import('Class/Experience').XPInfo} XPInfo
  */
 
-function popupContent(initStatKey) {
+/**
+ * @param {keyof Stats} initStatKey
+ * @param {Stats} [stats]
+ */
+function popupContent(initStatKey, stats = user.experience.GetExperience().stats) {
+    /** @param {keyof Stats} statKey */
     const statBox = (statKey) => {
         const statName = langManager.curr['statistics']['names'][statKey];
         const statDescription = langManager.curr['statistics']['descriptions'][statKey];
-        const stats = user.experience.GetExperience().stats;
-        const bar = statComponent(statKey, stats[statKey], 0, 0, false);
 
         return (
-            <>
+            <View style={styles.popupContentStatPage}>
                 <Text fontSize={24}>{statName}</Text>
-                <View style={{ padding: '5%', paddingHorizontal: '10%' }}>{bar}</View>
+                <View style={styles.popupContentStat}>
+                    {statComponent(statKey, stats[statKey], 0, 0, false)}
+                </View>
                 <Text fontSize={14}>{statDescription}</Text>
-            </>
+            </View>
         )
-    }
+    };
 
-    let swiperRef;
-    const bars = Object.keys(user.stats).map(statBox);
-    const initIndex = Object.keys(user.stats).indexOf(initStatKey);
+    /** @type {React.MutableRefObject<Swiper | null>} */
+    const swiperRef = React.useRef(null);
+    const bars = user.statsKey.map(statBox);
+    const initIndex = user.statsKey.indexOf(initStatKey);
 
     return (
-        <View style={{ padding: '5%' }}>
+        <View style={styles.popupContent}>
             <Swiper
-                ref={ref => { if (ref !== null) swiperRef = ref }}
+                ref={swiperRef}
+                style={styles.popupContentSwiper}
                 pages={bars}
-                height={256}
                 enableAutoNext={false}
                 initIndex={initIndex}
                 backgroundColor='transparent'
             />
-            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Icon onPress={() => { swiperRef.Prev() }} icon='chevron' angle={180} />
-                <Icon onPress={() => { swiperRef.Next() }} icon='chevron' />
+            <View style={styles.popupContentHeader}>
+                <Icon onPress={swiperRef.current?.Prev} icon='chevron' angle={180} />
+                <Icon onPress={swiperRef.current?.Next} icon='chevron' />
             </View>
         </View>
     );
 }
 
 /**
- * @param {string} statKey Stat key
+ * @param {keyof Stats} statKey Stat key
  * @param {XPInfo} stat Stat info
  * @param {number} sup
  * @param {number} index
  * @param {boolean} simplifiedDisplay
- * @param {boolean} clickable
+ * @param {(() => void) | null} [callback]
  * @returns {React.ReactElement}
  */
-function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, clickable = true) {
+function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, callback = null) {
     const langLevel = langManager.curr['level'];
     const langStats = langManager.curr['statistics']['names-min'];
 
-    const popupRender = () => popupContent(statKey);
-    const pressEvent = !clickable ? null : () => {
-        user.interface.popup.Open('custom', popupRender, undefined, true);
+    const pressEvent = () => {
+        if (callback !== null) {
+            callback();
+        }
     };
 
     let textXP = langLevel['level'] + ' ' + stat.lvl;
     let textLevel = langManager.curr['statistics']['names'][statKey];
-    if (!clickable) {
+    if (callback === null) {
         textLevel = langLevel['level-small'] + ' ' + stat.lvl;
-        textXP = `${stat.xp}/${stat.next} - ${stat.totalXP}${langLevel['xp']}`;
+        textXP = `${Math.floor(stat.xp)}/${Math.floor(stat.next)} - ${stat.totalXP}${langLevel['xp']}`;
     }
 
     if (simplifiedDisplay) {
@@ -111,4 +119,4 @@ function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, cli
     );
 }
 
-export { statComponent };
+export { statComponent, popupContent };

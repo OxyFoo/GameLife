@@ -79,10 +79,12 @@ class Popup extends PopupBack {
             { backgroundColor: themeManager.GetColor('backgroundCard') },
             { transform: [{ scale: this.state.animScale }] }
         ];
-        const buttonQuit = [
-            styles.buttonQuit,
-            { transform: [{ translateX: -this.state.x }, { translateY: this.state.y }] }
-        ];
+        const buttonQuitAnim = {
+            transform: [
+                { translateX: Animated.subtract(0, this.state.animQuitPos.x) },
+                { translateY: this.state.animQuitPos.y }
+            ]
+        };
 
         return (
             <Animated.View
@@ -91,7 +93,17 @@ class Popup extends PopupBack {
                 onTouchEnd={() => { this.forceUpdate() }}
             >
                 <View style={styles.background} onTouchStart={() => { this.Close(false) }} />
-                {(this.state.cross) && <Button style={buttonQuit} color='backgroundCard' colorText='main1' onPress={() => { this.Close(this.state.cross) }}>X</Button>}
+                {(this.state.cross) && (
+                    <Button
+                        style={styles.buttonQuit}
+                        styleAnimation={buttonQuitAnim}
+                        color='backgroundCard'
+                        colorText='main1'
+                        onPress={() => { this.Close(this.state.cross) }}
+                    >
+                        X
+                    </Button>
+                )}
                 <Animated.View style={containerStyle} onLayout={this.onLayout}>
                     {this.content()}
                 </Animated.View>

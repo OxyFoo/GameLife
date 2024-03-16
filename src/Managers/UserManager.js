@@ -34,6 +34,7 @@ const DEBUG_DATA = false;
 
 class UserManager {
     constructor() {
+        /** @type {Array<keyof Stats>} */
         this.statsKey = [ 'int', 'soc', 'for', 'sta', 'agi', 'dex' ];
 
         this.achievements = new Achievements(this);
@@ -52,22 +53,21 @@ class UserManager {
         this.tcp = new TCP(this);
         this.todoes = new Todoes(this);
 
+        /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
     }
 
     /**
      * @description Ref loaded here from render of App.js to skip cyclic dependency
-     * @type {PageManager | null}
+     * @type {PageManager}
      */
+    // @ts-ignore Because "interface" is necessarily defined, without it nothing works in all cases
     interface = null;
 
     /** @type {Character | null} */
     character = null;
 
     xp = 0;
-
-    /** @type {Stats | null} */
-    stats = null;
 
     appIsLoaded = false;
 

@@ -108,15 +108,14 @@ class BackActivityTimer extends PageBase {
     }
 
     onPressCancel = () => {
-        const remove = (button) => {
+        const title = langManager.curr['activity']['timeralert-cancel-title'];
+        const text = langManager.curr['activity']['timeralert-cancel-text'];
+        user.interface.popup.Open('yesno', [ title, text ], (button) => {
             if (button === 'yes') {
                 this.finished = true;
                 this.Back();
             }
-        }
-        const title = langManager.curr['activity']['timeralert-cancel-title'];
-        const text = langManager.curr['activity']['timeralert-cancel-text'];
-        user.interface.popup.Open('yesno', [ title, text ], remove);
+        });
         return false;
     }
     onPressComplete = () => {

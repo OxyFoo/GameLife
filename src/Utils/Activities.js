@@ -171,8 +171,11 @@ function AddActivity(activity) {
 function RemActivity(callback) {
     const title = langManager.curr['activity']['alert-remove-title'];
     const text = langManager.curr['activity']['alert-remove-text'];
-    const remove = (button) => button === 'yes' && callback();
-    user.interface.popup.Open('yesno', [ title, text ], remove);
+    user.interface.popup.Open('yesno', [ title, text ], (button) => {
+        if (button === 'yes') {
+            callback();
+        }
+    });
 }
 
 function Back() {

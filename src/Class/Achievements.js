@@ -245,6 +245,10 @@ class Achievements {
                     }
 
                     const title = dataManager.titles.GetByID(titleID);
+                    if (title === null) {
+                        this.user.interface.console.AddLog('error', 'Achievements: Error while get title ( ID:', titleID, ')');
+                        continue;
+                    }
                     const titleName = langManager.GetText(title.Name);
                     const titleLine = lang['title'].replace('{}', titleName);
                     let line = titleLine;
@@ -260,6 +264,10 @@ class Achievements {
 
                 case 'Item':
                     const item = dataManager.items.GetByID(/** @type {StuffID} */ (valueStr));
+                    if (item === null) {
+                        this.user.interface.console.AddLog('error', 'Achievements: Error while get item ( ID:', valueStr, ')');
+                        continue;
+                    }
                     const itemName = langManager.GetText(item.Name);
                     const itemRarity = langManager.curr['rarities'][item.Rarity];
                     const itemText = itemName + ' (' + itemRarity + ')';

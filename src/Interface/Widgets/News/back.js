@@ -96,7 +96,7 @@ class BackNews extends React.Component {
         this.setState({ claimIndex, claimDay, claimDate });
     }
 
-    goToQuestsPage = () => user.interface.ChangePage('quests');
+    goToQuestsPage = () => { user.interface.ChangePage('quests'); }
 }
 
 BackNews.prototype.props = NewsProps;

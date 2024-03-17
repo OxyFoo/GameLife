@@ -377,6 +377,7 @@ class Commands {
         $account = $this->account;
 
         $userData = array(
+            'achievements' => Achievements::Get($this->db, $account),
             'inventory' => array(
                 'stuffs' => Items::GetInventory($this->db, $account),
                 'titles' => Items::GetInventoryTitles($this->db, $account)

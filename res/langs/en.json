@@ -354,9 +354,10 @@
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-recap": "Recap of the day",
+        "chart-today-recap": "24-hour activities",
         "chart-today-performance": "Activities of today",
-        "chart-today-notmuch": "Not enough data to display graph",
+        "chart-today-notmuch": "Add an activity today to display the graphics",
+        "chart-today-notmuch-button": "Add",
         "chart-total-text": "Total",
 
         "news-myquests-title": "Quests to do",

@@ -13,7 +13,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  */
 
 const PageProps = {
-    /** @type {Array<React.JSX.Element | false> | React.JSX.Element | null} */
+    /** @type {Array<React.JSX.Element | false | null> | React.JSX.Element | null} */
     children: null,
 
     /** @type {StyleProp} */

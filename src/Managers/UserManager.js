@@ -34,7 +34,10 @@ const DEBUG_DATA = false;
 
 class UserManager {
     constructor() {
-        /** @type {Array<keyof Stats>} */
+        /**
+         * @readonly
+         * @type {Array<keyof Stats>}
+         */
         this.statsKey = [ 'int', 'soc', 'for', 'sta', 'agi', 'dex' ];
 
         this.achievements = new Achievements(this);

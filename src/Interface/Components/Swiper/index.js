@@ -15,13 +15,13 @@ import Dots from '../Dots';
 
 class Swiper extends SwiperBack {
     renderContent = (p, index) => {
-        const { pages } = this.props;
+        const { pages, verticalAlign } = this.props;
 
         /** @type {StyleProp} */
         const pageWidth = {
             width: 100 / pages.length + '%',
             height: '100%',
-            justifyContent: 'center'
+            justifyContent: verticalAlign
         };
 
         return (
@@ -45,12 +45,12 @@ class Swiper extends SwiperBack {
         if (pages.length === 0) return null;
 
         const pagesContent = pages.map(this.renderContent);
-        const contentContainerStyle = [styles.contentContainer, {
+        const contentContainerStyle = {
             transform: [{
                 translateX: Animated.subtract(0, Animated.multiply(positionX, width))
             }],
             width: pages.length * 100 + '%'
-        }];
+        };
 
         return (
             <Animated.View
@@ -69,7 +69,7 @@ class Swiper extends SwiperBack {
                 onTouchEnd={this.onTouchEnd}
                 onTouchCancel={this.onTouchCancel}
             >
-                <Animated.View style={contentContainerStyle}>
+                <Animated.View style={[styles.contentContainer, contentContainerStyle]}>
                     {pagesContent}
                 </Animated.View>
                 <Dots

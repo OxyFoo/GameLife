@@ -32,9 +32,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     popupContentSwiper: {
+        justifyContent: 'flex-start',
         paddingBottom: -12
     },
     popupContentStatPage: {
+        marginTop: 6,
         marginBottom: 24
     },
     popupContentStat: {

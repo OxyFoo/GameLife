@@ -43,6 +43,7 @@ function popupContent(initStatKey, stats = user.experience.GetExperience().stats
             <Swiper
                 ref={swiperRef}
                 style={styles.popupContentSwiper}
+                verticalAlign='flex-start'
                 pages={bars}
                 enableAutoNext={false}
                 initIndex={initIndex}

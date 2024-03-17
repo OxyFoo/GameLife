@@ -3,6 +3,7 @@ import { View, FlatList } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 import { Text, Icon, Button, DayClock } from 'Interface/Components';
 
@@ -133,12 +134,27 @@ class QuestElement extends React.Component {
     }
 
     render() {
+        const langTimes = langManager.curr['dates']['names'];
         const { days, streakCount } = this.state;
         const { style, quest } = this.props;
         if (quest === null) return null;
 
         const { title } = quest;
         const openQuest = () => user.interface.ChangePage('myqueststats', { quest }, true);
+
+        const timeHour = Math.floor(quest.schedule.duration / 60);
+        const timeMinute = quest.schedule.duration % 60;
+
+        let titleText = `${title.length > 10 ? title.slice(0, 12) + '...' : title}`;
+        if (timeHour > 0 || timeMinute > 0) {
+            titleText += ` -`;
+            if (timeHour > 0) {
+                titleText += ` ${timeHour}${langTimes['hours-min']}`;
+            }
+            if (timeMinute > 0) {
+                titleText += ` ${timeMinute}${langTimes['minutes-min']}`;
+            }
+        }
 
         return (
             <View style={[styles.item, style]}>
@@ -152,7 +168,9 @@ class QuestElement extends React.Component {
                 >
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>
-                            <Text style={styles.title}>{title}</Text>
+                            <Text style={styles.title}>
+                                {titleText}
+                            </Text>
                         </View>
                         <View style={styles.headerStreak}>
                             <Text style={styles.streak}>

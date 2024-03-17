@@ -78,6 +78,7 @@ class News extends BackNews {
 
     /** @type {ListRenderItemMyQuest} */
     renderMyQuestElement = ({ item: quest }) => {
+        const langTimes = langManager.curr['dates']['names'];
         const questsDays = user.quests.myquests.GetDays(quest);
         const currentDay = (new Date().getDay() - 1 + 7) % 7;
         const currentStreak =  user.quests.myquests.GetStreak(quest);
@@ -86,9 +87,22 @@ class News extends BackNews {
             user.interface.ChangePage('activity', { skills: quest.skills }, true);
         };
 
+        const timeHour = Math.floor(quest.schedule.duration / 60);
+        const timeMinute = quest.schedule.duration % 60;
+        let titleText = `${quest.title.length > 10 ? quest.title.slice(0, 12) + '...' : quest.title}`;
+        if (timeHour > 0 || timeMinute > 0) {
+            titleText += ` -`;
+            if (timeHour > 0) {
+                titleText += ` ${timeHour}${langTimes['hours-min']}`;
+            }
+            if (timeMinute > 0) {
+                titleText += ` ${timeMinute}${langTimes['minutes-min']}`;
+            }
+        }
+
         return (
             <Button style={styles.mqItem} onPress={onPress}>
-                <Text>{quest.title}</Text>
+                <Text>{titleText}</Text>
                 <View style={styles.headerStreak}>
                     <DayClock
                         style={styles.mqDayClock}

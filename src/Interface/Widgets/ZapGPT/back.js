@@ -13,6 +13,9 @@ import { ParsePlural } from 'Utils/String';
 
 const ZapGPTProps = {
     /** @type {() => void} */
+    onScrollToTop: () => {},
+
+    /** @type {() => void} */
     onChangePage: () => {}
 };
 
@@ -169,6 +172,7 @@ class ZapGPTBack extends React.Component {
             error: null,
             data: null
         }, this.ZapGPThandler);
+        this.props.onScrollToTop();
     }
 
     Reset = () => {
@@ -178,6 +182,7 @@ class ZapGPTBack extends React.Component {
             error: null,
             data: null
         });
+        this.props.onScrollToTop();
     }
 }
 

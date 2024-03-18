@@ -163,7 +163,7 @@ class PanelScreenBack extends React.Component {
         if (state === 'opened') {
             // Wait layout on first keyboard opening
             setTimeout(() => {
-                this.GotoY(this.posY - height * 2);
+                this.GotoY(this.posY - height);
             }, 100);
         } else if (state === 'closed') {
             this.GotoY(this.posY + height);

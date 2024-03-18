@@ -124,7 +124,7 @@ class Calendar extends BackCalendar {
                         {selectedALL?.day && ( // Force re-render after date selection
                             <FlatList
                                 style={styles.panelCard}
-                                contentContainerStyle={{ paddingBottom: 64 }}
+                                contentContainerStyle={styles.panelCardContainer}
                                 data={currActivities}
                                 onScroll={this.handleScroll}
                                 ListHeaderComponent={cardHeader.bind(this)}

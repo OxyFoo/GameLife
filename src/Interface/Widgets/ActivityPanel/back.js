@@ -198,6 +198,10 @@ class ActivityPanelBack extends React.Component {
         this.setState({ layoutHeight3: event.nativeEvent.layout.height });
     }
 
+    ScrollToTop = () => {
+        this.refPanelScreen.GotoY(this.props.topOffset);
+    }
+
     onOpenSkill = async () => {
         const { selectedSkillID } = this.state;
         const { selectedPage } = user.interface.state;

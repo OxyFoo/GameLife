@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Keyboard, Dimensions } from 'react-native';
+import { Animated, Keyboard, Dimensions, Platform } from 'react-native';
 
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
@@ -38,7 +38,8 @@ class ScreenInputBack extends React.Component {
     /** @type {KeyboardEventListener} */
     onKeyboardShow = (event) => {
         const { height } = event.endCoordinates;
-        const newHeight = SCREEN_HEIGHT - height - 72;
+        const offset = Platform.OS === 'android' ? 82 : 150;
+        const newHeight = SCREEN_HEIGHT - height - offset;
         SpringAnimation(this.state.keyboardHeight, newHeight).start();
     }
     /** @type {KeyboardEventListener} event */

@@ -400,7 +400,7 @@ class Server {
         if (response.status !== 200) {
             // Request failed
             if (this.online) { // Don't show popup if not connected to server
-                this.user.interface.console.AddLog('warn', 'Request: error -', response);
+                this.user.interface.console.AddLog('warn', 'Request: failed -', { type, response });
                 const title = langManager.curr['server']['alert-error-title'];
                 const text = langManager.curr['server']['alert-error-text'];
                 this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
@@ -410,7 +410,7 @@ class Server {
 
         // Print error in console
         if (response.content['status'] === 'error' && response.content.hasOwnProperty('error')) {
-            this.user.interface.console.AddLog('warn', 'Request: error -', response.content['error']);
+            this.user.interface.console.AddLog('warn', 'Request: error -', { type, response });
         }
 
         if (response.content['status'] === 'tokenExpired') {

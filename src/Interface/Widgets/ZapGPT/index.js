@@ -35,7 +35,7 @@ class ZapGPT extends ZapGPTBack {
 
         // Not buyed
         if (user.informations.purchasedCount < 1) {
-            return renderNotBuyed();
+            return renderNotBuyed(this.props.onChangePage);
         }
 
         // Not attempts

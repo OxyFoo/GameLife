@@ -56,10 +56,11 @@ const renderNotConnected = () => {
     );
 }
 
-const renderNotBuyed = () => {
+const renderNotBuyed = (callback = () => {}) => {
     const lang = langManager.curr['zap-gpt'];
 
     const onPress = () => {
+        callback();
         user.interface.ChangePage('shop');
     };
 

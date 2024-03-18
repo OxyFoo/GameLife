@@ -271,7 +271,7 @@ class ActivityPanel extends ActivityPanelBack {
                 onLayout={this.onLayout3}
                 pointerEvents={pointerEvents}
             >
-                <ZapGPT onAddActivities={this.Close} />
+                <ZapGPT onChangePage={this.Close} />
             </Animated.View>
         );
     }

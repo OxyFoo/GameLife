@@ -13,7 +13,7 @@ import { ParsePlural } from 'Utils/String';
 
 const ZapGPTProps = {
     /** @type {() => void} */
-    onAddActivities: () => {}
+    onChangePage: () => {}
 };
 
 class ZapGPTBack extends React.Component {
@@ -149,6 +149,7 @@ class ZapGPTBack extends React.Component {
 
         const text = ParsePlural(lang['added-message'], addedActivities > 1);
         if (addedActivities > 0) {
+            this.props.onChangePage();
             user.interface.ChangePage('display', {
                 'icon': 'success',
                 'iconRatio': .8,

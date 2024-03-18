@@ -25,13 +25,13 @@ const KeyboardSpacerView = (props) => {
     let timeout;
 
     useEffect(() => {
-        Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-        Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+        const emitterDidShow = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+        const emitterDidHide = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
 
         return () => {
-            clearTimeout(timeout);
-            Keyboard.removeAllListeners('keyboardDidShow');
-            Keyboard.removeAllListeners('keyboardDidHide');
+            if (!!timeout) clearTimeout(timeout);
+            if (!!emitterDidShow) emitterDidShow.remove();
+            if (!!emitterDidHide) emitterDidHide.remove();
         }
     }, []);
 

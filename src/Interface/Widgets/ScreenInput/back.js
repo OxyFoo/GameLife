@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Animated, Keyboard } from 'react-native';
+import { Animated, Keyboard, Dimensions } from 'react-native';
 
-import user from 'Managers/UserManager';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
-import { TimingAnimation } from 'Utils/Animations';
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 /**
  * @typedef {import('Interface/Components').Input} Input
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('react-native').KeyboardEventListener} KeyboardEventListener
  */
 
 class ScreenInputBack extends React.Component {
@@ -17,7 +18,7 @@ class ScreenInputBack extends React.Component {
         text: '',
         multiline: false,
         anim: new Animated.Value(0),
-        keyboardHeight: 0,
+        keyboardHeight: new Animated.Value(SCREEN_HEIGHT),
         callback: (text) => {},
         callbackClose: () => {}
     }
@@ -33,12 +34,16 @@ class ScreenInputBack extends React.Component {
         Keyboard.removeAllListeners('keyboardDidShow');
         Keyboard.removeAllListeners('keyboardDidHide');
     }
+
+    /** @type {KeyboardEventListener} */
     onKeyboardShow = (event) => {
-        const { height, screenY } = event.endCoordinates;
-        this.setState({ keyboardHeight: Math.ceil(user.interface.screenHeight - screenY) });
+        const { height } = event.endCoordinates;
+        const newHeight = SCREEN_HEIGHT - height - 72;
+        SpringAnimation(this.state.keyboardHeight, newHeight).start();
     }
+    /** @type {KeyboardEventListener} event */
     onKeyboardHide = () => {
-        this.setState({ keyboardHeight: 0 });
+        SpringAnimation(this.state.keyboardHeight, SCREEN_HEIGHT).start();
         this.refInput?.current?.unfocus();
         this.Close(false);
     }

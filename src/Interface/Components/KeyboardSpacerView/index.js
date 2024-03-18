@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Keyboard, View } from 'react-native';
 
-import user from 'Managers/UserManager';
-
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').KeyboardEvent} KeyboardEvent
+ * 
+ * @typedef {(state: 'opened' | 'closed', height: number) => void} KeyboardChangeStateEvent
  */
 
 /**
@@ -15,49 +15,44 @@ import user from 'Managers/UserManager';
  * 
  * @param {Object} props
  * @param {StyleProp} [props.style]
+ * @param {KeyboardChangeStateEvent} [props.onChangeState]
  */
-function KeyboardSpacerView(props) {
+const KeyboardSpacerView = (props) => {
     const [height, setHeight] = useState(0);
-    let lastHeight = 0;
-    let timeoutDidShow = null;
-    let timeoutDidHide = null;
+    let currHeight = 0;
+
+    /** @type {NodeJS.Timeout} */
+    let timeout;
 
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', keyboardDidShow);
         Keyboard.addListener('keyboardDidHide', keyboardDidHide);
 
         return () => {
+            clearTimeout(timeout);
             Keyboard.removeAllListeners('keyboardDidShow');
             Keyboard.removeAllListeners('keyboardDidHide');
-            clearTimeout(timeoutDidShow);
-            clearTimeout(timeoutDidHide);
         }
     }, []);
 
     /** @param {KeyboardEvent} event */
     const keyboardDidShow = (event) => {
         const newHeight = event.endCoordinates.height;
-        setHeight(newHeight / 2);
-        lastHeight = newHeight / 2;
-        clearTimeout(timeoutDidHide);
-        timeoutDidShow = setTimeout(() => {
-            user.interface.GetCurrentPage()?.refPage?.GoToYRelative(-newHeight / 2);
-        }, 100);
+        currHeight = newHeight / 2;
+        setHeight(currHeight);
+        props.onChangeState?.('opened', currHeight);
     }
 
     /** @param {KeyboardEvent} event */
     const keyboardDidHide = (event) => {
-        user.interface.GetCurrentPage()?.refPage?.GoToYRelative(lastHeight);
-        clearTimeout(timeoutDidShow);
-        timeoutDidHide = setTimeout(() => {
+        props.onChangeState?.('closed', currHeight);
+        timeout = setTimeout(() => {
             setHeight(0)
         }, 100);
     }
 
-    const styleHeight = { height: height };
-
     return (
-        <View style={[props.style, styleHeight]} />
+        <View style={[props.style, { height }]} />
     );
 }
 

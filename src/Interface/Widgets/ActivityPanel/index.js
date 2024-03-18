@@ -2,7 +2,8 @@ import * as React from 'react';
 import { View, Animated, TouchableOpacity } from 'react-native';
 
 import styles from './style';
-import ActivityPanelBack from './back';
+import ActivityPanelBack, { START_MODES } from './back';
+import ZapGPT from '../ZapGPT';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
@@ -25,7 +26,10 @@ class ActivityPanel extends ActivityPanelBack {
     render() {
         const lang = langManager.curr['activity'];
         const { style, topOffset, variantTheme } = this.props;
-        const { activityText, mode } = this.state;
+        const {
+            activityText, mode, startMode,
+            layoutHeight1, layoutHeight2, layoutHeight3
+        } = this.state;
         const { selectedPage } = user.interface.state;
 
         const stylePanel = {
@@ -35,6 +39,12 @@ class ActivityPanel extends ActivityPanelBack {
         };
         const styleTitle = {
             borderColor: themeManager.GetColor('main1')
+        };
+
+        const startModeIndex = START_MODES.indexOf(startMode);
+        const layouts = [layoutHeight1, layoutHeight2, layoutHeight3];
+        const styleContent = {
+            height: layouts[startModeIndex]
         };
 
         return (
@@ -80,21 +90,26 @@ class ActivityPanel extends ActivityPanelBack {
                     {mode === 'activity' ? null : (
                         <TextSwitch
                             style={styles.panelTextSwitch}
-                            texts={[lang['swiper-already'], lang['swiper-now']]}
+                            texts={[
+                                lang['swiper-already'],
+                                lang['swiper-now'],
+                                lang['swiper-gpt']
+                            ]}
                             onChange={this.onChangeMode}
                         />
                     )}
                 </View>
 
-                <View>
-                    {this.renderStartActivity.call(this)}
-                    {this.renderPanelDetails.call(this)}
+                <View style={styleContent}>
+                    {this.renderPanelDetails()}
+                    {this.renderStartActivity()}
+                    {this.renderZapGPT()}
                 </View>
             </PanelScreen>
         );
     }
 
-    renderPanelDetails() {
+    renderPanelDetails = () => {
         const lang = langManager.curr['activity'];
         const { variantTheme } = this.props;
         const { activity, startMode, mode } = this.state;
@@ -102,16 +117,17 @@ class ActivityPanel extends ActivityPanelBack {
         const maxDuration = activity?.skillID === 168 ? 12 : 4;
         const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
-        const viewOpacity = {
+        /** @type {AnimatedViewProp} */
+        const styleAnim = {
             transform: [{
-                translateY: this.state.animButtonNow.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 96]
+                translateX: this.state.animState.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: [0, -100, -100]
                 })
             }],
-            opacity: this.state.animButtonNow.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, .2]
+            opacity: this.state.animState.interpolate({
+                inputRange: [0, 0.9, 1, 2], // 0.9 prevent show with spring animation
+                outputRange: [1, 0, 0, 0]
             })
         };
         const backgroundCard = {
@@ -123,7 +139,8 @@ class ActivityPanel extends ActivityPanelBack {
         return (
             <Animated.View
                 ref={this.refPanelContent}
-                style={viewOpacity}
+                style={[styles.addActivity, styleAnim]}
+                onLayout={this.onLayout1}
                 pointerEvents={pointerEvents}
             >
                 {/* Schedule */}
@@ -195,22 +212,67 @@ class ActivityPanel extends ActivityPanelBack {
         );
     }
 
-    renderStartActivity() {
+    renderStartActivity = () => {
         const lang = langManager.curr['activity'];
+        const { startMode } = this.state;
+
         /** @type {AnimatedViewProp} */
-        const btnOpacity = {
-            opacity: this.state.animButtonNow
+        const styleAnim = {
+            transform: [{
+                translateX: this.state.animState.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: [100, 0, -100]
+                })
+            }],
+            opacity: this.state.animState.interpolate({
+                inputRange: [0, 1, 2],
+                outputRange: [0, 1, 0]
+            })
         };
+
+        const pointerEvents = startMode === 'now' ? 'auto' : 'none';
 
         return (
             <Button
                 style={styles.buttonNow}
-                styleAnimation={btnOpacity}
+                styleAnimation={styleAnim}
                 onPress={this.onStartNow}
                 color='main2'
+                onLayout={this.onLayout2}
+                pointerEvents={pointerEvents}
             >
                 {lang['btn-start']}
             </Button>
+        );
+    }
+
+    renderZapGPT = () => {
+        const { startMode } = this.state;
+
+        /** @type {AnimatedViewProp} */
+        const styleAnim = {
+            transform: [{
+                translateX: this.state.animState.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: [100, 100, 0]
+                })
+            }],
+            opacity: this.state.animState.interpolate({
+                inputRange: [0, 1, 1.1, 2], // 1.1 prevent show with spring animation
+                outputRange: [0, 0, 0, 1]
+            })
+        };
+
+        const pointerEvents = startMode === 'zap-gpt' ? 'auto' : 'none';
+
+        return (
+            <Animated.View
+                style={[styles.zapGPT, styleAnim]}
+                onLayout={this.onLayout3}
+                pointerEvents={pointerEvents}
+            >
+                <ZapGPT onAddActivities={this.Close} />
+            </Animated.View>
         );
     }
 

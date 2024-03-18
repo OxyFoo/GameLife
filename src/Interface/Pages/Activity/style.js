@@ -51,29 +51,6 @@ const styles = StyleSheet.create({
     emptyListText: {
         textAlign: 'center',
         fontSize: 24
-    },
-
-    zapGptContainer: {
-        position: 'absolute',
-        left: 12,
-        right: 12,
-        bottom: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end'
-    },
-    zapGptButton: {
-        height: 'auto',
-        paddingVertical: 6,
-        paddingHorizontal: 0
-    },
-    zapGptBubble: {
-        maxWidth: SCREEN_WIDTH - 24 - 120,
-        padding: 12,
-        borderWidth: 1,
-        borderRadius: 12,
-        borderColor: '#ffffff',
-        backgroundColor: '#000000A0'
     }
 });
 

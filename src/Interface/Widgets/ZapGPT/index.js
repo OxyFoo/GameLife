@@ -7,9 +7,10 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Text, Input, Button, Separator, Zap } from 'Interface/Components';
+import { Text, Input, Button, Separator } from 'Interface/Components';
 import { GetFullDate } from 'Utils/Date';
 import { GetDate, TimeToFormatString } from 'Utils/Time';
+import { renderNoRemaining, renderNotBuyed, renderNotConnected } from './render';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
@@ -19,22 +20,32 @@ import { GetDate, TimeToFormatString } from 'Utils/Time';
 class ZapGPT extends ZapGPTBack {
     render() {
         const lang = langManager.curr['zap-gpt'];
-        const { data } = this.state;
+        const { data, tcpState, text, loading, error } = this.state;
         const { zapGPT } = user.informations;
 
+        // Show data validation
         if (data !== null) {
             return this.renderData();
         }
 
+        // Not connected
+        if (tcpState !== 'connected') {
+            return renderNotConnected();
+        }
+
+        // Not buyed
+        if (user.informations.purchasedCount < 1) {
+            return renderNotBuyed();
+        }
+
+        // Not attempts
+        if (zapGPT.remaining <= 0) {
+            return renderNoRemaining()
+        }
+
+        const placeholder = ` (${zapGPT.remaining}/${zapGPT.total} ${lang['remaining-text']})`;
         return (
             <View style={styles.panel}>
-                <Text
-                    style={styles.globalCounter}
-                    fontSize={12}
-                >
-                    {`${lang['remaining-text']} ${zapGPT.remaining}/${zapGPT.total}`}
-                </Text>
-
                 <Text style={styles.title} fontSize={24}>
                     {lang['title1']}
                 </Text>
@@ -45,42 +56,10 @@ class ZapGPT extends ZapGPTBack {
                     ))}
                 </View>
 
-                {this.renderInteraction()}
-            </View>
-        );
-    }
-
-    renderInteraction = () => {
-        const lang = langManager.curr['zap-gpt'];
-        const { text, loading, error } = this.state;
-
-        if (user.informations.zapGPT.remaining <= 0) {
-            return (
-                <View style={styles.noRemaining}>
-                    <Text style={styles.noRemainingText} color='primary' fontSize={22}>
-                        {lang['no-remaining']}
-                    </Text>
-
-                    <View style={styles.noRemainingBack}>
-                        <Button
-                            style={styles.buttonClose}
-                            color='main1'
-                            icon='arrowLeft'
-                            iconSize={48}
-                            onPress={this.Back}
-                        />
-                        <Zap.High style={styles.noRemainingZap} />
-                    </View>
-                </View>
-            );
-        }
-
-        return (
-            <>
                 {/* Input */}
                 <View style={styles.input}>
                     <Input
-                        label={lang['input-label']}
+                        label={lang['input-label'] + placeholder}
                         text={text}
                         onChangeText={this.onChangeText}
                         maxLength={1024}
@@ -93,14 +72,6 @@ class ZapGPT extends ZapGPTBack {
 
                 {/* Buttons */}
                 <View style={styles.buttons}>
-                    {!loading && (
-                        <Button
-                            style={styles.buttonClose}
-                            color='danger'
-                            icon='cross'
-                            onPress={this.Back}
-                        />
-                    )}
                     <Button
                         style={styles.buttonAsk}
                         color='main1'
@@ -109,7 +80,7 @@ class ZapGPT extends ZapGPTBack {
                         loading={loading}
                     />
                 </View>
-            </>
+            </View>
         );
     }
 
@@ -165,7 +136,11 @@ class ZapGPT extends ZapGPTBack {
         const lang = langManager.curr['dates']['names'];
 
         const skill = dataManager.skills.GetByID(item.skillID);
-        const skillName = langManager.GetText(skill?.Name) || item.skillID.toString();
+        if (skill === null) {
+            return null;
+        }
+
+        const skillName = langManager.GetText(skill.Name) || item.skillID.toString();
         const skillDate = GetFullDate(GetDate(item.startTime));
         const skillStart = TimeToFormatString(item.startTime + item.timezone * 3600);
         const skillDuration = TimeToFormatString(item.duration * 60);

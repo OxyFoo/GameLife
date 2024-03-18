@@ -8,7 +8,16 @@ import { ParsePlural } from 'Utils/String';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Class/TCP').ConnectionState} ConnectionState
  */
+
+const ZapGPTProps = {
+    /** @type {() => void} */
+    onScrollToTop: () => {},
+
+    /** @type {() => void} */
+    onChangePage: () => {}
+};
 
 class ZapGPTBack extends React.Component {
     state = {
@@ -16,26 +25,25 @@ class ZapGPTBack extends React.Component {
         text: '',
         error: null,
 
+        /** @type {ConnectionState} */
+        tcpState: user.tcp.state.Get(),
+
         /** @type {Array<Activity> | null} */
         data: null
     }
 
-    componentDidMount() {
-        if (user.tcp.IsConnected() === false) {
-            if (user.interface.popup.opened) {
-                this.Back();
-            }
-        }
-        user.interface.SetCustomBackHandler(() => false);
+    /** @type {Symbol | null} */
+    listenerTCP = null;
 
+    componentDidMount() {
         this.listenerTCP = user.tcp.state.AddListener((state) => {
-            if (state !== 'connected') {
-                this.Back();
+            if (state !== this.state.tcpState) {
+                this.setState({ tcpState: state });
             }
         });
     }
+
     componentWillUnmount() {
-        user.interface.ResetCustomBackHandler();
         user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
@@ -112,6 +120,10 @@ class ZapGPTBack extends React.Component {
     /** @param {number} index */
     RemoveActivity = (index) => {
         const { data } = this.state;
+        if (data === null) {
+            return;
+        }
+
         data.splice(index, 1);
 
         if (data.length === 0) {
@@ -123,26 +135,34 @@ class ZapGPTBack extends React.Component {
 
     Validate = () => {
         const lang = langManager.curr['zap-gpt'];
+        const { data } = this.state;
+
+        if (data === null) {
+            return;
+        }
 
         let addedActivities = 0;
-        for (let i = 0; i < this.state.data.length; i++) {
-            const activity = this.state.data[i];
-            const result = user.activities.Add(activity);
-            if (result === 'added') {
+        for (let i = 0; i < data.length; i++) {
+            const activity = data[i];
+            const { status } = user.activities.Add(activity);
+            if (status === 'added') {
                 addedActivities++;
             }
         }
 
-        this.Back();
-
         const text = ParsePlural(lang['added-message'], addedActivities > 1);
         if (addedActivities > 0) {
+            this.props.onChangePage();
             user.interface.ChangePage('display', {
                 'icon': 'success',
                 'iconRatio': .8,
                 'text': text.replace('{}', addedActivities.toString()),
                 'button': 'OK'
             }, true);
+        } else {
+            const title = lang['no-activities-title'];
+            const text = lang['no-activities-text'];
+            user.interface.popup.Open('ok', [ title, text ]);
         }
     }
 
@@ -152,6 +172,7 @@ class ZapGPTBack extends React.Component {
             error: null,
             data: null
         }, this.ZapGPThandler);
+        this.props.onScrollToTop();
     }
 
     Reset = () => {
@@ -161,12 +182,11 @@ class ZapGPTBack extends React.Component {
             error: null,
             data: null
         });
-    }
-
-    Back = () => {
-        user.interface.popup.state.callback();
-        user.interface.popup.Close();
+        this.props.onScrollToTop();
     }
 }
+
+ZapGPTBack.prototype.props = ZapGPTProps;
+ZapGPTBack.defaultProps = ZapGPTProps;
 
 export default ZapGPTBack;

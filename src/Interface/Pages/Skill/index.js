@@ -11,65 +11,13 @@ import { Round } from 'Utils/Functions';
 import { PageHeader, ActivityPanel, SkillChart, StatsBars } from 'Interface/Widgets';
 import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 
-/** @typedef {import('./back').HistoryActivity} HistoryActivity */
+/**
+ * @typedef {import('react-native').ListRenderItem<HistoryActivity>} ListRenderItemHistoryActivity
+ * 
+ * @typedef {import('./back').HistoryActivity} HistoryActivity
+ */
 
 class Skill extends BackSkill {
-    renderHistory = () => {
-        const lang = langManager.curr['skill'];
-
-        if (this.history.length <= 0) {
-            return null;
-        }
-
-        return (
-            <Container text={lang['history-title']} type='rollable' opened={false}>
-                <FlatList
-                    data={this.history}
-                    keyExtractor={(item, i) => 'history_' + i}
-                    renderItem={this.renderHistoryItem}
-                />
-            </Container>
-        );
-    }
-
-    /**
-     * @param {{ item: HistoryActivity }} item
-     * @returns {JSX.Element}
-     */
-    renderHistoryItem = ({ item }) => {
-        return (
-            <TouchableOpacity activeOpacity={0.6} onPress={item.onPress}>
-                <Text style={styles.textHistory}>{item.title}</Text>
-            </TouchableOpacity>
-        );
-    }
-
-    renderActivity = () => {
-        return (
-            <ActivityPanel
-                ref={ref => this.refActivityPanel = ref}
-                topOffset={200}
-            />
-        );
-    }
-
-    renderFooter() {
-        if (!this.skill.enabled) {
-            return null;
-        }
-
-        // Add activity button
-        return (
-            <Button
-                style={styles.addActivity}
-                color='main2'
-                onPress={this.addActivity}
-                icon='add'
-                iconSize={30}
-            />
-        );
-    }
-
     render() {
         const lang = langManager.curr['skill'];
         const langTime = langManager.curr['dates']['names'];
@@ -77,18 +25,14 @@ class Skill extends BackSkill {
         const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
         const txtCurrXp = Round(this.skill.xp, 1);
-        const txtNextXP = this.skill.next;
+        const txtNextXP = Round(this.skill.next, 1);
         const txtXP = langManager.curr['level']['xp'];
-
-        if (!this.skill) {
-            return null;
-        }
 
         return (
             <Page
                 ref={ref => this.refPage = ref}
                 bottomOffset={104}
-                overlay={this.renderActivity()}
+                overlay={this.renderOverlay()}
                 footer={this.renderFooter()}
             >
                 <PageHeader onBackPress={user.interface.BackHandle} />
@@ -138,11 +82,13 @@ class Skill extends BackSkill {
                 </View>
 
                 {/* Skill use chart */}
-                <SkillChart
-                    skillID={this.skillID}
-                    chartWidth={300}
-                    style={styles.statsContainer}
-                />
+                {this.skill.ID !== 0 && (
+                    <SkillChart
+                        skillID={this.skill.ID}
+                        chartWidth={300}
+                        style={styles.statsContainer}
+                    />
+                )}
 
                 {/* Stats */}
                 <Container
@@ -155,8 +101,71 @@ class Skill extends BackSkill {
                 </Container>
 
                 {/* History */}
-                {this.renderHistory()}
+                {this.history.length > 0 && (
+                    <Container
+                        styleContainer={styles.historyContainer}
+                        text={lang['history-title']}
+                        type='rollable'
+                        opened={false}
+                    >
+                        <FlatList
+                            data={this.history}
+                            keyExtractor={(item, i) => 'history_' + i}
+                            renderItem={this.renderHistoryItem}
+                            numColumns={2}
+                            initialNumToRender={100}
+                            onTouchStart={() => {
+                                user.interface.GetCurrentPage()?.refPage?.DisableScroll();
+                            }}
+                            onTouchEnd={() => {
+                                user.interface.GetCurrentPage()?.refPage?.EnableScroll();
+                            }}
+                            onTouchCancel={() => {
+                                user.interface.GetCurrentPage()?.refPage?.EnableScroll();
+                            }}
+                        />
+                    </Container>
+                )}
             </Page>
+        );
+    }
+
+    /** @type {ListRenderItemHistoryActivity} */
+    renderHistoryItem = ({ item, index }) => {
+        return (
+            <TouchableOpacity
+                style={styles.historyItem}
+                activeOpacity={0.6}
+                onPress={item.onPress}
+            >
+                <Text>{item.title}</Text>
+            </TouchableOpacity>
+        );
+    }
+
+    renderOverlay = () => {
+        return (
+            <ActivityPanel
+                ref={ref => this.refActivityPanel = ref}
+                topOffset={200}
+            />
+        );
+    }
+
+    renderFooter() {
+        if (!this.skill.enabled) {
+            return null;
+        }
+
+        // Add activity button
+        return (
+            <Button
+                style={styles.addActivity}
+                color='main2'
+                onPress={this.addActivity}
+                icon='add'
+                iconSize={30}
+            />
         );
     }
 }

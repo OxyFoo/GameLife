@@ -54,7 +54,7 @@ async function checkCode(code) {
         text += user.achievements.getRewardsText(rewards);
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 
-    await user.OnlineLoad(true);
+    await user.OnlineLoad('inventories');
 }
 
 function renderGiftCodePopup() {

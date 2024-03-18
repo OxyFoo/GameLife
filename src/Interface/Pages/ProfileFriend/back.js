@@ -1,7 +1,6 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { USER_XP_PER_LEVEL } from 'Class/Experience';
 import { PageBase, Character } from 'Interface/Components';
 import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
@@ -9,6 +8,7 @@ import { StartActivityNow } from 'Utils/Activities';
 /**
  * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Class/Experience').Stats} Stats
  */
 
 class BackProfileFriend extends PageBase {
@@ -18,6 +18,9 @@ class BackProfileFriend extends PageBase {
 
         /** @type {XPInfo | null} */
         xpInfo: null,
+
+        /** @type {Stats} */
+        statsInfo: user.experience.GetEmptyExperience(),
 
         activities: {
             totalDays: 0,
@@ -46,7 +49,10 @@ class BackProfileFriend extends PageBase {
         }
 
         this.state.friend = friend;
-        this.state.xpInfo = user.experience.getXPDict(friend.xp, USER_XP_PER_LEVEL);
+        this.state.xpInfo = user.experience.getXPDict(friend.xp, 'user');
+        this.state.statsInfo = Object.assign({}, ...user.statsKey.map(i => ({
+            [i]: user.experience.getXPDict(friend.stats[i], 'stat')
+        })));
 
         if (friend.friendshipState === 'accepted') {
             if (friend.activities.firstTime) {
@@ -103,9 +109,13 @@ class BackProfileFriend extends PageBase {
             if (friend.activities.firstTime) {
                 totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
             }
+            const statsInfo = Object.assign({}, ...user.statsKey.map(i => ({
+                [i]: user.experience.getXPDict(friend.stats[i], 'stat')
+            })));
 
             this.setState({
                 friend: newFriend,
+                statsInfo: statsInfo,
                 activities: {
                     totalDays: totalDays,
                     activitiesLength: friend.activities.length,

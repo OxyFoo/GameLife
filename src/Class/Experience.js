@@ -2,15 +2,16 @@ import dataManager from 'Managers/DataManager';
 
 import { MinMax, Sum } from 'Utils/Functions';
 
-const USER_XP_PER_LEVEL = 20;
-const STAT_XP_PER_LEVEL = 2;
-const SKILL_XP_PER_LEVEL = 20;
-
-
 /**
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Managers/UserManager').Stats} Stats
+ * 
+ * @typedef {'user' | 'stat' | 'skill'} XPTypes
+ * 
+ * @typedef {object} XPOptions
+ * @property {number} xpPerLevel
+ * @property {number} increaseRatio Default: 0.5. ]0, 1[ for logarithmic, 1 for linear and ]1, 2] for exponential
  * 
  * @typedef {object} XPInfo
  * @property {number} xp - Current XP
@@ -26,6 +27,22 @@ const SKILL_XP_PER_LEVEL = 20;
  * @property {number} lastTime - Last time the user gained XP
  */
 
+/** @type {{ [key in XPTypes]: XPOptions }} */
+const XPOptions = {
+    user: {
+        xpPerLevel: 20,
+        increaseRatio: 0.5
+    },
+    stat: {
+        xpPerLevel: 6,
+        increaseRatio: 0.8
+    },
+    skill: {
+        xpPerLevel: 15,
+        increaseRatio: 0.6
+    }
+};
+
 class Experience {
     /** @param {UserManager} user */
     constructor(user) {
@@ -37,7 +54,7 @@ class Experience {
             /** @type {{stats: Stats, xpInfo: XPInfo}} */
             experience: {
                 stats: this.GetEmptyExperience(),
-                xpInfo: this.getXPDict(0, 1)
+                xpInfo: this.getXPDict(0)
             }
         };
     }
@@ -88,15 +105,15 @@ class Experience {
 
         for (let k in statsKey) {
             const key = statsKey[k];
-            stats[key] = this.getXPDict(statValues[key], STAT_XP_PER_LEVEL);
+            stats[key] = this.getXPDict(statValues[key], 'stat');
         }
 
         this.cache.id = activities.length.toString();
-        this.cache.experience = { stats, xpInfo: this.getXPDict(XP, USER_XP_PER_LEVEL) };
+        this.cache.experience = { stats, xpInfo: this.getXPDict(XP, 'user') };
 
         return {
             stats: stats,
-            xpInfo: this.getXPDict(XP, USER_XP_PER_LEVEL)
+            xpInfo: this.getXPDict(XP, 'user')
         };
     }
 
@@ -127,8 +144,8 @@ class Experience {
         const totalDuration = Sum(durations);
         const totalXP = skill.XP * (totalDuration / 60);
 
-        const experience = this.getXPDict(totalXP, SKILL_XP_PER_LEVEL);
-        const lastTime = activities.length > 0 ? activities.at(-1).startTime : 0;
+        const experience = this.getXPDict(totalXP, 'skill');
+        const lastTime = activities.length === 0 ? 0 : activities.at(-1)?.startTime ?? 0;
         return { ...experience, lastTime };
     }
 
@@ -151,7 +168,7 @@ class Experience {
             }
         }
 
-        return this.getXPDict(totalXP, SKILL_XP_PER_LEVEL);
+        return this.getXPDict(totalXP, 'skill');
     }
 
     /**
@@ -163,21 +180,25 @@ class Experience {
      * - `TotalXP = lvl/2 * ((lvl - 1) * xpPerLevel))`
      * - `lvl = 1/2 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)/2`
      * @param {number} totalXP
-     * @param {number} xpPerLevel
+     * @param {XPTypes} type
      * @returns {XPInfo}
      */
-    getXPDict(totalXP = 0, xpPerLevel = 1) {
-        if (totalXP < 0 || xpPerLevel < 1) {
+    getXPDict(totalXP = 0, type = 'user') {
+        const { xpPerLevel, increaseRatio } = XPOptions[type];
+
+        if (totalXP < 0 || xpPerLevel <= 0) {
             return { 'xp': 0, 'lvl': 0, 'next': 0, 'totalXP': 0 };
         }
 
-        const lvl = Math.floor((1 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)) / 2);
-        const xp = totalXP - (lvl * (lvl - 1) / 2) * xpPerLevel;
-        const next = lvl * xpPerLevel;
+        const lvl = Math.floor((1 + Math.pow(1 + 8 * totalXP / xpPerLevel, increaseRatio)) / 2);
+        const xpForCurrLevel = xpPerLevel * (Math.pow(2 * (lvl + 0) - 1, 1 / increaseRatio) - 1) / 8;
+        const xpForNextLevel = xpPerLevel * (Math.pow(2 * (lvl + 1) - 1, 1 / increaseRatio) - 1) / 8;
+
+        const xp = totalXP - xpForCurrLevel;
+        const next = xpForNextLevel - xpForCurrLevel;
 
         return { xp, lvl, next, totalXP };
     }
 }
 
-export { USER_XP_PER_LEVEL, STAT_XP_PER_LEVEL, SKILL_XP_PER_LEVEL };
 export default Experience;

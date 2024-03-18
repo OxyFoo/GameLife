@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Page, Container, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
-import { PageHeader, AchievementsGroup } from 'Interface/Widgets';
+import { PageHeader, AchievementsGroup, StatsBars } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 
 class ProfileFriend extends BackProfileFriend {
@@ -16,7 +16,7 @@ class ProfileFriend extends BackProfileFriend {
         const lang = langManager.curr['profile-friend'];
         const langDates = langManager.curr['dates']['names'];
 
-        const { friend, xpInfo, activities } = this.state;
+        const { friend, xpInfo, statsInfo, activities } = this.state;
 
         if (friend === null || xpInfo === null) {
             return null;
@@ -91,6 +91,18 @@ class ProfileFriend extends BackProfileFriend {
                             unit={langDates['hours-min']}
                             style={[styles.kpiProfile, backgroundKpi]}/>
                     </View>
+                )}
+
+                {/* Stats */}
+                {friend.friendshipState === 'accepted' && (
+                    <Container
+                        text={lang['container-stats-title']}
+                        style={styles.topSpace}
+                        type='rollable'
+                        opened={false}
+                    >
+                        <StatsBars data={statsInfo} />
+                    </Container>
                 )}
 
                 {/** Achievements */}

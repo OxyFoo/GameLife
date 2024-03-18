@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, FlatList, ScrollView } from 'react-native';
+import { View, FlatList, ScrollView } from 'react-native';
 
 import BackActivity from './back';
 import styles from './style';
@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Page, Text, IconCheckable, Input, Button, Zap } from 'Interface/Components';
+import { Page, Text, IconCheckable, Input } from 'Interface/Components';
 import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
 /**
@@ -26,7 +26,6 @@ class Activity extends BackActivity {
                 ref={ref => this.refPage = ref}
                 scrollable={false}
                 canScrollOver={false}
-                overlay={this.renderOverlay()}
             >
                 <PageHeader
                     style={styles.header}
@@ -134,49 +133,6 @@ class Activity extends BackActivity {
                     {lang['empty-activity']}
                 </Text>
             </View>
-        );
-    }
-
-    renderOverlay = () => {
-        const lang = langManager.curr['activity'];
-        const { tcpState, animZapGPTOpened, animZapGPTMessage } = this.state;
-
-        if (tcpState !== 'connected') {
-            return null;
-        }
-
-        const animOpened = {
-            transform: [
-                { translateX: Animated.multiply(animZapGPTOpened, 120) }
-            ]
-        };
-
-        const animMessage = {
-            opacity: animZapGPTMessage,
-            transform: [
-                {
-                    translateX: animZapGPTMessage.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [24, 0]
-                    })
-                }
-            ]
-        };
-
-        return (
-            <Animated.View style={[styles.zapGptContainer, animOpened]} pointerEvents={'box-none'}>
-                <Animated.View style={[styles.zapGptBubble, animMessage]} pointerEvents={'none'}>
-                    <Text fontSize={16}>
-                        {lang['activity-zap-hint']}
-                    </Text>
-                </Animated.View>
-                <Button
-                    style={styles.zapGptButton}
-                    onPress={this.PromptZapGPT}
-                >
-                    <Zap.High orientation='left' />
-                </Button>
-            </Animated.View>
         );
     }
 }

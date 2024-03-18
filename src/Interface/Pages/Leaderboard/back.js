@@ -1,7 +1,6 @@
 import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('Class/Multiplayer').Friend} Friend
@@ -10,8 +9,8 @@ import { Round } from 'Utils/Functions';
 
 class BackLeaderboard extends PageBase {
     sortList = {
-        XP: langManager.curr['statistics']['xp']['small'],
-        skills: langManager.curr['leaderboard']['label-activities'],
+        XP: langManager.curr['level']['level-small'],
+        skills: langManager.curr['leaderboard']['label-activities-small'],
         ...user.statsKey.reduce((acc, key) => {
             acc[key] = langManager.curr['statistics']['names-min'][key];
             return acc;
@@ -22,7 +21,7 @@ class BackLeaderboard extends PageBase {
     globalPlayersData = [];
 
     state = {
-        /** @type {RankedFriend} */
+        /** @type {RankedFriend | null} */
         selfData: null,
 
         /** @type {Array<RankedFriend>} */
@@ -107,6 +106,7 @@ class BackLeaderboard extends PageBase {
 
     refreshRanking = (applyState = true) => {
         const lang = langManager.curr['leaderboard'];
+        const langLvl = langManager.curr['level'];
         const langStats = langManager.curr['statistics'];
         const { search, sortIndex } = this.state;
         let newRanking = [ ...this.globalPlayersData ];
@@ -117,7 +117,8 @@ class BackLeaderboard extends PageBase {
             
             // Define label & ranks
             newRanking.forEach((player, index) => {
-                player.label = Round(player.xp, 0) + ' ' + langStats['xp']['small'];
+                const statExp = user.experience.getXPDict(player.xp);
+                player.label = `${langLvl['level']} ${statExp.lvl}`;
                 player.rank = index + 1;
             });
         }
@@ -139,7 +140,8 @@ class BackLeaderboard extends PageBase {
 
             // Define label & ranks
             newRanking.forEach((player, index) => {
-                player.label = player.stats[statKey] + ' ' + langStats['names'][statKey];
+                const statExp = user.experience.getXPDict(player.stats[statKey], 'stat');
+                player.label = `${statExp.lvl} ${langStats['names'][statKey]}`;
                 player.rank = index + 1;
             });
         }

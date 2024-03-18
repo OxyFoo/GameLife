@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
     panelCard: {
         marginHorizontal: 32
     },
+    panelCardContainer: {
+        paddingBottom: 64
+    },
     fadeBottom: {
         position: 'absolute',
         left: 0,

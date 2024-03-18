@@ -56,8 +56,14 @@ const styles = StyleSheet.create({
         marginBottom: 24
     },
 
-    textHistory: {
-        padding: 12
+    historyContainer: {
+        maxHeight: 400,
+        paddingHorizontal: 6
+    },
+    historyItem: {
+        width: '50%',
+        padding: 0,
+        marginVertical: 6
     },
 
     addActivity: {

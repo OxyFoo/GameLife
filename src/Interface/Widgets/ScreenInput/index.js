@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import styles from './style';
 import ScreenInputBack from './back';
@@ -11,7 +11,12 @@ class ScreenInput extends ScreenInputBack {
         const { opened, anim, label, text } = this.state;
         const opacity = { opacity: anim };
         const event = opened ? 'auto' : 'none';
-        const bottom = { transform: [{ translateY: -this.state.keyboardHeight - 56 }] };
+
+        const animInput = {
+            transform: [
+                { translateY: this.state.keyboardHeight }
+            ]
+        };
 
         return (
             <Animated.View style={[styles.parent, opacity]} pointerEvents={event}>
@@ -20,7 +25,7 @@ class ScreenInput extends ScreenInputBack {
                     onTouchStart={this.onPressIn}
                     onTouchEnd={this.onPressOut}
                 />
-                <View style={[styles.panel, bottom]}>
+                <Animated.View style={[styles.panel, animInput]}>
                     <Input
                         ref={this.refInput}
                         style={styles.input}
@@ -37,7 +42,7 @@ class ScreenInput extends ScreenInputBack {
                         icon='check'
                         onPress={this.onValid}
                     />
-                </View>
+                </Animated.View>
             </Animated.View>
         );
     }

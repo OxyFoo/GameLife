@@ -310,18 +310,18 @@ class Activities {
     }
 
     /**
-     * Add activity
-     * @param {Activity} newActivity Auto define timezone & addedTime if null
+     * Add activity, return status & Activity if added or edited successfully, null otherwise
+     * @param {Activity} newActivity Auto define timezone & addedTime if 0
      * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
-     * @returns {AddStatus}
+     * @returns {{ status: AddStatus, activity: Activity | null }}
      */
     Add(newActivity, alreadySaved = false) {
-        newActivity.timezone ??= GetTimeZone();
-        newActivity.addedTime ??= GetLocalTime();
+        newActivity.timezone ||= GetTimeZone();
+        newActivity.addedTime ||= GetLocalTime();
 
         // Limit date (< 2020-01-01)
         if (newActivity.startTime < 1577836800) {
-            return 'tooEarly';
+            return { status: 'tooEarly', activity: null };
         }
 
         // Check if not exist
@@ -336,7 +336,7 @@ class Activities {
         // Activity not exist, add it
         if (indexActivity === null && indexUnsaved === null) {
             if (!this.TimeIsFree(newActivity.startTime, newActivity.duration)) {
-                return 'notFree';
+                return { status: 'notFree', activity: null };
             }
             if (alreadySaved) {
                 this.activities.push(newActivity);
@@ -344,23 +344,23 @@ class Activities {
                 this.UNSAVED_activities.push(newActivity);
                 this.allActivities.Set(this.Get());
             }
-            return 'added';
+            return { status: 'added', activity: newActivity };
         }
 
         // Activity exist, update it
         else {
-            let activity = indexActivity !== null ? this.activities[indexActivity] : this.UNSAVED_activities[indexUnsaved];
+            const activity = indexActivity !== null ? this.activities[indexActivity] : this.UNSAVED_activities[indexUnsaved];
             if (activity.comment !== newActivity.comment) {
                 if (indexActivity !== null) this.activities.splice(indexActivity, 1);
                 if (indexUnsaved  !== null) this.UNSAVED_activities.splice(indexUnsaved, 1);
 
                 this.UNSAVED_activities.push(newActivity);
                 this.allActivities.Set(this.Get());
-                return 'edited';
+                return { status: 'edited', activity: newActivity };
             }
         }
 
-        return 'alreadyExist';
+        return { status: 'alreadyExist', activity: null };
     }
 
     /**

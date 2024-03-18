@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View, Image, StyleSheet } from 'react-native';
+import { Platform, Animated, View, Image, StyleSheet } from 'react-native';
 
 import { openPopupCode } from './popupGiftCode';
 import user from 'Managers/UserManager';
@@ -20,6 +20,9 @@ import { Text, Button } from 'Interface/Components';
  * @typedef {import('Interface/Components').Page} Page
  */
 
+// I hate Apple, RESPECT THE DEVELOPERS PLZZZ
+const ENABLE_GIFT_CODE = Platform.OS === 'android';
+
 const ShopHeaderPropTypes = {
     /** @type {Page | null} */
     refPage: null,
@@ -35,6 +38,9 @@ class ShopHeader extends React.Component {
 
         oxAmount: user.informations.ox.Get()
     }
+
+    /** @type {Symbol | null} */
+    oxListener = null;
 
     refTuto1 = null;
     refTuto2 = null;
@@ -74,7 +80,7 @@ class ShopHeader extends React.Component {
 
         // Check if the user is connected to the server and if the ad is loaded
         else if (!user.server.IsConnected() ||
-                !this.rewardedShop || !this.rewardedShop.ad.loaded) {
+                !this.rewardedShop || !this.rewardedShop.ad?.loaded) {
             const title = lang['alert-aderror-title'];
             const message = lang['alert-aderror-message'];
             user.interface.popup.Open('ok', [ title, message ]);
@@ -133,15 +139,17 @@ class ShopHeader extends React.Component {
         return (
             <Animated.View style={[styles.parent, parentStyle, style]}>
                 <View style={styles.content}>
-                    <Button.Badge
-                        ref={ref => this.refTuto1 = ref}
-                        style={styles.badge}
-                        icon='gift'
-                        onPress={openPopupCode}
-                        disabled={!user.server.IsConnected()}
-                    >
-                        <Text fontSize={16} color='main1'>{lang['button-header-code']}</Text>
-                    </Button.Badge>
+                    {ENABLE_GIFT_CODE && (
+                        <Button.Badge
+                            ref={ref => this.refTuto1 = ref}
+                            style={styles.badge}
+                            icon='gift'
+                            onPress={openPopupCode}
+                            disabled={!user.server.IsConnected()}
+                        >
+                            <Text fontSize={16} color='main1'>{lang['button-header-code']}</Text>
+                        </Button.Badge>
+                    )}
 
                     <Button.Badge
                         ref={ref => this.refTuto2 = ref}
@@ -189,7 +197,7 @@ const styles = StyleSheet.create({
     content: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: ENABLE_GIFT_CODE ? 'space-between' : 'space-evenly',
 
         marginHorizontal: 24
     },

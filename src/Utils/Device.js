@@ -1,3 +1,4 @@
+import { NativeModules, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 /**
@@ -33,4 +34,19 @@ function GetBattery() {
     return DeviceInfo.getBatteryLevelSync();
 }
 
-export { GetDeviceInformations, GetBattery };
+function GetLangRegionLocale() {
+    let langRegionLocale = 'fr_FR';
+
+    try {
+        // Are these variables still supported?
+        if (Platform.OS === 'android' && NativeModules.I18nManager.localeIdentifier) {
+            langRegionLocale = NativeModules.I18nManager.localeIdentifier;
+        } else if (Platform.OS === 'ios' && NativeModules.SettingsManager.settings.AppleLocale) {
+            langRegionLocale = NativeModules.SettingsManager.settings.AppleLocale;
+        }
+    } catch (e) {}
+
+    return langRegionLocale.split('_')[0];
+}
+
+export { GetDeviceInformations, GetBattery, GetLangRegionLocale };

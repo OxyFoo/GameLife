@@ -318,7 +318,7 @@ class Commands {
     }
 
     /**
-     * Retrieves user data (activities, nickname, successes, etc)
+     * Retrieves user data (activities, username, inventories, etc)
      */
     public function GetUserData() {
         if ($this->tokenChecked === false) return;
@@ -367,6 +367,23 @@ class Commands {
             );
             $userData['dataToken'] = $dbDataToken;
         }
+
+        $this->output['data'] = $userData;
+        $this->output['status'] = 'ok';
+    }
+
+    public function GetUserIntentories() {
+        if (!$this->tokenChecked) return;
+        $account = $this->account;
+
+        $userData = array(
+            'achievements' => Achievements::Get($this->db, $account),
+            'inventory' => array(
+                'stuffs' => Items::GetInventory($this->db, $account),
+                'titles' => Items::GetInventoryTitles($this->db, $account)
+            ),
+            'ox' => $account->Ox
+        );
 
         $this->output['data'] = $userData;
         $this->output['status'] = 'ok';

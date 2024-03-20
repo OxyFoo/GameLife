@@ -78,16 +78,31 @@ class News extends BackNews {
 
     /** @type {ListRenderItemMyQuest} */
     renderMyQuestElement = ({ item: quest }) => {
+        const langTimes = langManager.curr['dates']['names'];
         const questsDays = user.quests.myquests.GetDays(quest);
         const currentDay = (new Date().getDay() - 1 + 7) % 7;
+        const currentStreak =  user.quests.myquests.GetStreak(quest);
         const item = questsDays[currentDay];
         const onPress = () => {
             user.interface.ChangePage('activity', { skills: quest.skills }, true);
         };
 
+        const timeHour = Math.floor(quest.schedule.duration / 60);
+        const timeMinute = quest.schedule.duration % 60;
+        let titleText = `${quest.title.length > 10 ? quest.title.slice(0, 12) + '...' : quest.title}`;
+        if (timeHour > 0 || timeMinute > 0) {
+            titleText += ` -`;
+            if (timeHour > 0) {
+                titleText += ` ${timeHour}${langTimes['hours-min']}`;
+            }
+            if (timeMinute > 0) {
+                titleText += ` ${timeMinute}${langTimes['minutes-min']}`;
+            }
+        }
+
         return (
             <Button style={styles.mqItem} onPress={onPress}>
-                <Text>{quest.title}</Text>
+                <Text>{titleText}</Text>
                 <View style={styles.headerStreak}>
                     <DayClock
                         style={styles.mqDayClock}
@@ -97,7 +112,7 @@ class News extends BackNews {
                         fillingValue={item.fillingValue}
                     />
                     <Text style={styles.streak}>
-                        {quest.maximumStreak.toString()}
+                        {currentStreak.toString()}
                     </Text>
                     <Icon icon='flame' />
                 </View>
@@ -132,7 +147,7 @@ class News extends BackNews {
                         style={styles.nzdTitle}
                         onPress={this.goToQuestsPage}
                     >
-                        {lang['container-title'] + (claimDate !== null && ' - ' + claimDate)}
+                        {lang['container-title'] + (claimDate !== null ? (' - ' + claimDate) : '')}
                     </Text>
 
                     {/* Claim icon */}

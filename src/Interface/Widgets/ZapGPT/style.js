@@ -1,26 +1,18 @@
-import { Dimensions, StyleSheet } from 'react-native';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     panel: {
-        paddingTop: 12
-    },
-    globalCounter: {
-        position: 'absolute',
-        top: -6 - 26,
-        left: 8
+        paddingBottom: 12
     },
 
     // Page 1 - Ask activities to ZapGPT
     title: {
-        marginBottom: 12,
+        marginTop: 6,
+        marginBottom: 6,
         paddingHorizontal: 24
     },
     texts: {
-        marginBottom: 18,
-        paddingLeft: 24,
-        paddingRight: 12
+        marginBottom: 18
     },
     text: {
         marginBottom: 6,
@@ -38,22 +30,15 @@ const styles = StyleSheet.create({
         marginBottom: 24,
         paddingHorizontal: 24
     },
-    buttonClose: {
-        width: '35%',
-        borderRadius: 8
-    },
     buttonAsk: {
         flex: 1,
-        marginLeft: 12,
         borderRadius: 8
     },
     noRemaining: {
         alignItems: 'center',
         paddingTop: 12,
         marginBottom: 24,
-        marginHorizontal: 12,
-        borderTopWidth: 1,
-        borderTopColor: '#ffffff'
+        marginHorizontal: 12
     },
     noRemainingText: {
         textAlign: 'center',
@@ -67,17 +52,35 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     noRemainingZap: {
-        width: 48,
-        height: 48,
+        width: 86,
+        height: 86,
         transform: [
-            { scale: 1.8 },
             { scaleX: -1 }
         ]
     },
 
+    notBuyed: {
+        width: '100%',
+        marginTop: 12,
+        marginBottom: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    notBuyedText1: {
+        marginTop: 6,
+        marginBottom: 6
+    },
+    notBuyedText2Container: {
+        flex: 1
+    },
+    notBuyedText2: {
+        textAlign: 'justify',
+        verticalAlign: 'middle'
+    },
+
     // Page 2 - Select & validate activities
     flatlistView: {
-        maxHeight: Math.min(400, SCREEN_HEIGHT * .8 - 158),
         marginBottom: 12
     },
     separator: {

@@ -1,5 +1,6 @@
 import fr from '../../res/langs/fr.json';
 import en from '../../res/langs/en.json';
+import { GetLangRegionLocale } from 'Utils/Device';
 
 const LANGAGES = {
     'fr': fr,
@@ -11,15 +12,17 @@ const LANGAGES = {
  * @typedef {typeof LANGAGES[LangKey]} Lang
  */
 
+const INITIAL_LANG = GetLangRegionLocale() === 'en' ? 'en' : 'fr';
+
 /** @type {LangKey} */
 const DEFAULT_LANG = 'fr';
 
 class LangManager {
     /** @type {LangKey} */
-    currentLangageKey = 'fr';
+    currentLangageKey = INITIAL_LANG;
 
     /** @type {Lang} */
-    curr = LANGAGES['fr'];
+    curr = LANGAGES[INITIAL_LANG];
 
     GetAllLangs() {
         return LANGAGES;

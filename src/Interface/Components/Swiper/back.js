@@ -19,6 +19,9 @@ const SwiperProps = {
     /** @type {StyleProp} */
     style: {},
 
+    /** @type {"flex-start" | "flex-end" | "center"} */
+    verticalAlign: 'center',
+
     /** @type {number | string} If undefined, height equals to max height of pages content */
     height: undefined,
 

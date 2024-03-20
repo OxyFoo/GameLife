@@ -21,7 +21,9 @@ class Leaderboard extends BackLeaderboard {
                 <PageHeader style={styles.header} onBackPress={this.Back} />
 
                 <View style={styles.myRankContainer}>
-                    <RankElement item={selfData} />
+                    {selfData !== null && (
+                        <RankElement item={selfData} />
+                    )}
                 </View>
 
                 <View style={[styles.filter, styles.row]}>

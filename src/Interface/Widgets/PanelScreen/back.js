@@ -10,10 +10,12 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * 
+ * @typedef {import('Interface/Components/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
  */
 
 const PanelScreenProps = {
-    /** @type {Array<JSX.Element>} */
+    /** @type {Array<React.JSX.Element | false | null> | null} */
     children: null,
 
     /** @type {StyleProp} */
@@ -35,6 +37,7 @@ const PanelScreenProps = {
 class PanelScreenBack extends React.Component {
     state = {
         opened: false,
+        height: 0,
         positionY: new Animated.Value(user.interface.screenHeight),
 
         anim: new Animated.Value(0)
@@ -42,9 +45,6 @@ class PanelScreenBack extends React.Component {
 
     /** @type {number} Top distance of the panel when it's opened */
     posY = user.interface.screenHeight;
-
-    /** @type {number} Max height of panel */
-    height = 0;
 
     /** @type {boolean} Disable panel moving */
     scrollEnabled = true;
@@ -74,20 +74,22 @@ class PanelScreenBack extends React.Component {
     EnableScroll = () => this.scrollEnabled = true;
     DisableScroll = () => this.scrollEnabled = false;
     GotoY = (y) => {
+        const { height } = this.state;
         this.posY = Math.min(y, this.props.topOffset);
-        this.posY = Math.max(this.posY, user.interface.screenHeight - this.height);
+        this.posY = Math.max(this.posY, user.interface.screenHeight - height);
         SpringAnimation(this.state.positionY, this.posY).start();
     }
     RefreshPosition = () => {
+        const { height } = this.state;
         this.posY = Math.min(this.posY, this.props.topOffset);
-        this.posY = Math.max(this.posY, user.interface.screenHeight - this.height);
+        this.posY = Math.max(this.posY, user.interface.screenHeight - height);
         this.GotoY(this.posY);
     }
 
     /** @param {LayoutChangeEvent} event */
     onLayoutPanel = (event) => {
         const { height } = event.nativeEvent.layout;
-        this.height = height;
+        this.setState({ height });
     }
 
     /** @param {GestureResponderEvent} event */
@@ -121,7 +123,7 @@ class PanelScreenBack extends React.Component {
         this.posY -= deltaY;
 
         // Overscroll, smooth animation
-        const maxTop = user.interface.screenHeight - this.height;
+        const maxTop = user.interface.screenHeight - this.state.height;
         if (this.posY < maxTop) {
             this.posY = maxTop - (maxTop - this.posY) / 8;
         }
@@ -139,7 +141,7 @@ class PanelScreenBack extends React.Component {
 
         const posY = this.posY;
         this.posY -= this.accY * .25;
-        this.posY = Math.max(this.posY, user.interface.screenHeight - this.height);
+        this.posY = Math.max(this.posY, user.interface.screenHeight - this.state.height);
 
         if (posY > topOffset && this.accY < -2000 ||
             posY > topOffset + backOffset)
@@ -154,6 +156,18 @@ class PanelScreenBack extends React.Component {
         }
 
         SpringAnimation(positionY, this.posY).start();
+    }
+
+    /** @type {KeyboardChangeStateEvent} */
+    onKeyboardChangeState = (state, height) => {
+        if (state === 'opened') {
+            // Wait layout on first keyboard opening
+            setTimeout(() => {
+                this.GotoY(this.posY - height);
+            }, 100);
+        } else if (state === 'closed') {
+            this.GotoY(this.posY + height);
+        }
     }
 }
 

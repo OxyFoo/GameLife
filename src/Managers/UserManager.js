@@ -34,6 +34,10 @@ const DEBUG_DATA = false;
 
 class UserManager {
     constructor() {
+        /**
+         * @readonly
+         * @type {Array<keyof Stats>}
+         */
         this.statsKey = [ 'int', 'soc', 'for', 'sta', 'agi', 'dex' ];
 
         this.achievements = new Achievements(this);
@@ -52,22 +56,21 @@ class UserManager {
         this.tcp = new TCP(this);
         this.todoes = new Todoes(this);
 
+        /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
     }
 
     /**
      * @description Ref loaded here from render of App.js to skip cyclic dependency
-     * @type {PageManager | null}
+     * @type {PageManager}
      */
+    // @ts-ignore Because "interface" is necessarily defined, without it nothing works in all cases
     interface = null;
 
     /** @type {Character | null} */
     character = null;
 
     xp = 0;
-
-    /** @type {Stats | null} */
-    stats = null;
 
     appIsLoaded = false;
 
@@ -307,30 +310,38 @@ class UserManager {
         return saved;
     }
 
-    async OnlineLoad(force = false) {
+    /** @param {'normal' | 'force' | 'inventories'} [type] */
+    async OnlineLoad(type = 'normal') {
         if (!this.server.IsConnected()) return false;
         const debugIndex = this.interface.console.AddLog('info', 'User data: online loading...');
-        const data = await this.server.LoadUserData(force);
-        const contains = (key) => data.hasOwnProperty(key);
+
+        let data = null;
+        if (type === 'normal' || type === 'force') {
+            data = await this.server.LoadUserData(type === 'force');
+        } else if (type === 'inventories') {
+            data = await this.server.LoadUserInventories();
+        }
+
         if (DEBUG_DATA) console.log('User data online load:', data);
 
         if (data !== null) {
-            if (contains('username')) this.informations.username.Set(data['username']);
-            if (contains('usernameTime')) this.informations.usernameTime = data['usernameTime'];
-            if (contains('title')) this.informations.title.Set(data['title']);
-            if (contains('birthtime')) this.informations.birthTime = data['birthtime'];
-            if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
-            if (contains('ox')) this.informations.ox.Set(parseInt(data['ox']));
-            if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
+            const contains = (/** @type {string} */ key) => data.hasOwnProperty(key);
+            if (contains('username'))       this.informations.username.Set(data['username']);
+            if (contains('usernameTime'))   this.informations.usernameTime = data['usernameTime'];
+            if (contains('title'))          this.informations.title.Set(data['title']);
+            if (contains('birthtime'))      this.informations.birthTime = data['birthtime'];
+            if (contains('lastbirthtime'))  this.informations.lastBirthTime = data['lastbirthtime'];
+            if (contains('ox'))             this.informations.ox.Set(parseInt(data['ox']));
+            if (contains('adRemaining'))    this.informations.adRemaining = data['adRemaining'];
             if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
             if (contains('purchasedCount')) this.informations.purchasedCount = data['purchasedCount'];
-            if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
-            if (contains('missions')) this.missions.LoadOnline(data['missions']);
-            if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
-            if (contains('activities')) this.activities.LoadOnline(data['activities']);
-            if (contains('quests')) this.quests.LoadOnline(data['quests']);
-            if (contains('shop')) this.shop.LoadOnline(data['shop']);
-            if (contains('todoes')) this.todoes.LoadOnline(data['todoes']);
+            if (contains('inventory'))      this.inventory.LoadOnline(data['inventory']);
+            if (contains('missions'))       this.missions.LoadOnline(data['missions']);
+            if (contains('achievements'))   this.achievements.LoadOnline(data['achievements']);
+            if (contains('activities'))     this.activities.LoadOnline(data['activities']);
+            if (contains('quests'))         this.quests.LoadOnline(data['quests']);
+            if (contains('shop'))           this.shop.LoadOnline(data['shop']);
+            if (contains('todoes'))         this.todoes.LoadOnline(data['todoes']);
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

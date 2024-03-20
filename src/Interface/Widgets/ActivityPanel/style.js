@@ -28,11 +28,24 @@ const styles = StyleSheet.create({
         right: 0
     },
 
-    buttonNow: {
+    addActivity: {
         position: 'absolute',
         top: 0,
         right: 0,
+        left: 0
+    },
+    buttonNow: {
+        position: 'absolute',
+        top: 0,
         left: 0,
+        right: 0,
+        marginBottom: 24
+    },
+    zapGPT: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
         marginBottom: 24
     },
 

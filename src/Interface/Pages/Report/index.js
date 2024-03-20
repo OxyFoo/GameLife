@@ -4,6 +4,7 @@ import { View, FlatList } from 'react-native';
 import styles from './style';
 import StartHelp from './help';
 import BackReport from './back';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { PageHeader } from 'Interface/Widgets';
@@ -11,6 +12,7 @@ import { Page, Text, ComboBox, Input, Button, Digit } from 'Interface/Components
 
 class Report extends BackReport {
     renderActivity = () => {
+        const langStats = langManager.curr['statistics']['names-min'];
         const lang = langManager.curr['report'];
         const text = lang['type-activity-text'];
         const text_remain = lang['type-activity-remain'] + this.state.remain;
@@ -40,10 +42,10 @@ class Report extends BackReport {
                         <Text fontSize={18}>{text_remain}</Text>
                         <FlatList
                             keyExtractor={(item, i) => 'report-stat-' + i}
-                            data={Object.keys(this.stats)}
+                            data={user.statsKey}
                             renderItem={({ item }) => (
                                 <View style={styles.rowDigit}>
-                                    <Text>{item}</Text>
+                                    <Text>{langStats[item]}</Text>
                                     <Digit
                                         name={item}
                                         minDigitWidth={14}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 
 import { Sleep } from 'Utils/Functions';
-import { TimingAnimation } from 'Utils/Animations';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -29,8 +29,8 @@ class PopupBack extends React.PureComponent {
         callback: (type) => {},
         cancelable: true,
         cross: true,
-        x: 0, y: 0,
 
+        animQuitPos: new Animated.ValueXY({ x: 0, y: 0 }),
         animOpacity: new Animated.Value(0),
         animScale: new Animated.Value(.9)
     }
@@ -38,7 +38,7 @@ class PopupBack extends React.PureComponent {
     /** @param {LayoutChangeEvent} e */
     onLayout = (e) => {
         const { x, y, } = e.nativeEvent.layout;
-        this.setState({ x: x, y: y });
+        SpringAnimation(this.state.animQuitPos, { x, y }).start();
     }
 
     /**

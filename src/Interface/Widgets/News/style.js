@@ -3,22 +3,21 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     // News render
     new: {
-        padding: '5%',
+        padding: 12,
+        paddingBottom: 24,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    separator: {
-        width: 0,
-        height: '100%',
-        marginHorizontal: 12
-    },
     newInteraction: {
         flex: 1
     },
     newButton: {
-        height: 48,
+        minWidth: 72,
+        height: 'auto',
+        marginTop: 8,
+        paddingVertical: 12,
         paddingHorizontal: 12
     },
     newText: {

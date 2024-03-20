@@ -5,15 +5,17 @@ import styles from './style';
 import PanelScreenBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
+import { KeyboardSpacerView } from 'Interface/Components';
+
 class PanelScreen extends PanelScreenBack {
     render() {
-        const { opened, anim } = this.state;
+        const { opened, anim, height } = this.state;
         const { containerStyle, disableBackground } = this.props;
 
         const opacity = { opacity: anim };
         const event = opened ? 'box-none' : 'none';
         const stylePanel = {
-            minHeight: this.height,
+            minHeight: height,
             transform: [{ translateY: this.state.positionY }],
             backgroundColor: themeManager.GetColor('backgroundCard')
         };
@@ -43,6 +45,7 @@ class PanelScreen extends PanelScreenBack {
                     onLayout={this.onLayoutPanel}
                 >
                     {this.props.children}
+                    <KeyboardSpacerView onChangeState={this.onKeyboardChangeState} />
                 </Animated.View>
             </Animated.View>
         );

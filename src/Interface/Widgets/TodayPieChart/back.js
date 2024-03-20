@@ -246,6 +246,10 @@ class TodayPieChartBack extends React.Component {
         this.setState({ switched: !this.state.switched });
     }
 
+    onAddActivityPress = () => {
+        user.interface.ChangePage('activity', undefined, true);
+    }
+
     onLayout = (event) => {
         this.setState({ layoutWidth: event.nativeEvent.layout.width });
     }

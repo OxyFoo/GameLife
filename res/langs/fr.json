@@ -290,8 +290,9 @@
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
-        "swiper-already": "Déjà prévue",
+        "swiper-already": "Ajouter",
         "swiper-now": "Commencer maintenant",
+        "swiper-gpt": "ZapGPT",
         "btn-start": "Commencer",
         "btn-add": "Ajouter",
         "btn-remove": "Supprimer",
@@ -326,7 +327,6 @@
         "display-fail-button": "Retour vers l'accueil",
 
         "activity-zap-comment": "Ajouté par Zap",
-        "activity-zap-hint": "Je peux rapidement ajouter plusieurs activités à la fois",
 
         "tuto": {
             "1": "Tu peux filtrer les activités par catégorie: {}",
@@ -354,12 +354,13 @@
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
 
-        "chart-today-recap": "Récap du jour",
+        "chart-today-recap": "Activités sur 24h",
         "chart-today-performance": "Performances du jour",
-        "chart-today-notmuch": "Il n'y a pas assez de données pour afficher le graphique",
+        "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher les graphiques",
+        "chart-today-notmuch-button": "Ajouter",
         "chart-total-text": "Total",
 
-        "news-myquests-title": "Mes quêtes à faire",
+        "news-myquests-title": "Quêtes à faire",
 
         "container-stats-title": "Stats",
         "container-skills-title": "Compétences",
@@ -372,7 +373,7 @@
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
-        "alert-newversion-text": "Tu es sur une version non disponible au grand public, les fonctionnalités en ligne sont désactivés jusqu’à la publication officielle",
+        "alert-newversion-text": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Veux-tu vraiment quitter l'application ?",
         "alert-dateerror-title": "Attention",
@@ -381,6 +382,7 @@
 
     "leaderboard": {
         "label-activities": "Activitiés",
+        "label-activities-small": "Actis",
         "input-label-search": "Rechercher un joueur"
     },
 
@@ -532,6 +534,7 @@
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
 
+        "container-stats-title": "Statistiques",
         "container-achievements-title": "Derniers succès",
 
         "button-cancel": "Annuler la demande d'ami",
@@ -730,7 +733,6 @@
         "stats-title": "Statistiques",
         "history-title": "Historique",
         "activity-history": "Historique d'activité",
-        "text-history": "{} pendant {} minutes",
         "text-add": "Ajouter l'activité"
     },
 
@@ -993,14 +995,25 @@
         "instructions": [
             "- Descriptions le plus clair et simple possible",
             "- Bien préciser les activitiés, leurs dates et heures de commencements et leurs durées",
-            "- Exemple: J'ai fais du basket lundi, mercredi et vendredi de 18h à 20h"
+            "- Exemple: J'ai fais du basket lundi 11, mercredi et vendredi de 18h à 20h"
         ],
 
-        "remaining-text": "Restantes:",
         "input-label": "Requête à Zap",
-        "no-remaining": "Tu as atteint la limite, pour en ajouter plus reviens demain",
+        "remaining-text": "Restantes",
+
+        "no-remaining-title": "Limite atteinte",
+        "no-remaining-text": "Tu as atteint la limite, pour en ajouter plus reviens demain",
+
+        "not-buyed-text1": "Tu n'as pas débloqué l'accès à ZapGPT !\n\nZapGPT est un outil qui te permet d'ajouter plusieurs activités à la fois grâce à une courte description.",
+        "not-buyed-text2": "Pour le débloquer, achète n'importe quel pack d'Ox dans la boutique.",
+        "not-buyed-button": "Aller à la boutique",
+
+        "not-connected-title": "ZapGPT n'est pas là",
+        "not-connected-text": "L'application n'a pas pu se connecter à ZapGPT, vérifie ta connexion internet ou réessaye plus tard.",
 
         "added-message": "{} activité[s] a[-ont] été ajoutée[s]",
+        "no-activities-title": "Erreur",
+        "no-activities-text": "Aucune activité n'a pu être ajoutée, elles chevauchent des activités déjà existantes ou sont mal formées.",
 
         "errors": {
             "tcp-not-connected": "La connexion au serveur a échouée",

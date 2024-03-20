@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { Animated, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 
 import StartTutorial from './tuto';
 import StartMission from './mission';
@@ -10,11 +9,9 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { PageBase } from 'Interface/Components';
-import { ZapGPT } from 'Interface/Widgets';
 import { Sleep } from 'Utils/Functions';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
-import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -43,13 +40,7 @@ class BackActivity extends PageBase {
         skillSearch: '',
 
         /** @type {string} Header of input - Name of category */
-        inputText: '',
-
-        tcpState: user.tcp.state.Get(),
-        /** @type {Animated.Value} 0 = closed, 1 = opened */
-        animZapGPTMessage: new Animated.Value(0),
-        /** @type {Animated.Value} 0 = opened, 1 = closed */
-        animZapGPTOpened: new Animated.Value(1)
+        inputText: ''
     }
 
     refTuto1 = null;
@@ -184,44 +175,11 @@ class BackActivity extends PageBase {
 
             this.refActivityPanel?.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
         }
-
-        // Show ZapGPT if connected and puchased & show message if not readed
-        if (user.tcp.IsConnected() && user.informations.purchasedCount > 0) {
-            // Show ZapGPT
-            SpringAnimation(this.state.animZapGPTOpened, 0).start();
-
-            // Show message
-            if (user.settings.zapGPTMessageReaded === false) {
-                this.timeoutShowZapGPTMessage = setTimeout(() => {
-                    SpringAnimation(this.state.animZapGPTMessage, 1).start();
-                }, 2000);
-                // Hide message after 10 seconds
-                this.timeoutHideZapGPTMessage = setTimeout(() => {
-                    SpringAnimation(this.state.animZapGPTMessage, 0).start();
-                }, 10000);
-            }
-        }
-
-        // Show or hide ZapGPT if tcp state change
-        this.listenerTCP = user.tcp.state.AddListener((state) => {
-            this.setState({ tcpState: state });
-            if (state === 'connected' && user.informations.purchasedCount > 0) {
-                SpringAnimation(this.state.animZapGPTOpened, 0).start();
-            } else {
-                SpringAnimation(this.state.animZapGPTOpened, 1).start();
-            }
-        });
     }
 
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);
         StartMission.call(this, args?.missionName);
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.timeoutShowZapGPTMessage);
-        clearTimeout(this.timeoutHideZapGPTMessage);
-        user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -306,25 +264,6 @@ class BackActivity extends PageBase {
     selectSkill = (skill) => {
         StartMission.call(this, this.props.args?.missionName, true);
         this.refActivityPanel?.SelectSkill(skill);
-    }
-
-    PromptZapGPT = () => {
-        if (user.tcp.IsConnected() === false) {
-            return;
-        }
-
-        if (user.settings.zapGPTMessageReaded === false) {
-            clearTimeout(this.timeoutShowZapGPTMessage);
-            clearTimeout(this.timeoutHideZapGPTMessage);
-            SpringAnimation(this.state.animZapGPTMessage, 0).start();
-            user.settings.zapGPTMessageReaded = true;
-            user.LocalSave();
-        }
-
-        SpringAnimation(this.state.animZapGPTOpened, 1).start();
-        user.interface.popup.Open('custom', () => <ZapGPT />, () => {
-            SpringAnimation(this.state.animZapGPTOpened, 0).start();
-        }, false);
     }
 }
 

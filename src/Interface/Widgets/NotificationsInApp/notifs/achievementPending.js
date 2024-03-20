@@ -16,24 +16,27 @@ import { Button, Text } from 'Interface/Components';
  * @param {object} props
  * @param {NotificationInApp} props.notif
  * @param {number} props.index
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element | null}
  */
 function NIA_AchievementPending({ notif, index }) {
     const lang = langManager.curr['notifications']['in-app'];
     const [ loading, setLoading ] = React.useState(false);
 
     const achievement = dataManager.achievements.GetByID(notif.data.achievementID);
+    if (achievement === null) {
+        return null;
+    }
+
     const achievementTitle = langManager.GetText(achievement.Name);
 
     const claimHandle = async () => {
         const lang = langManager.curr['achievements'];
         setLoading(true);
-        user.interface.notificationsInApp.Close();
         const text = await user.achievements.Claim(notif.data.achievementID);
         setLoading(false);
 
         if (text === null) {
-            return;
+            return null;
         }
 
         if (text === false) {
@@ -41,7 +44,7 @@ function NIA_AchievementPending({ notif, index }) {
             const text = lang['alert-achievement-error-text'];
             user.interface.notificationsInApp.Close();
             user.interface.popup.Open('ok', [ title, text ]);
-            return;
+            return null;
         }
 
         const title = lang['alert-achievement-title'];

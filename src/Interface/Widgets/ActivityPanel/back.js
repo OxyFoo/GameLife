@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Animated } from 'react-native';
+import { View, Animated, Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -17,6 +17,7 @@ import { AddActivity, RemActivity, TIME_STEP_MINUTES } from 'Utils/Activities';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
+ * @typedef {'schedule' | 'now' | 'zap-gpt'} StartModes
  * @typedef {{ id: number, name: string, icon: string }} ItemCategory
  * @typedef {{ id: number, value: string, categoryID: number, onPress: () => void }} ItemSkill
  * 
@@ -25,6 +26,9 @@ import { AddActivity, RemActivity, TIME_STEP_MINUTES } from 'Utils/Activities';
  * @typedef {import('Interface/Widgets').PanelScreen} PanelScreen
  * @typedef {import('Interface/Widgets/ActivitySchedule').default} ActivitySchedule
  */
+
+/** @type {Array<StartModes>} */
+const START_MODES = ['schedule', 'now', 'zap-gpt'];
 
 const ActivityPanelProps = {
     /** @type {StyleProp} */
@@ -45,11 +49,11 @@ class ActivityPanelBack extends React.Component {
         /** @type {string} */
         activityText: langManager.curr['activity']['title-activity'],
 
-        /** @type {'schedule' | 'now'} */
+        /** @type {StartModes} */
         startMode: 'schedule',
 
         /** @type {Animated.Value} */
-        animButtonNow: new Animated.Value(0),
+        animState: new Animated.Value(0),
 
         /** @type {'activity' | 'skill'} */
         mode: 'activity',
@@ -64,7 +68,11 @@ class ActivityPanelBack extends React.Component {
             addedType: 'normal',
             addedTime: 0,
             friends: []
-        }
+        },
+
+        layoutHeight1: 0,
+        layoutHeight2: 0,
+        layoutHeight3: 0
     };
 
     /** @type {Activity | null} */
@@ -175,6 +183,25 @@ class ActivityPanelBack extends React.Component {
         return false;
     }
 
+    /** @param {LayoutChangeEvent} event */
+    onLayout1 = (event) => {
+        this.setState({ layoutHeight1: event.nativeEvent.layout.height });
+    }
+
+    /** @param {LayoutChangeEvent} event */
+    onLayout2 = (event) => {
+        this.setState({ layoutHeight2: event.nativeEvent.layout.height });
+    }
+
+    /** @param {LayoutChangeEvent} event */
+    onLayout3 = (event) => {
+        this.setState({ layoutHeight3: event.nativeEvent.layout.height });
+    }
+
+    ScrollToTop = () => {
+        this.refPanelScreen.GotoY(this.props.topOffset);
+    }
+
     onOpenSkill = async () => {
         const { selectedSkillID } = this.state;
         const { selectedPage } = user.interface.state;
@@ -186,10 +213,11 @@ class ActivityPanelBack extends React.Component {
         }
     }
 
+    /** @param {number} index */
     onChangeMode = (index) => {
-        const modes = ['schedule', 'now'];
-        this.setState({ startMode: modes[index] });
-        SpringAnimation(this.state.animButtonNow, index).start();
+        this.setState({ startMode: START_MODES[index] });
+        SpringAnimation(this.state.animState, index).start();
+        Keyboard.dismiss();
     }
 
     SetChangeSchedule(startTime, duration) {
@@ -275,4 +303,5 @@ class ActivityPanelBack extends React.Component {
 ActivityPanelBack.prototype.props = ActivityPanelProps;
 ActivityPanelBack.defaultProps = ActivityPanelProps;
 
+export { START_MODES };
 export default ActivityPanelBack;

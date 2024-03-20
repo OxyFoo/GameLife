@@ -50,7 +50,7 @@ class Todo extends BackTodo {
                     onChange={this.onEditTodo}
                 />
 
-                <KeyboardSpacerView />
+                <KeyboardSpacerView onChangeState={this.onKeyboardChangeState} />
             </Page>
         );
     }

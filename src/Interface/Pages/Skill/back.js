@@ -5,7 +5,7 @@ import dataManager from 'Managers/DataManager';
 
 import { GetDate } from 'Utils/Time';
 import { Round } from 'Utils/Functions';
-import { DateToFormatString } from 'Utils/Date';
+import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
 
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
@@ -22,30 +22,58 @@ class BackSkill extends PageBase {
     /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 
+    /** @type {Array<HistoryActivity>} */
+    history = [];
+
+    skill = {
+        ID: 0,
+        name: '',
+        category: '',
+        level: langManager.curr['level']['level'] + ' 1',
+        totalFloatXp: 0,
+        xp: 0,
+        next: 1,
+        creator: '',
+        stats: user.statsKey.map(() => 0),
+        xml: '',
+        enabled: true,
+        totalDuration: 0
+    };
+
     constructor(props) {
         super(props);
 
         // Property error handling
         if (typeof(props.args) === 'undefined' || !props.args.hasOwnProperty('skillID')) {
-            user.interface.BackHandle();
             return;
         }
 
         // Get skill
-        this.skillID = props.args['skillID'];
-        const skill = dataManager.skills.GetByID(this.skillID);
+        const skillID = props.args['skillID'];
+        const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) {
-            user.interface.BackHandle();
+            user.interface.console.AddLog('error', 'Skill not found for skillID: ' + skillID);
             return;
         }
 
         // Skill data
-        const skillXP = user.experience.GetSkillExperience(this.skillID);
+        const skillXP = user.experience.GetSkillExperience(skillID);
+        if (skillXP === null) {
+            user.interface.console.AddLog('error', 'SkillXP not found for skillID: ' + skillID);
+            return;
+        }
+
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
+        if (category === null) {
+            user.interface.console.AddLog('error', 'Category not found for skillID: ' + skillID);
+            return;
+        }
+
         const authorText = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
-        const totalDuration = this.getTotalDurationFromSkillID(this.skillID);
+        const totalDuration = this.getTotalDurationFromSkillID(skillID);
 
         this.skill = {
+            ID: skillID,
             name: langManager.GetText(skill.Name),
             category: langManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
@@ -59,21 +87,33 @@ class BackSkill extends PageBase {
             totalDuration: totalDuration
         };
 
-        /** @type {Array<HistoryActivity>} */
-        this.history = [];
         this.__updateHIstory();
     }
 
+    componentDidMount() {
+        if (this.skill.ID === 0) {
+            // TODO: Clean instant back handle
+            this.timeout = setTimeout(() => {
+                user.interface.BackHandle();
+            }, 100);
+        }
+    }
+
     __updateHIstory = () => {
-        const userActivities = user.activities.GetBySkillID(this.skillID);
+        const langDateName = langManager.curr['dates']['names'];
+
+        if (this.skill.ID === 0) return;
+        const userActivities = user.activities.GetBySkillID(this.skill.ID);
 
         this.history = [];
         for (const activity of userActivities.reverse()) {
             // Format title with date and duration
-            const date = DateToFormatString(GetDate(activity.startTime));
-            const text = langManager.curr['skill']['text-history'];
-            const duration = activity.duration;
-            const title = text.replace('{}', date).replace('{}', duration.toString());
+            const date = GetDate(activity.startTime);
+            const dateStr = DateToFormatString(date);
+            const start = DateToFormatTimeString(date);
+            const durationH = Math.floor(activity.duration / 60);
+            const durationM = activity.duration % 60;
+            const title = `${dateStr}\n${start} - ${durationH}${langDateName['hours-min']} ${durationM}${langDateName['minutes-min']}`;
 
             // On press function
             const onPress = () => {
@@ -87,11 +127,7 @@ class BackSkill extends PageBase {
                 });
             }
 
-            this.history.push({
-                activity: activity,
-                title: title,
-                onPress: onPress
-            });
+            this.history.push({ activity, title, onPress });
         };
     }
 
@@ -106,7 +142,7 @@ class BackSkill extends PageBase {
     }
 
     addActivity = () => {
-        const { skillID } = this;
+        const skillID = this.skill.ID;
         user.interface.ChangePage('activity', { skillID }, true);
     }
 }

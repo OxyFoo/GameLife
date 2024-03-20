@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 
 import BackSettings from './back';
 import user from 'Managers/UserManager';
@@ -65,7 +65,12 @@ class Settings extends BackSettings {
                 </View>
 
                 <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
-                <Button style={styles.margin} onPress={this.openConsentPopup} color='main2' loading={waitingConsentPopup}>{lang['input-consent']}</Button>
+
+                {/** TODO: Force consent popup on iOS */}
+                {Platform.OS === 'android' && (
+                    <Button style={styles.margin} onPress={this.openConsentPopup} color='main2' loading={waitingConsentPopup}>{lang['input-consent']}</Button>
+                )}
+
                 <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
                 <Button style={styles.margin} onPress={this.disconnectAll} color='main2' loading={devicesLoading}>{lang['input-disconnect-all']}</Button>
                 {user.server.IsConnected() && this.state.serverTCPState !== 'connected' && this.state.serverTCPState !== 'idle' && (

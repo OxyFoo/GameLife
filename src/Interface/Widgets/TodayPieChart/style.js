@@ -24,8 +24,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     notEnoughData: {
-        marginTop: 8,
+        width: '100%'
+    },
+    notEnoughDataText: {
         fontSize: 16
+    },
+    notEnoughDataButton: {
+        height: 'auto',
+        marginVertical: 12,
+        marginHorizontal: 24,
+        paddingVertical: 12
     }
 });
 

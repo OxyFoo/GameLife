@@ -13,7 +13,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  */
 
 const PageProps = {
-    /** @type {Array<JSX.Element> | JSX.Element | null} */
+    /** @type {Array<React.JSX.Element | false | null> | React.JSX.Element | null} */
     children: null,
 
     /** @type {StyleProp} */
@@ -34,16 +34,16 @@ const PageProps = {
     /** @type {number} */
     bottomOffset: 0,
 
-    /** @type {JSX.Element} */
+    /** @type {React.JSX.Element | false | null} */
     overlay: null,
 
-    /** @type {JSX.Element} */
+    /** @type {React.JSX.Element | false | null} */
     topOverlay: null,
 
     /** @type {number} */
     topOverlayHeight: 64,
 
-    /** @type {JSX.Element} */
+    /** @type {React.JSX.Element | false | null} */
     footer: null,
 
     /** @param {LayoutChangeEvent} event */

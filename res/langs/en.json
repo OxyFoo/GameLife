@@ -290,8 +290,9 @@
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",
-        "swiper-already": "Already planned",
+        "swiper-already": "Add",
         "swiper-now": "Start now",
+        "swiper-gpt": "ZapGPT",
         "btn-start": "Start",
         "btn-add": "Add",
         "btn-remove": "Remove",
@@ -326,7 +327,6 @@
         "display-fail-button": "Back home",
 
         "activity-zap-comment": "Added by Zap",
-        "activity-zap-hint": "I can quickly add several activities at the same time",
 
         "tuto": {
             "1": "You can filter activities by category: {}",
@@ -354,12 +354,13 @@
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-recap": "Recap of the day",
+        "chart-today-recap": "24-hour activities",
         "chart-today-performance": "Activities of today",
-        "chart-today-notmuch": "Not enough data to display graph",
+        "chart-today-notmuch": "Add an activity today to display the graphics",
+        "chart-today-notmuch-button": "Add",
         "chart-total-text": "Total",
 
-        "news-myquests-title": "My quests to do",
+        "news-myquests-title": "Quests to do",
 
         "container-stats-title": "Stats",
         "container-skills-title": "Skills",
@@ -372,7 +373,7 @@
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
         "alert-newversion-title": "Warning",
-        "alert-newversion-text": "You are on a version not available to the public, the online features are disabled until the official release",
+        "alert-newversion-text": "You're on the next GameLife update, this popup will be removed when the stores release it",
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?",
         "alert-dateerror-title": "Warning",
@@ -381,6 +382,7 @@
 
     "leaderboard": {
         "label-activities": "Activities",
+        "label-activities-small": "Actis",
         "input-label-search": "Search for a player"
     },
 
@@ -532,6 +534,7 @@
         "activity-now-title": "Activity now: {}",
         "activity-now-start": "Start the same activity",
 
+        "container-stats-title": "Statistics",
         "container-achievements-title": "Last achievements",
 
         "button-cancel": "Cancel friend request",
@@ -711,7 +714,7 @@
             "iap3": "Secondly, you can buy items for your avatar. They're not in their final version, don't worry!",
             "iap4": "But if you buy them now, you'll be able to resell them at double the price when the new avatars arrive!",
             "iap5": "This is a way to thank you for trusting us from the start!",
-            "iap6": "By the way, by paying, you also gain access to Zapgpt which is a chatbot which allows you to add lots of activities at once",
+            "iap6": "By the way, by paying, you also gain access to ZapGPT which is a chatbot which allows you to add lots of activities at once",
             "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
             "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
             "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
@@ -730,7 +733,6 @@
         "stats-title": "Statistiques",
         "history-title": "History",
         "activity-history": "Activity history",
-        "text-history": "{} during {} minutes",
         "text-add": "Add activity"
     },
 
@@ -993,14 +995,25 @@
         "instructions": [
             "- Descriptions as clear and simple as possible",
             "- Be clear about the activities, their start dates and times, and their duration.",
-            "- Example: I did basketball Monday, Wednesday and Friday from 6 p.m. to 8 p.m."
+            "- Example: I did basketball Monday 11, Wednesday and Friday from 6 p.m. to 8 p.m."
         ],
 
-        "remaining-text": "Remaining:",
         "input-label": "Request to Zap",
-        "no-remaining": "You have reached the limit, to add more come from tomorrow",
+        "remaining-text": "Remaining",
+
+        "no-remaining-title": "Limit reached",
+        "no-remaining-text": "You have reached the limit, to add more come from tomorrow",
+
+        "not-buyed-text1": "You have not unlocked access to Zapgpt!\n\nZapgpt is a tool that allows you to add several activities both thanks to a short description.",
+        "not-buyed-text2": "To unlock it, buy any OX pack in the store.",
+        "not-buyed-button": "Go to the shop",
+
+        "not-connected-title": "ZapGPT is not there",
+        "not-connected-text": "The application could not connect to Zapgpt, check your internet connection or try again later.",
 
         "added-message": "{} activities have been added",
+        "no-activities-title": "Error",
+        "no-activities-text": "No activity could be added, they ride already existing or activities are wrong.",
 
         "errors": {
             "tcp-not-connected": "The server is not connected",

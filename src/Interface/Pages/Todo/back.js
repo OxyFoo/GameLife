@@ -11,6 +11,7 @@ import { GetGlobalTime } from 'Utils/Time';
  * 
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ * @typedef {import('Interface/Components/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
  * 
  * @typedef {'new' | 'edit' | 'remove'} States
  * 
@@ -49,6 +50,9 @@ class BackTodo extends PageBase {
 
     /** @type {Todo | null} */
     selectedTodo = null;
+
+    /** @type {NodeJS.Timeout | undefined} */
+    timeoutDidShow;
 
     constructor(props) {
         super(props);
@@ -90,6 +94,10 @@ class BackTodo extends PageBase {
 
     componentDidFocused = () => {
         user.interface.SetCustomBackHandler(this.BackHandler);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeoutDidShow);
     }
 
     /**
@@ -264,6 +272,18 @@ class BackTodo extends PageBase {
         const title = langManager.curr['todo']['alert-remtodo-title'];
         const text = langManager.curr['todo']['alert-remtodo-text'];
         user.interface.popup.Open('yesno', [ title, text ], callback);
+    }
+
+    /** @type {KeyboardChangeStateEvent} */
+    onKeyboardChangeState = (state, height) => {
+        if (state === 'opened') {
+            this.timeoutDidShow = setTimeout(() => {
+                this.refPage?.GoToYRelative(-height);
+            }, 100);
+        } else if (state === 'closed') {
+            this.refPage?.GoToYRelative(height);
+            clearTimeout(this.timeoutDidShow);
+        }
     }
 }
 

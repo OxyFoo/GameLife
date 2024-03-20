@@ -4,9 +4,9 @@ import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetLocalTime } from 'Utils/Time';
+import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
-import { AddActivityNow, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
+import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('Class/Settings').MusicLinks} MusicLinks
@@ -94,11 +94,10 @@ class BackActivityTimer extends PageBase {
     }
 
     __getDuration = () => {
-        const { startTime, timezone } = this.state.currentActivity;
+        const { startTime } = this.state.currentActivity;
         const now = GetLocalTime();
-        const localTime = startTime + timezone * 3600;
         const currentMillis = new Date().getMilliseconds() / 1000;
-        const duration = (now + currentMillis - localTime) / 60;
+        const duration = (now + currentMillis - startTime) / 60;
         return duration;
     }
 
@@ -109,23 +108,25 @@ class BackActivityTimer extends PageBase {
     }
 
     onPressCancel = () => {
-        const remove = (button) => {
+        const title = langManager.curr['activity']['timeralert-cancel-title'];
+        const text = langManager.curr['activity']['timeralert-cancel-text'];
+        user.interface.popup.Open('yesno', [ title, text ], (button) => {
             if (button === 'yes') {
                 this.finished = true;
                 this.Back();
             }
-        }
-        const title = langManager.curr['activity']['timeralert-cancel-title'];
-        const text = langManager.curr['activity']['timeralert-cancel-text'];
-        user.interface.popup.Open('yesno', [ title, text ], remove);
+        });
         return false;
     }
     onPressComplete = () => {
         const { skillID, startTime, friendsIDs } = this.state.currentActivity;
-
-        // Too short
         const now = GetLocalTime();
-        if (now - startTime < MIN_TIME_MINUTES * 60 / 2) {
+
+        const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
+        const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
+    
+        // Too short
+        if (endTimeRounded - startTimeRounded <= MIN_TIME_MINUTES * 60 / 2) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];
             const text = lang['timeralert-tooshort-text'];

@@ -66,12 +66,11 @@ const RenderNew = (Nw) => {
     };
 
     const reverse = Nw.TextAlign === 'right' && RenderInteraction() !== null;
-    const align = reverse ? 'row-reverse' : 'row';
+    const align = reverse ? 'column-reverse' : 'column';
 
     return (
         <View style={[styles.new, { flexDirection: align }]}>
             <RenderText />
-            {Nw.ButtonText !== null && <View style={styles.separator} />}
             <RenderInteraction />
         </View>
     );

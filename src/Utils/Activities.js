@@ -50,10 +50,13 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
     const lang = langManager.curr['activity'];
 
     const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
-    const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, endTime, 'next');
+    const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, endTime, 'near');
 
-    let duration = (endTimeRounded - startTimeRounded) / 60;
-    duration = MinMax(MIN_TIME_MINUTES, duration, MAX_TIME_MINUTES);
+    const duration = MinMax(
+        MIN_TIME_MINUTES,
+        (endTimeRounded - startTimeRounded) / 60,
+        MAX_TIME_MINUTES
+    );
 
     // Get the max duration possible
     while (!user.activities.TimeIsFree(startTimeRounded, duration)) {

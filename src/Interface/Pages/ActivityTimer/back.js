@@ -4,9 +4,9 @@ import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetLocalTime } from 'Utils/Time';
+import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
-import { AddActivityNow, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
+import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('Class/Settings').MusicLinks} MusicLinks
@@ -120,10 +120,13 @@ class BackActivityTimer extends PageBase {
     }
     onPressComplete = () => {
         const { skillID, startTime, friendsIDs } = this.state.currentActivity;
-
-        // Too short
         const now = GetLocalTime();
-        if (now - startTime < MIN_TIME_MINUTES * 60 / 2) {
+
+        const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
+        const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
+    
+        // Too short
+        if (endTimeRounded - startTimeRounded <= MIN_TIME_MINUTES * 60 / 2) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];
             const text = lang['timeralert-tooshort-text'];

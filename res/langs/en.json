@@ -373,7 +373,7 @@
         "alert-update-title": "Update",
         "alert-update-text": "An update of the application is available",
         "alert-newversion-title": "Warning",
-        "alert-newversion-text": "You are on a version not available to the public, the online features are disabled until the official release",
+        "alert-newversion-text": "You're on the next GameLife update, this popup will be removed when the stores release it",
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?",
         "alert-dateerror-title": "Warning",

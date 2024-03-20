@@ -373,7 +373,7 @@
         "alert-update-title": "Mise à jour",
         "alert-update-text": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
-        "alert-newversion-text": "Tu es sur une version non disponible au grand public, les fonctionnalités en ligne sont désactivés jusqu’à la publication officielle",
+        "alert-newversion-text": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Veux-tu vraiment quitter l'application ?",
         "alert-dateerror-title": "Attention",

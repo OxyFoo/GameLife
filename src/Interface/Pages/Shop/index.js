@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import BackShop from './back';
 import ShopHeader from './UI/header';
@@ -18,54 +18,11 @@ import { Page, Text, Icon } from 'Interface/Components';
 import StartHelp from './help';
 
 class Shop extends BackShop {
-    noInternetRender = () => {
-        const lang = langManager.curr['shop'];
-        const title = lang['internet-offline-title'];
-        const text = lang['internet-offline-text'];
-
-        return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.noInternetContainer}
-                isHomePage
-                canScrollOver
-            >
-                <Icon icon='nowifi' size={100} />
-                <Text fontSize={22}>{title}</Text>
-                <Text fontSize={16}>{text}</Text>
-            </Page>
-        );
-    }
-
-    uselessRenderForAppleTesters = () => {
-        const lang = langManager.curr['shop'];
-
-        return (
-            <Page
-                ref={this.setRef}
-                style={styles.page}
-                isHomePage
-                canScrollOver
-            >
-                <ShopHeader
-                    ref={this.refHeader}
-                    refPage={this.state.refPage}
-                    style={styles.shopHeader}
-                />
-
-                <Banner title={lang['banner-iap']} />
-                <ShopIAP ref={this.refIAP} />
-            </Page>
-        );
-    }
-
     render() {
-        if (!user.server.IsConnected(false)) {
-            // Ignore limits for APPLE TESTERS, THANKYOU
-            if (user.settings.email === 'gamelife-test@oxyfoo.com' && Platform.OS === 'ios') {
-                return this.uselessRenderForAppleTesters();
-            }
-            return this.noInternetRender();
+        if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.com') {
+            return this.renderForTesters();
+        } else if (!user.server.IsConnected(false)) {
+            return this.renderNoInternet();
         }
 
         const lang = langManager.curr['shop'];
@@ -101,6 +58,47 @@ class Shop extends BackShop {
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
                 <ShopDyes ref={this.refDyes} />
+            </Page>
+        );
+    }
+
+    renderNoInternet = () => {
+        const lang = langManager.curr['shop'];
+        const title = lang['internet-offline-title'];
+        const text = lang['internet-offline-text'];
+
+        return (
+            <Page
+                ref={ref => this.refPage = ref}
+                style={styles.noInternetContainer}
+                isHomePage
+                canScrollOver
+            >
+                <Icon icon='nowifi' size={100} />
+                <Text fontSize={22}>{title}</Text>
+                <Text fontSize={16}>{text}</Text>
+            </Page>
+        );
+    }
+
+    renderForTesters = () => {
+        const lang = langManager.curr['shop'];
+
+        return (
+            <Page
+                ref={this.setRef}
+                style={styles.page}
+                isHomePage
+                canScrollOver
+            >
+                <ShopHeader
+                    ref={this.refHeader}
+                    refPage={this.state.refPage}
+                    style={styles.shopHeader}
+                />
+
+                <Banner title={lang['banner-iap']} />
+                <ShopIAP ref={this.refIAP} />
             </Page>
         );
     }

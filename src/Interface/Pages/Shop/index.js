@@ -19,7 +19,7 @@ import StartHelp from './help';
 
 class Shop extends BackShop {
     render() {
-        if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.com' && user.server.status === 'downdate') {
+        if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.com') {
             return this.renderForTesters();
         } else if (!user.server.IsConnected(false)) {
             return this.renderNoInternet();

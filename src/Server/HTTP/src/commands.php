@@ -635,6 +635,15 @@ class Commands {
 
         // 1. Reward ox
         if ($notif[0]['Action'] === 'reward-ox') {
+            // Update the notification as read
+            $command = "UPDATE TABLE SET `Readed` = 1 WHERE `ID` = ?";
+            $result = $this->db->QueryPrepare('GlobalNotifications', $command, 'i', [ $notifID ]);
+            if ($result === false) {
+                $this->output['status'] = 'error';
+                $this->output['error'] = 'Error while updating the notification';
+                return;
+            }
+
             $oxAmount = intval($notif[0]['Data']);
             Users::AddOx($this->db, $account->ID, $oxAmount);
             $this->output['ox'] = $account->Ox + $oxAmount;

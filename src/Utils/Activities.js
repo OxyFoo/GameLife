@@ -52,7 +52,7 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
     const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
     const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, endTime, 'near');
 
-    const duration = MinMax(
+    let duration = MinMax(
         MIN_TIME_MINUTES,
         (endTimeRounded - startTimeRounded) / 60,
         MAX_TIME_MINUTES

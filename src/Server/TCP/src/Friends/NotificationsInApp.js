@@ -30,6 +30,10 @@ async function GetUserNotifications(users, user) {
         users.db.ExecQuery(commandGlobalNotifications)
     ]);
 
+    if (friends === null || globalNotifications === null) {
+        return null;
+    }
+
     const notificationsFriend = friends.map(row => {
         const timezone = new Date().getTimezoneOffset() * 60;
         const timestamp = Math.floor(new Date(row.Date).getTime() / 1000) - timezone;

@@ -9,7 +9,7 @@ import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  */
 
 const TIME_STEP_MINUTES = 5;

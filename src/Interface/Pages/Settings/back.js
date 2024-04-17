@@ -9,7 +9,7 @@ import Notifications from 'Utils/Notifications';
 /**
  * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
- * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
+ * @typedef {import('Interface/OldComponents/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
 class BackSettings extends PageBase {

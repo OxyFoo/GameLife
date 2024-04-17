@@ -7,7 +7,7 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
  * 
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * 
  * @typedef BuyableRandomChest

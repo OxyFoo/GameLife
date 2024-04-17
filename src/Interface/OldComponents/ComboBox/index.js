@@ -6,10 +6,10 @@ import ComboBoxBack from './back';
 import themeManager from 'Managers/ThemeManager';
 import langManager from 'Managers/LangManager';
 
-import Text from 'Interface/Components/Text';
-import Button from 'Interface/Components/Button';
-import Icon from 'Interface/Components/Icon';
-import Input from 'Interface/Components/Input';
+import Text from 'Interface/OldComponents/Text';
+import Button from 'Interface/OldComponents/Button';
+import Icon from 'Interface/OldComponents/Icon';
+import Input from 'Interface/OldComponents/Input';
 
 /**
  * @typedef {import('./back').ComboBoxItem} ComboBoxItem

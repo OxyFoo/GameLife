@@ -15,7 +15,7 @@ import { GetTimeZone, TimeToFormatString } from 'Utils/Time';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Interface/Components/Icon/index').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon/index').Icons} Icons
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText

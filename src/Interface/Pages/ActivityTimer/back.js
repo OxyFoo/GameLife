@@ -10,7 +10,7 @@ import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES }
 
 /**
  * @typedef {import('Class/Settings').MusicLinks} MusicLinks
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
  */
 

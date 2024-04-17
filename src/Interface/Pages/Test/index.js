@@ -31,7 +31,7 @@ import { STUFFS } from 'Ressources/items/stuffs/Stuffs';
  * @typedef {import('Class/Inventory').Stuff} Stuff
  */
 
-/** @type {import('Interface/Components/ComboBox').ComboBoxItem[]} */
+/** @type {import('Interface/OldComponents/ComboBox').ComboBoxItem[]} */
 const TEST_VALUES = [
     {key: 0, value: 'Abc 0'},
     {key: 1, value: 'Def 1'},

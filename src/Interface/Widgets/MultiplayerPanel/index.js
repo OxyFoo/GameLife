@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Container, Text, UserOnlineElement } from 'Interface/Components';
 
 /**
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('react-native').ListRenderItem<Friend>} ListRenderFriend
  */

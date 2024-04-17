@@ -11,7 +11,7 @@ import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  */
 

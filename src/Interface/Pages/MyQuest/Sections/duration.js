@@ -10,7 +10,7 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
 const MAX_DURATION_MINUTES = 12 * 60;
 
 /**
- * @typedef {import('Interface/Components/Digit/back').DigitCallback} DigitCallback
+ * @typedef {import('Interface/OldComponents/Digit/back').DigitCallback} DigitCallback
  */
 
 const DurationProps = {

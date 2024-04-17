@@ -12,7 +12,7 @@ import { Text, Icon, Button, Frame } from 'Interface/Components';
 import { NotificationsInAppButton } from 'Interface/Widgets';
 
 /**
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  */
 
 class UserHeader extends UserHeaderBack {

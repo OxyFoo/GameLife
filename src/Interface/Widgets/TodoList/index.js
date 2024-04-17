@@ -16,7 +16,7 @@ import { Container, Button, Text } from 'Interface/Components';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
  * @typedef {import('Class/Todoes').Todo} Todo
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  */
 
 const TodoListProps = {

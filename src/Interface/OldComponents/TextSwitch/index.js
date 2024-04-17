@@ -6,7 +6,7 @@ import TextSwitchBack from './back';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
-import Button from 'Interface/Components/Button';
+import Button from 'Interface/OldComponents/Button';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

@@ -9,10 +9,10 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
-import Button from 'Interface/Components/Button';
-import TextSwitch from 'Interface/Components/TextSwitch';
+import Text from 'Interface/OldComponents/Text';
+import Icon from 'Interface/OldComponents/Icon';
+import Button from 'Interface/OldComponents/Button';
+import TextSwitch from 'Interface/OldComponents/TextSwitch';
 import PanelScreen from 'Interface/Widgets/PanelScreen';
 import ActivitySchedule from 'Interface/Widgets/ActivitySchedule';
 import ActivityExperience from 'Interface/Widgets/ActivityExperience';

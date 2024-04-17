@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import SwitchBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import Button from 'Interface/Components/Button';
+import Button from 'Interface/OldComponents/Button';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

@@ -7,8 +7,8 @@ import themeManager from 'Managers/ThemeManager';
 
 import Ripple from '../Ripple';
 import ButtonBadge from './Badge';
-import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
+import Text from 'Interface/OldComponents/Text';
+import Icon from 'Interface/OldComponents/Icon';
 import { IsUndefined } from 'Utils/Functions';
 
 /**

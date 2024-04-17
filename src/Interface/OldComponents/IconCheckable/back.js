@@ -6,7 +6,7 @@ import { IsUndefined } from 'Utils/Functions';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */

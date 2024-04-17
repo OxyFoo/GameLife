@@ -3,11 +3,11 @@ import { View, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
-import Icon from 'Interface/Components/Icon';
+import Icon from 'Interface/OldComponents/Icon';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('Interface/Components/Icon/index').Icons} Icons
+ * @typedef {import('Interface/OldComponents/Icon/index').Icons} Icons
  * 
  * @typedef {'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly'} JustifyContentStyle
  * 

@@ -11,7 +11,7 @@ import { GetGlobalTime } from 'Utils/Time';
  * 
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * @typedef {import('Interface/Components/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
+ * @typedef {import('Interface/OldComponents/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
  * 
  * @typedef {'new' | 'edit' | 'remove'} States
  * 

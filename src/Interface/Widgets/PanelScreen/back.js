@@ -11,7 +11,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('Interface/Components/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
+ * @typedef {import('Interface/OldComponents/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
  */
 
 const PanelScreenProps = {

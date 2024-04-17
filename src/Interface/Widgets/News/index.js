@@ -7,12 +7,12 @@ import RenderNew from './renderNews';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
-import Button from 'Interface/Components/Button';
-import Swiper from 'Interface/Components/Swiper';
-import DayClock from 'Interface/Components/DayClock';
-import Separator from 'Interface/Components/Separator';
+import Text from 'Interface/OldComponents/Text';
+import Icon from 'Interface/OldComponents/Icon';
+import Button from 'Interface/OldComponents/Button';
+import Swiper from 'Interface/OldComponents/Swiper';
+import DayClock from 'Interface/OldComponents/DayClock';
+import Separator from 'Interface/OldComponents/Separator';
 import { RenderItemMemo } from 'Interface/Widgets/NonZeroDay/element';
 
 /**

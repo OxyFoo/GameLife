@@ -30,7 +30,7 @@ const RenderNew = (Nw) => {
                     <Button
                         style={styles.newButton}
                         color='main2'
-                        iconXml={svgIcon === null ? undefined : svgIcon}
+                        iconXml={svgIcon}
                         iconColor='white'
                         onPress={event}
                         fontSize={12}

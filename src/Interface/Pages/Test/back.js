@@ -1,8 +1,8 @@
-import * as React from 'react';
-
 import user from 'Managers/UserManager';
+import { Animated } from 'react-native';
 
 import { PageBase } from 'Interface/Components';
+import { SpringAnimation } from 'Utils/Animations';
 
 class BackTest extends PageBase {
     state = {
@@ -10,6 +10,21 @@ class BackTest extends PageBase {
         testChecked: false,
         selectedSkill: {ID: -1, value: ''},
         switch: true
+    }
+
+    animPanel = new Animated.Value(0);
+    panelX = 0;
+
+    componentDidMount() {
+        this.intervalPanel = setInterval(() => {
+            const newX = this.panelX === 0 ? 200 : 0;
+            this.panelX = newX;
+            SpringAnimation(this.animPanel, newX).start();
+        }, 2000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.intervalPanel);
     }
 
     openSI = () => {

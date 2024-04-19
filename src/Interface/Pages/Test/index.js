@@ -1,35 +1,27 @@
 import * as React from 'react';
-import { View, Switch as RNSwitch, FlatList } from 'react-native';
+import { View, Switch as RNSwitch, Animated } from 'react-native';
+import MaskedView from '@react-native-masked-view/masked-view';
 
 import BackTest from './back';
-import ItemCard from '../Profile/cards/ItemCard';
-import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import {
+    Text,
     Button,
+    Page,
+    /*
     Checkbox,
     Container,
     Input,
     ComboBox,
     Swiper,
-    Text,
     XPBar,
-    Page,
     TextSwitch,
     Switch,
-    Icon,
-    Digit,
-    Character,
-    Frame
+    Digit
+    */
 } from 'Interface/Components';
-
-import { Sleep } from 'Utils/Functions';
-import { STUFFS } from 'Ressources/items/stuffs/Stuffs';
-
-/**
- * @typedef {import('Class/Inventory').Stuff} Stuff
- */
+import LinearGradient from 'react-native-linear-gradient';
 
 /** @type {import('Interface/OldComponents/ComboBox').ComboBoxItem[]} */
 const TEST_VALUES = [
@@ -40,40 +32,45 @@ const TEST_VALUES = [
     {key: 4, value: 'Item 4'}
 ];
 
-/** @type {Stuff[]} */
-//const TEST_ITEMS = [ ...Object.values(STUFFS['MALE']), ...Object.values(STUFFS['FEMALE']) ];
-const TEST_ITEMS = [];
-
 class Test extends BackTest {
     render() {
         return (
             <Page ref={ref => this.refPage = ref}>
+                <MaskedView
+                    style={{ marginVertical: 24 }}
+                    maskElement={(<Text fontSize={32}>{'Page de test'}</Text>)}
+                >
+                    <LinearGradient style={{ width: '100%', height: 45 }} colors={['#8CF7FF', '#DBA1FF']} useAngle={true} angle={190} />
+                </MaskedView>
 
-                <FlatList
-                    data={TEST_ITEMS}
-                    renderItem={this.renderCardItem}
-                    numColumns={3}
-                    keyExtractor={(item, index) => 'item-' + index.toString()}
+                <Animated.View
+                    style={{
+                        position: 'absolute',
+                        top: 128,
+                        left: 12,
+                        width: '50%',
+                        height: 300,
+                        borderRadius: 8,
+                        backgroundColor: '#fff',
+                        transform: [{ translateX: this.animPanel }]
+                    }}
                 />
 
-                <Button color='main2' style={{ marginBottom: 12 }} icon='home'>{'Ajouter des tâches'}</Button>
-                <Button color='main1' style={{ marginBottom: 12 }} icon='add' loading={true}>{'Quêtes journalières'}</Button>
+                <Button style={{ marginBottom: 12 }} icon='home' appearance='outline'/>
+                <Button style={{ marginBottom: 12 }} loading={true}>{'Quêtes journalières'}</Button>
+                <Button style={{ marginBottom: 12 }} appearance='outline-blur'>{'Quêtes journalières'}</Button>
+                <Button style={{ marginBottom: 12 }} appearance='normal' icon={'bell'}>
+                    <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
+                    <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
+                    <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
+                </Button>
 
-                <Button color='main2' style={{ marginBottom: 12 }} onPress={this.openSI}>{'Test "Screen Input"'}</Button>
-                <Button color='main2' style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
 
+                {/*
                 <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
                     <Digit />
-                </View>
-
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <Button.Badge
-                        style={{ width: '50%' }}
-                        icon='add'
-                        badgeJustifyContent='center'
-                    >
-                        <Text>{'Test'}</Text>
-                    </Button.Badge>
                 </View>
 
                 <Input style={{ marginBottom: 12 }} label='' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
@@ -132,12 +129,6 @@ class Test extends BackTest {
                     />
                 </View>
 
-                <Icon
-                    style={{ marginBottom: 12 }}
-                    icon='success'
-                    size={96}
-                />
-
                 <View style={{ marginBottom: 12 }}>
                     <Input />
                 </View>
@@ -167,30 +158,9 @@ class Test extends BackTest {
                     <Text style={{ marginBottom: 48 }}>Blablabla</Text>
                     <Text style={{ marginBottom: 48 }}>Insh le scroll marche bien</Text>
                 </Container>
-                
+                */}
+
             </Page>
-        );
-    }
-
-    /** @param {{item: Stuff}} element */
-    renderCardItem = ({ item: stuff }) => {
-        const stuffSelected = null;
-        const equippedStuff = user.inventory.GetEquipments();
-
-        const isSelected = stuffSelected?.ID === stuff.ID;
-        const isEquipped = equippedStuff.includes(stuff.ID);
-
-        const onPress = () => {
-            console.log('onPress');
-        };
-
-        return (
-            <ItemCard
-                stuff={stuff}
-                isSelected={isSelected}
-                isEquipped={isEquipped}
-                onPress={onPress}
-            />
         );
     }
 }

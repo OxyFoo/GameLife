@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, BackHandler, StyleSheet } from 'react-native';
+import { Animated, BackHandler, StyleSheet, View } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -428,7 +428,9 @@ class PageManager extends React.Component{
 
                 {['temp', ...PAGES_PERSISTENT].map(newPage)}
 
-                <UserHeader ref={ref => { if (ref !== null) this.header = ref } } show={this.state.bottomBarShow} editorMode={false} />
+                <View style={{ opacity: 0 }} pointerEvents='none'>
+                    <UserHeader ref={ref => { if (ref !== null) this.header = ref } } show={this.state.bottomBarShow} editorMode={false} />
+                </View>
                 <BottomBar ref={ref => { if (ref !== null) this.bottomBar = ref } } show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref } } />
 

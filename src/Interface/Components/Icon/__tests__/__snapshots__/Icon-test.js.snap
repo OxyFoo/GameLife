@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`[Component] Icon renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "height": 24,
+        "width": 24,
+      },
+      {},
+    ]
+  }
+/>
+`;

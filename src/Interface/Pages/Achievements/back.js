@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';

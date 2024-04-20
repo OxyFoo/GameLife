@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { View, Switch as RNSwitch, Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import BackTest from './back';
 import themeManager from 'Managers/ThemeManager';
 
+import { Page } from 'Interface/Global';
 import {
     Text,
     Button,
-    Page,
     /*
     Checkbox,
     Container,
@@ -21,7 +22,6 @@ import {
     Digit
     */
 } from 'Interface/Components';
-import LinearGradient from 'react-native-linear-gradient';
 
 /** @type {import('Interface/OldComponents/ComboBox').ComboBoxItem[]} */
 const TEST_VALUES = [

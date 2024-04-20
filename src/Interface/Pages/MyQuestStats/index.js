@@ -9,7 +9,8 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page, Button, StreakChart, Text } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Button, StreakChart, Text } from 'Interface/Components';
 import { PageHeader, YearHeatMap } from 'Interface/Widgets';
 
 class MyQuestStats extends BackQuest {

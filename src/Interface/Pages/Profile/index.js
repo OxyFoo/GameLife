@@ -9,7 +9,8 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-import { Page, Text, XPBar, Container, KPI, Button } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, XPBar, Container, KPI, Button } from 'Interface/Components';
 import { UserHeader, PageHeader, AchievementsGroup } from 'Interface/Widgets';
 
 class Profile extends BackProfile {

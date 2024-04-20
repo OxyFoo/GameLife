@@ -1,6 +1,6 @@
 import { Animated, Linking, Platform } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 

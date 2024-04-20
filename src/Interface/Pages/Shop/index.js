@@ -14,7 +14,8 @@ import ShopIAP from './InAppPurchases'
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text, Icon } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, Icon } from 'Interface/Components';
 import StartHelp from './help';
 
 class Shop extends BackShop {

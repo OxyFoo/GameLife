@@ -3,7 +3,7 @@ import StartMission from './mission';
 
 import user from 'Managers/UserManager';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import { GetDate, GetGlobalTime } from 'Utils/Time';
 
 /**

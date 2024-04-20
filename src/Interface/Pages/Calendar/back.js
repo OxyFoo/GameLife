@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, FlatList } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import user from 'Managers/UserManager';
 
 import StartTutorial from './tuto';

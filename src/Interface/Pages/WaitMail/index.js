@@ -5,7 +5,8 @@ import BackWaitmail from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text, Button, ProgressBar } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, Button, ProgressBar } from 'Interface/Components';
 
 class Waitmail extends BackWaitmail {
     render() {

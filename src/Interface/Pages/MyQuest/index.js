@@ -12,8 +12,9 @@ import SectionDuration from './Sections/duration';
 import SectionSchedule from './Sections/schedule';
 import SectionComment from './Sections/comment';
 
+import { Page } from 'Interface/Global';
+import { Text, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Text, Button } from 'Interface/Components';
 
 /**
  * @typedef {import('Managers/LangManager').Lang} Lang

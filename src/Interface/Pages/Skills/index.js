@@ -8,8 +8,9 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { Page } from 'Interface/Global';
+import { Input, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Input, Button } from 'Interface/Components';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 

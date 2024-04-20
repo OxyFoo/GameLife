@@ -5,7 +5,8 @@ import BackLogin from './back';
 import styles from './style';
 import user from 'Managers/UserManager';
 
-import { Page, Text, Button, Input, Checkbox } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, Button, Input, Checkbox } from 'Interface/Components';
 
 class Login extends BackLogin {
     render() {

@@ -2,7 +2,7 @@ import { Animated, Linking } from 'react-native';
 import Config from 'react-native-config';
 import RNExitApp from 'react-native-exit-app';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 

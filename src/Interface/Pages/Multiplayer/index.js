@@ -4,7 +4,8 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
-import { Button, Page, Text, UserOnlineElement } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Button, Text, UserOnlineElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 

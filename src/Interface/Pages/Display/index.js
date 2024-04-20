@@ -3,7 +3,8 @@ import { View, Animated, Dimensions, StyleSheet } from 'react-native';
 
 import BackDisplay from './back';
 
-import { Page, Text, Icon, Button } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, Icon, Button } from 'Interface/Components';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 

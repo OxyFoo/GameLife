@@ -13,7 +13,7 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Interface/Components').PageBase} PageBase
+ * @typedef {import('Interface/Global').PageBase} PageBase
  * @typedef {keyof PAGES} PageName
  * @typedef {PAGES[keyof PAGES]} PageType
  * 
@@ -71,7 +71,7 @@ class PageManager extends React.Component{
 
     /**
      * @description Custom back button handler
-     * @type {() => boolean | null} Return true if back is handled
+     * @type {(() => boolean) | null} Return true if back is handled
      */
     customBackHandle = null;
 

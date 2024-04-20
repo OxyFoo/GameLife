@@ -5,7 +5,8 @@ import BackOnboarding from './back';
 import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { Page, Button, Icon, Text } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Button, Icon, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('Managers/LangManager').LangKey} LangKey

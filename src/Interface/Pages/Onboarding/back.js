@@ -4,7 +4,7 @@ import RNExitApp from 'react-native-exit-app';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**

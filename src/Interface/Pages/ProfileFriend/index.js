@@ -7,7 +7,8 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page, Container, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Container, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
 import { PageHeader, AchievementsGroup, StatsBars } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 

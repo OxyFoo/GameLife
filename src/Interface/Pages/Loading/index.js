@@ -7,7 +7,8 @@ import BackLoading from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, GLLoading, Button, Text, Icon, Zap } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { GLLoading, Button, Text, Icon, Zap } from 'Interface/Components';
 
 class Loading extends BackLoading {
     render() {

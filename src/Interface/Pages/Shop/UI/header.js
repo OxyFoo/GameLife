@@ -17,7 +17,7 @@ import { Text, Button } from 'Interface/Components';
  * @typedef {import('Class/Admob').AdEvent} AdEvent
  * @typedef {import('Class/Admob').AdStates} AdStates
  * @typedef {import('Class/Admob').AdTypes} AdTypes
- * @typedef {import('Interface/Components').Page} Page
+ * @typedef {import('Interface/Global').Page} Page
  */
 
 // I hate Apple, RESPECT THE DEVELOPERS PLZZZ

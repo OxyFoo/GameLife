@@ -6,8 +6,9 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { Page } from 'Interface/Global';
+import { Text, Icon } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Text, Icon } from 'Interface/Components';
 
 class About extends BackAbout {
     renderContributor({ item: contributor }) {

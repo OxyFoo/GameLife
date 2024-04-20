@@ -4,11 +4,12 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import BackCalendar from './back';
 import styles from './style';
+import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
-import { Page, Text, Button, Icon, ActivityTimeline } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, Button, Icon, ActivityTimeline } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 

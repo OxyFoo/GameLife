@@ -8,7 +8,8 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Icon, Page, Text } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Icon, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 /**

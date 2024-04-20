@@ -1,7 +1,7 @@
 import user from 'Managers/UserManager';
 import { Animated } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import { SpringAnimation } from 'Utils/Animations';
 
 class BackTest extends PageBase {

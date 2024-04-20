@@ -10,8 +10,9 @@ import SectionSchedule from './Sections/schedule';
 import SectionTasks from './Sections/tasks';
 
 import StartHelp from './help';
+import { Page } from 'Interface/Global';
+import { Button, KeyboardSpacerView } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Button, Page, KeyboardSpacerView } from 'Interface/Components';
 
 class Todo extends BackTodo {
     render() {

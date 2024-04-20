@@ -3,7 +3,7 @@ import RNExitApp from 'react-native-exit-app';
 
 import user from 'Managers/UserManager';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 
 const REFRESH_DELAY_SECONDS = 30;
 

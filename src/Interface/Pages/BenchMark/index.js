@@ -5,7 +5,8 @@ import { BarChart } from 'react-native-gifted-charts';
 import styles from './style';
 import BackBenchMark from './back';
 
-import { Button, Page, Text } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Button, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 /**

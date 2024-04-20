@@ -5,7 +5,8 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Character, PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
+import { Character } from 'Interface/Components';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**

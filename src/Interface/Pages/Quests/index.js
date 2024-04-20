@@ -3,7 +3,7 @@ import * as React from 'react';
 import styles from './style';
 import BackQuests from './back';
 
-import { Page } from 'Interface/Components';
+import { Page } from 'Interface/Global';
 import { NonZeroDay, MyQuestsList, TodoList } from 'Interface/Widgets';
 
 class Quests extends BackQuests {

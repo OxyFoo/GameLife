@@ -9,7 +9,8 @@ import ActivityTimerFriends from './components/friends';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text, Button } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, Button } from 'Interface/Components';
 
 import IMG_MUSIC from 'Ressources/logo/music/music';
 

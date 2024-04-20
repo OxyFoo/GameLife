@@ -6,7 +6,8 @@ import BackLeaderboard from './back';
 import { RankElement } from './element';
 import langManager from 'Managers/LangManager';
 
-import { Page, Input, Button } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Input, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Leaderboard extends BackLeaderboard {

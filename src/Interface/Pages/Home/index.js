@@ -7,7 +7,8 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, XPBar, Page } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text, XPBar } from 'Interface/Components';
 import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
 
 /**

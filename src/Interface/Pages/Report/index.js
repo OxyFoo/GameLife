@@ -7,8 +7,9 @@ import BackReport from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { Page } from 'Interface/Global';
+import { Text, ComboBox, Input, Button, Digit } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Text, ComboBox, Input, Button, Digit } from 'Interface/Components';
 
 class Report extends BackReport {
     renderActivity = () => {

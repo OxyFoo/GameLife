@@ -5,7 +5,8 @@ import BackWaitinternet from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Text } from 'Interface/Components';
 
 class Waitinternet extends BackWaitinternet {
     render() {

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import StartTutorial from './tuto';
 import StartMission from './mission';
 
 /**
- * @typedef {import('Interface/Components').Page} Page
+ * @typedef {import('Interface/Global').Page} Page
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
  * @typedef {import('./InAppPurchases').default} InAppPurchases

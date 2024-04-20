@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PageBase } from 'Interface/Components';
+import { PageBase } from 'Interface/Global';
 import StartTutorial from './tuto';
 import user from 'Managers/UserManager';
 

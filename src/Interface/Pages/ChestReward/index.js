@@ -8,7 +8,8 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS, { IMG_CHEST_OX } from 'Ressources/items/chests/chests';
-import { Page, Frame, Text, Button } from 'Interface/Components';
+import { Page } from 'Interface/Global';
+import { Frame, Text, Button } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
 class ChestReward extends BackChestReward {

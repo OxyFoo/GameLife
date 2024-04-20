@@ -8,8 +8,9 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
+import { Page } from 'Interface/Global';
+import { Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 import { PageHeader, ActivityPanel, SkillChart, StatsBars } from 'Interface/Widgets';
-import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ListRenderItem<HistoryActivity>} ListRenderItemHistoryActivity

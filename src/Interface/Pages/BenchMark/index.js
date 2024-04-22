@@ -19,7 +19,7 @@ class BenchMark extends BackBenchMark {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 bottomOffset={96}
                 canScrollOver
             >

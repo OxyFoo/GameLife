@@ -17,7 +17,7 @@ function StartHelp(section) {
                 text: lang['dailyDeals'],
                 showNextButton: true,
                 execBefore: async () => {
-                    user.interface.GetCurrentPage()?.refPage?.GotoY(0);
+                    user.interface.GetCurrentPage()?.refPage.current?.GotoY(0);
                     await Sleep(400);
                 }
             }
@@ -31,7 +31,7 @@ function StartHelp(section) {
                 text: lang['iap1'],
                 showNextButton: true,
                 execBefore: async () => {
-                    user.interface.GetCurrentPage()?.refPage?.GotoY(400);
+                    user.interface.GetCurrentPage()?.refPage.current?.GotoY(400);
                     await Sleep(400);
                 }
             },
@@ -70,7 +70,7 @@ function StartHelp(section) {
                 text: lang['randomChests'],
                 showNextButton: true,
                 execBefore: async () => {
-                    user.interface.GetCurrentPage()?.refPage?.GotoY(820);
+                    user.interface.GetCurrentPage()?.refPage.current?.GotoY(820);
                     await Sleep(400);
                 },
             },
@@ -99,7 +99,7 @@ function StartHelp(section) {
                 text: lang['targetedChests'],
                 showNextButton: true,
                 execBefore: async () => {
-                    user.interface.GetCurrentPage()?.refPage?.GotoY(1080);
+                    user.interface.GetCurrentPage()?.refPage.current?.GotoY(1080);
                     await Sleep(400);
                 }
             },
@@ -128,7 +128,7 @@ function StartHelp(section) {
                 text: lang['dyes'],
                 showNextButton: true,
                 execBefore: async () => {
-                    user.interface.GetCurrentPage()?.refPage?.GotoY(1300);
+                    user.interface.GetCurrentPage()?.refPage.current?.GotoY(1300);
                     await Sleep(600);
                 }
             }

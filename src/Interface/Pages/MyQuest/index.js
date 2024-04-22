@@ -66,7 +66,7 @@ class Quest extends BackQuest {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 overlay={this.renderOverlayButton()}
                 bottomOffset={72}
                 onStartShouldSetResponder={this.keyboardDismiss}

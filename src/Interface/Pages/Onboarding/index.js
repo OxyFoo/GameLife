@@ -21,7 +21,7 @@ class Onboarding extends BackOnboarding {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.page}
                 scrollable={false}
             >

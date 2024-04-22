@@ -27,7 +27,7 @@ class Achievements extends BackAchievements {
         };
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <Page ref={this.refPage} scrollable={false}>
                 <View onLayout={this.onLayout}>
                     <PageHeader
                         style={styles.pageHeader}

@@ -20,7 +20,7 @@ class Todo extends BackTodo {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 onStartShouldSetResponder={this.keyboardDismiss}
                 overlay={this.renderOverlay()}
                 bottomOffset={72}

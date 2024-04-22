@@ -76,7 +76,7 @@ class ChestReward extends BackChestReward {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.page}
                 canScrollOver={false}
             >

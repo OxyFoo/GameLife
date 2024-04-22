@@ -8,7 +8,7 @@ import { Page } from 'Interface/Global';
 class NewPage extends BackNewPage {
     render() {
         return (
-            <Page ref={ref => this.refPage = ref} canScrollOver>
+            <Page ref={this.refPage} canScrollOver>
             </Page>
         );
     }

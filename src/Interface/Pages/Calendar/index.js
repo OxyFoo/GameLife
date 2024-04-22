@@ -69,7 +69,7 @@ class Calendar extends BackCalendar {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.page}
                 overlay={this.renderActivity()}
                 isHomePage

@@ -278,10 +278,10 @@ class BackTodo extends PageBase {
     onKeyboardChangeState = (state, height) => {
         if (state === 'opened') {
             this.timeoutDidShow = setTimeout(() => {
-                this.refPage?.GoToYRelative(-height);
+                this.refPage.current?.GoToYRelative(-height);
             }, 100);
         } else if (state === 'closed') {
-            this.refPage?.GoToYRelative(height);
+            this.refPage.current?.GoToYRelative(height);
             clearTimeout(this.timeoutDidShow);
         }
     }

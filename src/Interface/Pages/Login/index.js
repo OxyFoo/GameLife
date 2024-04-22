@@ -35,7 +35,7 @@ class Login extends BackLogin {
         const smallScreen = user.interface.screenHeight < 600;
 
         return (
-            <Page ref={ref => this.refPage = ref} style={styles.body} scrollable={false}>
+            <Page ref={this.refPage} style={styles.body} scrollable={false}>
                 {/* Background images */}
                 {smallScreen ? null : (
                     <Image style={styles.backgroundCircles} source={this.imageBackground} />

@@ -25,7 +25,7 @@ class Settings extends BackSettings {
         const lang = langManager.curr['settings'];
 
         return (
-            <Page ref={ref => this.refPage = ref}>
+            <Page ref={this.refPage}>
                 <PageHeader onBackPress={this.onBack} />
 
                 <Button style={styles.margin} color='main2' borderRadius={16} onPress={this.openAbout}>{lang['input-about']}</Button>

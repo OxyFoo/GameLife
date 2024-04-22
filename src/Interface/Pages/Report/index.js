@@ -133,7 +133,7 @@ class Report extends BackReport {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 onStartShouldSetResponder={this.keyboardDismiss}
                 canScrollOver={false}
             >

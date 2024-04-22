@@ -24,7 +24,7 @@ class Activity extends BackActivity {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 scrollable={false}
                 canScrollOver={false}
             >

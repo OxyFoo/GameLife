@@ -10,7 +10,7 @@ class Quests extends BackQuests {
     render() {
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.page}
                 isHomePage
                 canScrollOver

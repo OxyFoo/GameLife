@@ -31,7 +31,7 @@ class Skill extends BackSkill {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 bottomOffset={104}
                 overlay={this.renderOverlay()}
                 footer={this.renderFooter()}
@@ -116,13 +116,13 @@ class Skill extends BackSkill {
                             numColumns={2}
                             initialNumToRender={100}
                             onTouchStart={() => {
-                                user.interface.GetCurrentPage()?.refPage?.DisableScroll();
+                                user.interface.GetCurrentPage()?.refPage.current?.DisableScroll();
                             }}
                             onTouchEnd={() => {
-                                user.interface.GetCurrentPage()?.refPage?.EnableScroll();
+                                user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
                             }}
                             onTouchCancel={() => {
-                                user.interface.GetCurrentPage()?.refPage?.EnableScroll();
+                                user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
                             }}
                         />
                     </Container>

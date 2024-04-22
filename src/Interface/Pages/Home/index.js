@@ -36,7 +36,7 @@ class Home extends BackHome {
         };
 
         return (
-            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
+            <Page ref={this.refPage} isHomePage canScrollOver>
 
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>

@@ -32,7 +32,7 @@ class ProfileFriend extends BackProfileFriend {
         };
 
         return (
-            <Page ref={ref => this.refPage = ref}>
+            <Page ref={this.refPage}>
                 <PageHeader
                     style={{ marginBottom: 12 }}
                     onBackPress={this.Back}

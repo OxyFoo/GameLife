@@ -18,7 +18,7 @@ class Waitinternet extends BackWaitinternet {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.body}
                 scrollable={false}
             >

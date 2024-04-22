@@ -35,7 +35,7 @@ class ActivityTimer extends BackActivityTimer {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.content}
             >
                 {/* Title */}

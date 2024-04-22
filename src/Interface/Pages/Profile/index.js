@@ -26,7 +26,7 @@ class Profile extends BackProfile {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 scrollable={!editorOpened}
             >
                 <PageHeader

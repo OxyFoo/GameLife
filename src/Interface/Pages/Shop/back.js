@@ -15,10 +15,8 @@ import StartMission from './mission';
  */
 
 class BackShop extends PageBase {
-    state = {
-        /** @type {Page | null} */
-        refPage: null
-    }
+    /** @type {React.RefObject<Page>} */
+    refShopHeader = React.createRef();
 
     /** @type {React.RefObject<ShopHeader>} */
     refHeader = React.createRef();
@@ -41,11 +39,6 @@ class BackShop extends PageBase {
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);
         StartMission.call(this, args?.missionName);
-    }
-
-    setRef = (ref) => {
-        this.refPage = ref;
-        this.setState({ refPage: ref });
     }
 }
 

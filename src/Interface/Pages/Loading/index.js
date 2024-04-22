@@ -13,7 +13,7 @@ import { GLLoading, Button, Text, Icon, Zap } from 'Interface/Components';
 class Loading extends BackLoading {
     render() {
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <Page ref={this.refPage} scrollable={false}>
                 {this.state.icon === 4 ?
                     this.renderTestCautionMessage() :
                     this.renderLoading()

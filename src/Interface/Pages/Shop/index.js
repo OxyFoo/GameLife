@@ -31,14 +31,14 @@ class Shop extends BackShop {
 
         return (
             <Page
-                ref={this.setRef}
+                ref={this.refPage}
                 style={styles.page}
                 isHomePage
                 canScrollOver
             >
                 <ShopHeader
                     ref={this.refHeader}
-                    refPage={this.state.refPage}
+                    refPage={this.refShopHeader}
                     style={styles.shopHeader}
                 />
 
@@ -70,7 +70,7 @@ class Shop extends BackShop {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.noInternetContainer}
                 isHomePage
                 canScrollOver
@@ -87,7 +87,7 @@ class Shop extends BackShop {
 
         return (
             <Page
-                ref={this.setRef}
+                ref={this.refPage}
                 style={styles.page}
                 isHomePage
                 canScrollOver

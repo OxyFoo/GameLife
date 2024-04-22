@@ -43,7 +43,7 @@ class MyQuestStats extends BackQuest {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 footer={this.renderFooter()}
             >
                 <PageHeader

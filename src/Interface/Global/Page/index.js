@@ -10,10 +10,9 @@ class Page extends PageBack {
     renderTopOverlay() {
         if (this.props.topOverlay === null) return null;
 
-        const { topOverlayPosition } = this.state;
         const { topOverlay, topOverlayHeight } = this.props;
 
-        const animation = Animated.multiply(topOverlayPosition, -(topOverlayHeight + 32));
+        const animation = Animated.multiply(this.topOverlayPosition, -(topOverlayHeight + 32));
         const position = { transform: [{ translateY: animation }] };
         const backgroundColor = { backgroundColor: themeManager.GetColor('main3') };
         const borderColor = { borderColor: themeManager.GetColor('main1') };
@@ -34,7 +33,7 @@ class Page extends PageBack {
     }
 
     render() {
-        const { positionY, opacity, pointerEvents } = this.state;
+        const { pointerEvents } = this.state;
         const {
             style, isHomePage,
             topOffset, bottomOffset,
@@ -44,12 +43,16 @@ class Page extends PageBack {
         const headerHeight = user.interface.header.state.height;
         const valueOffset = isHomePage ? headerHeight : topOffset;
 
-        const styleOpacity = { opacity: opacity };
+        const styleOpacity = {
+            opacity: this.opacity
+        };
         const styleParent = {
             ...styles.parent,
-            transform: [{ translateY: positionY }],
+            transform: [
+                { translateY: this.positionY }
+            ],
             paddingTop: valueOffset,
-            height: scrollable ? 'auto' : '100%',
+            //height: scrollable ? 'auto' : '100%',
             minHeight: user.interface.screenHeight - topOffset - bottomOffset - 128
         };
 
@@ -60,10 +63,10 @@ class Page extends PageBack {
             >
                 <Animated.View
                     style={[styleParent, style]}
-                    onLayout={this.onLayout}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
-                    onTouchEnd={this.onTouchEnd}
+                    onLayout={this.scrolling.onLayout}
+                    onTouchStart={this.scrolling.onTouchStart}
+                    onTouchMove={this.scrolling.onTouchMove}
+                    onTouchEnd={this.scrolling.onTouchEnd}
                     onStartShouldSetResponder={this.props.onStartShouldSetResponder}
                 >
                     {this.props.children}

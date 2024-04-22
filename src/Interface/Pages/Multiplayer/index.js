@@ -13,7 +13,7 @@ class Multiplayer extends BackMultiplayer {
     render() {
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 overlay={this.renderAddButton()}
                 bottomOffset={64}
                 canScrollOver

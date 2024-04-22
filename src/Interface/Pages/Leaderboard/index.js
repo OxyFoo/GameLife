@@ -18,7 +18,7 @@ class Leaderboard extends BackLeaderboard {
         const sortType = Object.values(this.sortList)[sortIndex];
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <Page ref={this.refPage} scrollable={false}>
                 <PageHeader style={styles.header} onBackPress={this.Back} />
 
                 <View style={styles.myRankContainer}>

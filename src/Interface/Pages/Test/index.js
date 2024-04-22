@@ -10,6 +10,7 @@ import { Page } from 'Interface/Global';
 import {
     Text,
     Button,
+    Switch,
     /*
     Checkbox,
     Container,
@@ -35,7 +36,7 @@ const TEST_VALUES = [
 class Test extends BackTest {
     render() {
         return (
-            <Page ref={ref => this.refPage = ref}>
+            <Page ref={this.refPage}>
                 <MaskedView
                     style={{ marginVertical: 24 }}
                     maskElement={(<Text fontSize={32}>{'Page de test'}</Text>)}
@@ -67,6 +68,51 @@ class Test extends BackTest {
 
                 <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                 <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+
+                <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
+                    <Switch
+                        value={this.state.switch}
+                        onValueChanged={(value) => { this.setState({ switch: value }); }}
+                    />
+
+                    <RNSwitch
+                        value={this.state.switch}
+                        onValueChange={(value) => { this.setState({ switch: value }); }}
+                        thumbColor={this.state.switch ? themeManager.GetColor('main1') : themeManager.GetColor('backgroundCard')}
+                        trackColor={{ false: themeManager.GetColor('background'), true: themeManager.GetColor('background') }}
+                    />
+                </View>
+
+                {this.state.switch && (
+                    <React.Suspense fallback={<Text>Loading</Text>}>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                    </React.Suspense>
+                )}
 
                 {/*
                 <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
@@ -114,20 +160,6 @@ class Test extends BackTest {
                         <Button color='main2'>{'Page 3'}</Button>
                     ]}
                 />
-
-                <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
-                    <Switch
-                        value={this.state.switch}
-                        onValueChanged={(value) => { this.setState({ switch: value }); }}
-                    />
-
-                    <RNSwitch
-                        value={this.state.switch}
-                        onValueChange={(value) => { this.setState({ switch: value }); }}
-                        thumbColor={this.state.switch ? themeManager.GetColor('main1') : themeManager.GetColor('backgroundCard')}
-                        trackColor={{ false: themeManager.GetColor('background'), true: themeManager.GetColor('background') }}
-                    />
-                </View>
 
                 <View style={{ marginBottom: 12 }}>
                     <Input />

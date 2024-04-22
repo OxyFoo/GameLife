@@ -23,7 +23,7 @@ class About extends BackAbout {
         const lang = langManager.curr['about'];
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <Page ref={this.refPage} scrollable={false}>
                 <PageHeader
                     style={styles.pageHeader}
                     onBackPress={user.interface.BackHandle}

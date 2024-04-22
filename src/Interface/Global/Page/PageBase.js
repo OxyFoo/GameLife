@@ -5,8 +5,8 @@ import * as React from 'react';
  */
 
 class PageBase extends React.Component {
-    /** @type {Page | null} */
-    refPage = null;
+    /** @type {React.RefObject<Page>} */
+    refPage = React.createRef();
 
     /** @type {boolean} */
     loaded = false;
@@ -16,8 +16,11 @@ class PageBase extends React.Component {
         this.loaded = true;
     }
 
-    /** @description Called when page is focused */
-    componentDidFocused = (args) => {};
+    /**
+     * @description Called when page is focused
+     * @param {Page['props']} args
+     */
+    componentDidFocused = (args) => {}
 }
 
 export default PageBase;

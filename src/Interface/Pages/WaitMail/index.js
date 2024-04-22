@@ -17,7 +17,7 @@ class Waitmail extends BackWaitmail {
 
         return (
             <Page
-                ref={ref => this.refPage = ref}
+                ref={this.refPage}
                 style={styles.body}
                 scrollable={false}
             >

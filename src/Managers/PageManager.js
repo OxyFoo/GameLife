@@ -116,12 +116,12 @@ class PageManager extends React.Component{
 
         // Page was reloaded
         if (Object.keys(CACHE_PAGES.persistent).includes(this.state.selectedPage)) {
-            if (CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage?.state?.visible === false) {
-                CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage?.Show();
+            if (CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage.current?.state?.visible === false) {
+                CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage.current?.Show();
             }
         } else {
-            if (CACHE_PAGES.temp?.ref?.refPage?.state?.visible === false) {
-                CACHE_PAGES.temp?.ref?.refPage?.Show();
+            if (CACHE_PAGES.temp?.ref?.refPage.current?.state?.visible === false) {
+                CACHE_PAGES.temp?.ref?.refPage.current?.Show();
             }
         }
     }
@@ -309,11 +309,11 @@ class PageManager extends React.Component{
         const { selectedPage } = this.state;
         if (selectedPage !== '') {
             if (Object.keys(CACHE_PAGES.persistent).includes(selectedPage)) {
-                if (typeof(CACHE_PAGES.persistent[selectedPage]?.ref?.refPage?.Hide) === 'function') {
-                    CACHE_PAGES.persistent[selectedPage].ref.refPage.Hide();
+                if (typeof(CACHE_PAGES.persistent[selectedPage]?.ref?.refPage.current?.Hide) === 'function') {
+                    CACHE_PAGES.persistent[selectedPage].ref.refPage.current.Hide();
                 }
             } else {
-                if (typeof(CACHE_PAGES.temp.ref?.refPage?.Hide) === 'function') {
+                if (typeof(CACHE_PAGES.temp.ref?.refPage.current?.Hide) === 'function') {
                     CACHE_PAGES.temp.content = null;
                 }
             }
@@ -321,8 +321,8 @@ class PageManager extends React.Component{
 
         // Show new page
         if (Object.keys(CACHE_PAGES.persistent).includes(newPage)) {
-            if (typeof(CACHE_PAGES.persistent[newPage]?.ref?.refPage?.Show) === 'function') {
-                CACHE_PAGES.persistent[newPage].ref.refPage.Show();
+            if (typeof(CACHE_PAGES.persistent[newPage]?.ref?.refPage.current?.Show) === 'function') {
+                CACHE_PAGES.persistent[newPage].ref.refPage.current.Show();
                 CACHE_PAGES.persistent[newPage].ref.componentDidFocused(args);
                 this.setState({ selectedPage: newPage });
             } else if (DEBUG_MODE) {
@@ -331,8 +331,8 @@ class PageManager extends React.Component{
         } else {
             CACHE_PAGES.temp.content = this.getPageContent(newPage, args, true);
             this.setState({ selectedPage: newPage }, () => {
-                if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
-                    CACHE_PAGES.temp.ref.refPage.Show();
+                if (typeof(CACHE_PAGES.temp.ref?.refPage.current?.Show) === 'function') {
+                    CACHE_PAGES.temp.ref.refPage.current.Show();
                     CACHE_PAGES.temp.ref.componentDidFocused(args);
                 } else if (DEBUG_MODE) {
                     console.log('Ref undefined (temp)', CACHE_PAGES.temp);

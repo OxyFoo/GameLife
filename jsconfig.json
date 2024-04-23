@@ -3,6 +3,7 @@
         "jsx": "react",
         "target": "ES6",
         "checkJs": true,
+        "strict": true,
         "resolveJsonModule": true,
         "module": "NodeNext",
         "baseUrl": "src",

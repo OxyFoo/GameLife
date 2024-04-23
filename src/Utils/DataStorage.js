@@ -39,9 +39,13 @@ class DataStorage {
     static async Load(storageKey) {
         let json = null;
 
-        const localData = await AsyncStorage.getItem(storageKey);
-        if (StrIsJSON(localData)) {
-            json = JSON.parse(localData);
+        try {
+            const localData = await AsyncStorage.getItem(storageKey);
+            if (StrIsJSON(localData)) {
+                json = JSON.parse(localData);
+            }
+        } catch (error) {
+            console.error(error);
         }
 
         return json;

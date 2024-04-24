@@ -57,7 +57,7 @@ class ScreenList extends ScreenListBack {
                     <View style={[styles.background2, styleBackground]} />
                     <Text style={styles.label}>{label}</Text>
 
-                    <Separator.Horizontal style={{ marginLeft: '10%', width: '80%' }} />
+                    <Separator style={{ marginLeft: '10%', width: '80%' }} />
 
                     <FlatList
                         ref={ref => this.refFlatlist = ref}

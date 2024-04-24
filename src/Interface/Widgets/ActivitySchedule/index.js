@@ -149,7 +149,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                 {currDay + ' - ' + textDate}
                             </Text>
                         </View>
-                        <Separator.Horizontal style={{ marginVertical: 4 }} />
+                        <Separator style={{ marginVertical: 4 }} />
                         <View style={styles.row}>
                             <View style={styles.row}>
                                 <Text style={styles.title}>
@@ -159,7 +159,7 @@ class ActivitySchedule extends ActivityScheduleBack {
                                     {textTime}
                                 </Text>
                             </View>
-                            <Separator.Vertical style={{ height: '100%', marginHorizontal: 8 }} />
+                            <Separator style={{ marginHorizontal: 8 }} vertical />
                             <View style={styles.row}>
                                 <Text style={styles.title}>
                                     {DATES['duration'] + ': '}

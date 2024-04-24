@@ -121,7 +121,7 @@ class News extends BackNews {
     }
 
     renderMyQuestSeparator = () => (
-        <Separator.Horizontal style={styles.mqSeparator} />
+        <Separator style={styles.mqSeparator} />
     )
 
     renderRecapNZD = () => {

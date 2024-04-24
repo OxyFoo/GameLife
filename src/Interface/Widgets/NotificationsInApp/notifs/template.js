@@ -74,7 +74,7 @@ function NIA_Separator() {
 
     return (
         <Animated.View style={animStyle}>
-            <Separator.Horizontal style={styles.separator} />
+            <Separator style={styles.separator} />
         </Animated.View>
     );
 }

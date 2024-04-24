@@ -105,5 +105,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Text;
-export { MAIN_FONT_NAME };
+export { Text, MAIN_FONT_NAME };

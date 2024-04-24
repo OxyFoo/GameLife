@@ -102,7 +102,7 @@ class ZapGPT extends ZapGPTBack {
                             `${item.startTime}-${item.skillID}-${item.duration}-${index}`
                         }
                         ItemSeparatorComponent={() => (
-                            <Separator.Horizontal style={styles.separator} />
+                            <Separator style={styles.separator} />
                         )}
                     />
                 </View>

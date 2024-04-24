@@ -1,6 +1,7 @@
-import Button from './Components/Button';
-import Icon from './Components/Icon';
-import Text from './Components/Text';
+export { Button } from './Components/Button';
+export { Icon } from './Components/Icon';
+export { Text } from './Components/Text';
+export { InputText } from './Components/InputText';
 
 import Container from './OldComponents/Container';
 import Frame from './OldComponents/Character/Frame';
@@ -32,10 +33,6 @@ import UserOnlineElement from './OldComponents/UserOnlineElement';
 import Zap from './OldComponents/Zap';
 
 export {
-    Button,
-    Icon,
-    Text,
-
     Input,
     Container,
     Frame,

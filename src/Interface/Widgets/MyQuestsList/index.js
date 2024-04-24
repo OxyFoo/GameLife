@@ -119,7 +119,7 @@ class MyQuestsList extends BackQuestsList {
     }
 
     renderSeparator = () => (
-        <Separator.Horizontal
+        <Separator
             color='backgroundTransparent'
             style={styles.separator}
         />

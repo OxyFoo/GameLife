@@ -7,8 +7,8 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import styles from './style';
 import ButtonBack from './back';
 
-import Text from '../Text';
-import Icon from '../Icon';
+import { Text } from '../Text';
+import { Icon } from '../Icon';
 import Ripple from '../../Primitives/Ripple';
 import themeManager from 'Managers/ThemeManager';
 
@@ -239,4 +239,4 @@ class Button extends ButtonBack {
     }
 }
 
-export default Button;
+export { Button };

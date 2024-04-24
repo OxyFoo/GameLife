@@ -74,4 +74,4 @@ class Icon extends IconBack {
     }
 }
 
-export default Icon;
+export { Icon };

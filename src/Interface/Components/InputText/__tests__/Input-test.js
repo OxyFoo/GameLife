@@ -6,21 +6,21 @@ import { render, fireEvent } from '@testing-library/react-native';
 import renderer from 'react-test-renderer';
 
 // Graphical components
-import Input from '../index';
+import { InputText } from '../index';
 
-describe('[Component] Input', () => {
+describe('[Component] InputText', () => {
     it('renders correctly', () => {
         const tree = renderer
-            .create(<Input />)
+            .create(<InputText />)
             .toJSON();
         expect(tree).toMatchSnapshot();
     });
 
     it('should update the input value when typed', () => {
-        let [ value, setValue ] = [ '', (v) => { value = v } ];
+        let [ value, setValue ] = [ '', (v = '') => { value = v } ];
         const { getByTestId } = render(
-            <Input
-                text={value}
+            <InputText
+                value={value}
                 onChangeText={setValue}
             />
         );
@@ -33,7 +33,7 @@ describe('[Component] Input', () => {
     it('should call a callback function when submitted', () => {
         const onSubmitMock = jest.fn();
         const { getByTestId } = render(
-            <Input onSubmit={onSubmitMock} />
+            <InputText onSubmit={onSubmitMock} />
         );
 
         const input = getByTestId('textInput');

@@ -6,7 +6,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 import renderer, { create } from 'react-test-renderer';
 
 // Graphical components
-import Button from '../index';
+import { Button } from '../index';
 
 describe('[Component] Button', () => {
     it('renders correctly', () => {

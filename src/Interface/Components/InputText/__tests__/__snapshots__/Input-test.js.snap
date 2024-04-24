@@ -1,10 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`[Component] Input renders correctly 1`] = `
+exports[`[Component] InputText renders correctly 1`] = `
 <View
   collapsable={false}
   onLayout={[Function]}
-  pointerEvents="auto"
   style={
     {
       "backgroundColor": "#0E1247",
@@ -73,88 +72,42 @@ exports[`[Component] Input renders correctly 1`] = `
       }
     }
   >
-    <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": true,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
+    <Text
+      onLayout={[Function]}
       style={
-        {
-          "opacity": 1,
-        }
+        [
+          {
+            "color": "#ECECEC",
+            "fontFamily": "Hind Vadodara",
+            "fontSize": 16,
+            "margin": 0,
+            "padding": 0,
+            "textAlign": "center",
+          },
+          {},
+        ]
       }
     >
-      <Text
-        onLayout={[Function]}
-        style={
-          [
-            {
-              "fontFamily": "Hind Vadodara",
-              "margin": 0,
-              "padding": 0,
-              "textAlign": "center",
-            },
-            {
-              "color": "#ECECEC",
-              "fontSize": 16,
-              "fontWeight": "normal",
-            },
-            {},
-          ]
-        }
-      >
-        Default
-      </Text>
-    </View>
+      Default
+    </Text>
   </View>
   <TextInput
-    autoCompleteType="off"
+    autoComplete="off"
     autoCorrect={false}
-    maxLength={null}
-    multiline={false}
     onBlur={[Function]}
-    onChangeText={[Function]}
     onFocus={[Function]}
     onSubmitEditing={[Function]}
     selectionColor="#808080"
     style={
-      [
-        {
-          "color": "#FFFFFF",
-          "maxHeight": 256,
-          "paddingHorizontal": 12,
-        },
-        {
-          "height": 56,
-        },
-      ]
+      {
+        "color": "#FFFFFF",
+        "maxHeight": 256,
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+      }
     }
     testID="textInput"
     textContentType="none"
-    value=""
   />
 </View>
 `;

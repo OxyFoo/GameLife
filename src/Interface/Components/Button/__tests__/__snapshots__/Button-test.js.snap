@@ -76,15 +76,12 @@ exports[`[Component] Button renders correctly 1`] = `
       style={
         [
           {
+            "color": "#384065",
             "fontFamily": "Hind Vadodara",
+            "fontSize": 16,
             "margin": 0,
             "padding": 0,
             "textAlign": "center",
-          },
-          {
-            "color": "#384065",
-            "fontSize": 16,
-            "fontWeight": "normal",
           },
           {},
         ]

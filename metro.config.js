@@ -1,3 +1,5 @@
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+
 const Obfuscator = require("obfuscator-io-metro-plugin");
 /**
  * Metro configuration for React Native
@@ -31,7 +33,13 @@ const jsoMetroPlugin = Obfuscator(
   }
 );
 
-module.exports = {
+/**
+ * Metro configuration
+ * https://reactnative.dev/docs/metro
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
+const config = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
@@ -42,3 +50,5 @@ module.exports = {
   },
   ...jsoMetroPlugin
 };
+
+module.exports = mergeConfig(getDefaultConfig(__dirname), config);

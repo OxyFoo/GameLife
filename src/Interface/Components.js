@@ -2,11 +2,11 @@ export { Button } from './Components/Button';
 export { Icon } from './Components/Icon';
 export { Text } from './Components/Text';
 export { InputText } from './Components/InputText';
+export { Separator } from './Components/Separator';
 
 import Container from './OldComponents/Container';
 import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
-import Separator from './OldComponents/Separator';
 import Input from './OldComponents/Input';
 import KPI from './OldComponents/KPI';
 import XPBar from './OldComponents/XPBar';
@@ -37,7 +37,6 @@ export {
     Container,
     Frame,
     Character,
-    Separator,
     KPI,
     XPBar,
     ActivityTimeline,

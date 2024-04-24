@@ -11,6 +11,7 @@ import {
     Text,
     Button,
     Switch,
+    InputText,
     /*
     Checkbox,
     Container,
@@ -68,6 +69,13 @@ class Test extends BackTest {
 
                 <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                 <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+
+                <InputText
+                    style={{ marginBottom: 12 }}
+                    label='Test input'
+                    value={this.state.input}
+                    onChangeText={(newText) => this.setState({ input: newText })}
+                />
 
                 <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
                     <Switch

@@ -5,37 +5,37 @@ import { Button } from 'react-native';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedProps
+ * @typedef {import('react-native').ButtonProps} ButtonProps
  * 
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
  * @typedef {import('../Icon/back').Icons} Icons
  * @typedef {import('../../Primitives/Ripple').default} Ripple
+ * 
+ * @typedef {Object} ButtonPropsType
+ * @property {import('react').ReactNode | string | undefined} children
+ * @property {StyleProp} style
+ * @property {AnimatedProps | null} styleAnimation
+ * @property {StyleProp} styleContent
+ * @property {'normal' | 'outline' | 'outline-blur'} appearance
+ * @property {number} fontSize
+ * @property {Icons | null} icon
+ * @property {string | null} iconXml
+ * @property {number} iconSize
+ * @property {number} iconAngle
+ * @property {boolean} loading
+ * @property {boolean} enabled
+ * @property {() => void} onPress
+ * @property {() => void} onLongPress
+ * @property {(event: GestureResponderEvent) => void} onTouchStart
+ * @property {(event: GestureResponderEvent) => void} onTouchMove
+ * @property {(event: GestureResponderEvent) => void} onTouchEnd
+ * @property {(event: GestureResponderEvent) => void} onTouchCancel
+ * @property {(event: LayoutChangeEvent) => void} onLayout
  */
 
-/**
- * @type {import('react-native').ButtonProps & {
- *      children: import('react').ReactNode | string | undefined,
- *      style: StyleProp,
- *      styleAnimation: AnimatedProps | null,
- *      styleContent: StyleProp,
- *      appearance: 'normal' | 'outline' | 'outline-blur',
- *      fontSize: number,
- *      icon: Icons | null,
- *      iconXml: string | null,
- *      iconSize: number,
- *      iconAngle: number,
- *      loading: boolean,
- *      enabled: boolean,
- *      onPress: () => void,
- *      onLongPress: () => void,
- *      onTouchStart: (event: GestureResponderEvent) => void,
- *      onTouchMove: (event: GestureResponderEvent) => void,
- *      onTouchEnd: (event: GestureResponderEvent) => void,
- *      onTouchCancel: (event: GestureResponderEvent) => void,
- *      onLayout: (event: LayoutChangeEvent) => void
- * }}
- */
+/** @type {ButtonProps & ButtonPropsType} */
 const ButtonProps = {
     ...Button.prototype.props,
 

@@ -12,7 +12,7 @@ import Icon from 'Interface/OldComponents/Icon';
 import Button from 'Interface/OldComponents/Button';
 import Swiper from 'Interface/OldComponents/Swiper';
 import DayClock from 'Interface/OldComponents/DayClock';
-import Separator from 'Interface/OldComponents/Separator';
+import { Separator } from 'Interface/Components';
 import { RenderItemMemo } from 'Interface/Widgets/NonZeroDay/element';
 
 /**

@@ -10,65 +10,52 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle | TextStyle>} TextStyleProp
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
- * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('react-native').TextProps} TextProps
+ * @typedef {import('react-native').StyleProp<TextStyle>} StyleProp
  * 
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * 
+ * @typedef {Object} TextPropsType
+ * @property {TextStyleProp} style
+ * @property {ViewStyleProp} containerStyle Style of touchable opacity for onPress text
+ * @property {number} fontSize
+ * @property {ThemeColor | ThemeText} color
  */
 
+/** @type {TextProps & TextPropsType} */
 const TextProps = {
-    /** @type {string | JSX.Element | null} */
-    children: null,
-
-    /** @type {TextStyleProp} */
     style: {},
-    
-    /** @type {ViewStyleProp} Style of touchable opacity for onPress text */
     containerStyle: {},
-
-    /** @type {number} */
     fontSize: 18,
-
-    /** @type {ThemeColor | ThemeText} */
-    color: 'primary',
-
-    /** @type {((event: GestureResponderEvent) => void) | null} */
-    onPress: null,
-
-    /** @type {boolean} */
-    bold: false
+    color: 'primary'
 };
 
 class Text extends React.Component {
     render() {
         const {
-            style, containerStyle, color, onPress, fontSize, bold, children
+            style, containerStyle, color, fontSize, onPress, children, ...props
         } = this.props;
-        const _color = themeManager.GetColor(color);
 
         if (typeof children !== 'string') {
             return null;
         }
 
-        if (onPress !== null) {
+        /** @type {StyleProp} */
+        const textStyle = {
+            ...styles.text,
+            color: themeManager.GetColor(color),
+            fontSize: fontSize
+        };
+
+        if (!!onPress) {
             return (
                 <TouchableOpacity
                     style={containerStyle}
                     onPress={onPress}
                     activeOpacity={.5}
-                    disabled={onPress === null}
                 >
-                    <RNText
-                        style={[
-                            styles.text,
-                            {
-                                color: _color,
-                                fontSize: fontSize,
-                                fontWeight: this.props.bold ? 'bold' : 'normal'
-                            },
-                            style
-                        ]}
-                    >
+                    <RNText style={[textStyle, style]} {...props}>
                         {children}
                     </RNText>
                 </TouchableOpacity>
@@ -76,17 +63,7 @@ class Text extends React.Component {
         }
 
         return (
-            <RNText
-                style={[
-                    styles.text,
-                    {
-                        color: _color,
-                        fontSize: fontSize,
-                        fontWeight: this.props.bold ? 'bold' : 'normal'
-                    },
-                    style
-                ]}
-            >
+            <RNText style={[textStyle, style]} {...props}>
                 {children}
             </RNText>
         );

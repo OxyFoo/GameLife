@@ -26,7 +26,7 @@ class Button extends ButtonBack {
                 rippleColor='ground1'
                 onPress={onPress}
             >
-                <ButtonBadge {...props} />
+                <ButtonBadge />
             </Button>
         );
     });

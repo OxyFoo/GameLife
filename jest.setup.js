@@ -1,3 +1,4 @@
+import { Animated } from 'react-native';
 import mockPermissions from 'react-native-permissions/mock';
 
 jest.mock('@react-native-async-storage/async-storage', () =>
@@ -46,3 +47,20 @@ jest.mock('@react-native-community/push-notification-ios', () => ({
     removePendingNotificationRequests: jest.fn(),
     removeAllPendingNotificationRequests: jest.fn()
 }));
+
+jest.mock('react-native-gifted-charts', () => ({
+    LineChart: 'View',
+    BarChart: 'View',
+    PieChart: 'View'
+}));
+
+Animated.timing = () => ({
+    start: () => jest.fn(),
+    reset: () => jest.fn(),
+    stop: () => jest.fn()
+});
+Animated.spring = () => ({
+    start: () => jest.fn(),
+    reset: () => jest.fn(),
+    stop: () => jest.fn()
+});

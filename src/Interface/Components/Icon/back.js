@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SVGIcons from './icons';
+import SVGIcons from 'Ressources/Icons';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

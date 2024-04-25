@@ -12,6 +12,7 @@ import {
     Button,
     Switch,
     InputText,
+    Icon,
     /*
     Checkbox,
     Container,
@@ -67,7 +68,7 @@ class Test extends BackTest {
                     <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
                 </Button>
 
-                <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                 <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
 
                 <InputText
@@ -76,6 +77,35 @@ class Test extends BackTest {
                     value={this.state.input}
                     onChangeText={(newText) => this.setState({ input: newText })}
                 />
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <Icon icon='add' color='main1' />
+                    <Icon icon='arrow-square' color='main1' />
+                    <Icon icon='bell' color='main1' />
+                    <Icon icon='cart' color='main1' />
+                    <Icon icon='check' color='main1' />
+                    <Icon icon='clock' color='main1' />
+                    <Icon icon='close' color='main1' />
+                    <Icon icon='creativity' color='main1' />
+                    <Icon icon='crown' color='main1' />
+                    <Icon icon='cup' color='main1' />
+                    <Icon icon='danger' color='main1' />
+                    <Icon icon='favorite' color='main1' />
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <Icon icon='add-outline' color='main1' />
+                    <Icon icon='arrow-square-outline' color='main1' />
+                    <Icon icon='bell-outline' color='main1' />
+                    <Icon icon='cart-outline' color='main1' />
+                    <Icon icon='check-outline' color='main1' />
+                    <Icon icon='clock-outline' color='main1' />
+                    <Icon icon='close-outline' color='main1' />
+                    <Icon icon='creativity-outline' color='main1' />
+                    <Icon icon='crown-outline' color='main1' />
+                    <Icon icon='cup-outline' color='main1' />
+                    <Icon icon='danger-outline' color='main1' />
+                    <Icon icon='favorite-outline' color='main1' />
+                </View>
 
                 <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
                     <Switch
@@ -93,31 +123,31 @@ class Test extends BackTest {
 
                 {this.state.switch && (
                     <React.Suspense fallback={<Text>Loading</Text>}>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                         <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                         <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                         <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                         <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                         <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'world'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                        <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                         <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
                     </React.Suspense>
                 )}

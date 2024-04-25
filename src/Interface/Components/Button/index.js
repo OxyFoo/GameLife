@@ -67,7 +67,7 @@ class Button extends ButtonBack {
         if (loading) {
             content = (
                 <Icon
-                    icon='loadingDots'
+                    icon='loading-dots'
                     style={styles.loadingIcon}
                     size={36}
                     color={'darkBlue'}

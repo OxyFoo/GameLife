@@ -3,9 +3,9 @@ import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import IconBack from './back';
-import SVGIcons from './icons';
 import themeManager from 'Managers/ThemeManager';
 
+import SVGIcons from 'Ressources/Icons';
 import Base64 from 'Utils/Base64';
 
 class Icon extends IconBack {
@@ -45,6 +45,7 @@ class Icon extends IconBack {
                         width={size}
                         height={size}
                         color={color}
+                        fill={color}
                         transform={[{ rotate: angle * Math.PI / 180 }]}
                     />
                 </View>

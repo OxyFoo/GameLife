@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { Animated } from 'react-native';
 
 import { MinMax, Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
@@ -9,9 +8,11 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * 
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  */
 
-const XPBarProps = {
+const ProgressBarProps = {
     /** @type {StyleProp} */
     style: {},
 
@@ -24,11 +25,17 @@ const XPBarProps = {
     /** @type {number} */
     supValue: 0,
 
-    /** @type {number} To set the delay of the animation (delay * 200ms) */
-    delay: 0
+    /** @type {'gradient' | ThemeColor} */
+    color: 'gradient',
+
+    /** @type {'thin' | 'normal' | 'thick' | 'full'} */
+    size: 'normal',
+
+    /** @type {number} To set the delay of the animation in seconds */
+    delay: 0.2
 };
 
-class XPBarBack extends React.Component {
+class ProgressBarBack extends React.Component {
     state = {
         width: 0,
         animation: new Animated.Value(0),
@@ -36,8 +43,11 @@ class XPBarBack extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(this.startAnimations, this.props.delay * 200);
+        const time = Math.max(0, this.props.delay * 1000);
+        setTimeout(this.startAnimations, time);
     }
+
+    /** @param {ProgressBarProps} prevProps */
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value || prevProps.maxValue !== this.props.maxValue) {
             this.startAnimations();
@@ -47,14 +57,13 @@ class XPBarBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width } = event.nativeEvent.layout;
-        this.setState({ width: width });
+        this.setState({ width });
     }
 
     startAnimations = async () => {
-        const { maxValue } = this.props;
-        const value = MinMax(0, this.props.value, maxValue);
-        const valueInt = value / maxValue;
-        const valueCover = this.props.supValue / maxValue;
+        const { value, maxValue, supValue } = this.props;
+        const valueInt = MinMax(0, value, maxValue) / maxValue;
+        const valueCover = MinMax(0, supValue, maxValue - value) / maxValue;
 
         await Sleep(300);
         SpringAnimation(this.state.animation, valueInt).start();
@@ -63,7 +72,7 @@ class XPBarBack extends React.Component {
     }
 }
 
-XPBarBack.prototype.props = XPBarProps;
-XPBarBack.defaultProps = XPBarProps;
+ProgressBarBack.prototype.props = ProgressBarProps;
+ProgressBarBack.defaultProps = ProgressBarProps;
 
-export default XPBarBack;
+export default ProgressBarBack;

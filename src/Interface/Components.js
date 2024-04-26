@@ -2,6 +2,7 @@ export { Button } from './Components/Button';
 export { CheckBox } from './Components/CheckBox';
 export { Icon } from './Components/Icon';
 export { InputText } from './Components/InputText';
+export { ProgressBar } from './Components/ProgressBar';
 export { Separator } from './Components/Separator';
 export { Switch } from './Components/Switch';
 export { SwitchText } from './Components/SwitchText';
@@ -12,7 +13,6 @@ import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
 import Input from './OldComponents/Input';
 import KPI from './OldComponents/KPI';
-import XPBar from './OldComponents/XPBar';
 import ActivityTimeline from './OldComponents/ActivityTimeline';
 import ComboBox from './OldComponents/ComboBox';
 import DayClock from './OldComponents/DayClock';
@@ -24,7 +24,6 @@ import IconCheckable from './OldComponents/IconCheckable';
 import KeyboardSpacerView from './OldComponents/KeyboardSpacerView';
 import LineChartSvg from './OldComponents/LineChartSvg';
 import PieChart from './OldComponents/PieChart';
-import ProgressBar from './OldComponents/ProgressBar';
 import SimpleContainer from './OldComponents/SimpleContainer';
 import StreakChart from './OldComponents/StreakChart';
 import Swiper from './OldComponents/Swiper';
@@ -38,7 +37,6 @@ export {
     Frame,
     Character,
     KPI,
-    XPBar,
     ActivityTimeline,
     ComboBox,
     DayClock,
@@ -49,7 +47,6 @@ export {
     KeyboardSpacerView,
     LineChartSvg,
     PieChart,
-    ProgressBar,
     SimpleContainer,
     StreakChart,
     Swiper,

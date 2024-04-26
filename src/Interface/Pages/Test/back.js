@@ -6,8 +6,6 @@ import { SpringAnimation } from 'Utils/Animations';
 
 class BackTest extends PageBase {
     state = {
-        test: '',
-        testChecked: false,
         selectedSkill: {ID: -1, value: ''},
 
         // Components tests
@@ -27,7 +25,6 @@ class BackTest extends PageBase {
             const newX = this.panelX === 0 ? 200 : 0;
             this.panelX = newX;
             SpringAnimation(this.animPanel, newX).start();
-            //this.setState({ switch: !this.state.switch });
         }, 2000);
     }
 

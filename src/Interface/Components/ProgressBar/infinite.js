@@ -6,7 +6,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Random, Sleep } from 'Utils/Functions';
 import { TimingAnimation } from 'Utils/Animations';
 
-class ProgressBar extends React.Component {
+class ProgressBarInfinite extends React.Component {
     state = {
         animTranslate: new Animated.Value(0),
         animScale: new Animated.Value(0)
@@ -16,9 +16,11 @@ class ProgressBar extends React.Component {
         this.loop();
         this.interval = window.setInterval(this.loop, 2000);
     }
+
     componentWillUnmount() {
         clearInterval(this.interval);
     }
+
     loop = async () => {
         TimingAnimation(this.state.animTranslate, -1, 0, false).start();
         await Sleep(100);
@@ -65,4 +67,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ProgressBar;
+export { ProgressBarInfinite };

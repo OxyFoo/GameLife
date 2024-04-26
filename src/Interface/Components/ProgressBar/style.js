@@ -5,34 +5,33 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 10,
         borderRadius: 8,
+        backgroundColor: '#000000',
         overflow: 'hidden'
     },
     bar: {
         width: '100%',
         height: '100%'
     },
-    black: {
+    mask: {
         position: 'absolute',
-        width: '100%',
+        width: '110%', // Extra 10% to cover the whole bar (during the animation)
         height: '100%',
         top: 0,
-        left: 0,
-        borderLeftWidth: 0.6,
-        borderLeftColor: '#FFFFFF',
-        backgroundColor: '#000000',
-        overflow: 'hidden'
+        left: '-110%',
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 8,
+        backgroundColor: '#000000'
     },
-    preCover: {
-        left: '-200%'
-    },
-    cover: {
+    supXP: {
         position: 'absolute',
         top: 0,
-        left: '-100%',
-        width: '100%',
+        left: '-110%',
+        width: '110%',
         minWidth: 0.6,
         height: '100%',
-        opacity: 0.5,
+        opacity: 0.4,
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 8,
         backgroundColor: '#FFFFFF'
     }
 });

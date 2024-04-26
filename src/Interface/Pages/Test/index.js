@@ -14,16 +14,13 @@ import {
     InputText,
     Icon,
     CheckBox,
+    ProgressBar,
     SwitchText,
     /*
-    Checkbox,
     Container,
     Input,
     ComboBox,
     Swiper,
-    XPBar,
-    TextSwitch,
-    Switch,
     Digit
     */
 } from 'Interface/Components';
@@ -42,10 +39,11 @@ class Test extends BackTest {
         const renderTests = [
             //this.renderButtons,
             //this.renderButtonsPanic,
-            this.renderInputText,
+            //this.renderInputText,
             this.renderIcons,
             this.renderSwitches,
-            this.renderSwitchText
+            this.renderSwitchText,
+            this.renderProgressBars
         ];
 
         return (
@@ -68,11 +66,6 @@ class Test extends BackTest {
                     <Digit />
                 </View>
 
-                <Input style={{ marginBottom: 12 }} label='' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
-                <Input style={{ marginBottom: 12 }} label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
-
-                <Input style={{ marginBottom: 12 }} label='Test input multiline' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} multiline />
-
                 <ComboBox
                     style={{ marginBottom: 12 }}
                     data={TEST_VALUES}
@@ -80,8 +73,6 @@ class Test extends BackTest {
                     selectedValue={this.state.selectedSkill.value}
                     onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: 0, value: ''} : item }); }}
                 />
-
-                <TextSwitch style={{ marginBottom: 12 }} texts={[ 'Test 1', 'Test 2' ]} />
 
                 <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='userAdd' onIconPress={() => {console.log('YES')}}>
                     <XPBar value={0} style={{ marginBottom: 12 }} />
@@ -114,19 +105,7 @@ class Test extends BackTest {
                     <Input />
                 </View>
 
-                <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='add'>
-                    <Input label='Test input' text={this.state.test} onChangeText={(t) => { this.setState({ test: t}) }} />
-                </Container>
-
                 <Container text='Rollable !' type='rollable' opened={false}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Checkbox
-                            style={{ marginRight: 4 }}
-                            checked={this.state.testChecked}
-                            onChange={() => { this.setState({ testChecked: !this.state.testChecked }) }}
-                        />
-                        <Text fontSize={14} color='primary' onPress={() => { this.setState({ testChecked: !this.state.testChecked }) }}>{'Blablabla blablabla blabla bla'}</Text>
-                    </View>
                     <Text style={{ marginBottom: 48 }}>Blablabla</Text>
                     <Text style={{ marginBottom: 48 }}>Blablabla</Text>
                     <Text style={{ marginBottom: 48 }}>Blablabla</Text>
@@ -301,6 +280,38 @@ class Test extends BackTest {
                     value={this.state.switchText}
                     onChangeValue={(value) => { this.setState({ switchText: value }); }}
                 />
+            </View>
+        );
+    }
+
+    renderProgressBars = () => {
+        return (
+            <View>
+                {this.renderTitle('ProgressBar')}
+                <ProgressBar
+                    style={{ marginBottom: 12 }}
+                    //value={(this.state.switch1 ? 5 : 0) + (this.state.switch2 ? 5 : 0)}
+                    value={10}
+                    size='thin'
+                />
+                <ProgressBar
+                    style={{ marginBottom: 12 }}
+                    value={4}
+                    supValue={3}
+                    color='main1'
+                />
+                <ProgressBar
+                    style={{ marginBottom: 12 }}
+                    value={10}
+                    size='thick'
+                    color='main2'
+                />
+                <ProgressBar
+                    style={{ marginBottom: 12 }}
+                    value={6}
+                    size='full'
+                />
+                <ProgressBar.Infinite />
             </View>
         );
     }

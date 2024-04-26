@@ -59,6 +59,7 @@ class Test extends BackTest {
                     }}
                 />
 
+                <Text style={{ marginVertical: 12, textAlign: 'left', fontSize: 20 }}>{'Boutons'}</Text>
                 <Button style={{ marginBottom: 12 }} icon='home' appearance='outline'/>
                 <Button style={{ marginBottom: 12 }} loading={true}>{'Quêtes journalières'}</Button>
                 <Button style={{ marginBottom: 12 }} appearance='outline-blur'>{'Quêtes journalières'}</Button>
@@ -71,13 +72,25 @@ class Test extends BackTest {
                 <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
                 <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
 
+                <Text style={{ marginVertical: 12, textAlign: 'left', fontSize: 20 }}>{'Inputs'}</Text>
                 <InputText
                     style={{ marginBottom: 12 }}
                     label='Test input'
                     value={this.state.input}
                     onChangeText={(newText) => this.setState({ input: newText })}
                 />
+                <InputText
+                    style={{ marginBottom: 12 }}
+                    label='Test input'
+                    staticLabel
+                    placeholder='Placeholder'
+                    placeholderTextColor='white'
+                    value={this.state.input}
+                    onChangeText={(newText) => this.setState({ input: newText })}
+                    error
+                />
 
+                <Text style={{ marginVertical: 12, textAlign: 'left', fontSize: 20 }}>{'Icons'}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
                     <Icon icon='add' color='main1' />
                     <Icon icon='arrow-square' color='main1' />

@@ -25,6 +25,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {boolean} staticLabel If true, the label is static.
  * @property {ThemeColor} activeColor Color used when the TextInput is active.
  * @property {TextContentType} type Type of content to handle.
+ * @property {boolean} error If true, the TextInput has an error.
  * @property {boolean} enabled If true, the TextInput is enabled.
  * @property {(e: NativeSyntheticEvent) => void} onSubmit Handler for the submit event.
  */
@@ -36,6 +37,7 @@ const InputTextProps = {
     staticLabel: false,
     activeColor: 'main1',
     type: 'default',
+    error: false,
     enabled: true,
     onSubmit: (e) => {}
 };

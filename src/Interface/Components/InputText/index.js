@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { TextInput, Animated } from 'react-native';
+import { Animated, View, TextInput } from 'react-native';
 
 import styles from './style';
 import InputTextBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text } from '../Text';
+import { Icon } from '../Icon';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -26,9 +27,8 @@ const textTypes = {
 class InputText extends InputTextBack {
     render() {
         const {
-            style, label, type, enabled,
-            staticLabel, activeColor,
-            onSubmit, pointerEvents,
+            style, label, type, enabled, staticLabel, activeColor,
+            error, onSubmit, pointerEvents,
             ...props
         } = this.props;
         const {
@@ -38,14 +38,16 @@ class InputText extends InputTextBack {
 
         /** @type {ThemeColor | ThemeText} */
         const textColor = isFocused ? activeColor : 'primary';
-        const hexActiveColor = themeManager.GetColor(isFocused ? activeColor : 'border');
+        let hexActiveColor = themeManager.GetColor(isFocused ? activeColor : 'border');
+        if (error) hexActiveColor = themeManager.GetColor('danger');
 
         /** @type {ViewStyle} */
         const containerStyle = {
             backgroundColor: themeManager.GetColor('background'),
             borderColor: hexActiveColor,
             borderWidth: borderWidth,
-            opacity: enabled ? 1 : 0.6
+            opacity: enabled ? 1 : 0.6,
+            paddingRight: error ? 32 : 0
         };
 
         /** @type {ViewStyle} */
@@ -111,6 +113,16 @@ class InputText extends InputTextBack {
                     autoComplete={textTypes[type]['android']}
                     autoCorrect={false}
                 />
+
+                {/* Error icon */}
+                {error && (
+                    <View style={styles.error}>
+                        <Icon
+                            icon='danger'
+                            color='danger'
+                        />
+                    </View>
+                )}
             </Animated.View>
         );
     }

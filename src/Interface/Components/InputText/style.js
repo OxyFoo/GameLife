@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     parent: {
         width: '100%',
-        borderRadius: 4
+        borderRadius: 8
     },
     placeholderParent: {
         position: 'absolute',
@@ -21,6 +21,15 @@ const styles = StyleSheet.create({
         maxHeight: 256,
         color: '#FFFFFF',
         paddingHorizontal: 12
+    },
+
+    error: {
+        position: 'absolute',
+        right: 8,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 
     bar: {

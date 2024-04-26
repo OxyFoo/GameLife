@@ -4,6 +4,7 @@ export { Icon } from './Components/Icon';
 export { InputText } from './Components/InputText';
 export { Separator } from './Components/Separator';
 export { Switch } from './Components/Switch';
+export { SwitchText } from './Components/SwitchText';
 export { Text } from './Components/Text';
 
 import Container from './OldComponents/Container';
@@ -28,7 +29,6 @@ import SimpleContainer from './OldComponents/SimpleContainer';
 import StreakChart from './OldComponents/StreakChart';
 import Swiper from './OldComponents/Swiper';
 import OldText from './OldComponents/Text';
-import TextSwitch from './OldComponents/TextSwitch';
 import UserOnlineElement from './OldComponents/UserOnlineElement';
 import Zap from './OldComponents/Zap';
 
@@ -53,7 +53,6 @@ export {
     SimpleContainer,
     StreakChart,
     Swiper,
-    TextSwitch,
     UserOnlineElement,
     Zap,
 

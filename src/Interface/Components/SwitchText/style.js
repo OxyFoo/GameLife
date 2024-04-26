@@ -6,22 +6,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: 55,
-        padding: 4,
+        padding: 7,
         borderWidth: 1.6,
-        borderRadius: 16
+        borderRadius: 8
     },
     button: {
         width: '47.5%',
         height: '100%',
-        borderRadius: 8,
-        paddingHorizontal: 6
+        borderRadius: 3,
+        paddingHorizontal: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden'
     },
     selection: {
         position: 'absolute',
-        top: 4,
-        bottom: 4,
-        left: 4,
-        borderRadius: 12
+        top: 7,
+        bottom: 7,
+        left: 7,
+        borderRadius: 3
     }
 });
 

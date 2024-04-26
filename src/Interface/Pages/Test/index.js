@@ -14,6 +14,7 @@ import {
     InputText,
     Icon,
     CheckBox,
+    SwitchText,
     /*
     Checkbox,
     Container,
@@ -43,7 +44,8 @@ class Test extends BackTest {
             //this.renderButtonsPanic,
             this.renderInputText,
             this.renderIcons,
-            this.renderSwitches
+            this.renderSwitches,
+            this.renderSwitchText
         ];
 
         return (
@@ -285,6 +287,20 @@ class Test extends BackTest {
                         onChangeValue={(value) => { this.setState({ checkbox2: value }); }}
                     />
                 </View>
+            </View>
+        );
+    }
+
+    renderSwitchText = () => {
+        return (
+            <View>
+                {this.renderTitle('SwitchText')}
+                <SwitchText
+                    style={{ marginBottom: 12 }}
+                    texts={[ 'Test 1', 'Test 2', 'Test 3' ]}
+                    value={this.state.switchText}
+                    onChangeValue={(value) => { this.setState({ switchText: value }); }}
+                />
             </View>
         );
     }

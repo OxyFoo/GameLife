@@ -16,6 +16,7 @@ class BackTest extends PageBase {
         switch2: true,
         checkbox1: false,
         checkbox2: true,
+        switchText: 0,
     }
 
     animPanel = new Animated.Value(0);

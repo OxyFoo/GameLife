@@ -28,7 +28,7 @@ class CheckBox extends CheckBoxBack {
             <TouchableOpacity
                 style={[styles.parent, borderColorStyle, this.props.style]}
                 onPress={this.onPress}
-                activeOpacity={0.8}
+                activeOpacity={0.6}
             >
                 <Animated.View style={[styles.check, checkStyle]} />
             </TouchableOpacity>

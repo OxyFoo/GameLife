@@ -9,7 +9,7 @@ import ButtonBack from './back';
 
 import { Text } from '../Text';
 import { Icon } from '../Icon';
-import Ripple from '../../Primitives/Ripple';
+import { Ripple } from '../../Primitives/Ripple';
 import themeManager from 'Managers/ThemeManager';
 
 /**

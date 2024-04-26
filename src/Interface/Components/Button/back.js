@@ -11,7 +11,7 @@ import { Button } from 'react-native';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
  * @typedef {import('../Icon/back').Icons} Icons
- * @typedef {import('../../Primitives/Ripple').default} Ripple
+ * @typedef {import('../../Primitives/Ripple').Ripple} Ripple
  * 
  * @typedef {Object} ButtonPropsType
  * @property {import('react').ReactNode | string | undefined} children

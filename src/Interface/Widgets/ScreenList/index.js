@@ -63,7 +63,7 @@ class ScreenList extends ScreenListBack {
                         ref={ref => this.refFlatlist = ref}
                         data={data}
                         renderItem={this.renderItem}
-                        keyExtractor={(item) => 'SL-' + item.id + '-' + item.value}
+                        keyExtractor={(item) => `SL-${item?.id}-${item?.value}`}
                         onLayout={this.onLayoutFlatList}
                         onContentSizeChange={this.onContentSizeChange}
                         initialNumToRender={data.length / 2}

@@ -9,8 +9,13 @@ class BackTest extends PageBase {
         test: '',
         testChecked: false,
         selectedSkill: {ID: -1, value: ''},
-        switch: false,
-        input: ''
+
+        // Components tests
+        input: '',
+        switch1: false,
+        switch2: true,
+        checkbox1: false,
+        checkbox2: true,
     }
 
     animPanel = new Animated.Value(0);

@@ -26,22 +26,24 @@ const SwitchProps = {
 
 class SwitchBack extends React.Component {
     state = {
-        anim: new Animated.Value(0),
-        animBackground: new Animated.Value(0)
+        animSpring: new Animated.Value(0),
+        animLinear: new Animated.Value(0)
     }
 
     componentDidMount() {
         if (this.props.value) {
-            SpringAnimation(this.state.anim, 1).start();
-            TimingAnimation(this.state.animBackground, 1).start();
+            SpringAnimation(this.state.animSpring, 1).start();
+            TimingAnimation(this.state.animLinear, 1).start();
         }
     }
 
     /** @param {SwitchProps} prevProps */
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
-            SpringAnimation(this.state.anim, this.props.value ? 1 : 0).start();
-            TimingAnimation(this.state.animBackground, this.props.value ? 1 : 0).start();
+            Animated.parallel([
+                SpringAnimation(this.state.animSpring, this.props.value ? 1 : 0),
+                TimingAnimation(this.state.animLinear, this.props.value ? 1 : 0)
+            ]).start();
         }
     }
 

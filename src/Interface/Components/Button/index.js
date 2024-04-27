@@ -129,7 +129,7 @@ class Button extends ButtonBack {
             opacity: enabled ? 1 : 0.6
         };
 
-        if (appearance === 'normal') {
+        if (appearance === 'normal' || appearance === 'transparent') {
             return (
                 <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
                     {content}
@@ -165,9 +165,6 @@ class Button extends ButtonBack {
 
     renderBackground() {
         const { appearance } = this.props;
-        const backgroundStyle = {
-            backgroundColor: themeManager.GetColor('darkBlue', { opacity: .25 })
-        };
 
         if (appearance === 'normal') {
             return (
@@ -182,28 +179,17 @@ class Button extends ButtonBack {
 
         else if (appearance === 'outline') {
             return (
-                <>
-                    <View
-                        style={[
-                            styles.absolute,
-                            styles.backgroundTransparent,
-                            {
-                                backgroundColor: themeManager.GetColor('black', { opacity: .5 })
-                            }
-                        ]}
+                <MaskedView
+                    style={styles.absolute}
+                    maskElement={(<View style={styles.backgroundView} />)}
+                >
+                    <LinearGradient
+                        style={{ width: '100%', height: '100%' }}
+                        colors={['#8CF7FF', '#DBA1FF']}
+                        useAngle={true}
+                        angle={267}
                     />
-                    <MaskedView
-                        style={styles.absolute}
-                        maskElement={(<View style={styles.backgroundView} />)}
-                    >
-                        <LinearGradient
-                            style={{ width: '100%', height: '100%' }}
-                            colors={['#8CF7FF', '#DBA1FF']}
-                            useAngle={true}
-                            angle={267}
-                        />
-                    </MaskedView>
-                </>
+                </MaskedView>
             );
         }
 

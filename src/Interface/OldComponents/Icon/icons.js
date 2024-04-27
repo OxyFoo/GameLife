@@ -8,7 +8,7 @@ import svgCalendar from 'Ressources/icons/old/calendar';
 import svgCheck from 'Ressources/icons/old/check';
 import svgCheckboxOn from 'Ressources/icons/old/checkbox-on';
 import svgCheckboxOff from 'Ressources/icons/old/checkbox-off';
-import svgChevron from 'Ressources/icons/old/chevron';
+//import svgChevron from 'Ressources/icons/old/chevron';
 import svgChrono from 'Ressources/icons/old/chrono';
 import svgCross from 'Ressources/icons/old/cross';
 import svgDiscord from 'Ressources/icons/old/discord';
@@ -66,7 +66,7 @@ const SVGIcons = {
     check: svgCheck,
     checkboxOn: svgCheckboxOn,
     checkboxOff: svgCheckboxOff,
-    chevron: svgChevron,
+//    chevron: svgChevron,
     chrono: svgChrono,
     cross: svgCross,
     discord: svgDiscord,

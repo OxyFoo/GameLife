@@ -27,6 +27,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {TextContentType} type Type of content to handle.
  * @property {boolean} error If true, the TextInput has an error.
  * @property {boolean} enabled If true, the TextInput is enabled.
+ * @property {boolean} forceActive If true, the TextInput is forced to be active.
  * @property {(e: NativeSyntheticEvent) => void} onSubmit Handler for the submit event.
  */
 
@@ -39,6 +40,7 @@ const InputTextProps = {
     type: 'default',
     error: false,
     enabled: true,
+    forceActive: false,
     onSubmit: (e) => {}
 };
 

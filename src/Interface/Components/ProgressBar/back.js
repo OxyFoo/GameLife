@@ -28,8 +28,8 @@ const ProgressBarProps = {
     /** @type {'gradient' | ThemeColor} */
     color: 'gradient',
 
-    /** @type {'thin' | 'normal' | 'thick' | 'full'} */
-    size: 'normal',
+    /** @type {number} */
+    height: 8,
 
     /** @type {number} To set the delay of the animation in seconds */
     delay: 0.2

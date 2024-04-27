@@ -6,11 +6,13 @@ exports[`[Component] InputText renders correctly 1`] = `
   onLayout={[Function]}
   style={
     {
-      "backgroundColor": "#0E1247",
       "borderColor": "#808080",
-      "borderRadius": 4,
+      "borderRadius": 8,
       "borderWidth": 1.2,
+      "height": 54,
+      "justifyContent": "center",
       "opacity": 1,
+      "paddingRight": 0,
       "width": "100%",
     }
   }
@@ -97,13 +99,14 @@ exports[`[Component] InputText renders correctly 1`] = `
     onBlur={[Function]}
     onFocus={[Function]}
     onSubmitEditing={[Function]}
-    selectionColor="#808080"
+    selectionColor="white"
     style={
       {
         "color": "#FFFFFF",
         "maxHeight": 256,
-        "minHeight": 56,
+        "minHeight": 12,
         "paddingHorizontal": 12,
+        "paddingVertical": 0,
       }
     }
     testID="textInput"

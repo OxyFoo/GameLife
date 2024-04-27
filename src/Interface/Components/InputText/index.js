@@ -28,22 +28,29 @@ class InputText extends InputTextBack {
     render() {
         const {
             style, label, type, enabled, staticLabel, activeColor,
-            error, onSubmit, pointerEvents,
-            ...props
+            forceActive, error, onSubmit, pointerEvents, ...props
         } = this.props;
         const {
-            animTop, animLeft, animScale,
-            isFocused, boxHeight, borderWidth, textWidth, textHeight
+            animTop, animLeft, animScale, isFocused,
+            boxHeight, borderWidth, textWidth, textHeight
         } = this.state;
 
+        const isActive = isFocused || forceActive;
+
         /** @type {ThemeColor | ThemeText} */
-        const textColor = isFocused ? activeColor : 'primary';
-        let hexActiveColor = themeManager.GetColor(isFocused ? activeColor : 'border');
-        if (error) hexActiveColor = themeManager.GetColor('danger');
+        let textColor = isActive ? activeColor : 'primary';
+        let hexActiveColor = themeManager.GetColor(isActive ? activeColor : 'border');
+
+        if (error) {
+            hexActiveColor = themeManager.GetColor('danger');
+            if (isActive) {
+                textColor = 'danger';
+            }
+        }
 
         /** @type {ViewStyle} */
         const containerStyle = {
-            backgroundColor: themeManager.GetColor('background'),
+            //backgroundColor: themeManager.GetColor('background'),
             borderColor: hexActiveColor,
             borderWidth: borderWidth,
             opacity: enabled ? 1 : 0.6,
@@ -105,7 +112,7 @@ class InputText extends InputTextBack {
                     testID={'textInput'}
                     ref={this.refInput}
                     style={styles.input}
-                    selectionColor={hexActiveColor}
+                    selectionColor={'white'}
                     onFocus={this.onFocusIn}
                     onBlur={this.onFocusOut}
                     onSubmitEditing={onSubmit}

@@ -37,8 +37,6 @@ const styles = StyleSheet.create({
     backgroundBlur: {
         margin: 1
     },
-    backgroundTransparent: {
-    },
     loadingIcon: {
         marginTop: -6,
         marginBottom: -6

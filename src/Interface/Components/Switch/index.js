@@ -15,18 +15,18 @@ import themeManager from 'Managers/ThemeManager';
 class Switch extends SwitchBack {
     render() {
         const { style, color } = this.props;
-        const { anim, animBackground } = this.state;
+        const { animSpring, animLinear } = this.state;
 
         /** @type {StyleProp} */
         const bgStyle = {
-            opacity: Animated.subtract(1, anim)
+            opacity: Animated.subtract(1, animLinear)
         };
 
         /** @type {AnimatedViewStyle} */
         const activeBgStyle = {
             transform: [
-                { translateX: Animated.multiply(anim, 24)},
-                { scale: Animated.multiply(animBackground, 100)}
+                { translateX: Animated.multiply(animSpring, 24) },
+                { scale: Animated.multiply(animLinear, 100) }
             ],
             backgroundColor: themeManager.GetColor(color)
         };
@@ -35,7 +35,7 @@ class Switch extends SwitchBack {
         const btnStyle = {
             backgroundColor: themeManager.GetColor('white'),
             transform: [
-                { translateX: Animated.multiply(anim, 24) }
+                { translateX: Animated.multiply(animSpring, 24) }
             ]
         };
 

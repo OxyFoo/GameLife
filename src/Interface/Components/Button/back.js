@@ -18,7 +18,7 @@ import { Button } from 'react-native';
  * @property {StyleProp} style
  * @property {AnimatedProps | null} styleAnimation
  * @property {StyleProp} styleContent
- * @property {'normal' | 'outline' | 'outline-blur'} appearance
+ * @property {'normal' | 'outline' | 'outline-blur' | 'transparent'} appearance
  * @property {number} fontSize
  * @property {Icons | null} icon
  * @property {string | null} iconXml

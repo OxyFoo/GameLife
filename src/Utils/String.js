@@ -15,7 +15,7 @@
  */
  function IsEmail(email) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    return typeof(email) === 'string' && email.length && reg.test(email);
+    return typeof(email) === 'string' && !!email.length && reg.test(email);
 }
 
 /**
@@ -55,4 +55,12 @@ function getUppercaseLetters(str) {
     return matches !== null ? matches.join('') : '';
 }
 
-export { IsEmail, StrIsJSON, ParsePlural, getUppercaseLetters };
+/**
+ * @param {string} str
+ * @returns {string}
+ */
+function FormatForSearch(str) {
+    return str.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+export { IsEmail, StrIsJSON, ParsePlural, getUppercaseLetters, FormatForSearch };

@@ -6,7 +6,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 import renderer from 'react-test-renderer';
 
 // Graphical components
-import ComboBox from '../index';
+import { ComboBox } from '../index';
 
 const options = [
     { key: 'Option 1', value: 'Option 1' },

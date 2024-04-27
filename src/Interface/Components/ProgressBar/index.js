@@ -17,16 +17,8 @@ class ProgressBar extends ProgressBarBack {
     static Infinite = ProgressBarInfinite;
 
     render() {
-        const { style, size } = this.props;
+        const { style, height } = this.props;
         const { width, animation, animCover } = this.state;
-
-        /** @type {StyleProp} */
-        const bodyStyle = {
-            height: 8 // Normal size
-        };
-        if (size === 'thin') bodyStyle.height = 6;
-        else if (size === 'thick') bodyStyle.height = 10;
-        else if (size === 'full') bodyStyle.height = 14;
 
         const leftOffset = Animated.multiply(animation, width);
         const suppOffset = Animated.multiply(animCover, width);
@@ -37,7 +29,7 @@ class ProgressBar extends ProgressBarBack {
         };
 
         return (
-            <View style={[styles.body, bodyStyle, style]} onLayout={this.onLayout}>
+            <View style={[styles.body, { height }, style]} onLayout={this.onLayout}>
                 <Animated.View style={[styles.supXP, animSupStyle]} />
                 <MaskedView maskElement={this.renderMask()}>
                     {this.renderBackground()}

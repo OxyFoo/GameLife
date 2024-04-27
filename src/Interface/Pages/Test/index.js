@@ -16,6 +16,7 @@ import {
     CheckBox,
     ProgressBar,
     SwitchText,
+    ComboBox,
     /*
     Container,
     Input,
@@ -25,29 +26,21 @@ import {
     */
 } from 'Interface/Components';
 
-/** @type {import('Interface/OldComponents/ComboBox').ComboBoxItem[]} */
-const TEST_VALUES = [
-    {key: 0, value: 'Abc 0'},
-    {key: 1, value: 'Def 1'},
-    {key: 2, value: 'Item 2'},
-    {key: 3, value: 'Item 3'},
-    {key: 4, value: 'Item 4'}
-];
-
 class Test extends BackTest {
     render() {
         const renderTests = [
             //this.renderButtons,
             //this.renderButtonsPanic,
-            //this.renderInputText,
-            this.renderIcons,
+            this.renderInputText,
+            //this.renderIcons,
             this.renderSwitches,
             this.renderSwitchText,
-            this.renderProgressBars
+            this.renderProgressBars,
+            this.renderComboBox,
         ];
 
         return (
-            <Page ref={this.refPage}>
+            <Page ref={this.refPage} scrollable={false}>
                 <MaskedView
                     style={{ marginVertical: 24 }}
                     maskElement={(<Text fontSize={32}>{'Page de test'}</Text>)}
@@ -290,28 +283,44 @@ class Test extends BackTest {
                 {this.renderTitle('ProgressBar')}
                 <ProgressBar
                     style={{ marginBottom: 12 }}
-                    //value={(this.state.switch1 ? 5 : 0) + (this.state.switch2 ? 5 : 0)}
-                    value={10}
-                    size='thin'
+                    value={Math.random() * 10}
                 />
                 <ProgressBar
                     style={{ marginBottom: 12 }}
-                    value={4}
+                    value={Math.random() * 10}
                     supValue={3}
                     color='main1'
                 />
                 <ProgressBar
                     style={{ marginBottom: 12 }}
-                    value={10}
-                    size='thick'
+                    value={Math.random() * 10}
                     color='main2'
                 />
                 <ProgressBar
                     style={{ marginBottom: 12 }}
-                    value={6}
-                    size='full'
+                    value={Math.random() * 10}
                 />
                 <ProgressBar.Infinite />
+            </View>
+        );
+    }
+
+    renderComboBox = () => {
+        return (
+            <View>
+                {this.renderTitle('ComboBox')}
+                <ComboBox
+                    data={[
+                        {key: 0, value: 'Abc 0'},
+                        {key: 1, value: 'Def 1'},
+                        {key: 2, value: 'Item 2'},
+                        {key: 3, value: 'Item 3'},
+                        {key: 4, value: 'Item 4'}
+                    ]}
+                    selectedValue={this.state.selectedSkill.value}
+                    onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: -1, value: ''} : item }); }}
+                    enableSearchBar
+                />
             </View>
         );
     }

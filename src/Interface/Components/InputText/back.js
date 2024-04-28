@@ -68,6 +68,27 @@ class InputTextBack extends React.Component {
         }
     }
 
+    /**
+     * @param {InputTextProps} nextProps
+     * @param {InputTextBack['state']} nextState
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.style !== this.props.style ||
+            nextProps.label !== this.props.label ||
+            nextProps.value !== this.props.value ||
+            nextProps.staticLabel !== this.props.staticLabel ||
+            nextProps.activeColor !== this.props.activeColor ||
+            nextProps.type !== this.props.type ||
+            nextProps.error !== this.props.error ||
+            nextProps.enabled !== this.props.enabled ||
+            nextProps.forceActive !== this.props.forceActive ||
+            nextState.isFocused !== this.state.isFocused ||
+            nextState.boxHeight !== this.state.boxHeight ||
+            nextState.borderWidth !== this.state.borderWidth ||
+            nextState.textWidth !== this.state.textWidth ||
+            nextState.textHeight !== this.state.textHeight;
+    }
+
     /** @param {InputTextProps} prevProps */
     componentDidUpdate(prevProps) {
         if (prevProps.staticLabel !== this.props.staticLabel) {

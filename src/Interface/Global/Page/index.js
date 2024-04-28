@@ -58,7 +58,11 @@ class Page extends PageBack {
 
         return (
             <Animated.View style={styles.container}>
-                <ScrollView style={styles.parent} contentContainerStyle={{ padding: 32 }} scrollEnabled={scrollEnabled}>
+                <ScrollView
+                    style={styles.parent}
+                    contentContainerStyle={styles.parentContainer}
+                    scrollEnabled={scrollEnabled}
+                >
                     {this.props.children}
                 </ScrollView>
             </Animated.View>

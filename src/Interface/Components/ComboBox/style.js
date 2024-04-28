@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 8,
         overflow: 'hidden'
     },
+    overlayContent: {
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8
+    },
     borderFix: {
         position: 'absolute',
         top: -12,

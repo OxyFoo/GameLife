@@ -44,6 +44,15 @@ const IconProps = {
 };
 
 class IconBack extends React.Component {
+    /** @param {IconProps} nextProps */
+    shouldComponentUpdate(nextProps) {
+        return this.props.show !== nextProps.show
+            || this.props.xml !== nextProps.xml
+            || this.props.icon !== nextProps.icon
+            || this.props.size !== nextProps.size
+            || this.props.angle !== nextProps.angle
+            || this.props.color !== nextProps.color;
+    }
 }
 
 IconBack.prototype.props = IconProps;

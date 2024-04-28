@@ -387,17 +387,18 @@ class PageManager extends React.Component{
 
     GetCurrentPageName = () => this.state.selectedPage;
 
+    darkBackground = [
+        themeManager.GetColor('ground1', { themeName: 'Main' }),
+        themeManager.GetColor('ground2', { themeName: 'Main' })
+    ];
+    lightBackground = [
+        themeManager.GetColor('ground1', { themeName: 'Light' }),
+        themeManager.GetColor('ground2', { themeName: 'Light' })
+    ];
+
     render() {
         const { animTheme } = this.state;
 
-        const darkBackground = [
-            themeManager.GetColor('ground1', { themeName: 'Main' }),
-            themeManager.GetColor('ground2', { themeName: 'Main' })
-        ];
-        const lightBackground = [
-            themeManager.GetColor('ground1', { themeName: 'Light' }),
-            themeManager.GetColor('ground2', { themeName: 'Light' })
-        ];
         const lightOpacity = { opacity: animTheme };
 
         /**
@@ -418,12 +419,12 @@ class PageManager extends React.Component{
         return (
             <LinearGradient
                 style={styles.fullscreen}
-                colors={darkBackground}
+                colors={this.darkBackground}
                 onLayout={this.onLayout}
             >
                 {/* Light background */}
                 <Animated.View style={[styles.absolute, styles.fullscreen, lightOpacity]} pointerEvents='none'>
-                    <LinearGradient style={styles.fullscreen} colors={lightBackground} />
+                    <LinearGradient style={styles.fullscreen} colors={this.lightBackground} />
                 </Animated.View>
 
                 {['temp', ...PAGES_PERSISTENT].map(newPage)}

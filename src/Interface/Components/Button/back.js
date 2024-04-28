@@ -70,6 +70,22 @@ class ButtonBack extends React.Component {
     posY = 0;
     size = 0;
 
+    /** @param {ButtonProps & ButtonPropsType} nextProps */
+    shouldComponentUpdate(nextProps) {
+        return this.props.children !== nextProps.children ||
+            this.props.style !== nextProps.style ||
+            this.props.styleAnimation !== nextProps.styleAnimation ||
+            this.props.styleContent !== nextProps.styleContent ||
+            this.props.appearance !== nextProps.appearance ||
+            this.props.fontSize !== nextProps.fontSize ||
+            this.props.icon !== nextProps.icon ||
+            this.props.iconXml !== nextProps.iconXml ||
+            this.props.iconSize !== nextProps.iconSize ||
+            this.props.iconAngle !== nextProps.iconAngle ||
+            this.props.loading !== nextProps.loading ||
+            this.props.enabled !== nextProps.enabled;
+    }
+
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.props.onTouchStart(event);

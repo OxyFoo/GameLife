@@ -65,6 +65,18 @@ class ComboBoxBack extends React.Component {
     /** @type {React.RefObject<FlatList>} */
     flatlistRef = React.createRef();
 
+    /**
+     * @param {ComboBoxProps} nextProps
+     * @param {ComboBoxBack['state']} nextState
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.data != nextProps.data ||
+            this.props.selectedValue != nextProps.selectedValue ||
+            this.props.enabled != nextProps.enabled ||
+            this.state.selectionMode != nextState.selectionMode ||
+            this.state.search != nextState.search;
+    }
+
     /** @param {ComboBoxProps} prevProps */
     componentDidUpdate(prevProps) {
         // Data changed, update data and reset search

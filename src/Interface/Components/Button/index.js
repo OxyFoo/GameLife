@@ -204,9 +204,7 @@ class Button extends ButtonBack {
                                 backgroundColor: themeManager.GetColor('darkBlue', { opacity: .25 })
                             }
                         ]}
-                        blurType='dark'
-                        blurAmount={3}
-                        blurRadius={10}
+                        blurAmount={20}
                     />
                     <MaskedView
                         style={styles.absolute}

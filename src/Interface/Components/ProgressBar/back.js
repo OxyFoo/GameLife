@@ -42,9 +42,14 @@ class ProgressBarBack extends React.Component {
         animCover: new Animated.Value(0)
     }
 
-    componentDidMount() {
-        const time = Math.max(0, this.props.delay * 1000);
-        setTimeout(this.startAnimations, time);
+    /**
+     * @param {ProgressBarProps} nextProps
+     * @param {ProgressBarBack['state']} nextState
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.value !== this.props.value ||
+            nextProps.maxValue !== this.props.maxValue ||
+            nextState.width !== this.state.width;
     }
 
     /** @param {ProgressBarProps} prevProps */

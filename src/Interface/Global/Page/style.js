@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: '#00000001'
     },
+    parentContainer: {
+        padding: 32
+    },
     overlay: {
         position: 'absolute',
         top: 0,

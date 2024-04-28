@@ -37,6 +37,11 @@ class SwitchBack extends React.Component {
         }
     }
 
+    /** @param {SwitchProps} nextProps */
+    shouldComponentUpdate(nextProps) {  
+        return this.props.value !== nextProps.value || this.props.color !== nextProps.color;
+    }
+
     /** @param {SwitchProps} prevProps */
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {

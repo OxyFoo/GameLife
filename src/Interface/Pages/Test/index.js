@@ -44,6 +44,7 @@ class Test extends BackTest {
                     //this.renderButtonsPanic(),
                 ]}
 
+                {this.renderButtons()}
                 {this.renderInputText()}
                 {this.renderIcons()}
                 {this.renderIcons()}
@@ -235,19 +236,20 @@ class Test extends BackTest {
         );
     }
 
+    comboboxData = [
+        {key: 0, value: 'Abc 0'},
+        {key: 1, value: 'Def 1'},
+        {key: 2, value: 'Item 2'},
+        {key: 3, value: 'Item 3'},
+        {key: 4, value: 'Item 4'},
+        {key: 5, value: 'Item 5'}
+    ];
     renderComboBox = () => {
         return (
             <>
                 {this.renderTitle('ComboBox')}
                 <ComboBox
-                    data={[
-                        {key: 0, value: 'Abc 0'},
-                        {key: 1, value: 'Def 1'},
-                        {key: 2, value: 'Item 2'},
-                        {key: 3, value: 'Item 3'},
-                        {key: 4, value: 'Item 4'},
-                        {key: 5, value: 'Item 5'}
-                    ]}
+                    data={this.comboboxData}
                     selectedValue={this.state.selectedSkill.value}
                     onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: -1, value: ''} : item }); }}
                     enableSearchBar
@@ -284,13 +286,14 @@ class Test extends BackTest {
         );
     }
 
+    switchTextData = [ 'Test 1', 'Test 2', 'Test 3' ];
     renderSwitchText = () => {
         return (
             <View>
                 {this.renderTitle('SwitchText')}
                 <SwitchText
                     style={styles.marginBot}
-                    texts={[ 'Test 1', 'Test 2', 'Test 3' ]}
+                    texts={this.switchTextData}
                     value={this.state.switchText}
                     onChangeValue={(value) => { this.setState({ switchText: value }); }}
                 />

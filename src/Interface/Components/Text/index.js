@@ -32,6 +32,11 @@ const TextProps = {
 };
 
 class Text extends React.Component {
+    /** @param {TextProps & TextPropsType} nextProps */
+    shouldComponentUpdate(nextProps) {
+        return this.props.children !== nextProps.children;
+    }
+
     render() {
         const {
             style, containerStyle, color, fontSize, onPress, children, ...props

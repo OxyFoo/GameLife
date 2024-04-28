@@ -39,6 +39,16 @@ class SwitchTextBack extends React.Component {
         parentWidth: 0
     }
 
+    /**
+     * @param {SwitchTextProps} nextProps
+     * @param {SwitchTextBack['state']} nextState
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.value !== nextProps.value ||
+            this.props.texts !== nextProps.texts ||
+            this.state.parentWidth !== nextState.parentWidth;
+    }
+
     /** @param {SwitchTextProps} prevProps */
     componentDidUpdate(prevProps) {
         const { value } = this.props;

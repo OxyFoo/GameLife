@@ -15,6 +15,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').TextInputFocusEventData} TextInputFocusEventData
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputFocusEventData>} NativeSyntheticEventFocus
  * 
+ * @typedef {import('Interface/Components/Icon/back').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @typedef {'default' | 'email' | 'username' | 'name'} TextContentType
@@ -22,6 +23,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {Object} InputTextPropsType
  * @property {StyleProp} style Style of the TextInput.
  * @property {string} label Label for the TextInput.
+ * @property {Icons | null} icon Icon for the TextInput.
  * @property {boolean} staticLabel If true, the label is static.
  * @property {ThemeColor} activeColor Color used when the TextInput is active.
  * @property {TextContentType} type Type of content to handle.
@@ -35,6 +37,7 @@ import { TimingAnimation } from 'Utils/Animations';
 const InputTextProps = {
     style: {},
     label: 'Default',
+    icon: null,
     staticLabel: false,
     activeColor: 'main1',
     type: 'default',

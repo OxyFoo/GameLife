@@ -27,7 +27,7 @@ const textTypes = {
 class InputText extends InputTextBack {
     render() {
         const {
-            style, label, type, enabled, staticLabel, activeColor,
+            style, label, icon, type, enabled, staticLabel, activeColor,
             forceActive, error, onSubmit, pointerEvents, ...props
         } = this.props;
         const {
@@ -39,22 +39,26 @@ class InputText extends InputTextBack {
 
         /** @type {ThemeColor | ThemeText} */
         let textColor = isActive ? activeColor : 'primary';
-        let hexActiveColor = themeManager.GetColor(isActive ? activeColor : 'border');
+        /** @type {ThemeColor | ThemeText} */
+        let color = isActive ? activeColor : 'border';
 
         if (error) {
-            hexActiveColor = themeManager.GetColor('danger');
+            color = 'danger';
             if (isActive) {
                 textColor = 'danger';
             }
         }
 
+        const _icon = icon || (error ? 'danger' : null);
+        const hexColor = themeManager.GetColor(color);
+
         /** @type {ViewStyle} */
         const containerStyle = {
             //backgroundColor: themeManager.GetColor('background'),
-            borderColor: hexActiveColor,
+            borderColor: hexColor,
             borderWidth: borderWidth,
             opacity: enabled ? 1 : 0.6,
-            paddingRight: error ? 32 : 0
+            paddingRight: _icon !== null ? 32 : 0
         };
 
         /** @type {ViewStyle} */
@@ -122,11 +126,11 @@ class InputText extends InputTextBack {
                 />
 
                 {/* Error icon */}
-                {error && (
+                {_icon !== null && (
                     <View style={styles.error}>
                         <Icon
-                            icon='danger'
-                            color='danger'
+                            icon={_icon}
+                            color={color}
                         />
                     </View>
                 )}

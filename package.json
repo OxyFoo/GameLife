@@ -11,12 +11,13 @@
     "clean": "cd android && ./gradlew clean",
     "test": "jest",
     "lint": "eslint .",
-    "server": "cd src/Server/TCP && npm start"
+    "server": "cd src/Server/TCP && npm start",
+    "podi": "cd ios && pod install"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/blur": "^4.4.0",
-    "@react-native-community/datetimepicker": "^6.4.2",
+    "@react-native-community/datetimepicker": "^7.7.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "jest-raw-loader": "^1.0.1",

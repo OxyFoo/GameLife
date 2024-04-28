@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
+import user from 'Managers/UserManager';
+
 import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -127,6 +129,13 @@ class ComboBoxBack extends React.Component {
         this.props.onSelect(item);
         this.closeSelection();
     }
+
+    EnablePageScroll = () => {
+        user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
+    }
+    DisablePageScroll = () => {
+        user.interface.GetCurrentPage()?.refPage.current?.DisableScroll();
+    }    
 }
 
 ComboBoxBack.prototype.props = ComboBoxProps;

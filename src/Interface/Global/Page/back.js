@@ -65,6 +65,7 @@ class PageBack extends React.Component {
     state = {
         /** @type {'box-none' | 'none' | 'box-only' | 'auto'} */
         pointerEvents: 'none',
+        scrollEnabled: true,
         visible: false,
 
         height: 0,
@@ -99,8 +100,11 @@ class PageBack extends React.Component {
         SpringAnimation(this.positionY, this.posY).start();
     }
 
-    EnableScroll = () => this.scrolling.scrollEnabled = true;
-    DisableScroll = () => this.scrolling.scrollEnabled = false;
+    EnableScroll = () => this.setState({ scrollEnabled: true });
+    DisableScroll = () => this.setState({ scrollEnabled: false });
+
+    //EnableScroll = () => this.scrolling.scrollEnabled = true;
+    //DisableScroll = () => this.scrolling.scrollEnabled = false;
 }
 
 PageBack.prototype.props = PageProps;

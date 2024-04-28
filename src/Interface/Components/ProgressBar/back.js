@@ -57,7 +57,10 @@ class ProgressBarBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width } = event.nativeEvent.layout;
-        this.setState({ width });
+        this.setState({ width }, () => {
+            const time = Math.max(0, this.props.delay * 1000);
+            setTimeout(this.startAnimations, time);
+        });
     }
 
     startAnimations = async () => {

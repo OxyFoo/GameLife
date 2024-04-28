@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, TouchableHighlight, FlatList } from 'react-native';
+import { View, Animated, TouchableHighlight, FlatList, Platform } from 'react-native';
 
 import styles from './style';
 import ComboBoxBack from './back';
@@ -46,6 +46,7 @@ class ComboBox extends ComboBoxBack {
                     appearance='transparent'
                     onPress={this.onPress}
                     onLongPress={this.resetSelection}
+                    onTouchMove={this.closeSelection}
                 />
 
                 {/* InputText to show result */}
@@ -131,13 +132,14 @@ class ComboBox extends ComboBoxBack {
             <>
                 <Animated.View
                     style={[styles.borderFix, borderFixStyle]}
+                    pointerEvents={'none'}
                 />
 
-                <Animated.View style={[styles.overlayParent, overlayStyle]}>
-                    <Animated.View
-                        style={[styles.overlayPanel, panelStyle]}
-                        pointerEvents={selectionMode ? 'auto': 'none'}
-                    >
+                <Animated.View
+                    style={[styles.overlayParent, overlayStyle]}
+                    pointerEvents={selectionMode ? 'auto' : 'none'}
+                >
+                    <Animated.View style={[styles.overlayPanel, panelStyle]}>
                         <FlatList
                             ref={this.flatlistRef}
                             ListHeaderComponent={!setSearchBar ? null : (
@@ -150,11 +152,20 @@ class ComboBox extends ComboBoxBack {
                                     />
                                 </View>
                             )}
-                            style={{ backgroundColor: themeManager.GetColor('backgroundGrey') }}
+                            style={[
+                                styles.overlayContent,
+                                { backgroundColor: themeManager.GetColor('backgroundGrey') }
+                            ]}
                             data={data}
                             renderItem={this.renderItem}
                             onTouchMove={(e) => e.stopPropagation()}
                             keyExtractor={(item, index) => 'i-' + index}
+
+                            onTouchStart={this.DisablePageScroll}
+                            onTouchEnd={this.EnablePageScroll}
+                            onMomentumScrollEnd={this.EnablePageScroll}
+                            onScrollEndDrag={this.EnablePageScroll}
+                            nestedScrollEnabled={Platform.OS === 'ios'}
                         />
                     </Animated.View>
                 </Animated.View>

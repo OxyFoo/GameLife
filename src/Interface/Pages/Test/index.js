@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { View, Switch as RNSwitch, Animated } from 'react-native';
+import { View, Switch as RNSwitch, Animated, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
+import styles from './style';
 import BackTest from './back';
 import themeManager from 'Managers/ThemeManager';
 
@@ -28,17 +29,6 @@ import {
 
 class Test extends BackTest {
     render() {
-        const renderTests = [
-            //this.renderButtons,
-            //this.renderButtonsPanic,
-            this.renderInputText,
-            //this.renderIcons,
-            this.renderSwitches,
-            this.renderSwitchText,
-            this.renderProgressBars,
-            this.renderComboBox,
-        ];
-
         return (
             <Page ref={this.refPage} scrollable={false}>
                 <MaskedView
@@ -48,11 +38,21 @@ class Test extends BackTest {
                     <LinearGradient style={{ width: '100%', height: 45 }} colors={['#8CF7FF', '#DBA1FF']} useAngle={true} angle={190} />
                 </MaskedView>
 
-                {renderTests.map((renderTest, index) => (
-                    <View key={index}>
-                        {renderTest()}
-                    </View>
-                ))}
+
+                {[
+                    //this.renderButtons(),
+                    //this.renderButtonsPanic(),
+                ]}
+
+                {this.renderInputText()}
+                {this.renderIcons()}
+                {this.renderIcons()}
+                {this.renderIcons()}
+                {this.renderComboBox()}
+                {this.renderSwitches()}
+                {this.renderSwitchText()}
+                {this.renderProgressBars()}
+                {this.renderInputText()}
 
                 {/*
                 <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
@@ -60,30 +60,30 @@ class Test extends BackTest {
                 </View>
 
                 <ComboBox
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     data={TEST_VALUES}
                     setSearchBar={true}
                     selectedValue={this.state.selectedSkill.value}
                     onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: 0, value: ''} : item }); }}
                 />
 
-                <Container text='Static' color='main2' style={{ marginBottom: 12 }} type='static' opened={true} icon='userAdd' onIconPress={() => {console.log('YES')}}>
-                    <XPBar value={0} style={{ marginBottom: 12 }} />
-                    <XPBar value={4} style={{ marginBottom: 12 }} />
-                    <XPBar value={10} style={{ marginBottom: 12 }} />
+                <Container text='Static' color='main2' style={styles.marginBot} type='static' opened={true} icon='userAdd' onIconPress={() => {console.log('YES')}}>
+                    <XPBar value={0} style={styles.marginBot} />
+                    <XPBar value={4} style={styles.marginBot} />
+                    <XPBar value={10} style={styles.marginBot} />
                 </Container>
 
-                <Container text='Rollable' color='main2' style={{ marginBottom: 12 }} type='rollable' opened={true} icon='chrono'>
-                    <XPBar value={0} style={{ marginBottom: 12 }} />
-                    <XPBar value={4} style={{ marginBottom: 12 }} />
-                    <XPBar value={10} style={{ marginBottom: 12 }} />
+                <Container text='Rollable' color='main2' style={styles.marginBot} type='rollable' opened={true} icon='chrono'>
+                    <XPBar value={0} style={styles.marginBot} />
+                    <XPBar value={4} style={styles.marginBot} />
+                    <XPBar value={10} style={styles.marginBot} />
                 </Container>
 
                 <Swiper
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     pages={[
                         <>
-                            <Text style={{ marginBottom: 12 }}>{'Page 1'}</Text>
+                            <Text style={styles.marginBot}>{'Page 1'}</Text>
                             <Button color='main1'>{'Quêtes journalières'}</Button>
                         </>,
                         <>
@@ -94,7 +94,7 @@ class Test extends BackTest {
                     ]}
                 />
 
-                <View style={{ marginBottom: 12 }}>
+                <View style={styles.marginBot}>
                     <Input />
                 </View>
 
@@ -140,17 +140,17 @@ class Test extends BackTest {
                 />
 
                 {this.renderTitle('Boutons')}
-                <Button style={{ marginBottom: 12 }} icon='home' appearance='outline'/>
-                <Button style={{ marginBottom: 12 }} loading={true}>{'Quêtes journalières'}</Button>
-                <Button style={{ marginBottom: 12 }} appearance='outline-blur'>{'Quêtes journalières'}</Button>
-                <Button style={{ marginBottom: 12 }} appearance='normal' icon={'bell'}>
+                <Button style={styles.marginBot} icon='home' appearance='outline'/>
+                <Button style={styles.marginBot} loading={true}>{'Quêtes journalières'}</Button>
+                <Button style={styles.marginBot} appearance='outline-blur'>{'Quêtes journalières'}</Button>
+                <Button style={styles.marginBot} appearance='normal' icon={'bell'}>
                     <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
                     <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
                     <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
                 </Button>
 
-                <Button style={{ marginBottom: 12 }} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                <Button style={{ marginBottom: 12 }} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                <Button style={styles.marginBot} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
+                <Button style={styles.marginBot} onPress={this.openSL}>{'Test "Screen List"'}</Button>
             </View>
         );
     }
@@ -162,7 +162,7 @@ class Test extends BackTest {
                 {Array(30).fill(0).map((_, index) => (
                     <Button
                         key={`button-panic-${index}`}
-                        style={{ marginBottom: 12 }}
+                        style={styles.marginBot}
                         icon={'cup'}
                         appearance='outline-blur'
                     >
@@ -178,7 +178,7 @@ class Test extends BackTest {
             <View>
                 {this.renderTitle('Inputs')}
                 <InputText
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     label='Test input'
                     value={this.state.input}
                     onChangeText={(newText) => this.setState({ input: newText })}
@@ -235,6 +235,27 @@ class Test extends BackTest {
         );
     }
 
+    renderComboBox = () => {
+        return (
+            <>
+                {this.renderTitle('ComboBox')}
+                <ComboBox
+                    data={[
+                        {key: 0, value: 'Abc 0'},
+                        {key: 1, value: 'Def 1'},
+                        {key: 2, value: 'Item 2'},
+                        {key: 3, value: 'Item 3'},
+                        {key: 4, value: 'Item 4'},
+                        {key: 5, value: 'Item 5'}
+                    ]}
+                    selectedValue={this.state.selectedSkill.value}
+                    onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: -1, value: ''} : item }); }}
+                    enableSearchBar
+                />
+            </>
+        );
+    }
+
     renderSwitches = () => {
         return (
             <View>
@@ -268,7 +289,7 @@ class Test extends BackTest {
             <View>
                 {this.renderTitle('SwitchText')}
                 <SwitchText
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     texts={[ 'Test 1', 'Test 2', 'Test 3' ]}
                     value={this.state.switchText}
                     onChangeValue={(value) => { this.setState({ switchText: value }); }}
@@ -282,45 +303,25 @@ class Test extends BackTest {
             <View>
                 {this.renderTitle('ProgressBar')}
                 <ProgressBar
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     value={Math.random() * 10}
                 />
                 <ProgressBar
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     value={Math.random() * 10}
                     supValue={3}
                     color='main1'
                 />
                 <ProgressBar
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     value={Math.random() * 10}
                     color='main2'
                 />
                 <ProgressBar
-                    style={{ marginBottom: 12 }}
+                    style={styles.marginBot}
                     value={Math.random() * 10}
                 />
                 <ProgressBar.Infinite />
-            </View>
-        );
-    }
-
-    renderComboBox = () => {
-        return (
-            <View>
-                {this.renderTitle('ComboBox')}
-                <ComboBox
-                    data={[
-                        {key: 0, value: 'Abc 0'},
-                        {key: 1, value: 'Def 1'},
-                        {key: 2, value: 'Item 2'},
-                        {key: 3, value: 'Item 3'},
-                        {key: 4, value: 'Item 4'}
-                    ]}
-                    selectedValue={this.state.selectedSkill.value}
-                    onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: -1, value: ''} : item }); }}
-                    enableSearchBar
-                />
             </View>
         );
     }

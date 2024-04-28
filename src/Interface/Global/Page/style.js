@@ -1,20 +1,19 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         top: 0,
         left: 0,
+        right: 0,
+        bottom: 0,
 
-        width: '100%',
-        height: '100%',
         margin: 0,
         padding: 0
     },
     parent: {
         width: '100%',
-        padding: 32,
-        paddingBottom: Platform.OS === 'ios' ? 48 : 32,
+        height: '100%',
         backgroundColor: '#00000001'
     },
     overlay: {

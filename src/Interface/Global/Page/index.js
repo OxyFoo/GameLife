@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated } from 'react-native';
+import { View, Animated, ScrollView } from 'react-native';
 
 import styles from './style';
 import PageBack from './back';
@@ -33,7 +33,7 @@ class Page extends PageBack {
     }
 
     render() {
-        const { pointerEvents } = this.state;
+        const { scrollEnabled, pointerEvents } = this.state;
         const {
             style, isHomePage,
             topOffset, bottomOffset,
@@ -55,6 +55,14 @@ class Page extends PageBack {
             //height: scrollable ? 'auto' : '100%',
             minHeight: user.interface.screenHeight - topOffset - bottomOffset - 128
         };
+
+        return (
+            <Animated.View style={styles.container}>
+                <ScrollView style={styles.parent} contentContainerStyle={{ padding: 32 }} scrollEnabled={scrollEnabled}>
+                    {this.props.children}
+                </ScrollView>
+            </Animated.View>
+        );
 
         return (
             <Animated.View

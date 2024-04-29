@@ -13,7 +13,7 @@ import { CheckDate } from './src/Utils/DateCheck';
 class App extends React.Component {
     componentDidMount() {
         // Get the app state (active or background) to check the date
-        this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
+        this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
         // Open the test page
         user.interface.ChangePage('test', undefined, true); return;

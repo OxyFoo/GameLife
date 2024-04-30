@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PageBase } from 'Interface/Global';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import StartTutorial from './tuto';
 import StartMission from './mission';
 

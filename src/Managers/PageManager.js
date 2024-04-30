@@ -13,7 +13,7 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Interface/Global').PageBase} PageBase
+ * @typedef {import('Interface/FlowEngine').PageBase} PageBase
  * @typedef {keyof PAGES} PageName
  * @typedef {PAGES[keyof PAGES]} PageType
  * 

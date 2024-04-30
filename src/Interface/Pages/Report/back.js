@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Global';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';

@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Global';
+import PageBase from 'Interface/FlowEngine/PageBase';
 
 import user from 'Managers/UserManager';
 import Bench from './benchmark';

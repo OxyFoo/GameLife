@@ -1,7 +1,7 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase } from 'Interface/Global';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { Character } from 'Interface/Components';
 import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';

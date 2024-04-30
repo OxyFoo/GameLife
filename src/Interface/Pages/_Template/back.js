@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Global';
+import PageBase from 'Interface/FlowEngine/PageBase';
 
 class BackNewPage extends PageBase {
     state = {

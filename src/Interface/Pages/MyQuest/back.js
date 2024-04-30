@@ -1,6 +1,6 @@
 import { Keyboard } from 'react-native';
 
-import { PageBase } from 'Interface/Global';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 

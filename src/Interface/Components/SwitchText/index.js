@@ -17,7 +17,7 @@ import { Ripple } from '../../Primitives/Ripple';
 function SwitchTextCell(props = {
     text: '',
     fontSize: 16,
-    widthPourcentage: 50,
+    width: 50,
     onPress: () => {}
 }) {
     /** @type {React.RefObject<Ripple>} */
@@ -25,9 +25,9 @@ function SwitchTextCell(props = {
 
     return (
         <TouchableOpacity
-            style={[styles.button, { width: `${props.widthPourcentage}%` }]}
+            style={[styles.button, { width: props.width }]}
             onPress={() => props.onPress()}
-            onPressIn={(e) => refRipple.current?.Press(e, user.interface.screenWidth)}
+            onPressIn={(e) => refRipple.current?.Press(e, props.width)}
             onPressOut={refRipple.current?.Release}
             activeOpacity={0.6}
         >
@@ -82,7 +82,7 @@ class SwitchText extends SwitchTextBack {
                         key={'stc-' + index}
                         text={text}
                         fontSize={fontSize}
-                        widthPourcentage={width}
+                        width={width * (parentWidth - 7 * 2) / 100}
                         onPress={() => this.onChange(index)}
                     />
                 ))}

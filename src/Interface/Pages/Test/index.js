@@ -71,7 +71,7 @@ class Test extends BackTest {
                     />
                 )}
 
-                {this.renderTitle('Boutons')}
+                {this.renderTitle('Boutons - ' + this.state.selectedButon)}
                 <Button style={styles.marginBot} onPress={this.goToPage2} appearance={this.state.selectedButon} icon='home' />
                 <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon}>{'Changer l\'apparence'}</Button>
                 <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon} icon={'cup'}>{'Changer l\'apparence'}</Button>

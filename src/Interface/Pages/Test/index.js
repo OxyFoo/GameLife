@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { View, Switch as RNSwitch, Animated, ScrollView } from 'react-native';
+import { View, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
 import BackTest from './back';
-import themeManager from 'Managers/ThemeManager';
 
-import { Page } from 'Interface/Global';
 import {
     Text,
     Button,
@@ -17,20 +15,14 @@ import {
     CheckBox,
     ProgressBar,
     SwitchText,
-    ComboBox,
-    /*
-    Container,
-    Input,
-    ComboBox,
-    Swiper,
-    Digit
-    */
+    ComboBox
 } from 'Interface/Components';
 
 class Test extends BackTest {
     render() {
+        //console.log('test1');
         return (
-            <Page ref={this.refPage} scrollable={false}>
+            <View>
                 <MaskedView
                     style={{ marginVertical: 24 }}
                     maskElement={(<Text fontSize={32}>{'Page de test'}</Text>)}
@@ -39,82 +31,19 @@ class Test extends BackTest {
                 </MaskedView>
 
 
-                {[
-                    //this.renderButtons(),
-                    //this.renderButtonsPanic(),
-                ]}
+                {/*
+                    {this.renderButtonsPanic()}
+                    {this.renderComboBox()}
+                */}
 
                 {this.renderButtons()}
                 {this.renderInputText()}
                 {this.renderIcons()}
-                {this.renderIcons()}
-                {this.renderIcons()}
-                {this.renderComboBox()}
                 {this.renderSwitches()}
                 {this.renderSwitchText()}
                 {this.renderProgressBars()}
-                {this.renderInputText()}
 
-                {/*
-                <View style={{ width: '100%', alignItems: 'center', marginBottom: 12 }}>
-                    <Digit />
-                </View>
-
-                <ComboBox
-                    style={styles.marginBot}
-                    data={TEST_VALUES}
-                    setSearchBar={true}
-                    selectedValue={this.state.selectedSkill.value}
-                    onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: 0, value: ''} : item }); }}
-                />
-
-                <Container text='Static' color='main2' style={styles.marginBot} type='static' opened={true} icon='userAdd' onIconPress={() => {console.log('YES')}}>
-                    <XPBar value={0} style={styles.marginBot} />
-                    <XPBar value={4} style={styles.marginBot} />
-                    <XPBar value={10} style={styles.marginBot} />
-                </Container>
-
-                <Container text='Rollable' color='main2' style={styles.marginBot} type='rollable' opened={true} icon='chrono'>
-                    <XPBar value={0} style={styles.marginBot} />
-                    <XPBar value={4} style={styles.marginBot} />
-                    <XPBar value={10} style={styles.marginBot} />
-                </Container>
-
-                <Swiper
-                    style={styles.marginBot}
-                    pages={[
-                        <>
-                            <Text style={styles.marginBot}>{'Page 1'}</Text>
-                            <Button color='main1'>{'Quêtes journalières'}</Button>
-                        </>,
-                        <>
-                            <Text>{'Page 2'}</Text>
-                            <XPBar value={10} style={{ marginBottom: 24 }} />
-                        </>,
-                        <Button color='main2'>{'Page 3'}</Button>
-                    ]}
-                />
-
-                <View style={styles.marginBot}>
-                    <Input />
-                </View>
-
-                <Container text='Rollable !' type='rollable' opened={false}>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Blablabla</Text>
-                    <Text style={{ marginBottom: 48 }}>Insh le scroll marche bien</Text>
-                </Container>
-                */}
-
-            </Page>
+            </View>
         );
     }
 
@@ -127,31 +56,26 @@ class Test extends BackTest {
     renderButtons = () => {
         return (
             <View>
-                <Animated.View
-                    style={{
-                        position: 'absolute',
-                        top: 86,
-                        left: 12,
-                        width: '50%',
-                        height: 300,
-                        borderRadius: 8,
-                        backgroundColor: '#fff',
-                        transform: [{ translateX: this.animPanel }]
-                    }}
-                />
+                {this.state.selectedButon === 'outline-blur' && (
+                    <Animated.View
+                        style={{
+                            position: 'absolute',
+                            top: 80,
+                            left: 12,
+                            width: 150,
+                            height: 200,
+                            borderRadius: 8,
+                            backgroundColor: '#fff',
+                            transform: [{ translateX: this.animPanel }]
+                        }}
+                    />
+                )}
 
                 {this.renderTitle('Boutons')}
-                <Button style={styles.marginBot} icon='home' appearance='outline'/>
-                <Button style={styles.marginBot} loading={true}>{'Quêtes journalières'}</Button>
-                <Button style={styles.marginBot} appearance='outline-blur'>{'Quêtes journalières'}</Button>
-                <Button style={styles.marginBot} appearance='normal' icon={'bell'}>
-                    <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
-                    <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
-                    <Text fontSize={16} color='darkBlue'>{'Quêtes journalières'}</Text>
-                </Button>
-
-                <Button style={styles.marginBot} onPress={this.openSI} icon={'cup'} appearance='outline-blur'>{'Test "Screen Input"'}</Button>
-                <Button style={styles.marginBot} onPress={this.openSL}>{'Test "Screen List"'}</Button>
+                <Button style={styles.marginBot} onPress={this.goToPage2} appearance={this.state.selectedButon} icon='home' />
+                <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon}>{'Changer l\'apparence'}</Button>
+                <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon} icon={'cup'}>{'Changer l\'apparence'}</Button>
+                <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon} loading={true}>{'Quêtes journalières'}</Button>
             </View>
         );
     }
@@ -181,6 +105,7 @@ class Test extends BackTest {
                 <InputText
                     style={styles.marginBot}
                     label='Test input'
+                    icon={'users'}
                     value={this.state.input}
                     onChangeText={(newText) => this.setState({ input: newText })}
                 />
@@ -250,8 +175,8 @@ class Test extends BackTest {
                 {this.renderTitle('ComboBox')}
                 <ComboBox
                     data={this.comboboxData}
-                    selectedValue={this.state.selectedSkill.value}
-                    onSelect={(item) => { this.setState({ selectedSkill: item === null ? { ID: -1, value: ''} : item }); }}
+                    selectedValue={this.state.combobox.value}
+                    onSelect={(item) => { this.setState({ combobox: item === null ? { ID: -1, value: ''} : item }); }}
                     enableSearchBar
                 />
             </>
@@ -312,13 +237,13 @@ class Test extends BackTest {
                 <ProgressBar
                     style={styles.marginBot}
                     value={Math.random() * 10}
-                    supValue={3}
                     color='main1'
                 />
                 <ProgressBar
                     style={styles.marginBot}
                     value={Math.random() * 10}
                     color='main2'
+                    supValue={Math.random() * 10}
                 />
                 <ProgressBar
                     style={styles.marginBot}

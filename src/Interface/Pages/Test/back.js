@@ -1,20 +1,24 @@
-import user from 'Managers/UserManager';
 import { Animated } from 'react-native';
 
-import { PageBase } from 'Interface/Global';
+import PageBase from 'Interface/FlowEngine/PageBase';
+import user from 'Managers/UserManager';
+
+import { Button } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
 class BackTest extends PageBase {
-    state = {
-        selectedSkill: {ID: -1, value: ''},
+    feKeepMounted = true;
 
-        // Components tests
+    state = {
+        /** @type {Button['props']['appearance']} */
+        selectedButon: 'normal',
         input: '',
         switch1: false,
         switch2: true,
         checkbox1: false,
         checkbox2: true,
         switchText: 0,
+        combobox: {ID: -1, value: ''}
     }
 
     animPanel = new Animated.Value(0);
@@ -30,6 +34,17 @@ class BackTest extends PageBase {
 
     componentWillUnmount() {
         clearInterval(this.intervalPanel);
+    }
+
+    buttonLoop = () => {
+        const { selectedButon } = this.state;
+        if (selectedButon === 'normal') {
+            this.setState({selectedButon: 'outline'});
+        } else if (selectedButon === 'outline') {
+            this.setState({selectedButon: 'outline-blur'});
+        } else if (selectedButon === 'outline-blur') {
+            this.setState({selectedButon: 'normal'});
+        }
     }
 
     openSI = () => {
@@ -50,6 +65,8 @@ class BackTest extends PageBase {
         ];
         user.interface.screenList.Open('test', test, console.log);
     }
+
+    goToPage2 = () => user.interface.ChangePage('test2');
 }
 
 export default BackTest;

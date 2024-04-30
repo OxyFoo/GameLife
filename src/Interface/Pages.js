@@ -25,8 +25,10 @@ import Skills from './Pages/Skills/index';
 import Waitinternet from './Pages/WaitInternet/index';
 import Waitmail from './Pages/WaitMail/index';
 import Test from './Pages/Test/index';
+import Test2 from './Pages/Test2/index';
 import Todo from './Pages/Todo/index';
 
+/*
 const PAGES = {
     'about':            About,
     'achievements':     Achievements,
@@ -55,7 +57,14 @@ const PAGES = {
     'waitinternet':     Waitinternet,
     'waitmail':         Waitmail,
     'test':             Test,
+    'test2':            Test2,
     'todo':             Todo
+};
+*/
+
+const PAGES = {
+    'test':             Test,
+    'test2':            Test2
 };
 
 export default PAGES;

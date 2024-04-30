@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AppState, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
-import PageManager from './src/Managers/PageManager';
+import FlowEngine from './src/Interface/FlowEngine';
 
 import { CheckDate } from './src/Utils/DateCheck';
 
@@ -38,7 +38,7 @@ class App extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ backgroundColor: "#000000" }}>
-                <PageManager ref={ref => { if (ref !== null) user.interface = ref }} />
+                <FlowEngine ref={ref => { if (ref !== null) user.interface = ref }} />
             </SafeAreaView>
         );
     }

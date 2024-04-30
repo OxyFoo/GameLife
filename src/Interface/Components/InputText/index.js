@@ -38,15 +38,14 @@ class InputText extends InputTextBack {
         const isActive = isFocused || forceActive;
 
         /** @type {ThemeColor | ThemeText} */
-        let textColor = isActive ? activeColor : 'primary';
-        /** @type {ThemeColor | ThemeText} */
-        let color = isActive ? activeColor : 'border';
+        const textColor = 'primary';
 
+        /** @type {ThemeColor | ThemeText} */
+        let color = 'borderLight';
         if (error) {
             color = 'danger';
-            if (isActive) {
-                textColor = 'danger';
-            }
+        } else if (isActive) {
+            color = activeColor;
         }
 
         const _icon = icon || (error ? 'danger' : null);
@@ -54,7 +53,6 @@ class InputText extends InputTextBack {
 
         /** @type {ViewStyle} */
         const containerStyle = {
-            //backgroundColor: themeManager.GetColor('background'),
             borderColor: hexColor,
             borderWidth: borderWidth,
             opacity: enabled ? 1 : 0.6,

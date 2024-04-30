@@ -34,7 +34,9 @@ const TextProps = {
 class Text extends React.Component {
     /** @param {TextProps & TextPropsType} nextProps */
     shouldComponentUpdate(nextProps) {
-        return this.props.children !== nextProps.children;
+        return this.props.children !== nextProps.children ||
+            this.props.color !== nextProps.color ||
+            this.props.fontSize !== nextProps.fontSize;
     }
 
     render() {

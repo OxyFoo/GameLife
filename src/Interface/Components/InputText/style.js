@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     input: {
+        height: '100%',
         minHeight: 12,
         maxHeight: 256,
         color: '#FFFFFF',

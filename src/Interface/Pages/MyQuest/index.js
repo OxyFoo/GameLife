@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -12,7 +12,6 @@ import SectionDuration from './Sections/duration';
 import SectionSchedule from './Sections/schedule';
 import SectionComment from './Sections/comment';
 
-import { Page } from 'Interface/Global';
 import { Text, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
@@ -64,13 +63,11 @@ class Quest extends BackQuest {
         const { ShowTitle, ShowError } = this;
         const { title, skills, schedule, duration, comment } = this.state;
 
+        //overlay={this.renderOverlayButton()}
+        //bottomOffset={72}
+        //onStartShouldSetResponder={this.keyboardDismiss}
         return (
-            <Page
-                ref={this.refPage}
-                overlay={this.renderOverlayButton()}
-                bottomOffset={72}
-                onStartShouldSetResponder={this.keyboardDismiss}
-            >
+            <View>
                 <PageHeader
                     style={styles.pageHeader}
                     onBackPress={user.interface.BackHandle}
@@ -113,7 +110,7 @@ class Quest extends BackQuest {
                     comment={comment}
                     onChange={this.onChangeComment}
                 />
-            </Page>
+            </View>
         );
     }
 }

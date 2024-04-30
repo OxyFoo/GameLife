@@ -7,11 +7,51 @@ import BackReport from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page } from 'Interface/Global';
 import { Text, ComboBox, Input, Button, Digit } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Report extends BackReport {
+    render() {
+        const lang = langManager.curr['report'];
+        const { selectedType, reportHeight, sending } = this.state;
+
+        //onStartShouldSetResponder={this.keyboardDismiss}
+        return (
+            <View>
+                <PageHeader
+                    style={{ marginBottom: 24 }}
+                    onBackPress={this.back}
+                    onHelpPress={selectedType === 2 ? StartHelp : undefined}
+                />
+
+                <Text containerStyle={{ marginBottom: 24 }} fontSize={36}>{lang['page-title']}</Text>
+
+                <ComboBox
+                    title={lang['types-text']}
+                    data={this.reportTypes}
+                    selectedValue={this.reportTypes[selectedType].value}
+                    onSelect={this.selectType}
+                />
+
+                <View style={{ minHeight: reportHeight, marginTop: 24 }} onLayout={this.onLayout}>
+                    {selectedType === 0 && this.renderActivity()}
+                    {selectedType === 1 && this.renderSuggest()}
+                    {selectedType === 2 && this.renderBug()}
+                    {selectedType === 3 && this.renderMessage()}
+
+                    <Button
+                        style={styles.button}
+                        color='main2'
+                        onPress={this.sendData}
+                        loading={sending}
+                    >
+                        {lang['button-send']}
+                    </Button>
+                </View>
+            </View>
+        );
+    }
+
     renderActivity = () => {
         const langStats = langManager.curr['statistics']['names-min'];
         const lang = langManager.curr['report'];
@@ -124,50 +164,6 @@ class Report extends BackReport {
                     multiline
                 />
             </View>
-        );
-    }
-
-    render() {
-        const lang = langManager.curr['report'];
-        const { selectedType, reportHeight, sending } = this.state;
-
-        return (
-            <Page
-                ref={this.refPage}
-                onStartShouldSetResponder={this.keyboardDismiss}
-                canScrollOver={false}
-            >
-                <PageHeader
-                    style={{ marginBottom: 24 }}
-                    onBackPress={this.back}
-                    onHelpPress={selectedType === 2 ? StartHelp : undefined}
-                />
-
-                <Text containerStyle={{ marginBottom: 24 }} fontSize={36}>{lang['page-title']}</Text>
-
-                <ComboBox
-                    title={lang['types-text']}
-                    data={this.reportTypes}
-                    selectedValue={this.reportTypes[selectedType].value}
-                    onSelect={this.selectType}
-                />
-
-                <View style={{ minHeight: reportHeight, marginTop: 24 }} onLayout={this.onLayout}>
-                    {selectedType === 0 && this.renderActivity()}
-                    {selectedType === 1 && this.renderSuggest()}
-                    {selectedType === 2 && this.renderBug()}
-                    {selectedType === 3 && this.renderMessage()}
-
-                    <Button
-                        style={styles.button}
-                        color='main2'
-                        onPress={this.sendData}
-                        loading={sending}
-                    >
-                        {lang['button-send']}
-                    </Button>
-                </View>
-            </Page>
         );
     }
 }

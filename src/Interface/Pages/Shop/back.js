@@ -1,11 +1,11 @@
 import React from 'react';
+import { View } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import StartTutorial from './tuto';
 import StartMission from './mission';
 
 /**
- * @typedef {import('Interface/Global').Page} Page
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
  * @typedef {import('./InAppPurchases').default} InAppPurchases
@@ -15,7 +15,7 @@ import StartMission from './mission';
  */
 
 class BackShop extends PageBase {
-    /** @type {React.RefObject<Page>} */
+    /** @type {React.RefObject<View>} */
     refShopHeader = React.createRef();
 
     /** @type {React.RefObject<ShopHeader>} */

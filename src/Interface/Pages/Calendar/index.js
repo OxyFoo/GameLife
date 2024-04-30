@@ -8,7 +8,6 @@ import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page } from 'Interface/Global';
 import { Text, Button, Icon, ActivityTimeline } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
@@ -67,14 +66,9 @@ class Calendar extends BackCalendar {
             titleSelectedDay = GetFullDate(new Date(year, month, day));
         }
 
+        // overlay={this.renderActivity()}
         return (
-            <Page
-                ref={this.refPage}
-                style={styles.page}
-                overlay={this.renderActivity()}
-                isHomePage
-                scrollable={false}
-            >
+            <View style={styles.page}>
                 <Animated.View style={styleContent}>
                     {/* Month + button to show full calendar */}
                     <View style={styles.row}>
@@ -170,7 +164,7 @@ class Calendar extends BackCalendar {
                     />
                 </Animated.View>
 
-            </Page>
+            </View>
         );
     }
 }

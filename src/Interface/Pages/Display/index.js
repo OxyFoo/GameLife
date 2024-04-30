@@ -3,7 +3,6 @@ import { View, Animated, Dimensions, StyleSheet } from 'react-native';
 
 import BackDisplay from './back';
 
-import { Page } from 'Interface/Global';
 import { Text, Icon, Button } from 'Interface/Components';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -11,7 +10,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 class Display extends BackDisplay {
     render() {
         return (
-            <Page ref={this.refPage} style={styles.page} canScrollOver>
+            <View style={styles.page}>
                 <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                     <Icon
                         icon={this.icon}
@@ -26,7 +25,7 @@ class Display extends BackDisplay {
                         <Text fontSize={14} color={'secondary'} style={styles.quote}>{this.quote.author}</Text>
                     </View>
                 )}
-            </Page>
+            </View>
         );
     }
 

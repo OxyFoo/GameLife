@@ -5,7 +5,6 @@ import BackOnboarding from './back';
 import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { Page } from 'Interface/Global';
 import { Button, Icon, Text } from 'Interface/Components';
 
 /**
@@ -20,11 +19,7 @@ class Onboarding extends BackOnboarding {
         };
 
         return (
-            <Page
-                ref={this.refPage}
-                style={styles.page}
-                scrollable={false}
-            >
+            <View style={styles.page}>
                 <Button
                     ref={ref => this.refInfo = ref}
                     style={styles.buttonQuestion}
@@ -35,7 +30,7 @@ class Onboarding extends BackOnboarding {
                 </Button>
 
                 {!tutoLaunched && this.renderLangSelector()}
-            </Page>
+            </View>
         );
     }
 

@@ -8,7 +8,6 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page } from 'Interface/Global';
 import { Input, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
@@ -29,7 +28,7 @@ class Skills extends BackSkills {
         }
 
         return (
-            <Page ref={this.refPage} scrollable={false}>
+            <View>
 
                 <View onLayout={this.setheight}>
                     <PageHeader onBackPress={user.interface.BackHandle} />
@@ -79,7 +78,7 @@ class Skills extends BackSkills {
                     iconAngle={ascending ? 90 : -90}
                     onPress={this.switchOrder}
                 />
-            </Page>
+            </View>
         );
     }
 }

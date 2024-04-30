@@ -7,18 +7,17 @@ import BackLoading from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page } from 'Interface/Global';
 import { GLLoading, Button, Text, Icon, Zap } from 'Interface/Components';
 
 class Loading extends BackLoading {
     render() {
         return (
-            <Page ref={this.refPage} scrollable={false}>
+            <View>
                 {this.state.icon === 4 ?
                     this.renderTestCautionMessage() :
                     this.renderLoading()
                 }
-            </Page>
+            </View>
         );
     }
 

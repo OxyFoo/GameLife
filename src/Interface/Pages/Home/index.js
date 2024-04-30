@@ -7,8 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page } from 'Interface/Global';
-import { Text, XPBar } from 'Interface/Components';
+import { Text, ProgressBar } from 'Interface/Components';
 import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
 
 /**
@@ -36,7 +35,7 @@ class Home extends BackHome {
         };
 
         return (
-            <Page ref={this.refPage} isHomePage canScrollOver>
+            <View>
 
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
@@ -46,7 +45,7 @@ class Home extends BackHome {
                     <Text>{next_level + '%'}</Text>
                 </View>
 
-                <XPBar
+                <ProgressBar
                     value={xpInfo.xp}
                     maxValue={xpInfo.next}
                 />
@@ -66,14 +65,14 @@ class Home extends BackHome {
 
                 <View style={[styles.homeRow, styles.topSpace]}>
                     <View style={[styleSmallContainer, styles.stats]}>
-                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
+                        <Text fontSize={20} style={styles.titleWidget}>
                             {lang['container-stats-title']}
                         </Text>
                         <StatsBars data={user.stats} simplifiedDisplay={true} />
                     </View>
 
                     <View style={[styleContainer, styles.skills]}>
-                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
+                        <Text fontSize={20} style={styles.titleWidget}>
                             {lang['container-skills-title']}
                         </Text>
                         <SkillsGroup style={styles.skillsGroup} />
@@ -90,7 +89,7 @@ class Home extends BackHome {
                     <News style={styles.topSpace} />
                 )}
 
-            </Page>
+            </View>
         );
     }
 }

@@ -8,8 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-import { Page } from 'Interface/Global';
-import { Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
+import { Container, Text, Icon, ProgressBar, Button, KPI } from 'Interface/Components';
 import { PageHeader, ActivityPanel, SkillChart, StatsBars } from 'Interface/Widgets';
 
 /**
@@ -29,13 +28,11 @@ class Skill extends BackSkill {
         const txtNextXP = Round(this.skill.next, 1);
         const txtXP = langManager.curr['level']['xp'];
 
+        //bottomOffset={104}
+        //overlay={this.renderOverlay()}
+        //footer={this.renderFooter()}
         return (
-            <Page
-                ref={this.refPage}
-                bottomOffset={104}
-                overlay={this.renderOverlay()}
-                footer={this.renderFooter()}
-            >
+            <View>
                 <PageHeader onBackPress={user.interface.BackHandle} />
 
                 {/* Skill name and icon */}
@@ -60,7 +57,7 @@ class Skill extends BackSkill {
                         <Text>{this.skill.level}</Text>
                         <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
                     </View>
-                    <XPBar value={this.skill.xp} maxValue={this.skill.next} />
+                    <ProgressBar value={this.skill.xp} maxValue={this.skill.next} />
 
                     {this.skill.creator !== '' && (
                         <Text style={styles.creator} color='secondary'>{this.skill.creator}</Text>
@@ -127,7 +124,7 @@ class Skill extends BackSkill {
                         />
                     </Container>
                 )}
-            </Page>
+            </View>
         );
     }
 

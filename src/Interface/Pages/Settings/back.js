@@ -73,8 +73,9 @@ class BackSettings extends PageBase {
         this.setState({ waitingConsentPopup: false });
     }
 
-    /** @param {ComboBoxItem} lang */
+    /** @param {ComboBoxItem | null} lang */
     onChangeLang = (lang) => {
+        if (lang === null) return;
         this.setState({ cbSelectedLang: lang });
         langManager.SetLangage(/** @type {'fr' | 'en'} */ (lang.key));
         user.settings.Save();

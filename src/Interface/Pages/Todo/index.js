@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 
@@ -10,7 +10,6 @@ import SectionSchedule from './Sections/schedule';
 import SectionTasks from './Sections/tasks';
 
 import StartHelp from './help';
-import { Page } from 'Interface/Global';
 import { Button, KeyboardSpacerView } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
@@ -18,13 +17,11 @@ class Todo extends BackTodo {
     render() {
         const { title, error } = this.state;
 
+        //onStartShouldSetResponder={this.keyboardDismiss}
+        //overlay={this.renderOverlay()}
+        //bottomOffset={72}
         return (
-            <Page
-                ref={this.refPage}
-                onStartShouldSetResponder={this.keyboardDismiss}
-                overlay={this.renderOverlay()}
-                bottomOffset={72}
-            >
+            <View>
                 <PageHeader
                     onBackPress={user.interface.BackHandle}
                     onHelpPress={StartHelp.bind(this)}
@@ -52,7 +49,7 @@ class Todo extends BackTodo {
                 />
 
                 <KeyboardSpacerView onChangeState={this.onKeyboardChangeState} />
-            </Page>
+            </View>
         );
     }
 

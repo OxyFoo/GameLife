@@ -8,7 +8,6 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Page } from 'Interface/Global';
 import { Icon, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
@@ -27,7 +26,7 @@ class Achievements extends BackAchievements {
         };
 
         return (
-            <Page ref={this.refPage} scrollable={false}>
+            <View>
                 <View onLayout={this.onLayout}>
                     <PageHeader
                         style={styles.pageHeader}
@@ -50,7 +49,7 @@ class Achievements extends BackAchievements {
                     keyExtractor={(item, i) => 'achievement-' + i}
                     renderItem={this.renderAchievement}
                 />
-            </Page>
+            </View>
         );
     }
 

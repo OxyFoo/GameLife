@@ -4,23 +4,19 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
-import { Page } from 'Interface/Global';
 import { Button, Text, UserOnlineElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
 class Multiplayer extends BackMultiplayer {
     render() {
+        //overlay={this.renderAddButton()}
+        //bottomOffset={64}
         return (
-            <Page
-                ref={this.refPage}
-                overlay={this.renderAddButton()}
-                bottomOffset={64}
-                canScrollOver
-            >
+            <View>
                 <PageHeader onBackPress={this.Back} />
                 {this.renderContent()}
-            </Page>
+            </View>
         );
     }
 

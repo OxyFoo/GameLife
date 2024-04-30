@@ -5,7 +5,6 @@ import BackWaitmail from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page } from 'Interface/Global';
 import { Text, Button, ProgressBar } from 'Interface/Components';
 
 class Waitmail extends BackWaitmail {
@@ -16,11 +15,7 @@ class Waitmail extends BackWaitmail {
         const timeText = this.getTimeText();
 
         return (
-            <Page
-                ref={this.refPage}
-                style={styles.body}
-                scrollable={false}
-            >
+            <View style={styles.body}>
                 <View style={styles.backgroundCircles}>
                     <Image source={this.image} />
                 </View>
@@ -40,7 +35,7 @@ class Waitmail extends BackWaitmail {
                     onPress={this.onBack}
                     borderRadius={20}
                 />
-            </Page>
+            </View>
         );
     }
 }

@@ -7,7 +7,6 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page } from 'Interface/Global';
 import { Container, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
 import { PageHeader, AchievementsGroup, StatsBars } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
@@ -32,7 +31,7 @@ class ProfileFriend extends BackProfileFriend {
         };
 
         return (
-            <Page ref={this.refPage}>
+            <View>
                 <PageHeader
                     style={{ marginBottom: 12 }}
                     onBackPress={this.Back}
@@ -122,7 +121,7 @@ class ProfileFriend extends BackProfileFriend {
 
                 {/** Actions */}
                 {this.renderAction()}
-            </Page>
+            </View>
         );
     }
 

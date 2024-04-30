@@ -5,8 +5,7 @@ import BackLogin from './back';
 import styles from './style';
 import user from 'Managers/UserManager';
 
-import { Page } from 'Interface/Global';
-import { Text, Button, Input, Checkbox } from 'Interface/Components';
+import { Text, Button, Input, CheckBox } from 'Interface/Components';
 
 class Login extends BackLogin {
     render() {
@@ -35,7 +34,7 @@ class Login extends BackLogin {
         const smallScreen = user.interface.screenHeight < 600;
 
         return (
-            <Page ref={this.refPage} style={styles.body} scrollable={false}>
+            <View style={styles.body}>
                 {/* Background images */}
                 {smallScreen ? null : (
                     <Image style={styles.backgroundCircles} source={this.imageBackground} />
@@ -108,7 +107,7 @@ class Login extends BackLogin {
 
                     {/* CGU */}
                     <View style={styles.cgu}>
-                        <Checkbox
+                        <CheckBox
                             style={{ marginRight: 4 }}
                             checked={this.state.cguAccepted}
                             onChange={this.onCGUToggle}
@@ -136,7 +135,7 @@ class Login extends BackLogin {
                     icon='arrowLeft'
                     onPress={this.setSigninMode}
                 />
-            </Page>
+            </View>
         );
     }
 }

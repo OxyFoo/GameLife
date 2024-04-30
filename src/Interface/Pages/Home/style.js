@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
         marginTop: 16
     },
     titleWidget: {
-        marginBottom: 12
+        marginBottom: 12,
+        fontWeight: 'bold'
     },
     todayPieChart: {
         flex: 1

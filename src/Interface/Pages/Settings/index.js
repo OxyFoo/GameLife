@@ -6,8 +6,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page } from 'Interface/Global';
-import { Text, Button, Switch, TextSwitch, ComboBox } from 'Interface/Components';
+import { Text, Button, Switch, SwitchText, ComboBox } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Settings extends BackSettings {
@@ -25,10 +24,10 @@ class Settings extends BackSettings {
         const lang = langManager.curr['settings'];
 
         return (
-            <Page ref={this.refPage}>
+            <View>
                 <PageHeader onBackPress={this.onBack} />
 
-                <Button style={styles.margin} color='main2' borderRadius={16} onPress={this.openAbout}>{lang['input-about']}</Button>
+                <Button style={styles.margin} color='main2' onPress={this.openAbout}>{lang['input-about']}</Button>
 
                 <ComboBox
                     style={styles.margin}
@@ -40,7 +39,7 @@ class Settings extends BackSettings {
 
                 {/*
                 <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
-                <TextSwitch
+                <SwitchText
                     // TODO - Finish themes
                     style={styles.margin}
                     texts={[ langThemes['Main'], langThemes['Light'] ]}
@@ -53,7 +52,7 @@ class Settings extends BackSettings {
                     <Text style={styles.inlineText}>{lang['input-notif-morning']}</Text>
                     <Switch
                         value={switchMorningNotifs}
-                        onValueChanged={this.onChangeMorningNotifications}
+                        onChangeValue={this.onChangeMorningNotifications}
                     />
                 </View>
 
@@ -61,7 +60,7 @@ class Settings extends BackSettings {
                     <Text style={styles.inlineText}>{lang['input-notif-evening']}</Text>
                     <Switch
                         value={switchEveningNotifs}
-                        onValueChanged={this.onChangeEveningNotifications}
+                        onChangeValue={this.onChangeEveningNotifications}
                     />
                 </View>
 
@@ -77,9 +76,9 @@ class Settings extends BackSettings {
                 {user.server.IsConnected() && this.state.serverTCPState !== 'connected' && this.state.serverTCPState !== 'idle' && (
                     <Button style={styles.margin} onPress={this.reconnectTCP} color='main3'>{lang['input-reconnect-tcp']}</Button>
                 )}
-                <Button style={styles.margin} onPress={this.restartTuto} color='main1' borderRadius={16}>{lang['input-tuto-again']}</Button>
+                <Button style={styles.margin} onPress={this.restartTuto} color='main1'>{lang['input-tuto-again']}</Button>
                 <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>
-            </Page>
+            </View>
         );
     }
 }

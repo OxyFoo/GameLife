@@ -6,7 +6,6 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page } from 'Interface/Global';
 import { Text, Icon } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
@@ -23,7 +22,7 @@ class About extends BackAbout {
         const lang = langManager.curr['about'];
 
         return (
-            <Page ref={this.refPage} scrollable={false}>
+            <View>
                 <PageHeader
                     style={styles.pageHeader}
                     onBackPress={user.interface.BackHandle}
@@ -73,7 +72,7 @@ class About extends BackAbout {
                     </View>
 
                 </View>
-            </Page>
+            </View>
         );
     }
 }

@@ -5,7 +5,6 @@ import BackWaitinternet from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page } from 'Interface/Global';
 import { Text } from 'Interface/Components';
 
 class Waitinternet extends BackWaitinternet {
@@ -17,18 +16,14 @@ class Waitinternet extends BackWaitinternet {
         }
 
         return (
-            <Page
-                ref={this.refPage}
-                style={styles.body}
-                scrollable={false}
-            >
+            <View style={styles.body}>
                 <View style={styles.backgroundCircles}>
                     <Image source={this.image} />
                 </View>
 
                 <Text style={styles.text} color='primary'>{textWait}</Text>
                 <Text style={styles.link} onPress={this.goToWebsite} color='main1'>oxyfoo.com</Text>
-            </Page>
+            </View>
         );
     }
 }

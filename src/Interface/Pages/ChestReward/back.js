@@ -80,8 +80,6 @@ class BackChestReward extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         SpringAnimation(this.state.animGlobal, 1).start();
         TimingAnimation(this.state.animChest, 4, 1000).start();
         this.timeout1 = setTimeout(() => {

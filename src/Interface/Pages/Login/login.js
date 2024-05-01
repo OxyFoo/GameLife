@@ -9,23 +9,26 @@ import langManager from 'Managers/LangManager';
  * Login, return true if success (& next page loading) or false if error
  * @this {LoginPage}
  * @param {string} email
- * @returns {Promise<boolean>}
+ * @returns {Promise<void>}
  */
 async function Login(email) {
     const lang = langManager.curr['login'];
+
+    this.setState({ loading: true });
     const { status } = await user.server.Connect(email);
+    await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Logged in
     if (status === 'ok') {
         user.settings.email = email;
         user.settings.connected = true;
         await user.settings.Save();
-        return true;
+        user.interface.ChangePage('loading', undefined, true);
     }
 
     // No account, go to signin
-    if (status === 'free') {
-        this.setSigninMode(true);
+    else if (status === 'free') {
+        this.goToSignin();
     } 
 
     // Too many devices
@@ -44,10 +47,10 @@ async function Login(email) {
 
     // Error
     else if (status === 'error') {
-        this.checkConnection();
+        this.setState({ errorEmail: lang['error-signin-server'] }, () => {
+            this.checkConnection();
+        });
     }
-
-    return false;
 }
 
 /**
@@ -55,17 +58,20 @@ async function Login(email) {
  * @this {LoginPage}
  * @param {string} email
  * @param {string} username
- * @returns {Promise<boolean>}
+ * @returns {Promise<void>}
  */
 async function Signin(email, username) {
     const lang = langManager.curr['login'];
+    this.setState({ loading: true });
     const signinStatus = await user.server.Signin(email, username);
+    await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Signin success
     if (signinStatus === 'ok') {
         user.settings.email = email;
         await user.settings.Save();
-        return true;
+        user.interface.ChangePage('waitmail', { email: email }, true);
+        return;
     }
 
     // Too many devices
@@ -92,10 +98,8 @@ async function Signin(email, username) {
             errorUsername: '',
             errorEmail: lang['error-signin-server']
         });
-        this.setSigninMode(false);
+        this.backToLogin();
     }
-
-    return false;
 }
 
 export { Login, Signin };

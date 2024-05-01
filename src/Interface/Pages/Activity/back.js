@@ -108,8 +108,6 @@ class BackActivity extends PageBase {
     }
 
     async componentDidMount() {
-        super.componentDidMount();
-
         // Wait for the layout to be calculated
         while (this.state.topPanelOffset === 0) {
             await Sleep(100);

@@ -39,8 +39,6 @@ class BackProfile extends PageBase {
     refTuto1 = null;
 
     componentDidMount() {
-        super.componentDidMount();
-
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
                 xpInfo: user.experience.GetExperience().xpInfo

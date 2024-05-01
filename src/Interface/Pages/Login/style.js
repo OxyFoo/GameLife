@@ -1,71 +1,51 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    body: {
-        width: '100%',
+    page: {
         height: '100%',
-        paddingHorizontal: '5%'
-    },
-    container: {
-        width: '100%',
-        paddingVertical: 24,
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden'
-    },
-    mainImageContainer: {
-        width: '100%',
-        marginTop: '15%',
-
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    mainImage: {
-        height: '80%',
-        aspectRatio: 1
-    },
-    backgroundCircles: {
-        position: 'absolute',
-        top: 0,
-        right: 0
+        padding: 32,
+        justifyContent: 'space-evenly'
     },
     title: {
-        marginTop: '10%',
         fontSize: 58
-    },
-    smallTitle: {
-        marginTop: '5%',
-        fontSize: 40
     },
     text: {
         margin: 12,
+        marginBottom: 48,
         textAlign: 'center',
-        fontSize: 16
+        fontSize: 18
     },
     input: {
-        width: '90%'
+        width: '90%',
+        marginLeft: '5%'
     },
-    button: {
+
+    buttonLoginSignin: {
+        width: 'auto',
         position: 'absolute',
         left: 0,
         right: 0,
         bottom: 0,
         margin: 24
     },
-    backButton: {
+    buttonBack: {
         position: 'absolute',
         width: 64,
         left: 24,
         bottom: 24
     },
+
     cgu: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: -8
+        flexWrap: 'wrap'
     },
+    cguCheckBox: {
+        marginRight: 12
+    },
+
     error: {
         margin: 2,
         fontSize: 12

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackWaitmail from './back';
 import user from 'Managers/UserManager';
@@ -15,59 +15,57 @@ class Waitmail extends BackWaitmail {
         const timeText = this.getTimeText();
 
         return (
-            <View style={styles.body}>
-                <View style={styles.backgroundCircles}>
-                    <Image source={this.image} />
+            <View style={styles.page}>
+                <View>
+                    <Text style={styles.title} color='primary' fontSize={22}>{email}</Text>
+                    <Text color='primary' fontSize={16}>{textWait}</Text>
                 </View>
-
-                <Text style={styles.title} color='primary' fontSize={22}>{email}</Text>
-                <Text color='primary' fontSize={16}>{textWait}</Text>
+                <View />
 
                 {/* ProgressBar & Back button */}
-                <View style={styles.progressBar}>
-                    <Text style={styles.resendText}>{timeText}</Text>
-                    <ProgressBar />
+                <View style={styles.bottomView}>
+                    <Button
+                        style={styles.backButton}
+                        appearance='outline'
+                        icon='arrow-left'
+                        onPress={this.onBack}
+                    />
+                    <View style={styles.waitingView}>
+                        <Text style={styles.resendText}>{timeText}</Text>
+                        <ProgressBar.Infinite />
+                    </View>
                 </View>
-                <Button
-                    style={styles.backButton}
-                    color='main1'
-                    icon='arrowLeft'
-                    onPress={this.onBack}
-                    borderRadius={20}
-                />
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    body: {
-        flex: 1,
-        display: 'flex',
+    page: {
+        height: '100%',
+        padding: 32,
         alignItems: 'center',
-        justifyContent: 'center'
-    },
-    backgroundCircles: {
-        position: 'absolute',
-        top: 0,
-        right: 0
-    },
-    progressBar: {
-        position: 'absolute',
-        left: 96,
-        right: 24,
-        bottom: 24,
-        overflow: 'hidden'
-    },
-    backButton: {
-        position: 'absolute',
-        width: 64,
-        left: 24,
-        bottom: 24
+        justifyContent: 'space-evenly'
     },
     title: {
         marginBottom: 64,
         textDecorationLine: 'underline'
+    },
+
+    bottomView: {
+        position: 'absolute',
+        left: 24,
+        right: 24,
+        bottom: 24,
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
+    waitingView: {
+        flex: 1,
+        marginLeft: 24
+    },
+    backButton: {
+        width: 64
     },
     resendText: {
         fontSize: 14,

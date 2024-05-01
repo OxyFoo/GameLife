@@ -6,6 +6,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import styles from './style';
 import BackTest from './back';
 
+import ICONS from 'Ressources/Icons';
 import {
     Text,
     Button,
@@ -19,10 +20,12 @@ import {
 } from 'Interface/Components';
 
 class Test extends BackTest {
+    feKeepMounted = true;
+
     render() {
         //console.log('test1');
         return (
-            <View>
+            <View style={styles.page}>
                 <MaskedView
                     style={{ marginVertical: 24 }}
                     maskElement={(<Text fontSize={32}>{'Page de test'}</Text>)}
@@ -75,7 +78,7 @@ class Test extends BackTest {
                 <Button style={styles.marginBot} onPress={this.goToPage2} appearance={this.state.selectedButon} icon='home' />
                 <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon}>{'Changer l\'apparence'}</Button>
                 <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon} icon={'cup'}>{'Changer l\'apparence'}</Button>
-                <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon} loading={true}>{'Quêtes journalières'}</Button>
+                <Button style={styles.marginBot} onPress={this.buttonLoop} appearance={this.state.selectedButon} loading={this.state.selectedButon === 'normal'}>{'Quêtes journalières'}</Button>
             </View>
         );
     }
@@ -103,7 +106,7 @@ class Test extends BackTest {
             <View>
                 {this.renderTitle('Inputs')}
                 <InputText
-                    style={styles.marginBot}
+                    containerStyle={styles.marginBot}
                     label='Test input'
                     icon={'users'}
                     value={this.state.input}
@@ -126,38 +129,31 @@ class Test extends BackTest {
     }
 
     renderIcons = () => {
+        const iconKeys = Object.keys(ICONS);
+        const iconPair = iconKeys
+            .filter((icon) => icon.endsWith('-outline') || iconKeys.includes(icon + '-outline'));
+
+        const iconNormal = iconPair.filter((icon) => !icon.endsWith('-outline')).sort();
+        const iconOutline = iconPair.filter((icon) => icon.endsWith('-outline')).sort();
+        const iconOther = iconKeys.filter((icon) => !iconPair.includes(icon)).sort();
+        const iconToShow = this.state.iconsMode === 'normal' ? iconNormal : iconOutline;
+
         return (
-            <View>
+            <>
                 {this.renderTitle('Icons')}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <Icon icon='add' color='main1' />
-                    <Icon icon='arrow-square' color='main1' />
-                    <Icon icon='bell' color='main1' />
-                    <Icon icon='cart' color='main1' />
-                    <Icon icon='check' color='main1' />
-                    <Icon icon='clock' color='main1' />
-                    <Icon icon='close' color='main1' />
-                    <Icon icon='creativity' color='main1' />
-                    <Icon icon='crown' color='main1' />
-                    <Icon icon='cup' color='main1' />
-                    <Icon icon='danger' color='main1' />
-                    <Icon icon='favorite' color='main1' />
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
+                    {iconToShow.map((icon) => (
+                        // @ts-ignore
+                        <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
+                    ))}
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
-                    <Icon icon='add-outline' color='main1' />
-                    <Icon icon='arrow-square-outline' color='main1' />
-                    <Icon icon='bell-outline' color='main1' />
-                    <Icon icon='cart-outline' color='main1' />
-                    <Icon icon='check-outline' color='main1' />
-                    <Icon icon='clock-outline' color='main1' />
-                    <Icon icon='close-outline' color='main1' />
-                    <Icon icon='creativity-outline' color='main1' />
-                    <Icon icon='crown-outline' color='main1' />
-                    <Icon icon='cup-outline' color='main1' />
-                    <Icon icon='danger-outline' color='main1' />
-                    <Icon icon='favorite-outline' color='main1' />
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
+                    {iconOther.map((icon) => (
+                        // @ts-ignore
+                        <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
+                    ))}
                 </View>
-            </View>
+            </>
         );
     }
 

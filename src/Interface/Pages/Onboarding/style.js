@@ -4,11 +4,7 @@ const styles = StyleSheet.create({
     page: {
         height: '100%',
         width: '100%',
-        padding: 0,
-        paddingBottom: 0
-    },
-    langsContainer: {
-        height: '100%',
+        padding: 32,
         alignItems: 'center',
         justifyContent: 'space-around'
     },
@@ -27,14 +23,8 @@ const styles = StyleSheet.create({
     },
 
     buttonNext: {
-        height: 42,
-        width: 125,
-        paddingHorizontal: 16
-    },
-    buttonQuestion: {
-        position: 'absolute',
-        top: 16,
-        right: 16
+        width: '60%',
+        minWidth: 125
     }
 });
 

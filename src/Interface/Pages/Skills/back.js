@@ -25,8 +25,6 @@ class BackSkills extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         // Get all skills
         this.allSkills = this.getAllSkills();
         this.refreshSkills();

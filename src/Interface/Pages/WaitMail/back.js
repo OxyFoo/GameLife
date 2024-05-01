@@ -10,12 +10,7 @@ class BackWaitmail extends PageBase {
         time: null
     }
 
-    // @ts-ignore
-    image = require('../../../../res/logo/login_circles.png');
-
     componentDidMount() {
-        super.componentDidMount();
-
         this.tick = window.setInterval(this.onTick, 1000);
         this.login = window.setInterval(this.Login, REFRESH_DELAY * 1000);
         this.Login();

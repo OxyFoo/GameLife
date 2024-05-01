@@ -9,18 +9,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    sentence: {
+    textContainer: {
         position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: -12,
-        textAlign: 'center'
-    },
-    version: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 12,
+        left: 24,
+        right: 24,
+        bottom: 24,
         textAlign: 'center'
     },
 

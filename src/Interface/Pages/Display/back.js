@@ -52,8 +52,6 @@ class BackDisplay extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         SpringAnimation(this.state.anim, 1).start();
     }
 }

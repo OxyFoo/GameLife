@@ -5,6 +5,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
 import BackTest2 from './back';
+import user from 'Managers/UserManager';
 
 import { Text, Button, InputText } from 'Interface/Components';
 
@@ -12,7 +13,7 @@ class Test2 extends BackTest2 {
     render() {
         //console.log('test2');
         return (
-            <View>
+            <View style={styles.page}>
                 <MaskedView
                     style={{ marginVertical: 24 }}
                     maskElement={(<Text fontSize={32}>{'Page de test 2'}</Text>)}
@@ -25,11 +26,13 @@ class Test2 extends BackTest2 {
                 <Button style={styles.marginBot} loading={true}>{'Bla bla bla'}</Button>
 
                 <InputText
-                    style={styles.marginBot}
+                    containerStyle={styles.marginBot}
                     label='Test input'
                     value={this.state.input}
                     onChangeText={(newText) => this.setState({ input: newText })}
                 />
+
+                <Button onPress={() => user.interface.ChangePage('loading')}>{'Ouvrir l\'app'}</Button>
             </View>
         );
     }

@@ -87,6 +87,7 @@ export default {
     'users':                    require('./icons/users').default,
     'video-outline':            require('./icons/video-outline').default,
     'video':                    require('./icons/video').default,
+    'warning':                  require('./icons/warning').default,
     'well-being-outline':       require('./icons/well-being-outline').default,
     'well-being':               require('./icons/well-being').default,
     'work-job-outline':         require('./icons/work-job-outline').default,

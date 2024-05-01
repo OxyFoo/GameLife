@@ -1,84 +1,42 @@
-import { Animated } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Interface/Components').Button} Button
+ * @typedef {import('Managers/LangManager').LangKey} LangKey
  */
 
 class BackOnboarding extends PageBase {
     state = {
-        helpAnimation: new Animated.Value(-64),
-        tutoLaunched: false
+        selectedLangKey: langManager.currentLangageKey
     }
 
-    /** @type {Button} */
-    refInfo = null;
-
-    selectEnglish = () => {
-        langManager.SetLangage('en');
-        this.forceUpdate();
-    }
-    selectFrench = () => {
-        langManager.SetLangage('fr');
-        this.forceUpdate();
+    /** @param {LangKey} key */
+    selectLanguage = (key) => {
+        langManager.SetLangage(key);
+        this.setState({ selectedLangKey: key });
     }
 
-    launchOnboarding = () => {
-        const lang = langManager.curr['onboarding'];
+    Next = async () => {
+        //const lang = langManager.curr['onboarding'];
+        //lang['page1']    lang['page2']    lang['page3']
+        //lang['page4']    lang['page5']    lang['page6']
 
-        user.interface.screenTuto.ShowTutorial([
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page1']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page2']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page3']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page4']
-            },
-            {
-                component: this.refInfo,
-                showSkipButton: false,
-                text: lang['page5']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page6'],
-                execAfter: () => {
-                    this.endOnboarding();
-                    return true;
-                }
-            }
-        ]);
-
-        SpringAnimation(this.state.helpAnimation, 0).start();
-        this.setState({ tutoLaunched: true });
-    }
-
-    endOnboarding = async () => {
         user.settings.onboardingWatched = true;
 
         const saved = await user.settings.Save();
         if (!saved) {
-            RNExitApp.exitApp();
+            const lang = langManager.curr['app'];
+            user.interface.ChangePage('display', {
+                'icon': 'error',
+                'iconRatio': .4,
+                'text': lang['loading-error-message']['userdata-not-saved'],
+                'button': lang['loading-error-button'],
+                'action': RNExitApp.exitApp
+            }, true);
             return;
         }
 

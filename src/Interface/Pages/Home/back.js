@@ -32,8 +32,6 @@ class BackHome extends PageBase {
     refMissions = React.createRef();
 
     componentDidMount() {
-        super.componentDidMount();
-
         this.handleLevelsUpdate();
         this.listenerActivities = user.activities.allActivities.AddListener(
             this.handleLevelsUpdate

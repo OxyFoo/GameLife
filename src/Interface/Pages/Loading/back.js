@@ -11,6 +11,8 @@ import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * 
  * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  */
@@ -23,10 +25,10 @@ class BackLoading extends PageBase {
     }
 
     startY = 0;
+    /** @type {NodeJS.Timeout | null} */
     intervalId = null;
 
     componentDidMount() {
-        super.componentDidMount();
         Initialisation(this.nextStep, this.nextPage, this.handleError);
 
         this.pickRandomSentence();
@@ -34,7 +36,9 @@ class BackLoading extends PageBase {
     }
 
     componentWillUnmount() {
-        clearInterval(this.intervalId);
+        if (this.intervalId !== null) {
+            clearInterval(this.intervalId);
+        }
     }
 
     pickRandomSentence = () => {
@@ -43,9 +47,12 @@ class BackLoading extends PageBase {
         this.setState({ displayedSentence: sentences[randomIndex] });
     }
 
+    /** @param {GestureResponderEvent} event */
     onToucheStart = (event) => {
         this.startY = event.nativeEvent.pageY;
     }
+
+    /** @param {GestureResponderEvent} event */
     onToucheEnd = (event) => {
         // Check if the user is offline and if he has scrolled up to open the console
         if (event.nativeEvent.pageY - this.startY < -200 && !user.server.online) {

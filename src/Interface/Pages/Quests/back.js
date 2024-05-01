@@ -20,10 +20,6 @@ class BackNewPage extends PageBase {
     /** @type {React.RefObject<TodoList>} */
     refTodoList = React.createRef();
 
-    componentDidMount() {
-        super.componentDidMount();
-    }
-
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);
         StartMission.call(this, args?.missionName);

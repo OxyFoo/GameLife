@@ -82,8 +82,6 @@ class BackTodo extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         const { selectedTodo } = this;
         if (selectedTodo === null) return;
 

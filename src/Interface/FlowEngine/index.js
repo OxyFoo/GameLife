@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Animated, View, BackHandler, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 import PAGES from 'Interface/Pages';
-import themeManager from 'Managers/ThemeManager';
 
-import { RadialBackground } from './radialBackground';
+import { RadialBackground } from '../Primitives/radialBackground';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import { Console, Popup } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -60,6 +60,9 @@ class FlowEngine extends React.Component{
         /** @type {Array<PageMemory>} */
         mountedPages: []
     };
+
+    /** @type {Popup} */    popup       = null;
+    /** @type {Console} */  console     = null;
 
     /** @description Disable changing page while loading */
     changing = false;
@@ -132,10 +135,11 @@ class FlowEngine extends React.Component{
      * @param {object} pageArguments
      * @param {boolean} ignorePage
      * @param {boolean} forceUpdate
+     * @returns {boolean} True if page changed
      */
     ChangePage = (nextpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
         if (this.changing) {
-            return;
+            return false;
         }
 
         const { mountedPages, selectedPage } = this.state;
@@ -179,9 +183,11 @@ class FlowEngine extends React.Component{
                     this.removeFromMountedPages(oldPage.pageName);
                 }
             });
-        } else [
+        } else {
             this.changing = false
-        ]
+        }
+
+        return true;
     }
 
     /**
@@ -237,14 +243,10 @@ class FlowEngine extends React.Component{
             >
                 <ScrollView
                     style={styles.scrollview}
-                    contentContainerStyle={styles.scrollviewContainer}
+                    contentContainerStyle={[styles.scrollviewContainer, page.ref.current?.feStyleParent]}
                     scrollEnabled={true}
-                >
-                    <Page
-                        ref={page.ref}
-                        args={{ test: 'yesss' }}
-                    />
-                </ScrollView>
+                    children={<Page ref={page.ref} /*args={page.args}*/ />}
+                />
             </Animated.View>
         );
     }
@@ -264,6 +266,9 @@ class FlowEngine extends React.Component{
                 />
 
                 {pageNames.map(this.renderPage)}
+
+                <Popup ref={ref => { if (ref !== null) this.popup = ref } } />
+                <Console ref={ref => { if (ref !== null) this.console = ref } } />
             </KeyboardAvoidingView>
         );
     }
@@ -290,11 +295,10 @@ const styles = StyleSheet.create({
     },
     scrollview: {
         width: '100%',
-        height: '100%',
-        backgroundColor: '#00000001'
+        height: '100%'
     },
     scrollviewContainer: {
-        padding: 32
+        minHeight: '100%'
     }
 });
 

@@ -5,7 +5,9 @@ class BackNewPage extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
+    }
+
+    componentWillUnmount() {
     }
 }
 

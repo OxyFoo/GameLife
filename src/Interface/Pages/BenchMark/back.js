@@ -23,8 +23,6 @@ class BackBenchMark extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         const activities = user.activities.Get();
         const activitiesCount = activities.length;
 

@@ -49,7 +49,7 @@ import svgTiktok from 'Ressources/icons/old/tiktok';
 import svgTrash from 'Ressources/icons/old/trash';
 import svgUndo from 'Ressources/icons/old/undo';
 import svgUserAdd from 'Ressources/icons/old/user-add';
-import svgWarning from 'Ressources/icons/old/warning';
+//import svgWarning from 'Ressources/icons/old/warning';
 import svgWorld from 'Ressources/icons/old/world';
 
 import svgLoading from 'Ressources/icons/old/loading';
@@ -107,7 +107,7 @@ const SVGIcons = {
     trash: svgTrash,
     undo: svgUndo,
     userAdd: svgUserAdd,
-    warning: svgWarning,
+    //warning: svgWarning,
     world: svgWorld,
 
     loading: svgLoading,

@@ -13,6 +13,8 @@ class BackTest extends PageBase {
         /** @type {Button['props']['appearance']} */
         selectedButon: 'normal',
         input: '',
+        /** @type {'normal' | 'outline'} */
+        iconsMode: 'normal',
         switch1: false,
         switch2: true,
         checkbox1: false,
@@ -28,6 +30,7 @@ class BackTest extends PageBase {
         this.intervalPanel = setInterval(() => {
             const newX = this.panelX === 0 ? 200 : 0;
             this.panelX = newX;
+            this.setState({ iconsMode: this.state.iconsMode === 'normal' ? 'outline' : 'normal' });
             SpringAnimation(this.animPanel, newX).start();
         }, 2000);
     }

@@ -8,10 +8,6 @@ import { Login, Signin } from './login';
 import { IsEmail } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
-/**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- */
-
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
 
@@ -27,12 +23,11 @@ class BackLogin extends PageBase {
         errorUsername: '',
         errorCgu: '',
 
-        mainContentHeight: 0,
-        animImage: new Animated.Value(1),
-        animFocus: new Animated.Value(0),
-        animSignin: new Animated.Value(0)
+        animSignin: new Animated.Value(0),
+        animSigninBis: new Animated.Value(0)
     }
 
+    /** @param {PageBase['props']} props */
     constructor(props) {
         super(props);
 
@@ -47,40 +42,13 @@ class BackLogin extends PageBase {
             btnSignin: lang['button-signin-text'],
             cguTexts: lang['input-cgu-text'].split('%')
         };
-
-        // Load images
-        this.imageBackground = require('../../../../res/logo/login_circles.png');
-        this.imageMain = require('../../../../res/logo/login_hand.png');
     }
 
-    refInputEmail = null;
-    refInputUsername = null;
-
     componentDidMount() {
-        super.componentDidMount();
         this.checkConnection();
     }
     componentWillUnmount() {
         user.interface.ResetCustomBackHandler();
-    }
-
-    /** @param {LayoutChangeEvent} e */
-    onLayout = (e) => {
-        this.setState({ mainContentHeight: e.nativeEvent.layout.height });
-    }
-
-    onPressImageIn = () => SpringAnimation(this.state.animImage, .9, false).start();
-    onPressImageOut = () => SpringAnimation(this.state.animImage, 1, false).start();
-
-    onFocus = () => {
-        if (Platform.OS === 'ios') {
-            SpringAnimation(this.state.animFocus, 1, false).start();
-        }
-    }
-    onBlur = () => {
-        if (Platform.OS === 'ios') {
-            SpringAnimation(this.state.animFocus, 0, false).start();
-        }
     }
 
     checkConnection = async () => {
@@ -90,50 +58,14 @@ class BackLogin extends PageBase {
         }
     }
 
-    /**
-     * Set signin mode
-     * @param {boolean} mode
-     * @returns {false}
-     */
-    setSigninMode = (mode = false) => {
-        const { signinMode, animSignin } = this.state;
-        if (mode === signinMode) {
-            return;
-        }
 
-        // Do animation, change state, set custom back handle
-        if (mode) {
-            SpringAnimation(animSignin, 1, false).start();
-            this.setState({ signinMode: true });
-            user.interface.SetCustomBackHandler(() => this.setSigninMode(false));
-        } else {
-            SpringAnimation(animSignin, 0, false).start();
-            this.setState({
-                signinMode: false,
-                username: '',
-                cguAccepted: false,
-                errorUsername: '',
-                errorCgu: '',
-            });
-            user.interface.ResetCustomBackHandler();
-        }
-
-        SpringAnimation(this.state.animFocus, 0, false).start();
-        if (typeof(this.refInputEmail?.blur) === 'function') {
-            this.refInputEmail?.blur();
-        }
-        if (typeof(this.refInputUsername?.blur) === 'function') {
-            this.refInputUsername?.blur();
-        }
-
-        return false;
-    }
-
+    /** @param {string} newEmail */
     onChangeEmail = (newEmail) => {
         const email = newEmail.trim().substring(0, MAX_EMAIL_LENGTH);
         this.setState({ email });
     }
 
+    /** @param {string} newUsername */
     onChangeUsername = (newUsername) => {
         const username = newUsername.trim().substring(0, MAX_PSEUDO_LENGTH);
         this.setState({ username });
@@ -153,70 +85,84 @@ class BackLogin extends PageBase {
         Linking.openURL(`https://${langKey}.oxyfoo.com/legal/terms-of-service`);
     }
 
-    /**
-     * Login or Signin
-     * Do verification before call Login or Signin
-     */
-    onLoginOrSignin = async () => {
-        const lang = langManager.curr['login'];
-        const { loading, signinMode } = this.state;
 
-        if (loading) {
+    loginOrGoToSignin = async () => {
+        const lang = langManager.curr['login'];
+        const { loading, email, errorEmail } = this.state;
+
+        // Prevent double login
+        if (loading) return;
+
+        // Check email
+        if (!IsEmail(email)) {
+            this.setState({ errorEmail: lang['error-login-nonmail'] });
+            return;
+        }
+        if (errorEmail.length) {
+            this.setState({ errorEmail: '' });
+        }
+
+        // Login
+        return await Login.call(this, email);
+    }
+
+    goToSignin = () => {
+        const { signinMode, animSignin, animSigninBis } = this.state;
+        if (signinMode) {
             return;
         }
 
+        SpringAnimation(animSignin, 1, false).start();
+        setTimeout(SpringAnimation(animSigninBis, 1, false).start, 100);
+
+        this.setState({ signinMode: true });
+        user.interface.SetCustomBackHandler(this.backToLogin);
+    }
+
+    backToLogin = () => {
+        const { signinMode, animSignin, animSigninBis } = this.state;
         if (!signinMode) {
-            const { email, errorEmail } = this.state;
-
-            // Check email
-            if (!IsEmail(email)) {
-                this.setState({ errorEmail: lang['error-login-nonmail'] });
-                return;
-            }
-            if (errorEmail.length) {
-                this.setState({ errorEmail: '' });
-            }
-
-            // Login
-            this.setState({ loading: true });
-            const logged = await Login.call(this, email);
-            if (logged) {
-                user.interface.ChangePage('loading', undefined, true);
-                return;
-            }
+            return false;
         }
 
-        else {
-            const { email, username, errorUsername, cguAccepted, errorCgu } = this.state;
+        setTimeout(SpringAnimation(animSignin, 0, false).start, 100);
+        SpringAnimation(animSigninBis, 0, false).start();
 
-            // Check username
-            if (!username.length) {
-                this.setState({ errorUsername: lang['error-signin-pseudoWrong'] });
-                return;
-            }
-            if (errorUsername.length) {
-                this.setState({ errorUsername: '' });
-            }
+        this.setState({
+            signinMode: false,
+            username: '',
+            cguAccepted: false,
+            errorUsername: '',
+            errorCgu: '',
+        });
+        user.interface.ResetCustomBackHandler();
+        return false;
+    }
 
-            // Check CGU
-            if (!cguAccepted) {
-                this.setState({ errorCgu: lang['error-signin-disagree'] });
-                return;
-            }
-            if (errorCgu.length) {
-                this.setState({ errorCgu: '' });
-            }
+    signin = async () => {
+        const lang = langManager.curr['login'];
+        const { email, username, errorUsername, cguAccepted, errorCgu } = this.state;
 
-            // Signin
-            this.setState({ loading: true });
-            const signed = await Signin.bind(this)(email, username);
-            if (signed) {
-                user.interface.ChangePage('waitmail', { email: email }, true);
-                return;
-            }
+        // Check username
+        if (!username.length) {
+            this.setState({ errorUsername: lang['error-signin-pseudoWrong'] });
+            return;
+        }
+        if (errorUsername.length) {
+            this.setState({ errorUsername: '' });
         }
 
-        this.setState({ loading: false });
+        // Check CGU
+        if (!cguAccepted) {
+            this.setState({ errorCgu: lang['error-signin-disagree'] });
+            return;
+        }
+        if (errorCgu.length) {
+            this.setState({ errorCgu: '' });
+        }
+
+        // Signin
+        return await Signin.bind(this)(email, username);
     }
 }
 

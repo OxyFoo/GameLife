@@ -38,7 +38,6 @@ class BackReport extends PageBase {
     ];
 
     componentDidMount() {
-        super.componentDidMount();
         this.refreshRemainPoints();
     }
 

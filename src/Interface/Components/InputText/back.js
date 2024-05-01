@@ -21,7 +21,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {'default' | 'email' | 'username' | 'name'} TextContentType
  * 
  * @typedef {Object} InputTextPropsType
- * @property {StyleProp} style Style of the TextInput.
+ * @property {StyleProp} containerStyle Style of the TextInput.
  * @property {string} label Label for the TextInput.
  * @property {Icons | null} icon Icon for the TextInput.
  * @property {boolean} staticLabel If true, the label is static.
@@ -30,12 +30,13 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {boolean} error If true, the TextInput has an error.
  * @property {boolean} enabled If true, the TextInput is enabled.
  * @property {boolean} forceActive If true, the TextInput is forced to be active.
+ * @property {(e: LayoutChangeEvent) => void} onParentLayout Handler for the layout event.
  * @property {(e: NativeSyntheticEvent) => void} onSubmit Handler for the submit event.
  */
 
 /** @type {TextInputProps & InputTextPropsType} */
 const InputTextProps = {
-    style: {},
+    containerStyle: {},
     label: 'Default',
     icon: null,
     staticLabel: false,
@@ -44,6 +45,7 @@ const InputTextProps = {
     error: false,
     enabled: true,
     forceActive: false,
+    onParentLayout: (e) => {},
     onSubmit: (e) => {}
 };
 
@@ -77,6 +79,7 @@ class InputTextBack extends React.Component {
      */
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.style !== this.props.style ||
+            nextProps.containerStyle !== this.props.containerStyle ||
             nextProps.label !== this.props.label ||
             nextProps.value !== this.props.value ||
             nextProps.staticLabel !== this.props.staticLabel ||
@@ -110,6 +113,7 @@ class InputTextBack extends React.Component {
         if (height !== this.state.boxHeight) {
             this.setState({ boxHeight: height });
         }
+        this.props.onParentLayout(event);
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -122,6 +126,9 @@ class InputTextBack extends React.Component {
             this.setState({ textHeight: height });
         }
     }
+
+    blur = this.refInput.current?.blur;
+    focus = this.refInput.current?.focus;
 
     movePlaceHolderIn = () => {
         if (this.props.staticLabel) return;

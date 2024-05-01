@@ -1,15 +1,29 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, Animated, StyleSheet, Dimensions } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
 import { Random, Sleep } from 'Utils/Functions';
 import { TimingAnimation } from 'Utils/Animations';
 
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ */
+
+const ProgressBarInfiniteProps = {
+    /** @type {StyleProp} */
+    style: {},
+
+    /** @type {ThemeColor} */
+    color: 'main1'
+};
+
 class ProgressBarInfinite extends React.Component {
     state = {
         animTranslate: new Animated.Value(0),
-        animScale: new Animated.Value(0)
+        animScale: new Animated.Value(1)
     }
 
     componentDidMount() {
@@ -22,24 +36,27 @@ class ProgressBarInfinite extends React.Component {
     }
 
     loop = async () => {
-        TimingAnimation(this.state.animTranslate, -1, 0, false).start();
+        const { width } = Dimensions.get('window');
+
+        TimingAnimation(this.state.animTranslate, -width, 0).start();
         await Sleep(100);
-        TimingAnimation(this.state.animTranslate, 1, 1800, false).start();
-        TimingAnimation(this.state.animScale, .8, Random(300, 600), false).start();
+        TimingAnimation(this.state.animTranslate, width, 1800).start();
+        TimingAnimation(this.state.animScale, .8, 400).start();
         await Sleep(Random(600, 1200));
-        TimingAnimation(this.state.animScale, .4, Random(300, 600), false).start();
+        TimingAnimation(this.state.animScale, .4, 400).start();
     }
 
     render() {
-        const inter = { inputRange: [0, 1], outputRange: ['0%', '100%'] };
+        const { color, style } = this.props;
+
         return (
-            <View style={styles.parent}>
+            <View style={[styles.parent, style]}>
                 <Animated.View style={[
                     styles.bar,
                     {
-                        backgroundColor: themeManager.GetColor('main1'),
-                        left: this.state.animTranslate.interpolate(inter),
+                        backgroundColor: themeManager.GetColor(color),
                         transform: [
+                            { translateX: this.state.animTranslate },
                             { scaleX: this.state.animScale }
                         ]
                     }
@@ -48,6 +65,9 @@ class ProgressBarInfinite extends React.Component {
         );
     }
 }
+
+ProgressBarInfinite.prototype.props = ProgressBarInfiniteProps;
+ProgressBarInfinite.defaultProps = ProgressBarInfiniteProps;
 
 const styles = StyleSheet.create({
     parent: {

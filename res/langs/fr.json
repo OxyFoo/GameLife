@@ -170,7 +170,8 @@
     "app": {
         "loading-error-message": {
             "internaldata-not-loaded": "Les données internes n'ont pas pu être chargées",
-            "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées"
+            "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
+            "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
         },
         "loading-error-button": "Quitter"
     },
@@ -393,7 +394,7 @@
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
         "input-cgu-text": "J'ai lu et j'accepte les %conditions générales%.",
-        "button-login-text": "Se connecter",
+        "button-login-text": "Se connecter ou s'inscrire",
         "button-signin-text": "S'inscrire",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",

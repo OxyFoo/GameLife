@@ -1,6 +1,7 @@
 export default {
     'add-outline':              require('./icons/add-outline').default,
     'add':                      require('./icons/add').default,
+    'arrow-left':               require('./icons/arrow-left').default,
     'arrow-square-outline':     require('./icons/arrow-square-outline').default,
     'arrow-square':             require('./icons/arrow-square').default,
     'arrow-up':                 require('./icons/arrow-up').default,
@@ -36,6 +37,8 @@ export default {
     'favorite':                 require('./icons/favorite').default,
     'filter-outline':           require('./icons/filter-outline').default,
     'filter':                   require('./icons/filter').default,
+    'flag-english':             require('./icons/flag-english').default,
+    'flag-french':              require('./icons/flag-french').default,
     'flame-outline':            require('./icons/flame-outline').default,
     'flame':                    require('./icons/flame').default,
     'gift-outline':             require('./icons/gift-outline').default,

@@ -8,6 +8,10 @@ import themeManager from 'Managers/ThemeManager';
 import SVGIcons from 'Ressources/Icons';
 import Base64 from 'Utils/Base64';
 
+/**
+ * @typedef {keyof SVGIcons} Icons
+ */
+
 class Icon extends IconBack {
     render() {
         const { style, containerStyle, icon, xml, size, angle, onPress, show } = this.props;

@@ -53,8 +53,8 @@ class Button extends ButtonBack {
 
     renderContent() {
         const {
-            children, appearance, loading, icon, iconXml, 
-            styleContent: styleContentProp, enabled
+            children, appearance, loading, icon, iconXml,
+            styleContent: styleContentProp, fontSize, enabled
         } = this.props;
 
         const hasChildren = typeof(children) !== 'undefined';
@@ -67,8 +67,8 @@ class Button extends ButtonBack {
         if (loading) {
             content = (
                 <Icon
-                    icon='loading-dots'
                     style={styles.loadingIcon}
+                    icon='loading-dots'
                     size={36}
                     color={'darkBlue'}
                 />
@@ -79,7 +79,7 @@ class Button extends ButtonBack {
         else if (hasChildren) {
             if (typeof(children) === 'string') {
                 content = (
-                    <Text color={'darkBlue'} fontSize={this.props.fontSize}>
+                    <Text color={'darkBlue'} fontSize={fontSize}>
                         {children}
                     </Text>
                 );

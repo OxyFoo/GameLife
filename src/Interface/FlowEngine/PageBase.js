@@ -1,9 +1,5 @@
 import * as React from 'react';
 
-/**
- * @typedef {import('Interface/Global').Page} Page
- */
-
 const PageBaseProps = {
     args: {}
 };

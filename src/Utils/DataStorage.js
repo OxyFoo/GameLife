@@ -2,9 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { StrIsJSON } from './String';
 
-/**
- * @typedef {object} DataStorage_Data
- */
 const STORAGE_KEYS = {
     LOGIN: '@data/login',
     USER: '@data/user',
@@ -16,7 +13,7 @@ const STORAGE_KEYS = {
 
 class DataStorage {
     /**
-     * @param {DataStorage_Data} storageKey Storage key
+     * @param {string} storageKey Storage key
      * @param {object} data Data to save (JSON object)
      * @returns {Promise<boolean>} True if data was saved
      */
@@ -33,7 +30,7 @@ class DataStorage {
     }
 
     /**
-     * @param {DataStorage_Data} storageKey Storage key
+     * @param {string} storageKey Storage key
      * @returns {Promise<object?>} Data (JSON object) or null if an error occurred
      */
     static async Load(storageKey) {
@@ -41,7 +38,7 @@ class DataStorage {
 
         try {
             const localData = await AsyncStorage.getItem(storageKey);
-            if (StrIsJSON(localData)) {
+            if (localData !== null && StrIsJSON(localData)) {
                 json = JSON.parse(localData);
             }
         } catch (error) {

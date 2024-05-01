@@ -84,8 +84,12 @@ const styles = StyleSheet.create({
     parentSearchBar: {
         padding: 8
     },
+    searchContainer: {
+        minHeight: 0
+    },
     search: {
-        height: 36
+        paddingVertical: 4,
+        fontSize: 14
     }
 });
 

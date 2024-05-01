@@ -29,7 +29,7 @@ const Color = {
 
 const Text = {
     primary: '#ECECEC',
-    secondary: '#808080',
+    secondary: '#B0B0B0',
     light: '#A7A4A4',
     warning: '#F1C40F',
     error: '#CC0029'

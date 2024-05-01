@@ -2,7 +2,7 @@ import svgDefault from 'Ressources/icons/old/default';
 import svgAdd from 'Ressources/icons/old/add';
 import svgAddSquare from 'Ressources/icons/old/add-square';
 import svgAlarmClock from 'Ressources/icons/old/alarm-clock';
-import svgArrowLeft from 'Ressources/icons/old/arrow-left';
+//import svgArrowLeft from 'Ressources/icons/old/arrow-left';
 import svgBell from 'Ressources/icons/old/bell';
 import svgCalendar from 'Ressources/icons/old/calendar';
 import svgCheck from 'Ressources/icons/old/check';
@@ -15,8 +15,8 @@ import svgDiscord from 'Ressources/icons/old/discord';
 import svgEdit from 'Ressources/icons/old/edit';
 import svgError from 'Ressources/icons/old/error';
 import svgFilter from 'Ressources/icons/old/filter';
-import svgFlagEnglish from 'Ressources/icons/old/flag-english';
-import svgFlagFrench from 'Ressources/icons/old/flag-french';
+//import svgFlagEnglish from 'Ressources/icons/old/flag-english';
+//import svgFlagFrench from 'Ressources/icons/old/flag-french';
 import svgFlame from 'Ressources/icons/old/flame';
 import svgGift from 'Ressources/icons/old/gift';
 import svgHandPress from 'Ressources/icons/old/hand-press';
@@ -60,21 +60,21 @@ const SVGIcons = {
     add: svgAdd,
     addSquare: svgAddSquare,
     alarmClock: svgAlarmClock,
-    arrowLeft: svgArrowLeft,
+    //arrowLeft: svgArrowLeft,
     bell: svgBell,
     calendar: svgCalendar,
     check: svgCheck,
     checkboxOn: svgCheckboxOn,
     checkboxOff: svgCheckboxOff,
-//    chevron: svgChevron,
+    //chevron: svgChevron,
     chrono: svgChrono,
     cross: svgCross,
     discord: svgDiscord,
     edit: svgEdit,
     error: svgError,
     filter: svgFilter,
-    flagEnglish: svgFlagEnglish,
-    flagFrench: svgFlagFrench,
+    //flagEnglish: svgFlagEnglish,
+    //flagFrench: svgFlagFrench,
     flame: svgFlame,
     gift: svgGift,
     handPress: svgHandPress,

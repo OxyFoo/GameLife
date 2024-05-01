@@ -27,8 +27,8 @@ const textTypes = {
 class InputText extends InputTextBack {
     render() {
         const {
-            style, label, icon, type, enabled, staticLabel, activeColor,
-            forceActive, error, onSubmit, pointerEvents, ...props
+            style, containerStyle, label, icon, type, enabled, staticLabel, activeColor,
+            forceActive, error, onParentLayout, onSubmit, pointerEvents, ...props
         } = this.props;
         const {
             animTop, animLeft, animScale, isFocused,
@@ -52,7 +52,7 @@ class InputText extends InputTextBack {
         const hexColor = themeManager.GetColor(color);
 
         /** @type {ViewStyle} */
-        const containerStyle = {
+        const containerStyle2 = {
             borderColor: hexColor,
             borderWidth: borderWidth,
             opacity: enabled ? 1 : 0.6,
@@ -70,7 +70,7 @@ class InputText extends InputTextBack {
 
         return (
             <Animated.View
-                style={[styles.parent, containerStyle, style]}
+                style={[styles.parent, containerStyle, containerStyle2]}
                 onLayout={this.onBoxLayout}
                 pointerEvents={enabled ? pointerEvents : 'none'}
             >
@@ -113,7 +113,7 @@ class InputText extends InputTextBack {
                     {...props}
                     testID={'textInput'}
                     ref={this.refInput}
-                    style={styles.input}
+                    style={[styles.input, style]}
                     selectionColor={'white'}
                     onFocus={this.onFocusIn}
                     onBlur={this.onFocusOut}

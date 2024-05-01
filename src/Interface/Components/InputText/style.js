@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     parent: {
         width: '100%',
-        height: 54,
-        justifyContent: 'center',
+        minHeight: 54,
         borderRadius: 8
     },
     placeholderParent: {
@@ -19,11 +18,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     input: {
-        height: '100%',
         minHeight: 12,
         maxHeight: 256,
         color: '#FFFFFF',
-        paddingVertical: 0,
+        fontSize: 18,
+        paddingVertical: 12,
         paddingHorizontal: 12
     },
 

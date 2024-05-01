@@ -51,7 +51,7 @@ class ComboBox extends ComboBoxBack {
 
                 {/* InputText to show result */}
                 <InputText
-                    style={styles.input}
+                    containerStyle={styles.input}
                     label={title}
                     value={selectedValue}
                     activeColor={activeColor}
@@ -146,6 +146,7 @@ class ComboBox extends ComboBoxBack {
                                 <View style={styles.parentSearchBar}>
                                     <InputText
                                         style={styles.search}
+                                        containerStyle={styles.searchContainer}
                                         label={langManager.curr['modal']['search']}
                                         value={this.state.search}
                                         onChangeText={this.refreshSearch}

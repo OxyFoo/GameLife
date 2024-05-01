@@ -1,7 +1,6 @@
 import user from 'Managers/UserManager'
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { Sleep } from 'Utils/Functions';
 import { CheckDate } from 'Utils/DateCheck';
@@ -35,9 +34,6 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     if (!online) {
         user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
     }
-
-    // Set background theme
-    user.interface.SetTheme(themeManager.selectedTheme === 'Main' ? 0 : 1);
 
     nextStep();
 
@@ -137,7 +133,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
         user.inventory.avatar.skinColor
     );
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.interface.header.ShowAvatar(true);
+    //user.interface.header.ShowAvatar(true);
 
     // Loading: Quests
     user.quests.nonzerodays.RefreshCaimsList();
@@ -163,11 +159,11 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     user.tcp.Connect();
 
     // Load admob
-    await user.consent.ShowTrackingPopup()
-    .then(user.admob.LoadAds);
+    //await user.consent.ShowTrackingPopup()
+    //.then(user.admob.LoadAds);
 
     // Render default pages
-    await user.interface.LoadDefaultPages();
+    //await user.interface.LoadDefaultPages();
 
     nextStep();
     await Sleep(500);

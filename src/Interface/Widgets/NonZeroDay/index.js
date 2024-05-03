@@ -12,7 +12,7 @@ import langManager from 'Managers/LangManager';
 import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Shop').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
 class NonZeroDay extends NonZeroDayBack {
@@ -20,8 +20,8 @@ class NonZeroDay extends NonZeroDayBack {
         const lang = langManager.curr['nonzerodays'];
         const titleColors = ['#384065', '#B83EFFE3'];
 
-        /** @type {Icons} */
-        let icon = 'arrowLeft';
+        /** @type {IconsName} */
+        let icon = 'arrow-left';
         let onPress = this.openPopup;
 
         return (

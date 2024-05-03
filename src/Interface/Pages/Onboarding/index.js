@@ -9,7 +9,7 @@ import { Button, Icon, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('Managers/LangManager').LangKey} LangKey
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
 class Onboarding extends BackOnboarding {
@@ -40,7 +40,7 @@ class Onboarding extends BackOnboarding {
     /**
      * @param {Object} props
      * @param {LangKey} props.key
-     * @param {Icons} props.icon
+     * @param {IconsName} props.icon
      */
     flag = ({ key, icon }) => {
         const langs = langManager.GetAllLangs();

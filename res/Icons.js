@@ -1,4 +1,4 @@
-export default {
+const Icons = {
     'add-outline':              require('./icons/add-outline').default,
     'add':                      require('./icons/add').default,
     'arrow-left':               require('./icons/arrow-left').default,
@@ -61,6 +61,7 @@ export default {
     'minimize':                 require('./icons/minimize').default,
     'multiplayer-outline':      require('./icons/multiplayer-outline').default,
     'multiplayer':              require('./icons/multiplayer').default,
+    'no-wifi':                  require('./icons/nowifi').default,
     'ox':                       require('./icons/ox').default,
     'planner-outline':          require('./icons/planner-outline').default,
     'planner':                  require('./icons/planner').default,
@@ -68,6 +69,7 @@ export default {
     'quest':                    require('./icons/quest').default,
     'recent-outline':           require('./icons/recent-outline').default,
     'recent':                   require('./icons/recent').default,
+    'retry':                    require('./icons/retry').default,
     'rounded-magnifer-outline': require('./icons/rounded-magnifer-outline').default,
     'rounded-magnifer':         require('./icons/rounded-magnifer').default,
     'same-place':               require('./icons/same-place').default,
@@ -81,6 +83,7 @@ export default {
     'success':                  require('./icons/success').default,
     'trash-outline':            require('./icons/trash-outline').default,
     'trash':                    require('./icons/trash').default,
+    'undo':                     require('./icons/undo').default,
     'user-outline':             require('./icons/user-outline').default,
     'user':                     require('./icons/user').default,
     'users-outline':            require('./icons/users-outline').default,
@@ -97,3 +100,9 @@ export default {
     'workout-outline':          require('./icons/workout-outline').default,
     'workout':                  require('./icons/workout').default
 };
+
+/**
+ * @typedef {keyof typeof Icons} IconsName
+ */
+
+export default Icons;

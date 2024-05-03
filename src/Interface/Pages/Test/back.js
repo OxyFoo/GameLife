@@ -68,7 +68,7 @@ class BackTest extends PageBase {
         user.interface.screenList.Open('test', test, console.log);
     }
 
-    goToPage2 = () => user.interface.ChangePage('test2');
+    goToPage2 = () => this.fe.ChangePage('test2');
 }
 
 export default BackTest;

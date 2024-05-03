@@ -10,7 +10,7 @@ import { Button } from 'react-native';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('../Icon/back').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('../../Primitives/Ripple').Ripple} Ripple
  * 
  * @typedef {Object} ButtonPropsType
@@ -20,7 +20,7 @@ import { Button } from 'react-native';
  * @property {StyleProp} styleContent
  * @property {'normal' | 'outline' | 'outline-blur' | 'transparent'} appearance
  * @property {number} fontSize
- * @property {Icons | null} icon
+ * @property {IconsName | null} icon
  * @property {string | null} iconXml
  * @property {number} iconSize
  * @property {number} iconAngle

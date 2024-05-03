@@ -29,13 +29,13 @@ import svgLeaderboard from 'Ressources/icons/old/leaderboard';
 import svgMagnifyingGlass from 'Ressources/icons/old/magnifying-glass'; 
 import svgMedia from 'Ressources/icons/old/media';
 import svgMoveVertical from 'Ressources/icons/old/move-vertical';
-import svgNowifi from 'Ressources/icons/old/nowifi';
+//import svgNowifi from 'Ressources/icons/old/nowifi';
 import svgOnboarding1 from 'Ressources/icons/old/onboarding1';
 import svgOnboarding2 from 'Ressources/icons/old/onboarding2';
 import svgOnboarding3 from 'Ressources/icons/old/onboarding3';
 import svgOx from 'Ressources/icons/old/ox';
 import svgQuests from 'Ressources/icons/old/quests';
-import svgRetry from 'Ressources/icons/old/retry';
+//import svgRetry from 'Ressources/icons/old/retry';
 import svgSetting from 'Ressources/icons/old/setting';
 import svgShop from 'Ressources/icons/old/shop';
 import svgSleepZzz from 'Ressources/icons/old/sleep-zzz';
@@ -47,7 +47,7 @@ import svgSocial from 'Ressources/icons/old/social';
 import svgSuccess from 'Ressources/icons/old/success';
 import svgTiktok from 'Ressources/icons/old/tiktok';
 import svgTrash from 'Ressources/icons/old/trash';
-import svgUndo from 'Ressources/icons/old/undo';
+//import svgUndo from 'Ressources/icons/old/undo';
 import svgUserAdd from 'Ressources/icons/old/user-add';
 //import svgWarning from 'Ressources/icons/old/warning';
 import svgWorld from 'Ressources/icons/old/world';
@@ -87,13 +87,13 @@ const SVGIcons = {
     magnifyingGlass: svgMagnifyingGlass,
     media: svgMedia,
     moveVertical: svgMoveVertical,
-    nowifi: svgNowifi,
+    //nowifi: svgNowifi,
     onboarding1: svgOnboarding1,
     onboarding2: svgOnboarding2,
     onboarding3: svgOnboarding3,
     ox: svgOx,
     quests: svgQuests,
-    retry: svgRetry,
+    //retry: svgRetry,
     setting: svgSetting,
     shop: svgShop,
     sleepZzz: svgSleepZzz,
@@ -105,7 +105,7 @@ const SVGIcons = {
     success: svgSuccess,
     tiktok: svgTiktok,
     trash: svgTrash,
-    undo: svgUndo,
+    //undo: svgUndo,
     userAdd: svgUserAdd,
     //warning: svgWarning,
     world: svgWorld,

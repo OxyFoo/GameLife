@@ -16,7 +16,7 @@ import { Container, Button, Text } from 'Interface/Components';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
  * @typedef {import('Class/Todoes').Todo} Todo
- * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
 const TodoListProps = {
@@ -71,7 +71,7 @@ class TodoList extends BackTodoList {
             undoEnabled
         } = this.state;
 
-        /** @type {Icons} */
+        /** @type {IconsName} */
         const containerIcon = undoEnabled ? 'undo' : 'add';
         const containerAction = undoEnabled ? this.undo : this.addTodo;
 

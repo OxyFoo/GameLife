@@ -13,7 +13,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  */
 
@@ -68,7 +68,7 @@ class BackLoading extends PageBase {
     handleError = (message) => {
         const lang = langManager.curr['app'];
         user.interface.ChangePage('display', {
-            /** @type {Icons} */
+            /** @type {IconsName} */
             'icon': 'error',
             'iconRatio': .4,
             'text': lang['loading-error-message'][message],

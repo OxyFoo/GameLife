@@ -19,6 +19,10 @@ import {
     ComboBox
 } from 'Interface/Components';
 
+/**
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
+ */
+
 class Test extends BackTest {
     render() {
         return (
@@ -126,8 +130,11 @@ class Test extends BackTest {
     }
 
     renderIcons = () => {
+        /** @type {IconsName[]} */ // @ts-ignore
         const iconKeys = Object.keys(ICONS);
+
         const iconPair = iconKeys
+            // @ts-ignore
             .filter((icon) => icon.endsWith('-outline') || iconKeys.includes(icon + '-outline'));
 
         const iconNormal = iconPair.filter((icon) => !icon.endsWith('-outline')).sort();
@@ -141,7 +148,6 @@ class Test extends BackTest {
                     <Animated.View style={{ opacity: this.animLinear }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
                             {iconNormal.map((icon) => (
-                                // @ts-ignore
                                 <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
                             ))}
                         </View>
@@ -149,14 +155,12 @@ class Test extends BackTest {
                     <Animated.View style={{ position: 'absolute', top: 0, left: 0, opacity: Animated.subtract(1, this.animLinear) }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
                             {iconOutline.map((icon) => (
-                                // @ts-ignore
                                 <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
                             ))}
                         </View>
                     </Animated.View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
                         {iconOther.map((icon) => (
-                            // @ts-ignore
                             <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
                         ))}
                     </View>

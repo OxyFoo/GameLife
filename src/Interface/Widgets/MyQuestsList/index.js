@@ -17,7 +17,7 @@ import { SimpleContainer, Button, Text, Separator, Icon } from 'Interface/Compon
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Class/Shop').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
 const QuestsProps = {
@@ -32,11 +32,11 @@ class MyQuestsList extends BackQuestsList {
         const lang = langManager.curr['quests'];
         const titleColors = ['#384065', '#B83EFFE3'];
 
-        /** @type {Icons | null} */
+        /** @type {IconsName | null} */
         let icon = null;
         let onPress = null;
         if (!user.quests.myquests.IsMax()) {
-            icon = 'addSquare';
+            icon = 'add';
             onPress = this.addQuest;
         }
 

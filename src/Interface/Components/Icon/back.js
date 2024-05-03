@@ -1,12 +1,11 @@
 import * as React from 'react';
-import SVGIcons from 'Ressources/Icons';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {keyof SVGIcons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
@@ -24,7 +23,7 @@ const IconProps = {
     /** @type {string | null} Display an icon from XML base64 encoded ('icon' skip if define) */
     xml: null,
 
-    /** @type {Icons | null} */
+    /** @type {IconsName | null} */
     icon: null,
 
     /** @type {number} Size of icon in pixels */

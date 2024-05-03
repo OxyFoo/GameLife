@@ -9,7 +9,7 @@ import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
 const TIME_STEP_MINUTES = 5;
@@ -63,7 +63,7 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
         duration -= TIME_STEP_MINUTES;
         if (duration <= 0) {
             user.interface.ChangePage('display', {
-                /** @type {Icons} */
+                /** @type {IconsName} */
                 'icon': 'error',
                 'iconRatio': .4,
                 'text': lang['display-fail-text'].replace('{}', 'time'),
@@ -128,7 +128,7 @@ function AddActivity(activity) {
         if (skill === null) {
             const lang = langManager.curr['activity'];
             user.interface.ChangePage('display', {
-                /** @type {Icons} */
+                /** @type {IconsName} */
                 'icon': 'error',
                 'iconRatio': .4,
                 'text': lang['display-fail-text'].replace('{}', 'skill not found'),

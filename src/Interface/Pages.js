@@ -1,32 +1,32 @@
-import About from './Pages/About/index';
-import Achievements from './Pages/Achievements/index';
-import Activity from './Pages/Activity/index';
-import ActivityTimer from './Pages/ActivityTimer/index';
-import BenchMark from './Pages/BenchMark/index';
-import Calendar from './Pages/Calendar/index';
-import ChestReward from './Pages/ChestReward/index';
-import Display from './Pages/Display/index';
-import Home from './Pages/Home/index';
-import Leaderboard from './Pages/Leaderboard/index';
-import Loading from './Pages/Loading/index';
-import Login from './Pages/Login/index';
-import Multiplayer from './Pages/Multiplayer/index';
-import MyQuest from './Pages/MyQuest/index';
-import MyQuestStats from './Pages/MyQuestStats/index';
-import Onboarding from './Pages/Onboarding/index';
-import Profile from './Pages/Profile/index';
-import ProfileFriend from './Pages/ProfileFriend/index';
-import Quests from './Pages/Quests/index';
-import Report from './Pages/Report/index';
-import Settings from './Pages/Settings/index';
-import Shop from './Pages/Shop/index';
-import Skill from './Pages/Skill/index';
-import Skills from './Pages/Skills/index';
-import Waitinternet from './Pages/WaitInternet/index';
-import Waitmail from './Pages/WaitMail/index';
-import Test from './Pages/Test/index';
-import Test2 from './Pages/Test2/index';
-import Todo from './Pages/Todo/index';
+import About from './Pages/About';
+import Achievements from './Pages/Achievements';
+import Activity from './Pages/Activity';
+import ActivityTimer from './Pages/ActivityTimer';
+import BenchMark from './Pages/BenchMark';
+import Calendar from './Pages/Calendar';
+import ChestReward from './Pages/ChestReward';
+import Display from './Pages/Display';
+import Home from './Pages/Home';
+import Leaderboard from './Pages/Leaderboard';
+import Loading from './Pages/Loading';
+import Login from './Pages/Login';
+import Multiplayer from './Pages/Multiplayer';
+import MyQuest from './Pages/MyQuest';
+import MyQuestStats from './Pages/MyQuestStats';
+import Onboarding from './Pages/Onboarding';
+import Profile from './Pages/Profile';
+import ProfileFriend from './Pages/ProfileFriend';
+import Quests from './Pages/Quests';
+import Report from './Pages/Report';
+import Settings from './Pages/Settings';
+import Shop from './Pages/Shop';
+import Skill from './Pages/Skill';
+import Skills from './Pages/Skills';
+import Waitinternet from './Pages/WaitInternet';
+import Waitmail from './Pages/WaitMail';
+import Test from './Pages/Test';
+import Test2 from './Pages/Test2';
+import Todo from './Pages/Todo';
 
 const PAGES = {
     'about':            About,
@@ -59,5 +59,9 @@ const PAGES = {
     'test2':            Test2,
     'todo':             Todo
 };
+
+/**
+ * @typedef {keyof typeof PAGES} PageNames
+ */
 
 export default PAGES;

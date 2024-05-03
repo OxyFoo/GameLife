@@ -142,7 +142,7 @@ class BackActivityTimer extends PageBase {
 
     Back = () => {
         clearInterval(this.timer_tick);
-        if (user.interface.path.length > 1) {
+        if (user.interface.history.length > 1) {
             user.interface.ResetCustomBackHandler();
             user.interface.BackHandle();
         } else {

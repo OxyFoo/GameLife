@@ -18,6 +18,13 @@ import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
  * @property {(event: GestureResponderEvent) => void} onPress
  */
 
+const BackSkillProps = {
+    args: {
+        /** @type {number} */
+        skillID: 0
+    }
+};
+
 class BackSkill extends PageBase {
     /** @type {ActivityPanel | null} */
     refActivityPanel = null;
@@ -40,6 +47,7 @@ class BackSkill extends PageBase {
         totalDuration: 0
     };
 
+    /** @param {BackSkillProps} props */
     constructor(props) {
         super(props);
 
@@ -146,5 +154,8 @@ class BackSkill extends PageBase {
         user.interface.ChangePage('activity', { skillID }, true);
     }
 }
+
+BackSkill.defaultProps = BackSkillProps;
+BackSkill.prototype.props = BackSkillProps;
 
 export default BackSkill;

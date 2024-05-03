@@ -20,10 +20,7 @@ import {
 } from 'Interface/Components';
 
 class Test extends BackTest {
-    feKeepMounted = true;
-
     render() {
-        //console.log('test1');
         return (
             <View style={styles.page}>
                 <MaskedView
@@ -69,7 +66,7 @@ class Test extends BackTest {
                             height: 200,
                             borderRadius: 8,
                             backgroundColor: '#fff',
-                            transform: [{ translateX: this.animPanel }]
+                            transform: [{ translateX: this.animLoop }]
                         }}
                     />
                 )}
@@ -136,22 +133,33 @@ class Test extends BackTest {
         const iconNormal = iconPair.filter((icon) => !icon.endsWith('-outline')).sort();
         const iconOutline = iconPair.filter((icon) => icon.endsWith('-outline')).sort();
         const iconOther = iconKeys.filter((icon) => !iconPair.includes(icon)).sort();
-        const iconToShow = this.state.iconsMode === 'normal' ? iconNormal : iconOutline;
 
         return (
             <>
                 {this.renderTitle('Icons')}
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
-                    {iconToShow.map((icon) => (
-                        // @ts-ignore
-                        <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
-                    ))}
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
-                    {iconOther.map((icon) => (
-                        // @ts-ignore
-                        <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
-                    ))}
+                <View>
+                    <Animated.View style={{ opacity: this.animLinear }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
+                            {iconNormal.map((icon) => (
+                                // @ts-ignore
+                                <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
+                            ))}
+                        </View>
+                    </Animated.View>
+                    <Animated.View style={{ position: 'absolute', top: 0, left: 0, opacity: Animated.subtract(1, this.animLinear) }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
+                            {iconOutline.map((icon) => (
+                                // @ts-ignore
+                                <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
+                            ))}
+                        </View>
+                    </Animated.View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', marginBottom: 6 }}>
+                        {iconOther.map((icon) => (
+                            // @ts-ignore
+                            <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
+                        ))}
+                    </View>
                 </View>
             </>
         );

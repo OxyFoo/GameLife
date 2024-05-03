@@ -16,6 +16,13 @@ import { Round } from 'Utils/Functions';
  * @property {string} GlobalPercentage
  */
 
+const BackAchievementsProps = {
+    args: {
+        /** @type {number | null} */
+        friendID: null
+    }
+};
+
 class BackAchievements extends PageBase {
     state = {
         headerHeight: 0
@@ -53,5 +60,8 @@ class BackAchievements extends PageBase {
         user.achievements.ShowCardPopup(ID);
     }
 }
+
+BackAchievements.defaultProps = BackAchievementsProps;
+BackAchievements.prototype.props = BackAchievementsProps;
 
 export default BackAchievements;

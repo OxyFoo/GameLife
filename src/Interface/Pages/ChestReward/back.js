@@ -24,6 +24,22 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {() => void} callback
  */
 
+const BackChestRewardProps = {
+    args: {
+        /** @type {number} */
+        chestRarity: 0,
+
+        /** @type {StuffID} */
+        itemID: 'bottom_01',
+
+        /** @type {number} */
+        oxCount: 0,
+
+        /** @type {() => void} */
+        callback: () => {}
+    }
+};
+
 class BackChestReward extends PageBase {
     state = {
         animGlobal: new Animated.Value(.7),
@@ -106,5 +122,8 @@ class BackChestReward extends PageBase {
         this.callback();
     }
 }
+
+BackChestReward.defaultProps = BackChestRewardProps;
+BackChestReward.prototype.props = BackChestRewardProps;
 
 export default BackChestReward;

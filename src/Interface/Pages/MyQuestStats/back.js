@@ -5,20 +5,25 @@ import user from 'Managers/UserManager';
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  */
 
+const BackQuestProps = {
+    args: {
+        /** @type {MyQuest | null} */
+        quest: null
+    }
+};
+
 class BackQuest extends PageBase {
+    /** @param {BackQuestProps} props */
     constructor(props) {
         super(props);
 
-        if (this.props.args?.quest) {
+        if (this.props.args.quest !== null) {
             /** @type {MyQuest | null} */
-            const quest = this.props.args.quest || null;
+            const quest = this.props.args.quest;
             this.selectedQuest = quest;
 
-            if (quest === null) {
-                user.interface.BackHandle();
-                user.interface.console.AddLog('error', 'MyQuest: Quest not found');
-                return;
-            }
+            user.interface.BackHandle();
+            user.interface.console.AddLog('error', 'MyQuest: Quest not found');
         }
     }
 
@@ -36,5 +41,8 @@ class BackQuest extends PageBase {
         user.interface.ChangePage('myquest', { quest }, true);
     }
 }
+
+BackQuest.defaultProps = BackQuestProps;
+BackQuest.prototype.props = BackQuestProps;
 
 export default BackQuest;

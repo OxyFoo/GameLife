@@ -8,28 +8,29 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 import { Console, Popup } from 'Interface/Widgets';
 
 /**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {keyof PAGES} PageName
- * @typedef {PAGES[keyof PAGES]} PageType
- * @typedef {import('Interface/FlowEngine/PageBase').default} PageBase
- * 
- * @typedef PageState
- * @type {Object}
- * @property {JSX.Element | null} content
- * @property {PageBase | null} ref
- * @property {object} args
+ * @typedef {import('Interface/Pages').PageNames} PageNames
+ * @typedef {'auto' | 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight' | 'fromCenter'} Transitions
  */
 
 /**
+ * @template {PageNames} T
  * @typedef {Object} PageMemory
- * @property {PageName} pageName
- * @property {React.RefObject<PageBase>} ref
+ * @property {T} pageName
+ * @property {PAGES[T]['prototype']['props']['args']} args
+ * @property {React.RefObject<InstanceType<PAGES[T]>>} ref
  * @property {Animated.Value} transitionStart
  * @property {Animated.Value} transitionEnd
  */
 
-/** @type {Array<PageName>} */
-//@ts-ignore
+/**
+ * @template {PageNames} T
+ * @typedef {Object} PathMemory
+ * @property {T} pageName
+ * @property {PAGES[T]['prototype']['props']['args']} args
+ */
+
+/** @type {Array<PageNames>} */
+// @ts-ignore
 const pageNames = Object.keys(PAGES);
 
 const PATH1 = [
@@ -53,35 +54,33 @@ const PATH2 = [
 
 class FlowEngine extends React.Component{
     state = {
-        /** @type {PageName|''} */
-        selectedPage: '',
+        /** @type {PageNames | null} */
+        selectedPage: null,
         ignorePage: false,
 
-        /** @type {Array<PageMemory>} */
+        /** @type {Array<PageMemory<PageNames>>} */
         mountedPages: []
     };
 
-    /** @type {Popup} */    popup       = null;
-    /** @type {Console} */  console     = null;
+    /** @type {Popup | null} */    popup       = null;
+    /** @type {Console | null} */  console     = null;
 
     /** @description Disable changing page while loading */
     changing = false;
+
+    /**
+     * @description Represent all pages before current page
+     * Increment when changing page
+     * Decrement when back page
+     * @type {Array<PathMemory<PageNames>>}
+     */
+    history = [];
 
     /**
      * @description Custom back button handler
      * @type {(() => boolean) | null} Return true if back is handled
      */
     customBackHandle = null;
-
-    /**
-     * @description Represent all pages before current page
-     * Increment when changing page
-     * Decrement when back page
-     * @type {Array<[PageName, object]>}
-     */
-    path = [];
-
-    //intervalFastRefresh = null;
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
@@ -131,13 +130,15 @@ class FlowEngine extends React.Component{
 
     /**
      * Open page
-     * @param {PageName} nextpage
-     * @param {object} pageArguments
-     * @param {boolean} ignorePage
-     * @param {boolean} forceUpdate
+     * @template {PageNames} T
+     * @param {T} nextpage
+     * @param {Object} options
+     * @param {PAGES[T]['prototype']['props']['args']} [options.args]
+     * @param {boolean} [options.storeInHistory] Store page in history to allow back navigation (default: true)
+     * @param {Transitions} [options.transition]
      * @returns {boolean} True if page changed
      */
-    ChangePage = (nextpage, pageArguments = {}, ignorePage = false, forceUpdate = false) => {
+    ChangePage = (nextpage, options = { args: {}, storeInHistory: true, transition: 'auto' }) => {
         if (this.changing) {
             return false;
         }
@@ -146,19 +147,21 @@ class FlowEngine extends React.Component{
 
         this.changing = true;
         const newState = {};
-        const oldPage = mountedPages.find((p) => p.pageName === selectedPage);
-        let newPage = mountedPages.find((p) => p.pageName === nextpage) || null;
+        let newPage = this.getMountedPage(nextpage);
+        const oldPage = selectedPage === null ? null : this.getMountedPage(selectedPage);
 
         // Add page to memory or select and reset it
         if (newPage === null) {
             newPage = {
                 pageName: nextpage,
                 ref: React.createRef(),
+                args: options.args,
                 transitionStart: new Animated.Value(0),
                 transitionEnd: new Animated.Value(0)
             };
             newState.mountedPages = [ ...mountedPages, newPage ];
         } else {
+            newPage.ref.current?._componentDidFocused(newPage.args);
             newPage.transitionStart.setValue(0);
             newPage.transitionEnd.setValue(0);
         }
@@ -176,11 +179,13 @@ class FlowEngine extends React.Component{
             SpringAnimation(newPage.transitionEnd, 0).start();
         }
 
-        if (oldPage !== undefined) {
+        if (oldPage !== null) {
             TimingAnimation(oldPage.transitionEnd, 1, 200).start(() => {
                 this.changing = false;
                 if (oldPage.ref.current?.feKeepMounted !== true) {
                     this.removeFromMountedPages(oldPage.pageName);
+                } else {
+                    oldPage.ref.current?._componentDidUnfocused();
                 }
             });
         } else {
@@ -191,34 +196,54 @@ class FlowEngine extends React.Component{
     }
 
     /**
-     * @param {PageName} pageName
+     * @param {PageNames} pageName
      */
-    removeFromMountedPages = (pageName) => {
+    removeFromMountedPages = async (pageName) => {
         const { mountedPages } = this.state;
         const index = mountedPages.findIndex((p) => p.pageName === pageName);
         if (index !== -1) {
-            mountedPages.splice(index, 1);
-            this.setState({ mountedPages }, () => {
-                console.log('Page removed from memory:', pageName);
+            await new Promise((resolve) => {
+                mountedPages.splice(index, 1);
+                this.setState({ mountedPages }, () => {
+                    console.log('Page removed from memory:', pageName);
+                    resolve(null);
+                });
             });
         }
     }
 
+    /**
+     * @template {PageNames} T
+     * @param {T} pageName
+     * @returns {PageMemory<T> | null}
+     */
+    getMountedPage = (pageName) => {
+        const { mountedPages } = this.state;
+        if (pageName === null) {
+            return null;
+        }
+        // @ts-ignore
+        return mountedPages.find((p) => p.pageName === pageName) || null;
+    }
+
     GetCurrentPageName = () => this.state.selectedPage;
 
-    /** @param {PageName} pageName */
-    renderPage = (pageName) => {
-        const { selectedPage, mountedPages } = this.state;
+    /**
+     * @template {PageNames} T
+     * @param {Object} props
+     * @param {T} props.pageName
+     */
+    renderPage = ({ pageName }) => {
+        const { selectedPage } = this.state;
 
-        const Page = PAGES[pageName];
-        const page = mountedPages.find((p) => p.pageName === pageName);
-        if (page === undefined) {
+        const page = this.getMountedPage(pageName);
+        if (page === null) {
             return null;
         }
 
+        const Page = PAGES[pageName];
         return (
             <Animated.View
-                key={`fe-page-${pageName}`}
                 style={[
                     styles.parent,
                     {
@@ -243,9 +268,10 @@ class FlowEngine extends React.Component{
             >
                 <ScrollView
                     style={styles.scrollview}
-                    contentContainerStyle={[styles.scrollviewContainer, page.ref.current?.feStyleParent]}
+                    contentContainerStyle={styles.scrollviewContainer}
                     scrollEnabled={true}
-                    children={<Page ref={page.ref} /*args={page.args}*/ />}
+                    // @ts-ignore
+                    children={<Page ref={page.ref} args={page.args} />}
                 />
             </Animated.View>
         );
@@ -265,7 +291,12 @@ class FlowEngine extends React.Component{
                     duration={10000}
                 />
 
-                {pageNames.map(this.renderPage)}
+                {pageNames.map(pageName => (
+                    <this.renderPage
+                        key={`fe-page-${pageName}`}
+                        pageName={pageName}
+                    />
+                ))}
 
                 <Popup ref={ref => { if (ref !== null) this.popup = ref } } />
                 <Console ref={ref => { if (ref !== null) this.console = ref } } />

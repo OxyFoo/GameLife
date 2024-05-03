@@ -20,6 +20,13 @@ import { GetGlobalTime } from 'Utils/Time';
  * @typedef {import('./Sections/description').default} SectionDescription
  */
 
+const BackTodoProps = {
+    args: {
+        /** @type {Todo | null} */
+        todo: null
+    }
+};
+
 class BackTodo extends PageBase {
     state = {
         /** @type {States} */
@@ -54,6 +61,7 @@ class BackTodo extends PageBase {
     /** @type {NodeJS.Timeout | undefined} */
     timeoutDidShow;
 
+    /** @param {BackTodoProps} props */
     constructor(props) {
         super(props);
 
@@ -284,5 +292,8 @@ class BackTodo extends PageBase {
         }
     }
 }
+
+BackTodo.defaultProps = BackTodoProps;
+BackTodo.prototype.props = BackTodoProps;
 
 export default BackTodo;

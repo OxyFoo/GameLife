@@ -1,5 +1,10 @@
 import PageBase from 'Interface/FlowEngine/PageBase';
 
+const BackNewPageProps = {
+    args: {
+    }
+};
+
 class BackNewPage extends PageBase {
     state = {
     }
@@ -10,5 +15,8 @@ class BackNewPage extends PageBase {
     componentWillUnmount() {
     }
 }
+
+BackNewPage.defaultProps = BackNewPageProps;
+BackNewPage.prototype.props = BackNewPageProps;
 
 export default BackNewPage;

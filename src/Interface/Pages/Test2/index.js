@@ -11,7 +11,6 @@ import { Text, Button, InputText } from 'Interface/Components';
 
 class Test2 extends BackTest2 {
     render() {
-        //console.log('test2');
         return (
             <View style={styles.page}>
                 <MaskedView

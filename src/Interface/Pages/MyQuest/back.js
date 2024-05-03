@@ -18,6 +18,13 @@ import StartMission from './mission';
  * @typedef {import('./Sections/comment').default} SectionComment
  */
 
+const BackQuestProps = {
+    args: {
+        /** @type {MyQuest | null} */
+        quest: null
+    }
+};
+
 class BackQuest extends PageBase {
     state = {
         /** @type {States} */
@@ -254,5 +261,8 @@ class BackQuest extends PageBase {
         user.interface.popup.Open('yesno', [ title, text ], callback);
     }
 }
+
+BackQuest.defaultProps = BackQuestProps;
+BackQuest.prototype.props = BackQuestProps;
 
 export default BackQuest;

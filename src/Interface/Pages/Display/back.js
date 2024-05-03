@@ -11,6 +11,34 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Data/Quotes').Quote} Quote
  */
 
+const BackDisplayProps = {
+    args: {
+        /** @type {string} */
+        icon: '',
+
+        /** @type {number} */
+        iconRatio: 0.8,
+
+        /** @type {string} */
+        text: '',
+
+        /** @type {string} */
+        button: '',
+
+        /** @type {string} */
+        button2: '',
+
+        /** @type {Quote} */
+        quote: null,
+
+        /** @type {() => void} */
+        action: () => {},
+
+        /** @type {() => void} */
+        action2: () => {}
+    }
+};
+
 class BackDisplay extends PageBase {
     state = {
         anim: new Animated.Value(.5)
@@ -55,5 +83,8 @@ class BackDisplay extends PageBase {
         SpringAnimation(this.state.anim, 1).start();
     }
 }
+
+BackDisplay.defaultProps = BackDisplayProps;
+BackDisplay.prototype.props = BackDisplayProps;
 
 export default BackDisplay;

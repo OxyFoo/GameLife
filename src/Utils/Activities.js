@@ -182,7 +182,7 @@ function RemActivity(callback) {
 }
 
 function Back() {
-    if (user.interface.path.length > 1) {
+    if (user.interface.history.length > 1) {
         user.interface.BackHandle();
     } else {
         user.interface.ChangePage('calendar');

@@ -4,7 +4,7 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 
 import { Button } from 'Interface/Components';
-import { SpringAnimation } from 'Utils/Animations';
+import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 class BackTest extends PageBase {
     feKeepMounted = true;
@@ -13,8 +13,6 @@ class BackTest extends PageBase {
         /** @type {Button['props']['appearance']} */
         selectedButon: 'normal',
         input: '',
-        /** @type {'normal' | 'outline'} */
-        iconsMode: 'normal',
         switch1: false,
         switch2: true,
         checkbox1: false,
@@ -23,15 +21,16 @@ class BackTest extends PageBase {
         combobox: {ID: -1, value: ''}
     }
 
-    animPanel = new Animated.Value(0);
+    animLoop = new Animated.Value(0);
+    animLinear = new Animated.Value(0);
     panelX = 0;
 
     componentDidMount() {
         this.intervalPanel = setInterval(() => {
             const newX = this.panelX === 0 ? 200 : 0;
             this.panelX = newX;
-            this.setState({ iconsMode: this.state.iconsMode === 'normal' ? 'outline' : 'normal' });
-            SpringAnimation(this.animPanel, newX).start();
+            SpringAnimation(this.animLoop, newX).start();
+            TimingAnimation(this.animLinear, newX, 300).start();
         }, 2000);
     }
 

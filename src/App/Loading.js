@@ -56,7 +56,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     // Show onboarding if not watched
     const showOnboard = !user.settings.onboardingWatched;
     if (showOnboard) {
-        user.interface.ChangePage('onboarding', undefined, true);
+        user.interface.ChangePage('onboarding', { storeInHistory: false });
         return;
     }
 

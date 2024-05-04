@@ -15,7 +15,7 @@ class BackTest2 extends PageBase {
     }
 
     back = () => {
-        user.interface.ChangePage('test');
+        this.fe.BackHandle();
     }
 }
 

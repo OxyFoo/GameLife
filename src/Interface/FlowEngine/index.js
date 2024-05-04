@@ -3,6 +3,7 @@ import { Animated, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 import styles from './style';
 import BackFlowEngine from './back';
+import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
 import PAGES from 'Interface/Pages';
 
 import { RadialBackground } from '../Primitives/radialBackground';
@@ -38,7 +39,7 @@ class FlowEngine extends BackFlowEngine {
      * @param {T} props.pageName
      */
     renderPage = ({ pageName }) => {
-        const { selectedPage } = this.state;
+        const { selectedPage, currentTransition } = this.state;
 
         const page = this.getMountedPage(pageName);
         if (page === null) {
@@ -53,18 +54,8 @@ class FlowEngine extends BackFlowEngine {
                     {
                         opacity: Animated.subtract(1, page.transitionEnd),
                         transform: [
-                            {
-                                translateX: Animated.multiply(
-                                    200,
-                                    Animated.subtract(1, page.transitionStart)
-                                )
-                            },
-                            {
-                                scale: Animated.add(
-                                    0.75,
-                                    Animated.multiply(0.25, Animated.subtract(1, page.transitionEnd))
-                                )
-                            }
+                            ...GetAnimationPageOpen(page, currentTransition),
+                            ...GetAnimationPageClose(page)
                         ]
                     }
                 ]}

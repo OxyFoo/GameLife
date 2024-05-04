@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 /**
- * @typedef {import('Interface/FlowEngine').default} FlowEngine
+ * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
  */
 
 class PageBase extends React.Component {
@@ -16,18 +16,18 @@ class PageBase extends React.Component {
     constructor(props = {}) {
         super(props);
 
-        /** @type {FlowEngine | null} */
-        const parent = this.props.flowEngine || null;
+        /** @type {FlowEnginePublicClass | null} */
+        const flowEngine = this.props.flowEngine || null;
 
-        if (parent === null) {
+        if (flowEngine === null) {
             throw new Error('PageBase must have a parent');
         }
 
         /**
          * @description FlowEngine parent
-         * @type {FlowEngine}
+         * @type {FlowEnginePublicClass}
          */
-        this.fe = this.props.flowEngine;
+        this.fe = flowEngine;
     }
 
     /** @param {this['props']} props */

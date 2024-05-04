@@ -49,6 +49,7 @@ class BackTest extends PageBase {
         }
     }
 
+    /*
     openSI = () => {
         user.interface.screenInput.Open('test', 'abc', console.log);
     }
@@ -67,8 +68,9 @@ class BackTest extends PageBase {
         ];
         user.interface.screenList.Open('test', test, console.log);
     }
+    */
 
-    goToPage2 = () => this.fe.ChangePage('test2');
+    goToPage2 = () => this.fe.ChangePage('test2', { storeInHistory: false, transition: 'auto' });
 }
 
 export default BackTest;

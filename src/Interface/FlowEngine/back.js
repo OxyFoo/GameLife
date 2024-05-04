@@ -18,15 +18,35 @@ import { Console, Popup } from 'Interface/Widgets';
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
  * @property {React.RefObject<InstanceType<PAGES[T]>>} ref
+ * @property {boolean} storeInHistory
+ * @property {Transitions} transition
  * @property {Animated.Value} transitionStart
  * @property {Animated.Value} transitionEnd
  */
 
 /**
  * @template {PageNames} T
- * @typedef {Object} PathMemory
+ * @typedef {Object} PageHistory
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
+ */
+
+/**
+ * @template {PageNames} T
+ * @typedef {Object} PageOptions
+ * @property {PAGES[T]['prototype']['props']['args']} [args]
+ * @property {boolean} [storeInHistory]
+ * @property {Transitions} [transition]
+ */
+
+/**
+ * @typedef {Object} FlowEnginePublicClass
+ * @property {BackFlowEngine['history']} history
+ * @property {BackFlowEngine['ChangePage']} ChangePage
+ * @property {BackFlowEngine['BackHandle']} BackHandle
+ * @property {BackFlowEngine['GetCurrentPageName']} GetCurrentPageName
+ * @property {BackFlowEngine['SetCustomBackHandler']} SetCustomBackHandler
+ * @property {BackFlowEngine['ResetCustomBackHandler']} ResetCustomBackHandler
  */
 
 class BackFlowEngine extends React.Component{
@@ -36,31 +56,34 @@ class BackFlowEngine extends React.Component{
     state = {
         /** @type {PageNames | null} */
         selectedPage: null,
-        ignorePage: false,
+
+        /** @type {Transitions} */
+        currentTransition: 'auto',
 
         /** @type {Array<PageMemory<PageNames>>} */
         mountedPages: []
     };
 
-    /** @type {Array<PageNames>} */
+    /**
+     * @type {Array<PageNames>}
+     * @protected
+     */
     availablePages = [];
 
-    /** @description Disable changing page while loading */
+    /**
+     * @description Disable changing page while loading
+     * @type {boolean}
+     * @private
+     */
     changing = false;
 
     /**
      * @description Represent all pages before current page
      * Increment when changing page
      * Decrement when back page
-     * @type {Array<PathMemory<PageNames>>}
+     * @type {Array<PageHistory<PageNames>>}
      */
     history = [];
-
-    /**
-     * @description Custom back button handler
-     * @type {(() => boolean) | null} Return true if back is handled
-     */
-    customBackHandle = null;
 
     constructor(props = {}) {
         super(props);
@@ -86,11 +109,30 @@ class BackFlowEngine extends React.Component{
         BackHandler.removeEventListener('hardwareBackPress', this.BackHandle);
     }
 
+
+
+    /**
+     * @description Get current page name
+     * @returns {PageNames | null}
+     * @public
+     */
+    GetCurrentPageName = () => this.state.selectedPage;
+
+
+
+    /**
+     * @description Custom back button handler
+     * @type {(() => boolean) | null} Return true if back is handled
+     * @private
+     */
+    customBackHandle = null;
+
     /**
      * @param {() => boolean} handle
      * @returns {boolean} True if handle is set
+     * @public
      */
-    SetCustomBackHandler(handle) {
+    SetCustomBackHandler = (handle) => {
         if (typeof(handle) !== 'function') {
             return false;
         }
@@ -98,11 +140,20 @@ class BackFlowEngine extends React.Component{
         return true;
     }
 
-    ResetCustomBackHandler() {
+    /**
+     * @public
+     */
+    ResetCustomBackHandler = () => {
         this.customBackHandle = null;
     }
 
-    BackHandle = () => {
+    /**
+     * @description Handle back button
+     * @param {Transitions} [transition]
+     * @returns {boolean} True if back is handled
+     * @public
+     */
+    BackHandle = (transition = 'auto') => {
         if (this.customBackHandle !== null) {
             if (!this.customBackHandle()) {
                 return true;
@@ -110,64 +161,94 @@ class BackFlowEngine extends React.Component{
             this.ResetCustomBackHandler();
         }
 
-        this.backPage();
+        this.backPage(transition);
         return true;
-    }
-
-    /**
-     * @private
-     * Try to get last page content
-     * @param {boolean} [force=false] If true, try to get back until page is changing
-     * @returns {boolean} True if page changed
-     */
-    backPage = (force = false) => {
-        return false
     }
 
     /**
      * Open page
      * @template {PageNames} T
      * @param {T} nextpage
-     * @param {Object} options
-     * @param {PAGES[T]['prototype']['props']['args']} [options.args]
-     * @param {boolean} [options.storeInHistory] Store page in history to allow back navigation (default: true)
-     * @param {Transitions} [options.transition]
+     * @param {PageOptions<T>} options
      * @returns {boolean} True if page changed
+     * @public
      */
     ChangePage = (nextpage, options = { args: {}, storeInHistory: true, transition: 'auto' }) => {
+        const { selectedPage } = this.state;
+
         if (this.changing) {
             return false;
         }
 
-        const { mountedPages, selectedPage } = this.state;
+        if (nextpage === selectedPage) {
+            return false;
+        }
 
         this.changing = true;
-        const newState = {};
-        let newPage = this.getMountedPage(nextpage);
-        const oldPage = selectedPage === null ? null : this.getMountedPage(selectedPage);
+        this.mountPage(nextpage, options);
+        this.unmountPage(selectedPage);
+        this.changing = false;
 
-        // Add page to memory or select and reset it
+        return true;
+    }
+
+    /**
+     * Change page to previous page in history
+     * @param {Transitions} [transition]
+     * @returns {boolean} True if page changed
+     * @private
+     */
+    backPage = (transition = 'auto') => {
+        const { selectedPage } = this.state;
+
+        if (this.changing) {
+            return false;
+        }
+
+        const lastPage = this.history.pop();
+        if (lastPage === undefined) {
+            return false;
+        }
+
+        const { pageName, args } = lastPage;
+        if (pageName === selectedPage) {
+            return false;
+        }
+
+        this.changing = true;
+        this.mountPage(pageName, { args, transition }, true);
+        this.unmountPage(selectedPage, true);
+        this.changing = false;
+
+        return true;
+    }
+
+    /**
+     * Mount page if not already mounted
+     * @template {PageNames} T
+     * @param {T} nextPage
+     * @param {PageOptions<T>} options
+     * @param {boolean} [isGoingBack]
+     * @private
+     */
+    mountPage = (nextPage, options, isGoingBack = false) => {
+        const { mountedPages } = this.state;
+
+        let newPage = this.getMountedPage(nextPage);
+
+        // Page doesn't existe: Add it to memory
         if (newPage === null) {
-            newPage = {
-                pageName: nextpage,
-                ref: React.createRef(),
-                args: options.args,
-                transitionStart: new Animated.Value(0),
-                transitionEnd: new Animated.Value(0)
-            };
-            newState.mountedPages = [ ...mountedPages, newPage ];
-        } else {
+            newPage = this.createPage(nextPage, options);
+        }
+
+        // Page is already mounted: Update args, call _componentDidFocused and reset transition values
+        else {
+            if (newPage.args !== options.args) {
+                newPage.args = options.args;
+            }
             newPage.ref.current?._componentDidFocused(newPage.args);
             newPage.transitionStart.setValue(0);
             newPage.transitionEnd.setValue(0);
-        }
-
-        if (nextpage !== selectedPage) {
-            newState.selectedPage = nextpage;
-        }
-
-        if (Object.keys(newState).length > 0) {
-            this.setState(newState);
         }
 
         if (newPage !== null) {
@@ -175,43 +256,87 @@ class BackFlowEngine extends React.Component{
             SpringAnimation(newPage.transitionEnd, 0).start();
         }
 
-        if (oldPage !== null) {
-            TimingAnimation(oldPage.transitionEnd, 1, 200).start(() => {
-                this.changing = false;
-                if (oldPage.ref.current?.feKeepMounted !== true) {
-                    this.removeFromMountedPages(oldPage.pageName);
-                } else {
-                    oldPage.ref.current?._componentDidUnfocused();
-                }
-            });
-        } else {
-            this.changing = false
+        /** @type {Transitions} */
+        let transition = options?.transition || 'auto';
+        if (transition === 'auto') {
+            if (mountedPages.length === 0) {
+                transition = 'fromCenter';
+            } else if (isGoingBack) {
+                transition = 'fromLeft';
+            } else {
+                transition = 'fromRight';
+            }
         }
 
-        return true;
+        this.setState({
+            selectedPage: nextPage,
+            currentTransition: transition,
+            mountedPages: [ ...mountedPages, newPage ]
+        });
     }
 
     /**
-     * @param {PageNames} pageName
+     * Save page in history if needed and unmount if not keepMounted
+     * @param {PageNames | null} pageName
+     * @param {boolean} [isGoingBack] Save page in history if true
+     * @private
      */
-    removeFromMountedPages = async (pageName) => {
-        const { mountedPages } = this.state;
-        const index = mountedPages.findIndex((p) => p.pageName === pageName);
-        if (index !== -1) {
-            await new Promise((resolve) => {
-                mountedPages.splice(index, 1);
-                this.setState({ mountedPages }, () => {
-                    console.log('Page removed from memory:', pageName);
-                    resolve(null);
-                });
-            });
+    unmountPage = (pageName, isGoingBack = false) => {
+        const oldPage = this.getMountedPage(pageName);
+        if (oldPage === null) {
+            return;
         }
+
+        if (!isGoingBack && oldPage.storeInHistory) {
+            this.addPageToHistory(oldPage.pageName, oldPage.args);
+        }
+
+        TimingAnimation(oldPage.transitionEnd, 1, 200).start(() => {
+            if (oldPage.ref.current?.feKeepMounted) {
+                oldPage.ref.current?._componentDidUnfocused();
+            } else {
+                this.removeFromMountedPages(oldPage.pageName);
+            }
+        });
     }
 
     /**
      * @template {PageNames} T
      * @param {T} pageName
+     * @param {PageOptions<T>} options
+     * @returns {PageMemory<T>}
+     * @private
+     */
+    createPage = (pageName, options) => {
+        return {
+            pageName: pageName,
+            args: options.args || {},
+            ref: React.createRef(),
+            storeInHistory: options.storeInHistory ?? true,
+            transition: options.transition || 'auto',
+            transitionStart: new Animated.Value(0),
+            transitionEnd: new Animated.Value(0)
+        };
+    }
+
+    /**
+     * @template {PageNames} T
+     * @param {T} pageName
+     * @param {PAGES[T]['prototype']['props']['args']} args
+     * @private
+     */
+    addPageToHistory = (pageName, args) => {
+        this.history.push({
+            pageName: pageName,
+            args: args
+        });
+    }
+
+    /**
+     * @template {PageNames} T
+     * @param {T | null} pageName
      * @returns {PageMemory<T> | null}
+     * @protected
      */
     getMountedPage = (pageName) => {
         const { mountedPages } = this.state;
@@ -222,7 +347,24 @@ class BackFlowEngine extends React.Component{
         return mountedPages.find((p) => p.pageName === pageName) || null;
     }
 
-    GetCurrentPageName = () => this.state.selectedPage;
+    /**
+     * @param {PageNames} pageName
+     * @private
+     */
+    removeFromMountedPages = async (pageName) => {
+        const { mountedPages } = this.state;
+        const index = mountedPages.findIndex((p) => p.pageName === pageName);
+        if (index === -1) {
+            return;
+        }
+
+        await new Promise((resolve) => {
+            mountedPages.splice(index, 1);
+            this.setState({ mountedPages }, () => {
+                resolve(null);
+            });
+        });
+    }
 }
 
 export default BackFlowEngine;

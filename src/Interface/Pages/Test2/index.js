@@ -31,7 +31,7 @@ class Test2 extends BackTest2 {
                     onChangeText={(newText) => this.setState({ input: newText })}
                 />
 
-                <Button onPress={() => user.interface.ChangePage('loading')}>{'Ouvrir l\'app'}</Button>
+                <Button onPress={() => user.interface.ChangePage('loading', { storeInHistory: false })}>{'Ouvrir l\'app'}</Button>
             </View>
         );
     }

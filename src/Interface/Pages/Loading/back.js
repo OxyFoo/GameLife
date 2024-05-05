@@ -21,7 +21,7 @@ class BackLoading extends PageBase {
     state = {
         icon: 0,
         animTestButton: new Animated.Value(1),
-        displayedSentence: ''
+        displayedSentence: this.getRandomSentence()
     }
 
     startY = 0;
@@ -29,10 +29,8 @@ class BackLoading extends PageBase {
     intervalId = null;
 
     componentDidMount() {
-        Initialisation(this.nextStep, this.nextPage, this.handleError);
-
-        this.pickRandomSentence();
-        this.intervalId = setInterval(this.pickRandomSentence, 3 * 1000);
+        this.intervalId = setInterval(this.setRandomSentence, 3 * 1000);
+        Initialisation(this.fe, this.nextStep, this.nextPage, this.handleError);
     }
 
     componentWillUnmount() {
@@ -41,11 +39,16 @@ class BackLoading extends PageBase {
         }
     }
 
-    pickRandomSentence = () => {
+    getRandomSentence() {
         const sentences = langManager.curr['loading'];
         const randomIndex = Math.floor(Math.random() * sentences.length);
-        this.setState({ displayedSentence: sentences[randomIndex] });
+        return sentences[randomIndex];
     }
+    setRandomSentence = () => {
+        this.setState({
+            displayedSentence: this.getRandomSentence()
+        });
+    };
 
     /** @param {GestureResponderEvent} event */
     onToucheStart = (event) => {
@@ -67,14 +70,16 @@ class BackLoading extends PageBase {
     /** @param {ErrorMessages} message */
     handleError = (message) => {
         const lang = langManager.curr['app'];
-        user.interface.ChangePage('display', {
-            /** @type {IconsName} */
-            'icon': 'error',
-            'iconRatio': .4,
-            'text': lang['loading-error-message'][message],
-            'button': lang['loading-error-button'],
-            'action': RNExitApp.exitApp
-        }, true);
+        this.fe.ChangePage('display', {
+            args: {
+                icon: 'error',
+                iconRatio: .4,
+                text: lang['loading-error-message'][message],
+                button: lang['loading-error-button'],
+                action: RNExitApp.exitApp
+            },
+            storeInHistory: false
+        });
     }
 
     nextStep = () => {
@@ -96,10 +101,10 @@ class BackLoading extends PageBase {
         }
 
         // Start tutorial & valid test message
-        const homeProps = {};
+        let tuto = 0;
         if (!user.settings.tutoFinished || !user.settings.testMessageReaded) {
             if (!user.settings.tutoFinished) {
-                homeProps.tuto = 1;
+                tuto = 1;
                 user.settings.tutoFinished = true;
             }
             if (!user.settings.testMessageReaded) {
@@ -110,11 +115,9 @@ class BackLoading extends PageBase {
 
         // Go to home or activity timer
         if (user.activities.currentActivity.Get() === null) {
-            while (!user.interface.ChangePage('home', homeProps))
-                await Sleep(100);
+            this.fe.ChangePage('home', { args: { tuto } });
         } else {
-            while (!user.interface.ChangePage('activitytimer', undefined, true))
-                await Sleep(100);
+            this.fe.ChangePage('activitytimer', { storeInHistory: false });
         }
     }
 }

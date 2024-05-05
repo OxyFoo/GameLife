@@ -1,5 +1,4 @@
 import PageBase from 'Interface/FlowEngine/PageBase';
-import user from 'Managers/UserManager';
 
 const test = {
     args: {
@@ -16,6 +15,10 @@ class BackTest2 extends PageBase {
 
     back = () => {
         this.fe.BackHandle();
+    }
+
+    openApp = () => {
+        this.fe.ChangePage('loading', { storeInHistory: false })
     }
 }
 

@@ -5,7 +5,6 @@ import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
 import BackTest2 from './back';
-import user from 'Managers/UserManager';
 
 import { Text, Button, InputText } from 'Interface/Components';
 
@@ -31,7 +30,7 @@ class Test2 extends BackTest2 {
                     onChangeText={(newText) => this.setState({ input: newText })}
                 />
 
-                <Button onPress={() => user.interface.ChangePage('loading', { storeInHistory: false })}>{'Ouvrir l\'app'}</Button>
+                <Button onPress={this.openApp}>{'Ouvrir l\'app'}</Button>
             </View>
         );
     }

@@ -13,6 +13,13 @@ import StartMission from './mission';
  * @typedef {import('Class/Missions').MissionsItem} MissionsItem
  */
 
+const BackHomeProps = {
+    args: {
+        /** @type {number} */
+        tuto: 0
+    }
+}
+
 class BackHome extends PageBase {
     state = {
         experience: user.experience.GetExperience(),
@@ -38,8 +45,10 @@ class BackHome extends PageBase {
         );
         this.listenerMissions = user.missions.missions.AddListener(this.handleMissionsUpdate);
     }
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
+
+    /** @param {this['props']} props */
+    componentDidFocused = (props) => {
+        StartTutorial.call(this, props.args.tuto);
     }
 
     componentWillUnmount() {
@@ -67,5 +76,8 @@ class BackHome extends PageBase {
     openSkills = () => user.interface.ChangePage('skills');
     openQuests = () => user.interface.ChangePage('quests');
 }
+
+BackHome.defaultProps = BackHomeProps;
+BackHome.prototype.props = BackHomeProps;
 
 export default BackHome;

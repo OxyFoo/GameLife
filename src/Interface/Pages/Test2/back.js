@@ -4,22 +4,22 @@ const test = {
     args: {
         abc: 'def'
     }
-}
+};
 
 class BackTest2 extends PageBase {
     feKeepMounted = false;
 
     state = {
         input: ''
-    }
+    };
 
     back = () => {
         this.fe.BackHandle();
-    }
+    };
 
     openApp = () => {
-        this.fe.ChangePage('loading', { storeInHistory: false })
-    }
+        this.fe.ChangePage('loading', { storeInHistory: false });
+    };
 }
 
 BackTest2.defaultProps = test;

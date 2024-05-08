@@ -28,9 +28,7 @@ const styles = StyleSheet.create({
     },
     iconTest: {
         marginBottom: 24,
-        transform: [
-            { scaleX: 1.2 }
-        ]
+        transform: [{ scaleX: 1.2 }]
     },
     zapTest: {
         marginTop: 24

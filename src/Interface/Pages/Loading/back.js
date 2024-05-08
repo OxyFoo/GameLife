@@ -7,12 +7,11 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Initialisation } from 'App/Loading';
-import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
+ *
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  */
@@ -22,7 +21,7 @@ class BackLoading extends PageBase {
         icon: 0,
         animTestButton: new Animated.Value(1),
         displayedSentence: this.getRandomSentence()
-    }
+    };
 
     startY = 0;
     /** @type {NodeJS.Timeout | null} */
@@ -53,19 +52,22 @@ class BackLoading extends PageBase {
     /** @param {GestureResponderEvent} event */
     onToucheStart = (event) => {
         this.startY = event.nativeEvent.pageY;
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onToucheEnd = (event) => {
         // Check if the user is offline and if he has scrolled up to open the console
-        if (event.nativeEvent.pageY - this.startY < -200 && !user.server.online) {
+        if (
+            event.nativeEvent.pageY - this.startY < -200 &&
+            !user.server.online
+        ) {
             user.interface.console.Enable();
         }
-    }
+    };
 
     handleDiscordRedirection = () => {
         Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
-    }
+    };
 
     /** @param {ErrorMessages} message */
     handleError = (message) => {
@@ -73,18 +75,18 @@ class BackLoading extends PageBase {
         this.fe.ChangePage('display', {
             args: {
                 icon: 'error',
-                iconRatio: .4,
+                iconRatio: 0.4,
                 text: lang['loading-error-message'][message],
                 button: lang['loading-error-button'],
                 action: RNExitApp.exitApp
             },
             storeInHistory: false
         });
-    }
+    };
 
     nextStep = () => {
         this.setState({ icon: this.state.icon + 1 });
-    }
+    };
 
     nextPage = async () => {
         // If test release, go to test page
@@ -94,9 +96,12 @@ class BackLoading extends PageBase {
         // Loading finished & test mode (release) => go to "test message"
         if (isTestMode && icon === 3) {
             this.setState({ icon: icon + 1 });
-            setTimeout(() => {
-                SpringAnimation(this.state.animTestButton, 0).start();
-            }, user.settings.testMessageReaded ? 0 : 5000);
+            setTimeout(
+                () => {
+                    SpringAnimation(this.state.animTestButton, 0).start();
+                },
+                user.settings.testMessageReaded ? 0 : 5000
+            );
             return;
         }
 
@@ -119,7 +124,7 @@ class BackLoading extends PageBase {
         } else {
             this.fe.ChangePage('activitytimer', { storeInHistory: false });
         }
-    }
+    };
 }
 
 export default BackLoading;

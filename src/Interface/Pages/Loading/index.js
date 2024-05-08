@@ -25,9 +25,7 @@ class Loading extends BackLoading {
                 </View>
                 <View style={styles.textContainer}>
                     {this.renderVersionText()}
-                    <Text>
-                        {this.state.displayedSentence}
-                    </Text>
+                    <Text>{this.state.displayedSentence}</Text>
                 </View>
             </View>
         );
@@ -36,17 +34,26 @@ class Loading extends BackLoading {
     renderTestCautionMessage() {
         const lang = langManager.curr['onboarding'];
         const buttonPosY = {
-            transform: [{ translateY: Animated.multiply(300, this.state.animTestButton) }]
+            transform: [
+                {
+                    translateY: Animated.multiply(
+                        300,
+                        this.state.animTestButton
+                    )
+                }
+            ]
         };
 
         return (
             <View style={styles.contentTest}>
                 <Icon style={styles.iconTest} icon='warning' size={84} />
 
-                <Text fontSize={22}>
-                    {lang['test-caution-message']}
-                </Text>
-                <Text onPress={this.handleDiscordRedirection} fontSize={22} color='main1'>
+                <Text fontSize={22}>{lang['test-caution-message']}</Text>
+                <Text
+                    onPress={this.handleDiscordRedirection}
+                    fontSize={22}
+                    color='main1'
+                >
                     {lang['test-caution-redirect']}
                 </Text>
 
@@ -73,11 +80,7 @@ class Loading extends BackLoading {
         const mode = __DEV__ ? 'DEBUG' : 'RELEASE';
         const bottomText = env + ' MODE - ' + mode;
 
-        return (
-            <Text>
-                {bottomText}
-            </Text>
-        );
+        return <Text>{bottomText}</Text>;
     }
 }
 

@@ -12,6 +12,7 @@ exports[`[Component] Button renders correctly 1`] = `
       {
         "backgroundColor": "transparent",
         "borderRadius": 8,
+        "minHeight": 54,
         "overflow": "hidden",
         "paddingHorizontal": 24,
         "paddingVertical": 16,

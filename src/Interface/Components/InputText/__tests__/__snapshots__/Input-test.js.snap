@@ -6,11 +6,10 @@ exports[`[Component] InputText renders correctly 1`] = `
   onLayout={[Function]}
   style={
     {
-      "borderColor": "#808080",
+      "borderColor": "#D0D0D0",
       "borderRadius": 8,
       "borderWidth": 1.2,
-      "height": 54,
-      "justifyContent": "center",
+      "minHeight": 54,
       "opacity": 1,
       "paddingRight": 0,
       "width": "100%",
@@ -101,13 +100,17 @@ exports[`[Component] InputText renders correctly 1`] = `
     onSubmitEditing={[Function]}
     selectionColor="white"
     style={
-      {
-        "color": "#FFFFFF",
-        "maxHeight": 256,
-        "minHeight": 12,
-        "paddingHorizontal": 12,
-        "paddingVertical": 0,
-      }
+      [
+        {
+          "color": "#FFFFFF",
+          "fontSize": 18,
+          "maxHeight": 256,
+          "minHeight": 12,
+          "paddingHorizontal": 12,
+          "paddingVertical": 12,
+        },
+        undefined,
+      ]
     }
     testID="textInput"
     textContentType="none"

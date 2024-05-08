@@ -26,6 +26,7 @@ exports[`[Component] Input should render correctly 1`] = `
           {
             "backgroundColor": "transparent",
             "borderRadius": 8,
+            "minHeight": 54,
             "overflow": "hidden",
             "paddingHorizontal": 24,
             "paddingVertical": 16,
@@ -100,11 +101,10 @@ exports[`[Component] Input should render correctly 1`] = `
       pointerEvents="none"
       style={
         {
-          "borderColor": "#808080",
+          "borderColor": "#D0D0D0",
           "borderRadius": 8,
           "borderWidth": 1.2,
-          "height": 54,
-          "justifyContent": "center",
+          "minHeight": 54,
           "opacity": 1,
           "paddingRight": 0,
           "width": "100%",
@@ -195,13 +195,17 @@ exports[`[Component] Input should render correctly 1`] = `
         onSubmitEditing={[Function]}
         selectionColor="white"
         style={
-          {
-            "color": "#FFFFFF",
-            "maxHeight": 256,
-            "minHeight": 12,
-            "paddingHorizontal": 12,
-            "paddingVertical": 0,
-          }
+          [
+            {
+              "color": "#FFFFFF",
+              "fontSize": 18,
+              "maxHeight": 256,
+              "minHeight": 12,
+              "paddingHorizontal": 12,
+              "paddingVertical": 12,
+            },
+            undefined,
+          ]
         }
         testID="textInput"
         textContentType="none"
@@ -248,7 +252,7 @@ exports[`[Component] Input should render correctly 1`] = `
             bbHeight={20}
             bbWidth={20}
             collapsable={false}
-            color={4286611584}
+            color="#808080"
             fill="#808080"
             focusable={false}
             height={20}
@@ -269,7 +273,7 @@ exports[`[Component] Input should render correctly 1`] = `
                 },
               ]
             }
-            tintColor={4286611584}
+            tintColor="#808080"
             transform={
               [
                 {
@@ -282,16 +286,11 @@ exports[`[Component] Input should render correctly 1`] = `
             width={20}
           >
             <RNSVGGroup
-              fill={4286611584}
-              matrix={
-                [
-                  1,
-                  0,
-                  0,
-                  1,
-                  0,
-                  0,
-                ]
+              fill={
+                {
+                  "payload": 4286611584,
+                  "type": 0,
+                }
               }
               propList={
                 [
@@ -301,7 +300,12 @@ exports[`[Component] Input should render correctly 1`] = `
             >
               <RNSVGPath
                 d="M51.707 185.343a10.692 10.692 0 01-7.593-3.149 10.724 10.724 0 010-15.175l74.352-74.347L44.114 18.32c-4.194-4.194-4.194-10.987 0-15.175 4.194-4.194 10.987-4.194 15.18 0l81.934 81.934c4.194 4.194 4.194 10.987 0 15.175l-81.934 81.939a10.678 10.678 0 01-7.587 3.15z"
-                fill={4286611584}
+                fill={
+                  {
+                    "payload": 4286611584,
+                    "type": 0,
+                  }
+                }
                 propList={
                   [
                     "fill",
@@ -316,6 +320,7 @@ exports[`[Component] Input should render correctly 1`] = `
   </View>,
   <View
     collapsable={false}
+    pointerEvents="none"
     style={
       {
         "borderColor": "#9095FF",
@@ -342,6 +347,7 @@ exports[`[Component] Input should render correctly 1`] = `
   />,
   <View
     collapsable={false}
+    pointerEvents="none"
     style={
       {
         "elevation": 1000,
@@ -365,7 +371,6 @@ exports[`[Component] Input should render correctly 1`] = `
   >
     <View
       collapsable={false}
-      pointerEvents="none"
       style={
         {
           "borderBottomLeftRadius": 8,
@@ -390,6 +395,7 @@ exports[`[Component] Input should render correctly 1`] = `
         getItem={[Function]}
         getItemCount={[Function]}
         keyExtractor={[Function]}
+        nestedScrollEnabled={true}
         onContentSizeChange={[Function]}
         onLayout={[Function]}
         onMomentumScrollBegin={[Function]}
@@ -397,15 +403,23 @@ exports[`[Component] Input should render correctly 1`] = `
         onScroll={[Function]}
         onScrollBeginDrag={[Function]}
         onScrollEndDrag={[Function]}
+        onTouchEnd={[Function]}
         onTouchMove={[Function]}
+        onTouchStart={[Function]}
         removeClippedSubviews={false}
         renderItem={[Function]}
         scrollEventThrottle={0.0001}
         stickyHeaderIndices={[]}
         style={
-          {
-            "backgroundColor": "#222740",
-          }
+          [
+            {
+              "borderBottomLeftRadius": 8,
+              "borderBottomRightRadius": 8,
+            },
+            {
+              "backgroundColor": "#222740",
+            },
+          ]
         }
         viewabilityConfigCallbackPairs={[]}
       >

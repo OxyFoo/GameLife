@@ -313,6 +313,7 @@ class Commands {
             $this->output['hashes'] = $appHashes;
             $this->output['music-links'] = $appData['MusicLinks'];
             $this->output['iap'] = array_keys($IAP_REWARDS);
+            $this->output['priceFactor'] = $appData['PriceFactor'];
             $this->output['status'] = 'ok';
         }
     }

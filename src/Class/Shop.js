@@ -59,6 +59,9 @@ class Shop {
     /** @type {Array<string>} */
     IAP_IDs = [];
 
+    /** @type {number} Price factor, applied to all Ox prices in shop */
+    priceFactor = 1;
+
     Clear() {
         this.buyToday = {
             day: '',
@@ -104,9 +107,10 @@ class Shop {
     /** @param {BuyableRandomChest} chest */
     BuyRandomChest = async (chest) => {
         const lang = langManager.curr['shop'];
+        const price = Math.round(chest.Price * this.priceFactor);
 
         // Check Ox Amount
-        if (this.user.informations.ox.Get() < chest.Price) {
+        if (this.user.informations.ox.Get() < price) {
             const title = lang['popup-notenoughox-title'];
             const text = lang['popup-notenoughox-text'];
             this.user.interface.popup.ForceOpen('ok', [ title, text ]);
@@ -153,9 +157,10 @@ class Shop {
     /** @param {BuyableTargetedChest} chest */
     BuyTargetedChest = async (chest) => {
         const lang = langManager.curr['shop'];
+        const price = Math.round(chest.Price * this.priceFactor);
 
         // Check Ox Amount
-        if (this.user.informations.ox.Get() < chest.Price) {
+        if (this.user.informations.ox.Get() < price) {
             const title = lang['popup-notenoughox-title'];
             const text = lang['popup-notenoughox-text'];
             this.user.interface.popup.ForceOpen('ok', [ title, text ]);

@@ -129,6 +129,11 @@ class DataManager {
                     user.shop.LoadIAPs(reqIAP);
                 }
 
+                const priceFactor = reqInternalData.content['priceFactor'];
+                if (typeof(priceFactor) === 'number') {
+                    user.shop.priceFactor = priceFactor;
+                }
+
                 const reqTables = reqInternalData.content['tables'];
                 if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
                 if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);

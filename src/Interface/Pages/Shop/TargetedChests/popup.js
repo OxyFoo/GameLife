@@ -20,12 +20,13 @@ function renderBuyPopup(item, closePopup) {
     const lang = langManager.curr['shop']['targetedChests'];
     let [ loading, setLoading ] = React.useState(false);
 
+    const price = Math.round(item.Price * user.shop.priceFactor);
     const itemDescription = lang['popup-chest-text']
                         .replace('{}', langManager.curr['rarities'][item.Rarity])
                         .replace('{}', item.Name)
-                        .replace('{}', item.Price.toString());
+                        .replace('{}', price.toString());
     const buttonText = lang['popup-chest-button']
-                        .replace('{}', item.Price.toString());
+                        .replace('{}', price.toString());
 
     const buy = async () => {
         setLoading(true);

@@ -17,6 +17,30 @@ import { Button, Text, IconCheckable } from 'Interface/Components';
  */
 
 class ShopItems extends BackShopItems {
+    render() {
+        return (
+            <>
+                <FlatList
+                    style={styles.flatlistTargets}
+                    contentContainerStyle={styles.flatlistTargetsContent}
+                    data={this.TARGETS}
+                    renderItem={this.renderCategory}
+                    keyExtractor={(item) => `target-category-${item.id}`}
+                    scrollEnabled={false}
+                />
+                <FlatList
+                    ref={ref => this.refTuto1 = ref}
+                    style={styles.flatlistChests}
+                    data={this.CHESTS}
+                    numColumns={3}
+                    renderItem={this.renderItem}
+                    keyExtractor={(item) => `buyable-random-chest-${item.ID}`}
+                    scrollEnabled={false}
+                />
+            </>
+        );
+    }
+
     /**
      * @param {{ item: Target }} param0
      * @returns {JSX.Element}
@@ -69,10 +93,7 @@ class ShopItems extends BackShopItems {
                         />
 
                         {/** Chest price */}
-                        <View style={styles.itemPrice}>
-                            <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
-                            <Image style={styles.itemOxImage} source={IMG_OX} />
-                        </View>
+                        {this.renderPrice(item)}
 
                         {/** Decoration */}
                         <LinearGradient
@@ -88,27 +109,33 @@ class ShopItems extends BackShopItems {
         );
     }
 
-    render() {
+    /** @param {BuyableTargetedChest} item */
+    renderPrice = (item) => {
+        // Default price
+        if (user.shop.priceFactor === 1) {
+            return (
+                <View style={styles.itemPrice}>
+                    <Text style={styles.itemPriceOx}>
+                        {item.Price.toString()}
+                    </Text>
+                    <Image style={styles.itemOxImage} source={IMG_OX} />
+                </View>
+            );
+        }
+
+        // Price factor is applied
         return (
-            <>
-                <FlatList
-                    style={styles.flatlistTargets}
-                    contentContainerStyle={styles.flatlistTargetsContent}
-                    data={this.TARGETS}
-                    renderItem={this.renderCategory}
-                    keyExtractor={(item) => `target-category-${item.id}`}
-                    scrollEnabled={false}
-                />
-                <FlatList
-                    ref={ref => this.refTuto1 = ref}
-                    style={styles.flatlistChests}
-                    data={this.CHESTS}
-                    numColumns={3}
-                    renderItem={this.renderItem}
-                    keyExtractor={(item) => `buyable-random-chest-${item.ID}`}
-                    scrollEnabled={false}
-                />
-            </>
+            <View style={styles.itemPrice}>
+                <View>
+                    <Text style={styles.itemPriceOxEditedOld}>
+                        {item.Price.toString()}
+                    </Text>
+                    <Text style={styles.itemPriceOxEditedNew}>
+                        {Math.round(item.Price * user.shop.priceFactor).toString()}
+                    </Text>
+                </View>
+                <Image style={styles.itemOxImageEdited} source={IMG_OX} />
+            </View>
         );
     }
 }

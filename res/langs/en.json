@@ -900,6 +900,17 @@
         }
     },
 
+    "daily-quest": {
+        "container-title": "Quest of the day",
+
+        "tuto": {
+            "1": "Here are the daily quests, complete the required activity to earn rewards!",
+            "2": "Every day a list of activities tailored for you is made available.",
+            "3": "Choose an activity from the list and complete it for 15 minutes to validate your quest.",
+            "4": "If you want to see a list of all possible rewards, click on the arrow here!"
+        }
+    },
+
     "nonzerodays": {
         "container-title": "Non Zero Days",
         "container-date": "Rewards from {}",

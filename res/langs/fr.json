@@ -900,6 +900,17 @@
         }
     },
 
+    "daily-quest": {
+        "container-title": "Quête du jour",
+
+        "tuto": {
+            "1": "Voici les quêtes journalières, fais l'activité imposée pour gagner des récompenses !",
+            "2": "Chaque jour une liste d'activité faite sur mesure pour toi est mise à ta disposition.",
+            "3": "Choisi une activité parmis celles proposées et fais là pendant 15 minutes pour valider ta quête.",
+            "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
+        }
+    },
+
     "nonzerodays": {
         "container-title": "Jours non zéro",
         "container-date": "Récompenses du {}",

@@ -50,7 +50,6 @@ class Shop extends BackShop {
                 />
 
                 <Text style={styles.title}>{lang['banner-header']}</Text>
-                <Text style={styles.title2} color='secondary'>{lang['banner-header-refonte']}</Text>
 
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
                 <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
@@ -145,17 +144,10 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
     title: {
-        marginBottom: 6,
+        marginBottom: 12,
         paddingHorizontal: 16,
         fontSize: 20,
         fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    title2: {
-        marginBottom: 24,
-        paddingHorizontal: 16,
-        fontSize: 16,
-        fontStyle: 'italic',
         textAlign: 'center'
     },
     noInternetContainer: {

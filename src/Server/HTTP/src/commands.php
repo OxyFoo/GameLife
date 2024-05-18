@@ -9,12 +9,14 @@ require('./src/utils/utils.php');
 require('./src/classes/account.php');
 require('./src/classes/device.php');
 
-require('./src/managers/IAP.php');
+require('./src/data/IAP.php');
+require('./src/data/missions.php');
+require('./src/data/NZD_rewards.php');
+
 require('./src/managers/items.php');
 require('./src/managers/missions.php');
 require('./src/managers/myquests.php');
 require('./src/managers/nonzerodays.php');
-require('./src/managers/NZD_rewards.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
 require('./src/managers/todoes.php');
@@ -459,6 +461,10 @@ class Commands {
         $account = $this->account;
 
         $this->output['dailyDeals'] = Shop::GetDailyDeals($this->db, $account);
+        $this->output['chestsStats'] = array(
+            'random' => Shop::GetChestStats($this->db, 'random'),
+            'target' => Shop::GetChestStats($this->db, 'target')
+        );
         $this->output['status'] = 'ok';
     }
 

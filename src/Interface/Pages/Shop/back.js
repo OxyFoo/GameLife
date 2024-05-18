@@ -3,9 +3,13 @@ import React from 'react';
 import { PageBase } from 'Interface/Components';
 import StartTutorial from './tuto';
 import StartMission from './mission';
+import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('Interface/Components').Page} Page
+ * @typedef {import('Class/Shop').Chest} Chest
+ * @typedef {import('Data/Items').StuffID} StuffID
+ * 
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
  * @typedef {import('./InAppPurchases').default} InAppPurchases
@@ -17,7 +21,18 @@ import StartMission from './mission';
 class BackShop extends PageBase {
     state = {
         /** @type {Page | null} */
-        refPage: null
+        refPage: null,
+
+        loaded: false,
+
+        /** @type {StuffID[]} */
+        dailyItemsID: [],
+
+        /** @type {{ common: Chest, rare: Chest, epic: Chest } | null} */
+        randomChestsStats: null,
+
+        /** @type {{ common: Chest, rare: Chest, epic: Chest } | null} */
+        targetChestsStats: null
     }
 
     /** @type {React.RefObject<ShopHeader>} */
@@ -37,6 +52,28 @@ class BackShop extends PageBase {
 
     /** @type {React.RefObject<ShopDyes>} */
     refDyes = React.createRef();
+
+    componentDidMount() {
+        super.componentDidMount();
+
+        this.componentDidFocused(this.props);
+        user.server.GetShopContent().then((shopInfo) => {
+            this.setState({
+                loaded: true,
+                dailyItemsID: shopInfo.dailyDeals,
+                randomChestsStats: {
+                    common: shopInfo.chestsStats.random.common,
+                    rare: shopInfo.chestsStats.random.rare,
+                    epic: shopInfo.chestsStats.random.epic
+                },
+                targetChestsStats: {
+                    common: shopInfo.chestsStats.target.common,
+                    rare: shopInfo.chestsStats.target.rare,
+                    epic: shopInfo.chestsStats.target.epic
+                }
+            });
+        });
+    }
 
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);

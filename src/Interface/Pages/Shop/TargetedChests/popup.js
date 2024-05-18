@@ -20,7 +20,7 @@ function renderBuyPopup(item, closePopup) {
     const lang = langManager.curr['shop']['targetedChests'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const price = Math.round(item.Price * user.shop.priceFactor);
+    const price = item.PriceDiscount < 0 ? item.PriceOriginal : item.PriceDiscount;
     const itemDescription = lang['popup-chest-text']
                         .replace('{}', langManager.curr['rarities'][item.Rarity])
                         .replace('{}', item.Name)

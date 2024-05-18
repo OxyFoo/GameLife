@@ -1,4 +1,3 @@
-import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { DateToFormatString } from 'Utils/Date';
@@ -10,12 +9,22 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * 
+ * @typedef Chest
+ * @property {number} priceOriginal
+ * @property {number} priceDiscount
+ * @property {Object} probas
+ * @property {number} probas.common
+ * @property {number} probas.rare
+ * @property {number} probas.epic
+ * @property {number} probas.legendary
+ * 
  * @typedef BuyableRandomChest
  * @property {string} ref
  * @property {string | number} ID
  * @property {string} LangName
  * @property {ImageSourcePropType} Image
- * @property {number} Price
+ * @property {number} PriceOriginal
+ * @property {number} PriceDiscount
  * @property {number} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
@@ -32,7 +41,8 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {string} Name
  * @property {Slot} Slot
  * @property {ImageSourcePropType} Image
- * @property {number} Price
+ * @property {number} PriceOriginal
+ * @property {number} PriceDiscount
  * @property {number} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
@@ -107,7 +117,7 @@ class Shop {
     /** @param {BuyableRandomChest} chest */
     BuyRandomChest = async (chest) => {
         const lang = langManager.curr['shop'];
-        const price = Math.round(chest.Price * this.priceFactor);
+        const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
         // Check Ox Amount
         if (this.user.informations.ox.Get() < price) {
@@ -157,7 +167,7 @@ class Shop {
     /** @param {BuyableTargetedChest} chest */
     BuyTargetedChest = async (chest) => {
         const lang = langManager.curr['shop'];
-        const price = Math.round(chest.Price * this.priceFactor);
+        const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
         // Check Ox Amount
         if (this.user.informations.ox.Get() < price) {

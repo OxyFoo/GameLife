@@ -1,3 +1,6 @@
+/**
+ * @type {[ 'common', 'rare', 'epic', 'legendary' ]}
+ */
 const CHEST_RARITIES = [
     'common',
     'rare',

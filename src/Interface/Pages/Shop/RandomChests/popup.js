@@ -19,7 +19,7 @@ function renderBuyPopup(item, closePopup) {
     const lang = langManager.curr['shop']['randomChests'];
     let [ loading, setLoading ] = React.useState(false);
 
-    const price = Math.round(item.Price * user.shop.priceFactor);
+    const price = item.PriceDiscount < 0 ? item.PriceOriginal : item.PriceDiscount;
     const itemName = lang[item.LangName];
     const itemDescription = lang['popup-chest-text']
                         .replace('{}', itemName)

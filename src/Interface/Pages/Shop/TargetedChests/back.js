@@ -7,9 +7,15 @@ import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {import('Class/Shop').Slot} Slot
+ * @typedef {import('Class/Shop').Chest} Chest
  * @typedef {import('Class/Shop').Target} Target
  * @typedef {import('Class/Shop').BuyableTargetedChest} BuyableTargetedChest
  */
+
+const BackShopItemsProps = {
+    /** @type {{ common: Chest, rare: Chest, epic: Chest }} */
+    targetChestsStats: null
+};
 
 class BackShopItems extends React.Component {
     state = {
@@ -53,8 +59,10 @@ class BackShopItems extends React.Component {
             ID: 1,
             Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
             Slot: 'hair',
+            // @ts-ignore
             Image: require('Ressources/items/chests/common.png'),
-            Price: 60,
+            PriceOriginal: this.props.targetChestsStats.common.priceOriginal,
+            PriceDiscount: this.props.targetChestsStats.common.priceDiscount,
             Rarity: 0,
             Colors: themeManager.GetRariryColors(0),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
@@ -65,8 +73,10 @@ class BackShopItems extends React.Component {
             ID: 2,
             Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
             Slot: 'hair',
+            // @ts-ignore
             Image: require('Ressources/items/chests/rare.png'),
-            Price: 240,
+            PriceOriginal: this.props.targetChestsStats.rare.priceOriginal,
+            PriceDiscount: this.props.targetChestsStats.rare.priceDiscount,
             Rarity: 1,
             Colors: themeManager.GetRariryColors(1),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
@@ -77,8 +87,10 @@ class BackShopItems extends React.Component {
             ID: 3,
             Name: langManager.curr['shop']['targetedChests']['targets']['hair'],
             Slot: 'hair',
+            // @ts-ignore
             Image: require('Ressources/items/chests/epic.png'),
-            Price: 600,
+            PriceOriginal: this.props.targetChestsStats.epic.priceOriginal,
+            PriceDiscount: this.props.targetChestsStats.epic.priceDiscount,
             Rarity: 2,
             Colors: themeManager.GetRariryColors(2),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
@@ -103,5 +115,8 @@ class BackShopItems extends React.Component {
         user.interface.popup.Open('custom', render);
     }
 }
+
+BackShopItems.defaultProps = BackShopItemsProps;
+BackShopItems.prototype.props = BackShopItemsProps;
 
 export default BackShopItems;

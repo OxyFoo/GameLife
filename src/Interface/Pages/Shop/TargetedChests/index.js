@@ -112,11 +112,11 @@ class ShopItems extends BackShopItems {
     /** @param {BuyableTargetedChest} item */
     renderPrice = (item) => {
         // Default price
-        if (user.shop.priceFactor === 1) {
+        if (item.PriceDiscount < 0) {
             return (
                 <View style={styles.itemPrice}>
                     <Text style={styles.itemPriceOx}>
-                        {item.Price.toString()}
+                        {item.PriceOriginal.toString()}
                     </Text>
                     <Image style={styles.itemOxImage} source={IMG_OX} />
                 </View>
@@ -128,10 +128,10 @@ class ShopItems extends BackShopItems {
             <View style={styles.itemPrice}>
                 <View>
                     <Text style={styles.itemPriceOxEditedOld}>
-                        {item.Price.toString()}
+                        {item.PriceOriginal.toString()}
                     </Text>
                     <Text style={styles.itemPriceOxEditedNew}>
-                        {Math.round(item.Price * user.shop.priceFactor).toString()}
+                        {item.PriceDiscount.toString()}
                     </Text>
                 </View>
                 <Image style={styles.itemOxImageEdited} source={IMG_OX} />

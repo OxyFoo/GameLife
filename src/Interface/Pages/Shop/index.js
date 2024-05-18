@@ -19,10 +19,18 @@ import StartHelp from './help';
 
 class Shop extends BackShop {
     render() {
+        const {
+            dailyItemsID,
+            randomChestsStats,
+            targetChestsStats
+        } = this.state;
+
         if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.com') {
             return this.renderForTesters();
         } else if (!user.server.IsConnected(false)) {
             return this.renderNoInternet();
+        } else if (!this.state.loaded) {
+            return this.renderLoading();
         }
 
         const lang = langManager.curr['shop'];
@@ -45,19 +53,40 @@ class Shop extends BackShop {
                 <Text style={styles.title2} color='secondary'>{lang['banner-header-refonte']}</Text>
 
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
-                <ShopDailyDeals ref={this.refDailyDeals} />
+                <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
 
                 <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />
 
-                <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
-                <ShopRandomChests ref={this.refRandomChests} />
+                {randomChestsStats !== null && (
+                    <>
+                        <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
+                        <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} />
+                    </>
+                )}
 
-                <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
-                <ShopTargetedChests ref={this.refTargetedChests} />
+                {targetChestsStats !== null && (
+                    <>
+                        <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
+                        <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} />
+                    </>
+                )}
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
                 <ShopDyes ref={this.refDyes} />
+            </Page>
+        );
+    }
+
+    renderLoading = () => {
+        return (
+            <Page
+                ref={this.setRef}
+                style={styles.pageFill}
+                isHomePage
+                canScrollOver
+            >
+                <Text>Loading...</Text>
             </Page>
         );
     }
@@ -107,6 +136,10 @@ class Shop extends BackShop {
 const styles = StyleSheet.create({
     page: {
         paddingHorizontal: 0
+    },
+    pageFill: {
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     shopHeader: {
         marginBottom: 12

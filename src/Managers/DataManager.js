@@ -1,5 +1,3 @@
-import langManager from 'Managers/LangManager';
-
 import { Request_Async } from 'Utils/Request';
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 

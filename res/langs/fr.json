@@ -903,29 +903,23 @@
     "daily-quest": {
         "container-title": "Quête du jour",
 
-        "tuto": {
-            "1": "Voici les quêtes journalières, fais l'activité imposée pour gagner des récompenses !",
-            "2": "Chaque jour une liste d'activité faite sur mesure pour toi est mise à ta disposition.",
-            "3": "Choisi une activité parmis celles proposées et fais là pendant 15 minutes pour valider ta quête.",
-            "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
-        }
-    },
+        "label-time": "{0}/{1} min",
+        "label-reroll": "{0}/{1}",
+        "label-finished": "Quête du jour réalisée, bravo !",
 
-    "nonzerodays": {
-        "container-title": "Jours non zéro",
-        "container-date": "Récompenses du {}",
-        "claim": "Claim",
-        "claim-in": "Claim dans {}",
-        "claim-all": "Tout claim",
-        "no-claim": "Pas de claim",
+        "popup": {
+            "list-date": "Récompenses du {}",
+            "claim": "Claim",
+            "claim-all": "Tout claim"
+        },
 
         "alert-claim-error-title": "Erreur",
         "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard.",
 
-        "tuto": {
-            "1": "Ici, c'est les 'Jours non zéro' (inspiré du Non Zero Days), la chaîne de connexion en gros.",
-            "2": "Le fonctionnement est simple, chaque jour, tu dois faire au moins une activité qui rapporte de l'xp.",
-            "3": "Tu pourras alors récuperer ta récompense le lendemain, et ainsi de suite.",
+        "help": {
+            "1": "Voici les quêtes journalières, fais l'activité imposée pour gagner des récompenses !",
+            "2": "Chaque jour une liste d'activité faite sur mesure pour toi est mise à ta disposition.",
+            "3": "Choisi une activité parmis celles proposées et fais là pendant 15 minutes pour valider ta quête.",
             "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
         }
     },

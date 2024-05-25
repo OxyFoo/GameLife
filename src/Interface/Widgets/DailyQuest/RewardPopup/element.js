@@ -8,27 +8,28 @@ import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
+import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
+
 import { Text, Icon, Button } from 'Interface/Components';
 import { GetTimeToTomorrow, TimeToFormatString } from 'Utils/Time';
-import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Ressources/items/quests/NonZeroDay').NonZeroDayRewardType} NonZeroDayRewardType
+ * @typedef {import('Ressources/items/quests/DailyQuest').DailyQuestRewardType} DailyQuestRewardType
  */
 
 /**
  * @param {Object} props
  * @param {StyleProp} [props.style] Style of the container
  * @param {number} props.index Selected day
- * @param {number} props.claimIndex Index of the claim in the nonzeroquests.claimsList
+ * @param {number} props.claimIndex Index of the claim in the dailyquest.claimsList
  * @param {(index: number) => void} [props.handleClaim] Function called when the user press the button
  * @returns {JSX.Element}
  */
 const RenderItem = (props) => {
-    const lang = langManager.curr['nonzerodays'];
+    const lang = langManager.curr['daily-quest'];
     const langD = langManager.curr['dates']['names'];
     const [ loading, setLoading ] = React.useState(false);
 
@@ -47,25 +48,22 @@ const RenderItem = (props) => {
         borderWidth: 1.5
     };
 
-    let timeToTomorrow;
-    /** @type {'not-claimed' | 'claiming' | 'claim-in' | 'claimed'} */
-    let status = 'not-claimed';
+    /** @type {'none' | 'not-claimed' | 'claiming' | 'claimed'} */
+    let status = 'none';
+    let timeToTomorrowText = '';
 
     if (props.claimIndex !== -1) {
-        const allClaimLists = user.quests.nonzerodays.claimsList.Get();
+        const allClaimLists = user.quests.dailyquest.claimsList.Get();
         const claimList = allClaimLists[props.claimIndex];
-        const isCurrent = user.quests.nonzerodays.IsCurrentList(claimList);
 
         if (claimList.claimed.includes(currentDay) || loading) {
             status = 'claimed';
         } else if (currentDay <= claimList.daysCount) {
             status = 'claiming';
-        } else if (isCurrent && claimList.daysCount - currentDay === -1) {
-            status = 'claim-in';
-            timeToTomorrow = TimeToFormatString(GetTimeToTomorrow());
-        } else if (isCurrent && claimList.daysCount - currentDay === -2) {
-            status = 'claim-in';
-            timeToTomorrow = '1' + langD['day-min'] + ' ' + TimeToFormatString(GetTimeToTomorrow());
+        } else if (currentDay === claimList.daysCount) {
+            status = 'not-claimed';
+            timeToTomorrowText = '1' + langD['day-min'] + ' ' +
+                TimeToFormatString(GetTimeToTomorrow());
         }
     }
 
@@ -77,8 +75,8 @@ const RenderItem = (props) => {
         if (loading || props.claimIndex === -1) return;
 
         setLoading(true);
-        const claimList = user.quests.nonzerodays.claimsList.Get()[props.claimIndex];
-        const result = await user.quests.nonzerodays.ClaimReward(claimList.start, [ props.index ]);
+        const claimList = user.quests.dailyquest.claimsList.Get()[props.claimIndex];
+        const result = await user.quests.dailyquest.ClaimReward(claimList.start, [ props.index ]);
         setLoading(false);
 
         if (result === 'error') {
@@ -97,30 +95,32 @@ const RenderItem = (props) => {
                 <Text style={styles.itemDay}>{textToday}</Text>
 
                 {
-                    NONZERODAYS_REWARDS[props.index].map((reward, index) => (
-                        RenderReward({ item: reward, index })
+                    DAILY_QUEST_REWARDS[props.index].map((reward, index) => (
+                        <RenderReward
+                            key={`dailyquest-reward-${index}`}
+                            item={reward}
+                        />
                     ))
                 }
             </View>
 
             <View style={styles.claimState}>
+                {status === 'not-claimed' && (
+                    <Button
+                        style={[styles.claimButton, styleBorder]}
+                        color='transparent'
+                        onPress={handleEvent}
+                    >
+                        {timeToTomorrowText}
+                    </Button>
+                )}
                 {status === 'claiming' && (
                     <Button
                         style={[styles.claimButton, styleBorder]}
                         color='transparent'
                         onPress={handleEvent}
                     >
-                        {lang['claim']}
-                    </Button>
-                )}
-                {status === 'claim-in' && (
-                    <Button
-                        style={styles.claimButton}
-                        fontSize={12}
-                        color='transparent'
-                        colorText='primary'
-                    >
-                        {lang['claim-in'].replace('{}', timeToTomorrow)}
+                        {lang['popup']['claim']}
                     </Button>
                 )}
                 {status === 'claimed' && (
@@ -141,7 +141,7 @@ const RenderItemMemo = React.memo(RenderItem, (prevProps, nextProps) => {
     return true;
 });
 
-/** @param {{ item: NonZeroDayRewardType, index: number }} props */
+/** @param {{ item: DailyQuestRewardType }} props */
 function RenderReward(props) {
     const styleReward = {
         ...styles.rewardItem,
@@ -150,7 +150,7 @@ function RenderReward(props) {
 
     if (props.item.type === 'ox') {
         return (
-            <View key={`nzd-reward-${props.index}`} style={styleReward}>
+            <View style={styleReward}>
                 <Image
                     style={styles.rewardImage}
                     source={IMG_OX}
@@ -164,7 +164,7 @@ function RenderReward(props) {
 
     else if (props.item.type === 'chest') {
         return (
-            <View key={`nzd-reward-${props.index}`} style={styleReward}>
+            <View style={styleReward}>
                 <Image
                     style={styles.rewardImage}
                     source={IMG_CHESTS[props.item.value]}

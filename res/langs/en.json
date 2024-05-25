@@ -903,30 +903,24 @@
     "daily-quest": {
         "container-title": "Quest of the day",
 
-        "tuto": {
-            "1": "Here are the daily quests, complete the required activity to earn rewards!",
-            "2": "Every day a list of activities tailored for you is made available.",
-            "3": "Choose an activity from the list and complete it for 15 minutes to validate your quest.",
-            "4": "If you want to see a list of all possible rewards, click on the arrow here!"
-        }
-    },
+        "label-time": "{0}/{1} min",
+        "label-reroll": "{0}/{1}",
+        "label-finished": "Quest for the day made, well done!",
 
-    "nonzerodays": {
-        "container-title": "Non Zero Days",
-        "container-date": "Rewards from {}",
-        "claim": "Claim",
-        "claim-in": "Claim in {}",
-        "claim-all": "Claim all",
-        "no-claim": "No claim available",
+        "popup": {
+            "list-date": "Rewards from {}",
+            "claim": "Claim",
+            "claim-all": "Claim all"
+        },
 
         "alert-claim-error-title": "Error",
         "alert-claim-error-text": "An error has occurred, please try again later.",
 
-        "tuto": {
-            "1": "Here, it's the 'Non Zero Days' (inspired by Ryan from Reddit), the activity streak basically.",
-            "2": "The way it works is simple, every day you have to do at least one activity that earns you xp.",
-            "3": "You can then collect your reward the day after, and so on.",
-            "4": "If you want to see a list of all the possible rewards, you can click on the arrow right here!"
+        "help": {
+            "1": "Here are the daily quests, complete the required activity to earn rewards!",
+            "2": "Every day a list of activities tailored for you is made available.",
+            "3": "Choose an activity from the list and complete it for 15 minutes to validate your quest.",
+            "4": "If you want to see a list of all possible rewards, click on the arrow here!"
         }
     },
 

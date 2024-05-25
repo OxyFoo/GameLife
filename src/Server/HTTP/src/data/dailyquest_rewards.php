@@ -1,6 +1,6 @@
 <?php
 
-class NZDReward {
+class DailyQuestReward {
     /** @var 'ox'|'chest' */
     public $type = 'ox';
 
@@ -10,10 +10,10 @@ class NZDReward {
 
 /**
  * /!\ Warning: This is not linked to the client side \
- * Client side data are in `res/items/quests/NonZeroDays.js`
- * @var NZDReward[][] $NONZERODAYS_REWARDS
+ * Client side data are in `res/items/quests/DailyQuest.js`
+ * @var DailyQuestReward[][] $DAILY_QUEST_REWARDS
  */
-$NONZERODAYS_REWARDS = array(
+$DAILY_QUEST_REWARDS = array(
     [array( 'type' => 'ox', 'value' => 1 )],
     [array( 'type' => 'ox', 'value' => 1 )],
     [array( 'type' => 'ox', 'value' => 1 )],

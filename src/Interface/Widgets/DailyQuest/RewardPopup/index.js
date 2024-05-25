@@ -8,32 +8,31 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import NONZERODAYS_REWARDS from 'Ressources/items/quests/NonZeroDay';
+import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
 import { Button, Text } from 'Interface/Components';
-import { GetDate } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 
 function RenderPopup(props) {
-    const lang = langManager.curr['nonzerodays'];
+    const lang = langManager.curr['daily-quest'];
     const stylePopup = {
         backgroundColor: themeManager.GetColor('background')
     };
 
-    const claimsList = user.quests.nonzerodays.claimsList.Get();
-    const [ claimIndex, setClaimIndex ] = React.useState(user.quests.nonzerodays.GetCurrentClaimIndex());
+    const claimsList = user.quests.dailyquest.claimsList.Get();
+    const [ claimIndex, setClaimIndex ] = React.useState(user.quests.dailyquest.GetCurrentClaimIndex());
     const [ claimCount, setClaimCount ] = React.useState(0);
 
     let timeout;
     React.useEffect(() => {
-        const listener = user.quests.nonzerodays.claimsList.AddListener((claimsList) => {
+        const listener = user.quests.dailyquest.claimsList.AddListener((claimsList) => {
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
-                setClaimIndex(user.quests.nonzerodays.GetCurrentClaimIndex());
+                setClaimIndex(user.quests.dailyquest.GetCurrentClaimIndex());
             }, 1000);
         });
 
         return () => {
-            user.quests.nonzerodays.claimsList.RemoveListener(listener);
+            user.quests.dailyquest.claimsList.RemoveListener(listener);
         }
     }, []);
 
@@ -49,9 +48,9 @@ function RenderPopup(props) {
     let isCurrentStreak = false;
     if (claimsList.length > 0) {
         const currentClaimList = claimsList[claimIndex];
-        isCurrentStreak = user.quests.nonzerodays.IsCurrentList(currentClaimList);
+        isCurrentStreak = user.quests.dailyquest.IsCurrentList(currentClaimList);
         if (!isCurrentStreak) {
-            claimDate = DateToFormatString(GetDate(currentClaimList.start));
+            claimDate = DateToFormatString(new Date(currentClaimList.start));
         }
     }
 
@@ -70,12 +69,12 @@ function RenderPopup(props) {
 
             {claimIndex !== -1 && !isCurrentStreak && (
                 <Text style={styles.popupText}>
-                    {lang['container-date'].replace('{}', claimDate)}
+                    {lang['popup']['list-date'].replace('{}', claimDate)}
                 </Text>
             )}
 
             <FlatList
-                data={NONZERODAYS_REWARDS}
+                data={DAILY_QUEST_REWARDS}
                 keyExtractor={(item, index) => index.toString()}
                 initialNumToRender={10}
                 renderItem={(props) => (
@@ -102,9 +101,9 @@ function RenderPopup(props) {
                         style={styles.claimAllButton}
                         color='background'
                         rippleColor='white'
-                        onPress={user.quests.nonzerodays.ClaimAll}
+                        onPress={user.quests.dailyquest.ClaimAll}
                     >
-                        {lang['claim-all']}
+                        {lang['popup']['claim-all']}
                     </Button>
                 </View>
             )}

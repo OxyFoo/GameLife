@@ -1,16 +1,20 @@
 import React from 'react';
-import { View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import StartHelp from './help';
 import DailyQuestBack from './back';
+import { RenderItemMemo } from './RewardPopup/element';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { SimpleContainer, Text, Button, Icon } from 'Interface/Components';
+import { SimpleContainer, Text, Button, Icon, XPBar } from 'Interface/Components';
 
 /**
+ * @typedef {import('react-native').ListRenderItem<string>} ListRenderItemString
+ * 
  * @typedef {import('Class/Shop').Icons} Icons
  */
 
@@ -18,7 +22,7 @@ class DailyQuest extends DailyQuestBack {
     render() {
         return (
             <SimpleContainer
-                ref={ref => this.refContainer = ref}
+                ref={this.refContainer}
                 style={this.props.style}
             >
                 <SimpleContainer.Header>
@@ -41,10 +45,10 @@ class DailyQuest extends DailyQuestBack {
 
         return (
             <LinearGradient
-                colors={titleColors}
-                start={{ x: 0, y: -2 }}
-                end={{ x: 1, y: 2 }}
                 style={styles.headerStyle}
+                colors={titleColors}
+                start={this.gradientPos1}
+                end={this.gradientPos2}
             >
                 <View style={styles.buttonInfo}>
                     <Button
@@ -64,8 +68,9 @@ class DailyQuest extends DailyQuestBack {
 
                 {icon !== null && (
                     <Button
-                        ref={ref => this.refOpenStreakPopup = ref}
+                        ref={this.refOpenStreakPopup}
                         style={styles.headerButtonRight}
+                        onPress={this.openRewardPopup}
                     >
                         <Icon
                             containerStyle={styles.iconStaticHeader}
@@ -80,24 +85,100 @@ class DailyQuest extends DailyQuestBack {
     }
 
     renderBody = () => {
-        const lang = langManager.curr['nonzerodays'];
-        const { selectedSkill } = this.state;
+        const lang = langManager.curr['daily-quest'];
+        const {
+            selectedSkillsID,
+            refreshesRemaining,
+            progression
+        } = this.state.dailyQuest;
 
-        if (selectedSkill === null) return null;
+        const REFRESH_PER_DAY = user.quests.dailyquest.config.refresh_count_per_day;
+        const ACTIVITY_MINUTES_PER_DAY = user.quests.dailyquest.config.activity_minutes_per_day;
 
-        const skillName = langManager.GetText(
-            dataManager.skills.GetByID(selectedSkill).Name
+        // Daily quest is finished
+        if (progression >= ACTIVITY_MINUTES_PER_DAY) {
+            let claimDay = 0;
+
+            const claimIndex = user.quests.dailyquest.GetCurrentClaimIndex();
+            const claimLists = user.quests.dailyquest.claimsList.Get();
+            const claimList = claimLists[claimIndex];
+            if (claimIndex !== -1) {
+                for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
+                    if (!claimList.claimed.includes(claimDay + 1)) break;
+                }
+            }
+
+            return (
+                <View style={styles.viewFinished}>
+                    <Text>{lang['label-finished']}</Text>
+                    <RenderItemMemo
+                        style={styles.dailyFinished}
+                        index={claimDay}
+                        claimIndex={claimIndex}
+                    />
+                </View>
+            );
+        }
+
+        const skillsNames = selectedSkillsID.map(ID =>
+            langManager.GetText(
+                dataManager.skills.GetByID(ID).Name
+            )
         );
+
+        const titleTime = lang['label-time']
+            .replace('{0}', progression.toString())
+            .replace('{1}', ACTIVITY_MINUTES_PER_DAY.toString());
+        const titleReroll = lang['label-reroll']
+            .replace('{0}', refreshesRemaining.toString())
+            .replace('{1}', REFRESH_PER_DAY.toString());
 
         return (
             <View>
-                <Text>[Activité à faire aujourd'hui, 1h parmis:]</Text>
-                <Text style={styles.itemSkill}>
-                    {`- ${skillName}`}
-                </Text>
-                <Button onPress={this.update}>
-                    [Refresh]
-                </Button>
+                <View style={styles.viewTitle}>
+                    <View style={styles.columnTitle}>
+                        <Icon icon='alarmClock' size={20} />
+                        <Text style={styles.title}>{titleTime}</Text>
+                    </View>
+                    <View style={styles.columnTitle}>
+                        <Text style={styles.title}>{titleReroll}</Text>
+                        <Icon
+                            icon='retry'
+                            size={18}
+                            color={refreshesRemaining > 0 ? 'primary' : 'secondary'}
+                        />
+                    </View>
+                </View>
+                <View style={styles.viewProgression}>
+                    <XPBar
+                        style={styles.progressBar}
+                        value={progression}
+                        maxValue={ACTIVITY_MINUTES_PER_DAY}
+                    />
+                </View>
+                <View style={styles.skillsItems}>
+                    <FlatList
+                        data={skillsNames}
+                        renderItem={this.renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+            </View>
+        );
+    }
+
+    /** @type {ListRenderItemString} */
+    renderItem = ({ item, index }) => {
+        return (
+            <View style={styles.skillItem}>
+                <Text>{item}</Text>
+                <Button
+                    style={styles.skillButton}
+                    icon='retry'
+                    iconSize={18}
+                    onPress={() => user.quests.dailyquest.RefreshSkillSelection(index)}
+                    enabled={this.state.dailyQuest.refreshesRemaining > 0}
+                />
             </View>
         );
     }

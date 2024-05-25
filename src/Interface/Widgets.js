@@ -11,7 +11,6 @@ import Missions from './Widgets/Missions';
 import MultiplayerPanel from './Widgets/MultiplayerPanel';
 import MyQuestsList from './Widgets/MyQuestsList';
 import News from './Widgets/News';
-import NonZeroDay from './Widgets/NonZeroDay';
 import NotificationsInApp from './Widgets/NotificationsInApp/notifs';
 import NotificationsInAppButton from './Widgets/NotificationsInApp';
 import PageHeader from './Widgets/PageHeader';
@@ -43,7 +42,6 @@ export {
     MultiplayerPanel,
     MyQuestsList,
     News,
-    NonZeroDay,
     NotificationsInApp,
     NotificationsInAppButton,
     PageHeader,

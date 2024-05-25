@@ -12,7 +12,7 @@
  *  'buyTargetedChest' |
  *  'buyDye' |
  *  'sellStuff' |
- *  'claimNZD' |
+ *  'claimDailyQuest' |
  *  'myQuestArchive' |
  *  'friend-request' |
  *  'friend-removed' |

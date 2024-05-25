@@ -1,9 +1,7 @@
 import * as React from 'react';
 
+import RenderPopup from './RewardPopup';
 import user from 'Managers/UserManager';
-import dataManager from 'Managers/DataManager';
-
-import { Random } from 'Utils/Functions';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -20,60 +18,38 @@ const DailyQuestProps = {
 
 class DailyQuestBack extends React.Component {
     state = {
-        /** @type {number | null} */
-        selectedSkill: null
+        dailyQuest: user.quests.dailyquest.today.Get()
     }
 
     /** @type {Symbol | null} */
     dailyQuestListener = null;
 
-    /** @type {SimpleContainer | null} */
-    refContainer = null;
+    /** @type {React.RefObject<SimpleContainer>} */
+    refContainer = React.createRef();
 
-    /** @type {Button | null} */
-    refOpenStreakPopup = null;
+    /** @type {React.RefObject<Button>} */
+    refOpenStreakPopup = React.createRef();
+
+    gradientPos1 = { x: 0, y: -2 };
+    gradientPos2 = { x: 1, y: 2 };
 
     componentDidMount() {
         this.update();
-        this.dailyQuestListener = user.quests.nonzerodays.claimsList.AddListener(this.update);
+        this.dailyQuestListener = user.quests.dailyquest.today.AddListener(this.update);
     }
 
     componentWillUnmount() {
-        user.quests.nonzerodays.claimsList.RemoveListener(this.dailyQuestListener);
+        user.quests.dailyquest.today.RemoveListener(this.dailyQuestListener);
     }
 
     update = () => {
-        const worstStats = user.statsKey
-            .map(key => ({ key, value: user.stats[key] }))
-            .sort((a, b) => a.value.totalXP - b.value.totalXP)
-            .slice(0, 3);
-
-        const totalSkills = 50;
-        const selectedSkill = dataManager
-            .skills.Get()
-            .filter(skill => skill.XP > 0)
-            .sort((skillA, skillB) => {
-                const aStats = worstStats
-                    .map(stat => skillA.Stats[stat.key])
-                    .reduce((a, b) => a + b, 0);
-                const bStats = worstStats
-                    .map(stat => skillB.Stats[stat.key])
-                    .reduce((a, b) => a + b, 0);
-                return bStats - aStats;
-            })
-            .map(skill => ({
-                ID: skill.ID,
-                name: skill.Name.fr,
-                value: worstStats
-                    .map(s => skill.Stats[s.key])
-                    .reduce((a, b) => a + b, 0)
-            }))
-            .slice(0, totalSkills)
-            .sort(() => Random(-1, 1, 2));
-
         this.setState({
-            selectedSkill: selectedSkill.at(0).ID
+            dailyQuest: user.quests.dailyquest.today.Get()
         });
+    }
+
+    openRewardPopup = () => {
+        user.interface.popup.Open('custom', RenderPopup, undefined, true, false);
     }
 }
 

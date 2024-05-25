@@ -11,12 +11,12 @@ require('./src/classes/device.php');
 
 require('./src/data/IAP.php');
 require('./src/data/missions.php');
-require('./src/data/NZD_rewards.php');
+require('./src/data/dailyquest_rewards.php');
 
 require('./src/managers/items.php');
 require('./src/managers/missions.php');
 require('./src/managers/myquests.php');
-require('./src/managers/nonzerodays.php');
+require('./src/managers/dailyquest.php');
 require('./src/managers/shop.php');
 require('./src/managers/skills.php');
 require('./src/managers/todoes.php');
@@ -360,8 +360,8 @@ class Commands {
                     'data' => MyQuests::Get($this->db, $account),
                     'sort' => $account->QuestsSort
                 ),
-                'nonzerodays' => array(
-                    'data' => NonZeroDays::Get($this->db, $account)
+                'dailyquest' => array(
+                    'data' => DailyQuest::Get($this->db, $account)
                 )
             );
             $userData['todoes'] = array(
@@ -592,12 +592,12 @@ class Commands {
         $this->output['status'] = 'ok';
     }
 
-    public function ClaimNonZeroDays() {
+    public function ClaimDailyQuest() {
         $claimListStart = $this->data['claimListStart'];
         $dayIndexes = $this->data['dayIndexes'];
         if (!isset($claimListStart, $dayIndexes) || !$this->tokenChecked) return;
 
-        $newItems = NonZeroDays::ClaimRewards(
+        $newItems = DailyQuest::ClaimRewards(
             $this->db,
             $this->account,
             $this->device,

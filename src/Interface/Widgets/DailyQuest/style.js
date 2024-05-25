@@ -39,10 +39,61 @@ const styles = StyleSheet.create({
     containerItem: {
         padding: 8
     },
-    itemSkill: {
-        marginLeft: 48,
-        textAlign: 'left'
-    }
+    viewTitle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 12,
+        paddingHorizontal: 12
+    },
+    columnTitle: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    title: {
+        marginHorizontal: 8,
+        fontSize: 14
+    },
+
+    viewProgression: {
+        paddingHorizontal: 12
+    },
+    progressBar: {
+        marginTop: 10
+    },
+
+    skillsItems: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 12
+    },
+    skillItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 12
+    },
+    skillButton: {
+        height: 'auto',
+        paddingVertical: 10,
+        marginVertical: 2,
+        paddingHorizontal: 12
+    },
+
+    viewFinished: {
+        marginVertical: 6
+    },
+    dailyFinished: {
+        marginTop: 12,
+        marginLeft: 12,
+        marginRight: 12
+    },
+    buttonClaim: {
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        marginHorizontal: 4
+    },
 });
 
 export default styles;

@@ -7,7 +7,6 @@ import { MinMax } from 'Utils/Functions';
 import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
 /**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */

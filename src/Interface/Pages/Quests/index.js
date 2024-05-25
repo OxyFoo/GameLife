@@ -4,7 +4,7 @@ import styles from './style';
 import BackQuests from './back';
 
 import { Page } from 'Interface/Components';
-import { NonZeroDay, MyQuestsList, TodoList, DailyQuest } from 'Interface/Widgets';
+import { MyQuestsList, TodoList, DailyQuest } from 'Interface/Widgets';
 
 class Quests extends BackQuests {
     render() {
@@ -15,10 +15,20 @@ class Quests extends BackQuests {
                 isHomePage
                 canScrollOver
             >
-                <DailyQuest style={styles.quest} />
-                <NonZeroDay ref={this.refNonZeroDay} style={styles.quest} />
-                <MyQuestsList ref={this.refMyQuestsList} style={styles.quest} />
-                <TodoList ref={this.refTodoList} style={styles.quest} />
+                <DailyQuest
+                    ref={this.refDailyQuest}
+                    style={styles.quest}
+                />
+
+                <MyQuestsList
+                    ref={this.refMyQuestsList}
+                    style={styles.quest}
+                />
+
+                <TodoList
+                    ref={this.refTodoList}
+                    style={styles.quest}
+                />
             </Page>
         );
     }

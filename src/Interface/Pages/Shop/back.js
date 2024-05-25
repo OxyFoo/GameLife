@@ -57,22 +57,26 @@ class BackShop extends PageBase {
         super.componentDidMount();
 
         this.componentDidFocused(this.props);
-        user.server.GetShopContent().then((shopInfo) => {
-            this.setState({
-                loaded: true,
-                dailyItemsID: shopInfo.dailyDeals,
-                randomChestsStats: {
-                    common: shopInfo.chestsStats.random.common,
-                    rare: shopInfo.chestsStats.random.rare,
-                    epic: shopInfo.chestsStats.random.epic
-                },
-                targetChestsStats: {
-                    common: shopInfo.chestsStats.target.common,
-                    rare: shopInfo.chestsStats.target.rare,
-                    epic: shopInfo.chestsStats.target.epic
-                }
+        user.server.GetShopContent()
+            .then((shopInfo) => {
+                this.setState({
+                    loaded: true,
+                    dailyItemsID: shopInfo.dailyDeals,
+                    randomChestsStats: {
+                        common: shopInfo.chestsStats.random.common,
+                        rare: shopInfo.chestsStats.random.rare,
+                        epic: shopInfo.chestsStats.random.epic
+                    },
+                    targetChestsStats: {
+                        common: shopInfo.chestsStats.target.common,
+                        rare: shopInfo.chestsStats.target.rare,
+                        epic: shopInfo.chestsStats.target.epic
+                    }
+                });
+            })
+            .catch((error) => {
+                user.interface.console.AddLog('error', '[Shop] Failed to load shop content', error);
             });
-        });
     }
 
     componentDidFocused = (args) => {

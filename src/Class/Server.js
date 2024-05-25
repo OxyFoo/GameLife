@@ -354,7 +354,8 @@ class Server {
      * @property {Chest} chestsStats.target.rare
      * @property {Chest} chestsStats.target.epic
      * @property {Chest} chestsStats.target.legendary
-     * @returns {Promise<ReturnShopContent | null>} Return array of item ID
+     * @returns {Promise<ReturnShopContent>} Return array of item ID
+     * @throws {Error} Request failed
      */
     async GetShopContent() {
         const _data = {
@@ -362,10 +363,14 @@ class Server {
         };
 
         const response = await this.Request('getDailyDeals', _data);
-        if (response === null) return null;
+        if (response === null) {
+            throw new Error('Request failed');
+        };
 
         const status = response['status'];
-        if (status !== 'ok') return null;
+        if (status !== 'ok') {
+            throw new Error('Request failed');
+        };
 
         return response;
     }

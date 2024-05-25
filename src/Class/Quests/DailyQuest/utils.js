@@ -14,19 +14,33 @@ import { GetGlobalTime, GetMidnightTime } from 'Utils/Time';
  * @type {GetActivitiesIdOfDayType}
  */
 function GetActivitiesIdOfDay(preSelectionCount, worstStatsQuantity) {
-    const worstStats = this.user.statsKey
-        .map(key => ({ key, value: this.user.stats[key] }))
-        .sort((a, b) => a.value.totalXP - b.value.totalXP)
-        .slice(0, worstStatsQuantity);
+    const currentDay = (new Date()).getDay();
+    let selectedStats = [];
+
+    // During week: we select the worst stats
+    if (currentDay >= 1 && currentDay <= 5) {
+        selectedStats = this.user.statsKey
+            .map(key => ({ key, value: this.user.stats[key] }))
+            .sort((a, b) => a.value.totalXP - b.value.totalXP)
+            .slice(0, worstStatsQuantity);
+    }
+
+    // During the weekend: we select the best stats
+    else {
+        selectedStats = this.user.statsKey
+            .map(key => ({ key, value: this.user.stats[key] }))
+            .sort((a, b) => b.value.totalXP - a.value.totalXP)
+            .slice(0, worstStatsQuantity);
+    }
 
     const preSelectedSkillsIDs = dataManager
         .skills.Get()
         .filter(skill => skill.XP > 0)
         .sort((skillA, skillB) => {
-            const aStats = worstStats
+            const aStats = selectedStats
                 .map(stat => skillA.Stats[stat.key])
                 .reduce((a, b) => a + b, 0);
-            const bStats = worstStats
+            const bStats = selectedStats
                 .map(stat => skillB.Stats[stat.key])
                 .reduce((a, b) => a + b, 0);
             return bStats - aStats;
@@ -34,7 +48,7 @@ function GetActivitiesIdOfDay(preSelectionCount, worstStatsQuantity) {
         .map(skill => ({
             ID: skill.ID,
             name: skill.Name.fr,
-            value: worstStats
+            value: selectedStats
                 .map(s => skill.Stats[s.key])
                 .reduce((a, b) => a + b, 0)
         }))

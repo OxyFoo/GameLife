@@ -86,6 +86,7 @@ class DailyQuest extends DailyQuestBack {
 
     renderBody = () => {
         const lang = langManager.curr['daily-quest'];
+        const { claimIndex, claimDay, claimDate } = this.state;
         const {
             selectedSkillsID,
             refreshesRemaining,
@@ -97,19 +98,15 @@ class DailyQuest extends DailyQuestBack {
 
         // Daily quest is finished
         if (progression >= ACTIVITY_MINUTES_PER_DAY) {
-            let claimDay = 0;
-
-            const claimIndex = user.quests.dailyquest.GetCurrentClaimIndex();
-            const claimLists = user.quests.dailyquest.claimsList.Get();
-            const claimList = claimLists[claimIndex];
-            if (claimIndex !== -1) {
-                for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
-                    if (!claimList.claimed.includes(claimDay + 1)) break;
-                }
-            }
-
             return (
                 <View style={styles.viewFinished}>
+                    {/* Claim date if not last streak */}
+                    {claimDate !== null && (
+                        <Text style={styles.containerDateText}>
+                            {lang['container-date'].replace('{}', claimDate)}
+                        </Text>
+                    )}
+
                     <Text>{lang['label-finished']}</Text>
                     <RenderItemMemo
                         style={styles.dailyFinished}

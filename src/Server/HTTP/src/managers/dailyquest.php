@@ -21,7 +21,7 @@ class DailyQuest
         $dq = array();
         for ($i = 0; $i < count($rows); $i++) {
             $newQuest = array(
-                'start' => intval($rows[$i]['Start']),
+                'start' => $rows[$i]['Start'],
                 'daysCount' => intval($rows[$i]['DaysCount']),
                 'claimed' => json_decode($rows[$i]['Claimed'], true)
             );

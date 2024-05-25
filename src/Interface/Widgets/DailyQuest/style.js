@@ -94,6 +94,10 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         marginHorizontal: 4
     },
+    containerDateText: {
+        marginBottom: 12,
+        fontSize: 14
+    }
 });
 
 export default styles;

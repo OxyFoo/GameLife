@@ -48,7 +48,7 @@ const RenderItem = (props) => {
         borderWidth: 1.5
     };
 
-    /** @type {'none' | 'not-claimed' | 'claiming' | 'claimed'} */
+    /** @type {'none' | 'loading' | 'not-claimed' | 'claiming' | 'claimed'} */
     let status = 'none';
     let timeToTomorrowText = '';
 
@@ -56,7 +56,9 @@ const RenderItem = (props) => {
         const allClaimLists = user.quests.dailyquest.claimsList.Get();
         const claimList = allClaimLists[props.claimIndex];
 
-        if (claimList.claimed.includes(currentDay) || loading) {
+        if (loading) {
+            status = 'loading';
+        } else if (claimList.claimed.includes(currentDay)) {
             status = 'claimed';
         } else if (currentDay <= claimList.daysCount) {
             status = 'claiming';
@@ -114,11 +116,12 @@ const RenderItem = (props) => {
                         {timeToTomorrowText}
                     </Button>
                 )}
-                {status === 'claiming' && (
+                {(status === 'claiming' || status === 'loading') && (
                     <Button
                         style={[styles.claimButton, styleBorder]}
                         color='transparent'
                         onPress={handleEvent}
+                        loading={loading}
                     >
                         {lang['popup']['claim']}
                     </Button>

@@ -72,32 +72,30 @@ function UpdateActivities(newRefreshQuantity = null) {
         return;
     }
 
-    // Update claim list
+    // Check if the last day is today
+    const claimList = this.GetCurrentList();
     const claimLists = this.claimsList.Get();
-    const claimIndex = this.GetCurrentClaimIndex();
+    const todayDateStr = DateFormat(new Date(), 'YYYY-MM-DD');
 
-    if (claimIndex === -1) {
+    if (claimList === null) {
         claimLists.push({
-            start: DateFormat(new Date(), 'YYYY-MM-DD'),
+            start: todayDateStr,
             daysCount: 1,
             claimed: []
         });
+        this.claimsList.Set(claimLists);
+        this.SAVED_claimsList = false;
     } else {
-        const lastDay = new Date(claimLists[claimIndex].start);
-        lastDay.setDate(lastDay.getDate() + claimLists[claimIndex].daysCount);
+        const lastDay = new Date(claimList.start + 'T00:00:00');
+        lastDay.setDate(lastDay.getDate() + claimList.daysCount);
+        const lastDayDateStr = DateFormat(lastDay, 'YYYY-MM-DD');
 
-        if (DateFormat(lastDay, 'YYYY-MM-DD') === DateFormat(new Date(), 'YYYY-MM-DD')) {
-            claimLists[claimIndex].daysCount++;
-        } else {
-            claimLists.push({
-                start: DateFormat(new Date(), 'YYYY-MM-DD'),
-                daysCount: 1,
-                claimed: []
-            });
+        if (lastDayDateStr === todayDateStr) {
+            claimList.daysCount++;
+            this.claimsList.Set(claimLists);
+            this.SAVED_claimsList = false;
         }
     }
-    this.claimsList.Set(claimLists);
-    this.SAVED_claimsList = false;
 }
 
 export { UpdateSetup, UpdateActivities };

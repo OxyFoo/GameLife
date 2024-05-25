@@ -906,6 +906,7 @@
         "label-time": "{0}/{1} min",
         "label-reroll": "{0}/{1}",
         "label-finished": "Quête du jour réalisée, bravo !",
+        "container-date": "Récompenses du {}",
 
         "popup": {
             "list-date": "Récompenses du {}",

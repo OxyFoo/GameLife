@@ -155,9 +155,26 @@ class DailyQuest {
 
     /** @param {ClaimType} claimList */
     IsCurrentList(claimList) {
-        const firstDay = new Date(claimList.start);
-        const currentDay = GetLocalTime(firstDay) + claimList.daysCount * DAY_TIME;
-        return currentDay > GetLocalTime();
+        const tmpDate = new Date(claimList.start);
+        const todayDateStr = DateFormat(new Date(), 'YYYY-MM-DD');
+
+        // Check if the last day is today
+        tmpDate.setDate(tmpDate.getDate() + claimList.daysCount);
+        const lastDateWithRewardStr = DateFormat(tmpDate, 'YYYY-MM-DD');
+        tmpDate.setDate(tmpDate.getDate() - 1);
+        const lastDate = DateFormat(tmpDate, 'YYYY-MM-DD');
+
+        return todayDateStr === lastDate || todayDateStr === lastDateWithRewardStr;
+    }
+
+    GetCurrentList = () => {
+        const claimLists = this.claimsList.Get();
+        if (claimLists.length === 0) return null;
+
+        const lastClaimList = claimLists[claimLists.length - 1];
+        if (!this.IsCurrentList(lastClaimList)) return null;
+
+        return lastClaimList;
     }
 
     /**

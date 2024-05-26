@@ -50,7 +50,7 @@ function RenderPopup(props) {
         const currentClaimList = claimsList[claimIndex];
         isCurrentStreak = user.quests.dailyquest.IsCurrentList(currentClaimList);
         if (!isCurrentStreak) {
-            claimDate = DateToFormatString(new Date(currentClaimList.start));
+            claimDate = DateToFormatString(new Date(currentClaimList.start + 'T00:00:00'));
         }
     }
 

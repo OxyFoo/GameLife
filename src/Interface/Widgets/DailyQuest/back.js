@@ -68,7 +68,7 @@ class DailyQuestBack extends React.Component {
                 if (!claimList.claimed.includes(claimDay + 1)) break;
             }
             if (!user.quests.dailyquest.IsCurrentList(claimList)) {
-                claimDate = DateFormat(new Date(claimList.start), 'DD/MM/YYYY');
+                claimDate = DateFormat(new Date(claimList.start + 'T00:00:00'), 'DD/MM/YYYY');
             }
         }
 

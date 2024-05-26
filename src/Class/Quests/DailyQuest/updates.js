@@ -77,7 +77,7 @@ function UpdateActivities(newRefreshQuantity = null) {
     const claimLists = this.claimsList.Get();
     const todayDateStr = DateFormat(new Date(), 'YYYY-MM-DD');
 
-    if (claimList === null) {
+    if (claimList === null || claimList.daysCount === 73) {
         claimLists.push({
             start: todayDateStr,
             daysCount: 1,

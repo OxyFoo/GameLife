@@ -11,7 +11,7 @@ import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
 
 import { Text, Icon, Button } from 'Interface/Components';
-import { GetTimeToTomorrow, TimeToFormatString } from 'Utils/Time';
+import { DateFormat } from 'Utils/Date';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -63,8 +63,20 @@ const RenderItem = (props) => {
         } else if (currentDay <= claimList.daysCount) {
             status = 'claiming';
         } else if (currentDay === claimList.daysCount + 1) {
-            status = 'claim-tomorrow';
-            timeToTomorrowText = lang['container-tomorrow'];
+            // Get today date
+            const tmpDateToday = new Date();
+            tmpDateToday.setDate(tmpDateToday.getDate() + 1);
+            const todayStr = DateFormat(tmpDateToday, 'YYYY-MM-DD');
+
+            // Get target date
+            const tmpDate = new Date(claimList.start + 'T00:00:00');
+            tmpDate.setDate(tmpDate.getDate() + claimList.daysCount);
+            const targetDate = DateFormat(tmpDate, 'YYYY-MM-DD');
+
+            if (todayStr === targetDate) {
+                status = 'claim-tomorrow';
+                timeToTomorrowText = lang['container-tomorrow'];
+            }
         }
     }
 

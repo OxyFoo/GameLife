@@ -155,7 +155,7 @@ class DailyQuest {
 
     /** @param {ClaimType} claimList */
     IsCurrentList(claimList) {
-        const tmpDate = new Date(claimList.start);
+        const tmpDate = new Date(claimList.start + 'T00:00:00');
         const todayDateStr = DateFormat(new Date(), 'YYYY-MM-DD');
 
         // Check if the last day is today

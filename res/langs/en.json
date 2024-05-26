@@ -902,11 +902,12 @@
 
     "daily-quest": {
         "container-title": "Quest of the day",
+        "container-date": "Rewards from {}",
+        "container-tomorrow": "Tomorrow",
 
         "label-time": "{0}/{1} min",
         "label-reroll": "{0}/{1}",
         "label-finished": "Quest for the day made, well done!",
-        "container-date": "Rewards from {}",
 
         "popup": {
             "list-date": "Rewards from {}",

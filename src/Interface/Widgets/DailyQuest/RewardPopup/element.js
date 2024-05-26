@@ -48,7 +48,7 @@ const RenderItem = (props) => {
         borderWidth: 1.5
     };
 
-    /** @type {'none' | 'loading' | 'not-claimed' | 'claiming' | 'claimed'} */
+    /** @type {'none' | 'loading' | 'not-claimed' | 'claiming' | 'claim-tomorrow' | 'claimed'} */
     let status = 'none';
     let timeToTomorrowText = '';
 
@@ -62,10 +62,9 @@ const RenderItem = (props) => {
             status = 'claimed';
         } else if (currentDay <= claimList.daysCount) {
             status = 'claiming';
-        } else if (currentDay === claimList.daysCount) {
-            status = 'not-claimed';
-            timeToTomorrowText = '1' + langD['day-min'] + ' ' +
-                TimeToFormatString(GetTimeToTomorrow());
+        } else if (currentDay === claimList.daysCount + 1) {
+            status = 'claim-tomorrow';
+            timeToTomorrowText = lang['container-tomorrow'];
         }
     }
 
@@ -107,11 +106,11 @@ const RenderItem = (props) => {
             </View>
 
             <View style={styles.claimState}>
-                {status === 'not-claimed' && (
+                {status === 'claim-tomorrow' && (
                     <Button
                         style={[styles.claimButton, styleBorder]}
                         color='transparent'
-                        onPress={handleEvent}
+                        fontSize={12}
                     >
                         {timeToTomorrowText}
                     </Button>

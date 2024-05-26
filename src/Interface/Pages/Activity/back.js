@@ -247,7 +247,7 @@ class BackActivity extends PageBase {
 
     /** @param {string} text */
     onSearchChange = (text) => {
-        this.refreshSkills(text, this.state.selectedCategory);
+        this.refreshSkills(text, null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
     }
 

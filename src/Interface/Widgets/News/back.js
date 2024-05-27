@@ -83,7 +83,7 @@ class BackNews extends React.Component {
         const claimList = claimLists[claimIndex];
 
         if (claimIndex !== -1) {
-            for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
+            for (claimDay = 0; claimDay < claimList.daysCount; claimDay++) {
                 if (!claimList.claimed.includes(claimDay + 1)) break;
             }
             claimDate = DateToFormatString(new Date(claimList.start + 'T00:00:00'))

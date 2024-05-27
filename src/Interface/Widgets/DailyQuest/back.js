@@ -64,7 +64,7 @@ class DailyQuestBack extends React.Component {
         const claimLists = user.quests.dailyquest.claimsList.Get();
         const claimList = claimLists[claimIndex];
         if (claimIndex !== -1) {
-            for (claimDay = 0; claimDay <= claimList.daysCount; claimDay++) {
+            for (claimDay = 0; claimDay < claimList.daysCount; claimDay++) {
                 if (!claimList.claimed.includes(claimDay + 1)) break;
             }
             if (!user.quests.dailyquest.IsCurrentList(claimList)) {

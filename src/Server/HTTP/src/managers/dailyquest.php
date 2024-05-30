@@ -1,44 +1,42 @@
 <?php
 
-class NZD {
+class DQ {
     public $start = 0;
-    public $end = 0;
     public $daysCount = 0;
     public $claimed = '[]';
 }
 
-class NonZeroDays
+class DailyQuest
 {
     /**
      * @param DataBase $db
      * @param Account $account
-     * @return NZD[]
+     * @return DQ[]
      */
     public static function Get($db, $account) {
-        $command = 'SELECT `Start`, `End`, `DaysCount`, `Claimed` FROM TABLE WHERE `AccountID` = ?';
-        $rows = $db->QueryPrepare('NonZeroDays', $command, 'i', [ $account->ID ]);
-        if ($rows === false) ExitWithStatus('Error: getting nzd failed');
+        $command = 'SELECT `Start`, `DaysCount`, `Claimed` FROM TABLE WHERE `AccountID` = ?';
+        $rows = $db->QueryPrepare('DailyQuests', $command, 'i', [ $account->ID ]);
+        if ($rows === false) ExitWithStatus('Error: getting daily quest failed');
 
-        $nzd = array();
+        $dq = array();
         for ($i = 0; $i < count($rows); $i++) {
             $newQuest = array(
-                'start' => intval($rows[$i]['Start']),
-                'end' => intval($rows[$i]['End']),
+                'start' => $rows[$i]['Start'],
                 'daysCount' => intval($rows[$i]['DaysCount']),
                 'claimed' => json_decode($rows[$i]['Claimed'], true)
             );
 
-            array_push($nzd, $newQuest);
+            array_push($dq, $newQuest);
         }
 
-        return $nzd;
+        return $dq;
     }
 
     public static function Save($db, $account, $data) {
         if (isset($data['data'])) {
             self::Add($db, $account, $data['data']);
         } else {
-            ExitWithStatus('Error: saving nzd failed (no data)');
+            ExitWithStatus('Error: saving daily quest failed (no data)');
         }
     }
 
@@ -50,53 +48,50 @@ class NonZeroDays
     private static function Add($db, $account, $data) {
         $maxSavedTime = 0;
         $command = 'SELECT `Start` FROM TABLE WHERE `AccountID` = ? ORDER BY `Start` DESC LIMIT 1';
-        $rows = $db->QueryPrepare('NonZeroDays', $command, 'i', [ $account->ID ]);
+        $rows = $db->QueryPrepare('DailyQuests', $command, 'i', [ $account->ID ]);
         if ($rows !== false && count($rows) > 0) {
             $maxSavedTime = intval($rows[0]['Start']);
         }
 
         for ($i = 0; $i < count($data); $i++) {
-            $nzd = $data[$i];
+            $dq = $data[$i];
 
-            // Check if NZD is valid
-            $keysNzd = array_keys(get_object_vars(new NZD()));
-            $wrongKeys = array_diff($keysNzd, array_keys((array)$nzd));
+            // Check if DQ is valid
+            $keysDailyQuest = array_keys(get_object_vars(new DQ()));
+            $wrongKeys = array_diff($keysDailyQuest, array_keys((array)$dq));
             if (count($wrongKeys) > 0) {
                 continue;
             }
 
-            $start = $nzd['start'];                     // int
-            $end = $nzd['end'];                         // int
-            $daysCount = $nzd['daysCount'];             // int
-            $claimed = json_encode($nzd['claimed']);    // object => string
+            $start = $dq['start'];                     // int
+            $daysCount = $dq['daysCount'];             // int
+            $claimed = json_encode($dq['claimed']);    // object => string
 
-            // Check if NZD exists
+            // Check if DQ exists
             $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Start` = ?';
-            $reqQuest = $db->QueryPrepare('NonZeroDays', $command, 'ii', [ $account->ID, $start ]);
-            if ($reqQuest === false) ExitWithStatus('Error: adding NZD failed');
+            $reqQuest = $db->QueryPrepare('DailyQuests', $command, 'is', [ $account->ID, $start ]);
+            if ($reqQuest === false) ExitWithStatus('Error: adding DQ failed');
             $exists = count($reqQuest) > 0;
 
             $alreadySaved = $start < $maxSavedTime;
-            // Add NZD
+            // Add DQ
             if (!$exists) {
                 $command = 'INSERT INTO TABLE (
                     `AccountID`,
                     `Start`,
-                    `End`,
                     `DaysCount`,
                     `Claimed`
-                ) VALUES (?, ?, ?, ?, ?)';
+                ) VALUES (?, ?, ?, ?)';
                 $args = [
                     $account->ID,
                     $start,
-                    $end,
                     $daysCount,
                     $claimed
                 ];
-                $types = 'iiiis';
+                $types = 'isis';
 
-                $r = $db->QueryPrepare('NonZeroDays', $command, $types, $args);
-                if ($r === false) ExitWithStatus('Error: saving nzd failed (add)');
+                $r = $db->QueryPrepare('DailyQuests', $command, $types, $args);
+                if ($r === false) ExitWithStatus('Error: saving daily quest failed (add)');
             }
 
             // Update only claimed
@@ -110,27 +105,25 @@ class NonZeroDays
                 ];
                 $types = 'si';
 
-                $r = $db->QueryPrepare('NonZeroDays', $command, $types, $args);
-                if ($r === false) ExitWithStatus('Error: saving nzd failed (update claimed)');
+                $r = $db->QueryPrepare('DailyQuests', $command, $types, $args);
+                if ($r === false) ExitWithStatus('Error: saving daily quest failed (update claimed)');
             }
 
-            // Update all NZD
+            // Update all DQ
             else if ($exists && !$alreadySaved) {
                 $command = 'UPDATE TABLE SET
-                    `End` = ?,
                     `DaysCount` = ?,
                     `Claimed` = ?
                     WHERE `ID` = ?';
                 $args = [
-                    $end,
                     $daysCount,
                     $claimed,
                     $reqQuest[0]['ID']
                 ];
-                $types = 'iisi';
+                $types = 'isi';
 
-                $r = $db->QueryPrepare('NonZeroDays', $command, $types, $args);
-                if ($r === false) ExitWithStatus('Error: saving nzd failed (update)');
+                $r = $db->QueryPrepare('DailyQuests', $command, $types, $args);
+                if ($r === false) ExitWithStatus('Error: saving daily quest failed (update)');
             }
         }
     }
@@ -139,7 +132,7 @@ class NonZeroDays
      * @param DataBase $db
      * @param Account $account
      * @param Device $device
-     * @param int $claimListStart
+     * @param string $claimListStart
      * @param int[] $dayIndexes
      * @param string|false $error Error message if failed
      * @return int[]|false New items IDs or false if failed
@@ -152,7 +145,7 @@ class NonZeroDays
             $dayIndex = $dayIndexes[$i];
             $items = self::ClaimReward($db, $account, $device, $claimListStart, $dayIndex, $errorClaimReward);
             if ($items === false || $errorClaimReward !== false) {
-                $error = "Error: claiming nzd failed (claim reward $dayIndex) => $errorClaimReward";
+                $error = "Error: claiming daily quest failed (claim reward $dayIndex) => $errorClaimReward";
                 return false;
             }
             $newItems = array_merge($newItems, $items);
@@ -165,18 +158,18 @@ class NonZeroDays
      * @param DataBase $db
      * @param Account $account
      * @param Device $device
-     * @param int $claimListStart
+     * @param string $claimListStart
      * @param int $dayIndex
      * @param string|false $error Error message if failed
      * @return int[]|false New items IDs or false if failed
      */
     public static function ClaimReward($db, $account, $device, $claimListStart, $dayIndex, &$error = null) {
-        global $NONZERODAYS_REWARDS;
+        global $DAILY_QUEST_REWARDS;
         $error = false;
 
         $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Start` = ?';
-        $rows = $db->QueryPrepare('NonZeroDays', $command, 'ii', [ $account->ID, $claimListStart ]);
-        if ($rows === false) ExitWithStatus('Error: claiming nzd failed (get claimed)');
+        $rows = $db->QueryPrepare('DailyQuests', $command, 'is', [ $account->ID, $claimListStart ]);
+        if ($rows === false) ExitWithStatus('Error: claiming daily quest failed (get claimed)');
 
         // ClaimList not found
         if (count($rows) !== 1) {
@@ -187,9 +180,9 @@ class NonZeroDays
 
         // Check if already claimed
         $command = 'SELECT `ID` FROM TABLE WHERE `AccountID` = ? AND `Type` = ? AND `Data` = ?';
-        $args = [ $account->ID, 'claimNZD', "$claimListStart,$dayIndex" ];
+        $args = [ $account->ID, 'claimDailyQuest', "$claimListStart,$dayIndex" ];
         $rows = $db->QueryPrepare('Logs', $command, 'iss', $args);
-        if ($rows === false) ExitWithStatus('Error: claiming nzd failed (check claimed)');
+        if ($rows === false) ExitWithStatus('Error: claiming daily quest failed (check claimed)');
 
         // Already claimed
         if (count($rows) > 0) {
@@ -199,7 +192,7 @@ class NonZeroDays
         }
 
         $newItems = array();
-        $rewards = $NONZERODAYS_REWARDS[$dayIndex];
+        $rewards = $DAILY_QUEST_REWARDS[$dayIndex];
         for ($i = 0; $i < count($rewards); $i++) {
             $type = $rewards[$i]['type'];
             $value = $rewards[$i]['value'];
@@ -207,7 +200,7 @@ class NonZeroDays
             switch ($type) {
                 case 'ox':
                     if (Users::AddOx($db, $account->ID, $value) === false) {
-                        $error = 'Error: claiming nzd failed (add ox)';
+                        $error = 'Error: claiming daily quest failed (add ox)';
                         return false;
                     }
                     $account->Ox += $value;
@@ -215,13 +208,13 @@ class NonZeroDays
                 case 'chest':
                     $chestItem = Shop::BuyRandomChest($db, $account, $device->ID, $value, true, $errorBuyRandomChest);
                     if ($chestItem === false || $errorBuyRandomChest !== false) {
-                        $error = "Error: claiming nzd failed (buy chest $value) => $errorBuyRandomChest";
+                        $error = "Error: claiming daily quest failed (buy chest $value) => $errorBuyRandomChest";
                         return false;
                     }
                     array_push($newItems, $chestItem);
                     break;
                 default:
-                    $error = 'Error: claiming nzd failed (unknown reward type)';
+                    $error = 'Error: claiming daily quest failed (unknown reward type)';
                     $message = "Unknown reward type '$type' for '$claimListStart,$dayIndex'";
                     $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', $message);
                     return false;
@@ -229,7 +222,7 @@ class NonZeroDays
         }
 
         // Confirm claim
-        $db->AddLog($account->ID, $device->ID, 'claimNZD', "$claimListStart,$dayIndex");
+        $db->AddLog($account->ID, $device->ID, 'claimDailyQuest', "$claimListStart,$dayIndex");
 
         return $newItems;
     }

@@ -1,13 +1,13 @@
 /**
- * @typedef {{ type: 'ox' | 'chest', value: number }} NonZeroDayRewardType
+ * @typedef {{ type: 'ox' | 'chest', value: number }} DailyQuestRewardType
  */
 
 /**
  * /!\ Warning: This is not linked to the server side \
- * Server side data are in `src/Server/HTTP/src/Managers/NZD_rewards.php`
- * @type {Array<Array<NonZeroDayRewardType>>}
+ * Server side data are in `src/Server/HTTP/src/data/dailyquest_rewards.php`
+ * @type {Array<Array<DailyQuestRewardType>>}
  */
-const NONZERODAYS_REWARDS = [
+const DAILY_QUEST_REWARDS = [
     [{ type: 'ox', value: 1 }],
     [{ type: 'ox', value: 1 }],
     [{ type: 'ox', value: 1 }],
@@ -83,4 +83,4 @@ const NONZERODAYS_REWARDS = [
     [{ type: 'ox', value: 10 }, { type: 'chest', value: 3 }]
 ];
 
-export default NONZERODAYS_REWARDS;
+export default DAILY_QUEST_REWARDS;

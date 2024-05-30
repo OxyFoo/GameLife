@@ -7,14 +7,13 @@ import { MinMax } from 'Utils/Functions';
 import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
 /**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components/Icon').Icons} Icons
  */
 
 const TIME_STEP_MINUTES = 5;
 const MIN_TIME_MINUTES =  1 * TIME_STEP_MINUTES; // 5m
-const MAX_TIME_MINUTES = 48 * TIME_STEP_MINUTES; // 4h
+const MAX_TIME_MINUTES = 72 * TIME_STEP_MINUTES; // 6h
 
 /** @param {number} skillID */
 function StartActivityNow(skillID) {

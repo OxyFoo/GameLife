@@ -245,8 +245,8 @@ class Accounts
      */
     public static function Delete($db, $accountID) {
         $remFriends    = $db->QueryPrepare('Friends',                   'DELETE FROM TABLE WHERE `AccountID` = ? OR `TargetID` = ?', 'ii', [ $accountID, $accountID ]);
-        $remQuests     = $db->QueryPrepare('MyQuests',                  'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
-        $remNZD        = $db->QueryPrepare('NonZeroDays',               'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remMyQuests   = $db->QueryPrepare('MyQuests',                  'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
+        $remDailyQuest = $db->QueryPrepare('DailyQuests',               'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remTodoes     = $db->QueryPrepare('Todoes',                    'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remAvatar     = $db->QueryPrepare('Avatars',                   'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
         $remActivities = $db->QueryPrepare('Activities',                'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
@@ -255,7 +255,7 @@ class Accounts
         $remInventoryA = $db->QueryPrepare('InventoriesAchievements',   'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remUser       = $db->QueryPrepare('GlobalNotifications',       'DELETE FROM TABLE WHERE `AccountID` = ?', 'i', [ $accountID ]);
         $remUser       = $db->QueryPrepare('Accounts',                  'DELETE FROM TABLE WHERE `ID` = ?',        'i', [ $accountID ]);
-        return $remFriends !== false && $remQuests !== false && $remNZD !== false && $remTodoes !== false &&
+        return $remFriends !== false && $remMyQuests !== false && $remDailyQuest !== false && $remTodoes !== false &&
                 $remActivities !== false && $remAvatar !== false && $remUser !== false &&
                 $remInventory !== false && $remInventoryT !== false && $remInventoryA !== false;
     }

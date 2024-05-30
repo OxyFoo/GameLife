@@ -67,14 +67,14 @@ class BackShopIAP extends React.Component {
                     return clearProductsIOS().then(() => true);
                 }
             })
-            .catch((exception) => {
-                // Nothing to do here
-                user.interface.console.AddLog('error', '[IAP] Error flushing failed purchases cached as pending', exception);
-            })
             .then(() => {
                 this.purchaseUpdateSubscription = purchaseUpdatedListener(this.purchaseDidUpdate);
                 this.purchaseErrorSubscription = purchaseErrorListener(this.purchaseDidError);
                 return this.LoadIAP();
+            })
+            .catch((exception) => {
+                // Nothing to do here
+                user.interface.console.AddLog('error', '[IAP] Error flushing failed purchases cached as pending', exception);
             });
     }
 

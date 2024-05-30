@@ -1,17 +1,23 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { Sleep } from 'Utils/Functions';
+
 /**
  * @this {import('./back').default}
  */
 function StartHelp() {
-    const lang = langManager.curr['nonzerodays']['tuto'];
+    const lang = langManager.curr['daily-quest']['help'];
 
     user.interface.screenTuto.ShowTutorial([
         {
-            component: this.refContainer,
+            component: this.refContainer.current,
             text: lang['1'],
-            showNextButton: true
+            showNextButton: true,
+            execBefore: async () => {
+                user.interface.GetCurrentPage()?.refPage?.GotoY(0);
+                await Sleep(400);
+            }
         },
         {
             component: null,
@@ -24,7 +30,7 @@ function StartHelp() {
             showNextButton: true
         },
         {
-            component: this.refOpenStreakPopup,
+            component: this.refOpenStreakPopup.current,
             text: lang['4'],
             showNextButton: true
         }

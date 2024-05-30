@@ -1,5 +1,5 @@
 import MyQuests from './Quests/MyQuests';
-import NonZeroDays from './Quests/NonZeroDays';
+import DailyQuest from './Quests/DailyQuest';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -11,48 +11,48 @@ class Quests {
         this.user = user;
 
         this.myquests = new MyQuests(user);
-        this.nonzerodays = new NonZeroDays(user);
+        this.dailyquest = new DailyQuest(user);
     }
 
     Clear() {
         this.myquests.Clear();
-        this.nonzerodays.Clear();
+        this.dailyquest.Clear();
     }
     Load(quests) {
         const contains = (key) => quests.hasOwnProperty(key);
         if (contains('myquests'))   this.myquests.Load(quests['myquests']);
-        if (contains('nonzerodays')) this.nonzerodays.Load(quests['nonzerodays']);
+        if (contains('dailyquest')) this.dailyquest.Load(quests['dailyquest']);
     }
     LoadOnline(quests) {
         if (typeof(quests) !== 'object') return;
         const contains = (key) => quests.hasOwnProperty(key);
         if (contains('myquests'))   this.myquests.LoadOnline(quests['myquests']);
-        if (contains('nonzerodays')) this.nonzerodays.LoadOnline(quests['nonzerodays']);
+        if (contains('dailyquest')) this.dailyquest.LoadOnline(quests['dailyquest']);
     }
     Save() {
         const quests = {
             myquests: this.myquests.Save(),
-            nonzerodays: this.nonzerodays.Save()
+            dailyquest: this.dailyquest.Save()
         };
         return quests;
     }
 
     IsUnsaved = () => {
-        return this.myquests.IsUnsaved() || this.nonzerodays.IsUnsaved();
+        return this.myquests.IsUnsaved() || this.dailyquest.IsUnsaved();
     }
     GetUnsaved = () => {
         const quests = {};
         if (this.myquests.IsUnsaved()) {
             quests['myquests'] = this.myquests.GetUnsaved();
         }
-        if (this.nonzerodays.IsUnsaved()) {
-            quests['nonzerodays'] = this.nonzerodays.GetUnsaved();
+        if (this.dailyquest.IsUnsaved()) {
+            quests['dailyquest'] = this.dailyquest.GetUnsaved();
         }
         return quests;
     }
     Purge = () => {
         this.myquests.Purge();
-        this.nonzerodays.Purge();
+        this.dailyquest.Purge();
     }
 }
 

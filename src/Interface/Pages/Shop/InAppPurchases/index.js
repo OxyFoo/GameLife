@@ -19,7 +19,6 @@ import { Button, Text } from 'Interface/Components';
 class ShopIAP extends BackShopIAP {
     /** @type {ListRenderItemIAPItem} */
     renderItem = ({ item }) => {
-
         const backgroundStyle = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (

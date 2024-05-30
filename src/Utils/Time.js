@@ -63,8 +63,11 @@ function TimeToFormatString(time) {
 function RoundTimeTo(step, time, type = 'near') {
     const stepSeconds = step * 60;
     let mod = time % stepSeconds;
-    if (type === 'near' && mod > 450)   mod -= stepSeconds;
-    else if (type === 'next')           mod -= stepSeconds;
+    if (type === 'near' && mod > stepSeconds / 2) {
+        mod -= stepSeconds;
+    } else if (type === 'next') {
+        mod -= stepSeconds;
+    }
     return time - mod;
 }
 

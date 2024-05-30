@@ -19,10 +19,11 @@ function renderItemPopup(item, refreshCallback = () => {}) {
     const lang = langManager.curr['shop']['dailyDeals'];
     let [ loading, setLoading ] = React.useState(false);
 
+    const price = Math.round(item.Value * user.shop.priceFactor);
     const itemName = langManager.GetText(item.Name);
     const itemDescription = langManager.GetText(item.Description);
     const buttonText = lang['popup-item-button']
-                        .replace('{}', item.Value.toString());
+                        .replace('{}', price.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
@@ -61,7 +62,8 @@ const buyDailyDeals = async(item) => {
     const lang = langManager.curr['shop'];
 
     // Check Ox Amount
-    if (user.informations.ox.Get() < item.Value) {
+    const price = Math.round(item.Value * user.shop.priceFactor);
+    if (user.informations.ox.Get() < price) {
         const title = lang['popup-notenoughox-title'];
         const text = lang['popup-notenoughox-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
@@ -94,7 +96,7 @@ const buyDailyDeals = async(item) => {
     const title = lang['dailyDeals']['popup-buysuccess-title'];
     const text = lang['dailyDeals']['popup-buysuccess-text']
                 .replace('{}', itemName)
-                .replace('{}', item.Value.toString());
+                .replace('{}', price.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 

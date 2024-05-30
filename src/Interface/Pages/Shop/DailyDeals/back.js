@@ -10,6 +10,7 @@ import { Character } from 'Interface/Components';
 
 /**
  * @typedef {import('Data/Items').Item} Item
+ * @typedef {import('Data/Items').StuffID} StuffID
  * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
  * 
  * @typedef BuyableItem
@@ -24,23 +25,32 @@ import { Character } from 'Interface/Components';
  * @property {() => void} OnPress
  */
 
+const BackShopItemsProps = {
+    /** @type {StuffID[]} */
+    dailyItemsID: []
+};
+
 class BackShopItems extends React.Component {
     state = {
         /** @type {Array<BuyableItem>} */
         buyableItems: [],
     }
 
-    componentDidMount() {
-        this.refreshItems();
+    constructor(props) {
+        super(props);
+
+        const { dailyItemsID } = this.props;
+        this.state.buyableItems = this.refreshItems(dailyItemsID);
     }
 
-    refreshItems = async () => {
+    /** @param {StuffID[]} dailyItemsID */
+    refreshItems = (dailyItemsID) => {
         const allBuyableItems = dataManager.items.GetBuyable();
-        const dailyItemsID = await user.server.GetDailyDeals();
 
         if (dailyItemsID === null) return;
 
         // Create characters & get data for each item
+        /** @type {BuyableItem[]} */
         const buyableItems = [];
         dailyItemsID.forEach((itemID, index) => {
             const item = allBuyableItems.find(i => i.ID == itemID) || null;
@@ -65,7 +75,7 @@ class BackShopItems extends React.Component {
             buyableItems.push(buyableItem);
         });
 
-        this.setState({ buyableItems });
+        return buyableItems;
     }
 
     /** @param {Item} item */
@@ -74,5 +84,8 @@ class BackShopItems extends React.Component {
         user.interface.popup.Open('custom', render);
     }
 }
+
+BackShopItems.defaultProps = BackShopItemsProps;
+BackShopItems.prototype.props = BackShopItemsProps;
 
 export default BackShopItems;

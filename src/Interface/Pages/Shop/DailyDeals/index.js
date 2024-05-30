@@ -16,6 +16,22 @@ import { Button, Text, Frame } from 'Interface/Components';
  */
 
 class ShopDailyDeals extends BackShopItems {
+    render() {
+        const { buyableItems } = this.state;
+
+        return (
+            <FlatList
+                style={styles.flatlist}
+                data={buyableItems}
+                ListEmptyComponent={this.renderEmpty}
+                numColumns={3}
+                renderItem={this.renderItem}
+                keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
+                scrollEnabled={false}
+            />
+        );
+    }
+
     /**
      * @param {{ item: BuyableItem }} item
      * @returns {JSX.Element}
@@ -52,10 +68,7 @@ class ShopDailyDeals extends BackShopItems {
                         </View>
 
                         {/** Item price */}
-                        <View style={styles.itemPrice}>
-                            <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
-                            <Image style={styles.itemOxImage} source={IMG_OX} />
-                        </View>
+                        {this.renderPrice(item)}
 
                         {/** Decoration */}
                         <LinearGradient
@@ -81,19 +94,33 @@ class ShopDailyDeals extends BackShopItems {
         );
     }
 
-    render() {
-        const { buyableItems } = this.state;
+    /** @param {BuyableItem} item */
+    renderPrice = (item) => {
+        // Default price
+        if (user.shop.priceFactor === 1) {
+            return (
+                <View style={styles.itemPrice}>
+                    <Text style={styles.itemPriceOx}>
+                        {item.Price.toString()}
+                    </Text>
+                    <Image style={styles.itemOxImage} source={IMG_OX} />
+                </View>
+            );
+        }
 
+        // Price factor is applied
         return (
-            <FlatList
-                style={styles.flatlist}
-                data={buyableItems}
-                ListEmptyComponent={this.renderEmpty}
-                numColumns={3}
-                renderItem={this.renderItem}
-                keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
-                scrollEnabled={false}
-            />
+            <View style={styles.itemPrice}>
+                <View>
+                    <Text style={styles.itemPriceOxEditedOld}>
+                        {item.Price.toString()}
+                    </Text>
+                    <Text style={styles.itemPriceOxEditedNew}>
+                        {Math.round(item.Price * user.shop.priceFactor).toString()}
+                    </Text>
+                </View>
+                <Image style={styles.itemOxImageEdited} source={IMG_OX} />
+            </View>
         );
     }
 }

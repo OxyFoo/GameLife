@@ -101,7 +101,7 @@ class TCP {
 
     /** @param {Event} event */
     onError = (event) => {
-        this.user.interface.console.AddLog('error', 'TCP server:', event);
+        this.user.interface.console.AddLog('warn', 'TCP server:', event);
         this.state.Set('error');
         this.Disconnect();
     }

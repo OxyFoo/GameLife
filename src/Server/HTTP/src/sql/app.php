@@ -5,7 +5,14 @@
  * @param DataBase $db
  */
 function GetAppData($db) {
-    $appData = array('Version' => '0.0.0', 'Hashes' => '', 'Maintenance' => false, 'News' => array());
+    $appData = array(
+        'Version' => '0.0.0',
+        'Hashes' => '',
+        'Maintenance' => false,
+        'News' => array(),
+        'PriceFactor' => 1.0
+    );
+
     $app = $db->QueryPrepare('App', 'SELECT * FROM TABLE');
     $lastHashRefresh = 0;
 
@@ -26,6 +33,8 @@ function GetAppData($db) {
                 $appData['News'] = json_decode($data, true);
             } else if ($ID === 'MusicLinks') {
                 $appData['MusicLinks'] = json_decode($data, true);
+            } else if ($ID === 'PriceFactor') {
+                $appData['PriceFactor'] = floatval($data);
             }
         }
     }

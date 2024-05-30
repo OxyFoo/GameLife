@@ -46,13 +46,16 @@
 }
 
 /**
- * Will return a string containing all the uppercase letters of the string
+ * Ignore case, accents, spaces at extremes and special characters
  * @param {string} str
- * @returns {string}
+ * @returns {string} Formatted string
  */
-function getUppercaseLetters(str) {
-    const matches = str.match(/[A-Z]/g);
-    return matches !== null ? matches.join('') : '';
+function FormatForSearch(str) {
+    return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
 }
 
-export { IsEmail, StrIsJSON, ParsePlural, getUppercaseLetters };
+export { IsEmail, StrIsJSON, ParsePlural, FormatForSearch };

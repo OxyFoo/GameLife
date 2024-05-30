@@ -18,7 +18,7 @@ class ScreenInputBack extends React.Component {
         text: '',
         multiline: false,
         anim: new Animated.Value(0),
-        keyboardHeight: new Animated.Value(SCREEN_HEIGHT),
+        keyboardHeight: new Animated.Value(0),
         callback: (text) => {},
         callbackClose: () => {}
     }
@@ -38,13 +38,12 @@ class ScreenInputBack extends React.Component {
     /** @type {KeyboardEventListener} */
     onKeyboardShow = (event) => {
         const { height } = event.endCoordinates;
-        const offset = Platform.OS === 'android' ? 82 : 150;
-        const newHeight = SCREEN_HEIGHT - height - offset;
-        SpringAnimation(this.state.keyboardHeight, newHeight).start();
+        const offset = Platform.OS === 'android' ? -24 : -height;
+        SpringAnimation(this.state.keyboardHeight, offset).start();
     }
     /** @type {KeyboardEventListener} event */
     onKeyboardHide = () => {
-        SpringAnimation(this.state.keyboardHeight, SCREEN_HEIGHT).start();
+        SpringAnimation(this.state.keyboardHeight, 0).start();
         this.refInput?.current?.unfocus();
         this.Close(false);
     }

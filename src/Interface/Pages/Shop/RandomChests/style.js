@@ -44,10 +44,7 @@ const styles = StyleSheet.create({
     imageChest: {
         width: '100%',
         height: '100%',
-        transform: [
-            { scale: .7 },
-            { translateY: 12 }
-        ]
+        transform: [{ scale: .6 }]
     },
 
     itemPrice: {
@@ -64,9 +61,23 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginRight: 4
     },
+    itemPriceOxEditedOld: {
+        fontSize: 16,
+        marginRight: 4,
+        transform: [{ translateY: 6 }],
+        textDecorationLine: 'line-through'
+    },
+    itemPriceOxEditedNew: {
+        marginRight: 4
+    },
     itemOxImage: {
         width: 16,
         aspectRatio: 1
+    },
+    itemOxImageEdited: {
+        width: 16,
+        aspectRatio: 1,
+        marginTop: 24
     },
 
     itemDecoration: {

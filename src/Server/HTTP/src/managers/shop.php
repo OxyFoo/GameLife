@@ -1,5 +1,12 @@
 <?php
 
+$ITEM_RARITIES = array(
+    'common',
+    'rare',
+    'epic',
+    'legendary'
+);
+
 class Shop
 {
     /**
@@ -45,6 +52,38 @@ class Shop
     }
 
     /**
+     * Get random chest stats
+     * @param DataBase $db
+     * @param 'random'|'target' $type
+     * @return array|false Return stats if success, false otherwise
+     */
+    public static function GetChestStats($db, $type) {
+        if ($type !== 'random' && $type !== 'target') {
+            return false;
+        }
+
+        $command = 'SELECT * FROM TABLE WHERE `Type` = ?';
+        $result = $db->QueryPrepare('Chests', $command, 's', [ $type ]);
+        if ($result === false || count($result) !== 4) return false;
+
+        return array_combine(
+            array_column($result, 'Chest'),
+            array_map(function($item) {
+                return array(
+                    'priceOriginal' => $item['PriceOriginal'],
+                    'priceDiscount' => $item['PriceDiscount'],
+                    'probas' => array(
+                        'common' => $item['ProbaCommon'],
+                        'rare' => $item['ProbaRare'],
+                        'epic' => $item['ProbaEpic'],
+                        'legendary' => $item['ProbaLegendary']
+                    )
+                );
+            }, $result)
+        );
+    }
+
+    /**
      * Buy an item
      * @param DataBase $db
      * @param Account $account
@@ -57,17 +96,22 @@ class Shop
         $command = 'SELECT `Value` FROM TABLE WHERE `ID` = ?';
         $result = $db->QueryPrepare('Items', $command, 's', [ $itemID ]);
         if ($result === false || count($result) === 0) return false;
+
+        $multiplier = Shop::GetPriceFactor($db, $error);
+        if ($multiplier === false) return false;
+
         $oxAmount = intval($result[0]['Value']);
+        $finalPrice = intval(round($oxAmount * $multiplier, 0));
 
         // Check if account has enough ox
-        if ($account->Ox < $oxAmount) {
-            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy an item with not enough Ox ($account->Ox/$oxAmount)");
+        if ($account->Ox < $finalPrice) {
+            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy an item with not enough Ox ($account->Ox/$finalPrice)");
             return false;
         }
 
         // Update account ox
         $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
-        $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $oxAmount, $account->ID ]);
+        $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $finalPrice, $account->ID ]);
         if ($result === false) return false;
 
         // Add item to inventory
@@ -76,7 +120,7 @@ class Shop
 
         // Add result in logs and return new ox value
         $db->AddLog($account->ID, $device->ID, 'buyDailyDeals', "$itemID");
-        return $account->Ox - $oxAmount;
+        return $account->Ox - $finalPrice;
     }
 
     /**
@@ -89,44 +133,49 @@ class Shop
      * @return object|false Return item if success, false otherwise
      */
     public static function BuyRandomChest($db, $account, $deviceID, $rarity, $isFree = false, &$error = null) {
+        global $ITEM_RARITIES;
+
+        $randomChestsStats = Shop::GetChestStats($db, 'random');
+        if ($randomChestsStats === false) return false;
+
         $error = false;
         if ($rarity < 0 || $rarity > 3) {
             $error = 'Error: invalid rarity';
             return false;
         }
+        $rarityText = $ITEM_RARITIES[$rarity];
 
-        $rarities = array('common', 'rare', 'epic', 'legendary');
-        $prices = array(50, 200, 500, 1250);
-        $stats = array(
-            /* Common */    array('common' => .90, 'rare' => .09, 'epic' => .0099, 'legendary' => 0.0001),
-            /* Rare */      array('common' => .20, 'rare' => .75, 'epic' => .045,  'legendary' => .005),
-            /* Epic */      array('common' => 0,   'rare' => .29, 'epic' => .70,   'legendary' => .01),
-            /* Legendary */ array('common' => 0,   'rare' => .05, 'epic' => .80,   'legendary' => .15)
-        );
+        $price = 0;
+        if (!$isFree) {
+            $price = $randomChestsStats[$rarityText]['priceOriginal'];
+            if ($randomChestsStats[$rarityText]['priceDiscount'] >= 0) {
+                $price = $randomChestsStats[$rarityText]['priceDiscount'];
+            }
+        }
 
         // Check if account has enough ox
-        if (!$isFree && $account->Ox < $prices[$rarity]) {
-            $db->AddLog($account->ID, $deviceID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$prices[$rarity])");
+        if (!$isFree && $account->Ox < $price) {
+            $db->AddLog($account->ID, $deviceID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$price)");
             return false;
         }
 
         // Update account ox
         if (!$isFree) {
             $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
-            $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $prices[$rarity], $account->ID ]);
+            $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $price, $account->ID ]);
             if ($result === false) {
                 $error = 'Error: Update account ox failed';
                 return false;
             }
-            $account->Ox -= $prices[$rarity];
+            $account->Ox -= $price;
         }
 
         // Get random rarity (with stats)
         $random = (rand()&1000000)/1000001;
         $randomRarity = null;
-        foreach ($stats[$rarity] as $currentRarity => $chance) {
+        foreach ($randomChestsStats[$rarityText]['probas'] as $currentRarity => $chance) {
             if ($random < $chance) {
-                $randomRarity = array_search($currentRarity, $rarities);
+                $randomRarity = array_search($currentRarity, $ITEM_RARITIES);
                 break;
             }
             $random -= $chance;
@@ -173,34 +222,37 @@ class Shop
      * @return object|false Return items if success, false otherwise
      */
     public static function BuyTargetChest($db, $account, $device, $slot, $rarity) {
+        global $ITEM_RARITIES;
+
+        $targetChestsStats = Shop::GetChestStats($db, 'target');
+        if ($targetChestsStats === false) return false;
+
         if ($rarity < 0 || $rarity > 3) return false;
-        $rarities = array('common', 'rare', 'epic', 'legendary');
-        $prices = array(60, 240, 600, 1500);
-        $stats = array(
-            /* Common */    array('common' => .99, 'rare' => .009, 'epic' => .001, 'legendary'  => 0),
-            /* Rare */      array('common' => .27, 'rare' => .70,  'epic' => .029,  'legendary' => .001),
-            /* Epic */      array('common' => 0,   'rare' => .3,   'epic' => .65,   'legendary' => .05),
-            /* Legendary */ array('common' => 0,   'rare' => .08,  'epic' => .82,   'legendary1' => .10)
-        );
+        $rarityText = $ITEM_RARITIES[$rarity];
+
+        $price = $targetChestsStats[$rarityText]['priceOriginal'];
+        if ($targetChestsStats[$rarityText]['priceDiscount'] >= 0) {
+            $price = $targetChestsStats[$rarityText]['priceDiscount'];
+        }
 
         // Check if account has enough ox
-        if ($account->Ox < $prices[$rarity]) {
-            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$prices[$rarity])");
+        if ($account->Ox < $price) {
+            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a chest with not enough Ox ($account->Ox/$price)");
             return false;
         }
 
         // Update account ox
         $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
-        $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $prices[$rarity], $account->ID ]);
+        $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $price, $account->ID ]);
         if ($result === false) return false;
-        $account->Ox -= $prices[$rarity];
+        $account->Ox -= $price;
 
         // Get random rarity (with stats)
         $random = (rand()&1000000)/1000001;
         $randomRarity = null;
-        foreach ($stats[$rarity] as $currentRarity => $chance) {
+        foreach ($targetChestsStats[$rarityText]['probas'] as $currentRarity => $chance) {
             if ($random < $chance) {
-                $randomRarity = array_search($currentRarity, $rarities);
+                $randomRarity = array_search($currentRarity, $ITEM_RARITIES);
                 break;
             }
             $random -= $chance;
@@ -259,15 +311,19 @@ class Shop
         $oxAmount = intval($result[0]['Value']);
         $oxAmount = intval($oxAmount * 3 / 4);
 
+        $multiplier = Shop::GetPriceFactor($db, $error);
+        if ($multiplier === false) return false;
+        $finalPrice = intval(round($oxAmount * $multiplier, 0));
+
         // Check if account has enough ox
-        if ($account->Ox < $oxAmount) {
-            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a dye with not enough Ox ($account->Ox/$oxAmount)");
+        if ($account->Ox < $finalPrice) {
+            $db->AddLog($account->ID, $device->ID, 'cheatSuspicion', "Try to buy a dye with not enough Ox ($account->Ox/$finalPrice)");
             return false;
         }
 
         // Update account ox
         $command = 'UPDATE TABLE SET `Ox` = `Ox` - ? WHERE `ID` = ?';
-        $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $oxAmount, $account->ID ]);
+        $result = $db->QueryPrepare('Accounts', $command, 'ii', [ $finalPrice, $account->ID ]);
         if ($result === false) return false;
 
         // Add item to inventory
@@ -276,7 +332,7 @@ class Shop
 
         // Add result in logs and return new ox value
         $db->AddLog($account->ID, $device->ID, 'buyDye', "$ID/$itemID/$newItemID");
-        return $account->Ox - $oxAmount;
+        return $account->Ox - $finalPrice;
     }
 
     /**
@@ -360,6 +416,21 @@ class Shop
 
         $db->AddLog($accountID, $deviceID, 'giftCode', $code);
         return true;
+    }
+
+    /**
+     * Get price factor
+     * @param DataBase $db
+     * @return float|false Return price factor if success, false otherwise
+     */
+    public static function GetPriceFactor($db, &$error = null) {
+        $command = 'SELECT `Data` FROM TABLE WHERE `ID` = "PriceFactor"';
+        $result = $db->QueryPrepare('App', $command);
+        if ($result === false || count($result) === 0) {
+            $error = 'Error: get price factor failed';
+            return false;
+        }
+        return floatval($result[0]['Data']);
     }
 }
 

@@ -19,8 +19,18 @@ const styles = StyleSheet.create({
     dyeAmount: {
         alignItems: 'center'
     },
+    dyeAmountPriceEdit: {
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
     dyeAmountText: {
         marginRight: 6
+    },
+    dyeAmountTextOld: {
+        marginBottom: -6,
+        marginRight: 6,
+        fontSize: 16,
+        textDecorationLine: 'line-through'
     },
     dyeAmountPrice: {
         flexDirection: 'row',
@@ -29,6 +39,11 @@ const styles = StyleSheet.create({
     dyeOxImage: {
         width: 20,
         aspectRatio: 1
+    },
+    dyeOxImageEdit: {
+        width: 20,
+        aspectRatio: 1,
+        marginBottom: 3
     },
 
     dyeDecoration: {

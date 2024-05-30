@@ -616,8 +616,7 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
-        "banner-header": "-50% sur tous les items avant l'arrivée des nouveaux avatars",
-        "banner-header-refonte": "Achetez maintenant et revendez plus tard pour profiter de la hausse des prix de revente et gagner un max",
+        "banner-header": "Réduction sur tous les items avant l'arrivée des nouveaux avatars !",
         "banner-daily": "Deals du jour",
         "banner-iap": "Achats intégrés",
         "banner-random-chest": "Coffres aléatoires",
@@ -901,21 +900,28 @@
         }
     },
 
-    "nonzerodays": {
-        "container-title": "Jours non zéro",
+    "daily-quest": {
+        "container-title": "Quête du jour",
         "container-date": "Récompenses du {}",
-        "claim": "Claim",
-        "claim-in": "Claim dans {}",
-        "claim-all": "Tout claim",
-        "no-claim": "Pas de claim",
+        "container-tomorrow": "Demain",
+
+        "label-time": "{0}/{1} min",
+        "label-reroll": "{0}/{1}",
+        "label-finished": "Quête du jour réalisée, bravo !",
+
+        "popup": {
+            "list-date": "Récompenses du {}",
+            "claim": "Claim",
+            "claim-all": "Tout claim"
+        },
 
         "alert-claim-error-title": "Erreur",
         "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard.",
 
-        "tuto": {
-            "1": "Ici, c'est les 'Jours non zéro' (inspiré du Non Zero Days), la chaîne de connexion en gros.",
-            "2": "Le fonctionnement est simple, chaque jour, tu dois faire au moins une activité qui rapporte de l'xp.",
-            "3": "Tu pourras alors récuperer ta récompense le lendemain, et ainsi de suite.",
+        "help": {
+            "1": "Voici les quêtes journalières, fais l'activité imposée pour gagner des récompenses !",
+            "2": "Chaque jour une liste d'activité faite sur mesure pour toi est mise à ta disposition.",
+            "3": "Choisi une activité parmis celles proposées et fais là pendant 15 minutes pour valider ta quête.",
             "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
         }
     },
@@ -923,7 +929,7 @@
     "wait": {
         "wait-internet-text": "Le serveur de GameLife est inaccessible.\n\nVérifie ta connexion internet ou réessaye plus tard !\n\nSi le problème persiste, contacte-nous sur Discord ou par mail que tu trouveras sur notre site:",
         "wait-maintenance-text": "Les serveurs sont actuellement en maintenance, reviens plus tard !",
-        "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte.\n\nLe mail peut s'envoyer après quelque minutes, vérifie tes spams.",
+        "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-send": "Mail envoyé !"
     },

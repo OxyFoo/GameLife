@@ -7,6 +7,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text } from 'Interface/Components';
+import { FormatForSearch } from 'Utils/String';
 
 /**
  * @typedef {import('../../../Activity/types').ItemSkill} ItemSkill
@@ -93,11 +94,11 @@ function RenderSkillsSearch({ searchInput, callback }) {
     const [ skillsItems, setSkillsItems ] = React.useState([]);
 
     React.useEffect(() => {
-        const search = searchInput.toLowerCase();
+        const search = FormatForSearch(searchInput);
         const skills = dataManager.skills.Get();
         const newSkills = skills
             .map(skill => SkillToItem(skill, (skill) => callback(skill.ID)))
-            .filter(skill => skill.value.toLowerCase().includes(search));
+            .filter(skill => FormatForSearch(skill.value).includes(search));
         setSkillsItems(newSkills);
     }, [ searchInput ]);
 

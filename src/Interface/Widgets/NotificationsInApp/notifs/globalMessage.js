@@ -38,6 +38,9 @@ async function handleRead(notif, response) {
         return false;
     }
 
+    // Force update notifications to prevent re-claiming
+    user.interface.notificationsInApp.forceUpdate();
+
     return true;
 }
 

@@ -29,17 +29,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 
-    // NZD render
-    nzdContainer: {
+    // DailyQuest render
+    dqContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
     },
-    nzdTitle: {
+    dqTitle: {
         marginVertical: 8,
         marginRight: 8
     },
-    nzdItem: {
+    dqItem: {
         marginHorizontal: 16,
         marginBottom: 20,
         backgroundColor: 'transparent'

@@ -31,8 +31,8 @@ class Users
         if (isset($quests) && isset($quests['myquests'])) {
             MyQuests::Save($db, $account, $deviceID, $quests['myquests']);
         }
-        if (isset($quests) && isset($quests['nonzerodays'])) {
-            NonZeroDays::Save($db, $account, $quests['nonzerodays']);
+        if (isset($quests) && isset($quests['dailyquest'])) {
+            DailyQuest::Save($db, $account, $quests['dailyquest']);
         }
         if (isset($missions)) {
             Missions::Set($db, $account, $deviceID, $missions);

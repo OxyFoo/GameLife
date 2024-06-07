@@ -13,7 +13,7 @@ import Button from 'Interface/OldComponents/Button';
 import Swiper from 'Interface/OldComponents/Swiper';
 import DayClock from 'Interface/OldComponents/DayClock';
 import { Separator } from 'Interface/Components';
-import { RenderItemMemo } from 'Interface/Widgets/NonZeroDay/element';
+import { RenderItemMemo } from 'Interface/Widgets/DailyQuest/RewardPopup/element';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -26,7 +26,7 @@ class News extends BackNews {
 
         const pages = [
             this.renderRecapMyquests(),
-            this.renderRecapNZD(),
+            this.renderRecapDailyQuest(),
             ...pagesNews.map(RenderNew)
         ].filter(page => page !== null);
 
@@ -124,15 +124,15 @@ class News extends BackNews {
         <Separator style={styles.mqSeparator} />
     )
 
-    renderRecapNZD = () => {
-        const lang = langManager.curr['nonzerodays'];
+    renderRecapDailyQuest = () => {
+        const lang = langManager.curr['daily-quest'];
         const { claimDay, claimIndex, claimDate } = this.state;
 
         if (claimIndex < 0) {
             return null;
         }
 
-        const allClaimLists = user.quests.nonzerodays.claimsList.Get();
+        const allClaimLists = user.quests.dailyquest.claimsList.Get();
         const claimList = allClaimLists[claimIndex];
 
         if (claimList.claimed.includes(claimList.daysCount)) {
@@ -141,10 +141,10 @@ class News extends BackNews {
 
         return (
             <View>
-                <View style={styles.nzdContainer}>
+                <View style={styles.dqContainer}>
                     {/* Title */}
                     <Text
-                        style={styles.nzdTitle}
+                        style={styles.dqTitle}
                         onPress={this.goToQuestsPage}
                     >
                         {lang['container-title'] + (claimDate !== null ? (' - ' + claimDate) : '')}
@@ -160,7 +160,7 @@ class News extends BackNews {
 
                 {/* Claim item */}
                 <RenderItemMemo
-                    style={styles.nzdItem}
+                    style={styles.dqItem}
                     index={claimDay}
                     claimIndex={claimIndex}
                 />

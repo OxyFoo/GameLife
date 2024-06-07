@@ -97,6 +97,7 @@ jobs:
     name: '📣 App Published'
     runs-on: ubuntu-latest
     needs: [ android, ios ]
+    if: success() || (needs.android.result == 'success' || needs.ios.result == 'success')
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4

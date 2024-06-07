@@ -10,6 +10,7 @@ import langManager from 'Managers/LangManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import { Sleep } from 'Utils/Functions';
+import { FormatForSearch } from 'Utils/String';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
@@ -208,6 +209,8 @@ class BackActivity extends PageBase {
      * @returns {object}
      */
     refreshSkills = (textSearch = '', categoryID = null, refreshState = true) => {
+        const formattedSearch = FormatForSearch(textSearch);
+
         /** @param {ItemSkill} skill */
         const filter = skill => !categoryID || skill.categoryID === categoryID;
         /** @param {ItemSkill} skill */
@@ -216,7 +219,7 @@ class BackActivity extends PageBase {
             this.preselectedSkillsIDs.includes(skill.id)
         );
         /** @param {ItemSkill} skill */
-        const searchMatch = skill => skill.value.toLowerCase().includes(textSearch.toLowerCase());
+        const searchMatch = skill => FormatForSearch(skill.value).includes(formattedSearch);
 
         /** @type {ItemSkill[]} */
         let itemSkills = [];
@@ -258,7 +261,7 @@ class BackActivity extends PageBase {
 
     /** @param {string} text */
     onSearchChange = (text) => {
-        this.refreshSkills(text, this.state.selectedCategory);
+        this.refreshSkills(text, null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
     }
 

@@ -16,6 +16,7 @@ import { SwitchText } from 'Interface/Components/SwitchText/index';
 import PanelScreen from 'Interface/Widgets/PanelScreen';
 import ActivitySchedule from 'Interface/Widgets/ActivitySchedule';
 import ActivityExperience from 'Interface/Widgets/ActivityExperience';
+import { MAX_TIME_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -114,7 +115,12 @@ class ActivityPanel extends ActivityPanelBack {
         const { variantTheme } = this.props;
         const { activity, startMode, mode } = this.state;
 
-        const maxDuration = activity?.skillID === 168 ? 12 : 4;
+        // Exception for Sleep skill
+        let maxDurationHour = Math.round(MAX_TIME_MINUTES / 60);
+        if (activity?.skillID === 168) {
+            maxDurationHour = 12;
+        }
+
         const pointerEvents = startMode === 'schedule' ? 'auto' : 'none';
 
         /** @type {AnimatedViewProp} */
@@ -153,7 +159,7 @@ class ActivityPanel extends ActivityPanelBack {
                     editable={mode === 'skill'}
                     selectedDate={activity?.startTime ?? 0}
                     selectedDuration={activity?.duration ?? 60}
-                    maxDuration={maxDuration}
+                    maxDuration={maxDurationHour}
                     onChange={this.onChangeSchedule}
                     onChangeState={this.onChangeStateSchedule}
                 />

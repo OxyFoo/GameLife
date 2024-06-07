@@ -26,7 +26,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     await user.settings.Load();
 
     // Ping request
-    await user.server.Ping();
+    await user.server.Ping(); // TODO: Set timeout ?
     if (user.server.IsConnected() === false) {
         user.interface.console.AddLog('warn', 'Ping request failed, retrying...');
         await user.server.Ping();
@@ -127,6 +127,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
+    // Load quests
+    user.quests.dailyquest.Init();
+
     // Loading: User character
     user.character = new Character(
         'player',
@@ -136,11 +139,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     );
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     //user.interface.header.ShowAvatar(true);
-
-    // Loading: Quests
-    user.quests.nonzerodays.RefreshCaimsList();
-    await user.OnlineSave();
-    await user.LocalSave();
 
     // Loading: Notifications
     Notifications.DisableAll().then(() => {

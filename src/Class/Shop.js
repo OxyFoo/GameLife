@@ -1,4 +1,3 @@
-import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { DateToFormatString } from 'Utils/Date';
@@ -10,12 +9,22 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * 
+ * @typedef Chest
+ * @property {number} priceOriginal
+ * @property {number} priceDiscount
+ * @property {Object} probas
+ * @property {number} probas.common
+ * @property {number} probas.rare
+ * @property {number} probas.epic
+ * @property {number} probas.legendary
+ * 
  * @typedef BuyableRandomChest
  * @property {string} ref
  * @property {string | number} ID
  * @property {string} LangName
  * @property {ImageSourcePropType} Image
- * @property {number} Price
+ * @property {number} PriceOriginal
+ * @property {number} PriceDiscount
  * @property {number} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
@@ -32,7 +41,8 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {string} Name
  * @property {Slot} Slot
  * @property {ImageSourcePropType} Image
- * @property {number} Price
+ * @property {number} PriceOriginal
+ * @property {number} PriceDiscount
  * @property {number} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
@@ -58,6 +68,9 @@ class Shop {
 
     /** @type {Array<string>} */
     IAP_IDs = [];
+
+    /** @type {number} Price factor, applied to all Ox prices in shop */
+    priceFactor = 1;
 
     Clear() {
         this.buyToday = {
@@ -104,9 +117,10 @@ class Shop {
     /** @param {BuyableRandomChest} chest */
     BuyRandomChest = async (chest) => {
         const lang = langManager.curr['shop'];
+        const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
         // Check Ox Amount
-        if (this.user.informations.ox.Get() < chest.Price) {
+        if (this.user.informations.ox.Get() < price) {
             const title = lang['popup-notenoughox-title'];
             const text = lang['popup-notenoughox-text'];
             this.user.interface.popup.ForceOpen('ok', [ title, text ]);
@@ -153,9 +167,10 @@ class Shop {
     /** @param {BuyableTargetedChest} chest */
     BuyTargetedChest = async (chest) => {
         const lang = langManager.curr['shop'];
+        const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
         // Check Ox Amount
-        if (this.user.informations.ox.Get() < chest.Price) {
+        if (this.user.informations.ox.Get() < price) {
             const title = lang['popup-notenoughox-title'];
             const text = lang['popup-notenoughox-text'];
             this.user.interface.popup.ForceOpen('ok', [ title, text ]);

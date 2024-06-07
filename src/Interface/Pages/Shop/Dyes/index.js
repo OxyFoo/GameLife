@@ -12,10 +12,27 @@ import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import { Button, Text, Icon, Frame } from 'Interface/Components';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * 
  * @typedef {import('./back').BuyableDye} BuyableDye
  */
 
 class ShopDyes extends BackShopDyes {
+    render() {
+        const { buyableDyes } = this.state;
+
+        return (
+            <FlatList
+                data={buyableDyes}
+                ListEmptyComponent={this.renderEmpty}
+                renderItem={this.renderDye}
+                keyExtractor={(item, index) => `buyable-dye-${item.ItemBefore.ID}-${index}`}
+                scrollEnabled={false}
+            />
+        );
+    }
+
     /**
      * @param {{ item: BuyableDye }} item
      * @returns {JSX.Element}
@@ -23,6 +40,8 @@ class ShopDyes extends BackShopDyes {
     renderDye = ({ item: dyer }) => {
         const { ItemBefore, ItemAfter } = dyer;
         const disabled = user.shop.buyToday.dyes.includes(dyer.ItemBefore.InventoryID);
+
+        /** @type {StyleProp} */
         const buttonStyle = {
             flexDirection: !disabled ? 'row' : 'row-reverse',
             backgroundColor: dyer.BackgroundColor
@@ -41,10 +60,7 @@ class ShopDyes extends BackShopDyes {
                 {/** Arrow + Ox amount */}
                 <View style={styles.dyeAmount}>
                     <Icon icon='arrowLeft' angle={180} color='white' size={48} />
-                    <View style={styles.dyeAmountPrice}>
-                        <Text style={styles.dyeAmountText}>{dyer.Price.toString()}</Text>
-                        <Image style={styles.dyeOxImage} source={IMG_OX} />
-                    </View>
+                    {this.renderPrice(dyer)}
                 </View>
 
                 {/** Item after */}
@@ -70,17 +86,31 @@ class ShopDyes extends BackShopDyes {
         );
     }
 
-    render() {
-        const { buyableDyes } = this.state;
+    /** @param {BuyableDye} dyer */
+    renderPrice = (dyer) => {
+        // Default price
+        if (user.shop.priceFactor === 1) {
+            return (
+                <View style={styles.dyeAmountPrice}>
+                    <Text style={styles.dyeAmountText}>{dyer.Price.toString()}</Text>
+                    <Image style={styles.dyeOxImage} source={IMG_OX} />
+                </View>
+            );
+        }
 
+        // Price factor is applied
         return (
-            <FlatList
-                data={buyableDyes}
-                ListEmptyComponent={this.renderEmpty}
-                renderItem={this.renderDye}
-                keyExtractor={(item, index) => `buyable-dye-${item.ItemBefore.ID}-${index}`}
-                scrollEnabled={false}
-            />
+            <View style={styles.dyeAmountPriceEdit}>
+                <View>
+                    <Text style={styles.dyeAmountTextOld}>
+                        {dyer.Price.toString()}
+                    </Text>
+                    <Text style={styles.dyeAmountText}>
+                        {Math.round(dyer.Price * user.shop.priceFactor).toString()}
+                    </Text>
+                </View>
+                <Image style={styles.dyeOxImageEdit} source={IMG_OX} />
+            </View>
         );
     }
 }

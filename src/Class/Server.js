@@ -11,11 +11,14 @@ const { versionName } = require('../../package.json');
 /**
  * @typedef {import('Managers/LangManager').Lang} Lang
  * 
+ * @typedef {import('Class/Shop').Chest} Chest
+ * @typedef {import('Data/Items').StuffID} StuffID
  * @typedef {import('Managers/UserManager').default} UserManager
+ * 
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
- * @typedef {'ping'|'login'|'signin'|'getUserData'|'getUserIntentories'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimNonZeroDays'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
+ * @typedef {'ping'|'login'|'signin'|'getUserData'|'getUserIntentories'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimDailyQuest'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
 */
 
@@ -337,24 +340,39 @@ class Server {
     }
 
     /**
-     * Save username on server
-     * @returns {Promise<Array<string> | null>} Return array of item ID
+     * Get daily deals & chests data from server
+     * @typedef {object} ReturnShopContent
+     * @property {Array<StuffID>} dailyDeals
+     * @property {object} chestsStats
+     * @property {object} chestsStats.random
+     * @property {Chest} chestsStats.random.common
+     * @property {Chest} chestsStats.random.rare
+     * @property {Chest} chestsStats.random.epic
+     * @property {Chest} chestsStats.random.legendary
+     * @property {object} chestsStats.target
+     * @property {Chest} chestsStats.target.common
+     * @property {Chest} chestsStats.target.rare
+     * @property {Chest} chestsStats.target.epic
+     * @property {Chest} chestsStats.target.legendary
+     * @returns {Promise<ReturnShopContent>} Return array of item ID
+     * @throws {Error} Request failed
      */
-    async GetDailyDeals() {
+    async GetShopContent() {
         const _data = {
             'dataToken': this.dataToken
         };
 
         const response = await this.Request('getDailyDeals', _data);
-        if (response === null) return null;
+        if (response === null) {
+            throw new Error('Request failed');
+        };
 
         const status = response['status'];
-        if (status !== 'ok') return null;
+        if (status !== 'ok') {
+            throw new Error('Request failed');
+        };
 
-        const items = response['dailyDeals'];
-        if (!Array.isArray(items)) return null;
-
-        return items;
+        return response;
     }
 
     /**

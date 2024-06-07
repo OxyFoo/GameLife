@@ -61,12 +61,29 @@ function GetFullDate(date) {
  * Return date with format : dd/mm/yyyy
  * @param {Date} date
  * @returns {string} dd/mm/yyyy
+ * @deprecated Replaced by DateFormat
  */
 function DateToFormatString(date) {
     const dd = TwoDigit(date.getDate());
     const mm = TwoDigit(date.getMonth() + 1);
     const yyyy = date.getFullYear();
     return [ dd, mm, yyyy ].join('/');
+}
+
+/**
+ * Return local date with format. E.g. DD/MM/YYYY
+ * @param {Date} date
+ * @returns {string} Formatted date
+ */
+function DateFormat(date, format = 'DD/MM/YYYY') {
+    const dd = TwoDigit(date.getDate());
+    const mm = TwoDigit(date.getMonth() + 1);
+    const yyyy = date.getFullYear().toString();
+
+    return format
+        .replace('DD', dd)
+        .replace('MM', mm)
+        .replace('YYYY', yyyy);
 }
 
 /**
@@ -82,5 +99,5 @@ function DateToFormatTimeString(date) {
 
 export {
     DAYS, GetDay, GetMonthAndYear, GetFullDate,
-    DateToFormatString, DateToFormatTimeString
+    DateToFormatString, DateToFormatTimeString, DateFormat
 };

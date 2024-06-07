@@ -24,8 +24,9 @@ function renderDyePopup(dye, refreshCallback = () => {}) {
 
     const itemName = dye.Name;
     const itemDescription = lang['popup-dyer-text'];
+    const price = Math.round(dye.Price * user.shop.priceFactor);
     const buttonText = lang['popup-dyer-button']
-                        .replace('{}', dye.Price.toString());
+                        .replace('{}', price.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
@@ -64,7 +65,8 @@ const buyDye = async(item) => {
     const lang = langManager.curr['shop'];
 
     // Check Ox Amount
-    if (user.informations.ox.Get() < item.Price) {
+    const price = Math.round(item.Price * user.shop.priceFactor);
+    if (user.informations.ox.Get() < price) {
         const title = lang['popup-notenoughox-title'];
         const text = lang['popup-notenoughox-text'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
@@ -100,7 +102,7 @@ const buyDye = async(item) => {
     const title = lang['dyes']['popup-dyesuccess-title'];
     let text = lang['dyes']['popup-dyesuccess-text']
         .replace('{}', item.Name)
-        .replace('{}', item.Price.toString());
+        .replace('{}', price.toString());
     user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
 }
 

@@ -9,9 +9,9 @@ import { GetMidnightTime, GetLocalTime } from './Time';
  */
 function GetRandomIntByDay(min, max) {
     const today = new Date();
-    const date = today.getUTCDate();
-    const month = today.getUTCMonth();
-    const shortYear = today.getUTCFullYear() % 100;
+    const date = today.getDate();
+    const month = today.getMonth();
+    const shortYear = today.getFullYear() % 100;
 
     const device = GetDeviceInformations().deviceID;
     const deviceSeed = device.split('').map(c => c.charCodeAt(0)).reduce((a, b) => a + b, 0);

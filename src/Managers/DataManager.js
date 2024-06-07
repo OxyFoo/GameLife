@@ -1,5 +1,3 @@
-import langManager from 'Managers/LangManager';
-
 import { Request_Async } from 'Utils/Request';
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
@@ -127,6 +125,11 @@ class DataManager {
                 const reqIAP = reqInternalData.content['iap'];
                 if (typeof(reqIAP) === 'object') {
                     user.shop.LoadIAPs(reqIAP);
+                }
+
+                const priceFactor = reqInternalData.content['priceFactor'];
+                if (typeof(priceFactor) === 'number') {
+                    user.shop.priceFactor = priceFactor;
                 }
 
                 const reqTables = reqInternalData.content['tables'];

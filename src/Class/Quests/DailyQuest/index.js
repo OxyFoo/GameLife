@@ -84,6 +84,7 @@ class DailyQuest {
     }
 
     Init = () => {
+        // TODO: Wait loading
         UpdateSetup.call(this);
         UpdateActivities.call(this, this.tmpRemaining);
     }

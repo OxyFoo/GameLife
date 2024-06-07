@@ -66,7 +66,7 @@ class Settings {
             EditLog(debugIndex, 'warn', 'Settings data: local load failed');
         }
     }
-    Save() {
+    async Save() {
         const { AddLog, EditLog } = this.user.interface.console;
         const settings = {
             lang: langManager.currentLangageKey,
@@ -84,7 +84,7 @@ class Settings {
 
         const debugIndex = AddLog('info', 'Settings data: local saving...');
 
-        const status = DataStorage.Save(STORAGE.LOGIN, settings);
+        const status = await DataStorage.Save(STORAGE.LOGIN, settings);
 
         const statusText = status ? 'success' : 'failed';
         const statusType = status ? 'same' : 'error';

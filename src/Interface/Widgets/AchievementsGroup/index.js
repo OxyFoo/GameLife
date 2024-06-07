@@ -37,7 +37,7 @@ class AchievementsGroup extends AchievementsGroupBack {
                     renderItem={this.renderAchievement}
                     keyExtractor={(item, index) => 'skill-' + index}
                     ItemSeparatorComponent={() => (
-                        <Separator.Horizontal
+                        <Separator
                             style={styles.separator}
                             color='main1'
                         />

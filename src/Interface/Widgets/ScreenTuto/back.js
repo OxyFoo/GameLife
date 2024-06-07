@@ -11,9 +11,9 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
- * @typedef {import('Interface/Components/Zap/back').ZapInclinaison} ZapInclinaison
- * @typedef {import('Interface/Components/Zap/back').ZapFace} ZapFace
- * @typedef {import('Interface/Components/Zap/back').ZapOrientation} ZapOrientation
+ * @typedef {import('Interface/OldComponents/Zap/back').ZapInclinaison} ZapInclinaison
+ * @typedef {import('Interface/OldComponents/Zap/back').ZapFace} ZapFace
+ * @typedef {import('Interface/OldComponents/Zap/back').ZapOrientation} ZapOrientation
  * 
  * @typedef {object} TutoElement
  * @property {React.Component | null} component Ref of component to display (null to hide all the screen)

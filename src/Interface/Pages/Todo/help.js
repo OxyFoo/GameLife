@@ -20,7 +20,7 @@ function StartHelp() {
             text: lang['2'],
             showNextButton: true,
             execBefore: async () => {
-                this.refPage.GotoY(100);
+                this.refPage.current?.GotoY(100);
                 await Sleep(400);
             }
         },
@@ -29,7 +29,7 @@ function StartHelp() {
             text: lang['3'],
             showNextButton: true,
             execBefore: async () => {
-                this.refPage.GotoY(200);
+                this.refPage.current?.GotoY(200);
                 await Sleep(400);
             }
         }

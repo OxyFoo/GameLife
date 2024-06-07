@@ -6,7 +6,7 @@ import BackLeaderboard from './back';
 import { RankElement } from './element';
 import langManager from 'Managers/LangManager';
 
-import { Page, Input, Button } from 'Interface/Components';
+import { Input, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Leaderboard extends BackLeaderboard {
@@ -17,7 +17,7 @@ class Leaderboard extends BackLeaderboard {
         const sortType = Object.values(this.sortList)[sortIndex];
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <View>
                 <PageHeader style={styles.header} onBackPress={this.Back} />
 
                 <View style={styles.myRankContainer}>
@@ -50,7 +50,7 @@ class Leaderboard extends BackLeaderboard {
                     renderItem={({ item }) => <RankElement item={item} />}
                     keyExtractor={item => `rank-id-${item.accountID}`}
                 />
-            </Page>
+            </View>
         );
     }
 }

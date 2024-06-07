@@ -9,7 +9,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-import { Page, Text, XPBar, Container, KPI, Button } from 'Interface/Components';
+import { Text, ProgressBar, Container, KPI, Button } from 'Interface/Components';
 import { UserHeader, PageHeader, AchievementsGroup } from 'Interface/Widgets';
 
 class Profile extends BackProfile {
@@ -24,10 +24,7 @@ class Profile extends BackProfile {
         const backgroundKpi = { backgroundColor: themeManager.GetColor('backgroundCard') };
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                scrollable={!editorOpened}
-            >
+            <View>
                 <PageHeader
                     style={{ marginBottom: 12 }}
                     onBackPress={this.onBack}
@@ -47,7 +44,7 @@ class Profile extends BackProfile {
                         <Text>{langManager.curr['level']['level'] + ' ' + xpInfo.lvl}</Text>
                         <Text>{Round(xpInfo.xp) + '/' + xpInfo.next}</Text>
                     </View>
-                    <XPBar value={xpInfo.xp} maxValue={xpInfo.next} />
+                    <ProgressBar value={xpInfo.xp} maxValue={xpInfo.next} />
                 </Animated.View>
 
                 <EditorAvatar
@@ -96,7 +93,7 @@ class Profile extends BackProfile {
                 </Button>
 
                 <EditorProfile ref={ref => this.refProfileEditor = ref} />
-            </Page>
+            </View>
         );
     }
 }

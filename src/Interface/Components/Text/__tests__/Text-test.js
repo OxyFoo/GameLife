@@ -6,7 +6,7 @@ import { render } from '@testing-library/react-native';
 import renderer from 'react-test-renderer';
 
 // Graphical components
-import Text from '../index';
+import { Text } from '../index';
 
 describe('[Component] Text', () => {
     it('should render correctly', () => {

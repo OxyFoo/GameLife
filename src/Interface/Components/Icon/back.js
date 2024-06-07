@@ -1,14 +1,13 @@
 import * as React from 'react';
-import SVGIcons from './icons';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {keyof SVGIcons} Icons
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @callback GestureEvent
  * @param {GestureResponderEvent} event
@@ -24,7 +23,7 @@ const IconProps = {
     /** @type {string | null} Display an icon from XML base64 encoded ('icon' skip if define) */
     xml: null,
 
-    /** @type {Icons | null} */
+    /** @type {IconsName | null} */
     icon: null,
 
     /** @type {number} Size of icon in pixels */
@@ -36,7 +35,7 @@ const IconProps = {
     /** @type {ThemeColor | ThemeText} */
     color: 'white',
 
-    /** @type {(event: GestureResponderEvent) => void | null} */
+    /** @type {((event: GestureResponderEvent) => void) | null} */
     onPress: null,
 
     /** @type {boolean} */
@@ -44,6 +43,15 @@ const IconProps = {
 };
 
 class IconBack extends React.Component {
+    /** @param {IconProps} nextProps */
+    shouldComponentUpdate(nextProps) {
+        return this.props.show !== nextProps.show
+            || this.props.xml !== nextProps.xml
+            || this.props.icon !== nextProps.icon
+            || this.props.size !== nextProps.size
+            || this.props.angle !== nextProps.angle
+            || this.props.color !== nextProps.color;
+    }
 }
 
 IconBack.prototype.props = IconProps;

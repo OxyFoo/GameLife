@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import StartMission from './mission';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Interface/Components/Button').default} Button
+ * @typedef {import('Interface/OldComponents/Button').default} Button
  * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('Types/TCP').ConnectionState} ConnectionState
  */

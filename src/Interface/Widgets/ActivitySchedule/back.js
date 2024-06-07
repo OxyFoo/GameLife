@@ -8,8 +8,8 @@ import { GetGlobalTime, GetTimeZone } from 'Utils/Time';
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * @typedef {import('Interface/Components/Digit').default} Digit
- * @typedef {import('Interface/Components/Digit/back').DigitCallback} DigitCallback
+ * @typedef {import('Interface/OldComponents/Digit').default} Digit
+ * @typedef {import('Interface/OldComponents/Digit/back').DigitCallback} DigitCallback
  */
 
 const ActivityScheduleProps = {

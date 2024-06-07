@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import StartHelp from './help';
-import { Page, Text, IconCheckable, Input } from 'Interface/Components';
+import { Text, IconCheckable, Input } from 'Interface/Components';
 import { PageHeader, ActivityPanel } from 'Interface/Widgets';
 
 /**
@@ -22,11 +22,7 @@ class Activity extends BackActivity {
         const { skillSearch, skills, topPanelOffset, inputText } = this.state;
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                scrollable={false}
-                canScrollOver={false}
-            >
+            <View>
                 <PageHeader
                     style={styles.header}
                     onBackPress={(e) => user.interface.BackHandle()}
@@ -72,7 +68,7 @@ class Activity extends BackActivity {
                     ref={ref => this.refActivityPanel = ref}
                     topOffset={topPanelOffset}
                 />
-            </Page>
+            </View>
         );
     }
 

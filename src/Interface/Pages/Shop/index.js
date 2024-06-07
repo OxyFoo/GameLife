@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
+import StartHelp from './help';
 import BackShop from './back';
 import ShopHeader from './UI/header';
 import Banner from './UI/banner';
@@ -14,8 +15,7 @@ import ShopIAP from './InAppPurchases'
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text, Icon } from 'Interface/Components';
-import StartHelp from './help';
+import { Text, Icon } from 'Interface/Components';
 
 class Shop extends BackShop {
     render() {
@@ -37,15 +37,10 @@ class Shop extends BackShop {
         const Help = StartHelp.bind(this);
 
         return (
-            <Page
-                ref={this.setRef}
-                style={styles.page}
-                isHomePage
-                canScrollOver
-            >
+            <View style={styles.page}>
                 <ShopHeader
                     ref={this.refHeader}
-                    refPage={this.state.refPage}
+                    refPage={this.refShopHeader}
                     style={styles.shopHeader}
                 />
 
@@ -73,7 +68,7 @@ class Shop extends BackShop {
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
                 <ShopDyes ref={this.refDyes} />
-            </Page>
+            </View>
         );
     }
 
@@ -96,16 +91,11 @@ class Shop extends BackShop {
         const text = lang['internet-offline-text'];
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.noInternetContainer}
-                isHomePage
-                canScrollOver
-            >
+            <View style={styles.noInternetContainer}>
                 <Icon icon='nowifi' size={100} />
                 <Text fontSize={22}>{title}</Text>
                 <Text fontSize={16}>{text}</Text>
-            </Page>
+            </View>
         );
     }
 
@@ -113,12 +103,7 @@ class Shop extends BackShop {
         const lang = langManager.curr['shop'];
 
         return (
-            <Page
-                ref={this.setRef}
-                style={styles.page}
-                isHomePage
-                canScrollOver
-            >
+            <View style={styles.page}>
                 <ShopHeader
                     ref={this.refHeader}
                     refPage={this.state.refPage}
@@ -127,7 +112,7 @@ class Shop extends BackShop {
 
                 <Banner title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />
-            </Page>
+            </View>
         );
     }
 }

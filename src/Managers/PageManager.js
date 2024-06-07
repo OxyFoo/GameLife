@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, BackHandler, StyleSheet } from 'react-native';
+import { Animated, BackHandler, StyleSheet, View } from 'react-native';
 import RNExitApp from 'react-native-exit-app';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -13,7 +13,7 @@ import { BottomBar, Console, Popup, ScreenInput, ScreenList, ScreenTuto, UserHea
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Interface/Components').PageBase} PageBase
+ * @typedef {import('Interface/FlowEngine').PageBase} PageBase
  * @typedef {keyof PAGES} PageName
  * @typedef {PAGES[keyof PAGES]} PageType
  * 
@@ -71,7 +71,7 @@ class PageManager extends React.Component{
 
     /**
      * @description Custom back button handler
-     * @type {() => boolean | null} Return true if back is handled
+     * @type {(() => boolean) | null} Return true if back is handled
      */
     customBackHandle = null;
 
@@ -116,12 +116,12 @@ class PageManager extends React.Component{
 
         // Page was reloaded
         if (Object.keys(CACHE_PAGES.persistent).includes(this.state.selectedPage)) {
-            if (CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage?.state?.visible === false) {
-                CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage?.Show();
+            if (CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage.current?.state?.visible === false) {
+                CACHE_PAGES.persistent[this.state.selectedPage]?.ref?.refPage.current?.Show();
             }
         } else {
-            if (CACHE_PAGES.temp?.ref?.refPage?.state?.visible === false) {
-                CACHE_PAGES.temp?.ref?.refPage?.Show();
+            if (CACHE_PAGES.temp?.ref?.refPage.current?.state?.visible === false) {
+                CACHE_PAGES.temp?.ref?.refPage.current?.Show();
             }
         }
     }
@@ -309,11 +309,11 @@ class PageManager extends React.Component{
         const { selectedPage } = this.state;
         if (selectedPage !== '') {
             if (Object.keys(CACHE_PAGES.persistent).includes(selectedPage)) {
-                if (typeof(CACHE_PAGES.persistent[selectedPage]?.ref?.refPage?.Hide) === 'function') {
-                    CACHE_PAGES.persistent[selectedPage].ref.refPage.Hide();
+                if (typeof(CACHE_PAGES.persistent[selectedPage]?.ref?.refPage.current?.Hide) === 'function') {
+                    CACHE_PAGES.persistent[selectedPage].ref.refPage.current.Hide();
                 }
             } else {
-                if (typeof(CACHE_PAGES.temp.ref?.refPage?.Hide) === 'function') {
+                if (typeof(CACHE_PAGES.temp.ref?.refPage.current?.Hide) === 'function') {
                     CACHE_PAGES.temp.content = null;
                 }
             }
@@ -321,8 +321,8 @@ class PageManager extends React.Component{
 
         // Show new page
         if (Object.keys(CACHE_PAGES.persistent).includes(newPage)) {
-            if (typeof(CACHE_PAGES.persistent[newPage]?.ref?.refPage?.Show) === 'function') {
-                CACHE_PAGES.persistent[newPage].ref.refPage.Show();
+            if (typeof(CACHE_PAGES.persistent[newPage]?.ref?.refPage.current?.Show) === 'function') {
+                CACHE_PAGES.persistent[newPage].ref.refPage.current.Show();
                 CACHE_PAGES.persistent[newPage].ref.componentDidFocused(args);
                 this.setState({ selectedPage: newPage });
             } else if (DEBUG_MODE) {
@@ -331,8 +331,8 @@ class PageManager extends React.Component{
         } else {
             CACHE_PAGES.temp.content = this.getPageContent(newPage, args, true);
             this.setState({ selectedPage: newPage }, () => {
-                if (typeof(CACHE_PAGES.temp.ref?.refPage?.Show) === 'function') {
-                    CACHE_PAGES.temp.ref.refPage.Show();
+                if (typeof(CACHE_PAGES.temp.ref?.refPage.current?.Show) === 'function') {
+                    CACHE_PAGES.temp.ref.refPage.current.Show();
                     CACHE_PAGES.temp.ref.componentDidFocused(args);
                 } else if (DEBUG_MODE) {
                     console.log('Ref undefined (temp)', CACHE_PAGES.temp);
@@ -387,17 +387,18 @@ class PageManager extends React.Component{
 
     GetCurrentPageName = () => this.state.selectedPage;
 
+    darkBackground = [
+        themeManager.GetColor('ground1', { themeName: 'Main' }),
+        themeManager.GetColor('ground2', { themeName: 'Main' })
+    ];
+    lightBackground = [
+        themeManager.GetColor('ground1', { themeName: 'Light' }),
+        themeManager.GetColor('ground2', { themeName: 'Light' })
+    ];
+
     render() {
         const { animTheme } = this.state;
 
-        const darkBackground = [
-            themeManager.GetColor('ground1', { themeName: 'Main' }),
-            themeManager.GetColor('ground2', { themeName: 'Main' })
-        ];
-        const lightBackground = [
-            themeManager.GetColor('ground1', { themeName: 'Light' }),
-            themeManager.GetColor('ground2', { themeName: 'Light' })
-        ];
         const lightOpacity = { opacity: animTheme };
 
         /**
@@ -418,17 +419,19 @@ class PageManager extends React.Component{
         return (
             <LinearGradient
                 style={styles.fullscreen}
-                colors={darkBackground}
+                colors={this.darkBackground}
                 onLayout={this.onLayout}
             >
                 {/* Light background */}
                 <Animated.View style={[styles.absolute, styles.fullscreen, lightOpacity]} pointerEvents='none'>
-                    <LinearGradient style={styles.fullscreen} colors={lightBackground} />
+                    <LinearGradient style={styles.fullscreen} colors={this.lightBackground} />
                 </Animated.View>
 
                 {['temp', ...PAGES_PERSISTENT].map(newPage)}
 
-                <UserHeader ref={ref => { if (ref !== null) this.header = ref } } show={this.state.bottomBarShow} editorMode={false} />
+                <View style={{ opacity: 0 }} pointerEvents='none'>
+                    <UserHeader ref={ref => { if (ref !== null) this.header = ref } } show={this.state.bottomBarShow} editorMode={false} />
+                </View>
                 <BottomBar ref={ref => { if (ref !== null) this.bottomBar = ref } } show={this.state.bottomBarShow} selectedIndex={this.state.bottomBarIndex} />
                 <Popup ref={ref => { if (ref !== null) this.popup = ref } } />
 

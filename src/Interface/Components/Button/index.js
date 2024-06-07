@@ -1,147 +1,226 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { BlurView } from '@react-native-community/blur';
+import MaskedView from '@react-native-masked-view/masked-view';
 
+import styles from './style';
 import ButtonBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import Ripple from '../Ripple';
-import ButtonBadge from './Badge';
-import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
-import { IsUndefined } from 'Utils/Functions';
+import { Text } from '../Text';
+import { Icon } from '../Icon';
+import { Ripple } from '../../Primitives/Ripple';
 
 /**
- * @typedef {import('./Badge').ButtonBadgeProps} ButtonBadgeProps
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  */
 
 class Button extends ButtonBack {
-    static Badge = React.forwardRef((/** @type {ButtonBadgeProps} */ props, ref) => {
-        const { style, onPress } = props;
-
-        return (
-            <Button
-                style={[styles.buttonBadgeContainer, style]}
-                color='transparent'
-                rippleColor='ground1'
-                onPress={onPress}
-            >
-                <ButtonBadge {...props} />
-            </Button>
-        );
-    });
-
     render() {
         const {
-            children,
-            style: styleProp,
-            styleAnimation,
-            enabled,
-            loading,
-            icon,
-            iconXml
+            appearance, style: styleProp, styleAnimation, styleContent, enabled,
+            onTouchStart, onTouchCancel, onTouchMove, onTouchEnd, onLayout,
+            children, icon, iconSize, iconXml, iconAngle, loading,
+            fontSize, onPress, onLongPress, ...rest
         } = this.props;
-        const hasChildren = !IsUndefined(children);
-        const hasChildrenString = !IsUndefined(children) && typeof(children) === 'string';
-        const hasIcon = icon !== null || !IsUndefined(iconXml);
-        const onlyOneChild = !hasChildren || !hasIcon || loading;
 
-        const color = themeManager.GetColor(enabled ? this.props.color : 'disabled');
-        const style = [
-            styles.body,
-            {
-                justifyContent: onlyOneChild ? 'center' : 'space-between',
-                borderRadius: this.props.borderRadius,
-                backgroundColor: this.props.colorNextGen ? 'transparent' : color,
-                opacity: enabled ? 1 : 0.6
-            },
-            styleProp,
-            styleAnimation
-        ];
         const ButtonView = styleAnimation === null ? View : Animated.View;
-
-        let content;
-        if (this.props.loading) {
-            content = <Icon icon='loadingDots' size={this.props.iconSize + 8} color={this.props.iconColor} />;
-        } else {
-            const text = hasChildrenString ? <Text style={styles.text} color={this.props.colorText} fontSize={this.props.fontSize}>{children}</Text> : children;
-            content = <>
-                        {hasChildren && text}
-                        {hasIcon     && <Icon icon={this.props.icon} xml={this.props.iconXml} size={this.props.iconSize} color={this.props.iconColor} angle={this.props.iconAngle} />}
-                    </>;
-        }
-
-        let output = (
+        return (
             <ButtonView
-                testID={this.props.testID}
-                style={style}
+                {...rest}
+                style={[ styles.body, styleProp, styleAnimation ]}
                 onTouchStart={this.onTouchStart}
                 onTouchCancel={this.onTouchCancel}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
                 onLayout={this.onLayout}
-                pointerEvents={this.props.pointerEvents}
             >
-                {content}
+                {this.renderBackground()}
+                {this.renderContent()}
+
+                {/** Ripple */}
                 {enabled && (
                     <Ripple
                         ref={this.rippleRef}
-                        parentWidth={this.state.width}
-                        rippleColor={this.props.rippleColor}
+                        rippleColor={appearance === 'normal' ? 'black' : 'white'}
                     />
                 )}
             </ButtonView>
         );
+    }
 
-        
-        if (this.props.colorNextGen) {
-            const titleColors = [
-                '#384065',
-                '#B83EFFE3'
-            ];
-            output = (
-                <LinearGradient
-                    style={[{
-                        borderTopLeftRadius: this.props.borderRadius,
-                        borderTopRightRadius: this.props.borderRadius
-                    }, styleProp]}
-                    colors={titleColors}
-                    start={{ x: 0, y: -2 }}
-                    end={{ x: 1, y: 2 }}
-                >
-                    {output}
-                </LinearGradient>
+    renderContent() {
+        const {
+            children, appearance, loading, icon, iconXml,
+            styleContent: styleContentProp, fontSize, enabled
+        } = this.props;
+
+        const hasChildren = typeof(children) !== 'undefined';
+        const hasIcon = icon !== null || iconXml !== null;
+
+        let content = children;
+        let childCount = 1;
+
+        // Loading icon
+        if (loading) {
+            content = (
+                <Icon
+                    style={styles.loadingIcon}
+                    icon='loading-dots'
+                    size={36}
+                    color={'darkBlue'}
+                />
             );
         }
 
-        return output;
+        // Manage children
+        else if (hasChildren) {
+            if (typeof(children) === 'string') {
+                content = (
+                    <Text color={'darkBlue'} fontSize={fontSize}>
+                        {children}
+                    </Text>
+                );
+            }
+
+            // Add icon after text
+            if (hasIcon) {
+                childCount = 2;
+                content = (
+                    <View style={styles.content}>
+                        <Icon
+                            icon={'default'}
+                            size={this.props.iconSize}
+                            color={'transparent'}
+                        />
+                        <View style={[styles.content, { flex: 1 }]}>
+                            {content}
+                        </View>
+                        <Icon
+                            icon={this.props.icon}
+                            xml={this.props.iconXml}
+                            size={this.props.iconSize}
+                            color={'darkBlue'}
+                            angle={this.props.iconAngle}
+                        />
+                    </View>
+                );
+            }
+        }
+
+        // Icon only
+        else if (!hasChildren && hasIcon) {
+            content = (
+                <Icon
+                    icon={this.props.icon}
+                    xml={this.props.iconXml}
+                    size={this.props.iconSize}
+                    color={'darkBlue'}
+                    angle={this.props.iconAngle}
+                />
+            );
+        }
+
+        /** @type {StyleProp} */
+        const styleContent = {
+            justifyContent: childCount === 1 ? 'center' : 'space-between',
+            opacity: enabled ? 1 : 0.6
+        };
+
+        if (appearance === 'normal' || appearance === 'transparent') {
+            return (
+                <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
+                    {content}
+                </View>
+            );
+        }
+
+        else if (appearance === 'outline' || appearance === 'outline-blur') {
+            return (
+                <>
+                    <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
+                        {content}
+                    </View>
+                    <MaskedView
+                        style={[styles.absolute, styles.gradientContent]}
+                        maskElement={(
+                            <View style={[styles.content, styleContent, styleContentProp]}>
+                                {content}
+                            </View>
+                        )}
+                    >
+                        <LinearGradient
+                            style={{ width: '100%', height: '100%' }}
+                            colors={['#8CF7FF', '#DBA1FF']}
+                            useAngle={true}
+                            angle={190}
+                        />
+                    </MaskedView>
+                </>
+            );
+        }
+    }
+
+    renderBackground() {
+        const { appearance } = this.props;
+
+        if (appearance === 'normal') {
+            return (
+                <LinearGradient
+                    style={styles.absolute}
+                    colors={['#8CF7FF', '#DBA1FF']}
+                    useAngle={true}
+                    angle={267}
+                />
+            );
+        }
+
+        else if (appearance === 'outline') {
+            return (
+                <MaskedView
+                    style={styles.absolute}
+                    maskElement={(<View style={styles.backgroundView} />)}
+                >
+                    <LinearGradient
+                        style={{ width: '100%', height: '100%' }}
+                        colors={['#8CF7FF', '#DBA1FF']}
+                        useAngle={true}
+                        angle={267}
+                    />
+                </MaskedView>
+            );
+        }
+
+        else if (appearance === 'outline-blur') {
+            return (
+                <>
+                    <BlurView
+                        style={[
+                            styles.absolute,
+                            styles.backgroundBlur,
+                            {
+                                backgroundColor: themeManager.GetColor('darkBlue', { opacity: .25 })
+                            }
+                        ]}
+                        blurAmount={20}
+                    />
+                    <MaskedView
+                        style={styles.absolute}
+                        maskElement={(<View style={styles.backgroundView} />)}
+                    >
+                        <LinearGradient
+                            style={{ width: '100%', height: '100%' }}
+                            colors={['#8CF7FF', '#DBA1FF']}
+                            useAngle={true}
+                            angle={267}
+                        />
+                    </MaskedView>
+                </>
+            );
+        }
     }
 }
 
-const styles = StyleSheet.create({
-    body: {
-        height: 56,
-        paddingHorizontal: 24,
-
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-
-        overflow: 'hidden'
-    },
-    text: {
-        textTransform: 'uppercase'
-    },
-
-    buttonBadgeContainer: {
-        width: 'auto',
-        height: 'auto',
-        maxHeight: 48,
-        paddingVertical: 0,
-        paddingHorizontal: 0,
-        borderRadius: 8
-    }
-});
-
-export default Button;
+export { Button };

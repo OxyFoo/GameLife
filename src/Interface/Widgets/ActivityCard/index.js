@@ -15,7 +15,7 @@ import { GetTimeZone, TimeToFormatString } from 'Utils/Time';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Interface/Components/Icon/index').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
@@ -56,7 +56,7 @@ class ActivityCard extends React.Component {
         */
         let color = 'main1';
 
-        /** @type {Icons | undefined} */
+        /** @type {IconsName | undefined} */
         this.icon = undefined;
 
         if (type === 'activity') {

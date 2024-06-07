@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
+import user from 'Managers/UserManager';
+
+import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -8,6 +11,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * 
+ * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * 
  * @typedef {object} ComboBoxItem
@@ -20,21 +24,23 @@ const ComboBoxProps = {
     style: {},
 
     /** @type {number} */
-    maxHeight: 256,
-
-    /** @type {ThemeColor} */
-    activeColor: 'main1',
+    maxContentHeight: 256,
 
     /** @type {string} */
     title: 'Title',
+
+    /** @type {ThemeColor} */
+    activeColor: 'main1',
 
     /** @type {Array<ComboBoxItem>} */
     data: [],
 
     selectedValue: '',
-    setSearchBar: false,
 
-    /** @param {ComboBoxItem} item */
+    /** @type {boolean} */
+    enableSearchBar: false,
+
+    /** @param {ComboBoxItem | null} item */
     onSelect: (item) => {},
 
     /** @type {boolean} If false press event disabled */
@@ -44,29 +50,41 @@ const ComboBoxProps = {
 class ComboBoxBack extends React.Component {
     state = {
         parent: {
+            x: 0,
+            y: 0,
             width: 0,
-            height: 0,
-            x: 0, y: 0
+            height: 0
         },
         anim: new Animated.Value(0),
 
-        data: [],
+        data: this.props.data,
         selectionMode: false,
-        selectedValue: '',
         search: ''
     }
 
-    componentDidMount() {
-        this.flatlistRef = null;
-        this.refreshSearch();
+    /** @type {React.RefObject<FlatList>} */
+    flatlistRef = React.createRef();
+
+    /**
+     * @param {ComboBoxProps} nextProps
+     * @param {ComboBoxBack['state']} nextState
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.data != nextProps.data ||
+            this.props.selectedValue != nextProps.selectedValue ||
+            this.props.enabled != nextProps.enabled ||
+            this.state.selectionMode != nextState.selectionMode ||
+            this.state.search != nextState.search;
     }
 
+    /** @param {ComboBoxProps} prevProps */
     componentDidUpdate(prevProps) {
+        // Data changed, update data and reset search
         if (prevProps.data != this.props.data) {
-            this.refreshSearch();
-        }
-        if (this.state.selectedValue != this.props.selectedValue) {
-            this.setState({ selectedValue: this.props.selectedValue });
+            this.setState({
+                data: this.props.data,
+                search: ''
+            });
         }
     }
 
@@ -80,45 +98,56 @@ class ComboBoxBack extends React.Component {
         }
     }
 
-    openSelection = () => {
+    onPress = () => {
         if (!this.props.enabled) return;
 
-        // Scroll to top
-        if (this.flatlistRef !== null) {
-            this.flatlistRef.scrollToOffset({ offset: 0, animated: false });
+        if (this.state.selectionMode) {
+            this.closeSelection();
+            return;
         }
+
+        // Scroll to top
+        this.flatlistRef.current?.scrollToOffset({ offset: 0, animated: false });
 
         // Open selection
         SpringAnimation(this.state.anim, 1).start();
         this.setState({ selectionMode: true });
     }
+
     closeSelection = () => {
         SpringAnimation(this.state.anim, 0).start();
         this.setState({ selectionMode: false });
     }
+
     resetSelection = () => {
         if (!this.props.enabled) return;
         this.props.onSelect(null);
-        this.setState({ selectedValue: '' });
+        if (this.state.selectionMode) {
+            this.closeSelection();
+        }
     }
 
     refreshSearch = (text = '') => {
-        if (text.length > 0) {
-            const newDate = this.props.data.filter(item => item.value.toLowerCase().includes(text.toLowerCase()));
-            this.setState({ data: newDate, search: text });
-        } else {
-            this.setState({ data: this.props.data, search: text });
-        }
+        const textLowerCase = FormatForSearch(text);
+        this.setState({
+            data: this.props.data
+                .filter(item => FormatForSearch(item.value).includes(textLowerCase)),
+            search: text
+        });
     }
 
     /** @param {ComboBoxItem} item */
     onItemPress = (item) => {
-        const { key, value } = item;
-
         this.props.onSelect(item);
-        this.setState({ selectedValue: value })
         this.closeSelection();
     }
+
+    EnablePageScroll = () => {
+        user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
+    }
+    DisablePageScroll = () => {
+        user.interface.GetCurrentPage()?.refPage.current?.DisableScroll();
+    }    
 }
 
 ComboBoxBack.prototype.props = ComboBoxProps;

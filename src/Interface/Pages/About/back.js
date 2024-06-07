@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { Linking } from 'react-native';
 
 import dataManager from 'Managers/DataManager';

@@ -8,7 +8,7 @@ import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
 const TIME_STEP_MINUTES = 5;
@@ -62,7 +62,7 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
         duration -= TIME_STEP_MINUTES;
         if (duration <= 0) {
             user.interface.ChangePage('display', {
-                /** @type {Icons} */
+                /** @type {IconsName} */
                 'icon': 'error',
                 'iconRatio': .4,
                 'text': lang['display-fail-text'].replace('{}', 'time'),
@@ -127,7 +127,7 @@ function AddActivity(activity) {
         if (skill === null) {
             const lang = langManager.curr['activity'];
             user.interface.ChangePage('display', {
-                /** @type {Icons} */
+                /** @type {IconsName} */
                 'icon': 'error',
                 'iconRatio': .4,
                 'text': lang['display-fail-text'].replace('{}', 'skill not found'),
@@ -181,7 +181,7 @@ function RemActivity(callback) {
 }
 
 function Back() {
-    if (user.interface.path.length > 1) {
+    if (user.interface.history.length > 1) {
         user.interface.BackHandle();
     } else {
         user.interface.ChangePage('calendar');

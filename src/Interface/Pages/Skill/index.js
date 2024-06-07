@@ -8,8 +8,8 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
+import { Container, Text, Icon, ProgressBar, Button, KPI } from 'Interface/Components';
 import { PageHeader, ActivityPanel, SkillChart, StatsBars } from 'Interface/Widgets';
-import { Page, Container, Text, Icon, XPBar, Button, KPI } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ListRenderItem<HistoryActivity>} ListRenderItemHistoryActivity
@@ -28,13 +28,11 @@ class Skill extends BackSkill {
         const txtNextXP = Round(this.skill.next, 1);
         const txtXP = langManager.curr['level']['xp'];
 
+        //bottomOffset={104}
+        //overlay={this.renderOverlay()}
+        //footer={this.renderFooter()}
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                bottomOffset={104}
-                overlay={this.renderOverlay()}
-                footer={this.renderFooter()}
-            >
+            <View>
                 <PageHeader onBackPress={user.interface.BackHandle} />
 
                 {/* Skill name and icon */}
@@ -59,7 +57,7 @@ class Skill extends BackSkill {
                         <Text>{this.skill.level}</Text>
                         <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
                     </View>
-                    <XPBar value={this.skill.xp} maxValue={this.skill.next} />
+                    <ProgressBar value={this.skill.xp} maxValue={this.skill.next} />
 
                     {this.skill.creator !== '' && (
                         <Text style={styles.creator} color='secondary'>{this.skill.creator}</Text>
@@ -115,18 +113,18 @@ class Skill extends BackSkill {
                             numColumns={2}
                             initialNumToRender={100}
                             onTouchStart={() => {
-                                user.interface.GetCurrentPage()?.refPage?.DisableScroll();
+                                user.interface.GetCurrentPage()?.refPage.current?.DisableScroll();
                             }}
                             onTouchEnd={() => {
-                                user.interface.GetCurrentPage()?.refPage?.EnableScroll();
+                                user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
                             }}
                             onTouchCancel={() => {
-                                user.interface.GetCurrentPage()?.refPage?.EnableScroll();
+                                user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
                             }}
                         />
                     </Container>
                 )}
-            </Page>
+            </View>
         );
     }
 

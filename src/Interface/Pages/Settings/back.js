@@ -2,7 +2,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetGlobalTime } from 'Utils/Time';
 import Notifications from 'Utils/Notifications';
 
@@ -73,8 +73,9 @@ class BackSettings extends PageBase {
         this.setState({ waitingConsentPopup: false });
     }
 
-    /** @param {ComboBoxItem} lang */
+    /** @param {ComboBoxItem | null} lang */
     onChangeLang = (lang) => {
+        if (lang === null) return;
         this.setState({ cbSelectedLang: lang });
         langManager.SetLangage(/** @type {'fr' | 'en'} */ (lang.key));
         user.settings.Save();

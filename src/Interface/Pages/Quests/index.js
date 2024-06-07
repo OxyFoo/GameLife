@@ -1,20 +1,15 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
 import styles from './style';
 import BackQuests from './back';
 
-import { Page } from 'Interface/Components';
-import { MyQuestsList, TodoList, DailyQuest } from 'Interface/Widgets';
+import { DailyQuest, MyQuestsList, TodoList } from 'Interface/Widgets';
 
 class Quests extends BackQuests {
     render() {
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.page}
-                isHomePage
-                canScrollOver
-            >
+            <View style={styles.page}>
                 <DailyQuest
                     ref={this.refDailyQuest}
                     style={styles.quest}
@@ -29,7 +24,7 @@ class Quests extends BackQuests {
                     ref={this.refTodoList}
                     style={styles.quest}
                 />
-            </Page>
+            </View>
         );
     }
 }

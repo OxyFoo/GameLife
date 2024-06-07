@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS, { IMG_CHEST_OX } from 'Ressources/items/chests/chests';
-import { Page, Frame, Text, Button } from 'Interface/Components';
+import { Frame, Text, Button } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
 class ChestReward extends BackChestReward {
@@ -74,11 +74,7 @@ class ChestReward extends BackChestReward {
         }
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.page}
-                canScrollOver={false}
-            >
+            <View style={styles.page}>
                 <Animated.View
                     style={[
                         styles.container,
@@ -132,7 +128,7 @@ class ChestReward extends BackChestReward {
                 >
                     {langM['btn-continue']}
                 </Button>
-            </Page>
+            </View>
         );
     }
 }

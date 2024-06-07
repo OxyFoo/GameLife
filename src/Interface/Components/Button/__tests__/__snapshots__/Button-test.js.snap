@@ -7,82 +7,84 @@ exports[`[Component] Button renders correctly 1`] = `
   onTouchEnd={[Function]}
   onTouchMove={[Function]}
   onTouchStart={[Function]}
-  pointerEvents="box-only"
   style={
     [
       {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "height": 56,
-        "justifyContent": "center",
+        "backgroundColor": "transparent",
+        "borderRadius": 8,
+        "minHeight": 54,
         "overflow": "hidden",
         "paddingHorizontal": 24,
-      },
-      {
-        "backgroundColor": "#00000000",
-        "borderRadius": 12,
-        "justifyContent": "center",
-        "opacity": 1,
+        "paddingVertical": 16,
+        "width": "100%",
       },
       {},
       null,
     ]
   }
-  testID="button"
 >
-  <View
-    accessibilityState={
+  <BVLinearGradient
+    angle={267}
+    colors={
+      [
+        4287428607,
+        4292583935,
+      ]
+    }
+    endPoint={
       {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": true,
-        "expanded": undefined,
-        "selected": undefined,
+        "x": 0.5,
+        "y": 1,
       }
     }
-    accessibilityValue={
+    locations={null}
+    startPoint={
       {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
+        "x": 0.5,
+        "y": 0,
       }
     }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "opacity": 1,
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
       }
+    }
+    useAngle={true}
+  />
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexWrap": "wrap",
+          "justifyContent": "center",
+        },
+        {
+          "justifyContent": "center",
+          "opacity": 1,
+        },
+        {},
+      ]
     }
   >
     <Text
-      onLayout={[Function]}
       style={
         [
           {
+            "color": "#384065",
             "fontFamily": "Hind Vadodara",
+            "fontSize": 16,
             "margin": 0,
             "padding": 0,
             "textAlign": "center",
           },
-          {
-            "color": "#ECECEC",
-            "fontSize": 16,
-            "fontWeight": "normal",
-          },
-          {
-            "textTransform": "uppercase",
-          },
+          {},
         ]
       }
     >
@@ -91,6 +93,7 @@ exports[`[Component] Button renders correctly 1`] = `
   </View>
   <View
     collapsable={false}
+    pointerEvents="none"
     style={
       {
         "aspectRatio": 1,
@@ -102,10 +105,16 @@ exports[`[Component] Button renders correctly 1`] = `
         "top": 0,
         "transform": [
           {
+            "translateX": 0,
+          },
+          {
+            "translateY": 0,
+          },
+          {
             "scale": 0,
           },
         ],
-        "width": 0,
+        "width": 2,
       }
     }
   />

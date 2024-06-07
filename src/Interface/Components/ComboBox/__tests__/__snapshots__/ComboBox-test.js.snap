@@ -7,23 +7,106 @@ exports[`[Component] Input should render correctly 1`] = `
     style={
       [
         {
+          "elevation": 1010,
           "width": "100%",
+          "zIndex": 1010,
         },
         {},
       ]
     }
   >
     <View
+      onLayout={[Function]}
+      onTouchCancel={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderRadius": 8,
+            "minHeight": 54,
+            "overflow": "hidden",
+            "paddingHorizontal": 24,
+            "paddingVertical": 16,
+            "width": "100%",
+          },
+          {
+            "borderRadius": 6,
+            "bottom": 2,
+            "elevation": 800,
+            "height": "auto",
+            "left": 2,
+            "position": "absolute",
+            "right": 2,
+            "top": 2,
+            "width": "auto",
+            "zIndex": 800,
+          },
+          null,
+        ]
+      }
+      testID="combobox-button"
+    >
+      <View
+        pointerEvents="none"
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "flexWrap": "wrap",
+              "justifyContent": "center",
+            },
+            {
+              "justifyContent": "center",
+              "opacity": 1,
+            },
+            {},
+          ]
+        }
+      />
+      <View
+        collapsable={false}
+        pointerEvents="none"
+        style={
+          {
+            "aspectRatio": 1,
+            "backgroundColor": "#FFFFFF",
+            "borderRadius": 0,
+            "left": 0,
+            "opacity": 0,
+            "position": "absolute",
+            "top": 0,
+            "transform": [
+              {
+                "translateX": 0,
+              },
+              {
+                "translateY": 0,
+              },
+              {
+                "scale": 0,
+              },
+            ],
+            "width": 2,
+          }
+        }
+      />
+    </View>
+    <View
       collapsable={false}
       onLayout={[Function]}
       pointerEvents="none"
       style={
         {
-          "backgroundColor": "#0E1247",
-          "borderColor": "#808080",
-          "borderRadius": 4,
+          "borderColor": "#D0D0D0",
+          "borderRadius": 8,
           "borderWidth": 1.2,
+          "minHeight": 54,
           "opacity": 1,
+          "paddingRight": 0,
           "width": "100%",
         }
       }
@@ -85,83 +168,43 @@ exports[`[Component] Input should render correctly 1`] = `
           }
         }
       >
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": true,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+        <Text
+          onLayout={[Function]}
           style={
-            {
-              "opacity": 1,
-            }
+            [
+              {
+                "color": "#ECECEC",
+                "fontFamily": "Hind Vadodara",
+                "fontSize": 16,
+                "margin": 0,
+                "padding": 0,
+                "textAlign": "center",
+              },
+              {},
+            ]
           }
         >
-          <Text
-            onLayout={[Function]}
-            style={
-              [
-                {
-                  "fontFamily": "Hind Vadodara",
-                  "margin": 0,
-                  "padding": 0,
-                  "textAlign": "center",
-                },
-                {
-                  "color": "#ECECEC",
-                  "fontSize": 16,
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            Title
-          </Text>
-        </View>
+          Title
+        </Text>
       </View>
       <TextInput
-        autoCompleteType="off"
+        autoComplete="off"
         autoCorrect={false}
-        maxLength={null}
-        multiline={false}
         onBlur={[Function]}
-        onChangeText={[Function]}
         onFocus={[Function]}
         onSubmitEditing={[Function]}
-        selectionColor="#808080"
+        selectionColor="white"
         style={
           [
             {
               "color": "#FFFFFF",
+              "fontSize": 18,
               "maxHeight": 256,
+              "minHeight": 12,
               "paddingHorizontal": 12,
+              "paddingVertical": 12,
             },
-            {
-              "height": 56,
-            },
+            undefined,
           ]
         }
         testID="textInput"
@@ -209,7 +252,8 @@ exports[`[Component] Input should render correctly 1`] = `
             bbHeight={20}
             bbWidth={20}
             collapsable={false}
-            color={4294967295}
+            color="#808080"
+            fill="#808080"
             focusable={false}
             height={20}
             meetOrSlice={0}
@@ -229,7 +273,7 @@ exports[`[Component] Input should render correctly 1`] = `
                 },
               ]
             }
-            tintColor={4294967295}
+            tintColor="#808080"
             transform={
               [
                 {
@@ -242,20 +286,26 @@ exports[`[Component] Input should render correctly 1`] = `
             width={20}
           >
             <RNSVGGroup
-              matrix={
+              fill={
+                {
+                  "payload": 4286611584,
+                  "type": 0,
+                }
+              }
+              propList={
                 [
-                  1,
-                  0,
-                  0,
-                  1,
-                  0,
-                  0,
+                  "fill",
                 ]
               }
             >
               <RNSVGPath
                 d="M51.707 185.343a10.692 10.692 0 01-7.593-3.149 10.724 10.724 0 010-15.175l74.352-74.347L44.114 18.32c-4.194-4.194-4.194-10.987 0-15.175 4.194-4.194 10.987-4.194 15.18 0l81.934 81.934c4.194 4.194 4.194 10.987 0 15.175l-81.934 81.939a10.678 10.678 0 01-7.587 3.15z"
-                fill={4294967295}
+                fill={
+                  {
+                    "payload": 4286611584,
+                    "type": 0,
+                  }
+                }
                 propList={
                   [
                     "fill",
@@ -267,81 +317,43 @@ exports[`[Component] Input should render correctly 1`] = `
         </View>
       </View>
     </View>
-    <View
-      onLayout={[Function]}
-      onTouchCancel={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      pointerEvents="box-only"
-      style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "height": 56,
-            "justifyContent": "center",
-            "overflow": "hidden",
-            "paddingHorizontal": 24,
-          },
-          {
-            "backgroundColor": "#00000000",
-            "borderRadius": 12,
-            "justifyContent": "center",
-            "opacity": 1,
-          },
-          {
-            "borderRadius": 2,
-            "bottom": 2,
-            "elevation": 800,
-            "height": "auto",
-            "left": 2,
-            "position": "absolute",
-            "right": 2,
-            "top": 2,
-            "width": "auto",
-            "zIndex": 800,
-          },
-          null,
-        ]
-      }
-      testID="combobox-button"
-    >
-      <View
-        collapsable={false}
-        style={
-          {
-            "aspectRatio": 1,
-            "backgroundColor": "#FFFFFF",
-            "borderRadius": 0,
-            "left": 0,
-            "opacity": 0,
-            "position": "absolute",
-            "top": 0,
-            "transform": [
-              {
-                "scale": 0,
-              },
-            ],
-            "width": 0,
-          }
-        }
-      />
-    </View>
   </View>,
   <View
     collapsable={false}
     pointerEvents="none"
     style={
       {
-        "backgroundColor": "#222740",
-        "borderBottomLeftRadius": 8,
-        "borderBottomRightRadius": 8,
+        "borderColor": "#9095FF",
+        "borderLeftWidth": 1,
+        "borderRightWidth": 1,
+        "elevation": 1020,
+        "height": 14,
+        "left": 0,
+        "opacity": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": -12,
+        "transform": [
+          {
+            "translateX": 0,
+          },
+          {
+            "translateY": 0,
+          },
+        ],
+        "zIndex": 1020,
+      }
+    }
+  />,
+  <View
+    collapsable={false}
+    pointerEvents="none"
+    style={
+      {
         "elevation": 1000,
         "left": 0,
         "maxHeight": 256,
-        "opacity": 0,
+        "overflow": "hidden",
         "position": "absolute",
         "top": 0,
         "transform": [
@@ -349,7 +361,7 @@ exports[`[Component] Input should render correctly 1`] = `
             "translateX": 0,
           },
           {
-            "translateY": 20,
+            "translateY": 0,
           },
         ],
         "width": 0,
@@ -357,28 +369,63 @@ exports[`[Component] Input should render correctly 1`] = `
       }
     }
   >
-    <RCTScrollView
-      ListHeaderComponent={null}
-      data={[]}
-      getItem={[Function]}
-      getItemCount={[Function]}
-      keyExtractor={[Function]}
-      onContentSizeChange={[Function]}
-      onLayout={[Function]}
-      onMomentumScrollBegin={[Function]}
-      onMomentumScrollEnd={[Function]}
-      onScroll={[Function]}
-      onScrollBeginDrag={[Function]}
-      onScrollEndDrag={[Function]}
-      onTouchMove={[Function]}
-      removeClippedSubviews={false}
-      renderItem={[Function]}
-      scrollEventThrottle={50}
-      stickyHeaderIndices={[]}
-      viewabilityConfigCallbackPairs={[]}
+    <View
+      collapsable={false}
+      style={
+        {
+          "borderBottomLeftRadius": 8,
+          "borderBottomRightRadius": 8,
+          "borderColor": "#9095FF",
+          "borderTopWidth": 0,
+          "borderWidth": 1,
+          "marginBottom": 12,
+          "opacity": 0,
+          "overflow": "hidden",
+          "transform": [
+            {
+              "translateY": -60,
+            },
+          ],
+        }
+      }
     >
-      <View />
-    </RCTScrollView>
+      <RCTScrollView
+        ListHeaderComponent={null}
+        data={[]}
+        getItem={[Function]}
+        getItemCount={[Function]}
+        keyExtractor={[Function]}
+        nestedScrollEnabled={true}
+        onContentSizeChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={0.0001}
+        stickyHeaderIndices={[]}
+        style={
+          [
+            {
+              "borderBottomLeftRadius": 8,
+              "borderBottomRightRadius": 8,
+            },
+            {
+              "backgroundColor": "#222740",
+            },
+          ]
+        }
+        viewabilityConfigCallbackPairs={[]}
+      >
+        <View />
+      </RCTScrollView>
+    </View>
   </View>,
 ]
 `;

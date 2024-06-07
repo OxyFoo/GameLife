@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackWaitinternet from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text } from 'Interface/Components';
+import { Text, ProgressBar } from 'Interface/Components';
 
 class Waitinternet extends BackWaitinternet {
     render() {
@@ -16,33 +16,26 @@ class Waitinternet extends BackWaitinternet {
         }
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.body}
-                scrollable={false}
-            >
-                <View style={styles.backgroundCircles}>
-                    <Image source={this.image} />
+            <View style={styles.page}>
+                <View>
+                    <Text style={styles.text} color='primary'>{textWait}</Text>
+                    <Text style={styles.link} onPress={this.goToWebsite} color='main1'>oxyfoo.com</Text>
                 </View>
 
-                <Text style={styles.text} color='primary'>{textWait}</Text>
-                <Text style={styles.link} onPress={this.goToWebsite} color='main1'>oxyfoo.com</Text>
-            </Page>
+                <View style={styles.bottomView}>
+                    <ProgressBar.Infinite />
+                </View>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    body: {
+    page: {
         flex: 1,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
-    },
-    backgroundCircles: {
-        position: 'absolute',
-        top: 0,
-        right: 0
+        justifyContent: 'space-evenly'
     },
     text: {
         fontSize: 20,
@@ -51,6 +44,13 @@ const styles = StyleSheet.create({
     link: {
         marginTop: 12,
         fontSize: 24
+    },
+
+    bottomView: {
+        position: 'absolute',
+        left: 24,
+        right: 24,
+        bottom: 24
     }
 });
 

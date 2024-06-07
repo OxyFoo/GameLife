@@ -2,7 +2,7 @@ import React from 'react';
 
 import StartTutorial from './tuto';
 import StartMission from './mission';
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 
 /**
  * @typedef {import('Interface/Widgets').DailyQuest} DailyQuest

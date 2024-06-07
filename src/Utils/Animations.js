@@ -38,6 +38,24 @@ function SpringAnimation(anim, toValue, native = true) {
 }
 
 /**
+ * @description Used to create a circular animation
+ * @param {Animated.Value | Animated.ValueXY} anim Animated value to animate
+ * @param {AnimatedValue} toValue Value to animate to
+ * @param {number} [duration=300] Duration of animation
+ * @param {boolean} [native=true] Use native driver
+ * @returns {Animated.CompositeAnimation}
+ */
+function CircularAnimation(anim, toValue, duration = 300, native = true) {
+    return Animated.timing(anim, {
+        toValue: toValue,
+        duration: duration,
+        easing: Easing.out(Easing.cubic),
+        delay: 0,
+        useNativeDriver: native
+    });
+}
+
+/**
  * @description Used to interpolate animated with function
  * @param {Function} func
  * @param {number} [steps=50]
@@ -66,5 +84,8 @@ function WithInterpolation(animation, minValue, maxValue) {
     });
 }
 
-export { TimingAnimation, SpringAnimation, WithFunction, WithInterpolation };
+export {
+    TimingAnimation, SpringAnimation, CircularAnimation,
+    WithFunction, WithInterpolation
+};
 export default () => {};

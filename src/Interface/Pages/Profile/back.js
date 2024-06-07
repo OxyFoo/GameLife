@@ -3,7 +3,7 @@ import StartMission from './mission';
 
 import user from 'Managers/UserManager';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetDate, GetGlobalTime } from 'Utils/Time';
 
 /**
@@ -39,8 +39,6 @@ class BackProfile extends PageBase {
     refTuto1 = null;
 
     componentDidMount() {
-        super.componentDidMount();
-
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
                 xpInfo: user.experience.GetExperience().xpInfo

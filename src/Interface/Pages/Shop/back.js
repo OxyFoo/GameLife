@@ -1,12 +1,12 @@
 import React from 'react';
+import { View } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import StartTutorial from './tuto';
 import StartMission from './mission';
 import user from 'Managers/UserManager';
 
 /**
- * @typedef {import('Interface/Components').Page} Page
  * @typedef {import('Class/Shop').Chest} Chest
  * @typedef {import('Data/Items').StuffID} StuffID
  * 
@@ -20,7 +20,6 @@ import user from 'Managers/UserManager';
 
 class BackShop extends PageBase {
     state = {
-        /** @type {Page | null} */
         refPage: null,
 
         loaded: false,
@@ -34,6 +33,9 @@ class BackShop extends PageBase {
         /** @type {{ common: Chest, rare: Chest, epic: Chest } | null} */
         targetChestsStats: null
     }
+
+    /** @type {React.RefObject<View>} */
+    refShopHeader = React.createRef();
 
     /** @type {React.RefObject<ShopHeader>} */
     refHeader = React.createRef();
@@ -82,11 +84,6 @@ class BackShop extends PageBase {
     componentDidFocused = (args) => {
         StartTutorial.call(this, args?.tuto);
         StartMission.call(this, args?.missionName);
-    }
-
-    setRef = (ref) => {
-        this.refPage = ref;
-        this.setState({ refPage: ref });
     }
 }
 

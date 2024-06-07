@@ -5,7 +5,7 @@ import { BarChart } from 'react-native-gifted-charts';
 import styles from './style';
 import BackBenchMark from './back';
 
-import { Button, Page, Text } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 /**
@@ -17,11 +17,7 @@ class BenchMark extends BackBenchMark {
         const { benchmarking, activitiesCount, activitiesLoaded, benchmarkResults, benchmarkTimes } = this.state;
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                bottomOffset={96}
-                canScrollOver
-            >
+            <View>
                 <PageHeader
                     style={styles.header}
                     onBackPress={this.handleBackPress}
@@ -71,7 +67,7 @@ class BenchMark extends BackBenchMark {
                         />
                     </View>
                 )}
-            </Page>
+            </View>
         );
     }
 

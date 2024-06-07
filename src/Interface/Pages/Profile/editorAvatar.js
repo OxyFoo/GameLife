@@ -215,7 +215,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                     </Button>
                 </View>
 
-                <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%' }} />
+                <Separator color='border' style={{ width: '96%', marginHorizontal: '2%' }} />
             </Animated.View>
         );
     }
@@ -349,7 +349,7 @@ class EditorAvatarRender extends EditorAvatarBack {
 
                 {/* Editor panel */}
                 <Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
-                    <Separator.Horizontal color='border' style={{ width: '96%', marginHorizontal: '2%', marginBottom: 12 }} />
+                    <Separator color='border' style={{ width: '96%', marginHorizontal: '2%', marginBottom: 12 }} />
                     {this.renderSelectedStuff()}
 
                     {/* Other stuffs */}

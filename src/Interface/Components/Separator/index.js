@@ -15,34 +15,43 @@ const SeparatorProps = {
     style: {},
 
     /** @type {ThemeColor} */
-    color: 'white'
+    color: 'white',
+
+    /** @type {boolean} */
+    vertical: false
 };
 
-class Separator {
-    static Horizontal(props) {
-        const background = { backgroundColor: themeManager.GetColor(props.color) };
-        return (
-            <View style={[styles.horizontal, background, props.style]} />
-        );
-    }
+class Separator extends React.Component {
+    render() {
+        const { style, color, vertical } = this.props;
 
-    static Vertical(props) {
-        const background = { backgroundColor: themeManager.GetColor(props.color) };
+        const background = { backgroundColor: themeManager.GetColor(color) };
+
+        if (vertical) {
+            return (
+                <View style={[styles.vertical, background, style]} />
+            );
+        }
+
+        // Horizontal
         return (
-            <View style={[styles.vertical, background, props.style]} />
+            <View style={[styles.horizontal, background, style]} />
         );
     }
 }
 
-Separator.Horizontal.prototype.props = SeparatorProps;
-Separator.Horizontal.defaultProps = SeparatorProps;
-
-Separator.Vertical.prototype.props = SeparatorProps;
-Separator.Vertical.defaultProps = SeparatorProps;
+Separator.prototype.props = SeparatorProps;
+Separator.defaultProps = SeparatorProps;
 
 const styles = StyleSheet.create({
-    horizontal: { width: '100%', height: 1 },
-    vertical: { width: 1, height: '100%' },
+    horizontal: {
+        width: '100%',
+        height: 1
+    },
+    vertical: {
+        width: 1,
+        height: '100%'
+    }
 });
 
-export default Separator;
+export { Separator };

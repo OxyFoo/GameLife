@@ -6,7 +6,7 @@ import { DateToFormatString } from 'Utils/Date';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
  * 
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * 
  * @typedef Chest
@@ -32,7 +32,7 @@ import { DateToFormatString } from 'Utils/Date';
  * 
  * @typedef Target
  * @property {string} id
- * @property {Icons} icon
+ * @property {IconsName} icon
  * @property {() => void} onPress
  * 
  * @typedef BuyableTargetedChest

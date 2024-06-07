@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AppState, SafeAreaView } from 'react-native';
 
 import user from './src/Managers/UserManager';
-import PageManager from './src/Managers/PageManager';
+import FlowEngine from './src/Interface/FlowEngine';
 
 import { CheckDate } from './src/Utils/DateCheck';
 
@@ -11,13 +11,17 @@ import { CheckDate } from './src/Utils/DateCheck';
  */
 
 class App extends React.Component {
+    /** @type {React.RefObject<FlowEngine>} */
+    ref = React.createRef();
+
     componentDidMount() {
         // Get the app state (active or background) to check the date
-        this.appStateSubscription = AppState.addEventListener("change", this.componentChangeState);
+        this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
         // Open the test page
-        //user.interface.ChangePage('test', undefined, true); return;
-        user.interface.ChangePage('loading', undefined, true);
+        user.interface = this.ref.current;
+        this.ref.current?.ChangePage('test'); return;
+        this.ref.current?.ChangePage('loading', undefined, true);
     }
 
     /** @param {AppStateStatus} state */
@@ -38,7 +42,7 @@ class App extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ backgroundColor: "#000000" }}>
-                <PageManager ref={ref => { if (ref !== null) user.interface = ref }} />
+                <FlowEngine ref={this.ref} />
             </SafeAreaView>
         );
     }

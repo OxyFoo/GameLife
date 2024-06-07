@@ -12,7 +12,7 @@ import { Text, Icon, Button, Frame } from 'Interface/Components';
 import { NotificationsInAppButton } from 'Interface/Widgets';
 
 /**
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
 class UserHeader extends UserHeaderBack {
@@ -21,8 +21,8 @@ class UserHeader extends UserHeaderBack {
         const { showAvatar } = this.state;
 
         if (editorMode) {
-            /** @type {Icons} */
-            const icon = user.server.IsConnected() ? 'edit' : 'nowifi';
+            /** @type {IconsName} */
+            const icon = user.server.IsConnected() ? 'edit' : 'no-wifi';
 
             return (
                 <Icon icon={icon} color='border' />
@@ -37,7 +37,6 @@ class UserHeader extends UserHeaderBack {
                 ref={ref => this.refContainer = ref}
                 style={styles.avatar}
                 onPress={openProfile}
-                rippleColor='white'
             >
                 {showAvatar && (
                     <Frame

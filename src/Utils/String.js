@@ -15,7 +15,7 @@
  */
  function IsEmail(email) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    return typeof(email) === 'string' && email.length && reg.test(email);
+    return typeof(email) === 'string' && !!email.length && reg.test(email);
 }
 
 /**

@@ -11,7 +11,6 @@ import { DateToFormatString } from 'Utils/Date';
  * 
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Quests/DailyQuest').ClaimType} ClaimType
- * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */

@@ -1,106 +1,96 @@
 import * as React from 'react';
+import { Button } from 'react-native';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedProps
+ * @typedef {import('react-native').ButtonProps} ButtonProps
  * 
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * 
- * @typedef {import('../Icon').Icons} Icons
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
+ * @typedef {import('../../Primitives/Ripple').Ripple} Ripple
+ * 
+ * @typedef {Object} ButtonPropsType
+ * @property {import('react').ReactNode | string | undefined} children
+ * @property {StyleProp} style
+ * @property {AnimatedProps | null} styleAnimation
+ * @property {StyleProp} styleContent
+ * @property {'normal' | 'outline' | 'outline-blur' | 'transparent'} appearance
+ * @property {number} fontSize
+ * @property {IconsName | null} icon
+ * @property {string | null} iconXml
+ * @property {number} iconSize
+ * @property {number} iconAngle
+ * @property {boolean} loading
+ * @property {boolean} enabled
+ * @property {() => void} onPress
+ * @property {() => void} onLongPress
+ * @property {(event: GestureResponderEvent) => void} onTouchStart
+ * @property {(event: GestureResponderEvent) => void} onTouchMove
+ * @property {(event: GestureResponderEvent) => void} onTouchEnd
+ * @property {(event: GestureResponderEvent) => void} onTouchCancel
+ * @property {(event: LayoutChangeEvent) => void} onLayout
  */
 
+/** @type {ButtonProps & ButtonPropsType} */
 const ButtonProps = {
-    /** @type {string | JSX.Element | JSX.Element[] | undefined} */
+    ...Button.prototype.props,
+
     children: undefined,
-
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {AnimatedProps | null} */
     styleAnimation: null,
-
-    /** @type {string} */
-    testID: 'button',
-
-    /** @type {number} */
+    styleContent: {},
+    appearance: 'normal',
     fontSize: 16,
-
-    /** @type {Icons | null} */
     icon: null,
-
-    /** @type {string?} */
-    iconXml: undefined,
-
-    /** @type {number} */
+    iconXml: null,
     iconSize: 24,
-
-    /** @type {ThemeColor | ThemeText} */
-    iconColor: 'white',
-
-    /** @type {number} Angle in degrees */
     iconAngle: 0,
-
-    /** @type {boolean} If true, content will be replaced by loading icon & press event disabled */
     loading: false,
-
-    /** @type {ThemeColor | ThemeText} */
-    color: 'transparent',
-
-    /** @type {boolean} True to show new UI gradient */
-    colorNextGen: false,
-
-    /** @type {ThemeColor | ThemeText} */
-    colorText: 'primary',
-
-    /** @type {ThemeColor | ThemeText} */
-    rippleColor: 'black',
-
-    /** @type {number} */
-    borderRadius: 12,
-
-    /** @type {boolean} If false, background is gray & press event disabled */
     enabled: true,
 
     onPress: () => {},
-
     onLongPress: () => {},
-
-    /** @param {GestureResponderEvent} event */
     onTouchStart: (event) => {},
-
-    /** @param {GestureResponderEvent} event */
     onTouchMove: (event) => {},
-
-    /** @param {GestureResponderEvent} event */
     onTouchEnd: (event) => {},
-
-    /** @param {GestureResponderEvent} event */
     onTouchCancel: (event) => {},
-
-    /** @type {(event: LayoutChangeEvent) => void} */
-    onLayout: (event) => {},
-
-    /** @type {'auto' | 'box-only' | 'box-none' | 'none'} */
-    pointerEvents: 'box-only'
+    onLayout: (event) => {}
 };
 
 class ButtonBack extends React.Component {
-    constructor(props) {
-        super(props);
-        this.rippleRef = React.createRef();
-        this.posX = 0; this.posY = 0; this.time = 0;
-        this.state = { width: 0 };
+    /** @type {React.RefObject<Ripple>} */
+    rippleRef = React.createRef();
+
+    time = 0;
+    posX = 0;
+    posY = 0;
+    size = 0;
+
+    /** @param {ButtonProps & ButtonPropsType} nextProps */
+    shouldComponentUpdate(nextProps) {
+        return this.props.children !== nextProps.children ||
+            this.props.style !== nextProps.style ||
+            this.props.styleAnimation !== nextProps.styleAnimation ||
+            this.props.styleContent !== nextProps.styleContent ||
+            this.props.appearance !== nextProps.appearance ||
+            this.props.fontSize !== nextProps.fontSize ||
+            this.props.icon !== nextProps.icon ||
+            this.props.iconXml !== nextProps.iconXml ||
+            this.props.iconSize !== nextProps.iconSize ||
+            this.props.iconAngle !== nextProps.iconAngle ||
+            this.props.loading !== nextProps.loading ||
+            this.props.enabled !== nextProps.enabled;
     }
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.props.onTouchStart(event);
         if (this.props.enabled) {
-            this.rippleRef.current.onTouchStart(event);
+            this.rippleRef.current?.Press(event, this.size);
         }
         this.posX = event.nativeEvent.pageX;
         this.posY = event.nativeEvent.pageY;
@@ -116,7 +106,7 @@ class ButtonBack extends React.Component {
     onTouchCancel = (event) => {
         this.props.onTouchCancel(event);
         if (this.props.enabled) {
-            this.rippleRef.current.onTouchEnd(event);
+            this.rippleRef.current?.Release(event);
         }
     }
 
@@ -124,7 +114,7 @@ class ButtonBack extends React.Component {
     onTouchEnd = (event) => {
         this.props.onTouchEnd(event);
         if (this.props.enabled) {
-            this.rippleRef.current.onTouchEnd(event);
+            this.rippleRef.current?.Release(event);
         }
 
         const deltaX = Math.abs(event.nativeEvent.pageX - this.posX);
@@ -141,8 +131,9 @@ class ButtonBack extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
+        const { width, height } = event.nativeEvent.layout;
+        this.size = Math.max(width, height);
         this.props.onLayout(event);
-        this.setState({ width: event.nativeEvent.layout.width });
     }
 }
 

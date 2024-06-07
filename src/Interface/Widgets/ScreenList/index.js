@@ -57,13 +57,13 @@ class ScreenList extends ScreenListBack {
                     <View style={[styles.background2, styleBackground]} />
                     <Text style={styles.label}>{label}</Text>
 
-                    <Separator.Horizontal style={{ marginLeft: '10%', width: '80%' }} />
+                    <Separator style={{ marginLeft: '10%', width: '80%' }} />
 
                     <FlatList
                         ref={ref => this.refFlatlist = ref}
                         data={data}
                         renderItem={this.renderItem}
-                        keyExtractor={(item) => 'SL-' + item.id + '-' + item.value}
+                        keyExtractor={(item) => `SL-${item?.id}-${item?.value}`}
                         onLayout={this.onLayoutFlatList}
                         onContentSizeChange={this.onContentSizeChange}
                         initialNumToRender={data.length / 2}

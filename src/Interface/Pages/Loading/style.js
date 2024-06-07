@@ -9,18 +9,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    sentence: {
+    textContainer: {
         position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: -12,
-        textAlign: 'center'
-    },
-    version: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 12,
+        left: 24,
+        right: 24,
+        bottom: 24,
         textAlign: 'center'
     },
 
@@ -35,9 +28,7 @@ const styles = StyleSheet.create({
     },
     iconTest: {
         marginBottom: 24,
-        transform: [
-            { scaleX: 1.2 }
-        ]
+        transform: [{ scaleX: 1.2 }]
     },
     zapTest: {
         marginTop: 24

@@ -9,7 +9,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Page, Button, StreakChart, Text } from 'Interface/Components';
+import { Button, StreakChart, Text } from 'Interface/Components';
 import { PageHeader, YearHeatMap } from 'Interface/Widgets';
 
 class MyQuestStats extends BackQuest {
@@ -40,11 +40,9 @@ class MyQuestStats extends BackQuest {
             backgroundColor: themeManager.GetColor('dataBigKpi')
         };
 
+        //footer={this.renderFooter()}
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                footer={this.renderFooter()}
-            >
+            <View>
                 <PageHeader
                     style={styles.pageHeaderView}
                     onBackPress={user.interface.BackHandle}
@@ -95,7 +93,7 @@ class MyQuestStats extends BackQuest {
                     style={styles.yearHeatMap}
                     quest={this.selectedQuest}
                 />
-            </Page>
+            </View>
         );
     }
 }

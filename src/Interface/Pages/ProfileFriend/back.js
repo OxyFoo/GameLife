@@ -1,7 +1,8 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase, Character } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
+import { Character } from 'Interface/Components';
 import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
 
@@ -10,6 +11,13 @@ import { StartActivityNow } from 'Utils/Activities';
  * @typedef {import('Class/Experience').XPInfo} XPInfo
  * @typedef {import('Class/Experience').Stats} Stats
  */
+
+const BackProfileFriendProps = {
+    args: {
+        /** @type {number} */
+        friendID: 0
+    }
+};
 
 class BackProfileFriend extends PageBase {
     state = {
@@ -29,11 +37,7 @@ class BackProfileFriend extends PageBase {
         }
     }
 
-    /**
-     * @param {object} props
-     * @param {object} props.args
-     * @param {number} props.args.friendID
-     */
+    /** @param {BackProfileFriendProps} props */
     constructor(props) {
         super(props);
 
@@ -169,5 +173,8 @@ class BackProfileFriend extends PageBase {
         user.interface.BackHandle();
     }
 }
+
+BackProfileFriend.defaultProps = BackProfileFriendProps;
+BackProfileFriend.prototype.props = BackProfileFriendProps;
 
 export default BackProfileFriend;

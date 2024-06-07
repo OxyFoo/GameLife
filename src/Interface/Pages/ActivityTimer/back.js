@@ -1,6 +1,6 @@
 import { Animated, Linking } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -10,7 +10,6 @@ import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES }
 
 /**
  * @typedef {import('Class/Settings').MusicLinks} MusicLinks
- * @typedef {import('Interface/Components/Icon').Icons} Icons
  * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
  */
 
@@ -142,7 +141,7 @@ class BackActivityTimer extends PageBase {
 
     Back = () => {
         clearInterval(this.timer_tick);
-        if (user.interface.path.length > 1) {
+        if (user.interface.history.length > 1) {
             user.interface.ResetCustomBackHandler();
             user.interface.BackHandle();
         } else {

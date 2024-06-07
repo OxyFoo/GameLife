@@ -8,7 +8,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { Sleep } from 'Utils/Functions';
 import { FormatForSearch } from 'Utils/String';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
@@ -25,6 +25,22 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  */
+
+const BackActivityProps = {
+    args: {
+        /** @type {number | null} */
+        categoryID: null,
+
+        /** @type {number | null} */
+        skillID: null,
+
+        /** @type {number | null} */
+        time: null,
+
+        /** @type {Array<number>} */
+        skills: []
+    }
+};
 
 class BackActivity extends PageBase {
     state = {
@@ -109,8 +125,6 @@ class BackActivity extends PageBase {
     }
 
     async componentDidMount() {
-        super.componentDidMount();
-
         // Wait for the layout to be calculated
         while (this.state.topPanelOffset === 0) {
             await Sleep(100);
@@ -133,7 +147,7 @@ class BackActivity extends PageBase {
             }
         }
 
-        const fromCalendar = user.interface.path.at(-1)[0] === 'calendar';
+        const fromCalendar = user.interface.history.at(-1)[0] === 'calendar';
 
         // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
@@ -269,5 +283,8 @@ class BackActivity extends PageBase {
         this.refActivityPanel?.SelectSkill(skill);
     }
 }
+
+BackActivity.defaultProps = BackActivityProps;
+BackActivity.prototype.props = BackActivityProps;
 
 export default BackActivity;

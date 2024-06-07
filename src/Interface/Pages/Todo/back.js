@@ -1,6 +1,6 @@
 import { Keyboard } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -11,7 +11,7 @@ import { GetGlobalTime } from 'Utils/Time';
  * 
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * @typedef {import('Interface/Components/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
+ * @typedef {import('Interface/OldComponents/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
  * 
  * @typedef {'new' | 'edit' | 'remove'} States
  * 
@@ -19,6 +19,13 @@ import { GetGlobalTime } from 'Utils/Time';
  * @typedef {import('./Sections/tasks').default} SectionTasks
  * @typedef {import('./Sections/description').default} SectionDescription
  */
+
+const BackTodoProps = {
+    args: {
+        /** @type {Todo | null} */
+        todo: null
+    }
+};
 
 class BackTodo extends PageBase {
     state = {
@@ -54,6 +61,7 @@ class BackTodo extends PageBase {
     /** @type {NodeJS.Timeout | undefined} */
     timeoutDidShow;
 
+    /** @param {BackTodoProps} props */
     constructor(props) {
         super(props);
 
@@ -82,8 +90,6 @@ class BackTodo extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         const { selectedTodo } = this;
         if (selectedTodo === null) return;
 
@@ -278,13 +284,16 @@ class BackTodo extends PageBase {
     onKeyboardChangeState = (state, height) => {
         if (state === 'opened') {
             this.timeoutDidShow = setTimeout(() => {
-                this.refPage?.GoToYRelative(-height);
+                this.refPage.current?.GoToYRelative(-height);
             }, 100);
         } else if (state === 'closed') {
-            this.refPage?.GoToYRelative(height);
+            this.refPage.current?.GoToYRelative(height);
             clearTimeout(this.timeoutDidShow);
         }
     }
 }
+
+BackTodo.defaultProps = BackTodoProps;
+BackTodo.prototype.props = BackTodoProps;
 
 export default BackTodo;

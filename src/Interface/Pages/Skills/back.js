@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
@@ -25,8 +25,6 @@ class BackSkills extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         // Get all skills
         this.allSkills = this.getAllSkills();
         this.refreshSkills();

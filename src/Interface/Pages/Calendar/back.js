@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, FlatList } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 
 import StartTutorial from './tuto';
@@ -82,8 +82,6 @@ class BackCalendar extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         const today = new Date();
         const Day = today.getDate();
         const Month = today.getMonth();

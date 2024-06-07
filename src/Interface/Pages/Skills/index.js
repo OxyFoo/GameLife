@@ -8,8 +8,8 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { Input, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Input, Button } from 'Interface/Components';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -28,7 +28,7 @@ class Skills extends BackSkills {
         }
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <View>
 
                 <View onLayout={this.setheight}>
                     <PageHeader onBackPress={user.interface.BackHandle} />
@@ -78,7 +78,7 @@ class Skills extends BackSkills {
                     iconAngle={ascending ? 90 : -90}
                     onPress={this.switchOrder}
                 />
-            </Page>
+            </View>
         );
     }
 }

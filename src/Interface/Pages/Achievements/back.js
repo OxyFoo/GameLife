@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
@@ -15,6 +15,13 @@ import { Round } from 'Utils/Functions';
  * @property {boolean} isSolved
  * @property {string} GlobalPercentage
  */
+
+const BackAchievementsProps = {
+    args: {
+        /** @type {number | null} */
+        friendID: null
+    }
+};
 
 class BackAchievements extends PageBase {
     state = {
@@ -53,5 +60,8 @@ class BackAchievements extends PageBase {
         user.achievements.ShowCardPopup(ID);
     }
 }
+
+BackAchievements.defaultProps = BackAchievementsProps;
+BackAchievements.prototype.props = BackAchievementsProps;
 
 export default BackAchievements;

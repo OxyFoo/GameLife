@@ -1,6 +1,6 @@
 import { Keyboard } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -17,6 +17,13 @@ import StartMission from './mission';
  * @typedef {import('./Sections/schedule').default} SectionSchedule
  * @typedef {import('./Sections/comment').default} SectionComment
  */
+
+const BackQuestProps = {
+    args: {
+        /** @type {MyQuest | null} */
+        quest: null
+    }
+};
 
 class BackQuest extends PageBase {
     state = {
@@ -254,5 +261,8 @@ class BackQuest extends PageBase {
         user.interface.popup.Open('yesno', [ title, text ], callback);
     }
 }
+
+BackQuest.defaultProps = BackQuestProps;
+BackQuest.prototype.props = BackQuestProps;
 
 export default BackQuest;

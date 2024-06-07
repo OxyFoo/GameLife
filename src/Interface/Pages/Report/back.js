@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';
@@ -38,7 +38,6 @@ class BackReport extends PageBase {
     ];
 
     componentDidMount() {
-        super.componentDidMount();
         this.refreshRemainPoints();
     }
 

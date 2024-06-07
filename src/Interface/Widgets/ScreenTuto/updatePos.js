@@ -6,9 +6,9 @@ import { GetAbsolutePosition } from 'Utils/UI';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Interface/Components/Zap/back').ZapFace} ZapFace
- * @typedef {import('Interface/Components/Zap/back').ZapInclinaison} ZapInclinaison
- * @typedef {import('Interface/Components/Zap/back').ZapOrientation} ZapOrientation
+ * @typedef {import('Interface/OldComponents/Zap/back').ZapFace} ZapFace
+ * @typedef {import('Interface/OldComponents/Zap/back').ZapInclinaison} ZapInclinaison
+ * @typedef {import('Interface/OldComponents/Zap/back').ZapOrientation} ZapOrientation
  */
 
 /**

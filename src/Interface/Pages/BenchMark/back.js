@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 
 import user from 'Managers/UserManager';
 import Bench from './benchmark';
@@ -23,8 +23,6 @@ class BackBenchMark extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         const activities = user.activities.Get();
         const activitiesCount = activities.length;
 

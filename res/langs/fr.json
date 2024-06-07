@@ -170,7 +170,8 @@
     "app": {
         "loading-error-message": {
             "internaldata-not-loaded": "Les données internes n'ont pas pu être chargées",
-            "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées"
+            "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
+            "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
         },
         "loading-error-button": "Quitter"
     },
@@ -393,7 +394,7 @@
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
         "input-cgu-text": "J'ai lu et j'accepte les %conditions générales%.",
-        "button-login-text": "Se connecter",
+        "button-login-text": "Se connecter ou s'inscrire",
         "button-signin-text": "S'inscrire",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
@@ -769,7 +770,7 @@
             "int": "L’intelligence est une statistique très large, dès que tu fais fonctionner tes méninges, tu entraînes ton cerveau et gagnes donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
             "soc": "La compétence sociale est une compétence qui augmente quand tu fais des activités avec d'autres gens. Par exemple, des sports collectif ou des sorties avec des amis.",
             "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physiques par exemple !",
-            "sta": "L’endurance est probablement la statistique que tu peux améliorerer le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
+            "sta": "L’endurance est probablement la statistique que tu peux améliorer le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
             "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter ton agilité sont des activités comme des étirements ou encore du yoga.",
             "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
         }

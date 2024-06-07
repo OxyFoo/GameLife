@@ -1,7 +1,6 @@
 import user from 'Managers/UserManager'
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { Sleep } from 'Utils/Functions';
 import { CheckDate } from 'Utils/DateCheck';
@@ -10,15 +9,17 @@ import { Character } from 'Interface/Components';
 
 /**
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
+ * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
  */
 
 /**
  * Intialisation of all data
+ * @param {FlowEnginePublicClass} fe Used to change the page
  * @param {() => void} nextStep Used to change the icon
  * @param {() => void} nextPage Used to go to the next page
  * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
  */
-async function Initialisation(nextStep, nextPage, callbackError) {
+async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const time_start = new Date().getTime();
 
     // Loading: Settings
@@ -36,9 +37,6 @@ async function Initialisation(nextStep, nextPage, callbackError) {
         user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
     }
 
-    // Set background theme
-    user.interface.SetTheme(themeManager.selectedTheme === 'Main' ? 0 : 1);
-
     nextStep();
 
     // Loading: Internal data
@@ -50,7 +48,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     if (!dataLoaded) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
         if (!online) {
-            user.interface.ChangePage('waitinternet', { force: 1 }, true);
+            fe.ChangePage('waitinternet', { storeInHistory: false, transition: 'fromBottom' });
         } else {
             callbackError('internaldata-not-loaded');
         }
@@ -60,7 +58,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     // Show onboarding if not watched
     const showOnboard = !user.settings.onboardingWatched;
     if (showOnboard) {
-        user.interface.ChangePage('onboarding', undefined, true);
+        fe.ChangePage('onboarding', { storeInHistory: false });
         return;
     }
 
@@ -68,10 +66,10 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     const email = user.settings.email;
     if (email === '') {
         if (online) {
-            user.interface.ChangePage('login', undefined, true);
+            fe.ChangePage('login', { storeInHistory: false });
             return;
         } else {
-            user.interface.ChangePage('waitinternet', undefined, true);
+            fe.ChangePage('waitinternet', { storeInHistory: false });
             return;
         }
     }
@@ -79,7 +77,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     // Redirection: Wait mail page (if needed)
     const connected = user.settings.connected;
     if (!connected) {
-        user.interface.ChangePage('waitmail', undefined, true);
+        fe.ChangePage('waitmail', { storeInHistory: false });
         return;
     }
 
@@ -101,7 +99,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
 
         // Mail not confirmed
         else if (status === 'newDevice' || status === 'waitMailConfirmation') {
-            while (!user.interface.ChangePage('waitmail', { email: email }, true)) await Sleep(100);
+            while (!fe.ChangePage('waitmail', { args: { email: email }, storeInHistory: false })) await Sleep(100);
             return;
         }
 
@@ -140,7 +138,7 @@ async function Initialisation(nextStep, nextPage, callbackError) {
         user.inventory.avatar.skinColor
     );
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.interface.header.ShowAvatar(true);
+    //user.interface.header.ShowAvatar(true);
 
     // Loading: Notifications
     Notifications.DisableAll().then(() => {
@@ -161,11 +159,11 @@ async function Initialisation(nextStep, nextPage, callbackError) {
     user.tcp.Connect();
 
     // Load admob
-    await user.consent.ShowTrackingPopup()
-    .then(user.admob.LoadAds);
+    //await user.consent.ShowTrackingPopup()
+    //.then(user.admob.LoadAds);
 
     // Render default pages
-    await user.interface.LoadDefaultPages();
+    //await user.interface.LoadDefaultPages();
 
     nextStep();
     await Sleep(500);

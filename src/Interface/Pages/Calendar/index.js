@@ -4,11 +4,11 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import BackCalendar from './back';
 import styles from './style';
+import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
-import { Page, Text, Button, Icon, ActivityTimeline } from 'Interface/Components';
+import { Text, Button, Icon, ActivityTimeline } from 'Interface/Components';
 import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
 import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
 
@@ -66,14 +66,9 @@ class Calendar extends BackCalendar {
             titleSelectedDay = GetFullDate(new Date(year, month, day));
         }
 
+        // overlay={this.renderActivity()}
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.page}
-                overlay={this.renderActivity()}
-                isHomePage
-                scrollable={false}
-            >
+            <View style={styles.page}>
                 <Animated.View style={styleContent}>
                     {/* Month + button to show full calendar */}
                     <View style={styles.row}>
@@ -169,7 +164,7 @@ class Calendar extends BackCalendar {
                     />
                 </Animated.View>
 
-            </Page>
+            </View>
         );
     }
 }

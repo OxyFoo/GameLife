@@ -5,6 +5,7 @@ const Color = {
     white: '#FFFFFF', // White
     black: '#000000', // Black
     border: '#808080', // Grey
+    borderLight: '#D0D0D0', // Light grey
     background: '#0E1247', // Dark purple
     backgroundCard: '#384065', // Transparent purple
     backgroundGrey: '#222740', // Grey
@@ -14,7 +15,7 @@ const Color = {
     unfocused: '#6e6e6e', // Grey
     disabled: '#535C68', // Grey
     transparent: '#00000000', // Transparent
-    darkBlue: '#04052C', // Dark blue
+    darkBlue: '#384065', // Dark blue
 
     ox: '#962D8B',
     dataBigKpi: '#232B5D', // Dark blue
@@ -28,7 +29,7 @@ const Color = {
 
 const Text = {
     primary: '#ECECEC',
-    secondary: '#808080',
+    secondary: '#B0B0B0',
     light: '#A7A4A4',
     warning: '#F1C40F',
     error: '#CC0029'

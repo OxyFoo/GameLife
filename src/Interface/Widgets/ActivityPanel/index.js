@@ -9,10 +9,10 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
-import Button from 'Interface/Components/Button';
-import TextSwitch from 'Interface/Components/TextSwitch';
+import Text from 'Interface/OldComponents/Text';
+import Icon from 'Interface/OldComponents/Icon';
+import Button from 'Interface/OldComponents/Button';
+import { SwitchText } from 'Interface/Components/SwitchText/index';
 import PanelScreen from 'Interface/Widgets/PanelScreen';
 import ActivitySchedule from 'Interface/Widgets/ActivitySchedule';
 import ActivityExperience from 'Interface/Widgets/ActivityExperience';
@@ -89,14 +89,14 @@ class ActivityPanel extends ActivityPanelBack {
                 {/* Start mode - Already / Now */}
                 <View ref={ref => this.refHelp1 = ref}>
                     {mode === 'activity' ? null : (
-                        <TextSwitch
+                        <SwitchText
                             style={styles.panelTextSwitch}
                             texts={[
                                 lang['swiper-already'],
                                 lang['swiper-now'],
                                 lang['swiper-gpt']
                             ]}
-                            onChange={this.onChangeMode}
+                            onChangeValue={this.onChangeMode}
                         />
                     )}
                 </View>

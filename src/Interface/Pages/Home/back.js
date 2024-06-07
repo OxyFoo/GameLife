@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import StartTutorial from './tuto';
 import user from 'Managers/UserManager';
 
@@ -12,6 +12,13 @@ import StartMission from './mission';
  * @typedef {import('Interface/Widgets').Missions} Missions
  * @typedef {import('Class/Missions').MissionsItem} MissionsItem
  */
+
+const BackHomeProps = {
+    args: {
+        /** @type {number} */
+        tuto: 0
+    }
+}
 
 class BackHome extends PageBase {
     state = {
@@ -32,16 +39,16 @@ class BackHome extends PageBase {
     refMissions = React.createRef();
 
     componentDidMount() {
-        super.componentDidMount();
-
         this.handleLevelsUpdate();
         this.listenerActivities = user.activities.allActivities.AddListener(
             this.handleLevelsUpdate
         );
         this.listenerMissions = user.missions.missions.AddListener(this.handleMissionsUpdate);
     }
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
+
+    /** @param {this['props']} props */
+    componentDidFocused = (props) => {
+        StartTutorial.call(this, props.args.tuto);
     }
 
     componentWillUnmount() {
@@ -69,5 +76,8 @@ class BackHome extends PageBase {
     openSkills = () => user.interface.ChangePage('skills');
     openQuests = () => user.interface.ChangePage('quests');
 }
+
+BackHome.defaultProps = BackHomeProps;
+BackHome.prototype.props = BackHomeProps;
 
 export default BackHome;

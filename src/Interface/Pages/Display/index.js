@@ -3,21 +3,23 @@ import { View, Animated, Dimensions, StyleSheet } from 'react-native';
 
 import BackDisplay from './back';
 
-import { Page, Text, Icon, Button } from 'Interface/Components';
+import { Text, Icon, Button } from 'Interface/Components';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class Display extends BackDisplay {
     render() {
+        const { icon, iconRatio, text } = this.props.args;
+
         return (
-            <Page ref={ref => this.refPage = ref} style={styles.page} canScrollOver>
+            <View style={styles.page}>
                 <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                     <Icon
-                        icon={this.icon}
-                        size={SCREEN_WIDTH * this.iconRatio}
+                        icon={icon}
+                        size={SCREEN_WIDTH * iconRatio}
                     />
                 </Animated.View>
-                <Text>{this.text}</Text>
+                <Text>{text}</Text>
                 {this.renderButtons()}
                 {this.quote !== null && (
                     <View style={styles.quoteContainer}>
@@ -25,13 +27,15 @@ class Display extends BackDisplay {
                         <Text fontSize={14} color={'secondary'} style={styles.quote}>{this.quote.author}</Text>
                     </View>
                 )}
-            </Page>
+            </View>
         );
     }
 
     renderButtons = () => {
+        const { button, button2 } = this.props.args;
+
         // Show two buttons if both are defined
-        if (!!this.button2 && !!this.callback2) {
+        if (!!button2 && !!this.callback2) {
             return (
                 <View style={styles.doubleButtons}>
                     <Button
@@ -40,7 +44,7 @@ class Display extends BackDisplay {
                         fontSize={14}
                         onPress={this.callback}
                     >
-                        {this.button}
+                        {button}
                     </Button>
                     <Button
                         style={styles.buttonHalf2}
@@ -48,13 +52,20 @@ class Display extends BackDisplay {
                         fontSize={14}
                         onPress={this.callback2}
                     >
-                        {this.button2}
+                        {button2}
                     </Button>
                 </View>
             );
         }
+
         return (
-            <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
+            <Button
+                style={styles.button}
+                color='main1'
+                onPress={this.callback}
+            >
+                {button}
+            </Button>
         );
     }
 }

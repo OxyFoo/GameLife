@@ -1,15 +1,48 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    overlay: {
+    parentContent: {
+        width: '100%',
+        zIndex: 1010,
+        elevation: 1010
+    },
+    input: {
+        borderRadius: 8
+    },
+
+    overlayParent: {
         position: 'absolute',
         top: 0,
         left: 0,
         width: 128,
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
+
+        overflow: 'hidden',
         zIndex: 1000,
         elevation: 1000
+    },
+    overlayPanel: {
+        marginBottom: 12,
+        borderColor: '#ffffff',
+        borderWidth: 1,
+        borderTopWidth: 0,
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
+        overflow: 'hidden'
+    },
+    overlayContent: {
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8
+    },
+    borderFix: {
+        position: 'absolute',
+        top: -12,
+        left: 0,
+        right: 0,
+        height: 14,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        zIndex: 1020,
+        elevation: 1020
     },
     overlayBackground: {
         position: 'absolute',
@@ -29,14 +62,11 @@ const styles = StyleSheet.create({
         left: 2,
         right: 2,
         bottom: 2,
-        borderRadius: 2,
+        borderRadius: 6,
         zIndex: 800,
         elevation: 800
     },
 
-    parent: {
-        width: '100%'
-    },
     chevron: {
         position: 'absolute',
         top: 0,
@@ -53,6 +83,13 @@ const styles = StyleSheet.create({
     },
     parentSearchBar: {
         padding: 8
+    },
+    searchContainer: {
+        minHeight: 0
+    },
+    search: {
+        paddingVertical: 4,
+        fontSize: 14
     }
 });
 

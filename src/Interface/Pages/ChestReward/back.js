@@ -5,7 +5,8 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Character, PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
+import { Character } from 'Interface/Components';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
@@ -22,6 +23,22 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {number} oxCount
  * @property {() => void} callback
  */
+
+const BackChestRewardProps = {
+    args: {
+        /** @type {number} */
+        chestRarity: 0,
+
+        /** @type {StuffID} */
+        itemID: 'bottom_01',
+
+        /** @type {number} */
+        oxCount: 0,
+
+        /** @type {() => void} */
+        callback: () => {}
+    }
+};
 
 class BackChestReward extends PageBase {
     state = {
@@ -79,8 +96,6 @@ class BackChestReward extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         SpringAnimation(this.state.animGlobal, 1).start();
         TimingAnimation(this.state.animChest, 4, 1000).start();
         this.timeout1 = setTimeout(() => {
@@ -107,5 +122,8 @@ class BackChestReward extends PageBase {
         this.callback();
     }
 }
+
+BackChestReward.defaultProps = BackChestRewardProps;
+BackChestReward.prototype.props = BackChestRewardProps;
 
 export default BackChestReward;

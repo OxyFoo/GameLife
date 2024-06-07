@@ -3,14 +3,10 @@ import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import IconBack from './back';
-import SVGIcons from './icons';
 import themeManager from 'Managers/ThemeManager';
 
+import SVGIcons from 'Ressources/Icons';
 import Base64 from 'Utils/Base64';
-
-/**
- * @typedef {import('./back').Icons} Icons
- */
 
 class Icon extends IconBack {
     render() {
@@ -49,6 +45,7 @@ class Icon extends IconBack {
                         width={size}
                         height={size}
                         color={color}
+                        fill={color}
                         transform={[{ rotate: angle * Math.PI / 180 }]}
                     />
                 </View>
@@ -60,6 +57,7 @@ class Icon extends IconBack {
             output = <View style={[containerSize, style]} />;
         }
 
+        // Add onPress event
         if (onPress !== null) {
             output = (
                 <TouchableOpacity
@@ -77,4 +75,4 @@ class Icon extends IconBack {
     }
 }
 
-export default Icon;
+export { Icon };

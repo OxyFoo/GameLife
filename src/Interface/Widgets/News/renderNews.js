@@ -5,9 +5,9 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
-import Button from 'Interface/Components/Button';
+import Text from 'Interface/OldComponents/Text';
+import Icon from 'Interface/OldComponents/Icon';
+import Button from 'Interface/OldComponents/Button';
 
 /**
  * @typedef {import('Data/News').New} New
@@ -30,7 +30,7 @@ const RenderNew = (Nw) => {
                     <Button
                         style={styles.newButton}
                         color='main2'
-                        iconXml={svgIcon === null ? undefined : svgIcon}
+                        iconXml={svgIcon}
                         iconColor='white'
                         onPress={event}
                         fontSize={12}

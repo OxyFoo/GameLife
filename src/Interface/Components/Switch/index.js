@@ -1,57 +1,68 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
+import styles from './style';
 import SwitchBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import Button from 'Interface/Components/Button';
-
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedViewStyle
  */
 
 class Switch extends SwitchBack {
     render() {
-        const color = this.props.value ? themeManager.GetColor('main1') : themeManager.GetColor('backgroundCard');
+        const { style, color } = this.props;
+        const { animSpring, animLinear } = this.state;
 
-        const barStyle = [ styles.bar, {
-            borderColor: color,
-            backgroundColor: themeManager.GetColor('background')
-        } ];
+        /** @type {StyleProp} */
+        const bgStyle = {
+            opacity: Animated.subtract(1, animLinear)
+        };
+
+        /** @type {AnimatedViewStyle} */
+        const activeBgStyle = {
+            transform: [
+                { translateX: Animated.multiply(animSpring, 24) },
+                { scale: Animated.multiply(animLinear, 100) }
+            ],
+            backgroundColor: themeManager.GetColor(color)
+        };
 
         /** @type {AnimatedViewStyle} */
         const btnStyle = {
-            ...styles.circle,
-            backgroundColor: color, transform: [{ translateX: this.state.anim }]
+            backgroundColor: themeManager.GetColor('white'),
+            transform: [
+                { translateX: Animated.multiply(animSpring, 24) }
+            ]
         };
 
         return (
-            <View>
-                <View style={barStyle} onTouchStart={this.onPress} />
-                <Button styleAnimation={btnStyle} color='main1' onPress={this.onPress} />
-            </View>
+            <TouchableOpacity
+                style={[styles.parent, style]}
+                onPress={this.onPress}
+                activeOpacity={0.6}
+            >
+                {/** Gradient background */}
+                <Animated.View style={[styles.background, bgStyle]}>
+                    <LinearGradient
+                        style={styles.fill}
+                        colors={['#999EB573', '#43454F26']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                    />
+                </Animated.View>
+
+                {/** Active background */}
+                <Animated.View style={[styles.activeBackground, activeBgStyle]} />
+
+                {/** Circle button */}
+                <Animated.View style={[styles.circle, btnStyle]} />
+            </TouchableOpacity>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    circle: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: 28,
-        height: 'auto',
-        paddingHorizontal: 0,
-        aspectRatio: 1,
-        borderRadius: 48
-    },
-    bar: {
-        width: 56,
-        height: 28,
-        borderRadius: 14,
-        borderWidth: 1
-    }
-});
-
-export default Switch;
+export { Switch };

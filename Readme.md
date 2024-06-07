@@ -31,6 +31,10 @@ En 3 mots : Gestion RPG IRL
 * [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin)
 * [React Native Exit App](https://www.npmjs.com/package/react-native-exit-app)
 * [React Native IAP](https://github.com/dooboolab-community/react-native-iap)
+* [React Native Community Blur](https://www.npmjs.com/package/@react-native-community/blur)
+* [React Native Masked View](https://www.npmjs.com/package/@react-native-masked-view/masked-view)
+* [React Native Config](https://www.npmjs.com/package/react-native-config)
+* [React Native Gifted Charts](https://www.npmjs.com/package/react-native-gifted-charts)
 
 ### Potential libs
 * [Notifee](https://notifee.app/react-native/docs/installation)

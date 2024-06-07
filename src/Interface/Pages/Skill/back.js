@@ -1,4 +1,4 @@
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
@@ -17,6 +17,13 @@ import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
  * @property {string} title
  * @property {(event: GestureResponderEvent) => void} onPress
  */
+
+const BackSkillProps = {
+    args: {
+        /** @type {number} */
+        skillID: 0
+    }
+};
 
 class BackSkill extends PageBase {
     /** @type {ActivityPanel | null} */
@@ -40,6 +47,7 @@ class BackSkill extends PageBase {
         totalDuration: 0
     };
 
+    /** @param {BackSkillProps} props */
     constructor(props) {
         super(props);
 
@@ -146,5 +154,8 @@ class BackSkill extends PageBase {
         user.interface.ChangePage('activity', { skillID }, true);
     }
 }
+
+BackSkill.defaultProps = BackSkillProps;
+BackSkill.prototype.props = BackSkillProps;
 
 export default BackSkill;

@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Container, Text, UserOnlineElement } from 'Interface/Components';
 
 /**
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Types/UserOnline').Friend} Friend
  * @typedef {import('react-native').ListRenderItem<Friend>} ListRenderFriend
  */
@@ -23,8 +23,8 @@ class MultiplayerPanel extends BackMultiplayerPanel {
             return null;
         }
 
-        /** @type {Icons} */
-        let icon = 'loadingDots';
+        /** @type {IconsName} */
+        let icon = 'loading-dots';
         let iconPress = () => {};
 
         if (state === 'connected') {

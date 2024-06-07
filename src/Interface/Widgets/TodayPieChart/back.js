@@ -12,7 +12,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Interface/Components/PieChart/back').FocusedActivity} FocusedActivity
+ * @typedef {import('Interface/OldComponents/PieChart/back').FocusedActivity} FocusedActivity
  * 
  * @typedef {object} UpdatingData
  * @property {number} id

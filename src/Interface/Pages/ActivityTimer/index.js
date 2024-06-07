@@ -9,7 +9,7 @@ import ActivityTimerFriends from './components/friends';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text, Button } from 'Interface/Components';
+import { Text, Button } from 'Interface/Components';
 
 import IMG_MUSIC from 'Ressources/logo/music/music';
 
@@ -33,10 +33,7 @@ class ActivityTimer extends BackActivityTimer {
             (Object.keys(user.settings.musicLinks));
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.content}
-            >
+            <View style={styles.content}>
                 {/* Title */}
                 <ActivityTimerTitle currentActivity={currentActivity} />
 
@@ -72,7 +69,7 @@ class ActivityTimer extends BackActivityTimer {
                         {musicKeys.map(this.renderMusic)}
                     </View>
                 </View>
-            </Page>
+            </View>
         );
     }
 

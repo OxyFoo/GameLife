@@ -6,8 +6,8 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { Text, Icon } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Text, Icon } from 'Interface/Components';
 
 class About extends BackAbout {
     renderContributor({ item: contributor }) {
@@ -22,7 +22,7 @@ class About extends BackAbout {
         const lang = langManager.curr['about'];
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <View>
                 <PageHeader
                     style={styles.pageHeader}
                     onBackPress={user.interface.BackHandle}
@@ -72,7 +72,7 @@ class About extends BackAbout {
                     </View>
 
                 </View>
-            </Page>
+            </View>
         );
     }
 }

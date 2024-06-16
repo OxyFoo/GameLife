@@ -89,15 +89,14 @@ class DailyQuest extends DailyQuestBack {
         const { claimIndex, claimDay, claimDate } = this.state;
         const {
             selectedSkillsID,
-            refreshesRemaining,
+            queueSkillsID,
             progression
         } = this.state.dailyQuest;
 
-        const REFRESH_PER_DAY = user.quests.dailyquest.config.refresh_count_per_day;
-        const ACTIVITY_MINUTES_PER_DAY = user.quests.dailyquest.config.activity_minutes_per_day;
+        const { refreshCount, activityMinutes } = user.quests.dailyquest.config.dailySettings;
 
         // Daily quest is finished
-        if (progression >= ACTIVITY_MINUTES_PER_DAY) {
+        if (progression >= activityMinutes) {
             return (
                 <View style={styles.viewFinished}>
                     {/* Claim date if not last streak */}
@@ -123,12 +122,13 @@ class DailyQuest extends DailyQuestBack {
             )
         );
 
+        const refreshesRemaining = queueSkillsID.length;
         const titleTime = lang['label-time']
             .replace('{0}', progression.toString())
-            .replace('{1}', ACTIVITY_MINUTES_PER_DAY.toString());
+            .replace('{1}', activityMinutes.toString());
         const titleReroll = lang['label-reroll']
             .replace('{0}', refreshesRemaining.toString())
-            .replace('{1}', REFRESH_PER_DAY.toString());
+            .replace('{1}', refreshCount.toString());
 
         return (
             <View>
@@ -145,12 +145,16 @@ class DailyQuest extends DailyQuestBack {
                             color={refreshesRemaining > 0 ? 'primary' : 'secondary'}
                         />
                     </View>
+                    <View style={styles.columnTitle}>
+                        <Text style={styles.title}>{claimDay.toString()}</Text>
+                        <Icon icon='flame' size={18} />
+                    </View>
                 </View>
                 <View style={styles.viewProgression}>
                     <XPBar
                         style={styles.progressBar}
                         value={progression}
-                        maxValue={ACTIVITY_MINUTES_PER_DAY}
+                        maxValue={activityMinutes}
                     />
                 </View>
                 <View style={styles.skillsItems}>
@@ -166,6 +170,9 @@ class DailyQuest extends DailyQuestBack {
 
     /** @type {ListRenderItemString} */
     renderItem = ({ item, index }) => {
+        const { queueSkillsID } = this.state.dailyQuest;
+        const refreshesRemaining = queueSkillsID.length;
+
         return (
             <View style={styles.skillItem}>
                 <Text>{item}</Text>
@@ -174,7 +181,7 @@ class DailyQuest extends DailyQuestBack {
                     icon='retry'
                     iconSize={18}
                     onPress={() => user.quests.dailyquest.RefreshSkillSelection(index)}
-                    enabled={this.state.dailyQuest.refreshesRemaining > 0}
+                    enabled={refreshesRemaining > 0}
                 />
             </View>
         );

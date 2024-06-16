@@ -93,8 +93,7 @@ jobs:
             -workspace GameLife.xcworkspace \
             -scheme GameLife \
             -sdk iphoneos \
-            -configuration Release \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2'
+            -configuration Release
 
       - name: 'Archive app'
         env:
@@ -112,9 +111,6 @@ jobs:
           # Go to the ios directory
           cd ios
 
-          # List test
-          xcodebuild -workspace GameLife.xcworkspace -list
-
           # Archive GameLife
           xcodebuild archive \
             -workspace GameLife.xcworkspace \
@@ -122,7 +118,6 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             -archivePath $PWD/build/GameLife.xcarchive \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
             PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"

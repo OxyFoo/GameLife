@@ -80,7 +80,7 @@ function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, cal
     let textLevel = langManager.curr['statistics']['names'][statKey];
     if (callback === null) {
         textLevel = langLevel['level-small'] + ' ' + stat.lvl;
-        textXP = `${Math.floor(stat.xp)}/${Math.floor(stat.next)} - ${stat.totalXP}${langLevel['xp']}`;
+        textXP = `${Math.floor(stat.xp)}/${Math.ceil(stat.next)} - ${stat.totalXP}${langLevel['xp']}`;
     }
 
     if (simplifiedDisplay) {

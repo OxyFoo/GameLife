@@ -144,12 +144,24 @@ jobs:
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
             PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
 
+          # Check if .ipa file was created
+          if [ -f $PWD/build/GameLife.ipa ]; then
+            echo "IPA file created"
+          else
+            echo "IPA file not created"
+            ls -l .
+            ls -l $PWD
+            ls -l $PWD/build
+            ls -l $PWD/build/GameLife.xcarchive
+            exit 1
+          fi
+
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILE_IPA }}
           path: ios/build/${{ env.FILE_IPA }}
-          if-no-files-found: error  
+          if-no-files-found: error
 
   delivery:
     name: '📦 Delivery'

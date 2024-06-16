@@ -5,8 +5,6 @@ import { GetActivitiesIdOfDay, GetDailyProgress } from './utils';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { DateFormat } from 'Utils/Date';
-import { Range, Round } from 'Utils/Functions';
-import { DAY_TIME, GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -15,28 +13,51 @@ import { DAY_TIME, GetLocalTime } from 'Utils/Time';
  * @typedef {import('./claim').ClaimRewardType} ClaimRewardType
  * @typedef {import('./utils').GetActivitiesIdOfDayType} GetActivitiesIdOfDayType
  * @typedef {import('./utils').GetDailyProgressType} GetDailyProgressType
+ * @typedef {import('./updates').UpdateSetupType} UpdateSetupType
+ * @typedef {import('./updates').UpdateActivitiesType} UpdateActivitiesType
  * @typedef {import('./actions').RefreshSkillSelectionType} RefreshSkillSelectionType
  * 
  * @typedef {Object} ClaimType
  * @property {string} start First day YYYY-MM-DD
  * @property {number} daysCount
  * @property {Array<number>} claimed
+ * 
+ * @typedef {Object} TodayType
+ * @property {boolean} loaded Feature availability
+ * @property {string} date Date of the day YYYY-MM-DD
+ * @property {Array<number>} selectedSkillsID Selected skills ID
+ * @property {Array<number>} queueSkillsID Next skills ID
+ * @property {number} progression Progress of the day in minutes
+ * @property {boolean} claimed Is the day claimed
  */
 
 class DailyQuest {
     config = {
-        refresh_count_per_day: 5,
-        activity_minutes_per_day: 15,
+        dailySettings: {
+            skillsCount: 3,
+            refreshCount: 5,
+            activityMinutes: 15
+        },
 
-        /** @type {number} Quantity of worst stats to consider to select skills */
-        worstStatsQuantity: 3,
-    
-        /** @type {number} Number of skills to select */
-        preSelectionCount: 30,
-    
-        /** @type {number} Number of skills to display */
-        skillsSelectionCount: 3
+        selection: {
+            /** @type {number} Quantity of worst stats to consider to select skills */
+            worstStatsQuantity: 3,
+
+            /** @type {number} Number of skills to select */
+            skillsQuantity: 50
+        }
     };
+
+    /** @type {DynamicVar<TodayType>} */
+    today = new DynamicVar({
+        loaded: false,
+
+        date: '',
+        selectedSkillsID: [],
+        queueSkillsID: [],
+        progression: 0,
+        claimed: false
+    });
 
     /** @param {UserManager} user */
     constructor(user) {
@@ -51,42 +72,20 @@ class DailyQuest {
         /** @type {boolean} Currently claiming (to prevent multiple claims) */
         this.claiming = false;
 
-        this.tmpRemaining = this.config.refresh_count_per_day;
-
-        this.today = new DynamicVar({
-            /** @type {Array<number>} */
-            selectedSkillsID: [],
-
-            refreshesRemaining: 0,
-
-            /** @type {number} Progress of the day in minutes */
-            progression: 0,
-
-            /** @type {boolean} Is the day claimed */
-            claimed: false
-        });
-
         /** @type {number} */
         this.seed = 0;
-
-        /** @type {Array<number>} Worst skills ID */
-        this.worstSkillsID = [];
-
-        /** @type {Array<number>} Indexes of current selected skills */
-        this.selectedIndexes = Range(this.config.skillsSelectionCount);
 
         /** @type {NodeJS.Timeout | null} Update the current activity time to tomorrow */
         this.timeout = null;
 
         this.listener = this.user.activities.allActivities.AddListener(() => {
-            UpdateActivities.call(this);
+            this.UpdateActivities();
         });
     }
 
     Init = () => {
-        // TODO: Wait loading
-        UpdateSetup.call(this);
-        UpdateActivities.call(this, this.tmpRemaining);
+        this.UpdateSetup();
+        this.UpdateActivities();
     }
 
     // TODO: Implement this method
@@ -98,8 +97,10 @@ class DailyQuest {
     Clear() {
         this.claimsList.Set([]);
         this.today.Set({
+            loaded: false,
+            date: '',
             selectedSkillsID: [],
-            refreshesRemaining: 0,
+            queueSkillsID: [],
             progression: 0,
             claimed: false
         });
@@ -109,13 +110,7 @@ class DailyQuest {
         const contains = (key) => data.hasOwnProperty(key);
         if (contains('claimsList')) this.claimsList.Set(data['claimsList']);
         if (contains('SAVED_claimsList')) this.SAVED_claimsList = data['SAVED_claimsList'];
-        if (contains('selectedIndex')) {
-            const { date, indexes, remaining } = data['selectedIndex'];
-            if (date === DateFormat(new Date(), 'YYYY-MM-DD')) {
-                this.selectedIndexes = indexes;
-                this.tmpRemaining = remaining;
-            }
-        }
+        if (contains('today')) this.today.Set(data['today']);
     }
     LoadOnline(data) {
         if (typeof(data) !== 'object') return;
@@ -126,11 +121,7 @@ class DailyQuest {
         const quests = {
             claimsList: this.claimsList.Get(),
             SAVED_claimsList: this.SAVED_claimsList,
-            selectedIndex: {
-                date: DateFormat(new Date(), 'YYYY-MM-DD'),
-                indexes: this.selectedIndexes,
-                remaining: this.today.Get().refreshesRemaining
-            }
+            today: this.today.Get()
         };
         return quests;
     }
@@ -179,28 +170,16 @@ class DailyQuest {
     }
 
     /**
-     * @param {number[]} preSelectedSkillsIDs
-     * @param {number[]} skillsIndexes
-     * @returns {number[]}
+     * @private
+     * @type {UpdateSetupType}
      */
-    GetSelectedSkillsIDs = (preSelectedSkillsIDs, skillsIndexes) => {
-        const skillsID = skillsIndexes.map(index => {
-            const newIndex = Round((index + 1) * this.seed) % preSelectedSkillsIDs.length;
-            const ID = preSelectedSkillsIDs[newIndex];
-            return ID;
-        });
+    UpdateSetup = UpdateSetup.bind(this);
 
-        // Increment duplicates to ensure all skills are different
-        for (let i = 0; i < skillsID.length; i++) {
-            for (let j = i + 1; j < skillsID.length; j++) {
-                if (skillsID[i] === skillsID[j]) {
-                    skillsID[j]++;
-                }
-            }
-        }
-
-        return skillsID;
-    }
+    /**
+     * @private
+     * @type {UpdateActivitiesType}
+     */
+    UpdateActivities = UpdateActivities.bind(this);
 
     /** @type {ClaimAllType} */
     ClaimAll = ClaimAll.bind(this);

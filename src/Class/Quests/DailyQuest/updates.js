@@ -1,74 +1,72 @@
 import { DateFormat } from 'Utils/Date';
-import { MinMax } from 'Utils/Functions';
 import { GetTimeToTomorrow } from 'Utils/Time';
-import { GetRandomIntByDay } from 'Utils/Items';
 
 /**
  * @typedef {import('./index').default} DailyQuest
+ * 
+ * @typedef {() => void} UpdateSetupType
+ * @typedef {() => void} UpdateActivitiesType
  */
 
 /**
  * Update the daily quest setup
  * @this {DailyQuest}
+ * @type {UpdateSetupType}
  */
 function UpdateSetup() {
-    /** @type {number} */
-    this.seed = GetRandomIntByDay(1, this.config.preSelectionCount - 1);
-
-    /** @type {Array<number>} Worst skills ID */
-    this.worstSkillsID = this.GetActivitiesIdOfDay(
-        this.config.preSelectionCount,
-        this.config.worstStatsQuantity
-    );
-
-    const newSelectedSkillsID = this.GetSelectedSkillsIDs(
-        this.worstSkillsID,
-        this.selectedIndexes
-    );
-
-    this.today.Set({
-        refreshesRemaining: this.config.refresh_count_per_day,
-        selectedSkillsID: newSelectedSkillsID,
-        progression: this.GetDailyProgress(newSelectedSkillsID),
-        claimed: false
-    });
+    const todayDate = DateFormat(new Date(), 'YYYY-MM-DD');
 
     // Update the current activity time to tomorrow
     if (this.timeout) clearTimeout(this.timeout);
     this.timeout = setTimeout(UpdateSetup.bind(this), GetTimeToTomorrow() * 1000);
+
+    if (this.today.Get().date === todayDate) {
+        return;
+    }
+
+    const { worstStatsQuantity, skillsQuantity } = this.config.selection;
+    const { refreshCount, skillsCount } = this.config.dailySettings;
+
+    /** @type {Array<number>} Worst skills ID */
+    const worstSkillsID = this.GetActivitiesIdOfDay(worstStatsQuantity, skillsQuantity)
+        .sort(() => Math.random() - 0.5);
+
+    const newSelectedSkillsID = worstSkillsID.slice(0, skillsCount);
+    const newQueueSkillsID = worstSkillsID.slice(skillsCount, skillsCount + refreshCount);
+
+    this.today.Set({
+        date: todayDate,
+        loaded: true,
+        selectedSkillsID: newSelectedSkillsID,
+        queueSkillsID: newQueueSkillsID,
+        progression: 0,
+        claimed: false
+    });
 }
 
 /**
  * Update the activities
  * @this {DailyQuest}
- * @param {number | null} [newRefreshQuantity] New refresh quantity
+ * @type {UpdateActivitiesType}
  */
-function UpdateActivities(newRefreshQuantity = null) {
-    const { refreshesRemaining } = this.today.Get();
+function UpdateActivities() {
+    const { selectedSkillsID, progression } = this.today.Get();
+    const { activityMinutes } = this.config.dailySettings;
 
-    const newProgression = this.GetDailyProgress(
-        this.GetSelectedSkillsIDs(
-            this.worstSkillsID,
-            this.selectedIndexes
-        )
-    );
-    const newSelectedSkillsID = this.GetSelectedSkillsIDs(
-        this.worstSkillsID,
-        this.selectedIndexes
-    );
-    let newRefreshesRemaining = refreshesRemaining;
-    if (newRefreshQuantity !== null) {
-        newRefreshesRemaining = MinMax(0, newRefreshQuantity, this.config.refresh_count_per_day);
+    // Check if the progression is already completed
+    if (progression >= activityMinutes) {
+        return;
     }
 
+    // Update the progression
+    const newProgression = this.GetDailyProgress(selectedSkillsID);
     this.today.Set({
         ...this.today.Get(),
-        refreshesRemaining: newRefreshesRemaining,
-        selectedSkillsID: newSelectedSkillsID,
         progression: newProgression
     });
 
-    if (newProgression < this.config.activity_minutes_per_day) {
+    // Check if the progression is completed
+    if (newProgression < activityMinutes) {
         return;
     }
 

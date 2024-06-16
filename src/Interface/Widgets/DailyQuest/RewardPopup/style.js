@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
 
     claimState: {
-        aspectRatio: 1,
+        minWidth: 72,
         position: 'absolute',
         top: 0,
         right: 0,
@@ -88,6 +88,10 @@ const styles = StyleSheet.create({
         marginRight: 28,
         paddingVertical: 0,
         paddingHorizontal: 6
+    },
+    claimTomorrow: {
+        marginRight: 16,
+        fontSize: 16
     },
 
     claimAllView: {

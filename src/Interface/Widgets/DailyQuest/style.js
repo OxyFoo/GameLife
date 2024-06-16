@@ -42,13 +42,14 @@ const styles = StyleSheet.create({
     viewTitle: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         marginTop: 12,
         paddingHorizontal: 12
     },
     columnTitle: {
+        minWidth: '33.33%',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     title: {
         marginHorizontal: 8,

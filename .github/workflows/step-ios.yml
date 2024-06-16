@@ -39,28 +39,28 @@ jobs:
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # Import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o "$CERTIFICATE_PATH"
           
-          if [ ${{ inputs.environment }} == 'test' ]; then
-            echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
+          if [ "${{ inputs.environment }}" == 'test' ]; then
+            echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o "$PP_PATH"
             echo "Test environment selected"
           else
-            echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+            echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o "$PP_PATH"
             echo "Production environment selected"
           fi
 
           # Create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
           # Import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
+          security import "$CERTIFICATE_PATH" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
 
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles
 
           # List keychains and provisioning profiles
           security list-keychains
@@ -85,16 +85,13 @@ jobs:
 
       - name: 'Setup & clean build directory'
         run: |
-          # Go to the ios directory
-          cd ios
-
           # Clean the build directory
+          cd ios
           xcodebuild clean \
             -workspace GameLife.xcworkspace \
             -scheme GameLife \
             -sdk iphoneos \
-            -configuration Release \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2'
+            -configuration Release
 
       - name: 'Archive app'
         env:
@@ -102,10 +99,10 @@ jobs:
           KEYCHAIN_PATH: $RUNNER_TEMP/app-signing.keychain-db
         run: |
           # Specify the keychain for codesign
-          security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
+          security default-keychain -s "$KEYCHAIN_PATH"
 
           # Execute bundleSwitcher.sh if environment is test
-          if [ ${{ inputs.environment }} == 'test' ]; then
+          if [ "${{ inputs.environment }}" == 'test' ]; then
             ./Tools/BundleSwitcher/bundleSwitcher.sh test
           fi
 
@@ -119,7 +116,7 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             -archivePath $PWD/build/GameLife.xcarchive \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
+            -destination 'generic/platform=iOS' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
             PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
@@ -129,7 +126,7 @@ jobs:
           KEYCHAIN_PATH: $RUNNER_TEMP/app-signing.keychain-db
         run: |
           # Specify the keychain for codesign
-          security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
+          security default-keychain -s "$KEYCHAIN_PATH"
 
           # Go to the ios directory
           cd ios
@@ -175,16 +172,16 @@ jobs:
           KEY_CONTENT: ${{ secrets.APPLE_API_APP_STORE_CONNECT_AUTH_KEY }}
         run: |
           # Create directory
-          mkdir -p $KEY_PATH
+          mkdir -p "$KEY_PATH"
 
           # Go to the ios directory
-          cd $KEY_PATH
+          cd "$KEY_PATH"
 
           # Get key name (AuthKey_$SEND_KEY.p8)
           KEY_NAME="AuthKey_$SEND_KEY.p8"
 
           # Import key from secrets
-          echo -n "$KEY_CONTENT" | base64 --decode > $KEY_NAME
+          echo -n "$KEY_CONTENT" | base64 --decode > "$KEY_NAME"
 
           # Go back
           cd -
@@ -193,7 +190,7 @@ jobs:
           pwd
 
           # Check if key is valid
-          ls -l $KEY_PATH/$KEY_NAME
+          ls -l "$KEY_PATH/$KEY_NAME"
 
       - name: 'Upload to App Store'
         env:
@@ -205,7 +202,7 @@ jobs:
 
           # Upload the .ipa to the App Store using altool
           xcrun altool --upload-app \
-            -f ${FILE_IPA} \
+            -f "${{ env.FILE_IPA }}" \
             -t ios \
             --apiKey "$SEND_KEY" \
             --apiIssuer "$ISSUER_ID" \

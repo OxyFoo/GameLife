@@ -140,7 +140,7 @@ jobs:
         with:
           serviceAccountJson: ./serviceAccount.json
           packageName: ${{ inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
-          releaseFile: ./${{ env.FILE_AAB }}
+          releaseFiles: ./${{ env.FILE_AAB }}
           track: production
           whatsNewDirectory: distribution/whatsnew
           mappingFile: ./${{ env.FILE_MAPPING }}

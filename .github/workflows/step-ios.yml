@@ -151,10 +151,6 @@ jobs:
             mv $PWD/build/GameLife.ipa $PWD/build/${{ env.FILE_IPA }}
           fi
 
-          # Check if the .ipa file was created
-          ls -l $PWD
-          ls -l $PWD/build
-
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v3
         with:
@@ -197,12 +193,6 @@ jobs:
 
           # Go back
           cd -
-
-          # Print current directory
-          pwd
-
-          # Check if key is valid
-          ls -l $KEY_PATH/$KEY_NAME
 
       - name: 'Upload to App Store'
         env:

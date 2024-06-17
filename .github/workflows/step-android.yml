@@ -135,6 +135,11 @@ jobs:
         run: |
           echo ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 }} | base64 -d > ./serviceAccount.json
 
+      - name: 'Check config'
+        run: |
+          ls -lash
+          cat ./serviceAccount.json
+
       - name: 'Upload to Google Play'
         uses: r0adkll/upload-google-play@v1
         with:

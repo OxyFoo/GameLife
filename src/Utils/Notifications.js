@@ -1,6 +1,5 @@
-import { Platform } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
 import PushNotification from 'react-native-push-notification';
-import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 import user from 'Managers/UserManager';
@@ -10,6 +9,8 @@ import dataManager from 'Managers/DataManager';
 import { ParsePlural } from './String';
 import { GetGlobalTime } from './Time';
 import { Random, Range } from './Functions';
+
+const { AlarmPermission } = NativeModules;
 
 /**
  * @typedef {import('@react-native-community/push-notification-ios').NotificationRequest} NotificationRequest
@@ -24,14 +25,19 @@ const Management = {
             return true;
         }
 
-        let permissionStatus = await check(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
-        if (permissionStatus === RESULTS.DENIED) {
-            const newStatus = await request(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
-            if (newStatus !== RESULTS.GRANTED) {
+        try {
+            const result = await AlarmPermission.requestExactAlarmPermission();
+            if (result) {
+                user.interface.console.AddLog('info', 'Permission granted');
+                return true;
+            } else {
+                user.interface.console.AddLog('warn', 'Permission denied or pending');
                 return false;
             }
+        } catch (error) {
+            user.interface.console.AddLog('error', 'Error requesting alarm permission', error);
+            return false;
         }
-        return true;
     },
     async checkPermissionsIOS(forcePopup = false) {
         let authorization = false;

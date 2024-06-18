@@ -100,8 +100,8 @@ android {
         applicationId "com.gamelife"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 32
-        versionName "1.2.3"
+        versionCode 33
+        versionName "1.2.3-test"
         missingDimensionStrategy "store", "play"
     }
     splits {

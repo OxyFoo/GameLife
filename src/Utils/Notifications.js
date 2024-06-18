@@ -19,8 +19,11 @@ import { Random, Range } from './Functions';
 const MAX_DAYS = 30;
 
 const Management = {
-    /*
     async checkPermissionsAndroid(forcePopup = false) {
+        if (typeof Platform.Version === 'number' && Platform.Version < 33) {
+            return true;
+        }
+
         let permissionStatus = await check(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
         if (permissionStatus === RESULTS.DENIED) {
             const newStatus = await request(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
@@ -30,7 +33,6 @@ const Management = {
         }
         return true;
     },
-    */
     async checkPermissionsIOS(forcePopup = false) {
         let authorization = false;
         const perms = { alert: true, badge: true, sound: true, critical: true };
@@ -82,11 +84,11 @@ async function Setup(notif) {
 
         await Remove(notif, false); // notif.Disable();
     } else if (Platform.OS === 'android') {
-        //const enabled = await Management.checkPermissionsAndroid();
-        //if (enabled === false) {
-        //    user.interface.console.AddLog('warn', 'Notifications.Setup', 'Notifications are disabled (permissions denied)');
-        //    return false;
-        //}
+        const enabled = await Management.checkPermissionsAndroid();
+        if (enabled === false) {
+            user.interface.console.AddLog('warn', 'Notifications.Setup', 'Notifications are disabled (permissions denied)');
+            return false;
+        }
 
         await Remove(notif, false); // notif.Disable();
         const lang = langManager.curr['notifications'];

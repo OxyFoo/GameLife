@@ -29,7 +29,7 @@
     "react-native-iap": "^12.12.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-modal-datetime-picker": "^14.0.1",
-    "react-native-permissions": "^3.10.1",
+    "react-native-permissions": "^4.1.5",
     "react-native-push-notification": "^8.1.1",
     "react-native-shadow-2": "^7.0.6",
     "react-native-svg": "^12.5.1"

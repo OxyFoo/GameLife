@@ -8,6 +8,13 @@
         "react",
         "react-native"
     ],
+    "ignorePatterns": [
+        "node_modules/",
+        "Backups/",
+        "android/",
+        "ios/",
+        "build/"
+    ],
     "rules": {
         "semi": ["warn", "always"],
         "quotes": ["warn", "single", {

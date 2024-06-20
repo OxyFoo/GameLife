@@ -11,15 +11,18 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         overflow: 'hidden'
     },
+    flex: {
+        flex: 1
+    },
+    fill: {
+        width: '100%',
+        height: '100%'
+    },
     content: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    gradientContent: {
-        marginVertical: 16,
-        marginHorizontal: 24
     },
     absolute: {
         position: 'absolute',

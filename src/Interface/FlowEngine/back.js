@@ -5,10 +5,11 @@ import PageBase from './PageBase';
 import PAGES from 'Interface/Pages';
 
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
-import { Console, Popup } from 'Interface/Widgets';
 
 /**
  * @typedef {import('Interface/Pages').PageNames} PageNames
+ * @typedef {import('Interface/Global').Popup} Popup
+ * @typedef {import('Interface/Global').Console} Console
  * @typedef {'auto' | 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight' | 'fromCenter'} Transitions
  */
 
@@ -41,6 +42,8 @@ import { Console, Popup } from 'Interface/Widgets';
 
 /**
  * @typedef {Object} FlowEnginePublicClass
+ * @property {Popup} popup
+ * @property {Console} console
  * @property {BackFlowEngine['history']} history
  * @property {BackFlowEngine['ChangePage']} ChangePage
  * @property {BackFlowEngine['BackHandle']} BackHandle
@@ -49,9 +52,12 @@ import { Console, Popup } from 'Interface/Widgets';
  * @property {BackFlowEngine['ResetCustomBackHandler']} ResetCustomBackHandler
  */
 
-class BackFlowEngine extends React.Component{
-    /** @type {Popup | null} */    popup       = null;
-    /** @type {Console | null} */  console     = null;
+class BackFlowEngine extends React.Component {
+    /** @type {Popup | null} */
+    popup = null;
+
+    /** @type {Console | null} */
+    console = null;
 
     state = {
         /** @type {PageNames | null} */
@@ -91,13 +97,15 @@ class BackFlowEngine extends React.Component{
         // Check if all PAGES are valid & if extends PageBase
         for (const page of Object.entries(PAGES)) {
             const [pageName, Page] = page;
-            if (typeof(Page) !== 'function') {
+            if (typeof Page !== 'function') {
                 throw new Error(`Page ${pageName} must be a class`);
             }
             if (Page.prototype instanceof PageBase === false) {
                 throw new Error(`Page ${pageName} must extends PageBase`);
             }
-            this.availablePages.push(/** @type {PageNames} */ (pageName));
+
+            // @ts-ignore
+            this.availablePages.push(/** @type {PageNames} */ pageName);
         }
     }
 
@@ -109,16 +117,12 @@ class BackFlowEngine extends React.Component{
         BackHandler.removeEventListener('hardwareBackPress', this.BackHandle);
     }
 
-
-
     /**
      * @description Get current page name
      * @returns {PageNames | null}
      * @public
      */
     GetCurrentPageName = () => this.state.selectedPage;
-
-
 
     /**
      * @description Custom back button handler
@@ -133,19 +137,19 @@ class BackFlowEngine extends React.Component{
      * @public
      */
     SetCustomBackHandler = (handle) => {
-        if (typeof(handle) !== 'function') {
+        if (typeof handle !== 'function') {
             return false;
         }
         this.customBackHandle = handle;
         return true;
-    }
+    };
 
     /**
      * @public
      */
     ResetCustomBackHandler = () => {
         this.customBackHandle = null;
-    }
+    };
 
     /**
      * @description Handle back button
@@ -163,7 +167,7 @@ class BackFlowEngine extends React.Component{
 
         this.backPage(transition);
         return true;
-    }
+    };
 
     /**
      * Open page
@@ -173,7 +177,10 @@ class BackFlowEngine extends React.Component{
      * @returns {boolean} True if page changed
      * @public
      */
-    ChangePage = (nextpage, options = { args: {}, storeInHistory: true, transition: 'auto' }) => {
+    ChangePage = (
+        nextpage,
+        options = { args: {}, storeInHistory: true, transition: 'auto' }
+    ) => {
         const { selectedPage } = this.state;
 
         if (this.changing) {
@@ -190,7 +197,7 @@ class BackFlowEngine extends React.Component{
         this.changing = false;
 
         return true;
-    }
+    };
 
     /**
      * Change page to previous page in history
@@ -221,7 +228,7 @@ class BackFlowEngine extends React.Component{
         this.changing = false;
 
         return true;
-    }
+    };
 
     /**
      * Mount page if not already mounted
@@ -271,9 +278,9 @@ class BackFlowEngine extends React.Component{
         this.setState({
             selectedPage: nextPage,
             currentTransition: transition,
-            mountedPages: [ ...mountedPages, newPage ]
+            mountedPages: [...mountedPages, newPage]
         });
-    }
+    };
 
     /**
      * Save page in history if needed and unmount if not keepMounted
@@ -298,7 +305,7 @@ class BackFlowEngine extends React.Component{
                 this.removeFromMountedPages(oldPage.pageName);
             }
         });
-    }
+    };
 
     /**
      * @template {PageNames} T
@@ -317,7 +324,7 @@ class BackFlowEngine extends React.Component{
             transitionStart: new Animated.Value(0),
             transitionEnd: new Animated.Value(0)
         };
-    }
+    };
 
     /**
      * @template {PageNames} T
@@ -330,7 +337,7 @@ class BackFlowEngine extends React.Component{
             pageName: pageName,
             args: args
         });
-    }
+    };
 
     /**
      * @template {PageNames} T
@@ -345,7 +352,7 @@ class BackFlowEngine extends React.Component{
         }
         // @ts-ignore
         return mountedPages.find((p) => p.pageName === pageName) || null;
-    }
+    };
 
     /**
      * @param {PageNames} pageName
@@ -364,7 +371,7 @@ class BackFlowEngine extends React.Component{
                 resolve(null);
             });
         });
-    }
+    };
 }
 
 export default BackFlowEngine;

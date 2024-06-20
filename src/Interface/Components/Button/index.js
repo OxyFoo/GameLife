@@ -10,7 +10,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Text } from '../Text';
 import { Icon } from '../Icon';
-import { Ripple } from '../../Primitives/Ripple';
+import { Ripple } from 'Interface/Primitives';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -20,17 +20,34 @@ import { Ripple } from '../../Primitives/Ripple';
 class Button extends ButtonBack {
     render() {
         const {
-            appearance, style: styleProp, styleAnimation, styleContent, enabled,
-            onTouchStart, onTouchCancel, onTouchMove, onTouchEnd, onLayout,
-            children, icon, iconSize, iconXml, iconAngle, loading,
-            fontSize, onPress, onLongPress, ...rest
+            appearance,
+            style: styleProp,
+            styleAnimation,
+            styleContent,
+            enabled,
+            onTouchStart,
+            onTouchCancel,
+            onTouchMove,
+            onTouchEnd,
+            onLayout,
+            children,
+            icon,
+            iconSize,
+            iconXml,
+            iconAngle,
+            loading,
+            fontSize,
+            onPress,
+            onLongPress,
+            ...rest
         } = this.props;
 
         const ButtonView = styleAnimation === null ? View : Animated.View;
         return (
+            // @ts-ignore
             <ButtonView
                 {...rest}
-                style={[ styles.body, styleProp, styleAnimation ]}
+                style={[styles.body, styleProp, styleAnimation]}
                 onTouchStart={this.onTouchStart}
                 onTouchCancel={this.onTouchCancel}
                 onTouchMove={this.onTouchMove}
@@ -44,20 +61,28 @@ class Button extends ButtonBack {
                 {enabled && (
                     <Ripple
                         ref={this.rippleRef}
-                        rippleColor={appearance === 'normal' ? 'black' : 'white'}
+                        rippleColor={
+                            appearance === 'normal' ? 'black' : 'white'
+                        }
                     />
                 )}
             </ButtonView>
         );
     }
 
-    renderContent() {
+    renderContent = () => {
         const {
-            children, appearance, loading, icon, iconXml,
-            styleContent: styleContentProp, fontSize, enabled
+            children,
+            appearance,
+            loading,
+            icon,
+            iconXml,
+            styleContent: styleContentProp,
+            fontSize,
+            enabled
         } = this.props;
 
-        const hasChildren = typeof(children) !== 'undefined';
+        const hasChildren = typeof children !== 'undefined';
         const hasIcon = icon !== null || iconXml !== null;
 
         let content = children;
@@ -77,7 +102,7 @@ class Button extends ButtonBack {
 
         // Manage children
         else if (hasChildren) {
-            if (typeof(children) === 'string') {
+            if (typeof children === 'string') {
                 content = (
                     <Text color={'darkBlue'} fontSize={fontSize}>
                         {children}
@@ -95,7 +120,7 @@ class Button extends ButtonBack {
                             size={this.props.iconSize}
                             color={'transparent'}
                         />
-                        <View style={[styles.content, { flex: 1 }]}>
+                        <View style={[styles.content, styles.flex]}>
                             {content}
                         </View>
                         <Icon
@@ -131,39 +156,51 @@ class Button extends ButtonBack {
 
         if (appearance === 'normal' || appearance === 'transparent') {
             return (
-                <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
+                <View
+                    style={[styles.content, styleContent, styleContentProp]}
+                    pointerEvents='none'
+                >
                     {content}
                 </View>
             );
-        }
-
-        else if (appearance === 'outline' || appearance === 'outline-blur') {
+        } else if (appearance === 'outline' || appearance === 'outline-blur') {
             return (
-                <>
-                    <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
+                <View>
+                    <View
+                        style={[styles.content, styleContent, styleContentProp]}
+                        pointerEvents='none'
+                    >
                         {content}
                     </View>
                     <MaskedView
-                        style={[styles.absolute, styles.gradientContent]}
-                        maskElement={(
-                            <View style={[styles.content, styleContent, styleContentProp]}>
+                        style={styles.absolute}
+                        maskElement={
+                            <View
+                                style={[
+                                    styles.content,
+                                    styleContent,
+                                    styleContentProp
+                                ]}
+                            >
                                 {content}
                             </View>
-                        )}
+                        }
                     >
                         <LinearGradient
-                            style={{ width: '100%', height: '100%' }}
+                            style={styles.fill}
                             colors={['#8CF7FF', '#DBA1FF']}
                             useAngle={true}
                             angle={190}
                         />
                     </MaskedView>
-                </>
+                </View>
             );
         }
-    }
 
-    renderBackground() {
+        return null;
+    };
+
+    renderBackground = () => {
         const { appearance } = this.props;
 
         if (appearance === 'normal') {
@@ -175,25 +212,21 @@ class Button extends ButtonBack {
                     angle={267}
                 />
             );
-        }
-
-        else if (appearance === 'outline') {
+        } else if (appearance === 'outline') {
             return (
                 <MaskedView
                     style={styles.absolute}
-                    maskElement={(<View style={styles.backgroundView} />)}
+                    maskElement={<View style={styles.backgroundView} />}
                 >
                     <LinearGradient
-                        style={{ width: '100%', height: '100%' }}
+                        style={styles.fill}
                         colors={['#8CF7FF', '#DBA1FF']}
                         useAngle={true}
                         angle={267}
                     />
                 </MaskedView>
             );
-        }
-
-        else if (appearance === 'outline-blur') {
+        } else if (appearance === 'outline-blur') {
             return (
                 <>
                     <BlurView
@@ -201,17 +234,20 @@ class Button extends ButtonBack {
                             styles.absolute,
                             styles.backgroundBlur,
                             {
-                                backgroundColor: themeManager.GetColor('darkBlue', { opacity: .25 })
+                                backgroundColor: themeManager.GetColor(
+                                    'darkBlue',
+                                    { opacity: 0.25 }
+                                )
                             }
                         ]}
                         blurAmount={20}
                     />
                     <MaskedView
                         style={styles.absolute}
-                        maskElement={(<View style={styles.backgroundView} />)}
+                        maskElement={<View style={styles.backgroundView} />}
                     >
                         <LinearGradient
-                            style={{ width: '100%', height: '100%' }}
+                            style={styles.fill}
                             colors={['#8CF7FF', '#DBA1FF']}
                             useAngle={true}
                             angle={267}
@@ -220,7 +256,9 @@ class Button extends ButtonBack {
                 </>
             );
         }
-    }
+
+        return null;
+    };
 }
 
 export { Button };

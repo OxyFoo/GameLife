@@ -18,8 +18,8 @@ class BackTest extends PageBase {
         checkbox1: false,
         checkbox2: true,
         switchText: 0,
-        combobox: {ID: -1, value: ''}
-    }
+        combobox: { ID: -1, value: '' }
+    };
 
     animLoop = new Animated.Value(0);
     animLinear = new Animated.Value(0);
@@ -41,13 +41,13 @@ class BackTest extends PageBase {
     buttonLoop = () => {
         const { selectedButon } = this.state;
         if (selectedButon === 'normal') {
-            this.setState({selectedButon: 'outline'});
+            this.setState({ selectedButon: 'outline' });
         } else if (selectedButon === 'outline') {
-            this.setState({selectedButon: 'outline-blur'});
+            this.setState({ selectedButon: 'outline-blur' });
         } else if (selectedButon === 'outline-blur') {
-            this.setState({selectedButon: 'normal'});
+            this.setState({ selectedButon: 'normal' });
         }
-    }
+    };
 
     /*
     openSI = () => {
@@ -70,7 +70,22 @@ class BackTest extends PageBase {
     }
     */
 
-    goToPage2 = () => this.fe.ChangePage('test2', { storeInHistory: false, transition: 'auto' });
+    goToPage2 = () =>
+        this.fe.ChangePage('test2', {
+            storeInHistory: false,
+            transition: 'auto'
+        });
+
+    openPopup = (count = 1) => {
+        for (let i = 0; i < count; i++) {
+            this.fe.popup.Open({
+                type: 'ok',
+                args: ['A', (i + 1).toString()],
+                callback: console.log,
+                cancelable: i % 2 === 0
+            });
+        }
+    };
 }
 
 export default BackTest;

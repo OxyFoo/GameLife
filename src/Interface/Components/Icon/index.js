@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
 
 import IconBack from './back';
 import themeManager from 'Managers/ThemeManager';
@@ -10,24 +12,41 @@ import Base64 from 'Utils/Base64';
 
 class Icon extends IconBack {
     render() {
-        const { style, containerStyle, icon, xml, size, angle, onPress, show } = this.props;
+        const {
+            style,
+            containerStyle,
+            color: colorProp,
+            icon,
+            xml,
+            size,
+            angle,
+            onPress,
+            show
+        } = this.props;
 
         let output = null;
         const containerSize = { width: size, height: size };
-        const color = themeManager.GetColor(this.props.color);
+        const color =
+            colorProp === 'gradient'
+                ? 'white'
+                : themeManager.GetColor(colorProp);
 
         // Icon
         if (show && xml !== null) {
             // Default icon (invalid xml)
-            if (typeof(xml) !== 'string' || xml.length < 10) {
-                output = <Icon icon='default' size={size} color={this.props.color} />;
+            if (typeof xml !== 'string' || xml.length < 10) {
+                output = (
+                    <Icon icon='default' size={size} color={this.props.color} />
+                );
             }
 
             // XML icon
             else {
                 const XML = Base64.Decode(xml)
-                    .split('#ffffff').join(color)
-                    .split('#FFFFFF').join(color);
+                    .split('#ffffff')
+                    .join(color)
+                    .split('#FFFFFF')
+                    .join(color);
                 output = (
                     <View style={[containerSize, style]}>
                         <SvgXml xml={XML} width={size} height={size} />
@@ -46,7 +65,7 @@ class Icon extends IconBack {
                         height={size}
                         color={color}
                         fill={color}
-                        transform={[{ rotate: angle * Math.PI / 180 }]}
+                        transform={[{ rotate: (angle * Math.PI) / 180 }]}
                     />
                 </View>
             );
@@ -57,6 +76,20 @@ class Icon extends IconBack {
             output = <View style={[containerSize, style]} />;
         }
 
+        // Gradient color
+        if (colorProp === 'gradient') {
+            output = (
+                <MaskedView maskElement={output}>
+                    <LinearGradient
+                        style={[containerSize, style]}
+                        colors={['#8CF7FF', '#DBA1FF']}
+                        useAngle={true}
+                        angle={190}
+                    />
+                </MaskedView>
+            );
+        }
+
         // Add onPress event
         if (onPress !== null) {
             output = (
@@ -64,7 +97,7 @@ class Icon extends IconBack {
                     testID='icon'
                     style={[containerSize, containerStyle]}
                     onPress={onPress}
-                    activeOpacity={.5}
+                    activeOpacity={0.5}
                 >
                     {output}
                 </TouchableOpacity>

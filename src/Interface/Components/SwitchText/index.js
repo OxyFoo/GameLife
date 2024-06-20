@@ -7,19 +7,21 @@ import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text } from '../Text';
-import { Ripple } from '../../Primitives/Ripple';
+import { Ripple } from 'Interface/Primitives';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  */
 
-function SwitchTextCell(props = {
-    text: '',
-    fontSize: 16,
-    width: 50,
-    onPress: () => {}
-}) {
+function SwitchTextCell(
+    props = {
+        text: '',
+        fontSize: 16,
+        width: 50,
+        onPress: () => {}
+    }
+) {
     /** @type {React.RefObject<Ripple>} */
     const refRipple = React.useRef(null);
 
@@ -33,9 +35,7 @@ function SwitchTextCell(props = {
         >
             <Ripple ref={refRipple} />
 
-            <Text fontSize={props.fontSize}>
-                {props.text}
-            </Text>
+            <Text fontSize={props.fontSize}>{props.text}</Text>
         </TouchableOpacity>
     );
 }
@@ -64,7 +64,12 @@ class SwitchText extends SwitchTextBack {
             width: `${width}%`,
             backgroundColor: activeColor,
             transform: [
-                { translateX: Animated.multiply(anim, parentWidth / childrenCount) }
+                {
+                    translateX: Animated.multiply(
+                        anim,
+                        parentWidth / childrenCount
+                    )
+                }
             ]
         };
 
@@ -82,7 +87,7 @@ class SwitchText extends SwitchTextBack {
                         key={'stc-' + index}
                         text={text}
                         fontSize={fontSize}
-                        width={width * (parentWidth - 7 * 2) / 100}
+                        width={(width * (parentWidth - 7 * 2)) / 100}
                         onPress={() => this.onChange(index)}
                     />
                 ))}

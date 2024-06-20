@@ -7,7 +7,7 @@ import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
 import PAGES from 'Interface/Pages';
 
 import { RadialBackground } from '../Primitives/radialBackground';
-import { Console, Popup } from 'Interface/Widgets';
+import { Console, Popup } from 'Interface/Global';
 
 /**
  * @typedef {import('./back').PageNames} PageNames
@@ -15,21 +15,21 @@ import { Console, Popup } from 'Interface/Widgets';
 
 const PATH1 = [
     { x: 0, y: 0 },
-    { x: 1, y: .5 },
-    { x: 0, y: .5 },
+    { x: 1, y: 0.5 },
+    { x: 0, y: 0.5 },
     { x: 1, y: 0 },
     { x: 0, y: 0 }
 ];
 const PATH2 = [
-    { x: 1, y: .5 },
+    { x: 1, y: 0.5 },
     { x: 1, y: 1 },
     { x: 1, y: 0 },
-    { x: .5, y: 1 },
-    { x: 0, y: .5 },
+    { x: 0.5, y: 1 },
+    { x: 0, y: 0.5 },
     { x: 0, y: 1 },
     { x: 1, y: 0 },
     { x: 0, y: 0 },
-    { x: 1, y: .5 },
+    { x: 1, y: 0.5 }
 ];
 
 class FlowEngine extends BackFlowEngine {
@@ -76,11 +76,14 @@ class FlowEngine extends BackFlowEngine {
                 />
             </Animated.View>
         );
-    }
+    };
 
     render() {
         return (
-            <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior='height'>
+            <KeyboardAvoidingView
+                style={[styles.fullscreen, styles.background]}
+                behavior='height'
+            >
                 <RadialBackground
                     color='main1'
                     animPath={PATH1}
@@ -92,15 +95,15 @@ class FlowEngine extends BackFlowEngine {
                     duration={10000}
                 />
 
-                {this.availablePages.map(pageName => (
+                {this.availablePages.map((pageName) => (
                     <this.renderPage
                         key={`fe-page-${pageName}`}
                         pageName={pageName}
                     />
                 ))}
 
-                <Popup ref={ref => { if (ref !== null) this.popup = ref } } />
-                <Console ref={ref => { if (ref !== null) this.console = ref } } />
+                <Popup ref={(ref) => (this.popup = ref)} />
+                <Console ref={(ref) => (this.console = ref)} />
             </KeyboardAvoidingView>
         );
     }

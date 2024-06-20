@@ -6,13 +6,13 @@ import { Button } from 'react-native';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedProps
  * @typedef {import('react-native').ButtonProps} ButtonProps
- * 
+ *
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
+ *
  * @typedef {import('Ressources/Icons').IconsName} IconsName
- * @typedef {import('../../Primitives/Ripple').Ripple} Ripple
- * 
+ * @typedef {import('Interface/Primitives').Ripple} Ripple
+ *
  * @typedef {Object} ButtonPropsType
  * @property {import('react').ReactNode | string | undefined} children
  * @property {StyleProp} style
@@ -54,11 +54,11 @@ const ButtonProps = {
 
     onPress: () => {},
     onLongPress: () => {},
-    onTouchStart: (event) => {},
-    onTouchMove: (event) => {},
-    onTouchEnd: (event) => {},
-    onTouchCancel: (event) => {},
-    onLayout: (event) => {}
+    onTouchStart: () => {},
+    onTouchMove: () => {},
+    onTouchEnd: () => {},
+    onTouchCancel: () => {},
+    onLayout: () => {}
 };
 
 class ButtonBack extends React.Component {
@@ -72,7 +72,8 @@ class ButtonBack extends React.Component {
 
     /** @param {ButtonProps & ButtonPropsType} nextProps */
     shouldComponentUpdate(nextProps) {
-        return this.props.children !== nextProps.children ||
+        return (
+            this.props.children !== nextProps.children ||
             this.props.style !== nextProps.style ||
             this.props.styleAnimation !== nextProps.styleAnimation ||
             this.props.styleContent !== nextProps.styleContent ||
@@ -83,7 +84,8 @@ class ButtonBack extends React.Component {
             this.props.iconSize !== nextProps.iconSize ||
             this.props.iconAngle !== nextProps.iconAngle ||
             this.props.loading !== nextProps.loading ||
-            this.props.enabled !== nextProps.enabled;
+            this.props.enabled !== nextProps.enabled
+        );
     }
 
     /** @param {GestureResponderEvent} event */
@@ -95,12 +97,12 @@ class ButtonBack extends React.Component {
         this.posX = event.nativeEvent.pageX;
         this.posY = event.nativeEvent.pageY;
         this.time = new Date().getTime();
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         this.props.onTouchMove(event);
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onTouchCancel = (event) => {
@@ -108,7 +110,7 @@ class ButtonBack extends React.Component {
         if (this.props.enabled) {
             this.rippleRef.current?.Release(event);
         }
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
@@ -124,17 +126,20 @@ class ButtonBack extends React.Component {
 
         const { enabled, loading, onPress, onLongPress } = this.props;
         if (isPress && !loading && enabled) {
-            if (deltaT < 500) onPress();
-            else onLongPress();
+            if (deltaT < 500) {
+                onPress();
+            } else {
+                onLongPress();
+            }
         }
-    }
+    };
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width, height } = event.nativeEvent.layout;
         this.size = Math.max(width, height);
         this.props.onLayout(event);
-    }
+    };
 }
 
 ButtonBack.prototype.props = ButtonProps;

@@ -45,7 +45,9 @@ class PageBase extends React.Component {
      * @description Called when page is already mounted and focused
      * @param {this['props']} props
      */
-    componentDidFocused(props) {}
+    componentDidFocused(props) {
+        props;
+    }
 
     /**
      * @description Called when page is unmounted or not focused

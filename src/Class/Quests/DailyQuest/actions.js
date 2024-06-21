@@ -12,17 +12,24 @@ import { UpdateActivities } from './updates';
  * @type {RefreshSkillSelectionType}
  */
 function RefreshSkillSelection(index) {
-    const refreshesRemaining = this.today.Get().refreshesRemaining;
+    const { selectedSkillsID, queueSkillsID } = this.today.Get();
+    const refreshesRemaining = queueSkillsID.length;
 
-    if (refreshesRemaining <= 0) {
+    if (refreshesRemaining === 0) {
         this.user.interface.console.AddLog('error', '[DailyQuest] You have no more refreshes remaining');
         return;
     }
 
-    const maxValue = this.selectedIndexes.reduce((a, b) => Math.max(a, b), 0);
-    this.selectedIndexes[index] = maxValue + 1;
+    selectedSkillsID[index] = queueSkillsID[0];
+    queueSkillsID.shift();
 
-    UpdateActivities.call(this, refreshesRemaining - 1);
+    this.today.Set({
+        ...this.today.Get(),
+        selectedSkillsID,
+        queueSkillsID
+    });
+
+    UpdateActivities.call(this);
     this.user.LocalSave();
 }
 

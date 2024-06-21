@@ -50,7 +50,6 @@ const RenderItem = (props) => {
 
     /** @type {'none' | 'loading' | 'not-claimed' | 'claiming' | 'claim-tomorrow' | 'claimed'} */
     let status = 'none';
-    let timeToTomorrowText = '';
 
     if (props.claimIndex !== -1) {
         const allClaimLists = user.quests.dailyquest.claimsList.Get();
@@ -75,7 +74,6 @@ const RenderItem = (props) => {
 
             if (todayStr === targetDate) {
                 status = 'claim-tomorrow';
-                timeToTomorrowText = lang['container-tomorrow'];
             }
         }
     }
@@ -119,13 +117,7 @@ const RenderItem = (props) => {
 
             <View style={styles.claimState}>
                 {status === 'claim-tomorrow' && (
-                    <Button
-                        style={[styles.claimButton, styleBorder]}
-                        color='transparent'
-                        fontSize={12}
-                    >
-                        {timeToTomorrowText}
-                    </Button>
+                    <Text style={styles.claimTomorrow}>{lang['container-tomorrow']}</Text>
                 )}
                 {(status === 'claiming' || status === 'loading') && (
                     <Button

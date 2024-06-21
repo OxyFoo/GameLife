@@ -5,15 +5,20 @@ import { GetGlobalTime, GetMidnightTime } from 'Utils/Time';
 /**
  * @typedef {import('./index').default} DailyQuest
  * 
- * @typedef {(preSelectionCount: number, worstStatsQuantity: number) => number[]} GetActivitiesIdOfDayType
- * @typedef {(skillsIDs: number[]) => number} GetDailyProgressType
+ * @callback GetActivitiesIdOfDayType
+ * @this {DailyQuest}
+ * @param {number} worstStatsQuantity Quantity of worst stats to consider to select skills
+ * @param {number} preSelectionCount Number of skills to return
+ * @returns {number[]} Selected skills ID
+ * 
+ * @callback GetDailyProgressType
+ * @this {DailyQuest}
+ * @param {number[]} skillsIDs Selected skills ID
+ * @returns {number} Progress of the day in minutes
  */
 
-/**
- * @this {DailyQuest}
- * @type {GetActivitiesIdOfDayType}
- */
-function GetActivitiesIdOfDay(preSelectionCount, worstStatsQuantity) {
+/** @type {GetActivitiesIdOfDayType} */
+function GetActivitiesIdOfDay(worstStatsQuantity, preSelectionCount) {
     const currentDay = (new Date()).getDay();
     let selectedStats = [];
 
@@ -45,23 +50,13 @@ function GetActivitiesIdOfDay(preSelectionCount, worstStatsQuantity) {
                 .reduce((a, b) => a + b, 0);
             return bStats - aStats;
         })
-        .map(skill => ({
-            ID: skill.ID,
-            name: skill.Name.fr,
-            value: selectedStats
-                .map(s => skill.Stats[s.key])
-                .reduce((a, b) => a + b, 0)
-        }))
-        .slice(0, preSelectionCount)
-        .map(skill => skill.ID);
+        .map(skill => skill.ID)
+        .slice(0, preSelectionCount);
 
     return preSelectedSkillsIDs;
 }
 
-/**
- * @this {DailyQuest}
- * @type {GetDailyProgressType}
- */
+/** @type {GetDailyProgressType} */
 function GetDailyProgress(skillsIDs) {
     const now = GetGlobalTime();
     const midnight = GetMidnightTime(now);

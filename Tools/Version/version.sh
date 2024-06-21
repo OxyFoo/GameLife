@@ -67,8 +67,8 @@ if $ARG_PRINT; then
 fi
 
 # Android versions
-ANDROID_VERSION_CODE=$(grep versionCode $ANDROID_BUILD_GRADLE_PATH | head -1 | awk '{ print $2 }')
-ANDROID_VERSION_NAME=$(grep versionName $ANDROID_BUILD_GRADLE_PATH | head -1 | awk '{ print $2 }' | tr -d '"')
+ANDROID_VERSION_CODE=$(grep versionCode $ANDROID_BUILD_GRADLE_PATH | head -1 | awk '{ print $2 }' | tr -d '\r')
+ANDROID_VERSION_NAME=$(grep versionName $ANDROID_BUILD_GRADLE_PATH | head -1 | awk '{ print $2 }' | tr -d '\r' | tr -d '"')
 
 # Increment android version
 NEXT_ANDROID_VERSION_CODE=$(($ANDROID_VERSION_CODE + 1))

@@ -903,7 +903,7 @@
     "daily-quest": {
         "container-title": "Quest of the day",
         "container-date": "Rewards from {}",
-        "container-tomorrow": "Tomorrow",
+        "container-tomorrow": "Come back tomorrow",
 
         "label-time": "{0}/{1} min",
         "label-reroll": "{0}/{1}",

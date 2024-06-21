@@ -54,6 +54,7 @@ $tablesToSync = [
     'App',
     'Achievements',
     'Blacklist',
+    'Chests',
     'Items',
     'Quotes',
     'Skills',

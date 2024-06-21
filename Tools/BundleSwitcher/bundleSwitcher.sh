@@ -53,14 +53,14 @@ elif [ "$(uname)" == "Darwin" ]; then
         -type d -name res -prune -o \
         -type d -name Tools -prune -o \
         -type d -name node_modules -prune -o \
-        -type f -regex '.*\.\(gradle\|pro\|xml\|js\|java\)' \
-        -exec sh -c 'grep -q "$1" "{}" && sed -i '' "s/$1/$2/g" "{}" && echo "{}"' _ "${old_package_name}" "${new_package_name}" \;)
+        -type f -regex '.*\.\(gradle|pro|xml|js|java\)' \
+        -exec sh -c 'grep -q "$1" "{}" && sed -i "" -e "s/$1/$2/g" "{}" && echo "{}"' _ "${old_package_name}" "${new_package_name}" \;)
 
     # Change App Name
-    APP_NAME_CHANGED_FILES=$(find ./android/app/src/main/res/values/ -name strings.xml -exec sh -c 'grep -q "$1" "{}" && sed -i '' "s/$1/$2/g" "{}" && echo "{}"' _ "${old_app_name}" "${new_app_name}" \;)
+    APP_NAME_CHANGED_FILES=$(find ./android/app/src/main/res/values/ -name strings.xml -exec sh -c 'grep -q "$1" "{}" && sed -i "" -e "s/$1/$2/g" "{}" && echo "{}"' _ "${old_app_name}" "${new_app_name}" \;)
     EDITED_FILES="$EDITED_FILES\n$APP_NAME_CHANGED_FILES"
 fi
-echo -e "\rEdited files: $(echo "$EDITED_FILES" | wc -l)"
+echo -e "\rEdited files: $(echo "$EDITED_FILES" | wc -l | xargs)"
 
 # iOS
 echo -e "\n\tiOS"
@@ -73,9 +73,10 @@ if [ "$(uname)" == "Linux" ]; then
     sed -i "s/<string>org.reactjs.native.example.$old_bundle_id/<string>org.reactjs.native.example.$new_bundle_id/g" ./ios/GoogleService-Info.plist
     sed -i "s/94a736940ff60c834b1898/22189fa611f1a9d64b1898/g" ./ios/GoogleService-Info.plist
 elif [ "$(uname)" == "Darwin" ]; then
-    sed -i '' "s/PRODUCT_NAME = $old_bundle_id;/PRODUCT_NAME = $new_bundle_id;/g" ./ios/GameLife.xcodeproj/project.pbxproj
-    sed -i '' "/PRODUCT_BUNDLE_IDENTIFIER = \"org.reactjs.native.example.\$(PRODUCT_NAME:rfc1034identifier)\";/a\\\t\t\t\t\"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]\" = org.reactjs.native.example.$new_bundle_id;" ./ios/GameLife.xcodeproj/project.pbxproj
-    sed -i '' "s/<string>org.reactjs.native.example.$old_bundle_id/<string>org.reactjs.native.example.$new_bundle_id/g" ./ios/GoogleService-Info.plist
-    sed -i '' "s/94a736940ff60c834b1898/22189fa611f1a9d64b1898/g" ./ios/GoogleService-Info.plist
+    sed -i '' -e "s/PRODUCT_NAME = $old_bundle_id;/PRODUCT_NAME = $new_bundle_id;/g" ./ios/GameLife.xcodeproj/project.pbxproj
+    sed -i '' -e "/PRODUCT_BUNDLE_IDENTIFIER = \"org.reactjs.native.example.\$(PRODUCT_NAME:rfc1034identifier)\";/a\\
+				\"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]\" = org.reactjs.native.example.$new_bundle_id;" ./ios/GameLife.xcodeproj/project.pbxproj
+    sed -i '' -e "s/<string>org.reactjs.native.example.$old_bundle_id/<string>org.reactjs.native.example.$new_bundle_id/g" ./ios/GoogleService-Info.plist
+    sed -i '' -e "s/94a736940ff60c834b1898/22189fa611f1a9d64b1898/g" ./ios/GoogleService-Info.plist
 fi
 echo -e "\rEdited files: 2"

@@ -23,8 +23,9 @@
         }],
         "jsx-quotes": ["warn", "prefer-single"],
         "comma-dangle": ["warn", "never"],
-        "dot-notation": "off",
         "eol-last": ["warn", "always"],
+        "dot-notation": "off",
+        "no-bitwise": "off",
 
         "prettier/prettier": [
             "warn",

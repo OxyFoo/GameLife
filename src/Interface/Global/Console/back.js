@@ -30,7 +30,7 @@ class ConsoleBack extends React.Component {
 
         /** @type {Array<ConsoleLine>} */
         debug: []
-    }
+    };
 
     /** @type {React.RefObject<FlatList>} */
     refDebug = React.createRef();
@@ -41,12 +41,12 @@ class ConsoleBack extends React.Component {
     Enable = () => {
         this.setState({ enabled: true });
         TimingAnimation(this.state.animation, 0, 400).start();
-    }
+    };
     Disable = () => {
         TimingAnimation(this.state.animation, -1, 400).start(() => {
             this.setState({ enabled: false });
         });
-    }
+    };
 
     /**
      * Show message in app console
@@ -56,7 +56,9 @@ class ConsoleBack extends React.Component {
      * @returns {number} index of the message
      */
     AddLog = (type, text, ...params) => {
-        if (!this.state.enabled) return -1;
+        if (!this.state.enabled) {
+            return -1;
+        }
 
         // Add to app console
         let messages = [...this.state.debug];
@@ -71,12 +73,17 @@ class ConsoleBack extends React.Component {
 
         // Add to terminal
         let printLog = console.log;
-        if (type === 'warn') printLog = console.warn;
-        else if (type === 'error') printLog = console.error;
+        if (type === 'warn') {
+            printLog = console.warn;
+        } else if (type === 'error') {
+            printLog = console.error;
+        }
 
-        if (LEVEL_CONSOLE === 0
-            || (LEVEL_CONSOLE === 1  && type === 'warn')
-            || (LEVEL_CONSOLE >= 1  && type === 'error')) {
+        if (
+            LEVEL_CONSOLE === 0 ||
+            (LEVEL_CONSOLE === 1 && type === 'warn') ||
+            (LEVEL_CONSOLE >= 1 && type === 'error')
+        ) {
             printLog(text, ...params);
         }
 
@@ -91,7 +98,7 @@ class ConsoleBack extends React.Component {
         }
 
         return messages.length - 1;
-    }
+    };
 
     /**
      * Edit text in console, to update state debug
@@ -102,12 +109,17 @@ class ConsoleBack extends React.Component {
      * @returns {boolean} Success of edition
      */
     EditLog = (index, type, text, ...params) => {
-        if (!this.state.enabled) return false;
+        if (!this.state.enabled) {
+            return false;
+        }
 
         let messages = [...this.state.debug];
-        if (index < 0 || index >= messages.length) return false;
+        if (index < 0 || index >= messages.length) {
+            return false;
+        }
 
-        const _type = type === 'same' ? messages[index][0] : type;
+        const _type = type === 'same' ? messages[index].type : type;
+
         /** @type {ConsoleLine} */
         const newMessage = {
             type: _type,
@@ -116,14 +128,16 @@ class ConsoleBack extends React.Component {
         messages.splice(index, 1, newMessage);
         this.setState({ debug: messages });
 
-        if (LEVEL_CONSOLE === 0 ||
-           (LEVEL_CONSOLE >= 1  && _type === 'warn') ||
-           (LEVEL_CONSOLE >= 2  && _type === 'error')) {
+        if (
+            LEVEL_CONSOLE === 0 ||
+            (LEVEL_CONSOLE >= 1 && _type === 'warn') ||
+            (LEVEL_CONSOLE >= 2 && _type === 'error')
+        ) {
             console.log(`Edit (${index}):`, text, ...params);
         }
 
         return true;
-    }
+    };
 
     /**
      * Format text to show in console
@@ -131,20 +145,21 @@ class ConsoleBack extends React.Component {
      * @param {Array<any>} params
      */
     formatText = (text, ...params) => {
-        const toString = (v) => typeof(v) === 'object' ? JSON.stringify(v) : v;
+        /** @param {any} v */
+        const toString = (v) => (typeof v === 'object' ? JSON.stringify(v) : v);
         return [text, ...params].map(toString).join(' ');
-    }
+    };
 
     open = () => {
         this.setState({ opened: true });
         SpringAnimation(this.state.animation, 1).start();
         this.refDebug?.current?.scrollToEnd();
-    }
+    };
     close = () => {
         this.setState({ opened: false });
         SpringAnimation(this.state.animation, 0).start();
         TimingAnimation(this.state.animationDeleteButtons, 0).start();
-    }
+    };
     toggleDeleteButtons = () => {
         this.toggle = !this.toggle;
         if (this.toggle) {
@@ -152,12 +167,12 @@ class ConsoleBack extends React.Component {
         } else {
             TimingAnimation(this.state.animationDeleteButtons, 0).start();
         }
-    }
+    };
 
     goToBenchMark = () => {
         this.close();
         user.interface.ChangePage('benchmark');
-    }
+    };
 
     refreshInternalData = async () => {
         this.toggleDeleteButtons();
@@ -166,12 +181,12 @@ class ConsoleBack extends React.Component {
         await dataManager.LocalSave(user);
         await dataManager.OnlineLoad(user);
         await dataManager.LocalSave(user);
-    }
+    };
 
     deleteAll = async () => {
         await user.Clear(false);
         RNExitApp.exitApp();
-    }
+    };
 }
 
 export default ConsoleBack;

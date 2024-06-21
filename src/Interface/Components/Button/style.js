@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     body: {
         width: '100%',
-        minHeight: 54,
         paddingVertical: 16,
         paddingHorizontal: 24,
 
@@ -42,8 +41,7 @@ const styles = StyleSheet.create({
         margin: 1
     },
     loadingIcon: {
-        height: 24,
-        marginTop: -12
+        transform: [{ scale: 1.5 }]
     },
 
     buttonBadgeContainer: {

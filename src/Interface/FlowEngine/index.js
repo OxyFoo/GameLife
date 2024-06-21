@@ -6,31 +6,12 @@ import BackFlowEngine from './back';
 import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
 import PAGES from 'Interface/Pages';
 
-import { RadialBackground } from '../Primitives/radialBackground';
+import { DynamicBackground } from 'Interface/Primitives';
 import { Console, Popup } from 'Interface/Global';
 
 /**
  * @typedef {import('./back').PageNames} PageNames
  */
-
-const PATH1 = [
-    { x: 0, y: 0 },
-    { x: 1, y: 0.5 },
-    { x: 0, y: 0.5 },
-    { x: 1, y: 0 },
-    { x: 0, y: 0 }
-];
-const PATH2 = [
-    { x: 1, y: 0.5 },
-    { x: 1, y: 1 },
-    { x: 1, y: 0 },
-    { x: 0.5, y: 1 },
-    { x: 0, y: 0.5 },
-    { x: 0, y: 1 },
-    { x: 1, y: 0 },
-    { x: 0, y: 0 },
-    { x: 1, y: 0.5 }
-];
 
 class FlowEngine extends BackFlowEngine {
     /**
@@ -84,16 +65,7 @@ class FlowEngine extends BackFlowEngine {
                 style={[styles.fullscreen, styles.background]}
                 behavior='height'
             >
-                <RadialBackground
-                    color='main1'
-                    animPath={PATH1}
-                    duration={10000}
-                />
-                <RadialBackground
-                    color='main2'
-                    animPath={PATH2}
-                    duration={10000}
-                />
+                <DynamicBackground />
 
                 {this.availablePages.map((pageName) => (
                     <this.renderPage

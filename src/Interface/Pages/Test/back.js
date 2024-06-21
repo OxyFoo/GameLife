@@ -1,10 +1,12 @@
 import { Animated } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import user from 'Managers/UserManager';
 
-import { Button } from 'Interface/Components';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+
+/**
+ * @typedef {import('Interface/Components').Button} Button
+ */
 
 class BackTest extends PageBase {
     feKeepMounted = true;
@@ -45,6 +47,8 @@ class BackTest extends PageBase {
         } else if (selectedButon === 'outline') {
             this.setState({ selectedButon: 'outline-blur' });
         } else if (selectedButon === 'outline-blur') {
+            this.setState({ selectedButon: 'uniform' });
+        } else {
             this.setState({ selectedButon: 'normal' });
         }
     };
@@ -78,10 +82,17 @@ class BackTest extends PageBase {
 
     openPopup = (count = 1) => {
         for (let i = 0; i < count; i++) {
-            this.fe.popup.Open({
-                type: 'ok',
-                args: ['A', (i + 1).toString()],
-                callback: console.log,
+            this.fe.popup.OpenT({
+                type: 'acceptornot',
+                data: {
+                    title: 'Test' + i.toString(),
+                    message: 'This is a test message'
+                },
+                callback: (closeReason) => {
+                    if (closeReason === 'accept' && i === count - 1) {
+                        this.fe.console.Enable();
+                    }
+                },
                 cancelable: i % 2 === 0
             });
         }

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     },
     buttonOpen: {
         width: '40%',
-        height: 36,
+        paddingVertical: 8,
         paddingHorizontal: 0,
         borderRadius: 8
     },
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '40%',
-        height: 36,
+        paddingVertical: 8,
         paddingHorizontal: 0,
         borderRadius: 8
     },

@@ -5,7 +5,6 @@ import ActivityExperience from './Widgets/ActivityExperience';
 import ActivitySchedule from './Widgets/ActivitySchedule';
 import BlockMonth from './Widgets/BlockMonth';
 import BottomBar from './Widgets/BottomBar';
-import Console from './Widgets/Console';
 import DailyQuest from './Widgets/DailyQuest';
 import Missions from './Widgets/Missions';
 import MultiplayerPanel from './Widgets/MultiplayerPanel';
@@ -15,7 +14,6 @@ import NotificationsInApp from './Widgets/NotificationsInApp/notifs';
 import NotificationsInAppButton from './Widgets/NotificationsInApp';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
-import Popup from './Widgets/Popup';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
 import ScreenTuto from './Widgets/ScreenTuto';
@@ -36,7 +34,6 @@ export {
     ActivitySchedule,
     BlockMonth,
     BottomBar,
-    Console,
     DailyQuest,
     Missions,
     MultiplayerPanel,
@@ -46,7 +43,6 @@ export {
     NotificationsInAppButton,
     PageHeader,
     PanelScreen,
-    Popup,
     ScreenInput,
     ScreenList,
     ScreenTuto,

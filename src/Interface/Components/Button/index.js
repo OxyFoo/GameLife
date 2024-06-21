@@ -37,6 +37,8 @@ class Button extends ButtonBack {
             iconAngle,
             loading,
             fontSize,
+            color,
+            pointerEvents,
             onPress,
             onLongPress,
             ...rest
@@ -53,6 +55,10 @@ class Button extends ButtonBack {
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
                 onLayout={this.onLayout}
+                accessible={true}
+                accessibilityRole='button'
+                accessibilityState={{ disabled: !enabled }}
+                pointerEvents={pointerEvents}
             >
                 {this.renderBackground()}
                 {this.renderContent()}
@@ -78,7 +84,9 @@ class Button extends ButtonBack {
             icon,
             iconXml,
             styleContent: styleContentProp,
+            color,
             fontSize,
+            fontColor,
             enabled
         } = this.props;
 
@@ -88,14 +96,26 @@ class Button extends ButtonBack {
         let content = children;
         let childCount = 1;
 
+        let _fontColor = fontColor;
+        if (_fontColor === 'automatic') {
+            if (appearance === 'uniform') {
+                const luminance = themeManager.GetLuminance(
+                    themeManager.GetColor(color)
+                );
+                _fontColor = luminance > 0.75 ? 'darkBlue' : 'white';
+            } else {
+                _fontColor = 'darkBlue';
+            }
+        }
+
         // Loading icon
         if (loading) {
             content = (
                 <Icon
                     style={styles.loadingIcon}
                     icon='loading-dots'
-                    size={36}
-                    color={'darkBlue'}
+                    size={this.props.iconSize - 2}
+                    color={_fontColor}
                 />
             );
         }
@@ -104,7 +124,7 @@ class Button extends ButtonBack {
         else if (hasChildren) {
             if (typeof children === 'string') {
                 content = (
-                    <Text color={'darkBlue'} fontSize={fontSize}>
+                    <Text color={_fontColor} fontSize={fontSize}>
                         {children}
                     </Text>
                 );
@@ -127,7 +147,7 @@ class Button extends ButtonBack {
                             icon={this.props.icon}
                             xml={this.props.iconXml}
                             size={this.props.iconSize}
-                            color={'darkBlue'}
+                            color={_fontColor}
                             angle={this.props.iconAngle}
                         />
                     </View>
@@ -142,7 +162,7 @@ class Button extends ButtonBack {
                     icon={this.props.icon}
                     xml={this.props.iconXml}
                     size={this.props.iconSize}
-                    color={'darkBlue'}
+                    color={_fontColor}
                     angle={this.props.iconAngle}
                 />
             );
@@ -154,7 +174,11 @@ class Button extends ButtonBack {
             opacity: enabled ? 1 : 0.6
         };
 
-        if (appearance === 'normal' || appearance === 'transparent') {
+        if (
+            appearance === 'normal' ||
+            appearance === 'uniform' ||
+            fontColor !== 'automatic'
+        ) {
             return (
                 <View
                     style={[styles.content, styleContent, styleContentProp]}
@@ -201,7 +225,7 @@ class Button extends ButtonBack {
     };
 
     renderBackground = () => {
-        const { appearance } = this.props;
+        const { appearance, color } = this.props;
 
         if (appearance === 'normal') {
             return (
@@ -210,6 +234,17 @@ class Button extends ButtonBack {
                     colors={['#8CF7FF', '#DBA1FF']}
                     useAngle={true}
                     angle={267}
+                />
+            );
+        } else if (appearance === 'uniform') {
+            return (
+                <View
+                    style={[
+                        styles.absolute,
+                        appearance === 'uniform' && {
+                            backgroundColor: themeManager.GetColor(color)
+                        }
+                    ]}
                 />
             );
         } else if (appearance === 'outline') {

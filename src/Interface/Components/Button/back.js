@@ -10,6 +10,8 @@ import { Button } from 'react-native';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Interface/Primitives').Ripple} Ripple
  *
@@ -18,8 +20,10 @@ import { Button } from 'react-native';
  * @property {StyleProp} style
  * @property {AnimatedProps | null} styleAnimation
  * @property {StyleProp} styleContent
- * @property {'normal' | 'outline' | 'outline-blur' | 'transparent'} appearance
+ * @property {'normal' | 'outline' | 'outline-blur' | 'uniform'} appearance
+ * @property {ThemeColor} color Background color of the button, only used in 'uniform' appearance
  * @property {number} fontSize
+ * @property {ThemeColor | ThemeText | 'automatic'} fontColor
  * @property {IconsName | null} icon
  * @property {string | null} iconXml
  * @property {number} iconSize
@@ -28,6 +32,7 @@ import { Button } from 'react-native';
  * @property {boolean} enabled
  * @property {() => void} onPress
  * @property {() => void} onLongPress
+ * @property {'none' | 'auto' | 'box-none' | 'box-only'} pointerEvents
  * @property {(event: GestureResponderEvent) => void} onTouchStart
  * @property {(event: GestureResponderEvent) => void} onTouchMove
  * @property {(event: GestureResponderEvent) => void} onTouchEnd
@@ -44,13 +49,16 @@ const ButtonProps = {
     styleAnimation: null,
     styleContent: {},
     appearance: 'normal',
+    color: 'main1',
     fontSize: 16,
+    fontColor: 'automatic',
     icon: null,
     iconXml: null,
     iconSize: 24,
     iconAngle: 0,
     loading: false,
     enabled: true,
+    pointerEvents: 'auto',
 
     onPress: () => {},
     onLongPress: () => {},

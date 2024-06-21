@@ -19,21 +19,30 @@ class Console extends ConsoleBack {
 
         /** @type {ThemeText} */
         let color = 'primary';
-        if (type === 'warn') color = 'warning';
-        else if (type === 'error') color = 'error';
+        if (type === 'warn') {
+            color = 'warning';
+        } else if (type === 'error') {
+            color = 'error';
+        }
 
         return (
-            <Text style={styles.text} color={color}>{content}</Text>
+            <Text style={styles.text} color={color}>
+                {content}
+            </Text>
         );
-    }
+    };
 
     render() {
-        if (!this.state.enabled) return null;
+        if (!this.state.enabled) {
+            return null;
+        }
 
         const { opened, animation, animationDeleteButtons, debug } = this.state;
 
         const interY = { inputRange: [0, 1], outputRange: [-256, 0] };
-        const translateY = { transform: [{ translateY: animation.interpolate(interY) }] };
+        const translateY = {
+            transform: [{ translateY: animation.interpolate(interY) }]
+        };
         const buttonDelete = {
             opacity: animation,
             transform: [
@@ -54,20 +63,27 @@ class Console extends ConsoleBack {
         };
 
         return (
-            <Animated.View style={[styles.console, translateY]} pointerEvents={'box-none'}>
+            <Animated.View
+                style={[styles.console, translateY]}
+                pointerEvents={'box-none'}
+            >
                 <View style={styles.content}>
                     <FlatList
                         ref={this.refDebug}
                         data={debug}
                         renderItem={this.renderText}
-                        keyExtractor={(item, index) => 'debug-' + index}
+                        keyExtractor={(item, index) =>
+                            'debug-' + item.type + '-' + index
+                        }
                     />
                 </View>
 
                 <Button
                     style={styles.buttonOpen}
                     fontSize={14}
+                    appearance='uniform'
                     color='main1'
+                    fontColor='white'
                     onPress={this.open}
                     onLongPress={this.Disable}
                 >
@@ -78,7 +94,9 @@ class Console extends ConsoleBack {
                     style={styles.buttonAbsolute}
                     styleAnimation={buttonBenchMark}
                     fontSize={14}
+                    appearance='uniform'
                     color='main1'
+                    fontColor='white'
                     onPress={this.goToBenchMark}
                     pointerEvents={opened ? undefined : 'none'}
                 >
@@ -89,7 +107,9 @@ class Console extends ConsoleBack {
                     style={styles.buttonAbsolute}
                     styleAnimation={buttonRefreshData}
                     fontSize={14}
+                    appearance='uniform'
                     color='main1'
+                    fontColor='white'
                     onPress={this.refreshInternalData}
                     pointerEvents={opened ? undefined : 'none'}
                 >
@@ -100,7 +120,9 @@ class Console extends ConsoleBack {
                     style={styles.buttonAbsolute}
                     styleAnimation={buttonDelete}
                     fontSize={14}
+                    appearance='uniform'
                     color='main1'
+                    fontColor='white'
                     onPress={this.deleteAll}
                     pointerEvents={opened ? undefined : 'none'}
                 >
@@ -110,6 +132,7 @@ class Console extends ConsoleBack {
                 <Button
                     style={styles.buttonClose}
                     styleAnimation={{ opacity: animation }}
+                    appearance='uniform'
                     color='main2'
                     onPress={this.close}
                     onLongPress={this.toggleDeleteButtons}
@@ -122,4 +145,4 @@ class Console extends ConsoleBack {
     }
 }
 
-export default Console;
+export { Console };

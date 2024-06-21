@@ -94,6 +94,8 @@ class Test extends BackTest {
                     style={styles.marginBot}
                     onPress={this.buttonLoop}
                     appearance={this.state.selectedButon}
+                    fontColor='danger'
+                    color='main2'
                 >
                     {"Changer l'apparence"}
                 </Button>
@@ -101,6 +103,7 @@ class Test extends BackTest {
                     style={styles.marginBot}
                     onPress={this.buttonLoop}
                     appearance={this.state.selectedButon}
+                    color='main3'
                     icon={'cup'}
                 >
                     {"Changer l'apparence"}
@@ -109,6 +112,7 @@ class Test extends BackTest {
                     style={styles.marginBot}
                     onPress={this.buttonLoop}
                     appearance={this.state.selectedButon}
+                    color='white'
                     loading={this.state.selectedButon === 'normal'}
                 >
                     {'Quêtes journalières'}

@@ -14,44 +14,57 @@ const styles = StyleSheet.create({
         left: 0,
         width: '100%',
         height: '100%',
-        opacity: .8,
+        opacity: 0.8,
         backgroundColor: '#000000'
     },
+
     container: {
-        width: '80%',
+        maxWidth: '80%',
         maxHeight: '80%',
         borderRadius: 16,
-        overflow: 'visible'
+        overflow: 'visible',
+        backgroundColor: '#03052E'
+    },
+    dynamicBackground: {
+        borderRadius: 16,
+        overflow: 'hidden'
+    },
+    buttonQuit: {
+        position: 'absolute',
+        top: -48,
+        right: 0,
+        width: 32,
+        height: 'auto',
+        minHeight: 'auto',
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        borderRadius: 4
     },
 
+    // Template styles
     title: {
         fontSize: 20,
         marginVertical: 24,
         paddingHorizontal: 8
     },
     message: {
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
+        marginBottom: 24
     },
     row: {
         width: '100%',
-        padding: '5%',
+        padding: 16,
+        paddingBottom: 24,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around'
     },
     button: {
         width: '45%',
-        height: 48,
         borderRadius: 8
     },
-    buttonQuit: {
-        position: 'absolute',
-        top: -48,
-        right: 0,
-        width: 36,
-        height: 36,
-        paddingHorizontal: 0,
-        borderRadius: 4
+    fillWidth: {
+        width: '100%'
     }
 });
 

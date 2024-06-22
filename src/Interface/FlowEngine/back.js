@@ -177,10 +177,7 @@ class BackFlowEngine extends React.Component {
      * @returns {boolean} True if page changed
      * @public
      */
-    ChangePage = (
-        nextpage,
-        options = { args: {}, storeInHistory: true, transition: 'auto' }
-    ) => {
+    ChangePage = (nextpage, options = { args: {}, storeInHistory: true, transition: 'auto' }) => {
         const { selectedPage } = this.state;
 
         if (this.changing) {

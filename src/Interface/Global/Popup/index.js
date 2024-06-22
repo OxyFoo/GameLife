@@ -19,9 +19,7 @@ class Popup extends PopupBack {
         return (
             <>
                 {currents.map((current, i) => (
-                    <React.Fragment key={i}>
-                        {this.renderPopup(current)}
-                    </React.Fragment>
+                    <React.Fragment key={i}>{this.renderPopup(current)}</React.Fragment>
                 ))}
             </>
         );
@@ -73,10 +71,7 @@ class Popup extends PopupBack {
                     ]}
                     onLayout={this.onLayout}
                 >
-                    <DynamicBackground
-                        style={styles.dynamicBackground}
-                        opacity={0.12}
-                    />
+                    <DynamicBackground style={styles.dynamicBackground} opacity={0.12} />
                     {current.content(this.Close)}
                 </Animated.View>
             </Animated.View>

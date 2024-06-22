@@ -48,11 +48,7 @@ class FlowEngine extends BackFlowEngine {
                     scrollEnabled={true}
                     children={
                         // @ts-ignore
-                        <Page
-                            ref={page.ref}
-                            args={page.args}
-                            flowEngine={this}
-                        />
+                        <Page ref={page.ref} args={page.args} flowEngine={this} />
                     }
                 />
             </Animated.View>
@@ -61,21 +57,15 @@ class FlowEngine extends BackFlowEngine {
 
     render() {
         return (
-            <KeyboardAvoidingView
-                style={[styles.fullscreen, styles.background]}
-                behavior='height'
-            >
+            <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior='height'>
                 <DynamicBackground />
 
                 {this.availablePages.map((pageName) => (
-                    <this.renderPage
-                        key={`fe-page-${pageName}`}
-                        pageName={pageName}
-                    />
+                    <this.renderPage key={`fe-page-${pageName}`} pageName={pageName} />
                 ))}
 
-                <Popup ref={(ref) => (this.popup = ref)} />
-                <Console ref={(ref) => (this.console = ref)} />
+                <Popup ref={(ref) => (this.popup = ref ?? this.popup)} />
+                <Console ref={(ref) => (this.console = ref ?? this.console)} />
             </KeyboardAvoidingView>
         );
     }

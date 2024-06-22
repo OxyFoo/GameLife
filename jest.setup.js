@@ -9,23 +9,23 @@ jest.mock('react-native-device-info', () => ({
     getUniqueIdSync: jest.fn(() => 99),
     getDeviceNameSync: jest.fn(() => 'iPhone 12'),
     getSystemName: jest.fn(() => 'iOS'),
-    getSystemVersion: jest.fn(() => '14.4'),
+    getSystemVersion: jest.fn(() => '14.4')
 }));
 
 jest.mock('react-native-permissions', () => {
-	return mockPermissions;
+    return mockPermissions;
 });
 
 jest.mock('react-native-google-mobile-ads', () => ({
     TurboModuleRegistry: {
-      getEnforcing: () => {
-        return {
-          initialize: jest.fn(),
-          setRequestConfiguration: jest.fn(),
-          openAdInspector: jest.fn(),
-          openDebugMenu: jest.fn(),
-        };
-      },
+        getEnforcing: () => {
+            return {
+                initialize: jest.fn(),
+                setRequestConfiguration: jest.fn(),
+                openAdInspector: jest.fn(),
+                openDebugMenu: jest.fn()
+            };
+        }
     }
 }));
 

@@ -65,19 +65,13 @@ class SwitchText extends SwitchTextBack {
             backgroundColor: activeColor,
             transform: [
                 {
-                    translateX: Animated.multiply(
-                        anim,
-                        parentWidth / childrenCount
-                    )
+                    translateX: Animated.multiply(anim, parentWidth / childrenCount)
                 }
             ]
         };
 
         return (
-            <View
-                style={[styles.parent, parentStyle, style]}
-                onLayout={this.onLayout}
-            >
+            <View style={[styles.parent, parentStyle, style]} onLayout={this.onLayout}>
                 {/** Background selection */}
                 <Animated.View style={[styles.selection, selectionStyle]} />
 

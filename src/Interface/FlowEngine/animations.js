@@ -13,43 +13,25 @@ function GetAnimationPageOpen(page, transition) {
     if (transition === 'fromLeft') {
         return [
             {
-                translateX: Animated.multiply(
-                    -200,
-                    Animated.subtract(1, page.transitionStart)
-                )
+                translateX: Animated.multiply(-200, Animated.subtract(1, page.transitionStart))
             }
         ];
-    }
-
-    else if (transition === 'fromRight') {
+    } else if (transition === 'fromRight') {
         return [
             {
-                translateX: Animated.multiply(
-                    200,
-                    Animated.subtract(1, page.transitionStart)
-                )
+                translateX: Animated.multiply(200, Animated.subtract(1, page.transitionStart))
             }
         ];
-    }
-
-    else if (transition === 'fromTop') {
+    } else if (transition === 'fromTop') {
         return [
             {
-                translateY: Animated.multiply(
-                    -200,
-                    Animated.subtract(1, page.transitionStart)
-                )
+                translateY: Animated.multiply(-200, Animated.subtract(1, page.transitionStart))
             }
         ];
-    }
-
-    else if (transition === 'fromBottom') {
+    } else if (transition === 'fromBottom') {
         return [
             {
-                translateY: Animated.multiply(
-                    200,
-                    Animated.subtract(1, page.transitionStart)
-                )
+                translateY: Animated.multiply(200, Animated.subtract(1, page.transitionStart))
             }
         ];
     }
@@ -57,10 +39,7 @@ function GetAnimationPageOpen(page, transition) {
     // Default transition
     return [
         {
-            scale: Animated.add(
-                0.75,
-                Animated.multiply(0.25, page.transitionStart)
-            )
+            scale: Animated.add(0.75, Animated.multiply(0.25, page.transitionStart))
         }
     ];
 }

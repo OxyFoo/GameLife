@@ -29,14 +29,9 @@ class ProgressBar extends ProgressBarBack {
         };
 
         return (
-            <View
-                style={[styles.body, { height }, style]}
-                onLayout={this.onLayout}
-            >
+            <View style={[styles.body, { height }, style]} onLayout={this.onLayout}>
                 <Animated.View style={[styles.supXP, animSupStyle]} />
-                <MaskedView maskElement={this.renderMask()}>
-                    {this.renderBackground()}
-                </MaskedView>
+                <MaskedView maskElement={this.renderMask()}>{this.renderBackground()}</MaskedView>
             </View>
         );
     }

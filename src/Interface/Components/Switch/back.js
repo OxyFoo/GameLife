@@ -43,20 +43,14 @@ class SwitchBack extends React.Component {
 
     /** @param {SwitchProps} nextProps */
     shouldComponentUpdate(nextProps) {
-        return (
-            this.props.value !== nextProps.value ||
-            this.props.color !== nextProps.color
-        );
+        return this.props.value !== nextProps.value || this.props.color !== nextProps.color;
     }
 
     /** @param {SwitchProps} prevProps */
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
             Animated.parallel([
-                SpringAnimation(
-                    this.state.animSpring,
-                    this.props.value ? 1 : 0
-                ),
+                SpringAnimation(this.state.animSpring, this.props.value ? 1 : 0),
                 TimingAnimation(this.state.animLinear, this.props.value ? 1 : 0)
             ]).start();
         }

@@ -60,10 +60,7 @@ class SwitchTextBack extends React.Component {
         const { value } = this.props;
         if (prevProps.value !== this.props.value) {
             if (value < 0 || value >= this.props.texts.length) {
-                user.interface.console.AddLog(
-                    'warn',
-                    'TextSwitch value is out of bounds'
-                );
+                user.interface.console.AddLog('warn', 'TextSwitch value is out of bounds');
                 return;
             }
 

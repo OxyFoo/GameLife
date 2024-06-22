@@ -41,10 +41,7 @@ class CheckBoxBack extends React.Component {
 
     /** @param {CheckBoxPropsType} nextProps */
     shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.value !== this.props.value ||
-            nextProps.color !== this.props.color
-        );
+        return nextProps.value !== this.props.value || nextProps.color !== this.props.color;
     }
 
     /** @param {CheckBoxPropsType} prevProps */

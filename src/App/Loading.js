@@ -1,4 +1,4 @@
-import user from 'Managers/UserManager'
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
@@ -40,15 +40,21 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     nextStep();
 
     // Loading: Internal data
-    if (online) await dataManager.OnlineLoad(user);
-    else        await dataManager.LocalLoad(user);
+    if (online) {
+        await dataManager.OnlineLoad(user);
+    } else {
+        await dataManager.LocalLoad(user);
+    }
 
     // Check if internal data are loaded
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
         user.interface.console.AddLog('error', 'Internal data not loaded');
         if (!online) {
-            fe.ChangePage('waitinternet', { storeInHistory: false, transition: 'fromBottom' });
+            fe.ChangePage('waitinternet', {
+                storeInHistory: false,
+                transition: 'fromBottom'
+            });
         } else {
             callbackError('internaldata-not-loaded');
         }
@@ -86,28 +92,44 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Connect account if online
     if (online && user.server.token === '') {
-        const email = user.settings.email;
         const { status } = await user.server.Connect(email);
 
         // Too many devices
         if (status === 'limitDevice') {
             const title = langManager.curr['login']['alert-deviceRemoved-title'];
-            const text = langManager.curr['login']['alert-deviceRemoved-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
+            const message = langManager.curr['login']['alert-deviceRemoved-message'];
+            user.interface.popup.OpenT({
+                type: 'ok',
+                data: { title, message },
+                cancelable: false,
+                callback: () => user.Disconnect(true)
+            });
             return;
         }
 
         // Mail not confirmed
         else if (status === 'newDevice' || status === 'waitMailConfirmation') {
-            while (!fe.ChangePage('waitmail', { args: { email: email }, storeInHistory: false })) await Sleep(100);
+            while (
+                !fe.ChangePage('waitmail', {
+                    args: { email: email },
+                    storeInHistory: false
+                })
+            ) {
+                await Sleep(100);
+            }
             return;
         }
 
         // Account is deleted
         else if (status === 'free') {
             const title = langManager.curr['login']['alert-deletedaccount-title'];
-            const text = langManager.curr['login']['alert-deletedaccount-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
+            const message = langManager.curr['login']['alert-deletedaccount-message'];
+            user.interface.popup.OpenT({
+                type: 'ok',
+                data: { title, message },
+                callback: () => user.Disconnect(true),
+                cancelable: false
+            });
             return;
         }
     }
@@ -148,6 +170,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         if (user.settings.eveningNotifications) {
             return Notifications.Evening.Enable();
         }
+        return;
     });
 
     // Check if ads are available
@@ -175,8 +198,12 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     if (user.server.status === 'maintenance') {
         const lang = langManager.curr['home'];
         const title = lang['alert-maintenance-title'];
-        const text = lang['alert-maintenance-text'];
-        user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        const message = lang['alert-maintenance-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message },
+            cancelable: false
+        });
     }
 
     // End of initialisation

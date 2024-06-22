@@ -36,10 +36,7 @@ class Loading extends BackLoading {
         const buttonPosY = {
             transform: [
                 {
-                    translateY: Animated.multiply(
-                        300,
-                        this.state.animTestButton
-                    )
+                    translateY: Animated.multiply(300, this.state.animTestButton)
                 }
             ]
         };
@@ -49,11 +46,7 @@ class Loading extends BackLoading {
                 <Icon style={styles.iconTest} icon='warning' size={84} />
 
                 <Text fontSize={22}>{lang['test-caution-message']}</Text>
-                <Text
-                    onPress={this.handleDiscordRedirection}
-                    fontSize={22}
-                    color='main1'
-                >
+                <Text onPress={this.handleDiscordRedirection} fontSize={22} color='main1'>
                     {lang['test-caution-redirect']}
                 </Text>
 

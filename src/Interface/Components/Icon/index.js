@@ -26,18 +26,13 @@ class Icon extends IconBack {
 
         let output = null;
         const containerSize = { width: size, height: size };
-        const color =
-            colorProp === 'gradient'
-                ? 'white'
-                : themeManager.GetColor(colorProp);
+        const color = colorProp === 'gradient' ? 'white' : themeManager.GetColor(colorProp);
 
         // Icon
         if (show && xml !== null) {
             // Default icon (invalid xml)
             if (typeof xml !== 'string' || xml.length < 10) {
-                output = (
-                    <Icon icon='default' size={size} color={this.props.color} />
-                );
+                output = <Icon icon='default' size={size} color={this.props.color} />;
             }
 
             // XML icon

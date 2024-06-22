@@ -368,7 +368,7 @@
         "container-skills-empty": "No skills yet, do one and it will appear here !",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
+        "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
         "alert-error-title": "Error",
         "alert-error-text": "An error has occurred, please try again later.",
         "alert-update-title": "Update",
@@ -405,13 +405,13 @@
         "error-signin-disagree": "Please accept the terms and conditions.",
 
         "alert-deletedaccount-title": "Account deleted",
-        "alert-deletedaccount-text": "Your account has been deleted.",
+        "alert-deletedaccount-message": "Your account has been deleted.",
         "alert-limitAccount-title": "Too many accounts",
         "alert-limitAccount-text": "You can't create more than 3 accounts with one device.",
         "alert-limitDevice-title": "Too many devices on this account",
         "alert-limitDevice-text": "You can't have more than 5 devices connected to a single account.",
         "alert-deviceRemoved-title": "Device removed",
-        "alert-deviceRemoved-text": "Your device has been removed from your account because you already have the maximum number of devices on this account."
+        "alert-deviceRemoved-message": "Your device has been removed from your account because you already have the maximum number of devices on this account."
     },
 
     "multiplayer": {

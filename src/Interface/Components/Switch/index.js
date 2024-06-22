@@ -54,9 +54,7 @@ class Switch extends SwitchBack {
                 </Animated.View>
 
                 {/** Active background */}
-                <Animated.View
-                    style={[styles.activeBackground, activeBgStyle]}
-                />
+                <Animated.View style={[styles.activeBackground, activeBgStyle]} />
 
                 {/** Circle button */}
                 <Animated.View style={[styles.circle, btnStyle]} />

@@ -88,12 +88,7 @@ class ComboBoxBack extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
-        const {
-            x: _x,
-            y: _y,
-            width: _width,
-            height: _height
-        } = this.state.parent;
+        const { x: _x, y: _y, width: _width, height: _height } = this.state.parent;
         const { x, y, width, height } = event.nativeEvent.layout;
         if (x !== _x || y !== _y || width !== _width || height !== _height) {
             const parent = { x: x, y: y, width: width, height: height };

@@ -57,10 +57,7 @@ class BackLoading extends PageBase {
     /** @param {GestureResponderEvent} event */
     onToucheEnd = (event) => {
         // Check if the user is offline and if he has scrolled up to open the console
-        if (
-            event.nativeEvent.pageY - this.startY < -200 &&
-            !user.server.online
-        ) {
+        if (event.nativeEvent.pageY - this.startY < -200 && !user.server.online) {
             user.interface.console.Enable();
         }
     };

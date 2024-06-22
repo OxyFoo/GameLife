@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppState, SafeAreaView } from 'react-native';
+import { AppState, SafeAreaView, StyleSheet } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import FlowEngine from './src/Interface/FlowEngine';
@@ -9,6 +9,8 @@ import { CheckDate } from './src/Utils/DateCheck';
 /**
  * @typedef {import('react-native').AppStateStatus} AppStateStatus
  */
+
+const TEST_PAGE = false;
 
 class App extends React.Component {
     /** @type {React.RefObject<FlowEngine>} */
@@ -20,7 +22,12 @@ class App extends React.Component {
 
         // Open the test page
         user.interface = this.ref.current;
-        this.ref.current?.ChangePage('test'); return;
+
+        if (TEST_PAGE) {
+            this.ref.current?.ChangePage('test');
+            return;
+        }
+
         this.ref.current?.ChangePage('loading', undefined, true);
     }
 
@@ -30,7 +37,7 @@ class App extends React.Component {
             CheckDate();
             user.tcp.Connect();
         } else if (state === 'background' || state === 'inactive') {
-            await user.OnlineSave() || await user.LocalSave();
+            (await user.OnlineSave()) || (await user.LocalSave());
         }
     }
 
@@ -41,11 +48,17 @@ class App extends React.Component {
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: "#000000" }}>
+            <SafeAreaView style={styles.safeView}>
                 <FlowEngine ref={this.ref} />
             </SafeAreaView>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    safeView: {
+        backgroundColor: '#000000'
+    }
+});
 
 export default App;

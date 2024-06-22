@@ -42,15 +42,7 @@ class Text extends React.Component {
     }
 
     render() {
-        const {
-            style,
-            containerStyle,
-            color,
-            fontSize,
-            onPress,
-            children,
-            ...props
-        } = this.props;
+        const { style, containerStyle, color, fontSize, onPress, children, ...props } = this.props;
 
         if (typeof children !== 'string') {
             return null;
@@ -65,11 +57,7 @@ class Text extends React.Component {
 
         if (onPress) {
             return (
-                <TouchableOpacity
-                    style={containerStyle}
-                    onPress={onPress}
-                    activeOpacity={0.5}
-                >
+                <TouchableOpacity style={containerStyle} onPress={onPress} activeOpacity={0.5}>
                     <RNText style={[textStyle, style]} {...props}>
                         {children}
                     </RNText>

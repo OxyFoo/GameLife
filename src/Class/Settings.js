@@ -1,7 +1,7 @@
-import langManager from "Managers/LangManager";
-import themeManager from "Managers/ThemeManager";
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
-import DataStorage, { STORAGE } from "Utils/DataStorage";
+import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -9,10 +9,10 @@ import DataStorage, { STORAGE } from "Utils/DataStorage";
  */
 
 const DEFAULT_MUSIC_LINKS = {
-    'spotify': 'https://open.spotify.com/playlist/2qMPv8Re0IW2FzBGjS7HCG',
-    'applemusic': 'https://music.apple.com/fr/playlist/zapnmusic-for-work/pl.u-JPAZEomsDXLGvEb',
-    'youtubemusic': 'https://music.youtube.com/playlist?list=PLBo5aRk85uWnkkflI9Of9ecRn8e3SsclZ&si=6szeIToboXpBVot7',
-    'deezer': 'https://deezer.page.link/huyVFejy9ce3m7YY8'
+    spotify: 'https://open.spotify.com/playlist/2qMPv8Re0IW2FzBGjS7HCG',
+    applemusic: 'https://music.apple.com/fr/playlist/zapnmusic-for-work/pl.u-JPAZEomsDXLGvEb',
+    youtubemusic: 'https://music.youtube.com/playlist?list=PLBo5aRk85uWnkkflI9Of9ecRn8e3SsclZ&si=6szeIToboXpBVot7',
+    deezer: 'https://deezer.page.link/huyVFejy9ce3m7YY8'
 };
 
 class Settings {
@@ -47,24 +47,27 @@ class Settings {
         const debugIndex = AddLog('info', 'Settings data: local loading...');
 
         const settings = await DataStorage.Load(STORAGE.LOGIN);
-        const contains = (key) => settings.hasOwnProperty(key);
-        if (settings !== null) {
-            if (contains('lang')) langManager.SetLangage(settings['lang']);
-            if (contains('theme')) themeManager.SetTheme(settings['theme']);
-            if (contains('email')) this.email = settings['email'];
-            if (contains('connected')) this.connected = settings['connected'];
-            if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
-            if (contains('testMessageReaded')) this.testMessageReaded = settings['testMessageReaded'];
-            if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
-            if (contains('questHeatMap')) this.questHeatMap = settings['questHeatMap'];
-            if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
-            if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
-            if (contains('musicLinks')) this.musicLinks = settings['musicLinks'];
-
-            EditLog(debugIndex, 'same', 'Settings data: local load success');
-        } else {
+        if (settings === null) {
             EditLog(debugIndex, 'warn', 'Settings data: local load failed');
+            return;
         }
+
+        /** @param {string} key */
+        const contains = (key) => settings.hasOwnProperty(key);
+
+        if (contains('lang')) langManager.SetLangage(settings['lang']);
+        if (contains('theme')) themeManager.SetTheme(settings['theme']);
+        if (contains('email')) this.email = settings['email'];
+        if (contains('connected')) this.connected = settings['connected'];
+        if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
+        if (contains('testMessageReaded')) this.testMessageReaded = settings['testMessageReaded'];
+        if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
+        if (contains('questHeatMap')) this.questHeatMap = settings['questHeatMap'];
+        if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
+        if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
+        if (contains('musicLinks')) this.musicLinks = settings['musicLinks'];
+
+        EditLog(debugIndex, 'same', 'Settings data: local load success');
     }
     async Save() {
         const { AddLog, EditLog } = this.user.interface.console;

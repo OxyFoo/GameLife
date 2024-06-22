@@ -1,4 +1,5 @@
 {
+    "$schema": "https://json.schemastore.org/eslintrc",
     "root": true,
     "extends": "@react-native",
     "env": {
@@ -26,6 +27,14 @@
         "eol-last": ["warn", "always"],
         "dot-notation": "off",
         "no-bitwise": "off",
+        "curly": ["warn", "multi-line"],
+        "max-len": ["error", {
+            "code": 100,
+            "ignoreUrls": true,
+            "ignoreComments": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true
+        }],
 
         "prettier/prettier": [
             "warn",
@@ -35,7 +44,8 @@
                 "tabWidth": 4,
                 "jsxSingleQuote": true,
                 "avoidEscape": true,
-                "trailingComma": "none"
+                "trailingComma": "none",
+                "printWidth": 100
             }
         ]
     }

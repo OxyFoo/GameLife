@@ -53,10 +53,7 @@ class ProgressBarBack extends React.Component {
 
     /** @param {ProgressBarProps} prevProps */
     componentDidUpdate(prevProps) {
-        if (
-            prevProps.value !== this.props.value ||
-            prevProps.maxValue !== this.props.maxValue
-        ) {
+        if (prevProps.value !== this.props.value || prevProps.maxValue !== this.props.maxValue) {
             this.startAnimations();
         }
     }

@@ -41,18 +41,10 @@ function PopupTemplate_YesNo({ data, close }) {
             <Text style={styles.title}>{data.title.toUpperCase()}</Text>
             <Text style={styles.message}>{data.message}</Text>
             <View style={styles.row}>
-                <Button
-                    style={styles.button}
-                    onPress={() => close('no')}
-                    appearance='outline'
-                >
+                <Button style={styles.button} onPress={() => close('no')} appearance='outline'>
                     {lang['btn-no']}
                 </Button>
-                <Button
-                    style={styles.button}
-                    onPress={() => close('yes')}
-                    appearance='normal'
-                >
+                <Button style={styles.button} onPress={() => close('yes')} appearance='normal'>
                     {lang['btn-yes']}
                 </Button>
             </View>
@@ -69,18 +61,10 @@ function PopupTemplate_AcceptOrNot({ data, close }) {
             <Text style={styles.title}>{data.title.toUpperCase()}</Text>
             <Text style={styles.message}>{data.message}</Text>
             <View style={styles.row}>
-                <Button
-                    style={styles.button}
-                    onPress={() => close('refuse')}
-                    appearance='outline'
-                >
+                <Button style={styles.button} onPress={() => close('refuse')} appearance='outline'>
                     {lang['btn-refuse']}
                 </Button>
-                <Button
-                    style={styles.button}
-                    onPress={() => close('accept')}
-                    appearance='normal'
-                >
+                <Button style={styles.button} onPress={() => close('accept')} appearance='normal'>
                     {lang['btn-accept']}
                 </Button>
             </View>

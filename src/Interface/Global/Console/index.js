@@ -45,36 +45,25 @@ class Console extends ConsoleBack {
         };
         const buttonDelete = {
             opacity: animation,
-            transform: [
-                { translateY: Animated.multiply(-72, animationDeleteButtons) }
-            ]
+            transform: [{ translateY: Animated.multiply(-72, animationDeleteButtons) }]
         };
         const buttonRefreshData = {
             opacity: animation,
-            transform: [
-                { translateY: Animated.multiply(-116, animationDeleteButtons) }
-            ]
+            transform: [{ translateY: Animated.multiply(-116, animationDeleteButtons) }]
         };
         const buttonBenchMark = {
             opacity: animation,
-            transform: [
-                { translateY: Animated.multiply(-160, animationDeleteButtons) }
-            ]
+            transform: [{ translateY: Animated.multiply(-160, animationDeleteButtons) }]
         };
 
         return (
-            <Animated.View
-                style={[styles.console, translateY]}
-                pointerEvents={'box-none'}
-            >
+            <Animated.View style={[styles.console, translateY]} pointerEvents={'box-none'}>
                 <View style={styles.content}>
                     <FlatList
                         ref={this.refDebug}
                         data={debug}
                         renderItem={this.renderText}
-                        keyExtractor={(item, index) =>
-                            'debug-' + item.type + '-' + index
-                        }
+                        keyExtractor={(item, index) => 'debug-' + item.type + '-' + index}
                     />
                 </View>
 

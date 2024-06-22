@@ -67,9 +67,7 @@ class Button extends ButtonBack {
                 {enabled && (
                     <Ripple
                         ref={this.rippleRef}
-                        rippleColor={
-                            appearance === 'normal' ? 'black' : 'white'
-                        }
+                        rippleColor={appearance === 'normal' ? 'black' : 'white'}
                     />
                 )}
             </ButtonView>
@@ -99,9 +97,7 @@ class Button extends ButtonBack {
         let _fontColor = fontColor;
         if (_fontColor === 'automatic') {
             if (appearance === 'uniform') {
-                const luminance = themeManager.GetLuminance(
-                    themeManager.GetColor(color)
-                );
+                const luminance = themeManager.GetLuminance(themeManager.GetColor(color));
                 _fontColor = luminance > 0.75 ? 'darkBlue' : 'white';
             } else {
                 _fontColor = 'darkBlue';
@@ -135,14 +131,8 @@ class Button extends ButtonBack {
                 childCount = 2;
                 content = (
                     <View style={styles.content}>
-                        <Icon
-                            icon={'default'}
-                            size={this.props.iconSize}
-                            color={'transparent'}
-                        />
-                        <View style={[styles.content, styles.flex]}>
-                            {content}
-                        </View>
+                        <Icon icon={'default'} size={this.props.iconSize} color={'transparent'} />
+                        <View style={[styles.content, styles.flex]}>{content}</View>
                         <Icon
                             icon={this.props.icon}
                             xml={this.props.iconXml}
@@ -174,16 +164,9 @@ class Button extends ButtonBack {
             opacity: enabled ? 1 : 0.6
         };
 
-        if (
-            appearance === 'normal' ||
-            appearance === 'uniform' ||
-            fontColor !== 'automatic'
-        ) {
+        if (appearance === 'normal' || appearance === 'uniform' || fontColor !== 'automatic') {
             return (
-                <View
-                    style={[styles.content, styleContent, styleContentProp]}
-                    pointerEvents='none'
-                >
+                <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
                     {content}
                 </View>
             );
@@ -199,13 +182,7 @@ class Button extends ButtonBack {
                     <MaskedView
                         style={styles.absolute}
                         maskElement={
-                            <View
-                                style={[
-                                    styles.content,
-                                    styleContent,
-                                    styleContentProp
-                                ]}
-                            >
+                            <View style={[styles.content, styleContent, styleContentProp]}>
                                 {content}
                             </View>
                         }
@@ -269,10 +246,9 @@ class Button extends ButtonBack {
                             styles.absolute,
                             styles.backgroundBlur,
                             {
-                                backgroundColor: themeManager.GetColor(
-                                    'darkBlue',
-                                    { opacity: 0.25 }
-                                )
+                                backgroundColor: themeManager.GetColor('darkBlue', {
+                                    opacity: 0.25
+                                })
                             }
                         ]}
                         blurAmount={20}

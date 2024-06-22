@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         padding: 5,
         borderWidth: 2,
-        borderRadius: 8,
+        borderRadius: 8
     },
     check: {
         width: '100%',

@@ -1,25 +1,26 @@
 import * as React from 'react';
-import { Animated, TextInput } from 'react-native';
+import { Animated } from 'react-native';
 
 import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').TextInput} TextInput
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').TextInputProps} TextInputProps
- * 
+ *
  * @typedef {import('react-native').TextInputSubmitEditingEventData} TextInputSubmitEditingEventData
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputSubmitEditingEventData>} NativeSyntheticEvent
- * 
+ *
  * @typedef {import('react-native').TextInputFocusEventData} TextInputFocusEventData
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputFocusEventData>} NativeSyntheticEventFocus
- * 
+ *
  * @typedef {import('Interface/Components/Icon/back').IconsName} IconsName
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * 
+ *
  * @typedef {'default' | 'email' | 'username' | 'name'} TextContentType
- * 
+ *
  * @typedef {Object} InputTextPropsType
  * @property {StyleProp} containerStyle Style of the TextInput.
  * @property {string} label Label for the TextInput.
@@ -45,8 +46,8 @@ const InputTextProps = {
     error: false,
     enabled: true,
     forceActive: false,
-    onParentLayout: (e) => {},
-    onSubmit: (e) => {}
+    onParentLayout: () => {},
+    onSubmit: () => {}
 };
 
 const ANIM_DURATION = 200;
@@ -65,7 +66,7 @@ class InputTextBack extends React.Component {
         borderWidth: 1.2,
         textWidth: 0,
         textHeight: 0
-    }
+    };
 
     componentDidMount() {
         if (this.props.staticLabel || this.props.value?.length) {
@@ -78,7 +79,8 @@ class InputTextBack extends React.Component {
      * @param {InputTextBack['state']} nextState
      */
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.style !== this.props.style ||
+        return (
+            nextProps.style !== this.props.style ||
             nextProps.containerStyle !== this.props.containerStyle ||
             nextProps.label !== this.props.label ||
             nextProps.value !== this.props.value ||
@@ -92,18 +94,25 @@ class InputTextBack extends React.Component {
             nextState.boxHeight !== this.state.boxHeight ||
             nextState.borderWidth !== this.state.borderWidth ||
             nextState.textWidth !== this.state.textWidth ||
-            nextState.textHeight !== this.state.textHeight;
+            nextState.textHeight !== this.state.textHeight
+        );
     }
 
     /** @param {InputTextProps} prevProps */
     componentDidUpdate(prevProps) {
         if (prevProps.staticLabel !== this.props.staticLabel) {
-            if (this.props.staticLabel) this.movePlaceHolderBorder();
-            else if (!this.state.isFocused) this.movePlaceHolderIn();
+            if (this.props.staticLabel) {
+                this.movePlaceHolderBorder();
+            } else if (!this.state.isFocused) {
+                this.movePlaceHolderIn();
+            }
         }
         if (prevProps.value !== this.props.value) {
-            if (this.props.value?.length) this.movePlaceHolderBorder();
-            else if (!this.state.isFocused) this.movePlaceHolderIn();
+            if (this.props.value?.length) {
+                this.movePlaceHolderBorder();
+            } else if (!this.state.isFocused) {
+                this.movePlaceHolderIn();
+            }
         }
     }
 
@@ -114,7 +123,7 @@ class InputTextBack extends React.Component {
             this.setState({ boxHeight: height });
         }
         this.props.onParentLayout(event);
-    }
+    };
 
     /** @param {LayoutChangeEvent} event */
     onTextLayout = (event) => {
@@ -125,34 +134,36 @@ class InputTextBack extends React.Component {
         if (height !== this.state.textHeight) {
             this.setState({ textHeight: height });
         }
-    }
+    };
 
     blur = this.refInput.current?.blur;
     focus = this.refInput.current?.focus;
 
     movePlaceHolderIn = () => {
-        if (this.props.staticLabel) return;
+        if (this.props.staticLabel) {
+            return;
+        }
         TimingAnimation(this.state.animTop, 1, ANIM_DURATION).start();
         TimingAnimation(this.state.animLeft, 16, ANIM_DURATION).start();
         TimingAnimation(this.state.animScale, 1, ANIM_DURATION).start();
         this.setState({ borderWidth: 1.2 });
-    }
+    };
 
     movePlaceHolderBorder = () => {
         TimingAnimation(this.state.animTop, 0, ANIM_DURATION).start();
         TimingAnimation(this.state.animLeft, 8, ANIM_DURATION).start();
         TimingAnimation(this.state.animScale, 0.75, ANIM_DURATION).start();
         this.setState({ borderWidth: 1.6 });
-    }
+    };
 
     /** @param {NativeSyntheticEventFocus} event */
     onFocusIn = (event) => {
         this.setState({ isFocused: true });
         this.movePlaceHolderBorder();
-        if (!!this.props.onFocus) {
+        if (this.props.onFocus) {
             this.props.onFocus(event);
         }
-    }
+    };
 
     /** @param {NativeSyntheticEventFocus} event */
     onFocusOut = (event) => {
@@ -160,10 +171,10 @@ class InputTextBack extends React.Component {
         if (!this.props.value?.length) {
             this.movePlaceHolderIn();
         }
-        if (!!this.props.onBlur) {
+        if (this.props.onBlur) {
             this.props.onBlur(event);
         }
-    }
+    };
 }
 
 InputTextBack.prototype.props = InputTextProps;

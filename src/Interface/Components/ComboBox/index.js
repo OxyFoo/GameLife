@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { View, Animated, TouchableHighlight, FlatList, Platform } from 'react-native';
+import {
+    View,
+    Animated,
+    TouchableHighlight,
+    FlatList,
+    Platform
+} from 'react-native';
 
 import styles from './style';
 import ComboBoxBack from './back';
@@ -29,7 +35,8 @@ class ComboBox extends ComboBoxBack {
     }
 
     renderElement = () => {
-        const { style, title, activeColor, enabled, selectedValue } = this.props;
+        const { style, title, activeColor, enabled, selectedValue } =
+            this.props;
         const { anim, selectionMode } = this.state;
 
         const angle = anim.interpolate({
@@ -38,12 +45,16 @@ class ComboBox extends ComboBoxBack {
         });
 
         return (
-            <View style={[styles.parentContent, style]} onLayout={this.onLayout}>
+            <View
+                style={[styles.parentContent, style]}
+                onLayout={this.onLayout}
+            >
                 {/* Button for interaction (open combobox) */}
                 <Button
                     testID='combobox-button'
                     style={styles.hoverButton}
-                    appearance='transparent'
+                    appearance='uniform'
+                    color='transparent'
                     onPress={this.onPress}
                     onLongPress={this.resetSelection}
                     onTouchMove={this.closeSelection}
@@ -62,7 +73,9 @@ class ComboBox extends ComboBoxBack {
                 {/* Chevron icon */}
                 {enabled && (
                     <View style={styles.chevron} pointerEvents='none'>
-                        <Animated.View style={{ transform: [{ rotateX: angle }] }}>
+                        <Animated.View
+                            style={{ transform: [{ rotateX: angle }] }}
+                        >
                             <Icon
                                 icon='chevron'
                                 color={selectionMode ? activeColor : 'border'}
@@ -74,7 +87,7 @@ class ComboBox extends ComboBoxBack {
                 )}
             </View>
         );
-    }
+    };
 
     renderOverlay = () => {
         const { selectionMode } = this.state;
@@ -89,10 +102,14 @@ class ComboBox extends ComboBoxBack {
                 onTouchStart={this.closeSelection}
             />
         );
-    }
+    };
 
     renderContent = () => {
-        const { enableSearchBar: setSearchBar, maxContentHeight: maxHeight, activeColor } = this.props;
+        const {
+            enableSearchBar: setSearchBar,
+            maxContentHeight: maxHeight,
+            activeColor
+        } = this.props;
         const { anim, data, selectionMode } = this.state;
         const { x, y, width, height } = this.state.parent;
 
@@ -105,19 +122,13 @@ class ComboBox extends ComboBoxBack {
         const overlayStyle = {
             width: width,
             maxHeight: maxHeight,
-            transform: [
-                { translateX: x },
-                { translateY: y + height }
-            ]
+            transform: [{ translateX: x }, { translateY: y + height }]
         };
 
         /** @type {StyleProp} */
         const borderFixStyle = {
             opacity: anim,
-            transform: [
-                { translateX: x },
-                { translateY: y + height }
-            ],
+            transform: [{ translateX: x }, { translateY: y + height }],
             borderColor: themeManager.GetColor(activeColor)
         };
 
@@ -142,26 +153,38 @@ class ComboBox extends ComboBoxBack {
                     <Animated.View style={[styles.overlayPanel, panelStyle]}>
                         <FlatList
                             ref={this.flatlistRef}
-                            ListHeaderComponent={!setSearchBar ? null : (
-                                <View style={styles.parentSearchBar}>
-                                    <InputText
-                                        style={styles.search}
-                                        containerStyle={styles.searchContainer}
-                                        label={langManager.curr['modal']['search']}
-                                        value={this.state.search}
-                                        onChangeText={this.refreshSearch}
-                                    />
-                                </View>
-                            )}
+                            ListHeaderComponent={
+                                !setSearchBar ? null : (
+                                    <View style={styles.parentSearchBar}>
+                                        <InputText
+                                            style={styles.search}
+                                            containerStyle={
+                                                styles.searchContainer
+                                            }
+                                            label={
+                                                langManager.curr['modal'][
+                                                    'search'
+                                                ]
+                                            }
+                                            value={this.state.search}
+                                            onChangeText={this.refreshSearch}
+                                        />
+                                    </View>
+                                )
+                            }
                             style={[
                                 styles.overlayContent,
-                                { backgroundColor: themeManager.GetColor('backgroundGrey') }
+                                {
+                                    backgroundColor:
+                                        themeManager.GetColor('backgroundGrey')
+                                }
                             ]}
                             data={data}
                             renderItem={this.renderItem}
                             onTouchMove={(e) => e.stopPropagation()}
-                            keyExtractor={(item, index) => 'i-' + index}
-
+                            keyExtractor={(item, index) =>
+                                `i-${item.key}-${index}`
+                            }
                             onTouchStart={this.DisablePageScroll}
                             onTouchEnd={this.EnablePageScroll}
                             onMomentumScrollEnd={this.EnablePageScroll}
@@ -172,7 +195,7 @@ class ComboBox extends ComboBoxBack {
                 </Animated.View>
             </>
         );
-    }
+    };
 
     /** @param {{ item: ComboBoxItem }} param0 */
     renderItem = ({ item }) => {
@@ -187,7 +210,7 @@ class ComboBox extends ComboBoxBack {
                 <Text style={styles.itemText}>{item.value}</Text>
             </TouchableHighlight>
         );
-    }
+    };
 }
 
 export { ComboBox };

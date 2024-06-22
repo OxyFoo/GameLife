@@ -24,7 +24,7 @@ class ProgressBarInfinite extends React.Component {
     state = {
         animTranslate: new Animated.Value(0),
         animScale: new Animated.Value(1)
-    }
+    };
 
     componentDidMount() {
         this.loop();
@@ -41,26 +41,28 @@ class ProgressBarInfinite extends React.Component {
         TimingAnimation(this.state.animTranslate, -width, 0).start();
         await Sleep(100);
         TimingAnimation(this.state.animTranslate, width, 1800).start();
-        TimingAnimation(this.state.animScale, .8, 400).start();
+        TimingAnimation(this.state.animScale, 0.8, 400).start();
         await Sleep(Random(600, 1200));
-        TimingAnimation(this.state.animScale, .4, 400).start();
-    }
+        TimingAnimation(this.state.animScale, 0.4, 400).start();
+    };
 
     render() {
         const { color, style } = this.props;
 
         return (
             <View style={[styles.parent, style]}>
-                <Animated.View style={[
-                    styles.bar,
-                    {
-                        backgroundColor: themeManager.GetColor(color),
-                        transform: [
-                            { translateX: this.state.animTranslate },
-                            { scaleX: this.state.animScale }
-                        ]
-                    }
-                ]} />
+                <Animated.View
+                    style={[
+                        styles.bar,
+                        {
+                            backgroundColor: themeManager.GetColor(color),
+                            transform: [
+                                { translateX: this.state.animTranslate },
+                                { scaleX: this.state.animScale }
+                            ]
+                        }
+                    ]}
+                />
             </View>
         );
     }

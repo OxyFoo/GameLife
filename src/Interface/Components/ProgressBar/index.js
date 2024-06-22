@@ -29,7 +29,10 @@ class ProgressBar extends ProgressBarBack {
         };
 
         return (
-            <View style={[styles.body, { height }, style]} onLayout={this.onLayout}>
+            <View
+                style={[styles.body, { height }, style]}
+                onLayout={this.onLayout}
+            >
                 <Animated.View style={[styles.supXP, animSupStyle]} />
                 <MaskedView maskElement={this.renderMask()}>
                     {this.renderBackground()}
@@ -44,32 +47,33 @@ class ProgressBar extends ProgressBarBack {
 
         return (
             <Animated.View
-                style={[styles.mask, {
-                    transform: [{ translateX: leftOffset } ]
-                }]}
+                style={[
+                    styles.mask,
+                    {
+                        transform: [{ translateX: leftOffset }]
+                    }
+                ]}
             />
         );
-    }
+    };
 
     renderBackground = () => {
         const { color } = this.props;
 
         if (color !== 'gradient') {
             const backgroundColor = themeManager.GetColor(color);
-            return (
-                <View style={[styles.bar, { backgroundColor }]} />
-            );
+            return <View style={[styles.bar, { backgroundColor }]} />;
         }
 
         return (
             <LinearGradient
                 style={styles.bar}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
                 colors={['#DBA1FF', '#9095FF', '#8CF7FF']}
             />
         );
-    }
+    };
 }
 
 export { ProgressBar };

@@ -34,9 +34,7 @@ class Switch extends SwitchBack {
         /** @type {AnimatedViewStyle} */
         const btnStyle = {
             backgroundColor: themeManager.GetColor('white'),
-            transform: [
-                { translateX: Animated.multiply(animSpring, 24) }
-            ]
+            transform: [{ translateX: Animated.multiply(animSpring, 24) }]
         };
 
         return (
@@ -56,7 +54,9 @@ class Switch extends SwitchBack {
                 </Animated.View>
 
                 {/** Active background */}
-                <Animated.View style={[styles.activeBackground, activeBgStyle]} />
+                <Animated.View
+                    style={[styles.activeBackground, activeBgStyle]}
+                />
 
                 {/** Circle button */}
                 <Animated.View style={[styles.circle, btnStyle]} />

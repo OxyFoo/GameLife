@@ -16,6 +16,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef SwitchTextPropsType
  * @property {StyleProp} style
+ * @property {number} throttleTime
  * @property {ThemeColor} color
  * @property {number} fontSize
  * @property {Array<string>} texts
@@ -26,6 +27,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /** @type {SwitchTextPropsType} */
 const SwitchTextProps = {
     style: {},
+    throttleTime: 250,
     color: 'main1',
     fontSize: 14,
     texts: [],
@@ -38,6 +40,8 @@ class SwitchTextBack extends React.Component {
         anim: new Animated.Value(this.props.value),
         parentWidth: 0
     };
+
+    last = 0;
 
     /**
      * @param {SwitchTextProps} nextProps
@@ -77,6 +81,13 @@ class SwitchTextBack extends React.Component {
 
     /** @param {number} index */
     onChange = (index) => {
+        // Prevent multiple clicks
+        const now = Date.now();
+        if (now - this.last < this.props.throttleTime) {
+            return;
+        }
+
+        this.last = now;
         this.props.onChangeValue(index);
     };
 }

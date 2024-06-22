@@ -92,15 +92,18 @@ class Test extends BackTest {
                 />
                 <Button
                     style={styles.marginBot}
+                    throttleTime={0}
                     onPress={this.buttonLoop}
                     appearance={this.state.selectedButon}
                     fontColor='danger'
                     color='main2'
+                    icon={'danger-outline'}
                 >
                     {"Changer l'apparence"}
                 </Button>
                 <Button
                     style={styles.marginBot}
+                    throttleTime={1000}
                     onPress={this.buttonLoop}
                     appearance={this.state.selectedButon}
                     color='main3'
@@ -339,6 +342,7 @@ class Test extends BackTest {
                     }}
                 >
                     <Switch
+                        throttleTime={1000}
                         color='main2'
                         value={this.state.switch1}
                         onChangeValue={(value) => {
@@ -352,6 +356,7 @@ class Test extends BackTest {
                         }}
                     />
                     <CheckBox
+                        throttleTime={1000}
                         value={this.state.checkbox1}
                         onChangeValue={(value) => {
                             this.setState({ checkbox1: value });

@@ -20,6 +20,7 @@ import { Button } from 'react-native';
  * @property {StyleProp} style
  * @property {AnimatedProps | null} styleAnimation
  * @property {StyleProp} styleContent
+ * @property {number} throttleTime Time in ms to throttle the press event
  * @property {'normal' | 'outline' | 'outline-blur' | 'uniform'} appearance
  * @property {ThemeColor} color Background color of the button, only used in 'uniform' appearance
  * @property {number} fontSize
@@ -48,6 +49,7 @@ const ButtonProps = {
     style: {},
     styleAnimation: null,
     styleContent: {},
+    throttleTime: 250,
     appearance: 'normal',
     color: 'main1',
     fontSize: 16,
@@ -74,6 +76,7 @@ class ButtonBack extends React.Component {
     rippleRef = React.createRef();
 
     time = 0;
+    last = 0;
     posX = 0;
     posY = 0;
     size = 0;
@@ -127,13 +130,20 @@ class ButtonBack extends React.Component {
             this.rippleRef.current?.Release(event);
         }
 
+        // Prevent multiple press events
+        const now = Date.now();
+        if (now - this.last < this.props.throttleTime) {
+            return;
+        }
+
         const deltaX = Math.abs(event.nativeEvent.pageX - this.posX);
         const deltaY = Math.abs(event.nativeEvent.pageY - this.posY);
-        const deltaT = new Date().getTime() - this.time;
+        const deltaT = now - this.time;
         const isPress = deltaX < 20 && deltaY < 20;
 
         const { enabled, loading, onPress, onLongPress } = this.props;
         if (isPress && !loading && enabled) {
+            this.last = now;
             if (deltaT < 500) {
                 onPress();
             } else {

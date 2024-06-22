@@ -96,7 +96,7 @@ class Icon extends IconBack {
                 <TouchableOpacity
                     testID='icon'
                     style={[containerSize, containerStyle]}
-                    onPress={onPress}
+                    onPress={this.onPress}
                     activeOpacity={0.5}
                 >
                     {output}

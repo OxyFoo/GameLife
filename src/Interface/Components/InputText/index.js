@@ -11,28 +11,46 @@ import { Icon } from '../Icon';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').TextInputProps} TextInputProps
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
 
 /** @type {Object.<string, { ios: TextInputProps['textContentType'], android: TextInputProps['autoComplete'] }>} */
 const textTypes = {
-    default:    { ios: 'none',          android: 'off' },
-    email:      { ios: 'emailAddress',  android: 'email' },
-    name:       { ios: 'name',          android: 'name' },
-    username:   { ios: 'username',      android: 'username' }
+    default: { ios: 'none', android: 'off' },
+    email: { ios: 'emailAddress', android: 'email' },
+    name: { ios: 'name', android: 'name' },
+    username: { ios: 'username', android: 'username' }
 };
 
 class InputText extends InputTextBack {
     render() {
         const {
-            style, containerStyle, label, icon, type, enabled, staticLabel, activeColor,
-            forceActive, error, onParentLayout, onSubmit, pointerEvents, ...props
+            style,
+            containerStyle,
+            label,
+            icon,
+            type,
+            enabled,
+            staticLabel,
+            activeColor,
+            forceActive,
+            error,
+            onParentLayout,
+            onSubmit,
+            pointerEvents,
+            ...props
         } = this.props;
         const {
-            animTop, animLeft, animScale, isFocused,
-            boxHeight, borderWidth, textWidth, textHeight
+            animTop,
+            animLeft,
+            animScale,
+            isFocused,
+            boxHeight,
+            borderWidth,
+            textWidth,
+            textHeight
         } = this.state;
 
         const isActive = isFocused || forceActive;
@@ -63,9 +81,7 @@ class InputText extends InputTextBack {
         const barMaskStyle = {
             width: textWidth * 0.75 + (textWidth ? 12 : 0),
             backgroundColor: themeManager.GetColor('background'),
-            transform: [
-                { scaleX: Animated.subtract(1, animTop) },
-            ]
+            transform: [{ scaleX: Animated.subtract(1, animTop) }]
         };
 
         return (
@@ -79,24 +95,29 @@ class InputText extends InputTextBack {
 
                 {/* Title (in center or move into top border if focused or active) */}
                 <Animated.View
-                    style={[styles.placeholderParent, {
-                        transform: [
-                            { translateX: -textWidth/2 },
-                            { translateY: -textHeight/2 },
-                            { scale: animScale },
-                            { translateX: textWidth/2 },
-                            { translateY: textHeight/2 },
+                    style={[
+                        styles.placeholderParent,
+                        {
+                            transform: [
+                                { translateX: -textWidth / 2 },
+                                { translateY: -textHeight / 2 },
+                                { scale: animScale },
+                                { translateX: textWidth / 2 },
+                                { translateY: textHeight / 2 },
 
-                            { translateX: animLeft },
-                            { translateY: animTop.interpolate({
-                                inputRange: [ 0, 1 ],
-                                outputRange: [
-                                    -textHeight / 2,
-                                    boxHeight / 2 - textHeight / 2 - 2
-                                ]
-                            }) }
-                        ]
-                    }]}
+                                { translateX: animLeft },
+                                {
+                                    translateY: animTop.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [
+                                            -textHeight / 2,
+                                            boxHeight / 2 - textHeight / 2 - 2
+                                        ]
+                                    })
+                                }
+                            ]
+                        }
+                    ]}
                     pointerEvents={'none'}
                 >
                     <Text
@@ -126,10 +147,7 @@ class InputText extends InputTextBack {
                 {/* Error icon */}
                 {_icon !== null && (
                     <View style={styles.error}>
-                        <Icon
-                            icon={_icon}
-                            color={color}
-                        />
+                        <Icon icon={_icon} color={color} />
                     </View>
                 )}
             </Animated.View>

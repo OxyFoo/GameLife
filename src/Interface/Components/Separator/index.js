@@ -6,7 +6,7 @@ import themeManager from 'Managers/ThemeManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  */
 
@@ -28,15 +28,11 @@ class Separator extends React.Component {
         const background = { backgroundColor: themeManager.GetColor(color) };
 
         if (vertical) {
-            return (
-                <View style={[styles.vertical, background, style]} />
-            );
+            return <View style={[styles.vertical, background, style]} />;
         }
 
         // Horizontal
-        return (
-            <View style={[styles.horizontal, background, style]} />
-        );
+        return <View style={[styles.horizontal, background, style]} />;
     }
 }
 

@@ -12,10 +12,10 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
  * @typedef {import('react-native').TextProps} TextProps
  * @typedef {import('react-native').StyleProp<TextStyle>} StyleProp
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * 
+ *
  * @typedef {Object} TextPropsType
  * @property {TextStyleProp} style
  * @property {ViewStyleProp} containerStyle Style of touchable opacity for onPress text
@@ -34,14 +34,22 @@ const TextProps = {
 class Text extends React.Component {
     /** @param {TextProps & TextPropsType} nextProps */
     shouldComponentUpdate(nextProps) {
-        return this.props.children !== nextProps.children ||
+        return (
+            this.props.children !== nextProps.children ||
             this.props.color !== nextProps.color ||
-            this.props.fontSize !== nextProps.fontSize;
+            this.props.fontSize !== nextProps.fontSize
+        );
     }
 
     render() {
         const {
-            style, containerStyle, color, fontSize, onPress, children, ...props
+            style,
+            containerStyle,
+            color,
+            fontSize,
+            onPress,
+            children,
+            ...props
         } = this.props;
 
         if (typeof children !== 'string') {
@@ -55,12 +63,12 @@ class Text extends React.Component {
             fontSize: fontSize
         };
 
-        if (!!onPress) {
+        if (onPress) {
             return (
                 <TouchableOpacity
                     style={containerStyle}
                     onPress={onPress}
-                    activeOpacity={.5}
+                    activeOpacity={0.5}
                 >
                     <RNText style={[textStyle, style]} {...props}>
                         {children}

@@ -16,11 +16,7 @@ class Loading extends BackLoading {
 
         return (
             <View>
-                <View
-                    style={styles.content}
-                    onTouchStart={this.onToucheStart}
-                    onTouchEnd={this.onToucheEnd}
-                >
+                <View style={styles.content} onTouchStart={this.onToucheStart} onTouchEnd={this.onToucheEnd}>
                     <GLLoading state={this.state.icon} />
                 </View>
                 <View style={styles.textContainer}>
@@ -52,12 +48,7 @@ class Loading extends BackLoading {
 
                 <Zap style={styles.zapTest} />
 
-                <Button
-                    style={styles.buttonTest}
-                    styleAnimation={buttonPosY}
-                    color='main1'
-                    onPress={this.nextPage}
-                >
+                <Button style={styles.buttonTest} styleAnimation={buttonPosY} color='main1' onPress={this.nextPage}>
                     {lang['test-caution-button']}
                 </Button>
             </View>

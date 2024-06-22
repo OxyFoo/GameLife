@@ -10,20 +10,32 @@ const { versionName } = require('../../package.json');
 
 /**
  * @typedef {import('Managers/LangManager').Lang} Lang
- * 
+ *
  * @typedef {import('Class/Shop').Chest} Chest
  * @typedef {import('Data/Items').StuffID} StuffID
  * @typedef {import('Managers/UserManager').default} UserManager
- * 
+ *
  * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
  * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
  * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
  * @typedef {'ping'|'login'|'signin'|'getUserData'|'getUserIntentories'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimDailyQuest'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
-*/
+ */
 
 /** @type {ServerStatus[]} */
-const STATUS = [ 'offline', 'ok', 'free', 'waitMailConfirmation', 'newDevice', 'remDevice', 'maintenance', 'update', 'downdate', 'limitDevice', 'error' ];
+const STATUS = [
+    'offline',
+    'ok',
+    'free',
+    'waitMailConfirmation',
+    'newDevice',
+    'remDevice',
+    'maintenance',
+    'update',
+    'downdate',
+    'limitDevice',
+    'error'
+];
 
 class Server {
     /** @param {UserManager} user */
@@ -54,7 +66,7 @@ class Server {
         this.dataToken = '';
         this.online = false;
         this.status = 'offline';
-    }
+    };
 
     /**
      * Return true if the server is connected & user is connected to the server
@@ -80,7 +92,7 @@ class Server {
         }
 
         return false;
-    }
+    };
 
     Ping = async (resetConnections = false) => {
         const debugIndex = this.user.interface.console.AddLog('info', 'Request: ping...');
@@ -111,28 +123,43 @@ class Server {
                 RNExitApp.exitApp();
             };
             const title = langManager.curr['home']['alert-update-title'];
-            const text = langManager.curr['home']['alert-update-text'];
-            this.user.interface.popup.Open('ok', [ title, text ], update, false);
+            const message = langManager.curr['home']['alert-update-message'];
+            this.user.interface.popup.OpenT({
+                type: 'ok',
+                data: { title, message },
+                callback: update,
+                cancelable: false
+            });
         } else if (status === 'downdate') {
             this.online = true;
             if (this.popupDowndateShowed === false) {
                 this.popupDowndateShowed = true;
                 const title = langManager.curr['home']['alert-newversion-title'];
-                const text = langManager.curr['home']['alert-newversion-text'];
-                this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+                const message = langManager.curr['home']['alert-newversion-message'];
+                this.user.interface.popup.OpenT({
+                    type: 'ok',
+                    data: { title, message },
+                    callback: undefined,
+                    cancelable: false
+                });
             }
         } else if (status === 'maintenance' && this.status !== 'maintenance') {
             this.online = false;
         } else if (status === 'error') {
             this.online = false;
             const title = langManager.curr['home']['alert-error-title'];
-            const text = langManager.curr['home']['alert-error-text'];
-            this.user.interface.popup.Open('ok', [ title, text ], undefined, false);
+            const message = langManager.curr['home']['alert-error-message'];
+            this.user.interface.popup.OpenT({
+                type: 'ok',
+                data: { title, message },
+                callback: undefined,
+                cancelable: false
+            });
         } else if (status === 'ok') {
             this.online = true;
             this.user.interface.console.EditLog(debugIndex, 'same', 'Request: ping - OK');
         }
-    }
+    };
 
     /**
      * Try to connect to the server, with email (and device informations)
@@ -176,7 +203,7 @@ class Server {
                 this.user.interface.console.AddLog('warn', 'Request: connect - banned');
             }
 
-            if (typeof(token) === 'string' && token.length > 0) {
+            if (typeof token === 'string' && token.length > 0) {
                 this.token = token;
             } else {
                 status = 'error';
@@ -188,7 +215,7 @@ class Server {
             remainMailTime: parseInt(remainMailTime)
         };
         return output;
-    }
+    };
 
     /**
      * Send a request to the server to create a new user account
@@ -203,11 +230,11 @@ class Server {
 
         /** @type {SigninStatus} */
         const status = response['status'];
-        const allStatus = [ 'ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount' ];
+        const allStatus = ['ok', 'pseudoUsed', 'pseudoIncorrect', 'limitAccount'];
         if (!allStatus.includes(status)) return 'error';
 
         return status;
-    }
+    };
 
     /**
      * Send data unsaved on server
@@ -216,8 +243,8 @@ class Server {
      */
     async SaveUserData(data) {
         const _data = {
-            'data': data,
-            'dataToken': this.dataToken
+            data: data,
+            dataToken: this.dataToken
         };
         const response = await this.Request('addUserData', _data);
         if (response === null) return false;
@@ -294,12 +321,12 @@ class Server {
      * @returns {Promise<object | null>} Return all online data or null if failed
      */
     async LoadUserData(force = false) {
-        const _data = { 'dataToken': force ? '' : this.dataToken };
+        const _data = { dataToken: force ? '' : this.dataToken };
         const response = await this.Request('getUserData', _data);
         if (response === null) return null;
 
         const data = response['data'];
-        if (response['status'] !== 'ok' || typeof(data) !== 'object') {
+        if (response['status'] !== 'ok' || typeof data !== 'object') {
             return null;
         }
 
@@ -311,12 +338,12 @@ class Server {
      * @returns {Promise<object | null>} Return all online data or null if failed
      */
     async LoadUserInventories() {
-        const _data = { 'dataToken': this.dataToken };
+        const _data = { dataToken: this.dataToken };
         const response = await this.Request('getUserIntentories', _data);
         if (response === null) return null;
 
         const data = response['data'];
-        if (response['status'] !== 'ok' || typeof(data) !== 'object') {
+        if (response['status'] !== 'ok' || typeof data !== 'object') {
             return null;
         }
 
@@ -330,8 +357,8 @@ class Server {
      */
     async SaveUsername(username) {
         const _data = {
-            'username': username,
-            'dataToken': this.dataToken
+            username: username,
+            dataToken: this.dataToken
         };
         const response = await this.Request('setUsername', _data);
         if (response === null) return 'error';
@@ -359,18 +386,18 @@ class Server {
      */
     async GetShopContent() {
         const _data = {
-            'dataToken': this.dataToken
+            dataToken: this.dataToken
         };
 
         const response = await this.Request('getDailyDeals', _data);
         if (response === null) {
             throw new Error('Request failed');
-        };
+        }
 
         const status = response['status'];
         if (status !== 'ok') {
             throw new Error('Request failed');
-        };
+        }
 
         return response;
     }
@@ -383,14 +410,14 @@ class Server {
      */
     async SendReport(type, data) {
         const _data = {
-            'type': type,
-            'data': JSON.stringify(data)
+            type: type,
+            data: JSON.stringify(data)
         };
         const response = await this.Request('report', _data);
         if (response === null) return false;
 
         const status = response['status'];
-        if (status !== 'ok') return false
+        if (status !== 'ok') return false;
 
         return true;
     }
@@ -398,8 +425,14 @@ class Server {
     TokenExpired() {
         this.user.interface.console.AddLog('warn', 'Request: token expired');
         const title = langManager.curr['server']['alert-tokenexpired-title'];
-        const text = langManager.curr['server']['alert-tokenexpired-text'];
-        this.user.interface.popup.ForceOpen('ok', [ title, text ], RNExitApp.exitApp, false);
+        const message = langManager.curr['server']['alert-tokenexpired-message'];
+        this.user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message },
+            callback: RNExitApp.exitApp,
+            cancelable: false,
+            priority: true
+        });
     }
 
     /**
@@ -409,7 +442,7 @@ class Server {
      * @returns {Promise<object | null>} Return response from server or null if failed
      */
     async Request(type, data = {}, force = false) {
-        let reqData = { 'action': type, ...data };
+        let reqData = { action: type, ...data };
         if (this.token || force) {
             reqData['token'] = this.token;
         }
@@ -417,11 +450,17 @@ class Server {
         const response = await Request_Async(reqData);
         if (response.status !== 200) {
             // Request failed
-            if (this.online) { // Don't show popup if not connected to server
+            if (this.online) {
+                // Don't show popup if not connected to server
                 this.user.interface.console.AddLog('warn', 'Request: failed -', { type, response });
                 const title = langManager.curr['server']['alert-error-title'];
-                const text = langManager.curr['server']['alert-error-text'];
-                this.user.interface.popup.ForceOpen('ok', [ title, text ], null, false);
+                const message = langManager.curr['server']['alert-error-message'];
+                this.user.interface.popup.OpenT({
+                    type: 'ok',
+                    data: { title, message },
+                    cancelable: false,
+                    priority: true
+                });
             }
             return null;
         }

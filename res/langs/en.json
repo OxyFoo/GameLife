@@ -198,7 +198,7 @@
 
     "server": {
         "alert-tokenexpired-title": "The connection token has expired",
-        "alert-tokenexpired-text": "The application will close, please restart it.",
+        "alert-tokenexpired-message": "The application will close, please restart it.",
 
         "alert-adsuccess-title": "Congrats",
         "alert-adsuccess-message": "You have won {} Ox!",
@@ -211,7 +211,7 @@
         "alert-adempty-title": "No ads available",
         "alert-adempty-text": "You have no more ads available for today.",
         "alert-error-title": "Error",
-        "alert-error-text": "An error has occurred, please try again later."
+        "alert-error-message": "An error has occurred, please try again later."
     },
 
     "onboarding": {
@@ -370,11 +370,11 @@
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
         "alert-error-title": "Error",
-        "alert-error-text": "An error has occurred, please try again later.",
+        "alert-error-message": "An error has occurred, please try again later.",
         "alert-update-title": "Update",
-        "alert-update-text": "An update of the application is available",
+        "alert-update-message": "An update of the application is available",
         "alert-newversion-title": "Warning",
-        "alert-newversion-text": "You're on the next GameLife update, this popup will be removed when the stores release it",
+        "alert-newversion-message": "You're on the next GameLife update, this popup will be removed when the stores release it",
         "alert-exit-title": "Exit",
         "alert-exit-text": "Do you want to leave the application?",
         "alert-dateerror-title": "Warning",
@@ -407,9 +407,9 @@
         "alert-deletedaccount-title": "Account deleted",
         "alert-deletedaccount-message": "Your account has been deleted.",
         "alert-limitAccount-title": "Too many accounts",
-        "alert-limitAccount-text": "You can't create more than 3 accounts with one device.",
+        "alert-limitAccount-message": "You can't create more than 3 accounts with one device.",
         "alert-limitDevice-title": "Too many devices on this account",
-        "alert-limitDevice-text": "You can't have more than 5 devices connected to a single account.",
+        "alert-limitDevice-message": "You can't have more than 5 devices connected to a single account.",
         "alert-deviceRemoved-title": "Device removed",
         "alert-deviceRemoved-message": "Your device has been removed from your account because you already have the maximum number of devices on this account."
     },
@@ -495,7 +495,7 @@
         "alert-incorrect-title": "Incorrect username",
         "alert-incorrect-text": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
         "alert-error-title": "Error",
-        "alert-error-text": "Change of username impossible",
+        "alert-error-message": "Change of username impossible",
         "alert-emptytitle-title": "No title available",
         "alert-emptytitle-text": "You have not titles yet",
         "alert-birthtimewarning-title": "Change of date of birth",
@@ -576,7 +576,7 @@
         "alert-success-title": "Sent",
         "alert-success-text": "Thank you so much for your feedback!",
         "alert-error-title": "Error",
-        "alert-error-text": "An error has occurred, please try again later.",
+        "alert-error-message": "An error has occurred, please try again later.",
 
         "tuto": {
             "bug": "Please provide as many details on the nature of the bug as well as in the conditions in which it appeared (Android/iOS? Connected to the Internet or not? Smartphone or emulator brand?)"

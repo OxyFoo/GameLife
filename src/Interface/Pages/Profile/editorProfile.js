@@ -102,7 +102,7 @@ class EditorProfile extends React.PureComponent {
             user.interface.popup.ForceOpen('ok', [ title, text ], this.openUsername);
         } else if (state === 'error') {
             const title = lang['alert-error-title'];
-            const text = lang['alert-error-text'];
+            const text = lang['alert-error-message'];
             user.interface.popup.ForceOpen('ok', [ title, text ], this.openUsername);
         }
     }

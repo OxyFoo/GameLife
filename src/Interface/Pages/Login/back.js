@@ -1,4 +1,4 @@
-import { Animated, Linking, Platform } from 'react-native';
+import { Animated, Linking } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
@@ -25,7 +25,7 @@ class BackLogin extends PageBase {
 
         animSignin: new Animated.Value(0),
         animSigninBis: new Animated.Value(0)
-    }
+    };
 
     /** @param {PageBase['props']} props */
     constructor(props) {
@@ -56,35 +56,33 @@ class BackLogin extends PageBase {
         if (!user.server.online) {
             user.interface.ChangePage('waitinternet');
         }
-    }
-
+    };
 
     /** @param {string} newEmail */
     onChangeEmail = (newEmail) => {
         const email = newEmail.trim().substring(0, MAX_EMAIL_LENGTH);
         this.setState({ email });
-    }
+    };
 
     /** @param {string} newUsername */
     onChangeUsername = (newUsername) => {
         const username = newUsername.trim().substring(0, MAX_PSEUDO_LENGTH);
         this.setState({ username });
-    }
+    };
 
     onCGUToggle = () => {
         const { cguAccepted } = this.state;
         this.setState({ cguAccepted: !cguAccepted });
-    }
+    };
 
     onCGURedirect() {
-        const websiteAvailableLang = [ 'fr', 'en' ];
+        const websiteAvailableLang = ['fr', 'en'];
         let langKey = 'fr';
         if (!websiteAvailableLang.includes(langManager.currentLangageKey)) {
             langKey = langManager.currentLangageKey;
         }
         Linking.openURL(`https://${langKey}.oxyfoo.com/legal/terms-of-service`);
     }
-
 
     loginOrGoToSignin = async () => {
         const lang = langManager.curr['login'];
@@ -104,7 +102,7 @@ class BackLogin extends PageBase {
 
         // Login
         return await Login.call(this, email);
-    }
+    };
 
     goToSignin = () => {
         const { signinMode, animSignin, animSigninBis } = this.state;
@@ -117,7 +115,7 @@ class BackLogin extends PageBase {
 
         this.setState({ signinMode: true });
         user.interface.SetCustomBackHandler(this.backToLogin);
-    }
+    };
 
     backToLogin = () => {
         const { signinMode, animSignin, animSigninBis } = this.state;
@@ -133,11 +131,11 @@ class BackLogin extends PageBase {
             username: '',
             cguAccepted: false,
             errorUsername: '',
-            errorCgu: '',
+            errorCgu: ''
         });
         user.interface.ResetCustomBackHandler();
         return false;
-    }
+    };
 
     signin = async () => {
         const lang = langManager.curr['login'];
@@ -163,7 +161,7 @@ class BackLogin extends PageBase {
 
         // Signin
         return await Signin.bind(this)(email, username);
-    }
+    };
 }
 
 export default BackLogin;

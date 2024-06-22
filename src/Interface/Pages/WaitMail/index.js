@@ -17,19 +17,18 @@ class Waitmail extends BackWaitmail {
         return (
             <View style={styles.page}>
                 <View>
-                    <Text style={styles.title} color='primary' fontSize={22}>{email}</Text>
-                    <Text color='primary' fontSize={16}>{textWait}</Text>
+                    <Text style={styles.title} color='primary' fontSize={22}>
+                        {email}
+                    </Text>
+                    <Text color='primary' fontSize={16}>
+                        {textWait}
+                    </Text>
                 </View>
                 <View />
 
                 {/* ProgressBar & Back button */}
                 <View style={styles.bottomView}>
-                    <Button
-                        style={styles.backButton}
-                        appearance='outline'
-                        icon='arrow-left'
-                        onPress={this.onBack}
-                    />
+                    <Button style={styles.backButton} appearance='outline' icon='arrow-left' onPress={this.onBack} />
                     <View style={styles.waitingView}>
                         <Text style={styles.resendText}>{timeText}</Text>
                         <ProgressBar.Infinite />

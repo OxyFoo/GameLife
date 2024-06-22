@@ -135,7 +135,7 @@ class BackReport extends PageBase {
             user.interface.popup.Open('ok', [ title, text ], user.interface.BackHandle, false);
         } else {
             const title = langManager.curr['report']['alert-error-title'];
-            const text = langManager.curr['report']['alert-error-text'];
+            const text = langManager.curr['report']['alert-error-message'];
             user.interface.popup.Open('ok', [ title, text ]);
             user.interface.console.AddLog('error', 'Report: Send report failed');
         }

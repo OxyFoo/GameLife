@@ -8,7 +8,7 @@ class BackWaitmail extends PageBase {
     state = {
         /** @type {number | 'sent' | null} */
         time: null
-    }
+    };
 
     componentDidMount() {
         this.tick = window.setInterval(this.onTick, 1000);
@@ -24,15 +24,15 @@ class BackWaitmail extends PageBase {
     onBack = () => {
         user.settings.email = '';
         user.settings.Save();
-        user.interface.ChangePage('login', undefined, true);
-    }
+        user.interface.ChangePage('login', { storeInHistory: false });
+    };
 
     onTick = () => {
         const { time } = this.state;
-        if (typeof(time) === 'number' && time > 0) {
+        if (typeof time === 'number' && time > 0) {
             this.setState({ time: Math.max(0, time - 1) });
         }
-    }
+    };
 
     getTimeText = () => {
         const { time } = this.state;
@@ -41,15 +41,13 @@ class BackWaitmail extends PageBase {
         let timeText = '';
         if (time === 'sent') {
             timeText = langWait['wait-email-send'];
-        } else if (typeof(time) === 'number') {
+        } else if (typeof time === 'number') {
             const SS = time % 60;
             const MM = (time - SS) / 60;
-            timeText = langWait['wait-email-remain']
-                .replace('{}', MM.toString())
-                .replace('{}', SS.toString());
+            timeText = langWait['wait-email-remain'].replace('{}', MM.toString()).replace('{}', SS.toString());
         }
         return timeText;
-    }
+    };
 
     Login = async () => {
         const email = user.settings.email;
@@ -59,15 +57,19 @@ class BackWaitmail extends PageBase {
         if (status === 'ok') {
             user.settings.connected = true;
             await user.settings.Save();
-            user.interface.ChangePage('loading', undefined, true);
+            user.interface.ChangePage('loading', { storeInHistory: false });
             return;
         }
 
         // Too many devices
         if (status === 'limitDevice') {
             const title = langManager.curr['login']['alert-limitDevice-title'];
-            const text = langManager.curr['login']['alert-limitDevice-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], user.interface.BackHandle);
+            const message = langManager.curr['login']['alert-limitDevice-message'];
+            user.interface.popup.OpenT({
+                type: 'ok',
+                data: { title, message },
+                callback: user.interface.BackHandle
+            });
 
             user.settings.email = '';
             user.settings.Save();
@@ -78,20 +80,14 @@ class BackWaitmail extends PageBase {
             user.settings.email = '';
             user.settings.Save();
             user.interface.BackHandle();
-        }
-
-        else if (status === 'newDevice') {
+        } else if (status === 'newDevice') {
             this.setState({ time: 'sent' });
-        }
-
-        else if (status === 'waitMailConfirmation') {
+        } else if (status === 'waitMailConfirmation') {
             this.setState({ time: remainMailTime });
-        }
-
-        else if (status === 'remDevice') {
+        } else if (status === 'remDevice') {
             await this.Login();
         }
-    }
+    };
 }
 
 export default BackWaitmail;

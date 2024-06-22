@@ -198,7 +198,7 @@
 
     "server": {
         "alert-tokenexpired-title": "Le token de connexion a expiré",
-        "alert-tokenexpired-text": "L'application va se fermer, redémarre-la.",
+        "alert-tokenexpired-message": "L'application va se fermer, redémarre-la.",
 
         "alert-adsuccess-title": "Bravo",
         "alert-adsuccess-message": "Tu as gagné {} Ox !",
@@ -211,7 +211,7 @@
         "alert-adempty-title": "Plus de pubs",
         "alert-adempty-text": "Il n'y a plus de pubs disponibles pour aujourd'hui.",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Une erreur est survenue, réessaye plus tard."
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard."
     },
 
     "onboarding": {
@@ -370,11 +370,11 @@
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Une erreur est survenue, réessaye plus tard.",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
         "alert-update-title": "Mise à jour",
-        "alert-update-text": "Une mise à jour de l'application est disponible",
+        "alert-update-message": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
-        "alert-newversion-text": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
+        "alert-newversion-message": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Veux-tu vraiment quitter l'application ?",
         "alert-dateerror-title": "Attention",
@@ -407,9 +407,9 @@
         "alert-deletedaccount-title": "Compte supprimé",
         "alert-deletedaccount-message": "Ton compte a été supprimé.",
         "alert-limitAccount-title": "Trop de compte",
-        "alert-limitAccount-text": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil.",
+        "alert-limitAccount-message": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil.",
         "alert-limitDevice-title": "Trop d'appareils sur ce compte",
-        "alert-limitDevice-text": "Tu ne peux pas avoir plus de 5 appareils connectés sur un seul compte.",
+        "alert-limitDevice-message": "Tu ne peux pas avoir plus de 5 appareils connectés sur un seul compte.",
         "alert-deviceRemoved-title": "Appareil retiré",
         "alert-deviceRemoved-message": "Ton appareil a été retiré car tu as déjà le nombre maximum d'appareils sur ce compte."
     },
@@ -495,7 +495,7 @@
         "alert-incorrect-title": "Pseudo incorrect",
         "alert-incorrect-text": "Ton pseudo doit contenir entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Modification du pseudo impossible",
+        "alert-error-message": "Modification du pseudo impossible",
         "alert-emptytitle-title": "Pas de titres disponibles",
         "alert-emptytitle-text": "Tu n'as pas encore de titre à sélectionner",
         "alert-birthtimewarning-title": "Changement de date de naissance",
@@ -576,7 +576,7 @@
         "alert-success-title": "Envoyé",
         "alert-success-text": "Merci beacoup pour ton retour !",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Une erreur est survenue, réessaye plus tard.",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
 
         "tuto": {
             "bug": "Merci de fournir un maximum de détails sur la nature du bug ainsi que dans les conditions dans lesquelles il est apparu (android/ios ? Connecté à internet ou non ? Marque du smartphone ou émulateur ? etc)"

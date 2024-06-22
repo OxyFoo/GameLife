@@ -20,6 +20,9 @@ import { Character } from 'Interface/Components';
  * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
  */
 async function Initialisation(fe, nextStep, nextPage, callbackError) {
+    // TEMP
+    user.interface.console.Enable();
+
     const time_start = new Date().getTime();
 
     // Loading: Settings
@@ -182,8 +185,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.tcp.Connect();
 
     // Load admob
-    //await user.consent.ShowTrackingPopup()
-    //.then(user.admob.LoadAds);
+    //await user.consent.ShowTrackingPopup().then(user.admob.LoadAds);
 
     // Render default pages
     //await user.interface.LoadDefaultPages();
@@ -214,6 +216,12 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.appIsLoaded = true;
 
     nextPage();
+
+    // TEMP
+    user.interface.console.AddLog(
+        'info',
+        user.informations.username.Get() + ' connected, with ' + user.activities.Get().length + ' activities'
+    );
 }
 
 export { Initialisation };

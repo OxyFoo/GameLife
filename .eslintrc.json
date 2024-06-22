@@ -29,7 +29,7 @@
         "no-bitwise": "off",
         "curly": ["warn", "multi-line"],
         "max-len": ["error", {
-            "code": 100,
+            "code": 120,
             "ignoreUrls": true,
             "ignoreComments": true,
             "ignoreStrings": true,
@@ -45,7 +45,7 @@
                 "jsxSingleQuote": true,
                 "avoidEscape": true,
                 "trailingComma": "none",
-                "printWidth": 100
+                "printWidth": 120
             }
         ]
     }

@@ -34,10 +34,7 @@ class FlowEngine extends BackFlowEngine {
                     styles.parent,
                     {
                         opacity: Animated.subtract(1, page.transitionEnd),
-                        transform: [
-                            ...GetAnimationPageOpen(page, currentTransition),
-                            ...GetAnimationPageClose(page)
-                        ]
+                        transform: [...GetAnimationPageOpen(page, currentTransition), ...GetAnimationPageClose(page)]
                     }
                 ]}
                 pointerEvents={selectedPage === pageName ? 'auto' : 'none'}

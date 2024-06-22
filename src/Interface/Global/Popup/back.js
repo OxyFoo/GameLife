@@ -196,11 +196,7 @@ class PopupBack extends React.PureComponent {
         }
 
         const current = currents[currents.length - 1];
-        if (
-            current?.cancelable &&
-            Math.abs(pageX - this.clickPos.x) < 5 &&
-            Math.abs(pageY - this.clickPos.y) < 5
-        ) {
+        if (current?.cancelable && Math.abs(pageX - this.clickPos.x) < 5 && Math.abs(pageY - this.clickPos.y) < 5) {
             this.Close('closed');
         }
     };

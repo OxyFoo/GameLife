@@ -9,7 +9,7 @@ const REFRESH_DELAY_SECONDS = 30;
 class BackWaitinternet extends PageBase {
     state = {
         loading: false
-    }
+    };
 
     componentDidMount() {
         this.interval = window.setInterval(this.Loop, REFRESH_DELAY_SECONDS * 1000);
@@ -20,13 +20,13 @@ class BackWaitinternet extends PageBase {
     Loop = async () => {
         await user.server.Ping();
         if (user.server.online) {
-            user.interface.ChangePage('login', undefined, true);
+            user.interface.ChangePage('login', { storeInHistory: false });
         }
-    }
+    };
 
     goToWebsite = () => {
         Linking.openURL('https://oxyfoo.com');
-    }
+    };
 }
 
 export default BackWaitinternet;

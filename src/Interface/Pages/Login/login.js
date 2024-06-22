@@ -23,26 +23,29 @@ async function Login(email) {
         user.settings.email = email;
         user.settings.connected = true;
         await user.settings.Save();
-        user.interface.ChangePage('loading', undefined, true);
+        user.interface.ChangePage('loading', { storeInHistory: false });
     }
 
     // No account, go to signin
     else if (status === 'free') {
         this.goToSignin();
-    } 
+    }
 
     // Too many devices
     else if (status === 'limitDevice') {
         const title = lang['alert-limitDevice-title'];
-        const text = lang['alert-limitDevice-text'];
-        user.interface.popup.ForceOpen('ok', [ title, text ]);
+        const message = lang['alert-limitDevice-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
     }
 
     // New device or mail unconfirmed
     else if (status === 'waitMailConfirmation' || status === 'newDevice') {
         user.settings.email = email;
         await user.settings.Save();
-        user.interface.ChangePage('waitmail', { email: email }, true);
+        user.interface.ChangePage('waitmail', { storeInHistory: false });
     }
 
     // Error
@@ -70,15 +73,18 @@ async function Signin(email, username) {
     if (signinStatus === 'ok') {
         user.settings.email = email;
         await user.settings.Save();
-        user.interface.ChangePage('waitmail', { email: email }, true);
+        user.interface.ChangePage('waitmail', { storeInHistory: false });
         return;
     }
 
     // Too many devices
     else if (signinStatus === 'limitAccount') {
         const title = lang['alert-limitAccount-title'];
-        const text = lang['alert-limitAccount-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
+        const message = lang['alert-limitAccount-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
     }
 
     // Username already used

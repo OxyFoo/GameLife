@@ -10,9 +10,16 @@ class Login extends BackLogin {
     render() {
         const { langs } = this;
         const {
-            signinMode, animSignin, animSigninBis, loading,
-            email, username, cguAccepted,
-            errorCgu, errorEmail, errorUsername
+            signinMode,
+            animSignin,
+            animSigninBis,
+            loading,
+            email,
+            username,
+            cguAccepted,
+            errorCgu,
+            errorEmail,
+            errorUsername
         } = this.state;
 
         const btnLoginX = Animated.multiply(84, animSignin);
@@ -65,14 +72,16 @@ class Login extends BackLogin {
                     {/* CGU */}
                     <Animated.View style={{ opacity: animSigninBis }}>
                         <View style={styles.cgu}>
-                            <CheckBox
-                                style={styles.cguCheckBox}
-                                value={cguAccepted}
-                                onChangeValue={this.onCGUToggle}
-                            />
-                            <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>{langs.cguTexts[0] + ' '}</Text>
-                            <Text onPress={this.onCGURedirect} fontSize={16} color='main1'>{langs.cguTexts[1]}</Text>
-                            <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>{langs.cguTexts[2]}</Text>
+                            <CheckBox style={styles.cguCheckBox} value={cguAccepted} onChangeValue={this.onCGUToggle} />
+                            <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>
+                                {langs.cguTexts[0] + ' '}
+                            </Text>
+                            <Text onPress={this.onCGURedirect} fontSize={16} color='main1'>
+                                {langs.cguTexts[1]}
+                            </Text>
+                            <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>
+                                {langs.cguTexts[2]}
+                            </Text>
                         </View>
                         <Text style={styles.error} color={'error'}>
                             {errorCgu || ' '}
@@ -91,7 +100,7 @@ class Login extends BackLogin {
                 </Button>
                 <Button
                     style={styles.buttonBack}
-                    styleAnimation={{transform: [{ translateX: btnBackX }] }}
+                    styleAnimation={{ transform: [{ translateX: btnBackX }] }}
                     appearance='outline'
                     icon='arrow-left'
                     onPress={this.backToLogin}

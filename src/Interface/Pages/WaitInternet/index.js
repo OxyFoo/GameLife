@@ -18,8 +18,12 @@ class Waitinternet extends BackWaitinternet {
         return (
             <View style={styles.page}>
                 <View>
-                    <Text style={styles.text} color='primary'>{textWait}</Text>
-                    <Text style={styles.link} onPress={this.goToWebsite} color='main1'>oxyfoo.com</Text>
+                    <Text style={styles.text} color='primary'>
+                        {textWait}
+                    </Text>
+                    <Text style={styles.link} onPress={this.goToWebsite} color='main1'>
+                        oxyfoo.com
+                    </Text>
                 </View>
 
                 <View style={styles.bottomView}>

@@ -11,10 +11,12 @@ class NotificationsInAppButton extends BackNotificationsInApp {
     render() {
         const styleBellAnim = {
             transform: [
-                { rotate: this.state.animBell.interpolate({
-                    inputRange: [0, .33, .66, 1],
-                    outputRange: ['0deg', '-15deg', '15deg', '0deg']
-                }) }
+                {
+                    rotate: this.state.animBell.interpolate({
+                        inputRange: [0, 0.33, 0.66, 1],
+                        outputRange: ['0deg', '-15deg', '15deg', '0deg']
+                    })
+                }
             ]
         };
 
@@ -40,7 +42,7 @@ class NotificationsInAppButton extends BackNotificationsInApp {
         }
 
         const styleBadge = {
-            backgroundColor: themeManager.GetColor('error', { opacity: .95 })
+            backgroundColor: themeManager.GetColor('error', { opacity: 0.95 })
         };
 
         return (
@@ -50,7 +52,7 @@ class NotificationsInAppButton extends BackNotificationsInApp {
                 </Text>
             </View>
         );
-    }
+    };
 }
 
 export default NotificationsInAppButton;

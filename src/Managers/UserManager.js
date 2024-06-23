@@ -19,7 +19,7 @@ import TCP from 'Class/TCP';
 /**
  * @typedef {import('Interface/Components').Character} Character
  * @typedef {import('Managers/PageManager').default} PageManager
- * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
+ * @typedef {import('Interface/FlowEngine/back').default['_public']} FlowEngine
  * @typedef {import('Class/Experience').XPInfo} XPInfo
  *
  * @typedef {object} Stats
@@ -63,7 +63,7 @@ class UserManager {
 
     /**
      * @description Ref loaded here from render of App.js to skip cyclic dependency
-     * @type {FlowEnginePublicClass}
+     * @type {FlowEngine}
      */
     // @ts-ignore Because "interface" is necessarily defined, without it nothing works in all cases
     interface = null;

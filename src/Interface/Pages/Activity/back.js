@@ -24,20 +24,21 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * 
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
+ * 
+ * @typedef {Object} BackActivityPropsType
+ * @property {Object} args
+ * @property {number | null} [args.categoryID]
+ * @property {number | null} [args.skillID]
+ * @property {number | null} [args.time]
+ * @property {Array<number>} [args.skills]
  */
 
+/** @type {BackActivityPropsType} */
 const BackActivityProps = {
     args: {
-        /** @type {number | null} */
-        categoryID: null,
-
-        /** @type {number | null} */
-        skillID: null,
-
-        /** @type {number | null} */
-        time: null,
-
-        /** @type {Array<number>} */
+        categoryID: undefined,
+        skillID: undefined,
+        time: undefined,
         skills: []
     }
 };

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         flex: 2
     },
     newIcon: {
-        flex: .6,
+        flex: 0.6,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
     },
     mqSeparator: {
         width: '80%',
-        height: .5,
+        height: 0.5,
         marginHorizontal: '10%',
-        opacity: .5
+        opacity: 0.5
     }
 });
 

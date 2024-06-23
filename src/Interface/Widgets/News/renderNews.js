@@ -14,66 +14,69 @@ import Button from 'Interface/OldComponents/Button';
  * @param {New} Nw
  */
 const RenderNew = (Nw) => {
-    const RenderInteraction = () => {
-        const svgIcon = Nw.Icon;
-
-        if (Nw.ButtonText !== null) {
-            const eventText = Nw.ButtonEvent;
-
-            let event = undefined;
-            if (eventText !== null) {
-                event = buttonEvent.bind(null, eventText);
-            }
-
-            return (
-                <View style={styles.newInteraction}>
-                    <Button
-                        style={styles.newButton}
-                        color='main2'
-                        iconXml={svgIcon}
-                        iconColor='white'
-                        onPress={event}
-                        fontSize={12}
-                        borderRadius={8}
-                    >
-                        {langManager.GetText(Nw.ButtonText)}
-                    </Button>
-                </View>
-            );
-        }
-
-        if (svgIcon !== null) {
-            return (
-                <Icon
-                    style={styles.newIcon}
-                    size={52}
-                    color='main2'
-                    xml={svgIcon}
-                />
-            );
-        }
-
-        return null;
-    };
-
-    const RenderText = () => {
-        const text = langManager.GetText(Nw.Content);
-        return (
-            <View style={styles.newText}>
-                <Text fontSize={16}>{text}</Text>
-            </View>
-        )
-    };
-
-    const reverse = Nw.TextAlign === 'right' && RenderInteraction() !== null;
+    const reverse = Nw.TextAlign === 'right' && RenderInteraction({ Nw }) !== null;
     const align = reverse ? 'column-reverse' : 'column';
 
     return (
         <View style={[styles.new, { flexDirection: align }]}>
-            <RenderText />
-            <RenderInteraction />
+            <RenderText Nw={Nw} />
+            <RenderInteraction Nw={Nw} />
         </View>
     );
+};
+
+/**
+ * @param {Object} props
+ * @param {New} props.Nw
+ * @returns {React.ReactElement | null}
+ */
+const RenderText = ({ Nw }) => {
+    const text = langManager.GetText(Nw.Content);
+    return (
+        <View style={styles.newText}>
+            <Text fontSize={16}>{text}</Text>
+        </View>
+    );
+};
+
+/**
+ * @param {Object} props
+ * @param {New} props.Nw
+ * @returns {React.ReactElement | null}
+ */
+const RenderInteraction = ({ Nw }) => {
+    const svgIcon = Nw.Icon;
+
+    if (Nw.ButtonText !== null) {
+        const eventText = Nw.ButtonEvent;
+
+        let event;
+        if (eventText !== null) {
+            event = buttonEvent.bind(null, eventText);
+        }
+
+        return (
+            <View style={styles.newInteraction}>
+                <Button
+                    style={styles.newButton}
+                    color='main2'
+                    iconXml={svgIcon}
+                    iconColor='white'
+                    onPress={event}
+                    fontSize={12}
+                    borderRadius={8}
+                >
+                    {langManager.GetText(Nw.ButtonText)}
+                </Button>
+            </View>
+        );
+    }
+
+    if (svgIcon !== null) {
+        return <Icon style={styles.newIcon} size={52} color='main2' xml={svgIcon} />;
+    }
+
+    return null;
 };
 
 /**

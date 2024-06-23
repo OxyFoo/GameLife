@@ -8,20 +8,25 @@ import { DateToFormatString } from 'Utils/Date';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
- * 
+ *
+ * @typedef {import('Data/News').New} New
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Quests/DailyQuest').ClaimType} ClaimType
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ *
+ * @typedef {Object} NewsPropsType
+ * @property {StyleViewProp} style
  */
 
+/** @type {NewsPropsType} */
 const NewsProps = {
-    /** @type {StyleViewProp} */
     style: {}
 };
 
 class BackNews extends React.Component {
     state = {
+        /** @type {Array<New>} */
         pagesNews: [],
 
         claimIndex: -1,
@@ -31,8 +36,18 @@ class BackNews extends React.Component {
 
         /** @type {Array<MyQuest>} */
         quests: []
-    }
+    };
 
+    /** @type {Symbol | null} */
+    listenerMyQuests = null;
+
+    /** @type {Symbol | null} */
+    listenerDailyQuest = null;
+
+    /** @type {Symbol | null} */
+    listenerActivities = null;
+
+    /** @param {NewsPropsType} props */
     constructor(props) {
         super(props);
 
@@ -65,13 +80,10 @@ class BackNews extends React.Component {
     /** @param {Array<MyQuest>} newQuests */
     updateMyQuests = (newQuests) => {
         const quests = newQuests
-            .filter(quest =>
-                user.quests.myquests.GetDays(quest)
-                    .find(d => d.isToday && d.state === 'filling')
-            )
+            .filter((quest) => user.quests.myquests.GetDays(quest).find((d) => d.isToday && d.state === 'filling'))
             .slice(0, 2);
         this.setState({ quests });
-    }
+    };
 
     /** @param {Array<ClaimType>} claimLists */
     updateDailyQuest = (claimLists) => {
@@ -92,9 +104,11 @@ class BackNews extends React.Component {
         }
 
         this.setState({ claimIndex, claimDay, claimDate });
-    }
+    };
 
-    goToQuestsPage = () => { user.interface.ChangePage('quests'); }
+    goToQuestsPage = () => {
+        user.interface.ChangePage('quests');
+    };
 }
 
 BackNews.prototype.props = NewsProps;

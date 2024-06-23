@@ -22,7 +22,7 @@ import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import TodayPieChart from './Widgets/TodayPieChart';
 import TodoList from './Widgets/TodoList';
-import UserHeader from './Widgets/UserHeader';
+//import UserHeader from './Widgets/UserHeader';
 import YearHeatMap from './Widgets/YearHeatMap';
 import ZapGPT from './Widgets/ZapGPT';
 
@@ -51,7 +51,7 @@ export {
     SkillsGroup,
     TodayPieChart,
     TodoList,
-    UserHeader,
+    //    UserHeader,
     YearHeatMap,
     ZapGPT
 };

@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, ProgressBar, Button } from 'Interface/Components';
+import { Text, ProgressBar } from 'Interface/Components';
 import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
 
 /**
@@ -17,13 +17,6 @@ import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions
 
 class Home extends BackHome {
     render() {
-        return (
-            <View style={{ height: '100%', padding: 32, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ marginBottom: 24 }}>C'est pas finiiiii</Text>
-                <Button onPress={() => user.interface.ChangePage('test')}>Back to test</Button>
-            </View>
-        );
-
         const {
             experience: { xpInfo },
             values: { current_level, next_level },
@@ -38,12 +31,11 @@ class Home extends BackHome {
         };
 
         const styleSmallContainer = {
-            backgroundColor: themeManager.GetColor('ground2'),
+            backgroundColor: themeManager.GetColor('ground2')
         };
 
         return (
-            <View>
-
+            <View style={styles.page}>
                 <View style={styles.XPHeader}>
                     <View style={styles.XPHeaderLvl}>
                         <Text style={styles.level}>{txt_level}</Text>
@@ -52,23 +44,15 @@ class Home extends BackHome {
                     <Text>{next_level + '%'}</Text>
                 </View>
 
-                <ProgressBar
-                    value={xpInfo.xp}
-                    maxValue={xpInfo.next}
-                />
+                <ProgressBar value={xpInfo.xp} maxValue={xpInfo.next} />
 
                 <View style={[styles.homeRow, styles.topSpace]}>
                     <TodayPieChart style={styles.todayPieChart} />
                 </View>
 
-                <Missions
-                    style={styles.topSpace}
-                    refHome={this}
-                />
+                <Missions style={styles.topSpace} refHome={this} />
 
-                {mission.state === 'claimed' && (
-                    <News style={styles.topSpace} />
-                )}
+                {mission?.state === 'claimed' && <News style={styles.topSpace} />}
 
                 <View style={[styles.homeRow, styles.topSpace]}>
                     <View style={[styleSmallContainer, styles.stats]}>
@@ -86,16 +70,9 @@ class Home extends BackHome {
                     </View>
                 </View>
 
-                <MultiplayerPanel
-                    ref={this.refMultiplayerPanel}
-                    style={styles.topSpace}
-                    hideWhenOffline
-                />
+                <MultiplayerPanel ref={this.refMultiplayerPanel} style={styles.topSpace} hideWhenOffline />
 
-                {mission.state !== 'claimed' && (
-                    <News style={styles.topSpace} />
-                )}
-
+                {mission?.state !== 'claimed' && <News style={styles.topSpace} />}
             </View>
         );
     }

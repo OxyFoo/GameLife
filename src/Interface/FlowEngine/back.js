@@ -10,6 +10,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').Console} Console
+ * @typedef {import('Interface/Global').UserHeader} UserHeader
  * @typedef {'auto' | 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight' | 'fromCenter'} Transitions
  */
 
@@ -41,16 +42,22 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  */
 
 /**
- * @typedef {Object} FlowEnginePublicClass
- * @property {Popup} popup
- * @property {Console} console
- * @property {BackFlowEngine['history']} history
- * @property {BackFlowEngine['ChangePage']} ChangePage
- * @property {BackFlowEngine['BackHandle']} BackHandle
- * @property {BackFlowEngine['GetCurrentPageName']} GetCurrentPageName
- * @property {BackFlowEngine['SetCustomBackHandler']} SetCustomBackHandler
- * @property {BackFlowEngine['ResetCustomBackHandler']} ResetCustomBackHandler
+ * @typedef {BackFlowEngine['_public']} FlowEnginePublicClass
  */
+
+/**
+ * @typedef {Object} BackFlowEnginePropsType
+ * @property {React.RefObject<BackFlowEngine['popup']>} popup
+ * @property {React.RefObject<BackFlowEngine['console']>} console
+ * @property {React.RefObject<BackFlowEngine['userHeader']>} userHeader
+ */
+
+/** @type {BackFlowEnginePropsType} */
+const BackFlowEngineProps = {
+    popup: React.createRef(),
+    console: React.createRef(),
+    userHeader: React.createRef()
+};
 
 class BackFlowEngine extends React.Component {
     /** @type {Popup | null} */
@@ -58,6 +65,9 @@ class BackFlowEngine extends React.Component {
 
     /** @type {Console | null} */
     console = null;
+
+    /** @type {UserHeader | null} */
+    userHeader = null;
 
     state = {
         /** @type {PageNames | null} */
@@ -118,16 +128,26 @@ class BackFlowEngine extends React.Component {
     }
 
     /**
-     * @param {any} _
+     * @param {BackFlowEnginePropsType} nextProps
      * @param {this['state']} nextState
      * @returns {boolean}
      */
-    shouldComponentUpdate(_, nextState) {
-        if (_.popup !== this.popup || _.console !== this.console) {
-            this.popup = _.popup.current;
-            this.console = _.console.current;
+    shouldComponentUpdate(nextProps, nextState) {
+        /** @type {Array<keyof BackFlowEnginePropsType>} */
+        const toCheck = ['popup', 'console', 'userHeader'];
+        let changed = false;
+        for (const key of toCheck) {
+            const ref = nextProps[key];
+            if (this[key] === null && ref !== null && ref.current && ref?.current !== this[key]) {
+                // @ts-ignore
+                this[key] = ref.current;
+                changed = true;
+            }
+        }
+        if (changed) {
             return true;
         }
+
         return this.state.selectedPage !== nextState.selectedPage;
     }
 
@@ -137,6 +157,15 @@ class BackFlowEngine extends React.Component {
      * @public
      */
     GetCurrentPageName = () => this.state.selectedPage;
+
+    /**
+     * @description Check if page exist
+     * @param {string} pageName
+     * @returns {boolean}
+     * @public
+     */
+    // @ts-ignore
+    IsPage = (pageName) => this.availablePages.includes(pageName);
 
     /**
      * @description Custom back button handler
@@ -206,6 +235,7 @@ class BackFlowEngine extends React.Component {
         this.mountPage(nextpage, options);
         this.unmountPage(selectedPage);
         this.changing = false;
+        this.pageDidUpdate(nextpage);
 
         return true;
     };
@@ -310,12 +340,25 @@ class BackFlowEngine extends React.Component {
         }
 
         TimingAnimation(oldPage.transitionEnd, 1, 200).start(() => {
-            if (oldPage.ref.current?.feKeepMounted) {
+            if (oldPage.ref.current?.feKeepMounted === true) {
                 oldPage.ref.current?._componentDidUnfocused();
             } else {
                 this.removeFromMountedPages(oldPage.pageName);
             }
         });
+    };
+
+    /**
+     * @param {PageNames} pageName
+     * @private
+     */
+    pageDidUpdate = (pageName) => {
+        const showUserHeader = this.getMountedPage(pageName)?.ref.current?.feShowUserHeader ?? false;
+        if (showUserHeader && this.userHeader?.show === false) {
+            this.userHeader?.Show();
+        } else if (!showUserHeader && this.userHeader?.show === true) {
+            this.userHeader?.Hide();
+        }
     };
 
     /**
@@ -383,6 +426,28 @@ class BackFlowEngine extends React.Component {
             });
         });
     };
+
+    _public = {
+        /** @type {Popup} */ // @ts-ignore
+        popup: this.popup,
+
+        /** @type {Console} */ // @ts-ignore
+        console: this.console,
+
+        /** @type {UserHeader} */ // @ts-ignore
+        userHeader: this.userHeader,
+
+        history: this.history,
+        IsPage: this.IsPage,
+        ChangePage: this.ChangePage,
+        BackHandle: this.BackHandle,
+        GetCurrentPageName: this.GetCurrentPageName,
+        SetCustomBackHandler: this.SetCustomBackHandler,
+        ResetCustomBackHandler: this.ResetCustomBackHandler
+    };
 }
+
+BackFlowEngine.defaultProps = BackFlowEngineProps;
+BackFlowEngine.prototype.props = BackFlowEngineProps;
 
 export default BackFlowEngine;

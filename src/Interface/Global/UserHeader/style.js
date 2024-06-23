@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     avatar: {
-        height: 48,
-        aspectRatio: 1,
+        //height: 48,
+        //aspectRatio: 1,
         borderRadius: 4,
         borderColor: 'white',
         borderWidth: 2,

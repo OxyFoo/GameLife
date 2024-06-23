@@ -24,19 +24,11 @@ class News extends BackNews {
     render() {
         const { pagesNews } = this.state;
 
-        const pages = [
-            this.renderRecapMyquests(),
-            this.renderRecapDailyQuest(),
-            ...pagesNews.map(RenderNew)
-        ].filter(page => page !== null);
-
-        return (
-            <Swiper
-                style={this.props.style}
-                pages={pages}
-                delayNext={15}
-            />
+        const pages = [this.renderRecapMyquests(), this.renderRecapDailyQuest(), ...pagesNews.map(RenderNew)].filter(
+            (page) => page !== null
         );
+
+        return <Swiper style={this.props.style} pages={pages} delayNext={15} />;
     }
 
     renderRecapMyquests = () => {
@@ -51,40 +43,34 @@ class News extends BackNews {
             <View style={styles.mqContainer}>
                 <View style={styles.mqContainerTitle}>
                     {/* Title */}
-                    <Text
-                        style={styles.mqTitle}
-                        onPress={this.goToQuestsPage}
-                    >
+                    <Text style={styles.mqTitle} onPress={this.goToQuestsPage}>
                         {lang['news-myquests-title']}
                     </Text>
 
                     {/* Claim icon */}
-                    <Icon
-                        icon='handPress'
-                        size={18}
-                        color='main1'
-                    />
+                    <Icon icon='handPress' size={18} color='main1' />
                 </View>
 
                 <FlatList
                     data={quests}
                     renderItem={this.renderMyQuestElement}
                     ItemSeparatorComponent={this.renderMyQuestSeparator}
-                    keyExtractor={item => `news-myquest-${item.created}`}
+                    keyExtractor={(item) => `news-myquest-${item.created}`}
+                    scrollEnabled={false}
                 />
             </View>
         );
-    }
+    };
 
     /** @type {ListRenderItemMyQuest} */
     renderMyQuestElement = ({ item: quest }) => {
         const langTimes = langManager.curr['dates']['names'];
         const questsDays = user.quests.myquests.GetDays(quest);
         const currentDay = (new Date().getDay() - 1 + 7) % 7;
-        const currentStreak =  user.quests.myquests.GetStreak(quest);
+        const currentStreak = user.quests.myquests.GetStreak(quest);
         const item = questsDays[currentDay];
         const onPress = () => {
-            user.interface.ChangePage('activity', { skills: quest.skills }, true);
+            user.interface.ChangePage('activity', { storeInHistory: false, args: { skills: quest.skills } });
         };
 
         const timeHour = Math.floor(quest.schedule.duration / 60);
@@ -111,18 +97,14 @@ class News extends BackNews {
                         state={item.state}
                         fillingValue={item.fillingValue}
                     />
-                    <Text style={styles.streak}>
-                        {currentStreak.toString()}
-                    </Text>
+                    <Text style={styles.streak}>{currentStreak.toString()}</Text>
                     <Icon icon='flame' />
                 </View>
             </Button>
         );
-    }
+    };
 
-    renderMyQuestSeparator = () => (
-        <Separator style={styles.mqSeparator} />
-    )
+    renderMyQuestSeparator = () => <Separator style={styles.mqSeparator} />;
 
     renderRecapDailyQuest = () => {
         const lang = langManager.curr['daily-quest'];
@@ -143,30 +125,19 @@ class News extends BackNews {
             <View>
                 <View style={styles.dqContainer}>
                     {/* Title */}
-                    <Text
-                        style={styles.dqTitle}
-                        onPress={this.goToQuestsPage}
-                    >
-                        {lang['container-title'] + (claimDate !== null ? (' - ' + claimDate) : '')}
+                    <Text style={styles.dqTitle} onPress={this.goToQuestsPage}>
+                        {lang['container-title'] + (claimDate !== null ? ' - ' + claimDate : '')}
                     </Text>
 
                     {/* Claim icon */}
-                    <Icon
-                        icon='handPress'
-                        size={18}
-                        color='main1'
-                    />
+                    <Icon icon='handPress' size={18} color='main1' />
                 </View>
 
                 {/* Claim item */}
-                <RenderItemMemo
-                    style={styles.dqItem}
-                    index={claimDay}
-                    claimIndex={claimIndex}
-                />
+                <RenderItemMemo style={styles.dqItem} index={claimDay} claimIndex={claimIndex} />
             </View>
         );
-    }
-};
+    };
+}
 
 export default News;

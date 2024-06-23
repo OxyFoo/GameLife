@@ -4,12 +4,12 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import StartTutorial from './tuto';
 import user from 'Managers/UserManager';
 
-import { MultiplayerPanel } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 import StartMission from './mission';
 
 /**
  * @typedef {import('Interface/Widgets').Missions} Missions
+ * @typedef {import('Interface/Widgets').MultiplayerPanel} MultiplayerPanel
  * @typedef {import('Class/Missions').MissionsItem} MissionsItem
  */
 
@@ -18,7 +18,7 @@ const BackHomeProps = {
         /** @type {number} */
         tuto: 0
     }
-}
+};
 
 class BackHome extends PageBase {
     state = {
@@ -28,9 +28,11 @@ class BackHome extends PageBase {
             next_level: '0'
         },
 
-        /** @type {MissionsItem} */
+        /** @type {MissionsItem | null} */
         mission: user.missions.GetCurrentMission().mission
-    }
+    };
+
+    feShowUserHeader = true;
 
     /** @type {React.RefObject<MultiplayerPanel>} */
     refMultiplayerPanel = React.createRef();
@@ -38,18 +40,22 @@ class BackHome extends PageBase {
     /** @type {React.RefObject<Missions>} */
     refMissions = React.createRef();
 
+    /** @type {Symbol | null} */
+    listenerActivities = null;
+
+    /** @type {Symbol | null} */
+    listenerMissions = null;
+
     componentDidMount() {
         this.handleLevelsUpdate();
-        this.listenerActivities = user.activities.allActivities.AddListener(
-            this.handleLevelsUpdate
-        );
+        this.listenerActivities = user.activities.allActivities.AddListener(this.handleLevelsUpdate);
         this.listenerMissions = user.missions.missions.AddListener(this.handleMissionsUpdate);
     }
 
     /** @param {this['props']} props */
     componentDidFocused = (props) => {
         StartTutorial.call(this, props.args.tuto);
-    }
+    };
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.listenerActivities);
@@ -58,21 +64,23 @@ class BackHome extends PageBase {
 
     handleLevelsUpdate = () => {
         const experience = user.experience.GetExperience();
-        const { xpInfo: { lvl, xp, next } } = experience;
+        const {
+            xpInfo: { lvl, xp, next }
+        } = experience;
         const current_level = lvl.toString();
-        const next_level = Round(100 * xp / next, 0).toString();
+        const next_level = Round((100 * xp) / next, 0).toString();
 
         this.setState({ experience, values: { current_level, next_level } });
-    }
+    };
 
     handleMissionsUpdate = () => {
         const { mission } = user.missions.GetCurrentMission();
         this.setState({ mission });
-    }
+    };
 
     StartMission = StartMission.bind(this);
 
-    addActivity = () => user.interface.ChangePage('activity', undefined, true);
+    addActivity = () => user.interface.ChangePage('activity', { storeInHistory: false });
     openSkills = () => user.interface.ChangePage('skills');
     openQuests = () => user.interface.ChangePage('quests');
 }

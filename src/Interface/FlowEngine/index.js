@@ -7,7 +7,7 @@ import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
 import PAGES from 'Interface/Pages';
 
 import { DynamicBackground } from 'Interface/Primitives';
-import { Console, Popup } from 'Interface/Global';
+import { Console, Popup, UserHeader } from 'Interface/Global';
 
 /**
  * @typedef {import('./back').PageNames} PageNames
@@ -20,10 +20,14 @@ const FlowEngine = React.forwardRef((_, ref) => {
     /** @type {React.MutableRefObject<Console | null>} */
     const refConsole = React.useRef(null);
 
+    /** @type {React.MutableRefObject<UserHeader | null>} */
+    const refUserHeader = React.useRef(null);
+
     return (
         <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior='height'>
             <DynamicBackground />
-            <FlowEngineClass ref={ref} popup={refPopup} console={refConsole} />
+            <FlowEngineClass ref={ref} popup={refPopup} console={refConsole} userHeader={refUserHeader} />
+            <UserHeader ref={refUserHeader} />
             <Popup ref={refPopup} />
             <Console ref={refConsole} />
         </KeyboardAvoidingView>

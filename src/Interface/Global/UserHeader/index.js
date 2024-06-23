@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Animated  } from 'react-native';
+import { Animated, View, TouchableOpacity, Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
@@ -15,6 +15,8 @@ import { NotificationsInAppButton } from 'Interface/Widgets';
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
 class UserHeader extends UserHeaderBack {
     renderInteraction = () => {
         const { editorMode } = this.props;
@@ -24,24 +26,18 @@ class UserHeader extends UserHeaderBack {
             /** @type {IconsName} */
             const icon = user.server.IsConnected() ? 'edit' : 'no-wifi';
 
-            return (
-                <Icon icon={icon} color='border' />
-            );
+            return <Icon icon={icon} color='border' />;
         }
 
         const openProfile = () => user.interface.ChangePage('profile');
         const frameSize = { x: 200, y: 0, width: 500, height: 450 };
 
         return (
-            <Button
-                ref={ref => this.refContainer = ref}
-                style={styles.avatar}
-                onPress={openProfile}
-            >
+            <Button ref={this.refContainer} style={styles.avatar} onPress={openProfile}>
                 {showAvatar && (
                     <Frame
-                        ref={ref => this.refFrame = ref}
-                        characters={[ user.character ]}
+                        ref={this.refFrame}
+                        characters={[user.character]}
                         size={frameSize}
                         delayTime={0}
                         loadingTime={0}
@@ -50,7 +46,7 @@ class UserHeader extends UserHeaderBack {
                 )}
             </Button>
         );
-    }
+    };
 
     renderNotificationsInApp = () => {
         const { editorMode } = this.props;
@@ -59,10 +55,8 @@ class UserHeader extends UserHeaderBack {
             return null;
         }
 
-        return (
-            <NotificationsInAppButton style={styles.interactionsButton} />
-        );
-    }
+        return <NotificationsInAppButton style={styles.interactionsButton} />;
+    };
 
     renderContent() {
         const { style, editorMode, onPress } = this.props;
@@ -71,21 +65,15 @@ class UserHeader extends UserHeaderBack {
         let age = user.informations.GetAge();
         let ageText = '';
         if (age !== null) {
-            ageText = langManager.curr['profile']['value-age']
-                                .replace('{}', age.toString());
+            ageText = langManager.curr['profile']['value-age'].replace('{}', age.toString());
         }
 
         const activeOpacity = editorMode ? 0.6 : 1;
 
         return (
-            <TouchableOpacity
-                style={[styles.header, style]}
-                onPress={() => onPress()}
-                activeOpacity={activeOpacity}
-            >
+            <TouchableOpacity style={[styles.header, style]} onPress={() => onPress()} activeOpacity={activeOpacity}>
                 <View style={styles.content}>
                     <View style={styles.usernameContainer}>
-
                         <Text style={styles.username} color='primary'>
                             {username}
                         </Text>
@@ -120,27 +108,22 @@ class UserHeader extends UserHeaderBack {
             return this.renderContent();
         }
 
-        const background = [ themeManager.GetColor('ground1'), themeManager.GetColor('ground2') ];
+        const background = [themeManager.GetColor('ground1'), themeManager.GetColor('ground2')];
         const animStyle = { transform: [{ translateY: animPosY }] };
-        const screenHeight = { height: user.interface?.screenHeight || 0};
+        const screenHeight = { height: SCREEN_HEIGHT };
 
         return (
-            <Animated.View
-                style={[animStyle, styles.absolute]}
-                onLayout={this.onLayout}
-            >
+            <Animated.View style={[animStyle, styles.absolute]} onLayout={this.onLayout}>
                 <LinearGradient
                     style={[styles.absolute, styles.linear, screenHeight]}
                     colors={background}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 0, y: 1 }}
                 />
-                <View style={styles.container}>
-                    {this.renderContent()}
-                </View>
+                <View style={styles.container}>{this.renderContent()}</View>
             </Animated.View>
         );
     }
 }
 
-export default UserHeader;
+export { UserHeader };

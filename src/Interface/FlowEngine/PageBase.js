@@ -11,6 +11,12 @@ class PageBase extends React.Component {
      */
     feKeepMounted = false;
 
+    /**
+     * @description Show user header (default: false)
+     * @type {boolean}
+     */
+    feShowUserHeader = false;
+
     refresh = true;
 
     constructor(props = {}) {

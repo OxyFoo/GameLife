@@ -6,6 +6,9 @@ const styles = StyleSheet.create({
         padding: 32,
         justifyContent: 'space-evenly'
     },
+    form: {
+        alignItems: 'center'
+    },
     title: {
         fontSize: 58
     },
@@ -16,8 +19,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     input: {
-        width: '90%',
-        marginLeft: '5%'
+        width: '90%'
     },
 
     buttonLoginSignin: {
@@ -36,14 +38,23 @@ const styles = StyleSheet.create({
     },
 
     cgu: {
-        display: 'flex',
+        width: '90%',
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexWrap: 'wrap'
+        alignItems: 'center'
+    },
+    cguTextContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        textAlign: 'left'
+    },
+    cguText: {
+        textAlign: 'left'
     },
     cguCheckBox: {
-        marginRight: 12
+        width: 28,
+        marginRight: 16,
+        borderWidth: 1.2
     },
 
     error: {

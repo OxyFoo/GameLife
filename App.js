@@ -28,7 +28,7 @@ class App extends React.Component {
             return;
         }
 
-        this.ref.current?.ChangePage('loading', undefined, true);
+        this.ref.current?.ChangePage('loading', { storeInHistory: false });
     }
 
     /** @param {AppStateStatus} state */

@@ -44,10 +44,6 @@ class Text extends React.Component {
     render() {
         const { style, containerStyle, color, fontSize, onPress, children, ...props } = this.props;
 
-        if (typeof children !== 'string') {
-            return null;
-        }
-
         /** @type {StyleProp} */
         const textStyle = {
             ...styles.text,

@@ -13,58 +13,61 @@ import { Console, Popup } from 'Interface/Global';
  * @typedef {import('./back').PageNames} PageNames
  */
 
-class FlowEngine extends BackFlowEngine {
-    /**
-     * @template {PageNames} T
-     * @param {Object} props
-     * @param {T} props.pageName
-     */
-    renderPage = ({ pageName }) => {
-        const { selectedPage, currentTransition } = this.state;
+const FlowEngine = React.forwardRef((_, ref) => {
+    /** @type {React.MutableRefObject<Popup | null>} */
+    const refPopup = React.useRef(null);
 
-        const page = this.getMountedPage(pageName);
-        if (page === null) {
-            return null;
-        }
+    /** @type {React.MutableRefObject<Console | null>} */
+    const refConsole = React.useRef(null);
 
-        const Page = PAGES[pageName];
-        return (
-            <Animated.View
-                style={[
-                    styles.parent,
-                    {
-                        opacity: Animated.subtract(1, page.transitionEnd),
-                        transform: [...GetAnimationPageOpen(page, currentTransition), ...GetAnimationPageClose(page)]
-                    }
-                ]}
-                pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
-            >
-                <ScrollView
-                    style={styles.scrollview}
-                    contentContainerStyle={styles.scrollviewContainer}
-                    scrollEnabled={true}
-                    children={
-                        // @ts-ignore
-                        <Page ref={page.ref} args={page.args} flowEngine={this} />
-                    }
-                />
-            </Animated.View>
-        );
-    };
+    return (
+        <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior='height'>
+            <DynamicBackground />
+            <FlowEngineClass ref={ref} popup={refPopup} console={refConsole} />
+            <Popup ref={refPopup} />
+            <Console ref={refConsole} />
+        </KeyboardAvoidingView>
+    );
+});
 
+class FlowEngineClass extends BackFlowEngine {
     render() {
-        return (
-            <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior='height'>
-                <DynamicBackground />
+        return this.availablePages.map((pageName) => {
+            const { selectedPage, currentTransition } = this.state;
 
-                {this.availablePages.map((pageName) => (
-                    <this.renderPage key={`fe-page-${pageName}`} pageName={pageName} />
-                ))}
+            const page = this.getMountedPage(pageName);
+            if (page === null) {
+                return null;
+            }
 
-                <Popup ref={(ref) => (this.popup = ref ?? this.popup)} />
-                <Console ref={(ref) => (this.console = ref ?? this.console)} />
-            </KeyboardAvoidingView>
-        );
+            const Page = PAGES[pageName];
+            return (
+                <Animated.View
+                    key={'page-' + pageName}
+                    style={[
+                        styles.parent,
+                        {
+                            opacity: Animated.subtract(1, page.transitionEnd),
+                            transform: [
+                                ...GetAnimationPageOpen(page, currentTransition),
+                                ...GetAnimationPageClose(page)
+                            ]
+                        }
+                    ]}
+                    pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
+                >
+                    <ScrollView
+                        style={styles.scrollview}
+                        contentContainerStyle={styles.scrollviewContainer}
+                        scrollEnabled={true}
+                        children={
+                            // @ts-ignore
+                            <Page ref={page.ref} args={page.args} flowEngine={this} />
+                        }
+                    />
+                </Animated.View>
+            );
+        });
     }
 }
 

@@ -118,6 +118,20 @@ class BackFlowEngine extends React.Component {
     }
 
     /**
+     * @param {any} _
+     * @param {this['state']} nextState
+     * @returns {boolean}
+     */
+    shouldComponentUpdate(_, nextState) {
+        if (_.popup !== this.popup || _.console !== this.console) {
+            this.popup = _.popup.current;
+            this.console = _.console.current;
+            return true;
+        }
+        return this.state.selectedPage !== nextState.selectedPage;
+    }
+
+    /**
      * @description Get current page name
      * @returns {PageNames | null}
      * @public

@@ -38,11 +38,41 @@ class ConsoleBack extends React.Component {
     /** @type {boolean} State of delete buttons */
     toggle = false;
 
+    /**
+     * @private
+     * @type {Array<ConsoleLine>}
+     */
+    messages = [];
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    refreshing = false;
+
+    /**
+     * @private
+     * @type {NodeJS.Timeout | null}
+     */
+    refreshTimeout = null;
+
+    componentWillUnmount() {
+        if (this.refreshTimeout !== null) {
+            clearTimeout(this.refreshTimeout);
+        }
+    }
+
     Enable = () => {
-        this.setState({ enabled: true });
+        if (this.state.enabled) {
+            return;
+        }
+        this.setState({ enabled: true }, this.processQueue);
         TimingAnimation(this.state.animation, 0, 400).start();
     };
     Disable = () => {
+        if (!this.state.enabled) {
+            return;
+        }
         TimingAnimation(this.state.animation, -1, 400).start(() => {
             this.setState({ enabled: false });
         });
@@ -60,16 +90,13 @@ class ConsoleBack extends React.Component {
             return -1;
         }
 
-        // Add to app console
-        let messages = [...this.state.debug];
-
         /** @type {ConsoleLine} */
         const newMessage = {
             type: type,
             content: this.formatText(text, ...params)
         };
-        messages.push(newMessage);
-        this.setState({ debug: messages });
+
+        this.messages.push(newMessage);
 
         // Add to terminal
         let printLog = console.log;
@@ -89,15 +116,11 @@ class ConsoleBack extends React.Component {
 
         // If error, send to server
         if (type === 'error' && !__DEV__ && user.server.online) {
-            user.server.SendReport('error', messages.slice(-4));
+            user.server.SendReport('error', this.messages.slice(-4));
         }
 
-        // Scroll to end
-        if (this.state.opened) {
-            this.refDebug?.current?.scrollToEnd();
-        }
-
-        return messages.length - 1;
+        this.processQueue();
+        return this.messages.length - 1;
     };
 
     /**
@@ -109,24 +132,21 @@ class ConsoleBack extends React.Component {
      * @returns {boolean} Success of edition
      */
     EditLog = (index, type, text, ...params) => {
-        if (!this.state.enabled) {
+        if (typeof index !== 'number') {
+            throw new Error('Index must be a number');
+        }
+
+        if (!this.state.enabled || index < 0 || index >= this.messages.length) {
             return false;
         }
 
-        let messages = [...this.state.debug];
-        if (index < 0 || index >= messages.length) {
-            return false;
-        }
-
-        const _type = type === 'same' ? messages[index].type : type;
+        const _type = type === 'same' ? this.messages[index].type : type;
 
         /** @type {ConsoleLine} */
-        const newMessage = {
+        this.messages[index] = {
             type: _type,
             content: this.formatText(text, ...params)
         };
-        messages.splice(index, 1, newMessage);
-        this.setState({ debug: messages });
 
         if (
             LEVEL_CONSOLE === 0 ||
@@ -136,7 +156,46 @@ class ConsoleBack extends React.Component {
             console.log(`Edit (${index}):`, text, ...params);
         }
 
+        this.processQueue();
         return true;
+    };
+
+    processQueue = async () => {
+        if (!this.state.enabled || !this.state.opened) {
+            return;
+        }
+
+        // If already refreshing, wait
+        if (this.refreshing === true) {
+            if (this.refreshTimeout === null) {
+                this.refreshTimeout = setTimeout(this.processQueue, 1000);
+            }
+            return;
+        }
+
+        // Not already refreshing, start
+        if (this.refreshTimeout !== null) {
+            clearTimeout(this.refreshTimeout);
+            this.refreshTimeout = null;
+        }
+
+        // Refresh
+        this.refreshing = true;
+        await new Promise((resolve) => {
+            this.setState({ debug: this.messages }, () => {
+                resolve(null);
+            });
+        });
+
+        // Scroll to end
+        if (this.state.opened) {
+            setTimeout(() => {
+                this.refDebug?.current?.scrollToEnd();
+            }, 100);
+        }
+
+        // End
+        this.refreshing = false;
     };
 
     /**
@@ -151,11 +210,17 @@ class ConsoleBack extends React.Component {
     };
 
     open = () => {
-        this.setState({ opened: true });
+        if (this.state.opened) {
+            return;
+        }
+        this.setState({ opened: true }, this.processQueue);
         SpringAnimation(this.state.animation, 1).start();
         this.refDebug?.current?.scrollToEnd();
     };
     close = () => {
+        if (!this.state.opened) {
+            return;
+        }
         this.setState({ opened: false });
         SpringAnimation(this.state.animation, 0).start();
         TimingAnimation(this.state.animationDeleteButtons, 0).start();

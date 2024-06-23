@@ -21,7 +21,7 @@ import TCP from 'Class/TCP';
  * @typedef {import('Managers/PageManager').default} PageManager
  * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
  * @typedef {import('Class/Experience').XPInfo} XPInfo
- * 
+ *
  * @typedef {object} Stats
  * @property {XPInfo} int
  * @property {XPInfo} soc
@@ -39,7 +39,7 @@ class UserManager {
          * @readonly
          * @type {Array<keyof Stats>}
          */
-        this.statsKey = [ 'int', 'soc', 'for', 'sta', 'agi', 'dex' ];
+        this.statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
 
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
@@ -53,7 +53,7 @@ class UserManager {
         this.quests = new Quests(this);
         this.server = new Server(this);
         this.settings = new Settings(this);
-        this.shop = new Shop(this)
+        this.shop = new Shop(this);
         this.tcp = new TCP(this);
         this.todoes = new Todoes(this);
 
@@ -186,12 +186,12 @@ class UserManager {
         const localSaved = await this.LocalSave();
         if (!localSaved) success = false;
 
-        const onlineSaved = localSaved && await this.OnlineSave();
+        const onlineSaved = localSaved && (await this.OnlineSave());
         if (!onlineSaved) success = false;
 
         this.globalSaving = false;
         return success;
-    }
+    };
 
     /**
      * Load local user data
@@ -199,35 +199,36 @@ class UserManager {
      */
     LocalSave = async () => {
         const data = {
-            'xp': this.xp,
+            xp: this.xp,
 
-            'dataToken': this.server.dataToken,
-            'achievements': this.achievements.Save(),
-            'activities': this.activities.Save(),
-            'consent': this.consent.Save(),
-            'informations': this.informations.Save(),
-            'inventory': this.inventory.Save(),
-            'missions': this.missions.Save(),
-            'quests': this.quests.Save(),
-            'shop': this.shop.Save(),
-            'todoes': this.todoes.Save()
+            dataToken: this.server.dataToken,
+            achievements: this.achievements.Save(),
+            activities: this.activities.Save(),
+            consent: this.consent.Save(),
+            informations: this.informations.Save(),
+            inventory: this.inventory.Save(),
+            missions: this.missions.Save(),
+            quests: this.quests.Save(),
+            shop: this.shop.Save(),
+            todoes: this.todoes.Save()
         };
 
         const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
         const saved = await DataStorage.Save(STORAGE.USER, data);
-        if   (saved)  this.interface.console.EditLog(debugIndex, 'same', 'User data: local save');
-        else          this.interface.console.EditLog(debugIndex, 'error', 'User data: local save failed');
+        if (saved) this.interface.console.EditLog(debugIndex, 'same', 'User data: local save');
+        else this.interface.console.EditLog(debugIndex, 'error', 'User data: local save failed');
         return saved;
-    }
+    };
 
     async LocalLoad() {
         const debugIndex = this.interface.console.AddLog('info', 'User data: local loading...');
         let data = await DataStorage.Load(STORAGE.USER);
-        const contains = (key) => data.hasOwnProperty(key);
 
         if (data !== null) {
-            if (contains('xp')) this.xp = data['xp'];
+            /** @param {string} key */
+            const contains = (key) => data.hasOwnProperty(key);
 
+            if (contains('xp')) this.xp = data['xp'];
             if (contains('dataToken')) this.server.dataToken = data['dataToken'];
             if (contains('achievements')) this.achievements.Load(data['achievements']);
             if (contains('activities')) this.activities.Load(data['activities']);
@@ -258,11 +259,7 @@ class UserManager {
         if (this.activities.IsUnsaved()) {
             data['activities'] = this.activities.GetUnsaved();
             data['xp'] = this.xp;
-            data['stats'] = Object.fromEntries(
-                Object.entries(this.stats).map(
-                    ([key, value]) => [key, value.totalXP]
-                )
-            );
+            data['stats'] = Object.fromEntries(Object.entries(this.stats).map(([key, value]) => [key, value.totalXP]));
         }
 
         if (this.quests.IsUnsaved()) {
@@ -309,7 +306,7 @@ class UserManager {
         }
 
         return saved;
-    }
+    };
 
     /** @param {'normal' | 'force' | 'inventories'} [type] */
     async OnlineLoad(type = 'normal') {
@@ -327,22 +324,22 @@ class UserManager {
 
         if (data !== null) {
             const contains = (/** @type {string} */ key) => data.hasOwnProperty(key);
-            if (contains('username'))       this.informations.username.Set(data['username']);
-            if (contains('usernameTime'))   this.informations.usernameTime = data['usernameTime'];
-            if (contains('title'))          this.informations.title.Set(data['title']);
-            if (contains('birthtime'))      this.informations.birthTime = data['birthtime'];
-            if (contains('lastbirthtime'))  this.informations.lastBirthTime = data['lastbirthtime'];
-            if (contains('ox'))             this.informations.ox.Set(parseInt(data['ox']));
-            if (contains('adRemaining'))    this.informations.adRemaining = data['adRemaining'];
+            if (contains('username')) this.informations.username.Set(data['username']);
+            if (contains('usernameTime')) this.informations.usernameTime = data['usernameTime'];
+            if (contains('title')) this.informations.title.Set(data['title']);
+            if (contains('birthtime')) this.informations.birthTime = data['birthtime'];
+            if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
+            if (contains('ox')) this.informations.ox.Set(parseInt(data['ox']));
+            if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
             if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
             if (contains('purchasedCount')) this.informations.purchasedCount = data['purchasedCount'];
-            if (contains('inventory'))      this.inventory.LoadOnline(data['inventory']);
-            if (contains('missions'))       this.missions.LoadOnline(data['missions']);
-            if (contains('achievements'))   this.achievements.LoadOnline(data['achievements']);
-            if (contains('activities'))     this.activities.LoadOnline(data['activities']);
-            if (contains('quests'))         this.quests.LoadOnline(data['quests']);
-            if (contains('shop'))           this.shop.LoadOnline(data['shop']);
-            if (contains('todoes'))         this.todoes.LoadOnline(data['todoes']);
+            if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
+            if (contains('missions')) this.missions.LoadOnline(data['missions']);
+            if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
+            if (contains('activities')) this.activities.LoadOnline(data['activities']);
+            if (contains('quests')) this.quests.LoadOnline(data['quests']);
+            if (contains('shop')) this.shop.LoadOnline(data['shop']);
+            if (contains('todoes')) this.todoes.LoadOnline(data['todoes']);
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

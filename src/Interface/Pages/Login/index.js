@@ -27,7 +27,7 @@ class Login extends BackLogin {
 
         return (
             <View style={styles.page}>
-                <View>
+                <View style={styles.form}>
                     {/* Title */}
                     <View>
                         <Text style={styles.title} color='primary'>
@@ -54,9 +54,8 @@ class Login extends BackLogin {
                     </Text>
 
                     {/* Username */}
-                    <Animated.View style={{ opacity: animSignin }}>
+                    <Animated.View style={[styles.input, { opacity: animSignin }]}>
                         <InputText
-                            containerStyle={styles.input}
                             error={!!errorUsername}
                             type='name'
                             label={langs.titleUsername}
@@ -72,14 +71,23 @@ class Login extends BackLogin {
                     {/* CGU */}
                     <Animated.View style={{ opacity: animSigninBis }}>
                         <View style={styles.cgu}>
-                            <CheckBox style={styles.cguCheckBox} value={cguAccepted} onChangeValue={this.onCGUToggle} />
-                            <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>
-                                {langs.cguTexts[0] + ' '}
-                            </Text>
-                            <Text onPress={this.onCGURedirect} fontSize={16} color='main1'>
-                                {langs.cguTexts[1]}
-                            </Text>
-                            <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>
+                            <CheckBox
+                                style={styles.cguCheckBox}
+                                color='white'
+                                value={cguAccepted}
+                                onChangeValue={this.onCGUToggle}
+                            />
+                            <Text
+                                containerStyle={styles.cguTextContainer}
+                                style={styles.cguText}
+                                onPress={this.onCGURedirect}
+                                fontSize={14}
+                                color='secondary'
+                            >
+                                {langs.cguTexts[0]}
+                                <Text fontSize={16} color='main1'>
+                                    {langs.cguTexts[1]}
+                                </Text>
                                 {langs.cguTexts[2]}
                             </Text>
                         </View>
@@ -88,8 +96,11 @@ class Login extends BackLogin {
                         </Text>
                     </Animated.View>
                 </View>
+
+                {/* Separator */}
                 <View />
 
+                {/* Buttons */}
                 <Button
                     style={styles.buttonLoginSignin}
                     styleAnimation={{ left: btnLoginX }}

@@ -32,11 +32,12 @@ class Profile extends BackProfile {
                 />
 
                 <Animated.View style={headerOpacity} pointerEvents={headerPointer}>
-                    <UserHeader
+                    {/* TODO: Make new component */}
+                    {/* <UserHeader
                         ref={ref => this.refTuto1 = ref}
                         editorMode={true}
                         onPress={this.openProfileEditor}
-                    />
+                    /> */}
                 </Animated.View>
 
                 <Animated.View style={[styles.botSpace, headerOpacity]}>

@@ -15,15 +15,11 @@ import { SpringAnimation } from 'Utils/Animations';
  *
  * @typedef {object} UserHeaderPropsType
  * @property {StyleProp} style
- * @property {boolean} editorMode
- * @property {() => void} onPress
  */
 
 /** @type {UserHeaderPropsType} */
 const UserHeaderProps = {
-    style: {},
-    editorMode: false,
-    onPress: () => {}
+    style: {}
 };
 
 class UserHeaderBack extends React.Component {
@@ -50,13 +46,6 @@ class UserHeaderBack extends React.Component {
     /** @type {Symbol | null} */
     titleListener = null;
 
-    /** @param {UserHeaderPropsType} props */
-    constructor(props) {
-        super(props);
-
-        this.state.animPosY.setValue(props.editorMode ? -6 : -128);
-    }
-
     componentDidMount() {
         this.nameListener = user.informations.username.AddListener(this.update);
         this.titleListener = user.informations.title.AddListener(this.update);
@@ -65,6 +54,11 @@ class UserHeaderBack extends React.Component {
         user.informations.username.RemoveListener(this.nameListener);
         user.informations.title.RemoveListener(this.titleListener);
     }
+    /** @param {LayoutChangeEvent} event */
+    onLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ height });
+    };
 
     Show = () => {
         if (this.show) {
@@ -92,12 +86,6 @@ class UserHeaderBack extends React.Component {
     };
 
     ShowAvatar = (value = false) => this.setState({ showAvatar: value });
-
-    /** @param {LayoutChangeEvent} event */
-    onLayout = (event) => {
-        const { height } = event.nativeEvent.layout;
-        this.setState({ height });
-    };
 }
 
 UserHeaderBack.prototype.props = UserHeaderProps;

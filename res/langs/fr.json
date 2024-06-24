@@ -352,6 +352,8 @@
     },
 
     "home": {
+        "title-hello": "Bonjour {}",
+
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
 

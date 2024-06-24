@@ -2,30 +2,31 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     // NotificationsInAppButton bell & badge
-    container: {
+    button: {
         width: 48,
         height: 48,
-        aspectRatio: 1,
         paddingHorizontal: 0,
-        borderRadius: 4,
-        borderWidth: 2,
-        borderColor: '#FFFFFF',
+        borderRadius: 12,
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#00000050'
-    },
-    button: {
-        height: 'auto',
-        paddingHorizontal: 0,
-        borderRadius: 0
+        justifyContent: 'center'
     },
     badge: {
         position: 'absolute',
-        top: 4,
-        right: 4,
-        width: 20,
-        height: 20,
+        top: 2,
+        right: 2,
+        width: 6,
+        height: 6,
+        justifyContent: 'center',
         borderRadius: 100
+    },
+    badgeMask: {
+        position: 'absolute',
+        top: 0,
+        left: 0
+    },
+    badgeDarkClone: {
+        transform: [{ scale: 1.4 }],
+        backgroundColor: 'black'
     }
 });
 

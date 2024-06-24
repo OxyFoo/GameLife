@@ -352,6 +352,8 @@
     },
 
     "home": {
+        "title-hello": "Hello {}",
+
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 

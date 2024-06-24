@@ -1,44 +1,61 @@
 import * as React from 'react';
-import { Animated, View, TouchableOpacity, Dimensions } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { Animated, View } from 'react-native';
 
 import styles from './style';
 import UserHeaderBack from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { Text, Icon, Button, Frame } from 'Interface/Components';
 import { NotificationsInAppButton } from 'Interface/Widgets';
 
-/**
- * @typedef {import('Ressources/Icons').IconsName} IconsName
- */
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+const AVATAR_FRAME_SIZE = { x: 250, y: 50, width: 400, height: 350 };
 
 class UserHeader extends UserHeaderBack {
+    render() {
+        const lang = langManager.curr['home'];
+        const { style } = this.props;
+        const { username, titleText, animPosY } = this.state;
+
+        const animStyle = { transform: [{ translateY: animPosY }] };
+
+        return (
+            <Animated.View style={[styles.absolute, animStyle]} onLayout={this.onLayout}>
+                <View style={[styles.container, style]}>
+                    <View style={styles.userHeader}>
+                        <View style={styles.usernameContainer}>
+                            <Text style={styles.username} color='primary'>
+                                {lang['title-hello'].replace('{}', username)}
+                            </Text>
+                        </View>
+
+                        {titleText !== '' && (
+                            <Text style={styles.title} color='main1'>
+                                {titleText}
+                            </Text>
+                        )}
+                    </View>
+
+                    <View style={styles.interactions}>
+                        {this.renderNotificationsInAppButton()}
+                        {this.renderInteraction()}
+                    </View>
+                </View>
+            </Animated.View>
+        );
+    }
+
     renderInteraction = () => {
-        const { editorMode } = this.props;
         const { showAvatar } = this.state;
-
-        if (editorMode) {
-            /** @type {IconsName} */
-            const icon = user.server.IsConnected() ? 'edit' : 'no-wifi';
-
-            return <Icon icon={icon} color='border' />;
-        }
-
         const openProfile = () => user.interface.ChangePage('profile');
-        const frameSize = { x: 200, y: 0, width: 500, height: 450 };
 
         return (
             <Button ref={this.refContainer} style={styles.avatar} onPress={openProfile}>
-                {showAvatar && (
+                {showAvatar && user.character && (
                     <Frame
                         ref={this.refFrame}
                         characters={[user.character]}
-                        size={frameSize}
+                        size={AVATAR_FRAME_SIZE}
                         delayTime={0}
                         loadingTime={0}
                         bodyView={'topHalf'}
@@ -48,82 +65,12 @@ class UserHeader extends UserHeaderBack {
         );
     };
 
-    renderNotificationsInApp = () => {
-        const { editorMode } = this.props;
-
-        if (editorMode) {
-            return null;
+    renderNotificationsInAppButton = () => {
+        if (!user.server.IsConnected()) {
+            return <Icon style={styles.interactionsButton} icon='no-wifi' color='border' size={32} />;
         }
-
         return <NotificationsInAppButton style={styles.interactionsButton} />;
     };
-
-    renderContent() {
-        const { style, editorMode, onPress } = this.props;
-        const { username, titleText } = this.state;
-
-        let age = user.informations.GetAge();
-        let ageText = '';
-        if (age !== null) {
-            ageText = langManager.curr['profile']['value-age'].replace('{}', age.toString());
-        }
-
-        const activeOpacity = editorMode ? 0.6 : 1;
-
-        return (
-            <TouchableOpacity style={[styles.header, style]} onPress={() => onPress()} activeOpacity={activeOpacity}>
-                <View style={styles.content}>
-                    <View style={styles.usernameContainer}>
-                        <Text style={styles.username} color='primary'>
-                            {username}
-                        </Text>
-
-                        {editorMode && age !== null && (
-                            <Text style={styles.age} color='secondary'>
-                                {ageText}
-                            </Text>
-                        )}
-                    </View>
-
-                    {titleText !== '' && (
-                        <Text style={styles.title} color='secondary'>
-                            {titleText}
-                        </Text>
-                    )}
-                </View>
-
-                <View style={styles.interactions}>
-                    {this.renderNotificationsInApp()}
-                    {this.renderInteraction()}
-                </View>
-            </TouchableOpacity>
-        );
-    }
-
-    render() {
-        const { editorMode } = this.props;
-        const { animPosY } = this.state;
-
-        if (editorMode) {
-            return this.renderContent();
-        }
-
-        const background = [themeManager.GetColor('ground1'), themeManager.GetColor('ground2')];
-        const animStyle = { transform: [{ translateY: animPosY }] };
-        const screenHeight = { height: SCREEN_HEIGHT };
-
-        return (
-            <Animated.View style={[animStyle, styles.absolute]} onLayout={this.onLayout}>
-                <LinearGradient
-                    style={[styles.absolute, styles.linear, screenHeight]}
-                    colors={background}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                />
-                <View style={styles.container}>{this.renderContent()}</View>
-            </Animated.View>
-        );
-    }
 }
 
 export { UserHeader };

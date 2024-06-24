@@ -12,13 +12,13 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 class BackOnboarding extends PageBase {
     state = {
         selectedLangKey: langManager.currentLangageKey
-    }
+    };
 
     /** @param {LangKey} key */
     selectLanguage = (key) => {
         langManager.SetLangage(key);
         this.setState({ selectedLangKey: key });
-    }
+    };
 
     Next = async () => {
         //const lang = langManager.curr['onboarding'];
@@ -31,17 +31,20 @@ class BackOnboarding extends PageBase {
         if (!saved) {
             const lang = langManager.curr['app'];
             user.interface.ChangePage('display', {
-                'icon': 'error',
-                'iconRatio': .4,
-                'text': lang['loading-error-message']['userdata-not-saved'],
-                'button': lang['loading-error-button'],
-                'action': RNExitApp.exitApp
-            }, true);
+                args: {
+                    icon: 'error',
+                    iconRatio: 0.4,
+                    text: lang['loading-error-message']['userdata-not-saved'],
+                    button: lang['loading-error-button'],
+                    action: RNExitApp.exitApp
+                },
+                storeInHistory: false
+            });
             return;
         }
 
-        user.interface.ChangePage('loading', undefined, true);
-    }
+        user.interface.ChangePage('loading', { storeInHistory: false });
+    };
 }
 
 export default BackOnboarding;

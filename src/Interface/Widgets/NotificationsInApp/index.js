@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
+import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
 import BackNotificationsInApp from './back';
@@ -22,12 +23,13 @@ class NotificationsInAppButton extends BackNotificationsInApp {
 
         return (
             <Button
-                style={[styles.container, this.props.style]}
-                rippleColor='white'
+                style={[styles.button, this.props.style]}
+                appearance='uniform'
+                color='transparent'
                 onPress={this.openNotificationsHandler}
             >
                 <Animated.View style={styleBellAnim}>
-                    <Icon icon='bell' color='white' size={28} />
+                    <Icon icon='bell-outline' color='gradient' size={28} />
                 </Animated.View>
                 {this.renderBadge()}
             </Button>
@@ -35,22 +37,43 @@ class NotificationsInAppButton extends BackNotificationsInApp {
     }
 
     renderBadge = () => {
-        const { notificationsCount } = this.state;
+        const { notificationsCount, animOpenCount } = this.state;
 
         if (notificationsCount <= 0) {
             return null;
         }
 
-        const styleBadge = {
-            backgroundColor: themeManager.GetColor('error', { opacity: 0.95 })
+        const badgeStyle = {
+            width: Animated.add(styles.badge.width, Animated.multiply(18, animOpenCount)),
+            height: Animated.add(styles.badge.height, Animated.multiply(18, animOpenCount)),
+            borderRadius: Animated.subtract(styles.badge.borderRadius, Animated.multiply(93, animOpenCount))
         };
 
         return (
-            <View style={[styles.badge, styleBadge]}>
-                <Text color='primary' fontSize={15}>
-                    {notificationsCount.toString()}
-                </Text>
-            </View>
+            <>
+                <MaskedView
+                    style={styles.badgeMask}
+                    maskElement={<Animated.View style={[styles.badge, badgeStyle, styles.badgeDarkClone]} />}
+                >
+                    <Icon icon='bell-outline' color='black' size={28} />
+                </MaskedView>
+
+                <Animated.View
+                    style={[
+                        styles.badge,
+                        badgeStyle,
+                        {
+                            backgroundColor: themeManager.GetColor('main2')
+                        }
+                    ]}
+                >
+                    <Animated.View style={{ opacity: animOpenCount }}>
+                        <Text color='primary' fontSize={notificationsCount < 100 ? 14 : 10}>
+                            {notificationsCount < 100 ? notificationsCount.toString() : '99+'}
+                        </Text>
+                    </Animated.View>
+                </Animated.View>
+            </>
         );
     };
 }

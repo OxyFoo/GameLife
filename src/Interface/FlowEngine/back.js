@@ -148,7 +148,7 @@ class BackFlowEngine extends React.Component {
             return true;
         }
 
-        return this.state.selectedPage !== nextState.selectedPage;
+        return this.state.selectedPage !== nextState.selectedPage || this.state.mountedPages !== nextState.mountedPages;
     }
 
     /**
@@ -299,9 +299,8 @@ class BackFlowEngine extends React.Component {
             newPage.transitionEnd.setValue(0);
         }
 
-        if (newPage !== null) {
-            SpringAnimation(newPage.transitionStart, 1).start();
-            SpringAnimation(newPage.transitionEnd, 0).start();
+        if (newPage === null) {
+            throw new Error('FlowEngine: Page not found');
         }
 
         /** @type {Transitions} */
@@ -316,11 +315,19 @@ class BackFlowEngine extends React.Component {
             }
         }
 
-        this.setState({
-            selectedPage: nextPage,
-            currentTransition: transition,
-            mountedPages: [...mountedPages, newPage]
-        });
+        this.setState(
+            {
+                selectedPage: nextPage,
+                currentTransition: transition,
+                mountedPages: [...mountedPages, newPage]
+            },
+            () => {
+                if (newPage !== null) {
+                    SpringAnimation(newPage.transitionStart, 1).start();
+                    SpringAnimation(newPage.transitionEnd, 0).start();
+                }
+            }
+        );
     };
 
     /**
@@ -419,11 +426,17 @@ class BackFlowEngine extends React.Component {
             return;
         }
 
-        await new Promise((resolve) => {
-            mountedPages.splice(index, 1);
-            this.setState({ mountedPages }, () => {
-                resolve(null);
-            });
+        return new Promise((resolve) => {
+            this.setState(
+                (/** @type {this['state']} */ prevState) => {
+                    const newPages = [...prevState.mountedPages];
+                    newPages.splice(index, 1);
+                    return { mountedPages: newPages };
+                },
+                () => {
+                    resolve(null);
+                }
+            );
         });
     };
 

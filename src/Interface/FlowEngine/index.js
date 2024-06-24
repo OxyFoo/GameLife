@@ -40,16 +40,21 @@ class FlowEngineClass extends BackFlowEngine {
             const { selectedPage, currentTransition } = this.state;
 
             const page = this.getMountedPage(pageName);
+
+            // Page not found or not mounted and not keep mounted
             if (page === null) {
                 return null;
             }
 
             const Page = PAGES[pageName];
+            const feShowUserHeader = new Page({ flowEngine: this }).feShowUserHeader;
+
             return (
                 <Animated.View
                     key={'page-' + pageName}
                     style={[
                         styles.parent,
+                        feShowUserHeader && { top: this.userHeader?.state.height },
                         {
                             opacity: Animated.subtract(1, page.transitionEnd),
                             transform: [
@@ -64,10 +69,7 @@ class FlowEngineClass extends BackFlowEngine {
                         style={styles.scrollview}
                         contentContainerStyle={styles.scrollviewContainer}
                         scrollEnabled={true}
-                        children={
-                            // @ts-ignore
-                            <Page ref={page.ref} args={page.args} flowEngine={this} />
-                        }
+                        children={<Page ref={page.ref} args={page.args} flowEngine={this} />}
                     />
                 </Animated.View>
             );

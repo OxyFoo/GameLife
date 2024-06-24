@@ -160,7 +160,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         user.inventory.avatar.skinColor
     );
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    //user.interface.header.ShowAvatar(true);
+    user.interface.userHeader.ShowAvatar(true);
 
     // Loading: Notifications
     Notifications.DisableAll().then(() => {
@@ -188,7 +188,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     //await user.interface.LoadDefaultPages();
 
     nextStep();
-    await Sleep(500);
+    //await Sleep(500);
 
     CheckDate();
     user.StartTimers();

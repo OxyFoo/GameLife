@@ -2,17 +2,19 @@ import * as React from 'react';
 import { Animated, FlatList } from 'react-native';
 
 import styles from './style';
-import { NIA_Template, NIA_Separator, NIA_Empty } from './template';
+import { NIA_Template, NIA_Separator, NIA_Empty } from './templates';
 import user from 'Managers/UserManager';
 
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ *
  * @typedef {import('Types/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
  * @typedef {import('Types/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
-class Notifications extends React.Component {
+class NotificationsInApp extends React.Component {
     state = {
         /** @type {boolean} Enable or disable notifications rendering */
         opened: false,
@@ -24,10 +26,9 @@ class Notifications extends React.Component {
         pointerEvent: 'none',
 
         /** @type {Array<NotificationInAppFriendPending | NotificationInAppAchievementPending>} */
-        notifications: [
-            ...user.multiplayer.notifications.Get(),
-            ...user.achievements.GetNotifications()
-        ].sort((a, b) => b.timestamp - a.timestamp)
+        notifications: [...user.multiplayer.notifications.Get(), ...user.achievements.GetNotifications()].sort(
+            (a, b) => b.timestamp - a.timestamp
+        )
     };
 
     /**
@@ -36,12 +37,22 @@ class Notifications extends React.Component {
      */
     opening = false;
 
+    /** @type {Symbol | null} */
+    listener = null;
+
+    /** @type {Symbol | null} */
+    listenerAchievements = null;
+
     componentDidMount() {
         this.listener = user.multiplayer.notifications.AddListener(this.onUpdate);
         this.listenerAchievements = user.achievements.achievements.AddListener(this.onUpdate);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    /**
+     * @param {any} _prevProps
+     * @param {this['state']} prevState
+     */
+    componentDidUpdate(_prevProps, prevState) {
         if (this.state.opened && this.state.notifications.length === 0 && prevState.notifications.length > 0) {
             this.Close();
         }
@@ -54,26 +65,26 @@ class Notifications extends React.Component {
 
     onUpdate = () => {
         this.setState({
-            notifications: [
-                ...user.multiplayer.notifications.Get(),
-                ...user.achievements.GetNotifications()
-            ].sort((a, b) => b.timestamp - a.timestamp)
+            notifications: [...user.multiplayer.notifications.Get(), ...user.achievements.GetNotifications()].sort(
+                (a, b) => b.timestamp - a.timestamp
+            )
         });
-    }
+    };
 
-    backgroundPressHandler = (e) => {
-        if (e.target === e.currentTarget) {
+    /** @param {GestureResponderEvent} event */
+    backgroundPressHandler = (event) => {
+        if (event.target === event.currentTarget) {
             this.Close();
         }
-    }
+    };
 
     Open = () => {
         this.opening = true;
-        this.setState({ opened: true, pointerEvent: 'auto'});
+        this.setState({ opened: true, pointerEvent: 'auto' });
         SpringAnimation(this.state.animOpen, 0).start();
 
         user.interface.SetCustomBackHandler(this.Close);
-    }
+    };
 
     Close = () => {
         this.opening = false;
@@ -86,7 +97,7 @@ class Notifications extends React.Component {
 
         user.interface.ResetCustomBackHandler();
         return false;
-    }
+    };
 
     render() {
         const { opened, animOpen, notifications, pointerEvent } = this.state;
@@ -102,12 +113,14 @@ class Notifications extends React.Component {
             })
         };
         const animStyle = {
-            transform: [{
-                translateY: animOpen.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, -50]
-                })
-            }]
+            transform: [
+                {
+                    translateY: animOpen.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, -50]
+                    })
+                }
+            ]
         };
 
         return (
@@ -122,8 +135,8 @@ class Notifications extends React.Component {
                         data={notifications}
                         keyExtractor={(item, index) => 'notif-in-app-' + item.timestamp.toString() + index}
                         renderItem={({ item, index }) => <NIA_Template item={item} index={index} />}
-                        ItemSeparatorComponent={() => <NIA_Separator />}
-                        ListEmptyComponent={() => <NIA_Empty />}
+                        ItemSeparatorComponent={NIA_Separator}
+                        ListEmptyComponent={NIA_Empty}
                         onTouchStart={this.backgroundPressHandler}
                         showsVerticalScrollIndicator={true}
                     />
@@ -133,4 +146,4 @@ class Notifications extends React.Component {
     }
 }
 
-export default Notifications;
+export { NotificationsInApp };

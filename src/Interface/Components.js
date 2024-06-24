@@ -3,6 +3,7 @@ export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
 export { Icon } from './Components/Icon';
 export { InputText } from './Components/InputText';
+export { NotificationsInAppButton } from './Components/NotificationsInAppButton';
 export { ProgressBar } from './Components/ProgressBar';
 export { Separator } from './Components/Separator';
 export { Switch } from './Components/Switch';
@@ -51,7 +52,6 @@ export {
     Swiper,
     UserOnlineElement,
     Zap,
-
     OldIcon,
-    OldText,
+    OldText
 };

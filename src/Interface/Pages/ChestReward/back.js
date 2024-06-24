@@ -22,20 +22,15 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {'ox'} chestRarity
  * @property {number} oxCount
  * @property {() => void} callback
+ * 
+ * @typedef {ChestRewardProps | OxRewardProps} ChestRewardArgs
  */
 
 const BackChestRewardProps = {
+    /** @type {ChestRewardArgs} */
     args: {
-        /** @type {number} */
         chestRarity: 0,
-
-        /** @type {StuffID} */
         itemID: 'bottom_01',
-
-        /** @type {number} */
-        oxCount: 0,
-
-        /** @type {() => void} */
         callback: () => {}
     }
 };

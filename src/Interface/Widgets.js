@@ -10,8 +10,6 @@ import Missions from './Widgets/Missions';
 import MultiplayerPanel from './Widgets/MultiplayerPanel';
 import MyQuestsList from './Widgets/MyQuestsList';
 import News from './Widgets/News';
-import NotificationsInApp from './Widgets/NotificationsInApp/notifs';
-import NotificationsInAppButton from './Widgets/NotificationsInApp';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
 import ScreenInput from './Widgets/ScreenInput';
@@ -22,7 +20,6 @@ import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import TodayPieChart from './Widgets/TodayPieChart';
 import TodoList from './Widgets/TodoList';
-//import UserHeader from './Widgets/UserHeader';
 import YearHeatMap from './Widgets/YearHeatMap';
 import ZapGPT from './Widgets/ZapGPT';
 
@@ -39,8 +36,6 @@ export {
     MultiplayerPanel,
     MyQuestsList,
     News,
-    NotificationsInApp,
-    NotificationsInAppButton,
     PageHeader,
     PanelScreen,
     ScreenInput,
@@ -51,7 +46,6 @@ export {
     SkillsGroup,
     TodayPieChart,
     TodoList,
-    //    UserHeader,
     YearHeatMap,
     ZapGPT
 };

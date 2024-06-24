@@ -59,11 +59,11 @@
             "list-empty": "No notifications available",
 
             "popup-responded-title": "Thanks",
-            "popup-responded-text": "Thanks for your reply!",
+            "popup-responded-message": "Thanks for your reply!",
             "popup-claim-ox-title": "Congrats",
-            "popup-claim-ox-text": "You have won {} Ox!",
+            "popup-claim-ox-message": "You have won {} Ox!",
             "popup-error-title": "Error",
-            "popup-error-text": "An error has occurred, please try again later."
+            "popup-error-message": "An error has occurred, please try again later."
         }
     },
 
@@ -271,7 +271,7 @@
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",
         "alert-achievement-error-title": "Error",
-        "alert-achievement-error-text": "An error has occurred, please try again later.",
+        "alert-achievement-error-message": "An error has occurred, please try again later.",
 
         "tuto": {
             "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."

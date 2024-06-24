@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Image, Linking } from 'react-native';
 
-import styles from './style';
+import styles from '../style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
@@ -33,8 +33,11 @@ async function handleRead(notif, response) {
     const tcpResponse = await user.tcp.WaitForCallback(callbackID);
     if (tcpResponse !== 'ok') {
         const title = lang['popup-error-title'];
-        const text = lang['popup-error-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
+        const message = lang['popup-error-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
         return false;
     }
 
@@ -45,17 +48,17 @@ async function handleRead(notif, response) {
 }
 
 /** @param {NotificationInApp} notif */
-function handleOpenPageOrURL(notif) {
+async function handleOpenPageOrURL(notif) {
     if (typeof notif.data.data !== 'string') {
         return handleRead(notif);
     }
 
     user.interface.notificationsInApp.Close();
 
-    if (notif.data.action === 'open-page' && user.interface.IsPage(notif.data.data)) {
-        //@ts-ignore
-        user.interface.ChangePage(notif.data.data);
-    } else if (notif.data.action === 'open-link' && Linking.canOpenURL(notif.data.data)) {
+    const pageName = user.interface.GetPageName(notif.data.data);
+    if (notif.data.action === 'open-page' && pageName !== null) {
+        user.interface.ChangePage(pageName);
+    } else if (notif.data.action === 'open-link' && (await Linking.canOpenURL(notif.data.data))) {
         Linking.openURL(notif.data.data);
     }
 
@@ -64,21 +67,33 @@ function handleOpenPageOrURL(notif) {
 
 /** @param {NotificationInApp} notif */
 async function handleRespond(notif) {
+    // TODO: Update screenInput
+    console.log('Not yet implemented');
+    return;
+
     const lang = langManager.curr['notifications']['in-app'];
 
     user.interface.notificationsInApp.Close();
-    user.interface.screenInput.Open(lang['global-message-input'], '', async (response) => {
-        if (typeof response !== 'string' || response.trim().length <= 0) {
-            return;
-        }
+    user.interface.screenInput.Open(
+        lang['global-message-input'],
+        '',
+        async (response) => {
+            if (typeof response !== 'string' || response.trim().length <= 0) {
+                return;
+            }
 
-        const success = await handleRead(notif, response.trim());
-        if (success) {
-            const title = lang['popup-responded-title'];
-            const text = lang['popup-responded-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
-        }
-    }, true);
+            const success = await handleRead(notif, response.trim());
+            if (success) {
+                const title = lang['popup-responded-title'];
+                const message = lang['popup-responded-message'];
+                user.interface.popup.OpenT({
+                    type: 'ok',
+                    data: { title, message }
+                });
+            }
+        },
+        true
+    );
 }
 
 /** @param {NotificationInApp} notif */
@@ -95,8 +110,13 @@ async function handleClaim(notif) {
     // Check error
     if (result['status'] !== 'ok' || (!result.hasOwnProperty('newItem') && !result.hasOwnProperty('ox'))) {
         const title = lang['popup-error-title'];
-        const text = lang['popup-error-text'];
-        user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+        const message = lang['popup-error-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message },
+            cancelable: true,
+            priority: true
+        });
         return;
     }
 
@@ -104,8 +124,13 @@ async function handleClaim(notif) {
     if (result.hasOwnProperty('ox')) {
         user.informations.ox.Set(result['ox']);
         const title = lang['popup-claim-ox-title'];
-        const text = lang['popup-claim-ox-text'].replace('{}', notif.data.data.toString());
-        user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+        const message = lang['popup-claim-ox-message'].replace('{}', notif.data.data.toString());
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message },
+            cancelable: true,
+            priority: true
+        });
     }
 
     // Update inventory
@@ -120,12 +145,14 @@ async function handleClaim(notif) {
         }
 
         // Show chest opening
-        const args = {
-            itemID: newItem['ItemID'],
-            chestRarity: rarity,
-            callback: user.interface.BackHandle
-        };
-        user.interface.ChangePage('chestreward', args, true);
+        user.interface.ChangePage('chestreward', {
+            args: {
+                chestRarity: rarity,
+                itemID: newItem['ItemID'],
+                callback: user.interface.BackHandle
+            },
+            storeInHistory: false
+        });
     }
 
     // Save inventory
@@ -158,9 +185,7 @@ function renderButtons(notif) {
                 </Button>
             </View>
         );
-    }
-
-    else if (notif.data.action === 'can-respond' || notif.data.action === 'must-respond') {
+    } else if (notif.data.action === 'can-respond' || notif.data.action === 'must-respond') {
         return (
             <View style={styles.globalMessageButtons}>
                 <Button
@@ -183,9 +208,7 @@ function renderButtons(notif) {
                 )}
             </View>
         );
-    }
-
-    else if (notif.data.action === 'reward-ox' || notif.data.action === 'reward-chest') {
+    } else if (notif.data.action === 'reward-ox' || notif.data.action === 'reward-chest') {
         return (
             <View style={styles.globalMessageButtons}>
                 {RenderReward(notif)}
@@ -203,12 +226,7 @@ function renderButtons(notif) {
 
     return (
         <View style={styles.globalMessageButtons}>
-            <Button
-                style={styles.globalMessageButton}
-                color='main1'
-                fontSize={14}
-                onPress={() => handleRead(notif)}
-            >
+            <Button style={styles.globalMessageButton} color='main1' fontSize={14} onPress={() => handleRead(notif)}>
                 {lang['global-message-mark-read']}
             </Button>
         </View>
@@ -221,7 +239,7 @@ function renderButtons(notif) {
  * @param {number} props.index
  * @returns {JSX.Element}
  */
-function NIA_GlobalMessage({ notif, index }) {
+function NIA_GlobalMessage({ notif }) {
     const title = langManager.GetText(notif.data.message);
 
     return (
@@ -230,9 +248,7 @@ function NIA_GlobalMessage({ notif, index }) {
                 <Text fontSize={16}>{title}</Text>
             </View>
 
-            <View style={styles.globalMessageButtons}>
-                {renderButtons(notif)}
-            </View>
+            <View style={styles.globalMessageButtons}>{renderButtons(notif)}</View>
         </View>
     );
 }
@@ -247,18 +263,11 @@ function RenderReward(notif) {
     if (notif.data.action === 'reward-ox') {
         return (
             <View style={styleReward}>
-                <Image
-                    style={styles.globalMessageRewardImage}
-                    source={IMG_OX}
-                />
-                <Text style={styles.globalMessageRewardValue}>
-                    {'x' + notif.data.data.toString()}
-                </Text>
+                <Image style={styles.globalMessageRewardImage} source={IMG_OX} />
+                <Text style={styles.globalMessageRewardValue}>{'x' + notif.data.data.toString()}</Text>
             </View>
         );
-    }
-
-    else if (notif.data.action === 'reward-chest') {
+    } else if (notif.data.action === 'reward-chest') {
         let rarity = 0;
         if (CHEST_RARITIES.includes(notif.data.data.toString())) {
             rarity = CHEST_RARITIES.indexOf(notif.data.data.toString());
@@ -266,13 +275,12 @@ function RenderReward(notif) {
 
         return (
             <View style={styleReward}>
-                <Image
-                    style={styles.globalMessageRewardImage}
-                    source={IMG_CHESTS[rarity]}
-                />
+                <Image style={styles.globalMessageRewardImage} source={IMG_CHESTS[rarity]} />
             </View>
         );
     }
+
+    return null;
 }
 
 export default NIA_GlobalMessage;

@@ -11,6 +11,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').Console} Console
  * @typedef {import('Interface/Global').UserHeader} UserHeader
+ * @typedef {import('Interface/Global').NotificationsInApp} NotificationsInApp
  * @typedef {'auto' | 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight' | 'fromCenter'} Transitions
  */
 
@@ -50,13 +51,15 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {React.RefObject<BackFlowEngine['popup']>} popup
  * @property {React.RefObject<BackFlowEngine['console']>} console
  * @property {React.RefObject<BackFlowEngine['userHeader']>} userHeader
+ * @property {React.RefObject<BackFlowEngine['notificationsInApp']>} notificationsInApp
  */
 
 /** @type {BackFlowEnginePropsType} */
 const BackFlowEngineProps = {
     popup: React.createRef(),
     console: React.createRef(),
-    userHeader: React.createRef()
+    userHeader: React.createRef(),
+    notificationsInApp: React.createRef()
 };
 
 class BackFlowEngine extends React.Component {
@@ -68,6 +71,9 @@ class BackFlowEngine extends React.Component {
 
     /** @type {UserHeader | null} */
     userHeader = null;
+
+    /** @type {NotificationsInApp | null} */
+    notificationsInApp = null;
 
     state = {
         /** @type {PageNames | null} */
@@ -134,7 +140,7 @@ class BackFlowEngine extends React.Component {
      */
     shouldComponentUpdate(nextProps, nextState) {
         /** @type {Array<keyof BackFlowEnginePropsType>} */
-        const toCheck = ['popup', 'console', 'userHeader'];
+        const toCheck = ['popup', 'console', 'userHeader', 'notificationsInApp'];
         let changed = false;
         for (const key of toCheck) {
             const ref = nextProps[key];
@@ -161,11 +167,11 @@ class BackFlowEngine extends React.Component {
     /**
      * @description Check if page exist
      * @param {string} pageName
-     * @returns {boolean}
+     * @returns {PageNames | null} Return pageName if exist else null
      * @public
      */
     // @ts-ignore
-    IsPage = (pageName) => this.availablePages.includes(pageName);
+    GetPageName = (pageName) => (this.availablePages.includes(pageName) ? pageName : null);
 
     /**
      * @description Custom back button handler
@@ -363,6 +369,7 @@ class BackFlowEngine extends React.Component {
         const showUserHeader = this.getMountedPage(pageName)?.ref.current?.feShowUserHeader ?? false;
         if (showUserHeader && this.userHeader?.show === false) {
             this.userHeader?.Show();
+            this.userHeader?.refBellButton.current?.StartOpenCountAnimation(3000, 250);
         } else if (!showUserHeader && this.userHeader?.show === true) {
             this.userHeader?.Hide();
         }
@@ -450,10 +457,13 @@ class BackFlowEngine extends React.Component {
         /** @type {UserHeader} */ // @ts-ignore
         userHeader: this.userHeader,
 
+        /** @type {NotificationsInApp} */ // @ts-ignore
+        notificationsInApp: this.notificationsInApp,
+
         history: this.history,
-        IsPage: this.IsPage,
         ChangePage: this.ChangePage,
         BackHandle: this.BackHandle,
+        GetPageName: this.GetPageName,
         GetCurrentPageName: this.GetCurrentPageName,
         SetCustomBackHandler: this.SetCustomBackHandler,
         ResetCustomBackHandler: this.ResetCustomBackHandler

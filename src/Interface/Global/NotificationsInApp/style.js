@@ -21,10 +21,10 @@ const styles = StyleSheet.create({
         maxHeight: Math.max(SCREEN_HEIGHT / 2, 200),
         paddingVertical: 12,
         flexDirection: 'row',
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: 'white',
         borderRadius: 10,
-        backgroundColor: '#000000D0',
+        backgroundColor: '#000000D0'
     },
     flatlist: {
         width: '100%',

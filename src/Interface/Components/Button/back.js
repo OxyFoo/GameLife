@@ -22,7 +22,7 @@ import { Button } from 'react-native';
  * @property {StyleProp} styleContent
  * @property {number} throttleTime Time in ms to throttle the press event
  * @property {'normal' | 'outline' | 'outline-blur' | 'uniform'} appearance
- * @property {ThemeColor} color Background color of the button, only used in 'uniform' appearance
+ * @property {ThemeColor | ThemeText} color Background color of the button, only used in 'uniform' appearance
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText | 'automatic'} fontColor
  * @property {IconsName | null} icon

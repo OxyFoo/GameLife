@@ -28,9 +28,6 @@ class BackNotificationsInApp extends React.Component {
     /** @type {Symbol | null} */
     listenerAchievements = null;
 
-    /** @type {number} */
-    lastShowedCount = 0;
-
     /** @type {NodeJS.Timeout | null} */
     timeoutShowedCount = null;
 
@@ -47,19 +44,26 @@ class BackNotificationsInApp extends React.Component {
         user.achievements.achievements.RemoveListener(this.listenerAchievements);
     }
 
-    componentDidUpdate() {
-        const now = new Date().getTime();
-        if (now - this.lastShowedCount > 10000) {
-            this.lastShowedCount = now;
-            this.StartOpenCountAnimation();
-        }
-    }
-
-    StartOpenCountAnimation = () => {
-        SpringAnimation(this.state.animOpenCount, 1, false).start();
+    /**
+     * @param {number} delay
+     * @param {number} duration
+     */
+    StartOpenCountAnimation = (duration = 3000, delay = 0) => {
+        // Open after delay
         this.timeoutShowedCount = setTimeout(() => {
-            SpringAnimation(this.state.animOpenCount, 0, false).start();
-        }, 3000);
+            SpringAnimation(this.state.animOpenCount, 1, false).start();
+
+            // Close after duration
+            this.timeoutShowedCount = setTimeout(() => {
+                SpringAnimation(this.state.animOpenCount, 0, false).start();
+
+                // Clear timeout
+                if (this.timeoutShowedCount) {
+                    clearTimeout(this.timeoutShowedCount);
+                    this.timeoutShowedCount = null;
+                }
+            }, duration);
+        }, delay);
     };
 
     openNotificationsHandler = () => {

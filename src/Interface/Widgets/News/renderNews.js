@@ -80,14 +80,17 @@ const RenderInteraction = ({ Nw }) => {
 };
 
 /**
- * @param {*} eventText String to parse: if it starts with 'https://', open
- *                      the link in the browser, else change the page
+ * @param {string} eventText String to parse: if it starts with 'https://',
+ *                      open the link in the browser, else change the page
  */
 const buttonEvent = (eventText) => {
     if (eventText.startsWith('https://')) {
         Linking.openURL(eventText);
-    } else if (user.interface.IsPage(eventText)) {
-        user.interface.ChangePage(eventText);
+    } else {
+        const pageName = user.interface.GetPageName(eventText);
+        if (pageName !== null) {
+            user.interface.ChangePage(pageName);
+        }
     }
 };
 

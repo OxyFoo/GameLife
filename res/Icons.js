@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const Icons = {
     'add-outline':              require('./icons/add-outline').default,
     'add':                      require('./icons/add').default,
@@ -10,11 +11,13 @@ const Icons = {
     'cart-outline':             require('./icons/cart-outline').default,
     'cart':                     require('./icons/cart').default,
     'check-outline':            require('./icons/check-outline').default,
+    'check-filled':             require('./icons/check-filled').default,
     'check':                    require('./icons/check').default,
     'chevron':                  require('./icons/chevron').default,
     'clock-outline':            require('./icons/clock-outline').default,
     'clock':                    require('./icons/clock').default,
     'close-outline':            require('./icons/close-outline').default,
+    'close-filled':             require('./icons/close-filled').default,
     'close':                    require('./icons/close').default,
     'creativity-outline':       require('./icons/creativity-outline').default,
     'creativity':               require('./icons/creativity').default,
@@ -100,6 +103,7 @@ const Icons = {
     'workout-outline':          require('./icons/workout-outline').default,
     'workout':                  require('./icons/workout').default
 };
+/* eslint-enable prettier/prettier */
 
 /**
  * @typedef {keyof typeof Icons} IconsName

@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, Icon, Button, Frame } from 'Interface/Components';
-import { NotificationsInAppButton } from 'Interface/Widgets';
+import { NotificationsInAppButton } from 'Interface/Components';
 
 const AVATAR_FRAME_SIZE = { x: 250, y: 50, width: 400, height: 350 };
 
@@ -69,7 +69,7 @@ class UserHeader extends UserHeaderBack {
         if (!user.server.IsConnected()) {
             return <Icon style={styles.interactionsButton} icon='no-wifi' color='border' size={32} />;
         }
-        return <NotificationsInAppButton style={styles.interactionsButton} />;
+        return <NotificationsInAppButton ref={this.refBellButton} style={styles.interactionsButton} />;
     };
 }
 

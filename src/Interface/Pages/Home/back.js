@@ -10,7 +10,6 @@ import StartMission from './mission';
 /**
  * @typedef {import('Interface/Widgets').Missions} Missions
  * @typedef {import('Interface/Widgets').MultiplayerPanel} MultiplayerPanel
- * @typedef {import('Class/Missions').MissionsItem} MissionsItem
  */
 
 const BackHomeProps = {
@@ -24,12 +23,10 @@ class BackHome extends PageBase {
     state = {
         experience: user.experience.GetExperience(),
         values: {
-            current_level: '0',
-            next_level: '0'
-        },
-
-        /** @type {MissionsItem | null} */
-        mission: user.missions.GetCurrentMission().mission
+            currentLevel: '0',
+            currentXP: '0',
+            nextLevelXP: '0'
+        }
     };
 
     feShowUserHeader = true;
@@ -43,13 +40,9 @@ class BackHome extends PageBase {
     /** @type {Symbol | null} */
     listenerActivities = null;
 
-    /** @type {Symbol | null} */
-    listenerMissions = null;
-
     componentDidMount() {
         this.handleLevelsUpdate();
         this.listenerActivities = user.activities.allActivities.AddListener(this.handleLevelsUpdate);
-        this.listenerMissions = user.missions.missions.AddListener(this.handleMissionsUpdate);
     }
 
     /** @param {this['props']} props */
@@ -59,7 +52,6 @@ class BackHome extends PageBase {
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.listenerActivities);
-        user.missions.missions.RemoveListener(this.listenerMissions);
     }
 
     handleLevelsUpdate = () => {
@@ -67,15 +59,15 @@ class BackHome extends PageBase {
         const {
             xpInfo: { lvl, xp, next }
         } = experience;
-        const current_level = lvl.toString();
-        const next_level = Round((100 * xp) / next, 0).toString();
 
-        this.setState({ experience, values: { current_level, next_level } });
-    };
-
-    handleMissionsUpdate = () => {
-        const { mission } = user.missions.GetCurrentMission();
-        this.setState({ mission });
+        this.setState({
+            experience,
+            values: {
+                currentLevel: lvl.toString(),
+                currentXP: Round(xp, 0).toString(),
+                nextLevelXP: next.toString()
+            }
+        });
     };
 
     StartMission = StartMission.bind(this);

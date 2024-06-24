@@ -3,12 +3,12 @@ import { View } from 'react-native';
 
 import styles from './style';
 import BackHome from './back';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, ProgressBar } from 'Interface/Components';
-import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
+import { TodayPieChart, Missions, MyQuestsList } from 'Interface/Widgets';
+import { News, SkillsGroup, StatsBars, MultiplayerPanel } from 'Interface/Widgets';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -19,39 +19,46 @@ class Home extends BackHome {
     render() {
         const {
             experience: { xpInfo },
-            values: { current_level, next_level },
-            mission
+            values: { currentLevel, currentXP, nextLevelXP }
         } = this.state;
 
         const lang = langManager.curr['home'];
-        const txt_level = langManager.curr['level']['level'];
-
-        const styleContainer = {
-            backgroundColor: themeManager.GetColor('dataBigKpi')
-        };
-
-        const styleSmallContainer = {
-            backgroundColor: themeManager.GetColor('ground2')
-        };
 
         return (
             <View style={styles.page}>
+                <ProgressBar
+                    style={styles.progressbar}
+                    height={12}
+                    color='main1'
+                    value={xpInfo.xp}
+                    maxValue={xpInfo.next}
+                />
+
                 <View style={styles.XPHeader}>
-                    <View style={styles.XPHeaderLvl}>
-                        <Text style={styles.level}>{txt_level}</Text>
-                        <Text color='main2'>{current_level}</Text>
-                    </View>
-                    <Text>{next_level + '%'}</Text>
+                    <Text style={styles.level}>{langManager.curr['level']['level-small'] + '. ' + currentLevel}</Text>
+                    <Text style={styles.experience}>
+                        {currentXP + '/' + nextLevelXP + ' ' + langManager.curr['level']['xp']}
+                    </Text>
                 </View>
 
-                <ProgressBar value={xpInfo.xp} maxValue={xpInfo.next} />
+                <Missions refHome={this} style={styles.topSpace} />
 
-                <View style={[styles.homeRow, styles.topSpace]}>
+                {/* Today performance */}
+                <Text style={styles.sectionTitle} color='secondary'>
+                    {lang['section-today-performance']}
+                </Text>
+                <View style={styles.homeRow}>
                     <TodayPieChart style={styles.todayPieChart} />
                 </View>
 
-                <Missions style={styles.topSpace} refHome={this} />
+                {/* Today missions */}
+                <Text style={styles.sectionTitle} color='secondary'>
+                    {lang['section-today-quests']}
+                </Text>
 
+                <MyQuestsList />
+
+                {/*
                 {mission?.state === 'claimed' && <News style={styles.topSpace} />}
 
                 <View style={[styles.homeRow, styles.topSpace]}>
@@ -73,6 +80,7 @@ class Home extends BackHome {
                 <MultiplayerPanel ref={this.refMultiplayerPanel} style={styles.topSpace} hideWhenOffline />
 
                 {mission?.state !== 'claimed' && <News style={styles.topSpace} />}
+                */}
             </View>
         );
     }

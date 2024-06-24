@@ -16,7 +16,7 @@ import { Text, Icon, Button, DayClock } from 'Interface/Components';
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  * @typedef {import('Class/Quests/MyQuests').DayType} DayType
  * @typedef {import('Class/Quests/MyQuests').DayClockStates} DayClockStates
- * 
+ *
  */
 
 const QuestProps = {
@@ -37,7 +37,7 @@ class QuestElement extends React.Component {
 
         /** @type {number} */
         streakCount: 0
-    }
+    };
 
     /** @param {QuestProps} props */
     constructor(props) {
@@ -74,9 +74,11 @@ class QuestElement extends React.Component {
         }
 
         // Check if quest changed
-        if (this.props.quest.title !== nextProps.quest.title ||
+        if (
+            this.props.quest.title !== nextProps.quest.title ||
             JSON.stringify(this.props.quest.skills) !== JSON.stringify(nextProps.quest.skills) ||
-            JSON.stringify(this.props.quest.schedule) !== JSON.stringify(nextProps.quest.schedule)) {
+            JSON.stringify(this.props.quest.schedule) !== JSON.stringify(nextProps.quest.schedule)
+        ) {
             return true;
         }
 
@@ -91,15 +93,8 @@ class QuestElement extends React.Component {
 
     /** @param {{ item: DayType, index: number }} param0 */
     renderDay = ({ item, index }) => {
-        return (
-            <DayClock
-                day={item.day}
-                isToday={item.isToday}
-                state={item.state}
-                fillingValue={item.fillingValue}
-            />
-        );
-    }
+        return <DayClock day={item.day} isToday={item.isToday} state={item.state} fillingValue={item.fillingValue} />;
+    };
 
     renderContentScrollable() {
         const { quest, onDrag } = this.props;
@@ -108,10 +103,7 @@ class QuestElement extends React.Component {
         const { title } = quest;
 
         return (
-            <View
-                style={styles.itemScrollable}
-                onTouchStart={() => onDrag()}
-            >
+            <View style={styles.itemScrollable} onTouchStart={() => onDrag()}>
                 <View style={styles.scrollableHeader}>
                     <Icon icon='default' color='main1' />
                     <Text style={styles.scrollableTitle}>{title}</Text>
@@ -127,11 +119,11 @@ class QuestElement extends React.Component {
         const { onDrag } = this.props;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => onDrag(), 500);
-    }
+    };
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         clearTimeout(this.timeout);
-    }
+    };
 
     render() {
         const langTimes = langManager.curr['dates']['names'];
@@ -160,6 +152,8 @@ class QuestElement extends React.Component {
             <View style={[styles.item, style]}>
                 <Button
                     style={styles.content}
+                    appearance='uniform'
+                    color='main3'
                     onPress={openQuest}
                     onTouchStart={this.onTouchStart}
                     onTouchMove={this.onTouchMove}
@@ -168,25 +162,27 @@ class QuestElement extends React.Component {
                 >
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>
-                            <Text style={styles.title}>
-                                {titleText}
-                            </Text>
+                            <Text style={styles.title}>{titleText}</Text>
                         </View>
                         <View style={styles.headerStreak}>
-                            <Text style={styles.streak}>
+                            <Text style={styles.streakText2} color='main1'>
+                                {'0 / 2h'}
+                            </Text>
+                            <Text style={styles.streakText} color='main2'>
                                 {streakCount.toString()}
                             </Text>
-                            <Icon icon='flame' />
+                            <Icon icon='flame' color='main2' style={styles.streakIcon} />
+                            <Icon icon='arrow-square' color='gradient' angle={90} />
                         </View>
                     </View>
 
-                    <FlatList
+                    {/* <FlatList
                         data={days}
                         numColumns={7}
-                        keyExtractor={item => 'quest-day-' + item.state}
+                        keyExtractor={(item) => 'quest-day-' + item.state}
                         columnWrapperStyle={styles.flatlistColumnWrapper}
                         renderItem={this.renderDay}
-                    />
+                    /> */}
                 </Button>
             </View>
         );

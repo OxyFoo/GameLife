@@ -14,9 +14,9 @@ class TodayPieChart extends TodayPieChartBack {
         const { switched } = this.state;
 
         let headerText = lang['chart-today-recap'];
-        if (switched) {
-            headerText = lang['chart-today-performance'];
-        }
+        //if (switched) {
+        //    headerText = lang['chart-today-performance'];
+        //}
 
         // If there is no focused activity or no data to display, show add activity button
         if (!this.state.focusedActivity || !this.state.dataToDisplay) {
@@ -27,14 +27,8 @@ class TodayPieChart extends TodayPieChartBack {
             return (
                 <View style={[styles.container, background, this.props.style]}>
                     <View style={styles.notEnoughData}>
-                        <Text style={styles.notEnoughDataText}>
-                            {lang['chart-today-notmuch']}
-                        </Text>
-                        <Button
-                            style={styles.notEnoughDataButton}
-                            color='main2'
-                            onPress={this.onAddActivityPress}
-                        >
+                        <Text style={styles.notEnoughDataText}>{lang['chart-today-notmuch']}</Text>
+                        <Button style={styles.notEnoughDataButton} color='main2' onPress={this.onAddActivityPress}>
                             {lang['chart-today-notmuch-button']}
                         </Button>
                     </View>

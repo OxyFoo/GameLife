@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, FlatList } from 'react-native';
+import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -13,7 +13,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
- * 
+ *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Interface/Components').Button} Button
  * @typedef {import('Interface/Components').SimpleContainer} SimpleContainer
@@ -31,7 +31,7 @@ class BackQuestsList extends React.Component {
         draggedItem: null,
 
         mouseY: new Animated.Value(0)
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -67,14 +67,10 @@ class BackQuestsList extends React.Component {
 
     refreshQuests = () => {
         this.setState({ quests: user.quests.myquests.Get() });
-    }
+    };
 
     /** @param {MyQuest} item */
-    keyExtractor = (item) => (
-        'quest-' + item.title +
-            JSON.stringify(item.skills) +
-            JSON.stringify(item.schedule)
-    )
+    keyExtractor = (item) => 'quest-' + item.title + JSON.stringify(item.skills) + JSON.stringify(item.schedule);
 
     /**
      * Add a new quest to the list and open the quest page\
@@ -88,7 +84,7 @@ class BackQuestsList extends React.Component {
             return;
         }
         user.interface.ChangePage('myquest', undefined, true);
-    }
+    };
 
     /** @param {MyQuest} item */
     onDrag = (item) => {
@@ -96,26 +92,26 @@ class BackQuestsList extends React.Component {
             scrollable: false,
             draggedItem: item
         });
-    }
+    };
 
     /** @param {NativeSyntheticEvent} event */
     onScroll = (event) => {
         this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [ ...user.quests.myquests.sort ];
+        this.initialSort = [...user.quests.myquests.sort];
 
-        GetAbsolutePosition(this.refFlatlist).then(pos => {
+        GetAbsolutePosition(this.refFlatlist).then((pos) => {
             this.tmpLayoutContainer = pos;
 
             const posY = this.tmpLayoutContainer.y + 92 / 2;
             const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
             TimingAnimation(this.state.mouseY, newY, 0).start();
         });
-    }
+    };
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         const { draggedItem, scrollable } = this.state;
@@ -154,7 +150,7 @@ class BackQuestsList extends React.Component {
             const newOffset = Math.min(scrollYMax, scrollY + scrollOffset);
             this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
         }
-    }
+    };
     /** @param {GestureResponderEvent} event */
     onTouchEnd = (event) => {
         if (this.state.draggedItem === null) {
@@ -168,14 +164,16 @@ class BackQuestsList extends React.Component {
         });
 
         // Save changes if quests order changed (and not just a quest check)
-        if (this.initialSort.join() !== user.quests.myquests.sort.join() &&
-            this.initialSort.length === user.quests.myquests.sort.length) {
-                user.GlobalSave();
+        if (
+            this.initialSort.join() !== user.quests.myquests.sort.join() &&
+            this.initialSort.length === user.quests.myquests.sort.length
+        ) {
+            user.GlobalSave();
         }
 
         // Reset tmpLayoutContainer
         this.tmpLayoutContainer = null;
-    }
+    };
 }
 
 export default BackQuestsList;

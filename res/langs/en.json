@@ -354,11 +354,13 @@
     "home": {
         "title-hello": "Hello {}",
 
+        "section-today-performance": "My performance of the day",
+        "section-today-quests": "My quests of the day",
+
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
         "chart-today-recap": "24-hour activities",
-        "chart-today-performance": "Activities of today",
         "chart-today-notmuch": "Add an activity today to display the graphics",
         "chart-today-notmuch-button": "Add",
         "chart-total-text": "Total",

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     // Base item
@@ -9,18 +9,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     content: {
-        width: '100%',
-        height: 'auto',
         paddingVertical: 10,
         paddingHorizontal: 12,
-
-        alignItems: 'stretch',
-        justifyContent: 'flex-start',
-        flexDirection: 'column',
-
-        borderRadius: 0
+        borderRadius: 8
     },
     header: {
+        width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 8
@@ -38,10 +32,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    streak: {
-        height: 24,
-        marginRight: 8,
-        textAlign: 'left'
+    streakText2: {
+        marginRight: 12
+    },
+    streakText: {
+        marginRight: 4
+    },
+    streakIcon: {
+        marginRight: 12
     },
     flatlistColumnWrapper: {
         flexDirection: 'row',
@@ -56,7 +54,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
 
         justifyContent: 'space-between',
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     scrollableHeader: {
         flexDirection: 'row',

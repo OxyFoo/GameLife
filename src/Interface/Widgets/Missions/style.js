@@ -2,13 +2,14 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        height: 'auto',
-        paddingHorizontal: 0
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        borderRadius: 8
     },
     container: {
         flexDirection: 'row',
         paddingHorizontal: 12,
-        borderRadius: 12
+        borderRadius: 8
     },
 
     columnZap: {

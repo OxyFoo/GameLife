@@ -35,8 +35,8 @@ class Missions extends BackMissions {
         };
         const styleAnimation = {
             opacity: this.state.animReward.interpolate({
-                inputRange: [0, .5, 1],
-                outputRange: [1, .8, 0]
+                inputRange: [0, 0.5, 1],
+                outputRange: [1, 0.8, 0]
             }),
             transform: [
                 {
@@ -48,12 +48,12 @@ class Missions extends BackMissions {
             ]
         };
 
-        const backgroundColor = [ '#B839FE', '#8A3DFE' ];
+        const backgroundColor = ['#B839FE', '#8A3DFE'];
 
         return (
-            <Button style={styles.buttonContainer} onPress={this.handleNextMission}>
+            <Button style={[styles.buttonContainer, style]} onPress={this.handleNextMission} appearance='uniform'>
                 <LinearGradient
-                    style={[styles.container, style]}
+                    style={styles.container}
                     colors={backgroundColor}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
@@ -66,7 +66,7 @@ class Missions extends BackMissions {
                     </View>
 
                     <View style={styles.columnContent}>
-                        {mission?.state === 'pending' && (
+                        {(mission?.state === 'pending' && (
                             <View>
                                 <Text style={styles.text} fontSize={16} bold>
                                     {lang['content'][MISSIONS[step].name].title}
@@ -76,7 +76,7 @@ class Missions extends BackMissions {
                                     {lang['text-hint']}
                                 </Text>
                             </View>
-                        ) || (
+                        )) || (
                             <Text style={styles.text} fontSize={16} bold>
                                 {lang['text-claim']}
                             </Text>
@@ -99,9 +99,7 @@ class Missions extends BackMissions {
                             </Animated.View>
                         </View>
 
-                        <Text fontSize={12}>
-                            {`${step + 1}/${stepLength}`}
-                        </Text>
+                        <Text fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
                     </View>
                 </LinearGradient>
             </Button>
@@ -125,7 +123,7 @@ class Missions extends BackMissions {
                 {this.renderReward(item.rewardType, item.rewardValue, true)}
             </View>
         );
-    }
+    };
 
     /**
      * @param {'ox' | 'chest'} rewardType
@@ -136,10 +134,7 @@ class Missions extends BackMissions {
         if (rewardType === 'ox') {
             return (
                 <>
-                    <Image
-                        style={styles.rewardImage}
-                        source={IMG_OX}
-                    />
+                    <Image style={styles.rewardImage} source={IMG_OX} />
                     {!hideOxText && (
                         <Text style={styles.rewardValue} fontSize={14}>
                             {'x' + rewardValue.toString()}
@@ -147,15 +142,8 @@ class Missions extends BackMissions {
                     )}
                 </>
             );
-        }
-
-        else if (rewardType === 'chest') {
-            return (
-                <Image
-                    style={styles.rewardImage}
-                    source={IMG_CHESTS[rewardValue]}
-                />
-            );
+        } else if (rewardType === 'chest') {
+            return <Image style={styles.rewardImage} source={IMG_CHESTS[rewardValue]} />;
         }
     }
 }

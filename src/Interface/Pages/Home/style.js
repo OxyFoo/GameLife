@@ -4,32 +4,47 @@ const styles = StyleSheet.create({
     page: {
         paddingHorizontal: 24
     },
+    progressbar: {
+        marginTop: 12,
+        marginBottom: 6
+    },
     XPHeader: {
         marginTop: 0,
-        marginBottom: 12,
+        marginBottom: 0,
         paddingHorizontal: 16,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    XPHeaderLvl: {
-        flexDirection: 'row'
-    },
     level: {
-        marginRight: 8
+        fontSize: 16,
+        fontWeight: 700
+    },
+    experience: {
+        fontSize: 16
+    },
+
+    sectionTitle: {
+        marginTop: 16,
+        marginBottom: 24,
+        fontSize: 21,
+        textAlign: 'left',
+        textTransform: 'uppercase'
+    },
+
+    topSpace: {
+        marginTop: 16
     },
     homeRow: {
         flexDirection: 'row',
         justifyContent: 'space-between'
-    },
-    topSpace: {
-        marginTop: 16
     },
     titleWidget: {
         marginBottom: 12,
         fontWeight: 'bold'
     },
     todayPieChart: {
-        flex: 1
+        width: '100%',
+        borderRadius: 8
     },
     stats: {
         flex: 1,

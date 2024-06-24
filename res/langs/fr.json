@@ -119,12 +119,12 @@
     },
 
     "level": {
-        "xp": "XP",
+        "xp": "EXP",
         "level": "Niveau",
         "level-small": "Niv",
-        "total": "XP total",
+        "total": "EXP total",
         "total-hour": "Heures totales",
-        "average": "En moyenne {} xp/jour",
+        "average": "En moyenne {} exp/jour",
         "me": "Moi"
     },
 
@@ -354,11 +354,13 @@
     "home": {
         "title-hello": "Bonjour {}",
 
+        "section-today-performance": "Ma performance du jour",
+        "section-today-quests": "Mes quêtes du jour",
+
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
 
         "chart-today-recap": "Activités sur 24h",
-        "chart-today-performance": "Performances du jour",
         "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher les graphiques",
         "chart-today-notmuch-button": "Ajouter",
         "chart-total-text": "Total",
@@ -750,7 +752,7 @@
     "statistics": {
         "xp": {
             "name": "Expérience",
-            "small": "XP"
+            "small": "EXP"
         },
         "names": {
             "int": "Intelligence",

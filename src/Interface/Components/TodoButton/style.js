@@ -1,19 +1,26 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    item: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderRadius: 8
+    },
     parent: {
-        height: 32,
-        marginTop: 14,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
         overflow: 'hidden'
     },
     content: {
-        flex: 1,
+        //flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
     title: {
-        flex: 1,
+        //flex: 1,
         height: '100%',
         justifyContent: 'center'
     },

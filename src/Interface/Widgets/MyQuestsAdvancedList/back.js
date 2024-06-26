@@ -9,6 +9,7 @@ import { GetAbsolutePosition } from 'Utils/UI';
 import { TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').FlatList<MyQuest>} FlatListMyQuest
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
@@ -33,29 +34,36 @@ class BackQuestsList extends React.Component {
         mouseY: new Animated.Value(0)
     };
 
+    /** @param {any} props */
     constructor(props) {
         super(props);
 
-        /** @type {FlatList<MyQuest> | null} Used to manage quest sorting */
-        this.refFlatlist = null;
-
-        /** @type {SimpleContainer | null} Used for help */
-        this.refContainer = null;
-
-        /** @type {Button | null} Used for help */
-        this.refAddQuest = null;
-
-        this.flatlist = {
-            contentSizeHeight: 0,
-            layoutMeasurementHeight: 0,
-            contentOffsetY: 0
-        };
-
-        /** @type {LayoutRectangle | null} */
-        this.tmpLayoutContainer = null;
-
-        this.state.quests = user.quests.myquests.Get();
+        this.state.quests = user.quests.myquests.Get().slice(0, 3);
     }
+
+    /** @type {React.RefObject<FlatListMyQuest>} Used to manage quest sorting */
+    refFlatlist = React.createRef();
+
+    /** @type {SimpleContainer | null} Used for help */
+    refContainer = null;
+
+    /** @type {Button | null} Used for help */
+    refAddQuest = null;
+
+    flatlist = {
+        contentSizeHeight: 0,
+        layoutMeasurementHeight: 0,
+        contentOffsetY: 0
+    };
+
+    /** @type {LayoutRectangle | null} */
+    tmpLayoutContainer = null;
+
+    /** @type {Array<number>} */
+    initialSort = [];
+
+    /** @type {Symbol | null} */
+    listenerQuest = null;
 
     componentDidMount() {
         this.listenerQuest = user.quests.myquests.allQuests.AddListener(this.refreshQuests);
@@ -66,7 +74,9 @@ class BackQuestsList extends React.Component {
     }
 
     refreshQuests = () => {
-        this.setState({ quests: user.quests.myquests.Get() });
+        this.setState({
+            quests: user.quests.myquests.Get().slice(0, 3)
+        });
     };
 
     /** @param {MyQuest} item */
@@ -79,11 +89,14 @@ class BackQuestsList extends React.Component {
     addQuest = () => {
         if (user.quests.myquests.IsMax()) {
             const title = langManager.curr['quests']['alert-questslimit-title'];
-            const text = langManager.curr['quests']['alert-questslimit-text'];
-            user.interface.popup.Open('ok', [title, text]);
+            const message = langManager.curr['quests']['alert-questslimit-message'];
+            user.interface.popup.OpenT({
+                type: 'ok',
+                data: { title, message }
+            });
             return;
         }
-        user.interface.ChangePage('myquest', undefined, true);
+        user.interface.ChangePage('myquest', { storeInHistory: false });
     };
 
     /** @param {MyQuest} item */
@@ -104,14 +117,17 @@ class BackQuestsList extends React.Component {
         const { pageY } = event.nativeEvent;
         this.initialSort = [...user.quests.myquests.sort];
 
-        GetAbsolutePosition(this.refFlatlist).then((pos) => {
-            this.tmpLayoutContainer = pos;
+        if (this.refFlatlist.current !== null) {
+            GetAbsolutePosition(this.refFlatlist.current).then((pos) => {
+                this.tmpLayoutContainer = pos;
 
-            const posY = this.tmpLayoutContainer.y + 92 / 2;
-            const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
-            TimingAnimation(this.state.mouseY, newY, 0).start();
-        });
+                const posY = this.tmpLayoutContainer.y + 92 / 2;
+                const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
+                TimingAnimation(this.state.mouseY, newY, 0).start();
+            });
+        }
     };
+
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         const { draggedItem, scrollable } = this.state;
@@ -145,14 +161,15 @@ class BackQuestsList extends React.Component {
         const scrollYMax = contentSizeHeight - layoutMeasurementHeight;
         if (newY < scrollOffset && scrollY > 0) {
             const newOffset = Math.max(0, scrollY - scrollOffset);
-            this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
+            this.refFlatlist.current?.scrollToOffset({ offset: newOffset, animated: true });
         } else if (newY > this.tmpLayoutContainer.height - scrollOffset && scrollY < scrollYMax) {
             const newOffset = Math.min(scrollYMax, scrollY + scrollOffset);
-            this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
+            this.refFlatlist.current?.scrollToOffset({ offset: newOffset, animated: true });
         }
     };
-    /** @param {GestureResponderEvent} event */
-    onTouchEnd = (event) => {
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
         if (this.state.draggedItem === null) {
             return;
         }

@@ -113,6 +113,7 @@ class NotificationsInApp extends React.Component {
             })
         };
         const animStyle = {
+            top: user.interface.userHeader.state.height,
             transform: [
                 {
                     translateY: animOpen.interpolate({

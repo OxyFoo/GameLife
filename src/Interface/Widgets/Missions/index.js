@@ -48,15 +48,21 @@ class Missions extends BackMissions {
             ]
         };
 
-        const backgroundColor = ['#B839FE', '#8A3DFE'];
-
         return (
-            <Button style={[styles.buttonContainer, style]} onPress={this.handleNextMission} appearance='uniform'>
+            <Button
+                style={[styles.buttonContainer, style]}
+                onPress={this.handleNextMission}
+                appearance='uniform'
+                color='transparent'
+            >
                 <LinearGradient
                     style={styles.container}
-                    colors={backgroundColor}
+                    colors={[
+                        themeManager.GetColor('main2', { opacity: 0.65 }),
+                        themeManager.GetColor('main2', { opacity: 0.25 })
+                    ]}
                     start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
+                    end={{ x: 1, y: 0 }}
                 >
                     <View style={styles.columnZap}>
                         <Zap

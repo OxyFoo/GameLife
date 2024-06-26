@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import TodayPieChartBack from './back';
@@ -25,14 +26,22 @@ class TodayPieChart extends TodayPieChartBack {
             };
 
             return (
-                <View style={[styles.container, background, this.props.style]}>
+                <LinearGradient
+                    colors={[
+                        themeManager.GetColor('main1', { opacity: 0.45 }),
+                        themeManager.GetColor('main1', { opacity: 0.12 })
+                    ]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={[styles.container, background, this.props.style]}
+                >
                     <View style={styles.notEnoughData}>
                         <Text style={styles.notEnoughDataText}>{lang['chart-today-notmuch']}</Text>
                         <Button style={styles.notEnoughDataButton} color='main2' onPress={this.onAddActivityPress}>
                             {lang['chart-today-notmuch-button']}
                         </Button>
                     </View>
-                </View>
+                </LinearGradient>
             );
         }
 

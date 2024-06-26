@@ -9,7 +9,6 @@ import StartMission from './mission';
 
 /**
  * @typedef {import('Interface/Widgets').Missions} Missions
- * @typedef {import('Interface/Widgets').MultiplayerPanel} MultiplayerPanel
  */
 
 const BackHomeProps = {
@@ -30,9 +29,6 @@ class BackHome extends PageBase {
     };
 
     feShowUserHeader = true;
-
-    /** @type {React.RefObject<MultiplayerPanel>} */
-    refMultiplayerPanel = React.createRef();
 
     /** @type {React.RefObject<Missions>} */
     refMissions = React.createRef();

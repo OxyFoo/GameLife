@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, FlatList } from 'react-native';
+import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -14,8 +14,9 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
- * 
+ *
  * @typedef {import('Class/Todoes').Todo} Todo
+ * @typedef {import('react-native').FlatList<Todo>} FlatListTodo
  */
 
 class BackTodoList extends React.Component {
@@ -33,25 +34,29 @@ class BackTodoList extends React.Component {
         draggedItem: null,
 
         mouseY: new Animated.Value(0)
-    }
+    };
 
+    /** @type {React.RefObject<FlatListTodo>} Used to manage todo sorting */
+    refFlatlist = React.createRef();
+
+    flatlist = {
+        contentSizeHeight: 0,
+        layoutMeasurementHeight: 0,
+        contentOffsetY: 0
+    };
+
+    /** @type {number[]} */
+    initialSort = [];
+
+    /** @type {NodeJS.Timeout | null} */
+    undoTimeout = null;
+
+    /** @type {LayoutRectangle | null} */
+    tmpLayoutContainer = null;
+
+    /** @param {any} props */
     constructor(props) {
         super(props);
-
-        /** @type {FlatList<Todo> | null} Used to manage todo sorting */
-        this.refFlatlist = null;
-
-        this.flatlist = {
-            contentSizeHeight: 0,
-            layoutMeasurementHeight: 0,
-            contentOffsetY: 0,
-        }
-
-        /** @type {NodeJS.Timeout | null} */
-        this.undoTimeout = null;
-
-        /** @type {LayoutRectangle | null} */
-        this.tmpLayoutContainer = null;
 
         this.state.todoes = user.todoes.Get();
         this.listenerTodo = user.todoes.allTodoes.AddListener(this.refreshTodoes);
@@ -59,21 +64,17 @@ class BackTodoList extends React.Component {
 
     refreshTodoes = () => {
         this.setState({ todoes: user.todoes.Get() });
-    }
+    };
 
     componentWillUnmount() {
-        clearTimeout(this.undoTimeout);
+        if (this.undoTimeout !== null) {
+            clearTimeout(this.undoTimeout);
+        }
         user.todoes.allTodoes.RemoveListener(this.listenerTodo);
     }
 
     /** @param {Todo} item */
-    keyExtractor = (item) => (
-        'todo-' + [
-            item.title,
-            ...item.created.toString(),
-            ...item.deadline.toString()
-        ].join('-')
-    )
+    keyExtractor = (item) => 'todo-' + [item.title, ...item.created.toString(), ...item.deadline.toString()].join('-');
 
     /**
      * Add a new todo to the list and open the todo page\
@@ -82,13 +83,16 @@ class BackTodoList extends React.Component {
     addTodo = () => {
         if (this.state.todoes.length >= 8) {
             const title = langManager.curr['todoes']['alert-todoeslimit-title'];
-            const text = langManager.curr['todoes']['alert-todoeslimit-text'];
-            user.interface.popup.Open('ok', [title, text]);
+            const message = langManager.curr['todoes']['alert-todoeslimit-message'];
+            user.interface.popup.OpenT({
+                type: 'ok',
+                data: { title, message }
+            });
             return;
         }
 
-        user.interface.ChangePage('todo', undefined, true);
-    }
+        user.interface.ChangePage('todo', { storeInHistory: false });
+    };
 
     /** @param {Todo} todo */
     onTodoCheck = (todo) => {
@@ -98,11 +102,11 @@ class BackTodoList extends React.Component {
             user.todoes.Check(todo, GetGlobalTime());
         }
         user.GlobalSave();
-    }
+    };
 
     /**
      * @param {Todo} todo
-     * @param {(cancel: () => void) => void} callbackRemove
+     * @param {(cancelback: (cancel: () => void) => void) => void} callbackRemove
      */
     onTodoRemove = (todo, callbackRemove) => {
         // Close undo button after 10 seconds
@@ -119,12 +123,12 @@ class BackTodoList extends React.Component {
             }
 
             this.setState({
-                todoes: [ ...user.todoes.Get() ],
+                todoes: [...user.todoes.Get()],
                 undoEnabled: true
             });
             user.GlobalSave();
         });
-    }
+    };
 
     undo = () => {
         if (user.todoes.lastDeletedTodo === null) {
@@ -132,7 +136,9 @@ class BackTodoList extends React.Component {
         }
 
         // Close undo button
-        clearTimeout(this.undoTimeout);
+        if (this.undoTimeout !== null) {
+            clearTimeout(this.undoTimeout);
+        }
 
         this.setState({
             todoes: [...user.todoes.Get()],
@@ -141,7 +147,7 @@ class BackTodoList extends React.Component {
 
         user.todoes.Undo();
         user.GlobalSave();
-    }
+    };
 
     /** @param {Todo} item */
     onDrag = (item) => {
@@ -149,26 +155,31 @@ class BackTodoList extends React.Component {
             scrollable: false,
             draggedItem: item
         });
-    }
+    };
 
     /** @param {NativeSyntheticEvent} event */
     onScroll = (event) => {
         this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [ ...user.todoes.sort ];
+        this.initialSort = [...user.todoes.sort];
 
-        GetAbsolutePosition(this.refFlatlist).then(pos => {
+        if (this.refFlatlist.current === null) {
+            return;
+        }
+
+        GetAbsolutePosition(this.refFlatlist.current).then((pos) => {
             this.tmpLayoutContainer = pos;
 
             const posY = this.tmpLayoutContainer.y + 32 / 2;
             const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
             TimingAnimation(this.state.mouseY, newY, 0).start();
         });
-    }
+    };
+
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         const { draggedItem, scrollable } = this.state;
@@ -200,14 +211,15 @@ class BackTodoList extends React.Component {
         const scrollYMax = contentSizeHeight - layoutMeasurementHeight;
         if (newY < scrollOffset && scrollY > 0) {
             const newOffset = Math.max(0, scrollY - scrollOffset);
-            this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
+            this.refFlatlist.current?.scrollToOffset({ offset: newOffset, animated: true });
         } else if (newY > this.tmpLayoutContainer.height - scrollOffset && scrollY < scrollYMax) {
             const newOffset = Math.min(scrollYMax, scrollY + scrollOffset);
-            this.refFlatlist?.scrollToOffset({ offset: newOffset, animated: true });
+            this.refFlatlist.current?.scrollToOffset({ offset: newOffset, animated: true });
         }
-    }
-    /** @param {GestureResponderEvent} event */
-    onTouchEnd = (event) => {
+    };
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
         // Dragging ended & save new todoes order
         this.setState({
             scrollable: true,
@@ -215,14 +227,16 @@ class BackTodoList extends React.Component {
         });
 
         // Save changes if todoes order changed (and not just a todo check)
-        if (this.initialSort.join() !== user.todoes.sort.join() &&
-            this.initialSort.length === user.todoes.sort.length) {
-                user.GlobalSave();
+        if (
+            this.initialSort.join() !== user.todoes.sort.join() &&
+            this.initialSort.length === user.todoes.sort.length
+        ) {
+            user.GlobalSave();
         }
 
         // Reset tmpLayoutContainer
         this.tmpLayoutContainer = null;
-    }
+    };
 }
 
 export default BackTodoList;

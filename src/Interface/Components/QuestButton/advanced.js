@@ -1,15 +1,20 @@
+// TODO: Finish this component
+
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, Icon, Button, DayClock } from 'Interface/Components';
+import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').ListRenderItem<DayType>} ListRenderItemDayType
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -17,16 +22,16 @@ import { Text, Icon, Button, DayClock } from 'Interface/Components';
  * @typedef {import('Class/Quests/MyQuests').DayType} DayType
  * @typedef {import('Class/Quests/MyQuests').DayClockStates} DayClockStates
  *
+ * @typedef {Object} QuestPropsType
+ * @prop {StyleProp} style
+ * @prop {MyQuest | null} quest
+ * @prop {() => void} onDrag Icon to drag => onTouchStart event (quest only)
  */
 
+/** @type {QuestPropsType} */
 const QuestProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {MyQuest | null} */
     quest: null,
-
-    /** Icon to drag => onTouchStart event (quest only) */
     onDrag: () => {}
 };
 
@@ -85,14 +90,18 @@ class QuestElement extends React.Component {
         return false;
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    /**
+     * @param {QuestPropsType} _prevProps
+     * @param {this['state']} prevState
+     */
+    componentDidUpdate(_prevProps, prevState) {
         if (JSON.stringify(prevState.days) !== JSON.stringify(this.state.days)) {
             this.setState({ days: user.quests.myquests.GetDays(this.props.quest) });
         }
     }
 
-    /** @param {{ item: DayType, index: number }} param0 */
-    renderDay = ({ item, index }) => {
+    /** @type {ListRenderItemDayType} */
+    renderDay = ({ item }) => {
         return <DayClock day={item.day} isToday={item.isToday} state={item.state} fillingValue={item.fillingValue} />;
     };
 
@@ -114,14 +123,14 @@ class QuestElement extends React.Component {
     }
 
     timeout;
-    /** @param {GestureResponderEvent} event */
-    onTouchStart = (event) => {
+    /** @param {GestureResponderEvent} _event */
+    onTouchStart = (_event) => {
         const { onDrag } = this.props;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => onDrag(), 500);
     };
-    /** @param {GestureResponderEvent} event */
-    onTouchMove = (event) => {
+    /** @param {GestureResponderEvent} _event */
+    onTouchMove = (_event) => {
         clearTimeout(this.timeout);
     };
 
@@ -131,29 +140,37 @@ class QuestElement extends React.Component {
         const { style, quest } = this.props;
         if (quest === null) return null;
 
-        const { title } = quest;
-        const openQuest = () => user.interface.ChangePage('myqueststats', { quest }, true);
+        const openQuest = () => user.interface.ChangePage('myqueststats', { args: { quest }, storeInHistory: false });
 
         const timeHour = Math.floor(quest.schedule.duration / 60);
         const timeMinute = quest.schedule.duration % 60;
 
+        const { title } = quest;
         let titleText = `${title.length > 10 ? title.slice(0, 12) + '...' : title}`;
+        let timeText = '';
         if (timeHour > 0 || timeMinute > 0) {
-            titleText += ` -`;
             if (timeHour > 0) {
-                titleText += ` ${timeHour}${langTimes['hours-min']}`;
+                timeText += `${timeHour}${langTimes['hours-min']}`;
             }
             if (timeMinute > 0) {
-                titleText += ` ${timeMinute}${langTimes['minutes-min']}`;
+                timeText += ` ${timeMinute}${langTimes['minutes-min']}`;
             }
         }
 
         return (
-            <View style={[styles.item, style]}>
+            <LinearGradient
+                style={[styles.item, style]}
+                colors={[
+                    themeManager.GetColor('backgroundCard', { opacity: 0.45 }),
+                    themeManager.GetColor('backgroundCard', { opacity: 0.2 })
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+            >
                 <Button
                     style={styles.content}
                     appearance='uniform'
-                    color='main3'
+                    color='transparent'
                     onPress={openQuest}
                     onTouchStart={this.onTouchStart}
                     onTouchMove={this.onTouchMove}
@@ -166,7 +183,7 @@ class QuestElement extends React.Component {
                         </View>
                         <View style={styles.headerStreak}>
                             <Text style={styles.streakText2} color='main1'>
-                                {'0 / 2h'}
+                                {'0 / ' + timeText}
                             </Text>
                             <Text style={styles.streakText} color='main2'>
                                 {streakCount.toString()}
@@ -176,15 +193,15 @@ class QuestElement extends React.Component {
                         </View>
                     </View>
 
-                    {/* <FlatList
+                    <FlatList
                         data={days}
                         numColumns={7}
                         keyExtractor={(item) => 'quest-day-' + item.state}
                         columnWrapperStyle={styles.flatlistColumnWrapper}
                         renderItem={this.renderDay}
-                    /> */}
+                    />
                 </Button>
-            </View>
+            </LinearGradient>
         );
     }
 }

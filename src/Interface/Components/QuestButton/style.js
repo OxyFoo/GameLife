@@ -6,12 +6,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderRadius: 8
     },
     content: {
         paddingVertical: 10,
-        paddingHorizontal: 12,
-        borderRadius: 8
+        paddingHorizontal: 12
     },
     header: {
         width: '100%',
@@ -26,17 +26,21 @@ const styles = StyleSheet.create({
     title: {
         height: 24,
         marginLeft: 8,
+        fontSize: 16,
         textAlign: 'left'
     },
     headerStreak: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingLeft: 8
     },
     streakText2: {
-        marginRight: 12
+        marginRight: 12,
+        fontSize: 16
     },
     streakText: {
-        marginRight: 4
+        marginRight: 4,
+        fontSize: 16
     },
     streakIcon: {
         marginRight: 12

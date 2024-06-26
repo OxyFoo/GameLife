@@ -64,12 +64,7 @@ class Button extends ButtonBack {
                 {this.renderContent()}
 
                 {/** Ripple */}
-                {enabled && (
-                    <Ripple
-                        ref={this.rippleRef}
-                        rippleColor={appearance === 'normal' ? 'black' : 'white'}
-                    />
-                )}
+                {enabled && <Ripple ref={this.rippleRef} rippleColor={appearance === 'normal' ? 'black' : 'white'} />}
             </ButtonView>
         );
     }
@@ -173,19 +168,12 @@ class Button extends ButtonBack {
         } else if (appearance === 'outline' || appearance === 'outline-blur') {
             return (
                 <View>
-                    <View
-                        style={[styles.content, styleContent, styleContentProp]}
-                        pointerEvents='none'
-                    >
+                    <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
                         {content}
                     </View>
                     <MaskedView
                         style={styles.absolute}
-                        maskElement={
-                            <View style={[styles.content, styleContent, styleContentProp]}>
-                                {content}
-                            </View>
-                        }
+                        maskElement={<View style={[styles.content, styleContent, styleContentProp]}>{content}</View>}
                     >
                         <LinearGradient
                             style={styles.fill}
@@ -206,12 +194,7 @@ class Button extends ButtonBack {
 
         if (appearance === 'normal') {
             return (
-                <LinearGradient
-                    style={styles.absolute}
-                    colors={['#8CF7FF', '#DBA1FF']}
-                    useAngle={true}
-                    angle={267}
-                />
+                <LinearGradient style={styles.absolute} colors={['#8CF7FF', '#DBA1FF']} useAngle={true} angle={267} />
             );
         } else if (appearance === 'uniform') {
             return (
@@ -226,16 +209,8 @@ class Button extends ButtonBack {
             );
         } else if (appearance === 'outline') {
             return (
-                <MaskedView
-                    style={styles.absolute}
-                    maskElement={<View style={styles.backgroundView} />}
-                >
-                    <LinearGradient
-                        style={styles.fill}
-                        colors={['#8CF7FF', '#DBA1FF']}
-                        useAngle={true}
-                        angle={267}
-                    />
+                <MaskedView style={styles.absolute} maskElement={<View style={styles.backgroundView} />}>
+                    <LinearGradient style={styles.fill} colors={['#8CF7FF', '#DBA1FF']} useAngle={true} angle={267} />
                 </MaskedView>
             );
         } else if (appearance === 'outline-blur') {
@@ -253,10 +228,7 @@ class Button extends ButtonBack {
                         ]}
                         blurAmount={20}
                     />
-                    <MaskedView
-                        style={styles.absolute}
-                        maskElement={<View style={styles.backgroundView} />}
-                    >
+                    <MaskedView style={styles.absolute} maskElement={<View style={styles.backgroundView} />}>
                         <LinearGradient
                             style={styles.fill}
                             colors={['#8CF7FF', '#DBA1FF']}

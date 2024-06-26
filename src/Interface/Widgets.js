@@ -1,3 +1,8 @@
+export { MyQuestsSimpleList } from './Widgets/MyQuestsSimpleList';
+export { MyQuestsAdvancedList } from './Widgets/MyQuestsAdvancedList';
+export { TodoSimpleList } from './Widgets/TodoSimpleList';
+export { TodoAdvancedList } from './Widgets/TodoAdvancedList';
+
 import ActivityPanel from './Widgets/ActivityPanel';
 import AchievementsGroup from './Widgets/AchievementsGroup';
 import ActivityCard from './Widgets/ActivityCard';
@@ -8,7 +13,6 @@ import BottomBar from './Widgets/BottomBar';
 import DailyQuest from './Widgets/DailyQuest';
 import Missions from './Widgets/Missions';
 import MultiplayerPanel from './Widgets/MultiplayerPanel';
-import MyQuestsList from './Widgets/MyQuestsList';
 import News from './Widgets/News';
 import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
@@ -19,7 +23,6 @@ import StatsBars from './Widgets/StatsBars';
 import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import TodayPieChart from './Widgets/TodayPieChart';
-import TodoList from './Widgets/TodoList';
 import YearHeatMap from './Widgets/YearHeatMap';
 import ZapGPT from './Widgets/ZapGPT';
 
@@ -34,7 +37,6 @@ export {
     DailyQuest,
     Missions,
     MultiplayerPanel,
-    MyQuestsList,
     News,
     PageHeader,
     PanelScreen,
@@ -45,7 +47,6 @@ export {
     SkillChart,
     SkillsGroup,
     TodayPieChart,
-    TodoList,
     YearHeatMap,
     ZapGPT
 };

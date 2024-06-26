@@ -2,7 +2,8 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     page: {
-        paddingHorizontal: 24
+        paddingHorizontal: 24,
+        marginBottom: 24
     },
     progressbar: {
         marginTop: 12,
@@ -23,42 +24,22 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
 
+    sectionContainer: {
+        marginTop: 24,
+        marginBottom: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
     sectionTitle: {
-        marginTop: 16,
-        marginBottom: 24,
         fontSize: 21,
         textAlign: 'left',
         textTransform: 'uppercase'
     },
 
-    topSpace: {
-        marginTop: 16
-    },
-    homeRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    titleWidget: {
-        marginBottom: 12,
-        fontWeight: 'bold'
-    },
     todayPieChart: {
         width: '100%',
         borderRadius: 8
-    },
-    stats: {
-        flex: 1,
-        borderRadius: 24,
-        marginRight: 18,
-        padding: 8
-    },
-    skills: {
-        width: '60%',
-        borderRadius: 20,
-        padding: 8
-    },
-    skillsGroup: {
-        flex: 0
     }
 });
 

@@ -10,9 +10,8 @@ import langManager from 'Managers/LangManager';
 import Text from 'Interface/OldComponents/Text';
 import Icon from 'Interface/OldComponents/Icon';
 import Button from 'Interface/OldComponents/Button';
-import Swiper from 'Interface/OldComponents/Swiper';
 import DayClock from 'Interface/OldComponents/DayClock';
-import { Separator } from 'Interface/Components';
+import { Separator, Swiper } from 'Interface/Components';
 import { RenderItemMemo } from 'Interface/Widgets/DailyQuest/RewardPopup/element';
 
 /**

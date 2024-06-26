@@ -4,16 +4,9 @@ import { View } from 'react-native';
 import styles from './style';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import { Text, ProgressBar } from 'Interface/Components';
-import { TodayPieChart, Missions, MyQuestsList } from 'Interface/Widgets';
-import { News, SkillsGroup, StatsBars, MultiplayerPanel } from 'Interface/Widgets';
-
-/**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('react-native').ListRenderItem<MyQuest>} FlatListMyQuestProps
- */
+import { Text, ProgressBar, Icon, Swiper } from 'Interface/Components';
+import { TodayPieChart, Missions, MyQuestsSimpleList, TodoSimpleList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -24,11 +17,12 @@ class Home extends BackHome {
 
         const lang = langManager.curr['home'];
 
+        const { Title } = this;
         return (
             <View style={styles.page}>
                 <ProgressBar
                     style={styles.progressbar}
-                    height={12}
+                    height={8}
                     color='main1'
                     value={xpInfo.xp}
                     maxValue={xpInfo.next}
@@ -41,27 +35,26 @@ class Home extends BackHome {
                     </Text>
                 </View>
 
-                <Missions refHome={this} style={styles.topSpace} />
+                {/* Today missions */}
+                <Title title={lang['section-missions']} />
+                <Missions refHome={this} />
 
                 {/* Today performance */}
-                <Text style={styles.sectionTitle} color='secondary'>
-                    {lang['section-today-performance']}
-                </Text>
-                <View style={styles.homeRow}>
-                    <TodayPieChart style={styles.todayPieChart} />
-                </View>
+                <Title title={lang['section-today-performance']}>
+                    <Icon icon='add-outline' color='gradient' onPress={() => this.fe.console.AddLog('info', 'YAY')} />
+                </Title>
+                <Swiper pages={[<TodayPieChart style={styles.todayPieChart} />]} />
 
-                {/* Today missions */}
-                <Text style={styles.sectionTitle} color='secondary'>
-                    {lang['section-today-quests']}
-                </Text>
+                {/* Today quests */}
+                <Title title={lang['section-today-quests']} />
+                <MyQuestsSimpleList />
 
-                <MyQuestsList />
+                {/* My todoes */}
+                <Title title={lang['section-my-todoes']} />
+                <TodoSimpleList />
 
                 {/*
-                {mission?.state === 'claimed' && <News style={styles.topSpace} />}
-
-                <View style={[styles.homeRow, styles.topSpace]}>
+                <View style={styles.homeRow}>
                     <View style={[styleSmallContainer, styles.stats]}>
                         <Text fontSize={20} style={styles.titleWidget}>
                             {lang['container-stats-title']}
@@ -77,10 +70,26 @@ class Home extends BackHome {
                     </View>
                 </View>
 
-                <MultiplayerPanel ref={this.refMultiplayerPanel} style={styles.topSpace} hideWhenOffline />
-
-                {mission?.state !== 'claimed' && <News style={styles.topSpace} />}
+                <News />
+                <MultiplayerPanel ref={this.refMultiplayerPanel} hideWhenOffline />
                 */}
+            </View>
+        );
+    }
+
+    /**
+     * @param {Object} props
+     * @param {string} props.title
+     * @param {React.ReactNode} [props.children]
+     */
+    Title({ title, children }) {
+        return (
+            <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle} color='secondary'>
+                    {title}
+                </Text>
+
+                {children}
             </View>
         );
     }

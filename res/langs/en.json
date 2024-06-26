@@ -354,8 +354,10 @@
     "home": {
         "title-hello": "Hello {}",
 
-        "section-today-performance": "My performance of the day",
+        "section-missions": "Discovery missions",
+        "section-today-performance": "My activities of the day",
         "section-today-quests": "My quests of the day",
+        "section-my-todoes": "My to-do list",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
@@ -804,7 +806,7 @@
         "alert-remtodo-title": "Delete todo?",
         "alert-remtodo-text": "Are you sure you want to delete this todo?",
         "alert-remtask-title": "Delete todo?",
-        "alert-remtask-text": "Are you sure you want to delete this task?",
+        "alert-remtask-message": "Are you sure you want to delete this task?",
         "alert-taskslimit-title": "Limit reached",
         "alert-taskslimit-text": "You can't add more than 20 tasks to this todo",
         "alert-back-title": "Back",
@@ -819,13 +821,15 @@
 
     "todoes": {
         "container-title": "Todo list",
+        "button-all-todoes": "All todoes",
+
         "todoes-empty-title": "No quest",
         "todoes-empty-button": "Add a quest",
 
         "todo-type-deadline": "Ends on:",
 
         "alert-todoeslimit-title": "Limit reached",
-        "alert-todoeslimit-text": "You have reached the limit of todoes, please delete some of them to add more."
+        "alert-todoeslimit-message": "You have reached the limit of todoes, please delete some of them to add more."
     },
 
     "quest": {
@@ -885,11 +889,10 @@
 
     "quests": {
         "container-title": "My quests",
-        "quests-empty-title": "If you don't have a quest yet, add one by clicking on the button below or on the + at top right.",
-        "quests-empty-button": "Add a quest",
+        "button-all-quests": "All quests",
 
         "alert-questslimit-title": "Limit reached",
-        "alert-questslimit-text": "You have reached the limit of quests, please delete some of them to add more.",
+        "alert-questslimit-message": "You have reached the limit of quests, please delete some of them to add more.",
 
         "current-streak": "Current streak",
         "heatmap-title-weeks": "Completion by week",

@@ -2,20 +2,24 @@ import React from 'react';
 import { Animated } from 'react-native';
 
 import styles from './style';
-import TodoElement from './todo';
+import { TodoButton } from './index';
 
-/** 
+/**
  * @typedef {import('Class/Todoes').Todo} Todo
+ *
+ * @typedef {Object} TodoSelectionPropsType
+ * @property {Todo | null} draggedItem
+ * @property {Animated.Value} mouseY
  */
 
+/** @type {TodoSelectionPropsType} */
 const TodoSelectionProps = {
-    /** @type {Todo | null} */
     draggedItem: null,
-
     mouseY: new Animated.Value(0)
 };
 
 class TodoSelection extends React.Component {
+    /** @param {TodoSelectionPropsType} nextProps */
     shouldComponentUpdate(nextProps) {
         const { draggedItem } = this.props;
         return draggedItem !== nextProps.draggedItem;
@@ -26,17 +30,12 @@ class TodoSelection extends React.Component {
         if (draggedItem === null) return null;
 
         const translate = {
-            transform: [
-                { translateY: mouseY }
-            ]
+            transform: [{ translateY: mouseY }]
         };
 
         return (
             <Animated.View style={[styles.selection, translate]}>
-                <TodoElement
-                    style={styles.selectionTodo}
-                    todo={draggedItem}
-                />
+                <TodoButton style={styles.selectionTodo} todo={draggedItem} />
             </Animated.View>
         );
     }

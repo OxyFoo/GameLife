@@ -354,8 +354,10 @@
     "home": {
         "title-hello": "Bonjour {}",
 
-        "section-today-performance": "Ma performance du jour",
+        "section-missions": "Missions découverte",
+        "section-today-performance": "Mes activités du jour",
         "section-today-quests": "Mes quêtes du jour",
+        "section-my-todoes": "Mes listes",
 
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
@@ -804,7 +806,7 @@
         "alert-remtodo-title": "Suppression ?",
         "alert-remtodo-text": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
         "alert-remtask-title": "Suppression ?",
-        "alert-remtask-text": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
+        "alert-remtask-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
         "alert-taskslimit-title": "Limite atteinte",
         "alert-taskslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
@@ -819,13 +821,15 @@
 
     "todoes": {
         "container-title": "Todo liste",
+        "button-all-todoes": "Toutes les listes",
+
         "todoes-empty-title": "Tu n'as pas encore de tâches",
         "todoes-empty-button": "En ajouter une",
 
         "todo-type-deadline": "Avant le:",
 
         "alert-todoeslimit-title": "Limite atteinte",
-        "alert-todoeslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+        "alert-todoeslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "quest": {
@@ -885,11 +889,10 @@
 
     "quests": {
         "container-title": "Mes quêtes",
-        "quests-empty-title": "Tu n'as pas encore de quête, ajoutes-en une en cliquant sur le bouton ci-dessous ou sur le + en haut à droite",
-        "quests-empty-button": "En ajouter une",
+        "button-all-quests": "Toutes mes quêtes",
 
         "alert-questslimit-title": "Limite de quêtes atteinte",
-        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
+        "alert-questslimit-message": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
 
         "current-streak": "Série actuelle",
         "heatmap-title-weeks": "Réalisation par semaine",

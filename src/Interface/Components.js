@@ -5,10 +5,13 @@ export { Icon } from './Components/Icon';
 export { InputText } from './Components/InputText';
 export { NotificationsInAppButton } from './Components/NotificationsInAppButton';
 export { ProgressBar } from './Components/ProgressBar';
+export { QuestButton } from './Components/QuestButton';
 export { Separator } from './Components/Separator';
+export { Swiper } from './Components/Swiper';
 export { Switch } from './Components/Switch';
 export { SwitchText } from './Components/SwitchText';
 export { Text } from './Components/Text';
+export { TodoButton } from './Components/TodoButton';
 
 import Container from './OldComponents/Container';
 import Frame from './OldComponents/Character/Frame';
@@ -27,7 +30,6 @@ import LineChartSvg from './OldComponents/LineChartSvg';
 import PieChart from './OldComponents/PieChart';
 import SimpleContainer from './OldComponents/SimpleContainer';
 import StreakChart from './OldComponents/StreakChart';
-import Swiper from './OldComponents/Swiper';
 import OldText from './OldComponents/Text';
 import UserOnlineElement from './OldComponents/UserOnlineElement';
 import Zap from './OldComponents/Zap';
@@ -49,7 +51,6 @@ export {
     PieChart,
     SimpleContainer,
     StreakChart,
-    Swiper,
     UserOnlineElement,
     Zap,
     OldIcon,

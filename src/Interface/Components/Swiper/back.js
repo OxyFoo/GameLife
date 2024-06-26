@@ -13,46 +13,37 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ *
+ * @typedef {Object} SwiperPropsType
+ * @property {StyleProp} style
+ * @property {"flex-start" | "flex-end" | "center"} verticalAlign
+ * @property {number | string | undefined} height If undefined, height equals to max height of pages content
+ * @property {number} borderRadius
+ * @property {boolean} enableAutoNext If true, automatically swipe to the next page
+ * @property {boolean} disableCircular
+ * @property {number} delayNext Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true
+ * @property {Array<React.ReactNode>} pages
+ * @property {number} initIndex
+ * @property {ThemeColor} backgroundColor
+ * @property {(index: number) => void} onSwipe Callback is called when page index change
+ * @property {(event: LayoutChangeEvent) => void} onLayout Callback is called when page layout change
+ * @property {boolean} disableSwipe
  */
 
+/** @type {SwiperPropsType} */
 const SwiperProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {"flex-start" | "flex-end" | "center"} */
     verticalAlign: 'center',
-
-    /** @type {number | string} If undefined, height equals to max height of pages content */
     height: undefined,
-
-    /** @type {number} */
-    borderRadius: 16,
-
-    /** @type {boolean} If true, automatically swipe to the next page */
+    borderRadius: 8,
     enableAutoNext: true,
-
-    /** @type {boolean} */
     disableCircular: false,
-
-    /** @type {number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
     delayNext: 10,
-
-    /** @type {Array<React.Component | React.ReactElement | React.ReactNode>} */
     pages: [],
-
-    /** @type {number} */
     initIndex: 0,
-
-    /** @type {ThemeColor} */
     backgroundColor: 'backgroundTransparent',
-
-    /** @type {(index: number) => void} Callback is called when page index change */
-    onSwipe: (index) => {},
-
-    /** @type {(event: LayoutChangeEvent) => void} Callback is called when page layout change */
-    onLayout: (event) => {},
-
-    /** @type {boolean} */
+    onSwipe: () => {},
+    onLayout: () => {},
     disableSwipe: false
 };
 
@@ -67,6 +58,14 @@ class SwiperBack extends React.Component {
     };
 
     maxHeight = 0;
+
+    // Temporary variables
+    acc = 0;
+    tickPos = 0;
+    firstTouchX = 0;
+    firstTouchY = 0;
+    firstPosX = 0;
+    tickTime = 0;
 
     /** @type {'none' | 'vertical' | 'horizontal'} */
     scroll = 'none';
@@ -130,8 +129,12 @@ class SwiperBack extends React.Component {
         this.tickPos = 0;
         this.tickTime = Date.now();
     };
+
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
         if (this.props.disableSwipe) return;
 
         // Prevent vertical scroll when horizontal swipe
@@ -143,8 +146,12 @@ class SwiperBack extends React.Component {
 
         if (this.scroll === 'horizontal') {
             event.stopPropagation();
+            console.log('onTouchMove', this.scroll);
         } else if (this.scroll === 'vertical') {
+            console.log('onTouchMove', this.scroll);
             return;
+        } else {
+            console.log('onTouchMove', this.scroll);
         }
 
         // Position
@@ -164,8 +171,9 @@ class SwiperBack extends React.Component {
         TimingAnimation(this.state.positionX, newPosX, 0).start();
         TimingAnimation(this.state.positionDots, newDotPos, 0, false).start();
     };
-    /** @param {GestureResponderEvent} event */
-    onTouchEnd = (event) => {
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
         this.scroll = 'none';
 
         // Define the next page index
@@ -189,6 +197,7 @@ class SwiperBack extends React.Component {
 
         this.startTimer();
     };
+
     /** @param {GestureResponderEvent} event */
     onTouchCancel = (event) => {
         // Prevent vertical scroll when horizontal swipe

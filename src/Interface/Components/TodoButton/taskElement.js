@@ -14,20 +14,19 @@ import { Icon, Button } from 'Interface/Components';
  *
  * @typedef {import('Class/Todoes').Task} Task
  * @typedef {'none' | 'underline' | 'line-through' | 'underline line-through'} TextDecorationLineType
+ *
+ * @typedef {Object} TaskPropsType
+ * @property {StyleProp} style
+ * @property {Task | null} task
+ * @property {(checked: boolean, title: string) => void} onTaskEdit
+ * @property {() => void} onTaskDelete
  */
 
+/** @type {TaskPropsType} */
 const TaskProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {Task | null} */
     task: null,
-
-    /**
-     * @param {boolean} checked
-     * @param {string} title
-     */
-    onTaskEdit: (checked, title) => {},
+    onTaskEdit: () => {},
     onTaskDelete: () => {}
 };
 
@@ -39,10 +38,17 @@ class TaskElement extends React.Component {
         const { onTaskDelete } = this.props;
         const lang = langManager.curr['todo'];
         const title = lang['alert-remtask-title'];
-        const text = lang['alert-remtask-text'];
-        const callback = (btn) => btn === 'yes' && onTaskDelete();
-        user.interface.popup.Open('yesno', [title, text], callback);
-    }
+        const message = lang['alert-remtask-message'];
+        user.interface.popup.OpenT({
+            type: 'yesno',
+            data: { title, message },
+            callback: (btn) => {
+                if (btn === 'yes') {
+                    onTaskDelete();
+                }
+            }
+        });
+    };
 
     render() {
         const { style, task, onTaskEdit } = this.props;
@@ -69,7 +75,7 @@ class TaskElement extends React.Component {
                 <TextInput
                     style={[styles.input, this.textColor, decoration]}
                     value={title}
-                    onChangeText={text => onTaskEdit(checked, text)}
+                    onChangeText={(text) => onTaskEdit(checked, text)}
                     selectionColor={this.hexActiveColor}
                     multiline={true}
                     maxLength={256}

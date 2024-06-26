@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flexDirection: 'row',
-        paddingHorizontal: 12,
-        borderRadius: 8
+        paddingHorizontal: 12
     },
 
     columnZap: {

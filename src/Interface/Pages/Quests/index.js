@@ -10,20 +10,9 @@ class Quests extends BackQuests {
     render() {
         return (
             <View style={styles.page}>
-                <DailyQuest
-                    ref={this.refDailyQuest}
-                    style={styles.quest}
-                />
-
-                <MyQuestsList
-                    ref={this.refMyQuestsList}
-                    style={styles.quest}
-                />
-
-                <TodoList
-                    ref={this.refTodoList}
-                    style={styles.quest}
-                />
+                <DailyQuest ref={this.refDailyQuest} style={styles.quest} />
+                <MyQuestsList ref={this.refMyQuestsList} style={styles.quest} />
+                <TodoList ref={this.refTodoList} style={styles.quest} />
             </View>
         );
     }

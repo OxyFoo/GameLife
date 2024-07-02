@@ -45,8 +45,8 @@ class NavBar extends BottomBarBack {
         const NavButton = this.renderButton;
         return (
             <Animated.View style={[styles.parent, animStyle]} onLayout={this.onLayout}>
-                <NavButton text='home' icon='home-outline' />
-                <NavButton text='calendar' icon='planner-outline' />
+                <NavButton text='home' icon='home-outline' onPress={this.openHome} />
+                <NavButton text='calendar' icon='planner-outline' onPress={this.openCalendar} />
 
                 {/* Middle button to add an activity */}
                 <View style={styles.middleParentButton}>
@@ -55,13 +55,14 @@ class NavBar extends BottomBarBack {
                         style={styles.middleButton}
                         styleAnimation={middleButtonStyle}
                         appearance='normal'
+                        onPress={this.openAddActivity}
                     >
                         <Icon icon='add-outline' color='main3' size={24} />
                     </Button>
                 </View>
 
-                <NavButton text='multiplayer' icon='multiplayer-outline' />
-                <NavButton text='shop' icon='cart-outline' />
+                <NavButton text='multiplayer' icon='multiplayer-outline' onPress={this.openMultiplayer} />
+                <NavButton text='shop' icon='cart-outline' onPress={this.openShop} />
             </Animated.View>
         );
     }
@@ -70,9 +71,10 @@ class NavBar extends BottomBarBack {
      * @param {Object} props
      * @param {Icons} props.icon
      * @param {keyof Lang['navbar']} props.text
+     * @param {() => void} props.onPress
      * @returns {JSX.Element}
      */
-    renderButton = ({ icon, text }) => {
+    renderButton = ({ icon, text, onPress }) => {
         return (
             <View style={styles.buttonParent}>
                 <Button
@@ -81,6 +83,7 @@ class NavBar extends BottomBarBack {
                     styleContent={styles.buttonContent}
                     appearance='uniform'
                     color='transparent'
+                    onPress={onPress}
                 >
                     <Icon icon={icon} color={'main1'} size={24} />
                     <Text style={styles.text} color={'main1'}>

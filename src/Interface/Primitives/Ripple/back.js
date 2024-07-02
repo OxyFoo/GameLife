@@ -27,10 +27,11 @@ class RippleBack extends React.PureComponent {
     ripple_opacity = new Animated.Value(0);
 
     /**
-     * @param {GestureResponderEvent} event
+     * @param {number} x
+     * @param {number} y
      * @param {number} size
      */
-    Press = (event, size) => {
+    Press = (x, y, size) => {
         if (!this.anim_ended) return;
         if (this.timeoutAnim !== null) {
             clearTimeout(this.timeoutAnim);
@@ -39,10 +40,8 @@ class RippleBack extends React.PureComponent {
         this.pressed = true;
         this.anim_ended = false;
 
-        const posX = event.nativeEvent.locationX;
-        const posY = event.nativeEvent.locationY;
-        TimingAnimation(this.ripplePosX, posX, 0).start();
-        TimingAnimation(this.ripplePosY, posY, 0).start();
+        TimingAnimation(this.ripplePosX, x, 0).start();
+        TimingAnimation(this.ripplePosY, y, 0).start();
 
         TimingAnimation(this.ripple_opacity, 0.2, 100).start();
         TimingAnimation(this.ripple_anim, size * 1.2, 300).start(() => {
@@ -51,15 +50,14 @@ class RippleBack extends React.PureComponent {
                 this.Hide();
             }
         });
-    }
+    };
 
-    /** @param {GestureResponderEvent} event */
-    Release = (event) => {
+    Release = () => {
         this.pressed = false;
         if (this.anim_ended) {
             this.Hide();
         }
-    }
+    };
 
     Hide(duration = 150) {
         TimingAnimation(this.ripple_opacity, 0, duration).start();

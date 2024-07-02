@@ -29,7 +29,7 @@ function SwitchTextCell(
         <TouchableOpacity
             style={[styles.button, { width: props.width }]}
             onPress={() => props.onPress()}
-            onPressIn={(e) => refRipple.current?.Press(e, props.width)}
+            onPressIn={(e) => refRipple.current?.Press(e.nativeEvent.locationX, e.nativeEvent.locationY, props.width)}
             onPressOut={refRipple.current?.Release}
             activeOpacity={0.6}
         >

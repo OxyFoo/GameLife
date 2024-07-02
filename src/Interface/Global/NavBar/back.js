@@ -1,6 +1,9 @@
-import { SpringAnimation } from 'Utils/Animations';
 import * as React from 'react';
 import { Animated } from 'react-native';
+
+import user from 'Managers/UserManager';
+
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -57,6 +60,12 @@ class NavBarBack extends React.Component {
 
         this.setState({ height });
     };
+
+    openHome = () => user.interface.ChangePage('home');
+    openCalendar = () => user.interface.ChangePage('calendar');
+    openAddActivity = () => false;
+    openMultiplayer = () => user.interface.ChangePage('multiplayer');
+    openShop = () => user.interface.ChangePage('shop');
 }
 
 NavBarBack.prototype.props = NavBarProps;

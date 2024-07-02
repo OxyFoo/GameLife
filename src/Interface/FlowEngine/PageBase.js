@@ -23,6 +23,11 @@ class PageBase extends React.Component {
      */
     static feShowNavBar = false;
 
+    /**
+     * @description Refresh page when focused (default: true)
+     * @type {boolean}
+     * @private
+     */
     refresh = true;
 
     constructor(props = {}) {

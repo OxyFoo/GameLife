@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, Animated } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
@@ -18,6 +17,7 @@ import {
     SwitchText,
     ComboBox
 } from 'Interface/Components';
+import { Gradient } from 'Interface/Primitives';
 
 /**
  * @typedef {import('Ressources/Icons').IconsName} IconsName
@@ -28,12 +28,7 @@ class Test extends BackTest {
         return (
             <View style={styles.page}>
                 <MaskedView style={{ marginVertical: 24 }} maskElement={<Text fontSize={32}>{'Page de test'}</Text>}>
-                    <LinearGradient
-                        style={{ width: '100%', height: 45 }}
-                        colors={['#8CF7FF', '#DBA1FF']}
-                        useAngle={true}
-                        angle={190}
-                    />
+                    <Gradient style={{ width: '100%', height: 45 }} />
                 </MaskedView>
 
                 {/*

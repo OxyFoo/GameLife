@@ -45,6 +45,9 @@ const styles = StyleSheet.create({
     interactionsButton: {
         marginRight: 6
     },
+    noWifiIcon: {
+        marginRight: 24
+    },
     avatar: {
         width: 48,
         height: 48,

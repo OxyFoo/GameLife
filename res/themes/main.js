@@ -4,7 +4,7 @@ const Color = {
     main3: '#0B112F', // Dark (background)
     white: '#FFFFFF', // White
     black: '#000000', // Black
-    border: '#808080', // Grey
+    border: '#999EB5', // Grey
     borderLight: '#D0D0D0', // Light grey
     background: '#0E1247', // Dark purple
     backgroundCard: '#384065', // Transparent purple

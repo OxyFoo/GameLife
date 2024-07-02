@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, Animated } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { BlurView } from '@react-native-community/blur';
 import MaskedView from '@react-native-masked-view/masked-view';
 
@@ -10,7 +9,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Text } from '../Text';
 import { Icon } from '../Icon';
-import { Ripple } from 'Interface/Primitives';
+import { Gradient, Ripple } from 'Interface/Primitives';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -175,12 +174,7 @@ class Button extends ButtonBack {
                         style={styles.absolute}
                         maskElement={<View style={[styles.content, styleContent, styleContentProp]}>{content}</View>}
                     >
-                        <LinearGradient
-                            style={styles.fill}
-                            colors={['#8CF7FF', '#DBA1FF']}
-                            useAngle={true}
-                            angle={190}
-                        />
+                        <Gradient style={styles.fill} />
                     </MaskedView>
                 </View>
             );
@@ -193,9 +187,7 @@ class Button extends ButtonBack {
         const { appearance, color } = this.props;
 
         if (appearance === 'normal') {
-            return (
-                <LinearGradient style={styles.absolute} colors={['#8CF7FF', '#DBA1FF']} useAngle={true} angle={267} />
-            );
+            return <Gradient style={styles.absolute} />;
         } else if (appearance === 'uniform') {
             return (
                 <View
@@ -210,7 +202,7 @@ class Button extends ButtonBack {
         } else if (appearance === 'outline') {
             return (
                 <MaskedView style={styles.absolute} maskElement={<View style={styles.backgroundView} />}>
-                    <LinearGradient style={styles.fill} colors={['#8CF7FF', '#DBA1FF']} useAngle={true} angle={267} />
+                    <Gradient style={styles.fill} />
                 </MaskedView>
             );
         } else if (appearance === 'outline-blur') {
@@ -229,12 +221,7 @@ class Button extends ButtonBack {
                         blurAmount={20}
                     />
                     <MaskedView style={styles.absolute} maskElement={<View style={styles.backgroundView} />}>
-                        <LinearGradient
-                            style={styles.fill}
-                            colors={['#8CF7FF', '#DBA1FF']}
-                            useAngle={true}
-                            angle={267}
-                        />
+                        <Gradient style={styles.fill} />
                     </MaskedView>
                 </>
             );

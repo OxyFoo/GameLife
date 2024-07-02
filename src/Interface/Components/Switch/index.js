@@ -38,11 +38,7 @@ class Switch extends SwitchBack {
         };
 
         return (
-            <TouchableOpacity
-                style={[styles.parent, style]}
-                onPress={this.onPress}
-                activeOpacity={0.6}
-            >
+            <TouchableOpacity style={[styles.parent, style]} onPress={this.onPress} activeOpacity={0.6}>
                 {/** Gradient background */}
                 <Animated.View style={[styles.background, bgStyle]}>
                     <LinearGradient

@@ -9,13 +9,19 @@ class PageBase extends React.Component {
      * @description Page is not unmounted when changing page (default: false)
      * @type {boolean}
      */
-    feKeepMounted = false;
+    static feKeepMounted = false;
 
     /**
      * @description Show user header (default: false)
      * @type {boolean}
      */
-    feShowUserHeader = false;
+    static feShowUserHeader = false;
+
+    /**
+     * @description Show bottom bar (default: false)
+     * @type {boolean}
+     */
+    static feShowNavBar = false;
 
     refresh = true;
 

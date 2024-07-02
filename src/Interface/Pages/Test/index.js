@@ -27,10 +27,7 @@ class Test extends BackTest {
     render() {
         return (
             <View style={styles.page}>
-                <MaskedView
-                    style={{ marginVertical: 24 }}
-                    maskElement={<Text fontSize={32}>{'Page de test'}</Text>}
-                >
+                <MaskedView style={{ marginVertical: 24 }} maskElement={<Text fontSize={32}>{'Page de test'}</Text>}>
                     <LinearGradient
                         style={{ width: '100%', height: 45 }}
                         colors={['#8CF7FF', '#DBA1FF']}
@@ -56,13 +53,7 @@ class Test extends BackTest {
     }
 
     renderTitle = (title = '') => {
-        return (
-            <Text
-                style={{ marginVertical: 12, textAlign: 'left', fontSize: 20 }}
-            >
-                {title}
-            </Text>
-        );
+        return <Text style={{ marginVertical: 12, textAlign: 'left', fontSize: 20 }}>{title}</Text>;
     };
 
     renderButtons = () => {
@@ -153,9 +144,7 @@ class Test extends BackTest {
                     label='Test input'
                     icon={'users'}
                     value={this.state.input}
-                    onChangeText={(newText) =>
-                        this.setState({ input: newText })
-                    }
+                    onChangeText={(newText) => this.setState({ input: newText })}
                 />
                 <InputText
                     label='Test input'
@@ -163,9 +152,7 @@ class Test extends BackTest {
                     placeholder='Placeholder'
                     placeholderTextColor='white'
                     value={this.state.input}
-                    onChangeText={(newText) =>
-                        this.setState({ input: newText })
-                    }
+                    onChangeText={(newText) => this.setState({ input: newText })}
                     error
                 />
                 <Text
@@ -214,21 +201,11 @@ class Test extends BackTest {
 
         const iconPair = iconKeys
             // @ts-ignore
-            .filter(
-                (icon) =>
-                    icon.endsWith('-outline') ||
-                    iconKeys.includes(icon + '-outline')
-            );
+            .filter((icon) => icon.endsWith('-outline') || iconKeys.includes(icon + '-outline'));
 
-        const iconNormal = iconPair
-            .filter((icon) => !icon.endsWith('-outline'))
-            .sort();
-        const iconOutline = iconPair
-            .filter((icon) => icon.endsWith('-outline'))
-            .sort();
-        const iconOther = iconKeys
-            .filter((icon) => !iconPair.includes(icon))
-            .sort();
+        const iconNormal = iconPair.filter((icon) => !icon.endsWith('-outline')).sort();
+        const iconOutline = iconPair.filter((icon) => icon.endsWith('-outline')).sort();
+        const iconOther = iconKeys.filter((icon) => !iconPair.includes(icon)).sort();
 
         return (
             <>
@@ -244,12 +221,7 @@ class Test extends BackTest {
                             }}
                         >
                             {iconNormal.map((icon) => (
-                                <Icon
-                                    key={icon}
-                                    icon={icon}
-                                    color='main1'
-                                    style={{ margin: 4 }}
-                                />
+                                <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
                             ))}
                         </View>
                     </Animated.View>
@@ -270,12 +242,7 @@ class Test extends BackTest {
                             }}
                         >
                             {iconOutline.map((icon) => (
-                                <Icon
-                                    key={icon}
-                                    icon={icon}
-                                    color='main1'
-                                    style={{ margin: 4 }}
-                                />
+                                <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
                             ))}
                         </View>
                     </Animated.View>
@@ -288,12 +255,7 @@ class Test extends BackTest {
                         }}
                     >
                         {iconOther.map((icon) => (
-                            <Icon
-                                key={icon}
-                                icon={icon}
-                                color='main1'
-                                style={{ margin: 4 }}
-                            />
+                            <Icon key={icon} icon={icon} color='main1' style={{ margin: 4 }} />
                         ))}
                     </View>
                 </View>
@@ -318,8 +280,7 @@ class Test extends BackTest {
                     selectedValue={this.state.combobox.value}
                     onSelect={(item) => {
                         this.setState({
-                            combobox:
-                                item === null ? { ID: -1, value: '' } : item
+                            combobox: item === null ? { ID: -1, value: '' } : item
                         });
                     }}
                     enableSearchBar
@@ -358,14 +319,14 @@ class Test extends BackTest {
                     <CheckBox
                         throttleTime={1000}
                         value={this.state.checkbox1}
-                        onChangeValue={(value) => {
+                        onPress={(value) => {
                             this.setState({ checkbox1: value });
                         }}
                     />
                     <CheckBox
                         color='main2'
                         value={this.state.checkbox2}
-                        onChangeValue={(value) => {
+                        onPress={(value) => {
                             this.setState({ checkbox2: value });
                         }}
                     />
@@ -395,25 +356,15 @@ class Test extends BackTest {
         return (
             <View>
                 {this.renderTitle('ProgressBar')}
-                <ProgressBar
-                    style={styles.marginBot}
-                    value={Math.random() * 10}
-                />
-                <ProgressBar
-                    style={styles.marginBot}
-                    value={Math.random() * 10}
-                    color='main1'
-                />
+                <ProgressBar style={styles.marginBot} value={Math.random() * 10} />
+                <ProgressBar style={styles.marginBot} value={Math.random() * 10} color='main1' />
                 <ProgressBar
                     style={styles.marginBot}
                     value={Math.random() * 10}
                     color='main2'
                     supValue={Math.random() * 10}
                 />
-                <ProgressBar
-                    style={styles.marginBot}
-                    value={Math.random() * 10}
-                />
+                <ProgressBar style={styles.marginBot} value={Math.random() * 10} />
                 <ProgressBar.Infinite />
             </View>
         );

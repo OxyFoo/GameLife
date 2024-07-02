@@ -1,46 +1,51 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    item: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderRadius: 8
-    },
     parent: {
-        paddingVertical: 10,
-        paddingHorizontal: 12,
-        overflow: 'hidden'
-    },
-    content: {
-        //flex: 1,
+        borderRadius: 8,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
+
+    buttonLeft: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
+    },
+
+    buttonRight: {
+        flex: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 6
+    },
+    buttonRightContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+
+    contentLeft: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     title: {
-        //flex: 1,
-        height: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'center'
     },
-    titleText: {
-        height: 24,
-        textAlign: 'left'
+
+    contentRight: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
+
     dateText: {
-        textAlign: 'right',
-        fontSize: 12,
-        marginBottom: 2
+        marginRight: 4,
+        fontSize: 16
     },
-    checkbox: {
-        width: 32,
-        aspectRatio: 1,
-        marginRight: 16,
-        paddingHorizontal: 0,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 8
+    dateIcon: {
+        marginRight: 12
     },
     trashButton: {
         position: 'absolute',

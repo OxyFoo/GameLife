@@ -7,7 +7,7 @@ const test = {
 };
 
 class BackTest2 extends PageBase {
-    feKeepMounted = false;
+    static feKeepMounted = false;
 
     state = {
         input: ''

@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { Animated, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 
 import styles from './style';
-import BackFlowEngine from './back';
-import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
-import PAGES from 'Interface/Pages';
+import FlowEnginePagesRender from './pagesRender';
 
 import { DynamicBackground } from 'Interface/Primitives';
-import { Console, NotificationsInApp, Popup, UserHeader } from 'Interface/Global';
+import { NavBar, Console, NotificationsInApp, Popup, UserHeader } from 'Interface/Global';
 
 /**
  * @typedef {import('./back').PageNames} PageNames
@@ -23,68 +21,30 @@ const FlowEngine = React.forwardRef((_, ref) => {
     /** @type {React.MutableRefObject<NotificationsInApp | null>} */
     const refNotificationsInApp = React.useRef(null);
 
+    /** @type {React.MutableRefObject<NavBar | null>} */
+    const refBottomBar = React.useRef(null);
+
     /** @type {React.MutableRefObject<UserHeader | null>} */
     const refUserHeader = React.useRef(null);
 
     return (
         <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior='height'>
-            <DynamicBackground />
-            <FlowEngineClass
+            <DynamicBackground opacity={0.15} />
+            <FlowEnginePagesRender
                 ref={ref}
                 popup={refPopup}
                 console={refConsole}
                 userHeader={refUserHeader}
+                navBar={refBottomBar}
                 notificationsInApp={refNotificationsInApp}
             />
             <UserHeader ref={refUserHeader} />
+            <NavBar ref={refBottomBar} />
             <NotificationsInApp ref={refNotificationsInApp} />
             <Popup ref={refPopup} />
             <Console ref={refConsole} />
         </KeyboardAvoidingView>
     );
 });
-
-class FlowEngineClass extends BackFlowEngine {
-    render() {
-        return this.availablePages.map((pageName) => {
-            const { selectedPage, currentTransition } = this.state;
-
-            const page = this.getMountedPage(pageName);
-
-            // Page not found or not mounted and not keep mounted
-            if (page === null) {
-                return null;
-            }
-
-            const Page = PAGES[pageName];
-            const feShowUserHeader = new Page({ flowEngine: this }).feShowUserHeader;
-
-            return (
-                <Animated.View
-                    key={'page-' + pageName}
-                    style={[
-                        styles.parent,
-                        feShowUserHeader && { top: this.userHeader?.state.height },
-                        {
-                            opacity: Animated.subtract(1, page.transitionEnd),
-                            transform: [
-                                ...GetAnimationPageOpen(page, currentTransition),
-                                ...GetAnimationPageClose(page)
-                            ]
-                        }
-                    ]}
-                    pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
-                >
-                    <ScrollView
-                        style={styles.scrollview}
-                        contentContainerStyle={styles.scrollviewContainer}
-                        scrollEnabled={true}
-                        children={<Page ref={page.ref} args={page.args} flowEngine={this} />}
-                    />
-                </Animated.View>
-            );
-        });
-    }
-}
 
 export default FlowEngine;

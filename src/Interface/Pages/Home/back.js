@@ -28,7 +28,9 @@ class BackHome extends PageBase {
         }
     };
 
-    feShowUserHeader = true;
+    static feKeepMounted = true;
+    static feShowUserHeader = true;
+    static feShowNavBar = true;
 
     /** @type {React.RefObject<Missions>} */
     refMissions = React.createRef();
@@ -43,7 +45,7 @@ class BackHome extends PageBase {
 
     /** @param {this['props']} props */
     componentDidFocused = (props) => {
-        StartTutorial.call(this, props.args.tuto);
+        //StartTutorial.call(this, props.args.tuto);
     };
 
     componentWillUnmount() {

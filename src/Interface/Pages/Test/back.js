@@ -9,7 +9,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  */
 
 class BackTest extends PageBase {
-    feKeepMounted = true;
+    static feKeepMounted = true;
 
     state = {
         /** @type {Button['props']['appearance']} */

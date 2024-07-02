@@ -11,6 +11,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').Console} Console
  * @typedef {import('Interface/Global').UserHeader} UserHeader
+ * @typedef {import('Interface/Global').NavBar} NavBar
  * @typedef {import('Interface/Global').NotificationsInApp} NotificationsInApp
  * @typedef {'auto' | 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight' | 'fromCenter'} Transitions
  */
@@ -51,6 +52,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {React.RefObject<BackFlowEngine['popup']>} popup
  * @property {React.RefObject<BackFlowEngine['console']>} console
  * @property {React.RefObject<BackFlowEngine['userHeader']>} userHeader
+ * @property {React.RefObject<BackFlowEngine['navBar']>} navBar
  * @property {React.RefObject<BackFlowEngine['notificationsInApp']>} notificationsInApp
  */
 
@@ -59,6 +61,7 @@ const BackFlowEngineProps = {
     popup: React.createRef(),
     console: React.createRef(),
     userHeader: React.createRef(),
+    navBar: React.createRef(),
     notificationsInApp: React.createRef()
 };
 
@@ -71,6 +74,9 @@ class BackFlowEngine extends React.Component {
 
     /** @type {UserHeader | null} */
     userHeader = null;
+
+    /** @type {NavBar | null} */
+    navBar = null;
 
     /** @type {NotificationsInApp | null} */
     notificationsInApp = null;
@@ -140,7 +146,7 @@ class BackFlowEngine extends React.Component {
      */
     shouldComponentUpdate(nextProps, nextState) {
         /** @type {Array<keyof BackFlowEnginePropsType>} */
-        const toCheck = ['popup', 'console', 'userHeader', 'notificationsInApp'];
+        const toCheck = ['popup', 'console', 'userHeader', 'navBar', 'notificationsInApp'];
         let changed = false;
         for (const key of toCheck) {
             const ref = nextProps[key];
@@ -240,8 +246,8 @@ class BackFlowEngine extends React.Component {
         this.changing = true;
         this.mountPage(nextpage, options);
         this.unmountPage(selectedPage);
-        this.changing = false;
         this.pageDidUpdate(nextpage);
+        this.changing = false;
 
         return true;
     };
@@ -272,6 +278,7 @@ class BackFlowEngine extends React.Component {
         this.changing = true;
         this.mountPage(pageName, { args, transition }, true);
         this.unmountPage(selectedPage, true);
+        this.pageDidUpdate(pageName);
         this.changing = false;
 
         return true;
@@ -344,7 +351,7 @@ class BackFlowEngine extends React.Component {
      */
     unmountPage = (pageName, isGoingBack = false) => {
         const oldPage = this.getMountedPage(pageName);
-        if (oldPage === null) {
+        if (pageName === null || oldPage === null) {
             return;
         }
 
@@ -353,7 +360,7 @@ class BackFlowEngine extends React.Component {
         }
 
         TimingAnimation(oldPage.transitionEnd, 1, 200).start(() => {
-            if (oldPage.ref.current?.feKeepMounted === true) {
+            if (PAGES[pageName].feKeepMounted === true) {
                 oldPage.ref.current?._componentDidUnfocused();
             } else {
                 this.removeFromMountedPages(oldPage.pageName);
@@ -366,12 +373,19 @@ class BackFlowEngine extends React.Component {
      * @private
      */
     pageDidUpdate = (pageName) => {
-        const showUserHeader = this.getMountedPage(pageName)?.ref.current?.feShowUserHeader ?? false;
+        const showUserHeader = PAGES[pageName].feShowUserHeader;
         if (showUserHeader && this.userHeader?.show === false) {
             this.userHeader?.Show();
             this.userHeader?.refBellButton.current?.StartOpenCountAnimation(3000, 250);
         } else if (!showUserHeader && this.userHeader?.show === true) {
             this.userHeader?.Hide();
+        }
+
+        const showNavBar = PAGES[pageName].feShowNavBar;
+        if (showNavBar && this.navBar?.show === false) {
+            this.navBar?.Show();
+        } else if (!showNavBar && this.navBar?.show === true) {
+            this.navBar?.Hide();
         }
     };
 
@@ -456,6 +470,9 @@ class BackFlowEngine extends React.Component {
 
         /** @type {UserHeader} */ // @ts-ignore
         userHeader: this.userHeader,
+
+        /** @type {NavBar} */ // @ts-ignore
+        navBar: this.navBar,
 
         /** @type {NotificationsInApp} */ // @ts-ignore
         notificationsInApp: this.notificationsInApp,

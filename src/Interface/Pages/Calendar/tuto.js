@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 
 /**
  * @this {import('./back').default}
- * @param {number} tutoValue 
+ * @param {number} tutoValue
  */
 function StartTutorial(tutoValue) {
     const lang = langManager.curr['tuto']['main'];
@@ -17,7 +17,7 @@ function StartTutorial(tutoValue) {
                 positionY: 0.25
             },
             {
-                component: user.interface.bottomBar.refButtons[3],
+                component: user.interface.navBar.refButtons['multiplayer'],
                 text: lang['calendar-next'],
                 fontSize: 18,
                 execAfter: () => {

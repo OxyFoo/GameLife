@@ -44,14 +44,14 @@ function DynamicBackground(props) {
                 animPath={PATH1}
                 size={{ width: layout.width, height: layout.height }}
                 opacity={props.opacity || 0.2}
-                duration={20000}
+                duration={30000}
             />
             <Radial
                 color='main2'
                 animPath={PATH2}
                 size={{ width: layout.width, height: layout.height }}
                 opacity={props.opacity || 0.2}
-                duration={20000}
+                duration={30000}
             />
         </View>
     );

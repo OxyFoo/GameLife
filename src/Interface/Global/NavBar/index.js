@@ -1,0 +1,95 @@
+import * as React from 'react';
+import { Animated, View } from 'react-native';
+
+import styles from './style';
+import BottomBarBack from './back';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
+
+import { Button, Icon, Text } from 'Interface/Components';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ *
+ * @typedef {import('Managers/LangManager').Lang} Lang
+ * @typedef {import('Ressources/Icons').IconsName} Icons
+ */
+
+class NavBar extends BottomBarBack {
+    render() {
+        const { height, animation } = this.state;
+
+        /** @type {StyleViewProp} */
+        const animStyle = {
+            transform: [
+                {
+                    translateY: Animated.multiply(animation, -height)
+                }
+            ]
+        };
+
+        const middleButtonStyle = {
+            transform: [
+                {
+                    translateY: animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [24, -24]
+                    })
+                }
+            ],
+            borderColor: themeManager.GetColor('background')
+        };
+
+        const NavButton = this.renderButton;
+        return (
+            <Animated.View style={[styles.parent, animStyle]} onLayout={this.onLayout}>
+                <NavButton text='home' icon='home-outline' />
+                <NavButton text='calendar' icon='planner-outline' />
+
+                {/* Middle button to add an activity */}
+                <View style={styles.middleParentButton}>
+                    <Button
+                        ref={this.refButtons['addActivity']}
+                        style={styles.middleButton}
+                        styleAnimation={middleButtonStyle}
+                        appearance='normal'
+                    >
+                        <Icon icon='add-outline' color='main3' size={24} />
+                    </Button>
+                </View>
+
+                <NavButton text='multiplayer' icon='multiplayer-outline' />
+                <NavButton text='shop' icon='cart-outline' />
+            </Animated.View>
+        );
+    }
+
+    /**
+     * @param {Object} props
+     * @param {Icons} props.icon
+     * @param {keyof Lang['navbar']} props.text
+     * @returns {JSX.Element}
+     */
+    renderButton = ({ icon, text }) => {
+        return (
+            <View style={styles.buttonParent}>
+                <Button
+                    ref={this.refButtons[text]}
+                    style={styles.button}
+                    styleContent={styles.buttonContent}
+                    appearance='uniform'
+                    color='transparent'
+                >
+                    <Icon icon={icon} color={'main1'} size={24} />
+                    <Text style={styles.text} color={'main1'}>
+                        {langManager.curr['navbar'][text]}
+                    </Text>
+                </Button>
+            </View>
+        );
+    };
+}
+
+export { NavBar };

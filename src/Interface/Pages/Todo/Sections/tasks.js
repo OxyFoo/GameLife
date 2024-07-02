@@ -20,17 +20,17 @@ class SectionTasks extends React.Component {
     state = {
         /** @type {Array<Task>} */
         tasks: []
-    }
+    };
 
     refHelp1 = null;
 
     /** @param {Array<Task>} tasks */
     SetTasks = (tasks) => {
-        this.setState({ tasks: [ ...tasks ] });
-    }
+        this.setState({ tasks: [...tasks] });
+    };
     GetTasks = () => {
         return this.state.tasks;
-    }
+    };
 
     addTask = () => {
         let { tasks: tasks } = this.state;
@@ -49,7 +49,7 @@ class SectionTasks extends React.Component {
 
         this.setState({ tasks });
         this.props.onChange();
-    }
+    };
     onEditTask = (index, checked, title) => {
         let { tasks: tasks } = this.state;
 
@@ -60,7 +60,7 @@ class SectionTasks extends React.Component {
 
         this.setState({ tasks });
         this.props.onChange();
-    }
+    };
     onDeleteTask = (index) => {
         let { tasks: tasks } = this.state;
 
@@ -68,13 +68,13 @@ class SectionTasks extends React.Component {
 
         this.setState({ tasks });
         this.props.onChange();
-    }
+    };
 
     render() {
         const lang = langManager.curr['todo'];
 
         return (
-            <View ref={ref => this.refHelp1 = ref}>
+            <View ref={(ref) => (this.refHelp1 = ref)}>
                 <View style={[styles.row, styles.sectionTitle]}>
                     <Text fontSize={22}>{lang['title-tasks']}</Text>
                     <Icon icon='add' onPress={this.addTask} />
@@ -105,7 +105,7 @@ class SectionTasks extends React.Component {
                 ))}
             </View>
         );
-    }
+    };
 }
 
 SectionTasks.prototype.props = SectionTasksProps;

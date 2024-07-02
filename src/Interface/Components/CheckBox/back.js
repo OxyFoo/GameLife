@@ -14,7 +14,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {number} throttleTime Time in ms to throttle the press event
  * @property {ThemeColor} color
  * @property {boolean} value
- * @property {(newValue: boolean) => void} onChangeValue Event called when checkbox is pressed
+ * @property {(newValue: boolean) => void} onPress Event called when checkbox is pressed
  */
 
 /** @type {CheckBoxPropsType} */
@@ -23,7 +23,7 @@ const CheckBoxProps = {
     throttleTime: 250,
     color: 'main1',
     value: false,
-    onChangeValue: () => {}
+    onPress: () => {}
 };
 
 class CheckBoxBack extends React.Component {
@@ -59,7 +59,7 @@ class CheckBoxBack extends React.Component {
         }
 
         this.last = Date.now();
-        this.props.onChangeValue(!this.props.value);
+        this.props.onPress(!this.props.value);
     };
 }
 

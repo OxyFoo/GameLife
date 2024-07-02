@@ -2,12 +2,12 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './style';
-import BackNewComponent from './back';
+import TemplateGlobalBack from './back';
 
-class NewComponent extends BackNewComponent {
+class TemplateGlobal extends TemplateGlobalBack {
     render() {
         return <View />;
     }
 }
 
-export default NewComponent;
+export { TemplateGlobal };

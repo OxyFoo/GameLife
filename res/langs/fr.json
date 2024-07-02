@@ -176,6 +176,13 @@
         "loading-error-button": "Quitter"
     },
 
+    "navbar": {
+        "home": "Accueil",
+        "calendar": "Calendrier",
+        "multiplayer": "Multijoueur",
+        "shop": "Marché"
+    },
+
     "modal": {
         "back": "Retour",
         "search": "Chercher",

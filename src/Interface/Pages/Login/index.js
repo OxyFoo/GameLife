@@ -75,7 +75,7 @@ class Login extends BackLogin {
                                 style={styles.cguCheckBox}
                                 color='white'
                                 value={cguAccepted}
-                                onChangeValue={this.onCGUToggle}
+                                onPress={this.onCGUToggle}
                             />
                             <Text
                                 containerStyle={styles.cguTextContainer}

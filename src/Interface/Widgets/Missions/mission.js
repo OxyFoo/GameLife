@@ -19,7 +19,7 @@ function StartMission(missionName) {
         const texts = lang['texts'];
         user.interface.screenTuto.ShowTutorial([
             {
-                component: user.interface.bottomBar.refButtons[2],
+                component: user.interface.navBar.refButtons['addActivity'],
                 text: texts['1'],
                 execAfter: () => {
                     user.interface.ChangePage('activity', { missionName }, true);
@@ -27,13 +27,11 @@ function StartMission(missionName) {
                 }
             }
         ]);
-    }
-
-    else if (missionName === 'mission2') {
+    } else if (missionName === 'mission2') {
         const texts = lang['texts'];
         user.interface.screenTuto.ShowTutorial([
             {
-                component: user.interface.bottomBar.refButtons[3],
+                component: user.interface.navBar.refButtons['multiplayer'],
                 text: texts['1'],
                 execAfter: () => {
                     user.interface.ChangePage('quests', { missionName }, true);
@@ -41,13 +39,11 @@ function StartMission(missionName) {
                 }
             }
         ]);
-    }
-
-    else if (missionName === 'mission3') {
+    } else if (missionName === 'mission3') {
         const texts = lang['texts'];
         user.interface.screenTuto.ShowTutorial([
             {
-                component: user.interface.bottomBar.refButtons[4],
+                component: user.interface.navBar.refButtons[4],
                 text: texts['1'],
                 execAfter: () => {
                     user.interface.ChangePage('shop', { missionName }, true);
@@ -55,9 +51,7 @@ function StartMission(missionName) {
                 }
             }
         ]);
-    }
-
-    else if (missionName === 'mission4') {
+    } else if (missionName === 'mission4') {
         const texts = lang['texts'];
         user.interface.screenTuto.ShowTutorial([
             {
@@ -69,9 +63,7 @@ function StartMission(missionName) {
                 }
             }
         ]);
-    }
-
-    else if (missionName === 'mission5') {
+    } else if (missionName === 'mission5') {
         this.props.refHome.StartMission('mission5');
     }
 }

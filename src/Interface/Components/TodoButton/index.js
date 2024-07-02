@@ -6,7 +6,7 @@ import styles from './style';
 import TodoButtonBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Icon, Button } from 'Interface/Components';
+import { Text, Icon, Button, CheckBox } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
 /**
@@ -42,7 +42,7 @@ class TodoButton extends TodoButtonBack {
 
         return (
             <LinearGradient
-                style={[styles.item, style]}
+                style={[styles.parent, style]}
                 colors={[
                     themeManager.GetColor('backgroundCard', { opacity: 0.45 }),
                     themeManager.GetColor('backgroundCard', { opacity: 0.2 })
@@ -50,42 +50,59 @@ class TodoButton extends TodoButtonBack {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             >
-                <Button style={styles.parent} appearance='uniform' color='transparent' onPress={this.openTodo}>
-                    <Animated.View style={[styles.content, styleAnimation, style]}>
-                        {/* Check button */}
-                        <Button
-                            style={styles.checkbox}
-                            color={checked !== 0 ? 'white' : 'transparent'}
-                            onPress={this.onCheck}
-                        >
-                            {checked !== 0 && <Icon icon='check' color='main1' size={16} />}
-                        </Button>
+                <Button
+                    style={styles.buttonLeft}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={this.onCheck}
+                    onTouchStart={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }}
+                >
+                    <CheckBox value={checked !== 0} />
+                </Button>
 
-                        {/* Content */}
-                        <TouchableOpacity style={styles.title} onPress={this.openTodo} activeOpacity={0.6}>
-                            {/* Title & deadline */}
-                            <Text style={styles.titleText}>{title}</Text>
-                            {!!this.deadlineText.length && (
-                                <Text style={styles.dateText} color={this.colorText}>
-                                    {this.deadlineText}
-                                </Text>
-                            )}
-                        </TouchableOpacity>
+                <Button
+                    style={styles.buttonRight}
+                    styleContent={styles.buttonRightContent}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={this.openTodo}
+                >
+                    <View style={styles.contentLeft}>
+                        <Text style={styles.title}>{title}</Text>
+                    </View>
+
+                    <Animated.View style={[styles.contentRight, styleAnimation]}>
+                        {/* Deadline */}
+                        <Text style={styles.dateText} color='main2'>
+                            {'[27/06/24]'}
+                        </Text>
+                        <Icon style={styles.dateIcon} icon='clock-outline' color='main2' />
+
+                        <Icon icon='arrow-square' color='gradient' angle={90} />
+
+                        {/* {!!this.deadlineText.length && (
+                            <Text style={styles.dateText} color={this.colorText}>
+                                {this.deadlineText}
+                            </Text>
+                        )} */}
 
                         {/* Drag&Drop button */}
-                        <View onTouchStart={() => onDrag()}>
-                            <Icon icon='moveVertical' color='main1' />
-                        </View>
+                        {/* <View onTouchStart={() => onDrag()}>
+                            <Icon icon='add-outline' color='main1' />
+                        </View> */}
 
                         {/* Check button */}
-                        <Button
+                        {/* <Button
                             style={styles.trashButton}
                             styleAnimation={styleDeleteButton}
                             color={'backgroundCard'}
                             onPress={this.onRemove}
                         >
                             <Icon icon='trash' color='danger' size={16} />
-                        </Button>
+                        </Button> */}
                     </Animated.View>
                 </Button>
             </LinearGradient>

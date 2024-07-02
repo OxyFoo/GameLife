@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     parent: {
         width: 28,
         aspectRatio: 1,
-        padding: 5,
+        padding: 4,
         borderWidth: 2,
         borderRadius: 8
     },

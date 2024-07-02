@@ -176,6 +176,13 @@
         "loading-error-button": "Quitter"
     },
 
+    "navbar": {
+        "home": "Home",
+        "calendar": "Calendar",
+        "multiplayer": "Multiplayer",
+        "shop": "Shop"
+    },
+
     "modal": {
         "back": "Back",
         "search": "Search",

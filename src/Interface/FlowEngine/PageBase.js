@@ -24,6 +24,12 @@ class PageBase extends React.Component {
     static feShowNavBar = false;
 
     /**
+     * @description Enable scroll on page (default: true)
+     * @type {boolean}
+     */
+    static feScrollEnabled = true;
+
+    /**
      * @description Refresh page when focused (default: true)
      * @type {boolean}
      * @private

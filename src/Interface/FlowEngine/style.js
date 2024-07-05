@@ -20,10 +20,6 @@ const styles = StyleSheet.create({
         margin: 0,
         padding: 0
     },
-    scrollview: {
-        width: '100%',
-        height: '100%'
-    },
     scrollviewContainer: {
         minHeight: '100%'
     }

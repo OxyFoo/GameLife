@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, ScrollView } from 'react-native';
+import { Animated, View, ScrollView } from 'react-native';
 
 import styles from './style';
 import BackFlowEngine from './back';
@@ -36,12 +36,18 @@ class FlowEnginePagesRender extends BackFlowEngine {
                     ]}
                     pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
                 >
-                    <ScrollView
-                        style={styles.scrollview}
-                        contentContainerStyle={styles.scrollviewContainer}
-                        scrollEnabled={true}
-                        children={<Page ref={page.ref} args={page.args} flowEngine={this} />}
-                    />
+                    {Page.feScrollEnabled ? (
+                        <ScrollView
+                            style={styles.fullscreen}
+                            contentContainerStyle={styles.scrollviewContainer}
+                            children={<Page ref={page.ref} args={page.args} flowEngine={this} />}
+                        />
+                    ) : (
+                        <View
+                            style={styles.fullscreen}
+                            children={<Page ref={page.ref} args={page.args} flowEngine={this} />}
+                        />
+                    )}
                 </Animated.View>
             );
         });

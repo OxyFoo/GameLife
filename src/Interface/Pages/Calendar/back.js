@@ -1,22 +1,58 @@
+import React from 'react';
+import { Dimensions } from 'react-native';
 import PageBase from 'Interface/FlowEngine/PageBase';
-import user from 'Managers/UserManager';
 
-import { GetBlockMonth } from 'Interface/Widgets/BlockMonth/script';
-import { TIME_STEP_MINUTES } from 'Utils/Activities';
-import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
- * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} ScrollEvent
+ * @typedef {import('react-native').FlatList<DayDataType>} FlatListDay
  *
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/Components').ActivityTimeline} ActivityTimeline
- * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
- * @typedef {import('Interface/Widgets/BlockMonth/index').MonthData} MonthData
+ *
+ * @typedef {object} DayDataType
+ * @property {number} day
+ * @property {number} month
+ * @property {number} year
+ * @property {(day: DayDataType) => void} onPress
+ *
+ * @typedef {object} ActivityDataType
+ * @property {Activity} activity
+ * @property {(activity: ActivityDataType) => void} onPress
  */
 
+const TOTAL_DAYS_COUNT = 100;
+const BATCH_DAYS = 30;
+const ITEM_WIDTH = 65 + 6; // width of each item plus separator
+
+const INITIAL_DATE = new Date();
+INITIAL_DATE.setDate(INITIAL_DATE.getDate() - TOTAL_DAYS_COUNT / 2);
+
 class BackCalendar extends PageBase {
-    state = {};
+    state = {
+        /** @type {ActivityDataType[]} */
+        activities: user.activities.Get().map((activity) => ({
+            activity,
+            onPress: this.onActivityPress
+        })),
+
+        /** @type {string} */
+        selectedMonth: 'MONTH YEAR',
+
+        /** @type {DayDataType[]} */
+        days: Array(TOTAL_DAYS_COUNT)
+            .fill(0)
+            .map((_, index) => {
+                const date = new Date(INITIAL_DATE);
+                date.setDate(date.getDate() + index);
+                return {
+                    day: date.getDate(),
+                    month: date.getMonth(),
+                    year: date.getFullYear(),
+                    onPress: this.onDayPress
+                };
+            })
+    };
 
     /** @type {Symbol | null} */
     activitiesListener = null;
@@ -24,22 +60,20 @@ class BackCalendar extends PageBase {
     static feKeepMounted = true;
     static feShowUserHeader = true;
     static feShowNavBar = true;
+    static feScrollEnabled = false;
+
+    /** @type {React.RefObject<FlatListDay>} */
+    refDayList = React.createRef();
+    dayListPosX = 0;
 
     componentDidMount() {
-        return;
-
-        const today = new Date();
-        const Day = today.getDate();
-        const Month = today.getMonth();
-        const FullYear = today.getFullYear();
-        this.daySelect(Day, Month, FullYear);
-
-        this.activitiesListener = user.activities.allActivities.AddListener(async () => {
-            // Update activities
-            if (this.state.selectedALL === null) return;
-
-            const { day, month, year } = this.state.selectedALL;
-            await this.daySelect(day, month, year, true);
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            this.setState({
+                activities: user.activities.Get().map((activity) => ({
+                    activity,
+                    onPress: this.onActivityPress
+                }))
+            });
         });
     }
 
@@ -47,70 +81,109 @@ class BackCalendar extends PageBase {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
-    /**
-     * @param {number} day
-     * @param {number} month
-     * @param {number} year
-     * @param {boolean} [force=false]
-     * @returns {Promise<void>}
-     */
-    daySelect = async (
-        day = null,
-        month = this.state.selectedALL?.month,
-        year = this.state.selectedALL?.year,
-        force = false
-    ) => {
-        if (
-            !force &&
-            this.state.selectedALL?.day === day &&
-            this.state.selectedALL?.month === month &&
-            this.state.selectedALL.year === year
-        ) {
-            // Already selected
-            return;
-        }
+    refreshing = false;
 
-        const date = new Date(year, month, day);
-
-        // Select day
-        if (day !== null) {
-            const now = new Date();
-            date.setHours(now.getHours(), now.getMinutes(), 0, 0);
-            const nowLocalTime = GetLocalTime(date) + GetTimeZone() * 60;
-            user.tempSelectedTime = RoundTimeTo(TIME_STEP_MINUTES, nowLocalTime);
-
-            if (!this.opened) {
-                this.showPanel();
-            }
-        }
-
-        // Unselect day (calendar mode)
-        else {
-            user.tempSelectedTime = null;
-            if (this.opened) {
-                this.hidePanel();
-            }
-        }
-
-        return new Promise((resolve, reject) => {
-            if (day !== null) {
-                const weeks = GetBlockMonth(month, year, undefined, day).data;
-                const week = weeks.findIndex((w) => w.filter((d) => d?.day === day).length > 0);
-                const activities = user.activities.GetByTime(GetLocalTime(date));
-
-                this.setState(
-                    {
-                        currActivities: activities,
-                        selectedALL: { day, week, month, year }
-                    },
-                    resolve
-                );
-            } else {
-                this.setState({ selectedALL: null }, resolve);
-            }
-        });
+    /** @param {ActivityDataType} activity */
+    onActivityPress = (activity) => {
+        console.log('Activity pressed:', activity);
     };
-    dayRefresh = () => this.daySelect();
+
+    /** @param {DayDataType} day */
+    onDayPress = (day) => {
+        console.log('Day pressed:', day);
+    };
+
+    /** @type {FlatListDay['props']['onScroll']} */
+    handleDayScroll = (event) => {
+        this.dayListPosX = event.nativeEvent.contentOffset.x;
+
+        // Define the current month
+        const { days } = this.state;
+        const { width: screen_width } = Dimensions.get('window');
+        const index = this.dayListPosX / ITEM_WIDTH + screen_width / ITEM_WIDTH / 2;
+        const { month, year } = days[Math.floor(index)];
+        const monthText = langManager.curr['dates']['month'][month];
+        const yearText = year === new Date().getFullYear() ? '' : ` ${year}`;
+        this.setState({ selectedMonth: monthText + yearText });
+    };
+
+    /** @type {FlatListDay['props']['onStartReached']} */
+    onDayStartReached = async () => {
+        if (this.refreshing) return;
+        this.refreshing = true;
+
+        const { days } = this.state;
+        const firstDay = days[0];
+
+        /** @type {DayDataType[]} */
+        const newDays = Array(BATCH_DAYS)
+            .fill(0)
+            .map((_, index) => {
+                const date = new Date(firstDay.year, firstDay.month, firstDay.day);
+                date.setDate(date.getDate() - index - 1);
+                return {
+                    day: date.getDate(),
+                    month: date.getMonth(),
+                    year: date.getFullYear(),
+                    onPress: this.onDayPress
+                };
+            })
+            .reverse();
+
+        this.setState(
+            /** @param {this['state']} prevState */
+            (prevState) => ({
+                days: [...newDays, ...prevState.days.slice(0, -BATCH_DAYS)]
+            }),
+            () => {
+                const newItemsWidth = this.dayListPosX + newDays.length * ITEM_WIDTH;
+                this.refDayList.current?.scrollToOffset({
+                    offset: newItemsWidth,
+                    animated: false
+                });
+                this.refreshing = false;
+            }
+        );
+    };
+
+    /** @type {FlatListDay['props']['onEndReached']} */
+    onDayEndReached = async () => {
+        if (this.refreshing) return;
+        this.refreshing = true;
+
+        const { days } = this.state;
+        const lastDay = days[days.length - 1];
+
+        /** @type {DayDataType[]} */
+        const newDays = Array(BATCH_DAYS)
+            .fill(0)
+            .map((_, index) => {
+                const date = new Date(lastDay.year, lastDay.month, lastDay.day);
+                date.setDate(date.getDate() + index + 1);
+                return {
+                    day: date.getDate(),
+                    month: date.getMonth(),
+                    year: date.getFullYear(),
+                    onPress: this.onDayPress
+                };
+            });
+
+        this.setState(
+            /** @param {this['state']} prevState */
+            (prevState) => ({
+                days: [...prevState.days.slice(BATCH_DAYS), ...newDays]
+            }),
+            () => {
+                const newItemsWidth = this.dayListPosX - newDays.length * ITEM_WIDTH;
+                this.refDayList.current?.scrollToOffset({
+                    offset: newItemsWidth,
+                    animated: false
+                });
+                this.refreshing = false;
+            }
+        );
+    };
 }
 
+export { TOTAL_DAYS_COUNT };
 export default BackCalendar;

@@ -348,6 +348,7 @@
     },
 
     "calendar": {
+        "activities-title": "Activities of the day",
         "add-activity": "Add activity",
         "hour-min": "h",
         "start": "Start of the day",

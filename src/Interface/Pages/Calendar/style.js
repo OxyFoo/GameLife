@@ -1,16 +1,36 @@
 import { StyleSheet } from 'react-native';
 
+/**
+ * @param {any} _
+ * @param {number} index
+ * @returns {{ length: number, offset: number, index: number }}
+ */
+const getItemLayout = (_, index) => ({
+    length: 65 + 6,
+    offset: (65 + 6) * index,
+    index
+});
+
 const styles = StyleSheet.create({
     page: {
-        paddingHorizontal: 24
-    },
-    title: {
-        marginBottom: 12,
-        fontSize: 21,
-        textAlign: 'left'
+        height: '100%',
+        paddingBottom: 40,
+        flexDirection: 'column',
+        justifyContent: 'space-between'
     },
 
-    activity: {
+    // Activity list
+    activityList: {
+        flex: 1,
+        marginBottom: 12,
+        paddingHorizontal: 24
+    },
+    activityTitle: {
+        marginBottom: 12,
+        fontSize: 22,
+        textAlign: 'left'
+    },
+    activityItem: {
         padding: 16,
         paddingHorizontal: 16,
 
@@ -36,7 +56,35 @@ const styles = StyleSheet.create({
     },
     activityName: {
         fontSize: 16
+    },
+
+    // Day list
+    dayList: {},
+    monthTitle: {
+        fontSize: 18,
+        marginBottom: 12
+    },
+    dayItem: {
+        width: 65,
+        marginHorizontal: 3,
+        paddingVertical: 16,
+        paddingHorizontal: 0,
+        borderRadius: 8
+    },
+    dayContent: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    dayNumber: {
+        width: '100%',
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    dayName: {
+        fontSize: 16
     }
 });
 
+export { getItemLayout };
 export default styles;

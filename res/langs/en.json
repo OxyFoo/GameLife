@@ -164,6 +164,15 @@
             "Thursday",
             "Friday",
             "Saturday"
+        ],
+        "days-min": [
+            "Sun",
+            "Mon.",
+            "Tue.",
+            "Wed.",
+            "Thu.",
+            "Fri.",
+            "Sat."
         ]
     },
 

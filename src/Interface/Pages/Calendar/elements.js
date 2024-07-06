@@ -2,11 +2,16 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './style';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button, Icon } from 'Interface/Components';
+import { TimeToFormatString } from 'Utils/Time';
 
 /**
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('./back').DayDataType} DayDataType
  * @typedef {import('./back').ActivityDataType} ActivityDataType
  * @typedef {import('react-native').ListRenderItem<ActivityDataType>} ListRenderItemActivityDataType
@@ -16,11 +21,20 @@ import { Text, Button, Icon } from 'Interface/Components';
 /** @type {React.MemoExoticComponent<ListRenderItemActivityDataType>} */
 const RenderActivity = React.memo(
     ({ item }) => {
-        const { activity } = item;
+        const { skill, activity } = item;
 
+        if (!skill) {
+            user.interface.console.AddLog('warn', `Skill not found for activity ${activity.skillID}`);
+            return null;
+        }
+
+        const activityText = langManager.GetText(skill.Name);
+        const activityTime = TimeToFormatString(activity.startTime);
+        const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
+        const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
         const onPress = () => item.onPress(item);
         const borderColor = {
-            borderColor: themeManager.GetColor('border')
+            borderColor: category?.Color || themeManager.GetColor('border')
         };
 
         return (
@@ -32,11 +46,11 @@ const RenderActivity = React.memo(
                 onPress={onPress}
             >
                 <View style={styles.activityChild}>
-                    <Icon icon='home' size={24} color='primary' />
-                    <Text style={styles.activityHour}>[9:00 / 11:00]</Text>
+                    <Icon xml={xmlIcon} size={24} color='primary' />
+                    <Text style={styles.activityHour}>{activityTime}</Text>
                 </View>
                 <View style={styles.activityChild}>
-                    <Text style={styles.activityName}>{activity.skillID}</Text>
+                    <Text style={styles.activityName}>{activityText}</Text>
                 </View>
             </Button>
         );
@@ -48,28 +62,33 @@ const RenderActivity = React.memo(
 /** @type {React.MemoExoticComponent<ListRenderItemDayDataType>} */
 const RenderDay = React.memo(
     ({ item }) => {
-        const date = new Date(item.year, item.month, item.day);
-        const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
-        const onPress = () => item.onPress(item);
+        const { day, month, year, selected, onPress } = item;
+        const date = new Date(year, month, day);
+        const dayText = langManager.curr['dates']['days-min'][date.getDay()];
+
+        /** @type {ThemeColor} */
+        const colorText = selected ? 'ground1' : 'border';
+        /** @type {ThemeColor} */
+        const colorBackground = selected ? 'main1' : 'transparent';
 
         return (
             <Button
                 style={styles.dayItem}
                 styleContent={styles.dayContent}
                 appearance='uniform'
-                color='main1'
-                onPress={onPress}
+                color={colorBackground}
+                onPress={() => onPress(item)}
             >
-                <Text style={styles.dayNumber} color='ground1'>
-                    {`${item.day}`}
+                <Text style={styles.dayNumber} color={colorText}>
+                    {`${day}`}
                 </Text>
-                <Text style={styles.dayName} color='ground1'>
-                    {dayName}
+                <Text style={styles.dayName} color={colorText}>
+                    {dayText}
                 </Text>
             </Button>
         );
     },
-    (prevProps, nextProps) => prevProps.item.day === nextProps.item.day
+    (prevProps, nextProps) => prevProps.item.selected !== nextProps.item.selected
 );
 
 export { RenderActivity, RenderDay };

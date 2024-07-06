@@ -164,6 +164,15 @@
             "Jeudi",
             "Vendredi",
             "Samedi"
+        ],
+        "days-min": [
+            "Lun.",
+            "Mar.",
+            "Mer.",
+            "Jeu.",
+            "Ven.",
+            "Sam.",
+            "Dim."
         ]
     },
 

@@ -4,19 +4,25 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
+
+import { GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native').FlatList<DayDataType>} FlatListDay
  *
+ * @typedef {import('Class/Activities').Skill} Skill
  * @typedef {import('Class/Activities').Activity} Activity
  *
  * @typedef {object} DayDataType
  * @property {number} day
  * @property {number} month
  * @property {number} year
+ * @property {boolean} selected
  * @property {(day: DayDataType) => void} onPress
  *
  * @typedef {object} ActivityDataType
+ * @property {Skill | null} skill
  * @property {Activity} activity
  * @property {(activity: ActivityDataType) => void} onPress
  */
@@ -31,13 +37,13 @@ INITIAL_DATE.setDate(INITIAL_DATE.getDate() - TOTAL_DAYS_COUNT / 2);
 class BackCalendar extends PageBase {
     state = {
         /** @type {ActivityDataType[]} */
-        activities: user.activities.Get().map((activity) => ({
-            activity,
-            onPress: this.onActivityPress
-        })),
+        activities: [],
 
         /** @type {string} */
-        selectedMonth: 'MONTH YEAR',
+        selectedMonth: langManager.curr['dates']['month'][new Date().getMonth()],
+
+        /** @type {DayDataType | null} */
+        selectedDay: null,
 
         /** @type {DayDataType[]} */
         days: Array(TOTAL_DAYS_COUNT)
@@ -49,7 +55,8 @@ class BackCalendar extends PageBase {
                     day: date.getDate(),
                     month: date.getMonth(),
                     year: date.getFullYear(),
-                    onPress: this.onDayPress
+                    selected: false,
+                    onPress: this.onDayPress.bind(this)
                 };
             })
     };
@@ -69,12 +76,17 @@ class BackCalendar extends PageBase {
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
+                /** @type {ActivityDataType[]} */
                 activities: user.activities.Get().map((activity) => ({
+                    skill: dataManager.skills.GetByID(activity.skillID),
                     activity,
-                    onPress: this.onActivityPress
+                    onPress: this.onActivityPress.bind(this)
                 }))
             });
         });
+
+        const { days } = this.state;
+        this.onDayPress(days[days.length / 2]);
     }
 
     componentWillUnmount() {
@@ -84,14 +96,34 @@ class BackCalendar extends PageBase {
     refreshing = false;
 
     /** @param {ActivityDataType} activity */
-    onActivityPress = (activity) => {
+    onActivityPress(activity) {
         console.log('Activity pressed:', activity);
-    };
+    }
 
     /** @param {DayDataType} day */
-    onDayPress = (day) => {
-        console.log('Day pressed:', day);
-    };
+    onDayPress(day) {
+        // Update the selected day
+        const { days } = this.state;
+        let selectedDay = null;
+        for (const d in days) {
+            if (days[d].selected) days[d].selected = false;
+            else if (days[d] === day) {
+                days[d].selected = true;
+                selectedDay = days[d];
+            }
+        }
+        if (!selectedDay) return;
+
+        // Update activities
+        const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
+        const activities = user.activities.GetByTime(GetLocalTime(selectedDate)).map((activity) => ({
+            skill: dataManager.skills.GetByID(activity.skillID),
+            activity,
+            onPress: this.onActivityPress.bind(this)
+        }));
+
+        this.setState({ days, selectedDay, activities });
+    }
 
     /** @type {FlatListDay['props']['onScroll']} */
     handleDayScroll = (event) => {
@@ -104,7 +136,9 @@ class BackCalendar extends PageBase {
         const { month, year } = days[Math.floor(index)];
         const monthText = langManager.curr['dates']['month'][month];
         const yearText = year === new Date().getFullYear() ? '' : ` ${year}`;
-        this.setState({ selectedMonth: monthText + yearText });
+        if (this.state.selectedMonth !== monthText + yearText) {
+            this.setState({ selectedMonth: monthText + yearText });
+        }
     };
 
     /** @type {FlatListDay['props']['onStartReached']} */
@@ -119,13 +153,19 @@ class BackCalendar extends PageBase {
         const newDays = Array(BATCH_DAYS)
             .fill(0)
             .map((_, index) => {
+                const { selectedDay } = this.state;
                 const date = new Date(firstDay.year, firstDay.month, firstDay.day);
                 date.setDate(date.getDate() - index - 1);
+
                 return {
                     day: date.getDate(),
                     month: date.getMonth(),
                     year: date.getFullYear(),
-                    onPress: this.onDayPress
+                    selected:
+                        selectedDay?.year === date.getFullYear() &&
+                        selectedDay?.month === date.getMonth() &&
+                        selectedDay?.day === date.getDate(),
+                    onPress: this.onDayPress.bind(this)
                 };
             })
             .reverse();
@@ -158,13 +198,18 @@ class BackCalendar extends PageBase {
         const newDays = Array(BATCH_DAYS)
             .fill(0)
             .map((_, index) => {
+                const { selectedDay } = this.state;
                 const date = new Date(lastDay.year, lastDay.month, lastDay.day);
                 date.setDate(date.getDate() + index + 1);
                 return {
                     day: date.getDate(),
                     month: date.getMonth(),
                     year: date.getFullYear(),
-                    onPress: this.onDayPress
+                    selected:
+                        selectedDay?.year === date.getFullYear() &&
+                        selectedDay?.month === date.getMonth() &&
+                        selectedDay?.day === date.getDate(),
+                    onPress: this.onDayPress.bind(this)
                 };
             });
 

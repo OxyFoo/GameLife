@@ -25,7 +25,7 @@ class Calendar extends BackCalendar {
                     <FlatList
                         data={activities}
                         renderItem={(props) => <RenderActivity {...props} />}
-                        keyExtractor={(_, index) => index.toString()}
+                        keyExtractor={(activity) => `${activity.activity.startTime}`}
                         ItemSeparatorComponent={() => <View style={styles.activitySeparator} />}
                     />
                 </View>

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { View, FlatList, Dimensions } from 'react-native';
+import { Animated, View, FlatList, Dimensions } from 'react-native';
 
 import { RenderActivity, RenderDay } from './elements';
 import BackCalendar, { TOTAL_DAYS_COUNT } from './back';
 import styles, { getItemLayout } from './style';
 import langManager from 'Managers/LangManager';
 
-import { Text } from 'Interface/Components';
+import { ActivityTimeline, Button, Text } from 'Interface/Components';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(null, 0).length + 1) / 2;
@@ -15,8 +15,31 @@ class Calendar extends BackCalendar {
     render() {
         const { activities, selectedMonth, days } = this.state;
 
+        const summaryStyle = {
+            marginTop: this.state.animSummaryY
+        };
+
         return (
             <View style={styles.page}>
+                {/** Summary (hidden on scroll) */}
+                <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
+                    <Text style={styles.summaryTitle} color='secondary'>
+                        {langManager.curr['calendar']['summary-title']}
+                    </Text>
+
+                    <View style={styles.summaryHoursContent}>
+                        <Text fontSize={12} color='secondary'>
+                            {'00:00'}
+                        </Text>
+                        <Text fontSize={12} color='secondary'>
+                            {'24:00'}
+                        </Text>
+                    </View>
+
+                    <ActivityTimeline activities={activities.map((i) => i.activity)} />
+                </Animated.View>
+
+                {/** Activities list */}
                 <View style={styles.activityList}>
                     <Text style={styles.activityTitle} color='secondary'>
                         {langManager.curr['calendar']['activities-title']}
@@ -24,12 +47,19 @@ class Calendar extends BackCalendar {
 
                     <FlatList
                         data={activities}
-                        renderItem={(props) => <RenderActivity {...props} />}
                         keyExtractor={(activity) => `${activity.activity.startTime}`}
+                        renderItem={(props) => <RenderActivity {...props} />}
                         ItemSeparatorComponent={() => <View style={styles.activitySeparator} />}
+                        ListEmptyComponent={() => (
+                            <Button appearance='normal' icon='add'>
+                                [Ajouter une acit]
+                            </Button>
+                        )}
+                        onScroll={this.handleActivityScroll}
                     />
                 </View>
 
+                {/** Days selection */}
                 <View style={styles.dayList}>
                     <Text style={styles.monthTitle} color='secondary'>
                         {selectedMonth}

@@ -28,9 +28,18 @@ const RenderActivity = React.memo(
             return null;
         }
 
-        const activityText = langManager.GetText(skill.Name);
-        const activityTime = TimeToFormatString(activity.startTime);
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
+        if (!category) {
+            user.interface.console.AddLog('warn', `Category not found for skill ${skill.ID}`);
+            return null;
+        }
+
+        const activityText = langManager.GetText(skill.Name);
+        const categoryText = langManager.GetText(category.Name);
+        const activityTime =
+            TimeToFormatString(activity.startTime) +
+            ' - ' +
+            TimeToFormatString(activity.startTime + activity.duration * 60);
         const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
         const onPress = () => item.onPress(item);
         const borderColor = {
@@ -46,11 +55,17 @@ const RenderActivity = React.memo(
                 onPress={onPress}
             >
                 <View style={styles.activityChild}>
-                    <Icon xml={xmlIcon} size={24} color='primary' />
-                    <Text style={styles.activityHour}>{activityTime}</Text>
+                    <Icon
+                        xml={xmlIcon}
+                        size={24}
+                        // @ts-ignore - borderColor is a string from dataManager
+                        color={borderColor.borderColor}
+                    />
+                    <Text style={styles.activityName}>{activityText}</Text>
+                    <Text style={styles.categoryName}>{categoryText}</Text>
                 </View>
                 <View style={styles.activityChild}>
-                    <Text style={styles.activityName}>{activityText}</Text>
+                    <Text style={styles.activityTime}>{activityTime}</Text>
                 </View>
             </Button>
         );

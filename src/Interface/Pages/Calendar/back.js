@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import PageBase from 'Interface/FlowEngine/PageBase';
 
 import user from 'Managers/UserManager';
@@ -7,9 +7,11 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { GetLocalTime } from 'Utils/Time';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').FlatList<DayDataType>} FlatListDay
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
  * @typedef {import('Class/Activities').Skill} Skill
  * @typedef {import('Class/Activities').Activity} Activity
@@ -58,7 +60,9 @@ class BackCalendar extends PageBase {
                     selected: false,
                     onPress: this.onDayPress.bind(this)
                 };
-            })
+            }),
+
+        animSummaryY: new Animated.Value(0)
     };
 
     /** @type {Symbol | null} */
@@ -93,6 +97,9 @@ class BackCalendar extends PageBase {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
+    hideSummary = false;
+    summaryHeight = 0;
+
     refreshing = false;
 
     /** @param {ActivityDataType} activity */
@@ -124,6 +131,24 @@ class BackCalendar extends PageBase {
 
         this.setState({ days, selectedDay, activities });
     }
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutSummary = (event) => {
+        this.summaryHeight = event.nativeEvent.layout.height;
+    };
+
+    /** @type {FlatListDay['props']['onScroll']} */
+    handleActivityScroll = (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+
+        if (!this.hideSummary && y > 300) {
+            this.hideSummary = true;
+            SpringAnimation(this.state.animSummaryY, -this.summaryHeight, false).start();
+        } else if (this.hideSummary && y <= 150) {
+            this.hideSummary = false;
+            SpringAnimation(this.state.animSummaryY, 0, false).start();
+        }
+    };
 
     /** @type {FlatListDay['props']['onScroll']} */
     handleDayScroll = (event) => {

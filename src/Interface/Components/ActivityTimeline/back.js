@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { Animated, Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
 import dataManager from 'Managers/DataManager';
 
 import { GetDate, GetTimeZone } from 'Utils/Time';
-import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('Class/Activities').Activity} Activity
- * 
+ *
  * @typedef {object} ActivityTimelineItem
  * @property {number} startTime
  * @property {number} duration
@@ -21,39 +20,32 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {number} marginLeft
  * @property {string} logo
  * @property {string} logoColor
+ *
+ *
+ * @typedef {object} ActivityTimelinePropsType
+ * @property {StyleProp} style
+ * @property {Activity[]} activities
  */
 
+/** @type {ActivityTimelinePropsType} */
 const ActivityTimelineProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {Activity[]} */
     activities: []
 };
 
 class ActivityTimelineBack extends React.Component {
     state = {
-        activities: [],
-        animHeight: new Animated.Value(1)
-    }
+        activities: this.prepareUIActivities(this.prepareActivities())
+    };
 
     isScrolled = false;
 
-    componentDidMount() {
-        this.compute();
-    }
-
+    /** @param {ActivityTimelinePropsType} prevProps */
     componentDidUpdate(prevProps) {
         if (this.props.activities !== prevProps.activities) {
-            this.compute();
+            const preparedActivities = this.prepareActivities();
+            this.setState({ activities: this.prepareUIActivities(preparedActivities) });
         }
-    }
-
-    compute() {
-        let activities = this.prepareActivities();
-        activities = this.prepareUIActivities(activities);
-
-        this.setState({ activities });
     }
 
     /**
@@ -121,23 +113,8 @@ class ActivityTimelineBack extends React.Component {
     }
 
     /**
-     * To open or close the timeline
-     * @param {boolean} thinMode
-     */
-    SetThinMode(thinMode) {
-        if (thinMode && !this.isScrolled) {
-            this.isScrolled = true;
-            TimingAnimation(this.state.animHeight, 0, 200, false).start();
-        }
-        else if (!thinMode && this.isScrolled) {
-            this.isScrolled = false;
-            TimingAnimation(this.state.animHeight, 1, 200, false).start();
-        }
-    }
-
-    /**
      * Returns the complementary color of the given hex color
-     * @param {string} hex 
+     * @param {string} hex
      * @returns {string} hex color
      */
     getComplementaryColor(hex) {

@@ -1,3 +1,4 @@
+export { ActivityTimeline } from './Components/ActivityTimeline';
 export { Button } from './Components/Button';
 export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
@@ -18,7 +19,6 @@ import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
 import Input from './OldComponents/Input';
 import KPI from './OldComponents/KPI';
-import ActivityTimeline from './OldComponents/ActivityTimeline';
 import DayClock from './OldComponents/DayClock';
 import Digit from './OldComponents/Digit';
 import GLLoading from './OldComponents/GLLoading';
@@ -40,7 +40,6 @@ export {
     Frame,
     Character,
     KPI,
-    ActivityTimeline,
     DayClock,
     Digit,
     GLLoading,

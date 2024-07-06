@@ -357,6 +357,7 @@
     },
 
     "calendar": {
+        "summary-title": "Résumé de la journée",
         "activities-title": "Activités du jour",
         "add-activity": "Ajouter une activité",
         "hour-min": "h",

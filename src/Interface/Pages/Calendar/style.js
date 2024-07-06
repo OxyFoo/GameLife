@@ -19,6 +19,23 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
+    // Summary
+    summary: {
+        paddingBottom: 16,
+        paddingHorizontal: 24
+    },
+    summaryTitle: {
+        marginBottom: 12,
+        fontSize: 22,
+        textAlign: 'left'
+    },
+    summaryHoursContent: {
+        marginBottom: 2,
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'space-between'
+    },
+
     // Activity list
     activityList: {
         flex: 1,
@@ -34,7 +51,7 @@ const styles = StyleSheet.create({
         padding: 16,
         paddingHorizontal: 16,
 
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderRadius: 8
     },
     activitySeparator: {
@@ -49,12 +66,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    activityHour: {
+    activityName: {
         marginLeft: 12,
         fontSize: 18,
         fontWeight: 'bold'
     },
-    activityName: {
+    categoryName: {
+        marginLeft: 6,
+        fontSize: 16
+    },
+    activityTime: {
         fontSize: 16
     },
 

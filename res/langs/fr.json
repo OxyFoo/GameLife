@@ -295,8 +295,8 @@
     },
 
     "activity": {
-        "title-category": "Catégorie",
-        "title-activity": "Activité",
+        "title-category": "Toutes les catégories",
+        "title-activity": "Choisir mon activité",
         "title-click-me": "(tu peux cliquer !)",
         "title-schedule": "Horaire",
         "title-experience": "Expérience",

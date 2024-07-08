@@ -3,6 +3,7 @@ export { Button } from './Components/Button';
 export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
 export { Icon } from './Components/Icon';
+export { IconCheckable } from './Components/IconCheckable';
 export { InputText } from './Components/InputText';
 export { NotificationsInAppButton } from './Components/NotificationsInAppButton';
 export { ProgressBar } from './Components/ProgressBar';
@@ -24,7 +25,6 @@ import Digit from './OldComponents/Digit';
 import GLLoading from './OldComponents/GLLoading';
 import HeatMap from './OldComponents/HeatMap';
 import OldIcon from './OldComponents/Icon';
-import IconCheckable from './OldComponents/IconCheckable';
 import KeyboardSpacerView from './OldComponents/KeyboardSpacerView';
 import LineChartSvg from './OldComponents/LineChartSvg';
 import PieChart from './OldComponents/PieChart';
@@ -44,7 +44,6 @@ export {
     Digit,
     GLLoading,
     HeatMap,
-    IconCheckable,
     KeyboardSpacerView,
     LineChartSvg,
     PieChart,

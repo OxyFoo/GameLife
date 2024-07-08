@@ -9,6 +9,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
+ * @typedef {import('Interface/Global').BottomPanel} BottomPanel
  * @typedef {import('Interface/Global').Console} Console
  * @typedef {import('Interface/Global').UserHeader} UserHeader
  * @typedef {import('Interface/Global').NavBar} NavBar
@@ -50,15 +51,20 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {Object} BackFlowEnginePropsType
  * @property {React.RefObject<BackFlowEngine['popup']>} popup
+ * @property {React.RefObject<BackFlowEngine['bottomPanel']>} bottomPanel
  * @property {React.RefObject<BackFlowEngine['console']>} console
  * @property {React.RefObject<BackFlowEngine['userHeader']>} userHeader
  * @property {React.RefObject<BackFlowEngine['navBar']>} navBar
  * @property {React.RefObject<BackFlowEngine['notificationsInApp']>} notificationsInApp
  */
 
-/** @type {BackFlowEnginePropsType} */
+/**
+ * All props are React.RefObject wich will be binded to the instance
+ * @type {BackFlowEnginePropsType}
+ */
 const BackFlowEngineProps = {
     popup: React.createRef(),
+    bottomPanel: React.createRef(),
     console: React.createRef(),
     userHeader: React.createRef(),
     navBar: React.createRef(),
@@ -71,6 +77,9 @@ class BackFlowEngine extends React.Component {
 
     /** @type {Console | null} */
     console = null;
+
+    /** @type {BottomPanel | null} */
+    bottomPanel = null;
 
     /** @type {UserHeader | null} */
     userHeader = null;
@@ -145,8 +154,8 @@ class BackFlowEngine extends React.Component {
      * @returns {boolean}
      */
     shouldComponentUpdate(nextProps, nextState) {
-        /** @type {Array<keyof BackFlowEnginePropsType>} */
-        const toCheck = ['popup', 'console', 'userHeader', 'navBar', 'notificationsInApp'];
+        /** @type {Array<keyof BackFlowEnginePropsType>} */ // @ts-ignore
+        const toCheck = Object.keys(BackFlowEngineProps);
         let changed = false;
         for (const key of toCheck) {
             const ref = nextProps[key];
@@ -373,6 +382,7 @@ class BackFlowEngine extends React.Component {
      * @private
      */
     pageDidUpdate = (pageName) => {
+        // Update user header visibility
         const showUserHeader = PAGES[pageName].feShowUserHeader;
         if (showUserHeader && this.userHeader?.show === false) {
             this.userHeader?.Show();
@@ -381,11 +391,17 @@ class BackFlowEngine extends React.Component {
             this.userHeader?.Hide();
         }
 
+        // Update nav bar visibility
         const showNavBar = PAGES[pageName].feShowNavBar;
         if (showNavBar && this.navBar?.show === false) {
             this.navBar?.Show();
         } else if (!showNavBar && this.navBar?.show === true) {
             this.navBar?.Hide();
+        }
+
+        // Update bottom panel visibility
+        if (this.bottomPanel?.IsOpened()) {
+            this.bottomPanel?.Close();
         }
     };
 
@@ -467,6 +483,9 @@ class BackFlowEngine extends React.Component {
 
         /** @type {Console} */ // @ts-ignore
         console: this.console,
+
+        /** @type {BottomPanel} */ // @ts-ignore
+        bottomPanel: this.bottomPanel,
 
         /** @type {UserHeader} */ // @ts-ignore
         userHeader: this.userHeader,

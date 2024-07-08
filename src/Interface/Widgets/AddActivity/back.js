@@ -1,6 +1,6 @@
+import React from 'react';
 import { FlatList } from 'react-native';
 
-import StartTutorial from './tuto';
 import StartMission from './mission';
 import { GetRecentSkills, CategoryToItem, SkillToItem } from './types';
 
@@ -16,17 +16,17 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * 
+ *
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('./types').ItemSkill} ItemSkill
  * @typedef {import('./types').EnrichedSkill} EnrichedSkill
  * @typedef {import('./types').ItemCategory} ItemCategory
- * 
+ *
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
- * 
+ *
  * @typedef {Object} BackActivityPropsType
- * @property {Object} args
+ * @property {Object} [args]
  * @property {number | null} [args.categoryID]
  * @property {number | null} [args.skillID]
  * @property {number | null} [args.time]
@@ -43,7 +43,7 @@ const BackActivityProps = {
     }
 };
 
-class BackActivity extends PageBase {
+class BackActivity extends React.Component {
     state = {
         /** @type {number} */
         topPanelOffset: 0,
@@ -59,7 +59,7 @@ class BackActivity extends PageBase {
 
         /** @type {string} Header of input - Name of category */
         inputText: ''
-    }
+    };
 
     refTuto1 = null;
 
@@ -68,6 +68,8 @@ class BackActivity extends PageBase {
 
     /** @type {FlatList | null} */
     refActivities = null;
+
+    categoriesNames = dataManager.skills.categories.map((category) => langManager.GetText(category.Name));
 
     /** @type {Array<number>} Defined with props args 'skills' (disable categories) */
     preselectedSkillsIDs = [];
@@ -88,8 +90,7 @@ class BackActivity extends PageBase {
         this.allCategoriesItems = dataManager.skills.categories.map(CategoryToItem);
 
         // Define all skills
-        this.allSkillsItems = dataManager.skills.Get()
-            .map(skill => SkillToItem(skill, this.selectSkill));
+        this.allSkillsItems = dataManager.skills.Get().map((skill) => SkillToItem(skill, this.selectSkill));
 
         // Get recent skills
         this.allRecentSkillsItems = GetRecentSkills(this.selectSkill);
@@ -101,9 +102,7 @@ class BackActivity extends PageBase {
         if (this.props.args.hasOwnProperty('skills')) {
             if (this.props.args.skills.length > 0) {
                 this.preselectedSkillsIDs = this.props.args.skills;
-                this.state.skills = this.allSkillsItems.filter(skill => (
-                    this.preselectedSkillsIDs.includes(skill.id)
-                ));
+                this.state.skills = this.allSkillsItems.filter((skill) => this.preselectedSkillsIDs.includes(skill.id));
             }
         }
 
@@ -148,14 +147,12 @@ class BackActivity extends PageBase {
             }
         }
 
-        const fromCalendar = user.interface.history.at(-1)[0] === 'calendar';
+        //const fromCalendar = user.interface.history.at(-1)[0] === 'calendar';
 
         // Set default time (UTC) to add an activity
         if (this.props.args.hasOwnProperty('time')) {
             const { time } = this.props.args;
-            const activities = user.activities
-                .GetByTime(time)
-                .filter(activity => activity.startTime > time);
+            const activities = user.activities.GetByTime(time).filter((activity) => activity.startTime > time);
 
             let duration = 60;
             if (activities.length > 0) {
@@ -169,16 +166,14 @@ class BackActivity extends PageBase {
         }
 
         // User from calendar
-        else if (user.tempSelectedTime !== null && fromCalendar) {
-            this.refActivityPanel?.SetChangeSchedule(user.tempSelectedTime, 60);
+        else if (false && user.tempSelectedTime !== null /* && fromCalendar*/) {
+            //this.refActivityPanel?.SetChangeSchedule(user.tempSelectedTime, 60);
         }
 
         // Default time (local) to add an activity
         else {
             const time = GetLocalTime();
-            const activities = user.activities
-                .GetByTime(time)
-                .filter(activity => activity.startTime > time);
+            const activities = user.activities.GetByTime(time).filter((activity) => activity.startTime > time);
 
             let duration = 60;
             if (activities.length > 0) {
@@ -194,15 +189,14 @@ class BackActivity extends PageBase {
     }
 
     componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
         StartMission.call(this, args?.missionName);
-    }
+    };
 
     /** @param {LayoutChangeEvent} event */
     onLayoutCategories = (event) => {
         const { y, height } = event.nativeEvent.layout;
         this.setState({ topPanelOffset: y + height });
-    }
+    };
 
     /**
      * @param {string} textSearch
@@ -213,31 +207,24 @@ class BackActivity extends PageBase {
         const formattedSearch = FormatForSearch(textSearch);
 
         /** @param {ItemSkill} skill */
-        const filter = skill => !categoryID || skill.categoryID === categoryID;
+        const filter = (skill) => !categoryID || skill.categoryID === categoryID;
         /** @param {ItemSkill} skill */
-        const filterPreselected = skill => (
-            this.preselectedSkillsIDs.length === 0 ||
-            this.preselectedSkillsIDs.includes(skill.id)
-        );
+        const filterPreselected = (skill) =>
+            this.preselectedSkillsIDs.length === 0 || this.preselectedSkillsIDs.includes(skill.id);
         /** @param {ItemSkill} skill */
-        const searchMatch = skill => FormatForSearch(skill.value).includes(formattedSearch);
+        const searchMatch = (skill) => FormatForSearch(skill.value).includes(formattedSearch);
 
         /** @type {ItemSkill[]} */
         let itemSkills = [];
 
         // Recent skills
         if (categoryID === 0) {
-            itemSkills = this.allRecentSkillsItems
-                .filter(searchMatch)
-                .slice(0, 10);
+            itemSkills = this.allRecentSkillsItems.filter(searchMatch).slice(0, 10);
         }
 
         // Get skills by category
         else {
-            itemSkills = this.allSkillsItems
-                .filter(filter)
-                .filter(filterPreselected)
-                .filter(searchMatch);
+            itemSkills = this.allSkillsItems.filter(filter).filter(filterPreselected).filter(searchMatch);
         }
 
         let inputText = langManager.curr['activity']['input-activity'];
@@ -258,13 +245,13 @@ class BackActivity extends PageBase {
         }
 
         return newState;
-    }
+    };
 
     /** @param {string} text */
     onSearchChange = (text) => {
         this.refreshSkills(text, null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
-    }
+    };
 
     /**
      * @param {number} ID
@@ -274,7 +261,7 @@ class BackActivity extends PageBase {
         this.refreshSkills(this.state.skillSearch, checked ? ID : null);
         this.refActivities.scrollToOffset({ offset: 0, animated: false });
         this.refActivityPanel?.Close();
-    }
+    };
 
     /**
      * @param {Skill} skill
@@ -282,7 +269,7 @@ class BackActivity extends PageBase {
     selectSkill = (skill) => {
         StartMission.call(this, this.props.args?.missionName, true);
         this.refActivityPanel?.SelectSkill(skill);
-    }
+    };
 }
 
 BackActivity.defaultProps = BackActivityProps;

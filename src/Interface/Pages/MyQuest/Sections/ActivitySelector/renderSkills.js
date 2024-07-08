@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
 
-import { GetRecentSkills, SkillToItem } from '../../../Activity/types';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text } from 'Interface/Components';
+import { GetRecentSkills, SkillToItem } from 'Interface/Widgets/AddActivity/types';
 import { FormatForSearch } from 'Utils/String';
 
 /**
- * @typedef {import('../../../Activity/types').ItemSkill} ItemSkill
- * @typedef {import('../../../Activity/types').ItemCategory} ItemCategory
+ * @typedef {import('Interface/Widgets/AddActivity/types').ItemSkill} ItemSkill
+ * @typedef {import('Interface/Widgets/AddActivity/types').ItemCategory} ItemCategory
  */
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -22,9 +22,7 @@ function renderEmptyList() {
 
     return (
         <View style={styles.emptyList}>
-            <Text style={styles.emptyListText}>
-                {lang['empty-activity']}
-            </Text>
+            <Text style={styles.emptyListText}>{lang['empty-activity']}</Text>
         </View>
     );
 }
@@ -41,11 +39,7 @@ function RenderSkill({ item }) {
     };
 
     return (
-        <Text
-            style={[styles.activityElement, backgroundCard]}
-            fontSize={22}
-            onPress={onPress}
-        >
+        <Text style={[styles.activityElement, backgroundCard]} fontSize={22} onPress={onPress}>
             {value}
         </Text>
     );
@@ -62,14 +56,10 @@ function RenderSkills({ category, callback }) {
 
     // Recent skills
     if (category.id === 0) {
-        skillsItems.push(...GetRecentSkills(skill => callback(skill.ID)));
-    }
-
-    else {
+        skillsItems.push(...GetRecentSkills((skill) => callback(skill.ID)));
+    } else {
         const skills = dataManager.skills.GetByCategory(category.id);
-        skillsItems.push(...skills.map(skill =>
-            SkillToItem(skill, (skill) => callback(skill.ID))
-        ));
+        skillsItems.push(...skills.map((skill) => SkillToItem(skill, (s) => callback(s.ID))));
     }
 
     return (
@@ -78,7 +68,7 @@ function RenderSkills({ category, callback }) {
             data={skillsItems}
             ListEmptyComponent={renderEmptyList}
             renderItem={RenderSkill}
-            keyExtractor={item => 'act-skill-' + item.id}
+            keyExtractor={(item) => 'act-skill-' + item.id}
         />
     );
 }
@@ -91,16 +81,16 @@ const RenderSkillsMemo = React.memo(RenderSkills, (prev, next) => prev.category.
  * @returns {React.ReactNode}
  */
 function RenderSkillsSearch({ searchInput, callback }) {
-    const [ skillsItems, setSkillsItems ] = React.useState([]);
+    const [skillsItems, setSkillsItems] = React.useState([]);
 
     React.useEffect(() => {
         const search = FormatForSearch(searchInput);
         const skills = dataManager.skills.Get();
         const newSkills = skills
-            .map(skill => SkillToItem(skill, (skill) => callback(skill.ID)))
-            .filter(skill => FormatForSearch(skill.value).includes(search));
+            .map((skill) => SkillToItem(skill, (s) => callback(s.ID)))
+            .filter((skill) => FormatForSearch(skill.value).includes(search));
         setSkillsItems(newSkills);
-    }, [ searchInput ]);
+    }, [callback, searchInput]);
 
     return (
         <FlatList
@@ -108,7 +98,7 @@ function RenderSkillsSearch({ searchInput, callback }) {
             data={skillsItems}
             ListEmptyComponent={renderEmptyList}
             renderItem={RenderSkill}
-            keyExtractor={item => 'act-skill-' + item.id}
+            keyExtractor={(item) => 'act-skill-' + item.id}
         />
     );
 }
@@ -116,7 +106,7 @@ function RenderSkillsSearch({ searchInput, callback }) {
 const styles = StyleSheet.create({
     activitiesFlatlist: {
         width: '100%',
-        height: Math.min(500, SCREEN_HEIGHT * .8 - 142 - 16) - 50,
+        height: Math.min(500, SCREEN_HEIGHT * 0.8 - 142 - 16) - 50,
         marginTop: 12
     },
     activityElement: {

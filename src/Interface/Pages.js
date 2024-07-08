@@ -2,7 +2,6 @@
 const PAGES = {
     about:          require('./Pages/About').default,
     achievements:   require('./Pages/Achievements').default,
-    activity:       require('./Pages/Activity').default,
     activitytimer:  require('./Pages/ActivityTimer').default,
     benchmark:      require('./Pages/BenchMark').default,
     calendar:       require('./Pages/Calendar').default,

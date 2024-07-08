@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     },
     activityButtonContent: {
         flexDirection: 'row',
+        flexWrap: 'nowrap',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
@@ -67,12 +68,16 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     activityName: {
+        maxWidth: '50%',
         marginLeft: 12,
+        textAlign: 'left',
         fontSize: 18,
         fontWeight: 'bold'
     },
     categoryName: {
         marginLeft: 6,
+        marginBottom: -2,
+        textAlign: 'left',
         fontSize: 16
     },
     activityTime: {

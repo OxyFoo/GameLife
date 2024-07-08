@@ -61,7 +61,9 @@ const RenderActivity = React.memo(
                         // @ts-ignore - borderColor is a string from dataManager
                         color={borderColor.borderColor}
                     />
-                    <Text style={styles.activityName}>{activityText}</Text>
+                    <Text style={styles.activityName} numberOfLines={1} ellipsizeMode='tail'>
+                        {activityText}
+                    </Text>
                     <Text style={styles.categoryName}>{categoryText}</Text>
                 </View>
                 <View style={styles.activityChild}>

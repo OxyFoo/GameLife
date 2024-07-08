@@ -5,7 +5,7 @@ import styles from './style';
 import FlowEnginePagesRender from './pagesRender';
 
 import { DynamicBackground } from 'Interface/Primitives';
-import { NavBar, Console, NotificationsInApp, Popup, UserHeader } from 'Interface/Global';
+import { NavBar, Console, NotificationsInApp, Popup, UserHeader, BottomPanel } from 'Interface/Global';
 
 /**
  * @typedef {import('./back').PageNames} PageNames
@@ -14,6 +14,9 @@ import { NavBar, Console, NotificationsInApp, Popup, UserHeader } from 'Interfac
 const FlowEngine = React.forwardRef((_, ref) => {
     /** @type {React.MutableRefObject<Popup | null>} */
     const refPopup = React.useRef(null);
+
+    /** @type {React.MutableRefObject<BottomPanel | null>} */
+    const refBottomPanel = React.useRef(null);
 
     /** @type {React.MutableRefObject<Console | null>} */
     const refConsole = React.useRef(null);
@@ -33,12 +36,14 @@ const FlowEngine = React.forwardRef((_, ref) => {
             <FlowEnginePagesRender
                 ref={ref}
                 popup={refPopup}
+                bottomPanel={refBottomPanel}
                 console={refConsole}
                 userHeader={refUserHeader}
                 navBar={refBottomBar}
                 notificationsInApp={refNotificationsInApp}
             />
             <UserHeader ref={refUserHeader} />
+            <BottomPanel ref={refBottomPanel} />
             <NavBar ref={refBottomBar} />
             <NotificationsInApp ref={refNotificationsInApp} />
             <Popup ref={refPopup} />

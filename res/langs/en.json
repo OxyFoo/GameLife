@@ -295,8 +295,8 @@
     },
 
     "activity": {
-        "title-category": "Category",
-        "title-activity": "Activity",
+        "title-category": "All categories",
+        "title-activity": "Choose my activity",
         "title-click-me": "(you can click me)",
         "title-schedule": "Schedule",
         "title-experience": "Experience",

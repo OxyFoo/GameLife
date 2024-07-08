@@ -2,21 +2,24 @@ import React from 'react';
 import { Animated, View, ScrollView, Dimensions, StyleSheet } from 'react-native';
 
 import { RenderSkillsMemo, RenderSkillsSearch } from './renderSkills';
-import { CategoryToItem, GetRecentSkills } from '../../../Activity/types';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, IconCheckable, Swiper, Button, Icon, Input } from 'Interface/Components';
+import { CategoryToItem, GetRecentSkills } from 'Interface/Widgets/AddActivity/types';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('../../../Activity/types').ItemCategory} ItemCategory
+ * @typedef {import('Interface/Widgets/AddActivity/types').ItemCategory} ItemCategory
+ *
+ * @typedef {Object} ActivitySelectorPropsType
+ * @prop {(id: number) => void} callback
  */
 
+/** @type {ActivitySelectorPropsType} */
 const ActivitySelectorProps = {
-    /** @type {(param: number) => void} */
-    callback: (id) => {},
+    callback: () => {}
 };
 
 class ActivitySelector extends React.Component {
@@ -28,7 +31,7 @@ class ActivitySelector extends React.Component {
         search: '',
 
         animSearch: new Animated.Value(0)
-    }
+    };
 
     /** @type {React.RefObject<Swiper>} */
     refSwiper = React.createRef();
@@ -56,11 +59,11 @@ class ActivitySelector extends React.Component {
         } else {
             this.refInput.current?.unfocus();
         }
-    }
+    };
     /** @param {string} search */
     handleSearchInput = (search) => {
         this.setState({ search });
-    }
+    };
 
     render() {
         const lang = langManager.curr['quest'];
@@ -80,42 +83,40 @@ class ActivitySelector extends React.Component {
                 />
             );
         } else {
-            const selectedCategory = this.allCategoriesItems.find(category => category.id === this.state.selectedCategory);
+            const selectedCategory = this.allCategoriesItems.find(
+                (category) => category.id === this.state.selectedCategory
+            );
             title = selectedCategory?.name ?? '[ERROR]';
-            pages.push(...this.allCategoriesItems.map(category =>
-                <RenderSkillsMemo
-                    category={category}
-                    callback={(id) => {
-                        this.props.callback(id);
-                        user.interface.popup.Close();
-                    }}
-                />
-            ));
+            pages.push(
+                ...this.allCategoriesItems.map((category) => (
+                    <RenderSkillsMemo
+                        category={category}
+                        callback={(id) => {
+                            this.props.callback(id);
+                            user.interface.popup.Close();
+                        }}
+                    />
+                ))
+            );
         }
 
         const styleAnimCategories = {
-            transform: [
-                { translateY: 10 },
-                { translateY: Animated.multiply(-100, animSearch) }
-            ]
+            transform: [{ translateY: 10 }, { translateY: Animated.multiply(-100, animSearch) }]
         };
         const styleAnimSearch = {
-            transform: [
-                { translateY: -40 },
-                { translateY: Animated.multiply(-100, Animated.subtract(1, animSearch)) }
-            ]
+            transform: [{ translateY: -40 }, { translateY: Animated.multiply(-100, Animated.subtract(1, animSearch)) }]
         };
 
         // Get swiper height from popup height (max 80% screen height)
         const { height } = Dimensions.get('window');
-        const swiperHeight = Math.min(500, height * .8 - 142 - 16);
+        const swiperHeight = Math.min(500, height * 0.8 - 142 - 16);
 
         return (
             <View style={styles.popup}>
                 {/* Categories */}
                 <Animated.View style={[styles.categoriesContainer, styleAnimCategories]}>
                     <ScrollView style={styles.categoriesScrollView} horizontal>
-                        {this.allCategoriesItems.map(category => this.renderCategory({ item: category }))}
+                        {this.allCategoriesItems.map((category) => this.renderCategory({ item: category }))}
                     </ScrollView>
                 </Animated.View>
 
@@ -133,10 +134,7 @@ class ActivitySelector extends React.Component {
                 <View style={styles.containerTitle}>
                     <Text fontSize={isSearching ? 16 : 24}>{title}</Text>
                     <Button style={styles.searchButton} onPress={this.handleSearchButton}>
-                        <Icon
-                            icon={isSearching ? 'cross' : 'magnifyingGlass'}
-                            size={28}
-                        />
+                        <Icon icon={isSearching ? 'cross' : 'magnifyingGlass'} size={28} />
                     </Button>
                 </View>
 
@@ -156,11 +154,11 @@ class ActivitySelector extends React.Component {
     /** @param {number} id */
     handleCategorySwiper = (id) => {
         this.setState({ selectedCategory: id });
-    }
+    };
     /** @param {number} id */
     handleCategoryButton = (id) => {
         this.refSwiper.current?.GoTo(id);
-    }
+    };
 
     /**
      * @param {{ item: ItemCategory }} param0
@@ -181,7 +179,7 @@ class ActivitySelector extends React.Component {
                 onPress={this.handleCategoryButton}
             />
         );
-    }
+    };
 }
 
 ActivitySelector.prototype.props = ActivitySelectorProps;

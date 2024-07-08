@@ -158,13 +158,7 @@ class Button extends ButtonBack {
             opacity: enabled ? 1 : 0.6
         };
 
-        if (appearance === 'normal' || appearance === 'uniform' || fontColor !== 'automatic') {
-            return (
-                <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
-                    {content}
-                </View>
-            );
-        } else if (appearance === 'outline' || appearance === 'outline-blur') {
+        if (fontColor === 'automatic' && (appearance === 'outline' || appearance === 'outline-blur')) {
             return (
                 <View>
                     <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
@@ -178,13 +172,19 @@ class Button extends ButtonBack {
                     </MaskedView>
                 </View>
             );
+        } else if (appearance === 'normal' || appearance === 'uniform' || fontColor !== 'automatic') {
+            return (
+                <View style={[styles.content, styleContent, styleContentProp]} pointerEvents='none'>
+                    {content}
+                </View>
+            );
         }
 
         return null;
     };
 
     renderBackground = () => {
-        const { appearance, color } = this.props;
+        const { appearance, color, borderColor } = this.props;
 
         if (appearance === 'normal') {
             return <Gradient style={styles.absolute} />;
@@ -195,6 +195,17 @@ class Button extends ButtonBack {
                         styles.absolute,
                         appearance === 'uniform' && {
                             backgroundColor: themeManager.GetColor(color)
+                        }
+                    ]}
+                />
+            );
+        } else if (borderColor !== 'automatic' && (appearance === 'outline' || appearance === 'outline-blur')) {
+            return (
+                <View
+                    style={[
+                        styles.backgroundViewUniform,
+                        {
+                            borderColor: themeManager.GetColor(borderColor)
                         }
                     ]}
                 />

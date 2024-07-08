@@ -25,6 +25,7 @@ import { Button } from 'react-native';
  * @property {ThemeColor | ThemeText} color Background color of the button, only used in 'uniform' appearance
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText | 'automatic'} fontColor
+ * @property {ThemeColor | ThemeText | 'automatic'} borderColor
  * @property {IconsName | null} icon
  * @property {string | null} iconXml
  * @property {number} iconSize
@@ -54,6 +55,7 @@ const ButtonProps = {
     color: 'main1',
     fontSize: 16,
     fontColor: 'automatic',
+    borderColor: 'automatic',
     icon: null,
     iconXml: null,
     iconSize: 24,

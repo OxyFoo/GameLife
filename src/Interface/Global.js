@@ -1,3 +1,4 @@
+export { BottomPanel } from './Global/BottomPanel';
 export { Console } from './Global/Console';
 export { NavBar } from './Global/NavBar';
 export { NotificationsInApp } from './Global/NotificationsInApp';

@@ -3,6 +3,7 @@ import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
 
+import { AddActivity } from 'Interface/Widgets';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -22,7 +23,8 @@ const NavBarProps = {
 class NavBarBack extends React.Component {
     state = {
         height: 0,
-        animation: new Animated.Value(0)
+        animation: new Animated.Value(0),
+        animationAddActivity: new Animated.Value(0)
     };
 
     show = false;
@@ -63,7 +65,21 @@ class NavBarBack extends React.Component {
 
     openHome = () => user.interface.ChangePage('home');
     openCalendar = () => user.interface.ChangePage('calendar');
-    openAddActivity = () => false;
+    openAddActivity = () => {
+        if (user.interface.bottomPanel.IsOpened()) {
+            user.interface.bottomPanel.Close();
+            SpringAnimation(this.state.animationAddActivity, 0).start();
+            return;
+        }
+        user.interface.bottomPanel.Open({
+            content: <AddActivity />,
+            movable: false,
+            onClose: () => {
+                SpringAnimation(this.state.animationAddActivity, 0).start();
+            }
+        });
+        SpringAnimation(this.state.animationAddActivity, 1).start();
+    };
     openMultiplayer = () => user.interface.ChangePage('multiplayer');
     openShop = () => user.interface.ChangePage('shop');
 }

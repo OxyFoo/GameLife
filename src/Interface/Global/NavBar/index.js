@@ -30,37 +30,13 @@ class NavBar extends BottomBarBack {
             ]
         };
 
-        const middleButtonStyle = {
-            transform: [
-                {
-                    translateY: animation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [24, -24]
-                    })
-                }
-            ],
-            borderColor: themeManager.GetColor('background')
-        };
-
         const NavButton = this.renderButton;
+        const MiddleButton = this.renderMiddleButton;
         return (
             <Animated.View style={[styles.parent, animStyle]} onLayout={this.onLayout}>
                 <NavButton text='home' icon='home-outline' onPress={this.openHome} />
                 <NavButton text='calendar' icon='planner-outline' onPress={this.openCalendar} />
-
-                {/* Middle button to add an activity */}
-                <View style={styles.middleParentButton}>
-                    <Button
-                        ref={this.refButtons['addActivity']}
-                        style={styles.middleButton}
-                        styleAnimation={middleButtonStyle}
-                        appearance='normal'
-                        onPress={this.openAddActivity}
-                    >
-                        <Icon icon='add-outline' color='main3' size={24} />
-                    </Button>
-                </View>
-
+                <MiddleButton />
                 <NavButton text='multiplayer' icon='multiplayer-outline' onPress={this.openMultiplayer} />
                 <NavButton text='shop' icon='cart-outline' onPress={this.openShop} />
             </Animated.View>
@@ -89,6 +65,75 @@ class NavBar extends BottomBarBack {
                     <Text style={styles.text} color={'main1'}>
                         {langManager.curr['navbar'][text]}
                     </Text>
+                </Button>
+            </View>
+        );
+    };
+
+    renderMiddleButton = () => {
+        const { animation, animationAddActivity } = this.state;
+
+        /** @type {StyleViewProp} */
+        const middleButtonStyle = {
+            transform: [
+                {
+                    translateY: animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [24, -24]
+                    })
+                },
+                {
+                    translateY: animationAddActivity.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 20]
+                    })
+                }
+            ],
+            borderColor: themeManager.GetColor('background')
+        };
+
+        return (
+            <View style={styles.middleParentButton}>
+                <Button
+                    ref={this.refButtons['addActivity']}
+                    style={styles.middleButton}
+                    styleAnimation={middleButtonStyle}
+                    appearance='normal'
+                    onPress={this.openAddActivity}
+                >
+                    <Animated.View
+                        style={{
+                            opacity: Animated.subtract(1, animationAddActivity),
+                            transform: [
+                                {
+                                    rotate: animationAddActivity.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: ['0deg', '90deg']
+                                    })
+                                }
+                            ]
+                        }}
+                    >
+                        <Icon icon='add-outline' color='main3' size={24} />
+                    </Animated.View>
+                    <Animated.View
+                        style={[
+                            styles.absolute,
+                            {
+                                opacity: animationAddActivity,
+                                transform: [
+                                    {
+                                        rotate: animationAddActivity.interpolate({
+                                            inputRange: [0, 1],
+                                            outputRange: ['90deg', '0deg']
+                                        })
+                                    }
+                                ]
+                            }
+                        ]}
+                    >
+                        <Icon icon='close-outline' color='main3' size={24} />
+                    </Animated.View>
                 </Button>
             </View>
         );

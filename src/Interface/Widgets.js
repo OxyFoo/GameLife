@@ -1,3 +1,4 @@
+export { AddActivity } from './Widgets/AddActivity';
 export { MyQuestsSimpleList } from './Widgets/MyQuestsSimpleList';
 export { MyQuestsAdvancedList } from './Widgets/MyQuestsAdvancedList';
 export { TodoSimpleList } from './Widgets/TodoSimpleList';

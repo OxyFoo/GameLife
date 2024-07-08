@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
+    absolute: {
+        position: 'absolute'
+    },
     buttonParent: {
         flex: 1,
         height: '100%'
